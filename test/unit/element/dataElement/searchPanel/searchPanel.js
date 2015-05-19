@@ -27,6 +27,7 @@ describe('SearchPanel', function () {
         var searchPanelBuilder = new SearchPanelBuilder();
         var builder = new Builder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             Name: "SearchPanel1",
             DataSource: "PatientsDataSource"
@@ -35,22 +36,28 @@ describe('SearchPanel', function () {
 
         var searchPanel = searchPanelBuilder.build(builder, view, metadata);
         var $searchPanel = searchPanel.render();
+        exchange.subscribe(messageTypes.onSetTextFilter, onSetTextFilterHandler);
 
         // When
-        exchange.subscribe(messageTypes.onSetTextFilter, function (messageBody) {
-            // Then
+        searchPanel.setValue(123);
+        // вместо нативного вызова поиска, имитируем его, поскольку иначе мокка редиректит страницу, цука.
+        searchPanel.control.controlView.submitFormHandler({
+            preventDefault: $.noop
+        });
+
+        // Then
+        function onSetTextFilterHandler(messageBody){
             assert.equal(messageBody.value, 123);
             assert.equal(messageBody.dataSource, 'PatientsDataSource');
             done();
-        });
-        searchPanel.setValue(123);
-        $searchPanel.find('.btn_search').trigger('click');
+        }
     });
 
     it('should be true if scriptsHandlers call', function () {
         //Given
-        var searchPanel = new SearchPanelBuilder();
+        var searchPanelBuilder = new SearchPanelBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             OnValueChanged:{
                 Name: 'OnValueChanged'
@@ -59,16 +66,19 @@ describe('SearchPanel', function () {
                 Name: 'OnLoaded'
             }
         };
-        window.Test = {searchPanel:1, searchPanelLoaded: false};
-        view.setScripts([{Name:"OnValueChanged", Body:"window.Test.searchPanel = 5"}, {Name:"OnLoaded", Body:"window.Test.searchPanelLoaded = true"}]);
+        window.Test2 = {searchPanel:1, searchPanelLoaded: false};
+        view.setScripts([{Name:"OnValueChanged", Body:"window.Test2.searchPanel = 5"}, {Name:"OnLoaded", Body:"window.Test2.searchPanelLoaded = true"}]);
+        var searchPanel = searchPanelBuilder.build(searchPanelBuilder, view, metadata);
 
         //When
-        var build = searchPanel.build(searchPanel, view, metadata);
-        var $button = $(build.render());
-        $button.find('.btn_search').click();
+        searchPanel.render();
+        // вместо нативного вызова поиска, имитируем его, поскольку иначе мокка редиректит страницу, цука.
+        searchPanel.control.controlView.submitFormHandler({
+            preventDefault: $.noop
+        });
 
         // Then
-        assert.equal(window.Test.searchPanel, 5);
-        assert.isTrue(window.Test.searchPanelLoaded);
+        assert.equal(window.Test2.searchPanel, 5);
+        assert.isTrue(window.Test2.searchPanelLoaded);
     });
 });

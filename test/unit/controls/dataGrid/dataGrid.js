@@ -1,4 +1,4 @@
-describe('DataGrid', function () {
+/*describe('DataGrid', function () {
     describe('render', function () {
 
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -164,4 +164,4 @@ describe('DataGrid', function () {
         });
     });
 
-});
+});*/

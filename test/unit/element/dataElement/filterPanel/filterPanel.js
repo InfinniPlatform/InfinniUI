@@ -26,6 +26,7 @@ describe('FilterPanel', function () {
         // Given
         var builder = new ApplicationBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             FilterPanel: {
                 Name: "FilterPanel1",
@@ -70,13 +71,17 @@ describe('FilterPanel', function () {
         $filterPanel.find('input')
             .val('qq')
             .trigger('change');
-        $filterPanel.find('.btn_search').trigger('click');
+        // вместо нативного вызова поиска, имитируем его, поскольку иначе мокка редиректит страницу, цука.
+        filterPanel.control.controlView.submitFormHandler({
+            preventDefault: $.noop
+        });
     });
 
     it('should be true if scriptsHandlers call', function () {
         //Given
-        var filterPanel = new FilterPanelBuilder();
+        var filterPanelBuilder = new FilterPanelBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             OnValueChanged:{
                 Name: 'OnValueChanged'
@@ -89,9 +94,12 @@ describe('FilterPanel', function () {
         view.setScripts([{Name:"OnValueChanged", Body:"window.Test.filterPanel = 5"}, {Name:"OnLoaded", Body:"window.Test.filterPanelLoaded = true"}]);
 
         //When
-        var build = filterPanel.build(filterPanel, view, metadata);
-        var $button = $(build.render());
-        $button.find('.btn_search').click();
+        var filterPanel = filterPanelBuilder.build(filterPanelBuilder, view, metadata);
+        filterPanel.render();
+        // вместо нативного вызова поиска, имитируем его, поскольку иначе мокка редиректит страницу, цука.
+        filterPanel.control.controlView.submitFormHandler({
+            preventDefault: $.noop
+        });
 
         // Then
         assert.equal(window.Test.filterPanel, 5);

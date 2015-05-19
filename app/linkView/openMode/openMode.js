@@ -21,7 +21,7 @@ var OpenMode = function () {
     };
 
     this.getRootContainer = function () {
-        return $('body');
+        return launcherConfig.$rootContainer || $('body');
     };
 
     this.resolveContainer = function (list, callback) {

@@ -3,6 +3,7 @@ describe('DataNavigation', function () {
         // Given
         var dataNavigationBuilder = new DataNavigationBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             Enabled: true,
             PageNumber: 5,
@@ -31,6 +32,7 @@ describe('DataNavigation', function () {
         // Given
         var dataNavigationBuilder = new DataNavigationBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             PageNumber: 5,
             PageSize: 10,
@@ -64,6 +66,7 @@ describe('DataNavigation', function () {
         //Given
         var dataNavigation = new DataNavigationBuilder();
         var view = new View();
+        view.setGuid(guid());
         var metadata = {
             OnSetPageSize:{
                 Name: 'OnSetPageSize'
