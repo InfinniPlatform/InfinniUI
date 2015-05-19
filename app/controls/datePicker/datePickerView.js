@@ -219,11 +219,23 @@ var pickersStrategy = {
             $datePicker.on('changeDate', function(e){
                 if(e.date) {
                     var newVal = InfinniUI.DateUtils.toISO8601(e.date);
-                    //if (newVal != self.model.get('value')) {
+                    if (! self.isEqualDate(newVal, self.model.get('value'))) {
                         self.model.set('value', newVal);
-                    //}
+                    }
                 }
             });
+        },
+
+        isEqualDate: function(d1, d2){
+            if(d1 == d2){
+                return true;
+            }
+
+            if(typeof(d1) == 'string' && typeof(d2) == 'string'){
+                return d1.substr(0, 10) == d2.substr(0, 10);
+            }
+
+            return false;
         },
 
         /**

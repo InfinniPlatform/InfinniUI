@@ -12,9 +12,9 @@ describe('DatePicker', function () {
             datePicker.setValue('2014-07-29');
 
             // Then
-            assert.equal(datePicker.getMinDate(), '01/01/2014');
-            assert.equal(datePicker.getMaxDate(), '12/31/2014');
-            assert.equal(datePicker.getValue(), '2014-07-29');
+            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMinDate()).substr(0, 10), '2014-01-01');
+            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMaxDate()).substr(0, 10), '2014-12-31');
+            assert.equal(datePicker.getValue().substr(0, 10), '2014-07-29');
         });
 
         it('event OnValueChanged', function () {

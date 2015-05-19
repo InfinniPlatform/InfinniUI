@@ -30,17 +30,17 @@ describe('PopupButton', function () {
             // Given
             var button = new PopupButton();
 
-            assert.isUndefined(button.getAction());
+            assert.isTrue(typeof button.getAction() === 'undefined');
 
             // When
             button.render();
             button.setAction(new OpenViewActionBuilder().build());
 
             // Then
-            assert.isNotNull(button.getAction());
+            assert.isTrue(typeof button.getAction() !== 'undefined' && button.getAction() !== null);
         });
 
-        it('should execute action on click', function () {
+        it('should execute action on click', function (done) {
             // Given
             var button = new PopupButton(),
                 onLastActionExecute = 0,
@@ -55,6 +55,9 @@ describe('PopupButton', function () {
             button.setAction(new function(){
                 this.execute = function () {
                     onNewActionExecute++;
+                    assert.equal(onLastActionExecute, 0);
+                    assert.equal(onNewActionExecute, 1);
+                    done();
                 };
             });
 
@@ -66,8 +69,7 @@ describe('PopupButton', function () {
             button.click();
 
             // Then
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 1);
+
         });
 
         it('event onClick', function () {

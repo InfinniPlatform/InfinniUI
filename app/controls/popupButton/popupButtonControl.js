@@ -17,6 +17,17 @@ _.extend(PopupButtonControl.prototype, {
         return this.controlModel.get('items');
     },
 
+    getItem: function (name) {
+        var item = _.find(this.getItems(), function (data) {
+            return data.getName() === name;
+        });
+
+        if (typeof item === 'undefined') {
+            item = null;
+        }
+        return item;
+    },
+
     addItem: function(item){
         var items = this.getItems();
         items.push(item);
@@ -24,11 +35,17 @@ _.extend(PopupButtonControl.prototype, {
     },
 
     removeItem: function (item) {
-        var items = this.controlModel.get('items')
+        var items = this.controlModel.get('items');
+        var i = items.indexOf(item);
+
+        if (i > -1) {
+            items.splice(i, 1);
+            this.controlModel.set('items', items);
+        }
     },
 
     onClick: function(handler){
-        if (typeof handler === 'function ') {
+        if (typeof handler === 'function') {
             this.controlModel.set('useDefaultAction', true);
             this.controlView.on('onClick', handler);
         }
