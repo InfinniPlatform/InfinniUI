@@ -34,7 +34,8 @@ var OpenModePageStrategy = function (linkView) {
                     view: view,
                     $view: $elView,
                     container: _.isEmpty(layoutPanel) ? undefined : containerName,
-                    openMode: 'Page'
+                    openMode: 'Page',
+                    applicationView: applicationView
                 });
         };
 

@@ -1,24 +1,6 @@
 //@import "test.less";
 @max-line-count: 80;
 
-.linkLabelForeground(@color) {
-  color: @color;
-  div {
-    label {
-      a {
-        color: @color;
-        &:hover {
-          color: @color;
-        }
-      }
-    }
-  }
-}
-
-.linkLabelBackground(@color) {
-  background: @color;
-}
-
 .linkLabelHorizontalTextAlignment(@align) {
   div {
     label {
@@ -29,7 +11,7 @@
   }
 }
 
-.pl-link-label {
+.pl-link-label, .pl-label {
 
   &.horizontalTextAlignment-Left {
     .linkLabelHorizontalTextAlignment(left)

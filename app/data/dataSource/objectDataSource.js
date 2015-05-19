@@ -41,10 +41,10 @@ function ObjectDataSource(view, metadata) {
     };
 
     // timeout нужен для работающего биндинга к objectdatasource, объявленного в разделе datasources. Причина не до конца ясна.
-    setTimeout(function(){
-        baseDataSource.eventStore.executeEvent('onItemsUpdated', {}, {value: metadata.Items});
-        baseDataSource.loadingProcessDone();
-    }, 30);
+    //setTimeout(function(){
+        //baseDataSource.eventStore.executeEvent('onItemsUpdated', {}, {value: metadata.Items});
+        //baseDataSource.loadingProcessDone();
+    //}, 30);
 
     return baseDataSource;
 

@@ -21,4 +21,4 @@ _.extend(CheckBox.prototype, {
         return this.control.get('readOnly');
     }
 
-}, valuePropertyMixin, horizontalTextAlignmentPropertyMixin);
+}, valuePropertyMixin, elementHorizontalTextAlignmentMixin);

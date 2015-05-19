@@ -45,11 +45,16 @@ _.extend(TabPanelBuilder.prototype, {
      * @param message.$view {JQuery}
      * @param message.container {String} Имя контейнера
      * @param message.openMode {String} Режим открытия
+     * @param message.applicationView {View}
      */
     onViewOpened: function (params, message) {
         var element = params.element;
 
         if (message.container !== element.getName()) {
+            return;
+        }
+
+        if (message.applicationView && params.parent.getApplicationView() !== message.applicationView) {
             return;
         }
 

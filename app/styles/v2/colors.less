@@ -1,30 +1,30 @@
-
-.colors () {
-  @ln: length(@colors);
-
-  .foreground(@index) when (@index > 0) {
-    .foreground(@index - 1);
-    @foregroundName: extract(@colors, @index);
-
-    .foreground-@{foregroundName} {
-      @color: %("color%s", @foregroundName);
-      color: @@color;
-    }
-  }
-
-
-  .background(@index) when (@index > 0) {
-    .background(@index - 1);
-    @backgroundName: extract(@colors, @index);
-
-    .background-@{backgroundName} {
-      @color: %("color%s", @backgroundName);
-      background: @@color;
-    }
-  }
-
-  .foreground(@ln);
-  .background(@ln);
-}
-
-.colors();
+//
+//.colors () {
+//  @ln: length(@colors);
+//
+//  .foreground(@index) when (@index > 0) {
+//    .foreground(@index - 1);
+//    @foregroundName: extract(@colors, @index);
+//
+//    .foreground-@{foregroundName} {
+//      @color: %("color%s", @foregroundName);
+//      color: @@color;
+//    }
+//  }
+//
+//
+//  .background(@index) when (@index > 0) {
+//    .background(@index - 1);
+//    @backgroundName: extract(@colors, @index);
+//
+//    .background-@{backgroundName} {
+//      @color: %("color%s", @backgroundName);
+//      background: @@color;
+//    }
+//  }
+//
+//  .foreground(@ln);
+//  .background(@ln);
+//}
+//
+//.colors();

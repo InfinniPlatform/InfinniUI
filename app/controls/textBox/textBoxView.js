@@ -1,13 +1,22 @@
 var TextBoxView = ControlView.extend({
     className: 'pl-text-box',
 
-    templateTextBox: InfinniUI.Template["controls/textBox/template/textbox.tpl.html"],
-    templateTextArea: InfinniUI.Template["controls/textBox/template/textarea.tpl.html"],
+    template: {
+        textBox: {
+            default: InfinniUI.Template["controls/textBox/template/textbox.tpl.html"],
+            label: InfinniUI.Template["controls/textBox/template/label-textbox.tpl.html"]
+        },
+        textArea: {
+            default: InfinniUI.Template["controls/textBox/template/textarea.tpl.html"],
+            label: InfinniUI.Template["controls/textBox/template/label-textarea.tpl.html"]
+        }
+    },
 
     UI: {
         control: ".pl-control",
         editor: '.pl-control-editor',
-        validationMessage: '.pl-control-validation-message'
+        validationMessage: '.pl-control-validation-message',
+        hintText: '.pl-control-hint-text'
     },
 
     events: {
@@ -40,22 +49,55 @@ var TextBoxView = ControlView.extend({
         this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
         this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
+        this.initForeground();
+        this.initBackground();
+        this.initTextStyle();
+        this.initErrorText();
+        this.initHintText();
+        this.initLabelText();
+        this.initHorizontalTextAlignment();
+    },
+
+    renderTemplate: function () {
+        var multiline = this.model.get('multiline');
+        var labelText = this.model.get('labelText');
+        var lineCount = this.model.get('lineCount');
+        var inputType = this.model.get('inputType');
+
+        var kind = multiline ? 'textArea' : 'textBox';
+        var style = typeof labelText === 'undefined' || labelText === null ? 'default' : 'label';
+
+        var template = this.template[kind][style];
+        this.$el.html(template({
+            multiline: multiline,
+            labelText: labelText,
+            lineCount: lineCount,
+            inputType: inputType
+        }));
+
     },
 
     render: function () {
         this.prerenderingActions();
-
-        if(this.model.get('multiline')) {
-            this.$el.html(this.templateTextArea({lineCount: this.model.get('lineCount')}));
-        }else{
-            this.$el.html(this.templateTextBox({inputType: this.model.get('inputType')}));
-        }
+        this.renderTemplate();
+        //if(this.model.get('multiline')) {
+        //    this.$el.html(this.templateTextArea({lineCount: this.model.get('lineCount')}));
+        //}else{
+        //    this.$el.html(this.templateTextBox({inputType: this.model.get('inputType')}));
+        //}
 
         this.bindUIElements();
         this.initEditor();
 
         this.updateValue();
         this.updateEnabled();
+
+        this.updateBackground();
+        this.updateForeground();
+        this.updateTextStyle();
+        this.updateErrorText();
+        this.updateHintText();
+        this.updateHorizontalTextAlignment();
 
         this.postrenderingActions();
         return this;
@@ -134,4 +176,13 @@ var TextBoxView = ControlView.extend({
     }
 });
 
-_.extend(TextBoxView.prototype, textEditorMixin);
+_.extend(TextBoxView.prototype,
+    textEditorMixin,
+    horizontalTextAlignmentPropertyMixin,
+    foregroundPropertyMixin,
+    backgroundPropertyMixin,
+    textStylePropertyMixin,
+    errorTextPropertyMixin,
+    hintTextPropertyMixin,
+    labelTextPropertyMixin
+);

@@ -28,6 +28,13 @@ _.extend(TextBox.prototype, {
     formatPropertyMixin,
     editMaskPropertyMixin,
     baseTextElementMixin,
+    elementBackgroundMixin,
+    elementForegroundMixin,
+    elementTextStyleMixin,
+    elementErrorTextMixin,
+    elementHintTextMixin,
+    elementLabelTextMixin,
+    elementHorizontalTextAlignmentMixin,
     {
         setValue: function(value){
             if((typeof value != 'object' && value) || typeof value == 'string' || value === null)

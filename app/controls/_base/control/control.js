@@ -48,6 +48,10 @@ _.extend(Control.prototype, {
                 handler();
             }
         });
+    },
+
+    onKeyDown: function (handler) {
+        this.controlView.on('onKeyDown', handler);
     }
 });
 

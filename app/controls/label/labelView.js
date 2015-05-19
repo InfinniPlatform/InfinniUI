@@ -4,22 +4,20 @@ var LabelView = ControlView.extend({
     template: InfinniUI.Template["controls/label/template/label.tpl.html"],
 
     UI: {
-        control: 'label'
+        control: 'label',
+        container: 'div'
     },
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
 
         this.initHorizontalTextAlignment();
-        this.initValue();
-    },
-
-    initHorizontalTextAlignment: function () {
-        this.listenTo(this.model, 'change:horizontalTextAlignment', this.updateHorizontalTextAlignment);
-        this.updateHorizontalTextAlignment();
+        this.initUpdateLineCount();
+        this.initTextWrapping();
         this.initForeground();
         this.initBackground();
         this.initTextStyle();
+        this.initValue();
     },
 
     initValue: function () {
@@ -39,22 +37,12 @@ var LabelView = ControlView.extend({
         this.updateForeground();
         this.updateTextStyle();
         this.updateValue();
+        this.updateLineCount();
+        this.updateTextWrapping();
+        this.updateHorizontalAlignment();
+        this.updateHorizontalTextAlignment();
         this.postrenderingActions();
         return this;
-    },
-
-    /**
-     * @private
-     * Устанавливает горизонтально выравние метки внутри контейнера элемента
-     */
-    updateHorizontalTextAlignment: function () {
-        var $el = this.$el,
-            value = this.model.get('horizontalTextAlignment');
-
-        $el.toggleClass('text-left', value === 'Left');
-        $el.toggleClass('text-right', value === 'Right');
-        $el.toggleClass('text-center', value === 'Center');
-        $el.toggleClass('text-justify', value === 'Justify');
     },
 
     /**
@@ -78,10 +66,10 @@ var LabelView = ControlView.extend({
         control = this.ui.control;
         text = this.getTextLabel();
 
-        var lineCount = this.model.get('lineCount');
+        //var lineCount = this.model.get('lineCount');
 
         control.attr('title', text);
-        this.$el.toggleClass('pl-label-oneline', lineCount === 1);
+        //this.$el.toggleClass('pl-label-oneline', lineCount === 1);
 
         //Сохраняем форматирование пробелами и экранируем <>
         //text = text.replace(/</g, '&lt;')
@@ -127,7 +115,10 @@ var LabelView = ControlView.extend({
 });
 
 _.extend(LabelView.prototype,
+    horizontalTextAlignmentPropertyMixin,
     foregroundPropertyMixin,
     backgroundPropertyMixin,
-    textStylePropertyMixin
+    textStylePropertyMixin,
+    lineCountPropertyMixin,
+    textWrappingPropertyMixin
 );

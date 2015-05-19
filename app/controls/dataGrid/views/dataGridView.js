@@ -17,7 +17,8 @@ var DataGridView = ControlView.extend({
         mousedown: 'onMouseDownHandler',
         contextmenu: 'onContextMenuHandler',
         'focus tr': 'onFocusHandler',
-        'blur tr': 'onBlurHandler'
+        'blur tr': 'onBlurHandler',
+        'keydown tr': 'onKeyDown'
     },
 
     UI: {
@@ -255,17 +256,25 @@ var DataGridView = ControlView.extend({
                 var $th = $headers[i];
                 var delta = this.getSumCssProperties('padding-left,padding-right', $th);
                 var width = $el.width();
+
                 if (parseInt(width, 10) < 0) {
                     //Некорректная ширина, пересчитываем
                     syncColumnWidth();
                 }
-                $th.width(Math.max($el.width() - delta, 0));
+
+                if($headers.length-1 != i){
+                    $th.width(Math.max($el.width() - delta, 0));
+                }else{ //Если последняя колонка, прибавляем ширину скроллбара
+                    var widthScrollBar = this.ui.body.width() - this.ui.bodyContainer.width();
+                    $th.width(Math.max($el.width() - delta + widthScrollBar, 0));
+                }
+
             }, this);
 
             var headTable = this.ui.headTable;
             var delta = this.getSumCssProperties('padding-left,padding-right', headTable);
             headTable.width(Math.max(this.ui.bodyTable.width() - delta, 0));
-            headTable.css('margin-right', this.ui.body.width() - this.ui.bodyContainer.width());
+            //headTable.css('margin-right', this.ui.body.width() - this.ui.bodyContainer.width());
 
         }.bind(this), 100);
 
@@ -668,6 +677,12 @@ var DataGridView = ControlView.extend({
 
     onBlurHandler: function(e){
         this.$el.off('keydown.forFocusMove');
+    },
+
+    onKeyDown: function(event){
+        this.trigger('onKeyDown', {
+            keyCode: event.which
+        });
     },
 
     /**
