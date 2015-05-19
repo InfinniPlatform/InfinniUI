@@ -104,7 +104,7 @@ describe('TextBox', function () {
                 return new FakeDataProvider();
             });
 
-            $('body').append($('<div>').attr('id', 'page-content'));
+            //$('body').append($('<div>').attr('id', 'page-content'));
 
             var metadata = {
                 Text: 'Пациенты',
@@ -136,7 +136,7 @@ describe('TextBox', function () {
                                             Property : '$.LastName'
                                         }
                                     },
-                                    Multiline: true
+                                    Multiline: false
                                 }
                             }
                         ]
@@ -162,8 +162,8 @@ describe('TextBox', function () {
                 view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
 
                 //check text
-                assert.equal($('#page-content').find('input:text').val(), itemToSelect.LastName);
-                $('#page-content').remove();
+                assert.equal($('#sandbox').find('input:text').val(), itemToSelect.LastName);
+                //$('#page-content').remove();
             });
         });
     });

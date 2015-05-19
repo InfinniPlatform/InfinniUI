@@ -23,4 +23,20 @@ function EventStore() {
         }
         return response;
     };
+
+    this.executeEventAsync = function (name) {
+        var args = Array.prototype.slice.call(arguments);
+        var callback;
+        if (typeof args[args.length - 1] === 'function') {
+            callback = args.pop();
+        }
+        var response = this.executeEvent.apply(this, args);
+        $.when.apply($, response)
+            .done(function() {
+                var results = [];
+                if (typeof callback === 'function') {
+                    callback(Array.prototype.push.apply(results, arguments));
+                }
+            });
+    };
 }

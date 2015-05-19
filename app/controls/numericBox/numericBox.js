@@ -13,4 +13,7 @@ _.extend(NumericBoxControl.prototype, {
     createControlView: function (model) {
         return new NumericBoxView({model: model});
     }
-}, controlValuePropertyMixin);
+},
+    controlValuePropertyMixin,
+    baseTextControlMixin
+);

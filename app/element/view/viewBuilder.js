@@ -39,6 +39,11 @@ _.extend(ViewBuilder.prototype, {
                 InfinniUI.views.removeView(view);
             };
             _.each(view.getNestedViews(), removeView);
+
+            if(metadata.OnClosed){
+                new ScriptExecutor(view).executeScript(metadata.OnClosed.Name);
+            }
+
             removeView(view);
         });
 

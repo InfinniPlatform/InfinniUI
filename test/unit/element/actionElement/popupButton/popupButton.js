@@ -30,7 +30,7 @@ describe('PopupButton', function () {
             // Given
             var button = new PopupButton();
 
-            assert.isNull(button.getAction());
+            assert.isUndefined(button.getAction());
 
             // When
             button.render();

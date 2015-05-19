@@ -62,8 +62,16 @@ function ListDataSourceStrategy(dataSource) {
         strategy.invokeEvent('onTextFilterChanged', value);
     };
 
+    this.onBeforeItemSaved = function (value, callback) {
+        strategy.invokeEvent('onBeforeItemSaved', value);
+    };
+
     this.onItemSaved = function (value) {
         strategy.invokeEvent('onItemSaved', value);
+    };
+
+    this.onBeforeItemCreated = function (value) {
+        strategy.invokeEvent('onBeforeItemCreated', value);
     };
 
     this.onItemCreated = function (value) {

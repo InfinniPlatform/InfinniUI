@@ -27,6 +27,7 @@ _.extend(TextBox.prototype, {
     valuePropertyMixin,
     formatPropertyMixin,
     editMaskPropertyMixin,
+    baseTextElementMixin,
     {
         setValue: function(value){
             if((typeof value != 'object' && value) || typeof value == 'string' || value === null)

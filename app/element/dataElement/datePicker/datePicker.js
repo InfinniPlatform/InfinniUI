@@ -90,5 +90,6 @@ _.extend(DatePicker.prototype, {
         return (value instanceof Date) && (!isNaN(value.getTime()));
     }
 },
-    editMaskPropertyMixin
+    editMaskPropertyMixin,
+    baseTextElementMixin
 );

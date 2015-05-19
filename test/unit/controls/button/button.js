@@ -9,10 +9,8 @@ describe('ButtonControl', function () {
             var $el = button.render().children();
 
             //Then
-            assert.equal($el.attr('type'), 'button');
             assert.isTrue($el.hasClass('btn'));
-            assert.isTrue($el.hasClass('btn-primary'));
-            assert.equal($el.text(), 'Click me!');
+            assert.equal($.trim($el.text()), 'Click me!');
         });
     });
 });

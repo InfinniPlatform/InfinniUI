@@ -66,7 +66,7 @@ describe('DateTimeEditMask', function () {
             var value = editMask.getValue();
             var text = editMask.getText();
             assert.equal(position, text.length - 3);
-            assert.equal(date.getFullYear(), (new Date(value)).getFullYear() - 1);
+            assert.equal(date.getFullYear(), (new Date(value)).getFullYear());
         });
 
         it('successful delete char (right)', function () {

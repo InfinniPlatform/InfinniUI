@@ -7,6 +7,10 @@ var DataGridBaseRow = Backbone.View.extend({
 
     tagName: 'tr',
 
+    attributes: {
+        tabindex: 1
+    },
+
     template: InfinniUI.Template['controls/dataGrid/template/rows/base.tpl.html'],
 
     UI: {

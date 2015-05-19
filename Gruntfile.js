@@ -54,6 +54,7 @@
 			'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
 			'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js',
             'bower_components/metronic/assets/global/scripts/metronic.js',
+            'bower_components/JavaScript-MD5/js/md5.js',
             'bower_components/metronic/assets/admin/layout/scripts/layout.js'
         ],
         appStyleFiles = ['app/styles/main.less'],

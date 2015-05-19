@@ -51,6 +51,8 @@ _.extend(NumericBoxBuilder.prototype, {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
             });
         }
+
+        this.initBaseTextElementEvents(params);
     },
 
     createElement: function(params){
@@ -59,5 +61,6 @@ _.extend(NumericBoxBuilder.prototype, {
 
 },
     builderValuePropertyMixin,
-    builderEditMaskPropertyMixin
+    builderEditMaskPropertyMixin,
+    builderBaseTextElementMixin
 );

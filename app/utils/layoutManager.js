@@ -120,7 +120,14 @@ var layoutManager = {
                 });
             } else if (node.child.length > 0) {
 
-                var grid = _.groupBy(children, 'offsetTop');
+                var grid = _.chain(children)
+                    .filter(function (el) {
+                        var position = $(el).css('position');
+                        return ['absolute', 'fixed'].indexOf(position) === -1;
+                    })
+                    .groupBy('offsetTop')
+                    .value();
+
                 var heights = [];
 
                 _.each(grid, function (row, i) {

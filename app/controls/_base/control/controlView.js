@@ -189,9 +189,16 @@ var ControlView = Backbone.View.extend({
         this.wasRendered = true;
     },
 
-    postrenderingActions: function () {
+    /**
+     *
+     * @param {Boolean} [onLoaded=true]
+     */
+    postrenderingActions: function (onLoaded) {
+        var triggerEvent = typeof onLoaded === 'undefined' ? true : onLoaded;
         this.delegateEvents();
-        this.trigger('onLoaded');
+        if (triggerEvent) {
+            this.trigger('onLoaded');
+        }
     },
 
     switchClass: function (name, value) {

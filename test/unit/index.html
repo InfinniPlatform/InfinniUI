@@ -9,6 +9,7 @@
 </head>
 <body>
 <div id="mocha"></div>
+<div id="sandbox"></div>
 
 <script src="/out/vendor.js"></script>
 <script src="/bower_components/mocha/mocha.js"></script>
@@ -16,6 +17,10 @@
 
 <script src="/test/mochaSetup.js"></script>
 
+<script>
+    var launcherConfig = {};
+    launcherConfig.$rootContainer = $('#sandbox');
+</script>
 <script src="/out/templates.js"></script>
 <script src="/out/app.js"></script>
 <script src="/test/testHelpers.js"></script>

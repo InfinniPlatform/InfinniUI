@@ -12,6 +12,9 @@
     this.onItemDeleted = function (handler) {
         this.eventStore.addEvent('onItemDeleted', handler);
     };
+    this.onBeforeItemSaved = function (handler) {
+        this.eventStore.addEvent('onBeforeItemSaved', handler);
+    };
     this.onItemSaved = function (handler) {
         this.eventStore.addEvent('onItemSaved', handler);
     };
@@ -20,6 +23,10 @@
     };
     this.onPropertyFiltersChanged = function (handler) {
         this.eventStore.addEvent('onPropertyFiltersChanged', handler);
+    };
+
+    this.onBeforeItemCreated = function (handler) {
+        this.eventStore.addEvent('onBeforeItemCreated', handler);
     };
     this.onItemCreated = function (handler) {
         this.eventStore.addEvent('onItemCreated', handler);
@@ -32,6 +39,7 @@
     };
 
     //private
+    var _criteriaConstructor;
     var fillCreatedItem = true;
     var idFilter = null;
     var name = null;
@@ -70,6 +78,10 @@
     //strategy by default
     currentStrategy = listStrategy;
 
+
+    this.setCriteriaConstructor = function (criteriaConstructor) {
+        _criteriaConstructor = criteriaConstructor;
+    };
 
     this.getDataItems = function () {
         return dataItems;
@@ -354,8 +366,9 @@
     };
 
     this.setQueryFilter = function (value, callback) {
+
         if (queryFilter !== value) {
-            queryFilter = value;
+            queryFilter = _criteriaConstructor(value);
             this.updateItems(callback);
         }
     };

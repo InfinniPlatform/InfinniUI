@@ -43,6 +43,46 @@ Criteria.prototype.setItems = function (items) {
     }
 };
 
+
+/**
+ * Обратная совместимость (если строка то конвертирует в "флаговое соответствие")
+ */
+Criteria.prototype.decodeCriteriaType = function (value) {
+    var criteriaType = value;
+
+    if (typeof value === 'string') {
+        criteriaType = parseInt(value, 10);
+        if (isNaN(criteriaType)) {
+            criteriaType = this.criteriaType[value]
+        }
+    }
+
+    return criteriaType;
+};
+
+Criteria.prototype.normalizeCriteria = function (criteria) {
+
+};
+
+Criteria.prototype.criteriaType = {
+    IsEquals: 1,
+    IsNotEquals: 2,
+    IsMoreThan: 4,
+    IsLessThan: 8,
+    IsMoreThanOrEquals: 16,
+    IsLessThanOrEquals: 32,
+    IsContains: 64,
+    IsNotContains: 128,
+    IsEmpty: 256,
+    IsNotEmpty: 512,
+    IsStartsWith: 1024,
+    IsNotStartsWith: 2048,
+    IsEndsWith: 4096,
+    IsNotEndsWith: 8192,
+    IsIn:16384
+};
+
+
 /**
  * Функция конвертирует CriteriaType в "флаговое соответствие"
  * @param val
@@ -50,52 +90,9 @@ Criteria.prototype.setItems = function (items) {
  */
 
 function toEnum(val) {
-    switch (val) {
-        case 'IsEquals':
-            return 1;
-            break;
-        case 'IsNotEquals':
-            return 2;
-            break;
-        case 'IsMoreThan':
-            return 4;
-            break;
-        case 'IsLessThan':
-            return 8;
-            break;
-        case 'IsMoreThanOrEquals':
-            return 16;
-            break;
-        case 'IsLessThanOrEquals':
-            return 32;
-            break;
-        case 'IsContains':
-            return 64;
-            break;
-        case 'IsNotContains':
-            return 128;
-            break;
-        case 'IsEmpty':
-            return 256;
-            break;
-        case 'IsNotEmpty':
-            return 512;
-            break;
-        case 'IsStartsWith':
-            return 1024;
-            break;
-        case 'IsNotStartsWith':
-            return 2048;
-            break;
-        case 'IsEndsWith':
-            return 4096;
-            break;
-        case 'IsNotEndsWith':
-            return 8192;
-            break;
-        case 'IsIn':
-            return 16384;
-            break;
-    }
+
+    var criteria = new Criteria();
+
+    return criteria.decodeCriteriaType(val);
 }
 

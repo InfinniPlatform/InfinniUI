@@ -20,6 +20,7 @@ var TextEditor = Backbone.View.extend({
         'blur .pl-control-editor': 'onBlurEditorHandler',
         'keydown .pl-control-editor': 'onKeyDownEditorHandler',
         'keypress .pl-control-editor': 'onKeyPressEditorHandler',
+        'keyup .pl-control-editor': 'onKeyUpEditorHandler',
         'click .pl-control-editor': 'onClickEditorHandler',
         'focus .pl-control-editor': 'onFocusEditorHandler',
         'paste .pl-control-editor': 'onPasteEditorHandler',
@@ -326,6 +327,13 @@ var TextEditor = Backbone.View.extend({
         this.inFocus = true;
     },
 
+    onKeyUpEditorHandler: function (event) {
+        this.trigger('onKeyDown', {
+            keyCode: event.which,
+            value: this.parseInputValue()
+        });
+    },
+
     onKeyPressEditorHandler: function (event) {
         if (event.altKey || event.ctrlKey) {
             return;
@@ -532,6 +540,35 @@ var TextEditor = Backbone.View.extend({
         }
         //Триггерим событие для скрытия поля редактирования
         this.trigger('editor:hide');
+    },
+
+    parseInputValue: function () {
+        var control = this.getOptions('parent');
+        var done = this.getOptions('done');
+        var validate = this.getOptions('validate');
+        var convert = this.getOptions('convert');
+        var value = convert(this.ui.editor.val());
+        var editMask = this.getOptions('editMask');
+        var complete = true;
+
+        if (typeof editMask !== 'undefined' && editMask !== null) {
+            if (!editMask.getIsComplete(this.ui.editor.val())) {
+                return;
+            } else {
+                complete = editMask.getIsComplete(value);
+                value = editMask.getValue();
+            }
+        }
+
+        if (typeof validate !== 'undefined' && validate !== null) {
+            var isValid = complete && validate(value);
+            if (!isValid) {
+                //Если значение невалидно
+                return;
+            }
+        }
+
+        return editMask ? editMask.getData() : value;
     },
 
     getOptions: function (name) {

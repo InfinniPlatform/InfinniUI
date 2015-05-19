@@ -25,6 +25,7 @@ var LabelView = ControlView.extend({
     initValue: function () {
         this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:lineCount', this.updateValue);
+        this.listenTo(this.model, 'change:text', this.updateValue);
         this.updateValue();
     },
 

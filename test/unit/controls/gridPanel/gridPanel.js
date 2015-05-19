@@ -33,7 +33,7 @@ describe('GridPanelControl', function () {
             assert.isTrue($el.find('.pl-grid-row:first .pl-grid-cell:first').hasClass('col-md-12'));
             assert.isTrue($el.find('.pl-grid-row:last .pl-grid-cell:first').hasClass('col-md-6'));
 
-            assert.equal($el.find('.pl-grid-row:first .pl-grid-cell:first input.pl-text-box-input:text').length, 1);
+            assert.equal($el.find('.pl-grid-row:first .pl-grid-cell:first input.pl-text-box-input').length, 1);
         });
 
         it('should have Stretch alignment by default', function () {

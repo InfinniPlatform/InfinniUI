@@ -14,18 +14,26 @@ describe('Script', function () {
             ];
 
             var sb = new ScriptBuilder();
-            sb.build(metadata);
 
             var script = new Script();
             var script1 = new Script();
+
+            _.each(metadata, function(el, i){
+                if(!i){
+                    script = sb.build(el);
+                }else {
+                    script1 = sb.build(el);
+                }
+            });
+
             var ContextObj = {v: 1};
             var ArgumentsObj = {Text: "Same", Value: 1};
             var ContextObj1 = {v: 10};
             var ArgumentsObj1 = {Text: "Same text", Value: 5};
 
             //When
-            script.run('colorButton', ContextObj, ArgumentsObj);
-            script1.run('changeValue', ContextObj1, ArgumentsObj1);
+            script.run(ContextObj, ArgumentsObj);
+            script1.run(ContextObj1, ArgumentsObj1);
 
             //Then
             assert.equal(ArgumentsObj.Text, "Same text");

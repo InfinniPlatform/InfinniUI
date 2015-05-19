@@ -15,7 +15,7 @@ describe('PanelControl', function () {
             assert.equal($el.find('.portlet-title .caption').html(), 'Test');
 
             assert.equal($el.find('.portlet-body').length, 1);
-            assert.equal($el.find('.portlet-body input.pl-text-box-input:text').length, 2);
+            assert.equal($el.find('.portlet-body input.pl-text-box-input').length, 2);
         });
     });
 });

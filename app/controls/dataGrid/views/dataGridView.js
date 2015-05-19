@@ -15,7 +15,10 @@ var DataGridView = ControlView.extend({
     events: {
         'click .group-title': 'onClickOnGroup',
         mousedown: 'onMouseDownHandler',
-        contextmenu: 'onContextMenuHandler'
+        contextmenu: 'onContextMenuHandler',
+        'focus tr': 'onFocusHandler',
+        'blur tr': 'onBlurHandler',
+        'keydown tr': 'onKeyDown'
     },
 
     UI: {
@@ -289,7 +292,7 @@ var DataGridView = ControlView.extend({
 
         // test
         //if( this.model.get('items').length && this.model.get('items')[0].Name ){
-            //this.model.set('groups', new DataGridGroup({groupBy: ['Name']}));
+        //this.model.set('groups', new DataGridGroup({groupBy: ['Name']}));
         //}
         // end of test
 
@@ -634,6 +637,46 @@ var DataGridView = ControlView.extend({
         return result;
     },
 
+    onFocusHandler: function(e){
+
+        var items = this.model.get('items'),
+            $focused = $(e.target),
+            self = this;
+
+        this.$el.on('keydown.forFocusMove', function(e){
+            switch (e.which) {
+                case 38: //UP
+                    if($focused.prev()){
+                        $focused.prev().focus();
+                    }
+                    break;
+
+                case 40: //DOWN
+                    if($focused.next()) {
+                        $focused.next().focus();
+                    }
+                    break;
+
+                case 32: //SPACE
+                    if(items && $focused) {
+                        self.model.set('selectedItem', items[$focused.index() - 1]);
+                    }
+                    break;
+            }
+        });
+
+    },
+
+    onBlurHandler: function(e){
+        this.$el.off('keydown.forFocusMove');
+    },
+
+    onKeyDown: function(event){
+        this.trigger('onKeyDown', {
+            keyCode: event.which
+        });
+    },
+
     /**
      * @description Обработчик стандартного события контекстного меню.
      * @param e
@@ -641,7 +684,6 @@ var DataGridView = ControlView.extend({
     onContextMenuHandler: function (e) {
         e.preventDefault();//Запрещаем стандартное контекстное меню браузера
     },
-
 
     /**
      * @private

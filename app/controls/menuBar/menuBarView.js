@@ -42,7 +42,7 @@ var MenuBarView = ControlView.extend({
         //this.arr = this.getMenuSelect();
         this.renderMenuList();
         this.renderCompositeItems(this.model.getItems(), this.$el.find('.sidebar-menu'));
-        this.postrenderingActions();
+        this.postrenderingActions(false);
         return this;
     },
 
