@@ -187,6 +187,12 @@ var DataGridBuilder = function () {
             });
         }
 
+        if (metadata.OnKeyDown) {
+            dataGrid.onKeyDown(function (data) {
+                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, data);
+            });
+        }
+
         if (typeof metadata.ToolBar !== 'undefined') {
             var popupMenu = new DataGridPopupMenuView();
             var items = [];

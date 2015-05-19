@@ -17,7 +17,8 @@ var DataGridView = ControlView.extend({
         mousedown: 'onMouseDownHandler',
         contextmenu: 'onContextMenuHandler',
         'focus tr': 'onFocusHandler',
-        'blur tr': 'onBlurHandler'
+        'blur tr': 'onBlurHandler',
+        'keydown tr': 'onKeyDown'
     },
 
     UI: {
@@ -668,6 +669,12 @@ var DataGridView = ControlView.extend({
 
     onBlurHandler: function(e){
         this.$el.off('keydown.forFocusMove');
+    },
+
+    onKeyDown: function(event){
+        this.trigger('onKeyDown', {
+            keyCode: event.which
+        });
     },
 
     /**
