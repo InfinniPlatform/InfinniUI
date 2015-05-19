@@ -23,6 +23,7 @@ _.extend(TextBoxBuilder.prototype, {
         element.setInputType(metadata.InputType);
 
         this.initEditMaskProperty(params);
+        this.initBaseTextElementEvents(params);
     },
 
     initScriptsHandlers: function(params){
@@ -53,5 +54,6 @@ _.extend(TextBoxBuilder.prototype, {
 },
     builderValuePropertyMixin,
     builderFormatPropertyMixin,
-    builderEditMaskPropertyMixin
+    builderEditMaskPropertyMixin,
+    builderBaseTextElementMixin
 );

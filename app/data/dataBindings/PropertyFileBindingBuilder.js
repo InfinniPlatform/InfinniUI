@@ -15,12 +15,16 @@ FileBindingBuilder.prototype.build = function (builder, parent, metadata, collec
     var dataSource = parent.getDataSource(metadata.DataSource);
 
     var uploadFile = function (instanceId) {
+        var defer = $.Deferred();
         var file = fileBinding.getFile();
         if (typeof file === 'undefined' || file === null) {
             return;
         }
 
-        dataSource.uploadFile(metadataProperty, instanceId, fileBinding.getFile());
+        dataSource.uploadFile(metadataProperty, instanceId, fileBinding.getFile(), function (response) {
+            defer.resolve(response);
+        });
+        return defer.promise();
     };
 
     if(dataSource !== null){
@@ -38,15 +42,15 @@ FileBindingBuilder.prototype.build = function (builder, parent, metadata, collec
         dataSource.addDataBinding(fileBinding);
 
         //При сохранении существующего документа - загрузить файл
-        dataSource.onItemSaved(function (context, message) {
+        dataSource.onBeforeItemSaved(function (context, message) {
             var item = message.value;
             var instanceId = InfinniUI.ObjectUtils.getPropertyValue(item, dataSource.getIdProperty());
-            uploadFile(instanceId);
+            return uploadFile(instanceId);
         });
 
         //При сохранении нового документа - сохранить файл
-        dataSource.onItemCreated(function (instanceId) {
-            uploadFile(instanceId);
+        dataSource.onBeforeItemCreated(function (instanceId) {
+            return uploadFile(instanceId);
         });
 
     }

@@ -17,6 +17,9 @@ var DatePickerView = ControlView.extend({
         "focus .datePicker": 'onFocusControlHandler',
         "focus .datetimepicker": 'onFocusControlHandler',
         "focus .timepicker": 'onFocusControlHandler',
+        'mouseenter .datePicker': 'onMouseenterControlHandler',
+        'mouseenter .datetimepicker': 'onMouseenterControlHandler',
+        'mouseenter .timepicker': 'onMouseenterControlHandler',
         'focusin .pl-control-editor' : 'onFocusInDebounceHandler',
         'focusout .pl-control-editor' : 'onFocusOutDebounceHandler'
     },

@@ -8,6 +8,13 @@ BaseDataSourceStrategy.prototype.invokeEvent = function (eventName, value) {
     this.dataSource.eventStore.executeEvent(eventName, context, args);
 };
 
+BaseDataSourceStrategy.prototype.invokeEventAsync = function (eventName, value, callback) {
+    var context = this.dataSource.getView().getContext(),
+        args = { value: value };
+
+    this.dataSource.eventStore.executeEventAsync(eventName, context, args, callback);
+};
+
 BaseDataSourceStrategy.prototype.syncSelectedItem = function (value) {
     return value;
 };

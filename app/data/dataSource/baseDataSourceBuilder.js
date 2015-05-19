@@ -1,4 +1,5 @@
 function BaseDataSourceBuilder() {
+
     this.build = function (metadata, dataSource, parent, builder) {
 
         dataSource.suspendUpdate();
@@ -7,23 +8,28 @@ function BaseDataSourceBuilder() {
         dataSource.setSorting(metadata.Sorting);
         dataSource.setPageSize(metadata.PageSize || 15);
 
+        var criteriaConstructor = function (data) {
+            //Добавлен
+            var criteria;
 
-        var queryMetadata = {
-            Criteria: metadata.Query
+            if (typeof data === 'undefined' || data === null) {
+                return;
+            }
+
+
+            if (_.isArray(data)) {
+                //Переданы метаданные для создания Criteria
+                criteria = builder.buildType(parent, 'Criteria', data);
+            } else {
+                //Передан созданный экземпляр. Добавлено для совместимости со старой реализацией.
+                criteria = data;
+            }
+            return criteria;
         };
 
-        /**
-         * Обратная совместимость (если строка то конвертирует в "флаговое соответствие")
-         */
-        if(queryMetadata.Criteria) {
-            $.each(queryMetadata.Criteria, function (i, el) {
-                if(typeof el.CriteriaType == 'string'){
-                   el.CriteriaType = toEnum(el.CriteriaType);
-                }
-            });
-        }
+        dataSource.setCriteriaConstructor(criteriaConstructor);
 
-        var queryFilter = builder.build(parent, queryMetadata);
+        var queryFilter = builder.buildType(parent, 'Criteria', metadata.Query);
 
         queryFilter.onValueChanged(function () {
             dataSource.updateItems();

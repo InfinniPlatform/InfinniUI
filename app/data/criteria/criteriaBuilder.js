@@ -24,7 +24,7 @@ CriteriaBuilder.prototype.buildCriteriaItem = function(builder, parent, metadata
 
     var item = {
         Property: metadata.Property,
-        CriteriaType: metadata.CriteriaType
+        CriteriaType: criteria.decodeCriteriaType(metadata.CriteriaType)
     };
 
     var value = metadata.Value;

@@ -60,6 +60,8 @@ _.extend(DatePickerBuilder.prototype, {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
             });
         }
+
+        this.initBaseTextElementEvents(params);
     },
 
     createElement: function (params) {
@@ -68,7 +70,8 @@ _.extend(DatePickerBuilder.prototype, {
 
 },
     builderValuePropertyMixin,
-    builderEditMaskPropertyMixin
+    builderEditMaskPropertyMixin,
+    builderBaseTextElementMixin
     /*, builderFormatPropertyMixin*/
 );
 

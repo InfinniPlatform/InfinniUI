@@ -29,7 +29,15 @@ _.extend(FileBinding.prototype, {
 
     getFileUrl: function () {
         var value = this.getPropertyValue();
-        return (typeof value === 'undefined' || value === null) ? null : this.fileUrl;
+        var fileUrl = null;
+        if (typeof value !== 'undefined' && value !== null) {
+            fileUrl = this.fileUrl;
+            if (false === _.isEmpty(this.fileUrl)) {
+                var hash = md5(JSON.stringify(value));
+                fileUrl += '&hash=' + hash;
+            }
+        }
+        return  fileUrl;
     }
 
 });

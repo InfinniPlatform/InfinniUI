@@ -18,4 +18,6 @@ _.extend(DatePickerControl.prototype, {
         this.controlModel.on('change:value', handler);
     }
     
-});
+},
+    baseTextControlMixin
+);

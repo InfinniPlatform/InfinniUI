@@ -151,6 +151,10 @@ _.extend(Element.prototype, {
         return this.control.get('isLoaded');
     },
 
+    setIsLoaded: function () {
+        this.control.set('isLoaded', true);
+    },
+
     render: function () {
         return this.control.render();
     },

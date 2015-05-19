@@ -58,5 +58,6 @@ _.extend(NumericBox.prototype, {
     }
 },
     valuePropertyMixin,
-    editMaskPropertyMixin
+    editMaskPropertyMixin,
+    baseTextElementMixin
 );

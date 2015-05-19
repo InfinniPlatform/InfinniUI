@@ -58,6 +58,11 @@ var textEditorMixin = {
             this.trigger('editor:hide');
         });
 
+        this.listenTo(editor, 'onKeyDown', function (data) {
+            //Проброс события от редактора маски к контролу
+            this.trigger('onKeyDown', data);
+        });
+
         this.listenTo(this.model, 'change:value', function (model, value) {
             editor.trigger('editor:update', value);
         });
@@ -86,10 +91,11 @@ var textEditorMixin = {
 
     onMouseenterControlHandler: function (event) {
         //TODO: при ховере показывается маска (UI-854: убрал) по просьбе TeamLead'a
-        //if(this.model.get('enabled')) {
-            //this.showEditor(this.model.get('value'), true);
-            //this.onEditorHideControl();
-        //}
+        //При ховере Editor нужен, чтобы при клике по полю, курсор выставлялся в указаннкю позицию
+        if(this.model.get('enabled')) {
+            this.showEditor(this.model.get('value'), true);
+            this.onEditorHideControl();
+        }
     },
 
     /**

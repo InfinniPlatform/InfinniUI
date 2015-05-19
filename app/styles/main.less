@@ -119,20 +119,32 @@ body{
     & > .pl-stack-panel-i {
       width: auto;
       float: left;
+      display: table-cell;
       padding-right: 10px;
     }
   }
 }
 
 .pl-grid-panel{
+
   .pl-stack-panel{
+    float: left;
+    width: 100%;
     margin: 0;
     padding: 0;
     border: none;
+    background-color: transparent;
+
+    &.horizontal-orientation{
+      & > .pl-stack-panel-i{
+        display: table-cell;
+      }
+    }
 
     .pl-stack-panel-i{
       padding: 0;
       margin: 0;
+      display: block;
     }
   }
 }

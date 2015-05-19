@@ -96,6 +96,10 @@ function EditDataSourceStrategy(dataSource) {
 
     };
 
+    this.onBeforeItemSaved = function (value, result) {
+
+    };
+
     this.onItemSaved = function (value, result) {
 
         var idProperty = this.dataSource.getIdProperty();
@@ -106,7 +110,14 @@ function EditDataSourceStrategy(dataSource) {
             InfinniUI.ObjectUtils.setPropertyValue(value, idProperty, instanceId);
         }
 
-        this.invokeEvent('onItemSaved', value);
+
+        this.invokeEventAsync('onBeforeItemSaved', value, function () {
+            this.invokeEvent('onItemSaved', value);
+        }.bind(this));
+    };
+
+    this.onBeforeItemCreated = function (value) {
+        this.invokeEvent('onBeforeItemCreated', value);
     };
 
     /**
@@ -117,7 +128,10 @@ function EditDataSourceStrategy(dataSource) {
      * @param {String} value.DocumentId
      */
     this.onItemCreated = function (value) {
-        this.invokeEvent('onItemCreated', value.InstanceId);
+        var instanceId = value.InstanceId;
+        this.invokeEventAsync('onBeforeItemCreated', instanceId, function () {
+            this.invokeEvent('onItemCreated', instanceId);
+        }.bind(this));
     };
 
     this.onItemDeleted = function (value) {
