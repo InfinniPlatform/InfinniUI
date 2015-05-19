@@ -9,7 +9,7 @@ function signInInternal(self) {
         $('#password').val(),
         $('#remember').is(':checked'),
         function (result) {
-            onSuccessSignIn(getHomePageContext());
+
 
             window.getCurrentUserName = function(){
                 return result.UserName;
@@ -17,6 +17,7 @@ function signInInternal(self) {
 
             self.model.set('result', result);
             self.$modal.modal('hide');
+            location.reload();
         },
         function (error) {
             if(error.Error.indexOf('Invalid username or password') > -1){

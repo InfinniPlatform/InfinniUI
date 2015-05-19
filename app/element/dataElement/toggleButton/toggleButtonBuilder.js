@@ -22,15 +22,7 @@ _.extend(ToggleButtonBuilder.prototype, {
         element.setTextOff(metadata.TextOff);
         element.setReadOnly(metadata.ReadOnly);
 
-        if (metadata.Value != undefined) {
-            var dataBinding = params.builder.build(params.parent, metadata.Value);
-            dataBinding.onPropertyValueChanged = function (dataSourceName, value) {
-                element.setValue(value.value);
-            };
-//            toggleButton.onValueChanged = function(dataSourceName,value){
-//                dataBinding.setPropertyValue(value.value);
-//            };
-        }
+        this.initValueProperty(params, true);
     },
 
     initScriptsHandlers: function(params){
@@ -53,4 +45,6 @@ _.extend(ToggleButtonBuilder.prototype, {
     createElement: function(params){
         return new ToggleButton(params.parent);
     }
-});
+},
+    builderValuePropertyMixin
+);

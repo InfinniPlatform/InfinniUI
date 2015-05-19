@@ -28,6 +28,14 @@ _.extend(Button.prototype, {
         }
     },
 
+    setImage: function(image){
+        this.control.set('image', image);
+    },
+
+    getImage: function(){
+        this.control.get('image');
+    },
+
     click: function () {
 
         this.control.click();
@@ -39,5 +47,20 @@ _.extend(Button.prototype, {
 
     getHeight: function () {
         return 34;
+    },
+
+    setParentEnabled: function(enabled){
+        if(enabled == undefined){
+            enabled = true;
+        }
+        return this.control.set('parentEnabled', enabled);
+    },
+
+    getParentEnabled: function(){
+        return this.control.get('parentEnabled');
+    },
+
+    onEnabledChange: function (handler) {
+        this.control.onEnabledChange(handler);
     }
 });

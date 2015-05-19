@@ -62,5 +62,13 @@ _.extend(FilterPanel.prototype, {
 
     getHeight: function () {
         return 44;
+    },
+
+    /**
+     * @see {@link http://jira.infinnity.lan/browse/UI-772}
+     */
+    filter: function () {
+        this.control.filter();
     }
+
 }, valuePropertyMixin);

@@ -3,8 +3,8 @@ var TabPanelModel = ControlModel.extend({
         headerLocation: 'Top',
         headerOrientation: 'Horizontal',
         horizontalAlignment: 'Stretch',
-        defaultPage: null,
-        pages: []
+        verticalAlignment: 'Stretch',
+        defaultPage: null
     }, ControlModel.prototype.defaults),
 
     initialize: function(){

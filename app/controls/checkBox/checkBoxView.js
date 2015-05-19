@@ -11,6 +11,7 @@ var CheckBoxView = ControlView.extend({
         ControlView.prototype.initialize.apply(this);
         this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:readOnly', this.applyReadOnly);
+        this.listenTo(this.model, 'change:enabled', this.applyReadOnly);
         this.listenTo(this.model, 'change:text', this.updateText);
     },
 
@@ -30,15 +31,16 @@ var CheckBoxView = ControlView.extend({
 
     applyReadOnly: function () {
         var readOnly = this.model.get('readOnly');
+        var enabled = this.model.get('enabled');
         var $control = this.$el.find('.pl-control');
         var $checker = this.$el.find('.checker');
 
-        if (readOnly == true) {
-            $control.prop('disabled', 'disabled');
-            $checker.addClass('disabled');
-        } else {
+        if (enabled && !readOnly) {
             $control.prop('disabled', false);
             $checker.removeClass('disabled');
+        } else {
+            $control.prop('disabled', 'disabled');
+            $checker.addClass('disabled');
         }
     },
 

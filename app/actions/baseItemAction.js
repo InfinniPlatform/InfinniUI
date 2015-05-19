@@ -55,8 +55,6 @@ function BaseItemAction(view) {
         var itemsRemove = items.slice();
         itemsRemove.splice(index, 1);
 
-        eventStore.executeEvent('onValueChanged', context, { value: itemsRemove });
-
         if (index !== -1) {
             items[index] = newItem;
         }

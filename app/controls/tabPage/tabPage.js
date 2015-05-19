@@ -19,6 +19,9 @@ _.extend(TabPageControl.prototype, {
 
     getId: function () {
         return this.controlModel.getId();
-    }
+    },
 
+    close: function () {
+
+    }
 });

@@ -1,13 +1,9 @@
-function ListBoxItem(innerControl, editItemHandler, removeItemHandler) {
+function ListBoxItem(innerControl, editItemHandler, removeItemHandler, multiSelect) {
 
-    var template = '' +
-        '<div style="padding-top: 10px"><div>' +
-        '   <a href="javascript:;" class="btn-delete pull-right"><i class="fa fa-times"></i></a>' +
-        '   <a href="javascript:;" class="btn-edit pull-right"><i class="fa fa-pencil"></i></a>' +
-        '   </div><div class="item-content"></div>' +
-        '</div>';
+    var template = InfinniUI.Template["element/dataElement/listBox/template/listBoxItem.tpl.html"];
 
-    var $template = $(template);
+    var $template = $(template({}));
+    var $content = $template.find('.item-content');
 
     var renderedItem = null;
 
@@ -36,6 +32,9 @@ function ListBoxItem(innerControl, editItemHandler, removeItemHandler) {
         }
     });
 
+
+    $template.find('.pl-listbox-item-toolbar').toggleClass('hidden', true/*_.isEmpty(editItemHandler) && _.isEmpty(removeItemHandler)*/);
+
     this.render = function () {
 
         if (renderedItem) {
@@ -43,7 +42,30 @@ function ListBoxItem(innerControl, editItemHandler, removeItemHandler) {
         }
 
         renderedItem = innerControl.render();
-        $template.find('.item-content').append(innerControl.render());
+
+        var onClickRowHandler = function (event) {
+            $content.click();
+        };
+
+        (function f($el) {;
+            _.each($el, function (el) {;
+                var $el = $(el);
+                $el.on('click', onClickRowHandler);
+                var handlers = $._data(el, 'events').click;
+                if (handlers !== null && typeof handlers !== 'undefined') {
+                    var handler = handlers.pop();
+                    handlers.splice(0,0, handler);
+                }
+                f($(el).children());
+            });
+        })(renderedItem);
+
+        if(multiSelect) {
+            $content.append('<input class="check-listbox-item" style="position: absolute;" type="checkbox"/>');
+            renderedItem.css('margin-left', '20px');
+        }
+
+        $content.append(renderedItem);
 
         return $template;
     };

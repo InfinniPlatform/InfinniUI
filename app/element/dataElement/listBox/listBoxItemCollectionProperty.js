@@ -15,4 +15,8 @@ function ListBoxItemCollectionProperty(baseBindingProperty, baseIndex, parentCol
             return stringUtils.formatBinding(itemBindingProperty, baseIndex);
         }
     };
+
+    this.getBaseIndex = function () {
+        return baseIndex;
+    }
 }

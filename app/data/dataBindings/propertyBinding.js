@@ -7,6 +7,15 @@ var PropertyBinding = function (view, dataSource, property) {
     this.element = null;
 };
 
+
+PropertyBinding.prototype.validate = function () {
+    var exchange = this.view.getExchange();
+    exchange.send(messageTypes.onValidate, {
+        "dataSource": this.getDataSource(),
+        "property": this.getProperty()
+    });
+};
+
 PropertyBinding.prototype.onSetPropertyValue = function (handler) {
     this.eventStore.addEvent('onSetPropertyValue', handler);
 };

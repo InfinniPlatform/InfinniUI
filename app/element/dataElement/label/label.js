@@ -19,4 +19,11 @@ _.extend(Label.prototype, {
         this.control.set('lineCount', value);
     }
 
-}, valuePropertyMixin, formatPropertyMixin, horizontalTextAlignmentPropertyMixin);
+},
+    valuePropertyMixin,
+    formatPropertyMixin,
+    horizontalTextAlignmentPropertyMixin,
+    elementBackgroundMixin,
+    elementForegroundMixin,
+    elementTextStyleMixin
+);

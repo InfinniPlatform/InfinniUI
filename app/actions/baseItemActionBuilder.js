@@ -1,4 +1,4 @@
-function BaseItemActionBuilder(executeAction) {
+function BaseItemActionBuilder() {
 
     this.build = function (builder, parent, metadata) {
 
@@ -42,7 +42,7 @@ function BaseItemActionBuilder(executeAction) {
                 //при изменении выбранного элемента в AddAction (при добавлении нового элемента)
                 //уведомляем всех подписчиков - dataBindings
                 action.onSetSelectedItem(function(context, args){
-                    action.getView().getExchange().send('onSetSelectedItem',{
+                    action.getView().getExchange().send(messageTypes.onSetSelectedItem,{
                         dataSource : dataSourceName,
                         property : propertyName,
                         //@TODO Разобраться почему иногда приходит уже вложенное значени в args.value.
@@ -51,7 +51,7 @@ function BaseItemActionBuilder(executeAction) {
                     });
                 });
 
-                exchange.subscribe('onSetSelectedItem', function (value) {
+                exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
                     if (dataSourceName === value.dataSource && value.property !== null && value.property !== undefined && !value.isActionSource ) {
                         action.setSelectedItem(value.value);
                     }

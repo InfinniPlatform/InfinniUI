@@ -2,7 +2,9 @@ function QueryConstructorMetadata(host,metadata){
 
     var viewMetadataUrlTemplate = '{0}/systemconfig/StandardApi/metadata/getmanagedmetadata';
 
-    var menuMetadataUrlTemplate = '{0}/systemconfig/StandardApi/metadata/getmenumetadata';
+    var metadataUrlTemplate = '{0}/RestfulApi/StandardApi/configuration/getconfigmetadata';
+
+    var metadataConfigListUrlTemplate = '{0}/RestfulApi/StandardApi/configuration/getconfigmetadatalist';
 
     var makeGetViewMetadataRequestParams = function() {
         return {
@@ -18,16 +20,30 @@ function QueryConstructorMetadata(host,metadata){
         }
     };
 
+    var makeGetConfigMetadataRequestParams = function() {
+        return {
+            "id": null,
+            "changesObject":null,
+            "replace":false
+        }
+    };
+
     var makeGetMenuMetadataRequestParams = function() {
         return {
             "id": null,
             "changesObject":{
-                "ConfigId":metadata.ConfigId,
-                "MetadataType":"Menu",
-                "MetadataName":metadata.MetadataName
+                "Configuration":metadata.ConfigId,
+                "MetadataType":'Menu'
              },
             "replace":false
         }
+    };
+
+    this.constructConfigMetadataRequest = function(){
+        return {
+            "requestUrl" : stringUtils.format(metadataConfigListUrlTemplate,[host]),
+            "args" : makeGetConfigMetadataRequestParams()
+        };
     };
 
     this.constructViewMetadataRequest = function(){
@@ -39,7 +55,7 @@ function QueryConstructorMetadata(host,metadata){
 
     this.constructMenuMetadataRequest = function(){
         return {
-            "requestUrl" : stringUtils.format(menuMetadataUrlTemplate,[host]),
+            "requestUrl" : stringUtils.format(metadataConfigListUrlTemplate,[host]),
             "args" : makeGetMenuMetadataRequestParams()
         };
     };

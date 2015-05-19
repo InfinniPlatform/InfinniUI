@@ -1,0 +1,82 @@
+
+.transparency (@foreground, @background, @button, @menu, @caption, @body1, @body2, @subhead, @title, @headline, @display1, @display2, @display3, @display4) {
+  .background-@{background} {
+    &.foreground-@{foreground} {
+
+      @colorName: %("color%s", @foreground);
+
+      &.textstyle-Button {
+        color: fadeout(@@colorName, 100%  - @button);
+      }
+
+      &.textstyle-Menu {
+        color: fadeout(@@colorName, 100% - @menu);
+      }
+
+      &.textstyle-Caption {
+        color: fadeout(@@colorName, 100% - @caption);
+      }
+
+      &.textstyle-Body1 {
+        color: fadeout(@@colorName, 100% - @body1);
+      }
+
+      &.textstyle-Body2 {
+        color: fadeout(@@colorName, 100% - @body2);
+      }
+
+      &.textstyle-Subhead {
+        color: fadeout(@@colorName, 100% - @subhead);
+      }
+
+      &.textstyle-Title {
+        color: fadeout(@@colorName, 100% - @title);
+      }
+
+      &.textstyle-Headline {
+        color: fadeout(@@colorName, 100% - @headline);
+      }
+
+      &.textstyle-Display1 {
+        color: fadeout(@@colorName, 100% - @display1);
+      }
+
+      &.textstyle-Display2 {
+        color: fadeout(@@colorName, 100% - @display2);
+      }
+
+      &.textstyle-Display3 {
+        color: fadeout(@@colorName, 100% - @display3);
+      }
+
+      &.textstyle-Display4 {
+        color: fadeout(@@colorName, 100% - @display4);
+      }
+    }
+  }
+}
+
+.transparency(Black, White, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+.transparency(Black, Transparent, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+
+.transparency(White, Black, 87%, 87%, 70%, 87%,87%,87%,87%,87%,70%, 70%, 70%, 70%);
+.transparency(White, Transparent, 87%, 87%, 70%, 87%,87%,87%,87%,87%,70%, 70%, 70%, 70%);
+
+
+.transparency(Primary1, White, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+.transparency(Primary2, White, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+.transparency(Primary3, White, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+
+.transparency(Primary1, Transparent, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+.transparency(Primary2, Transparent, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+.transparency(Primary3, Transparent, 87%, 87%, 83%, 87%,87%,87%,87%,87%,83%, 83%, 83%, 83%);
+
+.transparency(Accent1, White, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+.transparency(Accent2, White, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+.transparency(Accent3, White, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+
+.transparency(Accent1, Transparent, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+.transparency(Accent2, Transparent, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+.transparency(Accent3, Transparent, 87%, 87%, 54%, 87%,87%,87%,87%,87%,54%, 54%, 54%, 54%);
+
+/** @TODO Если необходим, добавить значеняи прозрачности для оставшихся вариантов **/

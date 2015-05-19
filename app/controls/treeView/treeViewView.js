@@ -152,7 +152,7 @@ var TreeViewView = ControlView.extend({
             var data;
 
             if (multiple) {
-                data = el.jstree("get_checked", true);
+                data = $el.jstree("get_checked", true);
             } else {
                 data = $el.jstree("get_selected", true);
                 if (_.isArray(data) && data.length > 0) {

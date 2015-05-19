@@ -1,10 +1,27 @@
 @import "default.less";
 
 .pl-numeric-box{
-//  margin: 0 10px 15px 10px;
+  .pl-spin-control{
+    float: left;
+    //  margin: 0 10px 15px 10px;
+    .pl-spin-input.form-control{
+      width: auto;
+    }
+    .input-group-btn {
+      width: auto;
 
-  &.disabled{
-    button{
+      &:first-child {
+        button {
+          margin-right: 2px;
+        }
+      }
+      button {
+        width: 35px;
+      }
+    }
+  }
+  &.disabled {
+    button {
       background: @color-light-gray;
     }
   }

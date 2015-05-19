@@ -1,12 +1,13 @@
 var TextBoxView = ControlView.extend({
-    className: 'pl-text-box input-icon right',
+    className: 'pl-text-box',
 
     templateTextBox: InfinniUI.Template["controls/textBox/template/textbox.tpl.html"],
     templateTextArea: InfinniUI.Template["controls/textBox/template/textarea.tpl.html"],
 
     UI: {
         control: ".pl-control",
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        validationMessage: '.pl-control-validation-message'
     },
 
     events: {
@@ -35,6 +36,8 @@ var TextBoxView = ControlView.extend({
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
         this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
+        this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
         this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
     },
@@ -110,6 +113,20 @@ var TextBoxView = ControlView.extend({
 
         this.ui.control.val(text);
 
+    },
+
+    updateValidation: function () {
+        var model = this.model;
+
+        var state = model.get('validationState');
+        var message = model.get('validationMessage');
+
+        var hideMessage = _.isEmpty(message) || ['error', 'warning'].indexOf(state) === -1;
+
+        this.ui.validationMessage.toggleClass('hidden', hideMessage);
+        this.ui.validationMessage.text(message);
+
+        //state = success, error, warning
     },
 
     onEditorValidate: function (value) {

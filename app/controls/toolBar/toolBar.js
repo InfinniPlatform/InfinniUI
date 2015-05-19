@@ -15,5 +15,17 @@ _.extend(ToolBarControl.prototype, {
 
     addItem: function (item) {
         this.controlModel.addItem(item);
+    },
+
+    setItems: function(items){
+        this.controlModel.setItems(items);
+    },
+
+    getChildElements: function () {
+        return this.controlModel.getItems();
+    },
+
+    onEnabledChange: function (handler) {
+        this.controlModel.on('change:enabled', handler);
     }
 });

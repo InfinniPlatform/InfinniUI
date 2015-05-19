@@ -7,12 +7,12 @@ function Builder() {
         objectBuilders[metadataType] = objectBuilder;
     };
 
-    this.buildType = function (parentView, metadataType, metadataValue, collectionProperty) {
+    this.buildType = function (parentView, metadataType, metadataValue, collectionProperty, params) {
         if (objectBuilders[metadataType] === undefined) {
             return null;
         }
 
-        return objectBuilders[metadataType].build(this, parentView, metadataValue, collectionProperty);
+        return objectBuilders[metadataType].build(this, parentView, metadataValue, collectionProperty, params);
     };
 
     this.build = function (parentView, metadataValue, collectionProperty) {

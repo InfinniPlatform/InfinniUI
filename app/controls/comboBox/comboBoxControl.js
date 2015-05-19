@@ -35,6 +35,14 @@ _.extend(ComboBoxControl.prototype, {
 
     getDisplayValue: function (value) {
         return this.controlView.getDisplayValue(value);
+    },
+
+    getItem: function () {
+        return this.controlModel.get('item');
+    },
+
+    onItemChanged: function (handler) {
+        this.controlModel.on('change:item', handler);
     }
 
 }, controlValuePropertyMixin);

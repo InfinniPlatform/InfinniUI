@@ -5,7 +5,8 @@ var ImageBoxView = ControlView.extend({
 
     UI: {
         input: 'input[type=file]',
-        image: 'img'
+        image: 'img',
+        thumbnail: '.pl-thumbnail'
     },
 
 
@@ -37,10 +38,10 @@ var ImageBoxView = ControlView.extend({
         });
 
         this.applyAcceptTypes();
-        this.updateReadOnly();
         this.applyBlobData();
 
         this.postrenderingActions();
+        this.updateReadOnly();
         return this;
     },
 
@@ -136,7 +137,12 @@ var ImageBoxView = ControlView.extend({
     },
 
     updateReadOnly: function(){
-        if(this.wasRendered) this.ui.input.toggleClass('hidden', this.model.get('readOnly'));
+        if(!this.wasRendered) {
+            return;
+        }
+
+        this.ui.input.toggleClass('hidden', !!this.model.get('readOnly'));
+        this.ui.thumbnail.toggleClass('thumbnail', !this.model.get('readOnly'));
     },
 
     onChangeUrlHandler: function (model, url) {
@@ -150,7 +156,13 @@ var ImageBoxView = ControlView.extend({
         if (typeof url === 'string' && url.length > 0) {
             this.ui.image.attr('src', url);
         } else {
-            this.ui.image.attr('src', null);
+            var file = this.model.get('file');
+            if(file && typeof file.name === 'string'){
+                this.loadPreview(file);
+            }else{
+                this.ui.image.attr('src', null);
+            }
+
         }
     }
 

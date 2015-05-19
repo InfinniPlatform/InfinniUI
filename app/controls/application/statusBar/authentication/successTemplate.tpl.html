@@ -2,8 +2,10 @@
     <ul class="nav navbar-nav pull-right" style="margin-right: 0px">
         <li class="dropdown dropdown-user">
             <a href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                <span class="username"><%= displayName%></span>
-                <span class="role username"><%= activeRole%></span>
+                <span class="username">
+                    <i><%= displayName%></i></br>
+                    <small class="role"><%= roles%></small>
+                </span>
                 <i class="fa fa-angle-down"></i>
             </a>
             <ul class="dropdown-menu">

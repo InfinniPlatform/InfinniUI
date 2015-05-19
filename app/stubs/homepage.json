@@ -1,0 +1,72 @@
+{
+  "Id": "3b55a11e-8239-4c1d-89eb-324ab6d5006d",
+  "Description": "",
+  "Caption": "HomePage",
+  "Name": "HomePage",
+  "ActionBar": {
+    "Visible": true
+  },
+  "LayoutPanel": {
+    "StackPanel": {
+      "Items": [
+        {
+          "StackPanel": {
+            "Orientation": "Vertical",
+            "Style": "main-menu",
+            "Items": [
+              {
+                "Button": {
+                  "Text": "Button caption",
+                  "Action": {
+                    "OpenViewAction": {
+                      "View": {
+                        "AutoView": {
+                          "ConfigId": "PTA",
+                          "DocumentId": "Common",
+                          "MetadataName": "HomePage",
+                          "OpenMode": "Application"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "Button": {
+                  "Text": "Фонд класса",
+                  "Action": {
+                    "OpenViewAction": {
+                      "View": {
+                        "AutoView": {
+                          "ConfigId": "PTA",
+                          "Container": "",
+                          "DocumentId": "Fund",
+                          "MetadataName": "Fund",
+                          "OpenMode": "Application"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "ActionBar": {
+
+                }
+              },
+              {
+                "ViewPanel": {
+                  "Name": "MainContainer"
+                }
+              },
+              {
+                "GlobalNavigationBar": {
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

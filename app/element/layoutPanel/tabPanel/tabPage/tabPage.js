@@ -69,25 +69,34 @@ _.extend(TabPage.prototype, {
      * @return {Boolean}
      */
     close: function () {
+        var response = this.eventStore.executeEvent('onClosing');
 
+        var canClose = _.isEmpty(response) || response.indexOf(false) === -1;
+
+        if (canClose) {
+            this.control.close();
+            this.eventStore.executeEvent('onClosed', this);
+        }
     },
 
     /**
-     * Возвращает или устанавливает обработчик события о том, что страница закрывается.
-     * @param context
-     * @param args
+     * @description Обработчик события о том, что страница закрывается
+     * @param handler
      */
-    onClosing: function (context, args) {
-
+    onClosing: function (handler) {
+        this.eventStore.addEvent('onClosing', handler);
     },
 
     /**
-     * Возвращает или устанавливает обработчик события о том, что страница закрыта.
-     * @param context
-     * @param args
+     * @description Обработчик события о том, что страница закрыта
+     * @param handler
      */
-    onClosed: function (context, args) {
+    onClosed: function (handler) {
+        this.eventStore.addEvent('onClosed', handler);
+    },
 
+    getChildElements: function () {
+        return [this.control.get('layoutPanel')];
     }
 
 });

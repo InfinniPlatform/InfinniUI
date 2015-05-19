@@ -8,7 +8,7 @@ http.createServer(app).listen(port, function () {
     console.log('Start listening at port %d', port);
 
     var open = require('open');
-    open('http://localhost:' + port + '/launchers/main/#/Warehouse');
+    open('http://localhost:' + port + '/launcher/#/Warehouse');
 });
 
 

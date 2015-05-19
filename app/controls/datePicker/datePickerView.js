@@ -32,6 +32,7 @@ var DatePickerView = ControlView.extend({
         this.listenTo(this.model, 'change:mode', this.updateMode);
         this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:readonly', this.updateReadOnly);
+        this.listenTo(this.model, 'change:enabled', this.applyEnabled);
         this.listenTo(this.model, 'change:minDate', this.updateMinDate);
         this.listenTo(this.model, 'change:maxDate', this.updateMaxDate);
     },
@@ -56,6 +57,7 @@ var DatePickerView = ControlView.extend({
         this.initOnUiValueChangeHandler();
         this.updateValue();
         this.updateReadOnly();
+        this.applyEnabled();
         this.updateMinDate();
         this.updateMaxDate();
 
@@ -85,6 +87,13 @@ var DatePickerView = ControlView.extend({
         }
     },
 
+    applyEnabled: function () {
+        var enabled = this.model.get('enabled');
+        if (this.wasRendered) {
+            this.setEnabledOnPicker(enabled);
+        }
+    },
+
     updateMinDate: function () {
         if (this.wasRendered) {
             var minDate = this.model.get('minDate');
@@ -103,12 +112,11 @@ var DatePickerView = ControlView.extend({
         var minDate = this.model.get('minDate');
         var maxDate = this.model.get('maxDate');
 
-        if(typeof value == 'string'){
-            if(minDate instanceof Date){
-                minDate = this.dateToString(minDate);
-            }
-            if(maxDate instanceof Date){
-                maxDate = this.dateToString(maxDate);
+        if (typeof value === 'undefined' || value === null) {
+            return true;
+        } else {
+            if (typeof value === 'string') {
+                value = new Date(value);
             }
         }
 
@@ -146,50 +154,6 @@ var DatePickerView = ControlView.extend({
         return this.inAllowableRange(value);
     },
 
-    dateToString: function(value){
-        if(value instanceof Date){
-            var day = value.getDate().toString(),
-                mounth = (value.getMonth()+1).toString();
-            if(day.length == 1){
-                day = '0' + day;
-            }
-            if(mounth.length == 1){
-                mounth = '0' + mounth;
-            }
-            return value.getFullYear() + '-' + mounth + '-' + day;
-        }else{
-            return value;
-        }
-    },
-
-    dateTimeToString: function(value){
-        if(value instanceof Date){
-            var day = value.getDate().toString(),
-                mounth = (value.getMonth()+1).toString(),
-                hour = value.getHours().toString(),
-                minute = value.getMinutes().toString(),
-                second = value.getSeconds().toString();
-
-            if(day.length == 1){
-                day = '0' + day;
-            }
-            if(mounth.length == 1){
-                mounth = '0' + mounth;
-            }
-            if(hour.length == 1){
-                hour = '0'+hour;
-            }
-            if(second.length == 1){
-                second = '0'+second;
-            }
-            if(minute.length == 1){
-                minute = '0'+minute;
-            }
-            return value.getFullYear() + '-' + mounth + '-' + day + 'T' + hour + ':' + minute + ':'+second;
-        }else{
-            return value;
-        }
-    },
 
     timeToString: function(value){
         if(value instanceof Date){
@@ -251,43 +215,29 @@ var pickersStrategy = {
 
             $datePicker.on('changeDate', function(e){
                 if(e.date) {
-                    var newVal = self.dateToString(e.date);
-                    if (newVal != self.model.get('value')) {
+                    var newVal = InfinniUI.DateUtils.toISO8601(e.date);
+                    //if (newVal != self.model.get('value')) {
                         self.model.set('value', newVal);
-                    }
+                    //}
                 }
             });
         },
 
+        /**
+         * @description Установка даты в плагине календаря
+         * @param {String} value
+         */
         setValueOnPicker: function(value){
             var self = this,
+                date,
+                current,
                 $datePicker = this.$el.find('.date');
-            if(value instanceof Date){
-                setTimeout(function(){
-                    self.model.set('value', self.dateToString(value));
-                }, 50);
 
+            if (typeof value === 'undefined' || value === null) {
+                $datePicker.datepicker('setDate', null);
             } else {
-
-                var currentDate = this.dateToString($datePicker.datepicker('getDate'));
-                currentDate = currentDate && currentDate.indexOf('NaN') > -1 ? '' : currentDate;
-
-                if (typeof value == 'string' && value != '') {
-                    if (value == currentDate) {
-                        return;
-                    }
-
-                    if(value.length < 10){
-                        setTimeout(function(){
-                            self.model.set('value', null);
-                        }, 50);
-                        value = '';
-                    }else{
-                        value = new Date(value);
-                    }
-
-                }
-                $datePicker.datepicker('setDate', value);
+                date = new Date(value);
+                $datePicker.datepicker('setDate', date);
             }
         },
 
@@ -299,6 +249,10 @@ var pickersStrategy = {
             if (readonly) {
                 $datePickerInnerNodes.attr('disabled', 'disabled');
             }
+        },
+
+        setEnabledOnPicker: function (enabled) {
+            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -339,24 +293,30 @@ var pickersStrategy = {
                 self = this;
 
             $picker.on('changeDate', function(e){
-                var newVal = self.dateTimeToString(timezoneDate(e.date));
-                if(e.date && newVal != self.model.get('value')){
+                if(e.date){
+                    var d = new Date();
+                    //Костыль для плагина bootstrap-datetimepicker, т.к. этот плагин удаляет временную зону
+                    var date = new Date(e.date.getTime() + d.getTimezoneOffset() * 60000);
+                    var newVal = InfinniUI.DateUtils.toISO8601(date);
                     self.model.set('value', newVal);
                 }
             });
         },
 
+        /**
+         * @description Установка даты в плагине календаря
+         * @param {String} value
+         */
         setValueOnPicker: function(value){
             var self = this,
                 $picker = this.$el.find('.form_datetime');
-            if(value instanceof Date){
-                self.model.set('value', self.dateTimeToString(value));
-            } else if (typeof value == 'string' && value != '') {
-                $picker.data('datetimepicker').setDate(timezoneDate(value));
-                self.model.set('value', value);
-            }else{
+
+            if (typeof value === 'undefined' || value === null) {
+                this.$('.datetimepicker').val('');
                 $picker.datetimepicker('update');
-                this.model.set('value', null);
+            } else {
+                var date = new Date(value);
+                $picker.data('datetimepicker').setDate(date);
             }
         },
 
@@ -368,6 +328,10 @@ var pickersStrategy = {
             }else{
                 $datePickerInnerNodes.removeAttr('disabled');
             }
+        },
+
+        setEnabledOnPicker: function (enabled) {
+            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -418,37 +382,44 @@ var pickersStrategy = {
                 self = this;
 
             $picker.on('changeTime.timepicker', function(e) {
-                //var value = self.model.get('value');
-                var value = new Date(0);
+                var value = self.model.get('value');
+                if (typeof value === 'undefined' || value === null) {
+                    value = new Date(0);
+                }
+                value = new Date(value);
                 value.setMinutes(e.time.minutes);
                 value.setHours(e.time.hours);
 
-                var newVal = self.dateTimeToString(value);
-                if(newVal != self.model.get('value')){
-                    self.model.set('value', newVal);
-                }
+                self.model.set('value', InfinniUI.DateUtils.toISO8601(value));
             });
         },
 
+        /**
+         * @description Установка даты в плагине календаря
+         * @param {String} value
+         */
         setValueOnPicker: function(value){
             var $picker = this.$el.find('.timepicker-control'),
                 self = this;
 
-            if(value instanceof Date){
-                value = self.timeToString(value);
-            }else if (typeof value =='string'){
-                var date = timezoneDate(value);
-                value = self.timeToString(date);
-            }else{
-                value = null;
+            var date = null;
+
+            if (typeof value === 'undefined' || value === null) {
+
+            } else {
+                date = new Date(value);
             }
 
-            $picker.timepicker('setTime', value);
+            $picker.timepicker('setTime', date);
         },
 
         setReadOnlyOnPicker: function(readonly){
             var $field = this.$el.find('.timepicker-control');
             $field.prop('disabled', readonly);
+        },
+
+        setEnabledOnPicker: function (enabled) {
+            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){

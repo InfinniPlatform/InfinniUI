@@ -40,7 +40,16 @@ _.extend(ImageBox.prototype, {
 
         setUrl: function (value) {
             this.control.set('url', value);
+        },
+
+        getUrl: function () {
+            return this.control.get('url');
+        },
+
+        onUrlChanged: function (handler) {
+            this.control.onUrlChanged(handler);
         }
+
         //TODO: добавить API элемента
     },
     valuePropertyMixin

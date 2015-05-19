@@ -42,6 +42,10 @@ function View() {
         //}, 1000);
     };
 
+    this.getLayoutPanel = function (value) {
+        return model.get('layoutPanel');
+    };
+
     var dataSources = [];
 
     this.setDataSources = function (value) {
@@ -108,10 +112,8 @@ function View() {
     };
 
     this.addParameter = function (parameter) {
-
         parameters.push(parameter);
     };
-
 
     this.getContext = function () {
 
@@ -124,7 +126,6 @@ function View() {
 
         context.Parameters = {};
         for (var j = 0; j < parameters.length; j++) {
-
             context.Parameters[parameters[j].getName()] = parameters[j];
         }
 
@@ -175,6 +176,8 @@ function View() {
                 action.execute(resultCallback);
             },
 
+            session: new AuthenticationProvider(InfinniUI.config.serverUrl),
+
             culture: culture
         };
 
@@ -213,6 +216,10 @@ function View() {
         //not implemented
     };
 
+    this.setStyle = function (style) {
+        //not implemented
+    };
+
     var eventStore = new EventStore();
 
     this.onOpening = function (action) {
@@ -245,25 +252,30 @@ function View() {
 
     this.close = function (acceptResult) {
         var response = eventStore.executeEvent('onClosing');
-        if (response.indexOf(false) === -1) {
+        var canClose = response.indexOf(false) === -1;
+        if (canClose) {
             eventStore.executeEvent('onClosed', acceptResult);
         }
 
+        return canClose;
     };
 
     this.exchange = null;
 
     this.getExchange = function () {
         if (this.exchange == null) {
-            this.exchange = messageBus.getExchange(guid());
+            this.exchange = messageBus.getExchange(this.getGuid()/*guid()*/);
         }
 
         return this.exchange;
     };
 
     this.loaded = function () {
-        eventStore.executeEvent('onLoaded');
         this.onLoadedHandlers.resolve(this);
+        setTimeout(function () {
+            eventStore.executeEvent('onLoaded');
+        }, 0);
+
     };
 
     this.loading = function () {
@@ -292,19 +304,63 @@ function View() {
         return this.parent;
     };
 
+    /**
+     * @description Возвращает корневое представление, открытое в режиме приложения
+     * @returns {*}
+     */
     this.getApplicationView = function () {
-        if (typeof  this.parent === 'undefined') {
-            return null;
-        }
+        var isApplication = model.get('isApplication');
+        var parent = this.parent;
 
-        return this.parent.getApplicationView();
+        if (isApplication) {
+            return this;
+        } else {
+            return _.isEmpty(parent) ? null : parent.getApplicationView();
+        }
+    };
+
+    this.setGuid = function (guid) {
+        model.set('guid', guid);
+    };
+
+    this.getGuid = function () {
+        return model.get('guid');
     };
 
 
+    var _nestedViews = [];
+
+    this.addNestedView = function ( view) {
+        _nestedViews.push(view);
+    };
+
+    this.removeNestedView = function (view) {
+        var i = _nestedViews.indexOf(view);
+
+        if (i === -1) {
+            return;
+        }
+        _nestedViews.splice(i, 1);
+    };
+
+    this.getNestedViews = function () {
+        return _nestedViews;
+    };
+
+    this.isApplication = function (param) {
+        var result = model.get('isApplication');
+
+        if (_.isBoolean(param)) {
+            model.set('isApplication', param);
+        }
+
+        return result;
+    }
 }
 
 var ViewModel = Backbone.Model.extend({
     defaults: {
+        isApplication: false,
         layoutPanel: null
     }
 });

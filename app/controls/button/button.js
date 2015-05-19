@@ -20,5 +20,9 @@ _.extend(ButtonControl.prototype, {
 
     onClick: function(handler){
         this.controlView.on('onClick', handler);
+    },
+
+    onEnabledChange: function (handler) {
+        this.controlModel.on('change:enabled', handler);
     }
 });

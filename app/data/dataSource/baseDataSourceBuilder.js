@@ -68,7 +68,7 @@ function BaseDataSourceBuilder() {
 
     this.initScriptsHandlers = function (parent, metadata, dataSource) {
         //Скриптовые обработчики на события
-        if (parent && metadata.OnSelectedItemChanged) {
+        if (parent) {
             dataSource.onSelectedItemChanged(function () {
                 var exchange = parent.getExchange();
                 exchange.send(messageTypes.onSelectedItemChanged, {
@@ -76,7 +76,9 @@ function BaseDataSourceBuilder() {
                     Value: dataSource.getSelectedItem()
                 });
 
-                new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name);
+                if (metadata.OnSelectedItemChanged) {
+                    new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name);
+                }
             });
         }
 
@@ -119,6 +121,14 @@ function BaseDataSourceBuilder() {
         }
 
         dataSource.validation = new DataSourceValidator(dataSource, validationWarnings, validationErrors);
+
+        var exchange = parent.getExchange();
+        exchange.subscribe(messageTypes.onValidate, function (message) {
+            if (message && message.dataSource === dataSource.getName()) {
+                dataSource.validation.validate();
+                dataSource.validation.notifyElements(message.property);
+            }
+        });
     }
 
 }

@@ -21,6 +21,12 @@ _.extend(FileBinding.prototype, {
         this.fileUrl = fileUrl;
     },
 
+    //getPropertyValue: function () {
+    //    var value = PropertyBinding.prototype.getPropertyValue.call(this);
+    //
+    //    return (typeof value === 'undefined' || value === null) ? null : this.fileUrl;
+    //},
+
     getFileUrl: function () {
         var value = this.getPropertyValue();
         return (typeof value === 'undefined' || value === null) ? null : this.fileUrl;

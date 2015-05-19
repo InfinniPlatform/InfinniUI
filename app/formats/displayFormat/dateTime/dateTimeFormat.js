@@ -33,8 +33,8 @@ _.extend(DateTimeFormat.prototype, {
         var self = this;
 
         culture = culture || new Culture(InfinniUI.config.lang);
-        
-        var date = (originalDate instanceof Date)? originalDate : timezoneDate(originalDate);
+
+        var date = new Date(originalDate);
 
         format = format||this.getFormat();
 

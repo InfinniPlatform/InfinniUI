@@ -23,16 +23,23 @@ var layoutManager = {
         return contentHeight;
     },
 
+    getModalSelector: function () {
+        return '.modal-scrollable';
+    },
+
+    getSelector: function () {
+        //return '.pl-data-grid, .pl-scroll-panel, .pl-document-viewer, .pl-menu.vertical, .pl-tab-panel, .pl-treeview';
+        return '.verticalAlignmentStretch:not(:hidden)';
+    },
+
     resize: function (el, pageHeight) {
         var $el = $(el);
         var contentHeight = this.setOuterHeight($el, pageHeight);
-        var elements = $el.find('.pl-data-grid, .pl-scroll-panel, .pl-document-viewer, .sidebar-menu.vertical, .pl-tab-panel, .pl-treeview');
+        var elements = $el.find(this.getSelector());
 
         if (elements.length === 0) {
             return;
         }
-
-        var tree = [];//
 
         var $parent;
         var list = [];
@@ -86,10 +93,12 @@ var layoutManager = {
 
         var manager = this;
         (function h(node, height) {
-            var children = node.$element.children();
+            var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop)');
+            /**
+             * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
+             */
             var originalHeight;
             var fixedHeight = 0;
-
             var setHeight = function (node, height) {
                 originalHeight = node.$element.attr('data-height-original');
                 if (originalHeight === '') {
@@ -99,54 +108,46 @@ var layoutManager = {
             };
 
             var nodeHeight = setHeight(node, height);
+            if (node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable')) {
+                //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
+                return;
+            }
+
 
             if (node.$element.hasClass('tab-content')) {
                 _.each(node.child, function (node) {
                     h(node, nodeHeight);
                 });
-            } else  if (children.length === 1 && node.child.length === 1) {
-                //В контейнере один элемент, который надо растянуть по высоте на максимум
-                h(node.child[0], nodeHeight);
-            } else if (node.child.length === 1) {
-                //В контейнере страницы TabPanel
-                //В контейнере один из элементов растянуть по высоте на максимум
-                children.each(function (i, el) {
-                    if (el !== node.child[0].element) {
-                        fixedHeight = fixedHeight + $(el).outerHeight(true);
-                    }
-                });
-                h(node.child[0], Math.max(nodeHeight - fixedHeight, 0));
             } else if (node.child.length > 0) {
-                //В контейнере несколько элементов, которые надо растянуть по высоте на максимум
-                var top = _.map(node.child, function (c) {
-                    return c.element.offsetTop
-                });
 
-                /**
-                 * Выделена проверка табов внутри TabPanel т.к. Невидимые табы скрыты и невозможно определить
-                 * как визуально д.б. расположены контейнеры: вертикально или горизонтально
-                 */
-                if (_.uniq(top).length === 1) {
-                    //Элементы размещены горизонтально
-                    _.each(node.child, function (node) {
-                        h(node, Math.max(nodeHeight - fixedHeight, 0));
-                    });
-                } else {
-                    //Элементы размещены вертикально
-                    children.each(function (i, el) {
-                        var isChild = _.find(node.child, function (node) {
-                            return node.element === el;
-                        });
-                        if (!isChild) {
-                            fixedHeight = fixedHeight + $(el).outerHeight(true);
-                        }
+                var grid = _.groupBy(children, 'offsetTop');
+                var heights = [];
+
+                _.each(grid, function (row, i) {
+                    var nodes = [];
+                    _.each(row, function (e) {
+                        var n = _.find(node.child, function (c) {return c.element === e;});
+                        if (n) nodes.push(n);
                     });
 
-                    var nh = Math.ceil(Math.max(nodeHeight - fixedHeight, 0) / node.child.length);
-                    _.each(node.child, function (node) {
-                        h(node, nh);
-                    });
-                }
+                    heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
+                        return Math.max(height, $(e).outerHeight(true));
+                    }, 0));
+
+                    grid[i] = nodes;
+                }, this);
+
+                fixedHeight = _.reduce(heights, function (total, height) {return total + height}, 0);
+                var count = _.reduce(grid, function (count, row) {return row.length ? count + 1 : count}, 0);
+
+                var heightForNode = Math.floor((nodeHeight - fixedHeight) / count);
+
+                _.each(grid, function (row) {
+                    if (row.length === 0) return;
+                    _.each(row, function (node) {
+                        h(node, heightForNode);
+                    }, this);
+                }, this);
 
             }
         })(tree, pageHeight);
@@ -158,55 +159,68 @@ var layoutManager = {
         //$page.height(clientHeight);
         var contentHeight = this.setOuterHeight($page, clientHeight);
         var that = this;
-        $page.children().each(function (i, el) {
-            if (el.style.display !== 'none') {
-                //Обработка активной вкладки
-                var $tab = $(el);
 
-                var barHeight = $(".pl-active-bar", $tab).outerHeight(true);
-                $tab.children().each(function (i, el) {
-                    if (false === el.classList.contains('pl-active-bar') && el.style.display !== 'none') {
-                        var pageHeight = contentHeight - barHeight;
-                        that.resize(el, pageHeight);
-                    }
-                });
-            }
-        });
+        this.resize($page.get(0), contentHeight);
+
+        //$page.children().each(function (i, el) {
+        //    if (el.style.display !== 'none') {
+        //        //Обработка активной вкладки
+        //        var $tab = $(el);
+        //
+        //        var $bar = $(".pl-active-bar:not(:hidden)", $tab);
+        //
+        //        var barHeight = $bar.length ? $bar.outerHeight(true) : 0;
+        //        //var barHeight = $(".pl-active-bar", $tab).outerHeight(true);
+        //        $tab.children().each(function (i, el) {
+        //            if (false === el.classList.contains('pl-active-bar') && el.style.display !== 'none') {
+        //                var pageHeight = contentHeight - barHeight;
+        //                that.resize(el, pageHeight);
+        //            }
+        //        });
+        //    }
+        //});
     },
 
     resizeDialog: function () {
         var manager = this;
-        $(".modal-scrollable").each(function (i, el) {
+        $(this.getModalSelector()).each(function (i, el) {
             manager._resizeDialog($(el));
         });
     },
 
     _resizeDialog: function ($modal) {
         //var $modal = $(".modal-scrollable");
+        var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
 
         var $container = $modal.children();
 
         $container.css('margin-top', 0);
-        var marginTop = parseInt($container.css('margin-top'), 10);
+        //var marginTop = parseInt($container.css('margin-top'), 10);
 
         var $header = $('.modal-header', $container);
         var $body = $('.modal-body', $container);
 
-        $body.css('max-height', this.windowHeight - $header.outerHeight(true));
+        var headerHeight = $header.outerHeight(true);
+        $body.css('max-height', this.windowHeight - headerHeight);
 
-        if ($container.outerHeight() < this.windowHeight) {
-            //Высота диалога не больше высоты окна
+        $container.css('margin-top', 0);
+
+        var el = $(this.getSelector(), $modal);
+        if (el.length === 0) {
+            //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
+            //Выравниваем по вертикали в центр
+            $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
             return;
         }
 
-        var containerHeight = this.setOuterHeight($modal, this.windowHeight);
+        $body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
+        var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
 
         //Высота для содержимого окна диалога
-        var clientHeight = this.setOuterHeight($container, containerHeight, marginTop) - $header.outerHeight();
+        var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
 
         this.resize($body[0], clientHeight);
-
-        $container.css('margin-top', 0);
+        $container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
     },
 
     init: function (container) {
@@ -215,14 +229,25 @@ var layoutManager = {
         this.onChangeLayout(container);
         if (this.exchange === null) {
             this.exchange = messageBus.getExchange('global');
-            this.exchange.subscribe('OnChangeLayout', function () {
-                this.onChangeLayout();
-            }.bind(this));
+            this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
         }
+
+
+        var exchange = messageBus.getExchange('modal-dialog');
+        exchange.subscribe(messageTypes.onLoading, function () {
+            this.resizeDialog();
+        }.bind(this));
     },
 
     onChangeLayout: function (container) {
-        var clientHeight = this.windowHeight - $("#page-top", container).outerHeight() - $("#page-bottom", container).outerHeight();
+        if (_.isEmpty(container)) {
+            container = document;
+        }
+
+        var clientHeight = this.windowHeight
+            - $("#page-top:not(:hidden)", container).outerHeight()
+            - $("#page-bottom:not(:hidden)", container).outerHeight()
+            - $("#menu-area:not(:hidden)", container).outerHeight();
         this.resizeView(container, clientHeight);
         this.resizeDialog();
     }

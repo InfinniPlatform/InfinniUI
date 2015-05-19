@@ -21,17 +21,26 @@
 
     initAndRenderExtensionObject: function () {
         var extensionName = this.model.get('extensionName'),
-            context = this.model.get('context'),
+            context = this.model.getContext(),
             parameters = this.model.get('parameters');
 
         this.extensionObject = new window[extensionName]();
         var self = this;
         var $render = self.extensionObject.render(self.$el, parameters, context);
-        self.$el.html($render);
+        if($render){
+            self.$el
+                .empty()
+                .append($render);
+        }
+
     },
 
     renderExtensionObject: function () {
         var $render = this.extensionObject.render(this.$el, this.model.get('parent'));
-        this.$el.html($render);
+        if($render){
+            self.$el
+                .empty()
+                .append($render);
+        }
     }
 });

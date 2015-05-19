@@ -1,7 +1,16 @@
 var builderValuePropertyMixin = {
 
-    initValueProperty: function (params) {
+    /**
+     * @param {Object} params
+     * @param {Boolean|false} useValidation Использовать валидацию
+     * @returns {*}
+     */
+    initValueProperty: function (params, useValidation) {
         var metadata = params.metadata;
+
+        if (typeof useValidation === 'undefined') {
+            useValidation = false;
+        }
 
         if (metadata.Value !== undefined) {
             var dataBinding = params.builder.build(params.parent, metadata.Value, params.collectionProperty);
@@ -23,7 +32,13 @@ var builderValuePropertyMixin = {
                 });
             }
 
-            //dataBinding.refresh();
+
+            if (useValidation && dataBinding) {
+                params.element.onLostFocus(function () {
+                    dataBinding.validate();
+                });
+            }
+
             return dataBinding;
         }
     }

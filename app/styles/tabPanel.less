@@ -1,13 +1,20 @@
 @import "default.less";
 
 .pl-tab-panel {
-  & > .nav-tabs {
+
+  .nav-tabs {
 
     & > li {
 
       & > span.pl-tab-close {
         cursor: pointer;
         display: none;
+      }
+
+      & > a{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
 
     }

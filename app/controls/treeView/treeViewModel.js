@@ -5,6 +5,7 @@ var TreeViewModel = ControlModel.extend({
         keyProperty: '',
         parentProperty: '',
         imageProperty: '',
+        verticalAlignment: 'Stretch',
         /** Inherited from BaseListElement */
         readOnly: false,
         items: []

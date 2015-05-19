@@ -6,6 +6,10 @@ var DataGridHeaderCell = Backbone.View.extend({
 
     tagName: 'th',
 
+    UI: {
+        resize: '.pl-datagrid-resize'
+    },
+
     template: InfinniUI.Template['controls/dataGrid/template/cells/headerCell.tpl.html'],
 
     initialize: function (options) {
@@ -14,11 +18,48 @@ var DataGridHeaderCell = Backbone.View.extend({
         this.listenTo(this.model, 'change:image', this.onChangeImageHandler);
         this.listenTo(this.model, 'change:sortable', this.onChangeSortableHandler);
         this.listenTo(this.model, 'change:sorting', this.onChangeSortingHandler);
+        this.listenTo(this.model, 'change:Resizable', this.onChangeResizableHandler);
 
+        this.resize = new DataGridColumnResize(this, options.columnIndex);
+
+        var header = this;
+
+        this.resize.onStart(function (x, y) {
+            header.trigger('resize:start', x, y, options.columnIndex);
+        });
+
+        this.resize.onDrag(function (x, y) {
+            var $el = header.$el;
+            var offset = $el.offset();
+            if (offset.left < x) {
+                header.trigger('resize', x, y, options.columnIndex);
+            } else {
+                //@TODO Ограничить минимальную ширину колонки
+                header.trigger('resize', offset.left, y, options.columnIndex);
+            }
+
+        });
+
+        this.resize.onStop(function (x, y) {
+            var $el = header.$el;
+
+            var offset = $el.offset();
+            var position = $el.position();
+
+            var width = x - offset.left;
+
+            header.trigger('resize:stop', x, y, width, options.columnIndex);
+
+        });
     },
 
     events: {
-        click: 'onClickHandler'
+        click: 'onClickHandler',
+        'mousedown .pl-datagrid-resize': 'onClickResizeHandler'
+    },
+
+    onClickResizeHandler: function (event) {
+        this.resize.start(event);
     },
 
     render: function () {
@@ -26,6 +67,9 @@ var DataGridHeaderCell = Backbone.View.extend({
         this.applyVisible();
         this.applySortable();
         this.$el.html(this.template(this.model.toJSON()));
+        this.bindUIElements();
+
+        this.applyResizable();
         return this;
     },
 
@@ -57,11 +101,23 @@ var DataGridHeaderCell = Backbone.View.extend({
         }
     },
 
+    onChangeResizableHandler: function () {
+        if (this.wasRendered) {
+            this.applyResizable();
+        }
+    },
+
+    applyResizable: function () {
+        this.ui.resize.toggleClass('hidden', !this.model.get('resizable'));
+    },
+
     applySortable: function () {
         var sortable = this.model.get('sortable');
 
         this.model.set('sorting', sortable ? DataGridColumnModel.SORTING_NONE : false);
     },
+
+
 
     onClickHandler: function (event) {
         event.stopPropagation();
@@ -97,3 +153,5 @@ var DataGridHeaderCell = Backbone.View.extend({
     }
 
 });
+
+_.extend(DataGridHeaderCell.prototype, bindUIElementsMixin);

@@ -9,9 +9,24 @@ _.extend(ToolBarBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
+        var metadata = params.metadata;
 
         _.each(params.metadata.Items, function (metadataItem) {
-            params.element.addItem(params.builder.build(params.parent, metadataItem));
+            if (metadata.Enabled == false) {
+                metadataItem.ToolBarButton.Enabled = false;
+            }
+
+            var btn = params.builder.build(params.parent, metadataItem);
+            btn.setParentEnabled(metadata.Enabled);
+            params.element.addItem(btn);
+        });
+
+
+        params.element.onEnabledChange(function () {
+            var enabled = params.element.getEnabled();
+            _.each(params.element.getItems(), function(item){
+                item.control.set('parentEnabled', enabled);
+            });
         });
 
     },

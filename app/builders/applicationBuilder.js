@@ -44,11 +44,13 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Button', new ButtonBuilder());
         builder.register('ToolBar', new ToolBarBuilder());
         builder.register('ToolBarButton', new ButtonBuilder());
+        builder.register('ToolBarSeparator', new ToolBarSeparatorBuilder());
         builder.register('ComboBox', new ComboBoxBuilder());
+        builder.register('RadioGroup', new RadioGroupBuilder());
         builder.register('SearchPanel', new SearchPanelBuilder());
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
         builder.register('FilterPanel', new FilterPanelBuilder());
-        builder.register('PopupButtonBuilder', new PopupButtonBuilder());
+        builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
         builder.register('DocumentViewer', new DocumentViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
@@ -57,6 +59,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('PropertyBinding', new PropertyBindingBuilder());
         builder.register('ParameterBinding', new ParameterBindingBuilder());
         builder.register('FileBinding', new FileBindingBuilder());
+        builder.register('ObjectBinding', new ObjectBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
         builder.register('Validation', new ValidationBuilder());
@@ -71,6 +74,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('AddItemAction', new AddItemActionBuilder());
         builder.register('SaveItemAction', new SaveItemActionBuilder());
         builder.register('EditItemAction', new EditItemActionBuilder());
+        builder.register('DeleteItemAction', new DeleteItemActionBuilder());
         builder.register('SelectAction', new SelectActionBuilder());
         builder.register('AcceptAction', new AcceptActionBuilder());
         builder.register('PrintReportAction', new PrintReportActionBuilder());
@@ -87,6 +91,9 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('RegexEditMask', new RegexEditMaskBuilder());
 
         builder.register('Comparator', new ComparatorBuilder());
+        builder.register('GlobalNavigationBar', new GlobalNavigationBarBuilder());
+        builder.register('ActionBar', new ActionBarBuilder());
+
     },
 
     build: function(){

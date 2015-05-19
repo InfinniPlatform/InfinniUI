@@ -3,7 +3,7 @@
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-jscs');
-    grunt.loadNpmTasks('grunt-jsdoc');
+    //grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -14,8 +14,10 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
+            'app/element/**/metadata.js',
             'app/config.js',
             'app/utils/*.js',
+            'app/messaging/**/*.js',
             'app/controls/_base/**/*.js',
             'app/element/_mixins/*.js',
             'app/element/*.js',
@@ -54,9 +56,10 @@
             'bower_components/metronic/assets/global/scripts/metronic.js',
             'bower_components/metronic/assets/admin/layout/scripts/layout.js'
         ],
+        appStyleFiles = ['app/styles/main.less'],
         vendorCssFiles = [
             'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
-            'bower_components/metronic/assets/global/plugins/font-awesome/css/font-awesome.min.css',
+            'bower_components/font-awesome/css/font-awesome.min.css',
             'bower_components/metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css',
             'bower_components/metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css',
             'bower_components/metronic/assets/global/plugins/uniform/css/uniform.default.css',
@@ -79,7 +82,10 @@
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
-        templateFiles = ["app/controls/**/*.tpl.html"];
+        templateFiles = ["app/**/*.tpl.html"],
+        outerExtensionScript = '*.Extensions/**/*.js',
+        outerExtensionStyle = '*.Extensions/**/*.css',
+        outerExtensionLessStyle = '*.Extensions/**/*.less';
 
     grunt.initConfig({
         concat: {
@@ -115,7 +121,7 @@
 
         copy: {
             fonts: {
-                cwd: 'bower_components/metronic/assets/global/plugins/font-awesome/fonts/',
+                cwd: 'bower_components/font-awesome/fonts/',
                 src: '*',
                 dest: 'out/fonts/',
                 expand: true
@@ -126,7 +132,8 @@
                 src: [
                     'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
                     'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png'
+                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png',
+                    'bower_components/metronic/assets/global/plugins/select2/select2-spinner.gif'
                 ],
                 dest: 'out/css/'
             },
@@ -191,7 +198,7 @@
 
         less : {
             default: {
-                src: ['app/styles/main.less'],
+                src: appStyleFiles,
                 dest: 'app/styles/main.css'
             }
         },
@@ -258,16 +265,37 @@
     });
 
     grunt.task.registerTask('build',
-        [
-            'less',
-            'force:on',
-            'clean:default',
-            //'jscs',
-            'force:restore',
-            'jst',
-            'concat',
-            'copy'
-        ]
+        function (extensionPath) {
+            if (extensionPath) {
+                var tmp = appFiles.slice(0),
+                    tmpLess = appStyleFiles.slice(0);
+
+                tmp.push(extensionPath + outerExtensionScript);
+                tmpLess.push(extensionPath + outerExtensionStyle);
+                tmpLess.push(extensionPath + outerExtensionLessStyle);
+
+                grunt.config.set('concat.app.src', tmp);
+                grunt.config.set('less.default.src', tmpLess);
+            }else{
+                grunt.config.set('concat.app.src', appFiles);
+                grunt.config.set('less.default.src', appStyleFiles);
+            }
+
+            //grunt.log.writeln(extensionPath + outerExtensionScript);
+            //grunt.log.writeln(grunt.config().concat.app.src);
+
+            var tasks = [
+                'less',
+                'force:on',
+                'clean:default',
+                //'jscs',
+                'force:restore',
+                'jst',
+                'concat',
+                'copy'
+            ];
+            grunt.task.run(tasks);
+        }
     );
 
     grunt.task.registerTask('build with autogen tests',

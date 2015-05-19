@@ -1,7 +1,19 @@
 <div class="table-wrap">
-    <table class="table table-bordered table-hover table-condensed">
-        <thead><tr class="heading"></tr></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-    </table>
+    <div class="pl-datagrid-head" style="/*background: #f8f8f8;*/ position: relative; overflow: hidden;">
+        <div style="float: left;">
+            <table class="table table-bordered table-hover table-condensed pl-datagrid-head-table">
+                <thead><tr class="heading"></tr></thead>
+            </table>
+        </div>
+    </div>
+    <div class="pl-datagrid-body"  style="overflow: auto; margin: 0; padding: 0; position: relative;">
+        <div>
+            <table class="table table-bordered table-hover table-condensed pl-datagrid-body-table">
+                <tbody>
+                    <tr class="pl-dataGrid-first-row" style="height: 0;"></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+<div class="pl-datagrid-mark hidden"></div>

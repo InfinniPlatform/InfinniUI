@@ -46,11 +46,33 @@ function ListBoxBuilder() {
         var dataBinding = builder.build(parent, metadata.Items, collectionProperty);
 
         var listBoxItemConstructor = function(baseIndex) {
-            return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(metadata.Items.PropertyBinding.Property, baseIndex, collectionProperty));
+            return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, collectionProperty));
         };
 
         var listBox = new ListBox(addItemAction,editItemAction,dataBinding, listBoxItemConstructor);
 		listBox.setName(metadata.Name);
+        listBox.setMultiSelect(metadata.MultiSelect);
+
+        listBox.onSetSelectedValue(function(dataItem){
+            var ds = metadata.Items.PropertyBinding || {};
+
+            // if MultiSelect
+            if(_.isArray(dataItem) === false){
+                parent.getExchange().send(messageTypes.onSetSelectedItem,{
+                    value : dataItem,
+                    dataSource: ds.DataSource,
+                    property: ds.Property
+                });
+            }
+
+
+            if(metadata.OnValueChanged){
+                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name, dataItem);
+            }
+        });
+
+        listBox.setStyle(metadata.Style);
+
 		parent.registerElement(listBox);
 
         /** @TODO Дублирование @see {@link DataGridBuilder.build} **/
@@ -75,6 +97,17 @@ function ListBoxBuilder() {
             });
             listBox.setPopUpMenu(popupMenu);
         //}
+
+        this.initScriptsHandlers(metadata, parent, listBox);
         return listBox;
+    },
+
+    this.initScriptsHandlers = function(metadata, parent, element){
+
+        if (parent && metadata.OnDoubleClick){
+            element.onDoubleClick(function() {
+                new ScriptExecutor(parent).executeScript(metadata.OnDoubleClick.Name);
+            });
+        }
     }
 }

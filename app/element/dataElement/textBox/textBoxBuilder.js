@@ -6,15 +6,14 @@ _.inherit(TextBoxBuilder, ElementBuilder);
 _.extend(TextBoxBuilder.prototype, {
 
     applyMetadata: function(params){
+        var metadata = params.metadata,
+            element = params.element;
 
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
         this.initFormatProperty(params);
-        this.initValueProperty(params);
-
-        var metadata = params.metadata,
-            element = params.element;
+        this.initValueProperty(params, true);
 
         element.setMultiline(metadata.Multiline);
         element.setLineCount(metadata.LineCount);
@@ -22,12 +21,6 @@ _.extend(TextBoxBuilder.prototype, {
             metadata.InputType = 'text';
         }
         element.setInputType(metadata.InputType);
-
-//         params.metadata.EditMask = {
-//             TemplateEditMask: {
-//                Mask: 'L-000'
-//             }
-//         };
 
         this.initEditMaskProperty(params);
     },

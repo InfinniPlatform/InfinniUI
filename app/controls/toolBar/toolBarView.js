@@ -6,8 +6,6 @@ var ToolBarView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-
-        this.listenTo(this.model, 'change:enabled', this.updateEnabled);
     },
 
     render: function () {
@@ -18,21 +16,16 @@ var ToolBarView = ControlView.extend({
         var $toolbar = $(this.template({}));
 
         _.each(this.model.getItems(), function (item) {
-            var $item = $(this.templateItem({}));
-            $item.append($(item.render()));
-//            this.$el.append(item.render());
-            $toolbar.append($item);
-        }, this);
-        this.$el.append($toolbar);
+            var $itemTemplate = $(this.templateItem({}));
 
-        this.updateEnabled();
+            $itemTemplate.append($(item.render()));
+            $toolbar.append($itemTemplate);
+        }, this);
+
+        this.$el.append($toolbar);
 
         this.postrenderingActions();
 
         return this;
-    },
-
-    updateEnabled: function(){
-        this.$el.find('button').prop('disabled', !this.model.get('enabled'));
     }
 });

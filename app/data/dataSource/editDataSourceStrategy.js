@@ -12,6 +12,14 @@ function EditDataSourceStrategy(dataSource) {
             dataSource.loadingProcessDone();
         };
 
+        /**
+         * @description Добавляет идентификатор запроса. @see {@link DataProviderRequestQueue}
+         */
+        var setLocalId = function (data) {
+            data['__Id'] = guid();
+            return data;
+        };
+
         var newItem = function () {
             var selectedItem = dataSource.getSelectedItem();
             if (selectedItem !== null && typeof selectedItem !== 'undefined') {
@@ -24,12 +32,12 @@ function EditDataSourceStrategy(dataSource) {
 
             if (createItem === true) {
                 dataProvider.createItem(function (data) {
-                    callback([data]);
+                    callback([setLocalId(data)]);
                 });
             }
             else {
                 callback([
-                    {}
+                    setLocalId({})
                 ]);
             }
 
@@ -60,7 +68,13 @@ function EditDataSourceStrategy(dataSource) {
         var propertyValue;
 
         if (typeof propertyName !== 'undefined' && propertyName !== null && propertyName !== '') {
-            propertyValue = InfinniUI.ObjectUtils.getPropertyValue(items[0], propertyName);
+            if(propertyName == '$'){
+               propertyValue = items[0];
+            }else if(/^\$\..+$/.test(propertyName)){
+               propertyValue = InfinniUI.ObjectUtils.getPropertyValue(items[0], propertyName.substr(2));
+            }else{
+                propertyValue = InfinniUI.ObjectUtils.getPropertyValue(items[0], propertyName);
+            }
         } else {
             propertyValue = items[0];
         }
@@ -140,7 +154,7 @@ function EditDataSourceStrategy(dataSource) {
         var index = dataItems.indexOf(value);
         var selectedItem = value;
 
-        if (index === -1) {
+        if (index === -1 && dataItems[0]) {
             var i;
             selectedItem = dataItems[0];
             for (i in selectedItem) {

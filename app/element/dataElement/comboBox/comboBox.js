@@ -224,8 +224,35 @@ _.extend(ComboBox.prototype, {
 
         getDisplayValue: function (value) {
             return this.control.getDisplayValue(value);
-        }
+        },
 
+        getItem: function () {
+            return this.control.getItem();
+        },
+
+        setItem: function () {
+
+        },
+
+        onItemChanged: function (handler) {
+            this.control.onItemChanged(handler)
+        },
+
+        getFocusedItem: function () {
+
+        },
+
+        setFocusedItem: function () {
+
+        },
+
+        getFocusedValue: function () {
+
+        },
+
+        setFocusedValue: function () {
+
+        }
 
     },
     valuePropertyMixin

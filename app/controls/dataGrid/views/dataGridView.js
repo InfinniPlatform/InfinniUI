@@ -10,9 +10,10 @@ var DataGridView = ControlView.extend({
 
     template: InfinniUI.Template['controls/dataGrid/template/datagrid.tpl.html'],
 
+    templateFakeCell: InfinniUI.Template['controls/dataGrid/template/cells/fakeCell.tpl.html'],
+
     events: {
         'click .group-title': 'onClickOnGroup',
-        'scroll': 'onScroll',
         mousedown: 'onMouseDownHandler',
         contextmenu: 'onContextMenuHandler'
     },
@@ -20,7 +21,14 @@ var DataGridView = ControlView.extend({
     UI: {
         thead: 'thead tr',
         header: 'thead',
-        tbody: 'tbody'
+        tbody: 'tbody',
+        head: '.pl-datagrid-head',
+        body: '.pl-datagrid-body',
+        bodyContainer: '.pl-datagrid-body > div',
+        firstRow: '.pl-dataGrid-first-row',
+        headTable: '.pl-datagrid-head-table',
+        bodyTable: '.pl-datagrid-body-table',
+        mark: '.pl-datagrid-mark'
     },
 
     /**
@@ -44,6 +52,21 @@ var DataGridView = ControlView.extend({
 
         this.rows = [];
         this.colspan = null; // будет известно при установке первых данных
+
+        this.initVerticalResize();
+    },
+
+    /**
+     * @description При изменении высоты контейнера - изменить высоту контейнера для прокрутки таблицы
+     */
+    initVerticalResize: function () {
+        var handler = _.throttle(
+            function () {
+                var hh = this.ui.head.height();
+                this.ui.body.height(this.$el.height() - hh);
+            }.bind(this), 400, {leading: false});
+        var observer = new MutationObserver(handler);
+        observer.observe(this.el, {attributes: true, characterData:true});
     },
 
     onShowPopupMenuHandler: function (data) {
@@ -58,13 +81,36 @@ var DataGridView = ControlView.extend({
 
         this.$el.html(this.template());
         this.bindUIElements();
-
+        this.syncHorizontalScroll();
         this.renderHeader();
 
         this.renderBody();
 
+
         this.postrenderingActions();
         return this;
+    },
+
+    postrenderingActions: function(){
+        ControlView.prototype.postrenderingActions.call(this);
+
+        var that = this;
+        this.$el.find('.pl-datagrid-body')
+            .scroll(function(){
+                that.onScroll();
+            });
+    },
+
+    /**
+     * @description Синхронизирует горизонтальный скролл заголовка таблицы с его содержимым
+     */
+    syncHorizontalScroll: function () {
+        var body = this.ui.body;
+        var head = this.ui.head;
+
+        body.on('scroll', function () {
+            head.scrollLeft(body.scrollLeft());
+        });
     },
 
     /**
@@ -85,23 +131,149 @@ var DataGridView = ControlView.extend({
 
 
         if (this.model.get('multiSelect')) {
-            this.ui.thead.append('<th></th>');
+            var cb = new DataGridHeaderCheckBoxCell();
+            this.ui.thead.append(cb.render().el);
+            this.listenTo(cb, 'check', this.onCheckAll);
+        }
+
+        this.ui.firstRow.empty();
+        if (this.model.get('multiSelect')) {
+            var html = this.templateFakeCell({text: '', colspan: 1});
+            $(html).addClass('pl-datagrid-checkbox').appendTo(this.ui.firstRow);
         }
 
         _.each(this.model.get('columns'), function (column, index) {
+            var colspan;
             model = column.control.controlModel;
             this.listenTo(model, 'change:sorting', this.onChangeSortingHandler);
 
-            cell = new DataGridHeaderCell({model: model});
+            cell = new DataGridHeaderCell({model: model, columnIndex: index});
 
-            if (useDetail && index === 0) {
-                cell.$el.attr('colspan', 2);
-            }
+            this.listenTo(cell, 'resize', this.onResizeColumn);
+            this.listenTo(cell, 'resize:start', this.onStartResizeColumn);
+            this.listenTo(cell, 'resize:stop', this.onStopResizeColumn);
+
+            colspan = (useDetail && index === 0) ? 2 : 1;
+            cell.$el.attr('colspan', colspan);
 
             fragment.appendChild(cell.render().el);
+            this.ui.firstRow.append(this.templateFakeCell({text: model.get('text'), colspan: colspan}));
         }, this);
 
         this.ui.thead.append(fragment);
+
+        //this.renderTableHeader();
+    },
+
+    onCheckAll: function (value) {
+        if (value) { //Выделить все элементы
+            var values = this.rows.map(function (row) {
+                return row.getValue();
+            });
+            this.model.set('value', values);
+        } else { //Снять выделение со всех элементов
+            this.model.set('value', []);
+        }
+    },
+
+    onStartResizeColumn: function (pageX, pageY, columnIndex) {
+        this.ui.mark.removeClass('hidden');
+        this.updateMarkPosition(pageX, pageY);
+    },
+
+    onResizeColumn: function (pageX, pageY, columnIndex) {
+        this.updateMarkPosition(pageX, pageY);
+    },
+
+    onStopResizeColumn: function (pageX, pageY, width, columnIndex) {
+        this.updateMarkPosition(pageX, pageY, columnIndex);
+
+        var index = this.model.get('multiSelect') ? columnIndex + 2 : columnIndex + 1;
+        var $el = this.ui.firstRow.find('th:nth-child(' + index+ ')');
+        $el.width(width);
+
+        this.ui.mark.addClass('hidden');
+    },
+
+    updateMarkPosition: function (pageX, pageY) {
+        var position = this.ui.mark.position();
+        var offset = this.ui.mark.offset();
+        this.ui.mark.css('left', pageX - (offset.left - position.left));
+    },
+
+    renderTableHeader: function () {
+        var $headers = _.map(this.ui.thead.children(), function (el) {return $(el);});
+        var $firstRow = _.map(this.ui.firstRow.children(), function (el) {return $(el);});
+
+        //Копирование стилей из заголовка таблицы в фейковый
+        // @TODO Разобраться. Тпймаут добавлен т.к. при отображении в диалоге, стилей у элемента th почему то еще нет
+        setTimeout(function () {
+            _.each($firstRow, function ($el, i) {
+                'font,padding-left,padding-right'.split(',')
+                    .forEach(function (name) {
+                        var $div = $el.find('div');
+                        if ($div.length) {
+                            $div.css(name, $headers[i].css(name));
+                        }
+                    });
+            });
+
+            this.syncColumnWidth($headers, $firstRow);
+        }.bind(this), 42);
+
+    },
+
+    /**
+     *
+     * @param {String|Array}attributes
+     * @param $el
+     * @returns {Number}
+     */
+    getSumCssProperties: function (attributes, $el) {
+        if (_.isString(attributes)) {
+            attributes = attributes.split(',');
+        }
+        var result = _.reduce(attributes, function (result, name) {
+            return result + parseInt($el.css(name));
+        }, 0);
+
+        return result;
+    },
+
+    /**
+     * @private
+     * @description Синхронизация ширины колонок заголовка и содержимого
+     */
+    syncColumnWidth: function ($headers, $firstRow) {
+        //Создать обсеревер для отслеживания изменений ширины firstRow и изменять соотв. заголовки колонок
+        var syncColumnWidth = _.throttle(function () {
+
+            var headers = this.ui.thead.children();
+            _.each($firstRow, function ($el, i) {
+                var $th = $headers[i];
+                var delta = this.getSumCssProperties('padding-left,padding-right', $th);
+                var width = $el.width();
+                if (parseInt(width, 10) < 0) {
+                    //Некорректная ширина, пересчитываем
+                    syncColumnWidth();
+                }
+                $th.width(Math.max($el.width() - delta, 0));
+            }, this);
+
+            var headTable = this.ui.headTable;
+            var delta = this.getSumCssProperties('padding-left,padding-right', headTable);
+            headTable.width(Math.max(this.ui.bodyTable.width() - delta, 0));
+            headTable.css('margin-right', this.ui.body.width() - this.ui.bodyContainer.width());
+
+        }.bind(this), 100);
+
+        if (typeof this.syncColumnWidthObserver !== 'undefined') {
+            this.syncColumnWidthObserver.disconnect();
+        }
+        var observer = new MutationObserver(syncColumnWidth);
+        this.syncColumnWidthObserver = observer;
+        var target = this.ui.body.get(0);
+        observer.observe(target, {attributes: true, childList: true, characterData: true, subtree: true});
     },
 
     /**
@@ -134,16 +306,23 @@ var DataGridView = ControlView.extend({
         }
 
         //_.each(this.model.get('items'), this.renderBodyRow.bind(this, fragment));
-        //debugger;
         this.renderGroup(groupedItems, fragment);
         this.ui.tbody.append(fragment);
 
         this.closeAllGroup();
 
-        this.adaptHeaders();
-        setTimeout(function(){
-            that.adaptHeaders();
-        }, 200);
+
+
+        this.renderTableHeader();
+        var that = this;
+
+        that.$el.find('.pl-datagrid-body').css('height', 'auto');
+        layoutManager.init();
+
+        //this.adaptHeaders();
+        //setTimeout(function(){
+        //    that.adaptHeaders();
+        //}, 200);
     },
 
     renderGroup: function(group, fragment){
@@ -223,7 +402,6 @@ var DataGridView = ControlView.extend({
      * @memberOf DataGridView.prototype
      */
     onChangeItemsHandler: function (model, items) {
-        //console.log('DataGridView.onChangeItemsHandler');
         if (this.wasRendered) {
             this.renderBody();
         }
@@ -257,8 +435,9 @@ var DataGridView = ControlView.extend({
      * @description Обработчик переключения значения
      * @memberOf DataGridView.prototype
      * @param {*} value Переключаемое значение
+     * @param {undefined|boolean} toggle
      */
-    onToggleHandler: function (value) {
+    onToggleHandler: function (value, toggle) {
         var model = this.model;
         var current = model.get('value');
         var comparator = model.get('comparator');
@@ -270,25 +449,37 @@ var DataGridView = ControlView.extend({
 
         if (multiSelect === true) {
             var newValue = [];
-            if (_.isArray(current) === false) {
-                newValue.push(value);
-            } else {
-                var matched = false;
-
-                _.each(current, function (val) {
-                    if (comparator.isEqual(val, value)) {
-                        matched = true;
-                        return;
-                    } else {
-                        newValue.push(val);
-                    }
-                });
-
-                if (!matched) {
+            var matched = false;
+            if (typeof toggle === 'undefined' || toggle=== true) { //Установить значения
+                if (_.isArray(current) === false) {
                     newValue.push(value);
+                    model.set('value', newValue);
+                } else {
+                    current.forEach(function (v) {
+                        if (comparator.isEqual(v, value)) {
+                            matched = true;
+                        }
+                    });
+                    if (!matched) {
+                        newValue = current.slice();
+                        newValue.push(value);
+                        model.set('value', newValue);
+                    }
+                }
+            } else { //Исключить значение
+                if (_.isArray(current)) {
+                    _.each(current, function (val) {
+                        if (!comparator.isEqual(val, value)) {
+                            newValue.push(val);
+                        } else {
+                            matched = true;
+                        }
+                    });
+                    if (matched) {
+                        model.set('value', newValue);
+                    }
                 }
             }
-            model.set('value', newValue);
         } else {
             model.set('value', value);
         }
@@ -383,7 +574,8 @@ var DataGridView = ControlView.extend({
 
     checkEndOfScroll: function(){
         if(this.model.get('autoLoad')){
-            var scrollBottom = this.$el[0].scrollHeight - this.$el.height() - this.$el.scrollTop();
+            var $current = this.$el.find('.pl-datagrid-body'),
+                scrollBottom = $current[0].scrollHeight - $current.height() - $current.scrollTop();
             if(scrollBottom < 10){
                 this.trigger('scrollToTheEnd', this.model.get('items').length);
             }

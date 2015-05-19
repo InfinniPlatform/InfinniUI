@@ -32,7 +32,6 @@ var DataGridBaseRow = Backbone.View.extend({
     },
 
     render: function () {
-        this.initTemplate();
         this.bindUIElements();
         this.bindUIEvents();
         this.renderCells();
@@ -40,31 +39,7 @@ var DataGridBaseRow = Backbone.View.extend({
         this.applyActiveRow();
         this.applySelectedRow();
 
-        var self = this;
-        this.ui.checkbox.on('click', function (event) {
-            event.stopPropagation();
-            var options = self.options;
-            var grid = options.grid;
-
-            grid.trigger('toggle', this.getValue());
-        }.bind(this));
-
         return this;
-    },
-
-    initTemplate: function () {
-        if(this.options.grid.model.get('multiSelect') !== true) {
-            return;
-        }
-
-        var multiselect = this.options.grid.model.get('multiSelect');
-        this.$el.html(this.template({
-            multiselect: multiselect
-        }));
-        this.cb = new CheckBox();
-        var $el = this.$el.find('.cell-checkbox');
-
-        $el.html(this.cb.render());
     },
 
     bindUIEvents: function () {
@@ -75,9 +50,21 @@ var DataGridBaseRow = Backbone.View.extend({
         var
             options = this.options,
             row = options.row,
+            grid = options.grid,
             columns = options.columns,
             fragment = document.createDocumentFragment(),
             cell;
+
+        if(this.options.grid.model.get('multiSelect') === true) {
+            cell = new DataGridBodyCheckBoxCell();
+            this.checkbox = cell;
+
+            this.listenTo(cell, 'check', function (value) {
+                grid.trigger('toggle', this.getValue(), value);
+            });
+
+            fragment.appendChild(cell.render().el);
+        }
 
         _.each(columns, function (column, columnIndex) {
             cell = new DataGridBodyCell({
@@ -121,17 +108,6 @@ var DataGridBaseRow = Backbone.View.extend({
         if (multiSelect !== true) {
             grid.trigger('toggle', this.getValue());
         }
-
-        //if (this.doubleclicked) {
-        //    this.doubleclicked = false;
-        //} else {
-        //    console.log('wtf');
-        //    //if(!this.options.grid.model.get('multiSelect')) {
-        //    //    //
-        //        event.stopPropagation();
-        //        grid.trigger('toggle', this.getValue());
-        //    //}
-        //}
     }),
 
     onDoubleClickHandler: function(event){
@@ -198,7 +174,7 @@ var DataGridBaseRow = Backbone.View.extend({
                 }
             }
             this.$el.toggleClass('select', found);
-            this.cb.setValue(found);
+            this.checkbox.check(found);
         } else {
             this.$el.toggleClass('select', comparator.isEqual(this.getValue(), value));
         }

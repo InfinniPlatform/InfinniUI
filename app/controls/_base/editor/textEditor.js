@@ -6,7 +6,7 @@
  *
  * Подключается к элементу ввода посредством миксина {@see textEditorMixin}.
  */
-var TextEditor = Backbone.View.extend ({
+var TextEditor = Backbone.View.extend({
 
     templateTextBox: InfinniUI.Template["controls/_base/editor/template/editorTextBox.tpl.html"],
     templateTextArea: InfinniUI.Template["controls/_base/editor/template/editorTextArea.tpl.html"],
@@ -49,9 +49,9 @@ var TextEditor = Backbone.View.extend ({
     },
 
     render: function () {
-        if(this.options.multiline){
+        if (this.options.multiline) {
             this.$el.html(this.templateTextArea({lineCount: this.options.lineCount}));
-        }else {
+        } else {
             this.$el.html(this.templateTextBox({inputType: this.options.inputType}));
         }
         this.bindUIElements();
@@ -85,16 +85,17 @@ var TextEditor = Backbone.View.extend ({
         this.setIsValid(true);//По умолчанию считаем переданное значение валидно
     },
 
-    getValue: function(){
+    getValue: function () {
         var editMask = this.getOptions('editMask');
-        if(editMask){
+        var convert = this.getOptions('convert');
+        if (editMask) {
             return editMask.getValue();
-        }else{
-            return this.ui.editor.val();
+        } else {
+            return convert(this.ui.editor.val());
         }
     },
 
-    isInFocus: function(){
+    isInFocus: function () {
         return this.inFocus;
     },
 
@@ -115,7 +116,7 @@ var TextEditor = Backbone.View.extend ({
         this.cancelled = false;
         this.setValue(value);
         this.$el.show();
-        if(!skipRefocus){
+        if (!skipRefocus) {
             this.ui.editor.focus();
         }
         this.checkCurrentPosition();
@@ -138,28 +139,51 @@ var TextEditor = Backbone.View.extend ({
             return;
         }
         var editor = this.ui.editor;
+        var elem = editor.get(0);
         var position;
 
         switch (event.which) {
             case 36:    //Home
-                position = maskEdit.moveToPrevChar(0);
-                if (position !== false) {
-                    this.setCaretPosition(position);
-                    event.preventDefault();
+                if(event.shiftKey) {
+                    elem.selectionEnd = parseInt(elem.selectionEnd, 10);
+                }else {
+                    position = maskEdit.moveToPrevChar(0);
+                    if (position !== false) {
+                        this.setCaretPosition(position);
+                        event.preventDefault();
+                    }
                 }
                 break;
             case 37:    //Left arrow
-                position = maskEdit.moveToPrevChar(this.getCaretPosition());
-                if (position !== false) {
-                    this.setCaretPosition(position);
-                    event.preventDefault();
+                if(event.shiftKey) {
+                    elem.selectionEnd = parseInt(elem.selectionEnd, 10);
+                }else {
+                    if (this.getSelectionLength() > 0){
+                        event.preventDefault();
+                        this.setCaretPosition(parseInt(elem.selectionStart, 10));
+                    }else {
+                        position = maskEdit.moveToPrevChar(this.getCaretPosition());
+                        if (position !== false) {
+                            this.setCaretPosition(position);
+                            event.preventDefault();
+                        }
+                    }
                 }
                 break;
             case 39:    //Right arrow
-                position = maskEdit.moveToNextChar(this.getCaretPosition());
-                if (position !== false) {
-                    this.setCaretPosition(position);
-                    event.preventDefault();
+                if(event.shiftKey) {
+                    elem.selectionEnd = parseInt(elem.selectionEnd, 10);
+                }else {
+                    if (this.getSelectionLength() > 0){
+                        event.preventDefault();
+                        this.setCaretPosition(parseInt(elem.selectionEnd, 10));
+                    }else {
+                        position = maskEdit.moveToNextChar(this.getCaretPosition());
+                        if (position !== false) {
+                            this.setCaretPosition(position);
+                            event.preventDefault();
+                        }
+                    }
                 }
                 break;
             case 35:    //End
@@ -170,46 +194,107 @@ var TextEditor = Backbone.View.extend ({
                 }
                 break;
             case 38:    //Up arrow
-                position = maskEdit.setNextValue(this.getCaretPosition());
-                if (position !== false) {
-                    event.preventDefault();
-                    editor.val(maskEdit.getText());
-                    this.setCaretPosition(position);
+                if(event.shiftKey) {
+                    elem.selectionEnd = parseInt(elem.selectionEnd, 10);
+                }else {
+                    if (this.getSelectionLength() > 0){
+                        event.preventDefault();
+                        this.setCaretPosition(parseInt(elem.selectionStart, 10));
+                    }else {
+                        position = maskEdit.setNextValue(this.getCaretPosition());
+                        if (position !== false) {
+                            event.preventDefault();
+                            editor.val(maskEdit.getText());
+                            this.setCaretPosition(position);
+                        }
+                    }
                 }
                 break;
             case 40:    //Down arrow
-                position = maskEdit.setPrevValue(this.getCaretPosition());
-                if (position !== false) {
-                    event.preventDefault();
-                    editor.val(maskEdit.getText());
-                    this.setCaretPosition(position);
+                if(event.shiftKey) {
+                    elem.selectionEnd = parseInt(elem.selectionEnd, 10);
+                }else {
+                    if (this.getSelectionLength() > 0){
+                        event.preventDefault();
+                        this.setCaretPosition(parseInt(elem.selectionEnd, 10));
+                    }else {
+                        position = maskEdit.setPrevValue(this.getCaretPosition());
+                        if (position !== false) {
+                            event.preventDefault();
+                            editor.val(maskEdit.getText());
+                            this.setCaretPosition(position);
+                        }
+                    }
                 }
                 break;
             case 46:    //Delete
                 // @TODO Если выделена вся строка - очистить поле редактирования
-                position = maskEdit.deleteCharRight(this.getCaretPosition(), this.getSelectionLength());
-                if (position !== false) {
+                //TODO: доделать SelectionLength
+                if (this.getSelectionLength() > 0 && !(maskEdit.value instanceof Date)) {
                     event.preventDefault();
-                    editor.val(maskEdit.getText());
-                    this.setCaretPosition(position);
+                    this.removeSelection(maskEdit);
+                } else {
+                    position = maskEdit.deleteCharRight(this.getCaretPosition(), this.getSelectionLength());
+                    if (position !== false) {
+                        event.preventDefault();
+                        editor.val(maskEdit.getText());
+                        this.setCaretPosition(position);
+                    }
                 }
                 break;
             case 8:    //Backspace
                 // @TODO Если выделена вся строка - очистить поле редактирования
-                position = maskEdit.deleteCharLeft(this.getCaretPosition(), this.getSelectionLength());
-                if (position !== false) {
+                //TODO: доделать SelectionLength
+                if (this.getSelectionLength() > 0 && !(maskEdit.value instanceof Date)) {
                     event.preventDefault();
-                    editor.val(maskEdit.getText());
-                    this.setCaretPosition(position);
+                    this.removeSelection(maskEdit);
+                } else {
+                    position = maskEdit.deleteCharLeft(this.getCaretPosition(), this.getSelectionLength());
+                    if (position !== false) {
+                        event.preventDefault();
+                        editor.val(maskEdit.getText());
+                        this.setCaretPosition(position);
+                    }
                 }
                 break;
             case 32:    //Space
-                position = maskEdit.getNextItemMask(this.getCaretPosition());
-                if (position !== false) {
+                if (this.getSelectionLength() > 0 && !(maskEdit.value instanceof Date)) {
                     event.preventDefault();
-                    this.setCaretPosition(position);
+                    this.removeSelection(maskEdit);
+                }else {
+                    position = maskEdit.getNextItemMask(this.getCaretPosition());
+                    if (position !== false) {
+                        event.preventDefault();
+                        this.setCaretPosition(position);
+                    }
                 }
                 break;
+
+            default:
+                //TODO: не работает для DateTimeFormat
+                //TODO: доделать SelectionLength замена выделенного текста, по нажатию
+
+                var inp = String.fromCharCode(event.keyCode);
+                if (/[a-zA-Z0-9-_ ]/.test(inp)) {
+                    if (this.getSelectionLength() > 0 && !(maskEdit.value instanceof Date)) {
+                        event.preventDefault();
+                        //Data
+                        this.removeSelection(maskEdit, String.fromCharCode(event.keyCode));
+                    }
+                }
+                break;
+        }
+    },
+
+    removeSelection: function(mask, char){
+        var res = mask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
+
+        this.setValue(res.result);
+
+        if(!res.result){
+            this.setCaretPosition(0);
+        }else{
+            this.setCaretPosition(res.position);
         }
     },
 
@@ -233,7 +318,7 @@ var TextEditor = Backbone.View.extend ({
 
     onFocusEditorHandler: function () {
         var maskEdit = this.getOptions('editMask');
-        if (typeof maskEdit ==='undefined' || maskEdit === null) {
+        if (typeof maskEdit === 'undefined' || maskEdit === null) {
             return;
         }
         var position = maskEdit.moveToPrevChar(0);
@@ -247,7 +332,7 @@ var TextEditor = Backbone.View.extend ({
         }
 
         var maskEdit = this.getOptions('editMask');
-        if (typeof maskEdit ==='undefined' || maskEdit === null) {
+        if (typeof maskEdit === 'undefined' || maskEdit === null) {
             return;
         }
 
@@ -301,7 +386,7 @@ var TextEditor = Backbone.View.extend ({
 
     onMouseLeaveEditorHandler: function (event) {
         var inFocus = event.currentTarget == document.activeElement;
-        if(!inFocus){
+        if (!inFocus && this.isValid) {
             this.$el.hide();
             this.onBlurEditorHandler();
         }
@@ -320,7 +405,7 @@ var TextEditor = Backbone.View.extend ({
             return String.fromCharCode(event.keyCode)
         }
 
-        if (event.which!=0 && event.charCode!=0) { // все кроме IE
+        if (event.which != 0 && event.charCode != 0) { // все кроме IE
             if (event.which < 32) return null; // спец. символ
             return String.fromCharCode(event.which); // остальные
         }
@@ -343,13 +428,13 @@ var TextEditor = Backbone.View.extend ({
         if (document.selection) {
 
             // Set focus on the element
-            elem.focus ();
+            elem.focus();
 
             // To get cursor position, get empty selection range
-            var selection = document.selection.createRange ();
+            var selection = document.selection.createRange();
 
             // Move selection start to 0 position
-            selection.moveStart ('character', -elem.value.length);
+            selection.moveStart('character', -elem.value.length);
 
             // The caret position is selection length
             position = selection.text.length;
@@ -369,7 +454,7 @@ var TextEditor = Backbone.View.extend ({
         var endPos = parseInt(elem.selectionEnd, 10);
 
 
-        if(!isNaN(startPos) && !isNaN(endPos)) {
+        if (!isNaN(startPos) && !isNaN(endPos)) {
             len = endPos - startPos;
         }
 
@@ -385,13 +470,13 @@ var TextEditor = Backbone.View.extend ({
     setCaretPosition: function (position) {
         var elem = this.ui.editor.get(0);
 
-        if(elem.createTextRange) {
+        if (elem.createTextRange) {
             var range = elem.createTextRange();
             range.move('character', position);
             range.select();
         }
         else {
-            if(typeof elem.selectionStart !== 'undefined') {
+            if (typeof elem.selectionStart !== 'undefined') {
                 elem.setSelectionRange(position, position);
             }
         }
@@ -407,23 +492,25 @@ var TextEditor = Backbone.View.extend ({
     onBlurEditorHandler: function () {
         this.inFocus = false;
 
-        if (this.cancelled ){
+        if (this.cancelled) {
             //Выход из поля редактора с отменой изменений
             return;
         }
         var control = this.getOptions('parent');
         var done = this.getOptions('done');
         var validate = this.getOptions('validate');
-        var value = this.ui.editor.val();
+        var convert = this.getOptions('convert');
+        var value = convert(this.ui.editor.val());
         var editMask = this.getOptions('editMask');
         var complete = true;
 
         //Убираем маску при потере фокуса
         if (typeof editMask !== 'undefined' && editMask !== null) {
-            if(!editMask.getIsComplete(this.ui.editor.val())){
-                value = '';
+            if (!editMask.getIsComplete(this.ui.editor.val())) {
+                value = null;
+                editMask.reset(value);
                 this.trigger('editor:hide');
-            }else {
+            } else {
                 complete = editMask.getIsComplete(value);
                 value = editMask.getValue();
             }
@@ -441,7 +528,7 @@ var TextEditor = Backbone.View.extend ({
 
         if (typeof done !== 'undefined' && done !== null) {
             //Если указан коллбек на установку значения - вызываем его
-            done(value);
+            done(editMask ? editMask.getData() : value);
         }
         //Триггерим событие для скрытия поля редактирования
         this.trigger('editor:hide');

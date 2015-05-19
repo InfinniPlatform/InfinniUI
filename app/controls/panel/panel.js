@@ -58,6 +58,10 @@ var PanelModel = Backbone.Model.extend({
 var PanelView = ControlView.extend({
     className: 'pl-panel',
 
+    UI: {
+        caption: '.caption'
+    },
+
     events: {
         'click .collapse': 'onButtonCollapseClickHandler',
         'click .expand': 'onButtonExpandClickHandler'
@@ -72,12 +76,23 @@ var PanelView = ControlView.extend({
         this.isFirstCollapse = true;
     },
 
+    updateText: function () {
+        if (!this.wasRendered) {
+            return;
+        }
+
+        this.ui.caption.text(this.model.get('text'));
+    },
+
     render: function () {
         this.prerenderingActions();
 
         var $wrap = $(this.template(this.model.toJSON()));
 
-        this.$el.html($wrap);
+        this.$el
+            .empty()
+            .append($wrap);
+        this.bindUIElements();
         var $body = this.$el.find('.portlet-body .items');
         _.each(this.model.getItems(), function (item) {
             $body.append(item.render());

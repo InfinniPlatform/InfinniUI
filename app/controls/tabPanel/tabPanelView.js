@@ -1,6 +1,6 @@
 var TabPanelView = ControlView.extend({
 
-    className: 'pl-tab-panel tabbable',
+    className: 'pl-tab-panel',
 
     template: {
         //Шаблонов для различных вариантов расположения кнопок панели
@@ -62,6 +62,10 @@ var TabPanelView = ControlView.extend({
             var contentFragment = document.createDocumentFragment(),
                 activePageIndex = this.model.getActivePageIndex();
 
+            if(this.model.get('headerLocation') == 'Top'){
+                var percentWidth = 100/pages.length;
+            }
+
             _.each(pages, function (page, index) {
                 //Рендеринг содержимого вкладки
                 var $page = page.render();
@@ -74,7 +78,10 @@ var TabPanelView = ControlView.extend({
                     text: page.getText(),
                     active: activePageIndex === index,
                     canClose: page.getCanClose(),
-                    name: page.getName()
+                    name: page.getName(),
+
+                    width: percentWidth,
+                    location: this.model.get('headerLocation')
                 }));
             }, this);
             this.bindNavEvents();
@@ -111,9 +118,13 @@ var TabPanelView = ControlView.extend({
             Left: "tabs-left",
             Right: "tabs-right"
         };
+
+        this.$el.toggleClass('row', headerLocation === 'Left' || headerLocation === 'Right');
+
         for (var i in cssClasses) {
             if (!cssClasses.hasOwnProperty(i)) continue;
             this.$el.toggleClass(cssClasses[i], i === headerLocation);
+            this.ui.nav.toggleClass(cssClasses[i], i === headerLocation);
         }
     },
 
@@ -130,7 +141,7 @@ var TabPanelView = ControlView.extend({
      * @private
      * Обработчик события при удалении страницы
      */
-    onRemovePageHandler: function () {
+    onRemovePageHandler: function (page) {
         //@TODO Переделать на удаление нужной вкладки
         this.rerender();
     },
@@ -159,7 +170,8 @@ var TabPanelView = ControlView.extend({
         var $el = $(event.target).prev();
 
         var page = this.model.getPage($el.attr('data-pageName'));
-        this.model.removePage(page);
+        page.close();
+        //this.model.removePage(page);
     }
 
 

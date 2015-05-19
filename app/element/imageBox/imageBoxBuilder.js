@@ -9,17 +9,31 @@ _.extend(ImageBoxBuilder.prototype, {
             ElementBuilder.prototype.applyMetadata.call(this, params);
 
             var element = params.element;
+            params.element.setReadOnly(params.metadata.ReadOnly);
             this.initScriptsHandlers(params);
             var binding  = this.initValueProperty(params);
 
+            var getUrl = binding.getFileUrl || binding.getPropertyValue;
+
             element.onValueChanged(function (dataSourceName, value) {
                 var file = element.getFile();
-                binding.setFile(file);
+                if (typeof binding.setFile === 'function') {
+                    binding.setFile(file);
+                }
+            });
+
+            element.onUrlChanged(function () {
+                var url = element.getUrl();
+                if (typeof binding.setFileUrl === 'function') {
+                    binding.setFileUrl(url);
+                }
             });
 
             binding.onPropertyValueChanged(function (dataSourceName, value) {
-                element.setUrl(binding.getFileUrl());
+                element.setUrl(getUrl.call(binding));
             });
+
+            element.setUrl(getUrl.call(binding));
 
         },
 

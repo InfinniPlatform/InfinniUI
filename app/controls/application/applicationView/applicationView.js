@@ -17,8 +17,12 @@ function ApplicationView() {
         $bottom = $('#page-bottom', $el);
         $container = $('#page-content', $el);
 
-        $('#page-top').html(new StatusBarControl().render());
-        $('#page-bottom').html(new GlobalNavigationBarControl().render());
+        $('#page-top')
+            .empty()
+            .append(new StatusBarControl().render());
+        $('#page-bottom')
+            .empty()
+            .append(new GlobalNavigationBarControl().render());
     };
 
     this.getApplicationView = function () {

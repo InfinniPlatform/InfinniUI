@@ -1,7 +1,6 @@
-var Criteria = function () {
+var Criteria = function (items) {
     this.onValueChangedHandlers = [];
-    this.items = [];
-
+    this.items = items || [];
 };
 
 Criteria.prototype.onValueChanged = function (handler) {

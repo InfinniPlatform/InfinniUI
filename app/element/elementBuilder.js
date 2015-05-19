@@ -4,12 +4,13 @@ var ElementBuilder = function () {
 //о боги, зачем все это???
 _.extend(ElementBuilder.prototype, {
 
-    build: function (builder, parent, metadata, collectionProperty) {
+    build: function (builder, parent, metadata, collectionProperty, params) {
         var params = {
                 builder: builder,
                 parent: parent,
                 metadata: metadata,
-                collectionProperty: collectionProperty
+                collectionProperty: collectionProperty,
+                params: params
             },
             element = this.createElement(params);
 
@@ -38,11 +39,16 @@ _.extend(ElementBuilder.prototype, {
         }else{
             element.setText(metadata.Text);
         }
-        element.setVisible(metadata.Visible);
+
+        //element.setVisible(metadata.Visible);
+        this.initBindingToProperty(params, metadata.Visible, 'Visible', true);
+
         element.setHorizontalAlignment(metadata.HorizontalAlignment);
         element.setVerticalAlignment(metadata.VerticalAlignment);
         element.setName(metadata.Name);
         element.setEnabled(metadata.Enabled);
+
+        element.setStyle(metadata.Style);
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {
@@ -83,6 +89,41 @@ _.extend(ElementBuilder.prototype, {
 
         //dataBinding.refresh();
         return dataBinding;
+    },
+
+    initBindingToProperty: function(params, bindingMetadata, propertyName, isBooleanBinding){
+        var metadata = params.metadata;
+
+        if(!metadata[propertyName] || typeof metadata[propertyName] != 'object'){
+            params.element['set' + propertyName](metadata[propertyName]);
+            return null;
+        }else{
+            var dataBinding = params.builder.build(params.parent, metadata[propertyName], params.collectionProperty);
+
+            dataBinding.setElement(params.element);
+
+            if (dataBinding != null) {
+                dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
+                    if(isBooleanBinding){
+                        params.element['set' + propertyName](!!dataBinding.getPropertyValue());
+                    }else{
+                        params.element['set' + propertyName](dataBinding.getPropertyValue());
+                    }
+                });
+
+                var data = dataBinding.getPropertyValue();
+                if(isBooleanBinding){
+                    params.element['set' + propertyName](!!data);
+                }else{
+                    if (data) {
+                        params.element['set' + propertyName](data);
+                    }
+                }
+
+            }
+
+            return dataBinding;
+        }
     }
 
 });

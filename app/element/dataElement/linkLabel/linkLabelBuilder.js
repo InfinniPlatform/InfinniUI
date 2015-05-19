@@ -3,51 +3,89 @@ function LinkLabelBuilder() {
 
 _.inherit(LinkLabelBuilder, ElementBuilder);
 
-_.extend(LinkLabelBuilder.prototype, {
+_.extend(LinkLabelBuilder.prototype,
+    {
+        defaults: {
+            Foreground: "Black",
+            Background: "Transparent",
+            HorizontalTextAlignment: "Left",
+            TextStyle: "Body1",
+            TextTrimming: true,
+            TextWrapping: true
+        },
 
-    applyMetadata: function(params){
-        var metadata = params.metadata;
+        applyDefaults: function (metadata) {
+            var defaults = this.defaults;
 
-        ElementBuilder.prototype.applyMetadata.call(this, params);
+            for (var i in defaults) {
+                if (typeof metadata[i] === 'undefined') {
+                    metadata[i] = defaults[i];
+                }
+            }
+        },
 
-        this.initFormatProperty(params);
-        this.initValueProperty(params);
-        this.initPropertyBinding('Reference', params, function (value) {
-            params.element.setReference(value);
-        });
-        this.initScriptsHandlers(params);
+        applyMetadata: function (params) {
+            this.applyDefaults(params.metadata);
+            var metadata = params.metadata;
+            var element = params.element;
+
+            ElementBuilder.prototype.applyMetadata.call(this, params);
+
+            element.setTextWrapping(metadata.TextWrapping);
+            element.setTextTrimming(metadata.TextTrimming);
+            element.setLineCount(metadata.LineCount);
+
+            this.initHorizontalTextAlignmentProperty(params);
+            this.initForeground(params);
+            this.initBackground(params);
+            this.initTextStyle(params);
+            this.initFormatProperty(params);
+            this.initValueProperty(params);
+            this.initBindingToProperty(params, metadata.Reference, 'Reference');
+            this.initScriptsHandlers(params);
+
+            if(params.metadata.Action) {
+                params.element.setAction(params.builder.build(params.parent, params.metadata.Action, params.collectionProperty));
+            }
+        },
+
+        initScriptsHandlers: function (params) {
+            var metadata = params.metadata;
+
+            //Скриптовые обработчики на события
+            if (params.parent && metadata.OnLoaded) {
+                params.element.onLoaded(function () {
+                    new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                });
+            }
+
+            if (params.parent && metadata.OnValueChanged) {
+                params.element.onValueChanged(function () {
+                    new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                });
+            }
+
+            if (params.parent && metadata.OnClick) {
+                params.element.onClick(function () {
+                    var script = new ScriptExecutor(params.parent);
+                    return script.executeScript(metadata.OnClick.Name);
+                });
+            }
+        },
+
+        createElement: function (params) {
+            var linkLabel = new LinkLabel(params.parent);
+            linkLabel.getHeight = function () {
+                return 34;
+            };
+            return linkLabel;
+        }
+
     },
-
-    initScriptsHandlers: function(params){
-        var metadata = params.metadata;
-
-        //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
-            params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
-            });
-        }
-
-        if (params.parent && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
-            });
-        }
-
-        if (params.parent && metadata.OnClick){
-            params.element.onClick(function() {
-                var script = new ScriptExecutor(params.parent);
-                return script.executeScript(metadata.OnClick.Name);
-            });
-        }
-    },
-
-    createElement: function(params){
-        var linkLabel = new LinkLabel(params.parent);
-        linkLabel.getHeight = function () {
-            return 34;
-        };
-        return linkLabel;
-    }
-
-}, builderValuePropertyMixin, builderFormatPropertyMixin, builderPropertyBindingMixin);
+    builderValuePropertyMixin,
+    builderFormatPropertyMixin,
+    builderHorizontalTextAlignmentPropertyMixin,
+    builderBackgroundMixin,
+    builderForegroundMixin,
+    builderTextStyleMixin
+);

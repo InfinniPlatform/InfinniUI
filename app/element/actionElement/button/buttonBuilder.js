@@ -1,5 +1,5 @@
 var ButtonBuilder = function (buttonConstructor) {
-    this.buttonConstructor = buttonConstructor ? Button : buttonConstructor;
+    this.buttonConstructor = buttonConstructor ? buttonConstructor : Button;
 
 };
 
@@ -19,8 +19,10 @@ _.extend(ButtonBuilder.prototype, {
         this.initHorizontalTextAlignmentProperty(params);
         this.initScriptsHandlers(params);
 
+        params.element.setImage(params.metadata.Image);
+
         if(params.metadata.Action) {
-            params.element.setAction(params.builder.build(params.parent, params.metadata.Action));
+            params.element.setAction(params.builder.build(params.parent, params.metadata.Action, params.collectionProperty));
         }
     },
 

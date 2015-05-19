@@ -10,6 +10,10 @@ _.extend(ViewPanel.prototype, {
         this.control.set('layout', layout);
     },
 
+    getLayout: function () {
+        return this.control.get('layout');
+    },
+
     createControl: function () {
         return new ViewPanelControl();
     }

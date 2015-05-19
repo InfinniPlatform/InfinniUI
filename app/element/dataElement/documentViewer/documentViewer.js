@@ -36,6 +36,14 @@ _.extend(DocumentViewer.prototype, {
 
     getDataSource: function () {
         return this.control.get('dataSource');
+    },
+
+    setUrl: function (url) {
+        return this.control.set('url', url);
+    },
+
+    setValueExist: function(val){
+        return this.control.set('valueExist', val);
     }
 
-});
+}, valuePropertyMixin);

@@ -2,7 +2,7 @@
 
 .portlet{
   &.box.blue-steel{
-    margin: 5px 0;
+    margin: 0;
     background-color: @color-turquoise;
     border: 1px solid @color-turquoise-light;
     border-top: 0;
@@ -11,7 +11,7 @@
     }
   }
   &.box.blue-hoki{
-    margin: 5px 0;
+    margin: 0;
     background-color: @color-turquoise;
     border: 1px solid @color-turquoise-light;
     border-top: 0;
@@ -37,6 +37,13 @@
   float: left;
   width: 100%;
 
+  .portlet-title{
+    min-height: 36px;
+    .caption{
+      padding: 10px 0;
+      line-height: 16px;
+    }
+  }
   .portlet-body{
     float: left;
     width: 100%;
@@ -51,7 +58,7 @@
 
     .pl-stack-panel.horizontal-orientation{
       margin: 0;
-      width: 100%;
+      //width: 100%;
       float: left;
     }
 

@@ -9,17 +9,31 @@ _.extend(DatePickerBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 		this.initScriptsHandlers(params);
 
+        params.metadata.Mode = params.metadata.Mode || 'Date';
+
         if(!params.metadata.EditMask) {
+            var mask;
+            switch (params.metadata.Mode) {
+                case 'Date':
+                    mask = 'd';
+                    break;
+                case 'Time':
+                    mask = 't';
+                    break;
+                case 'DateTime':
+                    mask = 'g';
+                    break;
+            }
             params.metadata.EditMask = {
                 DateTimeEditMask: {
-                    Mask: 'dd.MM.yyyy'
+                    Mask: mask
                 }
             };
         }
 
         this.initEditMaskProperty(params);
         //this.initFormatProperty(params);
-        this.initValueProperty(params);
+        this.initValueProperty(params, true);
 
 
         params.element.setMode(params.metadata.Mode);

@@ -51,24 +51,29 @@ function DataSourceValidator (dataSource,  validationWarnings, validationErrors)
     /**
      * Уведомить элементы о результатах проверки
      */
-    this.notifyElements = function () {
-        clearOldMessages();
+    this.notifyElements = function (propertyName) {
+        clearOldMessages(propertyName);
 
         if (success) {
             return;
         }
 
-        notifyElement(warnings);//Уведомление о предупреждениях
-        notifyElement(errors);  //Уведомление об ошибках
+        notifyElement(warnings, propertyName);//Уведомление о предупреждениях
+        notifyElement(errors, propertyName);  //Уведомление об ошибках
     };
 
-    function clearOldMessages(){
+    function clearOldMessages(propertyName){
         var bindings = dataSource.getDataBindings();
         var element;
 
         for (var j = 0; j < bindings.length; j++) {
+            if (_.isEmpty(propertyName) === false) {
+                if (bindings[j].property !== propertyName) {
+                    continue;
+                }
+            }
             element = bindings[j].getElement();
-            if (typeof element == 'object' && $.isFunction(element.setValidationState) ) {
+            if (element && typeof element == 'object' && $.isFunction(element.setValidationState) ) {
                 element.setValidationState('success', '');
             }
         }
@@ -77,8 +82,9 @@ function DataSourceValidator (dataSource,  validationWarnings, validationErrors)
     /**
      * Уведомление элемента о необходимости изменить внешний виж по результатам валидации
      * @param {*} validationResult
+     * @param {string} [prop]
      */
-    function notifyElement (validationResult) {
+    function notifyElement (validationResult, prop) {
         if (validationResult.IsValid === true) {
             return;
         }
@@ -93,8 +99,15 @@ function DataSourceValidator (dataSource,  validationWarnings, validationErrors)
         for (var i = 0; i < items.length; i = i + 1) {
             propertyName = items[i].Property;
             message = items[i].Message;
+
+            if (_.isEmpty(propertyName) && _.isEmpty(prop)) {
+                toastr.error(message);
+            }
             for (var j = 0; j < bindings.length; j++) {
                 if (bindings[j].getProperty() === propertyName) {
+                    if (!_.isEmpty(prop) && propertyName !== prop) {
+                        continue;
+                    }
                     element = bindings[j].getElement();
                     if (typeof element !== 'undefined' && element !== null) {
                         element.setValidationState(state, message);

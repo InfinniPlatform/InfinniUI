@@ -6,7 +6,13 @@ _.inherit(ExtensionPanel, Element);
 
 _.extend(ExtensionPanel.prototype, {
     createControl: function () {
-        return new ExtensionPanelControl();
+        var control = new ExtensionPanelControl();
+
+        control.controlModel.getContext = function () {
+            return this.getContext();
+        }.bind(this);
+
+        return control;
     },
 
     setExtensionName: function (extensionName) {
@@ -15,9 +21,9 @@ _.extend(ExtensionPanel.prototype, {
 
     setParameters: function (value) {
         return this.control.set('parameters', value);
-    },
+    }//,
 
-    setContext: function (value) {
-        return this.control.set('context', value);
-    }
+    //setContext: function (value) {
+    //    return this.control.set('context', value);
+    //}
 });

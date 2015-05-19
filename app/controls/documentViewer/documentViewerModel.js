@@ -1,5 +1,6 @@
 var DocumentViewerModel = ControlModel.extend({
-    defaults: _.extend({
+    defaults: _.defaults({
+        verticalAlignment: 'Stretch'
     }, ControlModel.prototype.defaults),
 
     initialize: function(){

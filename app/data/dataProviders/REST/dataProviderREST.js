@@ -1,5 +1,7 @@
 function DataProviderREST(metadata, urlConstructor, successCallback, failCallback) {
 
+    var queueReplaceItem = new DataProviderReplaceItemQueue();
+
     this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentRequest(criteriaList, pageNumber, pageSize, sorting));
     };
@@ -9,7 +11,19 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
     };
 
     this.replaceItem = function (value, warnings, resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructSetDocumentRequest(value, warnings));
+
+        var request = (function (resultCallback) {
+            return function (data) {
+                var request = new RequestExecutor(resultCallback, successCallback, failCallback);
+                return request.makeRequest(urlConstructor.constructSetDocumentRequest(data.value, data.warnings));
+            }
+        })(resultCallback);
+
+        queueReplaceItem.append({
+            value: value,
+            warnings: warnings
+        }, request);
+
     };
 
     this.deleteItem = function (instanceId, resultCallback) {

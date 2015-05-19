@@ -15,5 +15,10 @@ _.extend(FilterPanelControl.prototype, {
 
     onValueChanged: function (handler) {
         this.controlView.on('onValueChanged', handler);
+    },
+
+    filter: function () {
+        this.controlView.trigger('applyFilter');
     }
+
 });

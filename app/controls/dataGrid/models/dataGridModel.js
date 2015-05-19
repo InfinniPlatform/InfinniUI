@@ -7,6 +7,7 @@ var DataGridModel = ControlModel.extend({
 
     defaults: _.defaults({
         horizontalAlignment: 'Stretch',
+        verticalAlignment: 'Stretch',
         multiSelect: false,
         readOnly: false,
         groups: null,

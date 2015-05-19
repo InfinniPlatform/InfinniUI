@@ -1,8 +1,46 @@
 @import "default.less";
 
 .pl-data-grid {
-  overflow: auto;
+  overflow: hidden;
   height: 100%;
+  position: relative;
+
+  .pl-label label{
+      min-height: 0;
+  }
+
+  .pl-datagrid-mark {
+    border-left: 3px solid @color-gray;
+    position: absolute;
+    top:0;
+    bottom: 0;
+
+  }
+
+  .pl-datagrid-fake-header {
+    height: 0;
+    padding: 0;
+    //border: 0;
+
+    &.pl-datagrid-checkbox {
+      width: 50px;
+    }
+
+    .pl-datagrid-fake-header-cell {
+      overflow: hidden;
+      height: 0;
+    }
+  }
+
+  .pl-datePicker, .pl-combo-box, .pl-label, .pl-button, .pl-numeric-box, .pl-check-box, .pl-check-box > label, .pl-text-area{
+    height: auto;
+    margin: 0;
+    line-height: 0;
+  }
+
+  .pl-check-box{
+    text-align: center;
+  }
 
   .table-hover {
     tbody {
@@ -28,6 +66,17 @@
     border: none;
     margin: 0;
     padding: 0;
+    //hot fix
+    .pl-stack-panel-i{
+      margin: 0;
+      padding: 0;
+      img{
+        vertical-align: top;
+      }
+      .pl-label{
+        line-height: 0;
+      }
+    }
   }
 
   .pl-label, .pl-link-label {
@@ -40,37 +89,85 @@
   @header-padding-right: 18px;
   table {
     margin-bottom: 0;
+
+    table-layout: fixed;
+
+    &.pl-datagrid-head-table {
+      table-layout: fixed;
+
+      .pl-check-box {
+        padding: 0;
+
+        .checker {
+          padding: 0;
+        }
+      }
+    }
+
     &.table-bordered{
       border: 1px solid @color-border;
 //      border: none;
     }
     thead {
-      & > tr {
 
+      & > tr {
         &.heading{
           & > th{
-            padding: 15px 10px;
-            background-color: @color-light-gray3 !important;
+            text-align: center;
+            vertical-align: middle;
+            background-color: @color-elements !important;
+            line-height: 14px;
+            white-space: nowrap;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+
+            .pl-datagrid-resize {
+              cursor:col-resize;
+              background: transparent;
+              display: inline;
+              top:0;
+              right:0;
+              bottom:0;
+              position: absolute;
+              width: 3px;
+            }
+
+            div {
+              padding: 10px;
+              text-overflow: ellipsis;
+            }
+
           }
         }
 
         & > th {
+          cursor: default;
+          .font-notosans-small;
           padding: 10px;
 //          background-color: @color-light-gray3 !important;
           border-color: @color-border;
-
-          &:first-child {
-            padding-left: 20px;
-          }
+          font-weight: bold;
+//          &:first-child {
+//            padding-left: 20px;
+//          }
         }
 
       }
     }
 
     tbody {
+      .font-notosans-small;
       & > tr {
         & > td{
-          padding: 10px;
+          padding: 5px 10px;
+          line-height: 14px;
+
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          cursor: default;
+
           .pl-label{
             margin: 0;
             padding: 0;
@@ -114,7 +211,6 @@
         }
 
       }
-
 
 //      &.active {
 //        & > tr {

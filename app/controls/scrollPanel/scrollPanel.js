@@ -12,9 +12,14 @@ ScrollPanelControl.prototype.createControlView = function (model) {
     return new ScrollPanelView({model: model});
 };
 
+ScrollPanelControl.prototype.getChildElements = function () {
+    return [this.controlModel.get('layoutPanel')];
+};
+
 var ScrollPanelModel = Backbone.Model.extend({
     defaults: _.defaults({
         verticalScroll: '',
+        verticalAlignment: 'Stretch',
         horizontalScroll: '',
         layoutPanel: null
     }, ControlModel.prototype.defaults)
@@ -30,7 +35,12 @@ var ScrollPanelView = ControlView.extend({
     render: function () {
         this.prerenderingActions();
 
-        this.$el.html(this.model.get('layoutPanel').render());
+        //this.$el.html(this.model.get('layoutPanel').render());
+
+
+        this.$el.empty();
+        this.$el.append(this.model.get('layoutPanel').render());
+
         //this.$el.children().slimScroll({
             //height: '250px'
         //});

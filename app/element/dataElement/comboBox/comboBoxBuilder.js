@@ -11,7 +11,7 @@ _.extend(ComboBoxBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initFormatProperty(params);
-        this.initValueProperty(params);
+        this.initValueProperty(params, true);
         this.initScriptsHandlers(params);
 
         var element = params.element,
@@ -28,8 +28,8 @@ _.extend(ComboBoxBuilder.prototype, {
         element.setAutocomplete(metadata.Autocomplete || 'Server');
         element.setShowClear(metadata.ShowClear);
         this.initFormatProperty(params);
-        this.initSelectView(element, builder, metadata, parent);
 
+        var binding;
         if (metadata.Items) {
             var lazyLoad = $.Deferred();
 
@@ -43,6 +43,17 @@ _.extend(ComboBoxBuilder.prototype, {
             });
 
 
+            element.onItemChanged(function() {
+                var item = element.getItem(),
+                    selectedItem = _.isArray(item) ? item[0] : item;
+
+                parent.getExchange().send(messageTypes.onSetSelectedItem, {
+                    dataSource: binding.getDataSource(),
+                    property:binding.getProperty(),
+                    value: typeof selectedItem === 'undefined' ? null : selectedItem
+                });
+            });
+
 
             var items = binding.getPropertyValue();
             if (items) {
@@ -55,6 +66,7 @@ _.extend(ComboBoxBuilder.prototype, {
 
         }
 
+        this.initSelectView(element, builder, metadata, parent, binding);
 
     },
 
@@ -95,7 +107,7 @@ _.extend(ComboBoxBuilder.prototype, {
         return new ComboBox(params.parent);
     },
 
-    initSelectView: function(element, builder, metadata, parent){
+    initSelectView: function(element, builder, metadata, parent, binding){
         if( !metadata.SelectView ){
             return;
         }
@@ -121,8 +133,10 @@ _.extend(ComboBoxBuilder.prototype, {
                     var item = view.getDataSources()[0].getSelectedItem();
                     if (result == dialogResult.accept && item) {
                         var value = _.isArray(item) ? _.map(item, getItem) : getItem(item);
+                        binding.refresh(function () {
+                            element.setValue(value);
+                        });
 
-                        element.setValue(value);
                     }
                 });
 

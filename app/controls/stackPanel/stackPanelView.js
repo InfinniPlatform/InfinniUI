@@ -36,17 +36,17 @@ var StackPanelView = ControlView.extend({
             window = $('#page-content').height() - magicConstant - magicConstant2, //magic!!!
             fluid = 0;
 
-        _.each(items, function (item) {
-            var measure = item.getHeight ? item.getHeight() : 0 ;//orientation == 'Vertical' ? item.getHeight() : item.getWidth();
-
-            if (measure === undefined) {
-                fluid++;
-            } else {
-                window -= measure;
-            }
-
-            elementMeasures.push(measure);
-        });
+        //_.each(items, function (item) {
+        //    var measure = item.getHeight ? item.getHeight() : 0 ;//orientation == 'Vertical' ? item.getHeight() : item.getWidth();
+        //
+        //    if (measure === undefined) {
+        //        fluid++;
+        //    } else {
+        //        window -= measure;
+        //    }
+        //
+        //    elementMeasures.push(measure);
+        //});
 
         var fluidHeight = window / fluid;
 

@@ -11,7 +11,8 @@ var ComboBoxModel = ControlModel.extend({
         displayProperty: 'DisplayName',
         selectView: false,
         itemFormat: null,
-        showClear: true
+        showClear: true,
+        item: null
     }, ControlModel.prototype.defaults),
 
     initialize: function () {
@@ -25,6 +26,26 @@ var ComboBoxModel = ControlModel.extend({
                 this.set('displayProperty', 'DisplayName', {silent: true});
             }
         });
-    }
 
+        this.on('change:value', this.updateItemHandler);
+        this.on('change:items', this.updateItemHandler);
+    },
+
+    updateItemHandler: function () {
+        var item = null;
+        var items = this.get('items');
+        var value = this.get('value');
+
+        if (!_.isEmpty(value) && _.isArray(items)) {
+            var method = _.isArray(value) ? 'where' : 'findWhere';
+
+            item = _[method].call(_, items, {Id: value.Id});
+
+            if (typeof item === 'undefined') {
+                item = null;
+            }
+        }
+
+        this.set('item', item);
+    }
 });

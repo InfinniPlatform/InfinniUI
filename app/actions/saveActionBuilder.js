@@ -6,6 +6,7 @@ function SaveActionBuilder() {
             canClose == undefined ? canClose = true : canClose = false;
 
         parentDataSource.onItemSaved(function (dataSourceName, value) {
+            parentDataSource.setSelectedItem(value.value);
             if(canClose) {
                 parent.close(dialogResult.accept);
             }
@@ -13,7 +14,6 @@ function SaveActionBuilder() {
 
         action.setAction(function (callback) {
             var editItem = parentDataSource.getSelectedItem();
-
             var validation = parentDataSource.validation;
             var validate = validation.validate();
 

@@ -136,6 +136,7 @@ var DateTimeMaskPartStrategy = (function () {
                 var year = parseInt(part, 10);
                 if (!isNaN(year)) {
                     year = '0000' + year;
+                    var date = new Date();
                     value.setFullYear(date.getFullYear().toString().substr(0, 2) + year.slice(-2));
                 }
                 return value;
@@ -166,6 +167,7 @@ var DateTimeMaskPartStrategy = (function () {
                 var year = parseInt(part, 10);
                 if (!isNaN(year)) {
                     year = '0000' + year;
+                    var date = new Date();
                     value.setFullYear(date.getFullYear().toString().substr(0, 2) + year.slice(-2));
                 }
                 return value;

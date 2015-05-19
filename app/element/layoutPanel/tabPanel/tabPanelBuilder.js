@@ -10,6 +10,8 @@ _.extend(TabPanelBuilder.prototype, {
 
         var metadata = params.metadata;
 
+        this.registerLayoutPanel(params);
+
         params.element.setHeaderLocation(metadata.HeaderLocation || 'Top');
         params.element.setHeaderOrientation(metadata.HeaderOrientation || 'Horizontal');
         params.element.setDefaultPage(metadata.DefaultPage);
@@ -17,7 +19,13 @@ _.extend(TabPanelBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         _.each(metadata.Pages, function (metadataItem) {
-            params.element.addPage(params.builder.buildType(params.parent, 'TabPage', metadataItem));
+            var tabPage = params.builder.buildType(params.parent, 'TabPage', metadataItem);
+            tabPage.onClosed(function (page) {
+                params.element.removePage(page);
+            });
+            params.element.addPage(tabPage);
+
+
         });
 
 
@@ -26,6 +34,55 @@ _.extend(TabPanelBuilder.prototype, {
             exchange.send('OnChangeLayout', {});//Генерация события для пересчета расположения элементов формы
         });
 
+        messageBus.getExchange('global').subscribe(messageTypes.onViewOpened,
+            this.onViewOpened.bind(this, params));
+
+    },
+
+    /**
+     * @param params {Object}
+     * @param message.view {View}
+     * @param message.$view {JQuery}
+     * @param message.container {String} Имя контейнера
+     * @param message.openMode {String} Режим открытия
+     */
+    onViewOpened: function (params, message) {
+        var element = params.element;
+
+        if (message.container !== element.getName()) {
+            return;
+        }
+
+        var tabPage = params.builder.buildType(params.parent, 'TabPage', {
+            Text: message.view.getText(),
+            Enabled: true,
+            Visible: true,
+            CanClose: true
+        });
+
+        tabPage.onClosing(function () {
+            //@TODO Добавить проверку на возможность закрытия представления view, открытого в режиме Page
+        });
+
+        tabPage.onClosed(function (page) {
+            var exchange = messageBus.getExchange('global');
+            exchange.send(messageTypes.onViewClosing, {sourсe: this, view: view});
+        });
+
+        message.view.onClosed(function () {
+            params.element.removePage(tabPage);
+        });
+
+        var layout = message.$view;
+        var view = message.view;
+
+        tabPage.setLayoutPanel(view.getLayoutPanel());
+        params.element.addPage(tabPage);
+        params.element.setSelectedPage(tabPage);
+
+
+            //layout.data('view', view);
+        layout.data('openMode', message.openMode);
     },
 
     createElement: function(params){
@@ -44,4 +101,6 @@ _.extend(TabPanelBuilder.prototype, {
         }
     }
 
-});
+},
+    builderLayoutPanelMixin
+);

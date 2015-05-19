@@ -115,6 +115,7 @@ function signOut(self) {
 
             //self.model.set('result', result);
             self.model.set('result', null);
+            location.reload();
 //            window.location = '/Home/SignIn';
         },
         function (error) {
@@ -124,10 +125,10 @@ function signOut(self) {
 }
 
 function setUserInfo(userInfo) {
-    showObject('#getCurrentUserResult', userInfo);
-    $('#displayName').val(userInfo.DisplayName);
-    $('#description').val(userInfo.Description);
-    $('#activeRole').val(userInfo.ActiveRole);
+    //showObject('#getCurrentUserResult', userInfo);
+    //$('#displayName').val(userInfo.DisplayName);
+    //$('#description').val(userInfo.Description);
+    //$('#activeRole').val(userInfo.ActiveRole);
 
     if (userInfo.Logins !== null && userInfo.Logins !== undefined) {
         var externalLogins = $('#externalLogins');

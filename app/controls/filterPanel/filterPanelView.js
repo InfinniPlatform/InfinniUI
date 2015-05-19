@@ -18,6 +18,7 @@ var FilterPanelView = ControlView.extend({
         ControlView.prototype.initialize.apply(this);
 
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
+        this.on('applyFilter', this.onApplyFilterHandler);
     },
 
     render: function () {
@@ -46,10 +47,14 @@ var FilterPanelView = ControlView.extend({
         return this;
     },
 
-    submitFormHandler: function(event){
-        event.preventDefault();
+    onApplyFilterHandler: function () {
         this.$el.find('.pl-text-box').trigger('synchValue');
         this.onButtonSearchClickHandler();
+    },
+
+    submitFormHandler: function(event){
+        event.preventDefault();
+        this.trigger('applyFilter');
     },
 
     onButtonSearchClickHandler: function () {

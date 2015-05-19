@@ -27,8 +27,12 @@ FileBindingBuilder.prototype.build = function (builder, parent, metadata, collec
 
         //При изменении значения в источнике данных - получаем URL загруженного файла из источника
         fileBinding.onPropertyValueChanged(function () {
-            var fileUrl = dataSource.getFileUrl(metadataProperty);
-            fileBinding.setFileUrl(fileUrl);
+            fileUrl = fileBinding.getFileUrl();
+
+            //if (typeof fileUrl === 'undefined' || fileUrl === null) {
+                var fileUrl = dataSource.getFileUrl(metadataProperty);
+                fileBinding.setFileUrl(fileUrl);
+            //}
         });
 
         dataSource.addDataBinding(fileBinding);

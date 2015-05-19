@@ -23,6 +23,10 @@
         return this.value;
     },
 
+    getData: function () {
+        return this.getValue();
+    },
+
     /**
      * Переход к предыдущему полю ввода
      * @param position
@@ -59,6 +63,16 @@
      * @returns {boolean|number}
      */
     setPrevValue: function (position) {
+
+        return false;
+    },
+
+    /**
+     * Удалить выделенный текст
+     * @param position
+     * @returns {boolean|number}
+     */
+    deleteSelectedText: function(position){
 
         return false;
     },
@@ -154,7 +168,7 @@
         }
         return value;
     },
-
+    
     getPrevIntValue: function (options, value) {
         options = options || {};
         var minValue = null,

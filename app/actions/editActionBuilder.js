@@ -1,5 +1,5 @@
 function EditActionBuilder() {
-    this.build = function (builder, parent, metadata, itemId) {
+    this.build = function (builder, parent, metadata, itemCollection, itemId) {
         var action = new BaseAction(parent);
 
         action.setAction(function (callback) {
@@ -40,14 +40,12 @@ function EditActionBuilder() {
 
                 editView.onClosed(function (closeResult) {
                     parentDataSource.updateItems();
-                });
 
-                if (callback) {
-                    editView.onLoaded(function () {
+                    if (callback && closeResult == dialogResult.accept) {
+
                         callback(editItemId);
-                    });
-                }
-
+                    }
+                });
 
                 editView.open();
             });

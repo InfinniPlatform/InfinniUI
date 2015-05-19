@@ -1,0 +1,121 @@
+function MenuBarBuilder() {
+}
+
+_.inherit(MenuBarBuilder, ElementBuilder);
+
+_.extend(MenuBarBuilder.prototype, {
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var element = params.element,
+            metadata = params.metadata;
+
+        metadata.MetadataName = 'MainMenu';
+
+
+        window.providerRegister.build('MetadataDataSource', metadata).getMenuMetadata(function (data) {
+            function findItems(Items, arr) {
+                if (Items) {
+                    _.each(Items, function (subItem) {
+                        var el = {
+                            Text: subItem.Text,
+                            Image: subItem.Image
+                        };
+                        if(subItem.Action){
+                            el.Action = params.builder.build(params.parent, subItem.Action);
+                        }
+                        if(subItem.Items){
+                            el.Items = [];
+                            findItems(subItem.Items, el.Items);
+                        }
+                        arr.push(el);
+                    });
+                }
+                return arr;
+            }
+
+            var menuName = InfinniUI.State.getMenuName();
+            element.setMenuName(menuName);
+            element.setConfigId(metadata.ConfigId);
+
+            if(_.isArray(data)) {
+                _.forEach(data, function(item) {
+                    if(metadata.ConfigId == item.ConfigId && menuName == item.Name){
+                        data.Items = item.Items;
+                    }
+                });
+            }
+
+            element.setItems(findItems(data.Items, []));
+
+
+            element.onChangeMenuName(function () {
+                InfinniUI.State.setMenuName(element.getMenuName());
+            });
+
+            element.onChangeConfigId(function () {
+                InfinniUI.State.setConfigId(element.getConfigId());
+            });
+
+
+        });
+
+        this.buildMenuForConfigurations(params);
+    },
+
+    getConfigurationList: function (callback) {
+        var configMetadata = {};
+        var provider = new MetadataProviderREST(new QueryConstructorMetadata(InfinniUI.config.serverUrl, configMetadata), null, null);
+
+        provider.getConfigMetadata(callback);
+    },
+
+    getMenuList: function (configId, callback) {
+        var menuMetadata = {
+            ConfigId: configId,
+            MetadataType: 'Menu'
+        };
+
+        var provider = new MetadataProviderREST(new QueryConstructorMetadata(InfinniUI.config.serverUrl, menuMetadata));
+        provider.getMenuMetadata(callback);
+    },
+
+    buildMenuForConfigurations: function (params) {
+        this.getConfigurationList(function (data) {
+            if (_.isArray(data) === false) {
+                return;
+            }
+
+            var menuList = [];
+            var updateMenuList = _.throttle(function () {
+                params.element.setMenuList(menuList.slice());
+            }, 100);
+
+            if(!data){
+                return;
+            }
+
+            _.forEach(data, function (item) {
+                this.getMenuList(item.Name, function (menuMetadata) {
+                    if(_.isArray(menuMetadata)) {
+                        _.forEach(menuMetadata, function (itemMenu) {
+                            if (_.isEmpty(itemMenu.ConfigId)) {
+                                return;
+                            }
+
+                            menuList.push(itemMenu);
+                            updateMenuList();
+                        });
+                    }
+                });
+            }, this);
+
+        }.bind(this));
+    },
+
+    createElement: function (params) {
+        return new MenuBar(params.parent);
+    }
+
+});

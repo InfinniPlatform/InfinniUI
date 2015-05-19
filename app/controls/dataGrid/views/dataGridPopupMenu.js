@@ -19,12 +19,22 @@ var DataGridPopupMenuView = Backbone.View.extend({
         contextmenu: 'onContextMenuHandler',
         mouseleave: 'onMouseleaveHandler',
         mouseover: 'onMouseoverHandler',
-        'click a': 'onClickMenuItem'
+        'click button': 'onClickMenuItem'
     },
 
     render: function () {
-        var html = this.template(this.model.toJSON());
-        this.$el.html(html);
+        var items = this.model.get('items'),
+            $html = $('<ul></ul>');
+
+        for(var i = 0, ii = items.length; i<ii; i++){
+            $('<li></li>')
+                .append( items[i].render() )
+             .appendTo($html);
+        }
+
+        this.$el
+            .empty()
+            .append($html);
         return this;
     },
 
@@ -70,9 +80,7 @@ var DataGridPopupMenuView = Backbone.View.extend({
 
     onClickMenuItem: function (event) {
         event.preventDefault();
-        var index = $(event.target).attr('data-item');
         this.hide();
-        this.trigger('clickItem', {index: index});
     },
 
     onContextMenuHandler: function (event) {

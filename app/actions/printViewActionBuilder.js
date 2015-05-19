@@ -18,8 +18,8 @@ function PrintViewActionBuilder() {
                 '<div class="modal-body">'+
                 '<iframe name="frame' + frameId + '" src="/app/utils/pdf/viewer.html#' + frameId + '" id="print-report" style="width: 100%; height: 600px"></iframe>'+
                 '</div>'+
-                '<button type="button" class="btn btn-default btn-print' + frameId + '" style="float: right; margin: 0 15px 15px 0">Ok</button>'+
-                '<button type="button" class="btn btn-default btn-print' + frameId + '" style="float: right; margin: 0 15px 15px 0">Печать</button>'+
+                '<button type="button" class="btn btn-default btn-close' + frameId + '" style="float: right; margin: 0 10px 10px 0; border: none">Закрыть</button>'+
+                '<button type="button" class="btn btn-default btn-print' + frameId + '" style="float: right; margin: 0 10px 10px 0; border: none">Печать</button>'+
                 '</div>'
         };
 
@@ -55,6 +55,10 @@ function PrintViewActionBuilder() {
                 }
 
                 _$modal.modal('show');
+
+                $('.btn-close'+ frameId).on('click', function(e){
+                    _$modal.modal('hide');
+                });
 
                 $('.btn-print' + frameId).on('click', function(e){
                     var frame = self.getFrame('frame'+frameId);

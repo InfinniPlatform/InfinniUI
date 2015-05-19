@@ -18,7 +18,7 @@ _.extend(DatePicker.prototype, {
     },
 
     getMinDate: function(){
-        return this.getDateProperty( this.control.get('minDate') );
+        return this.control.get('minDate');
     },
 
     setMinDate: function(minDate){
@@ -26,7 +26,7 @@ _.extend(DatePicker.prototype, {
     },
 
     getMaxDate: function(){
-        return this.getDateProperty( this.control.get('maxDate') );
+        return this.control.get('maxDate');
     },
 
     setMaxDate: function(maxDate){
@@ -52,49 +52,38 @@ _.extend(DatePicker.prototype, {
     },
 
     getValue: function(){
-        //return this.getDateProperty( this.control.get('value') );
         return this.control.get('value');
     },
 
     setValue: function(value){
-        this.setDateProperty('value', value, this.control.controlModel.defaults.value);
+        this.control.set('value', value/*, this.control.controlModel.defaults.value*/);
     },
 
     onValueChanged: function (handler) {
         this.control.onValueChanged(handler);
     },
 
-    getDateProperty: function(value){
-        if(this.isValidDate(value)){
-            //ToDo: учитывать формат
-            return moment(value).format('MM/DD/YYYY');
-        }
-        return null;
-    },
-
     setDateProperty: function(property, value, defaultValue){
-
-
         if (_.isObject(value) && !(value instanceof Date)) {
             value = null;
         }
 
         var date = this.parseToDate(value);
 
-        if(this.isValidDate(date)){
+        if(date !== null){
             this.control.set(property, date);
         }
         else{
-            this.control.set(property, defaultValue);
+            this.control.set(property, this.parseToDate(defaultValue));
         }
     },
 
     parseToDate: function(value) {
-        //ToDo: учитывать формат
-        if (value) {
-            return new Date(moment(value).format());
+        if (typeof value === 'undefined' || value === null) {
+            return null;
+        } else {
+            return new Date(value);
         }
-        return null;
     },
 
     isValidDate: function(value){

@@ -106,6 +106,16 @@
         "DocumentId": "oid_1_2_643_5_1_13_2_1_1_215",
         "Name": "oid_1_2_643_5_1_13_2_1_1_215DataSource"
       }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "data",
+        "Items": [
+          {
+            "Prop": "sss"
+          }
+        ]
+      }
     }
   ],
   "LayoutPanel": {
@@ -114,38 +124,18 @@
       "Items": [
         {
           "TextBox": {
-            "Name": "TextBox1",
-            "Multiline": true
+            "Name": "ToggleButton1",
+            "Value": {
+              "PropertyBinding":{
+                "DataSource": "data",
+                "Property":"Prop"
+              }
+            }
           }
         },
         {
           "TextBox": {
             "Name": "TextBox2"
-          }
-        },
-        {
-          "TreeView": {
-            "KeyProperty": "Id",
-            "ParentProperty": "ParentId",
-            "ItemFormat": {
-              "ObjectFormat": {
-                "Format": "{Id:n3}_{DisplayName}"
-              }
-            },
-            "ValueProperty": "CardNumber",
-            "ReadOnly": false,
-            "MultiSelect": true,
-            "Value": {
-              "PropertyBinding": {
-                "DataSource": "MainDataSource",
-                "Property": "Sex"
-              }
-            },
-            "Items": {
-              "PropertyBinding": {
-                "DataSource": "dsTree"
-              }
-            }
           }
         },
         {

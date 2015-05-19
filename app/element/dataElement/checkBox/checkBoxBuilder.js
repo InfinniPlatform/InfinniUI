@@ -9,7 +9,7 @@ _.extend(CheckBoxBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
-        this.initValueProperty(params);
+        this.initValueProperty(params, true);
 
         params.element.setReadOnly(params.metadata.ReadOnly);
     },

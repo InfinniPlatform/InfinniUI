@@ -22,10 +22,10 @@ window.adjustLoginResult = function (result) {
 
         provider.getItems(filter, 0, 1, null, function (data) {
             if (data.length) {
-                defer.resolve({ UserName: data[0].LastName + ' ' + data[0].FirstName + ' ' + data[0].MiddleName });
+                defer.resolve({ UserName: data[0].LastName + ' ' + data[0].FirstName + ' ' + data[0].MiddleName, Roles: result.Roles});
                 window.currentMedicalWorker = data[0];
             } else {
-                defer.resolve({ UserName: result.UserName });
+                defer.resolve({ UserName: result.UserName, Roles: result.Roles });
             }
         });
     }
@@ -80,36 +80,19 @@ $.ajaxSetup({
         return defer.promise();
     }
 
-    $.ajax({
-        type: 'post',
-        url: host + '/SystemConfig/StandardApi/metadata/getregisteredconfiglist',
-        data: JSON.stringify({
-            "id": null,
-            "changesObject": "null",
-            "replace": false
-        }),
-        success: function (data) {
-            var $list = $('#configs'),
-                items = data.ConfigList;
-            for (var i = 0, ii = items.length; i < ii; i++) {
-                $list.append('<option>' + items[i].Name + '</option>');
-            }
-        }
-    });
-
-    $('#configs').change(function () {
-        var val = $('#configs').val();
-        if (val != '') {
-            location.href = location.href.replace(/#?\S*$/, '#/' + val);
-            location.reload();
-        }
-    });
-
     window.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
     setTimeout(layoutManager.init.bind(layoutManager), 1000);
+
+    var metadataCache;
+
+    if (InfinniUI.config.cacheMetadata) {
+        metadataCache = new Cache();
+        metadataCache.setLifetime(InfinniUI.config.cacheMetadata === true ? 0 : InfinniUI.config.cacheMetadata);
+    }
+
     window.providerRegister.register('MetadataDataSource', function (metadataValue) {
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
@@ -118,8 +101,9 @@ $.ajaxSetup({
                 layoutManager.init();
             }, 500 + i * 300);
         }
-
-        return new MetadataProviderREST(new QueryConstructorMetadata(host, metadataValue));
+        var dataProvider = new MetadataProviderREST(new QueryConstructorMetadata(host, metadataValue));
+        dataProvider.setCache(metadataCache);
+        return dataProvider;
     });
 
     window.providerRegister.register('DocumentDataSource', function (metadataValue) {
@@ -176,12 +160,12 @@ $.ajaxSetup({
             setTimeout(function () {
                 //adaptHeightInsideElement($('body'));
                 layoutManager.init();
+                layoutManager.resizeDialog();
             }, 100);
         });
-        showSerialPopup().then(function (result) {
-            if (result)
+
                 view.open();
-        });
+
     });
 
 
@@ -205,20 +189,8 @@ $.ajaxSetup({
         });
     };
 
-    window.onSuccessSignIn = function (context, result) {
-        context.Global.executeAction({
-            OpenViewAction: {
-                View: {
-                    AutoView: {
-                        ConfigId: 'Administration',
-                        DocumentId: 'UserOrganizationSession',
-                        MetadataName: 'EditView',
-                        OpenMode: 'Dialog'
-                    }
-                }
-            }
-        });
-    };
+
+
 
     //window.onSuccessSignIn = function(callback){
     //    callback(viewContext);
@@ -247,6 +219,6 @@ $.ajaxSetup({
     }
 })(
     $('body'),
-    //'/app/stubs/twoView.json'
+    //'/app/stubs/parameters.json'
     {ConfigId: window.location.hash.slice(2), DocumentId: 'Common', ViewType: 'HomePage'}
 );

@@ -23,10 +23,18 @@ var textEditorMixin = {
      */
     renderEditor: function (options) {
 
+        var convert = function (value) {
+            if (this.onEditorConvertValue) {
+                return this.onEditorConvertValue(value);
+            }
+            return value;
+        }.bind(this);
+
         var editor = new TextEditor({
             parent: this,
             el: options.el,
             validate: this.onEditorValidate.bind(this),
+            convert: convert,
             done: this.onEditorDone.bind(this),
             editMask: this.model.get('editMask'),
             multiline: options.multiline,
@@ -50,6 +58,9 @@ var textEditorMixin = {
             this.trigger('editor:hide');
         });
 
+        this.listenTo(this.model, 'change:value', function (model, value) {
+            editor.trigger('editor:update', value);
+        });
 
         //Метод для показа поля редактирования
         //Обычно необходимо вызывать при получении фокуса полем ввод а элемента управления
@@ -57,9 +68,7 @@ var textEditorMixin = {
             editor.trigger('editor:show', value, skipRefocus);
         };
 
-        this.listenTo(this.model, 'change:value', function (model, value) {
-            editor.trigger('editor:update', value);
-        });
+
     },
 
 
@@ -76,10 +85,11 @@ var textEditorMixin = {
     },
 
     onMouseenterControlHandler: function (event) {
-        if(this.model.get('enabled')) {
-            this.showEditor(this.model.get('value'), true);
-            this.onEditorHideControl();
-        }
+        //TODO: при ховере показывается маска (UI-854: убрал) по просьбе TeamLead'a
+        //if(this.model.get('enabled')) {
+            //this.showEditor(this.model.get('value'), true);
+            //this.onEditorHideControl();
+        //}
     },
 
     /**
@@ -96,8 +106,8 @@ var textEditorMixin = {
      * @param value
      */
     onEditorDone: function (value) {
-        if(value == '') {
-            value = null;
+        if(value == '' || value === null) {
+            value = undefined;
         }
         this.model.set('value', value);
     },

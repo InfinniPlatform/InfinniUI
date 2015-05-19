@@ -12,6 +12,10 @@ var ToolBarModel = ControlModel.extend({
         this.get('items').push(item);
     },
 
+    setItems: function (items){
+        this.set('items', items);
+    },
+
     getItems: function () {
         return this.get('items');
     }

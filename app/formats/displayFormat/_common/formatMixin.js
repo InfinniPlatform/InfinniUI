@@ -52,7 +52,7 @@ var formatMixin = {
     getPropertyValue: function (name, defaultValue) {
         var value = this[name];
 
-        return (typeof value === 'undefined' || value === null || value === '') ? defaultValue : value;
+        return (typeof value === 'undefined' || value === null) ? defaultValue : value;
     }
 
 };

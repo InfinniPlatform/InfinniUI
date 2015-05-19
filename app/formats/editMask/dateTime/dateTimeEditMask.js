@@ -526,36 +526,33 @@ _.extend(DateTimeEditMask.prototype, {
         var item;
         var mask;
         var value = this.value;
+        var done = true;
+
         for (var i = 0; i < template.length; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') continue;
             mask = this.masks[item.mask];
             if (typeof mask.apply !== 'undefined') {
+                if (item.text === '') {
+                    done = false;
+                    break;
+                }
                 value = mask.apply(value, item.text);
             }
         }
 
-        //return this.normalizeValue(value);
-        return value;
+
+        return done ? value : null;
     },
 
     /**
-     * Приведение редактируемого значение к исходному типу
-     * @param value
-     * @returns {*}
+     * Вернуть результат в используемумом формате данных: строка в формате ISO8601
+     * @returns {String}
      */
-    normalizeValue: function (value) {
-        var day = value.getDate().toString(),
-            mounth = (value.getMonth()+1).toString();
-        if(day.length == 1){
-            day = '0' + day;
-        }
-        if(mounth.length == 1){
-            mounth = '0' + mounth;
-        }
-        return value.getFullYear() + '-' + mounth + '-' + day;
-        //return value;
+    getData: function () {
+        return InfinniUI.DateUtils.toISO8601(this.getValue());
     },
+
     /**
      * Установка начального значения
      * @param value
@@ -570,12 +567,7 @@ _.extend(DateTimeEditMask.prototype, {
                 if(value instanceof Date){
                     date = value;
                 }else {
-                    //TODO: убрать говнокод (возможно передавать тип даты)
-                    if (value.length == 10) { //DATE
-                        date = new Date(value);
-                    } else {
-                        date = timezoneDate(value);//DATETIME || TIME
-                    }
+                    date = new Date(value);
                 }
 
             } catch (e) {

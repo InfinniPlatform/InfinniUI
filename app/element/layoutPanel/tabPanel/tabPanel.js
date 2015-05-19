@@ -86,6 +86,10 @@ _.extend(TabPanel.prototype, {
 
     onSelectionChanged: function (handler) {
         this.control.onSelectionChanged(handler);
+    },
+
+    getChildElements: function () {
+        return this.getPages();
     }
 
 });

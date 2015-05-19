@@ -65,7 +65,24 @@ var ComboBoxView = ControlView.extend({
         this.prerenderingActions();
         var data = this.model.toJSON(),
             needSearch = this.model.get('autocomplete') == 'Client' || this.model.get('autocomplete') == 'Server',
-            that = this;
+            that = this,
+            options = {
+                readonly: data.readOnly,
+                placeholder: data.placeholder,
+                multiple: data.multiSelect,
+                allowClear: data.showClear,
+                width: "off",
+                minimumResultsForSearch: needSearch ? 5 : -1,
+                initSelection: this.initSelection.bind(this)
+            };
+
+
+        var autocomplete = this.model.get('autocomplete');
+        if(autocomplete !== 'Server'){
+            options.data = this.listData;
+        }else{
+            options.query = this.select2Query.bind(this);
+        }
 
         if(this.model.get('selectView')){
             this.$el.html(this.selectViewTemplate(data));
@@ -74,27 +91,22 @@ var ComboBoxView = ControlView.extend({
         }
 
         this.bindUIElements();
-        this.ui.control.select2({
-            readonly: data.readOnly,
-            placeholder: data.placeholder,
-            multiple: data.multiSelect,
-            allowClear: data.showClear,
-            data: this.listData,
-            width: "off",
-            minimumResultsForSearch: needSearch ? 0 : 20,
-            initSelection: this.initSelection.bind(this),
-            query: this.select2Query.bind(this)
-        });
+        this.ui.control.select2(options);
 
         this.setEnabled(data.enabled);
 
-        this.ui.control.on('select2-opening', function(){
+        this.ui.control.on('select2-opening', function(event){
+            if (that.model.get('showPopup') !== true) {
+                event.preventDefault();
+            }
+
             that.isOpen = true;
             if(!that.isListWasFirstOpened){
                 that.isListWasFirstOpened = true;
                 that.trigger('firstOpening');
             }
         });
+
         this.ui.control.on('select2-close', function(){
             that.isOpen = false;
         });
@@ -112,24 +124,28 @@ var ComboBoxView = ControlView.extend({
      * @param options
      */
     select2Query: function (options) {
-        var that = this;
+        if(options.term == this.model.get('term')){
+            this.select2callback(options.callback)
+        }else{
+            var that = this;
+            var autocomplete = this.model.get('autocomplete');
+            var delay = autocomplete === 'Server' ? 400 : 0;
 
-        if(this.lastQueryId){
-            clearTimeout(this.lastQueryId);
+            if(this.lastQueryId){
+                clearTimeout(this.lastQueryId);
+            }
+
+            this.lastQueryId = setTimeout(function(){
+                that.lastQueryId = null;
+
+                var term = that.model.get('term');
+
+                that.callback2query = that.callback2query || {};
+                that.callback2query[options.term] = options.callback;
+                that.model.set('term', options.term);
+                that.select2callback(options.callback);
+            } , delay);
         }
-
-        this.lastQueryId = setTimeout(function(){
-            that.lastQueryId = null;
-
-            var term = that.model.get('term');
-
-            that.callback2query = that.callback2query || {};
-            that.callback2query[options.term] = options.callback;
-            that.model.set('term', options.term);
-            that.select2callback(options.callback);
-        } , 400);
-
-
     },
 
     /**
@@ -268,6 +284,7 @@ var ComboBoxView = ControlView.extend({
     onChangeReadOnly: function (model, value) {
         if (!this.wasRendered) return;
         this.ui.control.select2('readonly', value);
+        this.ui.btnSelectView.prop('disabled', value);
     },
 
     onChangeEnabledHandler: function (model, value) {
@@ -344,7 +361,7 @@ var ComboBoxView = ControlView.extend({
     onClearValueHandler: function(e){
         var model = this.model;
         if (model.get('enabled') && !model.get('readOnly')) {
-            this.model.set('value', undefined);
+            this.model.set('value', null);
             this.ui.clearValue.hide();
         }
     },

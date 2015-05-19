@@ -1,0 +1,436 @@
+{
+  "Id": "eef5d0b0-d8ed-4070-a1fc-a76a08f20233",
+  "Version": "version_systemconfig",
+  "ParentId": "2edea4df-b673-492b-b0eb-1894367f527a",
+  "Name": "ListView",
+  "Caption": "Форма журнала расходных документов",
+  "Description": "",
+  "MetadataType": "ListView",
+  "Text": "Журнал 'Расходный документ'",
+  "Scripts": [
+    {
+      "Name": "UpdateSpecifications",
+      "Body": "var selectedDoc = context.DataSources['MainDataSource'].getSelectedItem();\r\nvar criteria = new Criteria();\r\nif (selectedDoc !== undefined) {\r\n    context.DataSources['MoveDataSource'].setSelectedItem(selectedDoc);\r\n    context.DataSources['CancelMoveDataSource'].setSelectedItem(selectedDoc);\r\n    criteria.items = [{\r\n        CriteriaType: 1,\r\n        Property: 'OutcomeDocument.Id',\r\n        Value: selectedDoc.Id\r\n    }];\r\n    var criteriaForPrinting = new Criteria();\r\n    criteriaForPrinting.items = [{\r\n        CriteriaType: 1,\r\n        Property: 'Id',\r\n        Value: selectedDoc.Id\r\n    }];\r\n    context.DataSources['OutcomeDocumentPrintViewDataSource'].setQueryFilter(criteriaForPrinting);\r\n} else {\r\n    criteria.items = [{\r\n        CriteriaType: 1,\r\n        Property: 'OutcomeDocument.Id',\r\n        Value: '0000'\r\n    }];\r\n}\r\ncontext.DataSources['OutcomeDocumentSpecificationDataSource'].setQueryFilter(criteria);"
+    },
+    {
+      "Name": "MoveClick",
+      "Body": "context.Global.executeAction({\r\n   SaveAction : {\r\n      DataSource : \"MoveDataSource\",\r\n      CanClose : false\r\n   }\r\n},function(data) {\r\n      if(data.IsValid != false) {\r\n      new MessageBox({\r\n                text: 'Документ отработан',\r\n                buttons: [\r\n                    {\r\n \t\t\t\t\t\tname: 'ОК'             \t\t\t       \r\n                    }\r\n                ]\r\n             })\r\n             }});\r\n             \r\n            \r\n            \r\n            "
+    },
+    {
+      "Name": "CancelMoveClick",
+      "Body": "context.Global.executeAction({\r\n   SaveAction : {\r\n      DataSource : \"CancelMoveDataSource\",\r\n      CanClose : false\r\n   }\r\n},function(data) {\r\n      if(data.IsValid != false) {\r\n      new MessageBox({\r\n                text: 'Отработка отменена',\r\n                buttons: [\r\n                    {\r\n \t\t\t\t\t\tname: 'ОК'             \t\t\t       \r\n                    }\r\n                ]\r\n             })\r\n             }});"
+    }
+  ],
+  "DataSources": [
+    {
+      "DocumentDataSource": {
+        "Name": "MainDataSource",
+        "ConfigId": "Warehouse",
+        "DocumentId": "OutcomeDocument",
+        "OnSelectedItemChanged": {"Name": "UpdateSpecifications"}
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "Name": "OutcomeDocumentSpecificationDataSource",
+        "ConfigId": "Warehouse",
+        "DocumentId": "OutcomeDocumentSpecification",
+        "Query": [
+          {
+            "Property": "OutcomeDocument.Id",
+            "Value": "0000",
+            "CriteriaType": 1
+          }
+        ]
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Warehouse",
+        "DocumentId": "OutcomeDocument",
+        "Name": "MoveDataSource",
+        "UpdateAction": "MoveBetweenStorages"
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Warehouse",
+        "DocumentId": "OutcomeDocument",
+        "Name": "CancelMoveDataSource",
+        "UpdateAction": "CancelMoveBetweenStorages"
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Warehouse",
+        "DocumentId": "OutcomeDocument",
+        "Name": "OutcomeDocumentPrintViewDataSource",
+        "UpdateAction": "PrepareOutcomeDocumentPrintView"
+      }
+    }
+  ],
+  "LayoutPanel": {
+    "StackPanel": {
+      "Items": [
+        {"SearchPanel": {"DataSource": "MainDataSource"}},
+        {
+          "DataGrid": {
+            "Columns": [
+              {
+                "Text": "Префикс документа",
+                "DisplayProperty": "DocumentPrefix"
+              },
+              {
+                "Text": "Номер документа",
+                "DisplayProperty": "DocNumber"
+              },
+              {
+                "Text": "Дата документа",
+                "DisplayProperty": "DocDate"
+              },
+              {
+                "Text": "Склад отправитель",
+                "DisplayProperty": "SourceStorage.DisplayName"
+              },
+              {
+                "Text": "Тип операции отправления",
+                "DisplayProperty": "SourceOperationType.DisplayName"
+              },
+              {
+                "Text": "Склад получатель",
+                "DisplayProperty": "TargetStorage.DisplayName"
+              },
+              {
+                "Text": "Тип операции получения",
+                "DisplayProperty": "TargetOperationType.DisplayName"
+              },
+              {
+                "Text": "Документ отработан",
+                "DisplayProperty": "IsMoved",
+                "ItemFormat": {
+                  "BooleanFormat": {
+                    "TrueText": "Да",
+                    "FalseText": "Нет"
+                  }
+                }
+              }
+            ],
+            "Items": {"PropertyBinding": {"DataSource": "MainDataSource"}},
+            "ToolBar": {
+              "Items": [
+                {
+                  "ToolBarButton": {
+                    "Text": "Добавить",
+                    "Action": {
+                      "AddAction": {
+                        "View": {
+                          "AutoView": {
+                            "ConfigId": "Warehouse",
+                            "DocumentId": "OutcomeDocument",
+                            "ViewType": "EditView",
+                            "OpenMode": "Page"
+                          }
+                        },
+                        "DataSource": "MainDataSource"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Отчеты – Расходная накладная",
+                    "Action": {
+                      "PrintViewAction": {
+                        "DataSource": "OutcomeDocumentPrintViewDataSource",
+                        "PrintViewId": "PrintView",
+                        "PrintViewType": "ObjectView"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Отчеты – Накладная на возврат поставщику",
+                    "Action": {
+                      "PrintViewAction": {
+                        "DataSource": "OutcomeDocumentPrintViewDataSource",
+                        "PrintViewId": "ReturnPrintView",
+                        "PrintViewType": "ObjectView"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Отработать по складу",
+                    "OnClick": {"Name": "MoveClick"}
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Отменить отработку",
+                    "OnClick": {"Name": "CancelMoveClick"}
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Редактировать",
+                    "Action": {
+                      "EditAction": {
+                        "View": {
+                          "AutoView": {
+                            "ConfigId": "Warehouse",
+                            "DocumentId": "OutcomeDocument",
+                            "ViewType": "EditView",
+                            "OpenMode": "Page"
+                          }
+                        },
+                        "DataSource": "MainDataSource"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Удалить",
+                    "Action": {"DeleteAction": {"DataSource": "MainDataSource"}}
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "DataGrid": {
+            "Columns": [
+              {
+                "Text": "Партия",
+                "DisplayProperty": "Series.Name"
+              },
+              {
+                "Text": "Количество",
+                "DisplayProperty": "Quantity"
+              }
+            ],
+            "Items": {"PropertyBinding": {"DataSource": "OutcomeDocumentSpecificationDataSource"}},
+            "ToolBar": {
+              "Items": [
+                {
+                  "ToolBarButton": {
+                    "Text": "Добавить",
+                    "Action": {
+                      "AddAction": {
+                        "View": {
+                          "InlineView": {
+                            "View": {
+                              "Id": "6e886f9e-71b2-4720-8889-3f029ad9ccc0",
+                              "OnLoaded": {"Name": "OnLoad"},
+                              "DataSources": [
+                                {
+                                  "DocumentDataSource": {
+                                    "ConfigId": "Warehouse",
+                                    "DocumentId": "OutcomeDocumentSpecification",
+                                    "Name": "MainDataSource"
+                                  }
+                                },
+                                {
+                                  "DocumentDataSource": {
+                                    "ConfigId": "Warehouse",
+                                    "DocumentId": "OutcomeDocument",
+                                    "Name": "OutcomeDocumentDataSource"
+                                  }
+                                },
+                                {
+                                  "DocumentDataSource": {
+                                    "ConfigId": "Warehouse",
+                                    "DocumentId": "Series",
+                                    "Name": "SeriesDataSource"
+                                  }
+                                }
+                              ],
+                              "LayoutPanel": {
+                                "StackPanel": {
+                                  "Items": [
+                                    {
+                                      "ScrollPanel": {
+                                        "LayoutPanel": {
+                                          "GridPanel": {
+                                            "Rows": [
+                                              {
+                                                "Cells": [
+                                                  {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [
+                                                      {
+                                                        "Label": {
+                                                          "Name": "OutputDocumentLabel",
+                                                          "Text": "Расходный документ"
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "ColumnSpan": 9,
+                                                    "Items": [
+                                                      {
+                                                        "ComboBox": {
+                                                          "Name": "OutputDocumentCombobox",
+                                                          "ValueProperty": "Id",
+                                                          "DisplayProperty": "DocNumber",
+                                                          "Value": {
+                                                            "PropertyBinding": {
+                                                              "DataSource": "MainDataSource",
+                                                              "Property": "OutcomeDocument"
+                                                            }
+                                                          },
+                                                          "Items": {"PropertyBinding": {"DataSource": "OutcomeDocumentDataSource"}}
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [{"Label": {"Text": "Партия"}}]
+                                                  },
+                                                  {
+                                                    "ColumnSpan": 9,
+                                                    "Items": [
+                                                      {
+                                                        "ComboBox": {
+                                                          "ValueProperty": "Id",
+                                                          "DisplayProperty": "Name",
+                                                          "Value": {
+                                                            "PropertyBinding": {
+                                                              "DataSource": "MainDataSource",
+                                                              "Property": "Series"
+                                                            }
+                                                          },
+                                                          "Items": {"PropertyBinding": {"DataSource": "SeriesDataSource"}},
+                                                          "ShowSelect": true,
+                                                          "SelectView": {
+                                                            "AutoView": {
+                                                              "ConfigId": "Warehouse",
+                                                              "DocumentId": "Series",
+                                                              "ViewType": "SelectView",
+                                                              "OpenMode": "Dialog"
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [{"Label": {"Text": "Количество"}}]
+                                                  },
+                                                  {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [
+                                                      {
+                                                        "TextBox": {
+                                                          "Value": {
+                                                            "ParameterBinding": {
+                                                              "Parameter": "SelectedDocument",
+                                                              "Property": "DocNumber"
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "ToolBar": {
+                                        "Items": [
+                                          {
+                                            "ToolBarButton": {
+                                              "Text": "Ок",
+                                              "Action": {"SaveAction": {"DataSource": "MainDataSource"}}
+                                            }
+                                          },
+                                          {
+                                            "ToolBarButton": {
+                                              "Text": "Отмена",
+                                              "Action": {"CancelAction": {}}
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "MetadataType": "EditView",
+                              "Description": "",
+                              "Parameters": [{
+                                "Name": "SelectedDocument",
+                                "OnValueChanged": {
+                                  "Name":"OnParam"
+                                }
+                              }],
+                              "Scripts": [
+                                {
+                                  "Name": "OnLoad",
+                                  "Body": "var document = context.Parameters['SelectedDocument'].getValue();if(document === null ||typeof document === 'undefined') { context.Controls['OutputDocumentCombobox'].setVisible(true);context.Controls['OutputDocumentLabel'].setVisible(true); } else {context.Controls['OutputDocumentCombobox'].setVisible(false); context.Controls['OutputDocumentLabel'].setVisible(false); context.DataSources['MainDataSource'].setSelectedItem({OutcomeDocument:{Id : document.Id, DisplayName : document.DocNumber}})}; console.log('PARAMS', document)"
+                                },
+                                {
+                                  "Name": "OnParam",
+                                  "Body":"debugger;"
+                                }
+                              ],
+                              "Caption": "Форма редактирования спецификаций расходного документа",
+                              "Text": "Товарные запасы склада",
+                              "Name": "EditViewSeries",
+                              "ParentId": "854655c2-d1d6-4ee8-99e0-f9452c84fe9c",
+                              "Version": "version_systemconfig",
+                              "__ConfigId": "systemconfig",
+                              "__DocumentId": "viewmetadata",
+                              "TimeStamp": "2015-02-11T11:08:54.0526319+06:00",
+                              "DocumentId": "OutcomeDocumentSpecification",
+                              "ConfigId": "Warehouse",
+                              "RequestParameters": []
+                            },
+                            "Parameters": [
+                              {
+                                "Name": "SelectedDocument",
+                                "Value": {
+                                  "PropertyBinding": {
+                                    "DataSource": "MainDataSource",
+                                    "Property": "$"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "DataSource": "OutcomeDocumentSpecificationDataSource"
+                      }
+                    }
+                  }
+                },
+                {
+                  "ToolBarButton": {
+                    "Text": "Удалить",
+                    "Action": {"DeleteAction": {"DataSource": "OutcomeDocumentSpecificationDataSource"}}
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "__ConfigId": "systemconfig",
+  "__DocumentId": "viewmetadata",
+  "TimeStamp": "2015-02-11T11:08:04.6556927+06:00",
+  "DocumentId": "OutcomeDocument",
+  "ConfigId": "Warehouse",
+  "RequestParameters": []
+}

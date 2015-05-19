@@ -66,7 +66,7 @@ var StatusBarView = ControlView.extend({
             $(this).find('#password, #userName').val('');
             $(this).find('#remember').attr('checked', false);
         });
-        this.$modal.find('.post').one('click', function () {
+        this.$modal.find('.post').on('click', function () {
             signInInternal(self);
         })
     },
@@ -96,19 +96,26 @@ var StatusBarView = ControlView.extend({
 
     render: function () {
         var result = this.model.get('result');
-        var $wrap = $(this.template(this.model.toJSON()));
+        var header = typeof(launcherConfig) != "undefined" && launcherConfig.header ? launcherConfig.header : '';
+        var $wrap = $(this.template({header: header}));
         var $loginTemplate,
             self = this;
 
         window.adjustLoginResult(result).then(function(r){
             if (result) {
-                $loginTemplate = $(self.successTemplate({displayName: r.UserName, activeRole: r.ActiveRole}));
+                $loginTemplate = $(self.successTemplate({
+                    displayName: r.UserName,
+                    activeRole: r.ActiveRole,
+                    roles: _.pluck(result.Roles, 'DisplayName').join(', ')
+                }));
             } else {
                 $loginTemplate = $(self.enterTemplate({}));
             }
 
             $wrap.find('.page-header-inner').prepend($loginTemplate);
-            self.$el.html($wrap);
+            self.$el
+                .empty()
+                .append($wrap);
         });
 
         this.$el.find('.calendar').datepicker({

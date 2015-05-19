@@ -1,6 +1,10 @@
 var Element = function (parentView) {
     this.parentView = parentView;
     this.control = this.createControl();
+    this.state = {
+        Enabled: true
+    };
+    this.eventStore = new EventStore();
 };
 
 _.extend(Element.prototype, {
@@ -38,8 +42,51 @@ _.extend(Element.prototype, {
     },
 
     setEnabled: function (isEnabled) {
-        if (typeof isEnabled == 'boolean') {
-            this.control.set('enabled', isEnabled);
+        if (typeof isEnabled !== 'boolean') {
+            return;
+        }
+
+        this.setState('Enabled', isEnabled);
+
+        var parentEnabled = this.control.get('parentEnabled');
+        var old = this.control.get('enabled');
+
+        isEnabled = parentEnabled && isEnabled;
+
+        if (isEnabled === old) {
+            return;
+        }
+
+        this.control.set('enabled', isEnabled);
+        this.setParentEnabledOnChild(isEnabled);
+    },
+
+    setParentEnabledOnChild: function (value) {
+        var elements = this.getChildElements();
+        if (_.isEmpty(elements) === false) {
+            for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
+                if (typeof elements[i].setParentEnabled === 'undefined') {
+                    continue;
+                }
+                elements[i].setParentEnabled(value);
+            }
+        }
+    },
+
+    setParentEnabled: function (value) {
+
+        if (typeof value !== 'boolean') {
+            return;
+        }
+
+        var old = this.control.get('parentEnabled');
+        this.control.set('parentEnabled', value);
+
+        if (old !== value) {
+            var enabled = value && this.getState('Enabled');
+            this.control.set('enabled', enabled);
+            this.setParentEnabled(enabled);
+            this.setParentEnabledOnChild(enabled);
         }
     },
 
@@ -52,6 +99,17 @@ _.extend(Element.prototype, {
             this.control.set('visible', isVisible);
         }
     },
+
+    getStyle: function(){
+        return this.control.get('style');
+    },
+
+    setStyle: function(style){
+        if(typeof style == 'string'){
+            this.control.set('style', style);
+        }
+    },
+
 
     getHorizontalAlignment: function () {
         return this.control.get('horizontalAlignment');
@@ -123,5 +181,13 @@ _.extend(Element.prototype, {
      */
     getValidationState: function () {
         return this.control.get('validationState');
+    },
+
+    getState: function (name) {
+        return this.state[name];
+    },
+
+    setState: function (name, value) {
+        this.state[name] = value;
     }
 });

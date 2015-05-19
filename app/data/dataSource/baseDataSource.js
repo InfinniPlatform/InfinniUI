@@ -55,6 +55,10 @@
 
     var suspended = false;
 
+    this.isSuspended = function () {
+        return suspended;
+    };
+
     var _loadingProcess = $.Deferred();
 
     this.loading = _loadingProcess.promise();
@@ -73,6 +77,7 @@
 
     this.setDataItems = function (value) {
         dataItems = value;
+        currentStrategy.setDataItems(value);
         if (suspended) {
             suspended = false;
         }
@@ -100,9 +105,8 @@
     };
 
     var addOrUpdateItem = function (item) {
-        var index = dataItems.indexOf(item);
-        if (index > -1) {
-            dataItems[index] = item;
+        if (dataItems.length == 1) {
+            dataItems[0] = item;
         }
         else {
             //may be slow method to add
@@ -172,10 +176,13 @@
         else if (value > 1000) {
             value = 1000;
         }
+
+        var isPageSizeChanging = pageSize !== value;
+
         pageNumber = 0;
         pageSize = value;
 
-        if (pageSize !== value && !suspended) {
+        if (isPageSizeChanging && !suspended) {
             currentStrategy.onPageNumberChanged(pageNumber);
             currentStrategy.onPageSizeChanged(value);
 
@@ -238,64 +245,83 @@
     };
     var warnings = false;
 
-    this.saveItem = function (item, callback) {
-        dataProvider.replaceItem(item, warnings, function (data) {
-            //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
-            if (data.IsValid || data.IsValid == undefined) {
-                addOrUpdateItem(item);
-                currentStrategy.onItemSaved(item, data);
-                resetModified(item);
-            } else {
-                var validation = data.ValidationMessage;
-                var resultText = '';
+    this.saveItem = function (item, onSuccess/*, onError*/) {
 
-                if (validation.ValidationErrors) {
-                    if (!validation.ValidationErrors.IsValid) {
-                        if (validation.ValidationErrors.Message instanceof Array) {
-                            for (var i = 0; i < validation.ValidationErrors.Message.length; i++) {
-                                toastr.error(validation.ValidationErrors.Message[i].Message, "Ошибка!");
-                            }
-                        } else {
-                            toastr.error('Обратитесь к системному администратору', "Ошибка!");
-                        }
-                    }
-                }
-                if (validation.ValidationWarnings) {
-                    if (!validation.ValidationWarnings.IsValid) {
-                        resultText = validation.ValidationWarnings.Message[0].Message;
-                        for (var j = 1; j < validation.ValidationWarnings.Message.length; j++) {
-                            resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + validation.ValidationWarnings.Message[j].Message;
-                        }
-                        resultText += '<p style="font-weight: bolder;">Продолжить?';
-
-                        new MessageBox({
-                            text: resultText,
-                            buttons: [
-                                {
-                                    name: 'Да',
-                                    type: 'action',
-                                    onClick: function () {
-                                        warnings = true;
-                                        dataProvider.replaceItem(item, warnings, function (data) {
-                                            addOrUpdateItem(item);
-                                            currentStrategy.onItemSaved(item, data);
-                                            resetModified(item);
-                                        });
-
-                                    }
-                                },
-                                {
-                                    name: 'Нет'
-                                }
-                            ]
-                        });
-                    }
-                }
+        var showErrors = function (errors) {
+            if (_.isEmpty(errors) || errors.IsValid) {
+                return;
             }
-            if (callback) {
-                callback(data);
+            if (errors.Message instanceof Array) {
+                for (var i = 0; i < errors.Message.length; i++) {
+                    toastr.error(errors.Message[i].Message, "Ошибка!");
+                }
+            } else if(typeof errors.Message == 'string' && errors.Message.indexOf('{') >= 0){
+                var result = JSON.parse(errors.Message);
+                result = result.ValidationMessage &&
+                result.ValidationMessage.ValidationErrors &&
+                result.ValidationMessage.ValidationErrors.Message ? result.ValidationMessage.ValidationErrors.Message : 'Обратитесь к системному администратору';
+                toastr.error(result, "Ошибка!");
+            }else{
+                toastr.error('Обратитесь к системному администратору', "Ошибка!");
             }
-        });
+        };
+
+        var showWarnings = function (warnings) {
+            if (_.isEmpty(warnings) || warnings.IsValid) {
+                return;
+            }
+
+            var resultText = warnings.Message[0].Message;
+            for (var j = 1; j < warnings.Message.length; j++) {
+                resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + warnings.Message[j].Message;
+            }
+            resultText += '<p style="font-weight: bolder;">Продолжить добавление?';
+
+            new MessageBox({
+                text: resultText,
+                buttons: [
+                    {
+                        name: 'Да',
+                        type: 'action',
+                        onClick: attemptSave.bind(undefined, true)
+                    },
+                    {
+                        name: 'Нет'
+                    }
+                ]
+            });
+        };
+
+        var invokeCallback = function (callback) {
+            if (typeof callback === 'function') {
+                var args = Array.prototype.slice.call(arguments, 1);
+                callback.apply(undefined, args);
+            }
+        };
+
+        var idProperty = that.getIdProperty() || "Id";
+
+        var attemptSave = function (warnings) {
+            dataProvider.replaceItem(item, warnings, function (data) {
+                //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
+                if ((data.IsValid || data.IsValid == undefined) ) {
+                    if(!(data instanceof Array) && item != null) {
+                        item[idProperty] = data.InstanceId;
+                        addOrUpdateItem(item);
+                        currentStrategy.onItemSaved(item, data);
+                        resetModified(item);
+                    }
+                    invokeCallback(onSuccess, data);
+                } else {
+                    var validation = data.ValidationMessage;
+                    showErrors(validation.ValidationErrors);
+                    showWarnings(validation.ValidationWarnings);
+                }
+            });
+
+        };
+
+        attemptSave(warnings);
     };
 
     this.deleteItem = function (item) {
@@ -360,11 +386,11 @@
             textFilter = value;
             var self = this;
 
-            setTimeout(function(){
+            setTimeout(function () {
                 currentStrategy.onPageNumberChanged(0);
                 currentStrategy.onTextFilterChanged(value);
                 self.updateItems();
-            },30)
+            }, 30)
         }
     };
 
@@ -398,10 +424,10 @@
         if (selectedItem === undefined || selectedItem === null) {
             return null;
         }
-        
+
         return JSON.parse(JSON.stringify(selectedItem));
     };
-    
+
     this.setSelectedItem = function (value) {
         var isEmpty = function (value) {
             return typeof value === 'undefined' || value === null;

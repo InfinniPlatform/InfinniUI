@@ -127,6 +127,7 @@ var DataGridBuilder = function () {
         //dataGrid.setReadOnly(metadata.ReadOnly);
         dataGrid.setValueProperty(metadata.ValueProperty);
         dataGrid.setHorizontalAlignment(metadata.HorizontalAlignment);
+        dataGrid.setVerticalAlignment(metadata.VerticalAlignment);
         dataGrid.setAutoLoad(metadata.AutoLoad);
         dataGrid.setItemTemplate(this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty));
         this.initGroups(dataGrid, metadata.Groups);
@@ -196,36 +197,11 @@ var DataGridBuilder = function () {
             };
 
             _.each(metadata.ToolBar.Items, function (data) {
-                var button = data.ToolBarButton;
-                if (button) {
-                    items.push(button.Text);
-                    actions.push(builder.build(parent, button.Action));
-
-                    if (button.OnClick){
-                        scripts.push(executeScript.bind(undefined, button.OnClick.Name));
-                    } else {
-                        scripts.push(null);
-                    }
-                }
+                var button = builder.build(parent, data, collectionProperty);
+                items.push(button);
             });
 
             popupMenu.setItems(items);
-            popupMenu.on('clickItem', function (data) {
-                var index = data.index;
-
-                if (typeof index === 'undefined' || index === null) {
-                    return;
-                }
-
-                var action = actions[index];
-                if (typeof action !== 'undefined' && action !== null) {
-                    action.execute();
-                }
-                var scriptHandler = scripts[index];
-                if (scriptHandler !== null) {
-                    scriptHandler();
-                }
-            });
             dataGrid.setPopUpMenu(popupMenu);
         }
 

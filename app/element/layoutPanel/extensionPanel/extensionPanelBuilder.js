@@ -25,7 +25,10 @@ _.extend(ExtensionPanelBuilder.prototype, {
         });
 
         params.element.setParameters(parameters);
-        params.element.setContext(params.parent.getContext());
+        //params.element.setContext(params.parent.getContext());
+        params.element.getContext = function () {
+            return params.parent.getContext();
+        }
     },
 
     initScriptsHandlers: function(params){
@@ -39,8 +42,14 @@ _.extend(ExtensionPanelBuilder.prototype, {
         }
     },
 
-    createElement: function () {
-        return new ExtensionPanel(this.parent);
+    createElement: function (params) {
+        var element = new ExtensionPanel(this.parent);
+
+        element.getContext = function () {
+            return params.parent.getContext();
+        };
+
+        return element;
     }
 
 });

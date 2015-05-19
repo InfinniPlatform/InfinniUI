@@ -1,14 +1,19 @@
-function EditItemActionBuilder(metadataView) {
+function EditItemActionBuilder() {
 
     var baseItemActionBuilder = null;
 
-    this.build = function(builder,parent,metadata){
-        var action = new BaseItemActionBuilder(this.executeAction).build(builder,parent,metadata);
+    this.build = function(builder, parent, metadata, collectionProperty){
 
-        var that = this;
+        var action = new BaseItemActionBuilder(this.executeAction).build(builder,parent,metadata, collectionProperty);
+
         action.setAction(function (callback) {
-            that.executeAction(builder, action, metadataView, callback);
-        });
+            if(collectionProperty){
+                var baseIndex = collectionProperty.getBaseIndex();
+                var items = action.getItems();
+                action.setSelectedItem(items[baseIndex]);
+            }
+            this.executeAction(builder, action, metadata, callback);
+        }.bind(this));
 
         return action;
     };
@@ -38,14 +43,14 @@ function EditItemActionBuilder(metadataView) {
                         itemDataSource.setEditMode();
                         itemDataSource.resumeUpdate();
 
-                        var copy = {};
-                        for(var property in selectedItem){
+                        //var copy = {};
+                        //for(var property in selectedItem){
+                        //
+                        //    copy[property] = selectedItem[property];
+                        //}
 
-                            copy[property] = selectedItem[property];
-                        }
 
-
-                        itemDataSource.setSelectedItem(copy);
+                        itemDataSource.setSelectedItem(_.clone(selectedItem));
 
                         view.onClosed(function(acceptResult){
                             if(acceptResult == dialogResult.accept) {
@@ -56,7 +61,6 @@ function EditItemActionBuilder(metadataView) {
 
                                     action.replaceItem(selectedItem, newItem);
                                     action.setSelectedItem(newItem);
-
                                 }
                             }
 

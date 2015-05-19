@@ -15,5 +15,9 @@ _.extend(ImageBoxControl.prototype, {
 
     onValueChanged: function(handler){
         this.controlModel.on('change:value', handler);
+    },
+
+    onUrlChanged: function (handler) {
+        this.controlModel.on('change:url', handler);
     }
 });

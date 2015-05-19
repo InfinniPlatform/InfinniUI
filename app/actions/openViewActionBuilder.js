@@ -5,7 +5,7 @@ function OpenViewActionBuilder() {
             builder.build(parent, metadata.View).createView(function (view) {
                 if (callback) {
                     view.onLoaded(function () {
-                        callback();
+                        callback(view);
                     });
                 }
 

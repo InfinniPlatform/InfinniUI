@@ -2,38 +2,38 @@ function MetadataDataSourceProvider(urlConstructor, successCallback, failCallbac
 
     this.getRegisteredConfigList = function (resultCallback) {
         new RequestExecutor(resultCallback, successCallback, failCallback)
-            .makeRequest(urlConstructor.constructGetRegisteredConfigListRequest());
+            .makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getConfigurationMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetConfigurationMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getDocumentListMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentListMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getDocumentMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getDocumentElementListMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentElementListMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getMenuListMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetMenuListMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getMenuMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetMenuMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getValidationWarningMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetValidationWarningMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 
     this.getValidationErrorMetadata = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetValidationErrorMetadataRequest());
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 }

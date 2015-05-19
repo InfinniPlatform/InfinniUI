@@ -5,7 +5,7 @@
   height: 100%;
   min-height: 56px;
   padding: 5px;
-  background-color: @color-light-gray3;
+  background-color: @color-elements;
   float: left;
   border: 1px solid @color-border;
 
@@ -64,8 +64,10 @@
       }
       .btn_search {
         width: 102px;
+        height: 30px;
         border: none;
         margin-right: 2px;
+        margin-left: 10px;
         background-color: @color-light-gray2;
       }
       .btn_search:hover {
@@ -73,11 +75,16 @@
       }
       .dropdown {
         .btn {
-          padding: 7px 4px;
+//          padding: 7px 4px;
+          width: 16px;
+          padding: 0;
           background-color: @color-light-gray2;
           border: none;
           i {
+            width: auto;
             color: @color-black;
+            margin: 0;
+            line-height: 30px;
           }
         }
         .btn:hover {
@@ -85,9 +92,15 @@
         }
         .dropdown-menu {
           left: -104px;
-          width: @buttonsWidth;;
+          width: 120px;
+          margin-top: 1px;
           box-shadow: none;
           min-width: 0;
+          li{
+            a{
+              line-height: 14px;
+            }
+          }
         }
       }
     }

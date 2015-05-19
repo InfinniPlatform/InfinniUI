@@ -1,23 +1,10 @@
 function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstructor) {
 
-    var listBox;
+    var listBox = this;
 
-    var template = '' +
-        '<div class="row" style="margin-left: 0">' +
-        '<div class="col-md-12">' +
-        '   <div class="portlet box blue-hoki">' +
-        '        <div class="portlet-title">' +
-        '           <div class="caption">' +
-        '               <i class="fa fa-list"></i>' +
-        '           </div>' +
-        '           <div class="actions">' +
-        '              <p class="btn btn-default btn-sm btn-add"><i class="fa fa-plus"></i></p>' +
-        '           </div>' +
-        '        </div>' +
-        '        <div class="portlet-body">' +
-        '        </div>' +
-        '   </div>' +
-        '</div>';
+    listBox.value = null;
+
+    var template = InfinniUI.Template["element/dataElement/listBox/template/listBox.tpl.html"];
 
     /*
      Список данных ListBox. Можно было бы обойтись без данного списка,
@@ -26,6 +13,9 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
      */
     var items = [];
 
+    var onSetSelectedValueHandlers = $.Callbacks();
+    var onDoubleClickHandlers = $.Callbacks();
+
     var popupMenu;
 
     /*
@@ -33,6 +23,12 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
      данный элемент отображает и нативным DOM-элементом, представляющим элемент данных
      */
     var listBoxItems = [];
+
+
+    //формируем DOM
+    var $template = $(template({}));
+    var $body = $template.find('.listbox-body');
+
 
     /*
      Создание нового элемента, при условии отсутствия установленнго AddItemAction
@@ -48,6 +44,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         listBox.addItem(item);
     };
 
+
     /*
      Добавление нового ListItem
      */
@@ -57,7 +54,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
             return item == dataItem;
         });
 
-        if(!foundItem) {
+        if(typeof foundItem === 'undefined') {
             items.push(dataItem);
         }
 
@@ -77,8 +74,19 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
 
         var element = listBoxItemConstructor(baseIndex); //builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(metadata.Items.PropertyBinding.Property, baseIndex));
 
+        var listBoxItem = new ListBoxItem(element, getEditHandler(), onRemoveListBoxItem, this.getMultiSelect());
 
-        var listBoxItem = new ListBoxItem(element, getEditHandler(), onRemoveListBoxItem);
+        var setSelectedValue = this.getValue();
+
+        if(this.getMultiSelect() && _.isArray(setSelectedValue)){
+            _.each(setSelectedValue, function(item){
+                if(item.Id == dataItem.Id){
+                    var $el = listBoxItem.render();
+                    $el.find('.item-content').addClass('selected');
+                    $el.find('.check-listbox-item').prop('checked', true);
+                }
+            })
+        }
 
         listBoxItems.push({
             element: element,
@@ -89,6 +97,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
 
         /** Создание меню для элемента ***/
         (function(){
+            return;
             var popupMenu = new DataGridPopupMenuView();
             var items = ['Добавить'];
             var handlers = [listBox.runAddItemAction];
@@ -127,7 +136,6 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         })();
 
 
-
         insertListItem(listBoxItem);
 
     };
@@ -144,7 +152,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
      */
     var insertListItem = function (collectionItem) {
 
-        $template.find('.portlet-body').append(collectionItem.getControl());
+        $body.append(collectionItem.getControl());
     };
 
     /*
@@ -152,6 +160,17 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
      */
     var removeListItem = function (collectionItem) {
         collectionItem.getControl().remove();
+    };
+
+
+    var multiSelect = false;
+
+    this.getMultiSelect = function(){
+        return multiSelect;
+    };
+
+    this.setMultiSelect = function(value){
+        multiSelect = value;
     };
 
 
@@ -170,6 +189,69 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         }
     };
 
+    var listItems = [];
+
+    var self = this;
+
+    listBox.setValue = function(val, index){
+        if(self.getMultiSelect()){
+            var $els = $template.children('.listbox-body').children().children('.item-content');
+            var $chkbox = $els.eq(index).children('.check-listbox-item');
+
+            if(index === undefined){
+                index = indexOfVal(listBox.value);
+            }
+
+            if(index >= 0){
+                if(listItems.length && $els.eq(index).hasClass('selected')){
+                    $els.eq(index).removeClass('selected');
+                    $chkbox.prop('checked', false);
+                    for(var j = 0; j < listItems.length; j++){
+                        if(listItems[j] == val){
+                            listItems.splice(j, 1);
+                            onSetSelectedValueHandlers.fire(listItems);
+                            return;
+                        }
+                    }
+                }else{
+                    $els.eq(index).addClass('selected');
+                    $chkbox.prop('checked', true);
+
+                    listItems.push(val);
+                    onSetSelectedValueHandlers.fire(listItems);
+                }
+            }
+
+        }else {
+            if (val == listBox.value) {
+                return;
+            }
+
+            if (val === null) {
+                listBox.value = val;
+                onSetSelectedValueHandlers.fire(null);
+                selectUI_Item(-1);
+                return;
+            }
+
+            for (var i = 0, ii = listBoxItems.length; i < ii; i++) {
+                if (isSubObject(listBoxItems[i].dataItem, val) && listBoxItems[i] != listBox.value) {
+                    listBox.value = listBoxItems[i].dataItem;
+                    onSetSelectedValueHandlers.fire(listBox.value);
+                    selectUI_Item(i);
+                    return;
+                }
+            }
+        }
+    };
+
+    listBox.getValue = function(){
+        if(self.getMultiSelect()){
+            return listItems;
+        }else{
+            return listBox.value;
+        }
+    };
 
     /*
      Получить список ДАННЫХ, отображаемых в ListBox
@@ -186,6 +268,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         for (var i = 0; i < items.length; i++) {
             this.removeItem(items[i]);
         }
+        listBoxItems = [];
 
         if (_.isArray(value)) {
             items = value;
@@ -200,6 +283,9 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
             dataBinding.setPropertyValue(items);
         }
 
+        if(indexOfVal(listBox.value) == -1){
+            listBox.setValue(null);
+        }
     };
 
     /*
@@ -228,6 +314,14 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
 
     this.setPopUpMenu = function (menu) {
         popupMenu = menu;
+    };
+
+    this.onSetSelectedValue = function (handler) {
+        onSetSelectedValueHandlers.add(handler);
+    };
+
+    this.onDoubleClick = function (handler) {
+        onDoubleClickHandlers.add(handler);
     };
 
     /*
@@ -299,7 +393,6 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         var dataItems = dataBinding.getPropertyValue();
 
         listBox.setItems(dataItems);
-
     };
 
     /*
@@ -328,8 +421,6 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         }
     };
 
-    //формируем DOM
-    var $template = $(template);
 
     $template.on('contextmenu', function (event) {
         event.preventDefault();//Запрещаем стандартное контекстное меню браузера
@@ -349,6 +440,78 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         }
     });
 
+    var ds = dataBinding.view.getDataSource(dataBinding.getDataSource());
+
+    $template.on('click', function (event) {
+        if(multiSelect){
+            if(!$(event.target).hasClass('check-listbox-item')){
+                return;
+            }
+        }
+        var $el = $(event.target).parentsUntil($(this), '.item-content');
+        if ($el.length == 0 && $(event.target).hasClass('item-content')) {
+            $el = $(event.target);
+        }
+
+        if ($el.length > 0) {
+            $el = $el.last();
+
+            var index = $el.parent().prevAll().length;
+
+            if (index > -1) {
+                listBox.setValue(listBoxItems[index].dataItem, index);
+            }
+        }
+
+        //listBoxItems
+    });
+
+    ds.onSelectedItemChanged(function(context, val){
+        val  = val.value;
+        listBox.setValue(val);
+    });
+
+    listBox.setStyle = function(newStyle){
+        $template.addClass(newStyle);
+    };
+
+    function isSubObject(subObj, obj){
+        if(!subObj || !obj){
+            return false;
+        }
+
+        for(var k in subObj){
+            if(subObj[k] != obj[k]){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function indexOfVal(val){
+        for(var i = 0, ii=listBoxItems.length; i < ii; i++){
+            if(isSubObject(listBoxItems[i].dataItem, val )){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function selectUI_Item(index){
+
+        if(index === undefined){
+            index = indexOfVal(listBox.value);
+        }
+
+        var $els = $template.children('.listbox-body').children().children('.item-content');
+        $els.removeClass('selected');
+
+        if(index >= 0){
+            $els.eq(index).addClass('selected');
+        }
+
+    }
 
     this.runAddItemAction = function () {
         addItemAction ? onDialogAdd() : createItem();
@@ -361,11 +524,13 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
     if (addItemAction) {
         $template.on('click', '.btn-add', onDialogAdd);
     }
-    else {
-        $template.on('click', '.btn-add', createItem);
-    }
 
-    listBox = this;
+    $template.on('dblclick', function(){
+        onDoubleClickHandlers.fire();
+    });
+    //else {
+    //    $template.on('click', '.btn-add', createItem);
+    //}
 
     return listBox;
 }

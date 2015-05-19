@@ -8,7 +8,7 @@ _.extend(NumericBoxBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
-        this.initValueProperty(params);
+        this.initValueProperty(params, true);
 
         var element = params.element,
             metadata = params.metadata;

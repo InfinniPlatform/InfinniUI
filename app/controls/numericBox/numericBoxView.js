@@ -12,7 +12,7 @@ var NumericBoxView = ControlView.extend({
     events: {
         'change .pl-spin-input': 'updateModelVal',
         //Обработчик для показа поля редактирования с использованием маски ввода
-        "focus .pl-spin-input": 'onFocusControlHandler',
+        'focus .pl-spin-input': 'onFocusControlHandler',
         'focusin .pl-control-editor' : 'onFocusInDebounceHandler',
         'focusout .pl-control-editor' : 'onFocusOutDebounceHandler'
     },
@@ -131,6 +131,13 @@ var NumericBoxView = ControlView.extend({
             el: this.ui.editor
         });
 
+    },
+
+    onEditorConvertValue: function (value) {
+        if (value === '' || value === null || typeof value === 'undefined') {
+            return undefined;
+        }
+        return parseInt(value, 10);
     },
 
     /**

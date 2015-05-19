@@ -124,7 +124,7 @@ _.extend(NumberEditMask.prototype, {
             if (typeof item === 'string') {
                 result.push(item);
             } else {
-                if (item.value === null) {
+                if (typeof item.value === 'undefined' || item.value === null) {
                     //Отдаем маску ввода
                     result.push(this.formatMask(0, item.mask).replace(/0/g, this.placeholder));
                 } else {
@@ -313,8 +313,54 @@ _.extend(NumberEditMask.prototype, {
     },
 
     /**
+     * Удаление выделенного текста
+     * @param position
+     * @param len
+     * @param char
+     * @returns {*}
+     */
+    deleteSelectedText: function(position, len, char){
+        var itemTemplate = this.getItemTemplate();
+        var item = itemTemplate.item;
+        var text = item.text;
+        var val = item.value.toString();
+        var endLength = len + position;
+        if(!char)char = "";
+
+        var preventPosition = text.slice(0, position);
+        var preventLength = text.slice(0, endLength);
+
+        var spacePreventPosition = (preventPosition.split(" ").length - 1);
+        var spacePreventLength = (preventLength.split(" ").length - 1);
+
+        position = position - spacePreventPosition;
+        endLength = endLength - spacePreventLength;
+
+        var res = val.slice(0, position) + char + val.slice(endLength, val.length);
+        var masktext = this.formatMask(res, item.mask);
+
+        if(char){
+            position += char.length+spacePreventPosition;
+            position += formatSpace(masktext, position);
+        }else{
+            position += formatSpace(masktext, position);
+        }
+
+        function formatSpace(text, position){
+            return text.slice(0, position).split(" ").length - 1;
+        }
+
+        if(_.isEmpty(res)){
+            res = null;
+        }
+
+        return {result: res, position: position};
+    },
+
+    /**
      * Удаление символов справа от позиции курсора
      * @param position
+     * @param len
      * @returns {*}
      */
     deleteCharRight: function (position, len) {

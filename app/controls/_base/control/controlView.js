@@ -5,10 +5,12 @@ var ControlView = Backbone.View.extend({
 
         this.initVisible();
         this.initHorizontalAlignment();
+        this.initVerticalAlignment();
         this.initEnabled();
         this.initName();
         this.initText();
         this.initValidationState();
+        this.initStyle();
     },
 
     initVisible: function () {
@@ -21,6 +23,11 @@ var ControlView = Backbone.View.extend({
         this.updateHorizontalAlignment();
     },
 
+    initVerticalAlignment: function () {
+        this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
+        this.updateVerticalAlignment();
+    },
+
     initEnabled: function () {
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
         this.updateEnabled();
@@ -29,6 +36,11 @@ var ControlView = Backbone.View.extend({
     initName: function () {
         this.listenTo(this.model, 'change:name', this.updateName);
         this.updateName();
+    },
+
+    initStyle: function () {
+        this.listenTo(this.model, 'change:style', this.updateStyle);
+        this.updateStyle();
     },
 
     initText: function () {
@@ -45,12 +57,30 @@ var ControlView = Backbone.View.extend({
         var isVisible = this.model.get('visible');
         this.$el
             .toggleClass('hidden', !isVisible);
+
+        this.onUpdateVisible();
+    },
+
+    onUpdateVisible: function () {
+        var exchange = messageBus.getExchange('global');
+        exchange.send('OnChangeLayout', {});
     },
 
     updateEnabled: function () {
         var isEnabled = this.model.get('enabled');
         this.$el
             .toggleClass('pl-disabled', !isEnabled);
+    },
+
+    updateVerticalAlignment: function () {
+        var verticalAlignment = this.model.get('verticalAlignment');
+        var prefix = 'verticalAlignment';
+        var regexp = new RegExp('(^|\\s)' + prefix + '\\S+', 'ig');
+
+        this.$el.removeClass(function (i, name) {
+            return (name.match(regexp) || []).join(' ');
+        })
+            .addClass(prefix + verticalAlignment);
     },
 
     updateHorizontalAlignment: function () {
@@ -99,6 +129,12 @@ var ControlView = Backbone.View.extend({
 
     },
 
+    updateStyle: function () {
+        var customStyle = this.model.get('style');
+        this.$el
+            .addClass(customStyle);
+    },
+
     updateValidationState: function () {
         var newState = this.model.get('validationState'),
             message = this.model.get('validationMessage');
@@ -129,10 +165,10 @@ var ControlView = Backbone.View.extend({
     },
 
     showErrorMessage: function(message){
-        var $errorIcn = $('<i class="error-icn fa fa-warning" data-placement="left" title="' + message + '"></i>');
+        var $errorIcn = $(_.template('<i class="2 error-icn fa fa-warning" data-placement="left" title="<%-message%>"></i>')({message:message}));
 
         this.hideErrorMessage();
-        this.$el.find('.form-control')
+        this.$el.find('.form-control:first')
             .before($errorIcn);
 
         $errorIcn.tooltip({'container': 'body'});
@@ -154,7 +190,18 @@ var ControlView = Backbone.View.extend({
     },
 
     postrenderingActions: function () {
+        this.delegateEvents();
         this.trigger('onLoaded');
+    },
+
+    switchClass: function (name, value) {
+        var startWith = name + '-';
+        var regexp = new RegExp('(^|\\s)' + startWith + '\\S+', 'ig');
+
+        this.$el.removeClass(function (i, name) {
+            return (name.match(regexp) || []).join(' ');
+        })
+            .addClass(startWith + value);
     }
 
 });

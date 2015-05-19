@@ -11,16 +11,20 @@ _.extend(UploadFileBoxBuilder.prototype, {
             var element = params.element;
             this.initScriptsHandlers(params);
             var binding  = this.initValueProperty(params);
+            var getUrl = binding.getFileUrl || binding.getPropertyValue;
 
             element.onValueChanged(function (dataSourceName, value) {
                 var file = element.getFile();
-                binding.setFile(file);
+                if (typeof binding.setFile === 'function') {
+                    binding.setFile(file);
+                }
             });
 
             binding.onPropertyValueChanged(function (dataSourceName, value) {
-                element.setUrl(binding.getFileUrl());
+                element.setUrl(getUrl.call(binding));
             });
 
+            element.setUrl(getUrl.call(binding));
         },
 
         createElement: function(params){

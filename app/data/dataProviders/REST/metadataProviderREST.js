@@ -12,17 +12,23 @@ function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallb
     };
 
     this.getViewMetadata = function (resultCallback) {
+        var data = metadataUrlConstructor.constructViewMetadataRequest();
+        new RequestExecutor(resultCallback,successCallback,failCallback, this.cache).makeRequest(data);
+    };
 
-        new RequestExecutor(resultCallback,successCallback,failCallback).makeRequest(metadataUrlConstructor.constructViewMetadataRequest());
+    this.getConfigMetadata = function (resultCallback) {
 
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(metadataUrlConstructor.constructConfigMetadataRequest());
     };
 
 
     this.getMenuMetadata = function (resultCallback) {
-
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(metadataUrlConstructor.constructMenuMetadataRequest());
-
+        new RequestExecutor(resultCallback, successCallback, failCallback, this.cache).makeRequest(metadataUrlConstructor.constructMenuMetadataRequest());
     };
+
+    this.setCache = function (cache) {
+        this.cache = cache;
+    }
 
 
 }

@@ -11,10 +11,22 @@ _.extend(DocumentViewerBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         params.element.setView(params.parent);
-        params.element.setDataSource(params.metadata.DataSource);
-        params.element.setPrintViewType(params.metadata.PrintViewType);
-        params.element.setPrintViewId(params.metadata.PrintViewId);
 
+
+        if(params.metadata.Value){
+            var binding  = this.initValueProperty(params);
+            binding.onPropertyValueChanged(function (dataSourceName, value) {
+                params.element.setUrl(binding.getFileUrl());
+            });
+
+            params.element.setValueExist(true);
+
+            params.element.setUrl(binding.getFileUrl());
+        }else{
+            params.element.setDataSource(params.metadata.DataSource);
+            params.element.setPrintViewType(params.metadata.PrintViewType);
+            params.element.setPrintViewId(params.metadata.PrintViewId);
+        }
         //this.initDataSource(params);
     },
 
@@ -32,4 +44,4 @@ _.extend(DocumentViewerBuilder.prototype, {
             });
         }
     }
-});
+}, builderValuePropertyMixin);

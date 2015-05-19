@@ -28,5 +28,10 @@ PropertyBindingBuilder.prototype.build = function (builder, parent, metadata, co
 
     }
 
+    /** Переделать! **/
+    propertyBinding.refresh = function (callback) {
+        dataSource.resumeUpdate(callback);
+    };
+
     return propertyBinding;
 };

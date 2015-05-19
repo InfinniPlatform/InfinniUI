@@ -11,7 +11,7 @@ function EhrImage() {
                             MetadataName: 'ResearchHistory',
                             OpenMode: 'Dialog',
                             Parameters: {
-                                Patient: context.DataSources['MainDataSource'].getSelectedItem()
+                                Patient: context.DataSources['HospitalizationHistoryDataSource'].getSelectedItem().Patient
                             }
                         }
                     }

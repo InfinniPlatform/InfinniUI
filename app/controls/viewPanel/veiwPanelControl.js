@@ -23,10 +23,12 @@ var ViewPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-        this.listenToOnce(this.model, 'change:layout', this.onChangeLayoutHandler);
+        //this.listenToOnce(this.model, 'change:layout', this.onChangeLayoutHandler); //Почему так было??
+        this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
     },
 
     onChangeLayoutHandler: function (model, layout) {
+        this.$el.empty();
         this.$el.append(layout);
     },
 

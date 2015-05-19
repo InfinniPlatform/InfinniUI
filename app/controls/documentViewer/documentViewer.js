@@ -11,5 +11,9 @@ _.extend(DocumentViewerControl.prototype, {
 
     createControlView: function (model) {
         return new DocumentViewerView({model: model});
+    },
+
+    onValueChanged: function(handler){
+        this.controlModel.on('change:value', handler);
     }
 });

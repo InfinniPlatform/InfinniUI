@@ -13,6 +13,10 @@ _.extend(LabelBuilder.prototype, {
         this.initFormatProperty(params);
         this.initValueProperty(params);
         this.initHorizontalTextAlignmentProperty(params);
+        this.initForeground(params);
+        this.initBackground(params);
+        this.initTextStyle(params);
+
     },
 
     initScriptsHandlers: function(params){
@@ -40,4 +44,11 @@ _.extend(LabelBuilder.prototype, {
         return label;
     }
 
-}, builderValuePropertyMixin, builderFormatPropertyMixin, builderHorizontalTextAlignmentPropertyMixin);
+},
+    builderValuePropertyMixin,
+    builderFormatPropertyMixin,
+    builderHorizontalTextAlignmentPropertyMixin,
+    builderBackgroundMixin,
+    builderForegroundMixin,
+    builderTextStyleMixin
+);

@@ -1,6 +1,7 @@
 var MenuBarModel = ControlModel.extend({
     defaults: _.defaults({
         items: null,
+        menus: null,
         horizontalAlignment: null,
         verticalAlignment: 'Stretch'
     }, ControlModel.prototype.defaults),
@@ -13,7 +14,7 @@ var MenuBarModel = ControlModel.extend({
 
     setItems: function (items) {
         this.set('items', items);
-        this.trigger('itemsIsChange', this.get('items'));
+        //this.trigger('itemsIsChange', this.get('items'));
     },
 
     getItems: function () {

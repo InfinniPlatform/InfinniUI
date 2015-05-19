@@ -4,7 +4,6 @@ var ParameterBindingBuilder = function () {
 
 
 ParameterBindingBuilder.prototype.build = function (builder, parent, metadata) {
-
     this.parameter = metadata.Parameter;
     this.property = metadata.Property;
 

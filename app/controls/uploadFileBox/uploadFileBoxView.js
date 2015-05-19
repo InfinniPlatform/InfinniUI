@@ -79,6 +79,7 @@ var UploadFileBoxView = ControlView.extend({
 
     applyBlobData: function () {
         var value = this.model.get('value');
+        var that = this;
 
         var blobData = InfinniUI.ObjectUtils.getPropertyValue(value, 'Info');
 
@@ -89,16 +90,28 @@ var UploadFileBoxView = ControlView.extend({
         } else {
             this.ui.empty.addClass('hidden');
 
-            if (typeof blobData.Id !== 'undefined' && blobData.Id !== null) {
-                this.ui.link.removeClass('hidden');
-                this.ui.link.attr('href', this.model.get('url'));
+            var id = InfinniUI.ObjectUtils.getPropertyValue(blobData, 'ContentId');
 
+            if (typeof id !== 'undefined' && id !== null) {
+
+                //this.ui.link.attr('href', this.model.get('url'));
+                
                 var blobName = blobData.Name;
                 if (typeof blobName === 'undefined' || blobName === null) {
                     blobName = this.blobNameDefault;
                 }
 
-                this.ui.link.text(blobName);
+                this.ui.link
+                    .text(blobName);
+
+                this.sendRequest(this.model.get('url'), function(data){
+                        var blob = new Blob([data], {type: "octet/stream"}),
+                            url = window.URL.createObjectURL(blob);
+                        that.ui.link.attr('href', url);
+                        that.ui.link.attr('download', blobName);
+                        that.ui.link.removeClass('hidden');
+                    }
+                );
             }
         }
     },
@@ -121,9 +134,43 @@ var UploadFileBoxView = ControlView.extend({
     },
 
     onChangeUrl: function (model, url) {
-
         // @TODO Изменить ссылку на представлении
         this.applyBlobData();
-    }
+    },
 
+    sendRequest: function(url, handler){
+        var xmlhttp = this.getXmlHttp();
+
+        xmlhttp.open('GET', url, true);
+        xmlhttp.withCredentials = true;
+        xmlhttp.responseType = 'arraybuffer';
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200) {
+                    handler(xmlhttp.response);
+                }
+            }
+        };
+        xmlhttp.send();
+    },
+
+    getXmlHttp: function(){
+        var xmlhttp;
+        try {
+            xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e1) {
+                xmlhttp = false;
+            }
+        }
+
+        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+            xmlhttp = new XMLHttpRequest();
+        }
+
+        return xmlhttp;
+    }
 });
