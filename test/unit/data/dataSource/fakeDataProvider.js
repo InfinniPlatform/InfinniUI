@@ -57,7 +57,7 @@ function FakeDataProvider(mode) {
         resultCallback({});
     };
 
-    this.replaceItem = function (value, resultCallback) {
+    this.replaceItem = function (value, warnings, resultCallback) {
 
         var itemIndex = -1;
 

@@ -36,17 +36,17 @@ describe('Label', function () {
             it('Setting property: horizontalAlignment', function () {
                 //Given
                 var $el = label.render();
-                assert.isTrue($el.hasClass('text-right'));
-                assert.isFalse($el.hasClass('text-left'));
+                assert.isTrue($el.hasClass('text-left'));
+                assert.isFalse($el.hasClass('text-right'));
                 assert.isFalse($el.hasClass('text-center'));
                 assert.isFalse($el.hasClass('text-justify'));
 
                 //When
-                label.setHorizontalTextAlignment('Left');
+                label.setHorizontalTextAlignment('Right');
 
                 //Then
-                assert.isTrue($el.hasClass('text-left'));
-                assert.isFalse($el.hasClass('text-right'));
+                assert.isTrue($el.hasClass('text-right'));
+                assert.isFalse($el.hasClass('text-left'));
                 assert.isFalse($el.hasClass('text-center'));
                 assert.isFalse($el.hasClass('text-justify'));
             });
@@ -77,7 +77,7 @@ describe('Label', function () {
                 return new FakeDataProvider();
             });
 
-            $('body').append($('<div>').attr('id', 'page-content'));
+            //$('body').append($('<div>').attr('id', 'page-content'));
 
             var metadata = {
                 Text: 'Пациенты',
@@ -135,12 +135,12 @@ describe('Label', function () {
                         view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
 //                        console.log(itemToSelect);
 //                        console.log($('#page-content').find('label').html());
-                        assert.equal($('#page-content').find('label').html(), itemToSelect.LastName);
+                        assert.equal($('#sandbox').find('label').html(), itemToSelect.LastName);
 
-                        $('#page-content').remove();
-                    });
+                        //$('#page-content').remove();
+                    }
+                );
             });
         });
     });
-
 });

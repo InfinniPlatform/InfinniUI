@@ -5,34 +5,35 @@ describe('DatePickerControl', function () {
             var datePicker = new DatePickerControl();
             var oldDate = new Date(2012, 10, 2);
             var newDate = new Date(2014, 7, 28);
+            var $el = datePicker.render().find('.date .datePicker');
 
             datePicker.set('value', oldDate);
 
             //When
-            var $el = datePicker.render().find('.date');
             datePicker.set('value', newDate);
 
             //Then
-            var dateInPicker = DatePickerView.prototype.dateToString(newDate);
-            assert.ok(dateInPicker == '2014-08-28', "Установленное значение (" + dateInPicker + ") не равно ожидаемому (" + '2014-08-28' + ")");
+            assert.equal($el.val(), '28.08.2014');
         });
 
         it('should update value when change date', function () {
             //Given
             var datePicker = new DatePickerControl();
             var oldDate = new Date(2012, 10, 2);
-            var newDate = new Date(2014, 7, 28);
+            var newDate = '28.08.2014';
 
             datePicker.set('value', oldDate);
-            assert.equal( datePicker.get('value'), '2012-11-02');
 
-            var $el = datePicker.render().find('.date');
+            var $el = datePicker.render().find('.date .datePicker');
 
             //When
-            $el.datepicker('setDate', newDate);
+            $el
+                .val(newDate)
+            .parent().data('datepicker')
+                .update();
 
             //Then
-            assert.ok( datePicker.get('value') == '2014-08-28', "Установленное значение (" + datePicker.get('value') + ") не равно ожидаемому (" + '2014-08-28' + ")");
+            assert.equal(datePicker.get('value').substr(0, 10), '2014-08-28');
         });
 
         it('should clear date when value is null', function () {
@@ -41,7 +42,7 @@ describe('DatePickerControl', function () {
             var value = new Date(2012, 10, 2);
 
             datePicker.set('value', value);
-            assert.equal( datePicker.get('value'), '2012-11-02');
+            assert.equal( datePicker.get('value').substr(0, 10), '2012-11-02');
 
             var $el = datePicker.render().find('.date');
 
@@ -89,17 +90,17 @@ describe('DatePickerControl', function () {
 
             datePicker.set('minDate', minDate);
             datePicker.set('maxDate', maxDate);
+            var $el = datePicker.render().find('.date');
 
             //When
-            var $el = datePicker.render().find('.date');
             datePicker.set('value', correctDate);
             //поскольку lessThanMinDate и moreThanMaxDate не входят в допустимый диапазон, ожидается, что дата не измениться
             datePicker.set('value', lessThanMinDate);
             datePicker.set('value', moreThanMaxDate);
 
             //Then
-            var dateInPicker = DatePickerView.prototype.dateToString($el.datepicker('getDate')),
-                settedDate = DatePickerView.prototype.dateToString(correctDate);
+            var dateInPicker = InfinniUI.DateUtils.toISO8601( $el.datepicker('getDate')).substr(0, 10),
+                settedDate = '2012-11-02';
             assert.ok(dateInPicker == settedDate, "Установленное значение (" + settedDate + ") не равно ожидаемому (" + dateInPicker + ")");
         });
 
@@ -110,7 +111,7 @@ describe('DatePickerControl', function () {
 
             var $el = datePicker.render().find('.date');
 
-            $.each($el.children(), function(index, child){
+            $.each($el.children('.form-control, button'), function(index, child){
                 assert.isFalse(child.hasAttribute('disabled'));
             });
 
@@ -118,7 +119,7 @@ describe('DatePickerControl', function () {
             datePicker.set('readonly', true);
 
             //Then
-            $.each($el.children(), function(index, child){
+            $.each($el.children('.form-control, button'), function(index, child){
                 assert.isTrue(child.hasAttribute('disabled'));
             });
         });
@@ -151,7 +152,7 @@ describe('DatePickerControl', function () {
             $control.timepicker('setTime', '12:45');
 
             //Then
-            value = datePicker.get('value');
+            value = new Date(datePicker.get('value'));
             assert.equal(value.getHours() + ':' + value.getMinutes(), '12:45');
         });
 
@@ -167,7 +168,7 @@ describe('DatePickerControl', function () {
             datePicker.set('value', date);
 
             //Then
-            assert.equal($control.val().substr(0, 14), '01 Январь 1970');
+            assert.equal($control.val().substr(0, 10), '01.01.1970');
         });
 
         it('should set DateTime mode 2', function () {
@@ -185,7 +186,7 @@ describe('DatePickerControl', function () {
             $control.data('datetimepicker')._setDate(date);
 
             //Then
-            assert.equal(datePicker.get('value'), date);
+            assert.equal(datePicker.get('value').substr(0, 10), InfinniUI.DateUtils.toISO8601(date).substr(0, 10));
         });
     });
 });

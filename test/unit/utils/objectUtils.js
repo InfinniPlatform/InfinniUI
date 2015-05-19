@@ -125,7 +125,9 @@ describe("ObjectUtils", function () {
             InfinniUI.ObjectUtils.setPropertyValue(target, "property1.property2.property3", propertyValue);
 
             // Then
-            assert.equal(target.property1.property2.property3, propertyValue);
+            assert.isObject(target.property1.property2.property3);
+            assert.isObject(propertyValue);
+            assert.equal(_.isEmpty(target.property1.property2.property3), _.isEmpty(propertyValue));
         });
 
         it("should replace collection item when target is collection", function () {

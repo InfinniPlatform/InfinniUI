@@ -203,6 +203,10 @@ var ComboBoxView = ControlView.extend({
         var items = [];
         var that = this;
 
+        if (_.isEmpty(valueProperty)) {
+            valueProperty = 'Id';
+        }
+
         list.length = 0;
 
         if (typeof value === 'undefined' || value === '') {

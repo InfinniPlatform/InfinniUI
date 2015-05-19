@@ -26,8 +26,8 @@ describe('DatePickerBuilder', function () {
 
             assert.equal(datePicker.getMode(), 'Date');
 
-            assert.equal(datePicker.getMinDate(), '01/01/2014');
-            assert.equal(datePicker.getMaxDate(), '12/31/2014');
+            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMinDate()).substr(0, 10), '2014-01-01');
+            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMaxDate()).substr(0, 10), '2014-12-31');
 
             assert.isTrue(datePicker.getReadOnly(), 'Неверное значение для свойства ReadOnly');
             //assert.equal(datePicker.getFormat(), 'ShortDate');

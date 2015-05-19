@@ -35,7 +35,7 @@ describe('Button', function () {
             button.setText('other button');
 
             // Then
-            assert.equal($el.find('button').text(), 'other button');
+            assert.equal($el.find('.btntext').text(), 'other button');
         });
 
 

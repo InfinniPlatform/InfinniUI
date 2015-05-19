@@ -43,12 +43,11 @@ describe('ScriptExecutor', function () {
         "DocumentId": 'HospitalizationRefusal',
         "ViewType": 'ListView',
         "MetadataName": 'HospitalizationRefusalListView',
-        "Parameters": [
-            {
-                "Name" : 'Param1',
-                "Value" : '1'
-            }
-        ],
+        //"Parameters": [
+        //    {
+        //        "Name" : 'Param1'
+        //    }
+        //],
         "LayoutPanel" : {
             "StackPanel": {
                 "Name": "MainViewPanel",
@@ -96,10 +95,10 @@ describe('ScriptExecutor', function () {
         linkView.createView(function(view){
 
             assert.isNotNull(view.getContext());
-            assert.isNotNull(view.getContext().Controls['PatientDataSource']);
-            assert.isNotNull(view.getContext().Controls['ClassifierDataSource']);
-            assert.isNotNull(view.getContext().Parameters['Param1']);
-            assert.equal(view.getContext().Parameters['Param1'].getValue(),'1');
+            assert.isNotNull(view.getContext().DataSources['PatientDataSource']);
+            assert.isNotNull(view.getContext().DataSources['ClassifierDataSource']);
+            //assert.isNotNull(view.getContext().Parameters['Param1']);
+            //assert.equal(view.getContext().Parameters['Param1'].getValue(),'1');
             assert.isNotNull(view.getContext().Controls['TextBox1']);
             assert.isNotNull(view.getContext().Controls['TextBox2']);
             assert.isNotNull(view.getContext().Controls['ComboBox1']);

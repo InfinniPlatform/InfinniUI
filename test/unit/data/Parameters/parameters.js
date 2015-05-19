@@ -1,6 +1,6 @@
 describe('Parameters', function () {
 
-    it('should get/set value from datasource', function () {
+    /*it('should get/set value from datasource', function () {
 
         var provider = new FakeDataProvider();
 
@@ -68,6 +68,6 @@ describe('Parameters', function () {
         assert.equal(items[0].LastName, parameterBinding.getPropertyValue());
         parameterBinding.setPropertyValue('2014');
         assert.equal('2014', parameter.getValue().LastName);
-    });
+    });*/
 
 });
