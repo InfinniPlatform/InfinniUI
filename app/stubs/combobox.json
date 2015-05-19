@@ -1,0 +1,120 @@
+{
+  "Text": "Пациенты",
+  "DataSources": [
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Demography",
+        "DocumentId": "Patient",
+        "IdProperty": "Id",
+        "CreateAction": "CreateDocument",
+        "GetAction": "GetDocument",
+        "UpdateAction": "SetDocument",
+        "DeleteAction": "DeleteDocument",
+        "FillCreatedItem": true,
+        "Name": "MainDataSource"
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Structure",
+        "DocumentId": "MedicalWorker",
+        "IdProperty": "Id",
+        "FillCreatedItem": true
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "AddressTypeDataSource",
+        "Items": [
+          "Почтовый",
+          "Юридический",
+          "Фактический"
+        ]
+      }
+    }
+  ],
+  "LayoutPanel": {
+    "StackPanel": {
+      "Name": "MainViewPanel",
+      "Items": [
+        {
+          "Panel": {
+            "Items": [
+              {
+                "ComboBox": {
+                  "Name": "ComboBox1",
+                  "DisplayProperty": "Personal.LastName",
+                  "ValueProperty": "Id",
+                  "MultiSelect": false,
+                  "ShowClear": true,
+                  "Items": {
+                    "PropertyBinding": {
+                      "DataSource": "MainDataSource",
+                      "Property": ""
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "TextBox": {
+            "Name": "TextBox1",
+            "Multiline": true
+          }
+        },
+        {
+          "TextBox": {
+            "Name": "TextBox2"
+          }
+        },
+        {
+          "LinkLabel": {
+            "Name": "LinkLabel1",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "AddressTypeDataSource"
+              }
+            },
+            "DisplayFormat": {
+              "ObjectFormat": {
+                "Format": "{}"
+              }
+            },
+            "Reference": {
+              "PropertyBinding": {
+                "DataSource": "AddressTypeDataSource",
+                "Property": "1"
+              }
+            },
+            "OnClick": {
+              "Name":  "OnClick"
+            }
+          }
+        },
+        {
+          "ComboBox": {
+            "Name": "ComboBox1",
+            "DisplayProperty": "Personal.LastName",
+            "ValueProperty": "Id",
+            "MultiSelect": false,
+            "ShowClear": true,
+            "Items": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": ""
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Scripts": [
+    {
+      "Name": "OnClick",
+      "Body": "console.log('onclock'); console.log(arguments);return false;"
+    }
+  ]
+}

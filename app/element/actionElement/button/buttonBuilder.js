@@ -1,0 +1,44 @@
+var ButtonBuilder = function (buttonConstructor) {
+    this.buttonConstructor = buttonConstructor ? Button : buttonConstructor;
+
+};
+
+_.inherit(ButtonBuilder, ElementBuilder);
+
+_.extend(ButtonBuilder.prototype, {
+
+    applyMetadata: function(params){
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        /**
+         * @TODO Исправить в PropertyBinding хардкод вызова метода this.element.setValue(this.getPropertyValue());!!!
+         */
+
+        this.initFormatProperty(params);
+        //this.initValueProperty(params);
+        this.initHorizontalTextAlignmentProperty(params);
+        this.initScriptsHandlers(params);
+
+        if(params.metadata.Action) {
+            params.element.setAction(params.builder.build(params.parent, params.metadata.Action));
+        }
+    },
+
+    initScriptsHandlers: function(params){
+        var metadata = params.metadata;
+
+        if (params.parent && metadata.OnClick){
+            params.element.onClick(function() {
+                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name);
+            });
+        }
+    },
+
+    createElement: function(params){
+        var ButtonConstructor = this.buttonConstructor ? this.buttonConstructor : Button;
+
+        return new ButtonConstructor(params.parent);
+    }
+
+}, builderFormatPropertyMixin, builderHorizontalTextAlignmentPropertyMixin);
+

@@ -1,0 +1,47 @@
+@import "default.less";
+
+.pl-data-grid-popupmenu {
+
+  @widthBorder: 1px;
+
+  position: absolute;
+  min-width: 250px;
+  background: @color-white;
+  display: inline-block;
+  left: -9999px;
+  top: -9999px;
+  z-index: 64000;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: @widthBorder solid @color-border;
+    box-shadow: 0 0 20px @color-border;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    li {
+      margin: 0;
+      padding: 0;
+
+      a {
+        display: block;
+        padding: 10px;
+        color: @color-dark-gray;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+          color: @color-light-gray2;
+          background: @color-turquoise;
+        }
+      }
+    }
+  }
+}

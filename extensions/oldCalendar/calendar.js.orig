@@ -1,0 +1,155 @@
+function Calendar() {
+    var metronicColors = ['blue', 'red', 'green', 'purple', 'grey', 'yellow'];
+    var $calendar;
+
+    var fullCalendar = function (node, events) {
+        $calendar = $(node).fullCalendar({
+            header: false,
+            defaultView: 'agendaWeek',
+            defaultDate: '2014-09-12',
+            selectable: true,
+            selectHelper: true,
+            monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
+                'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл',
+                'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+            dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+            dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+            buttonText: {
+                today: 'сегодня',
+                month: 'месяц',
+                week: 'неделя',
+                day: 'день'
+            },
+            allDayDefault: false,
+
+            allDayText: 'Все дни',
+            allDaySlot: false,
+            slotMinutes: 15,
+            defaultEventMinutes: 120,
+            height: 825,
+
+            axisFormat: 'HH:mm',
+            timeFormat: {
+                agenda: 'HH:mm{ - HH:mm}'
+            },
+            dragOpacity: {
+                agenda: .5
+            },
+            minTime: 8,
+            maxTime: 21,
+
+            fixedWeekCount: false,
+            firstDay: 1,
+
+            editable: true,
+
+            select: function (start, end) {
+                var title = prompt('Наименование события:');
+                var eventData;
+                if (title) {
+                    metronicColors.sort(function () {
+                        return 0.5 - Math.random()
+                    });
+                    eventData = {
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: false,
+                        className: 123,
+                        backgroundColor: Metronic.getBrandColor(metronicColors[0])
+                    };
+                    var s = $(node).fullCalendar('renderEvent', eventData, true); // stick? = true
+                    console.log(s);
+
+                }
+                $(node).fullCalendar('unselect');
+            },
+
+            eventLimit: true, // allow "more" link when too many events
+            events: events,
+
+            eventClick: function (calEvent, jsEvent, view) {
+                var r = confirm("Delete " + calEvent.title);
+                if (r === true) {
+                    $(node).fullCalendar('removeEvents', calEvent._id);
+                }
+            }
+        });
+
+        return {
+            update: function (metadata) {
+                //console.log('1');
+            },
+            teardown: function () {
+                $(node).fullCalendar('destroy');
+            }
+        };
+    };
+
+
+    var template = '<div class="portlet calendar" decorator="fullCalendar: {{events}}"></div>';
+
+    this.render = function (target, parameters) {
+
+        var curr = new Date();
+        var firstDay = moment(new Date(curr.setDate(curr.getDate() - curr.getDay())));
+
+        var days = [
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD'),
+            firstDay.add(1, 'days').format('YYYY-MM-DD')
+        ];
+
+        parameters['BaseScheduleDataSource'].onValueChanged(function (data) {
+            function resourceId(r) {
+                return r.Resource.Id;
+            }
+
+            function addEvent(day, item) {
+                _.each(item.Week.Time, function (time) {
+                    if (time.PeriodParity.DisplayName == 'Четные дни' && day.slice(-1)%2 != 0) return true;
+                    if (time.PeriodParity.DisplayName == 'Нечетные дни' && day.slice(-1)%2 == 0) return true;
+
+                    $calendar.fullCalendar('renderEvent', {
+                        id: guid(),
+                        title: item.Resource.DisplayName,
+                        start: day + 'T' + time.From + ':00',
+                        end: day + 'T' + time.To + ':00',
+                        allDay: false,
+                        backgroundColor: Metronic.getBrandColor('green')
+                    }, true);
+                });
+            }
+
+            $calendar.fullCalendar('removeEvents');
+
+            if (_.uniq(data, resourceId).length != 1) {
+                return;
+            }
+
+            _.each(data, function (schedule) {
+                if (schedule.Week.Monday) addEvent(days[0], schedule);
+                if (schedule.Week.Tuesday) addEvent(days[1], schedule);
+                if (schedule.Week.Wednesday) addEvent(days[2], schedule);
+                if (schedule.Week.Thursday) addEvent(days[3], schedule);
+                if (schedule.Week.Friday) addEvent(days[4], schedule);
+                if (schedule.Week.Saturday) addEvent(days[5], schedule);
+                if (schedule.Week.Sunday) addEvent(days[6], schedule);
+            });
+        });
+
+        new Ractive({
+            el: target,
+            template: template,
+            data: {
+                events: []
+            },
+            decorators: { fullCalendar: fullCalendar }
+        });
+    }
+}

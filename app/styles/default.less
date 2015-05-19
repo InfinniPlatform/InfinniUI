@@ -1,0 +1,71 @@
+/* COLORS VARIABLES */
+@color-black: #000000;
+@color-dark-gray: #333333;
+@color-gray: #999999;
+@color-light-gray: #D8D4D6;
+@color-light-gray2: #F0F0F0;
+@color-light-gray3: #F8F8F8;
+@color-white: #ffffff;
+@color-green: #2ECC71;
+@color-yellow: #F1C40F;
+@color-red: #E74C3C;
+@color-turquoise: #0094A3;
+@color-turquoise-light: #00A5B8;
+@color-border: #e8e8e8;
+
+/* FONT */
+.font-notosans-regular {
+  font-family: "NotoSans", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: @color-dark-gray;
+}
+.font-notosans-bold {
+  font-family: "NotoSans", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: @color-dark-gray;
+}
+
+/* BUTTON STYLES */
+.btn-default, .btn.default{
+//  padding: 6px 10px;
+//  border: none;
+  background-color: @color-light-gray2;
+  & > i{
+    color: @color-dark-gray;
+  }
+}
+
+.btn-default:hover, .btn.default:hover{
+  background-color: @color-light-gray;
+}
+
+.btn-primary, .btn.primary{
+//  padding: 6px 10px;
+//  border: none;
+  background-color: @color-turquoise;
+  border-color: transparent;
+  & > i{
+    color: @color-dark-gray;
+  }
+}
+
+.btn-primary:hover, .btn.primary:hover{
+  background-color: @color-turquoise-light;
+  border-color: transparent;
+}
+
+/* FORM'S */
+.form-control{
+  padding: 6px 10px;
+  border: 1px solid @color-border;
+}
+
+/* TEXT */
+a, span, p, h1, h2, h3, h4, h5, i{
+  color: @color-dark-gray;
+}
+a:hover, span:hover{
+  color: @color-dark-gray;
+}

@@ -1,0 +1,161 @@
+@import "default.less";
+
+.pl-data-grid {
+  overflow: auto;
+  height: 100%;
+
+  .table-hover {
+    tbody {
+      tr {
+        &.selected {
+          text-shadow: -1px 1px 4px @color-light-gray;
+        }
+      }
+      tr:hover {
+        td, th {
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+
+  .table-hover > tbody > tr.select > td{
+    text-decoration: underline;
+    color: @color-black;
+  }
+
+  .pl-stack-panel {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pl-label, .pl-link-label {
+    label {
+      line-height: normal;
+      margin-bottom: 0;
+    }
+  }
+
+  @header-padding-right: 18px;
+  table {
+    margin-bottom: 0;
+    &.table-bordered{
+      border: 1px solid @color-border;
+//      border: none;
+    }
+    thead {
+      & > tr {
+
+        &.heading{
+          & > th{
+            padding: 15px 10px;
+            background-color: @color-light-gray3 !important;
+          }
+        }
+
+        & > th {
+          padding: 10px;
+//          background-color: @color-light-gray3 !important;
+          border-color: @color-border;
+
+          &:first-child {
+            padding-left: 20px;
+          }
+        }
+
+      }
+    }
+
+    tbody {
+      & > tr {
+        & > td{
+          padding: 10px;
+          .pl-label{
+            margin: 0;
+            padding: 0;
+            height: auto;
+          }
+        }
+        &.group-title {
+          .fa-caret-right {
+
+          }
+          &.expanded {
+            .fa-caret-right {
+              transform: rotate(90deg);
+            }
+          }
+
+        }
+        &.group-title td{
+          font-weight: bold;
+          background: -moz-linear-gradient(top, rgba(208, 208, 208, 0.65) 0%, rgba(0,0,0,0) 30%);
+          background: linear-gradient(to right, rgba(208, 208, 208, 0.65) 0%,rgba(0,0,0,0) 30%);
+          cursor: pointer;
+        }
+
+        &.datagrid-row-master {
+
+          & > td.datagrid-expand {
+            cursor: pointer;
+          }
+
+          &.expanded {
+            & > td.datagrid-expand {
+              i {
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+              }
+            }
+          }
+        }
+
+      }
+
+
+//      &.active {
+//        & > tr {
+//          background: #a6c8e6;
+//          &.rowData {
+//            color: #2c5285;
+//          }
+//        }
+//
+//        &.hover {
+//          & > tr {
+//            & > td {
+//              background: #92bce0;
+//            }
+//          }
+//        }
+//      }
+    }
+
+    thead {
+      tr {
+        th {
+          &.sorting {
+            background: url('media/images/sort_both.png') no-repeat center right;
+          }
+
+          &.sorting, &.sorting_asc, &.sorting_desc {
+            padding-right: @header-padding-right;
+            cursor: pointer;
+          }
+
+          &.sorting_asc {
+            background: url('media/images/sort_asc.png') no-repeat center right;
+          }
+
+          &.sorting_desc {
+            background: url('media/images/sort_desc.png') no-repeat center right;
+          }
+
+        }
+      }
+    }
+  }
+}

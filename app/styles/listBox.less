@@ -1,0 +1,21 @@
+@import "default.less";
+
+.item-content {
+  float: left;
+  margin-bottom: 10px;
+  width: calc(~"100% - 40px");
+
+  .pl-label {
+
+    label {
+      margin-right: 20px !important;
+      border-right: 1px solid @color-white;
+      padding-right: 20px !important;
+      line-height: initial;
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+@import "default.less";
+
+.pl-tab-panel {
+  & > .nav-tabs {
+
+    & > li {
+
+      & > span.pl-tab-close {
+        cursor: pointer;
+        display: none;
+      }
+
+    }
+
+    & > li.pl-tab-closeable {
+
+      & > a {
+        padding-right: 40px;
+      }
+
+      & > span.pl-tab-close {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 10px 15px;
+        font-size: 16px;
+      }
+
+    }
+
+  }
+
+  .pl-stack-panel{
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .pl-data-grid{
+    & > table.table-bordered {
+      border: 1px solid @color-border;
+    }
+  }
+}

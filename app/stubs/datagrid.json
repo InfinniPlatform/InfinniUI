@@ -1,0 +1,183 @@
+{"Id": "784f2d03-d75a-4e00-823e-e0fb83687ade", "LayoutPanel": {
+    "GridPanel": {
+        "Rows": [
+            {
+                "Cells": [
+                    {
+                        "ColumnSpan": 2,
+                        "Items": [
+                            {
+                                "MenuBar": {
+                                    "Name": "MainMenu",
+                                    "ConfigId": "VeteransHospital"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "ColumnSpan": 10,
+                        "Items": [
+                            {
+                                "GridPanel": {
+                                    "Rows": [
+                                        {
+                                            "Cells": [
+                                                {
+                                                    "ColumnSpan": 12,
+                                                    "Items": [
+                                                        {
+                                                            "Panel": {
+                                                                "Text": "Пациенты на контроле",
+                                                                "Items": [
+                                                                    {
+                                                                        "DataGrid": {
+                                                                            "ReadOnly": true,
+                                                                            "Columns": [
+                                                                                {
+                                                                                    "Text": "Номер карты",
+                                                                                    "DisplayProperty": "CardNumber"
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Фамилия",
+                                                                                    "DisplayProperty": "Personal.LastName"
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Фамилия",
+                                                                                    "DisplayProperty": "Personal.LastName",
+                                                                                    "ItemTemplate": {
+                                                                                        "TextBox": {
+                                                                                            "Value": {
+                                                                                                "PropertyBinding": {
+                                                                                                    "DataSource": "PatientsDataSource",
+                                                                                                    "Property": "$.Personal.LastName"
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Имя",
+                                                                                    "DisplayProperty": "Personal.FirstName"
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Отчество",
+                                                                                    "DisplayProperty": "Personal.MiddleName"
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Дата рождения",
+                                                                                    "DisplayProperty": "Personal.DateOfBirth",
+                                                                                    "ItemFormat": {
+                                                                                        "DateTimeFormat": {
+                                                                                            "Format": "d"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "Text": "СНИЛС",
+                                                                                    "DisplayProperty": "Snils"
+                                                                                },
+                                                                                {
+                                                                                    "Text": "Номер паспорта",
+                                                                                    "DisplayProperty": "IdentityCard.Number"
+                                                                                }
+                                                                            ],
+                                                                            "Items": {
+                                                                                "PropertyBinding": {
+                                                                                    "DataSource": "PatientsDataSource"
+                                                                                }
+                                                                            },
+                                                                            "ItemTemplate": {
+                                                                                "TextBox": {
+                                                                                    "Value": {
+                                                                                        "PropertyBinding": {
+                                                                                            "DataSource": "PatientsDataSource",
+                                                                                            "Property": "$.Personal.MiddleName"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "ColumnSpan": 9,
+                                                    "Items": [
+                                                        {
+                                                            "Panel": {
+                                                                "Text": "Занятость коечного фонда",
+                                                                "Items": [
+                                                                    {
+                                                                        "ExtensionPanel": {
+                                                                            "ExtensionName": "BedStatus"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "Button": {
+                                                                            "Text": "Движение по регистру",
+                                                                            "Action": {
+                                                                                "OpenViewAction": {
+                                                                                    "View": {
+                                                                                        "AutoView": {
+                                                                                            "ConfigId": "EmergencyRoom",
+                                                                                            "DocumentId": "Register_BedStatusIncremental",
+                                                                                            "ViewType": "ListView",
+                                                                                            "OpenMode": "Dialog"
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [
+                                                        {
+                                                            "ViewPanel": {
+                                                                "Visible": true,
+                                                                "View": {
+                                                                    "AutoView": {
+                                                                        "ConfigId": "Demography",
+                                                                        "DocumentId": "Patient",
+                                                                        "MetadataName": "PatientEditView"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}, "DataSources": [
+    {
+        "DocumentDataSource": {
+            "Name": "PatientsDataSource",
+            "ConfigId": "Demography",
+            "DocumentId": "Patient",
+            "Query": [
+                {
+                    "CriteriaType": 1,
+                    "Property": "Control",
+                    "Value": true
+                }
+            ]
+        }
+    }
+], "MetadataType": "HomePage", "Description": "", "Caption": "Главная страница", "Name": "HomePage", "ParentId": "360bcfba-b45e-4ed6-b413-9f54d3217c60", "Version": "version_systemconfig", "Status": "Published", "Parameters": []}

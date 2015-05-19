@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Набор компонентов пакета обновления МИС БАРС</title>
+    <link href="/out/css/vendor.css" rel="stylesheet" type="text/css"/>
+    <link href="/app/styles/main.css" rel="stylesheet" type="text/css"/>
+</head>
+<body class="page-header-fixed">
+    <select id="configs" style="position: absolute; top: 13px; right: 250px; z-index: 10000;">
+        <option></option>
+    </select>
+    <script src="/app/utils/pdf/build/pdf.js"></script>
+    <script src="/out/vendor.js"></script>
+    <script src="/out/templates.js"></script>
+    <script src="/out/app.js"></script>
+    <script src="app.js"></script>
+    <script src="/app/utils/exel-builder/excel-builder.dist.js"></script>
+    <script type="application/javascript">
+//jQuery(function () {
+////    $(document).on('contextmenu', function() {
+////        return false;
+////    });
+//
+////    Metronic.init();
+////    Layout.init();
+//
+//    var resize;
+//    $(window).resize(function () {
+//        if (resize) {
+//            clearTimeout(resize);
+//        }
+//        resize = setTimeout(function () {
+//            _runResizeHandlers();
+//        }, 50); // wait 50ms until window resize finishes.
+//    });
+//
+//    function _runResizeHandlers() {
+//        resizeContent();
+//    }
+//
+//    function getViewPort() {
+//        var e = window, a = 'inner';
+//        if (!('innerWidth' in window)) {
+//            a = 'client';
+//            e = document.documentElement || document.body;
+//        }
+//        return {
+//            width: e[a + 'Width'],
+//            height: e[a + 'Height']
+//        }
+//    }
+//
+//    function resizeContent () {
+//        var height = getViewPort().height - (46 + 51); //46px высота толбаров
+//        $("#page-content").css('height', height + 'px');
+//    }
+//
+//    resizeContent();
+//});
+
+function downloadExel(originalData){
+    var artistWorkbook = ExcelBuilder.createWorkbook();
+    var albumList = artistWorkbook.createWorksheet({name: 'Список пациентов из журнала'});
+
+    albumList.setData(originalData);
+
+    albumList.setColumns([
+        {width: 20},
+        {width: 20},
+        {width: 20},
+        {width: 20},
+        {width: 20},
+        {width: 25},
+        {width: 50},
+        {width: 30},
+        {width: 30},
+        {width: 20},
+        {width: 30},
+        {width: 20}
+    ]);
+
+    artistWorkbook.addWorksheet(albumList);
+
+    var data = ExcelBuilder.createFile(artistWorkbook);
+    $('body').append('<iframe style="position: absolute; left: -1000000px;" src="' + 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + data + '"></iframe>');
+}
+
+</script>
+</body>
+</html>

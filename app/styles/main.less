@@ -1,0 +1,312 @@
+﻿//@import (less) "../../bower_components/metronic/global/plugins/bootstrap/css/bootstrap.css";
+//@import (less) "../../bower_components/metronic/global/css/components.css";
+//@import (less) "../../bower_components/metronic/global/css/plugins.css";
+//@font-notosans-regular: 400 "NotoSans", sans-serif;
+
+@import "default.less";
+@import (less) "../../bower_components/metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.css";
+
+@import "tabPanel.less";
+@import "numericBox.less";
+@import "popupButton.less";
+@import "imageBox.less";
+@import "dataGrid.less";
+@import "comboBox.less";
+@import "documentViewer.less";
+@import "filterpanel.less";
+@import "treeView.less";
+@import "calendar.less";
+@import "datePicker.less";
+@import "listBox.less";
+
+@import "validation.less";
+@import "flexbox.less";
+@import "dataGridPopupMenu.less";
+@import "portlet.less";
+
+@import "menuBar.less";
+@import "globalNavigationBar.less";
+@import "statusBar.less";
+@import "activeBar.less";
+@import "toolBar.less";
+
+body{
+  .font-notosans-regular;
+}
+
+.clearfix {
+  height: 0;
+}
+.full-width.pl-button {
+  button {
+    width: 100%;
+  }
+}
+
+.pl-link-label {
+  a {
+    color: @color-turquoise-light;
+    text-decoration: underline;
+
+    &:hover {
+      color: @color-black;
+    }
+  }
+}
+
+//.pl-button{
+//  button.btn{
+//    padding: 10px;
+//  }
+//}
+
+.pl-stack-panel {
+  margin: 10px;
+  padding: 10px;
+  background-color: @color-white;
+  border: 1px solid @color-border;
+  list-style: none;
+  //  padding: 0;
+  .pl-scroll-panel{
+    padding: 0 12px 0 0;
+  }
+
+  &.horizontal-orientation {
+    .pl-stack-panel-i {
+      float: left;
+      padding-right: 10px;
+    }
+  }
+
+  .pl-stack-panel-i {
+    overflow: hidden;
+  }
+}
+
+.pl-grid-panel{
+//  .pl-grid-cell{
+//    margin: 5px 0;
+//    .pl-text-box, .pl-datePicker, .pl-combo-box, .pl-label, .pl-button{
+//      margin: 0;
+//      padding: 0;
+//    }
+//
+//  }
+  .pl-stack-panel{
+    margin: 0;
+    padding: 0;
+    border: none;
+
+    .pl-stack-panel-i{
+      padding: 0;
+      margin: 0;
+
+      .pl-text-box, .pl-datePicker, .pl-combo-box, .pl-label, .pl-button, .pl-numeric-box, .pl-check-box, .pl-text-area{
+        margin: 5px 0;
+        padding: 0;
+      }
+    }
+//    .form-control{
+//      padding: 6px 12px !important;
+//    }
+  }
+}
+
+.pl-search-panel{
+  padding: 10px;
+  background-color: @color-light-gray3;
+  border: 1px solid @color-border;
+//  border-bottom: none;
+  //  margin-bottom: 15px;
+}
+
+.pl-scroll-panel{
+  height: 100%;
+  padding: 10px 12px 10px 10px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+//.pl-datePicker{
+//  .form-control{
+//    margin: 0;
+//  }
+//}
+//.form-control, .pl-datePicker {
+//  margin-bottom: 15px;
+//}
+
+//.pl-check-box {
+//  padding: 7px 0;
+//}
+
+//.pl-label {
+//  label {
+//    margin-bottom: 0;
+//  }
+//  .label-control {
+//    line-height: 34px;
+//  }
+//}
+
+//.pl-label{
+//  width: 115px;
+//}
+
+.pl-combo-box{
+  .select-view{
+    overflow: hidden;
+    .select-view-value{
+      width: 100%;
+      float: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+.select2-drop{
+  /*width: auto !important;*/
+  border-top: 1px solid @color-gray;
+  /*max-width: 500px;*/
+  .select2-search{
+    input.select2-input{
+      padding: 6px 10px !important;
+    }
+  }
+}
+.select2-container{
+  float: left;
+}
+
+//.portlet.box.blue-steel > .portlet-title{
+//  background-color: @color-turquoise;
+//}
+
+//.pl-text-box, .pl-datePicker, .pl-combo-box {
+//  margin-left: 10px;
+//  margin-right: 10px;
+//}
+
+.cell-checkbox{
+  text-align: center;
+  *{
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+.pl-label > label{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+.pl-button{
+  & > button{
+    padding: 6px 10px;
+    border: 1px solid @color-border;
+    float: left;
+  }
+}
+
+.pl-text-box{
+  margin: 5px 0;
+  &.input-icon.right {
+    & > .form-control {
+      padding: 6px 10px;
+    }
+  }
+}
+
+.pl-datePicker, .pl-combo-box, .pl-label, .pl-button, .pl-numeric-box, .pl-check-box, .pl-text-area{
+  height: 34px;
+  margin: 5px 0;
+  line-height: 34px;
+}
+
+//.pl-grid-cell > .pl-label > label{
+//    white-space: nowrap;
+//    overflow: hidden;
+//    text-overflow: ellipsis;
+//    float: left;
+//}
+
+.modal{
+  .modal-body{
+    padding: 10px;
+  }
+  .modal-footer{
+    padding: 10px;
+  }
+}
+.modal-open .select2-drop{
+  z-index: 100500; //fix z-index modal level
+}
+.modal-body > .pl-stack-panel{
+  margin-bottom: 0;
+}
+
+.pl-pdf-report-view{
+  width: 100%;
+  height: 100%;
+
+  iframe{
+    width: 100%;
+    height: 100%;
+    float: left;
+    border: none;
+  }
+}
+
+.pl-data-navigation {
+  .navigation, .page-sizes{
+    float: left;
+  }
+  .page-sizes{
+    margin: 10px 20px;
+    height: 32px;
+  }
+  .bootpag.disabled {
+    li a {
+      background-color: #EEE;
+      cursor: not-allowed;
+      border: 1px solid #ccc;
+    }
+    li a:hover {
+      background-color: #EEE;
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+#page-content {
+  margin-left: 0 !important;
+  padding: 0!important;
+  overflow: hidden !important;
+  background-color: @color-white;
+
+  .app-area{
+    position: relative;
+    width: 100%;
+    //  height: 100%;
+    float: left;
+    background-color: @color-light-gray3;
+
+    & > .pl-scroll-panel, & > .pl-grid-panel{
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid @color-border;
+      background-color: @color-white;
+    }
+  }
+
+  .app-area:first-child{
+    & > .pl-grid-panel{
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+    }
+  }
+}

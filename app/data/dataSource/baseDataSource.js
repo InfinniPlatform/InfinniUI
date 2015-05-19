@@ -1,0 +1,556 @@
+﻿function BaseDataSource(view, idProperty, dataProvider) {
+
+    this.eventStore = new EventStore();
+
+    //public
+    this.onPageNumberChanged = function (handler) {
+        this.eventStore.addEvent('onPageNumberChanged', handler);
+    };
+    this.onPageSizeChanged = function (handler) {
+        this.eventStore.addEvent('onPageSizeChanged', handler);
+    };
+    this.onItemDeleted = function (handler) {
+        this.eventStore.addEvent('onItemDeleted', handler);
+    };
+    this.onItemSaved = function (handler) {
+        this.eventStore.addEvent('onItemSaved', handler);
+    };
+    this.onTextFilterChanged = function (handler) {
+        this.eventStore.addEvent('onTextFilterChanged', handler);
+    };
+    this.onPropertyFiltersChanged = function (handler) {
+        this.eventStore.addEvent('onPropertyFiltersChanged', handler);
+    };
+    this.onItemCreated = function (handler) {
+        this.eventStore.addEvent('onItemCreated', handler);
+    };
+    this.onItemsUpdated = function (handler) {
+        this.eventStore.addEvent('onItemsUpdated', handler);
+    };
+    this.onItemsDeleted = function (handler) {
+        this.eventStore.addEvent('onItemsDeleted', handler);
+    };
+
+    //private
+    var fillCreatedItem = true;
+    var idFilter = null;
+    var name = null;
+    var dataItems = [];
+    var currentStrategy = null;
+    var listStrategy = new ListDataSourceStrategy(this);
+    var editStrategy = new EditDataSourceStrategy(this);
+
+    var propertyFilters = [];
+    var queryFilter = null;
+    var textFilter = null;
+    var selectedItem = null;
+//    var pageNumber = 0;
+    var pageSize = 15;
+    var pageNumber = null;
+    //var pageSize = null;
+
+    var sorting = null;
+
+    var dataBindings = [];
+
+    var suspended = false;
+
+    var _loadingProcess = $.Deferred();
+
+    this.loading = _loadingProcess.promise();
+
+    this.loadingProcessDone = function () {
+        _loadingProcess.resolve();
+    };
+
+    //strategy by default
+    currentStrategy = listStrategy;
+
+
+    this.getDataItems = function () {
+        return dataItems;
+    };
+
+    this.setDataItems = function (value) {
+        dataItems = value;
+        if (suspended) {
+            suspended = false;
+        }
+        currentStrategy.onItemsUpdated(dataItems);
+    };
+
+    this.setSorting = function (value) {
+        sorting = (typeof value === 'undefined') ? null : value;
+    };
+
+    this.getSorting = function () {
+        return sorting;
+    };
+
+    var setListStrategy = function () {
+        currentStrategy = listStrategy;
+    };
+
+    var setEditStrategy = function () {
+        currentStrategy = editStrategy;
+    };
+
+    this.setUserStrategy = function (strategy) {
+        currentStrategy = strategy;
+    };
+
+    var addOrUpdateItem = function (item) {
+        var index = dataItems.indexOf(item);
+        if (index > -1) {
+            dataItems[index] = item;
+        }
+        else {
+            //may be slow method to add
+            dataItems.push(item);
+        }
+    };
+
+    var removeById = function (item) {
+        for (var i = 0; i < dataItems.length; i++) {
+            if (dataItems[i].Id === item.Id) {
+                var indexToSplice = i;
+                break;
+            }
+        }
+        if (indexToSplice !== undefined) {
+            dataItems.splice(indexToSplice, 1);
+        }
+    };
+
+    var resetModified = function (item) {
+        if (item != null) {
+            var index = modifiedItems.indexOf(item);
+            if (index > -1) {
+                modifiedItems.splice(index, 1);
+            }
+        }
+    };
+
+
+    this.suspendUpdate = function () {
+        suspended = true;
+    };
+
+    this.resumeUpdate = function (callback) {
+        if (suspended) {
+            suspended = false;
+        }
+        this.updateItems(callback);
+    };
+
+    this.getPageNumber = function () {
+        return pageNumber;
+    };
+
+    this.setPageNumber = function (value) {
+        if (value < 0) {
+            value = 0;
+        }
+
+        if (value !== pageNumber) {
+            pageNumber = value;
+            if (currentStrategy.onPageNumberChanged !== null) {
+                currentStrategy.onPageNumberChanged(value);
+            }
+            this.updateItems();
+        }
+    };
+
+    this.getPageSize = function () {
+        return pageSize;
+    };
+
+    this.setPageSize = function (value) {
+        if (value < 0) {
+            value = 0;
+        }
+        else if (value > 1000) {
+            value = 1000;
+        }
+        pageNumber = 0;
+        pageSize = value;
+
+        if (pageSize !== value && !suspended) {
+            currentStrategy.onPageNumberChanged(pageNumber);
+            currentStrategy.onPageSizeChanged(value);
+
+            this.updateItems();
+        }
+    };
+
+
+    this.getName = function () {
+        return name;
+    };
+
+    this.setName = function (value) {
+        name = value;
+    };
+
+    this.getIdProperty = function () {
+        return idProperty || 'Id';
+    };
+
+    this.setIdProperty = function (value) {
+        idProperty = value;
+    };
+
+    this.getFillCreatedItem = function () {
+        return fillCreatedItem;
+    };
+
+    this.setFillCreatedItem = function (value) {
+        fillCreatedItem = value || false;
+    };
+    this.getIdFilter = function () {
+        return idFilter;
+    };
+    this.setIdFilter = function (value) {
+        if (idFilter !== value) {
+            idFilter = value;
+            this.updateItems();
+        }
+    };
+
+    this.setEditMode = function () {
+        setEditStrategy();
+    };
+    this.setListMode = function () {
+        setListStrategy();
+    };
+
+    this.getView = function () {
+        return view;
+    };
+
+    this.createItem = function () {
+        dataProvider.createItem(
+            function (data) {
+                addOrUpdateItem(data);
+                currentStrategy.onItemCreated(data);
+                setModified(data);
+            });
+    };
+    var warnings = false;
+
+    this.saveItem = function (item, callback) {
+        dataProvider.replaceItem(item, warnings, function (data) {
+            //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
+            if (data.IsValid || data.IsValid == undefined) {
+                addOrUpdateItem(item);
+                currentStrategy.onItemSaved(item, data);
+                resetModified(item);
+            } else {
+                var validation = data.ValidationMessage;
+                var resultText = '';
+
+                if (validation.ValidationErrors) {
+                    if (!validation.ValidationErrors.IsValid) {
+                        if (validation.ValidationErrors.Message instanceof Array) {
+                            for (var i = 0; i < validation.ValidationErrors.Message.length; i++) {
+                                toastr.error(validation.ValidationErrors.Message[i].Message, "Ошибка!");
+                            }
+                        } else {
+                            toastr.error('Обратитесь к системному администратору', "Ошибка!");
+                        }
+                    }
+                }
+                if (validation.ValidationWarnings) {
+                    if (!validation.ValidationWarnings.IsValid) {
+                        resultText = validation.ValidationWarnings.Message[0].Message;
+                        for (var j = 1; j < validation.ValidationWarnings.Message.length; j++) {
+                            resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + validation.ValidationWarnings.Message[j].Message;
+                        }
+                        resultText += '<p style="font-weight: bolder;">Продолжить?';
+
+                        new MessageBox({
+                            text: resultText,
+                            buttons: [
+                                {
+                                    name: 'Да',
+                                    type: 'action',
+                                    onClick: function () {
+                                        warnings = true;
+                                        dataProvider.replaceItem(item, warnings, function (data) {
+                                            addOrUpdateItem(item);
+                                            currentStrategy.onItemSaved(item, data);
+                                            resetModified(item);
+                                        });
+
+                                    }
+                                },
+                                {
+                                    name: 'Нет'
+                                }
+                            ]
+                        });
+                    }
+                }
+            }
+            if (callback) {
+                callback(data);
+            }
+        });
+    };
+
+    this.deleteItem = function (item) {
+        dataProvider.deleteItem(item, function (data) {
+            removeById(item);
+            currentStrategy.onItemDeleted(item)
+        });
+    };
+
+    var loadItems = function (resultCallback) {
+        currentStrategy.getItems(dataProvider, resultCallback);
+    };
+
+    this.getItems = function (resultCallback) {
+        loadItems(resultCallback);
+    };
+
+    this.updateItems = function (callback) {
+        if (!suspended) {
+            loadItems(function (data) {
+
+                dataItems = data;
+                currentStrategy.onItemsUpdated(data);
+
+                if (callback) {
+                    callback(data);
+                }
+            });
+        }
+    };
+
+    this.setQueryFilter = function (value, callback) {
+        if (queryFilter !== value) {
+            queryFilter = value;
+            this.updateItems(callback);
+        }
+    };
+    this.getQueryFilter = function () {
+        return queryFilter;
+    };
+
+    this.setPropertyFilters = function (value) {
+        if (propertyFilters !== value) {
+            pageNumber = 0;
+            propertyFilters = value;
+
+            currentStrategy.onPageNumberChanged(0);
+            currentStrategy.onPropertyFiltersChanged(value);
+            this.updateItems();
+        }
+    };
+    this.getPropertyFilters = function () {
+        return propertyFilters;
+    };
+    this.getTextFilter = function () {
+        return textFilter;
+    };
+
+    this.setTextFilter = function (value) {
+        if (textFilter !== value) {
+            pageNumber = 0;
+            textFilter = value;
+            var self = this;
+
+            setTimeout(function(){
+                currentStrategy.onPageNumberChanged(0);
+                currentStrategy.onTextFilterChanged(value);
+                self.updateItems();
+            },30)
+        }
+    };
+
+    this.addDataBinding = function (value) {
+        if (value !== null) {
+            dataBindings.push(value);
+
+            value.onSetPropertyValue(onSetPropertyValueHandler);
+
+
+            if (!suspended) {
+
+                //устанавливаем значение элемента
+                currentStrategy.bindItems(value, dataItems, this);
+
+            }
+
+        }
+    };
+
+    this.removeDataBinding = function (value) {
+        var itemIndex = dataBindings.indexOf(value);
+        if (itemIndex > -1) {
+            dataBindings.splice(itemIndex, 1);
+
+            //remove data binding problem
+            value.removeOnSetPropertyValue(onSetPropertyValueHandler);
+        }
+    };
+    this.getSelectedItem = function () {
+        if (selectedItem === undefined || selectedItem === null) {
+            return null;
+        }
+        
+        return JSON.parse(JSON.stringify(selectedItem));
+    };
+    
+    this.setSelectedItem = function (value) {
+        var isEmpty = function (value) {
+            return typeof value === 'undefined' || value === null;
+        };
+
+        if (isEmpty(value) || isEmpty(selectedItem)) {
+            if (isEmpty(value) && isEmpty(selectedItem)) {
+                return;
+            }
+        } else {
+            if (JSON.stringify(selectedItem) === JSON.stringify(value)) {
+                return;
+            }
+        }
+        //TODO: Проверить работу selectedItem в ListBox
+        //if (JSON.stringify(selectedItem) === JSON.stringify(value)) {
+        //    return;
+        //}
+
+        selectedItem = currentStrategy.syncSelectedItem(value);
+        currentStrategy.onSelectedItemChanged(selectedItem);
+    };
+
+    this.getDataBindings = function () {
+        return dataBindings;
+    };
+
+    var that = this;
+
+    var onSetPropertyValueHandler = function (context, args) {
+        var propertyName = args.property;
+        var propertyValue = args.value;
+
+        if (propertyName !== undefined && propertyName !== null) {
+            var selectedItem = that.getSelectedItem();
+
+            if (selectedItem === null) {
+                selectedItem = {};
+            }
+            if (selectedItem !== null) {
+                if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {
+                    InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName.substr(2), propertyValue);
+                }
+                else if (propertyName !== '$') {
+                    InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName, propertyValue);
+                }
+                else {
+                    for (var property in selectedItem) {
+                        delete(selectedItem[property]);
+                    }
+
+                    for (var property in propertyValue) {
+                        selectedItem[property] = propertyValue[property];
+                    }
+                }
+                that.setSelectedItem(selectedItem);
+                setModified(selectedItem);
+            }
+
+            var bindings = that.getDataBindings();
+            for (var i = 0; i < bindings.length; i++) {
+                if (bindings[i].getProperty() === propertyName) {
+                    bindings[i].propertyValueChanged(propertyValue);
+                }
+            }
+
+            that.eventStore.executeEvent('onSelectedItemModified');
+        }
+    };
+
+    this.onSelectedItemChanged = function (action) {
+        this.eventStore.addEvent('onSelectedItemChanged', action);
+    };
+
+    this.onSelectedItemModified = function (action) {
+        this.eventStore.addEvent('onSelectedItemModified', action);
+    };
+
+    //Добавляем событие по умолчанию (уведомление всех датабиндингов)
+    this.onSelectedItemChanged(function (context, args) {
+        var selectedItem = args.value;
+
+        for (var i = 0; i < dataBindings.length; i++) {
+            var propertyName = dataBindings[i].getProperty();
+
+            if (/^\d+/.test(propertyName)) {
+                /**
+                 * @TODO Костыль! Чтобы при изменении выбранного элемента, в привязки для ItemTemplate не вкидывались
+                 * неверные данные из selectedItem
+                 */
+            } else if (propertyName) {
+                if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {
+                    var propertyValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, propertyName.substring(2, propertyName.length));
+                }
+
+                else if (propertyName !== '$') {
+                    var propertyValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, propertyName); //selectedItem[propertyName];
+                }
+
+                else {
+                    var propertyValue = selectedItem;
+                }
+
+                dataBindings[i].propertyValueChanged(propertyValue);
+            }
+        }
+    });
+
+    this.onItemsUpdated(function (context, args) {
+        var items = args.value;
+        _.each(dataBindings, function (binding) {
+            if (binding.property === '$') {
+                var value = this.getSelectedItem();
+            } else if (/^\$\..+$/.test(binding.property)) {
+                var value = InfinniUI.ObjectUtils.getPropertyValue(this.getSelectedItem(), binding.property.substr(2));
+            } else {
+                var value = InfinniUI.ObjectUtils.getPropertyValue(items, binding.property);
+            }
+            binding.bind(value);
+        }, that);
+    });
+
+
+    var modifiedItems = [];
+
+    this.isModifiedItems = function () {
+        return modifiedItems.length > 0;
+    };
+
+    this.isModified = function (value) {
+        var isModified = value != null && value !== undefined;
+        if (!isModified) {
+            return false;
+        }
+        else {
+            var index = modifiedItems.indexOf(value);
+            return index > -1;
+        }
+    };
+
+    var setModified = function (value) {
+        if (value != null) {
+            modifiedItems.push(value);
+        }
+    };
+
+
+}
+
+function isMainDataSource(ds) {
+    return ds.getName() == 'MainDataSource';
+}

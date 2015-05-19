@@ -1,0 +1,151 @@
+{"Id": "03ed87e6-2ada-4af4-b178-038619031e0d", "Name": "List", "Caption": "Журнал", "Description": "", "Text": "Журнал 'Ресурс'", "DataSources": [
+    {
+        "DocumentDataSource": {
+            "Name": "MainDataSource",
+            "ConfigId": "Structure",
+            "DocumentId": "Resource"
+        }
+    }
+], "LayoutPanel": {
+    "StackPanel": {
+        "Items": [
+            {
+                "SearchPanel": {
+                    "DataSource": "MainDataSource"
+                }
+            },
+            {
+                "DataGrid": {
+                    "ReadOnly": true,
+                    "Columns": [
+                        {
+                            "Text": "Код",
+                            "DisplayProperty": "Code"
+                        },
+                        {
+                            "Text": "Название",
+                            "DisplayProperty": "Name"
+                        },
+                        {
+                            "Text": "Отделение ",
+                            "DisplayProperty": "Department.DisplayName"
+                        },
+                        {
+                            "Text": "Кабинет ",
+                            "DisplayProperty": "Room.DisplayName"
+                        },
+                        {
+                            "Text": "Статус ",
+                            "DisplayProperty": "UseStatus.DisplayName"
+                        },
+                        {
+                            "Text": "Кабинет",
+                            "ItemTemplate": {
+                                "TextBox": {
+                                    "Value": {
+                                        "PropertyBinding": {
+                                            "DataSource": "MainDataSource",
+                                            "Property": "$.Room.DisplayName"
+                                        }
+                                    }
+                                }
+                            },
+                            "Visible": false
+                        },
+                        {
+                            "Text": "Сервисы",
+                            "DisplayProperty": "Services",
+                            "ItemFormat": {
+                                "ObjectFormat": {
+                                    "Format": "{Id}: {DisplayName}"
+                                }
+                            }
+                        }
+                    ],
+                    "ItemTemplate": {
+                        "DataGrid": {
+                            "ReadOnly": true,
+                            "Columns": [
+                                {
+                                    "Text": "DisplayName",
+                                    "DisplayProperty": "DisplayName"
+                                }
+                            ],
+                            "Items": {
+                                "PropertyBinding": {
+                                    "DataSource": "MainDataSource",
+                                    "Property": "$.Services"
+                                }
+                            }
+
+                        }
+                    },
+                    "ItemFormat": {
+                        "ObjectFormat": {
+                            "Format": "{DisplayName}"
+                        }
+                    },
+                    "Items": {
+                        "PropertyBinding": {
+                            "DataSource": "MainDataSource"
+                        }
+                    }
+                }
+            },
+            {
+                "ToolBar": {
+                    "Items": [
+                        {
+                            "ToolBarButton": {
+                                "Text": "Добавить",
+                                "Action": {
+                                    "AddAction": {
+                                        "View": {
+                                            "AutoView": {
+                                                "ConfigId": "Structure",
+                                                "DocumentId": "Resource",
+                                                "ViewType": "EditView",
+                                                "MetadataName": "Edit",
+                                                "OpenMode": "Page"
+                                            }
+                                        },
+                                        "DataSource": "MainDataSource"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "ToolBarButton": {
+                                "Text": "Редактировать",
+                                "Action": {
+                                    "EditAction": {
+                                        "View": {
+                                            "AutoView": {
+                                                "ConfigId": "Structure",
+                                                "DocumentId": "Resource",
+                                                "ViewType": "EditView",
+                                                "MetadataName": "Edit",
+                                                "OpenMode": "Page"
+                                            }
+                                        },
+                                        "DataSource": "MainDataSource"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "ToolBarButton": {
+                                "Text": "Удалить",
+                                "Action": {
+                                    "DeleteAction": {
+                                        "DataSource": "MainDataSource"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}, "Parameters": [], "MetadataType": "ListView", "ParentId": "4ef806ce-3ff2-4cd8-a497-634036bc4372", "Version": "version_systemconfig"}
