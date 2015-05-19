@@ -65,7 +65,11 @@ var DocumentViewerView = ControlView.extend({
 
         //dataSource.addDataBinding({onSetPropertyValue: $.noop, bind: $.noop});
 
-        dataSource.onItemsUpdated(function(){
+        if (typeof this.onDataSourceItemsUpdated !== 'undefined') {
+            this.onDataSourceItemsUpdated.unsubscribe();
+        }
+
+        this.onDataSourceItemsUpdated = dataSource.onItemsUpdated(function(){
             renderFrame();
         });
 

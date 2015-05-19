@@ -296,8 +296,6 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
         //TODO: рефакторить listbox
         $template.off();
         $template.on('click', function (event) {
-            event.preventDefault();
-
             if(multiSelect){
                 if(!$(event.target).hasClass('check-listbox-item')){
                     return;

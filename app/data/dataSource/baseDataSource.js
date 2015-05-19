@@ -32,7 +32,7 @@
         this.eventStore.addEvent('onItemCreated', handler);
     };
     this.onItemsUpdated = function (handler) {
-        this.eventStore.addEvent('onItemsUpdated', handler);
+        return this.eventStore.addEvent('onItemsUpdated', handler);
     };
     this.onItemsDeleted = function (handler) {
         this.eventStore.addEvent('onItemsDeleted', handler);

@@ -9,6 +9,25 @@ function EventStore() {
         }
 
         event.actions.push(action);
+        return {
+            unsubscribe: this.removeEvent.bind(this, name, action)
+        };
+    };
+
+    this.removeEvent = function (name, action) {
+        var events = handlers[name];
+        if (typeof events === 'undefined') {
+            return;
+        }
+        var actions = events.actions;
+        var i;
+        while(true) {
+            i = actions.indexOf(action);
+            if (i === -1) {
+                break;
+            }
+            actions.splice(i, 1);
+        }
     };
 
     this.executeEvent = function (name) {
