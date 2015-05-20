@@ -129,5 +129,6 @@ PropertyBinding.prototype.bind = function (value) {
 
     this.propertyValueChanged(value);
 
-    this.invokeHandler('onPropertyValueChanged');
+    //Дублируется вызов onPropertyValueChanged в propertyValueChanged()
+    //this.invokeHandler('onPropertyValueChanged');
 };
