@@ -1,4 +1,4 @@
-﻿function BaseDataSource(view, idProperty, dataProvider) {
+﻿function oldBaseDataSource(view, idProperty, dataProvider) {
 
     this.eventStore = new EventStore();
 
