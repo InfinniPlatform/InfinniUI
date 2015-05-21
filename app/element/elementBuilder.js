@@ -16,11 +16,11 @@ _.extend(ElementBuilder.prototype, {
 
         params.element = element;
 
+        this.applyMetadata(params);
+
         if (parent && parent.registerElement) {
             parent.registerElement(element);
         }
-
-        this.applyMetadata(params);
 
         return element;
     },
