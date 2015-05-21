@@ -1,7 +1,10 @@
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
-        idProperty: 'Id'
+        idProperty: 'Id',
+        fillCreatedItem: true,
+        isUpdateSuspended: false,
+        pageNumber: null
     },
 
     initialize: function(){
@@ -17,6 +20,46 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getIdProperty: function () {
-        return return this.get('idProperty');
+        return this.get('idProperty');
+    },
+
+    getFillCreatedItem: function () {
+        return this.get('fillCreatedItem');
+    },
+
+    setFillCreatedItem: function (fillCreatedItem) {
+        this.set('fillCreatedItem', fillCreatedItem);
+    },
+
+    suspendUpdate: function () {
+        this.set('isUpdateSuspended', true);
+    },
+
+    resumeUpdate: function () {
+        this.set('isUpdateSuspended', false);
+        this.updateItems();
+    },
+
+    getPageNumber: function () {
+        return this.get('pageNumber');
+    },
+
+    setPageNumber: function (value) {
+        if(value < 0){
+            throw 'BaseDataSource.setPageNumber() Заданно значение меньше нуля: ' + value;
+        }
+
+        if (value != this.get('pageNumber')) {
+            this.set('pageNumber', value);
+            this.updateItems();
+        }
+
+
+    },
+
+    onPageSizeChanged: function (handler) {
+        this.on('change:pageNumber', handler);
     }
+
+
 });
