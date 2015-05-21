@@ -5,6 +5,12 @@ function View() {
 
     this.onLoadedHandlers = $.Deferred();
 
+    this.context = {
+        notInitialized: true,
+        Controls: {},
+        DataSources: null
+    };
+
     this.onTextChange = function(callback){
         model.on('change:text', callback);
     };
@@ -50,6 +56,12 @@ function View() {
 
     this.setDataSources = function (value) {
         dataSources = value;
+
+        this.context.DataSources = {};
+        for(var i = 0, ii = dataSources.length; i < ii; i++){
+            this.context.DataSources[dataSources[i].getName()] = dataSources[i];
+        }
+
 
         //После загрузке данных во все источники данных генерируем событие onLoaded
         var loading = _.map(dataSources, function (ds) {return ds.loading});
@@ -117,26 +129,20 @@ function View() {
 
     this.getContext = function () {
 
-        var context = {};
-
-        context.DataSources = {};
-        for (var i = 0; i < dataSources.length; i++) {
-            context.DataSources[dataSources[i].getName()] = dataSources[i];
+        if(!this.context.notInitialized){
+            return this.context;
         }
+        delete this.context.notInitialized;
 
-        context.Parameters = {};
+
+        this.context.Parameters = {};
         for (var j = 0; j < parameters.length; j++) {
-            context.Parameters[parameters[j].getName()] = parameters[j];
+            this.context.Parameters[parameters[j].getName()] = parameters[j];
         }
 
-        context.Controls = {};
-        for (var k = 0; k < elements.length; k++) {
-            context.Controls[elements[k].getName()] = elements[k];
-        }
-
-        context.Scripts = {};
+        this.context.Scripts = {};
         for (var key in scripts) {
-            context.Scripts[key] = {
+            this.context.Scripts[key] = {
                 Run: (function(k){
                     return function (context, args) {
                         scripts[k].run(context, args);
@@ -145,12 +151,11 @@ function View() {
             }
         }
 
-
-        context.ParentView = this;
+        this.context.ParentView = this;
 
         var that = this;
         //добавляем операции глобального контекста
-        context.Global = {
+        this.context.Global = {
 
             openView: function (openViewMetadata, resultCallback) {
 
@@ -181,8 +186,7 @@ function View() {
             culture: culture
         };
 
-
-        return context;
+        return this.context;
     };
 
     this.getScriptsStorage = function () {
@@ -193,6 +197,7 @@ function View() {
 
     this.registerElement = function (element) {
         elements.push(element);
+        this.context.Controls[element.getName()] = element;
     };
 
     this.setHorizontalAlignment = function (horizontalAlignment) {
