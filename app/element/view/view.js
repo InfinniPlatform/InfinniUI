@@ -8,7 +8,7 @@ function View() {
     this.context = {
         notInitialized: true,
         Controls: {},
-        DataSources: null
+        DataSources: {}
     };
 
     this.onTextChange = function(callback){
