@@ -4,11 +4,21 @@ var BaseDataSource = Backbone.Model.extend({
         idProperty: 'Id',
         fillCreatedItem: true,
         isUpdateSuspended: false,
-        pageNumber: null
+        pageNumber: null,
+        pageSize: 15,
+        modifiedItems: []
     },
 
     initialize: function(){
 
+    },
+
+    onPageNumberChanged: function (handler) {
+        this.on('change:pageNumber', handler);
+    },
+
+    onPageNumberSize: function (handler) {
+        this.on('change:pageSize', handler);
     },
 
     getName: function(){
@@ -45,8 +55,8 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageNumber: function (value) {
-        if(value < 0){
-            throw 'BaseDataSource.setPageNumber() Заданно значение меньше нуля: ' + value;
+        if(Number.isInteger(value) || value < 0){
+            throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
         }
 
         if (value != this.get('pageNumber')) {
@@ -57,8 +67,36 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-    onPageSizeChanged: function (handler) {
-        this.on('change:pageNumber', handler);
+    getPageSize: function () {
+        return this.get('pageSize');
+    },
+
+    setPageSize: function (value) {
+        if(Number.isInteger(value) || value < 0){
+            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
+        }
+
+        if (value != this.get('pageSize')) {
+            this.set('pageSize', value);
+            this.updateItems();
+        }
+
+
+    },
+
+    isModifiedItems : function () {
+        return this.get('modifiedItems').length > 0;
+    },
+
+    isModified : function (item) {
+        var isModified = value != null && value !== undefined;
+        if (!isModified) {
+            return false;
+        }
+        else {
+            var index = modifiedItems.indexOf(value);
+            return index > -1;
+        }
     }
 
 
