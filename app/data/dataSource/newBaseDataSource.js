@@ -7,7 +7,8 @@ var BaseDataSource = Backbone.Model.extend({
         isUpdateSuspended: false,
         pageNumber: null,
         pageSize: 15,
-        modifiedItems: []
+        modifiedItems: [],
+        items: null
     },
 
     initialize: function(){
@@ -123,7 +124,7 @@ var BaseDataSource = Backbone.Model.extend({
 
                 if(!(data instanceof Array) && item != null) {
                     item[idProperty] = data.InstanceId;
-                    addOrUpdateItem(item);
+                    this.set('items', [item]);
                     currentStrategy.onItemSaved(item, data);
                     resetModified(item);
                 }
@@ -138,7 +139,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
 
-    ttt: function(warnings){
+    _updateLocalItems: function(warnings){
 
     }
 
