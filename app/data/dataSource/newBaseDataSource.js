@@ -1,6 +1,7 @@
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
+        dataProvider: null,
         idProperty: 'Id',
         fillCreatedItem: true,
         isUpdateSuspended: false,
@@ -10,7 +11,11 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     initialize: function(){
+        this.initDataProvider();
+    },
 
+    initDataProvider: function(){
+        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
     },
 
     onPageNumberChanged: function (handler) {
@@ -19,6 +24,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     onPageNumberSize: function (handler) {
         this.on('change:pageSize', handler);
+    },
+
+    onError: function (handler) {
+        this.on('error', handler);
     },
 
     getName: function(){
@@ -85,18 +94,52 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     isModifiedItems : function () {
-        return this.get('modifiedItems').length > 0;
+        return this.isModified();
     },
 
     isModified : function (item) {
-        var isModified = value != null && value !== undefined;
-        if (!isModified) {
+        if(arguments.length == 0){
+            return this.get('modifiedItems').length > 0;
+        }
+
+        if (item != null && item !== undefined) {
             return false;
         }
         else {
-            var index = modifiedItems.indexOf(value);
-            return index > -1;
+            var index = this.get('modifiedItems').indexOf(item);
+            return index != -1;
         }
+    },
+
+    saveItem : function (item, onSuccess) {
+        this.get('dataProvider').replaceItem(item, warnings, function (data) {
+            var idProperty = this.get('idProperty');
+
+            if ((data.IsValid === false) ) {
+
+                this.trigger('error', data.ValidationMessage);
+
+            } else {
+
+                if(!(data instanceof Array) && item != null) {
+                    item[idProperty] = data.InstanceId;
+                    addOrUpdateItem(item);
+                    currentStrategy.onItemSaved(item, data);
+                    resetModified(item);
+                }
+
+                if (onSuccess) {
+                    var args = Array.prototype.slice.call(arguments, 1);
+                    onSuccess.apply(undefined, args);
+                }
+
+            }
+        });
+    },
+
+
+    ttt: function(warnings){
+
     }
 
 
