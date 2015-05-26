@@ -1,14 +1,21 @@
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
-        dataProvider: null,
         idProperty: 'Id',
-        fillCreatedItem: true,
-        isUpdateSuspended: false,
         pageNumber: null,
         pageSize: 15,
+
+        dataProvider: null,
+
         modifiedItems: [],
-        items: null
+        items: null,
+        selectedItem: null,
+        stringifySelectedItem: null,
+
+        fillCreatedItem: true,
+        isUpdateSuspended: false,
+        showingWarnings: false
+
     },
 
     initialize: function(){
@@ -113,29 +120,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     saveItem : function (item, onSuccess) {
-        this.get('dataProvider').replaceItem(item, warnings, function (data) {
-            var idProperty = this.get('idProperty');
 
-            if ((data.IsValid === false) ) {
-
-                this.trigger('error', data.ValidationMessage);
-
-            } else {
-
-                if(!(data instanceof Array) && item != null) {
-                    item[idProperty] = data.InstanceId;
-                    this.set('items', [item]);
-                    currentStrategy.onItemSaved(item, data);
-                    resetModified(item);
-                }
-
-                if (onSuccess) {
-                    var args = Array.prototype.slice.call(arguments, 1);
-                    onSuccess.apply(undefined, args);
-                }
-
-            }
-        });
     },
 
 
