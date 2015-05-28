@@ -39,6 +39,8 @@
     };
 
     //private
+    var that = this;
+
     var _criteriaConstructor;
     var fillCreatedItem = true;
     var idFilter = null;
@@ -62,6 +64,13 @@
     var dataBindings = [];
 
     var suspended = false;
+
+    this.initingDataStrategy = 'manualInitingData';
+    this.lazyInitingDataStarter = $.Deferred();
+
+    this.lazyInitingDataStarter.done(function(){
+        that.resumeUpdate();
+    });
 
     this.isSuspended = function () {
         return suspended;
@@ -407,22 +416,42 @@
         }
     };
 
-    this.addDataBinding = function (value) {
-        if (value !== null) {
-            dataBindings.push(value);
+    this.addDataBinding = function (binding, initingDataStrategy) {
+        if (binding !== null) {
+            handleInitingDataStrategy(initingDataStrategy);
 
-            value.onSetPropertyValue(onSetPropertyValueHandler);
+            dataBindings.push(binding);
+
+            binding.onSetPropertyValue(onSetPropertyValueHandler);
 
 
             if (!suspended) {
 
                 //устанавливаем значение элемента
-                currentStrategy.bindItems(value, dataItems, this);
+                currentStrategy.bindItems(binding, dataItems, this);
 
             }
 
         }
     };
+
+    function handleInitingDataStrategy(initingDataStrategy){
+        if(initingDataStrategy && initingDataStrategy.name == 'lazyInitingData' && (that.initingDataStrategy == 'manualInitingData' || that.initingDataStrategy == 'lazyInitingData')){
+            that.initingDataStrategy = 'lazyInitingData';
+            initingDataStrategy.starter.done(function(){
+                that.lazyInitingDataStarter.resolve();
+            });
+        }
+
+        if(!initingDataStrategy){
+            that.initingDataStrategy = 'previouslyInitingData';
+            that.lazyInitingDataStarter.reject();
+
+            if(view.isLoading()){
+                that.resumeUpdate();
+            }
+        }
+    }
 
     this.removeDataBinding = function (value) {
         var itemIndex = dataBindings.indexOf(value);
@@ -467,8 +496,6 @@
     this.getDataBindings = function () {
         return dataBindings;
     };
-
-    var that = this;
 
     var onSetPropertyValueHandler = function (context, args) {
         var propertyName = args.property;
