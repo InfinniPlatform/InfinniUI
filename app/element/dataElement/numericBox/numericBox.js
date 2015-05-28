@@ -1,8 +1,3 @@
-/**
- *
- * @param parentView
- * @constructor
- */
 function NumericBox(parentView) {
     _.superClass(NumericBox, this, parentView);
 }
@@ -58,6 +53,12 @@ _.extend(NumericBox.prototype, {
     }
 },
     valuePropertyMixin,
+    formatPropertyMixin,
+    elementHorizontalTextAlignmentMixin,
     editMaskPropertyMixin,
-    baseTextElementMixin
+    baseTextElementMixin,
+    elementBackgroundMixin,
+    elementForegroundMixin,
+    elementTextStyleMixin,
+    elementHintTextMixin
 );

@@ -6,19 +6,30 @@ var NumericBoxView = ControlView.extend({
     UI: {
         control: '.pl-spin-control',
         input: '.pl-spin-input',
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        hintText: '.pl-control-hint-text',
+        buttonMin: '.nm-min',
+        buttonMax: '.nm-max'
     },
 
     events: {
-        'change .pl-spin-input': 'updateModelVal',
         //Обработчик для показа поля редактирования с использованием маски ввода
         'focus .pl-spin-input': 'onFocusControlHandler',
         'focusin .pl-control-editor' : 'onFocusInDebounceHandler',
-        'focusout .pl-control-editor' : 'onFocusOutDebounceHandler'
+        'focusout .pl-control-editor' : 'onFocusOutDebounceHandler',
+        'click .nm-min' : 'onClickDecrementHandler',
+        'click .nm-max' : 'onClickIncrementHandler'
     },
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+
+        this.initHorizontalTextAlignment();
+        this.initForeground();
+        this.initBackground();
+        this.initTextStyle();
+        this.initHintText();
+
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
         this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
 
@@ -34,13 +45,15 @@ var NumericBoxView = ControlView.extend({
         this.prerenderingActions();
 
         this.$el.html(this.template({}));
+
         this.bindUIElements();
-        //@TODO Используемый плагин обязывает обязательно указывать мин и макс знаначения
-        this.ui.input.TouchSpin({
-            min: (typeof this.model.get('minValue') === 'undefined') ? -Number.MAX_VALUE : this.model.get('minValue'),
-            max: (typeof this.model.get('maxValue') === 'undefined') ? Number.MAX_VALUE : this.model.get('maxValue')
-        });
         this.initEditor();
+
+        this.updateBackground();
+        this.updateForeground();
+        this.updateTextStyle();
+        this.updateHintText();
+        this.updateHorizontalTextAlignment();
 
         this.updateValue();
         this.updateMaxValue();
@@ -52,20 +65,6 @@ var NumericBoxView = ControlView.extend({
         return this;
     },
 
-    updateModelVal: function (event) {
-        var val = parseInt(event.target.value, 10);
-        if (isNaN(val)) {
-            val = null
-        } else {
-            if(val > this.model.get('maxValue')){
-                val = this.model.get('maxValue')
-            }else if(val < this.model.get('minValue')){
-                val = this.model.get('minValue')
-            }
-        }
-
-        this.model.set('value', val);
-    },
     updateEnabled: function () {
         if (this.wasRendered) {
             var isEnabled = this.model.get('enabled');
@@ -74,6 +73,7 @@ var NumericBoxView = ControlView.extend({
             (!isEnabled) ? this.$el.addClass('disabled') : this.$el.removeClass('disabled');
         }
     },
+
     updateReadOnly: function () {
         if (this.wasRendered) {
             if (this.model.get('enabled')) {
@@ -84,10 +84,31 @@ var NumericBoxView = ControlView.extend({
             }
         }
     },
+
+    onClickDecrementHandler: function(){
+        var value = this.model.get('value');
+        var increment = this.model.get('increment');
+
+        value = parseInt(value) - parseInt(increment);
+
+        this.model.set('value', value);
+    },
+
+    onClickIncrementHandler: function(){
+        var value = this.model.get('value');
+        var increment = this.model.get('increment');
+
+        value = parseInt(value) + parseInt(increment);
+
+        this.model.set('value', value);
+    },
+
     updateValue: function () {
         var value = this.model.get('value');
         var min = this.model.get('minValue');
         var max = this.model.get('maxValue');
+        var format = this.model.get('format');
+        var text;
 
         if(typeof max !== 'undefined' && value  > max) {
             value = max;
@@ -96,29 +117,59 @@ var NumericBoxView = ControlView.extend({
             value = min;
         }
 
-        this.model.set('value', value);
+        if (typeof value !== 'undefined') {
+            if (typeof format !== 'undefined' && format !== null) {
+                text = format.format(value);
+            } else {
+                text = value;
+            }
+        }
+
+        if(this.model.get('value') != value){
+            this.model.set('value', value);
+        }
+
 
         if (this.wasRendered) {
-            this.ui.input.val(value);
-            this.ui.input.trigger("touchspin.updatesettings", {initval: value});
+            this.ui.input.val(text);
         }
     },
+
     updateIncrement: function () {
         if (this.wasRendered) {
             var increment = this.model.get('increment');
-            this.ui.input.trigger("touchspin.updatesettings", {step: increment});
+
+            if (increment === 0){
+                increment = 1;
+            }
+
+            this.model.set('increment', increment);
         }
     },
+
     updateMinValue: function () {
         if (this.wasRendered) {
             var min = this.model.get('minValue');
-            this.ui.input.trigger("touchspin.updatesettings", {min: min});
+            var value = this.model.get('value');
+
+            if(value < min){
+                value = min;
+            }
+
+            this.model.set('value', value);
         }
     },
+
     updateMaxValue: function () {
         if (this.wasRendered) {
             var max = this.model.get('maxValue');
-            this.ui.input.trigger("touchspin.updatesettings", {max: max});
+            var value = this.model.get('value');
+
+            if(value > max){
+                value = max;
+            }
+
+            this.model.set('value', value);
         }
     },
 
@@ -175,5 +226,10 @@ var NumericBoxView = ControlView.extend({
 });
 
 _.extend(NumericBoxView.prototype,
-    textEditorMixin
+    textEditorMixin,
+    horizontalTextAlignmentPropertyMixin,
+    foregroundPropertyMixin,
+    backgroundPropertyMixin,
+    textStylePropertyMixin,
+    hintTextPropertyMixin
 );

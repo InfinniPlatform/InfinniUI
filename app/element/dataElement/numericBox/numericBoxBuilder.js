@@ -8,29 +8,24 @@ _.extend(NumericBoxBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
+        this.initFormatProperty(params);
+        this.initEditMaskProperty(params);
         this.initValueProperty(params, true);
+        this.initForeground(params);
+        this.initBackground(params);
+        this.initTextStyle(params);
+        this.initHintText(params);
+        this.initHorizontalTextAlignmentProperty(params);
 
         var element = params.element,
             metadata = params.metadata;
 
-        /** Init EditMask **/
-//        params.metadata.EditMask = {
-//            NumberEditMask: {
-//                Mask: 'n0'
-//            }
-//        };
-        this.initEditMaskProperty(params);
-        /** /Init EditMask **/
-
-        element.setText(metadata.Text);
-        element.setName(metadata.Name);
+        //element.setText(metadata.Text);
+        //element.setName(metadata.Name);
         element.setVisible(metadata.Visible);
-        element.setEnabled(metadata.Enabled);
-        element.setHorizontalAlignment(metadata.HorizontalAlignment);
-//        element.setHorizontalTextAlignment(metadata.HorizontalTextAlignmen);
-
+        //element.setEnabled(metadata.Enabled);
+        //element.setHorizontalAlignment(metadata.HorizontalAlignment);
         element.setReadOnly(metadata.ReadOnly);
-//        element.setFormat(metadata.Format);
         element.setMinValue(metadata.MinValue);
         element.setMaxValue(metadata.MaxValue);
         element.setIncrement(metadata.Increment);
@@ -61,6 +56,12 @@ _.extend(NumericBoxBuilder.prototype, {
 
 },
     builderValuePropertyMixin,
+    builderFormatPropertyMixin,
+    builderHorizontalTextAlignmentPropertyMixin,
     builderEditMaskPropertyMixin,
-    builderBaseTextElementMixin
+    builderBaseTextElementMixin,
+    builderBackgroundMixin,
+    builderForegroundMixin,
+    builderTextStyleMixin,
+    builderHintTextMixin
 );

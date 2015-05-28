@@ -4,7 +4,10 @@ var NumericBoxModel = ControlModel.extend({
         readOnly: false,
         minValue: 0,
         maxValue: Number.MAX_VALUE,
-        increment: 1
+        increment: 1,
+        foreground: 'Black',
+        background: 'Transparent',
+        textStyle: 'Body1'
     }, ControlModel.prototype.defaults),
 
     initialize: function () {

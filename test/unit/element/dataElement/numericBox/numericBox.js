@@ -92,7 +92,6 @@ describe('NumericBox', function () {
         it('should be true if scriptsHandlers call', function () {
             //Given
             var builder = new ApplicationBuilder();
-            //var numericBox = new NumericBoxBuilder();
             var view = new View();
             var metadata = {
                 "NumericBox": {
