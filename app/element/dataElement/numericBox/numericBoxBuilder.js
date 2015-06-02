@@ -7,6 +7,9 @@ _.extend(NumericBoxBuilder.prototype, {
     applyMetadata: function(params){
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
+        params.metadata.LabelText = "ssss:";
+        params.metadata.ErrorText = "ОШИБКАБЛ!";
+
         this.initScriptsHandlers(params);
         this.initFormatProperty(params);
         this.initEditMaskProperty(params);
@@ -16,15 +19,13 @@ _.extend(NumericBoxBuilder.prototype, {
         this.initTextStyle(params);
         this.initHintText(params);
         this.initHorizontalTextAlignmentProperty(params);
+        this.initErrorText(params);
+        this.initLabelText(params);
 
         var element = params.element,
             metadata = params.metadata;
 
-        //element.setText(metadata.Text);
-        //element.setName(metadata.Name);
         element.setVisible(metadata.Visible);
-        //element.setEnabled(metadata.Enabled);
-        //element.setHorizontalAlignment(metadata.HorizontalAlignment);
         element.setReadOnly(metadata.ReadOnly);
         element.setMinValue(metadata.MinValue);
         element.setMaxValue(metadata.MaxValue);
@@ -63,5 +64,7 @@ _.extend(NumericBoxBuilder.prototype, {
     builderBackgroundMixin,
     builderForegroundMixin,
     builderTextStyleMixin,
-    builderHintTextMixin
+    builderErrorTextMixin,
+    builderHintTextMixin,
+    builderLabelTextMixin
 );

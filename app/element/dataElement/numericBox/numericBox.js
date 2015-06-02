@@ -60,5 +60,7 @@ _.extend(NumericBox.prototype, {
     elementBackgroundMixin,
     elementForegroundMixin,
     elementTextStyleMixin,
-    elementHintTextMixin
+    elementHintTextMixin,
+    elementErrorTextMixin,
+    elementLabelTextMixin
 );

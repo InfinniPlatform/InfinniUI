@@ -1,13 +1,18 @@
 var NumericBoxView = ControlView.extend({
     className: 'pl-numeric-box',
 
-    template: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
+    template: {
+        default: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
+        label: InfinniUI.Template["controls/numericBox/template/label-numericbox.tpl.html"]
+    },
+    //template: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
 
     UI: {
         control: '.pl-spin-control',
         input: '.pl-spin-input',
         editor: '.pl-control-editor',
         hintText: '.pl-control-hint-text',
+        validationMessage: '.pl-control-validation-message',
         buttonMin: '.nm-min',
         buttonMax: '.nm-max'
     },
@@ -21,6 +26,14 @@ var NumericBoxView = ControlView.extend({
         'click .nm-max' : 'onClickIncrementHandler'
     },
 
+    onFocusInHandler: function (event) {
+        this.callEventHandler('OnGotFocus');
+    },
+
+    onFocusOutHandler: function (event) {
+        this.callEventHandler('OnLostFocus');
+    },
+
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
 
@@ -29,37 +42,50 @@ var NumericBoxView = ControlView.extend({
         this.initBackground();
         this.initTextStyle();
         this.initHintText();
+        this.initErrorText();
 
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
         this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
 
         this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
+        this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.listenTo(this.model, 'change:minValue', this.updateMinValue);
         this.listenTo(this.model, 'change:maxValue', this.updateMaxValue);
         this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:increment', this.updateIncrement);
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
+
     },
 
     render: function () {
         this.prerenderingActions();
 
-        this.$el.html(this.template({}));
+        var labelText = this.model.get('labelText');
+        var style = typeof labelText === 'undefined' || labelText === null ? 'default' : 'label';
+
+        var template = this.template[style];
+
+        this.$el.html(template({
+            labelText: labelText
+        }));
 
         this.bindUIElements();
         this.initEditor();
-
-        this.updateBackground();
-        this.updateForeground();
-        this.updateTextStyle();
-        this.updateHintText();
-        this.updateHorizontalTextAlignment();
 
         this.updateValue();
         this.updateMaxValue();
         this.updateMinValue();
         this.updateIncrement();
         this.updateEnabled();
+
+        this.updateBackground();
+        this.updateForeground();
+        this.updateTextStyle();
+        this.updateErrorText();
+        this.updateValidation(); //При повторном рендере, принудительно выставляем Error текст
+        this.updateHintText();
+        this.updateHorizontalTextAlignment();
 
         this.postrenderingActions();
         return this;
@@ -191,6 +217,21 @@ var NumericBoxView = ControlView.extend({
         return parseInt(value, 10);
     },
 
+
+    updateValidation: function () {
+        var model = this.model;
+
+        var state = model.get('validationState');
+        var message = model.get('validationMessage');
+
+        var hideMessage = _.isEmpty(message) || ['error', 'warning'].indexOf(state) === -1;
+
+        this.ui.validationMessage.toggleClass('hidden', hideMessage);
+        this.ui.validationMessage.text(message);
+
+        //state = success, error, warning
+    },
+
     /**
      * Обработчик проверки значения из поля ввода с маской
      * @param value
@@ -213,16 +254,10 @@ var NumericBoxView = ControlView.extend({
         }
 
         return true;
-    },
-
-
-    onFocusInHandler: function (event) {
-        this.callEventHandler('OnGotFocus');
-    },
-
-    onFocusOutHandler: function (event) {
-        this.callEventHandler('OnLostFocus');
     }
+
+
+
 });
 
 _.extend(NumericBoxView.prototype,
@@ -231,5 +266,7 @@ _.extend(NumericBoxView.prototype,
     foregroundPropertyMixin,
     backgroundPropertyMixin,
     textStylePropertyMixin,
-    hintTextPropertyMixin
+    hintTextPropertyMixin,
+    errorTextPropertyMixin,
+    labelTextPropertyMixin
 );
