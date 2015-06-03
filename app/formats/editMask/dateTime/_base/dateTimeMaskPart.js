@@ -392,7 +392,9 @@ var DateTimeMaskPartStrategy = (function () {
                 return false;   // Не даем ничего вводить
             },
             validator: function (value) {
-                return this.rangeValidator(value);
+                var list = this.getListForMask('MMMM');
+                return list.indexOf(value) > -1;
+                //return this.rangeValidator(value);
             },
             prev: function (value) {
                 return this.getPrevMonthValue('MMMM', value);

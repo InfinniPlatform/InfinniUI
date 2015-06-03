@@ -7,9 +7,6 @@ _.extend(NumericBoxBuilder.prototype, {
     applyMetadata: function(params){
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
-        params.metadata.LabelText = "ssss:";
-        params.metadata.ErrorText = "ОШИБКАБЛ!";
-
         this.initScriptsHandlers(params);
         this.initFormatProperty(params);
         this.initEditMaskProperty(params);

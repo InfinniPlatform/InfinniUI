@@ -33,14 +33,6 @@ _.extend(DatePicker.prototype, {
         this.setDateProperty('maxDate', maxDate, this.control.controlModel.defaults.maxDate);
     },
 
-    getFormat: function(){
-        return this.control.get('format');
-    },
-
-    setFormat: function(format){
-        this.control.set('format', format);
-    },
-
     getReadOnly: function(){
         return this.control.get('readonly');
     },
@@ -51,17 +43,17 @@ _.extend(DatePicker.prototype, {
         }
     },
 
-    getValue: function(){
-        return this.control.get('value');
-    },
-
-    setValue: function(value){
-        this.control.set('value', value/*, this.control.controlModel.defaults.value*/);
-    },
-
-    onValueChanged: function (handler) {
-        this.control.onValueChanged(handler);
-    },
+    //getValue: function(){
+    //    return this.control.get('value');
+    //},
+    //
+    //setValue: function(value){
+    //    this.control.set('value', value/*, this.control.controlModel.defaults.value*/);
+    //},
+    //
+    //onValueChanged: function (handler) {
+    //    this.control.onValueChanged(handler);
+    //},
 
     setDateProperty: function(property, value, defaultValue){
         if (_.isObject(value) && !(value instanceof Date)) {
@@ -90,6 +82,15 @@ _.extend(DatePicker.prototype, {
         return (value instanceof Date) && (!isNaN(value.getTime()));
     }
 },
+    valuePropertyMixin,
+    formatPropertyMixin,
     editMaskPropertyMixin,
-    baseTextElementMixin
+    baseTextElementMixin,
+    elementHorizontalTextAlignmentMixin,
+    elementForegroundMixin,
+    elementBackgroundMixin,
+    elementTextStyleMixin,
+    elementHintTextMixin,
+    elementErrorTextMixin,
+    elementLabelTextMixin
 );
