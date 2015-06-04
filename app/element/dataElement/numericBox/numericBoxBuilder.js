@@ -22,8 +22,6 @@ _.extend(NumericBoxBuilder.prototype, {
         var element = params.element,
             metadata = params.metadata;
 
-        element.setVisible(metadata.Visible);
-        element.setReadOnly(metadata.ReadOnly);
         element.setMinValue(metadata.MinValue);
         element.setMaxValue(metadata.MaxValue);
         element.setIncrement(metadata.Increment);

@@ -10,7 +10,6 @@ var ToggleButtonView = ControlView.extend({
         this.initValue();
         this.initOnText();
         this.initOffText();
-        this.initReadOnly();
 
         ControlView.prototype.initialize.apply(this);
         this.listenTo(this.model, 'change', this.updateValue);
@@ -27,7 +26,6 @@ var ToggleButtonView = ControlView.extend({
         this.updateValue();
         this.updateTextOn();
         this.updateTextOff();
-        this.updateReadOnly();
         this.updateEnabled();
 
         this.postrenderingActions();
@@ -45,10 +43,6 @@ var ToggleButtonView = ControlView.extend({
     initOffText: function () {
         this.listenTo(this.model, 'change:textOff', this.updateTextOff);
         this.updateTextOff();
-    },
-    initReadOnly: function () {
-        this.listenTo(this.model, 'change:readonly', this.updateReadOnly);
-        this.updateReadOnly();
     },
 
     updateEnabled: function () {
@@ -73,12 +67,6 @@ var ToggleButtonView = ControlView.extend({
         if (this.wasRendered) {
             var textOff = this.model.get('textOff');
             this.$el.find('input').bootstrapSwitch('offText', textOff);
-        }
-    },
-    updateReadOnly: function () {
-        if (this.wasRendered) {
-            var readonly = this.model.get('readonly');
-            this.$el.find('input').bootstrapSwitch('readonly', readonly);
         }
     },
     updateValue: function () {

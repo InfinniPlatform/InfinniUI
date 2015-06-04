@@ -25,9 +25,9 @@ describe('ToggleButton', function () {
 
             // When
             $el = toggleButton.render();
+            $('body').prepend($el);
             $control = $el.find('input');
             toggleButton.setValue(false);
-            toggleButton.setReadOnly(false);
             toggleButton.setTextOn('ДА');
             toggleButton.setTextOff('НЕТ');
 

@@ -11,14 +11,11 @@ _.extend(CheckBox.prototype, {
 
     createControl: function () {
         return new CheckBoxControl();
-    },
-
-    setReadOnly: function (readonly) {
-        return this.control.set('readOnly', readonly);
-    },
-
-    getReadOnly: function () {
-        return this.control.get('readOnly');
     }
 
-}, valuePropertyMixin, elementHorizontalTextAlignmentMixin);
+},
+    valuePropertyMixin,
+    elementHorizontalTextAlignmentMixin,
+    elementForegroundMixin,
+    elementTextStyleMixin
+);

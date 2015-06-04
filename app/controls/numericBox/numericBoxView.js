@@ -52,7 +52,6 @@ var NumericBoxView = ControlView.extend({
         this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.listenTo(this.model, 'change:minValue', this.updateMinValue);
         this.listenTo(this.model, 'change:maxValue', this.updateMaxValue);
-        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:increment', this.updateIncrement);
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
 
@@ -97,17 +96,6 @@ var NumericBoxView = ControlView.extend({
             this.ui.input.prop('disabled', !isEnabled);
             this.$el.find('button').prop('disabled', !isEnabled);
             (!isEnabled) ? this.$el.addClass('disabled') : this.$el.removeClass('disabled');
-        }
-    },
-
-    updateReadOnly: function () {
-        if (this.wasRendered) {
-            if (this.model.get('enabled')) {
-                var readOnly = this.model.get('readOnly');
-                this.ui.input.prop('disabled', readOnly);
-                this.$el.find('button').prop('disabled', readOnly);
-                (readOnly) ? this.$el.addClass('disabled') : this.$el.removeClass('disabled');
-            }
         }
     },
 

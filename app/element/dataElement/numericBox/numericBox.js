@@ -40,14 +40,6 @@ _.extend(NumericBox.prototype, {
         return this.control.get('increment');
     },
 
-    setReadOnly: function (readonly) {
-        return this.control.set('readonly', readonly);
-    },
-
-    getReadOnly: function () {
-        return this.control.get('readonly');
-    },
-
     isNumeric: function( obj ) {
         return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
     }

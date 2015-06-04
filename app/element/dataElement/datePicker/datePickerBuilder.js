@@ -108,7 +108,6 @@ _.extend(DatePickerBuilder.prototype, {
         params.element.setMode(params.metadata.Mode);
         params.element.setMinDate(params.metadata.MinDate);
         params.element.setMaxDate(params.metadata.MaxDate);
-        params.element.setReadOnly(params.metadata.ReadOnly);
 
     },
 

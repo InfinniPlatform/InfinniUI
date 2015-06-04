@@ -49,7 +49,6 @@ var DatePickerView = ControlView.extend({
         this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
         this.listenTo(this.model, 'change:validationState', this.updateValidation);
-        this.listenTo(this.model, 'change:readonly', this.updateReadOnly);
         this.listenTo(this.model, 'change:enabled', this.applyEnabled);
         this.listenTo(this.model, 'change:minDate', this.updateMinDate);
         this.listenTo(this.model, 'change:maxDate', this.updateMaxDate);
@@ -74,7 +73,6 @@ var DatePickerView = ControlView.extend({
 
         this.initOnUiValueChangeHandler();
         this.updateValue();
-        this.updateReadOnly();
         this.applyEnabled();
         this.updateMinDate();
         this.updateMaxDate();
@@ -102,14 +100,6 @@ var DatePickerView = ControlView.extend({
 
         if (this.wasRendered && this.inAllowableRange(value)) {
             this.setValueOnPicker(value);
-        }
-    },
-
-    updateReadOnly: function () {
-        var readonly = this.model.get('readonly');
-
-        if (this.wasRendered) {
-            this.setReadOnlyOnPicker(readonly);
         }
     },
 
@@ -303,18 +293,14 @@ var pickersStrategy = {
             }
         },
 
-        setReadOnlyOnPicker: function(readonly){
+        setEnabledOnPicker: function (enabled) {
             var $datePickerInnerNodes = this.$el.find('button, input');
 
             $datePickerInnerNodes.removeAttr('disabled');
 
-            if (readonly) {
+            if (!enabled) {
                 $datePickerInnerNodes.attr('disabled', 'disabled');
             }
-        },
-
-        setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -395,18 +381,14 @@ var pickersStrategy = {
             }
         },
 
-        setReadOnlyOnPicker: function(readonly){
+        setEnabledOnPicker: function (enabled) {
             var $datePickerInnerNodes = this.$el.find('.open-button .form-control');
 
-            if (readonly){
+            if (!enabled){
                 $datePickerInnerNodes.attr('disabled', 'disabled');
             }else{
                 $datePickerInnerNodes.removeAttr('disabled');
             }
-        },
-
-        setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -495,13 +477,9 @@ var pickersStrategy = {
             $picker.timepicker('setTime', date);
         },
 
-        setReadOnlyOnPicker: function(readonly){
-            var $field = this.$el.find('.timepicker-control');
-            $field.prop('disabled', readonly);
-        },
-
         setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
+            var $field = this.$el.find('.timepicker-control');
+            $field.prop('disabled', !enabled);
         },
 
         setMinDateOnPicker: function(minDate){

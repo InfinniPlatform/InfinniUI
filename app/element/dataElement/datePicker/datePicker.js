@@ -33,28 +33,6 @@ _.extend(DatePicker.prototype, {
         this.setDateProperty('maxDate', maxDate, this.control.controlModel.defaults.maxDate);
     },
 
-    getReadOnly: function(){
-        return this.control.get('readonly');
-    },
-
-    setReadOnly: function(value){
-        if(typeof value == 'boolean'){
-            this.control.set('readonly', value);
-        }
-    },
-
-    //getValue: function(){
-    //    return this.control.get('value');
-    //},
-    //
-    //setValue: function(value){
-    //    this.control.set('value', value/*, this.control.controlModel.defaults.value*/);
-    //},
-    //
-    //onValueChanged: function (handler) {
-    //    this.control.onValueChanged(handler);
-    //},
-
     setDateProperty: function(property, value, defaultValue){
         if (_.isObject(value) && !(value instanceof Date)) {
             value = null;
