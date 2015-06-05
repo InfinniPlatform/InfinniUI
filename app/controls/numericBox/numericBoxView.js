@@ -99,11 +99,33 @@ var NumericBoxView = ControlView.extend({
         }
     },
 
+    DecrementLengthAfterDot: function(increment, value){
+        var lengthAfterDot = increment.toString().split('.')[1];
+
+        value = parseFloat(value) - parseFloat(increment);
+
+        if(lengthAfterDot){
+            value = value.toFixed(lengthAfterDot.length);
+        }
+        return value;
+    },
+
+    IncrementLengthAfterDot: function(increment, value){
+        var lengthAfterDot = increment.toString().split('.')[1];
+
+        value = parseFloat(value) + parseFloat(increment);
+
+        if(lengthAfterDot){
+            value = value.toFixed(lengthAfterDot.length);
+        }
+        return value;
+    },
+
     onClickDecrementHandler: function(){
         var value = this.model.get('value');
         var increment = this.model.get('increment');
 
-        value = parseInt(value) - parseInt(increment);
+        value = this.DecrementLengthAfterDot(increment, value);
 
         this.model.set('value', value);
     },
@@ -112,7 +134,7 @@ var NumericBoxView = ControlView.extend({
         var value = this.model.get('value');
         var increment = this.model.get('increment');
 
-        value = parseInt(value) + parseInt(increment);
+        value = this.IncrementLengthAfterDot(increment, value);
 
         this.model.set('value', value);
     },
@@ -123,6 +145,10 @@ var NumericBoxView = ControlView.extend({
         var max = this.model.get('maxValue');
         var format = this.model.get('format');
         var text;
+
+        if(value == 'undefined' || isNaN(value) || value == null){
+            value = min;
+        }
 
         if(typeof max !== 'undefined' && value  > max) {
             value = max;

@@ -3,15 +3,29 @@ var ToggleButtonView = ControlView.extend({
     template: _.template('<input type="checkbox" class="pl-control" name="my-checkbox" checked="checked">'),
 
     events: {
-        'switchChange.bootstrapSwitch input[type="checkbox"]': 'updateModelVal'
+        'switchChange.bootstrapSwitch input[type="checkbox"]': 'updateModelVal',
+        'focusin input[type="checkbox"]': 'onFocusInDebounceHandler',
+        'focusout input[type="checkbox"]': 'onFocusOutDebounceHandler'
+    },
+
+    onFocusInHandler: function (event) {
+        this.callEventHandler('OnGotFocus');
+    },
+
+    onFocusOutHandler: function (event) {
+        this.callEventHandler('OnLostFocus');
     },
 
     initialize: function () {
+        ControlView.prototype.initialize.apply(this);
+
         this.initValue();
         this.initOnText();
         this.initOffText();
 
-        ControlView.prototype.initialize.apply(this);
+        this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
+        this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
+
         this.listenTo(this.model, 'change', this.updateValue);
     },
 

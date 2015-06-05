@@ -112,7 +112,7 @@ var textEditorMixin = {
      * @param value
      */
     onEditorDone: function (value) {
-        if(value == '' || value === null) {
+        if(!value.toString().length || value === null) {
             value = undefined;
         }
         this.model.set('value', value);

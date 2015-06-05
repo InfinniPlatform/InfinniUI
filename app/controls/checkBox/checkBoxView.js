@@ -4,7 +4,19 @@ var CheckBoxView = ControlView.extend({
     template: InfinniUI.Template["controls/checkBox/template/checkbox.tpl.html"],
 
     events: {
-        'click [type="checkbox"]': 'onClick'
+        'click [type="checkbox"]': 'onClick',
+        'focusin [type="checkbox"]': 'onFocusInDebounceHandler',
+        'focusout [type="checkbox"]': 'onFocusOutDebounceHandler',
+        'focus [type="checkbox"]': 'onFocusControlHandler'
+
+    },
+
+    onFocusInHandler: function (event) {
+        this.callEventHandler('OnGotFocus');
+    },
+
+    onFocusOutHandler: function (event) {
+        this.callEventHandler('OnLostFocus');
     },
 
     initialize: function () {
@@ -13,6 +25,9 @@ var CheckBoxView = ControlView.extend({
         this.initHorizontalTextAlignment();
         this.initForeground();
         this.initTextStyle();
+
+        this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
+        this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
 
         this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:enabled', this.applyEnabled);
