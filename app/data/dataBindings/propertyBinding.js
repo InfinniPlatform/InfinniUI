@@ -5,8 +5,13 @@ var PropertyBinding = function (view, dataSource, property) {
     this.property = property;
     this.propertyValue = null;
     this.element = null;
+    this.setterName = 'setValue';
 };
 
+
+PropertyBinding.prototype.setSetterName = function (name) {
+    this.setterName = name;
+};
 
 PropertyBinding.prototype.validate = function () {
     var exchange = this.view.getExchange();
@@ -22,8 +27,15 @@ PropertyBinding.prototype.onSetPropertyValue = function (handler) {
 
 PropertyBinding.prototype.onPropertyValueChanged = function (handler) {
     /** @TODO Избавиться от хардкода element.setValue **/
-    if(this.element && this.propertyValue && this.element.setValue){
-        this.element.setValue(this.getPropertyValue());
+    var element = this.element;
+    var setter = this.setterName;
+
+    if (element) {
+        var method = element[setter];
+        if(/*this.propertyValue && */method/*this.element.setValue*/){
+            method.call(element, this.getPropertyValue());
+            //this.element.setValue(this.getPropertyValue());
+        }
     }
 
     this.eventStore.addEvent('onPropertyValueChanged', handler);
