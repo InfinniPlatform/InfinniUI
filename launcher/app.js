@@ -1,4 +1,4 @@
-﻿document.title = launcherConfig.header;
+﻿document.title = InfinniUI.config.configName;
 
 moment.lang('ru');
 
