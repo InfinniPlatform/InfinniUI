@@ -593,3 +593,53 @@
 function isMainDataSource(ds) {
     return ds.getName() == 'MainDataSource';
 }
+
+
+
+var components = {
+    main: {
+        name: 'Главная вьюха',
+        type: 'layout',
+        data: {
+
+        },
+        body: {
+
+        }
+    },
+
+    component_layout_432_1: {
+        type: 'layout',
+        name: 'элемент списка todo',
+        data: 'component_data_432_1',
+        body: {
+            type: 'switchArea',
+            binding: '~(isEditingNow)',
+            cases:[
+                {
+
+                }
+            ]
+        }
+    },
+
+    component_data_432_1: {
+        type: 'data',
+        name: 'элемент списка todo',
+        body: {
+            status:{
+                type: 'field',
+                default: 'open' // close, archive
+            },
+            isEditingNow:{
+                type: 'field',
+                default: false
+            },
+            title:{
+                type: 'field',
+                default: ''
+            }
+        }
+    }
+
+};
