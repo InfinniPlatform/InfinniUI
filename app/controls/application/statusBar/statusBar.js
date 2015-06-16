@@ -95,8 +95,8 @@ var StatusBarView = ControlView.extend({
     },
 
     render: function () {
-        var result = this.model.get('result');
-        var header = typeof(launcherConfig) != "undefined" && launcherConfig.header ? launcherConfig.header : '';
+        var result = this.model.get('result');debugger;
+        var header = InfinniUI.config.configName;
         var $wrap = $(this.template({header: header}));
         var $loginTemplate,
             self = this;
