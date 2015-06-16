@@ -3,7 +3,7 @@ var DocumentViewerView = ControlView.extend({
 
     template: _.template(
         '<div class="pl-documentViewer">' +
-        '   <iframe id="documentViewer" name="documentViewer" style="width:100%;" src="/app/utils/pdf/viewer.html#<%= frameId %>"></iframe>' +
+        '   <iframe id="documentViewer" name="documentViewer" style="width:100%;" src="/app/utils/pdf-js/web/viewer.html#<%= frameId %>"></iframe>' +
         '</div>'),
 
     events: {
@@ -55,6 +55,7 @@ var DocumentViewerView = ControlView.extend({
                 PageSize: dataSource.getPageSize(),
                 Query: query == null ? null : query.items
             };
+
             var urlParams = $.param({Form: JSON.stringify(requestData)}).replace(/%22/g, '%27');
             this.sendRequest(InfinniUI.config.serverUrl+'/SystemConfig/UrlEncodedData/Reporting/GetPrintView/?' + urlParams, function(data){
                 that.renderPdf(data);

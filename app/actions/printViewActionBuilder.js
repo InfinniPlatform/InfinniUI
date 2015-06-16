@@ -16,7 +16,7 @@ function PrintViewActionBuilder() {
                 //'<h3>Отчет</h3>'+
                 '</div>'+
                 '<div class="modal-body">'+
-                '<iframe name="frame' + frameId + '" src="/app/utils/pdf/viewer.html#' + frameId + '" id="print-report" style="width: 100%; height: 600px"></iframe>'+
+                '<iframe name="frame' + frameId + '" src="/app/utils/pdf-js/web/viewer.html#' + frameId + '" id="print-report" style="width: 100%; height: 600px"></iframe>'+
                 '</div>'+
                 '<button type="button" class="btn btn-default btn-close' + frameId + '" style="float: right; margin: 0 10px 10px 0; border: none">Закрыть</button>'+
                 '<button type="button" class="btn btn-default btn-print' + frameId + '" style="float: right; margin: 0 10px 10px 0; border: none">Печать</button>'+

@@ -23,7 +23,7 @@
             'app/element/*.js',
             'app/**/*.js',
             'extensions/**/*.js',
-            '!app/utils/pdf/**/*.js',
+            '!app/utils/pdf-js/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js'
         ],
