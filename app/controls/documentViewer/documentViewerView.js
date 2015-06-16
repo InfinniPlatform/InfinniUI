@@ -3,7 +3,7 @@ var DocumentViewerView = ControlView.extend({
 
     template: _.template(
         '<div class="pl-documentViewer">' +
-        '   <iframe id="documentViewer" name="documentViewer" style="width:100%;" src="/app/utils/pdf-js/web/viewer.html#<%= frameId %>"></iframe>' +
+        '   <iframe id="documentViewer" name="documentViewer" style="width:100%;" src="/app/utils/pdf/web/viewer.html#<%= frameId %>"></iframe>' +
         '</div>'),
 
     events: {
