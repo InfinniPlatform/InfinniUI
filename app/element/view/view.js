@@ -287,7 +287,7 @@ function View() {
         eventStore.executeEvent('onLoading');
     };
 
-    var childViews = [];
+    var childViews = {};
 
     this.getChildView = function (name) {
         return childViews[name];
