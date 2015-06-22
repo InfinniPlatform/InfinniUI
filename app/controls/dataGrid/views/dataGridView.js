@@ -219,7 +219,6 @@ var DataGridView = ControlView.extend({
                         }
                     });
             });
-
             this.syncColumnWidth($headers, $firstRow);
         }.bind(this), 42);
 
@@ -318,6 +317,10 @@ var DataGridView = ControlView.extend({
 
         that.$el.find('.pl-datagrid-body').css('height', 'auto');
         layoutManager.init();
+
+        setTimeout(function(){
+            that.lastScrollPosition(that.lastScrlPos);
+        },1200);
 
         //this.adaptHeaders();
         //setTimeout(function(){
@@ -573,16 +576,16 @@ var DataGridView = ControlView.extend({
     },
 
     //TODO: возвращение позиции при автоподгрузке новых элементов
-    //lastScrollPosition: function(val){
-    //    this.lastScrlPos = val;
-    //
-    //    var $current = this.$el.find('.pl-datagrid-body'),
-    //        scrollBottom = $current[0].scrollHeight - ($current.height() + $current.scrollTop());
-    //
-    //    if(!scrollBottom && $current[0].scrollHeight == $current.height()){
-    //        $current.scrollTop(this.lastScrlPos);
-    //    }
-    //},
+    lastScrollPosition: function(val){
+        this.lastScrlPos = val;
+
+        var $current = this.$el.find('.pl-datagrid-body'),
+            scrollBottom = $current[0].scrollHeight - ($current.height() + $current.scrollTop());
+
+        //if(!scrollBottom /*&& $current[0].scrollHeight == $current.height()*/){
+            $current.scrollTop(this.lastScrlPos);
+        //}
+    },
 
     checkEndOfScroll: function(){
         if(this.model.get('autoLoad')){
@@ -590,7 +593,7 @@ var DataGridView = ControlView.extend({
                 scrollBottom = $current[0].scrollHeight - ($current.height() + $current.scrollTop());
 
             if(scrollBottom < 10 && $current[0].scrollHeight !=  $current.height()){
-                //this.lastScrollPosition($current.scrollTop()); //Запись последней позиции перед подгрузкой новых элементов
+                this.lastScrollPosition($current.scrollTop()); //Запись последней позиции перед подгрузкой новых элементов
                 this.trigger('scrollToTheEnd', this.model.get('items').length);
             }
         }
