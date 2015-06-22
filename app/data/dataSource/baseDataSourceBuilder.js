@@ -7,6 +7,7 @@ function BaseDataSourceBuilder() {
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
         dataSource.setSorting(metadata.Sorting);
         dataSource.setPageSize(metadata.PageSize || 15);
+        dataSource.setPageNumber(metadata.PageNumber || 1);
 
         var criteriaConstructor = function (data) {
             //Добавлен

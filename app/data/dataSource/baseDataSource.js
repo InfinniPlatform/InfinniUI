@@ -52,10 +52,9 @@
     var queryFilter = null;
     var textFilter = null;
     var selectedItem = null;
-//    var pageNumber = 0;
-    var pageSize = 15;
+
+    var pageSize = null;
     var pageNumber = null;
-    //var pageSize = null;
 
     var sorting = null;
 
@@ -226,9 +225,11 @@
     this.setFillCreatedItem = function (value) {
         fillCreatedItem = value || false;
     };
+
     this.getIdFilter = function () {
         return idFilter;
     };
+
     this.setIdFilter = function (value) {
         if (idFilter !== value) {
             idFilter = value;
@@ -239,6 +240,7 @@
     this.setEditMode = function () {
         setEditStrategy();
     };
+
     this.setListMode = function () {
         setListStrategy();
     };
@@ -372,6 +374,7 @@
             this.updateItems(callback);
         }
     };
+
     this.getQueryFilter = function () {
         return queryFilter;
     };
@@ -386,9 +389,11 @@
             this.updateItems();
         }
     };
+
     this.getPropertyFilters = function () {
         return propertyFilters;
     };
+
     this.getTextFilter = function () {
         return textFilter;
     };
@@ -433,6 +438,7 @@
             value.removeOnSetPropertyValue(onSetPropertyValueHandler);
         }
     };
+
     this.getSelectedItem = function () {
         if (selectedItem === undefined || selectedItem === null) {
             return null;
