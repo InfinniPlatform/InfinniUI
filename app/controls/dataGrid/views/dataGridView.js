@@ -89,7 +89,6 @@ var DataGridView = ControlView.extend({
 
         this.renderBody();
 
-
         this.postrenderingActions();
         return this;
     },
@@ -313,8 +312,6 @@ var DataGridView = ControlView.extend({
         this.ui.tbody.append(fragment);
 
         this.closeAllGroup();
-
-
 
         this.renderTableHeader();
         var that = this;
@@ -575,11 +572,25 @@ var DataGridView = ControlView.extend({
         this.checkEndOfScroll();
     },
 
+    //TODO: возвращение позиции при автоподгрузке новых элементов
+    //lastScrollPosition: function(val){
+    //    this.lastScrlPos = val;
+    //
+    //    var $current = this.$el.find('.pl-datagrid-body'),
+    //        scrollBottom = $current[0].scrollHeight - ($current.height() + $current.scrollTop());
+    //
+    //    if(!scrollBottom && $current[0].scrollHeight == $current.height()){
+    //        $current.scrollTop(this.lastScrlPos);
+    //    }
+    //},
+
     checkEndOfScroll: function(){
         if(this.model.get('autoLoad')){
             var $current = this.$el.find('.pl-datagrid-body'),
-                scrollBottom = $current[0].scrollHeight - $current.height() - $current.scrollTop();
-            if(scrollBottom < 10){
+                scrollBottom = $current[0].scrollHeight - ($current.height() + $current.scrollTop());
+
+            if(scrollBottom < 10 && $current[0].scrollHeight !=  $current.height()){
+                //this.lastScrollPosition($current.scrollTop()); //Запись последней позиции перед подгрузкой новых элементов
                 this.trigger('scrollToTheEnd', this.model.get('items').length);
             }
         }
