@@ -16,7 +16,7 @@ function ListDataSourceStrategy(dataSource) {
         if (dataSource.getTextFilter()) {
             var fullTextSearchCriteria = {
                 Property: '',
-                CriteriaType: 65536, //full text search enumeration back-end service value
+                CriteriaType: toEnum(FullTextSearch), //full text search enumeration back-end service value
                 Value: dataSource.getTextFilter()
             };
             criteriaList.push(fullTextSearchCriteria);

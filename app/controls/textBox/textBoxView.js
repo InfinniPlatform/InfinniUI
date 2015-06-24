@@ -44,11 +44,7 @@ var TextBoxView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
-        this.listenTo(this.model, 'change:validationState', this.updateValidation);
-        this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
-        this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
+
         this.initForeground();
         this.initBackground();
         this.initTextStyle();
@@ -56,6 +52,13 @@ var TextBoxView = ControlView.extend({
         this.initHintText();
         this.initLabelText();
         this.initHorizontalTextAlignment();
+
+        this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
+        this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
+
+        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
+        this.listenTo(this.model, 'change:validationState', this.updateValidation);
     },
 
     renderTemplate: function () {
@@ -96,6 +99,7 @@ var TextBoxView = ControlView.extend({
         this.updateForeground();
         this.updateTextStyle();
         this.updateErrorText();
+        this.updateValidation(); //При повторном рендере, принудительно выставляем Error текст
         this.updateHintText();
         this.updateHorizontalTextAlignment();
 

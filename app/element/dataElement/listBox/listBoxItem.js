@@ -61,7 +61,7 @@ function ListBoxItem(innerControl, editItemHandler, removeItemHandler, multiSele
         })(renderedItem);
 
         if(multiSelect) {
-            $content.append('<input class="check-listbox-item" style="position: absolute;" type="checkbox"/>');
+            $content.append('<input class="check-listbox-item" type="checkbox"/>');
             renderedItem.css('margin-left', '20px');
         }
 

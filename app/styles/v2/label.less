@@ -53,6 +53,11 @@
 }
 
 .pl-label {
+
+  &.full-width{
+    width: 100%;
+  }
+
   &.TextWrapping {
     div {
       label {
@@ -64,6 +69,8 @@
   &.NoTextWrapping {
     div {
       label {
+        text-overflow: ellipsis;
+        overflow: hidden;
         white-space: nowrap;
       }
     }

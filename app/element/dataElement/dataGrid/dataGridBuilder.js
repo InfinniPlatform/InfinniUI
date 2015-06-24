@@ -118,7 +118,7 @@ var DataGridBuilder = function () {
         var customColors = customColorsBuilder.build(metadata.CustomColors);
         dataGrid.setCustomColors(customColors);
         /** End CustomColors Init **/
-
+        dataGrid.setStyle(metadata.Style);
         dataGrid.setName(metadata.Name);
         dataGrid.setText(metadata.Text);
         dataGrid.setEnabled(metadata.Enabled);

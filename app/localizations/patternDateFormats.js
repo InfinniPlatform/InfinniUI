@@ -1,12 +1,12 @@
 InfinniUI.localizations['ru-RU'].patternDateFormats = {
-    f: '%d MMMM yyyy г. H:%m',
-    F: '%d MMMM yyyy г. H:%m:%s',
+    f: 'dd MMMM yyyy г. HH:mm',
+    F: 'dd MMMM yyyy г. HH:mm:ss',
 
-    g: 'dd.MM.yyyy H:mm',
-    G: 'dd.MM.yyyy H:mm:%s',
+    g: 'dd.MM.yyyy HH:mm',
+    G: 'dd.MM.yyyy HH:mm:ss',
 
     d: 'dd.MM.yyyy',
-    D: '%d MMMM yyyy г.',
+    D: 'dd MMMM yyyy г.',
 
     t: 'H:mm',
     T: 'H:%m:%s',

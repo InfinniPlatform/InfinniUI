@@ -129,6 +129,10 @@ var TextEditor = Backbone.View.extend({
     },
     onKeyDownEditorHandler: function (event) {
 
+        if (event.ctrlKey || event.altKey) {
+            return;
+        }
+
         if (event.which === 27) {    //Escape
             //Отменить изменения и выйти из режима редактирования
             this.cancelled = true;
@@ -290,7 +294,7 @@ var TextEditor = Backbone.View.extend({
     removeSelection: function(mask, char){
         var res = mask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
 
-        this.setValue(res.result);
+        this.ui.editor.val(mask.getText());
 
         if(!res.result){
             this.setCaretPosition(0);
@@ -353,7 +357,7 @@ var TextEditor = Backbone.View.extend({
         }
 
 
-        position = maskEdit.setCharAt(char, this.getCaretPosition());
+        position = maskEdit.setCharAt(char, this.getCaretPosition(), this.getSelectionLength());
         if (position !== false) {
             event.preventDefault();
             editor.val(maskEdit.getText());

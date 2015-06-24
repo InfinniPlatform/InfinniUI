@@ -16,11 +16,11 @@ _.extend(ElementBuilder.prototype, {
 
         params.element = element;
 
+        this.applyMetadata(params);
+
         if (parent && parent.registerElement) {
             parent.registerElement(element);
         }
-
-        this.applyMetadata(params);
 
         return element;
     },
@@ -99,7 +99,7 @@ _.extend(ElementBuilder.prototype, {
             return null;
         }else{
             var dataBinding = params.builder.build(params.parent, metadata[propertyName], params.collectionProperty);
-
+            dataBinding.setSetterName('set' + propertyName);
             dataBinding.setElement(params.element);
 
             if (dataBinding != null) {

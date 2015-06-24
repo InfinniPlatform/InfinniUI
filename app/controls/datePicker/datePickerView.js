@@ -4,19 +4,24 @@ var DatePickerView = ControlView.extend({
     templates: {
         date: InfinniUI.Template["controls/datePicker/template/datepicker.tpl.html"],
         datetime: InfinniUI.Template["controls/datePicker/template/datetimepicker.tpl.html"],
-        time: InfinniUI.Template["controls/datePicker/template/timepicker.tpl.html"]
+        time: InfinniUI.Template["controls/datePicker/template/timepicker.tpl.html"],
+        labeldate: InfinniUI.Template["controls/datePicker/template/label-datepicker.tpl.html"],
+        labeldatetime: InfinniUI.Template["controls/datePicker/template/label-datetimepicker.tpl.html"],
+        labeltime: InfinniUI.Template["controls/datePicker/template/label-timepicker.tpl.html"]
     },
 
     UI: {
         control: 'input.datePicker, input.datetimepicker, input.timepicker',
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        hintText: '.pl-control-hint-text',
+        validationMessage: '.pl-control-validation-message'
     },
 
     events: {
         //Обработчик для показа поля редактирования с использованием маски ввода
-        "focus .datePicker": 'onFocusControlHandler',
-        "focus .datetimepicker": 'onFocusControlHandler',
-        "focus .timepicker": 'onFocusControlHandler',
+        'focus .datePicker': 'onFocusControlHandler',
+        'focus .datetimepicker': 'onFocusControlHandler',
+        'focus .timepicker': 'onFocusControlHandler',
         'mouseenter .datePicker': 'onMouseenterControlHandler',
         'mouseenter .datetimepicker': 'onMouseenterControlHandler',
         'mouseenter .timepicker': 'onMouseenterControlHandler',
@@ -26,6 +31,14 @@ var DatePickerView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+
+        this.initHorizontalTextAlignment();
+        this.initForeground();
+        this.initBackground();
+        this.initTextStyle();
+        this.initHintText();
+        this.initErrorText();
+
         this.on('editor:show', this.hideDatePickerHandler);
         this.on('editor:hide', this.showDatePickerHandler);
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
@@ -34,7 +47,8 @@ var DatePickerView = ControlView.extend({
         this.updateMode();
         this.listenTo(this.model, 'change:mode', this.updateMode);
         this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:readonly', this.updateReadOnly);
+        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
+        this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.listenTo(this.model, 'change:enabled', this.applyEnabled);
         this.listenTo(this.model, 'change:minDate', this.updateMinDate);
         this.listenTo(this.model, 'change:maxDate', this.updateMaxDate);
@@ -59,10 +73,17 @@ var DatePickerView = ControlView.extend({
 
         this.initOnUiValueChangeHandler();
         this.updateValue();
-        this.updateReadOnly();
         this.applyEnabled();
         this.updateMinDate();
         this.updateMaxDate();
+
+        this.updateHorizontalTextAlignment();
+        this.updateForeground();
+        this.updateBackground();
+        this.updateTextStyle();
+        this.updateErrorText();
+        this.updateValidation(); //При повторном рендере, принудительно выставляем Error текст
+        this.updateHintText();
 
         this.postrenderingActions();
         return this;
@@ -79,14 +100,6 @@ var DatePickerView = ControlView.extend({
 
         if (this.wasRendered && this.inAllowableRange(value)) {
             this.setValueOnPicker(value);
-        }
-    },
-
-    updateReadOnly: function () {
-        var readonly = this.model.get('readonly');
-
-        if (this.wasRendered) {
-            this.setReadOnlyOnPicker(readonly);
         }
     },
 
@@ -157,7 +170,6 @@ var DatePickerView = ControlView.extend({
         return this.inAllowableRange(value);
     },
 
-
     timeToString: function(value){
         if(value instanceof Date){
             var hours = value.getHours().toString(),
@@ -175,6 +187,19 @@ var DatePickerView = ControlView.extend({
         }
     },
 
+    updateValidation: function () {
+        var model = this.model;
+
+        var state = model.get('validationState');
+        var message = model.get('validationMessage');
+
+        var hideMessage = _.isEmpty(message) || ['error', 'warning'].indexOf(state) === -1;
+
+        this.ui.validationMessage.toggleClass('hidden', hideMessage);
+        this.ui.validationMessage.text(message);
+
+        //state = success, error, warning
+    },
 
     onFocusInHandler: function (event) {
         this.callEventHandler('OnGotFocus');
@@ -184,21 +209,33 @@ var DatePickerView = ControlView.extend({
         this.callEventHandler('OnLostFocus');
     }
 
-
 });
 
 var pickersStrategy = {
     'Date': {
         renderControl: function(){
-            this.$el
-                .html(this.templates.date({}));
+            var labelText = this.model.get('labelText');
+            var format = this.model.get('format');
+            if(!format){
+                format = "dd.mm.yyyy";
+            }else{
+                format = format.formatRule;
+            }
+
+            if(typeof labelText === 'undefined' || labelText === null){
+                this.$el.html(this.templates.date({}));
+            }else{
+                this.$el.html(this.templates.labeldate({
+                    labelText: labelText
+                }));
+            }
 
             this.bindUIElements();
             this.initEditor();
 
             this.$el.find('.date').datepicker({
                 autoclose: true,
-                format: "dd.mm.yyyy",
+                format: format,
                 language: InfinniUI.config.lang.substr(0, 2),
                 todayHighlight: true
             });
@@ -256,18 +293,14 @@ var pickersStrategy = {
             }
         },
 
-        setReadOnlyOnPicker: function(readonly){
+        setEnabledOnPicker: function (enabled) {
             var $datePickerInnerNodes = this.$el.find('button, input');
 
             $datePickerInnerNodes.removeAttr('disabled');
 
-            if (readonly) {
+            if (!enabled) {
                 $datePickerInnerNodes.attr('disabled', 'disabled');
             }
-        },
-
-        setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -284,15 +317,28 @@ var pickersStrategy = {
     //----------
     'DateTime': {
         renderControl: function(){
-            this.$el
-                .html(this.templates.datetime({}));
+            var labelText = this.model.get('labelText');
+            var format = this.model.get('format');
+            if(!format){
+                format = "dd.mm.yyyy - hh:ii";
+            }else{
+                format = format.formatRule;
+            }
+
+            if(typeof labelText === 'undefined' || labelText === null){
+                this.$el.html(this.templates.datetime({}));
+            }else{
+                this.$el.html(this.templates.labeldatetime({
+                    labelText: labelText
+                }));
+            }
 
             this.bindUIElements();
             this.initEditor();
 
             this.$el.find('.form_datetime').datetimepicker({
                 autoclose: true,
-                format: "dd.mm.yyyy - hh:ii",
+                format: format,
                 language: InfinniUI.config.lang.substr(0, 2),
                 pickerPosition: "bottom-left"
             });
@@ -335,18 +381,14 @@ var pickersStrategy = {
             }
         },
 
-        setReadOnlyOnPicker: function(readonly){
+        setEnabledOnPicker: function (enabled) {
             var $datePickerInnerNodes = this.$el.find('.open-button .form-control');
 
-            if (readonly){
+            if (!enabled){
                 $datePickerInnerNodes.attr('disabled', 'disabled');
             }else{
                 $datePickerInnerNodes.removeAttr('disabled');
             }
-        },
-
-        setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -363,8 +405,15 @@ var pickersStrategy = {
     //----------
     'Time': {
         renderControl: function(){
-            this.$el
-                .html(this.templates.time({}));
+            var labelText = this.model.get('labelText');
+
+            if(typeof labelText === 'undefined' || labelText === null){
+                this.$el.html(this.templates.time({}));
+            }else{
+                this.$el.html(this.templates.labeltime({
+                    labelText: labelText
+                }));
+            }
 
             this.bindUIElements();
             this.initEditor();
@@ -428,13 +477,9 @@ var pickersStrategy = {
             $picker.timepicker('setTime', date);
         },
 
-        setReadOnlyOnPicker: function(readonly){
-            var $field = this.$el.find('.timepicker-control');
-            $field.prop('disabled', readonly);
-        },
-
         setEnabledOnPicker: function (enabled) {
-            this.setReadOnlyOnPicker(!enabled);
+            var $field = this.$el.find('.timepicker-control');
+            $field.prop('disabled', !enabled);
         },
 
         setMinDateOnPicker: function(minDate){
@@ -448,5 +493,12 @@ var pickersStrategy = {
 };
 
 _.extend(DatePickerView.prototype,
-    textEditorMixin
+    textEditorMixin,
+    foregroundPropertyMixin,
+    backgroundPropertyMixin,
+    textStylePropertyMixin,
+    horizontalTextAlignmentPropertyMixin,
+    hintTextPropertyMixin,
+    errorTextPropertyMixin,
+    labelTextPropertyMixin
 );

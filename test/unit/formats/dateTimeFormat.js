@@ -178,7 +178,7 @@ describe('DateTimeFormat', function () {
             var date = new Date("4 January 1908 13:12");
 
             //Then
-            assert.equal(formatting.format(date), '4 Январь 1908 г. 13:12');
+            assert.equal(formatting.format(date), '04 Январь 1908 г. 13:12');
             assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908 1:12 PM');
         });
 

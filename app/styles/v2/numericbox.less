@@ -1,0 +1,118 @@
+.colors () {
+  @ln: length(@colors);
+
+  .foreground(@index) when (@index > 0) {
+    .foreground(@index - 1);
+    @foregroundName: extract(@colors, @index);
+
+    &.foreground-@{foregroundName} {
+      .form-control {
+        @color: %("color%s", @foregroundName);
+        color: @@color;
+      }
+    }
+  }
+
+  .background(@index) when (@index > 0) {
+    .background(@index - 1);
+    @backgroundName: extract(@colors, @index);
+
+    &.background-@{backgroundName} {
+      .form-control {
+        @color: %("color%s", @backgroundName);
+        background: @@color;
+      }
+    }
+  }
+
+
+  .foreground(@ln);
+  .background(@ln);
+}
+
+
+.buildTextStyles() {
+  .loop(@counter) when (@counter > 0) {
+    .loop(@counter - 1);
+    @name: extract(@textstyles, @counter);
+    @font-size: "font-size-@{name}";
+    @text-transform: "text-transform-@{name}";
+    &.textstyle-@{name} {
+      .form-control {
+        font-size: @@font-size;
+        text-transform: @@text-transform;
+      }
+    }
+  }
+
+  @count: length(@textstyles);
+  .loop(@count);
+}
+
+
+
+.pl-numeric-box {
+  //color: red;
+  //.pl-spin-input {
+  .colors();
+  .buildTextStyles();
+  //}
+
+  &.horizontalTextAlignment-Right {
+    .pl-spin-control {
+      .input-group {
+        .pl-spin-input {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Center {
+    .pl-spin-control {
+      .input-group {
+        .pl-spin-input {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Left {
+    .pl-spin-control {
+      .input-group {
+        .pl-spin-input {
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Justify {
+    .pl-spin-control {
+      .input-group {
+        .pl-spin-input {
+          text-align: justify;
+        }
+      }
+    }
+  }
+
+  .pl-control-hint-text {
+    color: #e0e0e0;
+  }
+
+  &.has-warning {
+    .pl-control-hint-text {
+      display: none;
+    }
+  }
+
+  &.has-error {
+    .pl-control-hint-text {
+      display: none;
+    }
+  }
+}
+
+

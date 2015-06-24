@@ -1,6 +1,8 @@
 var CheckBoxModel = ControlModel.extend({
     defaults: _.defaults({
-        value: false
+        value: false,
+        foreground: 'Black',
+        textStyle: 'Body1'
     }, ControlModel.prototype.defaults),
 
     initialize: function () {
