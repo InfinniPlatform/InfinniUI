@@ -1,4 +1,4 @@
-function DocumentDataSource(view, metadata) {
+function oldDocumentDataSource(view, metadata) {
 
     var dataProviderUpload = window.providerRegister.build('UploadDocumentDataSource', metadata);
 

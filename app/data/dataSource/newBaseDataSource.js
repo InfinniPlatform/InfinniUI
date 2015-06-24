@@ -126,6 +126,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     _updateLocalItems: function(warnings){
 
+    },
+
+    getItems: function(){
+
     }
 
 
