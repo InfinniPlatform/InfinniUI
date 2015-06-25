@@ -5,6 +5,8 @@ var BaseDataSource = Backbone.Model.extend({
         pageNumber: null,
         pageSize: 15,
 
+        isDataReady: false,
+
         dataProvider: null,
 
         modifiedItems: [],
@@ -128,8 +130,23 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-    getItems: function(){
+    isDataReady: function(){
+        return this.get('isDataReady');
+    },
 
+    getItems: function(){
+        if(this.isDataReady()){
+            logger.warn({
+                message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',
+                source: this
+            });
+        }
+
+        return this.get('items');
+    },
+
+    updateItems: function(onSuccess, onError){
+        this.get('dataProvider').getItems();
     }
 
 
