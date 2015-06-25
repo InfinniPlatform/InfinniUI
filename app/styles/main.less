@@ -247,19 +247,47 @@ label{
 }
 
 .pl-data-navigation {
-  .navigation, .page-sizes{
-    float: left;
+  .navigation-bar{
+    & > .availablePageSizes{
+      float: left;
+      margin: 10px;
+      height: 34px;
+      border: 1px solid #ddd;
+      &:focus{
+        outline: none;
+      }
+    }
+    & > .navigation{
+      float: left;
+      & > .pagination{
+        & > li{
+          & > a{
+            color: #000;
+          }
+          &.disabled{
+            &:not(.prev){
+              &:not(.next){
+                & > a {
+                  background-color: #46b1bd;
+                  color: #fff;
+                }
+              }
+            }
+          }
+        }
+        background-color: #46b1bd;
+        color: #fff;
+      }
+    }
   }
-  .page-sizes{
-    margin: 10px 20px;
-    height: 32px;
-  }
+
   .bootpag.disabled {
     li a {
       background-color: #EEE;
       cursor: not-allowed;
       border: 1px solid #ccc;
     }
+
     li a:hover {
       background-color: #EEE;
       border: 1px solid #ccc;

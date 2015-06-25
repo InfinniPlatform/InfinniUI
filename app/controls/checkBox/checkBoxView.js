@@ -1,7 +1,7 @@
 var CheckBoxView = ControlView.extend({
     className: 'pl-check-box',
 
-    template: _.template('<label><input class="pl-control pl-check-box-control" type="checkbox"><span class="pl-control-text"></span></label>'),
+    template: _.template('<label><input tabindex="1" class="pl-control pl-check-box-control" type="checkbox"><span class="pl-control-text"></span></label>'),
 
     events: {
         'click [type="checkbox"]': 'onClick'

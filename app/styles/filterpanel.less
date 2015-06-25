@@ -17,14 +17,12 @@
 
     .col-sm-5, .col-sm-7 {
       padding: 0 5px;
-//      margin-bottom: 10px;
     }
 
     .pl-filter-controls {
       margin-right: @buttonsWidth;
 
       .pl-filter-item {
-        //      width: @filterWidth;
         margin: 5px 0;
         width: 33%;
         float: left;
@@ -37,11 +35,7 @@
           .pl-label, .pl-button, .pl-text-box, .pl-check-box, .pl-datePicker, .pl-combo-box, .pl-numeric-box{
             margin: 0;
           }
-
-          //        .col-sm-5{
-          //          width: auto;
-          //        }
-        }
+      }
         .pl-filter-panel-label {
           label {
             white-space: nowrap;
@@ -55,15 +49,18 @@
 
     .pl-filter-buttons {
       position: absolute;
-      //    padding: 0 10px;
       top: 5px;
       right: 5px;
       width: @buttonsWidth;
       .btn_search, .dropdown {
         float: left;
+        &:focus{
+          border: 1px solid @color-gray;
+          outline: none;
+        }
       }
       .btn_search {
-        width: 102px;
+        width: 100px;
         height: 30px;
         border: none;
         margin-right: 2px;
@@ -75,7 +72,6 @@
       }
       .dropdown {
         .btn {
-//          padding: 7px 4px;
           width: 16px;
           padding: 0;
           background-color: @color-light-gray2;
@@ -106,6 +102,7 @@
     }
   }
 }
+
 @media screen and (max-width: 1350px) {
   .pl-filter-item {
     width: 50% !important;
