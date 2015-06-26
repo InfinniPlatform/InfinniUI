@@ -54,7 +54,6 @@ var DatePickerView = ControlView.extend({
 
     render: function () {
         this.prerenderingActions();
-
         this.renderControl();
 
         this.initOnUiValueChangeHandler();
@@ -182,9 +181,18 @@ var DatePickerView = ControlView.extend({
 
     onFocusOutHandler: function (event) {
         this.callEventHandler('OnLostFocus');
+    },
+
+    datePickerZindex: function(){
+        var zIndex = [];
+        _.each($('.modal-scrollable'), function (el) {
+            var num = parseInt($(el).css("z-index"));
+            if(num){
+                zIndex.push(num);
+            }
+        });
+        return Math.max.apply(Math, zIndex) + 1;
     }
-
-
 });
 
 var pickersStrategy = {
@@ -195,21 +203,25 @@ var pickersStrategy = {
 
             this.bindUIElements();
             this.initEditor();
+            var self = this;
 
             this.$el.find('.date').datepicker({
                 autoclose: true,
                 format: "dd.mm.yyyy",
                 language: InfinniUI.config.lang.substr(0, 2),
                 todayHighlight: true
+            }).on('show', function(e){
+                var $elem = $('.modal-open > .datepicker');
+                $elem.attr('style', $elem.attr('style') + 'z-index:'+self.datePickerZindex()+' !important');
             });
         },
 
         hideDatePicker: function () {
             //@TODO Иначе скрыть всплывающий календарь плагина bootstrap-datepicker, при получении фокуса не получиться
-            var control = this.$('.date');
-            setTimeout(function () {
-                control.datepicker('hide');
-            }, 10);
+            //var control = this.$('.date');
+            //setTimeout(function () {
+            //    control.datepicker('hide');
+            //}, 10);
         },
 
         initOnUiValueChangeHandler: function(){
@@ -289,12 +301,16 @@ var pickersStrategy = {
 
             this.bindUIElements();
             this.initEditor();
+            var self = this;
 
             this.$el.find('.form_datetime').datetimepicker({
                 autoclose: true,
                 format: "dd.mm.yyyy - hh:ii",
                 language: InfinniUI.config.lang.substr(0, 2),
                 pickerPosition: "bottom-left"
+            }).on('show', function(e){
+                var $elem = $('.modal-open > .datetimepicker');
+                $elem.attr('style', $elem.attr('style') + 'z-index:'+self.datePickerZindex()+' !important');
             });
         },
 

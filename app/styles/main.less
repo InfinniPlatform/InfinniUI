@@ -217,9 +217,9 @@ label{
     padding: 10px;
   }
 }
-.modal-open .datetimepicker{
-  z-index: auto !important;
-}
+//.modal-open .datetimepicker{
+//  z-index: auto !important;
+//}
 .modal-open .select2-drop{
   z-index: 100500; //fix z-index modal level
 }
@@ -251,7 +251,7 @@ label{
     & > .availablePageSizes{
       float: left;
       margin: 10px;
-      height: 34px;
+      height: 31px;
       border: 1px solid #ddd;
       &:focus{
         outline: none;
@@ -262,21 +262,31 @@ label{
       & > .pagination{
         & > li{
           & > a{
-            color: #000;
+            color: @color-black;
           }
           &.disabled{
+            &.prev{
+              & > a{
+                color: @color-light-gray;
+              }
+            }
+            &.next{
+              & > a{
+                color: @color-light-gray;
+              }
+            }
             &:not(.prev){
               &:not(.next){
                 & > a {
                   background-color: #46b1bd;
-                  color: #fff;
+                  color: @color-white;
                 }
               }
             }
           }
         }
         background-color: #46b1bd;
-        color: #fff;
+        color: @color-white;
       }
     }
   }
