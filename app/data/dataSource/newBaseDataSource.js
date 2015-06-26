@@ -4,6 +4,8 @@ var BaseDataSource = Backbone.Model.extend({
         idProperty: 'Id',
         pageNumber: null,
         pageSize: 15,
+        sorting: null,
+        criteriaList: [],
 
         isDataReady: false,
 
@@ -146,7 +148,17 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     updateItems: function(onSuccess, onError){
-        this.get('dataProvider').getItems();
+        var filters = this.getFilter(),
+            pageNumber = this.get('pageNumber'),
+            pageSize = this.get('pageSize'),
+            sorting = this.get('sorting');
+
+        this.get('dataProvider')
+            .getItems( filters, pageNumber, pageSize, sorting, onSuccess, onError );
+    },
+
+    getFilter: function(){
+        this.get('criteriaList');
     }
 
 
