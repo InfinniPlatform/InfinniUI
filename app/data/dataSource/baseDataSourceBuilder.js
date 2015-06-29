@@ -43,7 +43,12 @@ function BaseDataSourceBuilder() {
 
         var exchange = parent.getExchange();
         exchange.subscribe(messageTypes.onLoading, function () {
-            dataSource.resumeUpdate();
+            if(dataSource.initingDataStrategy == 'previouslyInitingData' || dataSource.initingDataStrategy == 'manualInitingData'){
+                dataSource.resumeUpdate();
+            }else{
+                dataSource.loadingProcessDone();
+            }
+
         });
         exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
             if (dataSource.getName() === value.dataSource && !value.property) {
