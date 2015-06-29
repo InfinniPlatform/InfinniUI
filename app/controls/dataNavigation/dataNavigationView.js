@@ -85,6 +85,7 @@ var DataNavigationView = ControlView.extend({
     },
 
     initNumberOfPage: function(dataSource, callback) {
+        var self = this;
         var requestData = dataSource.getQueryFilter();
         var param = {
             "id": null,
@@ -107,11 +108,24 @@ var DataNavigationView = ControlView.extend({
             data: JSON.stringify(param),
             contentType: 'application/json',
             success: function(data) {
-                callback(data[0].NumberOfDocuments);
+                if(data[0].NumberOfDocuments) {
+                    self.onSetElementCountHandler(data[0].NumberOfDocuments);
+                    callback(data[0].NumberOfDocuments);
+                }
             },
             error: function(error) {
                 alert(error.responseJSON);
             }
+        });
+    },
+
+    onSetElementCountHandler: function(elementCount){
+        this.trigger('onSetElementCount', this.model.set('elementCount', elementCount));
+    },
+
+    onGetElementCount: function(callback){
+        this.on('onSetElementCount', function(){
+            callback(this.model.get('elementCount'));
         });
     },
 

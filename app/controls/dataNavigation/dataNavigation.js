@@ -23,6 +23,11 @@ _.extend(DataNavigationControl.prototype, {
         this.controlModel.on('change:pageSize', function (model) {
             handler(model.get('pageSize'));
         });
-    }
+    },
 
+    onSetElementCount: function(handler){
+        this.controlModel.on('change:elementCount', function(model){
+            handler(model.get('elementCount'));
+        })
+    }
 });
