@@ -10,7 +10,7 @@ function View() {
     this.context = {
         notInitialized: true,
         Controls: {},
-        DataSources: null
+        DataSources: {}
     };
 
     this.onTextChange = function(callback){
@@ -294,7 +294,7 @@ function View() {
         return isLoading;
     };
 
-    var childViews = [];
+    var childViews = {};
 
     this.getChildView = function (name) {
         return childViews[name];

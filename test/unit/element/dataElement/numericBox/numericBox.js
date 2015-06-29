@@ -33,8 +33,6 @@ describe('NumericBox', function () {
             numericBox1.render();
             numericBox2.render();
 
-
-            numericBox.setReadOnly(false);
             numericBox.setValue(15);
             numericBox.setMinValue(10);
             numericBox.setMaxValue(50);
@@ -92,7 +90,6 @@ describe('NumericBox', function () {
         it('should be true if scriptsHandlers call', function () {
             //Given
             var builder = new ApplicationBuilder();
-            //var numericBox = new NumericBoxBuilder();
             var view = new View();
             var metadata = {
                 "NumericBox": {

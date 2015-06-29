@@ -1,45 +1,75 @@
 var NumericBoxView = ControlView.extend({
     className: 'pl-numeric-box',
 
-    template: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
+    template: {
+        default: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
+        label: InfinniUI.Template["controls/numericBox/template/label-numericbox.tpl.html"]
+    },
+    //template: InfinniUI.Template["controls/numericBox/template/numericbox.tpl.html"],
 
     UI: {
         control: '.pl-spin-control',
         input: '.pl-spin-input',
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        hintText: '.pl-control-hint-text',
+        validationMessage: '.pl-control-validation-message',
+        buttonMin: '.nm-min',
+        buttonMax: '.nm-max'
     },
 
     events: {
-        'change .pl-spin-input': 'updateModelVal',
         //Обработчик для показа поля редактирования с использованием маски ввода
         'focus .pl-spin-input': 'onFocusControlHandler',
         'focusin .pl-control-editor' : 'onFocusInDebounceHandler',
-        'focusout .pl-control-editor' : 'onFocusOutDebounceHandler'
+        'focusout .pl-control-editor' : 'onFocusOutDebounceHandler',
+        'click .nm-min' : 'onClickDecrementHandler',
+        'click .nm-max' : 'onClickIncrementHandler'
+    },
+
+    onFocusInHandler: function (event) {
+        this.callEventHandler('OnGotFocus');
+    },
+
+    onFocusOutHandler: function (event) {
+        this.callEventHandler('OnLostFocus');
     },
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+
+        this.initHorizontalTextAlignment();
+        this.initForeground();
+        this.initBackground();
+        this.initTextStyle();
+        this.initHintText();
+        this.initErrorText();
+
         this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
         this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
 
         this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:validationMessage', this.updateValidation);
+        this.listenTo(this.model, 'change:validationState', this.updateValidation);
         this.listenTo(this.model, 'change:minValue', this.updateMinValue);
         this.listenTo(this.model, 'change:maxValue', this.updateMaxValue);
-        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:increment', this.updateIncrement);
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
+
     },
 
     render: function () {
         this.prerenderingActions();
 
-        this.$el.html(this.template({}));
+        var labelText = this.model.get('labelText');
+        var style = typeof labelText === 'undefined' || labelText === null ? 'default' : 'label';
+
+        var template = this.template[style];
+
+        this.$el.html(template({
+            labelText: labelText
+        }));
+
         this.bindUIElements();
-        //@TODO Используемый плагин обязывает обязательно указывать мин и макс знаначения
-        this.ui.input.TouchSpin({
-            min: (typeof this.model.get('minValue') === 'undefined') ? -Number.MAX_VALUE : this.model.get('minValue'),
-            max: (typeof this.model.get('maxValue') === 'undefined') ? Number.MAX_VALUE : this.model.get('maxValue')
-        });
         this.initEditor();
 
         this.updateValue();
@@ -48,24 +78,18 @@ var NumericBoxView = ControlView.extend({
         this.updateIncrement();
         this.updateEnabled();
 
+        this.updateBackground();
+        this.updateForeground();
+        this.updateTextStyle();
+        this.updateErrorText();
+        this.updateValidation(); //При повторном рендере, принудительно выставляем Error текст
+        this.updateHintText();
+        this.updateHorizontalTextAlignment();
+
         this.postrenderingActions();
         return this;
     },
 
-    updateModelVal: function (event) {
-        var val = parseInt(event.target.value, 10);
-        if (isNaN(val)) {
-            val = null
-        } else {
-            if(val > this.model.get('maxValue')){
-                val = this.model.get('maxValue')
-            }else if(val < this.model.get('minValue')){
-                val = this.model.get('minValue')
-            }
-        }
-
-        this.model.set('value', val);
-    },
     updateEnabled: function () {
         if (this.wasRendered) {
             var isEnabled = this.model.get('enabled');
@@ -74,20 +98,57 @@ var NumericBoxView = ControlView.extend({
             (!isEnabled) ? this.$el.addClass('disabled') : this.$el.removeClass('disabled');
         }
     },
-    updateReadOnly: function () {
-        if (this.wasRendered) {
-            if (this.model.get('enabled')) {
-                var readOnly = this.model.get('readOnly');
-                this.ui.input.prop('disabled', readOnly);
-                this.$el.find('button').prop('disabled', readOnly);
-                (readOnly) ? this.$el.addClass('disabled') : this.$el.removeClass('disabled');
-            }
+
+    DecrementLengthAfterDot: function(increment, value){
+        var lengthAfterDot = increment.toString().split('.')[1];
+
+        value = parseFloat(value) - parseFloat(increment);
+
+        if(lengthAfterDot){
+            value = value.toFixed(lengthAfterDot.length);
         }
+        return value;
     },
+
+    IncrementLengthAfterDot: function(increment, value){
+        var lengthAfterDot = increment.toString().split('.')[1];
+
+        value = parseFloat(value) + parseFloat(increment);
+
+        if(lengthAfterDot){
+            value = value.toFixed(lengthAfterDot.length);
+        }
+        return value;
+    },
+
+    onClickDecrementHandler: function(){
+        var value = this.model.get('value');
+        var increment = this.model.get('increment');
+
+        value = this.DecrementLengthAfterDot(increment, value);
+
+        this.model.set('value', value);
+    },
+
+    onClickIncrementHandler: function(){
+        var value = this.model.get('value');
+        var increment = this.model.get('increment');
+
+        value = this.IncrementLengthAfterDot(increment, value);
+
+        this.model.set('value', value);
+    },
+
     updateValue: function () {
         var value = this.model.get('value');
         var min = this.model.get('minValue');
         var max = this.model.get('maxValue');
+        var format = this.model.get('format');
+        var text;
+
+        if(value == 'undefined' || isNaN(value) || value == null){
+            value = min;
+        }
 
         if(typeof max !== 'undefined' && value  > max) {
             value = max;
@@ -96,29 +157,59 @@ var NumericBoxView = ControlView.extend({
             value = min;
         }
 
-        this.model.set('value', value);
+        if (typeof value !== 'undefined') {
+            if (typeof format !== 'undefined' && format !== null) {
+                text = format.format(value);
+            } else {
+                text = value;
+            }
+        }
+
+        if(this.model.get('value') != value){
+            this.model.set('value', value);
+        }
+
 
         if (this.wasRendered) {
-            this.ui.input.val(value);
-            this.ui.input.trigger("touchspin.updatesettings", {initval: value});
+            this.ui.input.val(text);
         }
     },
+
     updateIncrement: function () {
         if (this.wasRendered) {
             var increment = this.model.get('increment');
-            this.ui.input.trigger("touchspin.updatesettings", {step: increment});
+
+            if (increment === 0){
+                increment = 1;
+            }
+
+            this.model.set('increment', increment);
         }
     },
+
     updateMinValue: function () {
         if (this.wasRendered) {
             var min = this.model.get('minValue');
-            this.ui.input.trigger("touchspin.updatesettings", {min: min});
+            var value = this.model.get('value');
+
+            if(value < min){
+                value = min;
+            }
+
+            this.model.set('value', value);
         }
     },
+
     updateMaxValue: function () {
         if (this.wasRendered) {
             var max = this.model.get('maxValue');
-            this.ui.input.trigger("touchspin.updatesettings", {max: max});
+            var value = this.model.get('value');
+
+            if(value > max){
+                value = max;
+            }
+
+            this.model.set('value', value);
         }
     },
 
@@ -138,6 +229,21 @@ var NumericBoxView = ControlView.extend({
             return undefined;
         }
         return parseInt(value, 10);
+    },
+
+
+    updateValidation: function () {
+        var model = this.model;
+
+        var state = model.get('validationState');
+        var message = model.get('validationMessage');
+
+        var hideMessage = _.isEmpty(message) || ['error', 'warning'].indexOf(state) === -1;
+
+        this.ui.validationMessage.toggleClass('hidden', hideMessage);
+        this.ui.validationMessage.text(message);
+
+        //state = success, error, warning
     },
 
     /**
@@ -162,18 +268,19 @@ var NumericBoxView = ControlView.extend({
         }
 
         return true;
-    },
-
-
-    onFocusInHandler: function (event) {
-        this.callEventHandler('OnGotFocus');
-    },
-
-    onFocusOutHandler: function (event) {
-        this.callEventHandler('OnLostFocus');
     }
+
+
+
 });
 
 _.extend(NumericBoxView.prototype,
-    textEditorMixin
+    textEditorMixin,
+    horizontalTextAlignmentPropertyMixin,
+    foregroundPropertyMixin,
+    backgroundPropertyMixin,
+    textStylePropertyMixin,
+    hintTextPropertyMixin,
+    errorTextPropertyMixin,
+    labelTextPropertyMixin
 );

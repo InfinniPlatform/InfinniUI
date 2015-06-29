@@ -1,0 +1,103 @@
+{
+  "Text": "Пациенты",
+  "DataSources": [
+    {
+      "DocumentDataSource": {
+        "ConfigId": "Demography",
+        "DocumentId": "Patient",
+        "IdProperty": "Id",
+        "CreateAction": "CreateDocument",
+        "GetAction": "GetDocument",
+        "UpdateAction": "SetDocument",
+        "DeleteAction": "DeleteDocument",
+        "FillCreatedItem": true,
+        "Name": "MainDataSource",
+        "ValidationWarnings": {
+          "And": {
+            "Operators": [
+              {
+                "IsEqual": {
+                  "Property": "Name",
+                  "Message": "Name Должно быть \"olololo\"",
+                  "Value": "olololo"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "ds1",
+        "Items": [
+          {
+            "id": 1,
+            "name": "1"
+          },
+          {
+            "id": 2,
+            "name": "2"
+          },
+          {
+            "id": 3,
+            "name": "3"
+          },
+          {
+            "id": 4,
+            "name": "4"
+          }
+        ]
+      }
+    }
+  ],
+  "LayoutPanel": {
+    "StackPanel": {
+      "Name": "MainViewPanel",
+      "Items": [
+        {
+          "Button": {
+            "Name": "Button1",
+            "Text": "Click",
+            "OnClick": {
+              "Name": "OnButton1Click"
+            }
+          }
+        },
+        {
+          "TextBox": {
+            "Name": "TextBox1",
+            "HintText": "HINT",
+            "LabelText": "Label",
+            "HorizontalTextAlignment": "Right",
+            "EditMask": {
+              "NumberEditMask": {
+                "Mask": "n3"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "Name"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Scripts": [
+    {
+      "Name": "OnClick",
+      "Body": "console.log('onclock'); console.log(arguments);return false;"
+    },
+    {
+      "Name": "OnButton1Click",
+      "Body": "var items = context.Controls.ListBox1.getItems(); console.log(items); context.Controls.ListBox1.setItems(items);"
+    },
+    {
+      "Name": "OnEditButtonClick",
+      "Body": "alert('OnEditButtonClick');"
+    }
+  ]
+}

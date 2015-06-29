@@ -26,6 +26,11 @@ _.extend(ViewBuilder.prototype, {
 
         view.setParentView(parent);
 
+        if(parent.addChildView){
+            parent.addChildView(metadata.Name, view);
+        }
+
+
         this.handleParameters(view, metadata.RequestParameters, params.builder, outerParams, parent);
         this.handleParameters(view, metadata.Parameters, params.builder, outerParams, parent);
 
@@ -55,10 +60,10 @@ _.extend(ViewBuilder.prototype, {
 
         view.setDataSources(params.builder.buildMany(view, metadata.DataSources));
         
-        _.each(metadata.ChildViews, function (childViewMetadata) {
-            var linkView = params.builder.build(view, childViewMetadata.LinkView);
-            view.addChildView(childViewMetadata.Name, linkView);
-        });
+        //_.each(metadata.ChildViews, function (childViewMetadata) {
+        //    var linkView = params.builder.build(view, childViewMetadata.LinkView);
+        //    view.addChildView(childViewMetadata.Name, linkView);
+        //});
 
 
         view.setLayoutPanel(params.builder.build(view, metadata.LayoutPanel));

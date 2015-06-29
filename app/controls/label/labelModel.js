@@ -4,6 +4,7 @@ var LabelModel = ControlModel.extend({
         verticalAlignment: 'Top',
         foreground: 'Black',
         background: 'Transparent',
-        textStyle: 'Body1'
+        textStyle: 'Body1',
+        textWrapping: true
     }, ControlModel.prototype.defaults)
 });

@@ -12,4 +12,6 @@ _.extend(CheckBoxControl.prototype, {
     createControlView: function(model){
         return new CheckBoxView({model: model});
     }
-}, controlValuePropertyMixin);
+},
+    controlValuePropertyMixin
+);

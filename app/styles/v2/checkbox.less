@@ -1,0 +1,115 @@
+.colors () {
+  @ln: length(@colors);
+
+  .foreground(@index) when (@index > 0) {
+    .foreground(@index - 1);
+    @foregroundName: extract(@colors, @index);
+
+    &.foreground-@{foregroundName} {
+      .pl-control-text {
+        @color: %("color%s", @foregroundName);
+        color: @@color;
+      }
+    }
+  }
+
+  .background(@index) when (@index > 0) {
+    .background(@index - 1);
+    @backgroundName: extract(@colors, @index);
+
+    &.background-@{backgroundName} {
+      .pl-control-text {
+        @color: %("color%s", @backgroundName);
+        background: @@color;
+      }
+    }
+  }
+
+
+  .foreground(@ln);
+  .background(@ln);
+}
+
+
+.buildTextStyles() {
+  .loop(@counter) when (@counter > 0) {
+    .loop(@counter - 1);
+    @name: extract(@textstyles, @counter);
+    @font-size: "font-size-@{name}";
+    @text-transform: "text-transform-@{name}";
+    &.textstyle-@{name} {
+      .form-control {
+        font-size: @@font-size;
+        text-transform: @@text-transform;
+      }
+    }
+  }
+
+  @count: length(@textstyles);
+  .loop(@count);
+}
+
+
+
+.pl-check-box{
+    .colors();
+    .buildTextStyles();
+
+  &.horizontalTextAlignment-Right {
+    label {
+      .checker {
+        .pl-control-text {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Center {
+    label {
+      .checker {
+        .pl-control-text {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Left {
+    label {
+      .checker {
+        .pl-control-text {
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  &.horizontalTextAlignment-Justify {
+    label {
+      .checker {
+        .pl-control-text {
+          text-align: justify;
+        }
+      }
+    }
+  }
+
+  //.pl-control-hint-text {
+  //  color: #e0e0e0;
+  //}
+  //
+  //&.has-warning {
+  //  .pl-control-hint-text {
+  //    display: none;
+  //  }
+  //}
+  //
+  //&.has-error {
+  //  .pl-control-hint-text {
+  //    display: none;
+  //  }
+  //}
+}
+
+

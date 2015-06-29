@@ -9,7 +9,8 @@ _.extend(LabelBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         params.element.setLineCount(params.metadata.LineCount);
-
+        params.element.setTextWrapping(params.metadata.TextWrapping);
+        this.initScriptsHandlers(params);
         this.initFormatProperty(params);
         this.initValueProperty(params);
         this.initHorizontalTextAlignmentProperty(params);

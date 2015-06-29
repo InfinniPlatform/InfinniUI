@@ -10,8 +10,9 @@ _.extend(CheckBoxBuilder.prototype, {
 
         this.initScriptsHandlers(params);
         this.initValueProperty(params, true);
-
-        params.element.setReadOnly(params.metadata.ReadOnly);
+        this.initForeground(params);
+        this.initTextStyle(params);
+        this.initHorizontalTextAlignmentProperty(params);
     },
 
     createElement: function (params) {
@@ -35,4 +36,9 @@ _.extend(CheckBoxBuilder.prototype, {
         }
     }
 
-}, builderValuePropertyMixin);
+},
+    builderValuePropertyMixin,
+    builderHorizontalTextAlignmentPropertyMixin,
+    builderForegroundMixin,
+    builderTextStyleMixin
+);

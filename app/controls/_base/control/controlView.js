@@ -201,11 +201,12 @@ var ControlView = Backbone.View.extend({
         }
     },
 
-    switchClass: function (name, value) {
+    switchClass: function (name, value, $el) {
+
         var startWith = name + '-';
         var regexp = new RegExp('(^|\\s)' + startWith + '\\S+', 'ig');
-
-        this.$el.removeClass(function (i, name) {
+        var $element = $el || this.$el;
+        $element.removeClass(function (i, name) {
             return (name.match(regexp) || []).join(' ');
         })
             .addClass(startWith + value);

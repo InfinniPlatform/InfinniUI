@@ -15,6 +15,19 @@ var OpenModeDialogStrategy = function (linkView) {
             focus: this
         });
 
+        //FOCUS IN MODAL WITHOUT FALL
+            $container.append('<div class="lastfocuselementinmodal" tabindex="0">');
+            $modal.find('.lastfocuselementinmodal').on('focusin', function(){
+                $modal.find('.firstfocuselementinmodal').focus();
+            });
+            $modal.keydown(function(e){
+                if($(this).find('.lastfocuselementinmodal').is(":focus") && (e.which || e.keyCode) == 9){
+                    e.preventDefault();
+                    $(this).find('.firstfocuselementinmodal').focus();
+                }
+            });
+        //
+
         var preventClosingViewHandler = function(e){
             /** Плагин DatePicker генерируют события hide в DOM!! **/
             var $target = $(e.target);

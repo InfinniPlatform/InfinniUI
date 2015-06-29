@@ -69,6 +69,8 @@ var DataGridBodyCell = Backbone.View.extend({
                 text: val,
                 canExpand: options.canExpand
             }));
+            this.$el.attr('title', val);
+
             this.bindUIElements();
         }
 

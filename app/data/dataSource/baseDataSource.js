@@ -54,10 +54,9 @@
     var queryFilter = null;
     var textFilter = null;
     var selectedItem = null;
-//    var pageNumber = 0;
-    var pageSize = 15;
+
+    var pageSize = null;
     var pageNumber = null;
-    //var pageSize = null;
 
     var sorting = null;
 
@@ -235,9 +234,11 @@
     this.setFillCreatedItem = function (value) {
         fillCreatedItem = value || false;
     };
+
     this.getIdFilter = function () {
         return idFilter;
     };
+
     this.setIdFilter = function (value) {
         if (idFilter !== value) {
             idFilter = value;
@@ -248,6 +249,7 @@
     this.setEditMode = function () {
         setEditStrategy();
     };
+
     this.setListMode = function () {
         setListStrategy();
     };
@@ -266,53 +268,52 @@
     };
     var warnings = false;
 
-    this.saveItem = function (item, onSuccess/*, onError*/) {
-
-        var showErrors = function (errors) {
-            if (_.isEmpty(errors) || errors.IsValid) {
-                return;
+    this.showErrors = function(errors){
+        if (_.isEmpty(errors) || errors.IsValid) {
+            return;
+        }
+        if (errors.Message instanceof Array) {
+            for (var i = 0; i < errors.Message.length; i++) {
+                toastr.error(errors.Message[i].Message, "Ошибка!");
             }
-            if (errors.Message instanceof Array) {
-                for (var i = 0; i < errors.Message.length; i++) {
-                    toastr.error(errors.Message[i].Message, "Ошибка!");
+        } else if(typeof errors.Message == 'string' && errors.Message.indexOf('{') >= 0){
+            var result = JSON.parse(errors.Message);
+            result = result.ValidationMessage &&
+            result.ValidationMessage.ValidationErrors &&
+            result.ValidationMessage.ValidationErrors.Message ? result.ValidationMessage.ValidationErrors.Message : 'Обратитесь к системному администратору';
+            toastr.error(result, "Ошибка!");
+        }else{
+            toastr.error('Обратитесь к системному администратору', "Ошибка!");
+        }
+    };
+
+    this.showWarnings = function(warnings){
+        if (_.isEmpty(warnings) || warnings.IsValid) {
+            return;
+        }
+
+        var resultText = warnings.Message[0].Message;
+        for (var j = 1; j < warnings.Message.length; j++) {
+            resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + warnings.Message[j].Message;
+        }
+        resultText += '<p style="font-weight: bolder;">Продолжить добавление?';
+
+        new MessageBox({
+            text: resultText,
+            buttons: [
+                {
+                    name: 'Да',
+                    type: 'action',
+                    onClick: attemptSave.bind(undefined, true)
+                },
+                {
+                    name: 'Нет'
                 }
-            } else if(typeof errors.Message == 'string' && errors.Message.indexOf('{') >= 0){
-                var result = JSON.parse(errors.Message);
-                result = result.ValidationMessage &&
-                result.ValidationMessage.ValidationErrors &&
-                result.ValidationMessage.ValidationErrors.Message ? result.ValidationMessage.ValidationErrors.Message : 'Обратитесь к системному администратору';
-                toastr.error(result, "Ошибка!");
-            }else{
-                toastr.error('Обратитесь к системному администратору', "Ошибка!");
-            }
-        };
+            ]
+        });
+    };
 
-        var showWarnings = function (warnings) {
-            if (_.isEmpty(warnings) || warnings.IsValid) {
-                return;
-            }
-
-            var resultText = warnings.Message[0].Message;
-            for (var j = 1; j < warnings.Message.length; j++) {
-                resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + warnings.Message[j].Message;
-            }
-            resultText += '<p style="font-weight: bolder;">Продолжить добавление?';
-
-            new MessageBox({
-                text: resultText,
-                buttons: [
-                    {
-                        name: 'Да',
-                        type: 'action',
-                        onClick: attemptSave.bind(undefined, true)
-                    },
-                    {
-                        name: 'Нет'
-                    }
-                ]
-            });
-        };
-
+    this.saveItem = function (item, onSuccess/*, onError*/) {
         var invokeCallback = function (callback) {
             if (typeof callback === 'function') {
                 var args = Array.prototype.slice.call(arguments, 1);
@@ -321,6 +322,8 @@
         };
 
         var idProperty = that.getIdProperty() || "Id";
+
+        var self = this;
 
         var attemptSave = function (warnings) {
             dataProvider.replaceItem(item, warnings, function (data) {
@@ -335,8 +338,8 @@
                     invokeCallback(onSuccess, data);
                 } else {
                     var validation = data.ValidationMessage;
-                    showErrors(validation.ValidationErrors);
-                    showWarnings(validation.ValidationWarnings);
+                    self.showErrors(validation.ValidationErrors);
+                    self.showWarnings(validation.ValidationWarnings);
                 }
             });
 
@@ -346,9 +349,16 @@
     };
 
     this.deleteItem = function (item) {
+        var self = this;
         dataProvider.deleteItem(item, function (data) {
-            removeById(item);
-            currentStrategy.onItemDeleted(item)
+            if ((data.IsValid || data.IsValid == undefined) ) {
+                removeById(item);
+                currentStrategy.onItemDeleted(item);
+            }else{
+                var validation = data.ValidationMessage;
+                self.showErrors(validation.ValidationErrors);
+                self.showWarnings(validation.ValidationWarnings);
+            }
         });
     };
 
@@ -381,6 +391,7 @@
             this.updateItems(callback);
         }
     };
+
     this.getQueryFilter = function () {
         return queryFilter;
     };
@@ -395,9 +406,11 @@
             this.updateItems();
         }
     };
+
     this.getPropertyFilters = function () {
         return propertyFilters;
     };
+
     this.getTextFilter = function () {
         return textFilter;
     };
@@ -462,6 +475,7 @@
             value.removeOnSetPropertyValue(onSetPropertyValueHandler);
         }
     };
+
     this.getSelectedItem = function () {
         if (selectedItem === undefined || selectedItem === null) {
             return null;

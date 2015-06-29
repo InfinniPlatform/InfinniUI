@@ -1,18 +1,55 @@
 var CheckBoxView = ControlView.extend({
     className: 'pl-check-box',
 
-    template: _.template('<label><input tabindex="1" class="pl-control pl-check-box-control" type="checkbox"><span class="pl-control-text"></span></label>'),
+    template: InfinniUI.Template["controls/checkBox/template/checkbox.tpl.html"],
 
     events: {
-        'click [type="checkbox"]': 'onClick'
+        'click [type="checkbox"]': 'onClick',
+        'focusin [type="checkbox"]': 'onFocusInDebounceHandler',
+        'focusout [type="checkbox"]': 'onFocusOutDebounceHandler',
+        'focus [type="checkbox"]': 'onFocusControlHandler'
+
+    },
+
+    onFocusInHandler: function (event) {
+        this.callEventHandler('OnGotFocus');
+    },
+
+    onFocusOutHandler: function (event) {
+        this.callEventHandler('OnLostFocus');
     },
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+
+        this.initHorizontalTextAlignment();
+        this.initForeground();
+        this.initTextStyle();
+
+        this.onFocusInDebounceHandler = _.debounce(this.onFocusInHandler, 100);
+        this.onFocusOutDebounceHandler = _.debounce(this.onFocusOutHandler, 100);
+
         this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:readOnly', this.applyReadOnly);
-        this.listenTo(this.model, 'change:enabled', this.applyReadOnly);
+        this.listenTo(this.model, 'change:enabled', this.applyEnabled);
         this.listenTo(this.model, 'change:text', this.updateText);
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        this.$el.html(this.template({}));
+        this.$el.find('input:checkbox').uniform();
+
+        this.updateText();
+        this.updateValue();
+        this.applyEnabled();
+
+        this.updateForeground();
+        this.updateTextStyle();
+        this.updateHorizontalTextAlignment();
+
+        this.postrenderingActions();
+        return this;
     },
 
     onClick: function (event) {
@@ -29,13 +66,12 @@ var CheckBoxView = ControlView.extend({
         }
     },
 
-    applyReadOnly: function () {
-        var readOnly = this.model.get('readOnly');
+    applyEnabled: function () {
         var enabled = this.model.get('enabled');
         var $control = this.$el.find('.pl-control');
         var $checker = this.$el.find('.checker');
 
-        if (enabled && !readOnly) {
+        if (enabled) {
             $control.prop('disabled', false);
             $checker.removeClass('disabled');
         } else {
@@ -53,19 +89,11 @@ var CheckBoxView = ControlView.extend({
             }
 
         }
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        this.$el.html(this.template({}));
-        this.$el.find('input:checkbox').uniform();
-
-        this.updateText();
-        this.updateValue();
-        this.applyReadOnly();
-
-        this.postrenderingActions();
-        return this;
     }
 });
+
+_.extend(CheckBoxView.prototype,
+    horizontalTextAlignmentPropertyMixin,
+    foregroundPropertyMixin,
+    textStylePropertyMixin
+);

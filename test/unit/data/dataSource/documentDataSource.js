@@ -10,6 +10,8 @@
             UpdateAction: 'SetDocument',
             DeleteAction: 'DeleteDocument',
             FillCreatedItem: true
+            //PageNumber: 10,
+            //PageSize: 50
         },
         parentView = fakeView();
 
@@ -23,6 +25,8 @@
             assert.equal(createdDataSource.getGetAction(), 'GetDocument');
             assert.equal(createdDataSource.getUpdateAction(), 'SetDocument');
             assert.equal(createdDataSource.getDeleteAction(), 'DeleteDocument');
+            //assert.equal(createdDataSource.getPageSize(), 50);
+            //assert.equal(createdDataSource.getPageNumber(), 10);
             assert.isTrue(createdDataSource.getFillCreatedItem());
         });
     });

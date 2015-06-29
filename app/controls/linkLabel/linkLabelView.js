@@ -35,37 +35,18 @@ var LinkLabelView = ControlView.extend({
         }
     },
 
-    updateLineCount: function () {
-        if (!this.wasRendered) {
-            return;
-        }
-
-        var lineCount = this.model.get('lineCount');
-        if (lineCount > 0) {
-            this.ui.container.removeAttr('class');
-            this.ui.container.addClass('line-count-' + lineCount);
-        }
-
-    },
-
     initModelHandlers: function () {
         this.listenTo(this.model, 'change:value', this.updateLinkText);
         this.listenTo(this.model, 'change:reference', this.updateReferenceHandler);
-        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
         this.listenTo(this.model, 'change:textTrimming', this.updateLinkText);
-        this.listenTo(this.model, 'change:textWrapping', this.updateLinkText);
-        this.listenTo(this.model, 'change:horizontalTextAlignment', this.updateHorizontalTextAlignment);
+        //this.listenTo(this.model, 'change:textWrapping', this.updateLinkText);
+        this.initHorizontalAlignment();
+        this.initHorizontalTextAlignment();
         this.initForeground();
         this.initBackground();
         this.initTextStyle();
-    },
-
-    updateHorizontalTextAlignment: function () {
-        if (!this.wasRendered) {
-            return;
-        }
-
-        this.switchClass('horizontalTextAlignment', this.model.get('horizontalTextAlignment'));
+        this.initUpdateLineCount();
+        this.initTextWrapping();
     },
 
     render: function () {
@@ -76,6 +57,7 @@ var LinkLabelView = ControlView.extend({
 
         this.bindUIElements();
         this.updateLineCount();
+        this.updateTextWrapping();
         this.updateLinkText();
         this.updateHorizontalTextAlignment();
         this.updateBackground();
@@ -103,12 +85,12 @@ var LinkLabelView = ControlView.extend({
 
         var model = this.model;
         var textTrimming = this.model.get('textTrimming');
-        var textWrapping = this.model.get('textWrapping');
+        //var textWrapping = this.model.get('textWrapping');
 
         text = this.getTextLabel();
 
-        this.$el.toggleClass('TextWrapping', textWrapping);
-        this.$el.toggleClass('NoTextWrapping', !textWrapping);
+        //this.$el.toggleClass('TextWrapping', textWrapping);
+        //this.$el.toggleClass('NoTextWrapping', !textWrapping);
 
 
         this.model.set('lineHeight', this.ui.label.innerHeight());
@@ -232,5 +214,8 @@ var LinkLabelView = ControlView.extend({
 _.extend(LinkLabelView.prototype,
     foregroundPropertyMixin,
     backgroundPropertyMixin,
-    textStylePropertyMixin
+    textStylePropertyMixin,
+    lineCountPropertyMixin,
+    textWrappingPropertyMixin,
+    horizontalTextAlignmentPropertyMixin
 );
