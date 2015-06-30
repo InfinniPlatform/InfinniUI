@@ -49,8 +49,8 @@ _.extend(DataNavigation.prototype, {
         return this.control.get('view');
     },
 
-    getElementCount: function () {
-        return this.control.get('elementCount');
+    onGetElementCount: function (handler) {
+        return this.control.onGetElementCount(handler);
     },
 
     onUpdateItems: function (handler) {
@@ -63,9 +63,5 @@ _.extend(DataNavigation.prototype, {
 
     onSetPageSize: function (handler) {
         this.control.onSetPageSize(handler);
-    },
-
-    onSetElementCount: function (handler){
-        this.control.onSetElementCount(handler);
     }
 });

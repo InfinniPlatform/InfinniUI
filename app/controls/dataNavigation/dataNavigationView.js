@@ -126,12 +126,6 @@ var DataNavigationView = ControlView.extend({
         this.trigger('onSetElementCount', this.model.set('elementCount', elementCount));
     },
 
-    onGetElementCount: function(callback){
-        this.on('onSetElementCount', function(){
-            callback(this.model.get('elementCount'));
-        });
-    },
-
     onPageSizeHandler: function() {
         this.trigger('onSetPageSize', this.model.get('pageSize'));
     },

@@ -25,9 +25,10 @@ _.extend(DataNavigationControl.prototype, {
         });
     },
 
-    onSetElementCount: function(handler){
-        this.controlModel.on('change:elementCount', function(model){
-            handler(model.get('elementCount'));
-        })
+    onGetElementCount: function(handler){
+        this.controlView.on('onSetElementCount', function(model) {
+            handler(model.get('elementCount'))
+        });
     }
+
 });
