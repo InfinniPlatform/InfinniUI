@@ -38,7 +38,7 @@ moment.lang('ru');
     openHomePage()
         .done(function (viewMetadata) {
             var action = builder.buildType(rootView, 'OpenViewAction', viewMetadata);
-            action.execute();
+            action.execute(function(){window.contextApp = arguments[0];});
         });
 
     function openHomePage() {
@@ -70,6 +70,7 @@ moment.lang('ru');
         }
         return defer.promise();
     }
+
 })(
     $('body'),
     //'/app/stubs/form.json'

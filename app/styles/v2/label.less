@@ -1,0 +1,104 @@
+.colors () {
+  @ln: length(@colors);
+
+  .foreground(@index) when (@index > 0) {
+    .foreground(@index - 1);
+    @foregroundName: extract(@colors, @index);
+
+    &.foreground-@{foregroundName} {
+      @color: %("color%s", @foregroundName);
+      color: @@color;
+    }
+  }
+
+
+  .background(@index) when (@index > 0) {
+    .background(@index - 1);
+    @backgroundName: extract(@colors, @index);
+
+    &.background-@{backgroundName} {
+      @color: %("color%s", @backgroundName);
+      background: @@color;
+    }
+  }
+
+  .foreground(@ln);
+  .background(@ln);
+}
+
+
+.buildTextStyles() {
+  .loop(@counter) when (@counter > 0) {
+    .loop(@counter - 1);
+    @name: extract(@textstyles, @counter);
+    @font-size: "font-size-@{name}";
+    @text-transform: "text-transform-@{name}";
+    &.textstyle-@{name} {
+      label {
+        font-size: @@font-size;
+        text-transform: @@text-transform;
+      }
+    }
+  }
+
+  @count: length(@textstyles);
+  .loop(@count);
+}
+
+//.buildTextStyles();
+
+.pl-label, .pl-link-label {
+  .buildTextStyles();
+  .colors();
+}
+
+.pl-label {
+
+  &.full-width{
+    width: 100%;
+  }
+
+  &.TextWrapping {
+    div {
+      label {
+        white-space: pre-wrap;
+      }
+    }
+  }
+
+  &.NoTextWrapping {
+    div {
+      label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.pl-label {
+  &.horizontalTextAlignment-Right {
+    > div {
+      text-align: right;
+    }
+  }
+
+  &.horizontalTextAlignment-Center {
+    > div {
+      text-align: center;
+    }
+  }
+
+  &.horizontalTextAlignment-Left {
+    > div {
+      text-align: left;
+    }
+  }
+
+  &.horizontalTextAlignment-Justify {
+    > div {
+      text-align: justify;
+    }
+  }
+}

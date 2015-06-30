@@ -32,7 +32,7 @@ _.extend(FileBinding.prototype, {
         var fileUrl = null;
         if (typeof value !== 'undefined' && value !== null) {
             fileUrl = this.fileUrl;
-            if (false === _.isEmpty(this.fileUrl)) {
+            if (value.Info.ContentId && false === _.isEmpty(this.fileUrl)) {
                 var hash = md5(JSON.stringify(value));
                 fileUrl += '&hash=' + hash;
             }

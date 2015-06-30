@@ -22,6 +22,14 @@ _.extend(TextBoxBuilder.prototype, {
         }
         element.setInputType(metadata.InputType);
 
+        this.initHorizontalTextAlignmentProperty(params);
+        this.initForeground(params);
+        this.initBackground(params);
+        this.initTextStyle(params);
+        this.initErrorText(params);
+        this.initHintText(params);
+        this.initLabelText(params);
+
         this.initEditMaskProperty(params);
         this.initBaseTextElementEvents(params);
     },
@@ -52,8 +60,15 @@ _.extend(TextBoxBuilder.prototype, {
     }
 
 },
+    builderHorizontalTextAlignmentPropertyMixin,
     builderValuePropertyMixin,
     builderFormatPropertyMixin,
     builderEditMaskPropertyMixin,
-    builderBaseTextElementMixin
+    builderBaseTextElementMixin,
+    builderBackgroundMixin,
+    builderForegroundMixin,
+    builderTextStyleMixin,
+    builderErrorTextMixin,
+    builderHintTextMixin,
+    builderLabelTextMixin
 );

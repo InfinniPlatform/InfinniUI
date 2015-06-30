@@ -1,0 +1,104 @@
+//@import "test.less";
+@max-line-count: 80;
+
+.linkLabelHorizontalTextAlignment(@align) {
+  div {
+    label {
+      a {
+        text-align: @align;
+      }
+    }
+  }
+}
+
+.pl-link-label, .pl-label {
+
+  &.horizontalTextAlignment-Left {
+    .linkLabelHorizontalTextAlignment(left)
+  }
+
+  &.horizontalTextAlignment-Right {
+    .linkLabelHorizontalTextAlignment(right)
+  }
+
+  &.horizontalTextAlignment-Center {
+    .linkLabelHorizontalTextAlignment(center)
+  }
+
+  &.horizontalTextAlignment-Justify {
+    .linkLabelHorizontalTextAlignment(justify)
+  }
+
+  .linkLabelTextStyles() {
+
+    .loop(@counter, @line-count) when (@counter > 0) {
+      .loop(@counter - 1, @line-count);
+      @name: extract(@textstyles, @counter);
+      @font-size: "font-size-@{name}";
+      &.textstyle-@{name} {
+        div.line-count-@{line-count} {
+          height: (@line-count * @@font-size * @line-height);
+        }
+      }
+    }
+
+    .generate-line-count(@n, @i: 1) when (@i =< @n) {
+      @count: length(@textstyles);
+      .loop(@count, @i);
+      .generate-line-count(@n, (@i + 1));
+    }
+
+    .generate-line-count(@max-line-count);
+  }
+
+  .linkLabelTextStyles();
+
+  div {
+    overflow:hidden;
+    line-height: @line-height;
+    label {
+      display: inline-block;
+      overflow: hidden;
+      //line-height: @label-line-height;
+
+      font-size: inherit;
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+        line-height: inherit;
+        &:hover {
+          color: inherit;
+        }
+      }
+    }
+
+
+  }
+
+
+  &.TextWrapping {
+    div {
+      label {
+        white-space: pre-wrap;
+        a {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  &.NoTextWrapping {
+    div {
+      label {
+        a {
+          white-space: nowrap;
+          /*display: inline-block;*/
+        }
+      }
+    }
+  }
+
+
+}
+

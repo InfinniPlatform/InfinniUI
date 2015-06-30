@@ -31,7 +31,7 @@ describe('CheckBox', function () {
             assert.isTrue(checkBox.getValue(), 'Value');
         });
 
-        it('should to forbid setting value if readOnly true', function () {
+        it('should to forbid setting value if Enabled false', function () {
             //Given
             var checkBox = new CheckBox();
             var $view = checkBox.render();
@@ -41,11 +41,11 @@ describe('CheckBox', function () {
             assert.isTrue(checkBox.getValue());
 
             // When
-            checkBox.setReadOnly(true);
+            checkBox.setEnabled(false);
             $view.find('input[type = checkbox]').click();
 
             // Then
-            assert.isTrue(checkBox.getReadOnly(), 'ReadOnly');
+            assert.isTrue(!checkBox.getEnabled(), 'Enabled');
             assert.isTrue(checkBox.getValue(), 'Value');
         });
 

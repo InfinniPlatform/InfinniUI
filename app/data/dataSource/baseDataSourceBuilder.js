@@ -7,6 +7,7 @@ function BaseDataSourceBuilder() {
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
         dataSource.setSorting(metadata.Sorting);
         dataSource.setPageSize(metadata.PageSize || 15);
+        dataSource.setPageNumber(metadata.PageNumber || null);
 
         var criteriaConstructor = function (data) {
             //Добавлен
@@ -43,7 +44,12 @@ function BaseDataSourceBuilder() {
 
         var exchange = parent.getExchange();
         exchange.subscribe(messageTypes.onLoading, function () {
-            dataSource.resumeUpdate();
+            if(dataSource.initingDataStrategy == 'previouslyInitingData' || dataSource.initingDataStrategy == 'manualInitingData'){
+                dataSource.resumeUpdate();
+            }else{
+                dataSource.loadingProcessDone();
+            }
+
         });
         exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
             if (dataSource.getName() === value.dataSource && !value.property) {

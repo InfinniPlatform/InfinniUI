@@ -406,15 +406,45 @@ _.extend(TemplateEditMask.prototype, {
         }
     },
 
+    clearText: function (position, len) {
+        var tmpl;
+        var startFrom;
+
+        for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
+            tmpl = this.template[i];
+
+            if (typeof tmpl === 'string') {
+                continue;
+            }
+
+            if (tmpl.position >= position && tmpl.position < position + len) {
+                if (typeof startFrom === 'undefined') {
+                    startFrom = tmpl.position;
+                }
+                tmpl.text = '';
+            }
+        }
+
+        return startFrom;
+    },
+
     /**
      * Обработка нажатия символа в указанной позиции
      * @param char
      * @param position
      */
-    setCharAt: function (char, position) {
+    setCharAt: function (char, position, len) {
         var template;
         var mask;
         var text;
+
+        if (typeof len === 'undefined') {
+            len = 0;
+        }
+
+        if (len > 0) {
+            this.clearText(position, len);
+        }
 
         for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
             template = this.template[i];
@@ -435,6 +465,19 @@ _.extend(TemplateEditMask.prototype, {
             }
         }
         return position;
+    },
+
+    deleteSelectedText: function(position, len, char){
+        var startFrom = this.clearText(position, len);
+
+        if (typeof char !== 'undefined') {
+            startFrom = this.setCharAt(char, position);
+        }
+
+        return {
+            position: startFrom,
+            result: this.getText()
+        };
     },
 
     getNextItemMask: function (position) {

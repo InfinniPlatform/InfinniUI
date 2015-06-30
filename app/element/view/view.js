@@ -3,12 +3,14 @@ function View() {
 
     var culture = new Culture(InfinniUI.config.lang);
 
+    var isLoading = false;
+
     this.onLoadedHandlers = $.Deferred();
 
     this.context = {
         notInitialized: true,
         Controls: {},
-        DataSources: null
+        DataSources: {}
     };
 
     this.onTextChange = function(callback){
@@ -284,10 +286,15 @@ function View() {
     };
 
     this.loading = function () {
+        isLoading = true;
         eventStore.executeEvent('onLoading');
     };
 
-    var childViews = [];
+    this.isLoading = function () {
+        return isLoading;
+    };
+
+    var childViews = {};
 
     this.getChildView = function (name) {
         return childViews[name];

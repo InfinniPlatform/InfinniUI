@@ -9,8 +9,7 @@ describe('DatePickerBuilder', function () {
 
                 Mode: 'Date',
                 MinDate: '2014-01-01',
-                MaxDate: '2014-12-31',
-                ReadOnly: true
+                MaxDate: '2014-12-31'
                 //Format: 'ShortDate'
             };
 
@@ -29,7 +28,6 @@ describe('DatePickerBuilder', function () {
             assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMinDate()).substr(0, 10), '2014-01-01');
             assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMaxDate()).substr(0, 10), '2014-12-31');
 
-            assert.isTrue(datePicker.getReadOnly(), 'Неверное значение для свойства ReadOnly');
             //assert.equal(datePicker.getFormat(), 'ShortDate');
         });
 
@@ -51,7 +49,6 @@ describe('DatePickerBuilder', function () {
             assert.isNull(datePicker.getMaxDate(), 'Неверное значение для свойства MaxDate');
             assert.isNull(datePicker.getValue(), 'Неверное значение для свойства Value');
 
-            assert.isFalse(datePicker.getReadOnly(), 'Неверное значение для свойства ReadOnly');
         });
 
         it('should be true if scriptsHandlers call', function () {

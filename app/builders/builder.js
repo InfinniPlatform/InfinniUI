@@ -15,7 +15,7 @@ function Builder() {
         return objectBuilders[metadataType].build(this, parentView, metadataValue, collectionProperty, params);
     };
 
-    this.build = function (parentView, metadataValue, collectionProperty) {
+    this.build = function (parentView, metadataValue, collectionProperty, params) {
         var key,
             value,
             result = null;
@@ -29,7 +29,7 @@ function Builder() {
             console.error('Builder: Не переданы метаданные');
         } else {
             value = metadataValue[key];
-            result = this.buildType(parentView, key, value, collectionProperty);
+            result = this.buildType(parentView, key, value, collectionProperty, params);
         }
         return result;
     };

@@ -14,10 +14,6 @@ _.extend(DatePickerControl.prototype, {
         return new DatePickerView({model: model});
     },
 
-    onValueChanged: function(handler){
-        this.controlModel.on('change:value', handler);
-    },
-
     set: function(key, val){
         if(key == 'value' && this.get('mode') == 'Date'){
             if(val instanceof Date){
@@ -29,7 +25,7 @@ _.extend(DatePickerControl.prototype, {
             Control.prototype.set.call(this, key, val);
         }
     }
-    
 },
+    controlValuePropertyMixin,
     baseTextControlMixin
 );

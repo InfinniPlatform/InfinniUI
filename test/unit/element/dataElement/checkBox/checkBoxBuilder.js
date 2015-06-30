@@ -6,7 +6,6 @@ describe('CheckBoxBuilder', function () {
                 Visible: false,
                 HorizontalAlignment: 'Center',
 
-                ReadOnly: true,
                 Text: 'CheckBox'
             };
 
@@ -26,7 +25,6 @@ describe('CheckBoxBuilder', function () {
             assert.isFalse(checkBox.getVisible(), 'Неверное значение для свойства Visible');
             assert.equal(checkBox.getHorizontalAlignment(), 'Center');
 
-            assert.isTrue(checkBox.getReadOnly(), 'Неверное значение для свойства ReadOnly');
             assert.equal(checkBox.getText(), 'CheckBox');
 
             assert.isNotNull(checkBox.getValue());

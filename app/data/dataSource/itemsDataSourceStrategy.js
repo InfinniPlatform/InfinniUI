@@ -4,6 +4,7 @@ function ItemsDataSourceStrategy(dataSource, metadata) {
     var strategy = this;
     var dataItems;
 
+    dataItems = metadata.Items;
     dataSource.setDataItems(metadata.Items);
 
     this.getItems = function (dataProvider, resultCallback) {
@@ -18,6 +19,7 @@ function ItemsDataSourceStrategy(dataSource, metadata) {
             return;
         }
         resultCallback(dataItems);
+        dataSource.loadingProcessDone();
     };
 
     this.onItemsUpdated = function (value) {

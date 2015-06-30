@@ -11,9 +11,7 @@ _.extend(ToggleButtonControl.prototype, {
 
     createControlView: function (model) {
         return new ToggleButtonView({model: model});
-    },
-
-    onValueChanged: function (handler) {
-        this.controlModel.on('change:value', handler);
     }
-});
+},
+    controlValuePropertyMixin
+);

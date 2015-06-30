@@ -16,14 +16,6 @@ _.extend(ToggleButton.prototype, {
 
     setTextOff: function (textOff) {
         return this.control.set('textOff', textOff);
-    },
-
-    getReadOnly: function (){
-      return this.control.get('readonly');
-    },
-
-    setReadOnly: function (readonly) {
-        return this.control.set('readonly', readonly);
     }
 },
     valuePropertyMixin

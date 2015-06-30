@@ -104,23 +104,23 @@ describe('DatePickerControl', function () {
             assert.ok(dateInPicker == settedDate, "Установленное значение (" + settedDate + ") не равно ожидаемому (" + dateInPicker + ")");
         });
 
-        it('should set readOnly', function () {
+        it('should set Enabled', function () {
             //Given
             var datePicker = new DatePickerControl();
-            datePicker.set('readonly', false);
+            datePicker.set('enabled', false);
 
             var $el = datePicker.render().find('.date');
 
             $.each($el.children('.form-control, button'), function(index, child){
-                assert.isFalse(child.hasAttribute('disabled'));
+                assert.isTrue(child.hasAttribute('disabled'));
             });
 
             //When
-            datePicker.set('readonly', true);
+            datePicker.set('enabled', true);
 
             //Then
             $.each($el.children('.form-control, button'), function(index, child){
-                assert.isTrue(child.hasAttribute('disabled'));
+                assert.isFalse(child.hasAttribute('disabled'));
             });
         });
 

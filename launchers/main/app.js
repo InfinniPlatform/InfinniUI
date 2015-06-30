@@ -219,6 +219,6 @@ $.ajaxSetup({
     }
 })(
     $('body'),
-    //'/app/stubs/parameters.json'
+    //'/app/stubs/combobox.json'
     {ConfigId: window.location.hash.slice(2), DocumentId: 'Common', ViewType: 'HomePage'}
 );

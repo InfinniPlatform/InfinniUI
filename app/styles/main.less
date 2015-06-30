@@ -20,6 +20,7 @@
 @import "calendar.less";
 @import "datePicker.less";
 @import "listBox.less";
+@import "toggleButton.less";
 
 @import "validation.less";
 @import "flexbox.less";
@@ -34,7 +35,6 @@
 @import "toolBar.less";
 @import "textBox.less";
 @import "radioGroup.less";
-@import "linkLabel.less";
 
 
 body{
@@ -68,6 +68,7 @@ body{
 .pl-check-box{
   label{
     line-height: 30px;
+    width: 100%;
     .checker{
       margin: 0;
     }
@@ -159,24 +160,24 @@ body{
   overflow-x: hidden;
 }
 
-.pl-label{
-
-  &.pl-label-oneline {
-
-    & label {
-      white-space: pre;
-      text-overflow: ellipsis;
-    }
-  }
-
-  label{
-    min-height: 30px;
-    //line-height: 30px;
-    display: block;
-    font-size: inherit;
+//.pl-label{
+//
+//  &.pl-label-oneline {
+//
+//    & label {
     //white-space: pre;
-  }
-}
+//      text-overflow: ellipsis;
+//    }
+//  }
+//
+//  label{
+//    min-height: 30px;
+//    //line-height: 30px;
+//    display: block;
+//    font-size: inherit;
+//    //white-space: pre;
+//  }
+//}
 
 
 .cell-checkbox{
@@ -191,12 +192,13 @@ label{
   margin-bottom: 0;
 }
 
-.pl-label > label{
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: pre-wrap;
-  margin-bottom: 0;
-}
+//.pl-label > label{
+//  text-overflow: ellipsis;
+//  overflow: hidden;
+//  white-space: pre-wrap;
+//  margin-bottom: 0;
+//}
+
 //.pl-button{
 //  & > button{
 //    padding: 6px 10px;

@@ -2,7 +2,7 @@ var PropertyBindingBuilder = function () {
 
 };
 
-PropertyBindingBuilder.prototype.build = function (builder, parent, metadata, collectionProperty) {
+PropertyBindingBuilder.prototype.build = function (builder, parent, metadata, collectionProperty, params) {
 
     var metadataProperty = metadata.Property;
 
@@ -23,8 +23,16 @@ PropertyBindingBuilder.prototype.build = function (builder, parent, metadata, co
     var dataSource = parent.getDataSource(metadata.DataSource);
 
     if(dataSource !== null){
+        var initingDataStrategy;
 
-        dataSource.addDataBinding(propertyBinding);
+        if(params && params.lazyLoad){
+            initingDataStrategy = {
+                name: 'lazyInitingData',
+                starter: params.lazyLoad
+            };
+        }
+
+        dataSource.addDataBinding(propertyBinding, initingDataStrategy);
 
     }
 

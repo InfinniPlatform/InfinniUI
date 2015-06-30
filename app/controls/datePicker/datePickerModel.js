@@ -5,6 +5,9 @@ var DatePickerModel = ControlModel.extend({
         maxDate: null,
         format: null,
         readonly: false,
-        value: null
+        value: null,
+        foreground: 'Black',
+        background: 'Transparent',
+        textStyle: 'Body1'
     }, ControlModel.prototype.defaults)
 });
