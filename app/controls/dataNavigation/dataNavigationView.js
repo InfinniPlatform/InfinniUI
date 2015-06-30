@@ -62,8 +62,11 @@ var DataNavigationView = ControlView.extend({
             page: parseInt(this.model.get('pageNumber')) + 1 || 1,
             maxVisible: 10,
             leaps: false,
-            next: 'Вперед ››',
-            prev: '‹‹ Назад'
+            next: 'Вперед ›',
+            prev: '‹ Назад',
+            firstLastUse: true,
+            first: '‹‹',
+            last: '››'
         }).on("page", function(event, num) {
             self.model.set('pageNumber', num - 1);
         });

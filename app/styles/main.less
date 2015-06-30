@@ -260,27 +260,34 @@ label{
     & > .navigation{
       float: left;
       & > .pagination{
+        .active{
+          a, span{
+            background-color: #46b1bd;
+            border-color: #dddddd;
+            color: @color-white;
+            &:hover, &:focus, &:active{
+              background-color: #46b1bd;
+              border-color: #dddddd;
+            }
+          }
+
+        }
         & > li{
           & > a{
             color: @color-black;
           }
           &.disabled{
-            &.prev{
-              & > a{
-                color: @color-light-gray;
+            &:not(.prev), &:not(.first), &:not(.last), &:not(.next){
+              & > a {
+                background-color: #46b1bd;
+                color: @color-white;
               }
             }
-            &.next{
+
+            &.prev, &.next, &.first, &.last{
               & > a{
                 color: @color-light-gray;
-              }
-            }
-            &:not(.prev){
-              &:not(.next){
-                & > a {
-                  background-color: #46b1bd;
-                  color: @color-white;
-                }
+                background-color: @color-white;
               }
             }
           }

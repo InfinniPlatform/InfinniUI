@@ -48,7 +48,7 @@
             'bower_components/metronic/assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js',
             'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
             'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modal.js',
-            'bower_components/metronic/assets/global/plugins/jquery-bootpag/jquery.bootpag.min.js',
+            'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/metronic/assets/global/plugins/uniform/jquery.uniform.js',
 			'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.js',
 			'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
