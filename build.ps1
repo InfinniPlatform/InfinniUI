@@ -4,6 +4,8 @@ $BundleName = "ParentCommittee"
 # Список файлов, которые будем копировать в архив (папку)
 $BundleFiles = @("launcher", "out", "extensions", "index.html", "app")
 
+# Если задан аргумент build, берём имя архива из этого аргумента
+If (($args.Length -gt 0) -And ($args[0] -Match "build:(../)?(\w+).*")) { $BundleName = $matches[2] }
 
 $FileName  = "$(Get-Location)\$(Get-Date -Format "yyyy-MM-dd-HH-mm-ss")-$BundleName-bundle.zip"
 
