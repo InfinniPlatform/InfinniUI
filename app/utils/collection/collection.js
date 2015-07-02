@@ -9,11 +9,11 @@ function Collection(items, idProperty, comparator) {
 }
 
 Collection.prototype.initStrategy = function () {
-    var val =  this._idProperty;
-    if (typeof val === 'undefined' || val === null || val.length > 0) {
-        this._strategy = new CollectionStrategyIndex(val);
+    var idProperty =  this._idProperty;
+    if (typeof idProperty === 'undefined' || idProperty === null || idProperty === '') {
+        this._strategy = new CollectionStrategyIndex();
     } else {
-        this._strategy = new CollectionStrategyId();
+        this._strategy = new CollectionStrategyId(idProperty);
     }
 };
 

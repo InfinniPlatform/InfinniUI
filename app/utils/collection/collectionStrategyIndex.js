@@ -12,7 +12,9 @@ Object.defineProperties(CollectionStrategyIndex.prototype, {
 });
 
 CollectionStrategyIndex.prototype.toString = function () {
-    return this._items.join(',');
+    return this._items.map(function (item) {
+        return JSON.stringify(item);
+    }).join(',');
 };
 
 CollectionStrategyIndex.prototype._resetData = function () {

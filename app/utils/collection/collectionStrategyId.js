@@ -12,7 +12,7 @@ Object.defineProperties(CollectionStrategyId.prototype, {
     }
 });
 
-CollectionStrategyIndex.prototype.toString = function () {
+CollectionStrategyId.prototype.toString = function () {
     return this._items.map(function (item) {
         return JSON.stringify(item);
     }).join(',');
@@ -112,6 +112,8 @@ CollectionStrategyId.prototype.insertAll = function (index, newItems) {
     }
 
     var position = (index < 0) ? 0 : Math.min(index, length);
+
+    Array.prototype.splice.apply(this._items, [position, 0].concat(newItems));
     this._reindex(position, newItems.length);
     for (var i = 0; i < newItems.length; i = i + 1) {
         this._storeData(newItems[i], position + i);
@@ -131,7 +133,7 @@ CollectionStrategyId.prototype.reset = function (newItems) {
     if (!changed) {
         for (var i = 0; i < newItems.length; i = i + 1) {
             if (this.indexOf(newItems[i], 0) === -1) {
-                changed === true;
+                changed = true;
                 break;
             }
         }

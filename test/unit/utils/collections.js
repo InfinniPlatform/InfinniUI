@@ -123,17 +123,17 @@ describe("Collection", function () {
 
             changed = collection.push('A');
             assert.isTrue(changed);
-            assert.isTrue('"A"' == collection);
+            assert.equal('"A"', String(collection));
 
 
             changed = collection.push('B');
             assert.isTrue(changed);
-            assert.isTrue('"A","B"' == collection);
+            assert.equal('"A","B"', String(collection));
 
 
             changed = collection.push('C');
             assert.isTrue(changed);
-            assert.isTrue('"A","B","C"' == collection);
+            assert.equal('"A","B","C"', String(collection));
         });
 
         it("should add objects", function () {
@@ -368,6 +368,25 @@ describe("Collection", function () {
 
     });
 
+    describe("replace()", function () {
+        //it("should replace item", function () {
+        //    //When
+        //    var collection = new Collection([ 'A', 'B', 'C' ]);
+        //    var changed = collection.replace('C', 'D');
+        //    //Then
+        //    assert.isTrue(changed);
+        //    assert.equal('"C","D"', String(collection));
+        //});
+
+        it("should replace object", function () {
+            //When
+            var collection = new Collection([{id: 1, title: "A"}, {id: 2, title: "B"}], 'id');
+            var changed = collection.replace({id: 2, title: "B"}, {id: 3, title: "C"});
+
+            assert.isTrue(changed);
+            assert.equal('{"id":1,"title":"A"},{"id":3,"title":"C"}', String(collection));
+        })
+    });
 
 
 });
