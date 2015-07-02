@@ -7,6 +7,8 @@ var BaseDataSource = Backbone.Model.extend({
         sorting: null,
         criteriaList: [],
 
+        view: null,
+
         isDataReady: false,
 
         dataProvider: null,
@@ -24,6 +26,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     initialize: function(){
         this.initDataProvider();
+
+        if(!this.get('view')){
+            throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
+        }
     },
 
     initDataProvider: function(){
@@ -93,7 +99,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageSize: function (value) {
-        if(Number.isInteger(value) || value < 0){
+        if(!Number.isInteger(value) || value < 0){
             throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
         }
 
@@ -101,8 +107,6 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('pageSize', value);
             this.updateItems();
         }
-
-
     },
 
     isModifiedItems : function () {
@@ -155,10 +159,17 @@ var BaseDataSource = Backbone.Model.extend({
         var filters = this.getFilter(),
             pageNumber = this.get('pageNumber'),
             pageSize = this.get('pageSize'),
-            sorting = this.get('sorting');
+            sorting = this.get('sorting'),
+            dataProvider = this.get('dataProvider'),
+            that = this;
 
-        this.get('dataProvider')
-            .getItems( filters, pageNumber, pageSize, sorting, onSuccess, onError );
+        dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
+
+            that.set('items', data);
+            that.set('isDataReady', true);
+            onSuccess(data);
+
+        }, onError );
     },
 
     getFilter: function(){
