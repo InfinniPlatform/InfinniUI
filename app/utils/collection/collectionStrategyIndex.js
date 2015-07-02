@@ -1,25 +1,10 @@
 function CollectionStrategyIndex() {
+    CollectionStrategy.apply(this);
     this._resetData();
 }
 
-Object.defineProperties(CollectionStrategyIndex.prototype, {
-    length: {
-        get: function () {
-            return this._items.length;
-        },
-        enumerable: false
-    }
-});
-
-CollectionStrategyIndex.prototype.toString = function () {
-    return this._items.map(function (item) {
-        return JSON.stringify(item);
-    }).join(',');
-};
-
-CollectionStrategyIndex.prototype._resetData = function () {
-    this._items = [];
-};
+CollectionStrategyIndex.prototype = Object.create(CollectionStrategy.prototype);
+CollectionStrategyIndex.prototype.constructor = CollectionStrategyIndex;
 
 CollectionStrategyIndex.prototype.push = function (newItem) {
     this._items.push(newItem);
@@ -86,3 +71,65 @@ CollectionStrategyIndex.prototype.reset = function (newItems) {
 
     return changed;
 };
+
+CollectionStrategyIndex.prototype.replace = function (oldItem, newItem) {
+    var index = this._items.indexOf(oldItem);
+
+    if (index === -1) {
+        return false;
+    }
+
+    this._items.splice(index, 1, newItem);
+    return true;
+};
+
+
+CollectionStrategyIndex.prototype.pop = function () {
+    return this._items.pop();
+};
+
+CollectionStrategyIndex.prototype.remove = function (item) {
+    var index,
+        changed = false;
+    while(true) {
+        index = this._items.indexOf(item);
+
+        if (index === -1) {
+            break;
+        }
+        changed = true;
+        this._items.splice(index, 1);
+    }
+
+    return changed;
+};
+
+CollectionStrategyIndex.prototype.indexOf = function (item, fromIndex) {
+  return this._items.indexOf(item, fromIndex);
+};
+
+
+CollectionStrategyIndex.prototype.lastIndexOf = function (item, fromIndex) {
+    return this._items.lastIndexOf(item, fromIndex);
+};
+
+
+
+
+
+CollectionStrategyIndex.prototype.removeById = function (id) {
+    //@TODO Какой смысл этого метода для коллекции значений
+};
+
+CollectionStrategyIndex.prototype.getById = function (id) {
+    //@TODO Какой смысл этого метода для коллекции значений
+};
+
+/**
+ *
+ * @private
+ */
+CollectionStrategyIndex.prototype._resetData = function () {
+    this._items = [];
+};
+

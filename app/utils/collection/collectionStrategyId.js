@@ -1,84 +1,15 @@
 function CollectionStrategyId(idProperty) {
+    CollectionStrategy.apply(this);
     this._idProperty = idProperty;
     this._resetData();
 }
 
-Object.defineProperties(CollectionStrategyId.prototype, {
-    length: {
-        get: function () {
-            return this._items.length;
-        },
-        enumerable: false
-    }
-});
-
-CollectionStrategyId.prototype.toString = function () {
-    return this._items.map(function (item) {
-        return JSON.stringify(item);
-    }).join(',');
-};
-
-CollectionStrategyId.prototype._resetData = function () {
-    this._data = Object.create(null);
-    this._items = [];
-};
-
-CollectionStrategyId.prototype._storeData = function (item, index) {
-
-    if (typeof item === 'undefined' || item === null || typeof item !== 'object') {
-        //Если undefined, null или простой тип - элемент не доступен по ключу
-        return;
-    }
-
-    var id = item[this._idProperty],
-        data = {
-            index: index,
-            item: item
-        };
-
-    if (id in this._data) {
-        this._data[id].push(data);
-    } else {
-        this._data[id] = [data];
-    }
-};
-
-CollectionStrategyId.prototype._getById = function (id, position) {
-    var data = this._data[id],
-        index = position || 0,
-        item;
-
-    if (Array.isArray(data) && index < data.length) {
-        item = data[index].item;
-    }
-
-    return item;
-};
-
-CollectionStrategyId.prototype._reindex = function (index, count) {
-    var
-        items,
-        length = this._items.length;
-
-    if (index >= length) {
-        return;
-    }
-
-    //Пересчет индексов
-    for (var key in this._data) {
-        items = this._data[key];
-        items.forEach(function (item) {
-            if (item.index < index) {
-                item.index += count;
-            }
-        });
-    }
-
-};
+CollectionStrategyId.prototype = Object.create(CollectionStrategy.prototype);
+CollectionStrategyId.prototype.constructor = CollectionStrategyId;
 
 CollectionStrategyId.prototype.push = function (newItem) {
     this._items.push(newItem);
-    this._storeData(newItem, this._items.length -1);
+    this._storeData(newItem, this._items.length - 1);
     return true;
 };
 
@@ -282,4 +213,137 @@ CollectionStrategyId.prototype.indexOf = function (item, fromIndex) {
     }
 
     return index;
+};
+
+CollectionStrategyId.prototype.lastIndexOf = function (item, fromIndex) {
+    if (item !== null && typeof item !== 'object') {
+        return this._items.lastIndexOf(item, fromIndex);
+    }
+
+    var id = item[this._idProperty];
+    var data = this._data[id];
+
+    if (!Array.isArray(data)) {
+        return -1;
+    } else if (data.length === 1) {
+        return data[0].index;
+    } else if (data.length === 0) {
+        return -1;
+    }
+
+    var index = data
+        .filter(function (data) {
+            return data.index <= fromIndex;
+        })
+        .map(function (data) {
+            return data.index
+        });
+
+    return Math.max.apply(Math, index);
+};
+
+CollectionStrategyId.prototype.contains = function (item, fromIndex) {
+    var contains = false;
+
+    if (item !== null && typeof item !== 'object') {
+        //Поиск по значению
+        contains = CollectionStrategy.prototype.contains.call(this, item, fromIndex);
+    } else {
+        var id = item[this._idProperty];
+        var data = this._data[id];
+        if (fromIndex === 0) {
+            contains = Array.isArray(data) && data.length > 0;
+        } else {
+            contains = data
+                    .filter(function (data) {
+                        return data.index >= fromIndex;
+                    })
+                    .length > 0;
+
+        }
+
+    }
+    return contains;
+};
+
+
+/**
+ *
+ * @private
+ */
+CollectionStrategyId.prototype._resetData = function () {
+    this._data = Object.create(null);
+    this._items = [];
+};
+
+/**
+ *
+ * @param {object} item
+ * @param {number} index
+ * @private
+ */
+CollectionStrategyId.prototype._storeData = function (item, index) {
+
+    if (typeof item === 'undefined' || item === null || typeof item !== 'object') {
+        //Если undefined, null или простой тип - элемент не доступен по ключу
+        return;
+    }
+
+    var id = item[this._idProperty],
+        data = {
+            index: index,
+            item: item
+        };
+
+    if (id in this._data) {
+        this._data[id].push(data);
+    } else {
+        this._data[id] = [data];
+    }
+};
+
+/**
+ *
+ * @param id
+ * @param position
+ * @returns {*}
+ * @private
+ */
+CollectionStrategyId.prototype._getById = function (id, position) {
+    var data = this._data[id],
+        index = position || 0,
+        item;
+
+    if (Array.isArray(data) && index < data.length) {
+        item = data[index].item;
+    }
+
+    return item;
+};
+
+/**
+ *
+ * @param index
+ * @param count
+ * @private
+ */
+CollectionStrategyId.prototype._reindex = function (index, count) {
+    var
+        items,
+        length = this._items.length;
+
+    if (index >= length) {
+        return;
+    }
+
+    //Пересчет индексов
+    for (var key in this._data) {
+        items = this._data[key];
+        items.forEach(function (item) {
+            if (item.index < index) {
+                item.index += count;
+            }
+        });
+    }
+
 };

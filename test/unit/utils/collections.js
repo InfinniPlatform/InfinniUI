@@ -236,12 +236,12 @@ describe("Collection", function () {
                 changed,
                 collection = new Collection([], 'id');
 
-            changed = collection.addAll([{id: 1, title: 'One'},{id: 2, title: 'Two'}]);
+            changed = collection.addAll([{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed);
             assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
 
 
-            changed = collection.addAll([{id: 3, title: 'Three'},{id: 4, title: 'Four'}]);
+            changed = collection.addAll([{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed);
             assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"},{"id":4,"title":"Four"}', String(collection));
         });
@@ -275,7 +275,7 @@ describe("Collection", function () {
                 changed,
                 collection = new Collection([], idProperty);
 
-            changed = collection.insert(0,{id: 1, title: 'One'});
+            changed = collection.insert(0, {id: 1, title: 'One'});
             assert.isTrue(changed, 'One changed');
             assert.equal('{"id":1,"title":"One"}', String(collection));
 
@@ -315,7 +315,7 @@ describe("Collection", function () {
                 changed,
                 collection = new Collection([], 'id');
 
-            changed = collection.insertAll(0,[{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
+            changed = collection.insertAll(0, [{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed, 'Changed step 1');
             assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
 
@@ -369,14 +369,14 @@ describe("Collection", function () {
     });
 
     describe("replace()", function () {
-        //it("should replace item", function () {
-        //    //When
-        //    var collection = new Collection([ 'A', 'B', 'C' ]);
-        //    var changed = collection.replace('C', 'D');
-        //    //Then
-        //    assert.isTrue(changed);
-        //    assert.equal('"C","D"', String(collection));
-        //});
+        it("should replace item", function () {
+            //When
+            var collection = new Collection(['A', 'B', 'C']);
+            var changed = collection.replace('C', 'D');
+            //Then
+            assert.isTrue(changed);
+            assert.equal('"A","B","D"', String(collection));
+        });
 
         it("should replace object", function () {
             //When
@@ -388,5 +388,275 @@ describe("Collection", function () {
         })
     });
 
+    describe("pop()", function () {
+
+        it("should pop item", function () {
+            //When
+            var items = ['A', 'B', 'C'],
+                collection = new Collection(['A', 'B', 'C']);
+            var item2 = collection.pop(); // 'C'
+            var item1 = collection.pop(); // 'B'
+            var item0 = collection.pop(); // 'A
+            //Then
+            assert.equal(item2, items[2]);
+            assert.equal(item1, items[1]);
+            assert.equal(item0, items[0]);
+        });
+
+        it("should pop object", function () {
+            //When
+            var objects = [
+                    {id: 1, title: 'One'},
+                    {id: 2, title: 'Two'},
+                    {id: 3, title: 'Three'}
+                ],
+                collection = new Collection(objects, 'id');
+
+            //Then
+            while (collection.length > 0) {
+                assert.equal(collection.pop(), objects.pop());
+            }
+        });
+
+    });
+
+    describe("remove()", function () {
+
+        it("should remove item", function () {
+            var
+                collection = new Collection(['A', 'B', 'C']),
+                change;
+
+            change = collection.remove('B'); // [ 'A', 'C' ]
+            assert.equal('"A","C"', String(collection));
+            assert.isTrue(change);
+
+            change = collection.remove('A'); // [ 'C' ]
+            assert.equal('"C"', String(collection));
+            assert.isTrue(change);
+
+            change = collection.remove('C'); // [ ]
+            assert.equal(collection.length, 0);
+            assert.isTrue(change);
+        });
+
+        it("should remove object", function () {
+            var collection = new Collection([
+                {id: 1, title: "One"},
+                {id: 2, title: "Two"},
+                {id: 3, title: "Three"}
+            ], 'id'), change;
+
+            change = collection.remove({id: 2, title: "Two"});
+            assert.isTrue(change);
+            assert.equal('{"id":1,"title":"One"},{"id":3,"title":"Three"}', String(collection));
+
+            change = collection.remove({id: 1, title: "One"});
+            assert.isTrue(change);
+            assert.equal('{"id":3,"title":"Three"}', String(collection));
+
+            change = collection.remove({id: 3, title: "Three"});
+            assert.isTrue(change);
+            assert.equal(collection.length, 0);
+
+        });
+
+    });
+
+    describe("removeById()", function () {
+
+        it("should remove object by id", function () {
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'}
+            ], 'key'), changed;
+
+            changed = collection.removeById(2);
+            assert.equal('{"key":1,"value":"A"},{"key":3,"value":"C"}', String(collection));
+            assert.isTrue(changed, 'deleted 2');
+
+            changed = collection.removeById(1);
+            assert.equal('{"key":3,"value":"C"}', String(collection));
+            assert.isTrue(changed, 'deleted 1');
+
+            changed = collection.removeById(3);
+            assert.equal(collection.length, 0);
+            assert.isTrue(changed, 'deleted 3');
+        });
+
+    });
+
+    describe("getById()", function () {
+
+        it("should get object by id", function () {
+            var objects = [
+                    {key: 1, value: 'A'},
+                    {key: 2, value: 'B'},
+                    {key: 3, value: 'C'}
+                ],
+                collection = new Collection(objects, 'key');
+
+            assert.equal(collection.getById(1), objects[0]);
+            assert.equal(collection.getById(2), objects[1]);
+            assert.equal(collection.getById(3), objects[2]);
+        });
+    });
+
+    describe("indexOf()", function () {
+
+        it("should return index of item", function () {
+            //When
+            var collection = new Collection(['A', 'B', 'C', 'A', 'B', 'C']);
+            //Then
+            assert.equal(collection.indexOf('C'), 2);
+            assert.equal(collection.indexOf('C', 3), 5);
+            assert.equal(collection.indexOf('D'), -1);
+        });
+
+        it("should return index of object", function () {
+            //When
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'},
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'}
+            ], 'key');
+
+            //Then
+            assert.equal(collection.indexOf({key: 3, value: 'C'}), 2);
+            assert.equal(collection.indexOf({key: 3, value: 'C'}, 3), 5);
+            assert.equal(collection.indexOf({key: 4, value: 'D'}), -1);
+        })
+
+    });
+
+    describe("lastIndexOf()", function () {
+
+        it("should return last index of item", function () {
+            //When
+            var collection = new Collection(['A', 'B', 'C', 'A', 'B', 'C']);
+            //Then
+            assert.equal(collection.lastIndexOf('C'), 5);
+            assert.equal(collection.lastIndexOf('C', 4), 2);
+            assert.equal(collection.lastIndexOf('D'), -1);
+        });
+
+        it("should return last index of object", function () {
+            //When
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'},
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'}
+            ], 'key');
+            //Then
+            assert.equal(collection.lastIndexOf({key: 3, value: 'C'}), 5);
+            assert.equal(collection.lastIndexOf({key: 3, value: 'C'}, 4), 2);
+            assert.equal(collection.lastIndexOf({key: 4, value: 'D'}), -1);
+        });
+    });
+
+    describe("findIndex()", function () {
+
+        it("should return index of item", function () {
+            //When
+            var collection = new Collection([1, 3, 5, 6, 7, 9, 11, 12]);
+            //Then
+            var index = collection.findIndex(function (item, index, collection) {
+                return item % 2 === 0;
+            });
+            assert.equal(index, 3);
+        });
+
+        it("should return index of object", function () {
+            //When
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 3, value: 'B'},
+                {key: 5, value: 'C'},
+                {key: 6, value: 'A'},
+                {key: 7, value: 'B'},
+                {key: 9, value: 'C'},
+                {key: 11, value: 'B'},
+                {key: 12, value: 'C'}
+            ], 'key');
+            //Then
+            var index = collection.findIndex(function (item, index, collection) {
+                return item.key % 2 === 0;
+            });
+            assert.equal(index, 3);
+        });
+
+    });
+
+    describe("find()", function () {
+
+        it("should return item", function () {
+            //When
+            var collection = new Collection([1, 3, 5, 6, 7, 9, 11, 12]);
+            //Then
+            var item = collection.find(function (item, index, collection) {
+                return item % 2 === 0;
+            });
+            assert.equal(item, 6);
+        });
+
+        it("should return object", function () {
+            //When
+            var objects = [
+                    {key: 1, value: 'A'},
+                    {key: 3, value: 'B'},
+                    {key: 5, value: 'C'},
+                    {key: 6, value: 'A'},
+                    {key: 7, value: 'B'},
+                    {key: 9, value: 'C'},
+                    {key: 11, value: 'B'},
+                    {key: 12, value: 'C'}
+                ],
+                collection = new Collection(objects, 'key');
+            //Then
+            var item = collection.find(function (item, index, collection) {
+                return item.key % 2 === 0;
+            });
+            assert.equal(item, objects[3]);
+        });
+
+    });
+
+    describe("contains()", function () {
+
+        it("should check item in collection", function () {
+            //When
+            var collection = new Collection([ 'A', 'B', 'C' ]);
+            //Then
+            assert.isTrue(collection.contains('A'), 'A');
+            assert.isTrue(collection.contains('B'), 'B');
+            assert.isTrue(collection.contains('C'), 'C');
+            assert.isFalse(collection.contains('A', 1), 'A');
+            assert.isFalse(collection.contains('B', 2), 'B');
+            assert.isFalse(collection.contains('C', 3), 'C');
+        });
+
+        it("should check object in collection", function () {
+            //When
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'}
+            ], 'key');
+            //Then
+            assert.isTrue(collection.contains({key: 1, value: 'A'}), 'contains A');
+            assert.isTrue(collection.contains({key: 2, value: 'B'}), 'contains B');
+            assert.isTrue(collection.contains({key: 3, value: 'C'}), 'contains C');
+            assert.isFalse(collection.contains({key: 1, value: 'A'}, 1), '!contains A');
+            assert.isFalse(collection.contains({key: 2, value: 'B'}, 2), '!contains B');
+            assert.isFalse(collection.contains({key: 3, value: 'C'}, 3), '!contains C');
+        });
+    })
 
 });

@@ -117,6 +117,34 @@ Collection.prototype.getById = function (id) {
     return item;
 };
 
+Collection.prototype.lastIndexOf = function (item, fromIndex) {
+    var maxIndex = this.length - 1,
+        index = (typeof fromIndex === 'undefined') ? maxIndex : fromIndex;
+
+    if(index < 0 || index > maxIndex) {
+        return -1;
+    }
+    return this._strategy.lastIndexOf(item, index);
+};
+
+Collection.prototype.getByIndex = function (index) {
+    return this._strategy.getByIndex(index);
+};
+
+Collection.prototype.findIndex = function (predicate, thisArgs) {
+    return this._strategy.findIndex(predicate, this, thisArgs);
+};
+
+Collection.prototype.find = function (predicate, thisArgs) {
+    return this._strategy.find(predicate, this, thisArgs);
+};
+
+Collection.prototype.contains = function (item, fromIndex) {
+    var index = typeof fromIndex === 'undefined' ? 0 : fromIndex;
+
+    return this._strategy.contains(item, index);
+};
+
 Collection.prototype.onChange = function (handler) {
     this._eventDispatcher.register(Collection.EVENTS.OnChange, handler);
 };
