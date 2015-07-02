@@ -16,14 +16,26 @@ describe('DocumentDataSource', function () {
         parentView = fakeView();
 
     describe('dataSource CRUD operations', function () {
-        it('should get list of data', function () {
-
+        it('should get list of data', function (done) {
+            // Given
             window.providerRegister.register('DocumentDataSource', function () {
                 return new FakeDataProvider();
             });
 
-            var dataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-            //dataSource.setListMode();
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            assert.isFalse(dataSource.isDataReady());
+
+            //When
+            dataSource.updateItems(function(data){
+
+                // Then
+                assert.isTrue(data.length > 0, "data provider returns items");
+                done();
+
+            });
 
             var invokes = false;
 

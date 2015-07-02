@@ -1,4 +1,10 @@
 var DocumentDataSource = BaseDataSource.extend({
+
+    initDataProvider: function(){
+        var dataProvider = window.providerRegister.build('DocumentDataSource', metadata);
+        this.set('dataProvider', dataProvider);
+    },
+
     saveItem : function (item, onSuccess) {
         var dataProvider = this.get('dataProvider'),
             showingWarnings = this.get('showingWarnings'),

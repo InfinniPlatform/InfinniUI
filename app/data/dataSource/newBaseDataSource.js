@@ -147,6 +147,10 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('items');
     },
 
+    isDataReady: function(){
+        return this.get('isDataReady');
+    },
+
     updateItems: function(onSuccess, onError){
         var filters = this.getFilter(),
             pageNumber = this.get('pageNumber'),
