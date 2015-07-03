@@ -360,7 +360,10 @@ var pickersStrategy = {
                 pickerPosition: "bottom-left"
             }).on('show', function(e){
                 var $elem = $('.modal-open > .datetimepicker');
-                $elem.attr('style', $elem.attr('style') + 'z-index:'+self.datePickerZindex()+' !important');
+                var zIndexStyle = 'z-index:'+self.datePickerZindex()+' !important';
+                if($elem.attr('style').indexOf(zIndexStyle) <= 0) {
+                    $elem.attr('style', $elem.attr('style') + zIndexStyle);
+                }
             });
         },
 
