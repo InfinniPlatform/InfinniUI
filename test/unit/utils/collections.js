@@ -112,7 +112,19 @@ describe("Collection", function () {
 
     });
 
-    //@TODO Comparator
+    describe("comparator", function () {
+        it("should has comparator", function () {
+            var
+                comparator = function (a, b) {
+                    return a - b
+                },
+                collection = new Collection([], null, comparator);
+
+            assert.isFunction(collection.comparator);
+            assert.equal(collection.comparator, comparator);
+        });
+    });
+
 
     describe("push()", function () {
         it("should add item", function () {
@@ -364,6 +376,35 @@ describe("Collection", function () {
             assert.isTrue(changed, 'Changed step 2');
             assert.equal('{"id":3,"title":"Three"},{"id":4,"title":"Four"}', String(collection));
 
+        });
+
+    });
+
+    describe("set()", function () {
+
+        it("should set objects", function () {
+            var collection = new Collection([
+                {key: 1, value: 'Apple'},
+                {key: 2, value: 'Banana'},
+                {key: 3, value: 'Pineapple'}
+            ], 'key');
+
+
+            collection.forEach(function (item) {
+                console.log(item.value);
+            });
+            assert.deepEqual(collection.toArray().map(function (item) {
+                return item.value;
+            }), ['Apple', 'Banana', 'Pineapple']);
+
+            collection.set([
+                {key: 1, value: 'Apple'},
+                {key: 2, value: 'Melon'}
+            ]);
+
+            assert.deepEqual(collection.toArray().map(function (item) {
+                return item.value;
+            }), ['Apple', 'Melon']);
         });
 
     });
@@ -819,6 +860,20 @@ describe("Collection", function () {
                 {value: 30, title: "30"}]);
         });
 
+    });
+
+    describe("clone()", function () {
+
+        it("should clone collection", function () {
+            var collection1 = new Collection(['A', 'B', 'C']);
+            var collection2 = collection1.clone();
+
+            collection1.add('X');
+            collection2.add('Y');
+
+            assert.deepEqual(collection1.toArray(), ['A', 'B', 'C', 'X']);
+            assert.deepEqual(collection2.toArray(), ['A', 'B', 'C', 'Y']);
+        });
     });
 
 

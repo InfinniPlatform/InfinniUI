@@ -299,7 +299,6 @@ CollectionStrategyId.prototype.sort = function (comparator) {
 };
 
 
-
 /**
  *
  * @private

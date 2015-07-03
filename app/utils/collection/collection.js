@@ -9,7 +9,7 @@ function Collection(items, idProperty, comparator) {
 }
 
 Collection.prototype.initStrategy = function () {
-    var idProperty =  this._idProperty;
+    var idProperty = this._idProperty;
     if (typeof idProperty === 'undefined' || idProperty === null || idProperty === '') {
         this._strategy = new CollectionStrategyIndex(this._comparator);
     } else {
@@ -29,6 +29,12 @@ Object.defineProperties(Collection.prototype, {
     idProperty: {
         get: function () {
             return this._idProperty;
+        },
+        enumerable: false
+    },
+    comparator: {
+        get: function () {
+            return this._comparator;
         },
         enumerable: false
     },
@@ -121,7 +127,7 @@ Collection.prototype.lastIndexOf = function (item, fromIndex) {
     var maxIndex = this.length - 1,
         index = (typeof fromIndex === 'undefined') ? maxIndex : fromIndex;
 
-    if(index < 0 || index > maxIndex) {
+    if (index < 0 || index > maxIndex) {
         return -1;
     }
     return this._strategy.lastIndexOf(item, index);
@@ -171,6 +177,15 @@ Collection.prototype.toArray = function () {
 
 Collection.prototype.sort = function (comparator) {
     return this._strategy.sort(comparator);
+};
+
+Collection.prototype.clone = function () {
+    var collection = new Collection(this.toArray(), this.idProperty, this.comparator);
+    return collection;
+};
+
+Collection.prototype.set = function (newItems) {
+    return this._strategy.set(newItems);
 };
 
 Collection.prototype.onChange = function (handler) {
