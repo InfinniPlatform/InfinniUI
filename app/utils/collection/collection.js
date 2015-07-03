@@ -145,6 +145,30 @@ Collection.prototype.contains = function (item, fromIndex) {
     return this._strategy.contains(item, index);
 };
 
+Collection.prototype.every = function (predicate, thisArgs) {
+    return this._strategy.every(predicate, this, thisArgs);
+};
+
+Collection.prototype.some = function (predicate, thisArgs) {
+    return this._strategy.some(predicate, this, thisArgs);
+};
+
+Collection.prototype.forEach = function (predicate, thisArgs) {
+    return this._strategy.forEach(predicate, this, thisArgs);
+};
+
+Collection.prototype.filter = function (predicate, thisArgs) {
+    return this._strategy.filter(predicate, this, thisArgs);
+};
+
+Collection.prototype.take = function (fromIndex, count) {
+    return this._strategy.take(fromIndex, count);
+};
+
+Collection.prototype.toArray = function () {
+    return this._strategy.toArray();
+};
+
 Collection.prototype.onChange = function (handler) {
     this._eventDispatcher.register(Collection.EVENTS.OnChange, handler);
 };

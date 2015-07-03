@@ -632,7 +632,7 @@ describe("Collection", function () {
 
         it("should check item in collection", function () {
             //When
-            var collection = new Collection([ 'A', 'B', 'C' ]);
+            var collection = new Collection(['A', 'B', 'C']);
             //Then
             assert.isTrue(collection.contains('A'), 'A');
             assert.isTrue(collection.contains('B'), 'B');
@@ -657,6 +657,129 @@ describe("Collection", function () {
             assert.isFalse(collection.contains({key: 2, value: 'B'}, 2), '!contains B');
             assert.isFalse(collection.contains({key: 3, value: 'C'}, 3), '!contains C');
         });
-    })
+    });
+
+    describe("every()", function () {
+
+        it("should check every item", function () {
+            var isBigEnough = function (item, index, collection) {
+                return item >= 10;
+            };
+
+            assert.isFalse(new Collection([12, 5, 8, 130, 44]).every(isBigEnough));
+            assert.isTrue(new Collection([12, 54, 18, 130, 44]).every(isBigEnough));
+        });
+
+        it("should check every object", function () {
+            var isBigEnough = function (item, index, collection) {
+                return item.value >= 10;
+            };
+
+            assert.isFalse(new Collection([
+                {id: 1, value: 12},
+                {id: 2, value: 5},
+                {id: 3, value: 8},
+                {id: 4, value: 130},
+                {id: 5, value: 44}]).every(isBigEnough));
+
+            assert.isTrue(new Collection([
+                {id: 1, value: 12},
+                {id: 2, value: 54},
+                {id: 3, value: 18},
+                {id: 4, value: 130},
+                {id: 5, value: 44}]).every(isBigEnough));
+        });
+    });
+
+    describe("some()", function () {
+
+        it("should check some item", function () {
+            function isBiggerThan10(item, index, collection) {
+                return item > 10;
+            }
+
+            assert.isFalse(new Collection([2, 5, 8, 1, 4]).some(isBiggerThan10));
+            assert.isTrue(new Collection([12, 5, 8, 1, 4]).some(isBiggerThan10));
+        });
+
+        it("should check some object", function () {
+            function isBiggerThan10(item, index, collection) {
+                return item.value > 10;
+            }
+
+            assert.isFalse(new Collection([
+                {id: 1, value: 2},
+                {id: 2, value: 5},
+                {id: 3, value: 8},
+                {id: 4, value: 1},
+                {id: 5, value: 4}]).some(isBiggerThan10));
+            assert.isTrue(new Collection([
+                {id: 1, value: 12},
+                {id: 2, value: 5},
+                {id: 3, value: 8},
+                {id: 4, value: 1},
+                {id: 5, value: 4}]).some(isBiggerThan10));
+        });
+
+    });
+
+    describe("forEach()", function () {
+
+        it("should call for each item", function () {
+            //When
+            var objects = ['A', 'B', 'C'];
+            var collection = new Collection(objects);
+            var result = [];
+            collection.forEach(function (item, index, collection) {
+                result.push(item);
+            });
+            //Then
+            assert.deepEqual(result, objects);
+        });
+
+    });
+
+    describe("filter()", function () {
+
+        it("should filter items", function () {
+            //When
+            var isBigEnough = function (item, index, collection) {
+                return item >= 10;
+            };
+            var collection = new Collection([12, 5, 8, 130, 44]);
+            //Then
+            assert.deepEqual(collection.filter(isBigEnough), [12, 130, 44]);
+        });
+
+    });
+
+    describe("take()", function () {
+        it("should return items", function () {
+            //When
+            var collection = new Collection(['A', 'B', 'C', 'D']);
+            //Then
+            assert.deepEqual(collection.take(1, 2), ['B', 'C']);
+            assert.deepEqual(collection.take(2), ['C', 'D']);
+        });
+    });
+
+    describe("toArray()", function () {
+
+        it("should return items", function () {
+            var collection = new Collection(['A', 'B', 'C']);
+            var array = collection.toArray();
+
+            collection.push('X');
+            array.push('Y');
+
+            var items = [];
+            collection.forEach(function (item) {
+                items.push(item);
+            });
+            assert.deepEqual(items, ['A', 'B', 'C', 'X']);
+            assert.deepEqual(array, ['A', 'B', 'C', 'Y']);
+        });
+    });
+
 
 });

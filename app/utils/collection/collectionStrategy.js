@@ -61,5 +61,78 @@ CollectionStrategy.prototype.contains = function (item, fromIndex) {
     return contains;
 };
 
+CollectionStrategy.prototype.every = function (predicate, collection, thisArg) {
+    var result = true;
+
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        if (predicate.call(thisArg, this._items[i], i, collection) !== true) {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+};
+
+CollectionStrategy.prototype.some = function (predicate, collection, thisArg) {
+    var result = false;
+
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        if (predicate.call(thisArg, this._items[i], i, collection) === true) {
+            result = true;
+            break;
+        }
+    }
+
+    return result;
+};
+
+CollectionStrategy.prototype.forEach = function (callback, collection, thisArg) {
+    var items = this._items;
+
+    for (var i = 0; i < items.length; i = i + 1) {
+        callback.call(thisArg, items[i], collection);
+    }
+};
+
+CollectionStrategy.prototype.filter = function (predicate, collection, thisArg) {
+    var result = [],
+        item;
+
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        item = this._items[i];
+        if (predicate.call(thisArg, item, i, collection)) {
+            result.push(item);
+        }
+    }
+    return result;
+};
+
+CollectionStrategy.prototype.take = function (fromIndex, count) {
+    var end;
+
+    if (typeof count !== 'undefined') {
+        end = fromIndex + count;
+    }
+    return this._items.slice(fromIndex, end);
+};
+
+CollectionStrategy.prototype.toArray = function () {
+    return this._items.slice();
+};
+
+
+/**
+ * @abstract
+ * @protected
+ */
+CollectionStrategy.prototype.isEqual = function (a, b) {
+    return a === b;
+};
+
+CollectionStrategy.prototype.isNotEqual = function (a, b) {
+    return !this.isEqual(a, b);
+};
+
 
 

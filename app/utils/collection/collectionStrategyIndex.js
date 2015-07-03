@@ -116,7 +116,6 @@ CollectionStrategyIndex.prototype.lastIndexOf = function (item, fromIndex) {
 
 
 
-
 CollectionStrategyIndex.prototype.removeById = function (id) {
     //@TODO Какой смысл этого метода для коллекции значений
 };
@@ -132,4 +131,3 @@ CollectionStrategyIndex.prototype.getById = function (id) {
 CollectionStrategyIndex.prototype._resetData = function () {
     this._items = [];
 };
-

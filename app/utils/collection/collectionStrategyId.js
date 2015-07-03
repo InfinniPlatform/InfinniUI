@@ -266,6 +266,10 @@ CollectionStrategyId.prototype.contains = function (item, fromIndex) {
     return contains;
 };
 
+CollectionStrategyId.prototype.move = function (oldIndex, newIndex) {
+    //@TODO
+};
+
 
 /**
  *
@@ -347,3 +351,6 @@ CollectionStrategyId.prototype._reindex = function (index, count) {
     }
 
 };
+
+
+
