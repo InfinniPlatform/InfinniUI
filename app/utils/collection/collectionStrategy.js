@@ -1,4 +1,5 @@
-function CollectionStrategy () {
+function CollectionStrategy (comparator) {
+    this._comparator = comparator;
     this._items = [];
 }
 
@@ -121,6 +122,14 @@ CollectionStrategy.prototype.toArray = function () {
     return this._items.slice();
 };
 
+
+CollectionStrategy
+/**
+ * @protected
+ */
+CollectionStrategy.prototype.checkIndex = function (index) {
+    return index >= 0 && index < this._items.length;
+};
 
 /**
  * @abstract

@@ -11,9 +11,9 @@ function Collection(items, idProperty, comparator) {
 Collection.prototype.initStrategy = function () {
     var idProperty =  this._idProperty;
     if (typeof idProperty === 'undefined' || idProperty === null || idProperty === '') {
-        this._strategy = new CollectionStrategyIndex();
+        this._strategy = new CollectionStrategyIndex(this._comparator);
     } else {
-        this._strategy = new CollectionStrategyId(idProperty);
+        this._strategy = new CollectionStrategyId(this._comparator, idProperty);
     }
 };
 
@@ -167,6 +167,10 @@ Collection.prototype.take = function (fromIndex, count) {
 
 Collection.prototype.toArray = function () {
     return this._strategy.toArray();
+};
+
+Collection.prototype.sort = function (comparator) {
+    return this._strategy.sort(comparator);
 };
 
 Collection.prototype.onChange = function (handler) {

@@ -1,5 +1,5 @@
-function CollectionStrategyId(idProperty) {
-    CollectionStrategy.apply(this);
+function CollectionStrategyId(comparator, idProperty) {
+    CollectionStrategy.call(this, comparator);
     this._idProperty = idProperty;
     this._resetData();
 }
@@ -266,9 +266,38 @@ CollectionStrategyId.prototype.contains = function (item, fromIndex) {
     return contains;
 };
 
-CollectionStrategyId.prototype.move = function (oldIndex, newIndex) {
-    //@TODO
+CollectionStrategyId.prototype.sort = function (comparator) {
+    var
+        cmp = comparator || this._comparator,
+        items = this._items,
+        copy = items.slice(),
+        changed = false;
+
+
+    items.sort(cmp);
+
+    for (var i = 0; i < items.length; i = i + 1) {
+        var item = items[i];
+        if (item === copy[i]) {
+            continue;
+        }
+        changed = true;
+
+        var id = item[this._idProperty];
+        var data = this._data[id];
+
+        if (!Array.isArray(data)) {
+            continue;
+        }
+
+        data.forEach(function (data) {
+            data.index = items.indexOf(data.item);
+        });
+    }
+
+    return changed;
 };
+
 
 
 /**

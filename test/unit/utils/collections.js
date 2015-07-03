@@ -781,5 +781,45 @@ describe("Collection", function () {
         });
     });
 
+    describe("sort()", function () {
+
+        it("should sort items", function () {
+            var collection = new Collection([3, 30, 2, 20, 1, 10]),
+                comparator = function (a, b) {
+                    return a - b
+                };
+
+            var changed = collection.sort(comparator);
+
+            assert.isTrue(changed);
+            assert.deepEqual(collection.toArray(), [1, 2, 3, 10, 20, 30]);
+        });
+
+        it("should sort items", function () {
+            var collection = new Collection([
+                    {value: 3, title: "3"},
+                    {value: 30, title: "30"},
+                    {value: 2, title: "2"},
+                    {value: 20, title: "20"},
+                    {value: 1, title: "1"},
+                    {value: 10, title: "10"}], 'value'),
+                comparator = function (a, b) {
+                    return a.value - b.value;
+                };
+
+            var changed = collection.sort(comparator);
+
+            assert.isTrue(changed);
+            assert.deepEqual(collection.toArray(), [
+                {value: 1, title: "1"},
+                {value: 2, title: "2"},
+                {value: 3, title: "3"},
+                {value: 10, title: "10"},
+                {value: 20, title: "20"},
+                {value: 30, title: "30"}]);
+        });
+
+    });
+
 
 });

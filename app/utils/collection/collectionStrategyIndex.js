@@ -1,5 +1,5 @@
-function CollectionStrategyIndex() {
-    CollectionStrategy.apply(this);
+function CollectionStrategyIndex(comparator) {
+    CollectionStrategy.call(this, comparator);
     this._resetData();
 }
 
@@ -113,8 +113,22 @@ CollectionStrategyIndex.prototype.lastIndexOf = function (item, fromIndex) {
     return this._items.lastIndexOf(item, fromIndex);
 };
 
+CollectionStrategyIndex.prototype.sort = function (comparator) {
+    var
+        cmp = comparator || this._comparator,
+        copy = this._items.slice(),
+        changed = false;
 
+    this._items.sort(cmp);
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        if (this._items[i] !== copy[i]) {
+            changed = true;
+            break;
+        }
+    }
 
+    return changed;
+};
 
 CollectionStrategyIndex.prototype.removeById = function (id) {
     //@TODO Какой смысл этого метода для коллекции значений
