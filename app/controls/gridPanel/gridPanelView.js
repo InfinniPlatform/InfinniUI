@@ -3,6 +3,6 @@ var GridPanelView = AbstractGridPanelView.extend({
 
     templates: {
         row: _.template('<div class="pl-grid-row row"></div>'),
-        cell: _.template('<div class="pl-grid-cell col-md-<%=colSpan%>"></div>')
+        cell: _.template('<div class="pl-grid-cell col-md-<%=colSpan%> col-xs-<%=colSpan%>"></div>')
     }
 });
