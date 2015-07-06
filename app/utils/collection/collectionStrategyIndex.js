@@ -130,10 +130,6 @@ CollectionStrategyIndex.prototype.sort = function (comparator) {
     return changed;
 };
 
-CollectionStrategyIndex.prototype.set = function (newItem) {
-    //@TODO Реализовать
-};
-
 CollectionStrategyIndex.prototype.removeById = function (id) {
     //@TODO Какой смысл этого метода для коллекции значений
 };

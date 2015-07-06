@@ -18,7 +18,7 @@ CollectionStrategy.prototype.toString = function () {
     }).join(',');
 };
 
-CollectionStrategy.prototype.getByIndex = function () {
+CollectionStrategy.prototype.getByIndex = function (index) {
     if (index < 0 || index >= this._items.length) {
         return;
     }
@@ -122,8 +122,30 @@ CollectionStrategy.prototype.toArray = function () {
     return this._items.slice();
 };
 
+CollectionStrategy.prototype.set = function (newItems) {
+    var newItem, _newItems = newItems.slice();
 
-CollectionStrategy
+
+    this.diff(newItems)
+        //Удалить
+        .forEach(function (item) {
+            this.remove(item);
+        }, this);
+
+    while (_newItems.length > 0) {
+        newItem = _newItems.pop();
+        var index = this.indexOf(newItem);
+        if (index === -1) {
+            //Добавить
+            this.add(newItem);
+        } else {
+            //Заменить
+            this.replace(this.getByIndex(index), newItem);
+        }
+    }
+
+};
+
 /**
  * @protected
  */
@@ -132,11 +154,49 @@ CollectionStrategy.prototype.checkIndex = function (index) {
 };
 
 /**
- * @abstract
  * @protected
  */
 CollectionStrategy.prototype.isEqual = function (a, b) {
-    return a === b;
+    return this._getValue(a) === this._getValue(b);
+};
+
+/**
+ * @protected
+ * @description Возвращает список элементов которые есть в коллекции но нет в указанном списке
+ * @param otherItems
+ * @returns {Array}
+ */
+CollectionStrategy.prototype.diff = function (otherItems) {
+    var
+        found,
+        currentItems = this._items,
+        items = [];
+
+    for (var i = 0; i < currentItems.length; i = i + 1) {
+        found = true;
+
+        for (var j = 0; j < otherItems.length; j = j + 1) {
+            if (this.isEqual(currentItems[i], otherItems[j])) {
+                found = false;
+                break;
+            }
+        }
+
+        if (found) {
+            items.push(currentItems[i]);
+        }
+    }
+
+    return items;
+};
+
+/**
+ * @param item
+ * @returns {*}
+ * @protected
+ */
+CollectionStrategy.prototype._getValue = function (item) {
+    return item;
 };
 
 CollectionStrategy.prototype.isNotEqual = function (a, b) {

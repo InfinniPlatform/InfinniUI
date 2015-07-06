@@ -381,6 +381,15 @@ describe("Collection", function () {
     });
 
     describe("set()", function () {
+        it("should set items", function () {
+            var collection = new Collection(['Apple', 'Banana', 'Pineapple']);
+
+            assert.deepEqual(collection.toArray(), ['Apple', 'Banana', 'Pineapple']);
+
+            collection.set(['Apple', 'Melon']);
+
+            assert.deepEqual(collection.toArray(), ['Apple', 'Melon']);
+        });
 
         it("should set objects", function () {
             var collection = new Collection([
@@ -389,10 +398,6 @@ describe("Collection", function () {
                 {key: 3, value: 'Pineapple'}
             ], 'key');
 
-
-            collection.forEach(function (item) {
-                console.log(item.value);
-            });
             assert.deepEqual(collection.toArray().map(function (item) {
                 return item.value;
             }), ['Apple', 'Banana', 'Pineapple']);
@@ -541,6 +546,16 @@ describe("Collection", function () {
             assert.equal(collection.getById(1), objects[0]);
             assert.equal(collection.getById(2), objects[1]);
             assert.equal(collection.getById(3), objects[2]);
+        });
+    });
+
+    describe("getByIndex()", function () {
+        it("should return item by index", function () {
+            var collection = new Collection(['A', 'B', 'C']);
+
+            assert.equal(collection.getByIndex(0), 'A');
+            assert.equal(collection.getByIndex(1), 'B');
+            assert.equal(collection.getByIndex(2), 'C');
         });
     });
 

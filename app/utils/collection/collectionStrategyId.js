@@ -89,23 +89,30 @@ CollectionStrategyId.prototype.replace = function (oldItem, newItem) {
                 continue;
             }
             this._items[i] = newItem;
-            this._storeData(newItem, i);
             changed = true;
         }
     } else {
         //выборка по ключу
         id = oldItem[this._idProperty];
-
-        if (id in this._data) {
-            var data = this._data[id];
-            for (var i = 0; i < data.length; i = i + 1) {
-                this._items.splice(data[i].index, 1, newItem);
-                this._data[i] = newItem;
-            }
-            changed = true;
-        }
+        changed = this._replaceById(id, newItem);
     }
 
+    return changed;
+};
+
+CollectionStrategyId.prototype._replaceById = function (id, item) {
+    var
+        items = this._items,
+        changed = false;
+
+    if (id in this._data) {
+        var data = this._data[id];
+
+        data.forEach(function (dataItem) {
+            items[dataItem.index] = dataItem.item = item;
+        });
+        changed = true;
+    }
     return changed;
 };
 
@@ -298,6 +305,9 @@ CollectionStrategyId.prototype.sort = function (comparator) {
     return changed;
 };
 
+CollectionStrategyId.prototype._getValue = function (item) {
+    return (item !== null && typeof item === 'object') ? item[this._idProperty] : item;
+};
 
 /**
  *
