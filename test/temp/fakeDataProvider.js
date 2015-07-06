@@ -12,6 +12,26 @@ function FakeDataProvider(mode) {
             "LastName": "Петров"
         },
         {
+            "Id": '3',
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "Id": '4',
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "Id": '5',
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "Id": '6',
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
             "Id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
@@ -37,6 +57,7 @@ function FakeDataProvider(mode) {
 
             var result = [];
             var allItems = items;
+
             for (var i = 0; i < pageSize; i++) {
                 var itemIndex = i + (pageNumber * pageSize);
                 if (itemIndex < allItems.length) {
@@ -46,10 +67,22 @@ function FakeDataProvider(mode) {
                     break;
                 }
             }
-            resultCallback(result);
+
+            if(criteriaList && criteriaList.length == 1 && criteriaList[0].CriteriaType == 1){
+                result = _.filter(result, function(item){
+                    return item.Id == criteriaList[0].Value;
+                });
+            }
+
+            setTimeout(function(){
+                resultCallback(result);
+            }, 100);
+
         }
         else {
-            resultCallback(itemsUpdated);
+            setTimeout(function(){
+                resultCallback(itemsUpdated);
+            }, 100);
         }
     };
 

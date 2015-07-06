@@ -20,7 +20,9 @@ var BaseDataSource = Backbone.Model.extend({
 
         fillCreatedItem: true,
         isUpdateSuspended: false,
-        showingWarnings: false
+        showingWarnings: false,
+
+        isRequestInProcess: false
 
     },
 
@@ -74,7 +76,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     resumeUpdate: function () {
         this.set('isUpdateSuspended', false);
-        this.updateItems();
     },
 
     getPageNumber: function () {
@@ -131,11 +132,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-
-    _updateLocalItems: function(warnings){
-
-    },
-
     isDataReady: function(){
         return this.get('isDataReady');
     },
@@ -156,24 +152,46 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     updateItems: function(onSuccess, onError){
-        var filters = this.getFilter(),
-            pageNumber = this.get('pageNumber'),
-            pageSize = this.get('pageSize'),
-            sorting = this.get('sorting'),
-            dataProvider = this.get('dataProvider'),
-            that = this;
+        if (!this.get('isUpdateSuspended')){
+            var filters = this.getFilter(),
+                pageNumber = this.get('pageNumber'),
+                pageSize = this.get('pageSize'),
+                sorting = this.get('sorting'),
+                dataProvider = this.get('dataProvider'),
+                that = this;
 
-        dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
+            this.set('isRequestInProcess', true);
+            dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
 
-            that.set('items', data);
-            that.set('isDataReady', true);
-            onSuccess(data);
+                that.set('isRequestInProcess', false);
 
-        }, onError );
+                that.set('items', data);
+                that.set('isDataReady', true);
+
+                if(onSuccess){
+                    onSuccess(data);
+                }
+
+            }, onError );
+        }
+
     },
 
     getFilter: function(){
-        this.get('criteriaList');
+        return this.get('criteriaList');
+    },
+
+    setFilter: function(filter){
+        this.set('criteriaList', filter);
+        this.updateItems();
+    },
+
+    setIdFilter: function(itemId){
+        this.setFilter([{
+            "Property": "Id",
+            "Value": itemId,
+            "CriteriaType": 1
+        }]);
     }
 
 
