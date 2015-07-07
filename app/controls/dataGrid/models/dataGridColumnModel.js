@@ -9,7 +9,8 @@ var DataGridColumnModel = Backbone.Model.extend({
         resizable: true,
         visible: true,
         itemFormat: null,
-        sortable: false
+        sortable: false,
+        text: ''
     }
 
 }, {
