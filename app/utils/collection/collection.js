@@ -123,6 +123,24 @@ Collection.prototype.getById = function (id) {
     return item;
 };
 
+Collection.prototype.removeAt = function (index) {
+    var changed = this._strategy.removeAt(index);
+    return changed;
+};
+
+Collection.prototype.removeAll = function (items) {
+    var changed = this._strategy.removeAll(items);
+    return changed;
+};
+
+Collection.prototype.removeRange = function (fromIndex, count) {
+    if (typeof count === 'undefined') {
+        count = this.length;
+    }
+    var changed = this._strategy.removeRange(fromIndex, count);
+    return changed;
+};
+
 Collection.prototype.lastIndexOf = function (item, fromIndex) {
     var maxIndex = this.length - 1,
         index = (typeof fromIndex === 'undefined') ? maxIndex : fromIndex;

@@ -146,6 +146,17 @@ CollectionStrategy.prototype.set = function (newItems) {
 
 };
 
+CollectionStrategy.prototype.removeAll = function (items) {
+    var changed = false;
+    items.forEach(function (item) {
+        if (this.remove(item)) {
+            changed = true;
+        }
+    }, this);
+
+    return changed;
+};
+
 /**
  * @protected
  */

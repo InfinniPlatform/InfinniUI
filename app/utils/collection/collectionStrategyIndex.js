@@ -91,7 +91,7 @@ CollectionStrategyIndex.prototype.pop = function () {
 CollectionStrategyIndex.prototype.remove = function (item) {
     var index,
         changed = false;
-    while(true) {
+    while (true) {
         index = this._items.indexOf(item);
 
         if (index === -1) {
@@ -105,7 +105,7 @@ CollectionStrategyIndex.prototype.remove = function (item) {
 };
 
 CollectionStrategyIndex.prototype.indexOf = function (item, fromIndex) {
-  return this._items.indexOf(item, fromIndex);
+    return this._items.indexOf(item, fromIndex);
 };
 
 
@@ -128,6 +128,17 @@ CollectionStrategyIndex.prototype.sort = function (comparator) {
     }
 
     return changed;
+};
+
+CollectionStrategyIndex.prototype.removeAt = function (index) {
+    var items = this._items.splice(index, 1);
+    return items.length > 0;
+};
+
+CollectionStrategyIndex.prototype.removeRange = function (fromIndex, count) {
+    return this._items
+            .splice(fromIndex, count)
+            .length > 0;
 };
 
 CollectionStrategyIndex.prototype.removeById = function (id) {

@@ -166,6 +166,29 @@ CollectionStrategyId.prototype.remove = function (item) {
     return changed;
 };
 
+CollectionStrategyId.prototype.removeAt = function (index) {
+    var changed = false,
+        item;
+    if (index >= 0 && index < this._items.length) {
+        item = this._items.splice(index, 1).pop();
+        if (item !== null && typeof item === 'object') {
+            var id = item[this._idProperty];
+            var data = this._data[id];
+            if (Array.isArray(data)) {
+                for (var i = 0; i < data.length; i = i + 1) {
+                    if (data[i].index === index) {
+                        data.splice(i, 1);
+                        this._reindex(index, -1);
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return changed;
+};
 
 CollectionStrategyId.prototype.removeById = function (id) {
     var
@@ -178,8 +201,10 @@ CollectionStrategyId.prototype.removeById = function (id) {
                 return _items[data.index];
             })
             .forEach(function (item) {
-                _items.splice(_items.indexOf(item), 1);
-            });
+                var index = _items.indexOf(item);
+                _items.splice(index, 1);
+                this._reindex(index, -1);
+            }, this);
 
         changed = this._data[id].length > 0;
         this._data[id] = [];
@@ -305,6 +330,49 @@ CollectionStrategyId.prototype.sort = function (comparator) {
     return changed;
 };
 
+CollectionStrategyId.prototype.removeRange = function (fromIndex, count) {
+    var indices = [], total;
+
+    for (var i = fromIndex; i < fromIndex + count; i = i + 1) {
+        indices.push({
+            index: i,
+            item: this._items[i]
+        });
+    }
+
+    this._items.splice(fromIndex, count);
+    total = indices.length;
+
+    if (total === 0) {
+        return false;
+    }
+
+    while (indices.length > 0) {
+        var indexItem = indices.pop(),
+            item = indexItem.item,
+            index = indexItem.index;
+
+        if (item === null || typeof item !== 'object') {
+            continue;
+        }
+
+        var id = item[this._idProperty];
+        var data = this._data[id];
+
+        if (Array.isArray(data)) {
+            for (var i = 0; i < data.length; i = i + 1) {
+                if (data[i].index === index) {
+                    data.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    this._reindex(fromIndex, total);
+    return true;
+};
+
 CollectionStrategyId.prototype._getValue = function (item) {
     return (item !== null && typeof item === 'object') ? item[this._idProperty] : item;
 };
@@ -382,7 +450,7 @@ CollectionStrategyId.prototype._reindex = function (index, count) {
     for (var key in this._data) {
         items = this._data[key];
         items.forEach(function (item) {
-            if (item.index < index) {
+            if (count > 0 && item.index < index || count < 0 && item.index > index) {
                 item.index += count;
             }
         });

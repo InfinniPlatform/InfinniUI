@@ -77,6 +77,37 @@ describe("Collection", function () {
 
     });
 
+    describe("idProperty", function () {
+        it("should return undefined", function () {
+            // When
+            var collection = new Collection();
+            // Then
+            assert.isUndefined(collection.idProperty);
+        });
+
+        it("should return idProperty", function () {
+            // When
+            var collection = new Collection([], idProperty);
+            // Then
+            assert.equal(collection.idProperty, idProperty);
+        });
+
+    });
+
+
+    describe("comparator", function () {
+        it("should has comparator", function () {
+            var
+                comparator = function (a, b) {
+                    return a - b
+                },
+                collection = new Collection([], null, comparator);
+
+            assert.isFunction(collection.comparator);
+            assert.equal(collection.comparator, comparator);
+        });
+    });
+
     describe("size()", function () {
         it("should return size items collection", function () {
             // When
@@ -95,36 +126,6 @@ describe("Collection", function () {
         });
     });
 
-    describe("idProperty", function () {
-        it("should return undefined", function () {
-            // When
-            var collection = new Collection();
-            // Then
-            assert.isUndefined(collection.idProperty);
-        });
-
-        it("should return idProperty", function () {
-            // When
-            var collection = new Collection([], idProperty);
-            // Then
-            assert.equal(collection.idProperty, idProperty);
-        });
-
-    });
-
-    describe("comparator", function () {
-        it("should has comparator", function () {
-            var
-                comparator = function (a, b) {
-                    return a - b
-                },
-                collection = new Collection([], null, comparator);
-
-            assert.isFunction(collection.comparator);
-            assert.equal(collection.comparator, comparator);
-        });
-    });
-
 
     describe("push()", function () {
         it("should add item", function () {
@@ -135,17 +136,17 @@ describe("Collection", function () {
 
             changed = collection.push('A');
             assert.isTrue(changed);
-            assert.equal('"A"', String(collection));
+            assert.equal(String(collection), '"A"');
 
 
             changed = collection.push('B');
             assert.isTrue(changed);
-            assert.equal('"A","B"', String(collection));
+            assert.equal(String(collection), '"A","B"');
 
 
             changed = collection.push('C');
             assert.isTrue(changed);
-            assert.equal('"A","B","C"', String(collection));
+            assert.equal(String(collection), '"A","B","C"');
         });
 
         it("should add objects", function () {
@@ -161,17 +162,17 @@ describe("Collection", function () {
 
             changed = collection.push(objects[0]);
             assert.isTrue(changed, 'One changed');
-            assert.equal('{"id":1,"title":"One"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"}');
 
 
             changed = collection.push(objects[1]);
             assert.isTrue(changed, 'Two changed');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
 
 
             changed = collection.push(objects[2]);
             assert.isTrue(changed, 'Three changed');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}');
         });
 
     });
@@ -185,17 +186,17 @@ describe("Collection", function () {
 
             changed = collection.add('A');
             assert.isTrue(changed);
-            assert.equal('"A"', String(collection));
+            assert.equal(String(collection), '"A"');
 
 
             changed = collection.add('B');
             assert.isTrue(changed);
-            assert.equal('"A","B"', String(collection));
+            assert.equal(String(collection), '"A","B"');
 
 
             changed = collection.add('C');
             assert.isTrue(changed);
-            assert.equal('"A","B","C"', String(collection));
+            assert.equal(String(collection), '"A","B","C"');
         });
 
         it("should add objects", function () {
@@ -211,17 +212,17 @@ describe("Collection", function () {
 
             changed = collection.add(objects[0]);
             assert.isTrue(changed, 'One changed');
-            assert.equal('{"id":1,"title":"One"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"}');
 
 
             changed = collection.add(objects[1]);
             assert.isTrue(changed, 'Two changed');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
 
 
             changed = collection.add(objects[2]);
             assert.isTrue(changed, 'Three changed');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}');
         });
     });
 
@@ -234,12 +235,12 @@ describe("Collection", function () {
 
             changed = collection.addAll(['A', 'B']);
             assert.isTrue(changed);
-            assert.equal('"A","B"', String(collection));
+            assert.equal(String(collection), '"A","B"');
 
 
             changed = collection.addAll(['C', 'D']);
             assert.isTrue(changed);
-            assert.equal('"A","B","C","D"', String(collection));
+            assert.equal(String(collection), '"A","B","C","D"');
         });
 
         it("should add all objects", function () {
@@ -250,12 +251,12 @@ describe("Collection", function () {
 
             changed = collection.addAll([{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed);
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
 
 
             changed = collection.addAll([{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed);
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"},{"id":4,"title":"Four"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"},{"id":4,"title":"Four"}');
         });
     });
 
@@ -268,17 +269,17 @@ describe("Collection", function () {
 
             changed = collection.insert(0, 'A');
             assert.isTrue(changed, 'Changed on insert "A"');
-            assert.equal('"A"', String(collection));
+            assert.equal(String(collection), '"A"');
 
 
             changed = collection.insert(0, 'B');
             assert.isTrue(changed, 'Changed on insert "B"');
-            assert.equal('"B","A"', String(collection));
+            assert.equal(String(collection), '"B","A"');
 
 
             changed = collection.insert(0, 'C');
             assert.isTrue(changed, 'Changed on insert "C"');
-            assert.equal('"C","B","A"', String(collection));
+            assert.equal(String(collection), '"C","B","A"');
         });
 
         it("should insert objects", function () {
@@ -289,17 +290,17 @@ describe("Collection", function () {
 
             changed = collection.insert(0, {id: 1, title: 'One'});
             assert.isTrue(changed, 'One changed');
-            assert.equal('{"id":1,"title":"One"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"}');
 
 
             changed = collection.insert(0, {id: 2, title: 'Two'});
             assert.isTrue(changed, 'Two changed');
-            assert.equal('{"id":2,"title":"Two"},{"id":1,"title":"One"}', String(collection));
+            assert.equal(String(collection), '{"id":2,"title":"Two"},{"id":1,"title":"One"}');
 
 
             changed = collection.insert(0, {id: 3, title: 'Three'});
             assert.isTrue(changed, 'Three changed');
-            assert.equal('{"id":3,"title":"Three"},{"id":2,"title":"Two"},{"id":1,"title":"One"}', String(collection));
+            assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":2,"title":"Two"},{"id":1,"title":"One"}');
         });
     });
 
@@ -313,12 +314,12 @@ describe("Collection", function () {
 
             changed = collection.insertAll(0, ['A', 'B']);
             assert.isTrue(changed, 'Changed on insert ["A", "B"]');
-            assert.equal('"A","B"', String(collection));
+            assert.equal(String(collection), '"A","B"');
 
 
             changed = collection.insertAll(0, ['C', 'D']);
             assert.isTrue(changed, 'Changed on insert ["C", "D"');
-            assert.equal('"C","D","A","B"', String(collection));
+            assert.equal(String(collection), '"C","D","A","B"');
         });
 
         it("should insert all objects", function () {
@@ -329,13 +330,12 @@ describe("Collection", function () {
 
             changed = collection.insertAll(0, [{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed, 'Changed step 1');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
 
 
             changed = collection.insertAll(0, [{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed, 'Changed step 2');
-            assert.equal('{"id":3,"title":"Three"},{"id":4,"title":"Four"},{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
-
+            assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":4,"title":"Four"},{"id":1,"title":"One"},{"id":2,"title":"Two"}');
         });
     });
 
@@ -349,16 +349,16 @@ describe("Collection", function () {
 
             changed = collection.reset(['A', 'B']);
             assert.isTrue(changed, 'Changed on step 1');
-            assert.equal('"A","B"', String(collection));
+            assert.equal(String(collection), '"A","B"');
 
 
             changed = collection.reset(['C', 'D']);
             assert.isTrue(changed, 'Changed on step 2');
-            assert.equal('"C","D"', String(collection));
+            assert.equal(String(collection), '"C","D"');
 
             changed = collection.reset(['C', 'D']);
             assert.isFalse(changed, 'Not changed on step 3');
-            assert.equal('"C","D"', String(collection));
+            assert.equal(String(collection), '"C","D"');
         });
 
         it("should reset objects", function () {
@@ -369,12 +369,12 @@ describe("Collection", function () {
 
             changed = collection.reset([{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed, 'Changed step 1');
-            assert.equal('{"id":1,"title":"One"},{"id":2,"title":"Two"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
 
 
             changed = collection.reset([{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed, 'Changed step 2');
-            assert.equal('{"id":3,"title":"Three"},{"id":4,"title":"Four"}', String(collection));
+            assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":4,"title":"Four"}');
 
         });
 
@@ -421,7 +421,7 @@ describe("Collection", function () {
             var changed = collection.replace('C', 'D');
             //Then
             assert.isTrue(changed);
-            assert.equal('"A","B","D"', String(collection));
+            assert.equal(String(collection), '"A","B","D"');
         });
 
         it("should replace object", function () {
@@ -430,7 +430,7 @@ describe("Collection", function () {
             var changed = collection.replace({id: 2, title: "B"}, {id: 3, title: "C"});
 
             assert.isTrue(changed);
-            assert.equal('{"id":1,"title":"A"},{"id":3,"title":"C"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"A"},{"id":3,"title":"C"}');
         })
     });
 
@@ -495,11 +495,11 @@ describe("Collection", function () {
 
             change = collection.remove({id: 2, title: "Two"});
             assert.isTrue(change);
-            assert.equal('{"id":1,"title":"One"},{"id":3,"title":"Three"}', String(collection));
+            assert.equal(String(collection), '{"id":1,"title":"One"},{"id":3,"title":"Three"}');
 
             change = collection.remove({id: 1, title: "One"});
             assert.isTrue(change);
-            assert.equal('{"id":3,"title":"Three"}', String(collection));
+            assert.equal(String(collection), '{"id":3,"title":"Three"}');
 
             change = collection.remove({id: 3, title: "Three"});
             assert.isTrue(change);
@@ -519,16 +519,115 @@ describe("Collection", function () {
             ], 'key'), changed;
 
             changed = collection.removeById(2);
-            assert.equal('{"key":1,"value":"A"},{"key":3,"value":"C"}', String(collection));
+            assert.equal(String(collection), '{"key":1,"value":"A"},{"key":3,"value":"C"}');
             assert.isTrue(changed, 'deleted 2');
 
             changed = collection.removeById(1);
-            assert.equal('{"key":3,"value":"C"}', String(collection));
+            assert.equal(String(collection), '{"key":3,"value":"C"}');
             assert.isTrue(changed, 'deleted 1');
 
             changed = collection.removeById(3);
             assert.equal(collection.length, 0);
             assert.isTrue(changed, 'deleted 3');
+        });
+
+    });
+
+    describe("removeAt()", function () {
+
+        it("should remove item by index", function () {
+            var collection = new Collection(['A', 'B', 'C']);
+
+            assert.isTrue(collection.removeAt(1));
+            assert.deepEqual(collection.toArray(), ['A', 'C']);
+
+            assert.isTrue(collection.removeAt(0));
+            assert.deepEqual(collection.toArray(), ['C']);
+
+            assert.isTrue(collection.removeAt(0));
+            assert.deepEqual(collection.toArray(), []);
+        });
+
+        it("should remove object by index", function () {
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'}
+            ], 'key'), changed;
+
+            assert.isTrue(collection.removeAt(1));
+            assert.deepEqual(collection.toArray(), [
+                {key: 1, value: 'A'},
+                {key: 3, value: 'C'}
+            ]);
+
+            assert.isTrue(collection.removeAt(0));
+            assert.deepEqual(collection.toArray(), [
+                {key: 3, value: 'C'}
+            ]);
+
+            assert.isTrue(collection.removeAt(0));
+            assert.deepEqual(collection.toArray(), []);
+        });
+
+    });
+
+    describe("removeAll()", function () {
+        it("should remove all item", function () {
+            var collection = new Collection(['A', 'B', 'C', 'D']);
+            assert.isTrue(collection.removeAll(['A', 'C']));
+            assert.deepEqual(collection.toArray(), ['B', 'D']);
+
+            assert.isTrue(collection.removeAll(['B', 'D']));
+            assert.deepEqual(collection.toArray(), []);
+        });
+
+        it("should remove all objects", function () {
+            var collection = new Collection([
+                {key: 1, value: 'A'},
+                {key: 2, value: 'B'},
+                {key: 3, value: 'C'},
+                {key: 4, value: 'D'}
+            ], 'key');
+
+            assert.isTrue(collection.removeAll([
+                {key: 1, value: 'A'},
+                {key: 3, value: 'C'}]));
+
+            assert.deepEqual(collection.toArray(), [
+                {key: 2, value: 'B'},
+                {key: 4, value: 'D'}]);
+
+            assert.isTrue(collection.removeAll([
+                {key: 2, value: 'B'},
+                {key: 4, value: 'D'}]));
+            assert.deepEqual(collection.toArray(), []);
+        });
+    });
+
+    describe("removeRange", function () {
+
+        it("should remove range items", function () {
+            var collection = new Collection(['A', 'B', 'C', 'D']);
+            assert.isTrue(collection.removeRange(1, 2));
+            assert.deepEqual(collection.toArray(), ['A', 'D']);
+
+            assert.isTrue(collection.removeRange(0));
+            assert.deepEqual(collection.toArray(), []);
+        });
+
+        it("should remove range items", function () {
+            var collection = new Collection([
+                null,
+                null,
+                {key: 1, value: 'A'}, {key: 2, value: 'B'}
+            ], 'key');
+
+            assert.isTrue(collection.removeRange(1, 2));
+            assert.deepEqual(collection.toArray(), [null, {key: 2, value: 'B'}]);
+
+            assert.isTrue(collection.removeRange(0));
+            assert.deepEqual(collection.toArray(), []);
         });
 
     });
