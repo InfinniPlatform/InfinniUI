@@ -4,8 +4,15 @@ function CollectionStrategyId(comparator, idProperty) {
     this._resetData();
 }
 
+
 CollectionStrategyId.prototype = Object.create(CollectionStrategy.prototype);
 CollectionStrategyId.prototype.constructor = CollectionStrategyId;
+
+CollectionStrategyId.prototype.clear = function () {
+    var changed = this._items.length > 0;
+    this._resetData();
+    return changed;
+};
 
 CollectionStrategyId.prototype.push = function (newItem) {
     this._items.push(newItem);

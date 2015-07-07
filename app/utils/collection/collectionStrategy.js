@@ -109,6 +109,16 @@ CollectionStrategy.prototype.filter = function (predicate, collection, thisArg) 
     return result;
 };
 
+CollectionStrategy.prototype.removeEvery = function (predicate, collection, thisArg) {
+    var changed = false;
+    this.filter(predicate, collection, thisArg)
+        .forEach(function (item) {
+            changed = this.remove(item) || changed;
+        }, this);
+
+    return changed;
+};
+
 CollectionStrategy.prototype.take = function (fromIndex, count) {
     var end;
 

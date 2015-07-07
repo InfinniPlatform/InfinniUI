@@ -6,6 +6,12 @@ function CollectionStrategyIndex(comparator) {
 CollectionStrategyIndex.prototype = Object.create(CollectionStrategy.prototype);
 CollectionStrategyIndex.prototype.constructor = CollectionStrategyIndex;
 
+CollectionStrategyIndex.prototype.clear = function () {
+    var changed = this._items.length > 0;
+    this._resetData();
+    return changed;
+};
+
 CollectionStrategyIndex.prototype.push = function (newItem) {
     this._items.push(newItem);
     return true;

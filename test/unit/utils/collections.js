@@ -632,6 +632,63 @@ describe("Collection", function () {
 
     });
 
+    describe("removeEvery()", function () {
+
+        it("should remove every item", function () {
+            var
+                changed,
+                collection = new Collection([1, 10, 2, 20, 3, 30]);
+
+            changed = collection.removeEvery(function (item, index, collection) {
+                return item >= 10;
+            });
+            assert.isTrue(changed);
+            assert.deepEqual(collection.toArray(), [1, 2, 3]);
+        });
+
+        it("should remove every object", function () {
+            var changed,
+                collection = new Collection([
+                    null,
+                    null,
+                    {key: 1, value: 'A'},
+                    {key: 2, value: 'B'},
+                    {key: 3, value: 'A'}
+                ], 'key');
+
+            changed = collection.removeEvery(function (item, index, collection) {
+                return item && item.key % 2 === 1;
+            });
+
+            assert.isTrue(changed);
+            assert.deepEqual(collection.toArray(), [
+                null,
+                null,
+                {key: 2, value: 'B'}
+            ]);
+
+            changed = collection.removeEvery(function (item, index, collection) {
+                return item === null;
+            });
+
+            assert.isTrue(changed);
+            assert.deepEqual(collection.toArray(), [
+                {key: 2, value: 'B'}
+            ]);
+
+
+        });
+    });
+
+    describe("clear()", function () {
+        it("should clear collection", function () {
+            var collection = new Collection([ 'A', 'B', 'C' ]);
+
+            assert.isTrue(collection.clear());
+            assert.equal(collection.length, 0);
+        });
+    });
+
     describe("getById()", function () {
 
         it("should get object by id", function () {
@@ -656,6 +713,40 @@ describe("Collection", function () {
             assert.equal(collection.getByIndex(1), 'B');
             assert.equal(collection.getByIndex(2), 'C');
         });
+    });
+
+    describe("find()", function () {
+
+        it("should return item", function () {
+            //When
+            var collection = new Collection([1, 3, 5, 6, 7, 9, 11, 12]);
+            //Then
+            var item = collection.find(function (item, index, collection) {
+                return item % 2 === 0;
+            });
+            assert.equal(item, 6);
+        });
+
+        it("should return object", function () {
+            //When
+            var objects = [
+                    {key: 1, value: 'A'},
+                    {key: 3, value: 'B'},
+                    {key: 5, value: 'C'},
+                    {key: 6, value: 'A'},
+                    {key: 7, value: 'B'},
+                    {key: 9, value: 'C'},
+                    {key: 11, value: 'B'},
+                    {key: 12, value: 'C'}
+                ],
+                collection = new Collection(objects, 'key');
+            //Then
+            var item = collection.find(function (item, index, collection) {
+                return item.key % 2 === 0;
+            });
+            assert.equal(item, objects[3]);
+        });
+
     });
 
     describe("indexOf()", function () {
@@ -745,40 +836,6 @@ describe("Collection", function () {
                 return item.key % 2 === 0;
             });
             assert.equal(index, 3);
-        });
-
-    });
-
-    describe("find()", function () {
-
-        it("should return item", function () {
-            //When
-            var collection = new Collection([1, 3, 5, 6, 7, 9, 11, 12]);
-            //Then
-            var item = collection.find(function (item, index, collection) {
-                return item % 2 === 0;
-            });
-            assert.equal(item, 6);
-        });
-
-        it("should return object", function () {
-            //When
-            var objects = [
-                    {key: 1, value: 'A'},
-                    {key: 3, value: 'B'},
-                    {key: 5, value: 'C'},
-                    {key: 6, value: 'A'},
-                    {key: 7, value: 'B'},
-                    {key: 9, value: 'C'},
-                    {key: 11, value: 'B'},
-                    {key: 12, value: 'C'}
-                ],
-                collection = new Collection(objects, 'key');
-            //Then
-            var item = collection.find(function (item, index, collection) {
-                return item.key % 2 === 0;
-            });
-            assert.equal(item, objects[3]);
         });
 
     });

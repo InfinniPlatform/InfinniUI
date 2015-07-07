@@ -163,6 +163,14 @@ Collection.prototype.find = function (predicate, thisArgs) {
     return this._strategy.find(predicate, this, thisArgs);
 };
 
+Collection.prototype.removeEvery = function (predicate, thisArgs) {
+    return this._strategy.removeEvery(predicate, this, thisArgs);
+};
+
+Collection.prototype.clear = function () {
+    return this._strategy.clear();
+};
+
 Collection.prototype.contains = function (item, fromIndex) {
     var index = typeof fromIndex === 'undefined' ? 0 : fromIndex;
 
