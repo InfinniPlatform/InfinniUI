@@ -20,7 +20,7 @@ describe('DataBindingBuilder', function () {
         var metadata = {
             Source: 'My_Source',
             Property: '',
-            Mode: 'toSource',
+            Mode: 'ToSource',
             Converter: {
                 toSource: function(){},
                 toElement: function(){}

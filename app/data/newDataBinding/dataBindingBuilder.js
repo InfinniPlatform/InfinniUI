@@ -17,7 +17,7 @@ DataBindingBuilder.prototype.build = function (builder, parent, metadata) {
     result.bindSource(source, metadata.Property);
 
     if(metadata.Mode){
-        result.setMode(BindingModes[metadata.Mode]);
+        result.setMode(metadata.Mode);
     }
 
     if(metadata.Converter){

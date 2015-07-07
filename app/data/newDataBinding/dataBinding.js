@@ -1,7 +1,7 @@
 var BindingModes = {
-    twoWay: 0,
-    toSource: 1,
-    toElement: 2
+    twoWay: 'TwoWay',
+    toSource: 'ToSource',
+    toElement: 'ToElement'
 };
 
 
@@ -91,7 +91,7 @@ var DataBinding = Backbone.Model.extend({
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
 
-        if(mode != BindingModes.toElement && argument.property == elementProperty){
+        if(this.shouldRefreshSource(mode) && argument.property == elementProperty){
             var value = element.getProperty(elementProperty);
             var converter = this.get('converter');
 
@@ -113,7 +113,7 @@ var DataBinding = Backbone.Model.extend({
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
 
-        if(mode != BindingModes.toSource && argument.property == sourceProperty){
+        if(this.shouldRefreshElement(mode) && argument.property == sourceProperty){
             var value = source.getProperty(sourceProperty);
             var converter = this.get('converter');
 
@@ -123,5 +123,13 @@ var DataBinding = Backbone.Model.extend({
 
             element.setProperty(elementProperty, value);
         }
+    },
+
+    shouldRefreshSource: function(mode){
+        return mode == BindingModes.twoWay || mode == BindingModes.toSource;
+    },
+
+    shouldRefreshElement: function(mode){
+        return mode == BindingModes.twoWay || mode == BindingModes.toElement;
     }
 });

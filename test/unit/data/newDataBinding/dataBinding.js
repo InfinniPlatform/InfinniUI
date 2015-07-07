@@ -175,6 +175,52 @@ describe('DataBinding', function () {
         assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
     });
 
+    it('should not refresh element if mode is wrong', function () {
+        // Given
+        var dataBinding = new DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
+    });
+
+    it('should not refresh source if mode is wrong', function () {
+        // Given
+        var dataBinding = new DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
+    });
+
     it('should convert value if have converter', function () {
         // Given
         var dataBinding = new DataBinding();
