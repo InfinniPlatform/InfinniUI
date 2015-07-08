@@ -27,7 +27,7 @@ describe('DocumentDataSource', function () {
             });
 
             assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
-            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request in process');
+            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
 
             //When
             dataSource.updateItems(
@@ -87,17 +87,28 @@ describe('DocumentDataSource', function () {
                 view: fakeView()
             });
 
-            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
+            dataSource.suspendUpdate();
+            dataSource.setPageSize(5);
+            dataSource.resumeUpdate();
 
             //When
             dataSource.updateItems(
                 function(data){
 
-                    // Then
-                    assert.isTrue(data.length > 0, 'data provider returns items');
-                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
-                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
-                    done();
+                    assert.isTrue(dataSource.getItems().length == 5, 'data provider returns 5 items');
+
+                    dataSource.suspendUpdate();
+                    dataSource.setPageNumber(1);
+                    dataSource.resumeUpdate();
+                    dataSource.updateItems(
+                        function(data){
+
+                            // Then
+                            assert.isTrue(dataSource.getItems().length == 2, 'data provider returns 2 items');
+                            done();
+
+                        }
+                    );
 
                 }
             );

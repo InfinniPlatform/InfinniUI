@@ -2,7 +2,7 @@ var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
         idProperty: 'Id',
-        pageNumber: null,
+        pageNumber: 0,
         pageSize: 15,
         sorting: null,
         criteriaList: [],
@@ -83,7 +83,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageNumber: function (value) {
-        if(Number.isInteger(value) || value < 0){
+        if(!Number.isInteger(value) || value < 0){
             throw 'BaseDataSource.setPageNumber() «аданно недопустимое значение: ' + value + '. ƒолжно быть целое, неотрицательное число.';
         }
 
