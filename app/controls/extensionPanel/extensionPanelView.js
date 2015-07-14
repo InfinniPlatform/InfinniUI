@@ -22,11 +22,12 @@
     initAndRenderExtensionObject: function () {
         var extensionName = this.model.get('extensionName'),
             context = this.model.getContext(),
-            parameters = this.model.get('parameters');
+            parameters = this.model.get('parameters'),
+            items = this.model.get('items');
 
         this.extensionObject = new window[extensionName]();
         var self = this;
-        var $render = self.extensionObject.render(self.$el, parameters, context);
+        var $render = self.extensionObject.render(self.$el, parameters, context, items);
         if($render){
             self.$el
                 .empty()

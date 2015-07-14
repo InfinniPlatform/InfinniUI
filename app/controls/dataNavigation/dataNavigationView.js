@@ -28,6 +28,7 @@ var DataNavigationView = ControlView.extend({
         if (typeof this.onDataSourceItemsUpdated !== 'undefined') {
             this.onDataSourceItemsUpdated.unsubscribe();
         }
+
         this.onDataSourceItemsUpdated = dataSource.onItemsUpdated(function () {
             self.initNumberOfPage(dataSource, function (num) {
                 self.numberOfPage = num;
@@ -89,13 +90,20 @@ var DataNavigationView = ControlView.extend({
 
     initNumberOfPage: function(dataSource, callback) {
         var self = this;
-        var requestData = dataSource.getQueryFilter();
+
+        var queryFilters = dataSource.getQueryFilter().items || [];
+        var propertyFilter = dataSource.getPropertyFilters() || [];
+
+        //TODO: wait Andrey
+
+        var filters = _.union(queryFilters, propertyFilter);
+
         var param = {
             "id": null,
             "changesObject": {
                 "Configuration": dataSource.getConfigId(),
                 "Metadata": dataSource.getDocumentId(),
-                "Filter": requestData.items,
+                "Filter": filters,
                 "PageNumber": dataSource.getPageNumber(),
                 "PageSize": dataSource.getPageSize()
             },

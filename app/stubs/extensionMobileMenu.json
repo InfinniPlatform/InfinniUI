@@ -1,0 +1,33 @@
+{
+  "LayoutPanel": {
+    "ExtensionPanel": {
+      "Name": "MobileMenu",
+      "ExtensionName": "MobileMenu",
+      "Items": [
+        {
+          "TextBox": {
+            "Name": "ToggleButton1",
+            "Background": "White",
+            "Value": {
+              "PropertyBinding":{
+                "DataSource": "data",
+                "Property":"Prop"
+              }
+            }
+          }
+        },{
+          "TextBox": {
+            "Name": "ToggleButton1",
+            "Background": "White",
+            "Value": {
+              "PropertyBinding":{
+                "DataSource": "data",
+                "Property":"Prop"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

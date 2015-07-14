@@ -21,7 +21,11 @@ _.extend(ExtensionPanel.prototype, {
 
     setParameters: function (value) {
         return this.control.set('parameters', value);
-    }//,
+    },
+
+    setItems: function(items){
+        this.control.set('items', items);
+    }
 
     //setContext: function (value) {
     //    return this.control.set('context', value);
