@@ -299,6 +299,8 @@ var ComboBoxView = ControlView.extend({
     setEnabled: function (value) {
         this.ui.control.select2('enable', value);
         this.ui.btnSelectView.prop('disabled', value !== true);
+
+        if(!value){this.ui.clearValue.hide()}
     },
 
     /**
@@ -371,7 +373,7 @@ var ComboBoxView = ControlView.extend({
     },
 
     onMouseenterHandler: function () {
-        if(this.model.get('value') && this.model.get('showClear')){
+        if(this.model.get('value') && this.model.get('showClear') && this.model.get('enabled')){
             this.ui.clearValue.show();
         }
     },
