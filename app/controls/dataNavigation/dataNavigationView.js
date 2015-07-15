@@ -90,12 +90,8 @@ var DataNavigationView = ControlView.extend({
 
     initNumberOfPage: function(dataSource, callback) {
         var self = this;
-
         var queryFilters = dataSource.getQueryFilter().items || [];
         var propertyFilter = dataSource.getPropertyFilters() || [];
-
-        //TODO: wait Andrey
-
         var filters = _.union(queryFilters, propertyFilter);
 
         var param = {
