@@ -24,6 +24,10 @@ var DataNavigationView = ControlView.extend({
         var dataSource = this.model.get('view').getDataSource(this.model.get('dataSource'));
         var self = this;
 
+        this.initNumberOfPage(dataSource, function(num) {
+            self.numberOfPage = num;
+        });
+
         //if filter change dataNavigation rerender
         if (typeof this.onDataSourceItemsUpdated !== 'undefined') {
             this.onDataSourceItemsUpdated.unsubscribe();
@@ -36,11 +40,8 @@ var DataNavigationView = ControlView.extend({
             });
         });
 
-
         this.renderAvaliablePageSize();
-        this.initNumberOfPage(dataSource, function(num) {
-            self.numberOfPage = num;
-        });
+
         this.initPlugin();
 
         this.onChangeEnabledHandler(this.model, this.model.get('enabled'));
@@ -53,14 +54,14 @@ var DataNavigationView = ControlView.extend({
 
         //reset pageNumber if filter change
         var maxCountPage = Math.ceil(this.numberOfPage / this.model.get('pageSize'));
-        if (maxCountPage < this.model.get('pageNumber')) {
+        if (maxCountPage < this.model.get('pageNumber') || (!maxCountPage && !this.model.get('pageNumber') )) {
             this.model.set('pageNumber', 0);
         }
 
         //initialize bootpag plugin
         this.$el.find('.navigation').bootpag({
-            total: Math.ceil(self.numberOfPage / self.model.get('pageSize')),
-            page: parseInt(this.model.get('pageNumber')) + 1 || 1,
+            total: Math.ceil(self.numberOfPage / self.model.get('pageSize')) || 1,
+            page: parseInt(this.model.get('pageNumber')) + 1 || 0,
             maxVisible: 10,
             leaps: false,
             next: 'Вперед ›',
@@ -115,7 +116,7 @@ var DataNavigationView = ControlView.extend({
             data: JSON.stringify(param),
             contentType: 'application/json',
             success: function(data) {
-                if(data[0].NumberOfDocuments) {
+                if(data.length) {
                     self.onSetElementCountHandler(data[0].NumberOfDocuments);
                     callback(data[0].NumberOfDocuments);
                 }
