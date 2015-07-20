@@ -14,6 +14,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
         params.element.setExtensionName(metadata.ExtensionName);
 
         var parameters = [];
+        var items = [];
         _.each(metadata.Parameters, function (item) {
 
             var itemToBuild = {
@@ -24,7 +25,15 @@ _.extend(ExtensionPanelBuilder.prototype, {
             parameters[param.getName()] = param;
         });
 
+        _.each(metadata.Items, function (item) {
+            var itemBuild = params.builder.build(params.parent, item);
+            items.push(itemBuild);
+        });
+
         params.element.setParameters(parameters);
+        params.element.setItems(items);
+
+
         //params.element.setContext(params.parent.getContext());
         params.element.getContext = function () {
             return params.parent.getContext();

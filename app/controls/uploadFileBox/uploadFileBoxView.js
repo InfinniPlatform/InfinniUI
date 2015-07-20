@@ -50,7 +50,7 @@ var UploadFileBoxView = ControlView.extend({
         var model = this.model;
 
         if(typeof maxSize !== 'undefined' && maxSize !== null && file.size >= maxSize){
-            alert('размер выбранного файла больше максимального ' + file.size);
+            toastr.error('Размер выбранного файла ' + (file.size/(1024*1024)).toFixed(1) + 'Мб больше допустимого размера ' + (maxSize/(1024*1024)).toFixed(1) + 'Мб', "Ошибка");
             this.ui.input.val(null);
             return;
         }

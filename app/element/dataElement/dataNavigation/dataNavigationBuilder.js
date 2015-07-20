@@ -13,14 +13,18 @@ _.extend(DataNavigationBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         var element = params.element,
-            metadata = params.metadata;
+            metadata = params.metadata,
+            view = params.parent;
+
+        var datasource = view.getDataSource(metadata.DataSource);
+
 
         element.setDataSource(metadata.DataSource);
         element.setAvailablePageSizes(metadata.AvailablePageSizes);
-        element.setView(params.parent);
+        element.setView(view);
 
-        element.setPageNumber(metadata.PageNumber);
-        element.setPageSize(metadata.PageSize || 10);
+        element.setPageNumber(datasource.getPageNumber());
+        element.setPageSize(datasource.getPageSize() || 10);
 
         //Скриптовые обработчики на события
         //TODO: OnUpdateItems
@@ -41,17 +45,17 @@ _.extend(DataNavigationBuilder.prototype, {
             });
         }
 
-        if (params.parent && metadata.OnSetPageNumber){
-            params.element.onSetPageNumber(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnSetPageNumber.Name);
-            });
-        }
-
-        if (params.parent && metadata.OnSetPageSize){
-            params.element.onSetPageSize(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnSetPageSize.Name);
-            });
-        }
+        //if (params.parent && metadata.OnSetPageNumber){
+        //    params.element.onSetPageNumber(function() {
+        //        new ScriptExecutor(params.parent).executeScript(metadata.OnSetPageNumber.Name);
+        //    });
+        //}
+        //
+        //if (params.parent && metadata.OnSetPageSize){
+        //    params.element.onSetPageSize(function() {
+        //        new ScriptExecutor(params.parent).executeScript(metadata.OnSetPageSize.Name);
+        //    });
+        //}
     },
 
     initDataSource: function (params) {

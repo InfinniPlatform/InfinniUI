@@ -293,6 +293,7 @@ var TextEditor = Backbone.View.extend({
 
     removeSelection: function(mask, char){
         var res = mask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
+        mask.reset(res.result);
 
         this.ui.editor.val(mask.getText());
 

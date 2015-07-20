@@ -11,7 +11,8 @@ var OpenModeDialogStrategy = function (linkView) {
         $modal.modal({
             show: true,
             backdrop: 'static',
-            modalOverflow: true
+            modalOverflow: true,
+            focus: this
         });
 
         //FOCUS IN MODAL WITHOUT FALL
