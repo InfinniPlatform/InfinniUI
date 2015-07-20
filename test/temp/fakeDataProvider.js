@@ -87,7 +87,10 @@ function FakeDataProvider(mode) {
     };
 
     this.createItem = function (resultCallback) {
-        resultCallback({});
+        setTimeout(function(){
+            resultCallback({prefilledField: 1});
+        },100);
+
     };
 
     this.replaceItem = function (value, warnings, resultCallback) {

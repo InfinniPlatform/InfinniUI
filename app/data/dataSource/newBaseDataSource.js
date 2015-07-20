@@ -177,6 +177,11 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
+    createItem: function(success, error){
+        var dataProvider = this.get('dataProvider');
+        dataProvider.createItem(function(){});
+    },
+
     getFilter: function(){
         return this.get('criteriaList');
     },

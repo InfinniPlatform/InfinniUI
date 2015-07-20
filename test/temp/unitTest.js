@@ -114,23 +114,24 @@ describe('DocumentDataSource', function () {
             );
          });
 
-        /*it('should create document', function (done) {
+        it('should create document', function (done) {
 
-            window.providerRegister.register('DocumentDataSource', function (metadataValue) {
-                return new DataProviderREST(metadataValue, new QueryConstructorStandard('http://ic:9900', metadataValue), null, errorCallback);
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
             });
 
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
 
-            dataSource.setListMode();
 
-            dataSource.onItemCreated(function (data) {
+            dataSource.createItem(function(data){
                 assert.ok(data);
+                assert(data.prefilledField == 1);
+                assert.ok(data.__Id);
                 done();
             });
-
-            dataSource.createItem();
-        });*/
+        });
     });
 
 });
