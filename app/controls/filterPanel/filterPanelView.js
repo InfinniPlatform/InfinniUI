@@ -84,6 +84,10 @@ var FilterPanelView = ControlView.extend({
 
         this.model.set('value', value);
         this.trigger('onValueChanged', this.model.get('value'));
+
+        this.$el.find('.dropdown').one('hidden.bs.dropdown', function(){
+            $(this).children('button.dropdown-toggle').focus();
+        })
     },
 
     collectFormQuery: function(){
