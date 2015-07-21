@@ -78,9 +78,8 @@ var ComboBoxView = ControlView.extend({
 
         var autocomplete = this.model.get('autocomplete');
 
-        //TODO: hot fix "autocomple: None", not display first time. ListData is empty on plugin initalize
-        if(autocomplete !== 'Server' && autocomplete !== 'None'){
-            options.data = this.listData; //not working first time open. Empty!
+        if(autocomplete !== 'Server'){
+            options.data = this.listData;
         }else{
             options.query = this.select2Query.bind(this);
         }
@@ -126,8 +125,7 @@ var ComboBoxView = ControlView.extend({
      * @param options
      */
     select2Query: function (options) {
-        //TODO: hot fix "autocomple: None", not display first time. ListData is empty on plugin initalize
-        if(options.term == this.model.get('term') && this.model.get('autocomplete') != 'None'){
+        if(options.term == this.model.get('term')){
             this.select2callback(options.callback)
         }else{
             var that = this;
@@ -235,8 +233,10 @@ var ComboBoxView = ControlView.extend({
         }
 
         if(this.isOpen){
-            //this.ui.control.select2('close');
-            //this.ui.control.select2('open');
+            if(this.model.get('autocomplete') == 'None') {
+                this.ui.control.select2('close');
+                this.ui.control.select2('open');
+            }
 
             //Триггеринг события, для вызова метода обновления списка значений select2.updateResults
             // т.к. прямой вызов этого метода невозможен в плагине select2
