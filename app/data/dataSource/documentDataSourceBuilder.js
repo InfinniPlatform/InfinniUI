@@ -1,13 +1,13 @@
 function DocumentDataSourceBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args){
 
-        var idProperty = metadata.IdProperty;
+        var idProperty = args.metadata.IdProperty;
         if (idProperty == undefined) {
             idProperty = 'Id';
         }
-        var dataSource = new DocumentDataSource(parent, metadata);
-        new BaseDataSourceBuilder().build(metadata, dataSource, parent, builder);
+        var dataSource = new DocumentDataSource(args.parent, args.metadata);
+        new BaseDataSourceBuilder().build(args.metadata, dataSource, args.parent, args.builder);
 
         return dataSource;
     }

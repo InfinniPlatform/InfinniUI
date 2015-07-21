@@ -20,18 +20,20 @@ describe('PropertyBinding', function () {
         }),
         builder = new ApplicationBuilder(),
         dataSourceBuilder = new DocumentDataSourceBuilder(),
-        dataSourcePatient = dataSourceBuilder.build(builder, view, {
+        patientMetadata = {
             Name: 'PatientDataSource',
             ConfigId: 'Demography',
             DocumentId: 'Patient',
             IdProperty: 'Id'
-        }),
-        dataSourceMedicalWorker = dataSourceBuilder.build(builder, view, {
+        },
+        dataSourcePatient = dataSourceBuilder.build(null, {builder: builder, parent: view, metadata: patientMetadata}),
+        medicalWorkerMetadata = {
             Name: 'MedicalWorkerDataSource',
             ConfigId: 'Structure',
             DocumentId: 'MedicalWorker',
             IdProperty: 'Id'
-        }),
+        },
+        dataSourceMedicalWorker = dataSourceBuilder.build(null, {builder: builder, parent: view, metadata: medicalWorkerMetadata}),
         dataSources = [dataSourcePatient, dataSourceMedicalWorker];
 
     it('should build property binding', function () {

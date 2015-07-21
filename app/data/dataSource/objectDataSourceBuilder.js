@@ -1,11 +1,11 @@
 function ObjectDataSourceBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args){
 
-        var dataSource = new ObjectDataSource(parent, metadata);
-        new BaseDataSourceBuilder().build(metadata, dataSource, parent, builder);
+        var dataSource = new ObjectDataSource(args.parent, args.metadata);
+        new BaseDataSourceBuilder().build(args.metadata, dataSource, args.parent, args.builder);
 
-        dataSource.setUserStrategy(new ItemsDataSourceStrategy(dataSource, metadata));
+        dataSource.setUserStrategy(new ItemsDataSourceStrategy(dataSource, args.metadata));
 
         return dataSource;
     }
