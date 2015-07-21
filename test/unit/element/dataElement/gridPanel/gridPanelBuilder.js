@@ -63,7 +63,7 @@ describe('GridPanelBuilder', function () {
         }});
 
         //Then
-        var gridPanel = new GridPanelBuilder().build(applicationBuilder, fakeView(), metadata);
+        var gridPanel = new GridPanelBuilder().build(null, {builder: applicationBuilder, parent: fakeView(), metadata: metadata});
 
         //When
         assert.equal(gridPanel.getRows().length, 2);

@@ -47,7 +47,7 @@ describe('StackPanel', function () {
             view.setScripts([{Name:"OnLoaded", Body:"window.Test.stackPanelLoaded = true"}]);
 
             //When
-            var build = stackPanel.build(applicationBuilder, view, metadata);
+            var build = stackPanel.build(null, {builder: applicationBuilder, parent: view, metadata: metadata});
             $(build.render());
 
             // Then

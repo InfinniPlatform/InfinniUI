@@ -45,7 +45,7 @@ describe('PopupButtonBuilder', function () {
 
             // When
             var builder = new PopupButtonBuilder();
-            var button = builder.build(new ApplicationBuilder(), null, metadata);
+            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
             // Then
             assert.isNotNull(button);
             assert.equal(button.getText(), 'Click me');

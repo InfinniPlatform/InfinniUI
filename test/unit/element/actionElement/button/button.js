@@ -47,7 +47,7 @@ describe('Button', function () {
 
             // When
             button.render();
-            button.setAction(new OpenViewActionBuilder().build());
+            button.setAction(new OpenViewActionBuilder().build(null, {}));
 
             // Then
             assert.isNotNull(button.getAction());
@@ -119,7 +119,7 @@ describe('Button', function () {
             window.Test = {button:1, buttonLoaded: false};
 
             //When
-            var build = button.build(button, view, metadata);
+            var build = button.build(null, {builder: button, parent: view, metadata: metadata});
             var $button = $(build.render());
             $button.find('button').click();
 

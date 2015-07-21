@@ -16,7 +16,7 @@ describe('TreeView', function () {
                 "MultiSelect": true
             };
             var builder = new TreeViewBuilder();
-            var tree = builder.build(new ApplicationBuilder(), null, metadata);
+            var tree = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
             tree.render();
 
             //When

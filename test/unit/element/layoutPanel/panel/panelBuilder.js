@@ -59,7 +59,7 @@ describe('PanelBuilder', function () {
         ]);
 
         //When
-        var build = panel.build(builder, view, metadata);
+        var build = panel.build(null, {builder: builder, parent: view, metadata: metadata});
         var $el = $(build.render());
         $el.find('.collapse').trigger('click');
         $el.find('.expand').trigger('click');

@@ -4,22 +4,14 @@ var ElementBuilder = function () {
 //о боги, зачем все это???
 _.extend(ElementBuilder.prototype, {
 
-    build: function (builder, parent, metadata, collectionProperty, params) {
-        var params = {
-                builder: builder,
-                parent: parent,
-                metadata: metadata,
-                collectionProperty: collectionProperty,
-                params: params
-            },
-            element = this.createElement(params);
-
-        params.element = element;
+    build: function (context, args){
+        var element = this.createElement(args);
+        var params = _.extend(args, {element: element});
 
         this.applyMetadata(params);
 
-        if (parent && parent.registerElement) {
-            parent.registerElement(element);
+        if (args.parent && args.parent.registerElement) {
+            args.parent.registerElement(element);
         }
 
         return element;

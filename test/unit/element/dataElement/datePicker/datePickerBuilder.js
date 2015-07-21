@@ -15,7 +15,7 @@ describe('DatePickerBuilder', function () {
 
             // When
             var builder = new DatePickerBuilder();
-            var datePicker = builder.build(new ApplicationBuilder(), new View(), datePickerMetadata);
+            var datePicker = builder.build(null, {builder: new ApplicationBuilder(), parent: new View(), metadata: datePickerMetadata});
 
             // Then
             assert.isNotNull(datePicker);
@@ -40,7 +40,7 @@ describe('DatePickerBuilder', function () {
 
             // When
             var builder = new DatePickerBuilder();
-            var datePicker = builder.build(new ApplicationBuilder(), new View(), datePickerMetadata);
+            var datePicker = builder.build(null, {builder: new ApplicationBuilder(), parent: new View(), metadata: datePickerMetadata});
 
             // Then
             assert.isNotNull(datePicker);
@@ -55,7 +55,7 @@ describe('DatePickerBuilder', function () {
             //Given
             var datePicker = new DatePickerBuilder();
             var view = new View();
-            var metadata = {
+            var datePickerMetadata = {
                 OnValueChanged:{
                     Name: 'OnValueChanged'
                 },
@@ -67,7 +67,7 @@ describe('DatePickerBuilder', function () {
             view.setScripts([{Name:"OnValueChanged", Body:"window.Test.datePicker = 5"}, {Name:"OnLoaded", Body:"window.Test.datePickerLoaded = true"}]);
 
             //When
-            var build = datePicker.build(new ApplicationBuilder(), view, metadata);
+            var build = datePicker.build(null, {builder: new ApplicationBuilder(), parent: view, metadata: datePickerMetadata});
             build.setValue(true);
             $(build.render());
 

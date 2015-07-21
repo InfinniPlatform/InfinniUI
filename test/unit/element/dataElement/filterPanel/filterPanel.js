@@ -8,7 +8,7 @@ describe('FilterPanel', function () {
             Name: "FilterPanel1",
             DataSource: "PatientsDataSource"
         };
-        var filterPanel = filterPanelBuilder.build(builder, view, metadata);
+        var filterPanel = filterPanelBuilder.build(null, {builder: builder, parent: view, metadata: metadata});
 
         //When
         filterPanel.setName('NewFilterPanel');
@@ -94,7 +94,7 @@ describe('FilterPanel', function () {
         view.setScripts([{Name:"OnValueChanged", Body:"window.Test.filterPanel = 5"}, {Name:"OnLoaded", Body:"window.Test.filterPanelLoaded = true"}]);
 
         //When
-        var filterPanel = filterPanelBuilder.build(filterPanelBuilder, view, metadata);
+        var filterPanel = filterPanelBuilder.build(null, {builder: filterPanelBuilder, parent: view, metadata: metadata});
         filterPanel.render();
         // вместо нативного вызова поиска, имитируем его, поскольку иначе мокка редиректит страницу, цука.
         filterPanel.control.controlView.submitFormHandler({

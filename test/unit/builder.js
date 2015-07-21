@@ -23,17 +23,17 @@ describe('Builder', function () {
 
         it('should pick concrete value from metadata if no metadataType passed', function () {
             var viewBuilder = {
-                build: function (b, p, metadata) {
-                    assert.isNotNull(metadata.Name);
-                    assert.isNotNull(metadata.Multiline);
+                build: function (context, args) {
+                    assert.isNotNull(args.metadata.Name);
+                    assert.isNotNull(args.metadata.Multiline);
 
-                    assert.equal(metadata.Name, 'TextBox');
-                    assert.isTrue(metadata.Multiline);
+                    assert.equal(args.metadata.Name, 'TextBox');
+                    assert.isTrue(args.metadata.Multiline);
                 }
             };
 
             builder.register('TextBox', viewBuilder);
-            builder.build(null, { TextBox: { Name: 'TextBox', Multiline: true } });
+            builder.build(null, { metadata: { TextBox: { Name: 'TextBox', Multiline: true } } });
         });
     });
 
