@@ -34,7 +34,7 @@ describe('PopupButton', function () {
 
             // When
             button.render();
-            button.setAction(new OpenViewActionBuilder().build());
+            button.setAction(new OpenViewActionBuilder().build(null, {}));
 
             // Then
             assert.isTrue(typeof button.getAction() !== 'undefined' && button.getAction() !== null);

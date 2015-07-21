@@ -99,5 +99,7 @@ function SpecialApplicationView() {
         //this.initViewHandlers();
     };
 
-
+    this.getContext = function(){
+        return null;
+    }
 }
