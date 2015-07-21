@@ -1,18 +1,19 @@
 function MetadataViewBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args){
+        var metadata = args.metadata;
 
         if (metadata.OpenMode === 'Container' && metadata.Container === 'Content') {
             metadata.OpenMode = 'Page';
         }
 
-        var linkView = new LinkView(parent, function (resultCallback) {
-            if(parent.handleOnLoaded){
-                parent.handleOnLoaded(function(){
-                    createView(builder, parent, metadata, resultCallback);
+        var linkView = new LinkView(args.parent, function (resultCallback) {
+            if(args.parent.handleOnLoaded){
+                args.parent.handleOnLoaded(function(){
+                    createView(args.builder, args.parent, metadata, resultCallback);
                 });
             }else{
-                createView(builder, parent, metadata, resultCallback);
+                createView(args.builder, args.parent, metadata, resultCallback);
             }
         });
         linkView.setOpenMode(metadata.OpenMode);
