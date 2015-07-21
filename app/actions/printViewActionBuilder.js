@@ -1,6 +1,6 @@
 function PrintViewActionBuilder() {
-    this.build = function (builder, parent, metadata) {
-        var action = new BaseAction(parent);
+    this.build = function (context, args){
+        var action = new BaseAction(args.parent);
 
         this.template = function(data){
             var url = InfinniUI.config.serverUrl+"/SystemConfig/UrlEncodedData/Reporting/GetPrintView";
@@ -25,10 +25,10 @@ function PrintViewActionBuilder() {
 
         var self = this;
         action.setAction(function (callback) {
-            var dataSource = parent.getDataSource(metadata.DataSource);
+            var dataSource = args.parent.getDataSource(args.metadata.DataSource);
             var data = {
-                PrintViewId : metadata.PrintViewId,
-                PrintViewType : metadata.PrintViewType,
+                PrintViewId : args.metadata.PrintViewId,
+                PrintViewType : args.metadata.PrintViewType,
                 ConfigId : dataSource.getConfigId(),
                 DocumentId : dataSource.getDocumentId(),
                 PageNumber : dataSource.getPageNumber(),
