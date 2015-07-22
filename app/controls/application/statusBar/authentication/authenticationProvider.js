@@ -141,6 +141,16 @@ _.extend(AuthenticationProvider.prototype, {
         this.sendPostRequest('/Auth/UnlinkExternalLogin', unlinkExternalLoginForm, resultCallback, errorCallback);
     },
 
+    addClaim: function(userName, claimName, claimValue, resultCallback, errorCallback) {
+        var claim = {
+            "UserName": userName,
+            "ClaimType": claimName,
+            "ClaimValue": claimValue
+        };
+
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
+    },
+
     /**
      * Выход пользователя из системы.
      *
