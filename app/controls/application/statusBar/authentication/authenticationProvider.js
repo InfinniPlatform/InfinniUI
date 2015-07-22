@@ -143,9 +143,13 @@ _.extend(AuthenticationProvider.prototype, {
 
     addClaim: function(userName, claimName, claimValue, resultCallback, errorCallback) {
         var claim = {
-            "UserName": userName,
-            "ClaimType": claimName,
-            "ClaimValue": claimValue
+            "id" : null,
+            "changesObject" : {
+                "UserName" : userName,
+                "ClaimType": claimName,
+                "ClaimValue": claimValue
+            },
+            "replace" : false
         };
 
         this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
