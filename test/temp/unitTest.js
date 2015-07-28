@@ -115,7 +115,7 @@ describe('DocumentDataSource', function () {
          });
 
         it('should create document', function (done) {
-
+            // Given
             window.providerRegister.register('DocumentDataSource', function () {
                 return new FakeDataProvider();
             });
@@ -124,13 +124,18 @@ describe('DocumentDataSource', function () {
                 view: fakeView()
             });
 
+            //When
+            dataSource.createItem(
+                function(context, argument){
 
-            dataSource.createItem(function(data){
-                assert.ok(data);
-                assert(data.prefilledField == 1);
-                assert.ok(data.__Id);
-                done();
-            });
+                    // Then
+                    var newItem = argument.value;
+                    assert.ok(newItem);
+                    assert(newItem.prefilledField == 1);
+                    assert.ok(newItem.__Id);
+                    done();
+                }
+            );
         });
     });
 

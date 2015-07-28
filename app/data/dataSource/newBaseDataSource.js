@@ -50,12 +50,20 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('error', handler);
     },
 
+    onItemCreated: function (handler) {
+        this.on('onItemCreated', handler);
+    },
+
     getName: function(){
         return this.get('name');
     },
 
     setName: function(name){
         this.set('name', name);
+    },
+
+    getView: function(){
+        return this.get('view');
     },
 
     getIdProperty: function () {
@@ -128,6 +136,10 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    setProperty: function(property, value){
+
+    },
+
     saveItem : function (item, onSuccess) {
 
     },
@@ -147,10 +159,6 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('items');
     },
 
-    isDataReady: function(){
-        return this.get('isDataReady');
-    },
-
     updateItems: function(onSuccess, onError){
         if (!this.get('isUpdateSuspended')){
             var filters = this.getFilter(),
@@ -167,6 +175,7 @@ var BaseDataSource = Backbone.Model.extend({
 
                 that.set('items', data);
                 that.set('isDataReady', true);
+                this.set('modifiedItems', []);
 
                 if(onSuccess){
                     onSuccess(data);
@@ -178,9 +187,43 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     createItem: function(success, error){
-        var dataProvider = this.get('dataProvider');
-        dataProvider.createItem(function(){});
+        var dataProvider = this.get('dataProvider'),
+            that = this;
+
+        if(this.get('fillCreatedItem')){
+            dataProvider.createItem(function (item) {
+                that._handleDataForCreatingItem(item, success);
+            });
+        }else{
+            this._handleDataForCreatingItem({}, success);
+        }
     },
+
+    _handleDataForCreatingItem: function(itemData, successHandler){
+        itemData['__Id'] = this._generateLocalId();
+
+        this.set('items', [itemData]);
+        this.set('isDataReady', true);
+        this.get('modifiedItems').push(itemData);
+
+        this._notifyAboutItemCreated(itemData, successHandler);
+    },
+
+    _notifyAboutItemCreated: function(createdItem, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: createdItem
+            };
+
+        successHandler(context, argument);
+        this.trigger('onItemCreated', context, argument);
+    },
+
+    _generateLocalId: function(){
+        return guid();
+    },
+
+
 
     getFilter: function(){
         return this.get('criteriaList');
@@ -197,7 +240,10 @@ var BaseDataSource = Backbone.Model.extend({
             "Value": itemId,
             "CriteriaType": 1
         }]);
-    }
+    },
 
+    getContext: function(){
+        return this.getView().getContext();
+    }
 
 });
