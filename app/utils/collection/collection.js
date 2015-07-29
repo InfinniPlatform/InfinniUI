@@ -219,6 +219,10 @@ Collection.prototype.set = function (newItems) {
     return this._strategy.set(newItems);
 };
 
+Collection.prototype.move = function (oldIndex, newIndex) {
+    return this._strategy.move(oldIndex, newIndex, this.triggerEvents.bind(this));
+}
+
 Collection.prototype.bindScriptHandler = function (eventName, handler) {
     var context = null;
     this._eventDispatcher.register(eventName, handler.bind(undefined, context));

@@ -996,6 +996,18 @@ describe("Collection", function () {
         });
     });
 
+    describe("move()", function () {
+
+        it("should move items", function () {
+            var collection = new Collection(['A', 'B', 'C']);
+
+            collection.move(2, 0);
+            assert.deepEqual(collection.toArray(), [ 'C', 'A', 'B' ]);
+            collection.move(2, 1);
+            assert.deepEqual(collection.toArray(), [ 'C', 'B', 'A' ]);
+        });
+    });
+
     describe("sort()", function () {
 
         it("should sort items", function () {
@@ -1068,7 +1080,7 @@ describe("Collection", function () {
 
 
         describe("Collection.onAdd", function () {
-            it("should raise onAdd event", function () {
+            it("should raise onAdd & onChange event", function () {
                 //when
                 collection = new Collection();
                 bindEvents();                
@@ -1079,27 +1091,52 @@ describe("Collection", function () {
         });
 
         describe("Collection.onReplace", function () {
-            it("should raise onReplace event", function () {
+            it("should raise onReplace & onChange event", function () {
                 //when
                 collection = new Collection(['A']);
                 bindEvents();                
                 collection.replace('A', 'B');
                 //then
                 assert.equal("onReplace,onChange", handlers.join(','));
+                assert.deepEqual(collection.toArray(), ['B']);
             });
         });
 
         describe("Collection.onRemove", function () {
-            it("should raise onRemove event", function () {
+            it("should raise onRemove & onChange event", function () {
                 //when
                 collection = new Collection(['A']);
                 bindEvents();                
                 collection.remove('A');
                 //then
                 assert.equal("onRemove,onChange", handlers.join(','));
+                assert.deepEqual(collection.toArray(), []);
             });
         });
 
+        describe("Collection.onMove", function () {
+            it("should raise onMove & onChange event", function () {
+                //when
+                collection = new Collection([ 'A', 'B' ]);
+                bindEvents();                
+                collection.move(1, 0);
+                //then
+                assert.equal("onMove,onChange", handlers.join(','));
+                assert.deepEqual(collection.toArray(), ['B', 'A']);
+            });
+        });
+
+        describe("Collection.onReset", function () {
+            it("should raise onReset & onChange event", function () {
+                //when
+                collection = new Collection();
+                bindEvents();                
+                collection.reset([ 'A', 'B' ]);
+                //then
+                assert.equal("onReset,onChange", handlers.join(','));
+                assert.deepEqual(collection.toArray(), [ 'A', 'B' ]);
+            });
+        });
     })
 
 

@@ -196,6 +196,23 @@ CollectionStrategy.prototype.removeAll = function (items, callback) {
     return changed;
 };
 
+CollectionStrategy.prototype.move = function (oldIndex, newIndex, callback) {
+    var 
+        item = this.getByIndex(oldIndex);
+
+    if (!this.removeAt(oldIndex)) {
+        return false;
+    }
+
+    this.insert(newIndex, item);
+
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onMove, [item], oldIndex, newIndex);
+        callback(this._events.extract());        
+    }        
+    return true;
+};
+
 /**
  * @protected
  */
@@ -252,28 +269,4 @@ CollectionStrategy.prototype._getValue = function (item) {
 CollectionStrategy.prototype.isNotEqual = function (a, b) {
     return !this.isEqual(a, b);
 };
-
-CollectionStrategy.prototype.buildOnAdd = function (items, startingIndex) {
-    var params = {
-        action: 'add',
-        newItems: items,
-        newStartingIndex: startingIndex
-    };
-
-    return params;
-};
-
-CollectionStrategy.prototype.buildOnRemove = function (items, startingIndex) {
-    var params = {
-        action: 'remove',
-        oldItems: items,
-        oldStartingIndex: typeof startingIndex === 'undefined' ? -1 : startingIndex
-    };
-
-    return params;
-};
-
-
-
-
 
