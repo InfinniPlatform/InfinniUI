@@ -15,6 +15,7 @@ var BaseDataSource = Backbone.Model.extend({
 
         modifiedItems: [],
         items: null,
+        itemsById: {},
         selectedItem: null,
         stringifySelectedItem: null,
 
@@ -54,6 +55,10 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onItemCreated', handler);
     },
 
+    onItemsUpdated: function (handler) {
+        this.on('onItemsUpdated', handler);
+    },
+
     getName: function(){
         return this.get('name');
     },
@@ -64,6 +69,35 @@ var BaseDataSource = Backbone.Model.extend({
 
     getView: function(){
         return this.get('view');
+    },
+
+    getItems: function(){
+        return this.get('items');
+    },
+
+    getSelectedItem: function(){
+        return this.get('selectedItem');
+    },
+
+    setSelectedItem: function(item, success, error){
+        var currentSelectedItem = this.getSelectedItem(),
+            idProperty = this.get('idProperty'),
+            itemId = item[idProperty],
+            items = this.get('itemsById');
+
+
+        if(!items[itemId]){
+            if(!error){
+                throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов';
+            }else{
+                error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов'});
+            }
+        }
+
+        if(currentSelectedItem[idProperty] == ){
+
+        }
+        this.set('selectedItem', item);
     },
 
     getIdProperty: function () {
@@ -137,7 +171,24 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setProperty: function(property, value){
+        var selectedItem = this.getSelectedItem(),
+            relativeProperty;
 
+        if(!selectedItem){
+            return;
+        }
+
+        if(property != '$'){
+            if(property.substr(0,2) == '$.'){
+                relativeProperty = property.substr(0,2);
+            }else{
+                relativeProperty = property;
+            }
+
+            InfinniUI.ObjectUtils.setPropertyValue(selectedItem, relativeProperty, value);
+        }else{
+
+        }
     },
 
     saveItem : function (item, onSuccess) {
@@ -172,18 +223,29 @@ var BaseDataSource = Backbone.Model.extend({
             dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
 
                 that.set('isRequestInProcess', false);
-
-                that.set('items', data);
-                that.set('isDataReady', true);
-                this.set('modifiedItems', []);
-
-                if(onSuccess){
-                    onSuccess(data);
-                }
+                that._handleUpdatedItemsData(data, onSuccess);
 
             }, onError );
         }
 
+    },
+
+    _handleUpdatedItemsData: function(itemsData, successHandler){
+        this.set('items', itemsData);
+        this.set('isDataReady', true);
+        this.set('modifiedItems', []);
+
+        this._notifyAboutItemsUpdated(itemsData, successHandler);
+    },
+
+    _notifyAboutItemsUpdated: function(itemsData, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: itemsData
+            };
+
+        successHandler(context, argument);
+        this.trigger('onItemsUpdated', context, argument);
     },
 
     createItem: function(success, error){
