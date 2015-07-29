@@ -85,6 +85,21 @@ var BaseDataSource = Backbone.Model.extend({
             itemId = item[idProperty],
             items = this.get('itemsById');
 
+        if(item === null){
+            if(){
+
+            }
+        }else{
+
+        }
+
+
+
+        var currentSelectedItem = this.getSelectedItem(),
+            idProperty = this.get('idProperty'),
+            itemId = item[idProperty],
+            items = this.get('itemsById');
+
 
         if(!items[itemId]){
             if(!error){
@@ -94,14 +109,18 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        if(currentSelectedItem[idProperty] == ){
-
+        if(currentSelectedItem[idProperty] != item[idProperty]){
+            this.set('selectedItem', item);
         }
         this.set('selectedItem', item);
     },
 
     getIdProperty: function () {
         return this.get('idProperty');
+    },
+
+    setIdProperty: function (value) {
+        this.set('idProperty', value);
     },
 
     getFillCreatedItem: function () {
@@ -234,6 +253,11 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('items', itemsData);
         this.set('isDataReady', true);
         this.set('modifiedItems', []);
+        if(itemsData && itemsData.length > 0){
+            this.setSelectedItem(itemsData[0]);
+        }else{
+            this.setSelectedItem(null);
+        }
 
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
@@ -250,14 +274,20 @@ var BaseDataSource = Backbone.Model.extend({
 
     createItem: function(success, error){
         var dataProvider = this.get('dataProvider'),
-            that = this;
+            idProperty = this.get('idProperty'),
+            that = this,
+            localItem;
 
         if(this.get('fillCreatedItem')){
-            dataProvider.createItem(function (item) {
-                that._handleDataForCreatingItem(item, success);
-            });
+            dataProvider.createItem(
+                function (item) {
+                    that._handleDataForCreatingItem(item, success);
+                },
+                idProperty
+            );
         }else{
-            this._handleDataForCreatingItem({}, success);
+            localItem = dataProvider.createLocalItem(idProperty);
+            this._handleDataForCreatingItem(localItem, success);
         }
     },
 
@@ -267,6 +297,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('items', [itemData]);
         this.set('isDataReady', true);
         this.get('modifiedItems').push(itemData);
+        this.setSelectedItem(itemData);
 
         this._notifyAboutItemCreated(itemData, successHandler);
     },
@@ -280,12 +311,6 @@ var BaseDataSource = Backbone.Model.extend({
         successHandler(context, argument);
         this.trigger('onItemCreated', context, argument);
     },
-
-    _generateLocalId: function(){
-        return guid();
-    },
-
-
 
     getFilter: function(){
         return this.get('criteriaList');

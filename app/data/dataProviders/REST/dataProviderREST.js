@@ -6,11 +6,32 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentRequest(criteriaList, pageNumber, pageSize, sorting));
     };
 
-    this.createItem = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructCreateDocumentRequest());
+    this.createItem = function (resultCallback, idProperty) {
+        new RequestExecutor(function(data){
+            data[idProperty] = this._generateLocalId();
+            data['__Id'] = data[idProperty];
+            resultCallback(data);
+        }, successCallback, failCallback).makeRequest(urlConstructor.constructCreateDocumentRequest());
     };
 
-    this.replaceItem = function (value, warnings, resultCallback) {
+    this.createLocalItem = function (resultCallback, idProperty) {
+        var result = {};
+
+        result[idProperty] = this._generateLocalId();
+        result['__Id'] = result[idProperty];
+
+        return result;
+    };
+
+    this._generateLocalId = function(){
+        return guid();
+    };
+
+    this.replaceItem = function (value, warnings, resultCallback, idProperty) {
+
+        if(value['__Id']){
+            delete value[idProperty];
+        }
 
         var request = (function (resultCallback) {
             return function (data) {
