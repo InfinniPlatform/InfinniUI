@@ -6,21 +6,12 @@ function CollectionStrategyIndex(comparator) {
 CollectionStrategyIndex.prototype = Object.create(CollectionStrategy.prototype);
 CollectionStrategyIndex.prototype.constructor = CollectionStrategyIndex;
 
-CollectionStrategyIndex.prototype.clear = function () {
-    var changed = this._items.length > 0;
-    this._resetData();
-    return changed;
-};
-
-CollectionStrategyIndex.prototype._add = function (newItem) {
-    this._items.push(newItem);
-};
-
-
 CollectionStrategyIndex.prototype.push = function (newItem, callback) {
-    this._add(newItem);
-    this._events.on(Collection.EVENTS.onAdd, [newItem]);
-    callback(this._events.extract());
+    this._items.push(newItem);
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        callback(this._events.extract());        
+    }
     return true;
 };
 
@@ -34,8 +25,11 @@ CollectionStrategyIndex.prototype.addAll = function (newItems, callback) {
     }
 
     Array.prototype.push.apply(this._items, newItems);
-    this._events.on(Collection.EVENTS.onAdd, newItems);
-    callback(this._events.extract());
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, newItems);
+        callback(this._events.extract());        
+    }
+
     return true;
 };
 
@@ -103,7 +97,7 @@ CollectionStrategyIndex.prototype.reset = function (newItems, callback) {
     return changed;
 };
 
-CollectionStrategyIndex.prototype.replace = function (oldItem, newItem) {
+CollectionStrategyIndex.prototype.replace = function (oldItem, newItem, callback) {
     var index = this._items.indexOf(oldItem);
 
     if (index === -1) {
@@ -136,17 +130,23 @@ CollectionStrategyIndex.prototype.pop = function (callback) {
     return item;
 };
 
-CollectionStrategyIndex.prototype.remove = function (item) {
+CollectionStrategyIndex.prototype.remove = function (item, callback) {
     var index,
+        _items = this._items,
         changed = false;
     while (true) {
-        index = this._items.indexOf(item);
+        index = _items.indexOf(item);
 
         if (index === -1) {
             break;
         }
         changed = true;
-        this._items.splice(index, 1);
+        _items.splice(index, 1);
+    }
+
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, [item], _items.length);
+        callback(this._events.extract());        
     }
 
     return changed;
@@ -161,7 +161,7 @@ CollectionStrategyIndex.prototype.lastIndexOf = function (item, fromIndex) {
     return this._items.lastIndexOf(item, fromIndex);
 };
 
-CollectionStrategyIndex.prototype.sort = function (comparator) {
+CollectionStrategyIndex.prototype.sort = function (comparator, callback) {
     var
         cmp = comparator || this._comparator,
         copy = this._items.slice(),
@@ -175,18 +175,38 @@ CollectionStrategyIndex.prototype.sort = function (comparator) {
         }
     }
 
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onReset);
+        callback(this._events.extract());
+    }
+
     return changed;
 };
 
-CollectionStrategyIndex.prototype.removeAt = function (index) {
-    var items = this._items.splice(index, 1);
-    return items.length > 0;
+CollectionStrategyIndex.prototype.removeAt = function (index, callback) {
+    var 
+        items = this._items.splice(index, 1),
+        changed = items.length > 0;
+
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, items, index);
+        callback(this._events.extract());        
+    }
+
+    return changed;
 };
 
-CollectionStrategyIndex.prototype.removeRange = function (fromIndex, count) {
-    return this._items
-            .splice(fromIndex, count)
-            .length > 0;
+CollectionStrategyIndex.prototype.removeRange = function (fromIndex, count, callback) {
+    var 
+        oldItems = this._items.splice(fromIndex, count),
+        changed = oldItems.length > 0;
+
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, oldItems, fromIndex);
+        callback(this._events.extract());        
+    }
+
+    return changed;
 };
 
 CollectionStrategyIndex.prototype.removeById = function (id) {

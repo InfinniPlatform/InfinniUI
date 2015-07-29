@@ -13,7 +13,8 @@ Collection.EVENTS = {
     onChange: 'onChange',
     onReplace: 'onReplace',
     onReset: 'onReset',
-    onRemove: 'onRemove'
+    onRemove: 'onRemove',
+    onMove: 'onMove'
 };
 
 Collection.prototype.initStrategy = function () {
@@ -97,23 +98,23 @@ Collection.prototype.reset = function (newItems) {
 //@TODO set
 
 Collection.prototype.replace = function (oldItem, newItem) {
-    var changed = this._strategy.replace(oldItem, newItem);
+    var changed = this._strategy.replace(oldItem, newItem, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.pop = function () {
-    var item = this._strategy.pop();
+    var item = this._strategy.pop(this.triggerEvents.bind(this));
     return item;
 };
 
 Collection.prototype.remove = function (item) {
-    var changed = this._strategy.remove(item);
+    var changed = this._strategy.remove(item, this.triggerEvents.bind(this));
     return changed;
 };
 
 
 Collection.prototype.removeById = function (id) {
-    var changed = this._strategy.removeById(id);
+    var changed = this._strategy.removeById(id, this.triggerEvents.bind(this));
     return changed;
 };
 
@@ -128,12 +129,12 @@ Collection.prototype.getById = function (id) {
 };
 
 Collection.prototype.removeAt = function (index) {
-    var changed = this._strategy.removeAt(index);
+    var changed = this._strategy.removeAt(index, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.removeAll = function (items) {
-    var changed = this._strategy.removeAll(items);
+    var changed = this._strategy.removeAll(items, this.triggerEvents.bind(this));
     return changed;
 };
 
@@ -141,7 +142,7 @@ Collection.prototype.removeRange = function (fromIndex, count) {
     if (typeof count === 'undefined') {
         count = this.length;
     }
-    var changed = this._strategy.removeRange(fromIndex, count);
+    var changed = this._strategy.removeRange(fromIndex, count, this.triggerEvents.bind(this));
     return changed;
 };
 
@@ -168,11 +169,11 @@ Collection.prototype.find = function (predicate, thisArgs) {
 };
 
 Collection.prototype.removeEvery = function (predicate, thisArgs) {
-    return this._strategy.removeEvery(predicate, this, thisArgs);
+    return this._strategy.removeEvery(predicate, this, thisArgs, this.triggerEvents.bind(this));
 };
 
 Collection.prototype.clear = function () {
-    return this._strategy.clear();
+    return this._strategy.clear(this.triggerEvents.bind(this));
 };
 
 Collection.prototype.contains = function (item, fromIndex) {
@@ -206,7 +207,7 @@ Collection.prototype.toArray = function () {
 };
 
 Collection.prototype.sort = function (comparator) {
-    return this._strategy.sort(comparator);
+    return this._strategy.sort(comparator, this.triggerEvents.bind(this));
 };
 
 Collection.prototype.clone = function () {
@@ -218,14 +219,33 @@ Collection.prototype.set = function (newItems) {
     return this._strategy.set(newItems);
 };
 
-Collection.prototype.onAdd = function (handler) {
+Collection.prototype.bindScriptHandler = function (eventName, handler) {
     var context = null;
-    this._eventDispatcher.register(Collection.EVENTS.onAdd, handler.bind(undefined, context));
+    this._eventDispatcher.register(eventName, handler.bind(undefined, context));
+}
+
+Collection.prototype.onAdd = function (handler) {
+    this.bindScriptHandler(Collection.EVENTS.onAdd, handler);
+};
+
+Collection.prototype.onReplace = function (handler) {
+    this.bindScriptHandler(Collection.EVENTS.onReplace, handler);
+};
+
+Collection.prototype.onRemove = function (handler) {
+    this.bindScriptHandler(Collection.EVENTS.onRemove, handler);
+};
+
+Collection.prototype.onMove = function (handler) {
+    this.bindScriptHandler(Collection.EVENTS.onMove, handler);
+};
+
+Collection.prototype.onReset = function (handler) {
+    this.bindScriptHandler(Collection.EVENTS.onReset, handler);
 };
 
 Collection.prototype.onChange = function (handler) {
-    var context = null;
-    this._eventDispatcher.register(Collection.EVENTS.onChange, handler.bind(undefined, context));
+    this.bindScriptHandler(Collection.EVENTS.onChange, handler);
 };
 
 

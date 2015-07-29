@@ -8,19 +8,10 @@ function CollectionStrategyId(comparator, idProperty) {
 CollectionStrategyId.prototype = Object.create(CollectionStrategy.prototype);
 CollectionStrategyId.prototype.constructor = CollectionStrategyId;
 
-CollectionStrategyId.prototype.clear = function () {
-    var changed = this._items.length > 0;
-    this._resetData();
-    return changed;
-};
-
-CollectionStrategyId.prototype._add = function (newItem) {
+CollectionStrategyId.prototype.push = function (newItem, callback) {
     this._items.push(newItem);
     this._storeData(newItem, this._items.length - 1);
-};
 
-CollectionStrategyId.prototype.push = function (newItem, callback) {
-    this._add(newItem);
     if (typeof callback === 'function') {
         this._events.on(Collection.EVENTS.onAdd, [newItem]);
         callback(this._events.extract());
@@ -38,7 +29,7 @@ CollectionStrategyId.prototype.addAll = function (newItems, callback) {
         return false;
     }
 
-    newItems.forEach(this._add.bind(this));
+    newItems.forEach(this.push.bind(this));
     if (typeof callback === 'function') {
         this._events.on(Collection.EVENTS.onAdd, newItems);
         callback(this._events.extract());
@@ -188,7 +179,7 @@ CollectionStrategyId.prototype.pop = function (callback) {
 };
 
 
-CollectionStrategyId.prototype.remove = function (item) {
+CollectionStrategyId.prototype.remove = function (item, callback) {
     var
         changed = false,
         _items = this._items;
@@ -208,12 +199,19 @@ CollectionStrategyId.prototype.remove = function (item) {
         }
     }
 
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, [item], _items.length);
+        callback(this._events.extract());        
+    }
+
     return changed;
 };
 
-CollectionStrategyId.prototype.removeAt = function (index) {
-    var changed = false,
+CollectionStrategyId.prototype.removeAt = function (index, callback) {
+    var 
+        changed = false,
         item;
+        
     if (index >= 0 && index < this._items.length) {
         item = this._items.splice(index, 1).pop();
         if (item !== null && typeof item === 'object') {
@@ -232,27 +230,44 @@ CollectionStrategyId.prototype.removeAt = function (index) {
         }
     }
 
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, [item], index);
+        callback(this._events.extract());        
+    }
+
     return changed;
 };
 
-CollectionStrategyId.prototype.removeById = function (id) {
+CollectionStrategyId.prototype.removeById = function (id, callback) {
     var
         changed = false,
+        oldItems = [],
+        oldStartingIndex,
         _items = this._items;
 
     if (id in this._data) {
-        this._data[id]
+        oldItems = this._data[id]
             .map(function (data) {
+                oldStartingIndex = data.index;
                 return _items[data.index];
-            })
-            .forEach(function (item) {
-                var index = _items.indexOf(item);
-                _items.splice(index, 1);
-                this._reindex(index, -1);
-            }, this);
+            });
+
+        oldItems.forEach(function (item) {
+            var index = _items.indexOf(item);
+            _items.splice(index, 1);
+            this._reindex(index, -1);
+        }, this);
 
         changed = this._data[id].length > 0;
         this._data[id] = [];
+    }
+
+    if (changed && typeof callback === 'function') {
+        if (oldItems.length > 1) {
+            oldStartingIndex = -1;
+        }
+        this._events.on(Collection.EVENTS.onRemove, oldItems, oldStartingIndex);
+        callback(this._events.extract());
     }
 
     return changed;
@@ -343,7 +358,7 @@ CollectionStrategyId.prototype.contains = function (item, fromIndex) {
     return contains;
 };
 
-CollectionStrategyId.prototype.sort = function (comparator) {
+CollectionStrategyId.prototype.sort = function (comparator, callback) {
     var
         cmp = comparator || this._comparator,
         items = this._items,
@@ -372,11 +387,19 @@ CollectionStrategyId.prototype.sort = function (comparator) {
         });
     }
 
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onReset);
+        callback(this._events.extract());
+    }
+
     return changed;
 };
 
-CollectionStrategyId.prototype.removeRange = function (fromIndex, count) {
-    var indices = [], total;
+CollectionStrategyId.prototype.removeRange = function (fromIndex, count, callback) {
+    var 
+        indices = [], 
+        total,
+        oldItems;
 
     for (var i = fromIndex; i < fromIndex + count; i = i + 1) {
         indices.push({
@@ -385,7 +408,7 @@ CollectionStrategyId.prototype.removeRange = function (fromIndex, count) {
         });
     }
 
-    this._items.splice(fromIndex, count);
+    oldItems = this._items.splice(fromIndex, count);
     total = indices.length;
 
     if (total === 0) {
@@ -415,6 +438,11 @@ CollectionStrategyId.prototype.removeRange = function (fromIndex, count) {
     }
 
     this._reindex(fromIndex, total);
+
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, oldItems, fromIndex);
+        callback(this._events.extract());        
+    }
     return true;
 };
 

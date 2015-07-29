@@ -1050,5 +1050,60 @@ describe("Collection", function () {
         });
     });
 
+    describe("Events", function () {
+        var 
+            collection,
+            events = 'onAdd,onReplace,onRemove,onMove,onReset,onChange'.split(','),
+            handlers,
+            bindEvents = function () {
+                handlers = [];
+
+                events.forEach(function (event) {
+
+                    collection[event](function(context, argument) {
+                        handlers.push(event);
+                    });
+                });                
+            }
+
+
+        describe("Collection.onAdd", function () {
+            it("should raise onAdd event", function () {
+                //when
+                collection = new Collection();
+                bindEvents();                
+                collection.add('A');
+                //then
+                assert.equal("onAdd,onChange", handlers.join(','));
+            });
+        });
+
+        describe("Collection.onReplace", function () {
+            it("should raise onReplace event", function () {
+                //when
+                collection = new Collection(['A']);
+                bindEvents();                
+                collection.replace('A', 'B');
+                //then
+                assert.equal("onReplace,onChange", handlers.join(','));
+            });
+        });
+
+        describe("Collection.onRemove", function () {
+            it("should raise onRemove event", function () {
+                //when
+                collection = new Collection(['A']);
+                bindEvents();                
+                collection.remove('A');
+                //then
+                assert.equal("onRemove,onChange", handlers.join(','));
+            });
+        });
+
+    })
+
 
 });
+
+
+

@@ -19,6 +19,21 @@ CollectionStrategy.prototype.toString = function () {
     }).join(',');
 };
 
+CollectionStrategy.prototype.clear = function (callback) {
+    var 
+        oldItems = this._items.slice(),
+        changed = oldItems.length > 0;
+        
+    this._resetData();
+
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, oldItems, 0);
+        callback(this._events.extract());        
+    }
+
+    return changed;
+};
+
 CollectionStrategy.prototype.getByIndex = function (index) {
     if (index < 0 || index >= this._items.length) {
         return;
@@ -110,13 +125,21 @@ CollectionStrategy.prototype.filter = function (predicate, collection, thisArg) 
     return result;
 };
 
-CollectionStrategy.prototype.removeEvery = function (predicate, collection, thisArg) {
-    var changed = false;
+CollectionStrategy.prototype.removeEvery = function (predicate, collection, thisArg, callback) {
+    var 
+        changed = false,
+        oldItems = [];
+
     this.filter(predicate, collection, thisArg)
         .forEach(function (item) {
+            oldItems.push(item);
             changed = this.remove(item) || changed;
         }, this);
 
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, oldItems);
+        callback(this._events.extract());        
+    }
     return changed;
 };
 
@@ -157,13 +180,18 @@ CollectionStrategy.prototype.set = function (newItems) {
 
 };
 
-CollectionStrategy.prototype.removeAll = function (items) {
+CollectionStrategy.prototype.removeAll = function (items, callback) {
     var changed = false;
     items.forEach(function (item) {
         if (this.remove(item)) {
             changed = true;
         }
     }, this);
+
+    if (changed && typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, items);
+        callback(this._events.extract());        
+    }
 
     return changed;
 };

@@ -62,7 +62,7 @@ CollectionQueueEvent.prototype.extract = function () {
     this.addEvent('onChange', event);
 
     for (var name in this.queue) {
-        events[name] = this.queue[name];
+        events[name] = this.queue[name].getArgument();
     }
     this.reset();
 
