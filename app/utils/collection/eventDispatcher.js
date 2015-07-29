@@ -11,21 +11,20 @@ EventDispatcher.prototype.register = function (eventName, callback) {
     }
 };
 
-EventDispatcher.prototype.emit = function (eventName, params) {
+EventDispatcher.prototype.emit = function (eventName) {
     var listeners = this._listeners[eventName];
 
     if (typeof listeners === 'undefined') {
         return;
     }
 
+    var args = Array.prototype.slice.call(arguments, 1);
+
     listeners.forEach(function (callback) {
-        callback.apply(undefined, params);
+        callback.apply(undefined, args);
     });
 };
 
 EventDispatcher.prototype.applyTo = function (object) {
-    var eventDispatcher = this;
-    object.emit = function (eventName, params) {
-        eventDispatcher.emit(eventName, params)
-    };
+    object.emit = this.emit.bind(this);
 };

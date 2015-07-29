@@ -134,6 +134,9 @@ describe("Collection", function () {
                 changed,
                 collection = new Collection();
 
+            collection.onAdd(function (context, args) {
+                console.log(context, args);
+            });
             changed = collection.push('A');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A"');

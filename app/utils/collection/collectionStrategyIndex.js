@@ -12,36 +12,51 @@ CollectionStrategyIndex.prototype.clear = function () {
     return changed;
 };
 
-CollectionStrategyIndex.prototype.push = function (newItem) {
+CollectionStrategyIndex.prototype._add = function (newItem) {
     this._items.push(newItem);
+};
+
+
+CollectionStrategyIndex.prototype.push = function (newItem, callback) {
+    this._add(newItem);
+    this._events.on(Collection.EVENTS.onAdd, [newItem]);
+    callback(this._events.extract());
     return true;
 };
 
-CollectionStrategyIndex.prototype.add = function (newItem) {
-    return this.push(newItem);
+CollectionStrategyIndex.prototype.add = function (newItem, callback) {
+    return this.push(newItem, callback);
 };
 
-CollectionStrategyIndex.prototype.addAll = function (newItems) {
+CollectionStrategyIndex.prototype.addAll = function (newItems, callback) {
     if (!Array.isArray(newItems)) {
         return false;
     }
 
     Array.prototype.push.apply(this._items, newItems);
+    this._events.on(Collection.EVENTS.onAdd, newItems);
+    callback(this._events.extract());
     return true;
 };
 
-CollectionStrategyIndex.prototype.insert = function (index, newItem) {
-    var position = (index < 0) ? 0 : Math.min(index, this._items.length);
+CollectionStrategyIndex.prototype.insert = function (index, newItem, callback) {
+    var
+        position = (index < 0) ? 0 : Math.min(index, this._items.length);
 
     if (position < this._items.length) {
         this._items.splice(index, 0, newItem);
     } else {
         this._items.push(newItem);
     }
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
-CollectionStrategyIndex.prototype.insertAll = function (index, newItems) {
+CollectionStrategyIndex.prototype.insertAll = function (index, newItems, callback) {
     if (!Array.isArray(newItems) || newItems.length === 0) {
         return false;
     }
@@ -52,10 +67,15 @@ CollectionStrategyIndex.prototype.insertAll = function (index, newItems) {
     } else {
         Array.prototype.push.apply(this._items, newItems);
     }
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, newItems);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
-CollectionStrategyIndex.prototype.reset = function (newItems) {
+CollectionStrategyIndex.prototype.reset = function (newItems, callback) {
     if (!Array.isArray(newItems)) {
         return false;
     }
@@ -73,6 +93,11 @@ CollectionStrategyIndex.prototype.reset = function (newItems) {
 
     if (changed) {
         this._items = newItems.slice();
+
+        if (typeof callback === 'function') {
+            this._events.on(Collection.EVENTS.onReset);
+            callback(this._events.extract());
+        }
     }
 
     return changed;
@@ -86,12 +111,29 @@ CollectionStrategyIndex.prototype.replace = function (oldItem, newItem) {
     }
 
     this._items.splice(index, 1, newItem);
+
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onReplace, oldItem, newItem);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
 
-CollectionStrategyIndex.prototype.pop = function () {
-    return this._items.pop();
+CollectionStrategyIndex.prototype.pop = function (callback) {
+    var item;
+
+    if (this._items.length > 0) {
+        item = this._items.pop();
+
+        if (typeof callback === 'function') {
+            this._events.on(Collection.EVENTS.onRemove, [item], this._items.length);
+            callback(this._events.extract());
+        }
+
+    }
+    return item;
 };
 
 CollectionStrategyIndex.prototype.remove = function (item) {

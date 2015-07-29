@@ -14,26 +14,39 @@ CollectionStrategyId.prototype.clear = function () {
     return changed;
 };
 
-CollectionStrategyId.prototype.push = function (newItem) {
+CollectionStrategyId.prototype._add = function (newItem) {
     this._items.push(newItem);
     this._storeData(newItem, this._items.length - 1);
+};
+
+CollectionStrategyId.prototype.push = function (newItem, callback) {
+    this._add(newItem);
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
-CollectionStrategyId.prototype.add = function (newItem) {
-    return this.push(newItem);
+CollectionStrategyId.prototype.add = function (newItem, callback) {
+    return this.push(newItem, callback);
 };
 
-CollectionStrategyId.prototype.addAll = function (newItems) {
+CollectionStrategyId.prototype.addAll = function (newItems, callback) {
     if (!Array.isArray(newItems)) {
         return false;
     }
 
-    newItems.forEach(this.add.bind(this));
+    newItems.forEach(this._add.bind(this));
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, newItems);
+        callback(this._events.extract());
+    }
     return true;
 };
 
-CollectionStrategyId.prototype.insert = function (index, newItem) {
+CollectionStrategyId.prototype.insert = function (index, newItem, callback) {
     var length = this._items.length,
         position = (index < 0) ? 0 : Math.min(index, length);
 
@@ -41,10 +54,15 @@ CollectionStrategyId.prototype.insert = function (index, newItem) {
     this._items.splice(position, 0, newItem);
     this._storeData(newItem, position);
 
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
-CollectionStrategyId.prototype.insertAll = function (index, newItems) {
+CollectionStrategyId.prototype.insertAll = function (index, newItems, callback) {
     if (!Array.isArray(newItems) || newItems.length === 0) {
         return false;
     }
@@ -57,10 +75,15 @@ CollectionStrategyId.prototype.insertAll = function (index, newItems) {
         this._storeData(newItems[i], position + i);
     }
 
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onAdd, [newItems], position);
+        callback(this._events.extract());
+    }
+
     return true;
 };
 
-CollectionStrategyId.prototype.reset = function (newItems) {
+CollectionStrategyId.prototype.reset = function (newItems, callback) {
     if (!Array.isArray(newItems)) {
         return false;
     }
@@ -80,11 +103,16 @@ CollectionStrategyId.prototype.reset = function (newItems) {
     if (changed) {
         this._resetData();
         this.insertAll(0, newItems);
+
+        if (typeof callback === 'function') {
+            this._events.on(Collection.EVENTS.onReset);
+            callback(this._events.extract());
+        }
     }
     return changed;
 };
 
-CollectionStrategyId.prototype.replace = function (oldItem, newItem) {
+CollectionStrategyId.prototype.replace = function (oldItem, newItem, callback) {
     var
         id,
         changed = false;
@@ -103,6 +131,11 @@ CollectionStrategyId.prototype.replace = function (oldItem, newItem) {
         id = oldItem[this._idProperty];
         changed = this._replaceById(id, newItem);
     }
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onReplace, oldItem, newItem);
+        callback(this._events.extract());
+    }
+
 
     return changed;
 };
@@ -123,7 +156,7 @@ CollectionStrategyId.prototype._replaceById = function (id, item) {
     return changed;
 };
 
-CollectionStrategyId.prototype.pop = function () {
+CollectionStrategyId.prototype.pop = function (callback) {
     if (this._items.length === 0) {
         return;
     }
@@ -144,6 +177,11 @@ CollectionStrategyId.prototype.pop = function () {
                 break;
             }
         }
+    }
+
+    if (typeof callback === 'function') {
+        this._events.on(Collection.EVENTS.onRemove, [item], this._items.length);
+        callback(this._events.extract());
     }
 
     return item;

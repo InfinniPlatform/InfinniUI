@@ -5,8 +5,16 @@ function Collection(items, idProperty, comparator) {
     this.initStrategy();
     this.reset(items || []);
 
-    //this._eventDispatcher.applyTo(this);
+    this._eventDispatcher.applyTo(this);
 }
+
+Collection.EVENTS = {
+    onAdd: 'onAdd',
+    onChange: 'onChange',
+    onReplace: 'onReplace',
+    onReset: 'onReset',
+    onRemove: 'onRemove'
+};
 
 Collection.prototype.initStrategy = function () {
     var idProperty = this._idProperty;
@@ -15,14 +23,7 @@ Collection.prototype.initStrategy = function () {
     } else {
         this._strategy = new CollectionStrategyId(this._comparator, idProperty);
     }
-};
 
-Collection.EVENTS = {
-    OnAdd: 'onAdd',
-    OnChange: 'onChange',
-    OnReplace: 'onReplace',
-    OnReset: 'onReset',
-    OnRemove: 'onRemove'
 };
 
 Object.defineProperties(Collection.prototype, {
@@ -61,32 +62,35 @@ Collection.prototype.size = function () {
 };
 
 Collection.prototype.push = function (newItem) {
-    var changed = this._strategy.push(newItem);
+    var changed;
+
+    changed = this._strategy.push(newItem, this.triggerEvents.bind(this));
+
     return changed;
 };
 
 Collection.prototype.add = function (newItem) {
-    var changed = this._strategy.add(newItem);
+    var changed = this._strategy.add(newItem, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.addAll = function (newItems) {
-    var changed = this._strategy.addAll(newItems);
+    var changed = this._strategy.addAll(newItems, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.insert = function (index, newItem) {
-    var changed = this._strategy.insert(index, newItem);
+    var changed = this._strategy.insert(index, newItem, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.insertAll = function (index, newItems) {
-    var changed = this._strategy.insertAll(index, newItems);
+    var changed = this._strategy.insertAll(index, newItems, this.triggerEvents.bind(this));
     return changed;
 };
 
 Collection.prototype.reset = function (newItems) {
-    var changed = this._strategy.reset(newItems);
+    var changed = this._strategy.reset(newItems, this.triggerEvents.bind(this));
     return changed;
 };
 
@@ -214,33 +218,27 @@ Collection.prototype.set = function (newItems) {
     return this._strategy.set(newItems);
 };
 
+Collection.prototype.onAdd = function (handler) {
+    var context = null;
+    this._eventDispatcher.register(Collection.EVENTS.onAdd, handler.bind(undefined, context));
+};
+
 Collection.prototype.onChange = function (handler) {
-    this._eventDispatcher.register(Collection.EVENTS.OnChange, handler);
+    var context = null;
+    this._eventDispatcher.register(Collection.EVENTS.onChange, handler.bind(undefined, context));
 };
 
-Collection.prototype.notifyOnRemove = function () {
-    var eventParams = {
-        action: 'remove'
-    };
 
-    this.emit(Collection.EVENTS.OnRemove, eventParams);
-    this.emit(Collection.EVENTS.OnChange, eventParams);
-};
+/**
+ * events = {EventName: EventParams, ...}
+ * @param events
+ */
+Collection.prototype.triggerEvents = function (events) {
+    if (typeof this.emit === 'undefined') {
+        return;
+    }
+    for (var name in events) {
+        this.emit(name, events[name]);
+    }
 
-Collection.prototype.notifyOnAdd = function () {
-    var eventParams = {
-        action: 'add'
-    };
-
-    this.emit(Collection.EVENTS.OnAdd, eventParams);
-    this.emit(Collection.EVENTS.OnChange, eventParams);
-};
-
-Collection.prototype.notifyOnReset = function () {
-    var eventParams = {
-        action: 'reset'
-    };
-
-    this.emit(Collection.EVENTS.OnReset, eventParams);
-    this.emit(Collection.EVENTS.OnChange, eventParams);
 };

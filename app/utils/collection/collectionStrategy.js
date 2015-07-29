@@ -1,4 +1,5 @@
 function CollectionStrategy (comparator) {
+    this._events = new CollectionQueueEvent();
     this._comparator = comparator;
     this._items = [];
 }
@@ -223,6 +224,28 @@ CollectionStrategy.prototype._getValue = function (item) {
 CollectionStrategy.prototype.isNotEqual = function (a, b) {
     return !this.isEqual(a, b);
 };
+
+CollectionStrategy.prototype.buildOnAdd = function (items, startingIndex) {
+    var params = {
+        action: 'add',
+        newItems: items,
+        newStartingIndex: startingIndex
+    };
+
+    return params;
+};
+
+CollectionStrategy.prototype.buildOnRemove = function (items, startingIndex) {
+    var params = {
+        action: 'remove',
+        oldItems: items,
+        oldStartingIndex: typeof startingIndex === 'undefined' ? -1 : startingIndex
+    };
+
+    return params;
+};
+
+
 
 
 
