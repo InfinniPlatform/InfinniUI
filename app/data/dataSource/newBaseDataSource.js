@@ -100,28 +100,19 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        if(item === null){
+        if(item !== null){
+            itemId = item[idProperty];
 
-
-        }else{
-
-        }
-
-        itemId = item[idProperty];
-
-
-        if(!items[itemId]){
-            if(!error){
-                throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов';
-            }else{
-                error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов'});
+            if(!items[itemId]){
+                if(!error){
+                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов';
+                }else{
+                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов'});
+                }
             }
         }
 
-        if(currentSelectedItem[idProperty] != item[idProperty]){
-            this.set('selectedItem', item);
-        }
-        this.set('selectedItem', item);
+        
     },
 
     getIdProperty: function () {
@@ -161,8 +152,6 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('pageNumber', value);
             this.updateItems();
         }
-
-
     },
 
     getPageSize: function () {
