@@ -16,8 +16,9 @@ var MessageBox = Backbone.View.extend({
             '   </div>' +
             '   <div class="modal-footer">' +
             '       <% _.each( buttons, function(button, i){ %>' +
-            '           <a href="javascript:;" class="btn <%= button.classes %> <%= button.type %>-modal" data-index="<%= i %>"><%= button.name %></a>' +
-            '       <% }); %>' +
+            '           <% if (i==0){%> <a href="javascript:;" tabindex="0" class="btn firstfocuselementinmodal <%= button.classes %> <%= button.type %>-modal" data-index="<%= i %>"><%= button.name %></a>' +
+            '           <% }else{ %> <a href="javascript:;" class="btn <%= button.classes %> <%= button.type %>-modal" data-index="<%= i %>"><%= button.name %></a>'+
+            '       <% }}); %>' +
             '   </div>'
     ),
 
@@ -42,6 +43,33 @@ var MessageBox = Backbone.View.extend({
 
         this.$el
             .html($(this.template(this.options)));
+
+
+        //FOCUS IN MODAL WITHOUT FALL
+
+        var self = this;
+        var $container = this.$el.find('.modal-footer');
+
+        this.$el.on('shown.bs.modal', function (e) {
+            $(e.target).find('.firstfocuselementinmodal').focus();
+        });
+
+        $container.append('<div class="lastfocuselementinmodal" tabindex="0">');
+        this.$el.find('.lastfocuselementinmodal').on('focusin', function(){
+            self.$el.find('.firstfocuselementinmodal').focus();
+        });
+        this.$el.on('keydown', function(e){
+            if($(document.activeElement).hasClass('lastfocuselementinmodal') && (e.which || e.keyCode) == 9){
+                e.preventDefault();
+                self.$el.find('.firstfocuselementinmodal').focus();
+            }
+
+            if($(document.activeElement).hasClass('firstfocuselementinmodal') && (e.which || e.keyCode) == 9 && e.shiftKey){
+                e.preventDefault();
+                self.$el.find('.lastfocuselementinmodal').focus();
+            }
+        });
+        //
 
         $parent
             .append(this.$el);

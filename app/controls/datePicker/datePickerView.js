@@ -250,7 +250,7 @@ var pickersStrategy = {
                 todayHighlight: true
             }).on('show', function(e){
                 var $elem = $('.modal-open > .datepicker');
-                var zIndexStyle = 'z-index:'+self.datePickerZindex()+' !important';
+                var zIndexStyle = 'z-index:'+ self.datePickerZindex() +' !important';
                 if($elem.attr('style').indexOf(zIndexStyle) <= 0) {
                     $elem.attr('style', $elem.attr('style') + zIndexStyle);
                 }

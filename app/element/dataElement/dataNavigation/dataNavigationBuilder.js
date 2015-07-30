@@ -23,7 +23,7 @@ _.extend(DataNavigationBuilder.prototype, {
         element.setAvailablePageSizes(metadata.AvailablePageSizes);
         element.setView(view);
 
-        element.setPageNumber(datasource.getPageNumber());
+        element.setPageNumber(datasource.getPageNumber() || null);
         element.setPageSize(datasource.getPageSize() || 10);
 
         //Скриптовые обработчики на события

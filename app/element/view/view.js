@@ -185,7 +185,9 @@ function View() {
 
             session: new AuthenticationProvider(InfinniUI.config.serverUrl),
 
-            culture: culture
+            culture: culture,
+
+            urlParams: urlManager.getParams()
         };
 
         return this.context;
