@@ -105,14 +105,39 @@ var BaseDataSource = Backbone.Model.extend({
 
             if(!items[itemId]){
                 if(!error){
-                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов';
+                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
                 }else{
-                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент которого не из списка элементов'});
+                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                    return;
                 }
             }
         }
 
-        
+        this.set('selectedItems', item);
+    },
+
+    _canSelectItem: function(item, errorHandler){
+        var currentSelectedItem = this.getSelectedItem(),
+            idProperty = this.get('idProperty'),
+            items = this.get('itemsById'),
+            itemId;
+
+        if(item == currentSelectedItem){
+            return;
+        }
+
+        if(item !== null){
+            itemId = item[idProperty];
+
+            if(!items[itemId]){
+                if(!error){
+                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                }else{
+                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                    return;
+                }
+            }
+        }
     },
 
     getIdProperty: function () {
