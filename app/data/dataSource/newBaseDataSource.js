@@ -75,6 +75,17 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('items');
     },
 
+    _setItems: function(items){
+        this.set('items', items);
+        this.set('isDataReady', true);
+        this.set('modifiedItems', []);
+        if(items && items.length > 0){
+            this.setSelectedItem(items[0]);
+        }else{
+            this.setSelectedItem(null);
+        }
+    },
+
     getSelectedItem: function(){
         return this.get('selectedItem');
     },
@@ -82,23 +93,21 @@ var BaseDataSource = Backbone.Model.extend({
     setSelectedItem: function(item, success, error){
         var currentSelectedItem = this.getSelectedItem(),
             idProperty = this.get('idProperty'),
-            itemId = item[idProperty],
-            items = this.get('itemsById');
+            items = this.get('itemsById'),
+            itemId;
+
+        if(item == currentSelectedItem){
+            return;
+        }
 
         if(item === null){
-            if(){
 
-            }
+
         }else{
 
         }
 
-
-
-        var currentSelectedItem = this.getSelectedItem(),
-            idProperty = this.get('idProperty'),
-            itemId = item[idProperty],
-            items = this.get('itemsById');
+        itemId = item[idProperty];
 
 
         if(!items[itemId]){
@@ -250,15 +259,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function(itemsData, successHandler){
-        this.set('items', itemsData);
-        this.set('isDataReady', true);
-        this.set('modifiedItems', []);
-        if(itemsData && itemsData.length > 0){
-            this.setSelectedItem(itemsData[0]);
-        }else{
-            this.setSelectedItem(null);
-        }
-
+        this._setItems(itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
 
@@ -292,13 +293,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function(itemData, successHandler){
-        itemData['__Id'] = this._generateLocalId();
-
-        this.set('items', [itemData]);
-        this.set('isDataReady', true);
-        this.get('modifiedItems').push(itemData);
-        this.setSelectedItem(itemData);
-
+        this._setItems(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
 
