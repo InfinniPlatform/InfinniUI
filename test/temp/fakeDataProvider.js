@@ -88,7 +88,7 @@ function FakeDataProvider(mode) {
 
     this.createItem = function (resultCallback) {
         setTimeout(function(){
-            resultCallback({prefilledField: 1});
+            resultCallback({prefilledField: 1, Id:1, __Id:1});
         },100);
 
     };

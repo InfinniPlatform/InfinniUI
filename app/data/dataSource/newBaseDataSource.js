@@ -51,6 +51,10 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('error', handler);
     },
 
+    onSelectedItemChanged: function (handler) {
+        this.on('onSelectedItemChanged', handler);
+    },
+
     onItemCreated: function (handler) {
         this.on('onItemCreated', handler);
     },
@@ -76,10 +80,15 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _setItems: function(items){
+        var indexOfItemsById;
+
         this.set('items', items);
         this.set('isDataReady', true);
         this.set('modifiedItems', []);
         if(items && items.length > 0){
+            indexOfItemsById = this._indexItemsById(items);
+            this.set('itemsById', indexOfItemsById);
+
             this.setSelectedItem(items[0]);
         }else{
             this.setSelectedItem(null);
@@ -113,31 +122,21 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this.set('selectedItems', item);
+        this.set('selectedItem', item);
+
+        this._notifyAboutSelectedItem(item, success);
     },
 
-    _canSelectItem: function(item, errorHandler){
-        var currentSelectedItem = this.getSelectedItem(),
-            idProperty = this.get('idProperty'),
-            items = this.get('itemsById'),
-            itemId;
+    _notifyAboutSelectedItem: function(item, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: item
+            };
 
-        if(item == currentSelectedItem){
-            return;
+        if(successHandler){
+            successHandler(context, argument);
         }
-
-        if(item !== null){
-            itemId = item[idProperty];
-
-            if(!items[itemId]){
-                if(!error){
-                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
-                }else{
-                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
-                    return;
-                }
-            }
-        }
+        this.trigger('onSelectedItemChanged', context, argument);
     },
 
     getIdProperty: function () {
@@ -283,7 +282,9 @@ var BaseDataSource = Backbone.Model.extend({
                 value: itemsData
             };
 
-        successHandler(context, argument);
+        if(successHandler){
+            successHandler(context, argument);
+        }
         this.trigger('onItemsUpdated', context, argument);
     },
 
@@ -340,6 +341,18 @@ var BaseDataSource = Backbone.Model.extend({
 
     getContext: function(){
         return this.getView().getContext();
+    },
+
+    _indexItemsById: function(items){
+        var idProperty = this.get('idProperty'),
+            result = {},
+            idValue;
+        for(var i = 0, ii = items.length; i < ii; i++){
+            idValue = items[i][idProperty];
+            result[idValue] = items[i];
+        }
+
+        return result;
     }
 
 });

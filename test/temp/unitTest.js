@@ -31,10 +31,10 @@ describe('DocumentDataSource', function () {
 
             //When
             dataSource.updateItems(
-                function(data){
+                function(context, arguments){
 
                     // Then
-                    assert.isTrue(data.length > 0, 'data provider returns items');
+                    assert.isTrue(arguments.value.length > 0, 'data provider returns items');
                     assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
                     assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
                     done();
@@ -65,11 +65,11 @@ describe('DocumentDataSource', function () {
 
 
             var items = dataSource.updateItems(
-                function (data) {
+                function (context, arguments) {
 
                     // Then
-                    assert.equal(data.length, 1);
-                    assert.equal(data[0].Id, '1');
+                    assert.equal(arguments.value.length, 1);
+                    assert.equal(arguments.value[0].Id, '1');
 
                     done();
                 }
@@ -93,7 +93,7 @@ describe('DocumentDataSource', function () {
 
             //When
             dataSource.updateItems(
-                function(data){
+                function(context, arguments){
 
                     assert.isTrue(dataSource.getItems().length == 5, 'data provider returns 5 items');
 
@@ -130,9 +130,9 @@ describe('DocumentDataSource', function () {
 
                     // Then
                     var newItem = argument.value;
-                    assert.ok(newItem);
-                    assert(newItem.prefilledField == 1);
-                    assert.ok(newItem.__Id);
+                    assert.ok(newItem, 'new item is ready');
+                    assert.isTrue(newItem.prefilledField == 1, 'prefilled field is right');
+                    assert.isTrue(newItem.__Id == newItem.Id, 'special Id is right');
                     done();
                 }
             );
