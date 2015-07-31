@@ -239,6 +239,53 @@ describe('DocumentDataSource', function () {
                 done();
             }
         });
+
+        it('should validate items', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.setErrorValidator(validator);
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+
+                dataSource.validateOnErrors
+
+                //When
+                var newItemData = {
+                    "Id": '1',
+                    "FirstName": "Ивано",
+                    "LastName": "Иванович"
+                };
+                dataSource.setProperty('$', newItemData);
+
+                // Then
+                assert.isTrue(dataSource.getProperty('$').FirstName == 'Ивано', 'return property value by property after change property');
+                done();
+            }
+
+            function validator(context, argument){
+                var result = {
+                    isValid: true
+                };
+
+                if(argument.FirstName != 'Иван'){
+                    result.isValid = false;
+                    result.items = [{
+                        property: 'FirstName',
+                        message: 'Почему не Иван?!'
+                    }];
+                }
+
+                return result;
+            }
+        });
     });
 
 });

@@ -13,14 +13,16 @@ var BaseDataSource = Backbone.Model.extend({
 
         dataProvider: null,
 
-        modifiedItems: [],
+        modifiedItems: {},
         items: null,
         itemsById: {},
         selectedItem: null,
-        stringifySelectedItem: null,
 
         fillCreatedItem: true,
         isUpdateSuspended: false,
+
+        errorValidator: null,
+        warningValidator: null,
         showingWarnings: false,
 
         isRequestInProcess: false
@@ -31,12 +33,12 @@ var BaseDataSource = Backbone.Model.extend({
         this.initDataProvider();
 
         if(!this.get('view')){
-            throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
+            throw 'BaseDataSource.initialize: РџСЂРё СЃРѕР·РґР°РЅРёРё РѕР±СЉРµРєС‚Р° РЅРµ Р±С‹Р»Р° Р·Р°РґР°РЅР° view.'
         }
     },
 
     initDataProvider: function(){
-        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
+        throw 'BaseDataSource.initDataProvider Р’ РїРѕС‚РѕРјРєРµ BaseDataSource РЅРµ Р·Р°РґР°РЅ РїСЂРѕРІР°Р№РґРµСЂ РґР°РЅРЅС‹С….'
     },
 
     onPageNumberChanged: function (handler) {
@@ -86,9 +88,9 @@ var BaseDataSource = Backbone.Model.extend({
     _setItems: function(items){
         var indexOfItemsById;
 
-        this.set('items', items);
         this.set('isDataReady', true);
-        this.set('modifiedItems', []);
+        this.set('items', items);
+        this._clearModifiedItems();
         if(items && items.length > 0){
             indexOfItemsById = this._indexItemsById(items);
             this.set('itemsById', indexOfItemsById);
@@ -118,9 +120,9 @@ var BaseDataSource = Backbone.Model.extend({
 
             if(!items[itemId]){
                 if(!error){
-                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                    throw 'BaseDataSource.setSelectedItem() РџРѕРїС‹С‚РєР° РІС‹Р±СЂР°С‚СЊ СЌР»РµРјРµРЅС‚ РІ РёСЃС‚РѕС‡РЅРёРєРµ, РєРѕС‚РѕСЂРѕРіРѕ РЅРµС‚ СЃСЂРµРґРё СЌР»РµРјРµРЅС‚РѕРІ СЌС‚РѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР°.';
                 }else{
-                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() РџРѕРїС‹С‚РєР° РІС‹Р±СЂР°С‚СЊ СЌР»РµРјРµРЅС‚ РІ РёСЃС‚РѕС‡РЅРёРєРµ, РєРѕС‚РѕСЂРѕРіРѕ РЅРµС‚ СЃСЂРµРґРё СЌР»РµРјРµРЅС‚РѕРІ СЌС‚РѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР°.'});
                     return;
                 }
             }
@@ -173,7 +175,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     setPageNumber: function (value) {
         if(!Number.isInteger(value) || value < 0){
-            throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
+            throw 'BaseDataSource.setPageNumber() Р—Р°РґР°РЅРЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ: ' + value + '. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»РѕРµ, РЅРµРѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ.';
         }
 
         if (value != this.get('pageNumber')) {
@@ -188,7 +190,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     setPageSize: function (value) {
         if(!Number.isInteger(value) || value < 0){
-            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
+            throw 'BaseDataSource.setPageSize() Р—Р°РґР°РЅРЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕРµ Р·РЅР°С‡РµРЅРёРµ: ' + value + '. Р”РѕР»Р¶РЅРѕ Р±С‹С‚СЊ С†РµР»РѕРµ, РЅРµРѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ.';
         }
 
         if (value != this.get('pageSize')) {
@@ -203,16 +205,27 @@ var BaseDataSource = Backbone.Model.extend({
 
     isModified : function (item) {
         if(arguments.length == 0){
-            return this.get('modifiedItems').length > 0;
+            return _.size(this.get('modifiedItems')) > 0;
         }
 
         if (item != null && item !== undefined) {
             return false;
         }
         else {
-            var index = this.get('modifiedItems').indexOf(item);
-            return index != -1;
+            var idProperty = this.get('idProperty'),
+                itemId = item[idProperty];
+            return itemId in this.get('modifiedItems');
         }
+    },
+
+    _addModifiedItem: function(item){
+        var idProperty = this.get('idProperty'),
+            itemId = item[idProperty];
+        this.get('modifiedItems')[itemId] = item;
+    },
+
+    _clearModifiedItems: function(){
+        this.set('modifiedItems', {});
     },
 
     getProperty: function(property){
@@ -267,6 +280,7 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
+        this._addModifiedItem(selectedItem);
         this._notifyAboutPropertyChanged(property, value, oldValue);
     },
 
@@ -290,9 +304,9 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getItems: function(){
-        if(this.isDataReady()){
+        if(!this.isDataReady()){
             logger.warn({
-                message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',
+                message: 'BaseDataSource: РџРѕРїС‹С‚РєР° РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ РёСЃС‚РѕС‡РЅРёРєР° РґР°РЅРЅС‹С… (' + this.get('name') + '), РґРѕ С‚РѕРіРѕ РєР°Рє РѕРЅ Р±С‹Р» РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ РґР°РЅРЅС‹РјРё',
                 source: this
             });
         }
@@ -367,7 +381,9 @@ var BaseDataSource = Backbone.Model.extend({
                 value: createdItem
             };
 
-        successHandler(context, argument);
+        if(successHandler){
+            successHandler(context, argument);
+        }
         this.trigger('onItemCreated', context, argument);
     },
 
@@ -386,6 +402,90 @@ var BaseDataSource = Backbone.Model.extend({
             "Value": itemId,
             "CriteriaType": 1
         }]);
+    },
+
+    getErrorValidator: function(){
+        return this.get('errorValidator');
+    },
+
+    setErrorValidator: function(validatingFunction){
+        this.set('errorValidator', validatingFunction);
+    },
+
+    getWarningValidator: function(){
+        return this.get('warningValidator');
+    },
+
+    setWarningValidator: function(validatingFunction){
+        this.set('warningValidator', validatingFunction);
+    },
+
+    validateOnErrors: function(item, callback){
+        return this._validate(item, callback, 'error');
+    },
+
+    validateOnWarnings: function(item, callback){
+        return this._validate(item, callback, 'warning');
+    },
+
+    _validate: function(item, callback, validationType){
+        var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
+            result = {
+                isValid: true,
+                items:[]
+            },
+            isCheckedSpecialItem = !!item,
+            context = this.getContext(),
+            items, subResult, itemIndex;
+
+        if(validatingFunction){
+            if(isCheckedSpecialItem){
+
+                result = validatingFunction(context, item);
+
+            }else{
+
+                items = this.getItems();
+                for(var i = 0, ii = items.length; i < ii; i++){
+
+                    subResult = validatingFunction(context, items[i]);
+                    if(!subResult.isValid) {
+                        this._addIndexToPropertiesOfValidationMessage(subResult.items, i);
+                        result.isValid = false;
+                        result.items = _.union(result.items, subResult.items);
+                    }
+
+                }
+
+            }
+        }
+
+        this._notifyAboutValidation(result, callback, validationType);
+
+        return result;
+    },
+
+    _addIndexToPropertiesOfValidationMessage: function(validationMessages, index){
+        for(var i = 0, ii = validationMessages.length; i < ii; i++){
+            validationMessages[i].property = index + '.' + validationMessages[i].property;
+        }
+    },
+
+    _notifyAboutValidation: function(validationResult, validationHandler, validationType){
+        var context = this.getContext(),
+            argument = {
+                value: validationResult
+            };
+
+        if(validationHandler){
+            validationHandler(context, argument);
+        }
+
+        if(validationType == 'error'){
+            this.trigger('onErrorValidator', context, argument);
+        }else{
+            this.trigger('onWarningValidator', context, argument);
+        }
     },
 
     getContext: function(){
