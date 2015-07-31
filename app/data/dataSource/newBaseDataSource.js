@@ -51,6 +51,10 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('error', handler);
     },
 
+    onPropertyChanged: function (handler) {
+        this.on('onPropertyChanged', handler);
+    },
+
     onSelectedItemChanged: function (handler) {
         this.on('onSelectedItemChanged', handler);
     },
@@ -211,9 +215,30 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    getProperty: function(property){
+        var selectedItem = this.getSelectedItem(),
+            relativeProperty, oldValue;
+
+        if(!selectedItem){
+            return undefined;
+        }
+
+        if(property != '$'){
+            if(property.substr(0,2) == '$.'){
+                relativeProperty = property.substr(2);
+            }else{
+                relativeProperty = property;
+            }
+
+            return InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+        }else{
+            return selectedItem;
+        }
+    },
+
     setProperty: function(property, value){
         var selectedItem = this.getSelectedItem(),
-            relativeProperty;
+            relativeProperty, oldValue;
 
         if(!selectedItem){
             return;
@@ -221,15 +246,39 @@ var BaseDataSource = Backbone.Model.extend({
 
         if(property != '$'){
             if(property.substr(0,2) == '$.'){
-                relativeProperty = property.substr(0,2);
+                relativeProperty = property.substr(2);
             }else{
                 relativeProperty = property;
             }
 
-            InfinniUI.ObjectUtils.setPropertyValue(selectedItem, relativeProperty, value);
-        }else{
+            oldValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+            if(value != oldValue){
+                InfinniUI.ObjectUtils.setPropertyValue(selectedItem, relativeProperty, value);
+            }else{
+                return;
+            }
 
+        }else{
+            if(value != selectedItem){
+                oldValue = this._copyObject(selectedItem);
+                this._replaceAllProperties(selectedItem, value);
+            }else{
+                return;
+            }
         }
+
+        this._notifyAboutPropertyChanged(property, value, oldValue);
+    },
+
+    _notifyAboutPropertyChanged : function (property, newValue, oldValue) {
+        var context = this.getContext(),
+            argument = {
+                property: property,
+                newValue: newValue,
+                oldValue: oldValue
+            };
+
+        this.trigger('onPropertyChanged', context, argument);
     },
 
     saveItem : function (item, onSuccess) {
@@ -353,6 +402,20 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         return result;
+    },
+
+    _replaceAllProperties: function(currentObject, newPropertiesSet){
+        for (var property in currentObject) {
+            delete(currentObject[property]);
+        }
+
+        for (var property in newPropertiesSet) {
+            currentObject[property] = newPropertiesSet[property];
+        }
+    },
+
+    _copyObject: function(currentObject){
+        return JSON.parse(JSON.stringify(currentObject));
     }
 
 });

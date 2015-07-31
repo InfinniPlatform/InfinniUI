@@ -137,6 +137,108 @@ describe('DocumentDataSource', function () {
                 }
             );
         });
+
+        it('should get document property', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            //When
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                // Then
+                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by simple property');
+                assert.isTrue(dataSource.getProperty('$.FirstName') == 'Иван', 'return property value by relative property');
+                assert.isTrue(dataSource.getProperty('$').FirstName == 'Иван', 'return property - full item by $ selector');
+                done();
+            }
+        });
+
+        it('should select item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                var items = dataSource.getItems();
+                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by simple property');
+
+                //When
+                dataSource.setSelectedItem(items[1]);
+
+                // Then
+                assert.isTrue(dataSource.getProperty('FirstName') == 'Петр', 'return property value by simple property after change selected item');
+                done();
+            }
+        });
+
+        it('should change document property', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by property');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+
+                // Then
+                assert.isTrue(dataSource.getProperty('$').FirstName == 'Иванидзе', 'return property value by property after change property');
+                done();
+            }
+        });
+
+        it('should change document property (full item change)', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by property');
+
+                //When
+                var newItemData = {
+                    "Id": '1',
+                    "FirstName": "Ивано",
+                    "LastName": "Иванович"
+                };
+                dataSource.setProperty('$', newItemData);
+
+                // Then
+                assert.isTrue(dataSource.getProperty('$').FirstName == 'Ивано', 'return property value by property after change property');
+                done();
+            }
+        });
     });
 
 });
