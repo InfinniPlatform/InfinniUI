@@ -68,8 +68,8 @@ describe('DocumentDataSource', function () {
                 function (context, arguments) {
 
                     // Then
-                    assert.equal(arguments.value.length, 1);
-                    assert.equal(arguments.value[0].Id, '1');
+                    assert.lengthOf(arguments.value, 1, 'length of filtered items set');
+                    assert.equal(arguments.value[0].Id, '1', 'value of filtered items set');
 
                     done();
                 }
@@ -95,7 +95,7 @@ describe('DocumentDataSource', function () {
             dataSource.updateItems(
                 function(context, arguments){
 
-                    assert.isTrue(dataSource.getItems().length == 5, 'data provider returns 5 items');
+                    assert.lengthOf(dataSource.getItems(), 5, 'data provider returns 5 items');
 
                     dataSource.suspendUpdate();
                     dataSource.setPageNumber(1);
@@ -104,7 +104,7 @@ describe('DocumentDataSource', function () {
                         function(data){
 
                             // Then
-                            assert.isTrue(dataSource.getItems().length == 2, 'data provider returns 2 items');
+                            assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
                             done();
 
                         }
@@ -131,8 +131,8 @@ describe('DocumentDataSource', function () {
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    assert.isTrue(newItem.prefilledField == 1, 'prefilled field is right');
-                    assert.isTrue(newItem.__Id == newItem.Id, 'special Id is right');
+                    assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
+                    assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
                     done();
                 }
             );
@@ -153,9 +153,9 @@ describe('DocumentDataSource', function () {
 
             function handleItemsReady(){
                 // Then
-                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by simple property');
-                assert.isTrue(dataSource.getProperty('$.FirstName') == 'Иван', 'return property value by relative property');
-                assert.isTrue(dataSource.getProperty('$').FirstName == 'Иван', 'return property - full item by $ selector');
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
                 done();
             }
         });
@@ -174,13 +174,13 @@ describe('DocumentDataSource', function () {
 
             function handleItemsReady(){
                 var items = dataSource.getItems();
-                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
 
                 //When
                 dataSource.setSelectedItem(items[1]);
 
                 // Then
-                assert.isTrue(dataSource.getProperty('FirstName') == 'Петр', 'return property value by simple property after change selected item');
+                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
                 done();
             }
         });
@@ -200,13 +200,13 @@ describe('DocumentDataSource', function () {
 
 
             function handleItemsReady(){
-                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by property');
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
 
                 //When
                 dataSource.setProperty('FirstName', 'Иванидзе');
 
                 // Then
-                assert.isTrue(dataSource.getProperty('$').FirstName == 'Иванидзе', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
                 done();
             }
         });
@@ -224,7 +224,7 @@ describe('DocumentDataSource', function () {
             dataSource.updateItems(handleItemsReady);
 
             function handleItemsReady(){
-                assert.isTrue(dataSource.getProperty('FirstName') == 'Иван', 'return property value by property');
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
 
                 //When
                 var newItemData = {
@@ -235,12 +235,65 @@ describe('DocumentDataSource', function () {
                 dataSource.setProperty('$', newItemData);
 
                 // Then
-                assert.isTrue(dataSource.getProperty('$').FirstName == 'Ивано', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
                 done();
             }
         });
 
-        it('should validate items', function (done) {
+        it('should validate item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.setErrorValidator(validator);
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+
+                dataSource.validateOnErrors
+
+                //When
+                var items = dataSource.getItems(),
+                    validateResult1 = dataSource.validateOnErrors(items[0]),
+                    validateResult2 = dataSource.validateOnErrors(items[1]),
+                    validateResult3 = dataSource.validateOnErrors();
+
+                // Then
+                assert.isTrue(validateResult1.isValid, 'successfully validation');
+
+                assert.isFalse(validateResult2.isValid, 'fail validation');
+                assert.lengthOf(validateResult2.items, 1, 'fail validation results');
+                assert.equal(validateResult2.items[0].property, 'FirstName', 'fail validation property result');
+
+                assert.isFalse(validateResult3.isValid, 'full validation');
+                assert.lengthOf(validateResult3.items, 6, 'full validation results');
+                assert.equal(validateResult3.items[3].property, '4.FirstName', 'full validation property result');
+                done();
+            }
+
+            function validator(context, argument){
+                var result = {
+                    isValid: true
+                };
+
+                if(argument.FirstName != 'Иван'){
+                    result.isValid = false;
+                    result.items = [{
+                        property: 'FirstName',
+                        message: 'Почему не Иван?!'
+                    }];
+                }
+
+                return result;
+            }
+        });
+
+        it('should fail item validate', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', function () {
                 return new FakeDataProvider();

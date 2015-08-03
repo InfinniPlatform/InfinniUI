@@ -421,25 +421,25 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     validateOnErrors: function(item, callback){
-        return this._validate(item, callback, 'error');
+        return this._validatingActions(item, callback, 'error');
     },
 
     validateOnWarnings: function(item, callback){
-        return this._validate(item, callback, 'warning');
+        return this._validatingActions(item, callback, 'warning');
     },
 
-    _validate: function(item, callback, validationType){
+    _validatingActions: function(item, callback, validationType){
         var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
             result = {
                 isValid: true,
                 items:[]
             },
-            isCheckedSpecialItem = !!item,
+            isCheckingOneItem = !!item,
             context = this.getContext(),
             items, subResult, itemIndex;
 
         if(validatingFunction){
-            if(isCheckedSpecialItem){
+            if(isCheckingOneItem){
 
                 result = validatingFunction(context, item);
 
