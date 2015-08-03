@@ -255,8 +255,6 @@ describe('DocumentDataSource', function () {
 
             function handleItemsReady(){
 
-                dataSource.validateOnErrors
-
                 //When
                 var items = dataSource.getItems(),
                     validateResult1 = dataSource.validateOnErrors(items[0]),
@@ -293,7 +291,7 @@ describe('DocumentDataSource', function () {
             }
         });
 
-        it('should fail item validate', function (done) {
+        it('should save item', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', function () {
                 return new FakeDataProvider();
@@ -303,40 +301,23 @@ describe('DocumentDataSource', function () {
                 view: fakeView()
             });
 
-            dataSource.setErrorValidator(validator);
-            dataSource.updateItems(handleItemsReady);
+            dataSource.updateItems(handleItemsReady1);
 
-            function handleItemsReady(){
-
-                dataSource.validateOnErrors
+            function handleItemsReady1(){
 
                 //When
-                var newItemData = {
-                    "Id": '1',
-                    "FirstName": "Ивано",
-                    "LastName": "Иванович"
-                };
-                dataSource.setProperty('$', newItemData);
+                var item = dataSource.getSelectedItem();
 
-                // Then
-                assert.isTrue(dataSource.getProperty('$').FirstName == 'Ивано', 'return property value by property after change property');
-                done();
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.saveItem(item);
+
+                dataSource.updateItems(handleItemsReady2);
             }
 
-            function validator(context, argument){
-                var result = {
-                    isValid: true
-                };
-
-                if(argument.FirstName != 'Иван'){
-                    result.isValid = false;
-                    result.items = [{
-                        property: 'FirstName',
-                        message: 'Почему не Иван?!'
-                    }];
-                }
-
-                return result;
+            function handleItemsReady2(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
+                done();
             }
         });
     });

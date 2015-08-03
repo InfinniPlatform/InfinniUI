@@ -93,9 +93,13 @@ function FakeDataProvider(mode) {
 
     };
 
-    this.saveItem = function (value, warnings, resultCallback) {
+    this.saveItem = function (value, resultCallback, warnings) {
 
         var itemIndex = -1;
+
+        if(value['__Id']){
+            delete value['__Id'];
+        }
 
         for (var i = 0; i < items.length; i++) {
             if (items[i].Id === value.Id) {
@@ -111,7 +115,9 @@ function FakeDataProvider(mode) {
             items.push(value);
         }
 
-        resultCallback(items);
+        setTimeout(function(){
+            resultCallback(items);
+        },90);
     };
 
     this.deleteItem = function (value, resultCallback) {

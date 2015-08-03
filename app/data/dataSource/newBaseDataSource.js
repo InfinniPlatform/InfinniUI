@@ -90,7 +90,7 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.set('isDataReady', true);
         this.set('items', items);
-        this._clearModifiedItems();
+        this._clearModifiedSet();
         if(items && items.length > 0){
             indexOfItemsById = this._indexItemsById(items);
             this.set('itemsById', indexOfItemsById);
@@ -218,13 +218,19 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _addModifiedItem: function(item){
+    _includeItemToModifiedSet: function(item){
         var idProperty = this.get('idProperty'),
             itemId = item[idProperty];
         this.get('modifiedItems')[itemId] = item;
     },
 
-    _clearModifiedItems: function(){
+    _excludeItemFromModifiedSet: function(item){
+        var idProperty = this.get('idProperty'),
+            itemId = item[idProperty];
+        delete this.get('modifiedItems')[itemId];
+    },
+
+    _clearModifiedSet: function(){
         this.set('modifiedItems', {});
     },
 
@@ -280,7 +286,7 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._addModifiedItem(selectedItem);
+        this._includeItemToModifiedSet(selectedItem);
         this._notifyAboutPropertyChanged(property, value, oldValue);
     },
 
@@ -297,6 +303,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     saveItem : function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
+            that = this,
             validateResult;
 
         if(!this.isModified(item)){
@@ -311,16 +318,29 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         dataProvider.saveItem(item, function(data){
-
+            if( !('isValid' in data) || data.isValid === true ){
+                that._excludeItemFromModifiedSet(item);
+                that._notifyAboutItemSaved(item, success);
+            }else{
+                that._notifyAboutFailValidationBySaving(item, data, error);
+            }
         });
     },
 
-    _notifyAboutItemSaved: function(item, success){
-        return this.get('isDataReady');
+    _notifyAboutItemSaved: function(item, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: item
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemsUpdated', context, argument);
     },
 
-    _notifyAboutFailValidationBySaving: function(item, validateResult, error){
-        return this.get('isDataReady');
+    _notifyAboutFailValidationBySaving: function(item, validationResult, errorHandler){
+        this._notifyAboutValidation(validationResult, errorHandler, 'error');
     },
 
     isDataReady: function(){
