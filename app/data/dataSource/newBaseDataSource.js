@@ -295,8 +295,32 @@ var BaseDataSource = Backbone.Model.extend({
         this.trigger('onPropertyChanged', context, argument);
     },
 
-    saveItem : function (item, onSuccess) {
+    saveItem : function (item, success, error) {
+        var dataProvider = this.get('dataProvider'),
+            validateResult;
 
+        if(!this.isModified(item)){
+            this._notifyAboutItemSaved(item, success);
+            return;
+        }
+
+        validateResult = this.validateOnErrors(item);
+        if(!validateResult.isValid){
+            this._notifyAboutFailValidationBySaving(item, validateResult, error);
+            return;
+        }
+
+        dataProvider.saveItem(item, function(data){
+
+        });
+    },
+
+    _notifyAboutItemSaved: function(item, success){
+        return this.get('isDataReady');
+    },
+
+    _notifyAboutFailValidationBySaving: function(item, validateResult, error){
+        return this.get('isDataReady');
     },
 
     isDataReady: function(){
