@@ -320,6 +320,34 @@ describe('DocumentDataSource', function () {
                 done();
             }
         });
+
+        it('should delete item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var items = dataSource.getItems(),
+                    itemsCount = items.length;
+
+                dataSource.deleteItem(items[0], function(context, argument){
+                    // Then
+                    items = dataSource.getItems();
+                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
+                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
+                    done();
+                });
+            }
+        });
     });
 
 });

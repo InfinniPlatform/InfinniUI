@@ -359,12 +359,12 @@ var BaseDataSource = Backbone.Model.extend({
 
     _handleDeletedItem: function(item, successHandler){
         var items = this.get('items'),
-            propertyId = this.get('propertyId'),
+            idProperty = this.get('idProperty'),
             itemId = this._idOfItem(item),
             selectedItem = this.getSelectedItem();
 
         for(var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++){
-            if(items[i][propertyId] == itemId){
+            if(items[i][idProperty] == itemId){
                 items.splice(i, 1);
                 needExit = true;
             }
@@ -372,7 +372,7 @@ var BaseDataSource = Backbone.Model.extend({
         delete this.get('itemsById')[itemId];
         this._excludeItemFromModifiedSet(item);
 
-        if(selectedItem && selectedItem[propertyId] == itemId){
+        if(selectedItem && selectedItem[idProperty] == itemId){
             this.setSelectedItem(null);
         }
 
@@ -396,7 +396,7 @@ var BaseDataSource = Backbone.Model.extend({
             argument = {
                 value: item,
                 error: {
-                    message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
+                    message: 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ'
                 }
             };
 
