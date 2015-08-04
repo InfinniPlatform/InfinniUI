@@ -107,17 +107,14 @@ var BaseDataSource = Backbone.Model.extend({
 
     setSelectedItem: function(item, success, error){
         var currentSelectedItem = this.getSelectedItem(),
-            idProperty = this.get('idProperty'),
             items = this.get('itemsById'),
-            itemId;
+            itemId = this._idOfItem(item);
 
         if(item == currentSelectedItem){
             return;
         }
 
         if(item !== null){
-            itemId = item[idProperty];
-
             if(!items[itemId]){
                 if(!error){
                     throw 'BaseDataSource.setSelectedItem() –ü–æ–ø—ã—Ç–∫–∞ –≤—ã–±—Ä–∞—Ç—å —ç–ª–µ–º–µ–Ω—Ç –≤ –∏—Å—Ç–æ—á–Ω–∏–∫–µ, –∫–æ—Ç–æ—Ä–æ–≥–æ –Ω–µ—Ç —Å—Ä–µ–¥–∏ —ç–ª–µ–º–µ–Ω—Ç–æ–≤ —ç—Ç–æ–≥–æ –∏—Å—Ç–æ—á–Ω–∏–∫–∞.';
@@ -212,21 +209,18 @@ var BaseDataSource = Backbone.Model.extend({
             return false;
         }
         else {
-            var idProperty = this.get('idProperty'),
-                itemId = item[idProperty];
+            var itemId = this._idOfItem(item);
             return itemId in this.get('modifiedItems');
         }
     },
 
     _includeItemToModifiedSet: function(item){
-        var idProperty = this.get('idProperty'),
-            itemId = item[idProperty];
+        var itemId = this._idOfItem(item);
         this.get('modifiedItems')[itemId] = item;
     },
 
     _excludeItemFromModifiedSet: function(item){
-        var idProperty = this.get('idProperty'),
-            itemId = item[idProperty];
+        var itemId = this._idOfItem(item);
         delete this.get('modifiedItems')[itemId];
     },
 
@@ -336,11 +330,91 @@ var BaseDataSource = Backbone.Model.extend({
         if(successHandler){
             successHandler(context, argument);
         }
-        this.trigger('onItemsUpdated', context, argument);
+        this.trigger('onItemSaved', context, argument);
     },
 
     _notifyAboutFailValidationBySaving: function(item, validationResult, errorHandler){
         this._notifyAboutValidation(validationResult, errorHandler, 'error');
+    },
+
+    deleteItem : function (item, success, error) {
+        var dataProvider = this.get('dataProvider'),
+            that = this,
+            itemId = this._idOfItem(item),
+            isItemInSet = this.get('itemsById')[itemId] !== undefined;
+
+        if(!isItemInSet){
+            this._notifyAboutMissingDeletedItem(item, error);
+            return;
+        }
+
+        dataProvider.deleteItem(item, function(data){
+            if( !('isValid' in data) || data.isValid === true ){
+                that._handleDeletedItem(item, success);
+            }else{
+                that._notifyAboutFailValidationByDeleting(item, data, error);
+            }
+        });
+    },
+
+    _handleDeletedItem: function(item, successHandler){
+        var items = this.get('items'),
+            propertyId = this.get('propertyId'),
+            itemId = this._idOfItem(item),
+            selectedItem = this.getSelectedItem();
+
+        for(var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++){
+            if(items[i][propertyId] == itemId){
+                items.splice(i, 1);
+                needExit = true;
+            }
+        }
+        delete this.get('itemsById')[itemId];
+        this._excludeItemFromModifiedSet(item);
+
+        if(selectedItem && selectedItem[propertyId] == itemId){
+            this.setSelectedItem(null);
+        }
+
+        this._notifyAboutItemDeleted(item, successHandler);
+    },
+
+    _notifyAboutItemDeleted: function(item, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: item
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemDeleted', context, argument);
+    },
+
+    _notifyAboutMissingDeletedItem: function(item, errorHandler){
+        var context = this.getContext(),
+            argument = {
+                value: item,
+                error: {
+                    message: 'ÕÂÎ¸Áˇ Û‰‡ÎËÚ¸ ˝ÎÂÏÂÌÚ, ÍÓÚÓÓ„Ó ÌÂÚ ÚÂÍÛ˘ÂÏ Ì‡·ÓÂ ËÒÚÓ˜ÌËÍ‡ ‰‡ÌÌ˚ı'
+                }
+            };
+
+        if(errorHandler){
+            errorHandler(context, argument);
+        }
+    },
+
+    _notifyAboutFailValidationByDeleting: function(item, errorData, errorHandler){
+        var context = this.getContext(),
+            argument = {
+                value: item,
+                error: errorData
+            };
+
+        if(errorHandler){
+            errorHandler(context, argument);
+        }
     },
 
     isDataReady: function(){
@@ -546,6 +620,14 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         return result;
+    },
+
+    _idOfItem: function(item){
+        var idProperty = this.get('idProperty');
+        if(!item){
+            return undefined;
+        }
+        return item[idProperty];
     },
 
     _replaceAllProperties: function(currentObject, newPropertiesSet){
