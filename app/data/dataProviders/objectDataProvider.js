@@ -1,4 +1,8 @@
-function ObjectDataProvider(metadata, items) {
+function ObjectDataProvider(items) {
+
+    this.setItems = function(newItems){
+        items = newItems;
+    };
 
     this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
 
@@ -11,7 +15,7 @@ function ObjectDataProvider(metadata, items) {
         resultCallback({});
     };
 
-    this.replaceItem = function (value, resultCallback) {
+    this.saveItem = function (value, resultCallback) {
 
         for(var i = 0; i < items.length; i++){
             if(InfinniUI.ObjectUtils.getPropertyValue(items[i],metadata.IdProperty) === InfinniUI.ObjectUtils.getPropertyValue(value, metadata.IdProperty) ){

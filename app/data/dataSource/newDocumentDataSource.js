@@ -1,7 +1,7 @@
 var DocumentDataSource = BaseDataSource.extend({
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('DocumentDataSource');
+        var dataProvider = new window.providerRegister.build('DocumentDataSource');
         this.set('dataProvider', dataProvider);
     }
 

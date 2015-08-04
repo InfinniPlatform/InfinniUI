@@ -3,9 +3,7 @@ describe('DocumentDataSource', function () {
     describe('dataSource CRUD operations', function () {
         it('should get list of data', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -31,11 +29,7 @@ describe('DocumentDataSource', function () {
 
         it('should get editing record', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource',
-                function () {
-                    return new FakeDataProvider();
-                }
-            );
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
 
             var dataSource = new DocumentDataSource({
@@ -64,9 +58,7 @@ describe('DocumentDataSource', function () {
 
         it('should update document', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -101,9 +93,7 @@ describe('DocumentDataSource', function () {
 
         it('should create document', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -125,9 +115,7 @@ describe('DocumentDataSource', function () {
 
         it('should get document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -147,9 +135,7 @@ describe('DocumentDataSource', function () {
 
         it('should select item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -172,9 +158,7 @@ describe('DocumentDataSource', function () {
 
         it('should change document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -198,9 +182,7 @@ describe('DocumentDataSource', function () {
 
         it('should change document property (full item change)', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -227,9 +209,7 @@ describe('DocumentDataSource', function () {
 
         it('should validate item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -278,9 +258,7 @@ describe('DocumentDataSource', function () {
 
         it('should save item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -308,9 +286,7 @@ describe('DocumentDataSource', function () {
 
         it('should delete item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -336,9 +312,7 @@ describe('DocumentDataSource', function () {
 
         it('should add items', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
