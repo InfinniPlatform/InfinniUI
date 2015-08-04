@@ -1,0 +1,3 @@
+var ListBoxModel = ListEditorBaseModel.extend({
+
+});
