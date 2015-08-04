@@ -101,6 +101,22 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    _addItems: function(newItems){
+        var indexOfItemsById = this.get('itemsById'),
+            items = this.getItems(),
+            newIndexOfItemsById;
+
+        this.set('isDataReady', true);
+
+        items = _.union(items, newItems);
+        this.set('items', items);
+        if(newItems && newItems.length > 0){
+            newIndexOfItemsById = this._indexItemsById(newItems);
+            _.extend(indexOfItemsById, newIndexOfItemsById);
+            this.set('itemsById', indexOfItemsById);
+        }
+    },
+
     getSelectedItem: function(){
         return this.get('selectedItem');
     },
@@ -467,6 +483,44 @@ var BaseDataSource = Backbone.Model.extend({
             successHandler(context, argument);
         }
         this.trigger('onItemsUpdated', context, argument);
+    },
+
+    addNextItems: function(success, error){
+        if (!this.get('isUpdateSuspended')){
+            var filters = this.getFilter(),
+                pageNumber = this.get('pageNumber'),
+                pageSize = this.get('pageSize'),
+                sorting = this.get('sorting'),
+                dataProvider = this.get('dataProvider'),
+                that = this;
+
+            this.set('isRequestInProcess', true);
+            this.set('pageNumber', pageNumber + 1);
+            dataProvider.getItems( filters, pageNumber + 1, pageSize, sorting, function(data){
+
+                that.set('isRequestInProcess', false);
+                that._handleAddedItems(data, success);
+
+            }, error );
+        }
+    },
+
+    _handleAddedItems: function(itemsData, successHandler){
+        this._addItems(itemsData);
+        this._notifyAboutItemsAdded(itemsData, successHandler);
+
+    },
+
+    _notifyAboutItemsAdded: function(itemsData, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: itemsData
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemsAdded', context, argument);
     },
 
     createItem: function(success, error){

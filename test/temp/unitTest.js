@@ -333,6 +333,44 @@ describe('DocumentDataSource', function () {
                 });
             }
         });
+
+        it('should add items', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.suspendUpdate();
+            dataSource.setPageSize(5);
+            dataSource.resumeUpdate();
+
+
+            dataSource.updateItems(
+                function(context, arguments){
+
+                    assert.lengthOf(dataSource.getItems(), 5, 'datasource have 5 items');
+                    assert.equal(dataSource.getPageNumber(), 0, 'datasource at first page');
+
+                    //When
+                    dataSource.addNextItems(
+                        function(data){
+
+                            // Then
+                            assert.lengthOf(dataSource.getItems(), 7, 'after adding datasource have 7 items');
+                            assert.equal(dataSource.getPageSize(), 5, 'after adding datasource still have page size equal 5');
+                            assert.equal(dataSource.getPageNumber(), 1, 'after adding datasource at second page');
+                            done();
+
+                        }
+                    );
+
+                }
+            );
+        });
     });
 
 });
