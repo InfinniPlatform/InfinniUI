@@ -396,7 +396,7 @@ var BaseDataSource = Backbone.Model.extend({
             argument = {
                 value: item,
                 error: {
-                    message: '������ ������� �������, �������� ��� ������� ������ ��������� ������'
+                    message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
                 }
             };
 
