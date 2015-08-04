@@ -1,19 +1,4 @@
 describe('DocumentDataSource', function () {
-    var builder = new ApplicationBuilder(),
-        metadata = {
-            Name: 'PatientDataSource',
-            ConfigId: 'Demography',
-            DocumentId: 'Patient',
-            IdProperty: 'Id',
-            CreateAction: 'CreateDocument',
-            GetAction: 'GetDocument',
-            UpdateAction: 'SetDocument',
-            DeleteAction: 'DeleteDocument',
-            FillCreatedItem: true
-            //PageNumber: 10,
-            //PageSize: 50
-        },
-        parentView = fakeView();
 
     describe('dataSource CRUD operations', function () {
         it('should get list of data', function (done) {
