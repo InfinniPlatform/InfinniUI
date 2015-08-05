@@ -5,6 +5,10 @@ var ObjectDataProvider = function(items, idProperty){
 
 _.extend(ObjectDataProvider.prototype, {
 
+    setItems: function (items) {
+        this.items = items;
+    },
+
     getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
         resultCallback(this.items);
     },
