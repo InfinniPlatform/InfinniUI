@@ -1,52 +1,61 @@
-function ObjectDataProvider(items) {
-
-    this.setItems = function(newItems){
-        items = newItems;
-    };
-
-    this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-
-        resultCallback(items);
-
-    };
-
-    this.createItem = function (resultCallback) {
-
-        resultCallback({});
-    };
-
-    this.saveItem = function (value, resultCallback) {
-
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i],metadata.IdProperty) === InfinniUI.ObjectUtils.getPropertyValue(value, metadata.IdProperty) ){
-                items[i] = value;
-                resultCallback(items[i]);
-                break;
-            }
-        }
-
-    };
-
-    this.deleteItem = function (instanceId, resultCallback) {
-
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i], metadata.IdProperty) === instanceId ) {
-                items.splice(i,1);
-                resultCallback(items);
-                break;
-            }
-        }
-    };
-
-    this.getItem = function (itemId, resultCallback) {
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i], metadata.IdProperty) === itemId ) {
-
-                resultCallback(items[i]);
-                break;
-            }
-        }
-
-    };
-
+var ObjectDataProvider = function(items, idProperty){
+    this.items = items || [];
+    this.idProperty = idProperty || 'Id';
 }
+
+_.extend(ObjectDataProvider.prototype, {
+
+    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
+        resultCallback(this.items);
+    },
+
+    createItem: function (resultCallback) {
+        resultCallback({});
+    },
+
+    saveItem: function (item, resultCallback) {
+        var items = this.items,
+            itemIndex = this._getIndexOfItem(item),
+            result = {
+                isValid: true
+            };
+
+        if(itemIndex == -1){
+            items.push(item);
+        }else{
+            items[itemIndex] = item;
+        }
+
+        resultCallback(result);
+    },
+
+    deleteItem: function (item, resultCallback) {
+        var items = this.items,
+            itemIndex = this._getIndexOfItem(item),
+            result = {
+                isValid: true
+            };
+
+        if(itemIndex == -1){
+            result.isValid = false;
+            result.message = 'Удаляемый элемент не найден';
+        }else{
+            items.splice(itemIndex, 1);
+        }
+
+        resultCallback(result);
+    },
+
+    _getIndexOfItem: function (item) {
+        var itemId = item[this.idProperty],
+            items = this.items;
+
+        for(var i = 0, ii = items.length; i < ii; i++){
+            if(items[i][this.idProperty] === itemId ) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+});
