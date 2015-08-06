@@ -14,22 +14,6 @@ _.extend(ListBoxBuilder.prototype, {
         var parent = params.parent;
         var builder = params.builder;
 
-        //EditorBase
-        //@TODO value
-        element.setHintText(metadata.HintText);
-        element.setErrorText(metadata.ErrorText);
-        element.setWarningText(metadata.WarningText);
-        if (metadata.OnValueChanging) {
-            element.onValueChanging(function (context, args) {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanging.Name, args);
-            });
-        }
-        if (metadata.OnValueChanged) {
-            element.onValueChanged(function (context, args) {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name, args);
-            });
-        }
-
         this.initItemsBinding(params);
     },
 
