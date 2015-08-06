@@ -102,18 +102,18 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _addItems: function(newItems){
-        var indexOfItemsById = this.get('itemsById'),
+        var indexedItemsById = this.get('itemsById'),
             items = this.getItems(),
-            newIndexOfItemsById;
+            newIndexedItemsById;
 
         this.set('isDataReady', true);
 
         items = _.union(items, newItems);
         this.set('items', items);
         if(newItems && newItems.length > 0){
-            newIndexOfItemsById = this._indexItemsById(newItems);
-            _.extend(indexOfItemsById, newIndexOfItemsById);
-            this.set('itemsById', indexOfItemsById);
+            newIndexedItemsById = this._indexItemsById(newItems);
+            _.extend(indexedItemsById, newIndexedItemsById);
+            this.set('itemsById', indexedItemsById);
         }
     },
 

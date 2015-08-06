@@ -136,4 +136,10 @@ function FakeDataProvider(mode) {
         resultCallback(null);
     };
 
+    this.setCreateAction = function(){};
+    this.setUpdateAction = function(){};
+    this.setReadAction = function(){};
+    this.setDeleteAction = function(){};
+    this.setConfigId = function(){};
+    this.setDocumentId = function(){};
 }
