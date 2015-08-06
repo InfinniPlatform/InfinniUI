@@ -3,7 +3,7 @@ function ListEditorBaseControl(parent) {
     editorBaseControlMixin.call(this);
 }
 
-_.inherit(ListEditorBaseControl, Control);
+_.inherit(ListEditorBaseControl, ContainerControl);
 
 ListEditorBaseControl.prototype.onSelectedItemChanged = function (handler) {
     this.controlModel.onSelectedItemChanged(handler);

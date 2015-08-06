@@ -1,4 +1,4 @@
-var ListEditorBaseModel = ControlModel.extend({
+var ListEditorBaseModel = ContainerModel.extend({
 
     initialize: function () {
         editorBaseModelMixin.call(this);
