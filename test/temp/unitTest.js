@@ -395,10 +395,11 @@ describe('ObjectDataSource', function () {
 
     function createObjectDataSource(){
         var dataSource = new ObjectDataSource({
-            view: fakeView()
-        });
+                view: fakeView()
+            }),
+            initItems = JSON.parse(JSON.stringify(items));
 
-        dataSource.setItems(items);
+        dataSource.setItems(initItems);
 
         return dataSource;
     }
@@ -443,11 +444,7 @@ describe('ObjectDataSource', function () {
 
         it('should get document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             //When
             dataSource.updateItems(handleItemsReady);
@@ -463,11 +460,7 @@ describe('ObjectDataSource', function () {
 
         it('should select item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             dataSource.updateItems(handleItemsReady);
 
@@ -486,15 +479,9 @@ describe('ObjectDataSource', function () {
 
         it('should change document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
-
+            var dataSource = createObjectDataSource();
 
             dataSource.updateItems(handleItemsReady);
-
 
             function handleItemsReady(){
                 assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
@@ -510,11 +497,7 @@ describe('ObjectDataSource', function () {
 
         it('should change document property (full item change)', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             dataSource.updateItems(handleItemsReady);
 
@@ -537,11 +520,7 @@ describe('ObjectDataSource', function () {
 
         it('should validate item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             dataSource.setErrorValidator(validator);
             dataSource.updateItems(handleItemsReady);
@@ -586,11 +565,7 @@ describe('ObjectDataSource', function () {
 
         it('should save item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             dataSource.updateItems(handleItemsReady1);
 
@@ -614,11 +589,7 @@ describe('ObjectDataSource', function () {
 
         it('should delete item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             dataSource.updateItems(handleItemsReady1);
 
@@ -636,42 +607,6 @@ describe('ObjectDataSource', function () {
                     done();
                 });
             }
-        });
-
-        it('should add items', function (done) {
-            // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.suspendUpdate();
-            dataSource.setPageSize(5);
-            dataSource.resumeUpdate();
-
-
-            dataSource.updateItems(
-                function(context, arguments){
-
-                    assert.lengthOf(dataSource.getItems(), 5, 'datasource have 5 items');
-                    assert.equal(dataSource.getPageNumber(), 0, 'datasource at first page');
-
-                    //When
-                    dataSource.addNextItems(
-                        function(data){
-
-                            // Then
-                            assert.lengthOf(dataSource.getItems(), 7, 'after adding datasource have 7 items');
-                            assert.equal(dataSource.getPageSize(), 5, 'after adding datasource still have page size equal 5');
-                            assert.equal(dataSource.getPageNumber(), 1, 'after adding datasource at second page');
-                            done();
-
-                        }
-                    );
-
-                }
-            );
         });
     });
 
