@@ -9,7 +9,7 @@ _.inherit(ListEditorBaseBuilder, ContainerBuilder);
 ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
 
     ContainerBuilder.prototype.applyMetadata.call(this, params);
-    editorBaseBuilderMixin.prototype.applyMetadata.call(this, params);
+    editorBaseBuilderMixin.applyMetadata.call(this, params);
 
     var metadata = params.metadata;
     var element = params.element;

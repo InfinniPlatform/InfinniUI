@@ -23,7 +23,7 @@ ContainerBuilder.prototype.initItemTemplate = function (params) {
         itemTemplate = function (context, argument) {
             var index = argument.index;
             var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            return builder.build(builder, parent, metadata.ItemTemplate, collectionProperty);
+            return builder.build(parent, metadata.ItemTemplate, collectionProperty);
         };
     } else if (metadata.DisplayProperty) {
         itemTemplate = function (context, argument) {
@@ -34,7 +34,7 @@ ContainerBuilder.prototype.initItemTemplate = function (params) {
             };
             var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
             //@TODO Напр. для DataGrid д.б. другая реализация (строка таблицы)
-            var label = builder.build(builder, parent, {
+            var label = builder.build(parent, {
                 Label: {
                     Text: getText()
                 }
@@ -51,7 +51,7 @@ ContainerBuilder.prototype.initItemTemplate = function (params) {
             var item = argument.item;
 
             var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            var label = builder.build(builder, parent, {
+            var label = builder.build(parent, {
                 Label: {
                     Value: {
                         ObjectBinding: {
@@ -76,7 +76,7 @@ ContainerBuilder.prototype.initItemTemplate = function (params) {
             };
 
             var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            var label = builder.build(builder, parent, {
+            var label = builder.build(parent, {
                 Label: {
                     Text: getText()
                 }

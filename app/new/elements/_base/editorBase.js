@@ -20,7 +20,7 @@ function editorBaseMixin() {
         return this.control.get('errorText');
     };
 
-    this.setErrorText = function () {
+    this.setErrorText = function (value) {
         this.control.set('errorText', value);
     };
 

@@ -1,0 +1,37 @@
+{
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "MainDataSource"
+      }
+    }
+  ],
+  "LayoutPanel": {
+    "StackPanel": {
+      "Name": "",
+      "Items": [
+        {
+          "CheckBox": {
+            "Text": "Подписаться на новости",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "IsSubscribe"
+              }
+            },
+            "OnValueChanged": {
+              "Name": "Test"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Scripts": [
+    {
+      "Name": "Test",
+      "Body": "alert(arguments);"
+    }
+  ]
+}
+
