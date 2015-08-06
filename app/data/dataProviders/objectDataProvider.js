@@ -14,7 +14,8 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     createItem: function (resultCallback) {
-        resultCallback({});
+        var item = this.createLocalItem(this.idProperty);
+        resultCallback(item);
     },
 
     saveItem: function (item, resultCallback) {
@@ -61,5 +62,17 @@ _.extend(ObjectDataProvider.prototype, {
         }
 
         return -1;
+    },
+
+    createLocalItem: function (idProperty) {
+        var result = {};
+
+        result[idProperty] = this._generateLocalId();
+
+        return result;
+    },
+
+    _generateLocalId: function(){
+        return guid();
     }
 });

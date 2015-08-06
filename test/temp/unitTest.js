@@ -435,8 +435,7 @@ describe('ObjectDataSource', function () {
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
-                    assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
+                    assert.ok(newItem.Id, 'new item has Id');
                     done();
                 }
             );

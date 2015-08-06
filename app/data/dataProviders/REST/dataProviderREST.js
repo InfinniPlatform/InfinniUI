@@ -14,7 +14,7 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         }, successCallback, failCallback).makeRequest(urlConstructor.constructCreateDocumentRequest());
     };
 
-    this.createLocalItem = function (resultCallback, idProperty) {
+    this.createLocalItem = function (idProperty) {
         var result = {};
 
         result[idProperty] = this._generateLocalId();
