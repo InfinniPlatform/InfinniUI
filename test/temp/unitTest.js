@@ -424,73 +424,9 @@ describe('ObjectDataSource', function () {
             );
         });
 
-
-        it('should get editing record', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            //When
-            dataSource.suspendUpdate();
-            dataSource.setIdFilter('1');
-            dataSource.resumeUpdate();
-
-
-
-            var items = dataSource.updateItems(
-                function (context, arguments) {
-
-                    // Then
-                    assert.lengthOf(arguments.value, 1, 'length of filtered items set');
-                    assert.equal(arguments.value[0].Id, '1', 'value of filtered items set');
-
-                    done();
-                }
-            );
-        });
-
-
-        it('should update document', function (done) {
-            // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.suspendUpdate();
-            dataSource.setPageSize(5);
-            dataSource.resumeUpdate();
-
-            //When
-            dataSource.updateItems(
-                function(context, arguments){
-
-                    assert.lengthOf(dataSource.getItems(), 5, 'data provider returns 5 items');
-
-                    dataSource.suspendUpdate();
-                    dataSource.setPageNumber(1);
-                    dataSource.resumeUpdate();
-                    dataSource.updateItems(
-                        function(data){
-
-                            // Then
-                            assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
-                            done();
-
-                        }
-                    );
-
-                }
-            );
-        });
-
         it('should create document', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var dataSource = createObjectDataSource();
 
             //When
             dataSource.createItem(
