@@ -8,16 +8,8 @@ _.extend(ListBoxBuilder.prototype, {
 
     applyMetadata: function (params) {
         ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
-
-        var metadata = params.metadata;
-        var element = params.element;
-        var parent = params.parent;
-        var builder = params.builder;
-
         this.initItemsBinding(params);
     },
-
-
 
     initItemsBinding: function (params) {
         var metadata = params.metadata.Items;
@@ -58,6 +50,5 @@ _.extend(ListBoxBuilder.prototype, {
         }
         return binding;
     }
-
 
 });
