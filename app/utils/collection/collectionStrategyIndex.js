@@ -35,15 +35,17 @@ CollectionStrategyIndex.prototype.addAll = function (newItems, callback) {
 
 CollectionStrategyIndex.prototype.insert = function (index, newItem, callback) {
     var
+        newStartingIndex = -1,
         position = (index < 0) ? 0 : Math.min(index, this._items.length);
 
     if (position < this._items.length) {
         this._items.splice(index, 0, newItem);
+        newStartingIndex = index;
     } else {
         this._items.push(newItem);
     }
     if (typeof callback === 'function') {
-        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        this._events.on(Collection.EVENTS.onAdd, [newItem], newStartingIndex);
         callback(this._events.extract());
     }
 

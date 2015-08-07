@@ -38,15 +38,17 @@ CollectionStrategyId.prototype.addAll = function (newItems, callback) {
 };
 
 CollectionStrategyId.prototype.insert = function (index, newItem, callback) {
-    var length = this._items.length,
-        position = (index < 0) ? 0 : Math.min(index, length);
+    var
+        length = this._items.length,
+        position = (index < 0) ? 0 : Math.min(index, length),
+        newStartingIndex = index === length ? -1 : index;
 
     this._reindex(position, 1);
     this._items.splice(position, 0, newItem);
     this._storeData(newItem, position);
 
     if (typeof callback === 'function') {
-        this._events.on(Collection.EVENTS.onAdd, [newItem]);
+        this._events.on(Collection.EVENTS.onAdd, [newItem], newStartingIndex);
         callback(this._events.extract());
     }
 
