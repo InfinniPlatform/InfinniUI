@@ -111,7 +111,7 @@ describe('DocumentDataSource', function () {
 
                     var items = dataSource.getItems();
                     assert.lengthOf(items, 1, 'one element (when was created) in items');
-                    assert.equal(items[0].prefilledField, 1, 'is right element in source after creating');
+                    assert.equal(items[0].prefilledField, 1, 'is right element in items after creating');
                     done();
                 }
             );
