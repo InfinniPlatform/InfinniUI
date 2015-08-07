@@ -4,6 +4,29 @@
       "ObjectDataSource": {
         "Name": "MainDataSource"
       }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "BloodGroupDataSource",
+        "Items": [
+          {
+            "Id": 1,
+            "DisplayName": "I"
+          },
+          {
+            "Id": 2,
+            "DisplayName": "II"
+          },
+          {
+            "Id": 3,
+            "DisplayName": "III"
+          },
+          {
+            "Id": 4,
+            "DisplayName": "IV"
+          }
+        ]
+      }
     }
   ],
   "LayoutPanel": {
@@ -26,7 +49,18 @@
               "Name": "OnValueChanging"
             }
           }
+        },
+        {
+          "ListBox": {
+            "DisplayProperty": "DisplayName",
+            "Items": {
+              "PropertyBinding": {
+                "DataSource": "BloodGroupDataSource"
+              }
+            }
+          }
         }
+
       ]
     }
   },

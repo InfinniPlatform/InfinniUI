@@ -46,7 +46,7 @@ function editorBaseModelMixin() {
         var hasAttributes = false;
 
         for (var i in attributes) {
-            hasAttributes = false;
+            hasAttributes = true;
             break;
         }
 
