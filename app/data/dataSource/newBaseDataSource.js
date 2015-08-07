@@ -148,9 +148,9 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutSelectedItem: function(item, successHandler){
         var context = this.getContext(),
-            argument = {
-                value: item
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
 
         if(successHandler){
             successHandler(context, argument);
@@ -302,11 +302,11 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutPropertyChanged : function (property, newValue, oldValue) {
         var context = this.getContext(),
-            argument = {
-                property: property,
-                newValue: newValue,
-                oldValue: oldValue
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.property = property;
+        argument.newValue = newValue;
+        argument.oldValue = oldValue;
 
         this.trigger('onPropertyChanged', context, argument);
     },
@@ -339,9 +339,9 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutItemSaved: function(item, successHandler){
         var context = this.getContext(),
-            argument = {
-                value: item
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
 
         if(successHandler){
             successHandler(context, argument);
@@ -397,9 +397,9 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutItemDeleted: function(item, successHandler){
         var context = this.getContext(),
-            argument = {
-                value: item
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
 
         if(successHandler){
             successHandler(context, argument);
@@ -409,12 +409,12 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutMissingDeletedItem: function(item, errorHandler){
         var context = this.getContext(),
-            argument = {
-                value: item,
-                error: {
-                    message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
-                }
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+        argument.error = {
+            message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
+        };
 
         if(errorHandler){
             errorHandler(context, argument);
@@ -423,10 +423,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     _notifyAboutFailValidationByDeleting: function(item, errorData, errorHandler){
         var context = this.getContext(),
-            argument = {
-                value: item,
-                error: errorData
-            };
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+        argument.error = errorData;
 
         if(errorHandler){
             errorHandler(context, argument);
@@ -696,6 +696,12 @@ var BaseDataSource = Backbone.Model.extend({
 
     _copyObject: function(currentObject){
         return JSON.parse(JSON.stringify(currentObject));
+    },
+
+    _getArgumentTemplate: function(){
+        return {
+            source: this
+        };
     }
 
 });

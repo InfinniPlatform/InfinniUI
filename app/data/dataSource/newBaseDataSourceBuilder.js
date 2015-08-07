@@ -1,4 +1,4 @@
-function oldBaseDataSourceBuilder() {
+function BaseDataSourceBuilder() {
 
     this.build = function (metadata, dataSource, parent, builder) {
 
@@ -139,3 +139,11 @@ function oldBaseDataSourceBuilder() {
     }
 
 }
+
+_.extend( BaseDataSourceBuilder.prototype, {
+    build: function(builder, parent, metadata){
+
+    }
+} );
+
+
