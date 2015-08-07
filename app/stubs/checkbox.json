@@ -20,7 +20,10 @@
               }
             },
             "OnValueChanged": {
-              "Name": "Test"
+              "Name": "OnValueChanged"
+            },
+            "OnValueChanging": {
+              "Name": "OnValueChanging"
             }
           }
         }
@@ -29,8 +32,12 @@
   },
   "Scripts": [
     {
-      "Name": "Test",
-      "Body": "alert(arguments);"
+      "Name": "OnValueChanged",
+      "Body": "console.log('OnValueChanged', args);"
+    },
+    {
+      "Name": "OnValueChanging",
+      "Body": "console.log('OnValueChanging', args);return false;"
     }
   ]
 }

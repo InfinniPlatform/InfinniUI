@@ -48,8 +48,8 @@ function editorBaseMixin() {
         }
 
         return function (message) {
-            message.source = this;
-            return handler.call(this, context, message);
+            message.source = element;
+            return handler.call(undefined, context, message);
         };
     }
 }

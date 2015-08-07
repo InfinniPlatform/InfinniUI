@@ -1,11 +1,12 @@
 function EventManager() {
-    this.handlers = [];
+    this.handlers = {};
 }
 
 EventManager.prototype.on = function (name, handler) {
     if (typeof this.handlers[name] === 'undefined') {
-        this.handlers[name].push(handler);
+        this.handlers[name] = [];
     }
+    this.handlers[name].push(handler);
     return this;
 };
 

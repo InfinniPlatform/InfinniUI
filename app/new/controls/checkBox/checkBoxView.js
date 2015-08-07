@@ -27,6 +27,7 @@ var CheckBoxView = ControlView.extend({
     onClickHandler: function (event) {
         var checked = this.ui.input.prop('checked');
         this.model.set('value', checked);
+        this.ui.input.prop('checked', this.model.get('value'));
     },
 
     onChangeValueHandler: function (model, value) {

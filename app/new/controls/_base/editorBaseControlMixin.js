@@ -1,11 +1,11 @@
 function editorBaseControlMixin() {
 
     this.setValue = function (value) {
-        this.controlModel.setValue(value);
+        this.controlModel.set('value', value);
     };
 
     this.getValue = function () {
-        return this.controlModel.getValue();
+        return this.controlModel.get('value');
     };
 
     this.onValueChanging = function (handler) {
