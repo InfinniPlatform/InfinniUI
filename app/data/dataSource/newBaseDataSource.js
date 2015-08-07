@@ -543,7 +543,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function(itemData, successHandler){
-        this._setItems(itemData);
+        this._setItems([itemData]);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
 

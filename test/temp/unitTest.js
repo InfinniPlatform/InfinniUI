@@ -108,6 +108,10 @@ describe('DocumentDataSource', function () {
                     assert.ok(newItem, 'new item is ready');
                     assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
                     assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
+
+                    var items = dataSource.getItems();
+                    assert.lengthOf(items, 1, 'one element (when was created) in items');
+                    assert.equal(items[0].prefilledField, 1, 'is right element in source after creating');
                     done();
                 }
             );
