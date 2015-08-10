@@ -35,6 +35,8 @@ FileBindingBuilder.prototype.build = function (builder, parent, metadata, collec
 
             var value = args.value;
 
+            if (!value){return;}
+
             if (value.Info.ContentId) {
                 var fileUrl = dataSource.getFileUrl(metadataProperty);
                 fileBinding.setFileUrl(fileUrl);
