@@ -195,11 +195,11 @@ var layoutManager = {
         var manager = this;
         $(this.getModalSelector()).each(function (i, el) {
             manager._resizeDialog($(el));
-            manager._resetDialogHeight($(el));
+            manager.resetDialogHeight($(el));
         });
     },
 
-    _resetDialogHeight: function($modal){
+    resetDialogHeight: function($modal){
         var space = 10;
 
         if($modal.children()) {
@@ -212,7 +212,7 @@ var layoutManager = {
 
             $el.parentsUntil('.modal').attr('style', 'height: auto');
 
-            $modal.children('.modal').height($body.outerHeight(true)+$header.outerHeight(true));
+            $modal.children('.modal').height($body.outerHeight(true) + $header.outerHeight(true));
 
         }
 
