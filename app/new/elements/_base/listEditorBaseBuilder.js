@@ -14,8 +14,11 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
     var metadata = params.metadata;
     var element = params.element;
 
-    element.setMultiSelect(metadata.MultiSelect);
-    element.setValueSelector(metadata.ValueSelector);
+    if (typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null) {
+        element.setMultiSelect(metadata.MultiSelect);
+    }
+
+    this.initValueSelector(params);
     element.setGroupValueSelector(metadata.GroupValueSelector);
     element.setGroupItemTemplate(metadata.GroupItemTemplate);
     element.setGroupItemComparator(metadata.GroupItemComparator);
@@ -28,6 +31,33 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
 
     //@TODO Build items DataBinding
     this.initItemsBinding(params);
+};
+
+ListEditorBaseBuilder.prototype.initValueSelector = function (params) {
+    var metadata = params.metadata,
+        element = params.element,
+        valueSelector;
+
+    //@TODO Build ValueComparator
+
+    if (metadata.ValueSelector) {
+        valueSelector = function (context, args) {
+            var scriptExecutor = new ScriptExecutor(params.parent);
+            return scriptExecutor.executeScript(metadata.ValueSelector.Name, args)
+        };
+    } else if (metadata.ValueProperty) {
+        valueSelector = function (context, args) {
+            return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.ValueProperty);
+        }
+    } else {
+        valueSelector = function (context, args) {
+            return args.value;
+        }
+    }
+
+    element.setValueComparator(new ComparatorId());
+
+    element.setValueSelector(valueSelector);
 };
 
 ListEditorBaseBuilder.prototype.initItemsBinding = function (params) {

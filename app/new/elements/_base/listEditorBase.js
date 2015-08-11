@@ -58,3 +58,11 @@ ListEditorBase.prototype.onSelectedItemChanged = function (handler) {
     //@TODO Вынести createControlEventHandler в базовый элемент?
     this.control.onSelectedItemChanged(this.createControlEventHandler(handler));
 };
+
+ListEditorBase.prototype.setValueComparator = function (comparator) {
+    this.control.set('valueComparator', comparator);
+};
+
+ListEditorBase.prototype.getValueComparator = function () {
+    return this.control.get('valueComparator');
+}

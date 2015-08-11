@@ -6,6 +6,11 @@ var ListBoxView = ControlView.extend({
         items: '.listbox-items'
     },
 
+    //ListEditorBase
+    applyItemStrategy: function () {
+
+    },
+
     initialize: function () {
         var items = this.model.get('items');
         this.$items = [];
@@ -16,40 +21,56 @@ var ListBoxView = ControlView.extend({
         items.onReplace(this.onReplaceItem.bind(this));
         items.onMove(this.onMoveItem.bind(this));
         items.onReset(this.onResetItem.bind(this));
-
         items.onChange(function (context, argument) {
             console.log('onChange', argument);
         });
     },
 
     render: function () {
-
         this.prerenderingActions();
-
         this.$el.html(this.template());
-
         this.bindUIElements();
-
         this.renderItems();
-
         this.postrenderingActions();
         return this;
     },
 
-    renderItems: function () {
+    renderItems: function (items, index) {
+        if (!this.wasRendered) {
+            return;
+        }
+        var model = this.model;
+        var itemTemplate = model.get('itemTemplate');
+        var itemsCollection = model.get('items');
+
+        if (typeof items === 'undefined') {
+            items = itemsCollection.toArray();
+        }
+
+        if (typeof index === 'undefined') {
+            index = -1;
+        }
+
+        var $items = items.map(this.renderItem.bind(this));
+
+        if (index === -1) { //Добавить представления элементов в конец
+            Array.prototype.push.apply(this.$items, $items);
+            this.ui.items.append($items);
+        } else {    //Добавить представления элементов в указанную позицию
+            Array.prototype.splice.apply(this.$items, [index, 0].concat($items));
+            if (index === 0) {
+                this.ui.items.prepend($items);
+            } else {
+                this.$items[index - 1].after($items);
+            }
+        }
+    },
+
+    renderItem: function (item) {
         var model = this.model;
 
-        var itemsCollection = model.get('items');
-        var itemTemplate = model.get('itemTemplate');
-
-        var $items = itemsCollection.toArray().map(function (item) {
-            return itemTemplate(undefined, {
-                item: item,
-                index: itemsCollection.indexOf(item)
-            }).render();
-        });
-        Array.prototype.push.apply(this.$items, $items);
-        this.ui.items.append(this.$items);
+        var viewItem = new ListBoxItemView({model: model, item: item});
+        return viewItem.render().$el;
     },
 
     onAddItem: function (context, argument) {
@@ -58,31 +79,7 @@ var ListBoxView = ControlView.extend({
         }
         var newItems = argument.newItems;
         var newStartingIndex = argument.newStartingIndex;
-        var model = this.model;
-
-        var itemsCollection = model.get('items');
-        var itemTemplate = model.get('itemTemplate');
-
-        var $items = newItems.map(function (item) {
-            return itemTemplate(undefined, {
-                item: item,
-                index: itemsCollection.indexOf(item)
-            }).render();
-        });
-
-        if (newStartingIndex === -1) {
-            //@TODO Добавить представления элементов в конец
-            Array.prototype.push.apply(this.$items, newItems);
-            this.ui.items.append($items);
-        } else {
-            //@TODO Добавить представления элементов в указанную позицию
-            Array.prototype.splice.apply(this.$items, [newStartingIndex, 0].concat($items));
-            if (newStartingIndex === 0) {
-                this.ui.items.prepend($items);
-            } else {
-                this.$items[newStartingIndex - 1].after($items);
-            }
-        }
+        this.renderItems(newItems, newStartingIndex);
     },
 
     onRemoveItem: function (context, argument) {

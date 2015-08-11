@@ -53,10 +53,17 @@
         {
           "ListBox": {
             "DisplayProperty": "DisplayName",
+            "MultiSelect": false,
+            "ValueSelector": {
+              "Name": "ValueSelector"
+            },
             "Items": {
               "PropertyBinding": {
                 "DataSource": "BloodGroupDataSource"
               }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged"
             }
           }
         }
@@ -72,6 +79,10 @@
     {
       "Name": "OnValueChanging",
       "Body": "console.log('OnValueChanging', args);return false;"
+    },
+    {
+      "Name": "ValueSelector",
+      "Body": "console.log(args.value.DisplayName); return {id: args.value.DisplayName};"
     }
   ]
 }
