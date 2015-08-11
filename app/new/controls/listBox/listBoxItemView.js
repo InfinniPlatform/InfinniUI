@@ -16,7 +16,7 @@ var ListBoxItemView = Backbone.View.extend({
 
     initialize: function (options) {
         this.options = options;
-        this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem, this);
+        this.listenTo(this.model, 'change:value', this.onChangeValueHandler, this);
     },
 
     events: {
@@ -45,15 +45,14 @@ var ListBoxItemView = Backbone.View.extend({
     },
 
     onMouseDownHandler: function (event) {
-        console.log(event);
-        this.toggleSelectedItem();
+        this.toggleItem();
     },
 
     onKeyDownHandler: function (event) {
         if (this.TOGGLE_KEY_CODE.indexOf(event.which) === -1) {
             return;
         }
-        this.toggleSelectedItem();
+        this.toggleItem();
     },
 
     onClickHandler: function (event) {
@@ -63,17 +62,18 @@ var ListBoxItemView = Backbone.View.extend({
         }
     },
 
-    onChangeSelectedItem: function (model, value) {
+    onChangeValueHandler: function (model, value) {
         if (this.ui && this.ui.content) {
-            var item = this.options.item;
-            var selected = Array.isArray(value) ? value.indexOf(item) > -1 : item === value;
+            var
+                selected = model.hasValue(this.options.value);
+
             this.$el.toggleClass('selected', selected);
             this.ui.input.prop('checked', selected);
         }
     },
 
-    toggleSelectedItem: function () {
-        this.model.trigger('toggleSelectedItem', this.options.item);
+    toggleItem: function () {
+        this.model.trigger('toggleValue', this.options.value);
     }
 
 });

@@ -65,4 +65,4 @@ ListEditorBase.prototype.setValueComparator = function (comparator) {
 
 ListEditorBase.prototype.getValueComparator = function () {
     return this.control.get('valueComparator');
-}
+};

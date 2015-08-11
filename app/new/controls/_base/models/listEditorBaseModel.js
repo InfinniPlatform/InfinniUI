@@ -4,25 +4,22 @@ var ListEditorBaseModel = ContainerModel.extend({
         multiSelect: false
     },
 
+    getValueFromItem: function (item) {
+        var
+            valueSelector = this.get('valueSelector'),
+            value;
+
+        value = valueSelector(undefined, {value: item});
+        return value;
+    },
+
     initialize: function () {
         ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
         editorBaseModelMixin.call(this);
 
         this.set(this.defaults, {silent: true});
         this.on('change:selectedItem', function (model, value) {
-            var valueSelector = model.get('valueSelector');
-            var multiSelect = model.get('multiSelect');
-            var val;
-
-            if (Array.isArray(value)) {
-                val = value.map(function (value) {
-                    return valueSelector(undefined, {value: value});
-                });
-            } else {
-                val = valueSelector(undefined, {value: value});
-            }
-
-            this.set('value', val);
+            this.set('value', this.getValueFromItem(value));
             //var message = {
             //    value: val
             //};
@@ -30,7 +27,7 @@ var ListEditorBaseModel = ContainerModel.extend({
             //this.trigger('onValueChanging', message);
         }, this);
 
-        this.on('toggleSelectedItem', this.onToggleSelectedItem, this);
+        this.on('toggleValue', this.onToggleValue, this);
 
         //var itemsCollection = this.get('items');
         //itemsCollection.onChange(function () {
@@ -48,24 +45,72 @@ var ListEditorBaseModel = ContainerModel.extend({
         this.on('onValueChanging', handler);
     },
 
-    onToggleSelectedItem: function (item) {
+    onToggleValue: function (val) {
         var
-            selectedItem = this.get('selectedItem'),
-            multiSelect = this.get('multiSelect');
+            value = this.get('value'),
+            multiSelect = this.get('multiSelect'),
+            newValue;
 
-        if (multiSelect === false) {
-            selectedItem = item;
+        if (this.hasValue(val)) {
+            if (!multiSelect || !Array.isArray(value)) {
+                return;
+            }
+
+            var comparator = this.get('valueComparator');
+            newValue = value.filter(function (i) {
+                return !comparator.isEqual(i, val);
+            }, this);
         } else {
-            selectedItem = Array.isArray(selectedItem) ? selectedItem.slice() : [];
-            var index = selectedItem.indexOf(item);
-            if (index === -1) {
-                selectedItem.push(item);
-            } else{
-                selectedItem.splice(index, 1);
+            if (multiSelect) {
+                if (Array.isArray(value)) {
+                    newValue = value.slice();
+                } else {
+                    newValue = [];
+                }
+                newValue.push(val);
+            } else {
+                newValue = val;
             }
         }
+        this.set('value', newValue);
+    },
 
-        this.set('selectedItem', selectedItem);
+    //onToggleSelectedItem: function (item) {
+    //    var
+    //        selectedItem = this.get('selectedItem'),
+    //        multiSelect = this.get('multiSelect');
+    //
+    //    if (multiSelect === false) {
+    //        selectedItem = item;
+    //    } else {
+    //        selectedItem = Array.isArray(selectedItem) ? selectedItem.slice() : [];
+    //        var index = selectedItem.indexOf(item);
+    //        if (index === -1) {
+    //            selectedItem.push(item);
+    //        } else {
+    //            selectedItem.splice(index, 1);
+    //        }
+    //    }
+    //
+    //    this.set('selectedItem', selectedItem);
+    //},
+
+    hasValue: function (val) {
+        var multiSelect = this.get('multiSelect');
+        var value = this.get('value');
+        var comparator = this.get('valueComparator');
+        var result = false;
+
+
+        if (multiSelect) {
+            if (Array.isArray(value)) {
+                result = value.some(function (i) {
+                    return comparator.isEqual(i, val);
+                }, this);
+            }
+        } else {
+            result = comparator.isEqual(value, val);
+        }
+        return result;
     }
-
 });

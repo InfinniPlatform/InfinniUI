@@ -52,8 +52,16 @@
         },
         {
           "ListBox": {
-            "DisplayProperty": "DisplayName",
-            "MultiSelect": false,
+            "~ItemProperty": "DisplayName",
+            "ItemFormat": {
+              "ObjectFormat": {
+                "Format": "{Id}: {DisplayName}"
+              }
+            },
+            "~ItemSelector": {
+              "Name": "ItemSelector"
+            },
+            "MultiSelect": true,
             "ValueSelector": {
               "Name": "ValueSelector"
             },
@@ -82,7 +90,11 @@
     },
     {
       "Name": "ValueSelector",
-      "Body": "console.log(args.value.DisplayName); return {id: args.value.DisplayName};"
+      "Body": "return {Id: args.value.DisplayName};"
+    },
+    {
+      "Name": "ItemSelector",
+      "Body": "var value = args.value; return value.Id + '/' + value.DisplayName;"
     }
   ]
 }
