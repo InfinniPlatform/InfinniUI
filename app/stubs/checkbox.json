@@ -52,8 +52,25 @@
         },
         {
           "ListBox": {
+            "ItemTemplate": {
+              "StackPanel": {
+                "Name": "",
+                "Items": [
+                  {
+                    "TextBox": {
+                      "Value": {
+                        "PropertyBinding": {
+                          "DataSource": "BloodGroupDataSource",
+                          "Property": "$.Id"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
             "~ItemProperty": "DisplayName",
-            "ItemFormat": {
+            "~ItemFormat": {
               "ObjectFormat": {
                 "Format": "{Id}: {DisplayName}"
               }
@@ -75,7 +92,6 @@
             }
           }
         }
-
       ]
     }
   },

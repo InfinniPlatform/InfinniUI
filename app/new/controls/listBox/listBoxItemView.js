@@ -16,6 +16,10 @@ var ListBoxItemView = Backbone.View.extend({
 
     initialize: function (options) {
         this.options = options;
+        this.options = {
+            item: options.item,
+            value: this.model.getValueFromItem(options.item)
+        };
         this.listenTo(this.model, 'change:value', this.onChangeValueHandler, this);
     },
 
@@ -62,7 +66,7 @@ var ListBoxItemView = Backbone.View.extend({
         }
     },
 
-    onChangeValueHandler: function (model, value) {
+    onChangeValueHandler: function (model) {
         if (this.ui && this.ui.content) {
             var
                 selected = model.hasValue(this.options.value);

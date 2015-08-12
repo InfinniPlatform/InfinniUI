@@ -1,4 +1,8 @@
-var ControlView = Backbone.View.extend({
+/**
+ * @class
+ * @augments Backbone.View
+ */
+var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     initialize: function () {
         this.wasRendered = false;

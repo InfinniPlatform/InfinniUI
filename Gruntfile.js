@@ -21,11 +21,15 @@
             'app/controls/_base/**/*.js',
             'app/element/_mixins/*.js',
             'app/element/*.js',
+            'app/new/elements/*.js',
             'app/**/*.js',
             'extensions/**/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
-            '!app/utils/exel-builder/*.js'
+            '!app/utils/exel-builder/*.js',
+            '!app/controls/checkBox/**/*.js',
+            '!app/element/dataElement/checkBox/**/*.js',
+            '!app/element/dataElement/listBox/**/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',

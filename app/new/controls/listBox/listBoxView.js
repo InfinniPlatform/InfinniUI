@@ -71,8 +71,7 @@ var ListBoxView = ControlView.extend({
 
         var viewItem = new ListBoxItemView({
             model: model,
-            item: item,
-            value: model.getValueFromItem(item)
+            item: item
         });
         return viewItem.render().$el;
     },

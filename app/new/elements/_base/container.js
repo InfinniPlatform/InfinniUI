@@ -1,3 +1,8 @@
+/**
+ * @param parent
+ * @constructor
+ * @augments Element
+ */
 function Container(parent) {
     _.superClass(Container, this, parent);
 }
