@@ -8,24 +8,63 @@ function StackPanelBuilder() {
 
 _.inherit(StackPanelBuilder, ContainerBuilder);
 
-_.extend(StackPanelBuilder.prototype, {
+_.extend(StackPanelBuilder.prototype,
+    /** @lends StackPanelBuilder.prototype*/
+    {
 
-    createElement: function (params) {
-        return new StackPanel(params.parent);
-    },
+        createElement: function (params) {
+            return new StackPanel(params.parent);
+        },
 
-    /**
-     * @param {Object} params
-     * @param {StackPanel} params.element
-     * @param {Object} params.metadata
-     */
-    applyMetadata: function (params) {
-        var
-            metadata = params.metadata,
-            element = params.element;
+        /**
+         * @param {Object} params
+         * @param {StackPanel} params.element
+         * @param {Object} params.metadata
+         */
+        applyMetadata: function (params) {
+            var
+                metadata = params.metadata,
+                element = params.element;
 
-        ContainerBuilder.prototype.applyMetadata.call(this, params);
-        element.setOrientation(metadata.Orientation);
-    }
+            ContainerBuilder.prototype.applyMetadata.call(this, params);
+            element.setOrientation(metadata.Orientation);
 
-});
+            this.initItemTemplate(params);
+            this.initItemsCollection(params);
+        },
+
+        initItemTemplate: function (params) {
+            var
+            //metadata = params.metadata,
+                element = params.element,
+                builder = params.builder,
+                parent = params.parent,
+                itemTemplate;
+
+            itemTemplate = function (context, argument) {
+                var index = argument.index;
+                var item = argument.item;
+                var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
+
+                return builder.build(parent, item/*, collectionProperty*/);
+            };
+
+            element.setItemTemplate(itemTemplate);
+        },
+
+        /**
+         *
+         * @param {Object} params
+         * @param {StackPanel} params.element
+         */
+        initItemsCollection: function (params) {
+            var metadata = params.metadata;
+            var element = params.element;
+            var itemsCollection = element.getItems();
+
+            if (metadata.Items) {
+                itemsCollection.reset(metadata.Items);
+            }
+        }
+
+    });

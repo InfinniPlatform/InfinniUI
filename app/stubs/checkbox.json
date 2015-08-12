@@ -52,7 +52,7 @@
         },
         {
           "ListBox": {
-            "ItemTemplate": {
+            "~ItemTemplate": {
               "StackPanel": {
                 "Name": "",
                 "Items": [
@@ -70,7 +70,7 @@
               }
             },
             "~ItemProperty": "DisplayName",
-            "~ItemFormat": {
+            "ItemFormat": {
               "ObjectFormat": {
                 "Format": "{Id}: {DisplayName}"
               }

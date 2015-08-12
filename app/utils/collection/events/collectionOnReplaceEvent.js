@@ -12,3 +12,9 @@ CollectionOnReplaceEvent.prototype.init = function (oldItems, newItems) {
         .setParam('oldItems', oldItems)
         .setParam('newItems', newItems);
 };
+
+/**
+ * @typedef {Object} CollectionOnReplaceArgument
+ * @property {Array} oldItems
+ * @property {Array} newItems
+ */

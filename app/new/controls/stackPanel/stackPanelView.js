@@ -3,32 +3,28 @@
  * @augments ControlView
  */
 var StackPanelView = ControlView.extend(
-    /** lends StackPanelView.prototype */
+    /** @lends StackPanelView.prototype */
     {
         template: InfinniUI.Template["new/controls/stackPanel/template/stackPanel.tpl.html"],
 
-        initialize: function (options) {
-            ControlView.initialize.call(this, options);
+        UI: {
+            items: '.stackpanel-items'
+        },
 
-            var itemsCollection = this.model.get('items');
-            itemsCollection.onChange(this.onChangeItemsHandler.bind(this));
+        initialize: function (options) {
+            ControlView.prototype.initialize.call(this, options);
         },
 
         render: function () {
             this.prerenderingActions();
             this.$el.html(this.template());
             this.bindUIElements();
-            this.renderItems();
+
+            this.renderItemsStrategy = new ContainerRenderStrategy(this.model, this.ui.items, StackPanelItemView);
+            this.renderItemsStrategy.render();
+
             this.postrenderingActions();
             return this;
-        },
-
-        renderItems: function () {
-
-        },
-
-        onChangeItemsHandler: function () {
-            this.renderItems();
         }
     }
 );

@@ -7,3 +7,6 @@ function CollectionOnResetEvent() {
 CollectionOnResetEvent.prototype = Object.create(CollectionEvent.prototype);
 CollectionOnResetEvent.prototype.constructor = CollectionOnResetEvent;
 
+/**
+ * @typedef {Object} CollectionOnResetArgument
+ */

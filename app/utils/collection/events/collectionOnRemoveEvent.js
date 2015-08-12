@@ -13,3 +13,9 @@ CollectionOnRemoveEvent.prototype.init = function (items, startingIndex) {
         .setParam('oldItems', items)
         .setParam('oldStartingIndex', typeof startingIndex === 'undefined' ? -1 : startingIndex);
 };
+
+/**
+ * @typedef {Object} CollectionOnRemoveArgument
+ * @property {Array} oldItems
+ * @property {Number} oldStartingIndex
+ */

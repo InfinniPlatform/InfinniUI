@@ -29,7 +29,9 @@
             '!app/utils/exel-builder/*.js',
             '!app/controls/checkBox/**/*.js',
             '!app/element/dataElement/checkBox/**/*.js',
-            '!app/element/dataElement/listBox/**/*.js'
+            '!app/element/dataElement/listBox/**/*.js',
+            '!app/controls/stackPanel/**/*.js',
+            '!app/element/layoutPanel/stackPanel/**/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',

@@ -13,3 +13,9 @@ CollectionOnAddEvent.prototype.init = function (items, startingIndex) {
         .setParam('newItems', items)
         .setParam('newStartingIndex', typeof startingIndex === 'undefined' ? -1 : startingIndex);
 };
+
+/**
+ * @typedef {Object} CollectionOnAddArgument
+ * @property {Array} newItems
+ * @property {Number} newStartingIndex
+ */
