@@ -212,7 +212,7 @@ var layoutManager = {
 
             $el.parentsUntil('.modal').attr('style', 'height: auto');
 
-            $modal.children('.modal').height($body.outerHeight(true) + $header.outerHeight(true));
+            $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
 
         }
 

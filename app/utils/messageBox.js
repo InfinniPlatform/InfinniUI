@@ -1,7 +1,7 @@
 var MessageBox = Backbone.View.extend({
     tagName: 'div',
 
-    className: 'modal hide fade',
+    className: 'modal hide fade messagebox',
 
     events: {
         'click .btn': 'btnHandler'
