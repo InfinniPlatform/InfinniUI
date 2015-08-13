@@ -1,8 +1,8 @@
 var ListEditorBaseModel = ContainerModel.extend({
 
-    defaults: {
+    defaults: _.extend({}, ContainerModel.prototype.defaults, {
         multiSelect: false
-    },
+    }),
 
     getValueFromItem: function (item) {
         var
@@ -28,17 +28,6 @@ var ListEditorBaseModel = ContainerModel.extend({
         }, this);
 
         this.on('toggleValue', this.onToggleValue, this);
-
-        //var itemsCollection = this.get('items');
-        //itemsCollection.onChange(function () {
-        //    var valueSelector = this.get('valueSelector');
-        //    var values = itemsCollection.toArray()
-        //        .map(function(item) {
-        //            return valueSelector(undefined, {value: item});
-        //        });
-        //
-        //    this.set('values', values);
-        //}.bind(this));
     },
 
     onSelectedItemChanged: function (handler) {
@@ -74,26 +63,6 @@ var ListEditorBaseModel = ContainerModel.extend({
         }
         this.set('value', newValue);
     },
-
-    //onToggleSelectedItem: function (item) {
-    //    var
-    //        selectedItem = this.get('selectedItem'),
-    //        multiSelect = this.get('multiSelect');
-    //
-    //    if (multiSelect === false) {
-    //        selectedItem = item;
-    //    } else {
-    //        selectedItem = Array.isArray(selectedItem) ? selectedItem.slice() : [];
-    //        var index = selectedItem.indexOf(item);
-    //        if (index === -1) {
-    //            selectedItem.push(item);
-    //        } else {
-    //            selectedItem.splice(index, 1);
-    //        }
-    //    }
-    //
-    //    this.set('selectedItem', selectedItem);
-    //},
 
     hasValue: function (val) {
         var multiSelect = this.get('multiSelect');

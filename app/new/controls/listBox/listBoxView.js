@@ -8,7 +8,7 @@ var ListBoxView = ControlView.extend({
 
     initialize: function (options) {
         //@TODO Реализовать обработку значений по умолчанию!
-        //ControlView.prototype.initialize.call(this, options);
+        ControlView.prototype.initialize.call(this, options);
     },
 
     render: function () {

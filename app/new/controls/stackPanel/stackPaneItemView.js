@@ -1,9 +1,9 @@
 var StackPanelItemView = Backbone.View.extend(
     /** @lends StackPanelItemView.prototype */
     {
+        tagName: 'li',
+        className: 'pl-stack-panel-i',
         template: InfinniUI.Template["new/controls/stackPanel/template/stackPanelItem.tpl.html"],
-
-        className: 'stackpanel_itemtemplate',
 
         UI: {
             content: '.stackpanel-item-content'
@@ -11,7 +11,6 @@ var StackPanelItemView = Backbone.View.extend(
 
         initialize: function (options) {
             this.options = options;
-            this.listenTo(this.model, 'change:orientation', this.onChangeOrientationHandler, this);
         },
 
         render: function () {
@@ -27,12 +26,8 @@ var StackPanelItemView = Backbone.View.extend(
 
             this.$el.html(this.template({}));
             this.bindUIElements();
-            this.ui.content.append($item);
+            this.$el.prepend($item);
             return this;
-        },
-
-        onChangeOrientationHandler: function () {
-
         }
 
     }

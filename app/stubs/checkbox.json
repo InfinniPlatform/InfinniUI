@@ -32,6 +32,7 @@
   "LayoutPanel": {
     "StackPanel": {
       "Name": "",
+      "Orientation": "Horizontal",
       "Items": [
         {
           "CheckBox": {
