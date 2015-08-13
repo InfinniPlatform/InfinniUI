@@ -52,6 +52,13 @@
           }
         },
         {
+          "ToggleButton": {
+            "Text": "Subscribe",
+            "TextOn": "yes",
+            "TextOff": "no"
+          }
+        },
+        {
           "ListBox": {
             "~ItemTemplate": {
               "StackPanel": {

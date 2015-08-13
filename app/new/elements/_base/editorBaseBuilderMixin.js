@@ -2,6 +2,10 @@ function editorBaseBuilderMixin() {
 
 }
 
+/**
+ *
+ * @param {ElementBuilderParams} params
+ */
 editorBaseBuilderMixin.applyMetadata = function (params) {
 
     var metadata = params.metadata;

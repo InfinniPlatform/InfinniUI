@@ -31,7 +31,9 @@
             '!app/element/dataElement/checkBox/**/*.js',
             '!app/element/dataElement/listBox/**/*.js',
             '!app/controls/stackPanel/**/*.js',
-            '!app/element/layoutPanel/stackPanel/**/*.js'
+            '!app/element/layoutPanel/stackPanel/**/*.js',
+            '!app/controls/toggleButton/**/*.js',
+            '!app/element/dataElement/toggleButton/**/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
