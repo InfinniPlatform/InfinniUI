@@ -55,7 +55,10 @@
           "ToggleButton": {
             "Text": "Subscribe",
             "TextOn": "yes",
-            "TextOff": "no"
+            "TextOff": "no",
+            "OnValueChanged": {
+              "Name": "ToggleButtonOnValueChanged"
+            }
           }
         },
         {
@@ -107,6 +110,10 @@
     {
       "Name": "OnValueChanged",
       "Body": "console.log('OnValueChanged', args);"
+    },
+    {
+      "Name": "ToggleButtonOnValueChanged",
+      "Body": "console.log('ToggleButtonOnValueChanged', args.value);"
     },
     {
       "Name": "OnValueChanging",

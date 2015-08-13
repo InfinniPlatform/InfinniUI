@@ -4,7 +4,8 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
 
     UI: {
         textOn: '.togglebutton-label-on',
-        textOff: '.togglebutton-label-off'
+        textOff: '.togglebutton-label-off',
+        container: '.togglebutton-container'
     },
 
     events: {
@@ -57,5 +58,6 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     onChangeValueHandler: function (model, value) {
         this.switchClass('toggle', value ? 'on' : 'off', this.$el);
     }
+
 
 });
