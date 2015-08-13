@@ -58,6 +58,9 @@
             "TextOff": "no",
             "OnValueChanged": {
               "Name": "ToggleButtonOnValueChanged"
+            },
+            "OnValueChanging": {
+              "Name": "ToggleButtonOnValueChanging"
             }
           }
         },
@@ -115,6 +118,11 @@
       "Name": "ToggleButtonOnValueChanged",
       "Body": "console.log('ToggleButtonOnValueChanged', args.value);"
     },
+    {
+      "Name": "ToggleButtonOnValueChanging",
+      "Body": "return args.value;"
+    },
+
     {
       "Name": "OnValueChanging",
       "Body": "console.log('OnValueChanging', args);return false;"
