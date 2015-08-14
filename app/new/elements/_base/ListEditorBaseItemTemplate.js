@@ -34,9 +34,6 @@ ListEditorBaseItemTemplate.prototype.getItemTemplate = function (params) {
     return itemTemplate;
 };
 
-/**
- * @abstract
- */
 ListEditorBaseItemTemplate.prototype.getDefaultItemTemplate = function (params ) {
     var itemTemplate = function (context, argument) {
         var index = argument.index;

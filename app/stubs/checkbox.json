@@ -89,6 +89,9 @@
                 "Format": "{Id}: {DisplayName}"
               }
             },
+            "GroupValueSelector": {
+              "Name": "GroupValueSelector"
+            },
             "~ItemSelector": {
               "Name": "ItemSelector"
             },
@@ -134,6 +137,10 @@
     {
       "Name": "ItemSelector",
       "Body": "var value = args.value; return value.Id + '/' + value.DisplayName;"
+    },
+    {
+      "Name": "GroupValueSelector",
+      "Body": "return args.value.Id % 2;"
     }
   ]
 }

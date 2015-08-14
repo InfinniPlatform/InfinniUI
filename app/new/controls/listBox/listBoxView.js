@@ -16,7 +16,8 @@ var ListBoxView = ControlView.extend({
         this.$el.html(this.template());
         this.bindUIElements();
 
-        this.renderItemsStrategy = new ContainerRenderStrategy(this.model, this.ui.items, ListBoxItemView);
+        //this.renderItemsStrategy = new ListEditorBasePlainRenderStrategy(this.model, this.ui.items, ListBoxItemView);
+        this.renderItemsStrategy = new ListEditorBaseGroupedRenderStrategy(this.model, this.ui.items, ListBoxItemView);
         this.renderItemsStrategy.render();
 
         this.postrenderingActions();

@@ -20,9 +20,7 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
     }
 
     this.initValueSelector(params);
-    element.setGroupValueSelector(metadata.GroupValueSelector);
-    element.setGroupItemTemplate(metadata.GroupItemTemplate);
-    element.setGroupItemComparator(metadata.GroupItemComparator);
+    this.initGroupValueSelector(params);
 
     if (metadata.OnSelectedItemChanged) {
         element.onSelectedItemChanged(function (context, args) {
@@ -32,6 +30,27 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
 
     //@TODO Build items DataBinding
     this.initItemsBinding(params);
+};
+
+ListEditorBaseBuilder.prototype.initGroupValueSelector = function (params) {
+    var metadata = params.metadata,
+        element = params.element,
+        groupValueSelector;
+
+    if (metadata.GroupValueSelector) {
+        groupValueSelector = function (context, args) {
+            var scriptExecutor = new ScriptExecutor(params.parent);
+            return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
+        };
+    } else if (metadata.GroupValueProperty) {
+        groupValueSelector = function (context, args) {
+            return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.GroupValueProperty);
+        }
+    } else {
+        //Без группировки
+        groupValueSelector = null
+    }
+    element.setGroupValueSelector(groupValueSelector);
 };
 
 ListEditorBaseBuilder.prototype.initValueSelector = function (params) {

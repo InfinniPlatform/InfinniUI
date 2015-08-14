@@ -29,7 +29,7 @@ ContainerRenderStrategy.prototype.render = function () {
 /**
  *
  * @param {Array} items
- * @param {index} [index = -1]
+ * @param {index} [itemIndex = -1]
  */
 ContainerRenderStrategy.prototype.renderItemsAt = function (items, itemIndex) {
     var index = (typeof index === 'undefined') ? -1 : itemIndex;
@@ -118,16 +118,4 @@ ContainerRenderStrategy.prototype.onChangeItem = function () {
 };
 
 
-/**
- *
- * @constructor
- * @augments ContainerRenderStrategy
- */
-function ContainerPlainRenderStrategy() {
 
-}
-
-ContainerPlainRenderStrategy.prototype = Object.create(ContainerRenderStrategy.prototype);
-ContainerPlainRenderStrategy.prototype.constructor = ContainerPlainRenderStrategy;
-
-var d = new ContainerPlainRenderStrategy()

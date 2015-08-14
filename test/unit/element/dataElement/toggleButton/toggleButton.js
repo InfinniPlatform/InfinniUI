@@ -10,12 +10,12 @@ describe('ToggleButton', function () {
             $control = $el.find('input');
 
             // Then
-            assert.isTrue($control.prop('checked'));
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isTrue($el.hasClass('pull-left'));
-            assert.isFalse($el.hasClass('center-block'));
+            assert.isTrue($control.prop('checked'), 'checked');
+            assert.isUndefined($el.attr('data-pl-name'), 'data-pl-name');
+            assert.isFalse($control.prop('disabled'), 'disabled');
+            assert.isFalse($el.hasClass('hidden'), 'hidden');
+            assert.isTrue($el.hasClass('pull-left'), 'pull-left');
+            assert.isFalse($el.hasClass('center-block'), 'center-block');
         });
 
         it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
