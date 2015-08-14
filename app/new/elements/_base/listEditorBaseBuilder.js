@@ -2,6 +2,7 @@ function ListEditorBaseBuilder() {
     _.superClass(ListEditorBaseBuilder, this);
 
     editorBaseBuilderMixin.call(this);
+
 }
 
 _.inherit(ListEditorBaseBuilder, ContainerBuilder);
@@ -22,7 +23,6 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
     element.setGroupValueSelector(metadata.GroupValueSelector);
     element.setGroupItemTemplate(metadata.GroupItemTemplate);
     element.setGroupItemComparator(metadata.GroupItemComparator);
-    this.initItemTemplate(params);
 
     if (metadata.OnSelectedItemChanged) {
         element.onSelectedItemChanged(function (context, args) {
@@ -56,91 +56,6 @@ ListEditorBaseBuilder.prototype.initValueSelector = function (params) {
     element.setValueSelector(valueSelector);
 
     element.setValueComparator(new ComparatorId());
-};
-
-ListEditorBaseBuilder.prototype.initItemTemplate = function (params) {
-    var metadata = params.metadata;
-    var element = params.element;
-    var parent = params.parent;
-    var builder = params.builder;
-    var itemsCollection = element.getItems();
-    var itemTemplate;
-
-    //@TODO Заменить на реализацию ч/з стратегию
-    if (metadata.ItemTemplate) {
-        itemTemplate = function (context, argument) {
-            var index = argument.index;
-            var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            return builder.build(parent, metadata.ItemTemplate, collectionProperty);
-        };
-    } else if (metadata.ItemProperty) {
-        itemTemplate = function (context, argument) {
-            var index = argument.index;
-            var item = argument.item;
-            var getText = function () {
-                return InfinniUI.ObjectUtils.getPropertyValue(item, metadata.ItemProperty);
-            };
-            var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            //@TODO Напр. для DataGrid д.б. другая реализация (строка таблицы)
-            var label = builder.build(parent, {
-                Label: {
-                    Text: getText()
-                }
-            }, collectionProperty);
-
-            itemsCollection.onChange(function (context, argument) {
-                label.setText(getText());
-            });
-            return label;
-        }
-    } else if (metadata.ItemFormat) {
-        itemTemplate = function (context, argument) {
-            var index = argument.index;
-            var item = argument.item;
-
-            var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            var label = builder.build(parent, {
-                Label: {
-                    Value: {
-                        ObjectBinding: {
-                            Value: item
-                        }
-                    },
-                    DisplayFormat: metadata.ItemFormat
-                }
-            }, collectionProperty);
-            itemsCollection.onChange(function (context, argument) {
-                //@TODO Перерисовать??
-            });
-            return label;
-        }
-    } else if (metadata.ItemSelector) {
-        itemTemplate = function (context, argument) {
-            var index = argument.index;
-            var item = argument.item;
-            var scriptExecutor = new ScriptExecutor(params.parent);
-            var getText = function () {
-                return scriptExecutor.executeScript(metadata.ItemSelector.Name, {value: item})
-            };
-
-            var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-            var label = builder.build(parent, {
-                Label: {
-                    Text: getText()
-                }
-            }, collectionProperty);
-
-            itemsCollection.onChange(function (context, argument) {
-                label.setText(getText());
-            });
-
-            return label;
-        }
-    } else {
-        //@TODO Label with item.toString()??
-    }
-
-    element.setItemTemplate(itemTemplate);
 };
 
 ListEditorBaseBuilder.prototype.initItemsBinding = function (params) {

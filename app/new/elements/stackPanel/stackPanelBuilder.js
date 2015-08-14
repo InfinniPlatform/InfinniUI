@@ -12,6 +12,13 @@ _.extend(StackPanelBuilder.prototype,
     /** @lends StackPanelBuilder.prototype*/
     {
 
+        getItemTemplateBuilder: function () {
+            if (!this.itemTemplateBuilder) {
+                this.itemTemplateBuilder = new StackPanelItemTemplate();
+            }
+            return this.itemTemplateBuilder;
+        },
+
         createElement: function (params) {
             return new StackPanel(params.parent);
         },
@@ -29,7 +36,7 @@ _.extend(StackPanelBuilder.prototype,
             ContainerBuilder.prototype.applyMetadata.call(this, params);
             element.setOrientation(metadata.Orientation);
 
-            this.initItemTemplate(params);
+
             this.initItemsCollection(params);
         },
 
