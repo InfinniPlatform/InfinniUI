@@ -38,6 +38,12 @@ window.InfinniUI.DateUtils = (function () {
         
         var sssPart = padInt(date.getMilliseconds(), 3) + '0';// '000' + '0'
 
+        if(!Math.sign) { //fix for devices not support ES6
+            Math.sign = function (x) {
+                return x?x<0?-1:1:0;
+            };
+        }
+
         var tz = Math.abs(date.getTimezoneOffset());
         var tzOffsetPart = Math.sign(date.getTimezoneOffset()) > 0 ? '-' : '+';
         var tzPart = [
