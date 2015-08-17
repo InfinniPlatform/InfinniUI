@@ -92,7 +92,8 @@
             "GroupValueSelector": {
               "Name": "GroupValueSelector"
             },
-            "GroupItemFormat": {
+            "GroupItemProperty": "",
+            "~GroupItemFormat": {
               "ObjectFormat": {
                 "Format": "{}"
               }
@@ -100,7 +101,7 @@
             "~ItemSelector": {
               "Name": "ItemSelector"
             },
-            "MultiSelect": true,
+            "MultiSelect": false,
             "ValueSelector": {
               "Name": "ValueSelector"
             },
@@ -145,7 +146,7 @@
     },
     {
       "Name": "GroupValueSelector",
-      "Body": "return args.value.Id % 2 ? 'Не четн.' : 'Четн.';"
+      "Body": "return args.value.Id;"
     }
   ]
 }

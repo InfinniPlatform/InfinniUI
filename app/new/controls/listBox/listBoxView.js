@@ -16,8 +16,11 @@ var ListBoxView = ControlView.extend({
         this.$el.html(this.template());
         this.bindUIElements();
 
-        //this.renderItemsStrategy = new ListEditorBasePlainRenderStrategy(this.model, this.ui.items, ListBoxItemView);
-        this.renderItemsStrategy = new ListEditorBaseGroupedRenderStrategy(this.model, this.ui.items, ListBoxItemView, ListBoxGroupItemView);
+        if (this.model.get('groupItemTemplate')) {
+            this.renderItemsStrategy = new ListEditorBaseGroupedRenderStrategy(this.model, this.ui.items, ListBoxItemView, ListBoxGroupItemView);
+        } else {
+            this.renderItemsStrategy = new ListEditorBasePlainRenderStrategy(this.model, this.ui.items, ListBoxItemView);
+        }
         this.renderItemsStrategy.render();
 
         this.postrenderingActions();

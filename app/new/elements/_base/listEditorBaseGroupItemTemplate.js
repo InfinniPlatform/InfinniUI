@@ -13,16 +13,14 @@ ListEditorBaseGroupItemTemplate.prototype.getItemTemplate = function (params) {
 
     if (metadata.GroupItemTemplate) {
         itemTemplate = this.getGroupItemTemplate(params);
-    } else if (metadata.GroupItemProperty) {
+    } else if (metadata.GroupItemProperty !== null && typeof metadata.GroupItemProperty !== 'undefined') {
         itemTemplate = this.getItemPropertyTemplate(params);
     } else if (metadata.GroupItemFormat) {
         itemTemplate = this.getItemFormatTemplate(params)
     } else if (metadata.GroupItemSelector) {
         itemTemplate = this.getItemSelectorTemplate(params);
-    } else {
-        //@TODO ??
-        throw new Error('Не определен способ отображения группы элементов');
     }
+
     return itemTemplate;
 };
 

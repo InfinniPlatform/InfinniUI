@@ -10,8 +10,7 @@ var ListBoxGroupItemView = Backbone.View.extend({
 
     initialize: function (options) {
         this.options = {
-            item: options.item,
-            value: this.model.getValueFromItem(options.item)
+            item: options.item
         };
     },
 
