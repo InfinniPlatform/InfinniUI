@@ -107,6 +107,9 @@ var layoutManager = {
                 return manager.setOuterHeight(node.$element, height);
             };
 
+            if(node.$element.parentsUntil('.modal').length) {
+                node.$element.attr('data-height-original', node.element.style.height);
+            }
             var nodeHeight = setHeight(node, height);
             if (node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable')) {
                 //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
@@ -192,11 +195,53 @@ var layoutManager = {
         var manager = this;
         $(this.getModalSelector()).each(function (i, el) {
             manager._resizeDialog($(el));
+            manager.resetDialogHeight($(el));
         });
     },
 
+    resetDialogHeight: function($modal){
+        var space = 10;
+
+        if($modal.children()) {
+            var $container = $modal.children();
+
+            var $header = $('.modal-header', $container);
+            var $body = $('.modal-body', $container);
+
+            var $el = $(this.getSelector(), $modal);
+
+            $el.parentsUntil('.modal').attr('style', 'height: auto');
+
+            $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
+
+        }
+
+        //var $header = $('.modal-header', $container);
+        //var $body = $('.modal-body', $container);
+
+        //var headerHeight = $header.outerHeight(true);
+        //
+        //$container.css('margin-top', 0);
+        //
+        //var el = $(this.getSelector(), $modal);
+        //if (el.length === 0) {
+        //    //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
+        //    //Выравниваем по вертикали в центр
+        //    $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
+        //    return;
+        //}
+        //
+        //$body.css('min-height', '0');
+        //var containerHeight = this.setOuterHeight($modal, 'auto');
+        //
+        ////Высота для содержимого окна диалога
+        //var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+        //
+        //this.resize($body[0], clientHeight);
+        //$container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
+    },
+
     _resizeDialog: function ($modal) {
-        //var $modal = $(".modal-scrollable");
         var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
 
         var $container = $modal.children();

@@ -35,8 +35,8 @@ window.InfinniUI.DateUtils = (function () {
             padInt(date.getMinutes(), 2),
             padInt(date.getSeconds(), 2)
         ].join(':');
-
-        var sssPart = padInt(date.getMilliseconds(), 4);
+        
+        var sssPart = padInt(date.getMilliseconds(), 3) + '0';// '000' + '0'
 
         var tz = Math.abs(date.getTimezoneOffset());
         var tzOffsetPart = Math.sign(date.getTimezoneOffset()) > 0 ? '-' : '+';

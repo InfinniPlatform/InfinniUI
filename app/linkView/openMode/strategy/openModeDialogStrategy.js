@@ -5,6 +5,9 @@ var OpenModeDialogStrategy = function (linkView) {
             .appendTo($('body'));
 
         $elView.find('.pl-stack-panel-i').css('height', 'auto');
+        $modal.on('shown.bs.modal', function (e) {
+            $(e.target).find('.firstfocuselementinmodal').focus();
+        });
         var $container = $modal.find('.modal-body');
 
         $container.append($elView);
@@ -21,9 +24,14 @@ var OpenModeDialogStrategy = function (linkView) {
                 $modal.find('.firstfocuselementinmodal').focus();
             });
             $modal.keydown(function(e){
-                if($(this).find('.lastfocuselementinmodal').is(":focus") && (e.which || e.keyCode) == 9){
+                if($(document.activeElement).hasClass('lastfocuselementinmodal') && (e.which || e.keyCode) == 9){
                     e.preventDefault();
-                    $(this).find('.firstfocuselementinmodal').focus();
+                    $modal.find('.firstfocuselementinmodal').focus();
+                }
+
+                if($(document.activeElement).hasClass('firstfocuselementinmodal') && (e.which || e.keyCode) == 9 && e.shiftKey){
+                    e.preventDefault();
+                    $modal.find('.lastfocuselementinmodal').focus();
                 }
             });
         //

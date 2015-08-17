@@ -37,6 +37,7 @@
             'bower_components/ractive/ractive.js',
             'bower_components/signalr/jquery.signalR.js',
             'bower_components/jstree/dist/jstree.js',
+            'bower_components/ulogin/index.js',
             'bower_components/metronic/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
             'bower_components/metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js',
             'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',

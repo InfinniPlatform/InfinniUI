@@ -279,8 +279,12 @@ var TextEditor = Backbone.View.extend({
                 //TODO: не работает для DateTimeFormat
                 //TODO: доделать SelectionLength замена выделенного текста, по нажатию
 
+                if((event.keyCode >= 96 && event.keyCode <= 105)){
+                    event.keyCode = event.keyCode - 48; //hotfix for numpad keys
+                }
+
                 var inp = String.fromCharCode(event.keyCode);
-                if (/[a-zA-Z0-9-_ ]/.test(inp)) {
+                if (!isNaN(parseFloat(inp)) && isFinite(inp)){
                     if (this.getSelectionLength() > 0 && !(maskEdit.value instanceof Date)) {
                         event.preventDefault();
                         //Data

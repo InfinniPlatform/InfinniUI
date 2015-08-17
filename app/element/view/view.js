@@ -185,7 +185,9 @@ function View() {
 
             session: new AuthenticationProvider(InfinniUI.config.serverUrl),
 
-            culture: culture
+            culture: culture,
+
+            urlParams: urlManager.getParams()
         };
 
         return this.context;
@@ -254,7 +256,10 @@ function View() {
     };
 
     this.open = function () {
-        eventStore.executeEvent('onOpening', model.get('layoutPanel').render());
+        this.childLayout = $(model.get('layoutPanel').render());
+        this.childLayout.css('visibility', 'hidden');
+
+        eventStore.executeEvent('onOpening', this.childLayout);
     };
 
     this.close = function (acceptResult) {
@@ -278,11 +283,13 @@ function View() {
     };
 
     this.loaded = function () {
+        var that = this;
+
         this.onLoadedHandlers.resolve(this);
         setTimeout(function () {
             eventStore.executeEvent('onLoaded');
+            that.childLayout.css('visibility', 'visible');
         }, 0);
-
     };
 
     this.loading = function () {

@@ -220,6 +220,11 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
                     listItems.push(val);
                     onSetSelectedValueHandlers.fire(listItems);
                 }
+            }else{
+                if(val == null){
+                    listItems = [];
+                    onSetSelectedValueHandlers.fire(listItems);
+                }
             }
 
         }else {
@@ -352,16 +357,16 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
 
         return $template;
     };
-	
-	var name = null;
-	
-	this.getName = function () {
-		return name;
-	};
-	
-	this.setName = function (value) {
-		name = value;
-	};
+
+    var name = null;
+
+    this.getName = function () {
+        return name;
+    };
+
+    this.setName = function (value) {
+        name = value;
+    };
 
     dataBinding.onPropertyValueChanged(function (context, args) {
 
