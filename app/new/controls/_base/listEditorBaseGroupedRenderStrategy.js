@@ -2,10 +2,10 @@
  * @constructor
  * @extends ContainerRenderStrategy
  */
-function ListEditorBaseGroupedRenderStrategy(model, $container, itemViewConstructor, groupViewConstructor) {
-    ContainerRenderStrategy.call(this, model, $container, itemViewConstructor);
+function ListEditorBaseGroupedRenderStrategy(model, $container, itemViewConstructor, groupItemViewConstructor) {
+    ContainerRenderStrategy.call(this, model, $container, itemViewConstructor, groupItemViewConstructor);
 
-    this.groupViewConstructor = groupViewConstructor;
+    this.groupItemViewConstructor = groupItemViewConstructor;
 }
 
 ListEditorBaseGroupedRenderStrategy.prototype = Object.create(ContainerRenderStrategy.prototype);
@@ -14,23 +14,60 @@ ListEditorBaseGroupedRenderStrategy.prototype.constructor = ListEditorBaseGroupe
 ListEditorBaseGroupedRenderStrategy.prototype.render = function () {
     //вычислить группированные значения
     var groupValueSelector = this.model.get('groupValueSelector');
+    var groupItemComparator = this.model.get('groupItemComparator');
 
     var groupValues = [];
 
-    this.items.toArray()
+    var data = this.items.toArray()
         .map(function (item, index) {
             return {
                 index: index,
                 item: item,
                 value: groupValueSelector(undefined, {value: item})
             };
-        })
-        .forEach(function (item, index, items) {
-            
         });
+
+    while(data.length) {
+        var dataItem = data[0];
+        groupValues.push({
+            value: dataItem.value,
+            items: data
+                .filter(function(item) {
+                    return groupItemComparator(dataItem.value, item.value) === 0;
+                })
+                .map(function (item) {
+                    data.splice(data.indexOf(item), 1);
+                    return {
+                        index: item.index,
+                        item: item.item
+                    };
+                })
+        });
+    }
+
+    groupValues.forEach(function (groupItem) {
+        var $group = this.renderGroupItem(groupItem.value);
+
+        var $items = groupItem.items.map(function (item) {
+            return this.renderItem(item.item)
+        }, this);
+
+        $group.append($items);
+        this.$container.append($group);
+    }, this);
 
     console.log(groupValues);
     //this.renderItemsAt(this.items.toArray());
+};
+
+ListEditorBaseGroupedRenderStrategy.prototype.renderGroupItem = function (item) {
+    var viewConstructor = this.groupItemViewConstructor;
+    var itemView = new viewConstructor({
+        model: this.model,
+        item: item
+    });
+
+    return itemView.render().$el;
 };
 
 ListEditorBaseGroupedRenderStrategy.prototype.renderItem = function (item) {

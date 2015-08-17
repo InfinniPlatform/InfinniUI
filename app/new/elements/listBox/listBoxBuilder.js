@@ -12,6 +12,14 @@ _.extend(ListBoxBuilder.prototype, /** @lends ListBoxBuilder.prototype */{
         }
         return this.itemTemplateBuilder;
     },
+
+    getGroupItemTemplateBuilder: function () {
+        if (!this.groupItemTemplateBuilder) {
+            this.groupItemTemplateBuilder = new ListBoxGroupItemTemplate();
+        }
+        return this.groupItemTemplateBuilder;
+    },
+
     createElement: function (params) {
         return new ListBox(params.parent);
     },

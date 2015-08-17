@@ -92,6 +92,11 @@
             "GroupValueSelector": {
               "Name": "GroupValueSelector"
             },
+            "GroupItemFormat": {
+              "ObjectFormat": {
+                "Format": "{}"
+              }
+            },
             "~ItemSelector": {
               "Name": "ItemSelector"
             },
@@ -140,7 +145,7 @@
     },
     {
       "Name": "GroupValueSelector",
-      "Body": "return args.value.Id % 2;"
+      "Body": "return args.value.Id % 2 ? 'Не четн.' : 'Четн.';"
     }
   ]
 }

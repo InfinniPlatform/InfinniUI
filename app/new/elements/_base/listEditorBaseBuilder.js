@@ -21,6 +21,7 @@ ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
 
     this.initValueSelector(params);
     this.initGroupValueSelector(params);
+    element.setGroupItemTemplate(this.getGroupItemTemplateBuilder().getItemTemplate(params));
 
     if (metadata.OnSelectedItemChanged) {
         element.onSelectedItemChanged(function (context, args) {
@@ -36,6 +37,18 @@ ListEditorBaseBuilder.prototype.initGroupValueSelector = function (params) {
     var metadata = params.metadata,
         element = params.element,
         groupValueSelector;
+
+    element.setGroupItemComparator(function(a, b) {
+        if (a < b) {
+            return -1;
+        }
+
+        if (a > b) {
+            return 1;
+        }
+
+        return 0;
+    });
 
     if (metadata.GroupValueSelector) {
         groupValueSelector = function (context, args) {
@@ -75,6 +88,10 @@ ListEditorBaseBuilder.prototype.initValueSelector = function (params) {
     element.setValueSelector(valueSelector);
 
     element.setValueComparator(new ComparatorId());
+};
+
+ListEditorBaseBuilder.prototype.getGroupItemTemplateBuilder = function () {
+    throw new Error('Не перекрыт метод getGroupItemTemplateBuilder')
 };
 
 ListEditorBaseBuilder.prototype.initItemsBinding = function (params) {
