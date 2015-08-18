@@ -1,7 +1,7 @@
 function ValidationBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
         var validatorFactory = createValidationBuilderFactory();
-        return validatorFactory.build(metadata);
+        return validatorFactory.build(args.metadata);
     }
 }

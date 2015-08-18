@@ -2,17 +2,18 @@ var FileBindingBuilder = function () {
 
 };
 
-FileBindingBuilder.prototype.build = function (builder, parent, metadata, collectionProperty) {
+FileBindingBuilder.prototype.build = function (context, args) {
 
-    var metadataProperty = metadata.Property;
+    var metadata = args.metadata,
+        metadataProperty = metadata.Property;
 
-    if(collectionProperty){
-        metadataProperty = collectionProperty.resolve(metadata.Property);
+    if(args.collectionProperty){
+        metadataProperty = args.collectionProperty.resolve(metadata.Property);
     }
 
-    var fileBinding = new FileBinding(parent, metadata.DataSource, metadataProperty);
+    var fileBinding = new FileBinding(args.parent, metadata.DataSource, metadataProperty);
 
-    var dataSource = parent.getDataSource(metadata.DataSource);
+    var dataSource = args.parent.getDataSource(metadata.DataSource);
 
     var uploadFile = function (instanceId) {
         var defer = $.Deferred();

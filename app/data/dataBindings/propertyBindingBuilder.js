@@ -2,33 +2,33 @@ var PropertyBindingBuilder = function () {
 
 };
 
-PropertyBindingBuilder.prototype.build = function (builder, parent, metadata, collectionProperty, params) {
+PropertyBindingBuilder.prototype.build = function (context, args) {
 
-    var metadataProperty = metadata.Property;
+    var metadata = args.metadata,
+        metadataProperty = metadata.Property;
 
-    if(collectionProperty){
-
-        metadataProperty = collectionProperty.resolve(metadata.Property);
+    if(args.collectionProperty){
+        metadataProperty = args.collectionProperty.resolve(metadata.Property);
     }
 
     //dataSourceObject = parent.getDataSource(metadata.DataSource);
 
-    var propertyBinding = new PropertyBinding(parent, metadata.DataSource, metadataProperty);
+    var propertyBinding = new PropertyBinding(args.parent, metadata.DataSource, metadataProperty);
 
 
     if(metadata.DefaultValue) {
         propertyBinding.setPropertyValue(metadata.DefaultValue);
     }
 
-    var dataSource = parent.getDataSource(metadata.DataSource);
+    var dataSource = args.parent.getDataSource(metadata.DataSource);
 
     if(dataSource !== null){
         var initingDataStrategy;
 
-        if(params && params.lazyLoad){
+        if(args.params && args.params.lazyLoad){
             initingDataStrategy = {
                 name: 'lazyInitingData',
-                starter: params.lazyLoad
+                starter: args.params.lazyLoad
             };
         }
 

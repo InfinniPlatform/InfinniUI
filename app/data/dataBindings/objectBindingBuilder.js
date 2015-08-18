@@ -1,8 +1,8 @@
 function ObjectBindingBuilder(){
 
-    this.build = function(builder,parent,metadata){
+    this.build = function (context, args) {
 
-        return new ObjectBinding(parent, metadata.Value);
+        return new ObjectBinding(args.parent, args.metadata.Value);
     }
 
 }

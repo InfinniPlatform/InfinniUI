@@ -1,13 +1,13 @@
 function ParameterBuilder() {
 
-    this.build = function(builder,parent,metadata){
+    this.build = function (context, args) {
 
-        if(metadata.Value){
+        if(args.metadata.Value){
             var parameter = new Parameter();
 
-            parameter.setName(metadata.Name);
+            parameter.setName(args.metadata.Name);
 
-            var dataBinding = builder.build(parent, metadata.Value);
+            var dataBinding = args.builder.build(args.parent, args.metadata.Value);
 
             //если существует Builder для хранящегося в параметре значения
             //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)
@@ -30,7 +30,7 @@ function ParameterBuilder() {
                 });
             }
             else {
-                parameter.setValue(metadata.Value);
+                parameter.setValue(args.metadata.Value);
             }
         }else{
 
