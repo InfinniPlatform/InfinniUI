@@ -7,7 +7,8 @@ function DocumentDataSourceBuilder() {
             idProperty = 'Id';
         }
         var dataSource = new DocumentDataSource(args.parent, args.metadata);
-        new BaseDataSourceBuilder().build(args.metadata, dataSource, args.parent, args.builder);
+        new BaseDataSourceBuilder().build(context,
+                                            _.extend(args, {dataSource: dataSource}));
 
         return dataSource;
     }

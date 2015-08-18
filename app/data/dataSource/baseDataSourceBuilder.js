@@ -1,6 +1,10 @@
 function BaseDataSourceBuilder() {
 
-    this.build = function (metadata, dataSource, parent, builder) {
+    this.build = function (context, args) {
+
+        var metadata = args.metadata,
+            dataSource = args.dataSource,
+            parent = args.parent
 
         dataSource.suspendUpdate();
         dataSource.setName(metadata.Name);
@@ -20,7 +24,7 @@ function BaseDataSourceBuilder() {
 
             if (_.isArray(data)) {
                 //Переданы метаданные для создания Criteria
-                criteria = builder.buildType(parent, 'Criteria', data);
+                criteria = args.builder.buildType(parent, 'Criteria', data);
             } else {
                 //Передан созданный экземпляр. Добавлено для совместимости со старой реализацией.
                 criteria = data;
@@ -30,7 +34,7 @@ function BaseDataSourceBuilder() {
 
         dataSource.setCriteriaConstructor(criteriaConstructor);
 
-        var queryFilter = builder.buildType(parent, 'Criteria', metadata.Query);
+        var queryFilter = args.builder.buildType(parent, 'Criteria', metadata.Query);
 
         queryFilter.onValueChanged(function () {
             dataSource.updateItems();

@@ -1,11 +1,12 @@
 function MetadataDataSourceBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
 
-        var idProperty = metadata.IdProperty || 'Id';
+        var idProperty = args.metadata.IdProperty || 'Id';
 
-        var dataSource = new MetadataDataSource(parent, metadata);
-        new BaseDataSourceBuilder().build(metadata, dataSource, parent, builder);
+        var dataSource = new MetadataDataSource(args.parent, args.metadata);
+        new BaseDataSourceBuilder().build(context,
+                                            _.extend(args, {dataSource: dataSource}));
 
         return dataSource;
     }
