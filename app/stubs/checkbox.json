@@ -114,6 +114,19 @@
               "Name": "OnValueChanged"
             }
           }
+        },
+        {
+          "TextBox": {
+            "Multiline": false,
+            "LineCount": 5,
+            "HintText": "I'm TextBox hint",
+            "LabelText": "Text label",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource"
+              }
+            }
+          }
         }
       ]
     }

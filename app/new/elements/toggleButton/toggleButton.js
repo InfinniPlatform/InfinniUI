@@ -11,8 +11,8 @@ function ToggleButton(parent) {
 
 _.inherit(ToggleButton, Element);
 
-ToggleButton.prototype.createControl = function () {
-    return new ToggleButtonControl();
+ToggleButton.prototype.createControl = function (parent) {
+    return new ToggleButtonControl(parent);
 };
 
 ToggleButton.prototype.getTextOn = function () {
