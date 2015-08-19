@@ -1,4 +1,4 @@
-function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstructor) {
+function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstructor, metadata) {
 
     var listBox = this;
 
@@ -163,7 +163,7 @@ function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstruc
     };
 
 
-    var multiSelect = false;
+    var multiSelect = metadata.MultiSelect;
 
     this.getMultiSelect = function(){
         return multiSelect;

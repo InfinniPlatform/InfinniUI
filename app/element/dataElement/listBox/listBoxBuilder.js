@@ -49,7 +49,7 @@ function ListBoxBuilder() {
             return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, collectionProperty));
         };
 
-        var listBox = new ListBox(addItemAction,editItemAction,dataBinding, listBoxItemConstructor);
+        var listBox = new ListBox(addItemAction,editItemAction,dataBinding, listBoxItemConstructor, metadata);
 		listBox.setName(metadata.Name);
         listBox.setMultiSelect(metadata.MultiSelect);
 
