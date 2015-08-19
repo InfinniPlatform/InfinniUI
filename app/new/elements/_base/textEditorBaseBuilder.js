@@ -22,24 +22,35 @@ TextEditorBaseBuilder.prototype.applyMetadata = function (params) {
     element.setLabelText(metadata.LabelText);
     element.setLabelFloating(metadata.LabelFloating);
 
-    this.initDisplayFormat(params);
-    this.initEditMask(params);
+    this
+        .initDisplayFormat(params)
+        .initEditMask(params);
 };
 
 TextEditorBaseBuilder.prototype.initDisplayFormat = function (params) {
-    var metadata = params.metadata;
-    var displayFormat;
+    var
+        metadata = params.metadata,
+        builder = params.builder,
+        displayFormat;
 
     if (metadata.DisplayFormat) {
-        displayFormat = params.build(params.parent, metadata.DisplayFormat);
+        displayFormat = builder.build(params.parent, metadata.DisplayFormat);
     }
     params.element.setDisplayFormat(displayFormat);
+    return this;
 };
 
 TextEditorBaseBuilder.prototype.initEditMask = function (params) {
-    var editMask;
-    //TODO BuildEditMask from metadata.EditMask
+    var
+        metadata = params.metadata,
+        builder = params.builder,
+        editMask;
+
+    if (metadata.EditMask) {
+        editMask = builder.build(params.parent, metadata.EditMask);
+    }
     params.element.setEditMask(editMask);
+    return this;
 };
 
 

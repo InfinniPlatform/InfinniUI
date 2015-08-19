@@ -117,10 +117,11 @@
         },
         {
           "TextBox": {
-            "Multiline": false,
+            "Multiline": true,
             "LineCount": 5,
             "HintText": "I'm TextBox hint",
             "LabelText": "Text label",
+            "Enabled": true,
             "Value": {
               "PropertyBinding": {
                 "DataSource": "MainDataSource"

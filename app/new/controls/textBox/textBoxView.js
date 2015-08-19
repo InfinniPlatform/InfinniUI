@@ -1,21 +1,19 @@
 /**
  * @class
- * @augments ControlView
+ * @augments TextEditorBaseView
  */
-var TextBoxView = ControlView.extend(/** @lends TextBoxView.prototype */{
+var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     template: {
         oneline: InfinniUI.Template["new/controls/textBox/template/textBoxInput.tpl.html"],
         multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
     },
 
-    UI: {
-        control: ".pl-control",
-        editor: '.pl-control-editor',
+    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
         hintText: '.pl-control-hint-text',
         warningText: '.pl-control-warning-text',
         errorText: '.pl-control-error-text'
-    },
+    }),
 
     initialize: function (options) {
         ControlView.prototype.initialize.call(this, options);
@@ -40,17 +38,28 @@ var TextBoxView = ControlView.extend(/** @lends TextBoxView.prototype */{
             hintText: model.get('hintText'),
             errorText: model.get('errorText'),
             warningText: model.get('warningText'),
-            labelText: model.get('labelText')
+            labelText: model.get('labelText'),
+            enabled: model.get('enabled')
         };
 
         var template = model.get('multiline') ? this.template.multiline : this.template.oneline;
 
         this.$el.html(template(data));
         this.bindUIElements();
+
+        //Рендеринг редактора
+        var editor = this.renderEditor({
+            el: this.ui.editor,
+            multiline: model.get('multiline'),
+            lineCount: model.get('lineCount'),
+            inputType: model.get('inputType')
+        });
+
         return this;
     },
 
     initOnChangeHandler: function () {
+
         this
             .listenTo(this.model, 'change:lineCount', this.onChangeLineCountHandler)
             .listenTo(this.model, 'change:multiline', this.onChangeMultilineHandler)
@@ -59,11 +68,13 @@ var TextBoxView = ControlView.extend(/** @lends TextBoxView.prototype */{
             .listenTo(this.model, 'change:labelFloating', this.onChangeLabelFloatingHandler)
             .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
             .listenTo(this.model, 'change:editMask', this.onChangeEditMaskHandler)
-            //@TODO Ищменения от EditorBase - вынести в EditorBaseView
+            //@TODO Изменения от EditorBase - вынести в EditorBaseView
             .listenTo(this.model, 'change:hintText', this.onChangeHintTextHandler)
             .listenTo(this.model, 'change:errorText', this.onChangeErrorTextHandler)
             .listenTo(this.model, 'change:warningText', this.onChangeWarningTextHandler)
-            .listenTo(this.model, 'change:value', this.onChangeValueHandler);
+            .listenTo(this.model, 'change:value', this.onChangeValueHandler)
+            //@TODO Изменения от Control
+            .listenTo(this.model, 'change:enabled', this.onChangeEnabledHandler);
     },
 
     onChangeLineCountHandler: function (model, value) {
@@ -110,6 +121,10 @@ var TextBoxView = ControlView.extend(/** @lends TextBoxView.prototype */{
         //@TODO Обработать!
     },
 
+    onChangeEnabledHandler: function (model, value) {
+        this.ui.control.prop('disabled', !value);
+    },
+
     getDisplayValue: function () {
         var
             model = this.model,
@@ -117,6 +132,17 @@ var TextBoxView = ControlView.extend(/** @lends TextBoxView.prototype */{
             displayFormat = model.getDisplayFormat;
 
         return displayFormat ? displayFormat.format(value) : value;
+    },
+
+    /**
+     * Используется миксином textEditorMixin
+     * @param value
+     * @returns {boolean}
+     */
+    onEditorValidate: function (value) {
+        return true;
     }
 
 });
+
+_.extend(TextBoxView.prototype, textEditorMixin);
