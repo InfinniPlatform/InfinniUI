@@ -38,7 +38,6 @@
             'bower_components/signalr/jquery.signalR.js',
             'bower_components/jstree/dist/jstree.js',
             'bower_components/ulogin/index.js',
-            'bower_components/blockUI/jquery.blockUI.js',
             'bower_components/metronic/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
             'bower_components/metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js',
             'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -52,12 +51,14 @@
             'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modal.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/metronic/assets/global/plugins/uniform/jquery.uniform.js',
-			'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.js',
-			'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
-			'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js',
+            'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.js',
+            'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
+            'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js',
             'bower_components/metronic/assets/global/scripts/metronic.js',
             'bower_components/JavaScript-MD5/js/md5.js',
-            'bower_components/metronic/assets/admin/layout/scripts/layout.js'
+            'bower_components/metronic/assets/admin/layout/scripts/layout.js',
+            'app/utils/exel-builder/excel-builder.dist.js',
+            'app/utils/pdf/build/pdf.js'
         ],
         appStyleFiles = ['app/styles/main.less'],
         vendorCssFiles = [
@@ -129,6 +130,18 @@
                 src: '*',
                 dest: 'out/fonts/',
                 expand: true
+            },
+            fonts1: {
+                cwd: 'app/styles/font/',
+                src: '*',
+                dest: 'out/fonts/',
+                expand: true
+            },
+            css:{
+                expand: true,
+                flatten: true,
+                src: 'app/styles/main.css',
+                dest: 'out/css/'
             },
             resources: {
                 expand: true,
