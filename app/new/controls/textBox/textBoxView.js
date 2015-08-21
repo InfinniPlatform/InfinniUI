@@ -15,6 +15,16 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         errorText: '.pl-control-error-text'
     }),
 
+    events: _.extend({}, TextEditorBaseView.prototype.events, {
+        //Отображение поля редактирования для INPUT[TEXT]
+        'focus .pl-text-box-input': 'onFocusControlHandler',
+        'mouseenter .pl-text-box-input': 'onMouseenterControlHandler',
+
+        //Отображение поля редактирования для TEXTAREA
+        'focus .pl-text-area-input': 'onFocusControlHandler',
+        'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
+    }),
+
     initialize: function (options) {
         ControlView.prototype.initialize.call(this, options);
         this.once('render', this.initOnChangeHandler, this);
@@ -48,7 +58,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         this.bindUIElements();
 
         //Рендеринг редактора
-        var editor = this.renderEditor({
+        this.renderControlEditor({
             el: this.ui.editor,
             multiline: model.get('multiline'),
             lineCount: model.get('lineCount'),
@@ -117,8 +127,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     },
 
     onChangeValueHandler: function (model, value) {
-        //this.ui.control.value(value);
-        //@TODO Обработать!
+        this.ui.control.val(this.getDisplayValue());
     },
 
     onChangeEnabledHandler: function (model, value) {
@@ -144,5 +153,3 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     }
 
 });
-
-_.extend(TextBoxView.prototype, textEditorMixin);

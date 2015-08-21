@@ -1,6 +1,7 @@
 /**
- * @class
+ * @class TextEditorBaseView
  * @augments ControlView
+ * @mixes textEditorMixin
  */
 var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */{
 
@@ -10,12 +11,37 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     events: {
-        'focus .pl-control': 'onFocusControlHandler',
-        'mouseenter .pl-control': 'onMouseenterControlHandler'
+        //Обработчик для показа поля редактирования с использованием маски ввода
+        'focus .pl-text-box-input': 'onFocusControlHandler',
+        'mouseenter .pl-text-box-input': 'onMouseenterControlHandler'
+
+        //@TODO Генерация событий GotFocus/LostFocus должна происходить с учетом что происходит подмена контролов
     },
 
     initialize: function () {
         ControlView.prototype.initialize.call(this, options);
+    },
+
+    /**
+     * Рендеринг редактора значений
+     * @params {Object} options
+     * @params {jQuery} options.el
+     * @params {Number} options.multiline
+     * @params {Number} options.lineCount
+     * @params {String} options.inputType
+     *
+     */
+    renderControlEditor: function (options) {
+
+        options = _.defaults(options, {
+            el: this.ui.editor,
+            multiline: false,
+            lineCount: 1,
+            inputType: 'text'
+        });
+
+        //@TODO Возможно при отсутвии maskEdit поле редактирования использовать не надо?
+        this.renderEditor(options);
     },
 
     initOnChangeHandler: function () {
@@ -26,20 +52,27 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
             .listenTo(this.model, 'change:editMask', this.onChangeEditMaskHandler);
     },
 
-    onFocusControlHandler: function (event) {
-        if(this.model.get('enabled')) {
-            this.showEditor(this.model.get('value'), false);
-            this.onEditorHideControl();
-        }
+    onChangeLabelTextHandler: function () {
+
     },
 
-    onMouseenterControlHandler: function (event) {
-        //TODO: при ховере показывается маска (UI-854: убрал) по просьбе TeamLead'a
-        //При ховере Editor нужен, чтобы при клике по полю, курсор выставлялся в указаннкю позицию
-        if(this.model.get('enabled')) {
-            this.showEditor(this.model.get('value'), true);
-            this.onEditorHideControl();
-        }
+    onChangeLabelFloatingHandler: function () {
+
+    },
+
+    onChangeDisplayFormatHandler: function ( ){
+
+    },
+
+    onChangeEditMaskHandler: function () {
+
+    },
+
+    onEditorValidate: function (value) {
+        return true;
     }
 
+
 });
+
+_.extend(TextEditorBaseView.prototype, textEditorMixin);

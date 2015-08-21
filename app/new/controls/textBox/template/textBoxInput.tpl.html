@@ -1,6 +1,8 @@
 <label for="<%- guid %>"><%- labelText%></label>
-<input <% if (!enabled) { %> disabled <% } %> class="pl-control" type="text" id="<%- guid %>" value="<%- value %>">
+<input <% if (!enabled) { %> disabled <% } %> class="pl-control form-control pl-text-box-input" type="text" id="<%- guid %>" value="<%- value %>">
 <div class="pl-control-editor"></div>
 <div class="pl-control-hint-text"><%- hintText %></div>
 <div class="pl-control-error-text"><%- errorText %></div>
 <div class="pl-control-warning-text"><%- warningText %></div>
+
+

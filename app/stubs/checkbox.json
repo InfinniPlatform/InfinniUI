@@ -117,11 +117,16 @@
         },
         {
           "TextBox": {
-            "Multiline": true,
+            "Multiline": false,
             "LineCount": 5,
             "HintText": "I'm TextBox hint",
             "LabelText": "Text label",
             "Enabled": true,
+            "~EditMask": {
+              "NumberEditMask": {
+                "Mask": "n3"
+              }
+            },
             "Value": {
               "PropertyBinding": {
                 "DataSource": "MainDataSource"
