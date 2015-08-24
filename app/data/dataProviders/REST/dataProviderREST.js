@@ -27,6 +27,14 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         return guid();
     };
 
+    this.createIdFilter = function(id){
+        return [{
+            "Property": "Id",
+            "Value": id,
+            "CriteriaType": 1
+        }];
+    };
+
     this.saveItem = function (value, resultCallback, warnings, idProperty) {
 
         var callback = function(data){

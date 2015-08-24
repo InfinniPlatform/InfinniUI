@@ -569,11 +569,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setIdFilter: function(itemId){
-        this.setFilter([{
-            "Property": "Id",
-            "Value": itemId,
-            "CriteriaType": 1
-        }]);
+        var dataProvider = this.get('dataProvider'),
+            idFilter = dataProvider.createIdFilter(itemId);
+
+        this.setFilter(idFilter);
     },
 
     getErrorValidator: function(){

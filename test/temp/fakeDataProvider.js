@@ -136,6 +136,14 @@ function FakeDataProvider(mode) {
         resultCallback(null);
     };
 
+    this.createIdFilter = function(id){
+        return [{
+            "Property": "Id",
+            "Value": id,
+            "CriteriaType": 1
+        }];
+    };
+
     this.setCreateAction = function(){};
     this.setUpdateAction = function(){};
     this.setReadAction = function(){};

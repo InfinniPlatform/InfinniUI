@@ -51,6 +51,14 @@ _.extend(ObjectDataProvider.prototype, {
         resultCallback(result);
     },
 
+    createIdFilter: function(id){
+        return [{
+            "Property": "Id",
+            "Value": id,
+            "CriteriaType": 1
+        }];
+    },
+
     _getIndexOfItem: function (item) {
         var itemId = item[this.idProperty],
             items = this.items;
