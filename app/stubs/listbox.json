@@ -1,321 +1,140 @@
-{"Id": "1f32c0fb-c0af-4795-b6e6-ee7def47714d", "Version": "version_systemconfig", "ParentId": "4ef806ce-3ff2-4cd8-a497-634036bc4372", "MetadataType": "EditView", "Parameters": [], "LayoutPanel": {
+{
+  "Id": "1f32c0fb-c0af-4795-b6e6-ee7def47714d",
+  "Version": "version_systemconfig",
+  "ParentId": "4ef806ce-3ff2-4cd8-a497-634036bc4372",
+  "MetadataType": "EditView",
+  "Parameters": [],
+  "LayoutPanel": {
     "StackPanel": {
-        "Items": [
-            {
-                "ScrollPanel": {
-                    "LayoutPanel": {
-                        "GridPanel": {
-                            "Rows": [
-                                {
-                                    "Cells": [
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Название"
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "TextBox": {
-                                                        "Value": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "Name"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Код"
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "TextBox": {
-                                                        "Value": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "Code"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Кабинет "
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "ComboBox": {
-                                                        "ValueProperty": "Id",
-                                                        "DisplayProperty": "Number",
-                                                        "Value": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "Room"
-                                                            }
-                                                        },
-                                                        "Items": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "RoomDataSource"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Отделение "
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "ComboBox": {
-                                                        "ValueProperty": "Code",
-                                                        "DisplayProperty": "Name",
-                                                        "Value": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "Department"
-                                                            }
-                                                        },
-                                                        "Items": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "DepartmentDataSource"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Оказываемые услуги"
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "ListBox": {
-                                                        "ItemTemplate": {
-                                                            "LayoutPanel": {
-                                                                "GridPanel": {
-                                                                    "Rows": [
-                                                                        {
-                                                                            "Cells": [
-                                                                                {
-                                                                                    "ColumnSpan": "3",
-                                                                                    "Items": [
-                                                                                        {
-                                                                                            "ComboBox": {
-                                                                                                "ValueProperty": "Code",
-                                                                                                "DisplayProperty": "DisplayName",
-                                                                                                "Items": {
-                                                                                                    "PropertyBinding": {
-                                                                                                        "DataSource": "ServicesDataSource"
-                                                                                                    }
-                                                                                                },
-                                                                                                "Value": {
-                                                                                                    "PropertyBinding": {
-                                                                                                        "DataSource": "MainDataSource",
-                                                                                                        "Property": "$.Name"
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-
-                                                                                        }
-                                                                                    ]
-                                                                                },
-                                                                                {
-                                                                                    "ColumnSpan": "3",
-                                                                                    "Items": [
-                                                                                        {
-                                                                                            "ListBox": {
-                                                                                                "ItemTemplate": {
-                                                                                                    "ComboBox": {
-                                                                                                        "ValueProperty": "Code",
-                                                                                                        "DisplayProperty": "DisplayName",
-                                                                                                        "Items": {
-                                                                                                            "PropertyBinding": {
-                                                                                                                "DataSource": "ServicesDataSource"
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "Value": {
-                                                                                                            "PropertyBinding": {
-                                                                                                                "DataSource": "MainDataSource",
-                                                                                                                "Property": "$.Address.$.City"
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                "Items": {
-                                                                                                    "PropertyBinding": {
-                                                                                                        "DataSource": "MainDataSource",
-                                                                                                        "Property": "Services"
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-
-                                                                                    ]
-                                                                                }
-                                                                            ]
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            }
-                                                        },
-                                                        "Items": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "Services"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "3",
-                                            "Items": [
-                                                {
-                                                    "Label": {
-                                                        "Text": "Статус "
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "ColumnSpan": "9",
-                                            "Items": [
-                                                {
-                                                    "ComboBox": {
-                                                        "ValueProperty": "Code",
-                                                        "DisplayProperty": "Value",
-                                                        "Value": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "MainDataSource",
-                                                                "Property": "UseStatus"
-                                                            }
-                                                        },
-                                                        "Items": {
-                                                            "PropertyBinding": {
-                                                                "DataSource": "UseStatusDataSource"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                }
+      "Items": [
+        {
+          "ListBox": {
+            "Name": "ListBox1",
+            "Items": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource"
+              }
             },
-            {
-                "ToolBar": {
-                    "Items": [
-                        {
-                            "ToolBarButton": {
-                                "Text": "Сохранить",
-                                "Action": {
-                                    "SaveAction": {
-                                        "DataSource": "MainDataSource"
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "ToolBarButton": {
-                                "Text": "Отмена",
-                                "Action": {
-                                    "CancelAction": {
-                                        "Author": "griZZZlyk"
-                                    }
-                                }
-                            }
+            "ItemTemplate": {
+              "StackPanel": {
+                "Items": [
+                  {
+                    "Label": {
+                      "Text": {
+                        "PropertyBinding": {
+                          "DataSource": "MainDataSource",
+                          "Property": "$.title"
                         }
-                    ]
-                }
+                      }
+                    }
+                  },
+                  {
+                    "ListBox": {
+                      "Name": "ListBox2",
+                      "Items": {
+                        "PropertyBinding": {
+                          "DataSource": "MainDataSource",
+                          "Property": "$.items"
+                        }
+                      },
+                      "MultiSelect": true,
+                      "ItemTemplate": {
+                        "StackPanel": {
+                          "Items": [
+                            {
+                              "Label": {
+                                "Text": {
+                                  "PropertyBinding": {
+                                    "DataSource": "MainDataSource",
+                                    "Property": "$.items.$.title"
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "Value": {
+                        "PropertyBinding": {
+                          "DataSource": "MainDataSource",
+                          "Property": "$.selectedItems"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "Button": {
+                      "Text": "Click",
+                      "Tag": {
+                        "PropertyBinding": {
+                          "DataSource": "MainDataSource",
+                          "Property": "$"
+                        }
+                      },
+                      "OnClick": {
+                        "Name": "OnClick"
+                      }
+                    }
+                  }
+                ]
+              }
             }
+          }
+        }
+      ]
+    }
+  },
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "MainDataSource",
+        "Items": [
+          {
+            "title": "item1",
+            "items": [
+              {
+                "id": 1,
+                "title": "one"
+              },
+              {
+                "id": 2,
+                "title": "two"
+              },
+              {
+                "id": 3,
+                "title": "three"
+              }
+            ]
+          },
+          {
+            "title": "item2",
+            "items": [
+              {
+                "id": 4,
+                "title": "four"
+              },
+              {
+                "id": 5,
+                "title": "five"
+              },
+              {
+                "id": 6,
+                "title": "six"
+              }
+            ]
+          }
         ]
+      }
     }
-}, "DataSources": [
+  ],
+  "Scripts": [
     {
-        "DocumentDataSource": {
-            "Name": "MainDataSource",
-            "ConfigId": "Structure",
-            "DocumentId": "Resource"
-        }
-    },
-    {
-        "DocumentDataSource": {
-            "Name": "ServicesDataSource",
-            "ConfigId": "ClassifierStorage",
-            "DocumentId": "oid_1_2_643_5_1_13_2_1_1_473"
-        }
-    },
-    {
-        "DocumentDataSource": {
-            "ConfigId": "Structure",
-            "DocumentId": "Room",
-            "Name": "RoomDataSource"
-        }
-    },
-    {
-        "DocumentDataSource": {
-            "ConfigId": "Structure",
-            "DocumentId": "Department",
-            "Name": "DepartmentDataSource"
-        }
-    },
-    {
-        "DocumentDataSource": {
-            "ConfigId": "ClassifierStorage",
-            "DocumentId": "UseStatus",
-            "Name": "UseStatusDataSource"
-        }
+      "Name": "OnClick",
+      "Body": "console.log(context.Controls.ListBox2.getValue(), arguments);"
     }
-], "Text": "Ресурс", "Description": "", "Caption": "Edit", "Name": "Edit"}
+  ],
+  "Text": "Ресурс",
+  "Description": "",
+  "Caption": "Edit",
+  "Name": "Edit"
+}

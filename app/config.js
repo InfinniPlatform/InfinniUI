@@ -4,3 +4,4 @@ InfinniUI.config.cacheMetadata = false; //boolean - enable/disable cache | milli
 InfinniUI.config.serverUrl = 'http://ic:9900';
 InfinniUI.config.configId = 'PregnantRegister';
 InfinniUI.config.configName = 'Регистр беременных';
+InfinniUI.config.useLoaderIndicator = true;
