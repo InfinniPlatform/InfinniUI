@@ -33,7 +33,11 @@ describe('PropertyBinding', function () {
             DocumentId: 'MedicalWorker',
             IdProperty: 'Id'
         },
-        dataSourceMedicalWorker = dataSourceBuilder.build(null, {builder: builder, parent: view, metadata: medicalWorkerMetadata}),
+        dataSourceMedicalWorker = dataSourceBuilder.build(null, {
+                                                                    builder: builder,
+                                                                    parent: view,
+                                                                    metadata: medicalWorkerMetadata
+                                                                }),
         dataSources = [dataSourcePatient, dataSourceMedicalWorker];
 
     it('should build property binding', function () {
@@ -48,7 +52,11 @@ describe('PropertyBinding', function () {
 
         var propertyBindingBuilder = new PropertyBindingBuilder();
 
-        propertyBindingBuilder.build(builder, view, propertyBinding);
+        propertyBindingBuilder.build(null, {
+                                                builder: builder,
+                                                parent: view,
+                                                metadata: propertyBinding
+                                            });
 
         assert.equal(dataSources[0].getDataBindings().length, 1);
         //check that dataSource binding was added
