@@ -1,6 +1,6 @@
 function PrintReportActionBuilder() {
-    this.build = function (builder, parent, metadata) {
-        var action = new BaseAction(parent);
+    this.build = function (context, args) {
+        var action = new BaseAction(args.parent);
 
         this.template = function(data){
             return '<form id="form" enctype="application/x-www-form-urlencoded" target="frame" action="http://ic:9900/SystemConfig/UrlEncodedData/Reporting/GetReport" method="post">' +
@@ -30,12 +30,12 @@ function PrintReportActionBuilder() {
             return params;
         };
 
-        $.each(metadata.Parameters, function(index, el){
+        $.each(args.metadata.Parameters, function(index, el){
             action.setParameters(el);
         });
 
-        data.Configuration = metadata.Configuration;
-        data.Template = metadata.Template;
+        data.Configuration = args.metadata.Configuration;
+        data.Template = args.metadata.Template;
         data.Parameters = action.getParameters();
         data.FileFormat = 0; //metadata.FileFormat;
 

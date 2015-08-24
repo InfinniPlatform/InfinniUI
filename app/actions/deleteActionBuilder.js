@@ -1,6 +1,6 @@
 function DeleteActionBuilder() {
-    this.build = function (builder, parent, metadata) {
-        var action = new BaseAction(parent);
+    this.build = function (context, args) {
+        var action = new BaseAction(args.parent);
         action.setAction(function (callback) {
             new MessageBox({
                 text: 'Вы уверены, что хотите удалить?',
@@ -9,7 +9,7 @@ function DeleteActionBuilder() {
                         name: 'Да',
                         type: 'action',
                         onClick: function () {
-                            var parentDataSource = parent.getDataSource(metadata.DataSource),
+                            var parentDataSource = args.parent.getDataSource(args.metadata.DataSource),
                                 editItem = parentDataSource.getSelectedItem(),
                                 idProperty = parentDataSource.getIdProperty();
 

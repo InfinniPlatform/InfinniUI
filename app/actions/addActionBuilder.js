@@ -1,9 +1,9 @@
 function AddActionBuilder() {
-    this.build = function (builder, parent, metadata) {
-        var action = new BaseAction(parent);
+    this.build = function (context, args) {
+        var action = new BaseAction(args.parent);
         action.setAction(function (callback) {
-            var parentDataSource = parent.getDataSource(metadata.DataSource);
-            var linkView = builder.build(parent, metadata.View);
+            var parentDataSource = args.parent.getDataSource(args.metadata.DataSource);
+            var linkView = args.builder.build(args.parent, args.metadata.View);
             if (linkView) {
                 linkView.createView(function (editView) {
                     var editDataSource = _.find(editView.getDataSources(), function (ds) {

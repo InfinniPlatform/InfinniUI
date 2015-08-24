@@ -4,15 +4,15 @@ function SaveItemActionBuilder(metadataView) {
 
     var parentView = null;
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
         var action = new BaseItemAction();
 
         var that = this;
         action.setAction(function (callback) {
-            that.executeAction(builder, action, metadataView, callback);
+            that.executeAction(args.builder, action, metadataView, callback);
         });
 
-        parentView = parent;
+        parentView = args.parent;
 
         return action;
     };

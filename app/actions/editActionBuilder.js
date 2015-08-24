@@ -1,13 +1,13 @@
 function EditActionBuilder() {
-    this.build = function (builder, parent, metadata, itemCollection, itemId) {
-        var action = new BaseAction(parent);
+    this.build = function (context, args) {
+        var action = new BaseAction(args.parent);
 
         action.setAction(function (callback) {
-            var parentDataSource = parent.getDataSource(metadata.DataSource),
+            var parentDataSource = args.parent.getDataSource(args.metadata.DataSource),
                 editItem, idProperty, editItemId;
 
-            if(itemId){
-                editItemId = itemId;
+            if(args.itemId){
+                editItemId = args.itemId;
             }else{
                 editItem = parentDataSource.getSelectedItem();
 
@@ -28,7 +28,7 @@ function EditActionBuilder() {
                 editItemId = InfinniUI.ObjectUtils.getPropertyValue(editItem, idProperty);
             }
 
-            var linkView = builder.build(parent, metadata.View);
+            var linkView = args.builder.build(args.parent, args.metadata.View);
             linkView.createView(function (editView) {
                 var editDataSource = _.find(editView.getDataSources(), function (ds) {
                     return isMainDataSource(ds);

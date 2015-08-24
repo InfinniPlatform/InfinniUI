@@ -1,11 +1,11 @@
 function SelectActionBuilder() {
 }
 
-SelectActionBuilder.prototype.build = function (builder, parent, metadata) {
+SelectActionBuilder.prototype.build = function (context, args) {
 
-    var action = new BaseAction(parent);
+    var action = new BaseAction(args.parent);
     action.setAction(function (callback) {
-        this.executeAction(builder, parent, metadata, callback);
+        this.executeAction(args.builder, args.parent, args.metadata, callback);
     }.bind(this));
 
     return action;

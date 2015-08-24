@@ -29,19 +29,19 @@ function DeleteItemActionBuilder() {
     };
 
 
-    this.build = function(builder, parent, metadata, collectionProperty){
+    this.build = function (context, args) {
 
-        var action = new BaseItemActionBuilder(this.executeAction).build(builder,parent,metadata, collectionProperty);
+        var action = new BaseItemActionBuilder(this.executeAction).build(context, args);
 
         var that = this;
         action.setAction(function (callback) {
-            if(collectionProperty){
-                var baseIndex = collectionProperty.getBaseIndex();
+            if(args.collectionProperty){
+                var baseIndex = args.collectionProperty.getBaseIndex();
                 var items = action.getItems();
                 action.setSelectedItem(items[baseIndex]);
             }
 
-            that.executeAction(builder, action, metadata, callback, collectionProperty);
+            that.executeAction(args.builder, action, args.metadata, callback, args.collectionProperty);
         });
 
         return action;
