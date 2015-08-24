@@ -4,11 +4,11 @@
  */
 function RegexEditMaskBuilder () {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
 
         var editMask = new RegexEditMask();
 
-        editMask.mask = metadata.Mask;
+        editMask.mask = args.metadata.Mask;
 
         return editMask;
     }

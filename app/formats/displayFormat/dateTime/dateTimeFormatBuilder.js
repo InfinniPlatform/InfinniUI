@@ -7,15 +7,14 @@ function DateTimeFormatBuilder () {
     /**
      * @description Создает и инициализирует экземпляр {@link DateTimeFormat}
      * @memberOf DateTimeFormatBuilder
-     * @param builder
-     * @param parent
-     * @param metadata
+     * @param context
+     * @param args
      * @returns {DateTimeFormat}
      */
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
         var format = new DateTimeFormat();
 
-        format.setFormat(metadata.Format);
+        format.setFormat(args.metadata.Format);
 
         return format;
     }

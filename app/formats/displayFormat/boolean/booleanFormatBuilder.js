@@ -8,17 +8,16 @@ function BooleanFormatBuilder () {
      * @description Создает и инициализирует экземпляр {@link BooleanFormat}
      * @memberOf BooleanFormatBuilder
      * @instance
-     * @param builder
-     * @param parent
-     * @param metadata
+     * @param context
+     * @param args
      * @returns {BooleanFormat}
      */
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
 
         var format = new BooleanFormat();
 
-        format.setFalseText(metadata.FalseText);
-        format.setTrueText(metadata.TrueText);
+        format.setFalseText(args.metadata.FalseText);
+        format.setTrueText(args.metadata.TrueText);
 
         return format;
     }

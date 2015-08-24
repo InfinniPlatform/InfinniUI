@@ -6,7 +6,7 @@ describe('ObjectFormat', function () {
             var metadata = {Format: '{}'};
             var builder = new ObjectFormatBuilder();
             //When
-            var format = builder.build(null, null, metadata);
+            var format = builder.build(null, { metadata: metadata } );
             //Then
             assert.isFunction(format.format);
             assert.equal(format.getFormat(), '{}');

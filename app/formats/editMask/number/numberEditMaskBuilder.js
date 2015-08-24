@@ -3,18 +3,13 @@
  * @constructor
  */
 function NumberEditMaskBuilder () {
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
 
         var editMask = new NumberEditMask();
-        var formatMetadata = {
-            "NumberFormat":{
-                "Format": metadata.Mask
-            }
-        };
 
-        editMask.mask = metadata.Mask;
+        editMask.mask = args.metadata.Mask;
 
-        editMask.format = builder.buildType(parent, 'NumberFormat', {Format: metadata.Mask});
+        editMask.format = args.builder.buildType(args.parent, 'NumberFormat', {Format: args.metadata.Mask});
 
         return editMask;
     }

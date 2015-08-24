@@ -7,15 +7,14 @@ function ObjectFormatBuilder () {
     /**
      * @description Создает и инициализирует экземпляр {@link ObjectFormat}
      * @memberOf ObjectFormatBuilder
-     * @param builder
-     * @param parent
-     * @param metadata
+     * @param context
+     * @param args
      * @returns {ObjectFormat}
      */
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
         var format = new ObjectFormat();
 
-        format.setFormat(metadata.Format);
+        format.setFormat(args.metadata.Format);
 
         return format;
     }
