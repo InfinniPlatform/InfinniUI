@@ -7,13 +7,14 @@ var DataGridColumnBuilder = function () {
     /**
      * @description Создает экземпляр {@link DataGridColumn}
      * @memberOf DataGridColumnBuilder
-     * @param {ApplicationBuilder} builder
-     * @param {View} parent
-     * @param {Object} metadata
+     * @param {Object} context
+     * @param {Object} args
      * @returns {DataGridColumn}
      */
-    this.build = function (builder, parent, metadata, collectionProperty) {
+    this.build = function (context, args) {
         var column;
+
+        var metadata = args.metadata;
 
         if (typeof metadata !== 'undefined' && metadata !== null) {
 
@@ -28,11 +29,11 @@ var DataGridColumnBuilder = function () {
 
             var itemTemplate = metadata.ItemTemplate;
             if (typeof itemTemplate !== 'undefined' && itemTemplate !== null && itemTemplate !== '') {
-                column.setItemTemplate(this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty));
+                column.setItemTemplate(this.getItemTemplateConstructor(args.builder, args.parent, metadata, args.collectionProperty));
             }
 
             if (metadata.ItemFormat) {
-                var format = builder.build(parent, metadata.ItemFormat);
+                var format = args.builder.build(args.parent, metadata.ItemFormat);
                 column.setFormat(format);
             }
 

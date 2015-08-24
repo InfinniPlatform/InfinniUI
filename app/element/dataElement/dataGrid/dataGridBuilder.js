@@ -87,14 +87,18 @@ var DataGridBuilder = function () {
     /**
      * @description Создание и инициализация экземпляра DataGrid
      * @memberOf DataGridBuilder
-     * @param {ApplicationBuilder} builder
-     * @param {View} parent
-     * @param {Object} metadata
+     * @param {Object} context
+     * @param {Object} args
      * @returns {DataGrid}
      */
-    this.build = function (builder, parent, metadata, collectionProperty) {
+    this.build = function (context, args) {
 
         //var itemTemplateConstructor = this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty);
+        var builder = args.builder,
+            parent = args.parent,
+            metadata = args.metadata,
+            collectionProperty = args.collectionProperty;
+
         this.builder = builder;
         this.parent = parent;
         var dataGrid = new DataGrid(parent);

@@ -24,7 +24,11 @@ function ListBoxBuilder() {
         return null;
     };
 
-    this.build = function (builder, parent, metadata, collectionProperty) {
+    this.build = function (context, args) {
+
+        var builder = args.builder,
+            parent = args.parent,
+            metadata = args.metadata;
 
         if(metadata.ToolBar) {
 
@@ -35,18 +39,18 @@ function ListBoxBuilder() {
 
         var editItemAction = null;
         if(editItemActionMetadata){
-           editItemAction = new EditItemActionBuilder(editItemActionMetadata).build(builder, parent, metadata);
+           editItemAction = new EditItemActionBuilder(editItemActionMetadata).build(context, args);
         }
 
         var addItemAction = null;
         if(addItemActionMetadata) {
-           addItemAction = new AddItemActionBuilder(addItemActionMetadata).build(builder, parent, metadata);
+           addItemAction = new AddItemActionBuilder(addItemActionMetadata).build(context, args);
         }
 
-        var dataBinding = builder.build(parent, metadata.Items, collectionProperty);
+        var dataBinding = builder.build(parent, metadata.Items, args.collectionProperty);
 
         var listBoxItemConstructor = function(baseIndex) {
-            return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, collectionProperty));
+            return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, args.collectionProperty));
         };
 
         var listBox = new ListBox(addItemAction,editItemAction,dataBinding, listBoxItemConstructor);

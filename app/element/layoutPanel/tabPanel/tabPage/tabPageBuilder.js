@@ -1,6 +1,8 @@
 function TabPageBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
+        var parent = args.parent,
+            metadata = args.metadata;
         var tabPage = new TabPage(parent);
 
         tabPage.setImage(metadata.Image);
@@ -15,7 +17,7 @@ function TabPageBuilder() {
         tabPage.setHorizontalAlignment(metadata.HorizontalAlignment);
 
         if (typeof metadata.LayoutPanel !== 'undefined') {
-            tabPage.setLayoutPanel(builder.build(parent, metadata.LayoutPanel));
+            tabPage.setLayoutPanel(args.builder.build(parent, metadata.LayoutPanel));
         }
 
         if (parent && metadata.OnClosing){
