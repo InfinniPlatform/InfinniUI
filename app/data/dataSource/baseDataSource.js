@@ -1,659 +1,707 @@
-﻿function oldBaseDataSource(view, idProperty, dataProvider) {
+var BaseDataSource = Backbone.Model.extend({
+    defaults: {
+        name: null,
+        idProperty: 'Id',
+        pageNumber: 0,
+        pageSize: 15,
+        sorting: null,
+        criteriaList: [],
 
-    this.eventStore = new EventStore();
+        view: null,
 
-    //public
-    this.onPageNumberChanged = function (handler) {
-        this.eventStore.addEvent('onPageNumberChanged', handler);
-    };
-    this.onPageSizeChanged = function (handler) {
-        this.eventStore.addEvent('onPageSizeChanged', handler);
-    };
-    this.onItemDeleted = function (handler) {
-        this.eventStore.addEvent('onItemDeleted', handler);
-    };
-    this.onBeforeItemSaved = function (handler) {
-        this.eventStore.addEvent('onBeforeItemSaved', handler);
-    };
-    this.onItemSaved = function (handler) {
-        this.eventStore.addEvent('onItemSaved', handler);
-    };
-    this.onTextFilterChanged = function (handler) {
-        this.eventStore.addEvent('onTextFilterChanged', handler);
-    };
-    this.onPropertyFiltersChanged = function (handler) {
-        this.eventStore.addEvent('onPropertyFiltersChanged', handler);
-    };
+        isDataReady: false,
 
-    this.onBeforeItemCreated = function (handler) {
-        this.eventStore.addEvent('onBeforeItemCreated', handler);
-    };
-    this.onItemCreated = function (handler) {
-        this.eventStore.addEvent('onItemCreated', handler);
-    };
-    this.onItemsUpdated = function (handler) {
-        return this.eventStore.addEvent('onItemsUpdated', handler);
-    };
-    this.onItemsDeleted = function (handler) {
-        this.eventStore.addEvent('onItemsDeleted', handler);
-    };
+        dataProvider: null,
 
-    //private
-    var _criteriaConstructor;
-    var fillCreatedItem = true;
-    var idFilter = null;
-    var name = null;
-    var dataItems = [];
-    var currentStrategy = null;
-    var listStrategy = new ListDataSourceStrategy(this);
-    var editStrategy = new EditDataSourceStrategy(this);
+        modifiedItems: {},
+        items: null,
+        itemsById: {},
+        selectedItem: null,
 
-    var propertyFilters = [];
-    var queryFilter = null;
-    var textFilter = null;
-    var selectedItem = null;
+        fillCreatedItem: true,
+        isUpdateSuspended: false,
 
-    var pageSize = null;
-    var pageNumber = null;
+        errorValidator: null,
+        warningValidator: null,
+        showingWarnings: false,
 
-    var sorting = null;
+        isRequestInProcess: false
 
-    var dataBindings = [];
+    },
 
-    var suspended = false;
+    initialize: function(){
+        this.initDataProvider();
 
-    this.isSuspended = function () {
-        return suspended;
-    };
-
-    var _loadingProcess = $.Deferred();
-
-    this.loading = _loadingProcess.promise();
-
-    this.loadingProcessDone = function () {
-        _loadingProcess.resolve();
-    };
-
-    //strategy by default
-    currentStrategy = listStrategy;
-
-
-    this.setCriteriaConstructor = function (criteriaConstructor) {
-        _criteriaConstructor = criteriaConstructor;
-    };
-
-    this.getDataItems = function () {
-        return dataItems;
-    };
-
-    this.setDataItems = function (value) {
-        dataItems = value;
-        currentStrategy.setDataItems(value);
-        if (suspended) {
-            suspended = false;
+        if(!this.get('view')){
+            throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
-        currentStrategy.onItemsUpdated(dataItems);
-    };
+    },
 
-    this.setSorting = function (value) {
-        sorting = (typeof value === 'undefined') ? null : value;
-    };
+    initDataProvider: function(){
+        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
+    },
 
-    this.getSorting = function () {
-        return sorting;
-    };
+    onPageNumberChanged: function (handler) {
+        this.on('change:pageNumber', handler);
+    },
 
-    var setListStrategy = function () {
-        currentStrategy = listStrategy;
-    };
+    onPageNumberSize: function (handler) {
+        this.on('change:pageSize', handler);
+    },
 
-    var setEditStrategy = function () {
-        currentStrategy = editStrategy;
-    };
+    onError: function (handler) {
+        this.on('error', handler);
+    },
 
-    this.setUserStrategy = function (strategy) {
-        currentStrategy = strategy;
-    };
+    onPropertyChanged: function (handler) {
+        this.on('onPropertyChanged', handler);
+    },
 
-    var addOrUpdateItem = function (item) {
-        if (dataItems.length == 1) {
-            dataItems[0] = item;
-        }
-        else {
-            //may be slow method to add
-            dataItems.push(item);
-        }
-    };
+    onSelectedItemChanged: function (handler) {
+        this.on('onSelectedItemChanged', handler);
+    },
 
-    var removeById = function (item) {
-        for (var i = 0; i < dataItems.length; i++) {
-            if (dataItems[i].Id === item.Id) {
-                var indexToSplice = i;
-                break;
-            }
-        }
-        if (indexToSplice !== undefined) {
-            dataItems.splice(indexToSplice, 1);
-        }
-    };
+    onItemCreated: function (handler) {
+        this.on('onItemCreated', handler);
+    },
 
-    var resetModified = function (item) {
-        if (item != null) {
-            var index = modifiedItems.indexOf(item);
-            if (index > -1) {
-                modifiedItems.splice(index, 1);
-            }
-        }
-    };
+    onItemsUpdated: function (handler) {
+        this.on('onItemsUpdated', handler);
+    },
 
+    getName: function(){
+        return this.get('name');
+    },
 
-    this.suspendUpdate = function () {
-        suspended = true;
-    };
+    setName: function(name){
+        this.set('name', name);
+    },
 
-    this.resumeUpdate = function (callback) {
-        if (suspended) {
-            suspended = false;
-        }
-        this.updateItems(callback);
-    };
+    getView: function(){
+        return this.get('view');
+    },
 
-    this.getPageNumber = function () {
-        return pageNumber;
-    };
+    getItems: function(){
+        return this.get('items');
+    },
 
-    this.setPageNumber = function (value) {
-        if (value < 0) {
-            value = 0;
-        }
+    _setItems: function(items){
+        var indexOfItemsById;
 
-        if (value !== pageNumber) {
-            pageNumber = value;
-            if (currentStrategy.onPageNumberChanged !== null) {
-                currentStrategy.onPageNumberChanged(value);
-            }
-            this.updateItems();
-        }
-    };
+        this.set('isDataReady', true);
+        this.set('items', items);
+        this._clearModifiedSet();
+        if(items && items.length > 0){
+            indexOfItemsById = this._indexItemsById(items);
+            this.set('itemsById', indexOfItemsById);
 
-    this.getPageSize = function () {
-        return pageSize;
-    };
-
-    this.setPageSize = function (value) {
-        if (value < 0) {
-            value = 0;
-        }
-        else if (value > 1000) {
-            value = 1000;
-        }
-
-        var isPageSizeChanging = pageSize !== value;
-
-        pageNumber = 0;
-        pageSize = value;
-
-        if (isPageSizeChanging && !suspended) {
-            currentStrategy.onPageNumberChanged(pageNumber);
-            currentStrategy.onPageSizeChanged(value);
-
-            this.updateItems();
-        }
-    };
-
-
-    this.getName = function () {
-        return name;
-    };
-
-    this.setName = function (value) {
-        name = value;
-    };
-
-    this.getIdProperty = function () {
-        return idProperty || 'Id';
-    };
-
-    this.setIdProperty = function (value) {
-        idProperty = value;
-    };
-
-    this.getFillCreatedItem = function () {
-        return fillCreatedItem;
-    };
-
-    this.setFillCreatedItem = function (value) {
-        fillCreatedItem = value || false;
-    };
-
-    this.getIdFilter = function () {
-        return idFilter;
-    };
-
-    this.setIdFilter = function (value) {
-        if (idFilter !== value) {
-            idFilter = value;
-            this.updateItems();
-        }
-    };
-
-    this.setEditMode = function () {
-        setEditStrategy();
-    };
-
-    this.setListMode = function () {
-        setListStrategy();
-    };
-
-    this.getView = function () {
-        return view;
-    };
-
-    this.createItem = function () {
-        dataProvider.createItem(
-            function (data) {
-                addOrUpdateItem(data);
-                currentStrategy.onItemCreated(data);
-                setModified(data);
-            });
-    };
-    var warnings = false;
-
-    this.showErrors = function(errors){
-        if (_.isEmpty(errors) || errors.IsValid) {
-            return;
-        }
-        if (errors.Message instanceof Array) {
-            for (var i = 0; i < errors.Message.length; i++) {
-                toastr.error(errors.Message[i].Message, "Ошибка!");
-            }
-        } else if(typeof errors.Message == 'string' && errors.Message.indexOf('{') >= 0){
-            var result = JSON.parse(errors.Message);
-            result = result.ValidationMessage &&
-            result.ValidationMessage.ValidationErrors &&
-            result.ValidationMessage.ValidationErrors.Message ? result.ValidationMessage.ValidationErrors.Message : 'Обратитесь к системному администратору';
-            toastr.error(result, "Ошибка!");
+            this.setSelectedItem(items[0]);
         }else{
-            toastr.error('Обратитесь к системному администратору', "Ошибка!");
+            this.setSelectedItem(null);
         }
-    };
+    },
 
-    this.showWarnings = function(warnings){
-        if (_.isEmpty(warnings) || warnings.IsValid) {
+    _addItems: function(newItems){
+        var indexedItemsById = this.get('itemsById'),
+            items = this.getItems(),
+            newIndexedItemsById;
+
+        this.set('isDataReady', true);
+
+        items = _.union(items, newItems);
+        this.set('items', items);
+        if(newItems && newItems.length > 0){
+            newIndexedItemsById = this._indexItemsById(newItems);
+            _.extend(indexedItemsById, newIndexedItemsById);
+            this.set('itemsById', indexedItemsById);
+        }
+    },
+
+    getSelectedItem: function(){
+        return this.get('selectedItem');
+    },
+
+    setSelectedItem: function(item, success, error){
+        var currentSelectedItem = this.getSelectedItem(),
+            items = this.get('itemsById'),
+            itemId = this._idOfItem(item);
+
+        if(item == currentSelectedItem){
             return;
         }
 
-        var resultText = warnings.Message[0].Message;
-        for (var j = 1; j < warnings.Message.length; j++) {
-            resultText += '<p><i class="fa-lg fa fa-warning" style="color: #45b6af; padding-right: 5px"></i>' + warnings.Message[j].Message;
-        }
-        resultText += '<p style="font-weight: bolder;">Продолжить добавление?';
-
-        new MessageBox({
-            text: resultText,
-            buttons: [
-                {
-                    name: 'Да',
-                    type: 'action',
-                    onClick: attemptSave.bind(undefined, true)
-                },
-                {
-                    name: 'Нет'
+        if(item !== null){
+            if(!items[itemId]){
+                if(!error){
+                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                }else{
+                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                    return;
                 }
-            ]
-        });
-    };
-
-    this.saveItem = function (item, onSuccess/*, onError*/) {
-        var invokeCallback = function (callback) {
-            if (typeof callback === 'function') {
-                var args = Array.prototype.slice.call(arguments, 1);
-                callback.apply(undefined, args);
             }
-        };
-
-        var idProperty = that.getIdProperty() || "Id";
-
-        var self = this;
-
-        var attemptSave = function (warnings) {
-            dataProvider.replaceItem(item, warnings, function (data) {
-                //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
-                if ((data.IsValid || data.IsValid == undefined) ) {
-                    if(!(data instanceof Array) && item != null) {
-                        item[idProperty] = data.InstanceId;
-                        addOrUpdateItem(item);
-                        currentStrategy.onItemSaved(item, data);
-                        resetModified(item);
-                    }
-                    invokeCallback(onSuccess, data);
-                } else {
-                    var validation = data.ValidationMessage;
-                    self.showErrors(validation.ValidationErrors);
-                    self.showWarnings(validation.ValidationWarnings);
-                }
-            });
-
-        };
-
-        attemptSave(warnings);
-    };
-
-    this.deleteItem = function (item) {
-        var self = this;
-        dataProvider.deleteItem(item, function (data) {
-            if ((data.IsValid || data.IsValid == undefined) ) {
-                removeById(item);
-                currentStrategy.onItemDeleted(item);
-            }else{
-                var validation = data.ValidationMessage;
-                self.showErrors(validation.ValidationErrors);
-                self.showWarnings(validation.ValidationWarnings);
-            }
-        });
-    };
-
-    var loadItems = function (resultCallback) {
-        currentStrategy.getItems(dataProvider, resultCallback);
-    };
-
-    this.getItems = function (resultCallback) {
-        loadItems(resultCallback);
-    };
-
-    this.updateItems = function (callback) {
-        if (!suspended) {
-            loadItems(function (data) {
-
-                dataItems = data;
-                currentStrategy.onItemsUpdated(data);
-
-                if (callback) {
-                    callback(data);
-                }
-            });
         }
-    };
 
-    this.setQueryFilter = function (value, callback) {
+        this.set('selectedItem', item);
 
-        if (queryFilter !== value) {
-            queryFilter = _criteriaConstructor(value);
-            this.updateItems(callback);
+        this._notifyAboutSelectedItem(item, success);
+    },
+
+    _notifyAboutSelectedItem: function(item, successHandler){
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+
+        if(successHandler){
+            successHandler(context, argument);
         }
-    };
+        this.trigger('onSelectedItemChanged', context, argument);
+    },
 
-    this.getQueryFilter = function () {
-        return queryFilter;
-    };
+    getIdProperty: function () {
+        return this.get('idProperty');
+    },
 
-    this.setPropertyFilters = function (value) {
-        if (propertyFilters !== value) {
-            pageNumber = 0;
-            propertyFilters = value;
+    setIdProperty: function (value) {
+        this.set('idProperty', value);
+    },
 
-            currentStrategy.onPageNumberChanged(0);
-            currentStrategy.onPropertyFiltersChanged(value);
+    getFillCreatedItem: function () {
+        return this.get('fillCreatedItem');
+    },
+
+    setFillCreatedItem: function (fillCreatedItem) {
+        this.set('fillCreatedItem', fillCreatedItem);
+    },
+
+    suspendUpdate: function () {
+        this.set('isUpdateSuspended', true);
+    },
+
+    resumeUpdate: function () {
+        this.set('isUpdateSuspended', false);
+    },
+
+    getPageNumber: function () {
+        return this.get('pageNumber');
+    },
+
+    setPageNumber: function (value) {
+        if(!Number.isInteger(value) || value < 0){
+            throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
+        }
+
+        if (value != this.get('pageNumber')) {
+            this.set('pageNumber', value);
             this.updateItems();
         }
-    };
+    },
 
-    this.getPropertyFilters = function () {
-        return propertyFilters;
-    };
+    getPageSize: function () {
+        return this.get('pageSize');
+    },
 
-    this.getTextFilter = function () {
-        return textFilter;
-    };
-
-    this.setTextFilter = function (value) {
-        if (textFilter !== value) {
-            pageNumber = 0;
-            textFilter = value;
-            var self = this;
-
-            setTimeout(function () {
-                currentStrategy.onPageNumberChanged(0);
-                currentStrategy.onTextFilterChanged(value);
-                self.updateItems();
-            }, 30)
-        }
-    };
-
-    this.addDataBinding = function (value) {
-        if (value !== null) {
-            dataBindings.push(value);
-
-            value.onSetPropertyValue(onSetPropertyValueHandler);
-
-
-            if (!suspended) {
-
-                //устанавливаем значение элемента
-                currentStrategy.bindItems(value, dataItems, this);
-
-            }
-
-        }
-    };
-
-    this.removeDataBinding = function (value) {
-        var itemIndex = dataBindings.indexOf(value);
-        if (itemIndex > -1) {
-            dataBindings.splice(itemIndex, 1);
-
-            //remove data binding problem
-            value.removeOnSetPropertyValue(onSetPropertyValueHandler);
-        }
-    };
-
-    this.getSelectedItem = function () {
-        if (selectedItem === undefined || selectedItem === null) {
-            return null;
+    setPageSize: function (value) {
+        if(!Number.isInteger(value) || value < 0){
+            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
         }
 
-        return JSON.parse(JSON.stringify(selectedItem));
-    };
-
-    this.setSelectedItem = function (value) {
-        var isEmpty = function (value) {
-            return typeof value === 'undefined' || value === null;
-        };
-
-        if (isEmpty(value) || isEmpty(selectedItem)) {
-            if (isEmpty(value) && isEmpty(selectedItem)) {
-                return;
-            }
-        } else {
-            if (JSON.stringify(selectedItem) === JSON.stringify(value)) {
-                return;
-            }
+        if (value != this.get('pageSize')) {
+            this.set('pageSize', value);
+            this.updateItems();
         }
-        //TODO: Проверить работу selectedItem в ListBox
-        //if (JSON.stringify(selectedItem) === JSON.stringify(value)) {
-        //    return;
-        //}
+    },
 
-        selectedItem = currentStrategy.syncSelectedItem(value);
-        currentStrategy.onSelectedItemChanged(selectedItem);
-    };
+    isModifiedItems : function () {
+        return this.isModified();
+    },
 
-    this.getDataBindings = function () {
-        return dataBindings;
-    };
-
-    var that = this;
-
-    var onSetPropertyValueHandler = function (context, args) {
-        var propertyName = args.property;
-        var propertyValue = args.value;
-
-        if (propertyName !== undefined && propertyName !== null) {
-            var selectedItem = that.getSelectedItem();
-
-            if (selectedItem === null) {
-                selectedItem = {};
-            }
-            if (selectedItem !== null) {
-                if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {
-                    InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName.substr(2), propertyValue);
-                }
-                else if (propertyName !== '$') {
-                    InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName, propertyValue);
-                }
-                else {
-                    for (var property in selectedItem) {
-                        delete(selectedItem[property]);
-                    }
-
-                    for (var property in propertyValue) {
-                        selectedItem[property] = propertyValue[property];
-                    }
-                }
-                that.setSelectedItem(selectedItem);
-                setModified(selectedItem);
-            }
-
-            var bindings = that.getDataBindings();
-            for (var i = 0; i < bindings.length; i++) {
-                if (bindings[i].getProperty() === propertyName) {
-                    bindings[i].propertyValueChanged(propertyValue);
-                }
-            }
-
-            that.eventStore.executeEvent('onSelectedItemModified');
+    isModified : function (item) {
+        if(arguments.length == 0){
+            return _.size(this.get('modifiedItems')) > 0;
         }
-    };
 
-    this.onSelectedItemChanged = function (action) {
-        this.eventStore.addEvent('onSelectedItemChanged', action);
-    };
-
-    this.onSelectedItemModified = function (action) {
-        this.eventStore.addEvent('onSelectedItemModified', action);
-    };
-
-    //Добавляем событие по умолчанию (уведомление всех датабиндингов)
-    this.onSelectedItemChanged(function (context, args) {
-        var selectedItem = args.value;
-
-        for (var i = 0; i < dataBindings.length; i++) {
-            var propertyName = dataBindings[i].getProperty();
-
-            if (/^\d+/.test(propertyName)) {
-                /**
-                 * @TODO Костыль! Чтобы при изменении выбранного элемента, в привязки для ItemTemplate не вкидывались
-                 * неверные данные из selectedItem
-                 */
-            } else if (propertyName) {
-                if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {
-                    var propertyValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, propertyName.substring(2, propertyName.length));
-                }
-
-                else if (propertyName !== '$') {
-                    var propertyValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, propertyName); //selectedItem[propertyName];
-                }
-
-                else {
-                    var propertyValue = selectedItem;
-                }
-
-                dataBindings[i].propertyValueChanged(propertyValue);
-            }
-        }
-    });
-
-    this.onItemsUpdated(function (context, args) {
-        var items = args.value;
-        _.each(dataBindings, function (binding) {
-            if (binding.property === '$') {
-                var value = this.getSelectedItem();
-            } else if (/^\$\..+$/.test(binding.property)) {
-                var value = InfinniUI.ObjectUtils.getPropertyValue(this.getSelectedItem(), binding.property.substr(2));
-            } else {
-                var value = InfinniUI.ObjectUtils.getPropertyValue(items, binding.property);
-            }
-            binding.bind(value);
-        }, that);
-    });
-
-
-    var modifiedItems = [];
-
-    this.isModifiedItems = function () {
-        return modifiedItems.length > 0;
-    };
-
-    this.isModified = function (value) {
-        var isModified = value != null && value !== undefined;
-        if (!isModified) {
+        if (item != null && item !== undefined) {
             return false;
         }
         else {
-            var index = modifiedItems.indexOf(value);
-            return index > -1;
-        }
-    };
-
-    var setModified = function (value) {
-        if (value != null) {
-            modifiedItems.push(value);
-        }
-    };
-
-
-}
-
-function isMainDataSource(ds) {
-    return ds.getName() == 'MainDataSource';
-}
-
-
-
-var components = {
-    main: {
-        name: 'Главная вьюха',
-        type: 'layout',
-        data: {
-
-        },
-        body: {
-
+            var itemId = this._idOfItem(item);
+            return itemId in this.get('modifiedItems');
         }
     },
 
-    component_layout_432_1: {
-        type: 'layout',
-        name: 'элемент списка todo',
-        data: 'component_data_432_1',
-        body: {
-            type: 'switchArea',
-            binding: '~(isEditingNow)',
-            cases:[
-                {
+    _includeItemToModifiedSet: function(item){
+        var itemId = this._idOfItem(item);
+        this.get('modifiedItems')[itemId] = item;
+    },
 
-                }
-            ]
+    _excludeItemFromModifiedSet: function(item){
+        var itemId = this._idOfItem(item);
+        delete this.get('modifiedItems')[itemId];
+    },
+
+    _clearModifiedSet: function(){
+        this.set('modifiedItems', {});
+    },
+
+    getProperty: function(property){
+        var selectedItem = this.getSelectedItem(),
+            relativeProperty, oldValue;
+
+        if(!selectedItem){
+            return undefined;
+        }
+
+        if(property != '$'){
+            if(property.substr(0,2) == '$.'){
+                relativeProperty = property.substr(2);
+            }else{
+                relativeProperty = property;
+            }
+
+            return InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+        }else{
+            return selectedItem;
         }
     },
 
-    component_data_432_1: {
-        type: 'data',
-        name: 'элемент списка todo',
-        body: {
-            status:{
-                type: 'field',
-                default: 'open' // close, archive
-            },
-            isEditingNow:{
-                type: 'field',
-                default: false
-            },
-            title:{
-                type: 'field',
-                default: ''
+    setProperty: function(property, value){
+        var selectedItem = this.getSelectedItem(),
+            relativeProperty, oldValue;
+
+        if(!selectedItem){
+            return;
+        }
+
+        if(property != '$'){
+            if(property.substr(0,2) == '$.'){
+                relativeProperty = property.substr(2);
+            }else{
+                relativeProperty = property;
+            }
+
+            oldValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+            if(value != oldValue){
+                InfinniUI.ObjectUtils.setPropertyValue(selectedItem, relativeProperty, value);
+            }else{
+                return;
+            }
+
+        }else{
+            if(value != selectedItem){
+                oldValue = this._copyObject(selectedItem);
+                this._replaceAllProperties(selectedItem, value);
+            }else{
+                return;
             }
         }
+
+        this._includeItemToModifiedSet(selectedItem);
+        this._notifyAboutPropertyChanged(property, value, oldValue);
+    },
+
+    _notifyAboutPropertyChanged : function (property, newValue, oldValue) {
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.property = property;
+        argument.newValue = newValue;
+        argument.oldValue = oldValue;
+
+        this.trigger('onPropertyChanged', context, argument);
+    },
+
+    saveItem : function (item, success, error) {
+        var dataProvider = this.get('dataProvider'),
+            that = this,
+            validateResult;
+
+        if(!this.isModified(item)){
+            this._notifyAboutItemSaved(item, success);
+            return;
+        }
+
+        validateResult = this.validateOnErrors(item);
+        if(!validateResult.isValid){
+            this._notifyAboutFailValidationBySaving(item, validateResult, error);
+            return;
+        }
+
+        dataProvider.saveItem(item, function(data){
+            if( !('isValid' in data) || data.isValid === true ){
+                that._excludeItemFromModifiedSet(item);
+                that._notifyAboutItemSaved(item, success);
+            }else{
+                that._notifyAboutFailValidationBySaving(item, data, error);
+            }
+        });
+    },
+
+    _notifyAboutItemSaved: function(item, successHandler){
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemSaved', context, argument);
+    },
+
+    _notifyAboutFailValidationBySaving: function(item, validationResult, errorHandler){
+        this._notifyAboutValidation(validationResult, errorHandler, 'error');
+    },
+
+    deleteItem : function (item, success, error) {
+        var dataProvider = this.get('dataProvider'),
+            that = this,
+            itemId = this._idOfItem(item),
+            isItemInSet = this.get('itemsById')[itemId] !== undefined;
+
+        if(!isItemInSet){
+            this._notifyAboutMissingDeletedItem(item, error);
+            return;
+        }
+
+        dataProvider.deleteItem(item, function(data){
+            if( !('isValid' in data) || data.isValid === true ){
+                that._handleDeletedItem(item, success);
+            }else{
+                that._notifyAboutFailValidationByDeleting(item, data, error);
+            }
+        });
+    },
+
+    _handleDeletedItem: function(item, successHandler){
+        var items = this.get('items'),
+            idProperty = this.get('idProperty'),
+            itemId = this._idOfItem(item),
+            selectedItem = this.getSelectedItem();
+
+        for(var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++){
+            if(items[i][idProperty] == itemId){
+                items.splice(i, 1);
+                needExit = true;
+            }
+        }
+        delete this.get('itemsById')[itemId];
+        this._excludeItemFromModifiedSet(item);
+
+        if(selectedItem && selectedItem[idProperty] == itemId){
+            this.setSelectedItem(null);
+        }
+
+        this._notifyAboutItemDeleted(item, successHandler);
+    },
+
+    _notifyAboutItemDeleted: function(item, successHandler){
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemDeleted', context, argument);
+    },
+
+    _notifyAboutMissingDeletedItem: function(item, errorHandler){
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+        argument.error = {
+            message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
+        };
+
+        if(errorHandler){
+            errorHandler(context, argument);
+        }
+    },
+
+    _notifyAboutFailValidationByDeleting: function(item, errorData, errorHandler){
+        var context = this.getContext(),
+            argument = this._getArgumentTemplate();
+
+        argument.value = item;
+        argument.error = errorData;
+
+        if(errorHandler){
+            errorHandler(context, argument);
+        }
+    },
+
+    isDataReady: function(){
+        return this.get('isDataReady');
+    },
+
+    getItems: function(){
+        if(!this.isDataReady()){
+            logger.warn({
+                message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',
+                source: this
+            });
+        }
+
+        return this.get('items');
+    },
+
+    updateItems: function(onSuccess, onError){
+        if (!this.get('isUpdateSuspended')){
+            var filters = this.getFilter(),
+                pageNumber = this.get('pageNumber'),
+                pageSize = this.get('pageSize'),
+                sorting = this.get('sorting'),
+                dataProvider = this.get('dataProvider'),
+                that = this;
+
+            this.set('isRequestInProcess', true);
+            dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
+
+                that.set('isRequestInProcess', false);
+                that._handleUpdatedItemsData(data, onSuccess);
+
+            }, onError );
+        }
+
+    },
+
+    _handleUpdatedItemsData: function(itemsData, successHandler){
+        this._setItems(itemsData);
+        this._notifyAboutItemsUpdated(itemsData, successHandler);
+    },
+
+    _notifyAboutItemsUpdated: function(itemsData, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: itemsData
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemsUpdated', context, argument);
+    },
+
+    addNextItems: function(success, error){
+        if (!this.get('isUpdateSuspended')){
+            var filters = this.getFilter(),
+                pageNumber = this.get('pageNumber'),
+                pageSize = this.get('pageSize'),
+                sorting = this.get('sorting'),
+                dataProvider = this.get('dataProvider'),
+                that = this;
+
+            this.set('isRequestInProcess', true);
+            this.set('pageNumber', pageNumber + 1);
+            dataProvider.getItems( filters, pageNumber + 1, pageSize, sorting, function(data){
+
+                that.set('isRequestInProcess', false);
+                that._handleAddedItems(data, success);
+
+            }, error );
+        }
+    },
+
+    _handleAddedItems: function(itemsData, successHandler){
+        this._addItems(itemsData);
+        this._notifyAboutItemsAdded(itemsData, successHandler);
+
+    },
+
+    _notifyAboutItemsAdded: function(itemsData, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: itemsData
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemsAdded', context, argument);
+    },
+
+    createItem: function(success, error){
+        var dataProvider = this.get('dataProvider'),
+            idProperty = this.get('idProperty'),
+            that = this,
+            localItem;
+
+        if(this.get('fillCreatedItem')){
+            dataProvider.createItem(
+                function (item) {
+                    that._handleDataForCreatingItem(item, success);
+                },
+                idProperty
+            );
+        }else{
+            localItem = dataProvider.createLocalItem(idProperty);
+            this._handleDataForCreatingItem(localItem, success);
+        }
+    },
+
+    _handleDataForCreatingItem: function(itemData, successHandler){
+        this._setItems([itemData]);
+        this._notifyAboutItemCreated(itemData, successHandler);
+    },
+
+    _notifyAboutItemCreated: function(createdItem, successHandler){
+        var context = this.getContext(),
+            argument = {
+                value: createdItem
+            };
+
+        if(successHandler){
+            successHandler(context, argument);
+        }
+        this.trigger('onItemCreated', context, argument);
+    },
+
+    getFilter: function(){
+        return this.get('criteriaList');
+    },
+
+    setFilter: function(filter){
+        this.set('criteriaList', filter);
+        this.updateItems();
+    },
+
+    setIdFilter: function(itemId){
+        this.setFilter([{
+            "Property": "Id",
+            "Value": itemId,
+            "CriteriaType": 1
+        }]);
+    },
+
+    getErrorValidator: function(){
+        return this.get('errorValidator');
+    },
+
+    setErrorValidator: function(validatingFunction){
+        this.set('errorValidator', validatingFunction);
+    },
+
+    getWarningValidator: function(){
+        return this.get('warningValidator');
+    },
+
+    setWarningValidator: function(validatingFunction){
+        this.set('warningValidator', validatingFunction);
+    },
+
+    validateOnErrors: function(item, callback){
+        return this._validatingActions(item, callback, 'error');
+    },
+
+    validateOnWarnings: function(item, callback){
+        return this._validatingActions(item, callback, 'warning');
+    },
+
+    _validatingActions: function(item, callback, validationType){
+        var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
+            result = {
+                isValid: true,
+                items:[]
+            },
+            isCheckingOneItem = !!item,
+            context = this.getContext(),
+            items, subResult, itemIndex;
+
+        if(validatingFunction){
+            if(isCheckingOneItem){
+
+                result = validatingFunction(context, item);
+
+            }else{
+
+                items = this.getItems();
+                for(var i = 0, ii = items.length; i < ii; i++){
+
+                    subResult = validatingFunction(context, items[i]);
+                    if(!subResult.isValid) {
+                        this._addIndexToPropertiesOfValidationMessage(subResult.items, i);
+                        result.isValid = false;
+                        result.items = _.union(result.items, subResult.items);
+                    }
+
+                }
+
+            }
+        }
+
+        this._notifyAboutValidation(result, callback, validationType);
+
+        return result;
+    },
+
+    _addIndexToPropertiesOfValidationMessage: function(validationMessages, index){
+        for(var i = 0, ii = validationMessages.length; i < ii; i++){
+            validationMessages[i].property = index + '.' + validationMessages[i].property;
+        }
+    },
+
+    _notifyAboutValidation: function(validationResult, validationHandler, validationType){
+        var context = this.getContext(),
+            argument = {
+                value: validationResult
+            };
+
+        if(validationHandler){
+            validationHandler(context, argument);
+        }
+
+        if(validationType == 'error'){
+            this.trigger('onErrorValidator', context, argument);
+        }else{
+            this.trigger('onWarningValidator', context, argument);
+        }
+    },
+
+    getContext: function(){
+        return this.getView().getContext();
+    },
+
+    _indexItemsById: function(items){
+        var idProperty = this.get('idProperty'),
+            result = {},
+            idValue;
+        for(var i = 0, ii = items.length; i < ii; i++){
+            idValue = items[i][idProperty];
+            result[idValue] = items[i];
+        }
+
+        return result;
+    },
+
+    _idOfItem: function(item){
+        var idProperty = this.get('idProperty');
+        if(!item){
+            return undefined;
+        }
+        return item[idProperty];
+    },
+
+    _replaceAllProperties: function(currentObject, newPropertiesSet){
+        for (var property in currentObject) {
+            delete(currentObject[property]);
+        }
+
+        for (var property in newPropertiesSet) {
+            currentObject[property] = newPropertiesSet[property];
+        }
+    },
+
+    _copyObject: function(currentObject){
+        return JSON.parse(JSON.stringify(currentObject));
+    },
+
+    _getArgumentTemplate: function(){
+        return {
+            source: this
+        };
     }
 
-};
+});

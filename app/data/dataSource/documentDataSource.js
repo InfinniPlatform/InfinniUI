@@ -1,70 +1,95 @@
-function oldDocumentDataSource(view, metadata) {
+var DocumentDataSource = BaseDataSource.extend({
+    defaults: _.defaults({
 
-    var dataProviderUpload = window.providerRegister.build('UploadDocumentDataSource', metadata);
+        configId:           null,
+        documentId:         null,
+        createActionName:   'CreateDocument',
+        readActionName:     'GetDocument',
+        updateActionName:   'SetDocument',
+        deleteActionName:   'DeleteDocument'
 
-    var baseDataSource = new BaseDataSource(view, metadata.IdProperty, window.providerRegister.build('DocumentDataSource',metadata));
-
-    baseDataSource.uploadFile = function (fieldName, instanceId, file, resultCallback) {
-        dataProviderUpload.uploadFile(fieldName.replace(/^\$\./, ''), instanceId, file, resultCallback);
-    };
-
-    baseDataSource.getFileUrl = function (propertyName) {
-
-        var selectedItem = baseDataSource.getSelectedItem();
-        var instanceId;
-        var idProperty = this.getIdProperty();
-        var fieldName;
-
-        if (propertyName) {
-
-            if (/^\d+\..*$/g.test(propertyName)) {
-                var matches = propertyName.match(/^(\d+)(.*)$/);
-                if (matches && matches.length === 3) {
-                    if (matches[2].substr(0,1) === '.') {
-                        instanceId = InfinniUI.ObjectUtils.getPropertyValue(this.getDataItems(), matches[1] + '.' + idProperty);
-                        fieldName = matches[2].substr(1);
-                    }
-                }
-            } else if (/^\$\..+$/.test(propertyName)) {
-                instanceId = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, idProperty);
-                fieldName = propertyName.substr(2);
-            } else {
-                instanceId = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, idProperty);
-                fieldName = propertyName;
-            }
-        }
-        return fieldName ? dataProviderUpload.getFileUrl(fieldName, instanceId) : null;
-
-        //
-        //var selectedItem = baseDataSource.getSelectedItem();
-        //var instanceId = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, this.getIdProperty());
-        //return dataProviderUpload.getFileUrl(fieldName, instanceId);
-    };
+    }, BaseDataSource.prototype.defaults),
 
 
-    baseDataSource.getDocumentId = function () {
-        return metadata.DocumentId;
-    };
+    initDataProvider: function(){
+        var dataProvider = window.providerRegister.build('DocumentDataSource'),
+            createActionName = this.getCreateAction(),
+            readActionName = this.getReadAction(),
+            updateActionName = this.getUpdateAction(),
+            deleteActionName = this.getDeleteAction();
 
-    baseDataSource.getConfigId = function () {
-        return metadata.ConfigId;
-    };
+        dataProvider.setCreateAction(createActionName);
+        dataProvider.setReadAction(readActionName);
+        dataProvider.setUpdateAction(updateActionName);
+        dataProvider.setDeleteAction(deleteActionName);
 
-    baseDataSource.getCreateAction = function(){
-        return metadata.CreateAction;
-    };
+        this.set('dataProvider', dataProvider);
+    },
 
-    baseDataSource.getGetAction = function(){
-        return metadata.GetAction;
-    };
+    getConfigId: function(){
+        return this.get('createActionName');
+    },
 
-    baseDataSource.getUpdateAction = function(){
-        return metadata.UpdateAction;
-    };
+    setConfigId: function(configId){
+        var dataProvider = this.get('dataProvider');
 
-    baseDataSource.getDeleteAction = function(){
-       return metadata.DeleteAction;
-    };
+        dataProvider.setConfigId(configId);
+        this.set('configId', configId);
+    },
 
-    return baseDataSource;
-}
+    getDocumentId: function(){
+        return this.get('documentId');
+    },
+
+    setDocumentId: function(documentId){
+        var dataProvider = this.get('dataProvider');
+
+        dataProvider.setDocumentId(documentId);
+        this.set('documentId', documentId);
+    },
+
+    getCreateAction: function(){
+        return this.get('createActionName');
+    },
+
+    setCreateAction: function(createActionName){
+        var dataProvider = this.get('dataProvider');
+
+        dataProvider.setCreateAction(createActionName);
+        this.set('createActionName', createActionName);
+    },
+
+    getReadAction: function(){
+        return this.get('readActionName');
+    },
+
+    setReadAction: function(readActionName){
+        var dataProvider = this.get('dataProvider');
+
+        dataProvider.setReadAction(readActionName);
+        this.set('readActionName', readActionName);
+    },
+
+    getUpdateAction: function(){
+        return this.get('updateActionName');
+    },
+
+    setUpdateAction: function(updateActionName){
+        var dataProvider = this.get('dataProvider');
+
+        dataProvider.setUpdateAction(updateActionName);
+        this.set('updateActionName', updateActionName);
+    },
+
+    getDeleteAction: function(){
+        return this.get('deleteActionName');
+    },
+
+    setDeleteAction: function(deleteActionName){
+        var dataProvider = this.get('dataProvider');
+
+        dataProvider.setDeleteAction(deleteActionName);
+        this.set('deleteActionName', deleteActionName);
+    }
+
+});
