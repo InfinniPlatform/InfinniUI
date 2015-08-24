@@ -12,7 +12,15 @@ function Builder() {
             return null;
         }
 
-        return objectBuilders[metadataType].build(this, parentView, metadataValue, collectionProperty, params);
+        var args = {
+                        builder: this,
+                        parent: parentView,
+                        metadata: metadataValue,
+                        collectionProperty: collectionProperty,
+                        params: params
+                    };
+        var context = parentView && parentView.getContext && parentView.getContext();
+        return objectBuilders[metadataType].build(context, args);
     };
 
     this.build = function (parentView, metadataValue, collectionProperty, params) {
@@ -29,7 +37,7 @@ function Builder() {
             console.error('Builder: Не переданы метаданные');
         } else {
             value = metadataValue[key];
-            result = this.buildType(parentView, key, value, collectionProperty, params);
+            result = this.buildType(parentView, key, value, collectionProperty);
         }
         return result;
     };
