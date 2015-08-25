@@ -45,7 +45,7 @@ describe('ButtonBuilder', function () {
                 metadata = { Action: 23 };
 
             //When
-            builder.build(null, {builder: applicationBuilder, parent: parentView, metadata: metadata});
+            builder.build(null, {builder: applicationBuilder, view: parentView, metadata: metadata});
         });
     });
 });

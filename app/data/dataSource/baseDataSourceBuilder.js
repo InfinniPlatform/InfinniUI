@@ -4,7 +4,7 @@ function BaseDataSourceBuilder() {
 
         var metadata = args.metadata,
             dataSource = args.dataSource,
-            parent = args.parent
+            view = args.view;
 
         dataSource.suspendUpdate();
         dataSource.setName(metadata.Name);
@@ -24,7 +24,7 @@ function BaseDataSourceBuilder() {
 
             if (_.isArray(data)) {
                 //Переданы метаданные для создания Criteria
-                criteria = args.builder.buildType(parent, 'Criteria', data);
+                criteria = args.builder.buildType(view, 'Criteria', data);
             } else {
                 //Передан созданный экземпляр. Добавлено для совместимости со старой реализацией.
                 criteria = data;
@@ -34,7 +34,7 @@ function BaseDataSourceBuilder() {
 
         dataSource.setCriteriaConstructor(criteriaConstructor);
 
-        var queryFilter = args.builder.buildType(parent, 'Criteria', metadata.Query);
+        var queryFilter = args.builder.buildType(view, 'Criteria', metadata.Query);
 
         queryFilter.onValueChanged(function () {
             dataSource.updateItems();
@@ -42,11 +42,11 @@ function BaseDataSourceBuilder() {
 
         dataSource.setQueryFilter(queryFilter);
 
-        this.initScriptsHandlers(parent, metadata, dataSource);
+        this.initScriptsHandlers(view, metadata, dataSource);
 
         buildValidation.apply(this, arguments);
 
-        var exchange = parent.getExchange();
+        var exchange = view.getExchange();
         exchange.subscribe(messageTypes.onLoading, function () {
             if(dataSource.initingDataStrategy == 'previouslyInitingData' || dataSource.initingDataStrategy == 'manualInitingData'){
                 dataSource.resumeUpdate();
@@ -82,67 +82,72 @@ function BaseDataSourceBuilder() {
         });
     };
 
-    this.initScriptsHandlers = function (parent, metadata, dataSource) {
+    this.initScriptsHandlers = function (view, metadata, dataSource) {
         //Скриптовые обработчики на события
-        if (parent) {
+        if (view) {
             dataSource.onSelectedItemChanged(function () {
-                var exchange = parent.getExchange();
+                var exchange = view.getExchange();
                 exchange.send(messageTypes.onSelectedItemChanged, {
                     DataSource: dataSource.getName(),
                     Value: dataSource.getSelectedItem()
                 });
 
                 if (metadata.OnSelectedItemChanged) {
-                    new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name);
+                    new ScriptExecutor(view).executeScript(metadata.OnSelectedItemChanged.Name);
                 }
             });
         }
 
-        if (parent && metadata.OnItemsUpdated) {
+        if (view && metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnItemsUpdated.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnItemsUpdated.Name);
             });
         }
 
-        if (parent && metadata.OnSelectedItemModified) {
+        if (view && metadata.OnSelectedItemModified) {
             dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemModified.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnSelectedItemModified.Name);
             });
         }
 
-        if (parent && metadata.OnItemDeleted) {
+        if (view && metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnItemDeleted.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnItemDeleted.Name);
             });
         }
     };
 
     /**
      * Создает компонент для валидации
-     * @param metadata
-     * @param dataSource
-     * @param parent
-     * @param builder
+     * @param context
+     * @param args
      */
-    function buildValidation(metadata, dataSource, parent) {
+    function buildValidation (context, args) {
+
         var builder = new ValidationBuilder(),
             validationErrors, validationWarnings;
 
-        if (typeof metadata.ValidationErrors !== 'undefined') {
-            validationErrors = builder.build(undefined, parent, metadata.ValidationErrors);
+        if (typeof args.metadata.ValidationErrors !== 'undefined') {
+            validationErrors = builder.build(context, {
+                                                            view: args.view,
+                                                            metadata: args.metadata.ValidationErrors
+                                                        });
         }
 
-        if (typeof metadata.ValidationWarnings !== 'undefined') {
-            validationWarnings = builder.build(undefined, parent, metadata.ValidationWarnings);
+        if (typeof args.metadata.ValidationWarnings !== 'undefined') {
+            validationWarnings = builder.build(context, {
+                                                            view: args.view,
+                                                            metadata: args.metadata.ValidationWarnings
+                                                        });
         }
 
-        dataSource.validation = new DataSourceValidator(dataSource, validationWarnings, validationErrors);
+        args.dataSource.validation = new DataSourceValidator(args.dataSource, validationWarnings, validationErrors);
 
-        var exchange = parent.getExchange();
+        var exchange = args.view.getExchange();
         exchange.subscribe(messageTypes.onValidate, function (message) {
-            if (message && message.dataSource === dataSource.getName()) {
-                dataSource.validation.validate();
-                dataSource.validation.notifyElements(message.property);
+            if (message && message.dataSource === args.dataSource.getName()) {
+                args.dataSource.validation.validate();
+                args.dataSource.validation.notifyElements(message.property);
             }
         });
     }

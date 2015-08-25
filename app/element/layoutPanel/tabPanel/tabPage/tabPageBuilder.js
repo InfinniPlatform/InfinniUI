@@ -1,9 +1,9 @@
 function TabPageBuilder() {
 
     this.build = function (context, args) {
-        var parent = args.parent,
+        var view = args.view,
             metadata = args.metadata;
-        var tabPage = new TabPage(parent);
+        var tabPage = new TabPage(view);
 
         tabPage.setImage(metadata.Image);
         tabPage.setCanClose(metadata.CanClose);
@@ -17,18 +17,18 @@ function TabPageBuilder() {
         tabPage.setHorizontalAlignment(metadata.HorizontalAlignment);
 
         if (typeof metadata.LayoutPanel !== 'undefined') {
-            tabPage.setLayoutPanel(args.builder.build(parent, metadata.LayoutPanel));
+            tabPage.setLayoutPanel(args.builder.build(view, metadata.LayoutPanel));
         }
 
-        if (parent && metadata.OnClosing){
+        if (view && metadata.OnClosing){
             tabPage.onClosing(function() {
-                new ScriptExecutor(parent).executeScript(metadata.OnClosing.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnClosing.Name);
             });
         }
 
-        if (parent && metadata.OnClosed){
+        if (view && metadata.OnClosed){
             tabPage.onClosed(function() {
-                new ScriptExecutor(parent).executeScript(metadata.OnClosed.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnClosed.Name);
             });
         }
 

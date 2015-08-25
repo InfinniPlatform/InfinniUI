@@ -1,6 +1,6 @@
 function PrintViewActionBuilder() {
     this.build = function (context, args){
-        var action = new BaseAction(args.parent);
+        var action = new BaseAction(args.view);
 
         this.template = function(data){
             var url = InfinniUI.config.serverUrl+"/SystemConfig/UrlEncodedData/Reporting/GetPrintView";
@@ -25,7 +25,7 @@ function PrintViewActionBuilder() {
 
         var self = this;
         action.setAction(function (callback) {
-            var dataSource = args.parent.getDataSource(args.metadata.DataSource);
+            var dataSource = args.view.getDataSource(args.metadata.DataSource);
             var data = {
                 PrintViewId : args.metadata.PrintViewId,
                 PrintViewType : args.metadata.PrintViewType,

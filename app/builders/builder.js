@@ -14,7 +14,7 @@ function Builder() {
 
         var args = {
                         builder: this,
-                        parent: parentView,
+                        view: parentView,
                         metadata: metadataValue,
                         collectionProperty: collectionProperty,
                         params: params

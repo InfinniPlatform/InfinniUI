@@ -18,7 +18,7 @@ _.extend(RadioGroupBuilder.prototype, {
             element.setOrientation(metadata.Orientation);
 
             if (_.isEmpty(metadata.ItemFormat) === false) {
-                var format = params.builder.build(params.parent, metadata.ItemFormat);
+                var format = params.builder.build(params.view, metadata.ItemFormat);
                 element.setItemFormat(format);
             }
 
@@ -38,7 +38,7 @@ _.extend(RadioGroupBuilder.prototype, {
 
             var itemTemplate = function (baseIndex) {
                 var collectionProperty = new ListBoxItemCollectionProperty('', baseIndex, params.collectionProperty);
-                return params.builder.build(params.parent, metadata.ItemTemplate, collectionProperty);
+                return params.builder.build(params.view, metadata.ItemTemplate, collectionProperty);
             };
 
             params.element.setItemTemplate(itemTemplate);
@@ -50,7 +50,7 @@ _.extend(RadioGroupBuilder.prototype, {
                 return;
             }
 
-            var binding = params.builder.build(params.parent, metadata.Items, params.collectionProperty);
+            var binding = params.builder.build(params.view, metadata.Items, params.collectionProperty);
 
             var setItems = function (value) {
                 params.element.setItems(value);
@@ -67,21 +67,21 @@ _.extend(RadioGroupBuilder.prototype, {
             var metadata = params.metadata;
 
             //Скриптовые обработчики на события
-            if (params.parent && metadata.OnLoaded){
+            if (params.view && metadata.OnLoaded){
                 params.element.onLoaded(function() {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
                 });
             }
 
-            if (params.parent && metadata.OnValueChanged){
+            if (params.view && metadata.OnValueChanged){
                 params.element.onValueChanged(function() {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
                 });
             }
         },
 
         createElement: function (params) {
-            return new RadioGroup(params.parent);
+            return new RadioGroup(params.view);
         }
 
     },

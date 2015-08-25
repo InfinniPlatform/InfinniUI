@@ -6,7 +6,7 @@ function DocumentDataSourceBuilder() {
         if (idProperty == undefined) {
             idProperty = 'Id';
         }
-        var dataSource = new DocumentDataSource(args.parent, args.metadata);
+        var dataSource = new DocumentDataSource(args.view, args.metadata);
         new BaseDataSourceBuilder().build(context,
                                             _.extend(args, {dataSource: dataSource}));
 

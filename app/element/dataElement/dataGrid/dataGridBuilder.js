@@ -95,15 +95,15 @@ var DataGridBuilder = function () {
 
         //var itemTemplateConstructor = this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty);
         var builder = args.builder,
-            parent = args.parent,
+            view = args.view,
             metadata = args.metadata,
             collectionProperty = args.collectionProperty;
 
         this.builder = builder;
-        this.parent = parent;
-        var dataGrid = new DataGrid(parent);
+        this.parent = view; //!!!
+        var dataGrid = new DataGrid(view);
 
-        this.initScriptsHandlers(parent, metadata, dataGrid);
+        this.initScriptsHandlers(view, metadata, dataGrid);
 
         /** Begin CustomColors Init **/
         /** @TODO Отрефакторить после описания метаданных */
@@ -133,21 +133,21 @@ var DataGridBuilder = function () {
         dataGrid.setHorizontalAlignment(metadata.HorizontalAlignment);
         dataGrid.setVerticalAlignment(metadata.VerticalAlignment);
         dataGrid.setAutoLoad(metadata.AutoLoad);
-        dataGrid.setItemTemplate(this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty));
+        dataGrid.setItemTemplate(this.getItemTemplateConstructor(builder, view, metadata, collectionProperty));
         this.initGroups(dataGrid, metadata.Groups);
-        this.initAutoload(parent, metadata, dataGrid);
+        this.initAutoload(view, metadata, dataGrid);
 
         dataGrid.setColumns(this.buildColumns(metadata.Columns, collectionProperty));
         dataGrid.setComparator(this.builder.buildType(this.parent, 'Comparator', {}, collectionProperty));
 
         if (typeof metadata.Items !== 'undefined') {
-            var dataBinding = builder.build(parent, metadata.Items, collectionProperty);
+            var dataBinding = builder.build(view, metadata.Items, collectionProperty);
             dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
                 dataGrid.setItems(value.value);
             });
 
             if (typeof metadata.Items.PropertyBinding !== 'undefined') {
-                var exchange = parent.getExchange();
+                var exchange = view.getExchange();
                 exchange.subscribe(messageTypes.onSelectedItemChanged, function (message) {
                     if (message && message.DataSource === metadata.Items.PropertyBinding.DataSource) {
                         dataGrid.setSelectedItem(message.Value);
@@ -159,7 +159,7 @@ var DataGridBuilder = function () {
                 var propertyName = dataBinding.getProperty();
                 if (_.isEmpty(propertyName) !== false) {
                     /** событие только если биндинг указывает на весь источник данных !!! */
-                    parent.getExchange().send(messageTypes.onSetSelectedItem, {
+                    view.getExchange().send(messageTypes.onSetSelectedItem, {
                         dataSource: dataBinding.getDataSource(),
                         property: propertyName,
                         value: dataGrid.getSelectedItem()
@@ -173,12 +173,12 @@ var DataGridBuilder = function () {
         }
 
         if (metadata.ItemFormat) {
-            var format = builder.build(parent, metadata.ItemFormat);
+            var format = builder.build(view, metadata.ItemFormat);
             dataGrid.setFormat(format);
         }
 
         if (typeof metadata.Value !== 'undefined') {
-            var valueBinding = builder.build(parent, metadata.Value, collectionProperty);
+            var valueBinding = builder.build(view, metadata.Value, collectionProperty);
 
             // Привязка элемента к источнику данных
             valueBinding.onPropertyValueChanged(function (context, args) {
@@ -193,7 +193,7 @@ var DataGridBuilder = function () {
 
         if (metadata.OnKeyDown) {
             dataGrid.onKeyDown(function (data) {
-                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, data);
+                new ScriptExecutor(view).executeScript(metadata.OnKeyDown.Name, data);
             });
         }
 
@@ -203,11 +203,11 @@ var DataGridBuilder = function () {
             var actions = [];
             var scripts = [];
             var executeScript = function (name) {
-                new ScriptExecutor(parent).executeScript(name);
+                new ScriptExecutor(view).executeScript(name);
             };
 
             _.each(metadata.ToolBar.Items, function (data) {
-                var button = builder.build(parent, data, collectionProperty);
+                var button = builder.build(view, data, collectionProperty);
                 items.push(button);
             });
 
@@ -215,8 +215,8 @@ var DataGridBuilder = function () {
             dataGrid.setPopUpMenu(popupMenu);
         }
 
-        if (parent && parent.registerElement) {
-            parent.registerElement(dataGrid);
+        if (view && view.registerElement) {
+            view.registerElement(dataGrid);
         }
 
 

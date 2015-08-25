@@ -38,7 +38,7 @@ _.extend(ImageBoxBuilder.prototype, {
         },
 
         createElement: function(params){
-            var imageBox = new ImageBox(params.parent);
+            var imageBox = new ImageBox(params.view);
             if(params.metadata.ReadOnly !== undefined) imageBox.setReadOnly(params.metadata.ReadOnly);
             if(params.metadata.MaxSize !== undefined) imageBox.setMaxSize(params.metadata.MaxSize);
 
@@ -49,15 +49,15 @@ _.extend(ImageBoxBuilder.prototype, {
             var metadata = params.metadata;
 
             //Скриптовые обработчики на события
-            if (params.parent && metadata.OnLoaded){
+            if (params.view && metadata.OnLoaded){
                 params.element.onLoaded(function() {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
                 });
             }
 
-            if (params.parent && metadata.OnValueChanged){
+            if (params.view && metadata.OnValueChanged){
                 params.element.onValueChanged(function() {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
                 });
             }
         }

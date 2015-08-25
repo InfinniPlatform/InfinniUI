@@ -46,7 +46,7 @@ describe('MetadataViewBuilder', function () {
 
         var applicationBuilder = new ApplicationBuilder();
         var builder = new MetadataViewBuilder();
-        var view = builder.build(null, {builder: applicationBuilder, parent: {}, metadata: metadata});
+        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
 
         applicationBuilder.appView = view;
         applicationBuilder.appView.createView(function(view){

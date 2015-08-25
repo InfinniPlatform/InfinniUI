@@ -10,7 +10,7 @@ _.extend(PopupButtonBuilder.prototype, {
         ButtonBuilder.prototype.applyMetadata.call(this, params);
 
         _.each(params.metadata.Items, function (metadataItem) {
-            params.element.addItem(params.builder.build(params.parent, metadataItem));
+            params.element.addItem(params.builder.build(params.view, metadataItem));
         });
     },
 
@@ -19,7 +19,7 @@ _.extend(PopupButtonBuilder.prototype, {
     },
 
     createElement: function(params){
-        return new PopupButton(params.parent);
+        return new PopupButton(params.view);
     }
 
 });

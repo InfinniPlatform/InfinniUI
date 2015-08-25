@@ -11,9 +11,9 @@ FileBindingBuilder.prototype.build = function (context, args) {
         metadataProperty = args.collectionProperty.resolve(metadata.Property);
     }
 
-    var fileBinding = new FileBinding(args.parent, metadata.DataSource, metadataProperty);
+    var fileBinding = new FileBinding(args.view, metadata.DataSource, metadataProperty);
 
-    var dataSource = args.parent.getDataSource(metadata.DataSource);
+    var dataSource = args.view.getDataSource(metadata.DataSource);
 
     var uploadFile = function (instanceId) {
         var defer = $.Deferred();

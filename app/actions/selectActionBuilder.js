@@ -3,9 +3,9 @@ function SelectActionBuilder() {
 
 SelectActionBuilder.prototype.build = function (context, args) {
 
-    var action = new BaseAction(args.parent);
+    var action = new BaseAction(args.view);
     action.setAction(function (callback) {
-        this.executeAction(args.builder, args.parent, args.metadata, callback);
+        this.executeAction(args.builder, args.view, args.metadata, callback);
     }.bind(this));
 
     return action;

@@ -8,7 +8,7 @@ describe('DocumentViewer', function () {
             PrintViewType: "ObjectView",
             DataSource: "MainDataSource"
         };
-        var documentViewer = documentViewerBuilder.build(null, {builder: documentViewerBuilder, parent: view, metadata: metadata});
+        var documentViewer = documentViewerBuilder.build(null, {builder: documentViewerBuilder, view: view, metadata: metadata});
 
         //When
         documentViewer.setName('DocumentViewer');

@@ -119,7 +119,7 @@ describe('Button', function () {
             window.Test = {button:1, buttonLoaded: false};
 
             //When
-            var build = button.build(null, {builder: button, parent: view, metadata: metadata});
+            var build = button.build(null, {builder: button, view: view, metadata: metadata});
             var $button = $(build.render());
             $button.find('button').click();
 

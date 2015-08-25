@@ -10,7 +10,6 @@ _.extend(GlobalNavigationBarBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         var element = params.element;
-        var parent = params.parent;
 
         element.setApplications(InfinniUI.global.openMode.getApplicationViews());
         var exchange = this.getGlobalMessageBus();
@@ -79,7 +78,7 @@ _.extend(GlobalNavigationBarBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new GlobalNavigationBar(params.parent);
+        return new GlobalNavigationBar(params.view);
     }
 
 });

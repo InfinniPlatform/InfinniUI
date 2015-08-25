@@ -16,7 +16,7 @@ _.extend(ToolBarBuilder.prototype, {
                 metadataItem.ToolBarButton.Enabled = false;
             }
 
-            var btn = params.builder.build(params.parent, metadataItem);
+            var btn = params.builder.build(params.view, metadataItem);
             btn.setParentEnabled(metadata.Enabled);
             params.element.addItem(btn);
         });
@@ -32,16 +32,16 @@ _.extend(ToolBarBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ToolBar(params.parent);
+        return new ToolBar(params.view);
     },
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
     }

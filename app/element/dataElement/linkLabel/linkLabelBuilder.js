@@ -45,7 +45,7 @@ _.extend(LinkLabelBuilder.prototype,
             this.initScriptsHandlers(params);
 
             if(params.metadata.Action) {
-                params.element.setAction(params.builder.build(params.parent, params.metadata.Action, params.collectionProperty));
+                params.element.setAction(params.builder.build(params.view, params.metadata.Action, params.collectionProperty));
             }
         },
 
@@ -53,28 +53,28 @@ _.extend(LinkLabelBuilder.prototype,
             var metadata = params.metadata;
 
             //Скриптовые обработчики на события
-            if (params.parent && metadata.OnLoaded) {
+            if (params.view && metadata.OnLoaded) {
                 params.element.onLoaded(function () {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
                 });
             }
 
-            if (params.parent && metadata.OnValueChanged) {
+            if (params.view && metadata.OnValueChanged) {
                 params.element.onValueChanged(function () {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                    new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
                 });
             }
 
-            if (params.parent && metadata.OnClick) {
+            if (params.view && metadata.OnClick) {
                 params.element.onClick(function () {
-                    var script = new ScriptExecutor(params.parent);
+                    var script = new ScriptExecutor(params.view);
                     return script.executeScript(metadata.OnClick.Name);
                 });
             }
         },
 
         createElement: function (params) {
-            var linkLabel = new LinkLabel(params.parent);
+            var linkLabel = new LinkLabel(params.view);
             linkLabel.getHeight = function () {
                 return 34;
             };

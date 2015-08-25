@@ -27,7 +27,7 @@ function ListBoxBuilder() {
     this.build = function (context, args) {
 
         var builder = args.builder,
-            parent = args.parent,
+            view = args.view,
             metadata = args.metadata;
 
         if(metadata.ToolBar) {
@@ -47,10 +47,10 @@ function ListBoxBuilder() {
            addItemAction = new AddItemActionBuilder(addItemActionMetadata).build(context, args);
         }
 
-        var dataBinding = builder.build(parent, metadata.Items, args.collectionProperty);
+        var dataBinding = builder.build(view, metadata.Items, args.collectionProperty); //!!!
 
         var listBoxItemConstructor = function(baseIndex) {
-            return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, args.collectionProperty));
+            return builder.build(view, metadata.ItemTemplate, new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', baseIndex, args.collectionProperty));
         };
 
         var listBox = new ListBox(addItemAction,editItemAction,dataBinding, listBoxItemConstructor, metadata);
@@ -62,7 +62,7 @@ function ListBoxBuilder() {
 
             // if MultiSelect
             if(_.isArray(dataItem) === false){
-                parent.getExchange().send(messageTypes.onSetSelectedItem,{
+                view.getExchange().send(messageTypes.onSetSelectedItem,{
                     value : dataItem,
                     dataSource: ds.DataSource,
                     property: ds.Property
@@ -71,13 +71,13 @@ function ListBoxBuilder() {
 
 
             if(metadata.OnValueChanged){
-                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name, dataItem);
+                new ScriptExecutor(view).executeScript(metadata.OnValueChanged.Name, dataItem);
             }
         });
 
         listBox.setStyle(metadata.Style);
 
-		parent.registerElement(listBox);
+		view.registerElement(listBox);
 
         /** @TODO Дублирование @see {@link DataGridBuilder.build} **/
         //if (addItemAction) {
@@ -102,7 +102,7 @@ function ListBoxBuilder() {
             listBox.setPopUpMenu(popupMenu);
         //}
 
-        this.initScriptsHandlers(metadata, parent, listBox);
+        this.initScriptsHandlers(metadata, view, listBox);
         return listBox;
     },
 

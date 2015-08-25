@@ -15,7 +15,7 @@ _.extend(StackPanelBuilder.prototype, {
         element.setOrientation(metadata.Orientation);
 
         _.each(metadata.Items, function (metadataItem) {
-            element.addItem(params.builder.build(params.parent, metadataItem, params.collectionProperty));
+            element.addItem(params.builder.build(params.view, metadataItem, params.collectionProperty));
         });
     },
 
@@ -23,14 +23,14 @@ _.extend(StackPanelBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
     },
 
     createElement: function(params){
-        return new StackPanel(params.parent);
+        return new StackPanel(params.view);
     }
 });

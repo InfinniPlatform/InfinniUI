@@ -19,7 +19,7 @@ _.extend(TabPanelBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         _.each(metadata.Pages, function (metadataItem) {
-            var tabPage = params.builder.buildType(params.parent, 'TabPage', metadataItem);
+            var tabPage = params.builder.buildType(params.view, 'TabPage', metadataItem);
             tabPage.onClosed(function (page) {
                 params.element.removePage(page);
             });
@@ -54,11 +54,11 @@ _.extend(TabPanelBuilder.prototype, {
             return;
         }
 
-        if (message.applicationView && params.parent.getApplicationView() !== message.applicationView) {
+        if (message.applicationView && params.view.getApplicationView() !== message.applicationView) {
             return;
         }
 
-        var tabPage = params.builder.buildType(params.parent, 'TabPage', {
+        var tabPage = params.builder.buildType(params.view, 'TabPage', {
             Text: message.view.getText(),
             Enabled: true,
             Visible: true,
@@ -91,7 +91,7 @@ _.extend(TabPanelBuilder.prototype, {
     },
 
     createElement: function(params){
-        return new TabPanel(params.parent);
+        return new TabPanel(params.view);
     },
 
     initScriptsHandlers: function(params){
@@ -99,9 +99,9 @@ _.extend(TabPanelBuilder.prototype, {
 
         //Скриптовые обработчики на события
 
-        if (params.parent && metadata.OnSelectionChanged){
+        if (params.view && metadata.OnSelectionChanged){
             params.element.onSelectionChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnSelectionChanged.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnSelectionChanged.Name);
             });
         }
     }

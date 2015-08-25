@@ -11,7 +11,7 @@ CriteriaBuilder.prototype.build = function(context, args){
 
     if (typeof metadata !== 'undefined' && metadata !== null && metadata.length) {
         for (var i = 0, ln = metadata.length; i < ln; i = i + 1) {
-            items.push(this.buildCriteriaItem(args.builder, args.parent, metadata[i], criteria));
+            items.push(this.buildCriteriaItem(args.builder, args.view, metadata[i], criteria));
         }
     }
 

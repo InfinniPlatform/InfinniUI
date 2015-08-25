@@ -2,9 +2,9 @@ function BaseItemActionBuilder() {
 
     this.build = function (context, args) {
 
-        var action = new BaseItemAction(args.parent);
+        var action = new BaseItemAction(args.view);
 
-        var itemsDataBinding = args.builder.build(args.parent, args.metadata.Items);
+        var itemsDataBinding = args.builder.build(args.view, args.metadata.Items);
 
         if (itemsDataBinding !== null) {
 
@@ -37,7 +37,7 @@ function BaseItemActionBuilder() {
                     parent.getDataSource(dataSourceName).updateItems();
                 });*/
 
-                var exchange = args.parent.getExchange();
+                var exchange = args.view.getExchange();
 
                 //при изменении выбранного элемента в AddAction (при добавлении нового элемента)
                 //уведомляем всех подписчиков - dataBindings

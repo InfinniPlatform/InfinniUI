@@ -1,14 +1,14 @@
 function SaveActionBuilder() {
     this.build = function (context, args) {
-        var action = new BaseAction(args.parent),
-            parentDataSource = args.parent.getDataSource(args.metadata.DataSource),
+        var action = new BaseAction(args.view),
+            parentDataSource = args.view.getDataSource(args.metadata.DataSource),
             canClose = args.metadata.CanClose;
             canClose == undefined ? canClose = true : canClose = false;
 
         parentDataSource.onItemSaved(function (dataSourceName, value) {
             parentDataSource.setSelectedItem(value.value);
             if(canClose) {
-                args.parent.close(dialogResult.accept);
+                args.view.close(dialogResult.accept);
             }
         });
 

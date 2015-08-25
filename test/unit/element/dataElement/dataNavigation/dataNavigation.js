@@ -13,7 +13,7 @@ describe('DataNavigation', function () {
             AvailablePageSizes: [ 20, 50, 100 ],
             DataSource: "PatientDataSource"
         };
-        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, parent: view, metadata: metadata});
+        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
 
         //When
         dataNavigation.setName('NewDataNavigation');
@@ -44,7 +44,7 @@ describe('DataNavigation', function () {
 
 
         var exchange = view.getExchange();
-        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, parent: view, metadata: metadata});
+        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
 
         //Then
         exchange.subscribe(messageTypes.onSetPageSize, function (messageBody) {
@@ -82,7 +82,7 @@ describe('DataNavigation', function () {
         view.setScripts([{Name:"OnSetPageSize", Body:"window.Test.dataNavigation.ps = 50"},{Name:"OnSetPageNumber", Body:"window.Test.dataNavigation.pn = 3"}, {Name:"OnLoaded", Body:"window.Test.dataNavigation.loaded = true"}]);
 
         //When
-        var build = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, parent: view, metadata: metadata});
+        var build = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
         build.setPageSize(1);
         build.setPageNumber(1);
         $(build.render());

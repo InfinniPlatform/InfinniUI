@@ -3,9 +3,9 @@ function InlineViewBuilder() {
         var that = this,
             metadata = args.metadata;
 
-        var linkView = new LinkView(args.parent, function (resultCallback) {
-            var params = that.buildParameters(args.parent, metadata.Parameters, args.builder);
-            var view = args.builder.buildType(args.parent, 'View', metadata.View, undefined, params);
+        var linkView = new LinkView(args.view, function (resultCallback) {
+            var params = that.buildParameters(args.view, metadata.Parameters, args.builder);
+            var view = args.builder.buildType(args.view, 'View', metadata.View, undefined, params);
 
             if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
                 InfinniUI.views.appendView(null, metadata.View, view);

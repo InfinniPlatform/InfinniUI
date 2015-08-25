@@ -23,11 +23,11 @@ _.extend(ActionBarBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ActionBar(params.parent);
+        return new ActionBar(params.view);
     },
 
     onViewOpened: function (params, message) {
-        var applicationView = params.parent.getApplicationView();
+        var applicationView = params.view.getApplicationView();
         if (message.openMode === 'Page' && applicationView === message.view.getApplicationView()) {
             //Открывается страница текущего приложения
             console.log('ActionBar.onViewOpened', message);
@@ -37,13 +37,13 @@ _.extend(ActionBarBuilder.prototype, {
     },
 
     updatePages: function (params) {
-        var applicationView = params.parent.getApplicationView();
+        var applicationView = params.view.getApplicationView();
         var pageViews = InfinniUI.global.openMode.getPageViews(applicationView);
         params.element.setPages(pageViews.slice());
     },
 
     onViewClosed: function (params, message) {
-        var applicationView = params.parent.getApplicationView();
+        var applicationView = params.view.getApplicationView();
         if (applicationView === message.view.getApplicationView()) {
             //Закрыта страница текущего приложения
             console.log('ActionBar.onViewClosed', message);

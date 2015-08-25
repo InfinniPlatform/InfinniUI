@@ -20,7 +20,7 @@ _.extend(ViewPanelBuilder.prototype, {
         this.registerLayoutPanel(params);
 
         if (typeof metadata.View !== 'undefined' && metadata.View !== null) {
-            var linkView = builder.build(params.parent, metadata.View);
+            var linkView = builder.build(params.view, metadata.View);
 
             var onOpening = function (layout) {
                 panel.setLayout(layout);
@@ -95,7 +95,7 @@ _.extend(ViewPanelBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ViewPanel(params.parent);
+        return new ViewPanel(params.view);
     }
 },
     builderLayoutPanelMixin

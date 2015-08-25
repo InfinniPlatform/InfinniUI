@@ -10,7 +10,7 @@ _.extend(DocumentViewerBuilder.prototype, {
 
         this.initScriptsHandlers(params);
 
-        params.element.setView(params.parent);
+        params.element.setView(params.view);
 
 
         if(params.metadata.Value){
@@ -31,16 +31,16 @@ _.extend(DocumentViewerBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new DocumentViewer(params.parent);
+        return new DocumentViewer(params.view);
     },
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
     }

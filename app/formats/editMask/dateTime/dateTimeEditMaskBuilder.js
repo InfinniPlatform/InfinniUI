@@ -17,7 +17,7 @@ function DateTimeEditMaskBuilder () {
 
         editMask.mask = mask;
 
-        editMask.format = args.builder.buildType(args.parent, 'DateTimeFormat', {Format: args.metadata.Mask});
+        editMask.format = args.builder.buildType(args.view, 'DateTimeFormat', {Format: args.metadata.Mask});
 
         return editMask;
     }

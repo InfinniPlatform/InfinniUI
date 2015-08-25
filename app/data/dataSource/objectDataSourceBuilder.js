@@ -2,7 +2,7 @@ function ObjectDataSourceBuilder() {
 
     this.build = function (context, args){
 
-        var dataSource = new ObjectDataSource(args.parent, args.metadata);
+        var dataSource = new ObjectDataSource(args.view, args.metadata);
         new BaseDataSourceBuilder().build(context,
                                             _.extend(args, {dataSource: dataSource}));
 

@@ -21,12 +21,12 @@ _.extend(ExtensionPanelBuilder.prototype, {
                 "Parameter": item
             };
 
-            var param = params.builder.build(params.parent, itemToBuild);
+            var param = params.builder.build(params.view, itemToBuild);
             parameters[param.getName()] = param;
         });
 
         _.each(metadata.Items, function (item) {
-            var itemBuild = params.builder.build(params.parent, item);
+            var itemBuild = params.builder.build(params.view, item);
             items.push(itemBuild);
         });
 
@@ -36,7 +36,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
 
         //params.element.setContext(params.parent.getContext());
         params.element.getContext = function () {
-            return params.parent.getContext();
+            return params.view.getContext();
         }
     },
 
@@ -44,9 +44,9 @@ _.extend(ExtensionPanelBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
     },
@@ -55,7 +55,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
         var element = new ExtensionPanel(this.parent);
 
         element.getContext = function () {
-            return params.parent.getContext();
+            return params.view.getContext();
         };
 
         return element;

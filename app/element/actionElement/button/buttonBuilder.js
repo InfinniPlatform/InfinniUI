@@ -22,16 +22,16 @@ _.extend(ButtonBuilder.prototype, {
         params.element.setImage(params.metadata.Image);
 
         if(params.metadata.Action) {
-            params.element.setAction(params.builder.build(params.parent, params.metadata.Action, params.collectionProperty));
+            params.element.setAction(params.builder.build(params.view, params.metadata.Action, params.collectionProperty));
         }
     },
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 
-        if (params.parent && metadata.OnClick){
+        if (params.view && metadata.OnClick){
             params.element.onClick(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnClick.Name);
             });
         }
     },
@@ -39,7 +39,7 @@ _.extend(ButtonBuilder.prototype, {
     createElement: function(params){
         var ButtonConstructor = this.buttonConstructor ? this.buttonConstructor : Button;
 
-        return new ButtonConstructor(params.parent);
+        return new ButtonConstructor(params.view);
     }
 
 }, builderFormatPropertyMixin, builderHorizontalTextAlignmentPropertyMixin);

@@ -17,7 +17,7 @@ _.extend(ComboBoxBuilder.prototype, {
         var element = params.element,
             builder = params.builder,
             metadata = params.metadata,
-            parent = params.parent,
+            view = params.view,
             that = this;
 
         element.setMultiSelect(metadata.MultiSelect);
@@ -34,7 +34,7 @@ _.extend(ComboBoxBuilder.prototype, {
             var lazyLoad = $.Deferred();
 
             // Привязка списка значений элемента к источнику данных
-            var binding = builder.build(parent, metadata.Items, undefined, {lazyLoad: lazyLoad});
+            var binding = builder.build(view, metadata.Items, undefined, {lazyLoad: lazyLoad});
 
             that.initSearchTermHandler(binding.getDataSource(), params);
 
@@ -47,7 +47,7 @@ _.extend(ComboBoxBuilder.prototype, {
                 var item = element.getItem(),
                     selectedItem = _.isArray(item) ? item[0] : item;
 
-                parent.getExchange().send(messageTypes.onSetSelectedItem, {
+                view.getExchange().send(messageTypes.onSetSelectedItem, {
                     dataSource: binding.getDataSource(),
                     property:binding.getProperty(),
                     value: typeof selectedItem === 'undefined' ? null : selectedItem
@@ -66,7 +66,7 @@ _.extend(ComboBoxBuilder.prototype, {
 
         }
 
-        this.initSelectView(element, builder, metadata, parent, binding);
+        this.initSelectView(element, builder, metadata, view, binding);
 
     },
 
@@ -74,15 +74,15 @@ _.extend(ComboBoxBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
 
-        if (params.parent && metadata.OnValueChanged){
+        if (params.view && metadata.OnValueChanged){
             params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
             });
         }
     },
@@ -93,7 +93,7 @@ _.extend(ComboBoxBuilder.prototype, {
             dataSource: datasource,
             value: ''
         };
-        var view = params.parent;
+        var view = params.view;
         var exchange = view.getExchange();
 
         params.element.onChangeTerm(function (term) {
@@ -104,7 +104,7 @@ _.extend(ComboBoxBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ComboBox(params.parent);
+        return new ComboBox(params.view);
     },
 
     initSelectView: function(element, builder, metadata, parent, binding){

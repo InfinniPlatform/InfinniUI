@@ -17,7 +17,7 @@ describe('CheckBoxBuilder', function () {
 
             // When
             var builder = new CheckBoxBuilder();
-            var checkBox = builder.build(null, {builder: new ApplicationBuilder(), parent: view, metadata: checkBoxMetadata});
+            var checkBox = builder.build(null, {builder: new ApplicationBuilder(), view: view, metadata: checkBoxMetadata});
 
             // Then
             assert.isNotNull(checkBox);

@@ -1,6 +1,6 @@
 function PrintReportActionBuilder() {
     this.build = function (context, args) {
-        var action = new BaseAction(args.parent);
+        var action = new BaseAction(args.view);
 
         this.template = function(data){
             return '<form id="form" enctype="application/x-www-form-urlencoded" target="frame" action="http://ic:9900/SystemConfig/UrlEncodedData/Reporting/GetReport" method="post">' +

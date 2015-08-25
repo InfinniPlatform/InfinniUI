@@ -17,7 +17,7 @@ _.extend(TreeViewBuilder.prototype, {
         var element = params.element,
             builder = params.builder,
             metadata = params.metadata,
-            parent = params.parent,
+            view = params.view,
             that = this;
 
         element.setMultiSelect(metadata.MultiSelect);
@@ -30,14 +30,14 @@ _.extend(TreeViewBuilder.prototype, {
 
         if (metadata.Items) {
             // Привязка списка значений элемента к источнику данных
-            var binding = builder.build(parent, metadata.Items);
+            var binding = builder.build(view, metadata.Items);
 
             binding.onPropertyValueChanged(function (dataSourceName, value) {
                 element.setItems(value.value);
             });
 
             element.onValueChanged(function (context, args) {
-                parent.getExchange().send(messageTypes.onSetSelectedItem, {
+                view.getExchange().send(messageTypes.onSetSelectedItem, {
                     dataSource: binding.getDataSource(),
                     property: '',
                     value: element.getSelectedItem()
@@ -55,21 +55,21 @@ _.extend(TreeViewBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
 
-        if (params.parent && metadata.OnValueChanged){
+        if (params.view && metadata.OnValueChanged){
             params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
             });
         }
     },
 
     createElement: function (params) {
-        return new TreeView(params.parent);
+        return new TreeView(params.view);
     }
 
 }, builderValuePropertyMixin, builderFormatPropertyMixin, builderFormatPropertyMixin);

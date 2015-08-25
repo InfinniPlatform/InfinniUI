@@ -10,8 +10,8 @@ _.extend(ElementBuilder.prototype, {
 
         this.applyMetadata(params);
 
-        if (args.parent && args.parent.registerElement) {
-            args.parent.registerElement(element);
+        if (args.view && args.view.registerElement) {
+            args.view.registerElement(element);
         }
 
         return element;
@@ -22,9 +22,7 @@ _.extend(ElementBuilder.prototype, {
 
     applyMetadata: function (params) {
         var metadata = params.metadata,
-            element = params.element,
-            parent = params.parent,
-            collectionProperty = params.collectionProperty;
+            element = params.element;
 
         if(metadata.Text && typeof metadata.Text == 'object'){
             this.initTextBinding(params, metadata.Text);
@@ -50,13 +48,13 @@ _.extend(ElementBuilder.prototype, {
 
         if (metadata.OnGotFocus){
             params.element.onGotFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnGotFocus.Name);
             });
         }
 
         if (metadata.OnLostFocus){
             params.element.onLostFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLostFocus.Name);
             });
         }
     },
@@ -64,7 +62,7 @@ _.extend(ElementBuilder.prototype, {
     initTextBinding: function(params, bindingMetadata){
         var metadata = params.metadata;
 
-        var dataBinding = params.builder.build(params.parent, metadata.Text, params.collectionProperty);
+        var dataBinding = params.builder.build(params.view, metadata.Text, params.collectionProperty);
 
         dataBinding.setElement(params.element);
 
@@ -90,7 +88,7 @@ _.extend(ElementBuilder.prototype, {
             params.element['set' + propertyName](metadata[propertyName]);
             return null;
         }else{
-            var dataBinding = params.builder.build(params.parent, metadata[propertyName], params.collectionProperty);
+            var dataBinding = params.builder.build(params.view, metadata[propertyName], params.collectionProperty);
             dataBinding.setSetterName('set' + propertyName);
             dataBinding.setElement(params.element);
 

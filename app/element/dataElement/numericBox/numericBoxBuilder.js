@@ -31,15 +31,15 @@ _.extend(NumericBoxBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
+        if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
             });
         }
 
-        if (params.parent && metadata.OnValueChanged){
+        if (params.view && metadata.OnValueChanged){
             params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
             });
         }
 
@@ -47,7 +47,7 @@ _.extend(NumericBoxBuilder.prototype, {
     },
 
     createElement: function(params){
-        return new NumericBox(params.parent);
+        return new NumericBox(params.view);
     }
 
 },

@@ -13,7 +13,7 @@ var builderValuePropertyMixin = {
         }
 
         if (metadata.Value !== undefined) {
-            var dataBinding = params.builder.build(params.parent, metadata.Value, params.collectionProperty);
+            var dataBinding = params.builder.build(params.view, metadata.Value, params.collectionProperty);
 
             dataBinding.setElement(params.element);
 

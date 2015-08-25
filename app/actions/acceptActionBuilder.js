@@ -1,13 +1,13 @@
 function AcceptActionBuilder() {
     this.build = function (context, args) {
-        var action = new BaseAction(args.parent);
+        var action = new BaseAction(args.view);
         action.setAction(function (callback) {
             if (callback) {
-                args.parent.onClosed(function () {
+                args.view.onClosed(function () {
                     callback();
                 });
             }
-            args.parent.close(dialogResult.accept);
+            args.view.close(dialogResult.accept);
         });
 
         return action;

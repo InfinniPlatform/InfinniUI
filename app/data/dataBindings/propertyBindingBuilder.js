@@ -13,14 +13,14 @@ PropertyBindingBuilder.prototype.build = function (context, args) {
 
     //dataSourceObject = parent.getDataSource(metadata.DataSource);
 
-    var propertyBinding = new PropertyBinding(args.parent, metadata.DataSource, metadataProperty);
+    var propertyBinding = new PropertyBinding(args.view, metadata.DataSource, metadataProperty);
 
 
     if(metadata.DefaultValue) {
         propertyBinding.setPropertyValue(metadata.DefaultValue);
     }
 
-    var dataSource = args.parent.getDataSource(metadata.DataSource);
+    var dataSource = args.view.getDataSource(metadata.DataSource);
 
     if(dataSource !== null){
         var initingDataStrategy;

@@ -65,7 +65,7 @@ describe('CheckBox', function () {
             view.setScripts([{Name:"OnValueChanged", Body:"window.Test.checkBox = 5"}, {Name:"OnLoaded", Body:"window.Test.checkBoxLoaded = true"}]);
 
             //When
-            var build = checkBox.build(null, {builder: checkBox, parent: view, metadata: metadata});
+            var build = checkBox.build(null, {builder: checkBox, view: view, metadata: metadata});
             $(build.render());
             build.setValue(true);
 

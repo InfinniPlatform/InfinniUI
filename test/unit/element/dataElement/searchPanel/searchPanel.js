@@ -8,7 +8,7 @@ describe('SearchPanel', function () {
             Name: "SearchPanel1",
             DataSource: "PatientsDataSource"
         };
-        var searchPanel = searchPanelBuilder.build(null, {builder: builder, parent: view, metadata: metadata});
+        var searchPanel = searchPanelBuilder.build(null, {builder: builder, view: view, metadata: metadata});
 
         //When
         searchPanel.setName('NewSearchPanel');
@@ -34,7 +34,7 @@ describe('SearchPanel', function () {
         };
         var exchange = view.getExchange();
 
-        var searchPanel = searchPanelBuilder.build(null, {builder: builder, parent: view, metadata: metadata});
+        var searchPanel = searchPanelBuilder.build(null, {builder: builder, view: view, metadata: metadata});
         var $searchPanel = searchPanel.render();
         exchange.subscribe(messageTypes.onSetTextFilter, onSetTextFilterHandler);
 
@@ -68,7 +68,7 @@ describe('SearchPanel', function () {
         };
         window.Test2 = {searchPanel:1, searchPanelLoaded: false};
         view.setScripts([{Name:"OnValueChanged", Body:"window.Test2.searchPanel = 5"}, {Name:"OnLoaded", Body:"window.Test2.searchPanelLoaded = true"}]);
-        var searchPanel = searchPanelBuilder.build(null, {builder: searchPanelBuilder, parent: view, metadata: metadata});
+        var searchPanel = searchPanelBuilder.build(null, {builder: searchPanelBuilder, view: view, metadata: metadata});
 
         //When
         searchPanel.render();

@@ -9,7 +9,7 @@ _.extend(PanelBuilder.prototype, {
 
         this.initScriptsHandlers(params);
 
-        var items = params.builder.buildMany(params.parent, params.metadata.Items);
+        var items = params.builder.buildMany(params.view, params.metadata.Items);
         if (items) {
             _.each(items, function (item) {
                 params.element.addItem(item);
@@ -22,31 +22,31 @@ _.extend(PanelBuilder.prototype, {
     },
 
     initScriptsHandlers: function (params) {
-        var parent = params.parent;
+        var view = params.view;
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (parent && metadata.OnLoaded) {
+        if (view && metadata.OnLoaded) {
             params.element.onLoaded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnLoaded.Name);
             });
         }
 
-        if (parent && metadata.OnExpanded) {
+        if (view && metadata.OnExpanded) {
             params.element.onExpanded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnExpanded.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnExpanded.Name);
             });
         }
 
-        if (parent && metadata.OnCollapsed) {
+        if (view && metadata.OnCollapsed) {
             params.element.onCollapsed(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnCollapsed.Name);
+                new ScriptExecutor(view).executeScript(metadata.OnCollapsed.Name);
             });
         }
     },
 
     createElement: function (params) {
-        return new Panel(params.parent);
+        return new Panel(params.view);
     }
 
 });

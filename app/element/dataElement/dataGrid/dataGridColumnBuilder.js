@@ -29,11 +29,11 @@ var DataGridColumnBuilder = function () {
 
             var itemTemplate = metadata.ItemTemplate;
             if (typeof itemTemplate !== 'undefined' && itemTemplate !== null && itemTemplate !== '') {
-                column.setItemTemplate(this.getItemTemplateConstructor(args.builder, args.parent, metadata, args.collectionProperty));
+                column.setItemTemplate(this.getItemTemplateConstructor(args.builder, args.view, metadata, args.collectionProperty));
             }
 
             if (metadata.ItemFormat) {
-                var format = args.builder.build(args.parent, metadata.ItemFormat);
+                var format = args.builder.build(args.view, metadata.ItemFormat);
                 column.setFormat(format);
             }
 

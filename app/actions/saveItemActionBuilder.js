@@ -12,7 +12,7 @@ function SaveItemActionBuilder(metadataView) {
             that.executeAction(args.builder, action, metadataView, callback);
         });
 
-        parentView = args.parent;
+        parentView = args.view;
 
         return action;
     };

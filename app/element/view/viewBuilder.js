@@ -109,7 +109,7 @@ _.extend(ViewBuilder.prototype, {
     },
 
     createElement: function(params) {
-        return new View(params.parent);
+        return new View(params.view);
     }
 
 }, builderValuePropertyMixin, builderFormatPropertyMixin);

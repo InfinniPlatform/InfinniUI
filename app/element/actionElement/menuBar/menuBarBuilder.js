@@ -21,7 +21,7 @@ _.extend(MenuBarBuilder.prototype, {
                         Image: subItem.Image
                     };
                     if(subItem.Action){
-                        el.Action = params.builder.build(params.parent, subItem.Action);
+                        el.Action = params.builder.build(params.view, subItem.Action);
                     }
                     if(subItem.Items){
                         el.Items = [];
@@ -146,7 +146,7 @@ _.extend(MenuBarBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new MenuBar(params.parent);
+        return new MenuBar(params.view);
     }
 
 });

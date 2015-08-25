@@ -12,7 +12,7 @@ _.extend(ToolBarSeparatorBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ToolBarSeparator(params.parent);
+        return new ToolBarSeparator(params.view);
     },
 
     initScriptsHandlers: function(params){

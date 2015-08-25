@@ -1,13 +1,13 @@
 function CancelActionBuilder() {
     this.build = function (context, args) {
-        var action = new BaseAction(args.parent);
+        var action = new BaseAction(args.view);
         action.setAction(function (callback) {
             if (callback) {
-                args.parent.onClosed(function () {
+                args.view.onClosed(function () {
                     callback();
                 });
             }
-            args.parent.close(dialogResult.cancel);
+            args.view.close(dialogResult.cancel);
         });
 
         return action;

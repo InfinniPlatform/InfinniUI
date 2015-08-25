@@ -26,7 +26,7 @@ describe('PropertyBinding', function () {
             DocumentId: 'Patient',
             IdProperty: 'Id'
         },
-        dataSourcePatient = dataSourceBuilder.build(null, {builder: builder, parent: view, metadata: patientMetadata}),
+        dataSourcePatient = dataSourceBuilder.build(null, {builder: builder, view: view, metadata: patientMetadata}),
         medicalWorkerMetadata = {
             Name: 'MedicalWorkerDataSource',
             ConfigId: 'Structure',
@@ -35,7 +35,7 @@ describe('PropertyBinding', function () {
         },
         dataSourceMedicalWorker = dataSourceBuilder.build(null, {
                                                                     builder: builder,
-                                                                    parent: view,
+                                                                    view: view,
                                                                     metadata: medicalWorkerMetadata
                                                                 }),
         dataSources = [dataSourcePatient, dataSourceMedicalWorker];
@@ -54,7 +54,7 @@ describe('PropertyBinding', function () {
 
         propertyBindingBuilder.build(null, {
                                                 builder: builder,
-                                                parent: view,
+                                                view: view,
                                                 metadata: propertyBinding
                                             });
 

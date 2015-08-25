@@ -87,7 +87,7 @@ describe('ToggleButton', function () {
             view.setScripts([{Name:"OnValueChanged", Body:"window.Test.toggleButton = 5"}, {Name:"OnLoaded", Body:"window.Test.toggleButtonLoaded = true"}]);
 
             //When
-            var build = toggleButton.build(null, {builder: toggleButton, parent: view, metadata: metadata});
+            var build = toggleButton.build(null, {builder: toggleButton, view: view, metadata: metadata});
             build.setValue(false);
             $(build.render());
 
