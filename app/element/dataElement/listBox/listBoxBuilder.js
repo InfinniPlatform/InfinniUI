@@ -71,6 +71,29 @@ function ListBoxBuilder() {
             }
         });
 
+        (function () {
+            if (!metadata.Value) {
+                return;
+            }
+
+            var
+                dataBinding = builder.build(parent, metadata.Value, collectionProperty);
+
+            if (!dataBinding) {
+                return;
+            }
+
+            listBox.onSetSelectedValue(function (data) {
+                dataBinding.setPropertyValue(data);
+            });
+
+            dataBinding.onPropertyValueChanged(function () {
+                var value = dataBinding.getPropertyValue();
+                listBox.setValue(value);
+            });
+        })();
+
+
         listBox.setStyle(metadata.Style);
 
 		parent.registerElement(listBox);
