@@ -254,7 +254,8 @@ var BaseDataSource = Backbone.Model.extend({
 
     getProperty: function(property){
         var selectedItem = this.getSelectedItem(),
-            relativeProperty, oldValue;
+            bindingByIndexRegEx = /^\d/,
+            relativeProperty, source;
 
         if(!selectedItem){
             return undefined;
@@ -263,11 +264,18 @@ var BaseDataSource = Backbone.Model.extend({
         if(property != '$'){
             if(property.substr(0,2) == '$.'){
                 relativeProperty = property.substr(2);
+                source = selectedItem;
             }else{
                 relativeProperty = property;
+
+                if(bindingByIndexRegEx.test(property)){
+                    source = this.getItems();
+                }else{
+                    source = selectedItem;
+                }
             }
 
-            return InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+            return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
         }else{
             return selectedItem;
         }
@@ -275,7 +283,8 @@ var BaseDataSource = Backbone.Model.extend({
 
     setProperty: function(property, value){
         var selectedItem = this.getSelectedItem(),
-            relativeProperty, oldValue;
+            bindingByIndexRegEx = /^\d/,
+            relativeProperty, oldValue, source;
 
         if(!selectedItem){
             return;
@@ -284,13 +293,20 @@ var BaseDataSource = Backbone.Model.extend({
         if(property != '$'){
             if(property.substr(0,2) == '$.'){
                 relativeProperty = property.substr(2);
+                source = selectedItem;
             }else{
                 relativeProperty = property;
+
+                if(bindingByIndexRegEx.test(property)){
+                    source = this.getItems();
+                }else{
+                    source = selectedItem;
+                }
             }
 
-            oldValue = InfinniUI.ObjectUtils.getPropertyValue(selectedItem, relativeProperty);
+            oldValue = InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
             if(value != oldValue){
-                InfinniUI.ObjectUtils.setPropertyValue(selectedItem, relativeProperty, value);
+                InfinniUI.ObjectUtils.setPropertyValue(source, relativeProperty, value);
             }else{
                 return;
             }

@@ -133,6 +133,7 @@ describe('DocumentDataSource', function () {
                 assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
                 assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
                 assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
+                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
                 done();
             }
         });
@@ -177,9 +178,11 @@ describe('DocumentDataSource', function () {
 
                 //When
                 dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
 
                 // Then
                 assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
                 done();
             }
         });
