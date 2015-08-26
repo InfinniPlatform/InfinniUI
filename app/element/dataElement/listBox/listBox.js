@@ -1,5 +1,7 @@
 function ListBox(addItemAction, editItemAction, dataBinding, listBoxItemConstructor, metadata) {
-
+    this.getEl = function () {
+        return $template;
+    };
     var listBox = this;
 
     listBox.value = null;
