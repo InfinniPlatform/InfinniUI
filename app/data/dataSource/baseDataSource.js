@@ -521,6 +521,10 @@
             if (selectedItem === null) {
                 selectedItem = {};
             }
+
+            if (/^\d+\..*$/.test(propertyName) && Array.isArray(dataItems)) {
+                InfinniUI.ObjectUtils.setPropertyValue(dataItems, propertyName, propertyValue);
+            } else
             if (selectedItem !== null) {
                 if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {
                     InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName.substr(2), propertyValue);

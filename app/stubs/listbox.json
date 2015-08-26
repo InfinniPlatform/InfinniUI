@@ -54,11 +54,15 @@
                           ]
                         }
                       },
+                      "ValueProperty": "Id",
                       "Value": {
                         "PropertyBinding": {
                           "DataSource": "MainDataSource",
                           "Property": "$.selectedItems"
                         }
+                      },
+                      "OnValueChanged": {
+                        "Name": "OnValueChanged"
                       }
                     }
                   },
@@ -90,35 +94,41 @@
         "Name": "MainDataSource",
         "Items": [
           {
+            "Id": 101,
             "title": "item1",
             "items": [
               {
-                "id": 1,
+                "Id": 1,
                 "title": "one"
               },
               {
-                "id": 2,
+                "Id": 2,
                 "title": "two"
               },
               {
-                "id": 3,
+                "Id": 3,
                 "title": "three"
               }
             ]
           },
           {
+            "Id": 102,
             "title": "item2",
             "items": [
               {
-                "id": 4,
+                "Id": 1,
+                "title": "one"
+              },
+              {
+                "Id": 4,
                 "title": "four"
               },
               {
-                "id": 5,
+                "Id": 5,
                 "title": "five"
               },
               {
-                "id": 6,
+                "Id": 6,
                 "title": "six"
               }
             ]
@@ -130,7 +140,11 @@
   "Scripts": [
     {
       "Name": "OnClick",
-      "Body": "console.log(context.Controls.ListBox2.getValue(), arguments);"
+      "Body": "console.log('OnClick', context.Controls.ListBox2.getValue(), context.DataSources.MainDataSource.getSelectedItem());"
+    },
+    {
+      "Name": "OnValueChanged",
+      "Body": "console.log('OnValueChanged', arguments);"
     }
   ],
   "Text": "Ресурс",
