@@ -1,13 +1,13 @@
 function ParameterBuilder() {
 
-    this.build = function(builder,parent,metadata){
+    this.build = function(builder,parent,metadata, collectionProperty){
 
         if(metadata.Value){
             var parameter = new Parameter();
 
             parameter.setName(metadata.Name);
 
-            var dataBinding = builder.build(parent, metadata.Value);
+            var dataBinding = builder.build(parent, metadata.Value, collectionProperty);
 
             //если существует Builder для хранящегося в параметре значения
             //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)

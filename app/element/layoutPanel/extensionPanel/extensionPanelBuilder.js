@@ -21,7 +21,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
                 "Parameter": item
             };
 
-            var param = params.builder.build(params.parent, itemToBuild);
+            var param = params.builder.build(params.parent, itemToBuild, params.collectionProperty);
             parameters[param.getName()] = param;
         });
 
