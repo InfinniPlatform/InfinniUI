@@ -61,12 +61,20 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onSelectedItemChanged', handler);
     },
 
+    onSelectedItemModified: function (handler) {
+        this.on('onPropertyChanged', handler);
+    },
+
     onItemCreated: function (handler) {
         this.on('onItemCreated', handler);
     },
 
     onItemsUpdated: function (handler) {
         this.on('onItemsUpdated', handler);
+    },
+
+    onItemDeleted: function (handler) {
+        this.on('onItemDeleted', handler);
     },
 
     getName: function(){

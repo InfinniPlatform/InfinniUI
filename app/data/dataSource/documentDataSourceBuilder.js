@@ -1,4 +1,4 @@
-function DocumentDataSourceBuilder() {
+function oldDocumentDataSourceBuilder() {
 
     this.build = function (builder, parent, metadata) {
 
