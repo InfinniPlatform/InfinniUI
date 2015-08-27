@@ -66,7 +66,7 @@ var OpenMode = function () {
 
         //Получаем следущее доступное приложение
         var ln = applications.length;
-        if (ln > 0) {
+        if (ln > 1) {
             var next = (i < ln) ? applications[i] : applications[ln - 1];
             return next.applicationView;
         }
