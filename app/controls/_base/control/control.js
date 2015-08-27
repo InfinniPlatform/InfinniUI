@@ -34,6 +34,10 @@ _.extend(Control.prototype, {
         return this.controlModel.get(key);
     },
 
+    on: function (name, handler) {
+        return this.controlModel.on(name, handler);
+    },
+
     render: function () {
         return this.controlView.render().$el;
     },

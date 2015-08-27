@@ -27,6 +27,33 @@ _.extend(Element.prototype, {
         }
     },
 
+    getProperty: function (name) {
+        var getterMethodName = 'get' + this._upperFirstSymbol(name);
+        if (typeof this[getterMethodName] == 'function') {
+            return this[getterMethodName]();
+        }else{
+            throw 'expect that ' + getterMethodName + ' is getter function';
+        }
+    },
+
+    setProperty: function (name, value) {
+        var setterMethodName = 'set' + this._upperFirstSymbol(name);
+        if (typeof this[setterMethodName] == 'function') {
+            this[setterMethodName](value);
+        }else{
+            throw 'expect that ' + setterMethodName + ' is setter function';
+        }
+    },
+
+    onPropertyChanged: function (propertyName, handler) {
+        var subscribingMethodName = 'on' + this._upperFirstSymbol(propertyName) + 'Changed';
+        if (typeof this[subscribingMethodName]  == 'function') {
+            this[subscribingMethodName](handler);
+        }else{
+            this.control.on('change:'+ propertyName, handler);
+        }
+    },
+
     getText: function () {
         return this.control.get('text');
     },
@@ -202,5 +229,10 @@ _.extend(Element.prototype, {
             handler(data);
         };
         return this.control.onKeyDown(callback);
+    },
+
+
+    _upperFirstSymbol: function(s){
+        return s[0].toUpperCase() + s.substr(1);
     }
 });
