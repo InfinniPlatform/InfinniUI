@@ -1,13 +1,12 @@
 function ObjectDataSourceBuilder() {
-
-    this.build = function (context, args){
-
-        var dataSource = new ObjectDataSource(args.view, args.metadata);
-        new BaseDataSourceBuilder().build(context,
-                                            _.extend(args, {dataSource: dataSource}));
-
-        dataSource.setUserStrategy(new ItemsDataSourceStrategy(dataSource, args.metadata));
-
-        return dataSource;
-    }
 }
+
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(ObjectDataSourceBuilder.prototype, {
+    createDataSource: function(parent){
+        return new ObjectDataSource({
+            view: parent
+        });
+    }
+});

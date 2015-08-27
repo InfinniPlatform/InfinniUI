@@ -6,18 +6,52 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentRequest(criteriaList, pageNumber, pageSize, sorting));
     };
 
-    this.createItem = function (resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructCreateDocumentRequest());
+    this.createItem = function (resultCallback, idProperty) {
+        new RequestExecutor(function(data){
+            data[idProperty] = this._generateLocalId();
+            data['__Id'] = data[idProperty];
+            resultCallback(data);
+        }, successCallback, failCallback).makeRequest(urlConstructor.constructCreateDocumentRequest());
     };
 
-    this.replaceItem = function (value, warnings, resultCallback) {
+    this.createLocalItem = function (idProperty) {
+        var result = {};
 
-        var request = (function (resultCallback) {
+        result[idProperty] = this._generateLocalId();
+        result['__Id'] = result[idProperty];
+
+        return result;
+    };
+
+    this._generateLocalId = function(){
+        return guid();
+    };
+
+    this.createIdFilter = function(id){
+        return [{
+            "Property": "Id",
+            "Value": id,
+            "CriteriaType": 1
+        }];
+    };
+
+    this.saveItem = function (value, resultCallback, warnings, idProperty) {
+
+        var callback = function(data){
+            data = adaptAnswerOnSavingItem();
+            resultCallback(data);
+        };
+
+        if(value['__Id']){
+            delete value[idProperty];
+        }
+
+        var request = (function (success) {
             return function (data) {
-                var request = new RequestExecutor(resultCallback, successCallback, failCallback);
+                var request = new RequestExecutor(success, successCallback, failCallback);
                 return request.makeRequest(urlConstructor.constructSetDocumentRequest(data.value, data.warnings));
             }
-        })(resultCallback);
+        })(callback);
 
         queueReplaceItem.append({
             value: value,
@@ -25,6 +59,19 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         }, request);
 
     };
+
+    function adaptAnswerOnSavingItem(data){
+        if(data.IsValid){
+            data.isValid = data.IsValid;
+            delete data.IsValid;
+        }
+
+        if(data.ValidationMessage && data.ValidationMessage.ValidationErrors){
+            data.items = data.ValidationMessage.ValidationErrors;
+            delete data.ValidationMessage.ValidationErrors;
+        }
+        return data;
+    }
 
     this.deleteItem = function (instanceId, resultCallback) {
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructDeleteDocumentRequest(instanceId));

@@ -11,6 +11,10 @@ function fakeView(view) {
         return {};
     };
 
+    view.getScript = function (name) {
+        return view.scripts[name];
+    };
+
     return view;
 }
 
