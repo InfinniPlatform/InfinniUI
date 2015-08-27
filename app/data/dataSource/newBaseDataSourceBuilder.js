@@ -1,14 +1,14 @@
 function BaseDataSourceBuilder(){};
 
 _.extend(BaseDataSourceBuilder.prototype, {
-    build: function (builder, parent, metadata) {
-        var dataSource = this.createDataSource(parent);
+    build: function (context, args) {
+        var dataSource = this.createDataSource(args.view);
         dataSource.suspendUpdate();
 
-        this.applyMetadata(builder, parent, metadata, dataSource);
+        this.applyMetadata(args.builder, args.view, args.metadata, dataSource);
 
-        if(parent.onLoading){
-            parent.onLoading(function () {
+        if(args.view.onLoading){
+            args.view.onLoading(function () {
                 dataSource.resumeUpdate();
             });
         }else{
