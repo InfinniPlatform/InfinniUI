@@ -27,7 +27,7 @@ var DocumentDataSource = BaseDataSource.extend({
     },
 
     getConfigId: function(){
-        return this.get('createActionName');
+        return this.get('configId');
     },
 
     setConfigId: function(configId){

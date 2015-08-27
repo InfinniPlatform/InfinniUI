@@ -633,8 +633,8 @@ describe('DataSourceBuilder', function () {
             UpdateAction: 'SetDocument',
             DeleteAction: 'DeleteDocument',
             FillCreatedItem: true,
-            PageNumber: 10,
-            PageSize: 50,
+            PageNumber: 1,
+            PageSize: 5,
 
             OnSelectedItemModified: {
                 Name: 'OnSelectedItemModified'
@@ -655,8 +655,8 @@ describe('DataSourceBuilder', function () {
             assert.equal(createdDataSource.getCreateAction(), 'CreateDocument');
             assert.equal(createdDataSource.getUpdateAction(), 'SetDocument');
             assert.equal(createdDataSource.getDeleteAction(), 'DeleteDocument');
-            assert.equal(createdDataSource.getPageSize(), 50, 'PageSize');
-            assert.equal(createdDataSource.getPageNumber(), 10, 'PageNumber');
+            assert.equal(createdDataSource.getPageSize(), 5, 'PageSize');
+            assert.equal(createdDataSource.getPageNumber(), 1, 'PageNumber');
             assert.isTrue(createdDataSource.getFillCreatedItem(), 'Value of FillCreatedItem');
         });
 
@@ -666,10 +666,7 @@ describe('DataSourceBuilder', function () {
                 createdDataSource = builder.buildType(view, 'DocumentDataSource', metadata);
 
             view.scripts = {
-                onSelectedItemModified: new Script({
-                    Name: 'onSelectedItemModified',
-                    Body: 'window.documentDataSourceTest = 1;'
-                })
+                OnSelectedItemModified: new Script('window.documentDataSourceTest = 1;', 'OnSelectedItemModified')
             }
 
             createdDataSource.updateItems(onItemUpdates);
