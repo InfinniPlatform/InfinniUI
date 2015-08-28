@@ -12,16 +12,13 @@ describe('ListBox', function () {
                 Text: 'Пациенты',
                 DataSources : [
                     {
-                        DocumentDataSource: {
-                            Name : "PatientDataSource",
-                            ConfigId: 'Demography',
-                            DocumentId: 'Patient',
-                            IdProperty: 'Id',
-                            CreateAction: 'CreateDocument',
-                            GetAction: 'GetDocument',
-                            UpdateAction: 'SetDocument',
-                            DeleteAction: 'DeleteDocument',
-                            FillCreatedItem: true
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
                         }
                     }
                 ],
@@ -33,20 +30,19 @@ describe('ListBox', function () {
                             {
                                 "ListBox": {
                                     "ItemTemplate": {
-                                        "StackPanel": {
-                                            "Items": [
-                                                {
-                                                    "TextBox": {
-                                                        "Name": "TextBox1"
-                                                    }
+                                        "TextBox": {
+                                            "Name": "TextBox1",
+                                            "Value": {
+                                                "PropertyBinding":{
+                                                    "DataSource": "ObjectDataSource1",
+                                                    "Property": "$.Display"
                                                 }
-                                            ]
-
+                                            }
                                         }
                                     },
                                     "Items" : {
                                         "PropertyBinding": {
-                                            "DataSource": "PatientDataSource",
+                                            "DataSource": "ObjectDataSource1",
                                             "Property": ""
                                         }
                                     }
@@ -56,7 +52,7 @@ describe('ListBox', function () {
                     }
                 }
             };
-
+debugger;
             var linkView = new LinkView(null, function (resultCallback) {
                 var builder = new ApplicationBuilder();
                 var view = builder.buildType(fakeView(), 'View', metadata);
