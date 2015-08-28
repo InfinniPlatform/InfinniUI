@@ -54,8 +54,36 @@ _.extend(Control.prototype, {
         });
     },
 
+    onMouseDoubleClick: function (handler) {
+        this.controlView.$el.on('dblclick', handler);
+    },
+
+    onMouseDown: function (handler) {
+        this.controlView.$el.on('mousedown', handler);
+    },
+
+    onMouseUp: function (handler) {
+        this.controlView.$el.on('mouseup', handler);
+    },
+
+    onMouseEnter: function (handler) {
+        this.controlView.$el.on('mouseenter', handler);
+    },
+
+    onMouseLeave: function (handler) {
+        this.controlView.$el.on('mouseleave', handler);
+    },
+
+    onMouseMove: function (handler) {
+        this.controlView.$el.on('mousemove', handler);
+    },
+
     onKeyDown: function (handler) {
-        this.controlView.on('onKeyDown', handler);
+        this.controlView.$el.on('keydown', handler);
+    },
+
+    onKeyUp: function (handler) {
+        this.controlView.$el.on('keyup', handler);
     }
 });
 

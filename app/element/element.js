@@ -223,14 +223,105 @@ _.extend(Element.prototype, {
     },
 
     onKeyDown: function (handler) {
-        var element = this;
-        var callback = function (data) {
-            data.source = element;
-            handler(data);
-        };
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingKeyEventData(nativeEventData);
+                handler(eventData);
+            };
         return this.control.onKeyDown(callback);
     },
 
+    onKeyUp: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingKeyEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onKeyUp(callback);
+    },
+
+    onMouseDoubleClick: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseDoubleClick(callback);
+    },
+
+    onMouseDown: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseDown(callback);
+    },
+
+    onMouseUp: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseUp(callback);
+    },
+
+    onMouseEnter: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseEnter(callback);
+    },
+
+    onMouseLeave: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseLeave(callback);
+    },
+
+    onMouseMove: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseMove(callback);
+    },
+
+
+    _getHandlingKeyEventData: function(nativeData){
+        var result = {};
+
+        result = {
+            source: this,
+            key: nativeData.which,
+            altKey: nativeData.altKey,
+            ctrlKey: nativeData.ctrlKey,
+            shiftKey: nativeData.shiftKey,
+            nativeEventData: nativeData
+        };
+        return result;
+    },
+
+    _getHandlingMouseEventData: function(nativeData){
+        var result = {};
+
+        result = {
+            source: this,
+            button: nativeData.which,
+            altKey: nativeData.altKey,
+            ctrlKey: nativeData.ctrlKey,
+            shiftKey: nativeData.shiftKey,
+            nativeEventData: nativeData
+        };
+        return result;
+    },
 
     _upperFirstSymbol: function(s){
         return s[0].toUpperCase() + s.substr(1);

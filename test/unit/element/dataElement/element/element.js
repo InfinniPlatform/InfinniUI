@@ -40,5 +40,22 @@ describe('Element', function () {
             }
 
         });
+
+        it('Handling DOM event', function (done) {
+            // Given
+            var textBox = new TextBox();
+            textBox.onMouseDoubleClick(onMouseDoubleClickHandler);
+
+            // When
+            var $el = textBox.render();
+            $el.trigger('dblclick');
+
+            // Then
+            function onMouseDoubleClickHandler(eventData){
+                assert.equal(eventData.source, textBox, 'eventData has right source');
+                done();
+            }
+
+        });
     });
 });
