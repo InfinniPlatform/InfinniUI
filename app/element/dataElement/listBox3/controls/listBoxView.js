@@ -37,11 +37,11 @@ var ListBoxView = ControlView.extend({
     },
 
     initUIHandler: function () {
-        this.on('change:multiSelect', function () {
+        this.listenTo(this.model, 'change:multiSelect', function () {
             this.renderItems();
         });
 
-        this.on('change:items', function () {
+        this.listenTo(this.model, 'change:items', function () {
             this.renderItems();
         });
     },

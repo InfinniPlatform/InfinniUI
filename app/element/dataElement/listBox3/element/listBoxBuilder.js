@@ -96,31 +96,6 @@ _.extend(ListBoxBuilder.prototype, {
          * @TODO Добавить обратную подписку на установкку SelectedItem из DataSource в ListBox
          */
 
-
-        //element.onValueChanged(function () {
-        //    var items = element.getItems();
-        //    var value = JSON.stringify(element.getValue());
-        //    var itemValue;
-        //    var valueSelector = element.getValueSelector();
-        //    if (!element.getMultiSelect() && Array.isArray(items)) {
-        //        //Установить соотвествующее SelectedItem для источника данных Items
-        //        for (var i = 0; i < items.length; i = i + 1) {
-        //            itemValue = valueSelector(items[i]);
-        //            if (JSON.stringify(itemValue) === value) {
-        //                continue;
-        //            }
-        //            var ds = metadata.Items.PropertyBinding || {};
-        //            parent.getExchange().send(messageTypes.onSetSelectedItem,{
-        //                value : items[i],
-        //                dataSource: ds.DataSource,
-        //                property: ds.Property
-        //            });
-        //            break;
-        //        }
-        //    }
-        //
-        //});
-
         binding.onPropertyValueChanged(function (dataSourceName, value) {
             element.setItems(value.value);
         });
