@@ -11,12 +11,29 @@ var ListBoxModel = ControlModel.extend({
     set: function (key, val, options) {
         if (typeof key === 'string' && ['selectedItem', 'value'].indexOf(key) !== -1) {
             var oldValue = this.get(key);
-            if (JSON.stringify(oldValue) === JSON.stringify(val)) {
+            if (this.isEqualValue(oldValue, val)) {
                 return this;
             }
             return ControlModel.prototype.set.call(this, key, val, options);
         }
         return ControlModel.prototype.set.apply(this, Array.prototype.slice.call(arguments));
+    },
+
+    toggleValue: function (value) {
+        var values = this.get('value');
+
+        if (Array.isArray(values)) {
+            if (values.some(this.isEqualValue.bind(this, value))) {
+                values = values.filter(this.isNotEqualValue.bind(this, value));
+            } else {
+                values = values.slice();
+                values.push(value);
+            }
+        } else {
+            values = [value];
+        }
+
+        this.set('value', values);
     },
 
     updateValueItemsIndex: function () {
@@ -26,6 +43,7 @@ var ListBoxModel = ControlModel.extend({
             items = this.get('items'),
             multiSelect = this.get('multiSelect'),
             valueSelector = this.get('valueSelector'),
+            isEqualValue = this.isEqualValue,
             index,
             itemsValue;
 
@@ -55,10 +73,6 @@ var ListBoxModel = ControlModel.extend({
             });
             return valueIndex;
         }
-
-        function isEqualValue (val1, val2) {
-            return JSON.stringify(val1) === JSON.stringify(val2);
-        }
     },
 
     isEnabled: function () {
@@ -67,6 +81,10 @@ var ListBoxModel = ControlModel.extend({
             enabled = this.get('enabled');
 
         return !readOnly && enabled;
+    },
+
+    isSelectedIndex: function (index) {
+        return this.isEqualValue(this.get('selectedItem'), this.getItemByIndex(index));
     },
 
     getItemByIndex: function (index) {
@@ -79,6 +97,16 @@ var ListBoxModel = ControlModel.extend({
         }
 
         return item;
+    },
+
+    isEqualValue: function (val1, val2) {
+        return JSON.stringify(val1) === JSON.stringify(val2);
+    },
+
+    isNotEqualValue: function (val1, val2) {
+        return !this.isEqualValue(val1, val2);
     }
+
+
 
 });

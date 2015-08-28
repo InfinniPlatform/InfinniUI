@@ -6,12 +6,17 @@ var ListBoxRadioItem = Backbone.View.extend({
 		content: '.item-content'
 	},
 
+    events: {
+        'click': 'onClickHandler'
+    },
+
 	initialize: function (options) {
 		this.options = {
 			index: options.index,
 			content: options.content
 		};
-		this.el.addEventListener('mousedown', this.onToggleHandler.bind(this), true);
+		this.el.addEventListener('mousedown', this.selectItemOnClick.bind(this), true);
+		//this.el.addEventListener('mousedown', this.onToggleHandler.bind(this), true);
 
 		this.listenTo(this.model, 'change:valueItemsIndex', this.updateCheckState);
 	},
@@ -21,10 +26,28 @@ var ListBoxRadioItem = Backbone.View.extend({
 		this.bindUIElements();
 		this.ui.content.append(this.options.content);
         this.updateCheckState();
+        this.updateSelectedState();
 		return this;
 	},
 
-    onToggleHandler: function () {
+    /**
+     * Сдедать текущий элемент выделенным
+     */
+    selectItemOnClick: function () {
+        var model = this.model;
+
+        if (!model.isEnabled()) {
+            return;
+        }
+
+        var selectedItem = model.getItemByIndex(this.options.index);
+        model.set('selectedItem', selectedItem);
+    },
+
+    /**
+     * Переключить значение ListBox
+     */
+    onClickHandler: function () {
         var model = this.model;
 
         if (!model.isEnabled()) {
@@ -36,12 +59,17 @@ var ListBoxRadioItem = Backbone.View.extend({
         var valueSelector = model.get('valueSelector');
         var value = valueSelector(model.getItemByIndex(index));
         model.set('value', value);
-	},
+    },
 
     updateCheckState: function () {
         var valueItemsIndex = this.model.get('valueItemsIndex');
 		this.applyCheckState(valueItemsIndex === this.options.index);
 	},
+
+    updateSelectedState: function () {
+        //Для простого списка выделенный элемент и значение совпадают!
+        this.updateCheckState();
+    },
 
 	applyCheckState: function (checked) {
 		this.ui.content.toggleClass('selected', checked);

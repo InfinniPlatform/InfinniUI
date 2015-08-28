@@ -23,7 +23,7 @@
                       "Text": {
                         "PropertyBinding": {
                           "DataSource": "MainDataSource",
-                          "Property": "$.title"
+                          "Property": "$.Assignee.DisplayName"
                         }
                       }
                     }
@@ -34,10 +34,11 @@
                       "Items": {
                         "PropertyBinding": {
                           "DataSource": "MainDataSource",
-                          "Property": "$.items"
+                          "Property": "$.PersonalNotifications"
                         }
                       },
                       "MultiSelect": true,
+                      "~MultiSelect": false,
                       "ItemTemplate": {
                         "StackPanel": {
                           "Items": [
@@ -46,7 +47,7 @@
                                 "Text": {
                                   "PropertyBinding": {
                                     "DataSource": "MainDataSource",
-                                    "Property": "$.items.$.title"
+                                    "Property": "$.PersonalNotifications.$.PublicNotification.DisplayName"
                                   }
                                 }
                               }
@@ -54,7 +55,7 @@
                           ]
                         }
                       },
-                      "ValueProperty": "Id",
+                      "~ValueProperty": "Id",
                       "Value": {
                         "PropertyBinding": {
                           "DataSource": "MainDataSource",
@@ -94,49 +95,655 @@
         "Name": "MainDataSource",
         "Items": [
           {
-            "Id": 101,
-            "title": "item1",
-            "items": [
+            "Assignee": {
+              "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
+              "DisplayName": "Petrov Petr"
+            },
+            "PersonalNotifications": [
               {
-                "Id": 1,
-                "title": "one"
+                "Id": "c9ece2d4-5f73-4acf-a559-09d59fde6d0a",
+                "PublicNotification": {
+                  "Id": "e1ea1fc8-2bca-410f-8ae1-4736f496f102",
+                  "DisplayName": "Взнос события петрова"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": true,
+                "Decision": {
+                  "IsAgree": true,
+                  "DecisionDate": "2015-08-25T10:08:01.165Z",
+                  "ChildrenCount": 1,
+                  "AdultsCount": 3
+                },
+                "ParentNotification": {
+                  "Id": "91caeea1-e70c-40a9-8889-c52f7f01b97b",
+                  "DisplayName": "Событие петрова"
+                },
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "ea08b45f-992c-459a-9a53-33673e40ad47",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:38:41.3231596+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
+                  "DisplayName": "Petrov Petr"
+                },
+                "AdultPrice": 5,
+                "Price": 3,
+                "Date": "2015-09-04T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 18,
+                "CreationDate": "2015-08-25T15:02:18.1291962+05:00",
+                "OldSum": 18,
+                "Metadata": "PersonalNotification",
+                "Configuration": "PTA",
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:08:06.46712+05:00"
               },
               {
-                "Id": 2,
-                "title": "two"
+                "Id": "00ce3d7b-af84-4cc1-b668-cd034334b9cc",
+                "PublicNotification": {
+                  "Id": "081b2735-120d-4505-82b4-f3a7548b4bc5",
+                  "DisplayName": "Взнос мой"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {
+                  "IsAgree": true,
+                  "DecisionDate": "2015-08-25T10:08:18.309Z",
+                  "ChildrenCount": 1,
+                  "AdultsCount": 1
+                },
+                "ParentNotification": {
+                  "Id": "82da25b8-c2a7-445a-a5eb-beb08b89f8cb",
+                  "DisplayName": "Событие мое"
+                },
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "ea08b45f-992c-459a-9a53-33673e40ad47",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:38:41.3231596+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
+                  "DisplayName": "Petrov Petr"
+                },
+                "AdultPrice": 12,
+                "Price": 6,
+                "Date": "2015-08-31T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 18,
+                "CreationDate": "2015-08-25T15:03:42.7880384+05:00",
+                "OldSum": 18,
+                "Metadata": "PersonalNotification",
+                "Configuration": "PTA",
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:08:20.4069173+05:00"
               },
               {
-                "Id": 3,
-                "title": "three"
+                "Id": "ceb091c6-18c3-44cf-85b0-f9b12f53b506",
+                "PublicNotification": {
+                  "Id": "ceefebb9-9a54-49ce-ad2e-1a2a12fe1ba5",
+                  "DisplayName": "Взнос11"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "ea08b45f-992c-459a-9a53-33673e40ad47",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:38:41.3231596+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
+                  "DisplayName": "Petrov Petr"
+                },
+                "Price": 8,
+                "Date": "2015-09-03T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 8.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T15:41:26.4475124+05:00",
+                "OldSum": 8.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:41:26.4965152+05:00"
+              },
+              {
+                "Id": "a9f7a0a1-4958-49ea-9d03-da4fa60628f5",
+                "PublicNotification": {
+                  "Id": "5754377b-e0cd-4e0f-b67a-667d8356ad4f",
+                  "DisplayName": "Отдельный взнос"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": true,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "ea08b45f-992c-459a-9a53-33673e40ad47",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:38:41.3231596+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
+                  "DisplayName": "Petrov Petr"
+                },
+                "Price": 45,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 45.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T14:41:45.886716+05:00",
+                "OldSum": 45.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T14:42:08.6900203+05:00"
               }
-            ]
+            ],
+            "RequiredSum": 62.0,
+            "AvailableSum": 177.0,
+            "HasMoneyOnHands": true,
+            "IsPersonalNotificaction": true
           },
           {
-            "Id": 102,
-            "title": "item2",
-            "items": [
+            "Assignee": {
+              "Id": "9107d6d6-7517-4e1c-9f3f-e9685f508628",
+              "DisplayName": "Евдокимова Анна"
+            },
+            "PersonalNotifications": [
               {
-                "Id": 1,
-                "title": "one"
+                "Id": "732fb769-b1df-4a38-b10c-0edc358ea2d6",
+                "PublicNotification": {
+                  "Id": "51c12822-e616-4949-a5c1-8d6805f80e51",
+                  "DisplayName": "Взнос только мой"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": true,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "aafd85ca-1ac3-4962-838b-ae4a8a24de44",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:33:30.2013644+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "9107d6d6-7517-4e1c-9f3f-e9685f508628",
+                  "DisplayName": "Евдокимова Анна"
+                },
+                "Price": 8,
+                "Date": "2015-09-05T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 8.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-26T15:32:31.6414405+05:00",
+                "OldSum": 8.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-26T15:32:31.6554413+05:00"
               },
               {
-                "Id": 4,
-                "title": "four"
+                "Id": "28584eae-33cd-491c-88fe-3f7ee3c80b5e",
+                "PublicNotification": {
+                  "Id": "14d2446b-1fa8-42fd-946f-f05583a9a4dc",
+                  "DisplayName": "Отдельный взнос"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "aafd85ca-1ac3-4962-838b-ae4a8a24de44",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:33:30.2013644+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "9107d6d6-7517-4e1c-9f3f-e9685f508628",
+                  "DisplayName": "Евдокимова Анна"
+                },
+                "Price": 45,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 45.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T14:39:51.1031508+05:00",
+                "OldSum": 45.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T14:39:51.1051509+05:00"
               },
               {
-                "Id": 5,
-                "title": "five"
-              },
-              {
-                "Id": 6,
-                "title": "six"
+                "Id": "7aacde3b-7baf-4f17-844a-09e68a0be5b5",
+                "PublicNotification": {
+                  "Id": "5754377b-e0cd-4e0f-b67a-667d8356ad4f",
+                  "DisplayName": "Отдельный взнос"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "aafd85ca-1ac3-4962-838b-ae4a8a24de44",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:33:30.2013644+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "9107d6d6-7517-4e1c-9f3f-e9685f508628",
+                  "DisplayName": "Евдокимова Анна"
+                },
+                "Price": 45,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 45.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T14:43:06.7323401+05:00",
+                "OldSum": 45.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T14:43:13.8477471+05:00"
               }
-            ]
+            ],
+            "RequiredSum": 98.0,
+            "AvailableSum": 693.0,
+            "HasMoneyOnHands": true,
+            "IsPersonalNotificaction": true
+          },
+          {
+            "Assignee": {
+              "Id": "edbd9ed2-6a75-4230-9b72-bb2aea4efca3",
+              "DisplayName": "Иванов Иван"
+            },
+            "PersonalNotifications": [
+              {
+                "Id": "e6d754fe-992c-4e2f-b2da-214cae15faad",
+                "PublicNotification": {
+                  "Id": "e1ea1fc8-2bca-410f-8ae1-4736f496f102",
+                  "DisplayName": "Взнос события петрова"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {
+                  "IsAgree": true,
+                  "DecisionDate": "2015-08-25T10:07:31.304Z",
+                  "ChildrenCount": 1,
+                  "AdultsCount": 1
+                },
+                "ParentNotification": {
+                  "Id": "91caeea1-e70c-40a9-8889-c52f7f01b97b",
+                  "DisplayName": "Событие петрова"
+                },
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "f03fdb65-7e9f-4739-a61f-efab8ad9899a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:36:31.759749+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "edbd9ed2-6a75-4230-9b72-bb2aea4efca3",
+                  "DisplayName": "Иванов Иван"
+                },
+                "AdultPrice": 5,
+                "Price": 3,
+                "Date": "2015-09-04T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 8,
+                "CreationDate": "2015-08-25T15:02:18.247203+05:00",
+                "OldSum": 8,
+                "Metadata": "PersonalNotification",
+                "Configuration": "PTA",
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:07:33.6092407+05:00"
+              },
+              {
+                "Id": "77c6693b-16ba-441e-ad2b-efb6486cc4c0",
+                "PublicNotification": {
+                  "Id": "ceefebb9-9a54-49ce-ad2e-1a2a12fe1ba5",
+                  "DisplayName": "Взнос11"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "f03fdb65-7e9f-4739-a61f-efab8ad9899a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:36:31.759749+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "edbd9ed2-6a75-4230-9b72-bb2aea4efca3",
+                  "DisplayName": "Иванов Иван"
+                },
+                "Price": 8,
+                "Date": "2015-09-03T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 8.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T15:41:26.6835259+05:00",
+                "OldSum": 8.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:41:26.6845259+05:00"
+              },
+              {
+                "Id": "802175ea-b872-4473-b51d-d9f304c0fb88",
+                "PublicNotification": {
+                  "Id": "2c25742f-fc89-4671-8503-577ab25d3f0b",
+                  "DisplayName": "Взнос2"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "f03fdb65-7e9f-4739-a61f-efab8ad9899a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:36:31.759749+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "edbd9ed2-6a75-4230-9b72-bb2aea4efca3",
+                  "DisplayName": "Иванов Иван"
+                },
+                "Price": 18,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 18.0,
+                "CreationDate": "2015-08-25T15:03:05.0938825+05:00",
+                "OldSum": 18.0,
+                "Metadata": "PersonalNotification",
+                "Configuration": "PTA",
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:06:04.0921206+05:00"
+              }
+            ],
+            "RequiredSum": 29.0,
+            "AvailableSum": 50.0,
+            "HasMoneyOnHands": true,
+            "IsPersonalNotificaction": true
+          },
+          {
+            "Assignee": {
+              "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+              "DisplayName": "Сидоров Сидор"
+            },
+            "PersonalNotifications": [
+              {
+                "Id": "cb6b5f5f-4afb-41db-8e25-1bd243bcb94a",
+                "PublicNotification": {
+                  "Id": "081b2735-120d-4505-82b4-f3a7548b4bc5",
+                  "DisplayName": "Взнос мой"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {
+                  "IsAgree": true,
+                  "DecisionDate": "2015-08-25T10:06:32.471Z",
+                  "ChildrenCount": 3,
+                  "AdultsCount": 1
+                },
+                "ParentNotification": {
+                  "Id": "82da25b8-c2a7-445a-a5eb-beb08b89f8cb",
+                  "DisplayName": "Событие мое"
+                },
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "5f5d1d03-e67d-40fc-b131-d7751196732a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:37:52.3343576+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+                  "DisplayName": "Сидоров Сидор"
+                },
+                "AdultPrice": 12,
+                "Price": 6,
+                "Date": "2015-08-31T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 30,
+                "CreationDate": "2015-08-25T15:03:42.9670487+05:00",
+                "OldSum": 30,
+                "Metadata": "PersonalNotification",
+                "Configuration": "PTA",
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:06:39.014118+05:00"
+              },
+              {
+                "Id": "b04a68ac-6431-4720-96de-cfcb20c7620c",
+                "PublicNotification": {
+                  "Id": "ceefebb9-9a54-49ce-ad2e-1a2a12fe1ba5",
+                  "DisplayName": "Взнос11"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "5f5d1d03-e67d-40fc-b131-d7751196732a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:37:52.3343576+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+                  "DisplayName": "Сидоров Сидор"
+                },
+                "Price": 8,
+                "Date": "2015-09-03T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 8.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T15:41:26.7695308+05:00",
+                "OldSum": 8.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:41:26.7705308+05:00"
+              },
+              {
+                "Id": "220e6578-bfed-4967-a5cd-b22062c45816",
+                "PublicNotification": {
+                  "Id": "57399666-5824-4c6c-a763-2fa61f5839fc",
+                  "DisplayName": "Взнос 1"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "5f5d1d03-e67d-40fc-b131-d7751196732a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:37:52.3343576+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+                  "DisplayName": "Сидоров Сидор"
+                },
+                "Price": 5,
+                "Date": "2015-09-04T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 5.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T15:01:44.3852662+05:00",
+                "OldSum": 5.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T15:01:44.3862662+05:00"
+              },
+              {
+                "Id": "cb291d8c-6ece-44a4-a0e2-38ca17dbb38b",
+                "PublicNotification": {
+                  "Id": "5754377b-e0cd-4e0f-b67a-667d8356ad4f",
+                  "DisplayName": "Отдельный взнос"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "5f5d1d03-e67d-40fc-b131-d7751196732a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:37:52.3343576+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+                  "DisplayName": "Сидоров Сидор"
+                },
+                "Price": 45,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 45.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T14:43:29.5016424+05:00",
+                "OldSum": 45.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T14:43:30.647708+05:00"
+              },
+              {
+                "Id": "1ed1c1d5-0cf7-458a-81e2-9ec8e6e18c4c",
+                "PublicNotification": {
+                  "Id": "14d2446b-1fa8-42fd-946f-f05583a9a4dc",
+                  "DisplayName": "Отдельный взнос"
+                },
+                "IsAssignee": false,
+                "HasAssignee": false,
+                "IsAuthor": false,
+                "Decision": {},
+                "ParentPhoto": {
+                  "Info": {
+                    "Type": "application/octet-stream",
+                    "ContentId": "5f5d1d03-e67d-40fc-b131-d7751196732a",
+                    "Name": "empty_photo.png",
+                    "Size": 4957,
+                    "Time": "2015-08-25T14:37:52.3343576+05:00"
+                  }
+                },
+                "Parent": {
+                  "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
+                  "DisplayName": "Сидоров Сидор"
+                },
+                "Price": 45,
+                "Date": "2015-09-06T00:00:00+05:00",
+                "NotificationType": {
+                  "IsPayment": true
+                },
+                "Sum": 45.0,
+                "Configuration": "PTA",
+                "Metadata": "PersonalNotification",
+                "CreationDate": "2015-08-25T14:39:51.2751606+05:00",
+                "OldSum": 45.0,
+                "__ConfigId": "pta",
+                "__DocumentId": "personalnotification",
+                "TimeStamp": "2015-08-25T14:39:51.2761606+05:00"
+              }
+            ],
+            "RequiredSum": 109.0,
+            "AvailableSum": 64.0,
+            "HasMoneyOnHands": true,
+            "IsPersonalNotificaction": true
           }
         ]
       }
     }
   ],
+  "OnLoaded": {
+    "Name": "OnLoaded"
+  },
   "Scripts": [
     {
       "Name": "OnClick",
@@ -145,6 +752,10 @@
     {
       "Name": "OnValueChanged",
       "Body": "console.log('OnValueChanged', arguments);"
+    },
+    {
+      "Name": "OnLoaded",
+      "Body": "return;context.DataSources.MainDataSource.setDataItems([{'Id': 101,'title': 'item1','items': [{'Id': 1,'title': 'one'},{'Id': 2,'title': 'two'},{'Id': 3,'title': 'three'}]},{'Id': 102,'title': 'item2','items': [{'Id': 1,'title': 'one'},{'Id': 4,'title': 'four'},{'Id': 5,'title': 'five'},{'Id': 6,'title': 'six'}]}]);"
     }
   ],
   "Text": "Ресурс",

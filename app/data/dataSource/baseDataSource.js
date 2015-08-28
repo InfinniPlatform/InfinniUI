@@ -524,6 +524,10 @@
 
             if (/^\d+\..*$/.test(propertyName) && Array.isArray(dataItems)) {
                 InfinniUI.ObjectUtils.setPropertyValue(dataItems, propertyName, propertyValue);
+                //Допущение, что SelectedItem указывает на тотже элемент
+                InfinniUI.ObjectUtils.setPropertyValue(selectedItem, propertyName.replace(/^\d+\./, ''), propertyValue);
+                that.setSelectedItem(selectedItem);
+                setModified(selectedItem);
             } else
             if (selectedItem !== null) {
                 if (propertyName.length > 2 && propertyName.substring(0, 2) === '$.') {

@@ -7,7 +7,7 @@ var ListBoxView = ControlView.extend({
 
     itemView: {
         radio: ListBoxRadioItem,
-        check: ListBoxRadioItem
+        check: ListBoxCheckItem
     },
 
     createItemView: function (data) {

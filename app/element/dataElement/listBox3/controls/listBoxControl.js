@@ -12,6 +12,10 @@ _.extend(ListBoxControl.prototype, {
 
     createControlView: function (model) {
         return new ListBoxView({model: model});
+    },
+
+    onChangeSelectedItem: function (handler) {
+        this.controlModel.on('change:selectedItem', handler);
     }
 
 }, controlValuePropertyMixin);

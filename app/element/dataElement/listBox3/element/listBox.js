@@ -70,6 +70,18 @@ _.extend(ListBox.prototype, {
 
     },
 
+    setSelectedItem: function (value) {
+        this.control.set('selectedItem', value);
+    },
+
+    getSelectedItem: function () {
+        return this.control.get('selectedItem');
+    },
+
+    onChangeSelectedItem: function (handler) {
+        this.control.onChangeSelectedItem(handler);
+    },
+
     setValueSelector: function (value) {
         return this.control.set('valueSelector', value);
     },
