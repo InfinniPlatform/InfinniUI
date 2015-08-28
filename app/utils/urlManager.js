@@ -17,5 +17,22 @@ var urlManager = {
         }
 
         return result;
+    },
+
+    clearUrlSearchPath: function(){
+        var searchPath = location.search,
+            index, newUrl;
+
+        if(searchPath.length > 0){
+            index = location.href.indexOf(searchPath);
+            if(index > 0){
+                newUrl = location.href.substr(0, index);
+            }
+        }
+
+        if(newUrl){
+            history.pushState(null, null, newUrl);
+        }
+
     }
 };
