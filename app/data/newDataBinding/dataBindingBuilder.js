@@ -1,14 +1,15 @@
 var DataBindingBuilder = function () {};
 
-DataBindingBuilder.prototype.build = function (builder, parent, metadata) {
+DataBindingBuilder.prototype.build = function (context, args) {
     var result = new DataBinding();
+    var metadata = args.metadata;
 
     if(metadata.Source == null){
         logger.error('DataBindingBuilder: не указан источник.');
         throw new Error('DataBindingBuilder: not declared source in DataBinding metadata.');
     }
 
-    var source = this.findSource(parent, metadata.Source);
+    var source = this.findSource(args.view, metadata.Source);
     if(source == null){
         logger.error('DataBindingBuilder: некорректный источник.');
         throw new Error('DataBindingBuilder: declared source not found.');
