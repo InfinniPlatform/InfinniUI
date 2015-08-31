@@ -63,7 +63,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $listbox = $('#sandbox').children();
-                //$listbox.detach();
+                $listbox.detach();
 
                 onListboxReady($listbox);
             });
