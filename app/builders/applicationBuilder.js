@@ -56,10 +56,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TreeView', new TreeViewBuilder());
 
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
-        builder.register('PropertyBinding', new PropertyBindingBuilder());
-        builder.register('ParameterBinding', new ParameterBindingBuilder());
-        builder.register('FileBinding', new FileBindingBuilder());
-        builder.register('ObjectBinding', new ObjectBindingBuilder());
+        builder.register('DataBinding', new DataBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
         builder.register('Validation', new ValidationBuilder());
