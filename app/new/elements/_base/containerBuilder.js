@@ -19,3 +19,17 @@ ContainerBuilder.prototype.applyMetadata = function (params) {
     element.setItemTemplate(this.getItemTemplateBuilder().getItemTemplate(params));
 };
 
+
+
+/*ContainerBuilder.prototype.buildItemTemplate = function (params, templateMetadata) {
+    var element = params.element;
+    var builder = params.builder;
+
+    return function(context, argument) {
+        var index = argument.index;
+        var item = argument.item;
+
+
+    };
+};*/
+
