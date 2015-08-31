@@ -9,7 +9,7 @@ _.extend(ViewBuilder.prototype, {
 
         var metadata = params.metadata;
         var view = params.element;
-        var parent = params.parent;
+        var parentView = params.view;
         var outerParams = params.params;
 
         view.setGuid(guid());
@@ -19,18 +19,18 @@ _.extend(ViewBuilder.prototype, {
         //    view: view
         //};
 
-        if (parent instanceof View) {
-            parent.addNestedView(view);
+        if (parentView instanceof View) {
+            parentView.addNestedView(view);
         }
 
-        view.setParentView(parent);
+        view.setParentView(parentView);
 
-        if (parent.addChildView) {
-            parent.addChildView(metadata.Name, view);
+        if (parentView.addChildView) {
+            parentView.addChildView(metadata.Name, view);
         }
 
-        this.handleParameters(view, metadata.RequestParameters, params.builder, outerParams, parent);
-        this.handleParameters(view, metadata.Parameters, params.builder, outerParams, parent);
+        this.handleParameters(view, metadata.RequestParameters, params.builder, outerParams, parentView);
+        this.handleParameters(view, metadata.Parameters, params.builder, outerParams, parentView);
 
         view.setCaption(metadata.Caption);
         view.setScripts(metadata.Scripts);
