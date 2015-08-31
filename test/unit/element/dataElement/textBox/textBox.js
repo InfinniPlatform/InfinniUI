@@ -94,77 +94,77 @@ describe('TextBox', function () {
         });
     });
 
-    describe('TextBox data binding', function () {
-        it('should set TextBox.text from property binding', function () {
-
-            //это говнокод
-            $('#page-content').empty();
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            //$('body').append($('<div>').attr('id', 'page-content'));
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources: [
-                    {
-                        DocumentDataSource: {
-                            Name : "PatientDataSource",
-                            ConfigId: 'Demography',
-                            DocumentId: 'Patient',
-                            IdProperty: 'Id',
-                            CreateAction: 'CreateDocument',
-                            GetAction: 'GetDocument',
-                            UpdateAction: 'SetDocument',
-                            DeleteAction: 'DeleteDocument',
-                            FillCreatedItem: true
-                        }
-                    }
-                ],
-                LayoutPanel: {
-                    StackPanel: {
-                        Name: 'MainViewPanel',
-                        Items: [
-                            {
-                                TextBox: {
-                                    Name: 'TextBox1',
-                                    Value : {
-                                        PropertyBinding : {
-                                            DataSource : 'PatientDataSource',
-                                            Property : '$.LastName'
-                                        }
-                                    },
-                                    Multiline: false
-                                }
-                            }
-                        ]
-                    }
-                }
-            };
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType(fakeView(), 'View', metadata);
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            linkView.createView(function(view){
-                view.open();
-
-                var itemToSelect = null;
-                view.getDataSource('PatientDataSource').getItems(function(data){
-                    itemToSelect = data[1];
-                });
-
-                view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
-
-                //check text
-                assert.equal($('#sandbox').find('input:text').val(), itemToSelect.LastName);
-                //$('#page-content').remove();
-            });
-        });
-    });
+//    describe('TextBox data binding', function () {
+//        it('should set TextBox.text from property binding', function () {
+//
+//            //это говнокод
+//            $('#page-content').empty();
+//
+//            window.providerRegister.register('DocumentDataSource', function () {
+//                return new FakeDataProvider();
+//            });
+//
+//            //$('body').append($('<div>').attr('id', 'page-content'));
+//
+//            var metadata = {
+//                Text: 'Пациенты',
+//                DataSources: [
+//                    {
+//                        DocumentDataSource: {
+//                            Name : "PatientDataSource",
+//                            ConfigId: 'Demography',
+//                            DocumentId: 'Patient',
+//                            IdProperty: 'Id',
+//                            CreateAction: 'CreateDocument',
+//                            GetAction: 'GetDocument',
+//                            UpdateAction: 'SetDocument',
+//                            DeleteAction: 'DeleteDocument',
+//                            FillCreatedItem: true
+//                        }
+//                    }
+//                ],
+//                LayoutPanel: {
+//                    StackPanel: {
+//                        Name: 'MainViewPanel',
+//                        Items: [
+//                            {
+//                                TextBox: {
+//                                    Name: 'TextBox1',
+//                                    Value : {
+//                                        PropertyBinding : {
+//                                            DataSource : 'PatientDataSource',
+//                                            Property : '$.LastName'
+//                                        }
+//                                    },
+//                                    Multiline: false
+//                                }
+//                            }
+//                        ]
+//                    }
+//                }
+//            };
+//
+//            var linkView = new LinkView(null, function (resultCallback) {
+//                var builder = new ApplicationBuilder();
+//                var view = builder.buildType(fakeView(), 'View', metadata);
+//                resultCallback(view);
+//            });
+//            linkView.setOpenMode('Application');
+//
+//            linkView.createView(function(view){
+//                view.open();
+//
+//                var itemToSelect = null;
+//                view.getDataSource('PatientDataSource').getItems(function(data){
+//                    itemToSelect = data[1];
+//                });
+//
+//                view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
+//
+//                //check text
+//                assert.equal($('#sandbox').find('input:text').val(), itemToSelect.LastName);
+//                //$('#page-content').remove();
+//            });
+//        });
+//    });
 });

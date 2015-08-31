@@ -70,7 +70,7 @@ describe('Label', function () {
 
     });
 
-    describe('Data binding', function () {
+    /*describe('Data binding', function () {
         it('should set Label from property binding', function () {
 
             window.providerRegister.register('DocumentDataSource', function () {
@@ -142,5 +142,5 @@ describe('Label', function () {
                 );
             });
         });
-    });
+    });*/
 });
