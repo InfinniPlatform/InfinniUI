@@ -13,6 +13,7 @@ var ControlModel = Backbone.Model.extend({
     },
 
     initialize: function(){
-
+        this.set('guid', guid(), {silent: true});
     }
+
 });

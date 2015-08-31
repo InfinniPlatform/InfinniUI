@@ -1,8 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var ElementBuilder = function () {
 };
 
 //о боги, зачем все это???
-_.extend(ElementBuilder.prototype, {
+_.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
     build: function (context, args){
         var element = this.createElement(args);
@@ -16,10 +20,28 @@ _.extend(ElementBuilder.prototype, {
 
         return element;
     },
-    createElement: function () {
+
+    /**
+     *
+     * @param {Object} params
+     * @param {Builder} params.builder
+     * @param {View} params.parent
+     * @param {Object} params.metadata
+     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     */
+    createElement: function (params) {
         throw ('Не перегружен абстрактный метод ElementBuilder.createElement()');
     },
 
+    /**
+     *
+     * @param {Object} params
+     * @param {Builder} params.builder
+     * @param {View} params.parent
+     * @param {Object} params.metadata
+     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     * @param {Element} params.element
+     */
     applyMetadata: function (params) {
         var metadata = params.metadata,
             element = params.element;

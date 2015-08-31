@@ -1,0 +1,172 @@
+{
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "MainDataSource"
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "BloodGroupDataSource",
+        "Items": [
+          {
+            "Id": 1,
+            "DisplayName": "I"
+          },
+          {
+            "Id": 2,
+            "DisplayName": "II"
+          },
+          {
+            "Id": 3,
+            "DisplayName": "III"
+          },
+          {
+            "Id": 4,
+            "DisplayName": "IV"
+          }
+        ]
+      }
+    }
+  ],
+  "LayoutPanel": {
+    "StackPanel": {
+      "Name": "",
+      "Orientation": "Horizontal",
+      "Items": [
+        {
+          "CheckBox": {
+            "Text": "Подписаться на новости",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "IsSubscribe"
+              }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged"
+            },
+            "OnValueChanging": {
+              "Name": "OnValueChanging"
+            }
+          }
+        },
+        {
+          "ToggleButton": {
+            "Text": "Subscribe",
+            "TextOn": "yes",
+            "TextOff": "no",
+            "OnValueChanged": {
+              "Name": "ToggleButtonOnValueChanged"
+            },
+            "OnValueChanging": {
+              "Name": "ToggleButtonOnValueChanging"
+            }
+          }
+        },
+        {
+          "ListBox": {
+            "~ItemTemplate": {
+              "StackPanel": {
+                "Name": "",
+                "Items": [
+                  {
+                    "TextBox": {
+                      "Value": {
+                        "PropertyBinding": {
+                          "DataSource": "BloodGroupDataSource",
+                          "Property": "$.Id"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "~ItemProperty": "DisplayName",
+            "ItemFormat": {
+              "ObjectFormat": {
+                "Format": "{Id}: {DisplayName}"
+              }
+            },
+            "GroupValueSelector": {
+              "Name": "GroupValueSelector"
+            },
+            "GroupItemProperty": "",
+            "~GroupItemFormat": {
+              "ObjectFormat": {
+                "Format": "{}"
+              }
+            },
+            "~ItemSelector": {
+              "Name": "ItemSelector"
+            },
+            "MultiSelect": false,
+            "ValueSelector": {
+              "Name": "ValueSelector"
+            },
+            "Items": {
+              "PropertyBinding": {
+                "DataSource": "BloodGroupDataSource"
+              }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged"
+            }
+          }
+        },
+        {
+          "TextBox": {
+            "Multiline": false,
+            "LineCount": 5,
+            "HintText": "I'm TextBox hint",
+            "LabelText": "Text label",
+            "Enabled": true,
+            "~EditMask": {
+              "NumberEditMask": {
+                "Mask": "n3"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Scripts": [
+    {
+      "Name": "OnValueChanged",
+      "Body": "console.log('OnValueChanged', args);"
+    },
+    {
+      "Name": "ToggleButtonOnValueChanged",
+      "Body": "console.log('ToggleButtonOnValueChanged', args.value);"
+    },
+    {
+      "Name": "ToggleButtonOnValueChanging",
+      "Body": "return args.value;"
+    },
+
+    {
+      "Name": "OnValueChanging",
+      "Body": "console.log('OnValueChanging', args);return false;"
+    },
+    {
+      "Name": "ValueSelector",
+      "Body": "return {Id: args.value.DisplayName};"
+    },
+    {
+      "Name": "ItemSelector",
+      "Body": "var value = args.value; return value.Id + '/' + value.DisplayName;"
+    },
+    {
+      "Name": "GroupValueSelector",
+      "Body": "return args.value.Id;"
+    }
+  ]
+}
+

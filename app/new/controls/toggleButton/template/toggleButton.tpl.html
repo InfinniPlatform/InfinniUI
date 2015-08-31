@@ -1,0 +1,42 @@
+<div class="togglebutton-box">
+    <div class="togglebutton-container">
+    <span class="togglebutton-handle-on"><%- textOn %></span><span class="togglebutton-handle-label">&nbsp;</span><span class="togglebutton-handle-off"><%- textOff %></span>
+    </div>
+</div>
+
+<style>
+    .toggle-off .togglebutton-container {
+        margin-left: -50px;;
+    }
+
+    .togglebutton-box {
+        width: 100px;
+        border: 1px solid #0094a3;
+        overflow: hidden;
+    }
+
+    .togglebutton-container {
+        display: inline-block;
+        white-space: nowrap;
+        transition: margin-left 0.5s;
+    }
+
+    .togglebutton-container .togglebutton-handle-on,
+    .togglebutton-container .togglebutton-handle-label,
+    .togglebutton-container .togglebutton-handle-off {
+        padding: 5px 10px;
+        width: 50px;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .togglebutton-handle-on {
+        background: #5bc0de;
+    }
+
+    .togglebutton-handle-off {
+        background: #d4e2ee;
+    }
+
+</style>

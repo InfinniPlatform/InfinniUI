@@ -8,6 +8,7 @@
  * Для обработки дополнительной логике при показе/скрытии редактора масок
  * можно использовать события editor:show и editor:hide.
  *
+ * @mixin textEditorMixin
  */
 var textEditorMixin = {
 
@@ -130,17 +131,17 @@ var textEditorMixin = {
      */
     onEditorHideControl: function () {
         this.ui.control.hide();
-    },
+    }
 
     /**
      * Метод выполняющий синхронизацию значения из эдитора в элемент
      */
-    synchValueHandler: function () {
-        if(this.editor.isInFocus()){
-            var val = this.editor.getValue();
-            this.model.set('value', val);
-        }
-    }
+    //synchValueHandler: function () {
+    //    if(this.editor.isInFocus()){
+    //        var val = this.editor.getValue();
+    //        this.model.set('value', val);
+    //    }
+    //}
 
 
 };
