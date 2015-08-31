@@ -27,7 +27,7 @@ _.extend(BaseDataSourceBuilder.prototype, {
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
         dataSource.setPageSize(metadata.PageSize || 15);
-        dataSource.setPageNumber(metadata.PageNumber || null);
+        dataSource.setPageNumber(metadata.PageNumber || 0);
 
         dataSource.setErrorValidator(metadata.ValidationErrors);
         dataSource.setWarningValidator(metadata.ValidationWarnings);
