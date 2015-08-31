@@ -53,6 +53,7 @@ function BaseDataSourceBuilder() {
         });
         exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
             if (dataSource.getName() === value.dataSource && !value.property) {
+                console.log('BaseDataSourceBuilder.messageTypes.onSetSelectedItem', dataSource.getName());
                 dataSource.setSelectedItem(value.value);
             }
         });

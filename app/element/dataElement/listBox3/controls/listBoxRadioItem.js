@@ -7,7 +7,8 @@ var ListBoxRadioItem = Backbone.View.extend({
 	},
 
     events: {
-        'click': 'onClickHandler'
+        //'click': 'onClickHandler'
+        'mousedown': 'onClickHandler'
     },
 
 	initialize: function (options) {
@@ -39,7 +40,6 @@ var ListBoxRadioItem = Backbone.View.extend({
         if (!model.isEnabled()) {
             return;
         }
-
         var selectedItem = model.getItemByIndex(this.options.index);
         model.set('selectedItem', selectedItem);
     },

@@ -83,7 +83,6 @@ _.extend(ListBoxBuilder.prototype, {
 
         element.onChangeSelectedItem(function () {
             var selectedItem = element.getSelectedItem();
-
             var ds = metadata.Items.PropertyBinding || {};
             parent.getExchange().send(messageTypes.onSetSelectedItem,{
                 value : selectedItem,
