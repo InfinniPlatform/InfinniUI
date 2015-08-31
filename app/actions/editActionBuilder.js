@@ -10,7 +10,6 @@ function EditActionBuilder() {
                 editItemId = itemId;
             }else{
                 editItem = parentDataSource.getSelectedItem();
-
                 if(!editItem){
                     new MessageBox({
                         type: 'error',

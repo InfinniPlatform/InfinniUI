@@ -25,7 +25,8 @@
             'extensions/**/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
-            '!app/utils/exel-builder/*.js'
+            '!app/utils/exel-builder/*.js',
+            '!app/element/dataElement/listBox/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
