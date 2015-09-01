@@ -20,6 +20,7 @@ var ListBoxView = ControlView.extend({
     },
 
     initialize: function () {
+        ControlView.prototype.initialize.apply(this);
         this.once('render', this.initUIHandler);
         this.listenTo(this.model, 'check', function (index) {
 
