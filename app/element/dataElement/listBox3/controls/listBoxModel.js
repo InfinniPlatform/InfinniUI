@@ -4,6 +4,7 @@ var ListBoxModel = ControlModel.extend({
     }),
 
     initialize: function () {
+        this.set('value', [], {silent:true});
         this.on('change:value', this.updateValueItemsIndex, this);
         this.on('change:items', this.updateValueItemsIndex, this);
     },
