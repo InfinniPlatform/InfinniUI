@@ -8,8 +8,8 @@ var ListBoxCheckItem = Backbone.View.extend({
     },
 
     events: {
-        'mousedown .check-listbox-item': 'onClickHandler',
-        'click .check-listbox-item': 'preventDefault'
+        'click .check-listbox-item': 'onClickHandler',
+        //'click .check-listbox-item': 'preventDefault'
     },
 
     initialize: function (options) {
@@ -17,7 +17,7 @@ var ListBoxCheckItem = Backbone.View.extend({
             index: options.index,
             content: options.content
         };
-        this.el.addEventListener('mousedown', this.selectItemOnClick.bind(this), true);
+        this.el.addEventListener('click', this.selectItemOnClick.bind(this), true);
         this.listenTo(this.model, 'change:valueItemsIndex', this.updateCheckState);
         this.listenTo(this.model, 'change:selectedItem', this.updateSelectedState);
     },
@@ -53,7 +53,8 @@ var ListBoxCheckItem = Backbone.View.extend({
     /**
      * Переключить значение ListBox
      */
-    onClickHandler: function () {
+    onClickHandler: function (event) {
+        //event.preventDefault();
         var model = this.model;
 
         if (!model.isEnabled()) {

@@ -17,13 +17,14 @@ _.extend(ButtonBuilder.prototype, {
         this.initFormatProperty(params);
         //this.initValueProperty(params);
         this.initHorizontalTextAlignmentProperty(params);
-        this.initScriptsHandlers(params);
 
+        this.initScriptsHandlers(params);
         params.element.setImage(params.metadata.Image);
 
         if(params.metadata.Action) {
             params.element.setAction(params.builder.build(params.parent, params.metadata.Action, params.collectionProperty));
         }
+        //this.initScriptsHandlers(params);
     },
 
     initScriptsHandlers: function(params){
