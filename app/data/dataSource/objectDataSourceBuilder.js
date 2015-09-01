@@ -8,5 +8,13 @@ _.extend(ObjectDataSourceBuilder.prototype, {
         return new ObjectDataSource({
             view: parent
         });
+    },
+
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        if(metadata.Items){
+            dataSource.setItems(metadata.Items);
+        }
+
     }
 });
