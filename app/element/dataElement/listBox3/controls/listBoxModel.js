@@ -20,6 +20,18 @@ var ListBoxModel = ControlModel.extend({
         return ControlModel.prototype.set.apply(this, Array.prototype.slice.call(arguments));
     },
 
+    get: function (attribute) {
+        var value = ControlModel.prototype.get.call(this, attribute);
+        switch (attribute) {
+            case 'value':
+                if (this.get('multiSelect') && (value === null || typeof value === 'undefined')) {
+                    value = [];
+                }
+                break;
+        }
+        return value;
+    },
+
     toggleValue: function (value) {
         var values = this.get('value');
 
@@ -53,6 +65,8 @@ var ListBoxModel = ControlModel.extend({
             if (multiSelect) {
                 if (Array.isArray(value)) {
                     index = value.map(getIndexValue);
+                } else {
+                    index = [];
                 }
             } else {
                 index = getIndexValue(value);
