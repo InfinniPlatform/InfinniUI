@@ -1,4 +1,4 @@
-var StackPanelModel = ControlModel.extend({
+/*var StackPanelModel = ControlModel.extend({
     defaults: _.defaults({
         items: null,
         orientation: 'Vertical',
@@ -19,4 +19,4 @@ var StackPanelModel = ControlModel.extend({
     getItems: function(){
         return this.get('items');
     }
-});
+});*/

@@ -3,6 +3,7 @@ var DataBindingBuilder = function () {};
 DataBindingBuilder.prototype.build = function (context, args) {
     var result = new DataBinding();
     var metadata = args.metadata;
+    var property;
 
     if(metadata.Source == null){
         logger.error('DataBindingBuilder: не указан источник.');
@@ -15,7 +16,12 @@ DataBindingBuilder.prototype.build = function (context, args) {
         throw new Error('DataBindingBuilder: declared source not found.');
     }
 
-    result.bindSource(source, metadata.Property);
+    if(args.basePathOfProperty){
+        property = args.basePathOfProperty.resolveProperty(metadata.Property);
+    }else{
+        property = metadata.Property;
+    }
+    result.bindSource(source, property);
 
     if(metadata.Mode){
         result.setMode(metadata.Mode);

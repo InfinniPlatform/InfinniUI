@@ -1,4 +1,4 @@
-var StackPanelControl = function () {
+/*var StackPanelControl = function () {
     _.superClass(StackPanelControl, this);
 };
 
@@ -24,4 +24,4 @@ _.extend(StackPanelControl.prototype, {
     getChildElements: function () {
         return this.getItems();
     }
-});
+});*/

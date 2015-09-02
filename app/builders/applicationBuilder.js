@@ -57,6 +57,7 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
         builder.register('DataBinding', new DataBindingBuilder());
+        builder.register('PropertyBinding', new DataBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
         builder.register('Validation', new ValidationBuilder());

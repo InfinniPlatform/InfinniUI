@@ -1,4 +1,4 @@
-function StackPanel(parentView) {
+/*function StackPanel(parentView) {
     _.superClass(StackPanel, this, parentView);
 }
 
@@ -25,3 +25,4 @@ _.extend(StackPanel.prototype, {
     }
 
 });
+*/

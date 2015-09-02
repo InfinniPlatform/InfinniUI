@@ -1,4 +1,4 @@
-function StackPanelBuilder() {
+/*function StackPanelBuilder() {
 }
 
 _.inherit(StackPanelBuilder, ElementBuilder);
@@ -33,4 +33,4 @@ _.extend(StackPanelBuilder.prototype, {
     createElement: function(params){
         return new StackPanel(params.view);
     }
-});
+});*/

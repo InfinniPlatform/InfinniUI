@@ -1,7 +1,11 @@
 function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
     if(!parentBasePath){
         this.basePathOfProperty = basePathOfProperty;
-        this.indexesInParentLists = [baseIndex];
+        if(baseIndex !== undefined && baseIndex !== null){
+            this.indexesInParentLists = [baseIndex];
+            this.basePathOfProperty += baseIndex;
+        }
+
     }else{
         this.basePathOfProperty = parentBasePath.basePathOfProperty + '.' + basePathOfProperty;
 
@@ -13,7 +17,7 @@ function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
 
 }
 
-_.extend(BasePathProperty.prototype, {
+_.extend(BasePathOfProperty.prototype, {
     /*возвращает полный путь к свойству элемента в коллекции*/
     resolveProperty: function(property) {
         return stringUtils.formatProperty(property, this.indexesInParentLists)
@@ -28,5 +32,15 @@ _.extend(BasePathProperty.prototype, {
             property = relativeProperty;
         }
         return this.resolveProperty(property);
+    },
+
+    /*создает BasePathOfProperty следующего уровня*/
+    buildChild: function(basePathOfProperty, baseIndex){
+        return new BasePathOfProperty(basePathOfProperty, baseIndex, this);
+    },
+
+    /*создает BasePathOfProperty следующего уровня с относительным путем*/
+    buildRelativeChild: function(basePathOfProperty, baseIndex){
+        return new BasePathOfProperty(basePathOfProperty, baseIndex, this);
     }
 });

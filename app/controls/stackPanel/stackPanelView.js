@@ -1,4 +1,4 @@
-var StackPanelView = ControlView.extend({
+/*var StackPanelView = ControlView.extend({
     tagName: 'ul',
     className: 'pl-stack-panel',
 
@@ -73,4 +73,4 @@ var StackPanelView = ControlView.extend({
 
         return $wrap.prepend($item);
     }
-});
+});*/

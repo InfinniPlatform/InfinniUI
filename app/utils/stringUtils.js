@@ -10,6 +10,18 @@
 
     formatBinding: function(value,index){
         return value.replace('$', index);
+    },
+
+    formatProperty: function(property, indexes){
+        if(!indexes || indexes.length == 0){
+            return property;
+        }
+
+        var i = 0;
+        return property.replace(/\$/g, function(){
+            i++;
+            return indexes[i-1];
+        });
     }
 };
 

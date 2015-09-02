@@ -1,6 +1,6 @@
 describe('ListBox', function () {
 
-    var metadata = {
+    var metadata2 = {
         Text: 'Пациенты',
         DataSources : [
             {
@@ -18,29 +18,92 @@ describe('ListBox', function () {
 
             StackPanel: {
                 Name: 'MainViewPanel',
-                Items: [
-                    {
-                        "ListBox": {
-                            "ItemTemplate": {
-                                "TextBox": {
-                                    "Name": "TextBox1",
-                                    "Value": {
-                                        "PropertyBinding":{
-                                            "DataSource": "ObjectDataSource1",
-                                            "Property": "$.Display"
-                                        }
-                                    }
-                                }
-                            },
-                            "Items" : {
-                                "PropertyBinding": {
-                                    "DataSource": "ObjectDataSource1",
-                                    "Property": ""
-                                }
+                "ItemTemplate": {
+                    "TextBox": {
+                        "Name": "TextBox1",
+                        "Value": {
+                            "PropertyBinding":{
+                                "Source": "ObjectDataSource1",
+                                "Property": "$.Display"
                             }
                         }
                     }
-                ]
+                },
+                "Items" : {
+                    "PropertyBinding": {
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
+                    }
+                }
+            }
+        }
+    };
+
+    describe('render', function () {
+        it('should render stackPanel', function () {
+            // Given When
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var linkView = new LinkView(null, function (resultCallback) {
+                var builder = new ApplicationBuilder();
+                var view = builder.buildType(fakeView(), 'View', metadata2);
+                resultCallback(view);
+            });
+            linkView.setOpenMode('Application');
+
+            var view = linkView.createView(function (view) {
+                view.open();
+
+                var $stackPanel = $('#sandbox').children();
+                //$listbox.detach();
+
+                onListboxReady($stackPanel);
+            });
+
+            // Then
+            function onListboxReady($stackPanel){
+                assert.lengthOf($stackPanel.find('.listbox-item-content'), 3, 'length of rendered stackPanel');
+            }
+        });
+    });
+
+/*
+    var metadata = {
+        Text: 'Пациенты',
+        DataSources : [
+            {
+                ObjectDataSource: {
+                    "Name": "ObjectDataSource1",
+                    "Items": [
+                        { "Id": 1, "Display": "LTE" },
+                        { "Id": 2, "Display": "3G" },
+                        { "Id": 3, "Display": "2G" }
+                    ]
+                }
+            }
+        ],
+        LayoutPanel: {
+
+            ListBox: {
+                "ItemTemplate": {
+                    "TextBox": {
+                        "Name": "TextBox1",
+                        "Value": {
+                            "PropertyBinding":{
+                                "Source": "ObjectDataSource1",
+                                "Property": "$.Display"
+                            }
+                        }
+                    }
+                },
+                "Items" : {
+                    "PropertyBinding": {
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
+                    }
+                }
             }
         }
     };
@@ -73,5 +136,6 @@ describe('ListBox', function () {
                 assert.lengthOf($listbox.find('.listbox-item-content'), 3, 'length of rendered listbox');
             }
         });
-    })
+    });
+*/
 });

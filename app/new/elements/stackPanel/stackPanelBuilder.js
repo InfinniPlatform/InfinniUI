@@ -11,14 +11,6 @@ _.inherit(StackPanelBuilder, ContainerBuilder);
 _.extend(StackPanelBuilder.prototype,
     /** @lends StackPanelBuilder.prototype*/
     {
-
-        getItemTemplateBuilder: function () {
-            if (!this.itemTemplateBuilder) {
-                this.itemTemplateBuilder = new StackPanelItemTemplate();
-            }
-            return this.itemTemplateBuilder;
-        },
-
         createElement: function (params) {
             return new StackPanel(params.parent);
         },
@@ -36,8 +28,8 @@ _.extend(StackPanelBuilder.prototype,
             ContainerBuilder.prototype.applyMetadata.call(this, params);
             element.setOrientation(metadata.Orientation);
 
-
-            this.initItemsCollection(params);
+            this.initItems(params);
+            //this.initItemsCollection(params);
         },
 
         initItemTemplate: function (params) {
@@ -72,6 +64,32 @@ _.extend(StackPanelBuilder.prototype,
             if (metadata.Items) {
                 itemsCollection.reset(metadata.Items);
             }
+        },
+
+        initItems: function(params){
+            var metadata = params.metadata;
+            var element = params.element;
+            var itemTemplate;
+
+            if($.isArray(metadata.Items)){
+                throw 'Нужно реализовать создание элементов как они были';
+            }else{
+                params.builder.build(params.view.getContext(), {
+                    metadata: metadata.Items,
+                    view: params.view,
+                    builder: params.builder,
+                    basePathOfProperty: params.basePathOfProperty
+                });
+
+                if(metadata.ItemTemplate){
+                    itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
+                    element.setItemTemplate(itemTemplate);
+                }else{
+                    throw 'Нужно обработать другие варианты элементов';
+                }
+            }
+
+
         }
 
     });

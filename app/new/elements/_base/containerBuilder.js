@@ -16,20 +16,25 @@ ContainerBuilder.prototype.applyMetadata = function (params) {
     var element = params.element;
 
     ElementBuilder.prototype.applyMetadata.call(this, params);
-    element.setItemTemplate(this.getItemTemplateBuilder().getItemTemplate(params));
+
 };
 
 
-
-/*ContainerBuilder.prototype.buildItemTemplate = function (params, templateMetadata) {
+ContainerBuilder.prototype.buildItemTemplate = function (templateMetadata, params) {
     var element = params.element;
     var builder = params.builder;
+    var basePathOfProperty = params.basePathOfProperty;
 
-    return function(context, argument) {
-        var index = argument.index;
-        var item = argument.item;
+    return function(context, args) {
+        var index = args.index;
+        var item = args.item;
+        var argumentForBuilder = _.extend({}, params.args);
 
+        if(index !== undefined && index !== null){
+            argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+        }
 
+        return builder.build(context, argumentForBuilder);
     };
-};*/
+};
 
