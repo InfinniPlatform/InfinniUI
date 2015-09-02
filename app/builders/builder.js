@@ -7,23 +7,19 @@ function Builder() {
         objectBuilders[metadataType] = objectBuilder;
     };
 
-    this.buildType = function (parentView, metadataType, metadataValue, collectionProperty, params) {
+    this.buildType = function (metadataType, metadataValue, args) {
         if (objectBuilders[metadataType] === undefined) {
             return null;
         }
 
-        var args = {
-                        builder: this,
-                        view: parentView,
-                        metadata: metadataValue,
-                        collectionProperty: collectionProperty,
-                        params: params
-                    };
-        var context = parentView && parentView.getContext && parentView.getContext();
-        return objectBuilders[metadataType].build(context, args);
+        var resultArgs = _.extend({
+                metadata: metadataValue
+            }, args);
+        var context = args.parentView ? args.parentView.getContext() : {};
+        return objectBuilders[metadataType].build(context, resultArgs);
     };
 
-    this.build = function (parentView, metadataValue, collectionProperty, params) {
+    this.build = function (metadataValue, args) {
         var key,
             value,
             result = null;
@@ -37,18 +33,18 @@ function Builder() {
             console.error('Builder: Не переданы метаданные');
         } else {
             value = metadataValue[key];
-            result = this.buildType(parentView, key, value, collectionProperty);
+            result = this.buildType(key, value, args);
         }
         return result;
     };
 
-    this.buildMany = function (parentView, metadataValue, collectionProperty) {
+    this.buildMany = function (metadataValue, args) {
 
         var items = [];
 
         if (metadataValue) {
             for (var i = 0; i < metadataValue.length; i++) {
-                var item = this.build(parentView, metadataValue[i], collectionProperty);
+                var item = this.build(metadataValue[i], args);
 
                 if (item !== null) {
                     items.push(item);
