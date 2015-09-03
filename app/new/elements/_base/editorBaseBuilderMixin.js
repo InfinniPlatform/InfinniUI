@@ -29,9 +29,13 @@ editorBaseBuilderMixin.applyMetadata = function (params) {
 
     //@TODO Init DataBinding on Value
     if (metadata.Value !== undefined) {
-        var dataBinding = params.builder.build(params.parent, metadata.Value, params.collectionProperty);
+        var buildParams = {
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
+        var dataBinding = params.builder.build(metadata.Value, buildParams);
 
-        dataBinding.setElement(params.element);
+        dataBinding.bindElement(params.element, 'value');
 
         if (dataBinding != null) {
             dataBinding.onPropertyValueChanged(function (dataSourceName, value) {

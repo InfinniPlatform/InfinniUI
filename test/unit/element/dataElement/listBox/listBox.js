@@ -64,7 +64,8 @@ describe('ListBox', function () {
 
             // Then
             function onListboxReady($stackPanel){
-                assert.lengthOf($stackPanel.find('.listbox-item-content'), 3, 'length of rendered stackPanel');
+                assert.lengthOf($stackPanel.find('.stackpanel-item'), 3, 'length of rendered stackPanel');
+                assert.lengthOf($stackPanel.find('.pl-control-editor'), 3, 'length of rendered textbox');
             }
         });
     });

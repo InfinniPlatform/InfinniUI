@@ -28,13 +28,15 @@ _.extend(ContainerBuilder.prototype, {
         return function(context, args) {
             var index = args.index;
             var item = args.item;
-            var argumentForBuilder = _.extend({}, params.args);
+            var argumentForBuilder = {
+                parentView: params.parentView
+            };
 
             if(index !== undefined && index !== null){
                 argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
             }
 
-            return builder.build(context, argumentForBuilder);
+            return builder.build(templateMetadata, argumentForBuilder);
         };
     }
 });

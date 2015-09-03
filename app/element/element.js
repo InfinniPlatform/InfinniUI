@@ -45,7 +45,7 @@ _.extend(Element.prototype, {
         }else{
             if(this._isCollectionProperty(name)){
                 getterMethodName = 'get' + this._upperFirstSymbol(name);
-                this[getterMethodName]().add(value);
+                this[getterMethodName]().addAll(value);
             }else{
                 throw 'expect that ' + setterMethodName + ' is setter function';
             }
