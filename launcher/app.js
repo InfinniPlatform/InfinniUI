@@ -73,8 +73,8 @@ moment.lang('ru');
 
 })(
     $('body'),
-    //'/app/stubs/form.json'
-    {ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage', OpenMode: 'Container'}
+    '/app/stubs/checkbox.json'
+    //{ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage', OpenMode: 'Container'}
 );
 
 

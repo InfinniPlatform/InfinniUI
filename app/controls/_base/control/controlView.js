@@ -15,6 +15,8 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.initText();
         this.initValidationState();
         this.initStyle();
+
+        this.once('render', this.initOnChangeHandler, this);
     },
 
     initVisible: function () {
@@ -214,7 +216,44 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             return (name.match(regexp) || []).join(' ');
         })
             .addClass(startWith + value);
+    },
+
+    renderTemplate: function (template) {
+        var data = this.getData();
+        this.$el.html(template(data));
+        this.bindUIElements();
+    },
+
+    initOnChangeHandler: function () {
+        this
+            .listenTo(this.model, 'change:enabled', this.onChangeEnabledHandler);
+    },
+
+    getData: function () {
+        var model = this.model;
+        return {
+            name: model.get('name'),
+            text: model.get('text'),
+            focusable: model.get('focusable'),
+            focused: model.get('focused'),
+            enabled: model.get('enabled'),
+            visible: model.get('visible'),
+            horizontalAlignment: model.get('horizontalAlignment'),
+            verticalAlignment: model.get('verticalAlignment'),
+            textHorizontalAlignment: model.get('textHorizontalAlignment'),
+            textVerticalAlignment: model.get('textVerticalAlignment'),
+            textStyle: model.get('textStyle'),
+            foreground: model.get('foreground'),
+            background: model.get('background'),
+            texture: model.get('texture')
+        }
+    },
+
+    onChangeEnabledHandler: function (model, value) {
+        //@TODO Обработка View при изменении свойства Enabled
     }
+
+
 
 });
 

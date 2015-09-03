@@ -2,13 +2,16 @@
  * @class TextEditorBaseView
  * @augments ControlView
  * @mixes textEditorMixin
+ * @mixed editorBaseViewMixin
  */
-var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */{
 
-    UI: {
+
+var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */ _.extend({}, editorBaseViewMixin, {
+
+    UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
         editor: '.pl-control-editor'
-    },
+    }),
 
     events: {
         //Обработчик для показа поля редактирования с использованием маски ввода
@@ -19,7 +22,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     initialize: function () {
-        ControlView.prototype.initialize.call(this, options);
+        ControlView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     },
 
     /**
@@ -45,11 +48,26 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     initOnChangeHandler: function () {
+        ControlView.prototype.initOnChangeHandler.call(this);
+        editorBaseViewMixin.initOnChangeHandler.call(this);
+
         this
             .listenTo(this.model, 'change:labelText', this.onChangeLabelTextHandler)
             .listenTo(this.model, 'change:labelFloating', this.onChangeLabelFloatingHandler)
             .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
             .listenTo(this.model, 'change:editMask', this.onChangeEditMaskHandler);
+    },
+
+    getData: function () {
+        var model = this.model;
+
+        return _.extend({},
+            ControlView.prototype.getData.call(this),
+            editorBaseViewMixin.getData.call(this), {
+                labelText: model.get('labelText'),
+                labelFloating: model.get('labelFloating'),
+                value: this.getDisplayValue()
+            });
     },
 
     onChangeLabelTextHandler: function () {
@@ -60,7 +78,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     },
 
-    onChangeDisplayFormatHandler: function ( ){
+    onChangeDisplayFormatHandler: function () {
 
     },
 
@@ -68,11 +86,23 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     },
 
+    onChangeValueHandler: function (model, value) {
+        this.ui.control.val(this.getDisplayValue());
+    },
+
     onEditorValidate: function (value) {
         return true;
+    },
+
+    getDisplayValue: function () {
+        var
+            model = this.model,
+            value = model.get('value'),
+            displayFormat = model.getDisplayFormat;
+
+        return displayFormat ? displayFormat.format(value) : value;
     }
 
+}));
 
-});
-
-_.extend(TextEditorBaseView.prototype, textEditorMixin);
+_.extend(TextEditorBaseView.prototype, textEditorMixin); //Работа с масками ввода

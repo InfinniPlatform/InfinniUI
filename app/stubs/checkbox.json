@@ -122,7 +122,24 @@
             "HintText": "I'm TextBox hint",
             "LabelText": "Text label",
             "Enabled": true,
-            "~EditMask": {
+            "EditMask": {
+              "NumberEditMask": {
+                "Mask": "n3"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource"
+              }
+            }
+          }
+        },
+        {
+          "NumericBox": {
+            "HintText": "I'm NumericBox hint",
+            "LabelText": "Numeric label",
+            "Enabled": true,
+            "EditMask": {
               "NumberEditMask": {
                 "Mask": "n3"
               }
