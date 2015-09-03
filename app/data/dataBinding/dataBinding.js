@@ -68,10 +68,25 @@ var DataBinding = Backbone.Model.extend({
         this.set('element', element);
         this.set('elementProperty', property);
 
+        this._initElementProperty();
+
         var that = this;
         element.onPropertyChanged(property, function(context, argument){
             that.onElementPropertyChangedHandler(context, argument);
         });
+    },
+
+    _initElementProperty: function(){
+        var elementProperty = this.get('elementProperty');
+        var sourceProperty = this.get('sourceProperty');
+        var source = this.get('source');
+        var element = this.get('element');
+        var value = this.get('element');
+
+        if(source){
+            value = source.getProperty(sourceProperty);
+            element.setProperty(elementProperty, value);
+        }
     },
 
     getElement: function () {

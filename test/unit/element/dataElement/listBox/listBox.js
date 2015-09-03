@@ -64,8 +64,9 @@ describe('ListBox', function () {
 
             // Then
             function onListboxReady($stackPanel){
-                assert.lengthOf($stackPanel.find('.stackpanel-item'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.pl-control-editor'), 3, 'length of rendered textbox');
+                assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
+                assert.lengthOf($stackPanel.find('.pl-text-box-input'), 3, 'length of rendered textbox');
+                assert.equal($stackPanel.find('.pl-text-box-input:first').val(), 'LTE', 'binding in itemTemplate is right');
             }
         });
     });

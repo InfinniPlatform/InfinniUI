@@ -37,21 +37,6 @@ editorBaseBuilderMixin.applyMetadata = function (params) {
 
         dataBinding.bindElement(params.element, 'value');
 
-        if (dataBinding != null) {
-            dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                params.element.setValue(dataBinding.getPropertyValue());
-            });
-
-            var data = dataBinding.getPropertyValue();
-            if (data !== null && typeof data !== 'undefined') {
-                params.element.setValue(data);
-            }
-
-            params.element.onValueChanged(function (dataSourceName, value) {
-                dataBinding.setPropertyValue(value);
-            });
-        }
-
 
         //if (useValidation && dataBinding) {
         //    params.element.onLostFocus(function () {

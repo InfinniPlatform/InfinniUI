@@ -29,14 +29,28 @@ var StackPanelView = ControlView.extend(
 
             this.$el.empty();
             this.$el.html(this.template({
-                items: this.model.get('items'),
-                itemTemplate: this.model.get('itemTemplate')
+                items: this.model.get('items')
             }));
+            this.renderItemsContents();
 
             this.bindUIElements();
 
             this.postrenderingActions();
             return this;
+        },
+
+        renderItemsContents: function(){
+            var $items = this.$el.find('.pl-stack-panel-i'),
+                items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                element, item;
+
+            $items.each(function(i, el){
+                item = items.getByIndex(i);
+                element = itemTemplate(undefined, {item: item, index: i});
+                $(el)
+                    .append(element.render());
+            });
         },
 
         initOrientation: function () {

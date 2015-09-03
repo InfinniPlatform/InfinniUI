@@ -33,22 +33,33 @@ function editorBaseMixin() {
     };
 
     this.onValueChanging =  function (handler) {
-        this.control.onValueChanging(createControlEventHandler(this, handler));
+        this.control.onValueChanging(
+            createControlEventHandler(this, handler, {property: 'value'})
+        );
     };
 
     this.onValueChanged = function (handler) {
-        this.control.onValueChanged(createControlEventHandler(this, handler));
+        this.control.onValueChanged(
+            createControlEventHandler(this, handler, {property: 'value'})
+        );
     };
 
 
-    function createControlEventHandler(element, handler) {
+    function createControlEventHandler(element, handler, additionParams) {
         var context;
+        additionParams = additionParams || {};
+
         if (element.parentView) {
             context = element.parentView.context;
         }
 
         return function (message) {
+            _.extend(
+                message,
+                additionParams
+            );
             message.source = element;
+
             return handler.call(undefined, context, message);
         };
     }
