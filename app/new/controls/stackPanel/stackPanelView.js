@@ -8,7 +8,7 @@ var StackPanelView = ControlView.extend(
         tagName: 'ul',
         className: 'pl-stack-panel',
 
-        //template: InfinniUI.Template["new/controls/stackPanel/template/stackPanel.tpl.html"],
+        template: InfinniUI.Template["new/controls/stackPanel/template/stackPanel.tpl.html"],
 
         UI: {
             items: '.stackpanel-items'
@@ -16,19 +16,24 @@ var StackPanelView = ControlView.extend(
 
         initialize: function (options) {
             ControlView.prototype.initialize.call(this, options);
+
+            var that = this;
+            this.model.get('items').onChange(function(){
+                that.rerender();
+            });
             this.initOrientation();
         },
 
         render: function () {
             this.prerenderingActions();
+
             this.$el.empty();
-            //this.$el.html(this.template());
+            this.$el.html(this.template({
+                items: this.model.get('items'),
+                itemTemplate: this.model.get('itemTemplate')
+            }));
+
             this.bindUIElements();
-
-            this.updateOrientation();
-
-            this.renderItemsStrategy = new ContainerRenderStrategy(this.model, this.$el, StackPanelItemView);
-            this.renderItemsStrategy.render();
 
             this.postrenderingActions();
             return this;

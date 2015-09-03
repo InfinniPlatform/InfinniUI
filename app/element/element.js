@@ -37,12 +37,24 @@ _.extend(Element.prototype, {
     },
 
     setProperty: function (name, value) {
-        var setterMethodName = 'set' + this._upperFirstSymbol(name);
+        var setterMethodName = 'set' + this._upperFirstSymbol(name),
+            getterMethodName;
+
         if (typeof this[setterMethodName] == 'function') {
             this[setterMethodName](value);
         }else{
-            throw 'expect that ' + setterMethodName + ' is setter function';
+            if(this._isCollectionProperty(name)){
+                getterMethodName = 'get' + this._upperFirstSymbol(name);
+                this[getterMethodName]().add(value);
+            }else{
+                throw 'expect that ' + setterMethodName + ' is setter function';
+            }
         }
+    },
+
+    _isCollectionProperty: function(propertyName){
+        var getterMethodName = 'get' + this._upperFirstSymbol(propertyName);
+        return (typeof this[getterMethodName] == 'function') && this[getterMethodName]() instanceof Collection;
     },
 
     onPropertyChanged: function (propertyName, handler) {

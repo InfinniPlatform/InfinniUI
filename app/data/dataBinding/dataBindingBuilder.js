@@ -10,7 +10,7 @@ DataBindingBuilder.prototype.build = function (context, args) {
         throw new Error('DataBindingBuilder: not declared source in DataBinding metadata.');
     }
 
-    var source = this.findSource(args.view, metadata.Source);
+    var source = this.findSource(args.parentView, metadata.Source);
     if(source == null){
         logger.error('DataBindingBuilder: некорректный источник.');
         throw new Error('DataBindingBuilder: declared source not found.');

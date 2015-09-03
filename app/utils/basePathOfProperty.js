@@ -9,7 +9,7 @@ function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
     }else{
         this.basePathOfProperty = parentBasePath.basePathOfProperty + '.' + basePathOfProperty;
 
-        this.indexesInParentLists = parentBasePath.indexesInParentLists.slice();
+        this.indexesInParentLists = parentBasePath.indexesInParentLists ? parentBasePath.indexesInParentLists.slice() : [];
         this.indexesInParentLists.push(baseIndex);
 
         this.parentBasePath = parentBasePath;

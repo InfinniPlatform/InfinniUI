@@ -94,19 +94,15 @@ _.extend(ApplicationBuilder.prototype, {
 
     },
 
-    build: function(){
-        var args = _.toArray(arguments);
-
-        return this.builder.build.apply(this.builder, args);
+    build: function(metadataValue, args){
+        return this.builder.build(metadataValue, args);
     },
 
-    buildType: function(){
-        var args = _.toArray(arguments);
-        return this.builder.buildType.apply(this.builder, args);
+    buildType: function(metadataType, metadataValue, args){
+        return this.builder.buildType(metadataType, metadataValue, args);
     },
 
-    buildMany: function(){
-        var args = _.toArray(arguments);
-        return this.builder.buildMany.apply(this.builder, args);
+    buildMany: function(metadataValue, args){
+        return this.builder.buildMany(metadataValue, args);
     }
 });

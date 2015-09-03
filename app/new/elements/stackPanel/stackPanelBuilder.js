@@ -70,16 +70,17 @@ _.extend(StackPanelBuilder.prototype,
             var metadata = params.metadata;
             var element = params.element;
             var itemTemplate;
+            var binding;
 
             if($.isArray(metadata.Items)){
                 throw 'Нужно реализовать создание элементов как они были';
             }else{
-                params.builder.build(params.view.getContext(), {
-                    metadata: metadata.Items,
-                    view: params.view,
-                    builder: params.builder,
+                binding = params.builder.build(metadata.Items, {
+                    parentView: params.parentView,
                     basePathOfProperty: params.basePathOfProperty
                 });
+
+                binding.bindElement(element, 'items');
 
                 if(metadata.ItemTemplate){
                     itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);

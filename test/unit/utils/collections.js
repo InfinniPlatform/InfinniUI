@@ -1137,6 +1137,18 @@ describe("Collection", function () {
                 assert.deepEqual(collection.toArray(), [ 'A', 'B' ]);
             });
         });
+
+        describe("Collection.onChange", function () {
+            it("should raise onChange event on setElements", function () {
+                //when
+                collection = new Collection();
+                bindEvents();
+                collection.set([ 'A', 'B' ]);
+                //then
+                assert.equal("onReset,onChange", handlers.join(','));
+                assert.deepEqual(collection.toArray(), [ 'A', 'B' ]);
+            });
+        });
     })
 
 

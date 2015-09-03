@@ -1,155 +1,70 @@
-function oldBaseDataSourceBuilder() {
+function BaseDataSourceBuilder(){};
 
-    this.build = function (context, args) {
-
-        var metadata = args.metadata,
-            dataSource = args.dataSource,
-            view = args.view;
-
+_.extend(BaseDataSourceBuilder.prototype, {
+    build: function (context, args) {
+        var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
+
+        this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
+
+        if(args.parentView.onLoading){
+            args.parentView.onLoading(function () {
+                dataSource.resumeUpdate();
+                dataSource.updateItems();
+            });
+        }else{
+            dataSource.resumeUpdate();
+            dataSource.updateItems();
+        }
+
+        return dataSource;
+    },
+
+    applyMetadata: function(builder, parentView, metadata, dataSource){
+        var idProperty = metadata.IdProperty;
+        if (idProperty) {
+            dataSource.setIdProperty(idProperty);
+        }
+
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
-        dataSource.setSorting(metadata.Sorting);
         dataSource.setPageSize(metadata.PageSize || 15);
-        dataSource.setPageNumber(metadata.PageNumber || null);
+        dataSource.setPageNumber(metadata.PageNumber || 0);
 
-        var criteriaConstructor = function (data) {
-            //Добавлен
-            var criteria;
+        dataSource.setErrorValidator(metadata.ValidationErrors);
+        dataSource.setWarningValidator(metadata.ValidationWarnings);
 
-            if (typeof data === 'undefined' || data === null) {
-                return;
-            }
+        this.initScriptsHandlers(parentView, metadata, dataSource);
+    },
 
+    createDataSource: function(parent){
+        throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+    },
 
-            if (_.isArray(data)) {
-                //Переданы метаданные для создания Criteria
-                criteria = args.builder.buildType(view, 'Criteria', data);
-            } else {
-                //Передан созданный экземпляр. Добавлено для совместимости со старой реализацией.
-                criteria = data;
-            }
-            return criteria;
-        };
-
-        dataSource.setCriteriaConstructor(criteriaConstructor);
-
-        var queryFilter = args.builder.buildType(view, 'Criteria', metadata.Query);
-
-        queryFilter.onValueChanged(function () {
-            dataSource.updateItems();
-        });
-
-        dataSource.setQueryFilter(queryFilter);
-
-        this.initScriptsHandlers(view, metadata, dataSource);
-
-        buildValidation.apply(this, arguments);
-
-        var exchange = view.getExchange();
-        exchange.subscribe(messageTypes.onLoading, function () {
-            if(dataSource.initingDataStrategy == 'previouslyInitingData' || dataSource.initingDataStrategy == 'manualInitingData'){
-                dataSource.resumeUpdate();
-            }else{
-                dataSource.loadingProcessDone();
-            }
-
-        });
-        exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
-            if (dataSource.getName() === value.dataSource && !value.property) {
-                dataSource.setSelectedItem(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetTextFilter, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setTextFilter(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPropertyFilters, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPropertyFilters(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPageNumber, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPageNumber(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPageSize, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPageSize(value.value);
-            }
-        });
-    };
-
-    this.initScriptsHandlers = function (view, metadata, dataSource) {
+    initScriptsHandlers: function (parentView, metadata, dataSource) {
         //Скриптовые обработчики на события
-        if (view) {
+        if (parentView && metadata.OnSelectedItemChanged) {
             dataSource.onSelectedItemChanged(function () {
-                var exchange = view.getExchange();
-                exchange.send(messageTypes.onSelectedItemChanged, {
-                    DataSource: dataSource.getName(),
-                    Value: dataSource.getSelectedItem()
-                });
-
-                if (metadata.OnSelectedItemChanged) {
-                    new ScriptExecutor(view).executeScript(metadata.OnSelectedItemChanged.Name);
-                }
+                    new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name);
             });
         }
 
-        if (view && metadata.OnItemsUpdated) {
+        if (parentView && metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(view).executeScript(metadata.OnItemsUpdated.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name);
             });
         }
 
-        if (view && metadata.OnSelectedItemModified) {
+        if (parentView && metadata.OnSelectedItemModified) {
             dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(view).executeScript(metadata.OnSelectedItemModified.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name);
             });
         }
 
-        if (view && metadata.OnItemDeleted) {
+        if (parentView && metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
-                new ScriptExecutor(view).executeScript(metadata.OnItemDeleted.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name);
             });
         }
-    };
-
-    /**
-     * Создает компонент для валидации
-     * @param context
-     * @param args
-     */
-    function buildValidation (context, args) {
-
-        var builder = new ValidationBuilder(),
-            validationErrors, validationWarnings;
-
-        if (typeof args.metadata.ValidationErrors !== 'undefined') {
-            validationErrors = builder.build(context, {
-                                                            view: args.view,
-                                                            metadata: args.metadata.ValidationErrors
-                                                        });
-        }
-
-        if (typeof args.metadata.ValidationWarnings !== 'undefined') {
-            validationWarnings = builder.build(context, {
-                                                            view: args.view,
-                                                            metadata: args.metadata.ValidationWarnings
-                                                        });
-        }
-
-        args.dataSource.validation = new DataSourceValidator(args.dataSource, validationWarnings, validationErrors);
-
-        var exchange = args.view.getExchange();
-        exchange.subscribe(messageTypes.onValidate, function (message) {
-            if (message && message.dataSource === args.dataSource.getName()) {
-                args.dataSource.validation.validate();
-                args.dataSource.validation.notifyElements(message.property);
-            }
-        });
     }
-
-}
+});

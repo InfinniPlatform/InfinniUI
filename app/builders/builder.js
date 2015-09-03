@@ -13,6 +13,7 @@ function Builder() {
         }
 
         var resultArgs = _.extend({
+                builder: this,
                 metadata: metadataValue
             }, args);
         var context = args.parentView ? args.parentView.getContext() : {};

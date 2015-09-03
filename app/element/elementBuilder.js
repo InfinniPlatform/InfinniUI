@@ -83,8 +83,12 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
     initTextBinding: function(params, bindingMetadata){
         var metadata = params.metadata;
+        var args = {
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
 
-        var dataBinding = params.builder.build(params.view, metadata.Text, params.collectionProperty);
+        var dataBinding = params.builder.build(metadata.Text, args);
 
         dataBinding.setElement(params.element);
 
@@ -105,12 +109,16 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
     initBindingToProperty: function(params, bindingMetadata, propertyName, isBooleanBinding){
         var metadata = params.metadata;
+        var args = {
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
 
         if(!metadata[propertyName] || typeof metadata[propertyName] != 'object'){
             params.element['set' + propertyName](metadata[propertyName]);
             return null;
         }else{
-            var dataBinding = params.builder.build(params.view, metadata[propertyName], params.collectionProperty);
+            var dataBinding = params.builder.build(metadata[propertyName], args);
             dataBinding.setSetterName('set' + propertyName);
             dataBinding.setElement(params.element);
 

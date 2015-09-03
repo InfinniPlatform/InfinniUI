@@ -1,1 +1,8 @@
-<div class="stackpanel-items"></div>
+<div class="stackpanel-items">
+    <% items.forEach(function(item, index){%>
+        <div class="stackpanel-item">
+            <%- itemTemplate(undefined, {item:item, index: index}) %>
+        </div>
+    <%});%>
+
+</div>

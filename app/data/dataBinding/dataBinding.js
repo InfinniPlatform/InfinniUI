@@ -44,6 +44,7 @@ var DataBinding = Backbone.Model.extend({
         this.set('sourceProperty', property);
 
         var that = this;
+
         source.onPropertyChanged(function(context, argument){
             that.onSourcePropertyChangedHandler(context, argument);
         });
@@ -68,7 +69,7 @@ var DataBinding = Backbone.Model.extend({
         this.set('elementProperty', property);
 
         var that = this;
-        element.onPropertyChanged(function(context, argument){
+        element.onPropertyChanged(property, function(context, argument){
             that.onElementPropertyChangedHandler(context, argument);
         });
     },
@@ -114,7 +115,7 @@ var DataBinding = Backbone.Model.extend({
         var elementProperty = this.get('elementProperty');
 
         if(this.shouldRefreshElement(mode) && argument.property == sourceProperty){
-            var value = source.getProperty(sourceProperty);
+            var value = argument.newValue;
             var converter = this.get('converter');
 
             if(converter != null && converter.toElement != null){

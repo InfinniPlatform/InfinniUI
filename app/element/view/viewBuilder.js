@@ -9,7 +9,7 @@ _.extend(ViewBuilder.prototype, {
 
         var metadata = params.metadata;
         var view = params.element;
-        var parentView = params.view;
+        var parentView = params.parentView;
         var outerParams = params.params;
 
         view.setGuid(guid());
@@ -56,15 +56,15 @@ _.extend(ViewBuilder.prototype, {
             });
         }
 
-        view.setDataSources(params.builder.buildMany(view, metadata.DataSources));
+        view.setDataSources(params.builder.buildMany(metadata.DataSources, {parentView: view}));
 
         _.each(metadata.ChildViews, function(childViewMetadata) {
-            var linkView = params.builder.build(view, childViewMetadata.LinkView);
+            var linkView = params.builder.build(childViewMetadata.LinkView, {parentView: view});
             view.addChildView(childViewMetadata.Name, linkView);
         });
 
 
-        view.setLayoutPanel(params.builder.build(view, metadata.LayoutPanel));
+        view.setLayoutPanel(params.builder.build(metadata.LayoutPanel, {parentView: view}));
     },
 
     onChangeTextHandler: function(params) {
@@ -87,10 +87,10 @@ _.extend(ViewBuilder.prototype, {
                     if (outerParams[name]) {
                         view.addParameter(outerParams[name]);
                     } else {
-                        var emptyParameter = builder.buildType(parent, 'Parameter', {
+                        var emptyParameter = builder.buildType('Parameter', {
                             Name: name,
                             Value: null
-                        })
+                        }, {parentView: view});
                     }
 
                 }

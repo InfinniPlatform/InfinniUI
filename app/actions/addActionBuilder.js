@@ -3,7 +3,7 @@ function AddActionBuilder() {
         var action = new BaseAction(args.view);
         action.setAction(function (callback) {
             var parentDataSource = args.view.getDataSource(args.metadata.DataSource);
-            var linkView = args.builder.build(args.view, args.metadata.View);
+            var linkView = args.builder.build(args.metadata.View, {parentView: args.parentView});
             if (linkView) {
                 linkView.createView(function (editView) {
                     var editDataSource = _.find(editView.getDataSources(), function (ds) {

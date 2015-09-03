@@ -4,7 +4,7 @@ function BaseItemActionBuilder() {
 
         var action = new BaseItemAction(args.view);
 
-        var itemsDataBinding = args.builder.build(args.view, args.metadata.Items);
+        var itemsDataBinding = args.builder.build(args.metadata.Items, {parentView: args.parentView});
 
         if (itemsDataBinding !== null) {
 

@@ -7,7 +7,7 @@ function ParameterBuilder() {
 
             parameter.setName(args.metadata.Name);
 
-            var dataBinding = args.builder.build(args.view, args.metadata.Value);
+            var dataBinding = args.builder.build(args.metadata.Value, {parentView: args.parentView});
 
             //если существует Builder для хранящегося в параметре значения
             //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)

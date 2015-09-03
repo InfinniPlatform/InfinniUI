@@ -48,7 +48,7 @@ describe('ListBox', function () {
 
             var linkView = new LinkView(null, function (resultCallback) {
                 var builder = new ApplicationBuilder();
-                var view = builder.buildType(fakeView(), 'View', metadata2);
+                var view = builder.buildType('View', metadata2, {parentView: fakeView()});
                 resultCallback(view);
             });
             linkView.setOpenMode('Application');

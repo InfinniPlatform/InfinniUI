@@ -9,8 +9,8 @@ function View() {
 
     this.context = {
         notInitialized: true,
-        Controls: {},
-        DataSources: {}
+        controls: {},
+        dataSources: {}
     };
 
     this.onTextChange = function(callback){
@@ -59,9 +59,9 @@ function View() {
     this.setDataSources = function (value) {
         dataSources = value;
 
-        this.context.DataSources = {};
+        this.context.dataSources = {};
         for(var i = 0, ii = dataSources.length; i < ii; i++){
-            this.context.DataSources[dataSources[i].getName()] = dataSources[i];
+            this.context.dataSources[dataSources[i].getName()] = dataSources[i];
         }
 
 
@@ -137,9 +137,9 @@ function View() {
         delete this.context.notInitialized;
 
 
-        this.context.Parameters = {};
+        this.context.parameters = {};
         for (var j = 0; j < parameters.length; j++) {
-            this.context.Parameters[parameters[j].getName()] = parameters[j];
+            this.context.parameters[parameters[j].getName()] = parameters[j];
         }
 
         this.context.Scripts = {};
@@ -201,7 +201,7 @@ function View() {
 
     this.registerElement = function (element) {
         elements.push(element);
-        this.context.Controls[element.getName()] = element;
+        this.context.controls[element.getName()] = element;
     };
 
     this.setHorizontalAlignment = function (horizontalAlignment) {
@@ -260,6 +260,8 @@ function View() {
         this.childLayout.css('visibility', 'hidden');
 
         eventStore.executeEvent('onOpening', this.childLayout);
+
+        this.loading();
     };
 
     this.close = function (acceptResult) {
