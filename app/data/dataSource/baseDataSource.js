@@ -330,7 +330,7 @@
                 //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
                 if ((data.IsValid || data.IsValid == undefined) ) {
                     if(!(data instanceof Array) && item != null) {
-                        item[idProperty] = data.InstanceId;
+                        item[idProperty] = data.InstanceId || data.Id;
                         addOrUpdateItem(item);
                         currentStrategy.onItemSaved(item, data);
                         resetModified(item);
