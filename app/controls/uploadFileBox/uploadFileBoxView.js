@@ -87,6 +87,7 @@ var UploadFileBoxView = ControlView.extend({
             //Файл не выбран. Очистить, если он был показан.
             this.ui.empty.removeClass('hidden');
             this.ui.link.addClass('hidden');
+            this.ui.input.val(null);
         } else {
             this.ui.empty.addClass('hidden');
 
