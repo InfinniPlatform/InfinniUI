@@ -139,6 +139,7 @@
             "HintText": "I'm NumericBox hint",
             "LabelText": "Numeric label",
             "Enabled": true,
+            "MinValue": 0,
             "EditMask": {
               "NumberEditMask": {
                 "Mask": "n3"

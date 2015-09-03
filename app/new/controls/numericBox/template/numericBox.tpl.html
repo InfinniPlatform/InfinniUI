@@ -1,8 +1,8 @@
 <label for="<%- guid %>"><%- labelText%></label>
-<button class="pl-numeric-box-min">-</button>
+<button <% if (!enabled) { %> disabled <% } %> class="pl-numeric-box-min">-</button>
 <input <% if (!enabled) { %> disabled <% } %> class="pl-control form-control pl-numeric-box-input" type="text" id="<%- guid %>" value="<%- value %>">
-<button class="pl-numericbox-max">+</button>
 <div class="pl-control-editor"></div>
+<button <% if (!enabled) { %> disabled <% } %> class="pl-numeric-box-max">+</button>
 <div class="pl-control-hint-text"><%- hintText %></div>
 <div class="pl-control-error-text"><%- errorText %></div>
 <div class="pl-control-warning-text"><%- warningText %></div>

@@ -24,6 +24,7 @@ var editorBaseViewMixin = {
             .listenTo(this.model, 'change:errorText', this.onChangeErrorTextHandler)
             .listenTo(this.model, 'change:warningText', this.onChangeWarningTextHandler)
             .listenTo(this.model, 'change:value', this.onChangeValueHandler)
+            .listenTo(this.model, 'invalid', this.onInvalidHandler)
     },
 
     onChangeHintTextHandler: function (model, value) {
@@ -36,6 +37,11 @@ var editorBaseViewMixin = {
 
     onChangeWarningTextHandler: function (model, value) {
         this.ui.warningText.text(value);
+    },
+
+    onInvalidHandler: function (model, error) {
+        //@TODO Можно ли использовать поля из API или реализовывать вывод ошибок отдельно?
+        //this.model.set('errorText', error);
     },
 
     /**
