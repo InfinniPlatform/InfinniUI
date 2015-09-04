@@ -27,7 +27,6 @@ _.extend(ContainerBuilder.prototype, {
 
         return function(context, args) {
             var index = args.index;
-            var item = args.item;
             var argumentForBuilder = {
                 parentView: params.parentView
             };
@@ -37,6 +36,29 @@ _.extend(ContainerBuilder.prototype, {
             }
 
             return builder.build(templateMetadata, argumentForBuilder);
+        };
+    },
+
+    /**
+     * @public
+     * @memberOf ContainerBuilder
+     * @description Возвращает функцию itemTemplate для не шаблонизируемого item'а.
+     * @param {Object} itemMetadata метаданные.
+     * @param {Object} params стандартные params, передаваемые внутри билдеров.
+     **/
+    buildItemTemplateForUniqueItem: function (itemsMetadata, params) {
+        var element = params.element;
+        var builder = params.builder;
+        var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
+
+        return function(context, args) {
+            var index = args.index;
+            var argumentForBuilder = {
+                parentView: params.parentView,
+                basePathOfProperty: basePathOfProperty
+            };
+
+            return builder.build(itemsMetadata[index], argumentForBuilder);
         };
     }
 });

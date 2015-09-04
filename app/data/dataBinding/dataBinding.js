@@ -48,6 +48,30 @@ var DataBinding = Backbone.Model.extend({
         source.onPropertyChanged(function(context, argument){
             that.onSourcePropertyChangedHandler(context, argument);
         });
+
+        if(typeof source.onSelectedItemChanged == 'function'){
+            this._initBehaviorWithSelectedItem();
+        }
+    },
+
+    _initBehaviorWithSelectedItem: function(){
+        var sourceProperty = this.get('sourceProperty');
+        var source = this.get('source');
+        var that = this;
+
+        if(this._isRelativeProperty(sourceProperty)){
+            source.onSelectedItemChanged(function(context, argument){
+                var args = {
+                    property: sourceProperty,
+                    newValue: source.getProperty(sourceProperty)
+                };
+                that.onSourcePropertyChangedHandler(context, args);
+            });
+        }
+    },
+
+    _isRelativeProperty: function(property){
+        return ! /^\d/.test(property);
     },
 
     getSource: function () {
@@ -81,7 +105,7 @@ var DataBinding = Backbone.Model.extend({
         var sourceProperty = this.get('sourceProperty');
         var source = this.get('source');
         var element = this.get('element');
-        var value = this.get('element');
+        var value;
 
         if(source){
             value = source.getProperty(sourceProperty);

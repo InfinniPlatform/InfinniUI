@@ -68,29 +68,43 @@ _.extend(StackPanelBuilder.prototype,
 
         initItems: function(params){
             var metadata = params.metadata;
+
+            if($.isArray(metadata.Items)){  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
+                this.initNotTemplatingItems(params);
+            }else{                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
+                this.initTemplatingItems(params);
+            }
+        },
+
+        initTemplatingItems: function(params){
+            var metadata = params.metadata;
             var element = params.element;
             var itemTemplate;
             var binding;
 
-            if($.isArray(metadata.Items)){
-                throw 'Нужно реализовать создание элементов как они были';
+            binding = params.builder.build(metadata.Items, {
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+
+            binding.bindElement(element, 'items');
+
+            if(metadata.ItemTemplate){
+                itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
+                element.setItemTemplate(itemTemplate);
             }else{
-                binding = params.builder.build(metadata.Items, {
-                    parentView: params.parentView,
-                    basePathOfProperty: params.basePathOfProperty
-                });
-
-                binding.bindElement(element, 'items');
-
-                if(metadata.ItemTemplate){
-                    itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
-                    element.setItemTemplate(itemTemplate);
-                }else{
-                    throw 'Нужно обработать другие варианты элементов';
-                }
+                throw 'Нужно обработать другие варианты элементов';
             }
+        },
 
+        initNotTemplatingItems: function(params){
+            var itemsMetadata = params.metadata.Items;
+            var element = params.element;
+            var fakeItems = new Array(itemsMetadata.length);
+            var itemTemplate = this.buildItemTemplateForUniqueItem(itemsMetadata, params);
 
+            element.setItemTemplate(itemTemplate);
+            element.getItems().addAll(fakeItems);
         }
 
     });
