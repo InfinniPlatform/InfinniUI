@@ -1,4 +1,7 @@
+
 var Element = function (parentView) {
+    this.parent = null;
+    this.children = new ChildrenElementCollection(this);
     this.parentView = parentView;
     this.control = this.createControl();
     this.state = {
@@ -8,6 +11,18 @@ var Element = function (parentView) {
 };
 
 _.extend(Element.prototype, {
+
+    getParent: function () {
+        return this.children.getParent();
+    },
+
+    getChildElements: function () {
+        return this.children.getList();
+    },
+
+    getChildren: function () {
+        return this.children;
+    },
 
     createControl: function () {
         throw ('Не перегружен абстрактный метод Element.createControl');

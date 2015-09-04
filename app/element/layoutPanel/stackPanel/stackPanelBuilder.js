@@ -15,7 +15,7 @@ _.extend(StackPanelBuilder.prototype, {
         element.setOrientation(metadata.Orientation);
 
         _.each(metadata.Items, function (metadataItem) {
-            element.addItem(params.builder.build(params.parent, metadataItem, params.collectionProperty));
+            element.addItem(params.builder.build(params.parent, metadataItem, params.collectionProperty, {parentElement: element}));
         });
     },
 

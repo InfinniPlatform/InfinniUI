@@ -19,7 +19,7 @@ _.extend(TabPanelBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         _.each(metadata.Pages, function (metadataItem) {
-            var tabPage = params.builder.buildType(params.parent, 'TabPage', metadataItem);
+            var tabPage = params.builder.buildType(params.parent, 'TabPage', metadataItem, null, {parentElement: params.element});
             tabPage.onClosed(function (page) {
                 params.element.removePage(page);
             });

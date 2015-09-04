@@ -16,7 +16,7 @@ _.extend(ToolBarBuilder.prototype, {
                 metadataItem.ToolBarButton.Enabled = false;
             }
 
-            var btn = params.builder.build(params.parent, metadataItem);
+            var btn = params.builder.build(params.parent, metadataItem, null, {parentElement: params.element});
             btn.setParentEnabled(metadata.Enabled);
             params.element.addItem(btn);
         });

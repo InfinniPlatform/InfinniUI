@@ -1,7 +1,15 @@
 function TabPageBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+    this.build = function (builder, parent, metadata, params) {
         var tabPage = new TabPage(parent);
+
+        //@TODO Должен быть унаследован от ElementBuilder!!!!
+        //@TODO Удалить работу с parentElement после исправления наследования
+        var parentElement = params && params.parentElement;
+        if (parentElement) {
+            parentElement.children.add(tabPage);
+        }
+
 
         tabPage.setImage(metadata.Image);
         tabPage.setCanClose(metadata.CanClose);

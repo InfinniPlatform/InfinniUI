@@ -14,7 +14,7 @@ _.extend(ScrollPanelBuilder.prototype, {
 
         element.setVerticalScroll(metadata.VerticalScroll);
         element.setHorizontalScroll(metadata.HorizontalScroll);
-        element.setLayoutPanel(params.builder.build(params.parent, metadata.LayoutPanel, params.collectionProperty));
+        element.setLayoutPanel(params.builder.build(params.parent, metadata.LayoutPanel, params.collectionProperty, {parentElement: element}));
     },
 
     initScriptsHandlers: function(params){

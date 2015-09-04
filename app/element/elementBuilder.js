@@ -5,6 +5,7 @@ var ElementBuilder = function () {
 _.extend(ElementBuilder.prototype, {
 
     build: function (builder, parent, metadata, collectionProperty, params) {
+        var parentElement = params && params.parentElement;
         var params = {
                 builder: builder,
                 parent: parent,
@@ -13,6 +14,10 @@ _.extend(ElementBuilder.prototype, {
                 params: params
             },
             element = this.createElement(params);
+
+        if (parentElement) {
+            parentElement.children.add(element);
+        }
 
         params.element = element;
 

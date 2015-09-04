@@ -129,7 +129,7 @@ var DataGridBuilder = function () {
         dataGrid.setHorizontalAlignment(metadata.HorizontalAlignment);
         dataGrid.setVerticalAlignment(metadata.VerticalAlignment);
         dataGrid.setAutoLoad(metadata.AutoLoad);
-        dataGrid.setItemTemplate(this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty));
+        dataGrid.setItemTemplate(this.getItemTemplateConstructor(builder, parent, metadata, collectionProperty, dataGrid));
         this.initGroups(dataGrid, metadata.Groups);
         this.initAutoload(parent, metadata, dataGrid);
 
@@ -309,13 +309,16 @@ var DataGridBuilder = function () {
      * @memberOf DataGridBuilder
      * @returns {*}
      */
-    this.getItemTemplateConstructor = function (builder, parent, metadata, collectionProperty) {
+    this.getItemTemplateConstructor = function (builder, parent, metadata, collectionProperty, dataGrid) {
 
         var itemTemplateConstructor = null;
 
         if (typeof metadata.ItemTemplate !== 'undefined' && metadata.ItemTemplate !== null && metadata.ItemTemplate !== '') {
             itemTemplateConstructor = function(baseIndex) {
-                return builder.build(parent, metadata.ItemTemplate, new ListBoxItemCollectionProperty(metadata.Items.PropertyBinding.Property, baseIndex, collectionProperty));
+                return builder.build(parent, metadata.ItemTemplate,
+                    new ListBoxItemCollectionProperty(metadata.Items.PropertyBinding.Property, baseIndex, collectionProperty),
+                    {parentElement: dataGrid}
+                );
             };
         }
 

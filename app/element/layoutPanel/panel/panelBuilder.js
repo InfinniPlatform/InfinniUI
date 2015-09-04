@@ -9,7 +9,7 @@ _.extend(PanelBuilder.prototype, {
 
         this.initScriptsHandlers(params);
 
-        var items = params.builder.buildMany(params.parent, params.metadata.Items);
+        var items = params.builder.buildMany(params.parent, params.metadata.Items, null, {parentElement: params.element});
         if (items) {
             _.each(items, function (item) {
                 params.element.addItem(item);

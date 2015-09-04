@@ -34,13 +34,13 @@ function Builder() {
         return result;
     };
 
-    this.buildMany = function (parentView, metadataValue, collectionProperty) {
+    this.buildMany = function (parentView, metadataValue, collectionProperty, params) {
 
         var items = [];
 
         if (metadataValue) {
             for (var i = 0; i < metadataValue.length; i++) {
-                var item = this.build(parentView, metadataValue[i], collectionProperty);
+                var item = this.build(parentView, metadataValue[i], collectionProperty, params);
 
                 if (item !== null) {
                     items.push(item);

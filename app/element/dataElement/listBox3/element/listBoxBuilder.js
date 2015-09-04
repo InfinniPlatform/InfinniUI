@@ -96,6 +96,7 @@ _.extend(ListBoxBuilder.prototype, {
          */
 
         binding.onPropertyValueChanged(function (dataSourceName, value) {
+            element.children.clear();//При изменении списка - старые элементы уничтожаются!
             element.setItems(value.value);
         });
 
@@ -117,15 +118,9 @@ _.extend(ListBoxBuilder.prototype, {
         if (metadata.ItemTemplate) {
             itemTemplate = function (value, index) {
                 var collectionProperty = new ListBoxItemCollectionProperty('', index, params.collectionProperty);
-                var itemTemplateElement = builder.build(params.parent, metadata.ItemTemplate, collectionProperty);
+                var itemTemplateElement = builder.build(params.parent, metadata.ItemTemplate, collectionProperty, {parentElement: element});
                 return itemTemplateElement.render();
             };
-
-            //itemTemplate = function (value, index) {
-            //    var collectionProperty = new ListBoxItemCollectionProperty('', index, params.collectionProperty);
-            //    var itemTemplateElement = builder.build(params.parent, metadata.ItemTemplate, collectionProperty);
-            //    return itemTemplateElement.render();
-            //}
         } else {
             var format;
             if (metadata.ItemFormat) {
