@@ -18,6 +18,7 @@ function DeleteActionBuilder() {
 
                                 if (editItemId) {
                                     parentDataSource.onItemDeleted(function (dataSourceName, value) {
+                                        parentDataSource.setIdFilter(null, true);
                                         parentDataSource.updateItems();
 
 //                                      TODO: Переделать механизм удаления обработчиков
