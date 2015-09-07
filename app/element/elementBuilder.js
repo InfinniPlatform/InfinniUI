@@ -88,8 +88,8 @@ _.extend(ElementBuilder.prototype, {
         return params.builder.buildType(params.parent, 'DataSourceMessage', null, null, {
             source: params.element,
             value: params.element.getValue(),
-            dataSource: dataBinding.getDataSource && dataBinding.getDataSource(),
-            property: dataBinding.getProperty && dataBinding.getProperty()
+            dataSource: dataBinding && dataBinding.getDataSource && dataBinding.getDataSource(),
+            property: dataBinding && dataBinding.getProperty && dataBinding.getProperty()
         });
     },
 
