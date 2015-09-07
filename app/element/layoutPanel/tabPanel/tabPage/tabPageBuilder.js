@@ -28,13 +28,19 @@ function TabPageBuilder() {
 
         if (parent && metadata.OnClosing){
             tabPage.onClosing(function() {
-                new ScriptExecutor(parent).executeScript(metadata.OnClosing.Name);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: tabPage
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnClosing.Name, message);
             });
         }
 
         if (parent && metadata.OnClosed){
             tabPage.onClosed(function() {
-                new ScriptExecutor(parent).executeScript(metadata.OnClosed.Name);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: tabPage
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnClosed.Name, message);
             });
         }
 

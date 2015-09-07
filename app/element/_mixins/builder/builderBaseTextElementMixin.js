@@ -11,8 +11,10 @@ var builderBaseTextElementMixin = {
 
         if (metadata.OnKeyDown) {
             element.onKeyDown(function (data) {
-                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, data);
-            });
+                var message = this.getBaseMessage(params);
+                message.value = data;
+                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, message);
+            }.bind(this));
         }
 
     }

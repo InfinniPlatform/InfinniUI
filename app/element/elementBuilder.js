@@ -65,13 +65,15 @@ _.extend(ElementBuilder.prototype, {
 
         if (metadata.OnGotFocus){
             params.element.onGotFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name, message);
+            }.bind(this));
         }
 
         if (metadata.OnLostFocus){
             params.element.onLostFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name);
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name, message);
             });
         }
     },

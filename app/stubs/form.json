@@ -52,6 +52,9 @@
                 "Property": "FName"
               }
             },
+            "OnKeyDown": {
+              "Name": "OnKeyDown1"
+            },
             "OnValueChanged": {
               "Name": "OnValueChanged1"
             },
@@ -73,6 +76,21 @@
               "Name": "OnValueChanged1"
             }
           }
+        },
+        {
+          "DatePicker": {
+            "Name": "Birthday",
+            "Mode": "DateTime",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "ds1",
+                "Property": "birthday"
+              }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged22"
+            }
+          }
         }
       ]
     }
@@ -83,12 +101,20 @@
       "Body": "console.log(args.source.children.getParent()); console.log(args.source.getName(), args.value);"
     },
     {
+      "Name": "OnValueChanged22",
+      "Body": "console.log('OnValueChanged22');console.log(args);"
+    },
+    {
       "Name": "OnValueChanged2",
       "Body": "debugger;console.log(args);"
     },
     {
       "Name": "OnLoaded",
       "Body": "console.log('OnLoaded', arguments);"
+    },
+    {
+      "Name": "OnKeyDown1",
+      "Body": "console.log('OnKeyDown1', arguments);"
     }
   ]
 

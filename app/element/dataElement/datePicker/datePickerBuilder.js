@@ -116,12 +116,6 @@ _.extend(DatePickerBuilder.prototype, {
 
         //Скриптовые обработчики на события
 
-        if (params.parent && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
-            });
-        }
-
         this.initBaseTextElementEvents(params);
     },
 

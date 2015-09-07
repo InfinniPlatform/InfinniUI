@@ -737,7 +737,10 @@
             "HasMoneyOnHands": true,
             "IsPersonalNotificaction": true
           }
-        ]
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged1"
+        }
       }
     }
   ],
@@ -747,7 +750,7 @@
   "Scripts": [
     {
       "Name": "OnClick",
-      "Body": "console.log('OnClick', context.Controls.ListBox2.getValue(), context.DataSources.MainDataSource.getSelectedItem());"
+      "Body": "debugger;console.log('OnClick', args.source, context.Controls.ListBox2.getValue(), context.DataSources.MainDataSource.getSelectedItem());"
     },
     {
       "Name": "OnValueChanged",
@@ -756,6 +759,10 @@
     {
       "Name": "OnLoaded",
       "Body": "return;context.DataSources.MainDataSource.setDataItems([{'Id': 101,'title': 'item1','items': [{'Id': 1,'title': 'one'},{'Id': 2,'title': 'two'},{'Id': 3,'title': 'three'}]},{'Id': 102,'title': 'item2','items': [{'Id': 1,'title': 'one'},{'Id': 4,'title': 'four'},{'Id': 5,'title': 'five'},{'Id': 6,'title': 'six'}]}]);"
+    },
+    {
+      "Name": "OnSelectedItemChanged1",
+      "Body": "console.log('OnSelectedItemChanged1', arguments);"
     }
   ],
   "Text": "Ресурс",

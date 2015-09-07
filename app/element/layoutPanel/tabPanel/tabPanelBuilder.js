@@ -101,8 +101,9 @@ _.extend(TabPanelBuilder.prototype, {
 
         if (params.parent && metadata.OnSelectionChanged){
             params.element.onSelectionChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnSelectionChanged.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnSelectionChanged.Name, message);
+            }.bind(this));
         }
     }
 

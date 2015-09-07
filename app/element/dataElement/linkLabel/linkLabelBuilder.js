@@ -54,12 +54,6 @@ _.extend(LinkLabelBuilder.prototype,
 
             //Скриптовые обработчики на события
 
-            if (params.parent && metadata.OnValueChanged) {
-                params.element.onValueChanged(function () {
-                    new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
-                });
-            }
-
             if (params.parent && metadata.OnClick) {
                 params.element.onClick(function () {
                     var script = new ScriptExecutor(params.parent);

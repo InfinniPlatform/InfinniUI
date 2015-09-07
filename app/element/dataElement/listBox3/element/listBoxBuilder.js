@@ -31,13 +31,6 @@ _.extend(ListBoxBuilder.prototype, {
         var element = params.element;
 
         //Скриптовые обработчики на события
-
-        if (params.parent && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                var value = element.getValue();
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name, value);
-            });
-        }
     },
 
 

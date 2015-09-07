@@ -54,12 +54,6 @@ _.extend(FilterPanelBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-
-        if (params.parent && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
-            });
-        }
     },
 
     initDataSource: function (params) {

@@ -20,12 +20,6 @@ _.extend(ToggleButtonBuilder.prototype, {
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
-
-        if (params.parent && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnValueChanged.Name);
-            });
-        }
     },
 
     createElement: function(params){
