@@ -49,9 +49,13 @@ var DataBinding = Backbone.Model.extend({
             that.onSourcePropertyChangedHandler(context, argument);
         });
 
-        if(typeof source.onSelectedItemChanged == 'function'){
+        if( this._isWorkingWithSelectedItems(source) ){
             this._initBehaviorWithSelectedItem();
         }
+    },
+
+    _isWorkingWithSelectedItems: function(source){
+        return typeof source.onSelectedItemChanged == 'function'
     },
 
     _initBehaviorWithSelectedItem: function(){

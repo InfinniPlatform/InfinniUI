@@ -21,7 +21,7 @@ var ListBoxGroupItemView = Backbone.View.extend({
             itemsCollection = model.get('items'),
             item = this.options.item,
             $item = itemTemplate(undefined, {
-                item: item,
+                item: item
                 //index: itemsCollection.indexOf(item)
             }).render();
 

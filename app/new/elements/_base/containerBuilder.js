@@ -8,9 +8,6 @@ _.inherit(ContainerBuilder, ElementBuilder);
  * @abstract
  */
 _.extend(ContainerBuilder.prototype, {
-    getItemTemplateBuilder: function () {
-        throw new Error('Не перекрыт метод getItemTemplateBuilder')
-    },
 
     applyMetadata: function (params) {
         var metadata = params.metadata;
@@ -18,6 +15,38 @@ _.extend(ContainerBuilder.prototype, {
 
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
+    },
+
+    buildItemProperty: function(itemPropertyMetadata, itemsDataSourceName, params){
+        var templateMetadata = {
+            Label: {
+                Value: {
+                    PropertyBinding:{
+                        Source: itemsDataSourceName,
+                        Property: itemPropertyMetadata
+                    }
+                }
+            }
+        };
+
+        return this.buildItemTemplate(templateMetadata, params);
+    },
+
+    buildItemFormat: function(itemPropertyMetadata, itemsDataSourceName, itemFormatMetadata, params){
+        var templateMetadata = {
+            Label: {
+                Value: {
+                    PropertyBinding:{
+                        Source: itemsDataSourceName,
+                        Property: itemPropertyMetadata
+                    }
+                },
+
+                DisplayFormat: itemFormatMetadata
+            }
+        };
+
+        return this.buildItemTemplate(templateMetadata, params);
     },
 
     buildItemTemplate: function (templateMetadata, params) {

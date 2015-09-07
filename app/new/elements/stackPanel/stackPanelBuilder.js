@@ -29,41 +29,6 @@ _.extend(StackPanelBuilder.prototype,
             element.setOrientation(metadata.Orientation);
 
             this.initItems(params);
-            //this.initItemsCollection(params);
-        },
-
-        initItemTemplate: function (params) {
-            var
-            //metadata = params.metadata,
-                element = params.element,
-                builder = params.builder,
-                parent = params.parent,
-                itemTemplate;
-
-            itemTemplate = function (context, argument) {
-                var index = argument.index;
-                var item = argument.item;
-                var collectionProperty = new ListBoxItemCollectionProperty(/*metadata.Items.PropertyBinding.Property*/'', index, params.collectionProperty);
-
-                return builder.build(parent, item/*, collectionProperty*/);
-            };
-
-            element.setItemTemplate(itemTemplate);
-        },
-
-        /**
-         *
-         * @param {Object} params
-         * @param {StackPanel} params.element
-         */
-        initItemsCollection: function (params) {
-            var metadata = params.metadata;
-            var element = params.element;
-            var itemsCollection = element.getItems();
-
-            if (metadata.Items) {
-                itemsCollection.reset(metadata.Items);
-            }
         },
 
         initItems: function(params){

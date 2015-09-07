@@ -2,68 +2,133 @@ function ListEditorBaseBuilder() {
     _.superClass(ListEditorBaseBuilder, this);
 
     editorBaseBuilderMixin.call(this);
-
 }
 
 _.inherit(ListEditorBaseBuilder, ContainerBuilder);
 
-ListEditorBaseBuilder.prototype.applyMetadata = function (params) {
 
-    ContainerBuilder.prototype.applyMetadata.call(this, params);
-    editorBaseBuilderMixin.applyMetadata.call(this, params);
+_.extend(ListEditorBaseBuilder.prototype, {
 
-    var metadata = params.metadata;
-    var element = params.element;
+    applyMetadata: function (params) {
+        ContainerBuilder.prototype.applyMetadata.call(this, params);
+        editorBaseBuilderMixin.applyMetadata.call(this, params);
 
-    if (typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null) {
-        element.setMultiSelect(metadata.MultiSelect);
-    }
+        this.initItems(params);
+        this.initGroup(params);
+        this.initValue(params); //?
+    },
 
-    this.initValueSelector(params);
-    this.initGroupValueSelector(params);
-    element.setGroupItemTemplate(this.getGroupItemTemplateBuilder().getItemTemplate(params));
+    initItems: function(params){
+        var itemsBinding = this.initItemsBinding(params);
+        this.initItemTemplating(params);
+        this.initSorting(params);
+        this.initSelecting(params, itemsBinding);
+    },
 
-    if (metadata.OnSelectedItemChanged) {
-        element.onSelectedItemChanged(function (context, args) {
-            new ScriptExecutor(params.parent).executeScript(metadata.OnSelectedItemChanged.Name, args);
+    initItemsBinding: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+        var binding;
+
+        binding = params.builder.build(metadata.Items, {
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
         });
-    }
 
-    //@TODO Build items DataBinding
-    this.initItemsBinding(params);
+        binding.bindElement(element, 'items');
+
+        return binding;
+    },
+
+    initItemTemplating: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+        var itemTemplate;
+
+        if(metadata.ItemTemplate){
+            itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
+            element.setItemTemplate(itemTemplate);
+        }else {
+            throw 'Нужно обработать другие варианты элементов';
+        }
+    },
+
+
+    initSelecting: function(params, itemsBinding){
+        var metadata = params.metadata;
+        var element = params.element;
+        var dataSource = itemsBinding.getSource();
+
+        dataSource.setSelectedItem(null);
+
+        dataSource.onSelectedItemChanged(function(context, args){
+            element.setSelectedItem(args.value);
+        });
+
+        element.onSelectedItemChanged(function(context, args){
+            dataSource.setSelectedItem(args.value);
+
+            if (metadata.OnSelectedItemChanged) {
+                new ScriptExecutor(params.parent).executeScript(metadata.OnSelectedItemChanged.Name, args);
+            }
+        });
+    },
+
+    initGroup: function(params){
+        this.initGroupValueSelector(params);
+        this.initGroupItemTemplate(params);
+    },
+
+    initGroupValueSelector: function (params) {
+        var metadata = params.metadata,
+            element = params.element,
+            groupValueSelector;
+
+        element.setGroupItemComparator(function(a, b) {
+            if (a < b) {
+                return -1;
+            }
+
+            if (a > b) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        if (metadata.GroupValueSelector) {
+            groupValueSelector = function (context, args) {
+                var scriptExecutor = new ScriptExecutor(params.parent);
+                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
+            };
+        } else if (metadata.GroupValueProperty) {
+            groupValueSelector = function (context, args) {
+                return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.GroupValueProperty);
+            }
+        } else {
+            //Без группировки
+            groupValueSelector = null
+        }
+        element.setGroupValueSelector(groupValueSelector);
+    },
+
+    initValue: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+
+        if (typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null) {
+            element.setMultiSelect(metadata.MultiSelect);
+        }
+
+        this.initValueSelector(params);
+    }
+});
+
+
+ListEditorBaseBuilder.prototype.initGroupItemTemplate = function (params) {
 };
 
-ListEditorBaseBuilder.prototype.initGroupValueSelector = function (params) {
-    var metadata = params.metadata,
-        element = params.element,
-        groupValueSelector;
-
-    element.setGroupItemComparator(function(a, b) {
-        if (a < b) {
-            return -1;
-        }
-
-        if (a > b) {
-            return 1;
-        }
-
-        return 0;
-    });
-
-    if (metadata.GroupValueSelector) {
-        groupValueSelector = function (context, args) {
-            var scriptExecutor = new ScriptExecutor(params.parent);
-            return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
-        };
-    } else if (metadata.GroupValueProperty) {
-        groupValueSelector = function (context, args) {
-            return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.GroupValueProperty);
-        }
-    } else {
-        //Без группировки
-        groupValueSelector = null
-    }
-    element.setGroupValueSelector(groupValueSelector);
+ListEditorBaseBuilder.prototype.initGroupItemTemplate = function (params) {
 };
 
 ListEditorBaseBuilder.prototype.initValueSelector = function (params) {

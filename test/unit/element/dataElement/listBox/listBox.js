@@ -97,7 +97,7 @@ describe('ListBox', function () {
                             "Value": {
                                 "PropertyBinding":{
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "Display"
                                 }
                             }
                         }
@@ -107,7 +107,7 @@ describe('ListBox', function () {
                             "Value": {
                                 "PropertyBinding":{
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Id"
+                                    "Property": "Id"
                                 }
                             }
                         }
@@ -135,7 +135,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $stackPanel = $('#sandbox').children();
-                //$listbox.detach();
+                $stackPanel.detach();
 
                 onListboxReady($stackPanel);
             });
@@ -149,7 +149,7 @@ describe('ListBox', function () {
         });
     });
 
-/*
+
     var metadata = {
         Text: 'Пациенты',
         DataSources : [
@@ -158,7 +158,7 @@ describe('ListBox', function () {
                     "Name": "ObjectDataSource1",
                     "Items": [
                         { "Id": 1, "Display": "LTE" },
-                        { "Id": 2, "Display": "3G" },
+                        { "Id": 2, "Display": "2G" },
                         { "Id": 3, "Display": "2G" }
                     ]
                 }
@@ -178,6 +178,7 @@ describe('ListBox', function () {
                         }
                     }
                 },
+                "GroupValueProperty": "Display",
                 "Items" : {
                     "PropertyBinding": {
                         "Source": "ObjectDataSource1",
@@ -188,7 +189,7 @@ describe('ListBox', function () {
         }
     };
 
-    describe('render', function () {
+    describe('render lb', function () {
         it('should render listBox', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
@@ -206,7 +207,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $listbox = $('#sandbox').children();
-                $listbox.detach();
+                //$listbox.detach();
 
                 onListboxReady($listbox);
             });
@@ -217,5 +218,5 @@ describe('ListBox', function () {
             }
         });
     });
-*/
+
 });
