@@ -15,13 +15,13 @@ _.extend(ListEditorBaseBuilder.prototype, {
 
         this.initItems(params);
         this.initGroup(params);
-        this.initValue(params); //?
+        this.initValueFeatures(params);
     },
 
     initItems: function(params){
         var itemsBinding = this.initItemsBinding(params);
         this.initItemTemplating(params);
-        this.initSorting(params);
+        //this.initSorting(params);
         this.initSelecting(params, itemsBinding);
     },
 
@@ -84,7 +84,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
             element = params.element,
             groupValueSelector;
 
-        element.setGroupItemComparator(function(a, b) {
+       /* element.setGroupItemComparator(function(a, b) {
             if (a < b) {
                 return -1;
             }
@@ -94,7 +94,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
             }
 
             return 0;
-        });
+        });*/
 
         if (metadata.GroupValueSelector) {
             groupValueSelector = function (context, args) {
@@ -112,6 +112,42 @@ _.extend(ListEditorBaseBuilder.prototype, {
         element.setGroupValueSelector(groupValueSelector);
     },
 
+    initValueFeatures: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+
+        if (typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null) {
+            element.setMultiSelect(metadata.MultiSelect);
+        }
+
+        this.initValueSelector(params);
+    },
+
+    initValueSelector: function (params) {
+        var metadata = params.metadata,
+            element = params.element,
+            valueSelector;
+
+        if (metadata.ValueSelector) {
+            valueSelector = function (context, args) {
+                var scriptExecutor = new ScriptExecutor(params.parent);
+                return scriptExecutor.executeScript(metadata.ValueSelector.Name, args)
+            };
+        } else if (metadata.ValueProperty) {
+            valueSelector = function (context, args) {
+                return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.ValueProperty);
+            }
+        } else {
+            valueSelector = function (context, args) {
+                return args.value;
+            }
+        }
+        element.setValueSelector(valueSelector);
+
+        element.setValueComparator(new ComparatorId());
+    }
+});
+/*
     initValue: function(params){
         var metadata = params.metadata;
         var element = params.element;
@@ -131,29 +167,6 @@ ListEditorBaseBuilder.prototype.initGroupItemTemplate = function (params) {
 ListEditorBaseBuilder.prototype.initGroupItemTemplate = function (params) {
 };
 
-ListEditorBaseBuilder.prototype.initValueSelector = function (params) {
-    var metadata = params.metadata,
-        element = params.element,
-        valueSelector;
-
-    if (metadata.ValueSelector) {
-        valueSelector = function (context, args) {
-            var scriptExecutor = new ScriptExecutor(params.parent);
-            return scriptExecutor.executeScript(metadata.ValueSelector.Name, args)
-        };
-    } else if (metadata.ValueProperty) {
-        valueSelector = function (context, args) {
-            return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.ValueProperty);
-        }
-    } else {
-        valueSelector = function (context, args) {
-            return args.value;
-        }
-    }
-    element.setValueSelector(valueSelector);
-
-    element.setValueComparator(new ComparatorId());
-};
 
 ListEditorBaseBuilder.prototype.getGroupItemTemplateBuilder = function () {
     throw new Error('Не перекрыт метод getGroupItemTemplateBuilder')
@@ -199,3 +212,4 @@ ListEditorBaseBuilder.prototype.initItemsBinding = function (params) {
     }
     return binding;
 };
+*/
