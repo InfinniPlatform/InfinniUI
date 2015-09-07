@@ -128,7 +128,7 @@ function EditDataSourceStrategy(dataSource) {
      * @param {String} value.DocumentId
      */
     this.onItemCreated = function (value) {
-        var instanceId = value.InstanceId;
+        var instanceId = value.InstanceId || value.Id;
         this.invokeEventAsync('onBeforeItemCreated', instanceId, function () {
             this.invokeEvent('onItemCreated', instanceId);
         }.bind(this));

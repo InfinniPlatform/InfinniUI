@@ -134,9 +134,9 @@
         }
     };
 
-    var removeById = function (item) {
+    var removeById = function (itemId) {
         for (var i = 0; i < dataItems.length; i++) {
-            if (dataItems[i].Id === item.Id) {
+            if (dataItems[i].Id === itemId) {
                 var indexToSplice = i;
                 break;
             }
@@ -239,10 +239,12 @@
         return idFilter;
     };
 
-    this.setIdFilter = function (value) {
+    this.setIdFilter = function (value, silent) {
         if (idFilter !== value) {
             idFilter = value;
-            this.updateItems();
+            if (!silent) {
+                this.updateItems();
+            }
         }
     };
 
@@ -330,7 +332,7 @@
                 //TODO: убрать 'data.IsValid == undefined' когда заполнятся метаданные
                 if ((data.IsValid || data.IsValid == undefined) ) {
                     if(!(data instanceof Array) && item != null) {
-                        item[idProperty] = data.InstanceId;
+                        item[idProperty] = data.InstanceId || data.Id;
                         addOrUpdateItem(item);
                         currentStrategy.onItemSaved(item, data);
                         resetModified(item);
