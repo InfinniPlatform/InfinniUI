@@ -26,11 +26,6 @@ _.extend(PanelBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (parent && metadata.OnLoaded) {
-            params.element.onLoaded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name);
-            });
-        }
 
         if (parent && metadata.OnExpanded) {
             params.element.onExpanded(function () {

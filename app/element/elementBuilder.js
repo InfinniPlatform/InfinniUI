@@ -56,9 +56,11 @@ _.extend(ElementBuilder.prototype, {
         element.setStyle(metadata.Style);
 
         if (metadata.OnLoaded) {
+
             element.onLoaded(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name, message);
+            }.bind(this));
         }
 
         if (metadata.OnGotFocus){
@@ -72,6 +74,21 @@ _.extend(ElementBuilder.prototype, {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name);
             });
         }
+    },
+
+    getBaseMessage: function (params) {
+        return params.builder.buildType(params.parent, 'BaseMessage', null, null, {
+            source: params.element
+        });
+    },
+
+    getDataSourceMessage: function (params, dataBinding) {
+        return params.builder.buildType(params.parent, 'DataSourceMessage', null, null, {
+            source: params.element,
+            value: params.element.getValue(),
+            dataSource: dataBinding.getDataSource && dataBinding.getDataSource(),
+            property: dataBinding.getProperty && dataBinding.getProperty()
+        });
     },
 
     initTextBinding: function(params, bindingMetadata){

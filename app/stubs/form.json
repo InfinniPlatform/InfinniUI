@@ -51,6 +51,12 @@
                 "DataSource": "ds1",
                 "Property": "FName"
               }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged1"
+            },
+            "OnLoaded": {
+              "Name": "OnLoaded"
             }
           }
         },
@@ -62,10 +68,28 @@
                 "DataSource": "ds1",
                 "Property": "LName"
               }
+            },
+            "OnValueChanged": {
+              "Name": "OnValueChanged1"
             }
           }
         }
       ]
     }
-  }
+  },
+  "Scripts": [
+    {
+      "Name": "OnValueChanged1",
+      "Body": "console.log(args.source.children.getParent()); console.log(args.source.getName(), args.value);"
+    },
+    {
+      "Name": "OnValueChanged2",
+      "Body": "debugger;console.log(args);"
+    },
+    {
+      "Name": "OnLoaded",
+      "Body": "console.log('OnLoaded', arguments);"
+    }
+  ]
+
 }

@@ -10,6 +10,8 @@ _.extend(ApplicationBuilder.prototype, {
 
     registerElementBuilders: function(){
         var builder = this.builder;
+        builder.register('BaseMessage', new BaseMessageBuilder());
+        builder.register('DataSourceMessage', new DataSourceMessageBuilder());
 
         builder.register('View', new ViewBuilder());
         builder.register('InlineView', new InlineViewBuilder());

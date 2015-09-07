@@ -99,7 +99,7 @@ var DataGridBuilder = function () {
         this.parent = parent;
         var dataGrid = new DataGrid(parent);
 
-        this.initScriptsHandlers(parent, metadata, dataGrid);
+        this.initScriptsHandlers(parent, metadata, dataGrid, builder);
 
         /** Begin CustomColors Init **/
         /** @TODO Отрефакторить после описания метаданных */
@@ -257,11 +257,14 @@ var DataGridBuilder = function () {
      * @param metadata
      * @param {DataGrid} dataGrid
      */
-    this.initScriptsHandlers = function (parent, metadata, dataGrid) {
+    this.initScriptsHandlers = function (parent, metadata, dataGrid, builder) {
         // Скриптовые обработчики на события
         if (parent && metadata.OnLoaded){
             dataGrid.onLoaded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: dataGrid
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name, message);
             });
         }
 
