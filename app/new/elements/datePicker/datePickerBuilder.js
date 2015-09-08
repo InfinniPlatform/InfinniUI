@@ -10,7 +10,7 @@ function DatePickerBuilder() {
 _.inherit(DatePickerBuilder, TextEditorBaseBuilder);
 
 DatePickerBuilder.prototype.createElement = function (params) {
-    return new DatePickerBuilder(params.parent);
+    return new DatePicker(params.parent);
 };
 
 DatePickerBuilder.prototype.applyMetadata = function (params) {
@@ -22,5 +22,8 @@ DatePickerBuilder.prototype.applyMetadata = function (params) {
     element.setMinValue(metadata.MinValue);
     element.setMaxValue(metadata.MaxValue);
     element.setMode(metadata.Mode);
+
+    var format = params.builder.buildType(params.parent, 'DateFormat', {}, null);
+    element.setDateFormat(format);
 };
 

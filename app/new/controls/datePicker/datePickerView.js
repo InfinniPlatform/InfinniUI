@@ -7,17 +7,18 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
     template: InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
-
+        dropdown: '.pl-datepicker-calendar'
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
         'focus .pl-date-picker-input': 'onFocusControlHandler',
         'mouseenter .pl-date-picker-input': 'onMouseenterControlHandler',
+        'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     }),
 
     render: function () {
         this.prerenderingActions();
-        this.renderTemplate(this.template);
+        this.renderTemplate(this.getTemplate());
         this.renderDatePickerEditor();
         this.trigger('render');
         this.postrenderingActions();
@@ -83,6 +84,25 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
      */
     onEditorValidate: function (value) {
         return true;
+    },
+
+    /** DatePicker **/
+    getTemplate: function () {
+        return InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"];
+    },
+
+    onClickDropdownHandler: function (event) {
+        var calendar = new DatePickerDropdown({
+            model: this.model
+        });
+        calendar.render();
+        //@TODO Переделать
+        $('body').append(calendar.$el);
+
+        calendar.$el.css({
+            top: event.clientY,
+            left: event.clientX
+        });
     }
 
 });

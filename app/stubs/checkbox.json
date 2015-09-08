@@ -151,6 +151,17 @@
               }
             }
           }
+        },
+        {
+          "DatePicker": {
+            "Mode": "Date",
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
+              }
+            }
+          }
         }
       ]
     }

@@ -38,3 +38,8 @@ DatePicker.prototype.setMode = function (value) {
     this.control.set('mode', value);
 };
 
+DatePicker.prototype.setDateFormat = function (value) {
+    this.control.set('format', value);
+};
+
+

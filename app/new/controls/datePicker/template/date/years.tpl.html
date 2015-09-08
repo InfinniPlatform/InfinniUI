@@ -1,0 +1,66 @@
+<style>
+    .year {
+        padding: 5px;
+    }
+
+    .year {
+        color: #000000;
+    }
+
+    .year-begin, .year-end {
+        opacity: 0.5;
+    }
+
+    .year-current {
+        background: #d4e2ee;
+    }
+
+</style>
+<table>
+    <thead>
+    <tr>
+        <th>
+            <button>&laquo;</button>
+        </th>
+        <th colspan="2">
+            <span class="from-year">Начало - Конец</span>
+            <span class="to-year"></span>
+        </th>
+        <th>
+            <button>&raquo;</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="years">
+        <td class="year year-begin">1999</td>
+        <td class="year">2000</td>
+        <td class="year">2001</td>
+        <td class="year">2002</td>
+    </tr>
+    <tr class="years">
+        <td class="year">2003</td>
+        <td class="year">2004</td>
+        <td class="year">2005</td>
+        <td class="year">2006</td>
+    </tr>
+    <tr class="years">
+        <td class="year">2007</td>
+        <td class="year">2008</td>
+        <td class="year">2009</td>
+        <td class="year year-end">2010</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th colspan="4">
+            <button>Сегодня</button>
+        </th>
+    </tr>
+    <tr>
+        <th colspan="4">
+            <button>Очистить</button>
+        </th>
+    </tr>
+    </tfoot>
+</table>
