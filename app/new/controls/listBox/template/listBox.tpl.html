@@ -1,1 +1,22 @@
-<div class="listbox-items"></div>
+<ul class="pl-listbox-control">
+    <% items.forEach(function(item, index){%>
+        <li class="pl-listbox-i">
+            <div class="pl-listbox-input">
+                <% buildListboxInput(index); %>
+            </div>
+            <div class="pl-listbox-body"></div>
+        </li>
+    <%});%>
+</ul>
+
+<%function buildListboxInput(i){
+    if(isMultiselect){
+        %>
+            <input type = "checkbox" name="<%= inputName + '-' + i %>" />
+        <%
+    }else{
+        %>
+            <input type = "radio" name="<%= inputName %>" />
+        <%
+    }
+}%>

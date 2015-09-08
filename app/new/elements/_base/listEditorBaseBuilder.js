@@ -112,6 +112,19 @@ _.extend(ListEditorBaseBuilder.prototype, {
         element.setGroupValueSelector(groupValueSelector);
     },
 
+    initGroupItemTemplate: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+        var itemTemplate;
+
+        if(metadata.GroupItemTemplate){
+            itemTemplate = this.buildItemTemplate(metadata.GroupItemTemplate, params);
+            element.setGroupItemTemplate(itemTemplate);
+        }else {
+            throw 'Нужно обработать другие варианты элементов';
+        }
+    },
+
     initValueFeatures: function(params){
         var metadata = params.metadata;
         var element = params.element;

@@ -34,18 +34,18 @@ function editorBaseMixin() {
 
     this.onValueChanging =  function (handler) {
         this.control.onValueChanging(
-            createControlEventHandler(this, handler, {property: 'value'})
+            this.createControlEventHandler(this, handler, {property: 'value'})
         );
     };
 
     this.onValueChanged = function (handler) {
         this.control.onValueChanged(
-            createControlEventHandler(this, handler, {property: 'value'})
+            this.createControlEventHandler(this, handler, {property: 'value'})
         );
     };
 
 
-    function createControlEventHandler(element, handler, additionParams) {
+    this.createControlEventHandler = function(element, handler, additionParams) {
         var context;
         additionParams = additionParams || {};
 
@@ -62,5 +62,5 @@ function editorBaseMixin() {
 
             return handler.call(undefined, context, message);
         };
-    }
+    };
 }

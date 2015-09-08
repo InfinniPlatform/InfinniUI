@@ -166,25 +166,42 @@ describe('ListBox', function () {
         ],
         LayoutPanel: {
 
-            ListBox: {
-                "ItemTemplate": {
-                    "TextBox": {
-                        "Name": "TextBox1",
-                        "Value": {
-                            "PropertyBinding":{
-                                "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
+            StackPanel: {
+                Name: 'MainViewPanel',
+                "Items" : [
+                    {
+                        ListBox: {
+                            "ItemTemplate": {
+                                "TextBox": {
+                                    "Name": "TextBox1",
+                                    "Value": {
+                                        "PropertyBinding":{
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "$.Display"
+                                        }
+                                    }
+                                }
+                            },
+                            "GroupItemTemplate": {
+                                "TextBox": {
+                                    "Value": {
+                                        "PropertyBinding":{
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "$.Display"
+                                        }
+                                    }
+                                }
+                            },
+                            "GroupValueProperty": "Display",
+                            "Items" : {
+                                "PropertyBinding": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": ""
+                                }
                             }
                         }
                     }
-                },
-                "GroupValueProperty": "Display",
-                "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
+                ]
             }
         }
     };
@@ -198,7 +215,7 @@ describe('ListBox', function () {
 
             var linkView = new LinkView(null, function (resultCallback) {
                 var builder = new ApplicationBuilder();
-                var view = builder.buildType(fakeView(), 'View', metadata);
+                var view = builder.buildType('View', metadata, {parentView: fakeView()});
                 resultCallback(view);
             });
             linkView.setOpenMode('Application');
