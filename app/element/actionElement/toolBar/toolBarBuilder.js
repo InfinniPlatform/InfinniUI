@@ -36,13 +36,6 @@ _.extend(ToolBarBuilder.prototype, {
     },
 
     initScriptsHandlers: function(params){
-        var metadata = params.metadata;
 
-        //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
-            params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
-            });
-        }
     }
 });

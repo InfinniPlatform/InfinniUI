@@ -38,7 +38,7 @@ function BaseDataSourceBuilder() {
 
         dataSource.setQueryFilter(queryFilter);
 
-        this.initScriptsHandlers(parent, metadata, dataSource);
+        this.initScriptsHandlers(parent, metadata, dataSource, builder);
 
         buildValidation.apply(this, arguments);
 
@@ -79,37 +79,62 @@ function BaseDataSourceBuilder() {
         });
     };
 
-    this.initScriptsHandlers = function (parent, metadata, dataSource) {
+    this.initScriptsHandlers = function (parent, metadata, dataSource, builder) {
         //Скриптовые обработчики на события
         if (parent) {
             dataSource.onSelectedItemChanged(function () {
                 var exchange = parent.getExchange();
+                var selectedItem = dataSource.getSelectedItem();
+
                 exchange.send(messageTypes.onSelectedItemChanged, {
                     DataSource: dataSource.getName(),
-                    Value: dataSource.getSelectedItem()
+                    Value: selectedItem
                 });
 
                 if (metadata.OnSelectedItemChanged) {
-                    new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name);
+                    var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
+                        source: dataSource,
+                        value: selectedItem,
+                        dataSource: dataSource.getName()
+                    });
+                    new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name, message);
                 }
             });
         }
 
         if (parent && metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnItemsUpdated.Name);
+                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
+                    source: dataSource,
+                    value: dataSource.getDataItems(),
+                    dataSource: dataSource.getName()
+                });
+
+                new ScriptExecutor(parent).executeScript(metadata.OnItemsUpdated.Name, message);
             });
         }
 
         if (parent && metadata.OnSelectedItemModified) {
             dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemModified.Name);
+                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
+                    source: dataSource,
+                    value: dataSource.getSelectedItem(),
+                    dataSource: dataSource.getName()
+                });
+
+                new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemModified.Name, message);
             });
         }
 
         if (parent && metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnItemDeleted.Name);
+            dataSource.onItemDeleted(function (context, args) {
+                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
+                    source: dataSource,
+                    value: args.value,
+                    dataSource: dataSource.getName()
+                });
+
+                new ScriptExecutor(parent).executeScript(metadata.OnItemDeleted.Name, message);
             });
         }
     };

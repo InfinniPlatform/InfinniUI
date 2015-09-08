@@ -361,7 +361,7 @@ var pickersStrategy = {
             }).on('show', function(e){
                 var $elem = $('.modal-open > .datetimepicker');
                 var zIndexStyle = 'z-index:'+self.datePickerZindex()+' !important';
-                if($elem.attr('style').indexOf(zIndexStyle) <= 0) {
+                if($elem.length && $elem.attr('style').indexOf(zIndexStyle) <= 0) {
                     $elem.attr('style', $elem.attr('style') + zIndexStyle);
                 }
             });

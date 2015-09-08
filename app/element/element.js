@@ -216,6 +216,6 @@ _.extend(Element.prototype, {
             data.source = element;
             handler(data);
         };
-        return this.control.onKeyDown(callback);
+        return this.control.onKeyDown(handler);
     }
 });

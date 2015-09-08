@@ -56,22 +56,41 @@ _.extend(ElementBuilder.prototype, {
         element.setStyle(metadata.Style);
 
         if (metadata.OnLoaded) {
+
             element.onLoaded(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name, message);
+            }.bind(this));
         }
 
         if (metadata.OnGotFocus){
             params.element.onGotFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name, message);
+            }.bind(this));
         }
 
         if (metadata.OnLostFocus){
             params.element.onLostFocus(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name);
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name, message);
             });
         }
+    },
+
+    getBaseMessage: function (params) {
+        return params.builder.buildType(params.parent, 'BaseMessage', null, null, {
+            source: params.element
+        });
+    },
+
+    getDataSourceMessage: function (params, dataBinding) {
+        return params.builder.buildType(params.parent, 'DataSourceMessage', null, null, {
+            source: params.element,
+            value: params.element.getValue(),
+            dataSource: dataBinding && dataBinding.getDataSource && dataBinding.getDataSource(),
+            property: dataBinding && dataBinding.getProperty && dataBinding.getProperty()
+        });
     },
 
     initTextBinding: function(params, bindingMetadata){

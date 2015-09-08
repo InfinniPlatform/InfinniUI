@@ -65,10 +65,10 @@ function ListBoxBuilder() {
                 });
             }
 
-
-            if(metadata.OnValueChanged){
-                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name, dataItem);
-            }
+            // @TODO Проверить данное поведение!!
+            //if(metadata.OnValueChanged){
+            //    new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name, dataItem);
+            //}
         });
 
         (function () {

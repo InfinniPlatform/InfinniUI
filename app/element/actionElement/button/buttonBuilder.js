@@ -32,8 +32,8 @@ _.extend(ButtonBuilder.prototype, {
 
         if (params.parent && metadata.OnClick){
             params.element.onClick(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name);
-            });
+                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name, this.getBaseMessage(params));
+            }.bind(this));
         }
     },
 

@@ -44,16 +44,18 @@ _.extend(ViewBuilder.prototype, {
             _.each(view.getNestedViews(), removeView);
 
             if (metadata.OnClosed) {
-                new ScriptExecutor(view).executeScript(metadata.OnClosed.Name);
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(view).executeScript(metadata.OnClosed.Name, message);
             }
 
             removeView(view);
-        });
+        }.bind(this));
 
         if (metadata.OnClosing) {
             view.OnClosing(function() {
-                new ScriptExecutor(view.getScriptsStorage()).executeScript(metadata.OnClosing.Name);
-            });
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(view.getScriptsStorage()).executeScript(metadata.OnClosing.Name, message);
+            }.bind(this));
         }
 
         view.setDataSources(params.builder.buildMany(view, metadata.DataSources));
@@ -99,7 +101,11 @@ _.extend(ViewBuilder.prototype, {
                     (function(parameter) {
                         //debugger;
                         view.getParameter(parameter.Name).onValueChanged(function(arg1, value) {
-                            new ScriptExecutor(view).executeScript(parameter.OnValueChanged.Name, value);
+                            var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                                source: parameter,
+                                value: value
+                            });
+                            new ScriptExecutor(view).executeScript(parameter.OnValueChanged.Name, message);
                         });
                     })(parameters[i]);
 

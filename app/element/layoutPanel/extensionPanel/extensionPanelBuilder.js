@@ -44,11 +44,6 @@ _.extend(ExtensionPanelBuilder.prototype, {
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
-        if (params.parent && metadata.OnLoaded){
-            params.element.onLoaded(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLoaded.Name);
-            });
-        }
     },
 
     createElement: function (params) {

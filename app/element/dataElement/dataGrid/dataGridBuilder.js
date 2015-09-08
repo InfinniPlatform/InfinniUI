@@ -99,7 +99,7 @@ var DataGridBuilder = function () {
         this.parent = parent;
         var dataGrid = new DataGrid(parent);
 
-        this.initScriptsHandlers(parent, metadata, dataGrid);
+        this.initScriptsHandlers(parent, metadata, dataGrid, builder);
 
         /** Begin CustomColors Init **/
         /** @TODO Отрефакторить после описания метаданных */
@@ -185,12 +185,29 @@ var DataGridBuilder = function () {
             dataGrid.onValueChanged(function (context, args) {
                 valueBinding.setPropertyValue(dataGrid.getValue());
             });
+
+            //@TODO Удалить, после наследования от ElementBuilder
+            if (parent && metadata.OnValueChanged) {
+                dataGrid.onValueChanged (function () {
+                    var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
+                        source: dataGrid,
+                        value: dataGrid.getValue(),
+                        dataSource: valueBinding.getDataSource && valueBinding.getDataSource()
+                    });
+                    new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name, message);
+                });
+            }
         }
 
         if (metadata.OnKeyDown) {
             dataGrid.onKeyDown(function (data) {
-                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, data);
-            });
+                //var message = this.getBaseMessage(params);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: dataGrid,
+                    value: data
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnKeyDown.Name, message);
+            }.bind(this));
         }
 
         if (typeof metadata.ToolBar !== 'undefined') {
@@ -257,23 +274,25 @@ var DataGridBuilder = function () {
      * @param metadata
      * @param {DataGrid} dataGrid
      */
-    this.initScriptsHandlers = function (parent, metadata, dataGrid) {
+    this.initScriptsHandlers = function (parent, metadata, dataGrid, builder) {
         // Скриптовые обработчики на события
+
+        //@TODO Удалить, после наследования от ElementBuilder
         if (parent && metadata.OnLoaded){
             dataGrid.onLoaded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name);
-            });
-        }
-
-        if (parent && metadata.OnValueChanged) {
-            dataGrid.onValueChanged (function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: dataGrid
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name, message);
             });
         }
 
         if(parent && metadata.OnDoubleClick) {
             dataGrid.onDoubleClick(function (args) {
-                new ScriptExecutor(parent).executeScript(metadata.OnDoubleClick.Name, args);
+                var message = builder.buildType(parent, 'BaseMessage', null, null, {
+                    source: dataGrid
+                });
+                new ScriptExecutor(parent).executeScript(metadata.OnDoubleClick.Name, message);
             });
         }
     };
