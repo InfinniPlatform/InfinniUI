@@ -2,14 +2,14 @@
     <% items.forEach(function(item, index){%>
         <li class="pl-listbox-i">
             <div class="pl-listbox-input">
-                <% buildListboxInput(index); %>
+                <% buildListboxInput(index, isMultiselect, inputName); %>
             </div>
             <div class="pl-listbox-body"></div>
         </li>
     <%});%>
 </ul>
 
-<%function buildListboxInput(i){
+<%function buildListboxInput(i, isMultiselect, inputName){
     if(isMultiselect){
         %>
             <input type = "checkbox" name="<%= inputName + '-' + i %>" />

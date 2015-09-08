@@ -75,8 +75,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
     },
 
     initGroup: function(params){
-        this.initGroupValueSelector(params);
-        this.initGroupItemTemplate(params);
+        if(this.hasGrouping(params)){
+            this.initGroupValueSelector(params);
+            this.initGroupItemTemplate(params);
+        }
+    },
+
+    hasGrouping: function(params){
+        return params.metadata.GroupValueSelector || params.metadata.GroupValueProperty;
     },
 
     initGroupValueSelector: function (params) {
