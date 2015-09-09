@@ -80,7 +80,6 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     initOnChangeHandlers: function () {
-        this.listenTo(this.model, 'change:year', this.fillCalendar);
         this.listenTo(this.model, 'change:month', this.onChangeMonthHandler);
         this.listenTo(this.model, 'change:year', this.onChangeYearHandler);
     },
@@ -88,10 +87,12 @@ var DatePickerDays = DatePickerComponent.extend({
     onChangeMonthHandler: function (model, value) {
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         this.ui.month.text(dateTimeFormatInfo.monthNames[value]);
+        this.fillCalendar();
     },
 
     onChangeYearHandler: function (model, value) {
         this.ui.year.text(value);
+        this.fillCalendar();
     },
 
     fillLegend: function () {
@@ -117,10 +118,13 @@ var DatePickerDays = DatePickerComponent.extend({
 
     fillCalendar: function () {
         var date = new Date();
-        var firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        var model = this.model;
+        var month = model.get('month');
+        var year = model.get('year');
+        var firstDayOfMonth = new Date(year, month, 1);
         var weekday = firstDayOfMonth.getDay();
-        var month = firstDayOfMonth.getMonth();
-        var startDate = new Date(firstDayOfMonth.getFullYear(), month, 1 - weekday);
+
+        var startDate = new Date(year, month, 1 - weekday);
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
