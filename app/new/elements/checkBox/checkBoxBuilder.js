@@ -1,6 +1,6 @@
 function CheckBoxBuilder() {
     _.superClass(CheckBoxBuilder, this);
-    editorBaseBuilderMixin.call(this);
+    this.initialize_editorBaseBuilder();
 }
 
 _.inherit(CheckBoxBuilder, ElementBuilder);
@@ -13,7 +13,7 @@ _.extend(CheckBoxBuilder.prototype, {
 
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
-        editorBaseBuilderMixin.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
     }
 
-});
+}, editorBaseBuilderMixin);

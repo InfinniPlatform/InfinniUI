@@ -1,7 +1,7 @@
 function ListEditorBaseBuilder() {
     _.superClass(ListEditorBaseBuilder, this);
 
-    editorBaseBuilderMixin.call(this);
+    this.initialize_editorBaseBuilder();
 }
 
 _.inherit(ListEditorBaseBuilder, ContainerBuilder);
@@ -11,7 +11,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
 
     applyMetadata: function (params) {
         ContainerBuilder.prototype.applyMetadata.call(this, params);
-        editorBaseBuilderMixin.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
 
         this.initItems(params);
         this.initGroup(params);
@@ -165,7 +165,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
 
         element.setValueComparator(new ComparatorId());
     }
-});
+}, editorBaseBuilderMixin);
 /*
     initValue: function(params){
         var metadata = params.metadata;

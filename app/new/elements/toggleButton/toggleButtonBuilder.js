@@ -5,27 +5,30 @@
  */
 function ToggleButtonBuilder() {
     _.superClass(ToggleButtonBuilder, this);
-    editorBaseBuilderMixin.call(this);
+    this.initialize_editorBaseBuilder();
 }
 
 _.inherit(ToggleButtonBuilder, ElementBuilder);
 
-ToggleButtonBuilder.prototype.createElement = function (params) {
-    return new ToggleButton(params.parent);
-};
 
-ToggleButtonBuilder.prototype.applyMetadata = function (params) {
-    ElementBuilder.prototype.applyMetadata.call(this, params);
-    editorBaseBuilderMixin.applyMetadata.call(this, params);
+_.extend(ToggleButtonBuilder.prototype, {
+    createElement: function (params) {
+        return new ToggleButton(params.parent);
+    },
 
-    /** @type {ToggleButton} */
-    var element = params.element;
-    /** @type {ToggleButtonMetadata} */
-    var metadata = params.metadata;
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
 
-    element.setTextOff(metadata.TextOff);
-    element.setTextOn(metadata.TextOn);
-};
+        /** @type {ToggleButton} */
+        var element = params.element;
+        /** @type {ToggleButtonMetadata} */
+        var metadata = params.metadata;
+
+        element.setTextOff(metadata.TextOff);
+        element.setTextOn(metadata.TextOn);
+    }
+}, editorBaseBuilderMixin);
 
 /**
  * @typedef {Object} ToggleButtonMetadata

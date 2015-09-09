@@ -7,51 +7,54 @@
  */
 function TextEditorBaseBuilder() {
     _.superClass(TextEditorBaseBuilder, this);
-    editorBaseBuilderMixin.call(this);
+    this.initialize_editorBaseBuilder();
 }
 
 _.inherit(TextEditorBaseBuilder, ElementBuilder);
 
-TextEditorBaseBuilder.prototype.applyMetadata = function (params) {
-    ElementBuilder.prototype.applyMetadata.call(this, params);
-    editorBaseBuilderMixin.applyMetadata.call(this, params);
+_.extend(TextEditorBaseBuilder.prototype, {
 
-    var metadata = params.metadata;
-    var element = params.element;
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
 
-    element.setLabelText(metadata.LabelText);
-    element.setLabelFloating(metadata.LabelFloating);
+        var metadata = params.metadata;
+        var element = params.element;
 
-    this
-        .initDisplayFormat(params)
-        .initEditMask(params);
-};
+        element.setLabelText(metadata.LabelText);
+        element.setLabelFloating(metadata.LabelFloating);
 
-TextEditorBaseBuilder.prototype.initDisplayFormat = function (params) {
-    var
-        metadata = params.metadata,
-        builder = params.builder,
-        displayFormat;
+        this
+            .initDisplayFormat(params)
+            .initEditMask(params);
+    },
 
-    if (metadata.DisplayFormat) {
-        displayFormat = builder.build(params.parent, metadata.DisplayFormat);
+    initDisplayFormat: function (params) {
+        var
+            metadata = params.metadata,
+            builder = params.builder,
+            displayFormat;
+
+        if (metadata.DisplayFormat) {
+            displayFormat = builder.build(params.parent, metadata.DisplayFormat);
+        }
+        params.element.setDisplayFormat(displayFormat);
+        return this;
+    },
+
+    initEditMask: function (params) {
+        var
+            metadata = params.metadata,
+            builder = params.builder,
+            editMask;
+
+        if (metadata.EditMask) {
+            editMask = builder.build(params.parent, metadata.EditMask);
+        }
+        params.element.setEditMask(editMask);
+        return this;
     }
-    params.element.setDisplayFormat(displayFormat);
-    return this;
-};
-
-TextEditorBaseBuilder.prototype.initEditMask = function (params) {
-    var
-        metadata = params.metadata,
-        builder = params.builder,
-        editMask;
-
-    if (metadata.EditMask) {
-        editMask = builder.build(params.parent, metadata.EditMask);
-    }
-    params.element.setEditMask(editMask);
-    return this;
-};
+}, editorBaseBuilderMixin);
 
 
 
