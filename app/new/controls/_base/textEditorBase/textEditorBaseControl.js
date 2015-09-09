@@ -7,11 +7,9 @@
  */
 function TextEditorBaseControl(parent) {
     _.superClass(TextEditorBaseControl, this, parent);
-    editorBaseControlMixin.call(this);
+    this.initialize_editorBaseControl();
 }
 
 _.inherit(TextEditorBaseControl, Control);
 
-TextEditorBaseControl.prototype.onSelectedItemChanged = function (handler) {
-    this.controlModel.onSelectedItemChanged(handler);
-};
+_.extend(TextEditorBaseControl.prototype, editorBaseControlMixin);

@@ -1,6 +1,6 @@
 function ToggleButtonControl(parent) {
     _.superClass(ToggleButtonControl, this, parent);
-    editorBaseControlMixin.call(this);
+    this.initialize_editorBaseControl();
 }
 
 _.inherit(ToggleButtonControl, Control);
@@ -14,5 +14,5 @@ _.extend(ToggleButtonControl.prototype, {
     createControlView: function (model) {
         return new ToggleButtonView({model: model});
     }
-});
+}, editorBaseControlMixin);
 

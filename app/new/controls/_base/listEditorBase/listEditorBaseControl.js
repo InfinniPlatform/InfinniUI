@@ -1,10 +1,13 @@
 function ListEditorBaseControl(parent) {
     _.superClass(ListEditorBaseControl, this, parent);
-    editorBaseControlMixin.call(this);
+    this.initialize_editorBaseControl();
 }
 
 _.inherit(ListEditorBaseControl, ContainerControl);
 
-ListEditorBaseControl.prototype.onSelectedItemChanged = function (handler) {
-    this.controlModel.onSelectedItemChanged(handler);
-};
+_.extend(ListEditorBaseControl.prototype, {
+
+    onSelectedItemChanged: function (handler) {
+        this.controlModel.onSelectedItemChanged(handler);
+    }
+}, editorBaseControlMixin);

@@ -1,18 +1,22 @@
-function editorBaseControlMixin() {
+var editorBaseControlMixin = {
 
-    this.setValue = function (value) {
+    initialize_editorBaseControl: function(){
+
+    },
+
+    setValue: function (value) {
         this.controlModel.set('value', value);
-    };
+    },
 
-    this.getValue = function () {
+    getValue: function () {
         return this.controlModel.get('value');
-    };
+    },
 
-    this.onValueChanging = function (handler) {
+    onValueChanging: function (handler) {
         this.controlModel.onValueChanging(handler);
-    };
+    },
 
-    this.onValueChanged = function (handler) {
+    onValueChanged: function (handler) {
         this.controlModel.onValueChanged(handler);
-    };
-}
+    }
+};
