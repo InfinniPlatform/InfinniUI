@@ -1,3 +1,3 @@
-function editorBaseViewMixin() {
+var editorBaseViewMixin = {
 
-}
+};
