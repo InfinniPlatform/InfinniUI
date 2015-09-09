@@ -48,7 +48,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
         if(metadata.ItemTemplate){
             itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
             element.setItemTemplate(itemTemplate);
-        }else {
+        }else if(metadata.ItemTemplate){
             throw 'Нужно обработать другие варианты элементов';
         }
     },
