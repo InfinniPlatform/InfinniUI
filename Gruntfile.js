@@ -16,7 +16,7 @@
             'app/utils/namespace.js',
             'app/element/**/metadata.js',
             'app/config.js',
-            'app/utils/*.js',
+            'app/utils/**/*.js',
             'app/messaging/**/*.js',
             'app/controls/_base/**/*.js',
             'app/element/_mixins/*.js',
