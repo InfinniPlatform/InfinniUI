@@ -305,4 +305,73 @@ describe('ListBox', function () {
         });
     });
 
+
+
+    var metadata5 = {
+        Text: 'Пациенты',
+        DataSources : [
+            {
+                ObjectDataSource: {
+                    "Name": "ObjectDataSource1",
+                    "Items": [
+                        { "Id": 1, "Display": "LTE" },
+                        { "Id": 2, "Display": "2G" },
+                        { "Id": 3, "Display": "2G" }
+                    ]
+                }
+            }
+        ],
+        LayoutPanel: {
+
+            ListBox: {
+                "ItemTemplate": {
+                    "Label": {
+                        "Value": {
+                            "PropertyBinding":{
+                                "Source": "ObjectDataSource1",
+                                "Property": "$.Display"
+                            }
+                        }
+                    }
+                },
+                "Items" : {
+                    "PropertyBinding": {
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
+                    }
+                }
+            }
+        }
+    };
+
+    describe('render lb3', function () {
+        it('should render listBox without grouping', function () {
+            // Given When
+            window.providerRegister.register('DocumentDataSource', function () {
+                return new FakeDataProvider();
+            });
+
+            var linkView = new LinkView(null, function (resultCallback) {
+                var builder = new ApplicationBuilder();
+                var view = builder.buildType('View', metadata5, {parentView: fakeView()});
+                resultCallback(view);
+            });
+            linkView.setOpenMode('Application');
+
+            var view = linkView.createView(function (view) {
+                view.open();
+
+                var $listbox = $('#sandbox').children();
+                //$listbox.detach();
+
+                onListboxReady($listbox);
+            });
+
+            // Then
+            function onListboxReady($listbox){
+                assert.lengthOf($listbox.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+            }
+        });
+    });
+
 });

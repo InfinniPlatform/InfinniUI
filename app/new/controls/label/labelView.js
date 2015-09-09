@@ -1,7 +1,7 @@
 var LabelView = ControlView.extend({
     className: 'pl-label',
 
-    template: InfinniUI.Template["controls/label/template/label.tpl.html"],
+    template: InfinniUI.Template["new/controls/label/template/label.tpl.html"],
 
     UI: {
         control: 'label',
