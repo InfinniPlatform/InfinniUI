@@ -11,23 +11,24 @@
         opacity: 0.5;
     }
 
-    .year-current {
+    .year-today {
         background: #d4e2ee;
     }
 
 </style>
 <table>
     <thead>
-    <tr>
-        <th>
-            <button>&laquo;</button>
+    <tr class="navigation">
+        <th class="navigation-prev">
+            <button class="btn-year btn-year-prev">&laquo;</button>
         </th>
         <th colspan="2">
-            <span class="from-year">Начало - Конец</span>
-            <span class="to-year"></span>
+            <span class="year-begin"></span>
+            -
+            <span class="year-end"></span>
         </th>
-        <th>
-            <button>&raquo;</button>
+        <th class="navigation-next">
+            <button class="btn-year btn-year-next">&raquo;</button>
         </th>
     </tr>
     </thead>
@@ -45,6 +46,18 @@
         <td class="year">2006</td>
     </tr>
     <tr class="years">
+        <td class="year">2003</td>
+        <td class="year">2004</td>
+        <td class="year">2005</td>
+        <td class="year">2006</td>
+    </tr>
+    <tr class="years">
+        <td class="year">2003</td>
+        <td class="year">2004</td>
+        <td class="year">2005</td>
+        <td class="year">2006</td>
+    </tr>
+    <tr class="years">
         <td class="year">2007</td>
         <td class="year">2008</td>
         <td class="year">2009</td>
@@ -54,7 +67,7 @@
     <tfoot>
     <tr>
         <th colspan="4">
-            <button>Сегодня</button>
+            <button class="today today-year">Сегодня</button>
         </th>
     </tr>
     <tr>

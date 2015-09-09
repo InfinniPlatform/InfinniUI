@@ -1,14 +1,73 @@
-var DatePickerDays = Backbone.View.extend({
+var DatePickerDaysModel = Backbone.Model.extend({
+    defaults: function () {
+        var today = moment();
+
+        return {
+            today: today.toDate(),
+            todayMonth: today.month(),
+            todayDay: today.date(),
+            todayYear: today.year()
+        }
+    },
+
+    initialize: function () {
+        this.on('change:date', this.onChangeDateHandler, this);
+    },
+
+    onChangeDateHandler: function (model, value) {
+        if (typeof value !== 'undefined' && value !== null) {
+            var date = moment(value);
+            model.set('month', date.month());
+            model.set('year', date.year());
+            model.set('day', date.date());
+        } else {
+            model.set('month', null);
+            model.set('year', null);
+            model.set('day', null);
+        }
+    },
+
+    nextMonth: function () {
+        var
+            month = this.get('month'),
+            year = this.get('year');
+
+        this.set({
+            month: month === 11 ? 0: month + 1,
+            year: month === 11 ? year + 1 : year
+        });
+    },
+
+    prevMonth: function () {
+        var
+            month = this.get('month'),
+            year = this.get('year');
+
+        this.set({
+            month: month === 0 ? 11: month - 1,
+            year: month === 0 ? year - 1 : year
+        });
+    }
+
+});
+
+var DatePickerDays = DatePickerComponent.extend({
+
+    modelClass: DatePickerDaysModel,
 
     template: InfinniUI.Template["new/controls/datePicker/template/date/days.tpl.html"],
 
     UI: {
         headerDays: '.weekdays-head .day',
-        calendarDays: '.weekdays-calendar .day'
+        calendarDays: '.weekdays-calendar .day',
+        year: '.years-year',
+        month: '.years-month'
     },
 
     events: {
-        'click .years': 'onYearsClickHandler'
+        'click .years': 'onYearsClickHandler',
+        'click .btn-month-prev': 'prevMonth',
+        'click .btn-month-next': 'nextMonth'
     },
 
     render: function () {
@@ -17,6 +76,22 @@ var DatePickerDays = Backbone.View.extend({
         this.bindUIElements();
         this.fillLegend();
         this.fillCalendar();
+        this.initOnChangeHandlers();
+    },
+
+    initOnChangeHandlers: function () {
+        this.listenTo(this.model, 'change:year', this.fillCalendar);
+        this.listenTo(this.model, 'change:month', this.onChangeMonthHandler);
+        this.listenTo(this.model, 'change:year', this.onChangeYearHandler);
+    },
+
+    onChangeMonthHandler: function (model, value) {
+        var dateTimeFormatInfo = localized.dateTimeFormatInfo;
+        this.ui.month.text(dateTimeFormatInfo.monthNames[value]);
+    },
+
+    onChangeYearHandler: function (model, value) {
+        this.ui.year.text(value);
     },
 
     fillLegend: function () {
@@ -51,6 +126,7 @@ var DatePickerDays = Backbone.View.extend({
             var $el = $(el);
             var d = new Date(startDate.getFullYear(), month, startDate.getDay() + i);
             $el.text(d.getDate());
+            $el.attr('data-date', moment(d).format('YYYY-MM-DD'));
             markWeekend($el, i % 7);
             markActiveMonth($el, d.getMonth() === month);
         });
@@ -65,9 +141,15 @@ var DatePickerDays = Backbone.View.extend({
     },
 
     onYearsClickHandler: function (event) {
-        this.trigger('years');
+        this.trigger('year');
+    },
+
+    prevMonth: function () {
+        this.model.prevMonth();
+    },
+
+    nextMonth: function () {
+        this.model.nextMonth();
     }
 
 });
-
-_.extend(DatePickerDays.prototype, bindUIElementsMixin);

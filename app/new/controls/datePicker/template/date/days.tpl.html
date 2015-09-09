@@ -16,17 +16,36 @@
     .day-weekend {
         color: #FF0000;
     }
+
+    .today {
+        width: 100%;
+    }
+
+    .years {
+        text-align: center;
+    }
+
+    .navigation-next {
+        text-align: right;
+    }
+
+    .navigation-prev {
+        text-align: left;
+    }
 </style>
 
 <table>
     <thead>
-    <tr>
-        <th>
-            <button>&laquo;</button>
+    <tr class="navigation">
+        <th class="navigation-prev">
+            <button class="btn-month-prev">&laquo;</button>
         </th>
-        <th colspan="5" class="years">Месяц Год</th>
-        <th>
-            <button>&raquo;</button>
+        <th colspan="5" class="years">
+            <span class="years-month"></span>
+            <span class="years-year"></span>
+        </th>
+        <th class="navigation-next">
+            <button class="btn-month-next">&raquo;</button>
         </th>
     </tr>
     <tr class="weekdays weekdays-head">
@@ -98,7 +117,7 @@
     <tfoot>
     <tr>
         <th colspan="7">
-            <button>Сегодня</button>
+            <button class="today today-date">Сегодня</button>
         </th>
     </tr>
     <tr>

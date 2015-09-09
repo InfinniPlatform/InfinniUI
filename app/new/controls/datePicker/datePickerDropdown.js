@@ -19,40 +19,102 @@ var DatePickerDropdown = Backbone.View.extend({
         this.$el.html(template);
         this.bindUIElements();
         this.renderComponents();
-        $(document).on('click', function (event) {
-
-        });
     },
 
     renderComponents: function () {
-        var months = new DatePickerMonths({
-            el: this.ui.months,
-            model: this.model
-        });
-        months.render();
+        var model = this.model;
+        var value = model.get('value');
+        var m = moment(value);
 
-        var years = new DatePickerYears({
-            el: this.ui.years,
-            model: this.model
-        });
-        years.render();
+        if (m.isValid()) {
+            value = m.toDate();
+        } else {
+            value = null;
+        }
 
-        var days = new DatePickerDays({
-            el: this.ui.days,
-            model: this.model
-        });
-        days.render();
+        var options = {
+            value: value,
+            date: model.get('value'),
+            max: model.get('maxValue'),
+            min: model.get('minValue')
+        };
 
-        this.listenTo(days, 'years', this.showYearsPanel);
+        options.el = this.ui.months;
+        var months = new DatePickerMonths(options);
+
+        options.el = this.ui.years;
+        var years = new DatePickerYears(options);
+
+        options.el = this.ui.days;
+        var days = new DatePickerDays(options);
+
+        this.workflow(days, months, years);
     },
 
-    onClickBackdropHandler: function(event) {
+    onClickBackdropHandler: function (event) {
         this.remove();
     },
 
-    showYearsPanel: function () {
-        this.ui.days.hide();
-        this.ui.years.show();
+    workflow: function (days, months, years) {
+        var
+            value = this.model.get('value'),
+            date,
+            day,
+            month,
+            year;
+
+        if (typeof value !== 'undefined' && value !== null) {
+            date = moment(value);
+            day = date.date();
+            month = date.month();
+            year = date.year();
+        }
+
+        this
+            .listenTo(days, 'date', function () {
+                //Input complete. close dropdown
+                debugger;
+                console.log(arguments);
+            })
+            .listenTo(days, 'year', function (date) {
+                showYears(date);//Needed select year from list
+            })
+            .listenTo(years, 'year', function (date) {
+                showMonths(date);//Needed select month for year
+            })
+            .listenTo(months, 'year', function (date) {
+                showYears(date);//Needed select year from list
+            })
+            .listenTo(months, 'month', function (date) {
+                showDays(date);//Needed select day from calendar
+            });
+
+        showDays();
+
+        function showDays(date) {
+            days.setDate(date);
+
+            years.hide();
+            months.hide();
+            days.show();
+        }
+
+        function showMonths(date) {
+            months.setDate(date);
+
+            days.hide();
+            years.hide();
+            months.show();
+        }
+
+        function showYears(date) {
+            years.setDate(date);
+
+            days.hide();
+            months.hide();
+            years.show();
+        }
+
     }
 
 
