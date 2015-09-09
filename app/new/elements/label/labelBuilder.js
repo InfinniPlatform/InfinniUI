@@ -1,4 +1,6 @@
 function LabelBuilder() {
+    _.superClass(TextEditorBaseBuilder, this);
+    this.initialize_editorBaseBuilder();
 }
 
 _.inherit(LabelBuilder, ElementBuilder);
@@ -7,12 +9,12 @@ _.extend(LabelBuilder.prototype, {
 
     applyMetadata: function(params){
         ElementBuilder.prototype.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
 
         params.element.setLineCount(params.metadata.LineCount);
         params.element.setTextWrapping(params.metadata.TextWrapping);
         this.initScriptsHandlers(params);
         this.initFormatProperty(params);
-        this.initValueProperty(params);
         this.initHorizontalTextAlignmentProperty(params);
         this.initForeground(params);
         this.initBackground(params);
@@ -46,7 +48,7 @@ _.extend(LabelBuilder.prototype, {
     }
 
 },
-    builderValuePropertyMixin,
+    editorBaseBuilderMixin,
     builderFormatPropertyMixin,
     builderHorizontalTextAlignmentPropertyMixin,
     builderBackgroundMixin,
