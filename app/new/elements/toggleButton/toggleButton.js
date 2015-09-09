@@ -6,27 +6,31 @@
  */
 function ToggleButton(parent) {
     _.superClass(ToggleButton, this, parent);
-    editorBaseMixin.call(this);
+    this.initialize_editorBase();
 }
 
 _.inherit(ToggleButton, Element);
 
-ToggleButton.prototype.createControl = function (parent) {
-    return new ToggleButtonControl(parent);
-};
 
-ToggleButton.prototype.getTextOn = function () {
-    return this.control.get('textOn');
-};
+_.extend(ToggleButton.prototype, {
 
-ToggleButton.prototype.setTextOn = function (value) {
-    return this.control.set('textOn', value ? value : '');
-};
+    createControl: function (parent) {
+        return new ToggleButtonControl(parent);
+    },
 
-ToggleButton.prototype.getTextOff = function () {
-    return this.control.get('textOff');
-};
+    getTextOn: function () {
+        return this.control.get('textOn');
+    },
 
-ToggleButton.prototype.setTextOff = function (value) {
-    return this.control.set('textOff', value ? value : '');
-};
+    setTextOn: function (value) {
+        return this.control.set('textOn', value ? value : '');
+    },
+
+    getTextOff: function () {
+        return this.control.get('textOff');
+    },
+
+    setTextOff: function (value) {
+        return this.control.set('textOff', value ? value : '');
+    }
+}, editorBaseMixin);

@@ -7,39 +7,42 @@
  */
 function TextEditorBase(parent) {
     _.superClass(TextEditorBase, this, parent);
-    editorBaseMixin.call(this);
+    this.initialize_editorBase();
 }
 
 _.inherit(TextEditorBase, Element);
 
-TextEditorBase.prototype.setLabelText = function (value) {
-    this.control.set('labelText', value);
-};
+_.extend(TextEditorBase.prototype, {
 
-TextEditorBase.prototype.getLabelText = function () {
-    return this.control.get('labelText');
-};
+    setLabelText: function (value) {
+        this.control.set('labelText', value);
+    },
 
-TextEditorBase.prototype.setLabelFloating = function (value) {
-    this.control.set('labelFloating', value);
-};
+    getLabelText: function () {
+        return this.control.get('labelText');
+    },
 
-TextEditorBase.prototype.getLabelFloating = function () {
-    return this.control.get('labelFloating');
-};
+    setLabelFloating: function (value) {
+        this.control.set('labelFloating', value);
+    },
 
-TextEditorBase.prototype.setDisplayFormat = function (value) {
-    this.control.set('displayFormat', value);
-};
+    getLabelFloating: function () {
+        return this.control.get('labelFloating');
+    },
 
-TextEditorBase.prototype.getDisplayFormat = function () {
-    return this.control.get('displayFormat');
-};
+    setDisplayFormat: function (value) {
+        this.control.set('displayFormat', value);
+    },
 
-TextEditorBase.prototype.setEditMask = function (value) {
-    this.control.set('editMask', value);
-};
+    getDisplayFormat: function () {
+        return this.control.get('displayFormat');
+    },
 
-TextEditorBase.prototype.getEditMask = function () {
-    return this.control.get('editMask');
-};
+    setEditMask: function (value) {
+        this.control.set('editMask', value);
+    },
+
+    getEditMask: function () {
+        return this.control.get('editMask');
+    }
+}, editorBaseMixin);

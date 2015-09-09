@@ -1,11 +1,15 @@
 function CheckBox(parent) {
     _.superClass(CheckBox, this, parent);
 
-    editorBaseMixin.call(this);
+    this.initialize_editorBase();
 }
 
 _.inherit(CheckBox, Element);
 
-CheckBox.prototype.createControl = function () {
-    return new CheckBoxControl();
-};
+
+_.extend(CheckBox.prototype, {
+
+    createControl: function () {
+        return new CheckBoxControl();
+    }
+}, editorBaseMixin);

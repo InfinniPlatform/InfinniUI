@@ -1,51 +1,53 @@
-function editorBaseMixin() {
+var editorBaseMixin = {
+    initialize_editorBase: function(){
 
-    this.getValue = function () {
+    },
+
+    getValue: function () {
         return this.control.getValue();
-    };
+    },
 
-    this.setValue = function (value) {
+    setValue: function (value) {
         this.control.setValue(value);
-    };
+    },
 
-    this.getHintText = function () {
+    getHintText: function () {
         return this.control.get('hintText');
-    };
+    },
 
-    this.setHintText = function (value) {
+    setHintText: function (value) {
         this.control.set('hintText', value);
-    };
+    },
 
-    this.getErrorText = function () {
+    getErrorText: function () {
         return this.control.get('errorText');
-    };
+    },
 
-    this.setErrorText = function (value) {
+    setErrorText: function (value) {
         this.control.set('errorText', value);
-    };
+    },
 
-    this.getWarningText = function () {
+    getWarningText: function () {
         return this.control.get('warningText');
-    };
+    },
 
-    this.setWarningText = function (value) {
+    setWarningText: function (value) {
         this.control.set('warningText', value);
-    };
+    },
 
-    this.onValueChanging =  function (handler) {
+    onValueChanging:  function (handler) {
         this.control.onValueChanging(
             this.createControlEventHandler(this, handler, {property: 'value'})
         );
-    };
+    },
 
-    this.onValueChanged = function (handler) {
+    onValueChanged: function (handler) {
         this.control.onValueChanged(
             this.createControlEventHandler(this, handler, {property: 'value'})
         );
-    };
+    },
 
-
-    this.createControlEventHandler = function(element, handler, additionParams) {
+    createControlEventHandler: function(element, handler, additionParams) {
         var context;
         additionParams = additionParams || {};
 
@@ -62,5 +64,5 @@ function editorBaseMixin() {
 
             return handler.call(undefined, context, message);
         };
-    };
-}
+    }
+};

@@ -1,5 +1,6 @@
 function Label() {
     _.superClass(Label, this);
+    this.initialize_editorBase();
 }
 
 _.inherit(Label, Element);
@@ -29,7 +30,7 @@ _.extend(Label.prototype, {
         }
 
     },
-    valuePropertyMixin,
+    editorBaseMixin,
     formatPropertyMixin,
     elementHorizontalTextAlignmentMixin,
     //@TODO TextTrimming
