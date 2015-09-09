@@ -1,11 +1,12 @@
-var CheckBoxModel = ControlModel.extend({
+var CheckBoxModel = ControlModel.extend( _.extend({
 
-    defaults: {
+    defaults: _.defaults({
         value: false
-    },
+    }, ControlModel.prototype.defaults),
 
     initialize: function () {
-        editorBaseModelMixin.call(this);
+        ControlModel.prototype.initialize.apply(this, arguments);
+        this.initialize_editorBaseModel();
     }
 
-});
+}, editorBaseModelMixin));

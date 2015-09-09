@@ -1,8 +1,8 @@
-var ListEditorBaseModel = ContainerModel.extend({
+var ListEditorBaseModel = ContainerModel.extend( _.extend({
 
-    defaults: _.extend({}, ContainerModel.prototype.defaults, {
+    defaults: _.defaults({
         multiSelect: false
-    }),
+    }, ContainerModel.prototype.defaults),
 
     getValueFromItem: function (item) {
         var
@@ -14,10 +14,9 @@ var ListEditorBaseModel = ContainerModel.extend({
     },
 
     initialize: function () {
-        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        editorBaseModelMixin.call(this);
+        ContainerModel.prototype.initialize.apply(this, arguments);
+        this.initialize_editorBaseModel();
 
-        this.set(this.defaults, {silent: true});
         this.on('change:selectedItem', function (model, value) {
             this.set('value', this.getValueFromItem(value));
             //var message = {
@@ -82,4 +81,4 @@ var ListEditorBaseModel = ContainerModel.extend({
         }
         return result;
     }
-});
+}, editorBaseModelMixin));

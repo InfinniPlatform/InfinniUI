@@ -1,13 +1,12 @@
-function editorBaseModelMixin() {
+var editorBaseModelMixin = {
 
-    //@TODO Добавить в базовый класс ControlModel?
-    var eventManager = new EventManager();
-    var model = this;
-    var originalSetMethod = this.set;
+    initialize_editorBaseModel: function(){
+       this.eventManager = new EventManager();
+    },
 
-    function setValue(value, options) {
+    _setValue: function(value, options) {
         var
-            oldValue = model.get('value'),
+            oldValue = this.get('value'),
             message = {
                 value: value
             };
@@ -16,14 +15,14 @@ function editorBaseModelMixin() {
             return;
         }
 
-        if (eventManager.trigger('onValueChanging', message)) {
-            //model.set('value', message.value, optionsValue);
-            originalSetMethod.call(model, 'value', message.value, options || {})
-            model.trigger('onValueChanged', message);
+        if (this.eventManager.trigger('onValueChanging', message)) {
+            //this.set('value', message.value, optionsValue);
+            ContainerModel.prototype.set.call(this, 'value', message.value, options || {})
+            this.trigger('onValueChanged', message);
         }
-    }
+    },
 
-    this.set = function (key, value, options) {
+    set: function (key, value, options) {
         var attributes, options;
         if (key === null) {
             return this;
@@ -39,7 +38,7 @@ function editorBaseModelMixin() {
         options = options || {};
 
         if ('value' in attributes) {
-            setValue(attributes.value, options);
+            this._setValue(attributes.value, options);
             delete attributes.value;
         }
 
@@ -51,23 +50,22 @@ function editorBaseModelMixin() {
         }
 
         if (hasAttributes) {
-            originalSetMethod.call(this, attributes, options);
+            ContainerModel.prototype.set.call(this, attributes, options);
         }
 
         return this;
 
-    };
+    },
 
-    this.getValue = function () {
+    getValue: function () {
         return this.get('value');
-    };
+    },
 
-    this.onValueChanging = function (handler) {
-        eventManager.on('onValueChanging', handler);
-    };
+    onValueChanging: function (handler) {
+        this.eventManager.on('onValueChanging', handler);
+    },
 
-    this.onValueChanged = function (handler) {
+    onValueChanged: function (handler) {
         this.on('onValueChanged', handler);
-    };
-
-}
+    }
+};

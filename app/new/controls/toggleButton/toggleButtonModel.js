@@ -1,7 +1,8 @@
-var ToggleButtonModel = ControlModel.extend({
+var ToggleButtonModel = ControlModel.extend( _.extend({
 
     initialize: function () {
-        editorBaseModelMixin.call(this);
+        ControlModel.prototype.initialize.apply(this, arguments);
+        this.initialize_editorBaseModel();
     }
 
-});
+}, editorBaseModelMixin));
