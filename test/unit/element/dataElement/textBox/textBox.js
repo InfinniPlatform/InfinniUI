@@ -29,6 +29,7 @@ describe('TextBox', function () {
             assert.isTrue($el.hasClass('hidden'));
             assert.isTrue($el.hasClass('pull-left'));
         });
+
         function testAlignment(element, alignment, cssClass){
             debugger
             if(!element.setHorizontalAlignment) return false;
