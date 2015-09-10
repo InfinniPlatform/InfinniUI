@@ -34,7 +34,7 @@ var DatePickerDropdown = Backbone.View.extend({
 
         var options = {
             value: value,
-            date: model.get('value'),
+            //date: value,
             max: model.get('maxValue'),
             min: model.get('minValue')
         };
@@ -48,7 +48,7 @@ var DatePickerDropdown = Backbone.View.extend({
         options.el = this.ui.days;
         var days = new DatePickerDays(options);
 
-        this.workflow(days, months, years);
+        this.workflow(days, months, years, value)(value);
     },
 
     onClickBackdropHandler: function (event) {
@@ -56,19 +56,19 @@ var DatePickerDropdown = Backbone.View.extend({
     },
 
     workflow: function (days, months, years) {
-        var
-            value = this.model.get('value'),
-            date,
-            day,
-            month,
-            year;
-
-        if (typeof value !== 'undefined' && value !== null) {
-            date = moment(value);
-            day = date.date();
-            month = date.month();
-            year = date.year();
-        }
+        //var
+        //    value = this.model.get('value'),
+        //    date,
+        //    day,
+        //    month,
+        //    year;
+        //
+        //if (typeof value !== 'undefined' && value !== null) {
+        //    date = moment(value);
+        //    day = date.date();
+        //    month = date.month();
+        //    year = date.year();
+        //}
 
         this
             .listenTo(days, 'date', function (date) {
@@ -89,7 +89,7 @@ var DatePickerDropdown = Backbone.View.extend({
                 showDays(date);//Needed select day from calendar
             });
 
-        showDays();
+        return showDays;
 
         function showDays(date) {
             days.setDate(date);

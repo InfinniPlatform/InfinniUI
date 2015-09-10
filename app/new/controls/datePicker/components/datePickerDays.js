@@ -66,7 +66,7 @@ var DatePickerDays = DatePickerComponent.extend({
 
     UI: {
         headerDays: '.weekdays-head .day',
-        calendarDays: '.weekdays-calendar .day',
+        calendarDays: '.day-calendar',
         year: '.years-year',
         month: '.years-month'
     },
@@ -76,7 +76,7 @@ var DatePickerDays = DatePickerComponent.extend({
         'click .btn-month-prev': 'prevMonth',
         'click .btn-month-next': 'nextMonth',
         'click .today-date': 'showToday',
-        'click .day': 'useDay'
+        'click .day-calendar': 'useDay'
     },
 
     render: function () {
@@ -136,10 +136,11 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     fillCalendar: function () {
-        //var date = new Date();
         var model = this.model;
+        var valueDate = model.get('value');
         var month = model.get('month');
         var year = model.get('year');
+        var day = model.get('day');
         var firstDayOfMonth = new Date(year, month, 1);
         var weekday = firstDayOfMonth.getDay();
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
@@ -154,6 +155,7 @@ var DatePickerDays = DatePickerComponent.extend({
             $el.attr('data-date', moment(d).format('YYYY-MM-DD'));
             markActiveMonth($el, d.getMonth() === month);
             markToday($el, d);
+            markSelected($el, d);
         });
 
         function markActiveMonth ($el, active) {
@@ -163,9 +165,19 @@ var DatePickerDays = DatePickerComponent.extend({
         function markToday($el, date) {
             var today = date.getMonth() === model.get('todayMonth')
                 && date.getFullYear() === model.get('todayYear')
-            && date.getDate() === model.get('todayDay');
+                && date.getDate() === model.get('todayDay');
 
             $el.toggleClass('day-today', today);
+        }
+
+        function markSelected($el, value) {
+            var selected = false;
+
+            if (valueDate) {
+                selected = moment(valueDate).isSame(value, 'day');
+            }
+
+            $el.toggleClass('day-selected', selected);
         }
 
     },

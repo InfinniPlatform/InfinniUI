@@ -44,7 +44,8 @@ editorBaseBuilderMixin.applyMetadata = function (params) {
             }
 
             params.element.onValueChanged(function (dataSourceName, value) {
-                dataBinding.setPropertyValue(value);
+                // @TODO Параметры д.б.: context, args
+                dataBinding.setPropertyValue(params.element.getValue());
             });
         }
 
