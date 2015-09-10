@@ -27,6 +27,13 @@ var DatePickerDaysModel = Backbone.Model.extend({
         }
     },
 
+    today: function () {
+        this.set({
+            year: this.get('todayYear'),
+            month: this.get('todayMonth')
+        });
+    },
+
     nextMonth: function () {
         var
             month = this.get('month'),
@@ -67,7 +74,9 @@ var DatePickerDays = DatePickerComponent.extend({
     events: {
         'click .years': 'onYearsClickHandler',
         'click .btn-month-prev': 'prevMonth',
-        'click .btn-month-next': 'nextMonth'
+        'click .btn-month-next': 'nextMonth',
+        'click .today-date': 'showToday',
+        'click .day': 'useDay'
     },
 
     render: function () {
@@ -99,16 +108,26 @@ var DatePickerDays = DatePickerComponent.extend({
         var date = new Date();
 
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
+        var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
+        var days = dateTimeFormatInfo.abbreviatedDayNames.map(function(day, i) {
+            return i;
+        });
+
+        if (firstDayOfWeek > 0) {
+            days = days.splice(firstDayOfWeek).concat(days);
+        }
 
         this.ui.headerDays.each(function (i, el) {
             var $el = $(el);
-            $el.text(dateTimeFormatInfo.abbreviatedDayNames[i]);
-            markWeekend($el, i);
+            var index = days[i];
+            $el.text(dateTimeFormatInfo.abbreviatedDayNames[index]);
+            markWeekend($el, index);
         });
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
-            markWeekend($el, i % 7);
+            var index = days[i % 7];
+            markWeekend($el, index);
         });
 
         function markWeekend ($el, weekday) {
@@ -117,35 +136,43 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     fillCalendar: function () {
-        var date = new Date();
+        //var date = new Date();
         var model = this.model;
         var month = model.get('month');
         var year = model.get('year');
         var firstDayOfMonth = new Date(year, month, 1);
         var weekday = firstDayOfMonth.getDay();
+        var dateTimeFormatInfo = localized.dateTimeFormatInfo;
+        var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
 
-        var startDate = new Date(year, month, 1 - weekday);
+        var startDate = new Date(year, month, 1 - weekday + firstDayOfWeek);
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
-            var d = new Date(startDate.getFullYear(), month, startDate.getDay() + i);
+            var d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
             $el.text(d.getDate());
             $el.attr('data-date', moment(d).format('YYYY-MM-DD'));
-            markWeekend($el, i % 7);
             markActiveMonth($el, d.getMonth() === month);
+            markToday($el, d);
         });
-
-        function markWeekend ($el, weekday) {
-            $el.toggleClass('day-weekend', weekday === 0 || weekday === 6);
-        }
 
         function markActiveMonth ($el, active) {
             $el.toggleClass('day-inactive', !active);
         }
+
+        function markToday($el, date) {
+            var today = date.getMonth() === model.get('todayMonth')
+                && date.getFullYear() === model.get('todayYear')
+            && date.getDate() === model.get('todayDay');
+
+            $el.toggleClass('day-today', today);
+        }
+
     },
 
     onYearsClickHandler: function (event) {
-        this.trigger('year');
+        var date = new Date(this.model.get('year'), this.model.get('month'));
+        this.trigger('year', date);
     },
 
     prevMonth: function () {
@@ -154,6 +181,19 @@ var DatePickerDays = DatePickerComponent.extend({
 
     nextMonth: function () {
         this.model.nextMonth();
+    },
+
+    showToday: function () {
+        this.model.today();
+    },
+
+    useDay: function (event) {
+        var $el = $(event.target),
+            value =$el.attr('data-date'),
+            m = moment(value, 'YYYY-MM-DD');
+
+
+        this.trigger('date', m.toDate());
     }
 
 });

@@ -6,12 +6,6 @@ var DatePickerYearsModel = Backbone.Model.extend({
         todayYear: moment().year()
     },
 
-    //getStartYear: function (year) {
-    //    var pageSize = this.get('pageSize');
-    //
-    //    return Math.ceil(year - pageSize / 2);
-    //},
-
     initialize: function () {
         this.on('change:date', this.onChangeDateHandler, this);
         this.on('change:year', this.onChangeYearHandler, this);
@@ -33,10 +27,13 @@ var DatePickerYearsModel = Backbone.Model.extend({
 
     onChangeDateHandler: function (model, value) {
         if (typeof value !== 'undefined' && value !== null) {
+            model.set('month', moment(value).month());
             model.set('year', moment(value).year());
         } else {
+            model.set('month', null);
             model.set('year', null);
         }
+
     },
 
     onChangeYearHandler: function (model, value) {
@@ -65,6 +62,7 @@ var DatePickerYears = DatePickerComponent.extend({
 
     initOnChangeHandlers: function () {
         this.listenTo(this.model, 'change:page', this.fillYearsTable);
+        this.listenTo(this.model, 'change:year', this.fillYearsTable);
     },
 
     render: function () {
@@ -83,21 +81,27 @@ var DatePickerYears = DatePickerComponent.extend({
             pageSize = model.get('pageSize'),
             year = model.get('year'),
             todayYear = model.get('todayYear'),
-            startYear = Math.ceil((year || todayYear) - pageSize / 2) + page * pageSize;
+            //startYear = Math.ceil((year || todayYear) - pageSize / 2) + page * pageSize;
+            startYear = Math.ceil(year - pageSize / 2) + page * pageSize;
 
         this.ui.years.each(function (i, el) {
             var $el = $(el);
             var year = startYear + i;
             $el.text(year);
             $el.attr('data-year', year);
-            markTodayYear($el, year === todayYear);
+            markTodayYear($el, year);
+            markSelected($el, year);
         });
 
         this.ui.yearBegin.text(startYear);
         this.ui.yearEnd.text(startYear + pageSize - 1);
 
-        function markTodayYear($el, current) {
-            $el.toggleClass('year-today', current);
+        function markTodayYear($el, value) {
+            $el.toggleClass('year-today', value === todayYear);
+        }
+
+        function markSelected($el, value) {
+            $el.toggleClass('year-selected', value === year);
         }
 
     },
@@ -115,9 +119,11 @@ var DatePickerYears = DatePickerComponent.extend({
     },
 
     useYear: function (event) {
-        var $el = $(event.target);
+        var $el = $(event.target),
+            year = parseInt($el.attr('data-year'), 10),
+            month = parseInt(this.model.get('month'), 10);
 
-        this.trigger('year', parseInt($el.attr('data-year'), 10));
+        this.trigger('year', new Date(year, month));
     }
 
 });

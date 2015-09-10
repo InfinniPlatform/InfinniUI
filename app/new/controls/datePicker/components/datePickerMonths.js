@@ -26,6 +26,13 @@ var DatePickerMonthsModel = Backbone.Model.extend({
     prevYear: function () {
         var year = this.get('year');
         this.set('year', year - 1);
+    },
+
+    today: function () {
+        this.set({
+            month: this.get('todayMonth'),
+            year: this.get('todayYear')
+        });
     }
 
 
@@ -41,7 +48,8 @@ var DatePickerMonths = DatePickerComponent.extend({
         "click .btn-year-prev": "prevYear",
         "click .btn-year-next": "nextYear",
         "click .month": "useMonth",
-        "click .year": "selectMonth"
+        "click .year": "selectYear",
+        "click .today-month": "showToday"
     },
 
     UI: {
@@ -62,17 +70,23 @@ var DatePickerMonths = DatePickerComponent.extend({
 
         var
             dateTimeFormatInfo = localized.dateTimeFormatInfo,
-            todayMonth = this.model.get('todayMonth');
+            todayMonth = this.model.get('todayMonth'),
+            month = this.model.get('month');
 
         this.ui.month.each(function (i, el) {
             var $el = $(el);
             $el.text(dateTimeFormatInfo.abbreviatedMonthNames[i]);
             $el.attr('data-month', i);
-            markTodayMonth($el, i === todayMonth);
+            markTodayMonth($el, i);
+            markSelected($el, i);
         });
 
-        function markTodayMonth($el, current) {
-            $el.toggleClass('month-today', current);
+        function markTodayMonth($el, value) {
+            $el.toggleClass('month-today', value === todayMonth);
+        }
+
+        function markSelected($el, value) {
+            $el.toggleClass('month-selected', value === month);
         }
     },
 
@@ -93,18 +107,24 @@ var DatePickerMonths = DatePickerComponent.extend({
             $el = $(event.target),
             model = this.model,
             year = parseInt(model.get('year'), 10),
-            month = parseInt(model.get('month'), 10);
+            month = parseInt($el.attr('data-month'), 10);
 
-        this.trigger('month', year, month);
+        this.trigger('month', new Date(year, month));
     },
 
-    selectMonth: function () {
+    selectYear: function () {
         var
             model = this.model,
-            year = parseInt(model.get('year'), 10);
+            year = parseInt(model.get('year'), 10),
+            month = parseInt(model.get('month'), 10);
 
-        this.trigger('year', year);
+        this.trigger('year', new Date(year, month));
+    },
+
+    showToday: function () {
+        this.model.today();
     }
+
 
 
 });

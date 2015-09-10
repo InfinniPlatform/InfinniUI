@@ -25,6 +25,7 @@ var DatePickerComponent = Backbone.View.extend({
 
     /**
      * @description Установка текущего положения списка выбора значений
+     * Если устанавливается недействительная дата - используется текущая
      * @param date
      */
     setDate: function (date) {

@@ -71,10 +71,10 @@ var DatePickerDropdown = Backbone.View.extend({
         }
 
         this
-            .listenTo(days, 'date', function () {
+            .listenTo(days, 'date', function (date) {
                 //Input complete. close dropdown
-                debugger;
-                console.log(arguments);
+                this.trigger('date', date);
+                this.remove();
             })
             .listenTo(days, 'year', function (date) {
                 showYears(date);//Needed select year from list

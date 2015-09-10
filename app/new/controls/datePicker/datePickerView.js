@@ -103,6 +103,12 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
             top: event.clientY,
             left: event.clientX
         });
+
+        this.listenToOnce(calendar, 'date', function (date) {
+            console.log('selected date:', date);
+
+            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+        });
     }
 
 });
