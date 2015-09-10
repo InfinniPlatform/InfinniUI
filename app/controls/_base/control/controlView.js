@@ -11,6 +11,7 @@ var ControlView = Backbone.View.extend({
         this.initText();
         this.initValidationState();
         this.initStyle();
+        this.$el.on('click', this.trigger.bind(this, 'onClick'));
     },
 
     initVisible: function () {

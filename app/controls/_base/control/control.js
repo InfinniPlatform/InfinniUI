@@ -42,6 +42,15 @@ _.extend(Control.prototype, {
         return [];
     },
 
+    onClick: function (handler) {
+        var model = this.controlModel;
+        this.controlView.on('onClick', function () {
+            if (model.get('enabled')) {
+                handler();
+            }
+        });
+    },
+
     onLoaded: function (handler) {
         this.controlModel.on('change:isLoaded', function (isLoaded) {
             if (isLoaded) {

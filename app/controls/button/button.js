@@ -14,14 +14,6 @@ _.extend(ButtonControl.prototype, {
         return new ButtonView({model: model});
     },
 
-    click: function(){
-        this.controlView.trigger('onClick');
-    },
-
-    onClick: function(handler){
-        this.controlView.on('onClick', handler);
-    },
-
     onEnabledChange: function (handler) {
         this.controlModel.on('change:enabled', handler);
     }

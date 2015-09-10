@@ -29,12 +29,6 @@ _.extend(ButtonBuilder.prototype, {
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
-
-        if (params.parent && metadata.OnClick){
-            params.element.onClick(function() {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name, this.getBaseMessage(params));
-            }.bind(this));
-        }
     },
 
     createElement: function(params){

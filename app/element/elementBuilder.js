@@ -76,6 +76,13 @@ _.extend(ElementBuilder.prototype, {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name, message);
             });
         }
+
+        if (metadata.OnClick){
+            params.element.onClick(function() {
+                var message = this.getBaseMessage(params);
+                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name, message);
+            }.bind(this));
+        }
     },
 
     getBaseMessage: function (params) {

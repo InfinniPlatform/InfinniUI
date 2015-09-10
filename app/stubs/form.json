@@ -60,6 +60,18 @@
             },
             "OnLoaded": {
               "Name": "OnLoaded"
+            },
+            "OnClick": {
+              "Name": "OnClick"
+            }
+          }
+        },
+        {
+          "Button": {
+            "Text": "Clicl",
+            "Enabled": false,
+            "OnClick": {
+              "Name": "OnClick"
             }
           }
         },
@@ -74,6 +86,9 @@
             },
             "OnValueChanged": {
               "Name": "OnValueChanged1"
+            },
+            "OnClick": {
+              "Name": "OnClick"
             }
           }
         },
@@ -89,10 +104,16 @@
             },
             "OnValueChanged": {
               "Name": "OnValueChanged22"
+            },
+            "OnClick": {
+              "Name": "OnClick"
             }
           }
         }
-      ]
+      ],
+      "OnClick": {
+        "Name": "OnClick"
+      }
     }
   },
   "Scripts": [
@@ -115,6 +136,10 @@
     {
       "Name": "OnKeyDown1",
       "Body": "console.log('OnKeyDown1', arguments);"
+    },
+    {
+      "Name": "OnClick",
+      "Body": "console.log('OnCLick', args.source);"
     }
   ]
 

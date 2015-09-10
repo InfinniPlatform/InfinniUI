@@ -154,6 +154,10 @@ _.extend(Element.prototype, {
         this.control.onLoaded(handler);
     },
 
+    onClick: function (handler) {
+        this.control.onClick(handler);
+    },
+
     onLostFocus: function (handler) {
         this.control.controlView.addEventHandler('OnLostFocus', handler);
     },

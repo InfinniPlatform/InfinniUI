@@ -53,14 +53,6 @@ _.extend(LinkLabelBuilder.prototype,
             var metadata = params.metadata;
 
             //Скриптовые обработчики на события
-
-            if (params.parent && metadata.OnClick) {
-                params.element.onClick(function () {
-                    var script = new ScriptExecutor(params.parent);
-                    var message = this.getBaseMessage(params);
-                    return script.executeScript(metadata.OnClick.Name, message);
-                }.bind(this));
-            }
         },
 
         createElement: function (params) {

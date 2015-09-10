@@ -189,24 +189,24 @@ var LinkLabelView = ControlView.extend({
      * @param event
      */
     onClickHandler: function (event) {
-        var cancel = false;
-
-        var enabled = this.model.get('enabled');
-
-        if (!enabled) {
+        //var cancel = false;
+        //
+        //var enabled = this.model.get('enabled');
+        //
+        //if (!enabled) {
+        //    event.preventDefault();
+        //    return;
+        //}
+        //
+        //this.callEventHandler('OnClick', function (response) {
+        //    if (response === false) {
+        //        cancel = true;
+        //    }
+        //});
+        //
+        //if (cancel) {
             event.preventDefault();
-            return;
-        }
-
-        this.callEventHandler('OnClick', function (response) {
-            if (response === false) {
-                cancel = true;
-            }
-        });
-
-        if (cancel) {
-            event.preventDefault();
-        }
+        //}
     }
 
 });
