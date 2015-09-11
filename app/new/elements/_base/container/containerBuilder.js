@@ -55,7 +55,7 @@ _.extend(ContainerBuilder.prototype, {
 
     },
 
-    buildItemSelector: function(itemsBinding, itemFormatMetadata, params){
+    buildItemSelector: function(itemsBinding, ItemSelector, params){
 
         return function (context, args) {
             var label = new Label(this);
