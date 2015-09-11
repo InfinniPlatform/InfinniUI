@@ -10,7 +10,22 @@
 
     formatBinding: function(value,index){
         return value.replace('$', index);
+    },
+
+    padLeft: function a (value, len, char) {
+        if (typeof char == 'undefined' || char === null) {
+            char = ' ';
+        }
+
+        var str = String(value);
+
+        if (str.length < len) {
+            return new Array(len - str.length + 1).join(char) + str;
+        }
+        return str;
     }
+
+
 };
 
 function guid() {

@@ -1,47 +1,71 @@
-<table class="table-condensed">
+<style>
+    .time-segment {
+        font-size: 36px;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    .time-spin {
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .time-spin-up, .time-spin-down {
+        width: 100%;
+        text-decoration: none;
+
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .time-spin-up:hover, .time-spin-down:hover {
+        text-decoration: none;
+    }
+</style>
+<table>
     <tbody>
     <tr>
-        <td>
-            <a href="#" tabindex="-1" title="Increment Hour" class="btn" data-action="incrementHours">
-                <span class="glyphicon glyphicon-chevron-up"></span>
+        <td class="time-spin">
+            <a class="time-spin-up time-spin-hour">
+                <span>&uparrow;</span>
             </a>
         </td>
-        <td class="separator"></td>
-        <td>
-            <a href="#" tabindex="-1" title="Increment Minute" class="btn" data-action="incrementMinutes">
-                <span class="glyphicon glyphicon-chevron-up"></span>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-up time-spin-minute">
+                <span>&uparrow;</span>
             </a>
         </td>
-        <td class="separator"></td>
+        <td></td>
     </tr>
     <tr>
-        <td>
-            <span class="timepicker-hour" data-time-component="hours" title="Pick Hour"
-                  data-action="showHours">12</span>
+        <td class="time-segment">
+            <span class="time-segment-hour">12</span>
         </td>
-        <td class="separator">:</td>
-        <td>
-            <span class="timepicker-minute" data-time-component="minutes" title="Pick Minute" data-action="showMinutes">14</span>
+        <td class="time-segment">:</td>
+        <td class="time-segment">
+            <span class="time-segment-minute">14</span>
         </td>
-        <td>
-            <button class="btn btn-primary" data-action="togglePeriod" tabindex="-1" title="Toggle Period">
-                PM
-            </button>
+        <td class="time-segment">
+            <button class="period" style="display: none;">AM/PM</button>
         </td>
     </tr>
     <tr>
-        <td>
-            <a href="#" tabindex="-1" title="Decrement Hour" class="btn" data-action="decrementHours">
-                <span class="glyphicon glyphicon-chevron-down"></span>
+        <td class="time-spin">
+            <a class="time-spin-down time-spin-hour">
+                <span>&downarrow;</span>
             </a>
         </td>
-        <td class="separator"></td>
-        <td>
-            <a href="#" tabindex="-1" title="Decrement Minute" class="btn" data-action="decrementMinutes">
-                <span class="glyphicon glyphicon-chevron-down"></span>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-down time-spin-minute">
+                <span>&downarrow;</span>
             </a>
         </td>
-        <td class="separator"></td>
+        <td></td>
     </tr>
     </tbody>
 </table>

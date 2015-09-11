@@ -1,0 +1,55 @@
+<div class="backdrop"></div>
+
+<style>
+    .backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .pl-datepicker-dropdown {
+        position: absolute;
+        top: 100px;
+        left: 200px;
+    }
+    .datepicker-date, .datepicker-time {
+        background: #ffffff;
+        position: relative;
+        border: 1px solid #000000;
+    }
+
+    .datepicker-clear {
+        width: 100%;
+    }
+
+    .toggle-time, .toggle-date {
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+    }
+
+</style>
+
+<div class="datepicker-datetime">
+    <div class="datepicker-date">
+        <div class="days"></div>
+        <div class="months" style="display: none;"></div>
+        <div class="years"  style="display: none;"></div>
+        <div>
+            <span class="toggle-time">Время</span>
+        </div>
+    </div>
+    <div class="datepicker-time"  style="display: none;">
+        <div>
+            <span class="toggle-date">Дата</span>
+        </div>
+        <div class="times"></div>
+        <div class="hours" style="display: none;"></div>
+        <div class="minutes" style="display: none;"></div>
+    </div>
+
+    <button class="datepicker-clear">Очистить</button>
+</div>
+

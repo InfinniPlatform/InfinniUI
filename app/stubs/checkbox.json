@@ -154,7 +154,17 @@
         },
         {
           "DatePicker": {
-            "Mode": "Date",
+            "Mode": "DateTime",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "g"
+              }
+            },
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "d"
+              }
+            },
             "Value": {
               "PropertyBinding": {
                 "DataSource": "MainDataSource",
