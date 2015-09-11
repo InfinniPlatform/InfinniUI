@@ -17,36 +17,65 @@ _.extend(ContainerBuilder.prototype, {
 
     },
 
-    buildItemProperty: function(itemPropertyMetadata, itemsDataSourceName, params){
-        var templateMetadata = {
-            Label: {
-                Value: {
-                    PropertyBinding:{
-                        Source: itemsDataSourceName,
-                        Property: itemPropertyMetadata
-                    }
-                }
-            }
-        };
+    buildItemProperty: function(itemsBinding, itemPropertyMetadata, params){
 
-        return this.buildItemTemplate(templateMetadata, params);
+        return function(context, args){
+            var index = args.index;
+            var label = new Label(this);
+            var sourceProperty = itemsBinding.getSourceProperty() + '.' + index + '.' + itemPropertyMetadata;
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(label, 'value');
+
+            return label;
+        };
     },
 
-    buildItemFormat: function(itemPropertyMetadata, itemsDataSourceName, itemFormatMetadata, params){
-        var templateMetadata = {
-            Label: {
-                Value: {
-                    PropertyBinding:{
-                        Source: itemsDataSourceName,
-                        Property: itemPropertyMetadata
-                    }
-                },
+    buildItemFormat: function(itemsBinding, itemFormatMetadata, params){
 
-                DisplayFormat: itemFormatMetadata
-            }
+        return function(context, args){
+            var index = args.index;
+            var label = new Label(this);
+            var format = new ObjectFormat();
+
+            var sourceProperty = itemsBinding.getSourceProperty();
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            format.setFormat(itemFormatMetadata);
+            label.setDisplayFormat(format);
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(label, 'value');
+
+            return label;
         };
 
-        return this.buildItemTemplate(templateMetadata, params);
+    },
+
+    buildItemSelector: function(itemsBinding, itemFormatMetadata, params){
+
+        return function (context, args) {
+            var label = new Label(this);
+            var scriptExecutor = new ScriptExecutor(params.parentView);
+
+            var sourceProperty = itemsBinding.getSourceProperty();
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            binding.setConverter({
+                toElement: function(_context, _args){
+                    return scriptExecutor.executeScript(metadata.ItemSelector.Name, _args);
+                }
+            });
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(label, 'value');
+
+            return label;
+        }
     },
 
     buildItemTemplate: function (templateMetadata, params) {
