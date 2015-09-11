@@ -98,7 +98,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         var
             model = this.model,
             value = model.get('value'),
-            displayFormat = model.getDisplayFormat;
+            displayFormat = model.get('displayFormat');
 
         return displayFormat ? displayFormat.format(value) : value;
     }
