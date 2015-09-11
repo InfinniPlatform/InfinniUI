@@ -1,25 +1,38 @@
 var editorBaseModelMixin = {
 
+    defaults_editorBaseModel: {
+        value: null,
+        hintText: null,
+        errorText: null,
+        warningText: null
+    },
+
     initialize_editorBaseModel: function(){
        this.eventManager = new EventManager();
+        this.isInited = true;
     },
 
     _setValue: function(value, options) {
         var
             oldValue = this.get('value'),
             message = {
-                value: value
+                oldValue: oldValue,
+                newValue: value
             };
 
         if (value === oldValue) {
             return;
         }
 
-        if (this.eventManager.trigger('onValueChanging', message)) {
-            //this.set('value', message.value, optionsValue);
-            ContainerModel.prototype.set.call(this, 'value', message.value, options || {})
-            this.trigger('onValueChanged', message);
+        if(this.isInited){
+            if (this.eventManager.trigger('onValueChanging', message)) {
+                ContainerModel.prototype.set.call(this, 'value', value, options || {});
+                this.trigger('onValueChanged', message);
+            }
+        }else{
+            ContainerModel.prototype.set.call(this, 'value', value, options || {});
         }
+
     },
 
     set: function (key, value, options) {

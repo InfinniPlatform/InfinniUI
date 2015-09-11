@@ -1,97 +1,89 @@
 describe('EditorBase', function () {
     describe('Textbox as exemplar of EditorBase', function () {
 
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+        it('Base functional', function () {
+            // Given
+            var textBox = new TextBox();
+
+            assert.isNull(textBox.getValue(), 'default value is null');
+            assert.isNull(textBox.getHintText(), 'default hint text is null');
+            assert.isNull(textBox.getErrorText(), 'default error text is null');
+            assert.isNull(textBox.getWarningText(), 'default warning text is null');
+
+
+            // When
+            textBox.setValue('value');
+            textBox.setHintText('hint text');
+            textBox.setErrorText('error text');
+            textBox.setWarningText('warning text');
+
+
+            // Then
+            assert.equal(textBox.getValue(), 'value', 'default value is right');
+            assert.equal(textBox.getHintText(), 'hint text', 'default hint text is right');
+            assert.equal(textBox.getErrorText(), 'error text', 'default error text is right');
+            assert.equal(textBox.getWarningText(), 'warning text', 'default warning text is right');
+        });
+
+        it('Base events functional', function () {
             // Given
             var textBox = new TextBox(),
-                $el, $control;
-            textBox.setValue('test');
-            $el = textBox.render();
-            $control = $el.find('input');
+                handling = 0;
 
-            assert.equal($control.val(), 'test');
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
+            textBox.onValueChanging(onValueChangingHandler);
+            textBox.onValueChanged(onValueChangedHandler);
 
             // When
             textBox.setValue('new');
-            textBox.setName('newName');
-            textBox.setEnabled(false);
-            textBox.setVisible(false);
-            textBox.setHorizontalAlignment('Left');
 
             // Then
-            assert.equal($control.val(), 'new');
-            assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isTrue($el.hasClass('pull-left'));
+            function onValueChangingHandler(context, args){
+                assert.equal(handling, 0, 'right order: changing handler is first');
+                assert.isNull(args.oldValue, 'old value is null');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+                assert.equal(args.source, textBox, 'right source');
+
+                handling++;
+            }
+
+            function onValueChangedHandler(context, args){
+                assert.equal(handling, 1, 'right order: changing handler is second');
+                assert.isNull(args.oldValue, 'old value is null');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+                assert.equal(args.source, textBox, 'right source');
+            }
         });
 
-        function testAlignment(element, alignment, cssClass){
-            debugger
-            if(!element.setHorizontalAlignment) return false;
-            //debugger
-            element.setHorizontalAlignment(alignment);
-
-            if(alignment!== element.getHorizontalAlignment()) return false;
-            if(!element.render().hasClass(cssClass)) return false;
-
-            return true;
-        }
-
-        it('Events onLoad, onValueChanged', function () {
+        it('cancelling changing event', function () {
             // Given
             var textBox = new TextBox(),
-                onLoadFlag = 0,
-                onValueChanged = 0;
+                handling = 0;
 
-            textBox.onLoaded(function(){
-                onLoadFlag++;
-            });
-            textBox.onValueChanged(function(){
-                onValueChanged++;
-            });
-
-            assert.equal(onLoadFlag, 0);
-            assert.equal(onValueChanged, 0);
+            textBox.onValueChanging(onValueChangingHandler1);
+            textBox.onValueChanging(onValueChangingHandler2);
 
             // When
-            textBox.render();
             textBox.setValue('new');
 
             // Then
-            assert.equal(onLoadFlag, 1);
-            assert.equal(onValueChanged, 1);
-        });
+            function onValueChangingHandler1(context, args){
+                assert.equal(handling, 0, 'right order: changing handler is first');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
 
-        it('should be true if scriptsHandlers call', function () {
-            //Given
-            var builder = new ApplicationBuilder();
-            var view = new View();
-            var metadata = {
-                "TextBox": {
-                    OnValueChanged:{
-                        Name: 'OnValueChanged'
-                    },
-                    OnLoaded:{
-                        Name: 'OnLoaded'
-                    }
-                }
-            };
-            window.Test = {textBox:1, textBoxLoaded:false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.textBox = 5"}, {Name:"OnLoaded", Body:"window.Test.textBoxLoaded = true"}]);
+                handling++;
 
-            //When
-            var build = builder.build(view, metadata);
-            build.setValue(true);
-            $(build.render());
+                return false
+            }
 
-            // Then
-            assert.equal(window.Test.textBox, 5);
-            assert.isTrue(window.Test.textBoxLoaded);
+            function onValueChangingHandler2(context, args){
+                assert.equal(handling, 1, 'right order: this changing handler is second');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+
+                handling++;
+            }
+
+            assert.equal(handling, 2, 'right order');
+            assert.isNull(textBox.getValue(), 'value should not be changed');
         });
     });
 
