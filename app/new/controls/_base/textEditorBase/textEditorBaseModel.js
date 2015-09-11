@@ -5,7 +5,10 @@
  */
 var TextEditorBaseModel = ControlModel.extend(/** @lends TextEditorBaseModel.prototype */ {
     defaults: _.defaults({
-            labelFloating: false
+            labelFloating: false,
+            labelText: null,
+            displayFormat: null,
+            editMask: null
         },
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults),

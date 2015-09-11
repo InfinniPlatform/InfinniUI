@@ -19,10 +19,10 @@ describe('EditorBase', function () {
 
 
             // Then
-            assert.equal(textBox.getValue(), 'value', 'default value is right');
-            assert.equal(textBox.getHintText(), 'hint text', 'default hint text is right');
-            assert.equal(textBox.getErrorText(), 'error text', 'default error text is right');
-            assert.equal(textBox.getWarningText(), 'warning text', 'default warning text is right');
+            assert.equal(textBox.getValue(), 'value', 'new value is right');
+            assert.equal(textBox.getHintText(), 'hint text', 'new hint text is right');
+            assert.equal(textBox.getErrorText(), 'error text', 'new error text is right');
+            assert.equal(textBox.getWarningText(), 'warning text', 'new warning text is right');
         });
 
         it('Base events functional', function () {
