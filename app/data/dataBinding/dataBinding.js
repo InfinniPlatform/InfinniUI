@@ -88,6 +88,8 @@ var DataBinding = Backbone.Model.extend({
 
 
     bindElement: function (element, property) {
+        var that = this;
+
         if(this.get('element') != null){
             var message = stringUtils.format('DataBinding. bindElement: повторная инициализация. {0} заменен на {1}', [this.get('element').getName(), element.getName()])
             logger.warn(message);
@@ -96,24 +98,21 @@ var DataBinding = Backbone.Model.extend({
         this.set('element', element);
         this.set('elementProperty', property);
 
-        this._initElementProperty();
+        this._initPropertyOnElement();
 
-        var that = this;
         element.onPropertyChanged(property, function(context, argument){
             that.onElementPropertyChangedHandler(context, argument);
         });
     },
 
-    _initElementProperty: function(){
-        var elementProperty = this.get('elementProperty');
+    _initPropertyOnElement: function(){
         var sourceProperty = this.get('sourceProperty');
         var source = this.get('source');
-        var element = this.get('element');
         var value;
 
         if(source){
             value = source.getProperty(sourceProperty);
-            element.setProperty(elementProperty, value);
+            this._setValueToElement(value);
         }
     },
 
@@ -130,43 +129,51 @@ var DataBinding = Backbone.Model.extend({
      */
     onElementPropertyChangedHandler: function (context, argument) {
         var mode = this.get('mode');
-        var source = this.get('source');
-        var sourceProperty = this.get('sourceProperty');
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
 
         if(this.shouldRefreshSource(mode) && argument.property == elementProperty){
             var value = element.getProperty(elementProperty);
-            var converter = this.get('converter');
-
-            if(converter != null && converter.toSource != null){
-                value = converter.toSource(context, {value: value});
-            }
-
-            source.setProperty(sourceProperty, value);
+            this._setValueToSource(value);
         }
     },
+
+    _setValueToSource: function(value){
+        var source = this.get('source');
+        var sourceProperty = this.get('sourceProperty');
+        var converter = this.get('converter');
+
+        if(converter != null && converter.toSource != null){
+            value = converter.toSource(context, {value: value});
+        }
+
+        source.setProperty(sourceProperty, value);
+    },
+
+
 
     /**
      * @description Обработчик события изменения значения источника
      */
     onSourcePropertyChangedHandler: function (context, argument) {
         var mode = this.get('mode');
-        var source = this.get('source');
         var sourceProperty = this.get('sourceProperty');
-        var element = this.get('element');
-        var elementProperty = this.get('elementProperty');
 
         if(this.shouldRefreshElement(mode) && argument.property == sourceProperty){
-            var value = argument.newValue;
-            var converter = this.get('converter');
-
-            if(converter != null && converter.toElement != null){
-                value = converter.toElement(context, {value: value});
-            }
-
-            element.setProperty(elementProperty, value);
+            this._setValueToElement(argument.newValue);
         }
+    },
+
+    _setValueToElement: function(value){
+        var element = this.get('element');
+        var elementProperty = this.get('elementProperty');
+        var converter = this.get('converter');
+
+        if(converter != null && converter.toElement != null){
+            value = converter.toElement(context, {value: value});
+        }
+
+        element.setProperty(elementProperty, value);
     },
 
     shouldRefreshSource: function(mode){

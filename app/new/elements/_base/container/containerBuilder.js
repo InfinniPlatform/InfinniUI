@@ -22,9 +22,17 @@ _.extend(ContainerBuilder.prototype, {
         return function(context, args){
             var index = args.index;
             var label = new Label(this);
-            var sourceProperty = itemsBinding.getSourceProperty() + '.' + index + '.' + itemPropertyMetadata;
+            var sourceProperty;
             var source = itemsBinding.getSource();
             var binding = new DataBinding(this);
+
+            sourceProperty = index.toString();
+            if(itemsBinding.getSourceProperty() != ''){
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+            if(itemPropertyMetadata != ''){
+                sourceProperty = sourceProperty + '.' + itemPropertyMetadata;
+            }
 
             binding.bindSource(source, sourceProperty);
             binding.bindElement(label, 'value');
@@ -44,6 +52,11 @@ _.extend(ContainerBuilder.prototype, {
             var source = itemsBinding.getSource();
             var binding = new DataBinding(this);
 
+            sourceProperty = index.toString();
+            if(itemsBinding.getSourceProperty() != ''){
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+
             format.setFormat(itemFormatMetadata);
             label.setDisplayFormat(format);
 
@@ -55,9 +68,10 @@ _.extend(ContainerBuilder.prototype, {
 
     },
 
-    buildItemSelector: function(itemsBinding, ItemSelector, params){
+    buildItemSelector: function(itemsBinding, itemSelectorMetadata, params){
 
         return function (context, args) {
+            var index = args.index;
             var label = new Label(this);
             var scriptExecutor = new ScriptExecutor(params.parentView);
 
@@ -65,9 +79,14 @@ _.extend(ContainerBuilder.prototype, {
             var source = itemsBinding.getSource();
             var binding = new DataBinding(this);
 
+            sourceProperty = index.toString();
+            if(itemsBinding.getSourceProperty() != ''){
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+
             binding.setConverter({
                 toElement: function(_context, _args){
-                    return scriptExecutor.executeScript(metadata.ItemSelector.Name, _args);
+                    return scriptExecutor.executeScript(itemSelectorMetadata.Name, _args);
                 }
             });
 

@@ -4,7 +4,7 @@ var formatPropertyMixin = {
      * Возвращает формат отображения данных.
      * @returns {BooleanFormat|DateTimeFormat|NumberFormat|ObjectFormat}
      */
-    getFormat: function(){
+    getDisplayFormat: function(){
         return this.control.get('format');
     },
 
@@ -13,7 +13,7 @@ var formatPropertyMixin = {
      * @param {BooleanFormat|DateTimeFormat|NumberFormat|ObjectFormat} format
      * @returns {*}
      */
-    setFormat: function(format){
+    setDisplayFormat: function(format){
         return this.control.set('format', format);
     }
 

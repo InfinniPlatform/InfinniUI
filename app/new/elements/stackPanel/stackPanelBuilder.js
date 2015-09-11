@@ -46,6 +46,7 @@ _.extend(StackPanelBuilder.prototype,
             var element = params.element;
             var itemTemplate;
             var binding;
+            var property;
 
             binding = params.builder.build(metadata.Items, {
                 parentView: params.parentView,
@@ -56,10 +57,20 @@ _.extend(StackPanelBuilder.prototype,
 
             if(metadata.ItemTemplate){
                 itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
-                element.setItemTemplate(itemTemplate);
+            }else if(metadata.ItemFormat){
+                itemTemplate = this.buildItemFormat(binding, metadata.ItemFormat, params);
+            }else if(metadata.ItemSelector){
+                itemTemplate = this.buildItemSelector(binding, metadata.ItemSelector, params);
             }else{
-                throw 'Нужно обработать другие варианты элементов';
+                if(metadata.ItemProperty){
+                    property = metadata.ItemProperty;
+                }else{
+                    property = '';
+                }
+                itemTemplate = this.buildItemProperty(binding, property, params);
             }
+
+            element.setItemTemplate(itemTemplate);
         },
 
         initNotTemplatingItems: function(params){
