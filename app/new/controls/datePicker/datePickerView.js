@@ -11,8 +11,8 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'focus .pl-date-picker-input': 'onFocusControlHandler',
-        'mouseenter .pl-date-picker-input': 'onMouseenterControlHandler',
+        'focus .pl-datepicker-input': 'onFocusControlHandler',
+        'mouseenter .pl-datepicker-input': 'onMouseenterControlHandler',
         'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     }),
 
@@ -105,10 +105,32 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
         });
 
         this.listenToOnce(calendar, 'date', function (date) {
-            console.log('selected date:', date);
+            //console.log('selected date:', date);
+            //
+            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+        });
+    },
 
+    /** DateTimePicker **/
+    onClickDropdownHandler: function (event) {
+        var calendar = new DateTimePickerDropdown({
+            model: this.model
+        });
+        calendar.render();
+        //@TODO Переделать
+        $('body').append(calendar.$el);
+
+        calendar.$el.css({
+            top: event.clientY,
+            left: event.clientX
+        });
+
+        this.listenToOnce(calendar, 'date', function (date) {
+            //console.log('selected date:', date);
+            //
             this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
         });
     }
+
 
 });

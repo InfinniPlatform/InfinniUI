@@ -11,7 +11,8 @@ var DatePickerDropdown = Backbone.View.extend({
     },
 
     events: {
-        'click .backdrop': 'onClickBackdropHandler'
+        'click .backdrop': 'onClickBackdropHandler',
+        'click .datepicker-clear': 'onClickClearValueHandler'
     },
 
     render: function () {
@@ -55,27 +56,23 @@ var DatePickerDropdown = Backbone.View.extend({
         this.remove();
     },
 
+    onClickClearValueHandler: function () {
+        this.clearValue();
+    },
+
+    clearValue: function () {
+        this.useValue(null);
+    },
+
+    useValue: function (date) {
+        this.trigger('date', date);
+        this.remove();
+    },
+
     workflow: function (days, months, years) {
-        //var
-        //    value = this.model.get('value'),
-        //    date,
-        //    day,
-        //    month,
-        //    year;
-        //
-        //if (typeof value !== 'undefined' && value !== null) {
-        //    date = moment(value);
-        //    day = date.date();
-        //    month = date.month();
-        //    year = date.year();
-        //}
 
         this
-            .listenTo(days, 'date', function (date) {
-                //Input complete. close dropdown
-                this.trigger('date', date);
-                this.remove();
-            })
+            .listenTo(days, 'date', this.useValue)
             .listenTo(days, 'year', function (date) {
                 showYears(date);//Needed select year from list
             })
