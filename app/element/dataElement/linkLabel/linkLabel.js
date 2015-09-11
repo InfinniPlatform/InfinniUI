@@ -18,10 +18,6 @@ _.extend(LinkLabel.prototype, {
             this.control.set('reference', value);
         },
 
-        onClick: function (handler) {
-            this.control.controlView.addEventHandler('OnClick', handler);
-        },
-
         getTextTrimming: function () {
             return this.control.get('textTrimming');
         },

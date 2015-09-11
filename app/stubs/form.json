@@ -93,6 +93,15 @@
           }
         },
         {
+          "LinkLabel": {
+            "Name": "LABEL",
+            "Text": "My Label",
+            "OnClick": {
+              "Name": "OnClick"
+            }
+          }
+        },
+        {
           "DatePicker": {
             "Name": "Birthday",
             "Mode": "DateTime",
