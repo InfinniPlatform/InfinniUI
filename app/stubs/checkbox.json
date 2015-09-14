@@ -154,6 +154,48 @@
         },
         {
           "DatePicker": {
+            "Mode": "Date",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "d"
+              }
+            },
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "d"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
+              }
+            }
+          }
+        },
+        {
+          "DatePicker": {
+            "Mode": "DateTime",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "g"
+              }
+            },
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "g"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
+              }
+            }
+          }
+        },
+        {
+          "DatePicker": {
             "Mode": "Time",
             "DisplayFormat": {
               "DateTimeFormat": {

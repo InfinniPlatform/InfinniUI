@@ -16,6 +16,12 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
         'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     }),
 
+    initialize: function () {
+        TextEditorBaseView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        this.applyDataPickerStrategy(this.model.get('mode'));
+        this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
+    },
+
     render: function () {
         this.prerenderingActions();
         this.renderTemplate(this.getTemplate());
@@ -53,8 +59,7 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
         this
             .listenTo(this.model, 'change:minValue', this.onChangeMinValueHandler)
-            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler)
-            .listenTo(this.model, 'change:mode', this.onChangeModeHandler);
+            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler);
     },
 
     onChangeMinValueHandler: function (model, value) {
@@ -70,7 +75,11 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
     },
 
     onChangeModeHandler: function (model, value) {
+        this.applyDataPickerStrategy(value);
+    },
 
+    applyDataPickerStrategy: function (mode) {
+        _.extend(this, datePickerStrategy[mode]);
     },
 
     onChangeEnabledHandler: function (model, value) {
@@ -86,72 +95,11 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
         return true;
     },
 
-    /** DatePicker **/
+
     getTemplate: function () {
-        return InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"];
+        throw new Error('Не перекрыт getTemplate');
     },
 
-    onClickDropdownHandler: function (event) {
-        var calendar = new DatePickerDropdown({
-            model: this.model
-        });
-        calendar.render();
-        //@TODO Переделать
-        $('body').append(calendar.$el);
-
-        calendar.$el.css({
-            top: event.clientY,
-            left: event.clientX
-        });
-
-        this.listenTo(calendar, 'date', function (date) {
-            //console.log('selected date:', date);
-            //
-            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
-        });
-    },
-
-    /** DateTimePicker **/
-
-    onClickDropdownHandler: function (event) {
-        var calendar = new DateTimePickerDropdown({
-            model: this.model
-        });
-        calendar.render();
-        //@TODO Переделать
-        $('body').append(calendar.$el);
-
-        calendar.$el.css({
-            top: event.clientY,
-            left: event.clientX
-        });
-
-        this.listenTo(calendar, 'date', function (date) {
-            //console.log('selected date:', date);
-            //
-            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
-        });
-    },
-
-    /** TimePicker **/
-
-    onClickDropdownHandler: function (event) {
-        var calendar = new TimePickerDropdown({
-            model: this.model
-        });
-        calendar.render();
-        //@TODO Переделать
-        $('body').append(calendar.$el);
-
-        calendar.$el.css({
-            top: event.clientY,
-            left: event.clientX
-        });
-
-        this.listenTo(calendar, 'date', function (date) {
-            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
-        });
-    }
-
+    onClickDropdownHandler: function (event) {}
 
 });

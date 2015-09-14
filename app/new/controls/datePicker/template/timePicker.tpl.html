@@ -1,5 +1,8 @@
-<div class="datepicker-time">
-    <div class="time"></div>
-    <div class="hours"></div>
-    <div class="minutes"></div>
-</div>
+<label for="<%- guid %>"><%- labelText%></label>
+<input <% if (!enabled) { %> disabled <% } %> class="pl-control form-control pl-datepicker-input" type="text" id="<%- guid %>" value="<%- value %>">
+<div class="pl-control-editor"></div>
+<button <% if (!enabled) { %> disabled <% } %> class="pl-datepicker-calendar">&#128336;</button>
+
+<div class="pl-control-hint-text"><%- hintText %></div>
+<div class="pl-control-error-text"><%- errorText %></div>
+<div class="pl-control-warning-text"><%- warningText %></div>
