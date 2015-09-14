@@ -82,7 +82,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
             .listenTo(this.model, 'change:hintText', this.onChangeHintTextHandler)
             .listenTo(this.model, 'change:errorText', this.onChangeErrorTextHandler)
             .listenTo(this.model, 'change:warningText', this.onChangeWarningTextHandler)
-            .listenTo(this.model, 'change:value', this.onChangeValueHandler)
             //@TODO Изменения от Control
             .listenTo(this.model, 'change:enabled', this.onChangeEnabledHandler);
     },
@@ -126,21 +125,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         this.ui.warningText.text(value);
     },
 
-    onChangeValueHandler: function (model, value) {
-        this.ui.control.val(this.getDisplayValue());
-    },
-
     onChangeEnabledHandler: function (model, value) {
         this.ui.control.prop('disabled', !value);
-    },
-
-    getDisplayValue: function () {
-        var
-            model = this.model,
-            value = model.get('value'),
-            displayFormat = model.getDisplayFormat;
-
-        return displayFormat ? displayFormat.format(value) : value;
     },
 
     /**

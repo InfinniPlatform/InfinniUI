@@ -27,6 +27,64 @@ describe('TextEditorBase', function () {
             assert.equal(textBox.getEditMask(), mask, 'new edit mask is right');
         });
 
+        var metadata_1 = {
+            Text: 'Пациенты',
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 1, "Display": "2.2222" },
+                            { "Id": 2, "Display": "3.2222" },
+                            { "Id": 3, "Display": "4.2222" }
+                        ]
+                    }
+                }
+            ],
+            LayoutPanel: {
+
+                "TextBox": {
+                    "Name": "TextBox1",
+                    "Value": {
+                        "PropertyBinding":{
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Display"
+                        }
+                    },
+                    "DisplayFormat": {
+                        "NumberFormat": {
+                            "Format": "n2"
+                        }
+                    }
+                }
+            }
+        };
+
+        it('metadata and rendering', function () {
+            // Given When
+            var linkView = new LinkView(null, function (resultCallback) {
+                var builder = new ApplicationBuilder();
+                var view = builder.buildType('View', metadata_1, {parentView: fakeView()});
+                resultCallback(view);
+            });
+            linkView.setOpenMode('Application');
+
+            var view = linkView.createView(function (view) {
+                view.open();
+
+                var $layout = $('#sandbox').children();
+                //$layout.detach();
+
+                onLayoutReady($layout);
+            });
+
+            // Then
+            function onLayoutReady($layout){
+                var $input = $layout.find('.pl-text-box-input');
+                assert.equal($input.val(), 'Type is LTE', 'binding and formatting is right');
+            }
+        });
+
     });
 
 });
