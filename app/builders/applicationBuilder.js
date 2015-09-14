@@ -92,6 +92,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('GlobalNavigationBar', new GlobalNavigationBarBuilder());
         builder.register('ActionBar', new ActionBarBuilder());
 
+        builder.register('Script', new ScriptBuilder());
     },
 
     build: function(metadataValue, args){

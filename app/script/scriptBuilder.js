@@ -5,8 +5,8 @@
 function ScriptBuilder() {}
 
 _.extend( ScriptBuilder.prototype, {
-    build: function (metadata) {
-        return new Script(metadata.Body, metadata.Name);
+    build: function (context, args) {
+        return new Script(args.metadata.Body, args.metadata.Name);
     }
 });
 
