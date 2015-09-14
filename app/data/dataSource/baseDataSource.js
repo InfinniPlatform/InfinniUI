@@ -53,8 +53,14 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('error', handler);
     },
 
-    onPropertyChanged: function (handler) {
-        this.on('onPropertyChanged', handler);
+    onPropertyChanged: function (property, handler) {
+        if(typeof property == 'function'){
+            handler = property;
+            this.on('onPropertyChanged', handler);
+        }else{
+            this.on('onPropertyChanged:' + property, handler);
+        }
+
     },
 
     onSelectedItemChanged: function (handler) {
@@ -333,6 +339,7 @@ var BaseDataSource = Backbone.Model.extend({
         argument.oldValue = oldValue;
 
         this.trigger('onPropertyChanged', context, argument);
+        this.trigger('onPropertyChanged:' + property, context, argument);
     },
 
     saveItem : function (item, success, error) {
@@ -520,6 +527,7 @@ var BaseDataSource = Backbone.Model.extend({
         argument.oldValue = null;
 
         this.trigger('onPropertyChanged', context, argument);
+        this.trigger('onPropertyChanged:', context, argument);
     },
 
     addNextItems: function(success, error){
