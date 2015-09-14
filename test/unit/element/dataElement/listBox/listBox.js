@@ -42,10 +42,6 @@ describe('ListBox', function () {
     describe('render', function () {
         it('should render stackPanel', function () {
             // Given When
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
             var linkView = new LinkView(null, function (resultCallback) {
                 var builder = new ApplicationBuilder();
                 var view = builder.buildType('View', metadata2, {parentView: fakeView()});

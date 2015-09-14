@@ -47,6 +47,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     initOnChangeHandler: function () {
         this
             .listenTo(this.model, 'change:labelText', this.onChangeLabelTextHandler)
+            .listenTo(this.model, 'change:value', this.onChangeValue)
             .listenTo(this.model, 'change:labelFloating', this.onChangeLabelFloatingHandler)
             .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
             .listenTo(this.model, 'change:editMask', this.onChangeEditMaskHandler);
@@ -61,7 +62,9 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     onChangeDisplayFormatHandler: function ( ){
-
+        if(this.wasRendered){
+            this.updateDisplayValue();
+        }
     },
 
     onChangeEditMaskHandler: function () {
@@ -70,6 +73,26 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     onEditorValidate: function (value) {
         return true;
+    },
+
+    onChangeValue: function () {
+        if(this.wasRendered){
+            this.updateDisplayValue();
+        }
+    },
+
+    updateDisplayValue: function () {
+        var displayValue = this.getDisplayValue();
+        this.ui.control.val(displayValue);
+    },
+
+    getDisplayValue: function () {
+        var
+            model = this.model,
+            value = model.get('value'),
+            displayFormat = model.get('displayFormat');
+
+        return displayFormat ? displayFormat.format(value) : value;
     }
 
 

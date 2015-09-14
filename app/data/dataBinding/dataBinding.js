@@ -45,7 +45,7 @@ var DataBinding = Backbone.Model.extend({
 
         var that = this;
 
-        source.onPropertyChanged(function(context, argument){
+        source.onPropertyChanged(property, function(context, argument){
             that.onSourcePropertyChangedHandler(context, argument);
         });
 
