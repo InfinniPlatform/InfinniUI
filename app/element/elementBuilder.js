@@ -9,6 +9,7 @@ var ElementBuilder = function () {
 _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
     build: function (context, args){
+        args = args || {};
         var element = this.createElement(args);
         var params = _.extend(args, {element: element});
 

@@ -28,7 +28,7 @@ describe('DataBindingBuilder', function () {
         };
 
         // When
-        var dataBinding = dataBindingBuilder.build(null, {view: view, metadata: metadata});
+        var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
 
         // Then
         assert.equal(dataBinding.getMode(), BindingModes.toSource);
@@ -63,8 +63,8 @@ describe('DataBindingBuilder', function () {
         };
 
         // Then
-        dataBindingBuilder.build(null, { view: view, metadata: { Source: 'My_DataSource'} });
-        dataBindingBuilder.build(null, { view: view,  metadata: { Source: 'My_Parameter'} });
-        dataBindingBuilder.build(null, { view: view,  metadata: { Source: 'My_Button'} });
+        dataBindingBuilder.build(null, { parentView: view, metadata: { Source: 'My_DataSource'} });
+        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Parameter'} });
+        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Button'} });
     });
 });

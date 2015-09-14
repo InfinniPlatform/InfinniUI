@@ -1,5 +1,5 @@
 var FakeElement = Backbone.Model.extend({
-    onPropertyChanged: function(callback){
+    onPropertyChanged: function(prop, callback){
         this.set('callback', callback);
     },
 

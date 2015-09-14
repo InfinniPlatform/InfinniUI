@@ -7,7 +7,7 @@ describe('Builder', function () {
 
     describe('build', function () {
         it('should return null if no builder found', function () {
-            var view = builder.buildType(fakeView(), 'TextBox', null);
+            var view = builder.buildType('IncorrectType', null, {parentView: fakeView()});
 
             assert.isNull(view);
         });
@@ -18,7 +18,7 @@ describe('Builder', function () {
             };
 
             builder.register('TextBox', { build: viewFactory});
-            assert.equal(builder.build(null, { TextBox: {} }), 42);
+            assert.equal(builder.build({ TextBox: {} }), 42);
         });
 
         it('should pick concrete value from metadata if no metadataType passed', function () {
@@ -44,7 +44,7 @@ describe('Builder', function () {
             };
             builder.register('TextBox', { build: viewFactory});
 
-            assert.equal(builder.buildType(fakeView(), 'TextBox', null), 42);
+            assert.equal(builder.buildType('TextBox', null, { parentView: fakeView() }), 42);
         });
     });
 });

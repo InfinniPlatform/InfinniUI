@@ -25,6 +25,8 @@ function Builder() {
             value,
             result = null;
 
+        args = args || {};
+
         for (var p in metadataValue) {
             key = p;
             break; // берем первое найденное свойство в объекте! Остальное игнорируем
