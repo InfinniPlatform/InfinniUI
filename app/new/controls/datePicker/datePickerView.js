@@ -131,6 +131,26 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
             //
             this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
         });
+    },
+
+    /** TimePicker **/
+
+    onClickDropdownHandler: function (event) {
+        var calendar = new TimePickerDropdown({
+            model: this.model
+        });
+        calendar.render();
+        //@TODO Переделать
+        $('body').append(calendar.$el);
+
+        calendar.$el.css({
+            top: event.clientY,
+            left: event.clientX
+        });
+
+        this.listenTo(calendar, 'date', function (date) {
+            this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+        });
     }
 
 

@@ -154,15 +154,15 @@
         },
         {
           "DatePicker": {
-            "Mode": "DateTime",
+            "Mode": "Time",
             "DisplayFormat": {
               "DateTimeFormat": {
-                "Format": "g"
+                "Format": "t"
               }
             },
             "EditMask": {
               "DateTimeEditMask": {
-                "Mask": "g"
+                "Mask": "t"
               }
             },
             "Value": {
