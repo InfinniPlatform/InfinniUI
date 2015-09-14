@@ -1,31 +1,17 @@
 var DatePickerTimeModel = DatePickerComponentModel.extend({
 
     defaults: {
-        //todayMonth: moment().month()
         hour: moment().hour(),
         minute: moment().minute(),
         second: moment().second()
     },
 
     initialize: function () {
-        //this.on('change:date', this.onChangeDateHandler, this);
         DatePickerComponentModel.prototype.initialize.call(this);
         this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
         this.on('change:second', this.updateDatePart.bind(this, 'second'));
     },
-
-    //onChangeDateHandler: function (model, value) {
-    //    if (typeof value !== 'undefined' && value !== null) {
-    //        model.set('hour', moment(value).hour());
-    //        model.set('minute', moment(value).minute());
-    //        model.set('second', moment(value).second());
-    //    } else {
-    //        model.set('hour',null);
-    //        model.set('minute', null);
-    //        model.set('second', null);
-    //    }
-    //},
 
     nextHour: function () {
         var hour = this.get('hour');
@@ -81,7 +67,9 @@ var DatePickerTime = DatePickerComponent.extend({
         "click .time-spin-down.time-spin-minute": "prevMinute",
         "click .time-spin-up.time-spin-minute": "nextMinute",
         "click .time-segment-hour": "selectHour",
-        "click .time-segment-minute": "selectMinute"
+        "click .time-segment-minute": "selectMinute",
+        "click .days": "selectDay"
+
         /*
         "click .month": "useMonth",
         "click .today-month": "showToday"
@@ -107,7 +95,7 @@ var DatePickerTime = DatePickerComponent.extend({
     selectHour: function () {
         var
             model = this.model,
-            date = new Date(),
+            date = model.get('date'),
             hour = model.get('hour'),
             minute = model.get('minute'),
             second = model.get('second');
@@ -119,7 +107,7 @@ var DatePickerTime = DatePickerComponent.extend({
     selectMinute: function () {
         var
             model = this.model,
-            date = new Date(),
+            date = model.get('date'),
             hour = model.get('hour'),
             minute = model.get('minute'),
             second = model.get('second');
@@ -165,6 +153,14 @@ var DatePickerTime = DatePickerComponent.extend({
             date = this.model.get('date');
 
         this.trigger('date', date);
+    },
+
+    selectDay: function () {
+        var
+            date = this.model.get('date');
+
+        this.trigger('day', date);
+
     }
 
 });

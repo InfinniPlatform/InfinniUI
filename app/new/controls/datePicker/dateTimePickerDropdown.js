@@ -10,17 +10,8 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         years: '.years',
         times: '.times',
         hours: '.hours',
-        minutes: '.minutes',
-        toggleDate: '.toggle-date',
-        toggleTime: '.toggle-time',
-        panelDate: '.datepicker-date',
-        panelTime: '.datepicker-time'
+        minutes: '.minutes'
     },
-
-    events: _.extend({}, DatePickerDropdown.prototype.events, {
-        'click .toggle-date': "onClickToggleDateHandler",
-        'click .toggle-time': "onClickToggleTimeHandler"
-    }),
 
     onClickToggleDateHandler: function () {
         this.trigger('days');
@@ -77,14 +68,16 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
     },
 
     workflow: function (days, months, years, time, hours, minutes) {
-        var
-            panelDate = this.ui.panelDate,
-            panelTime = this.ui.panelTime;
         var useTime = this.useTime.bind(this);
+        var components = Array.prototype.slice.call(arguments);
+
         this
             .listenTo(days, 'date', this.useValue)
             .listenTo(days, 'year', function (date) {
                 showYears(date);//Needed select year from list
+            })
+            .listenTo(days, 'time', function (date) {
+                showTime(date);
             })
             .listenTo(years, 'year', function (date) {
                 showMonths(date);//Needed select month for year
@@ -101,6 +94,9 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
             })
             .listenTo(time, 'minute', function (date) {
                 showMinutes(date);
+            })
+            .listenTo(time, 'day', function (date) {
+                showDays(date);
             })
             .listenTo(time, 'date', function (date) {
                 useTime(date);
@@ -125,71 +121,44 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
 
         return showDays;
 
+        function switchComponent(component) {
+            components.forEach(function (c) {
+                if (c !== component) {
+                    c.hide();
+                }
+            });
+            component.show();
+        }
+
         function showDays(date) {
             days.setDate(date);
-
-            toggleDateTimePanel('date');
-            years.hide();
-            months.hide();
-            days.show();
+            switchComponent(days);
         }
 
         function showMonths(date) {
             months.setDate(date);
-
-            toggleDateTimePanel('date');
-            days.hide();
-            years.hide();
-            months.show();
+            switchComponent(months);
         }
 
         function showYears(date) {
             years.setDate(date);
-
-            toggleDateTimePanel('date');
-            days.hide();
-            months.hide();
-            years.show();
+            switchComponent(years);
         }
 
         function showHours(date) {
             hours.setDate(date);
-
-            toggleDateTimePanel('time');
-            time.hide();
-            minutes.hide();
-            hours.show();
+            switchComponent(hours);
         }
 
         function showMinutes(date) {
             minutes.setDate(date);
-
-            toggleDateTimePanel('time');
-            time.hide();
-            hours.hide();
-            minutes.show();
+            switchComponent(minutes);
         }
 
         function showTime(date) {
             time.setDate(date);
-
-            toggleDateTimePanel('time');
-            hours.hide();
-            minutes.hide();
-            time.show();
+            switchComponent(time);
         }
-
-        function toggleDateTimePanel(name) {
-            if (name === 'time') {
-                panelDate.hide();
-                panelTime.show();
-            } else{
-                panelTime.hide();
-                panelDate.show();
-            }
-        }
-
-
 
     }
 

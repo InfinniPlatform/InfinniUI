@@ -10,22 +10,12 @@ var DatePickerDaysModel = DatePickerComponentModel.extend({
         }
     },
 
-    //initialize: function () {
-    //    this.on('change:date', this.onChangeDateHandler, this);
-    //},
-
-    //onChangeDateHandler: function (model, value) {
-    //    if (typeof value !== 'undefined' && value !== null) {
-    //        var date = moment(value);
-    //        model.set('month', date.month());
-    //        model.set('year', date.year());
-    //        model.set('day', date.date());
-    //    } else {
-    //        model.set('month', null);
-    //        model.set('year', null);
-    //        model.set('day', null);
-    //    }
-    //},
+    initialize: function () {
+        DatePickerComponentModel.prototype.initialize.call(this);
+        this.on('change:year', this.updateDatePart.bind(this, 'year'));
+        this.on('change:month', this.updateDatePart.bind(this, 'month'));
+        this.on('change:day', this.updateDatePart.bind(this, 'day'));
+    },
 
     today: function () {
         this.set({
@@ -76,7 +66,8 @@ var DatePickerDays = DatePickerComponent.extend({
         'click .btn-month-prev': 'prevMonth',
         'click .btn-month-next': 'nextMonth',
         'click .today-date': 'showToday',
-        'click .day-calendar': 'useDay'
+        'click .day-calendar': 'useDay',
+        'click .time': 'showTime'
     },
 
     render: function () {
@@ -183,7 +174,8 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     onYearsClickHandler: function (event) {
-        var date = new Date(this.model.get('year'), this.model.get('month'));
+        var date = this.model.get('date');
+
         this.trigger('year', date);
     },
 
@@ -197,6 +189,10 @@ var DatePickerDays = DatePickerComponent.extend({
 
     showToday: function () {
         this.model.today();
+    },
+
+    showTime: function () {
+        this.trigger('time', this.model.get('date'));
     },
 
     useDay: function (event) {

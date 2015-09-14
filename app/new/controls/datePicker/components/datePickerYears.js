@@ -1,4 +1,4 @@
-var DatePickerYearsModel = Backbone.Model.extend({
+var DatePickerYearsModel = DatePickerComponentModel.extend({
 
     defaults: {
         pageSize: 20,
@@ -7,8 +7,9 @@ var DatePickerYearsModel = Backbone.Model.extend({
     },
 
     initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
-        this.on('change:year', this.onChangeYearHandler, this);
+        DatePickerComponentModel.prototype.initialize.call(this);
+        this.on('change:year', this.updateDatePart.bind(this, 'year'));
+        this.on('change:year', this.onChangeYearHandler);
     },
 
     prevPage: function () {
@@ -23,17 +24,6 @@ var DatePickerYearsModel = Backbone.Model.extend({
 
     resetPage: function () {
         this.set('page', 0);
-    },
-
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set('month', moment(value).month());
-            model.set('year', moment(value).year());
-        } else {
-            model.set('month', null);
-            model.set('year', null);
-        }
-
     },
 
     onChangeYearHandler: function (model, value) {
@@ -120,10 +110,13 @@ var DatePickerYears = DatePickerComponent.extend({
 
     useYear: function (event) {
         var $el = $(event.target),
-            year = parseInt($el.attr('data-year'), 10),
-            month = parseInt(this.model.get('month'), 10);
+            model = this.model;
 
-        this.trigger('year', new Date(year, month));
+        model.set({
+            year: parseInt($el.attr('data-year'), 10)
+        });
+
+        this.trigger('year', model.get('date'));
     }
 
 });

@@ -112,6 +112,7 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
     },
 
     /** DateTimePicker **/
+
     onClickDropdownHandler: function (event) {
         var calendar = new DateTimePickerDropdown({
             model: this.model

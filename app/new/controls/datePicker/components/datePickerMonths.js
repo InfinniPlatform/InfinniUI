@@ -1,21 +1,13 @@
-var DatePickerMonthsModel = Backbone.Model.extend({
+var DatePickerMonthsModel = DatePickerComponentModel.extend({
 
     defaults: {
         todayMonth: moment().month()
     },
 
     initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
-    },
-
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set('month', moment(value).month());
-            model.set('year', moment(value).year());
-        } else {
-            model.set('month', null);
-            model.set('year', null);
-        }
+        DatePickerComponentModel.prototype.initialize.call(this);
+        this.on('change:month', this.updateDatePart.bind(this, 'month'));
+        this.on('change:year', this.updateDatePart.bind(this, 'year'));
     },
 
     nextYear: function () {
@@ -105,20 +97,20 @@ var DatePickerMonths = DatePickerComponent.extend({
     useMonth: function (event) {
         var
             $el = $(event.target),
-            model = this.model,
-            year = parseInt(model.get('year'), 10),
-            month = parseInt($el.attr('data-month'), 10);
+            model = this.model;
 
-        this.trigger('month', new Date(year, month));
+        model.set({
+            year: parseInt(model.get('year'), 10),
+            month: parseInt($el.attr('data-month'), 10)
+        });
+        this.trigger('month', model.get('date'));
     },
 
     selectYear: function () {
         var
-            model = this.model,
-            year = parseInt(model.get('year'), 10),
-            month = parseInt(model.get('month'), 10);
+            model = this.model;
 
-        this.trigger('year', new Date(year, month));
+        this.trigger('year', model.get('data'));
     },
 
     showToday: function () {

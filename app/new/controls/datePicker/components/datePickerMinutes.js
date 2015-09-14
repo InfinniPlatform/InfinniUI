@@ -2,17 +2,8 @@ var DatePickerMinutesModel = DatePickerComponentModel.extend({
 
     initialize: function () {
         DatePickerComponentModel.prototype.initialize.call(this);
-        //this.on('change:date', this.onChangeDateHandler, this);
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
-    },
-
-    //onChangeDateHandler: function (model, value) {
-    //    if (typeof value !== 'undefined' && value !== null) {
-    //        model.set('minute', moment(value).minute());
-    //    } else {
-    //        model.set('minute', null);
-    //    }
-    //}
+    }
 
 });
 
