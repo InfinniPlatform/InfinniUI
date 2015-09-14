@@ -110,7 +110,7 @@ var DataBinding = Backbone.Model.extend({
         var source = this.get('source');
         var value;
 
-        if(source){
+        if(this.shouldRefreshElement(this.get('mode')) && source){
             value = source.getProperty(sourceProperty);
             this._setValueToElement(value);
         }
@@ -133,8 +133,7 @@ var DataBinding = Backbone.Model.extend({
         var elementProperty = this.get('elementProperty');
 
         if(this.shouldRefreshSource(mode) && argument.property == elementProperty){
-            var value = element.getProperty(elementProperty);
-            this._setValueToSource(value);
+            this._setValueToSource(argument.newValue);
         }
     },
 

@@ -18,7 +18,7 @@ var FakeElement = Backbone.Model.extend({
             this.set(property, newValue);
             var callback = this.get('callback');
             if(callback){
-                callback({}, {property: property});
+                callback({}, {property: property, newValue: newValue});
             }
         }
     },
