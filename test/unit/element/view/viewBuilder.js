@@ -2,7 +2,7 @@ describe('ViewBuilder', function () {
 
     /*it('should build Container and Element metadata', function () {
      // Given
-     var viewBuilder = new newViewBuilder();
+     var viewBuilder = new ViewBuilder();
      var metadata = {
      Name: 'my_view',
      Items: []
@@ -17,7 +17,7 @@ describe('ViewBuilder', function () {
 
     it('should build Icon', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Icon: 'Icon'
         };
@@ -32,7 +32,7 @@ describe('ViewBuilder', function () {
 
     it('should build Scripts', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Scripts: [
                 {
@@ -60,7 +60,7 @@ describe('ViewBuilder', function () {
 
     it('should build Parameters', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Parameters: [
                 {
@@ -84,7 +84,7 @@ describe('ViewBuilder', function () {
         window.providerRegister.register('DocumentDataSource', FakeDataProvider);
         window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             DataSources: [
                 {
@@ -119,7 +119,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnOpening', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Scripts: [
                 {
@@ -142,7 +142,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnOpened', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Scripts: [
                 {
@@ -165,7 +165,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnClosing', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Scripts: [
                 {
@@ -188,7 +188,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnClosed', function () {
         // Given
-        var viewBuilder = new newViewBuilder();
+        var viewBuilder = new ViewBuilder();
         var metadata = {
             Scripts: [
                 {

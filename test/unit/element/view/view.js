@@ -2,7 +2,7 @@ describe('View', function () {
 
     it('should get scripts', function () {
         //Given
-        var view = new newView();
+        var view = new View();
 
         //When
         var scripts = view.getScripts();
@@ -20,7 +20,7 @@ describe('View', function () {
 
     it('should get parameters', function () {
         //Given
-        var view = new newView();
+        var view = new View();
 
         //When
         var parameters = view.getParameters();
@@ -38,7 +38,7 @@ describe('View', function () {
 
     it('should get dataSources', function () {
         //Given
-        var view = new newView();
+        var view = new View();
 
         //When
         var dataSources = view.getDataSources();
@@ -56,7 +56,7 @@ describe('View', function () {
 
     it('should set icon', function () {
         //Given
-        var view = new newView();
+        var view = new View();
 
         assert.isUndefined(view.getIcon());
 
@@ -69,7 +69,7 @@ describe('View', function () {
 
     it('should set dialogResult', function () {
         //Given
-        var view = new newView();
+        var view = new View();
 
         assert.equal(view.getDialogResult(), DialogResult.none);
 
@@ -83,7 +83,7 @@ describe('View', function () {
     describe('Context', function () {
         it('should get context', function () {
             //Given
-            var view = new newView();
+            var view = new View();
 
             //When
             var context = view.getContext();
@@ -95,7 +95,7 @@ describe('View', function () {
 
         it('should refresh context on registerElement', function () {
             //Given
-            var view = new newView();
+            var view = new View();
 
             //When
             view.registerElement({name: 'element'});
@@ -108,7 +108,7 @@ describe('View', function () {
 
         it('should refresh context on add script', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var scripts = view.getScripts();
 
             //When
@@ -121,7 +121,7 @@ describe('View', function () {
 
         it('should refresh context on replace script', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var scripts = view.getScripts();
             var oldScript = { name: 'oldScript', func: {} };
             var newScript = { name: 'newScript', func: {} };
@@ -139,7 +139,7 @@ describe('View', function () {
 
         it('should refresh context on remove script', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var scripts = view.getScripts();
             var removedScript = { name: 'removedScript', func: {} };
 
@@ -156,7 +156,7 @@ describe('View', function () {
 
         it('should refresh context on reset script', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var scripts = view.getScripts();
             var oldScript = { name: 'oldScript', func: {} };
             var newScript = { name: 'newScript', func: {} };
@@ -175,7 +175,7 @@ describe('View', function () {
 
         it('should refresh context on add parameter', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var parameters = view.getParameters();
 
             //When
@@ -188,7 +188,7 @@ describe('View', function () {
 
         it('should refresh context on replace parameter', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var parameters = view.getParameters();
             var oldParameter = { name: 'oldParameter' };
             var newParameter = { name: 'newParameter' };
@@ -206,7 +206,7 @@ describe('View', function () {
 
         it('should refresh context on remove parameter', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var parameters = view.getParameters();
             var removedParameter = { name: 'removedParameter' };
 
@@ -223,7 +223,7 @@ describe('View', function () {
 
         it('should refresh context on reset parameter', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var parameters = view.getParameters();
             var oldParameter = { name: 'oldParameter' };
             var newParameter = { name: 'newParameter' };
@@ -242,7 +242,7 @@ describe('View', function () {
 
         it('should refresh context on add dataSource', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var dataSources = view.getDataSources();
 
             //When
@@ -255,7 +255,7 @@ describe('View', function () {
 
         it('should refresh context on replace dataSource', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var dataSources = view.getDataSources();
             var oldDataSource = { name: 'oldDataSource' };
             var newDataSource = { name: 'newDataSource' };
@@ -273,7 +273,7 @@ describe('View', function () {
 
         it('should refresh context on remove dataSource', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var dataSources = view.getDataSources();
             var removedDataSource = { name: 'removedDataSource' };
 
@@ -290,7 +290,7 @@ describe('View', function () {
 
         it('should refresh context on reset dataSource', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             var dataSources = view.getDataSources();
             var oldDataSource = { name: 'oldDataSource' };
             var newDataSource = { name: 'newDataSource' };
@@ -310,7 +310,7 @@ describe('View', function () {
     describe('Open', function () {
         it('should call event onOpening', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnOpeningWasCall = false;
 
             view.onOpening(function () {
@@ -326,7 +326,7 @@ describe('View', function () {
 
         it('should call event onOpened when onOpening passed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnOpenedWasCall = false;
 
             view.onOpened(function () {
@@ -342,7 +342,7 @@ describe('View', function () {
 
         it('should not call event onOpened when onOpening failed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnOpenedWasCall = false;
 
             view.onOpening(
@@ -363,7 +363,7 @@ describe('View', function () {
 
         it('should select correct callback when onOpening passed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -384,7 +384,7 @@ describe('View', function () {
 
         it('should select correct callback when onOpening failed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -412,7 +412,7 @@ describe('View', function () {
     describe('Close', function () {
         it('should call event onClosing', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnClosingWasCall = false;
 
             view.onClosing(function () {
@@ -428,7 +428,7 @@ describe('View', function () {
 
         it('should call event onClosed when onClosing passed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnClosedWasCall = false;
 
             view.onClosed(function () {
@@ -444,7 +444,7 @@ describe('View', function () {
 
         it('should not call event onClosed when onClosing failed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.EventOnClosedWasCall = false;
 
             view.onClosing(
@@ -465,7 +465,7 @@ describe('View', function () {
 
         it('should select correct callback when onClosing passed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -486,7 +486,7 @@ describe('View', function () {
 
         it('should select correct callback when onClosing failed', function () {
             //Given
-            var view = new newView();
+            var view = new View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
