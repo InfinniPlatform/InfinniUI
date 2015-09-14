@@ -6,6 +6,7 @@ var DatePickerComponent = Backbone.View.extend({
         var modelClass = this.modelClass;
 
         this.model = new modelClass({
+            today: new Date(),
             value: options.value,
             date: options.date,
             max: options.max,

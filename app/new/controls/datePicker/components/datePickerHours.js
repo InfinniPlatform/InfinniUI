@@ -1,16 +1,18 @@
-var DatePickerHoursModel = Backbone.Model.extend({
+var DatePickerHoursModel = DatePickerComponentModel.extend({
 
     initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
+        //this.on('change:date', this.onChangeDateHandler, this);
+        DatePickerComponentModel.prototype.initialize.call(this);
+        this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
     },
 
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set('hour', moment(value).hour());
-        } else {
-            model.set('hour', null);
-        }
-    }
+    //onChangeDateHandler: function (model, value) {
+    //    if (typeof value !== 'undefined' && value !== null) {
+    //        model.set('hour', moment(value).hour());
+    //    } else {
+    //        model.set('hour', null);
+    //    }
+    //}
 
 });
 
@@ -69,7 +71,7 @@ var DatePickerHours = DatePickerComponent.extend({
         var
             $el = $(event.target),
             model = this.model,
-            date = new Date(),
+            date = model.get('date'),
             hour = parseInt($el.attr('data-hour'), 10);
 
         date.setHours(hour);

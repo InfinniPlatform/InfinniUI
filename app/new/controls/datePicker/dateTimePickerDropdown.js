@@ -23,22 +23,13 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
     }),
 
     onClickToggleDateHandler: function () {
-        this.toggleDateTimePanel('date');
+        this.trigger('days');
     },
 
     onClickToggleTimeHandler: function () {
-        this.toggleDateTimePanel('time');
+        this.trigger('time');
     },
 
-    toggleDateTimePanel: function (name) {
-        if (name === 'time') {
-            this.ui.panelDate.hide();
-            this.ui.panelTime.show();
-        } else{
-            this.ui.panelTime.hide();
-            this.ui.panelDate.show();
-        }
-    },
 
     renderComponents: function () {
         var model = this.model;
@@ -81,8 +72,15 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         this.workflow(days, months, years, time, hours, minutes)(value);
     },
 
-    workflow: function (days, months, years, time, hours, minutes) {
+    useTime: function (date) {
+        this.trigger('date', date);
+    },
 
+    workflow: function (days, months, years, time, hours, minutes) {
+        var
+            panelDate = this.ui.panelDate,
+            panelTime = this.ui.panelTime;
+        var useTime = this.useTime.bind(this);
         this
             .listenTo(days, 'date', this.useValue)
             .listenTo(days, 'year', function (date) {
@@ -104,10 +102,24 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
             .listenTo(time, 'minute', function (date) {
                 showMinutes(date);
             })
+            .listenTo(time, 'date', function (date) {
+                useTime(date);
+            })
             .listenTo(hours, 'hour', function (date) {
+                useTime(date);
                 showTime(date);
             })
             .listenTo(minutes, 'minute', function (date) {
+                useTime(date);
+                showTime(date);
+            });
+
+        //Переключатель режима Date/Time
+        this
+            .on('days', function (date) {
+                showDays(date);
+            })
+            .on('time', function (date) {
                 showTime(date);
             });
 
@@ -116,6 +128,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showDays(date) {
             days.setDate(date);
 
+            toggleDateTimePanel('date');
             years.hide();
             months.hide();
             days.show();
@@ -124,6 +137,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showMonths(date) {
             months.setDate(date);
 
+            toggleDateTimePanel('date');
             days.hide();
             years.hide();
             months.show();
@@ -132,6 +146,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showYears(date) {
             years.setDate(date);
 
+            toggleDateTimePanel('date');
             days.hide();
             months.hide();
             years.show();
@@ -140,6 +155,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showHours(date) {
             hours.setDate(date);
 
+            toggleDateTimePanel('time');
             time.hide();
             minutes.hide();
             hours.show();
@@ -148,6 +164,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showMinutes(date) {
             minutes.setDate(date);
 
+            toggleDateTimePanel('time');
             time.hide();
             hours.hide();
             minutes.show();
@@ -156,10 +173,22 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         function showTime(date) {
             time.setDate(date);
 
+            toggleDateTimePanel('time');
             hours.hide();
             minutes.hide();
             time.show();
         }
+
+        function toggleDateTimePanel(name) {
+            if (name === 'time') {
+                panelDate.hide();
+                panelTime.show();
+            } else{
+                panelTime.hide();
+                panelDate.show();
+            }
+        }
+
 
 
     }

@@ -1,4 +1,4 @@
-var DatePickerTimeModel = Backbone.Model.extend({
+var DatePickerTimeModel = DatePickerComponentModel.extend({
 
     defaults: {
         //todayMonth: moment().month()
@@ -8,20 +8,24 @@ var DatePickerTimeModel = Backbone.Model.extend({
     },
 
     initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
+        //this.on('change:date', this.onChangeDateHandler, this);
+        DatePickerComponentModel.prototype.initialize.call(this);
+        this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
+        this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
+        this.on('change:second', this.updateDatePart.bind(this, 'second'));
     },
 
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set('hour', moment(value).hour());
-            model.set('minute', moment(value).minute());
-            model.set('second', moment(value).second());
-        } else {
-            model.set('hour',null);
-            model.set('minute', null);
-            model.set('second', null);
-        }
-    },
+    //onChangeDateHandler: function (model, value) {
+    //    if (typeof value !== 'undefined' && value !== null) {
+    //        model.set('hour', moment(value).hour());
+    //        model.set('minute', moment(value).minute());
+    //        model.set('second', moment(value).second());
+    //    } else {
+    //        model.set('hour',null);
+    //        model.set('minute', null);
+    //        model.set('second', null);
+    //    }
+    //},
 
     nextHour: function () {
         var hour = this.get('hour');
@@ -127,6 +131,7 @@ var DatePickerTime = DatePickerComponent.extend({
     initOnChangeHandlers: function () {
         this.listenTo(this.model, 'change:hour', this.updateHour);
         this.listenTo(this.model, 'change:minute', this.updateMinute);
+        this.listenTo(this.model, 'change:date', this.useTime);
     },
 
     updateHour: function () {
@@ -155,14 +160,11 @@ var DatePickerTime = DatePickerComponent.extend({
         this.model.nextMinute();
     },
 
-    useTime: function (event) {
+    useTime: function () {
         var
-            $el = $(event.target),
-            model = this.model,
-            year = parseInt(model.get('year'), 10),
-            month = parseInt($el.attr('data-month'), 10);
+            date = this.model.get('date');
 
-        this.trigger('month', new Date(year, month));
+        this.trigger('date', date);
     }
 
 });

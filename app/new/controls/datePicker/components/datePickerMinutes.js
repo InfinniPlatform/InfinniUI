@@ -1,16 +1,18 @@
-var DatePickerMinutesModel = Backbone.Model.extend({
+var DatePickerMinutesModel = DatePickerComponentModel.extend({
 
     initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
+        DatePickerComponentModel.prototype.initialize.call(this);
+        //this.on('change:date', this.onChangeDateHandler, this);
+        this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
     },
 
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set('minute', moment(value).minute());
-        } else {
-            model.set('minute', null);
-        }
-    }
+    //onChangeDateHandler: function (model, value) {
+    //    if (typeof value !== 'undefined' && value !== null) {
+    //        model.set('minute', moment(value).minute());
+    //    } else {
+    //        model.set('minute', null);
+    //    }
+    //}
 
 });
 
@@ -62,7 +64,7 @@ var DatePickerMinutes = DatePickerComponent.extend({
         var
             $el = $(event.target),
             model = this.model,
-            date = new Date(),
+            date = model.get('date'),
             minute = parseInt($el.attr('data-minute'), 10);
 
         date.setMinutes(minute);

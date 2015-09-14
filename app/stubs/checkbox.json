@@ -162,7 +162,7 @@
             },
             "EditMask": {
               "DateTimeEditMask": {
-                "Mask": "d"
+                "Mask": "g"
               }
             },
             "Value": {

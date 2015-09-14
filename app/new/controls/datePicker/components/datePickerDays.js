@@ -1,4 +1,4 @@
-var DatePickerDaysModel = Backbone.Model.extend({
+var DatePickerDaysModel = DatePickerComponentModel.extend({
     defaults: function () {
         var today = moment();
 
@@ -10,22 +10,22 @@ var DatePickerDaysModel = Backbone.Model.extend({
         }
     },
 
-    initialize: function () {
-        this.on('change:date', this.onChangeDateHandler, this);
-    },
+    //initialize: function () {
+    //    this.on('change:date', this.onChangeDateHandler, this);
+    //},
 
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            var date = moment(value);
-            model.set('month', date.month());
-            model.set('year', date.year());
-            model.set('day', date.date());
-        } else {
-            model.set('month', null);
-            model.set('year', null);
-            model.set('day', null);
-        }
-    },
+    //onChangeDateHandler: function (model, value) {
+    //    if (typeof value !== 'undefined' && value !== null) {
+    //        var date = moment(value);
+    //        model.set('month', date.month());
+    //        model.set('year', date.year());
+    //        model.set('day', date.date());
+    //    } else {
+    //        model.set('month', null);
+    //        model.set('year', null);
+    //        model.set('day', null);
+    //    }
+    //},
 
     today: function () {
         this.set({
@@ -204,8 +204,14 @@ var DatePickerDays = DatePickerComponent.extend({
             value =$el.attr('data-date'),
             m = moment(value, 'YYYY-MM-DD');
 
+        this.model.set({
+            year: m.year(),
+            month: m.month(),
+            day: m.date()
+        });
 
-        this.trigger('date', m.toDate());
+
+        this.trigger('date', this.model.get('date'));
     }
 
 });
