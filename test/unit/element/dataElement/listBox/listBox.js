@@ -14,7 +14,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -36,7 +36,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render', function () {

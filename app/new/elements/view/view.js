@@ -1,7 +1,7 @@
 /**
  * @param parent
  * @constructor
- * @augments View
+ * @augments Container
  */
 function View(parent) {
     _.superClass(View, this, parent);

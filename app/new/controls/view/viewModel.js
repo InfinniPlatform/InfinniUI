@@ -4,14 +4,14 @@ var DialogResult = {
     canceled: 2
 };
 
-var ViewModel = ControlModel.extend({
+var ViewModel = ContainerModel.extend({
 
     defaults: _.defaults({
         dialogResult: DialogResult.none
-    }, ControlModel.prototype.defaults),
+    }, ContainerModel.prototype.defaults),
 
     initialize: function () {
-        ControlModel.prototype.initialize.apply(this);
+        ContainerModel.prototype.initialize.apply(this);
 
         this.set('scripts', new Collection([], 'name'));
         this.set('parameters', new Collection());

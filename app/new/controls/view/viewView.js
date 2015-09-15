@@ -1,66 +1,37 @@
 /**
  * @class
- * @augments ControlView
+ * @augments ContainerView
  */
-var StackPanelView = ControlView.extend(
-    /** @lends StackPanelView.prototype */
+var ViewView = ContainerView.extend(
+    /** @lends ViewView.prototype */
     {
-        tagName: 'ul',
-        className: 'pl-stack-panel',
-
-        template: InfinniUI.Template["new/controls/stackPanel/template/stackPanel.tpl.html"],
-
-        UI: {
-            items: '.stackpanel-items'
-        },
+        className: 'pl-view',
 
         initialize: function (options) {
-            ControlView.prototype.initialize.call(this, options);
-
-            var that = this;
-            this.model.get('items').onChange(function(){
-                that.rerender();
-            });
-            this.initOrientation();
+            ContainerView.prototype.initialize.call(this, options);
         },
 
         render: function () {
             this.prerenderingActions();
 
             this.$el.empty();
-            this.$el.html(this.template({
-                items: this.model.get('items')
-            }));
-            this.renderItemsContents();
 
-            this.bindUIElements();
+            this.renderItemsContents();
 
             this.postrenderingActions();
             return this;
         },
 
         renderItemsContents: function(){
-            var $items = this.$el.find('.pl-stack-panel-i'),
-                items = this.model.get('items'),
+            var that = this,
                 itemTemplate = this.model.get('itemTemplate'),
-                element, item;
+                element;
 
-            $items.each(function(i, el){
-                item = items.getByIndex(i);
+            items.forEach(function(item, i){
                 element = itemTemplate(undefined, {item: item, index: i});
-                $(el)
+                that.$el
                     .append(element.render());
             });
-        },
-
-        initOrientation: function () {
-            this.listenTo(this.model, 'change:orientation', this.updateOrientation);
-            this.updateOrientation();
-        },
-
-        updateOrientation: function () {
-            var orientation = this.model.get('orientation');
-            this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
         }
     }
 );

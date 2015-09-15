@@ -12,9 +12,128 @@ _.extend(ContainerBuilder.prototype, {
     applyMetadata: function (params) {
         var metadata = params.metadata;
         var element = params.element;
+        var itemsBinding;
 
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
+        itemsBinding = this.initItems(params);
+        this.initGroup(params);
+
+        return itemsBinding;
+    },
+
+    initItems: function(params){
+        var metadata = params.metadata;
+        var itemsBinding = null;
+
+        if($.isArray(metadata.Items)){  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
+            this.initNotTemplatingItems(params);
+        }else{                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
+            itemsBinding = this.initTemplatingItems(params);
+        }
+
+        return itemsBinding;
+    },
+
+    initTemplatingItems: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+        var itemTemplate;
+        var binding;
+        var property;
+
+        binding = params.builder.build(metadata.Items, {
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        });
+
+        binding.bindElement(element, 'items');
+
+        if(metadata.ItemTemplate){
+            itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
+        }else if(metadata.ItemFormat){
+            itemTemplate = this.buildItemFormat(binding, metadata.ItemFormat, params);
+        }else if(metadata.ItemSelector){
+            itemTemplate = this.buildItemSelector(binding, metadata.ItemSelector, params);
+        }else{
+            if(metadata.ItemProperty){
+                property = metadata.ItemProperty;
+            }else{
+                property = '';
+            }
+            itemTemplate = this.buildItemProperty(binding, property, params);
+        }
+
+        element.setItemTemplate(itemTemplate);
+
+        return binding;
+    },
+
+    initNotTemplatingItems: function(params){
+        var itemsMetadata = params.metadata.Items;
+        var element = params.element;
+        var fakeItems = new Array(itemsMetadata.length);
+        var itemTemplate = this.buildItemTemplateForUniqueItem(itemsMetadata, params);
+
+        element.setItemTemplate(itemTemplate);
+        element.getItems().addAll(fakeItems);
+    },
+
+    initGroup: function(params){
+        if(this.hasGrouping(params)){
+            this.initGroupValueSelector(params);
+            this.initGroupItemTemplate(params);
+        }
+    },
+
+    hasGrouping: function(params){
+        return params.metadata.GroupValueSelector || params.metadata.GroupValueProperty;
+    },
+
+    initGroupValueSelector: function (params) {
+        var metadata = params.metadata,
+            element = params.element,
+            groupValueSelector;
+
+        /* element.setGroupItemComparator(function(a, b) {
+         if (a < b) {
+         return -1;
+         }
+
+         if (a > b) {
+         return 1;
+         }
+
+         return 0;
+         });*/
+
+        if (metadata.GroupValueSelector) {
+            groupValueSelector = function (context, args) {
+                var scriptExecutor = new ScriptExecutor(params.parent);
+                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
+            };
+        } else if (metadata.GroupValueProperty) {
+            groupValueSelector = function (context, args) {
+                return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.GroupValueProperty);
+            }
+        } else {
+            //Без группировки
+            groupValueSelector = null
+        }
+        element.setGroupValueSelector(groupValueSelector);
+    },
+
+    initGroupItemTemplate: function(params){
+        var metadata = params.metadata;
+        var element = params.element;
+        var itemTemplate;
+
+        if(metadata.GroupItemTemplate){
+            itemTemplate = this.buildItemTemplate(metadata.GroupItemTemplate, params);
+            element.setGroupItemTemplate(itemTemplate);
+        }else {
+            throw 'Нужно обработать другие варианты элементов';
+        }
     },
 
     buildItemProperty: function(itemsBinding, itemPropertyMetadata, params){

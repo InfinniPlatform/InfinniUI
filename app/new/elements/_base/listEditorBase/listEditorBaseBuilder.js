@@ -10,47 +10,14 @@ _.inherit(ListEditorBaseBuilder, ContainerBuilder);
 _.extend(ListEditorBaseBuilder.prototype, {
 
     applyMetadata: function (params) {
-        ContainerBuilder.prototype.applyMetadata.call(this, params);
+        var itemsBinding;
+
+        itemsBinding = ContainerBuilder.prototype.applyMetadata.call(this, params);
         this.applyMetadata_editorBaseBuilder(params);
 
-        this.initItems(params);
-        this.initGroup(params);
-        this.initValueFeatures(params);
-    },
-
-    initItems: function(params){
-        var itemsBinding = this.initItemsBinding(params);
-        this.initItemTemplating(params);
-        //this.initSorting(params);
         this.initSelecting(params, itemsBinding);
-    },
 
-    initItemsBinding: function(params){
-        var metadata = params.metadata;
-        var element = params.element;
-        var binding;
-
-        binding = params.builder.build(metadata.Items, {
-            parentView: params.parentView,
-            basePathOfProperty: params.basePathOfProperty
-        });
-
-        binding.bindElement(element, 'items');
-
-        return binding;
-    },
-
-    initItemTemplating: function(params){
-        var metadata = params.metadata;
-        var element = params.element;
-        var itemTemplate;
-
-        if(metadata.ItemTemplate){
-            itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
-            element.setItemTemplate(itemTemplate);
-        }else if(metadata.ItemTemplate){
-            throw 'Нужно обработать другие варианты элементов';
-        }
+        this.initValueFeatures(params);
     },
 
 
@@ -72,63 +39,6 @@ _.extend(ListEditorBaseBuilder.prototype, {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnSelectedItemChanged.Name, args);
             }
         });
-    },
-
-    initGroup: function(params){
-        if(this.hasGrouping(params)){
-            this.initGroupValueSelector(params);
-            this.initGroupItemTemplate(params);
-        }
-    },
-
-    hasGrouping: function(params){
-        return params.metadata.GroupValueSelector || params.metadata.GroupValueProperty;
-    },
-
-    initGroupValueSelector: function (params) {
-        var metadata = params.metadata,
-            element = params.element,
-            groupValueSelector;
-
-       /* element.setGroupItemComparator(function(a, b) {
-            if (a < b) {
-                return -1;
-            }
-
-            if (a > b) {
-                return 1;
-            }
-
-            return 0;
-        });*/
-
-        if (metadata.GroupValueSelector) {
-            groupValueSelector = function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.parent);
-                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
-            };
-        } else if (metadata.GroupValueProperty) {
-            groupValueSelector = function (context, args) {
-                return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.GroupValueProperty);
-            }
-        } else {
-            //Без группировки
-            groupValueSelector = null
-        }
-        element.setGroupValueSelector(groupValueSelector);
-    },
-
-    initGroupItemTemplate: function(params){
-        var metadata = params.metadata;
-        var element = params.element;
-        var itemTemplate;
-
-        if(metadata.GroupItemTemplate){
-            itemTemplate = this.buildItemTemplate(metadata.GroupItemTemplate, params);
-            element.setGroupItemTemplate(itemTemplate);
-        }else {
-            throw 'Нужно обработать другие варианты элементов';
-        }
     },
 
     initValueFeatures: function(params){
