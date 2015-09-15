@@ -14,7 +14,7 @@ _.extend(ViewBuilder.prototype, {
     },
 
     applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
+        ContainerBuilder.prototype.applyMetadata.call(this, params);
 
         var
             metadata = params.metadata,
