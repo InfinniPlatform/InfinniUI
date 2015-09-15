@@ -1,6 +1,6 @@
 ﻿document.title = InfinniUI.config.configName;
 
-moment.lang('ru');
+moment.locale('ru');
 
 (function ($target/*, metadata*/, homePageMetadata) {
 
