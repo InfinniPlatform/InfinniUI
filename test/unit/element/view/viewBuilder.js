@@ -1,19 +1,28 @@
 describe('ViewBuilder', function () {
 
-    /*it('should build Container and Element metadata', function () {
-     // Given
-     var viewBuilder = new ViewBuilder();
-     var metadata = {
-     Name: 'my_view',
-     Items: []
-     };
+    it('should build Container and Element metadata', function () {
+        // Given
+        var viewBuilder = new ViewBuilder();
+        var metadata = {
+            Name: 'my_view',
+            Items: [
+                {
+                    StackPanel: {
+                        GridPanel: {
+                            Rows: []
+                        }
+                    }
+                }
+            ]
+        };
 
-     // When
-     var view = viewBuilder.build(null, {metadata: metadata});
+        // When
+        var view = viewBuilder.build(null, {metadata: metadata});
 
-     // Then
-     assert.equal(view.getName(), 'my_view');
-     });*/
+        // Then
+        assert.equal(view.getName(), 'my_view');
+        assert.instanceOf(view.getItems(), Collection);
+    });
 
     it('should build Icon', function () {
         // Given
