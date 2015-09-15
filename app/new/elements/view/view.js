@@ -59,7 +59,7 @@ _.extend(View.prototype,
                 var newParameters = that.getDataSources();
 
                 newParameters.forEach(function(item){
-                    that.context.dataSources[item.name] = item;
+                    that.context.dataSources[item.get('name')] = item;
                 });
             });
         },
@@ -106,6 +106,8 @@ _.extend(View.prototype,
             var scriptArgs = this._getScriptArgs();
 
             if(this.eventManager.trigger('onOpening', scriptArgs, context)){
+
+                scriptArgs.$layout = this.render();
                 this.eventManager.trigger('onOpened', scriptArgs, context);
 
                 if(success){

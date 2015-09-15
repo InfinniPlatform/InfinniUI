@@ -32,14 +32,14 @@ LinkView.prototype.createView = function (resultCallback) {
     var openModeStrategy = openMode.getStrategy(this);
 
     this.viewFactory(function (view) {
-        view.onOpening(function ($elView) {
+        view.onOpened(function (args) {
             view.onClosed(function () {
-                $elView.remove();
+                args.$layout.remove();
                 messageBus.getExchange('global')
                     .send(messageTypes.onViewClosed, {view: view});
             });
 
-            openModeStrategy.open(view, $elView);
+            openModeStrategy.open(view, args.$layout);
             //view.getExchange().send(messageTypes.onLoading, {});
         });
 

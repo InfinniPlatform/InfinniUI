@@ -18,7 +18,7 @@ _.extend(ViewControl.prototype,
         },
 
         createControlView: function (model) {
-            return new ControlView({model: model});
+            return new ViewView({model: model});
         }
     }
 );

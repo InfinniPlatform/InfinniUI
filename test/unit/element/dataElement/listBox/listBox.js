@@ -53,7 +53,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $stackPanel = $('#sandbox').children();
-                $stackPanel.detach();
+                //$stackPanel.detach();
 
                 onListboxReady($stackPanel);
             });

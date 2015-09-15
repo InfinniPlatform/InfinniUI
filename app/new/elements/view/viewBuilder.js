@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @augments ViewBuilder
+ * @augments ContainerBuilder
  */
 function ViewBuilder() {
     _.superClass(StackPanelBuilder, this);
@@ -14,7 +14,12 @@ _.extend(ViewBuilder.prototype, {
     },
 
     applyMetadata: function (params) {
-        ContainerBuilder.prototype.applyMetadata.call(this, params);
+
+        var parentView = params.parentView;
+
+        // новые params, где parentView будет уже текущая вьюха
+        params = _.extend({}, params);
+        params.parentView = params.element;
 
         var
             metadata = params.metadata,
@@ -76,5 +81,7 @@ _.extend(ViewBuilder.prototype, {
                 new ScriptExecutor(element).executeScript(metadata.OnClosed);
             });
         }
+
+        ContainerBuilder.prototype.applyMetadata.call(this, params);
     }
 });

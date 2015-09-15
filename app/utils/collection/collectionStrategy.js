@@ -108,7 +108,7 @@ CollectionStrategy.prototype.forEach = function (callback, collection, thisArg) 
     var items = this._items;
 
     for (var i = 0; i < items.length; i = i + 1) {
-        callback.call(thisArg, items[i], collection);
+        callback.call(thisArg, items[i], i, collection);
     }
 };
 

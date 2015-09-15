@@ -24,6 +24,7 @@ var ViewView = ContainerView.extend(
 
         renderItemsContents: function(){
             var that = this,
+                items = this.model.get('items'),
                 itemTemplate = this.model.get('itemTemplate'),
                 element;
 
