@@ -40,7 +40,7 @@ LinkView.prototype.createView = function (resultCallback) {
             });
 
             openModeStrategy.open(view, $elView);
-            view.getExchange().send(messageTypes.onLoading, {});
+            //view.getExchange().send(messageTypes.onLoading, {});
         });
 
         resultCallback(view);

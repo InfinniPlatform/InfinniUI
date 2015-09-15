@@ -12,7 +12,7 @@ var OpenModeApplicationStrategy = function (linkView) {
 
     this.open = function (view, $elView) {
 
-        view.isApplication(true);//Отмечаем представление как приложение
+        //view.isApplication(true);//Отмечаем представление как приложение
 
         view.onClosing(function () {
             //@TODO Закрыть все представления данного приложения
