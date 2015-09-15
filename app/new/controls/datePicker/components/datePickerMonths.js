@@ -1,7 +1,9 @@
 var DatePickerMonthsModel = DatePickerComponentModel.extend({
 
     defaults: {
-        todayMonth: moment().month()
+        today: moment().toDate(),
+        todayMonth: moment().month(),
+        todayYear: moment().year()
     },
 
     initialize: function () {
@@ -9,6 +11,8 @@ var DatePickerMonthsModel = DatePickerComponentModel.extend({
         this.on('change:month', this.updateDatePart.bind(this, 'month'));
         this.on('change:year', this.updateDatePart.bind(this, 'year'));
     },
+
+
 
     nextYear: function () {
         var year = this.get('year');
@@ -25,7 +29,33 @@ var DatePickerMonthsModel = DatePickerComponentModel.extend({
             month: this.get('todayMonth'),
             year: this.get('todayYear')
         });
+    },
+
+    checkRange: function (value) {
+        var min = this.get('min'),
+            max = this.get('max'),
+            success = true;
+
+        var mMin = moment(min),
+            mMax = moment(max),
+            mVal = moment(value);
+
+        if (!isEmpty(min) && !isEmpty(max)) {
+            success = mVal.isBetween(min, max, 'month') || mVal.isSame(mMin, 'month') || mVal.isSame(mMax, 'month');
+        } else if (!isEmpty(min) && isEmpty(max)) {
+            success = mMin.isBefore(value, 'month') || mMin.isSame(value, 'month');
+        } else if (isEmpty(min) && !isEmpty(max)) {
+            success = mMax.isAfter(value, 'month') || mMax.isSame(value, 'month');
+        }
+
+        return success;
+
+        function isEmpty(value) {
+            return typeof value === 'undefined' || _.isEmpty(value);
+        }
+
     }
+
 
 
 });
@@ -39,7 +69,7 @@ var DatePickerMonths = DatePickerComponent.extend({
     events: {
         "click .btn-year-prev": "prevYear",
         "click .btn-year-next": "nextYear",
-        "click .month": "useMonth",
+        "click .month:not('.month-unavailable')": "useMonth",
         "click .year": "selectYear",
         "click .today-month": "showToday"
     },
@@ -61,9 +91,10 @@ var DatePickerMonths = DatePickerComponent.extend({
         this.ui.year.text(this.model.get('year'));
 
         var
+            model = this.model,
             dateTimeFormatInfo = localized.dateTimeFormatInfo,
-            todayMonth = this.model.get('todayMonth'),
-            month = this.model.get('month');
+            todayMonth = model.get('todayMonth'),
+            month = model.get('month');
 
         this.ui.month.each(function (i, el) {
             var $el = $(el);
@@ -71,14 +102,26 @@ var DatePickerMonths = DatePickerComponent.extend({
             $el.attr('data-month', i);
             markTodayMonth($el, i);
             markSelected($el, i);
+            markAvailable($el, i);
         });
 
         function markTodayMonth($el, value) {
-            $el.toggleClass('month-today', value === todayMonth);
+            var date = moment([model.get('year'), value]);
+            var today = model.get('today');
+
+            $el.toggleClass('month-today', moment(date).isSame(today, 'month'));
         }
 
         function markSelected($el, value) {
-            $el.toggleClass('month-selected', value === month);
+            var date = moment([model.get('year'), value]);
+            var selected = model.get('value');
+
+            $el.toggleClass('month-selected', moment(date).isSame(selected, 'month'));
+        }
+
+        function markAvailable($el, value) {
+            var date = moment([model.get('year'), value]);
+            $el.toggleClass('month-unavailable', !model.checkRange(date));
         }
     },
 

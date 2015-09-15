@@ -30,7 +30,7 @@ var DatePickerDaysModel = DatePickerComponentModel.extend({
             year = this.get('year');
 
         this.set({
-            month: month === 11 ? 0: month + 1,
+            month: month === 11 ? 0 : month + 1,
             year: month === 11 ? year + 1 : year
         });
     },
@@ -41,9 +41,34 @@ var DatePickerDaysModel = DatePickerComponentModel.extend({
             year = this.get('year');
 
         this.set({
-            month: month === 0 ? 11: month - 1,
+            month: month === 0 ? 11 : month - 1,
             year: month === 0 ? year - 1 : year
         });
+    },
+
+    checkRange: function (value) {
+        var min = this.get('min'),
+            max = this.get('max'),
+            success = true;
+
+        var mMin = moment(min),
+            mMax = moment(max),
+            mVal = moment(value);
+
+        if (!isEmpty(min) && !isEmpty(max)) {
+            success = mVal.isBetween(min, max, 'day') || mVal.isSame(mMin, 'day') || mVal.isSame(mMax, 'day');
+        } else if (!isEmpty(min) && isEmpty(max)) {
+            success = mMin.isBefore(value, 'day') || mMin.isSame(value, 'day');
+        } else if (isEmpty(min) && !isEmpty(max)) {
+            success = mMax.isAfter(value, 'day') || mMax.isSame(value, 'day');
+        }
+
+        return success;
+
+        function isEmpty(value) {
+            return typeof value === 'undefined' || _.isEmpty(value);
+        }
+
     }
 
 });
@@ -66,7 +91,7 @@ var DatePickerDays = DatePickerComponent.extend({
         'click .btn-month-prev': 'prevMonth',
         'click .btn-month-next': 'nextMonth',
         'click .today-date': 'showToday',
-        'click .day-calendar': 'useDay',
+        'click .day-calendar:not(".day-unavailable")': 'useDay',
         'click .time': 'showTime'
     },
 
@@ -100,7 +125,7 @@ var DatePickerDays = DatePickerComponent.extend({
 
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
-        var days = dateTimeFormatInfo.abbreviatedDayNames.map(function(day, i) {
+        var days = dateTimeFormatInfo.abbreviatedDayNames.map(function (day, i) {
             return i;
         });
 
@@ -121,7 +146,7 @@ var DatePickerDays = DatePickerComponent.extend({
             markWeekend($el, index);
         });
 
-        function markWeekend ($el, weekday) {
+        function markWeekend($el, weekday) {
             $el.toggleClass('day-weekend', weekday === 0 || weekday === 6);
         }
     },
@@ -132,6 +157,8 @@ var DatePickerDays = DatePickerComponent.extend({
         var month = model.get('month');
         var year = model.get('year');
         var day = model.get('day');
+        var min = model.get('min');
+        var max = model.get('max');
         var firstDayOfMonth = new Date(year, month, 1);
         var weekday = firstDayOfMonth.getDay();
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
@@ -147,9 +174,10 @@ var DatePickerDays = DatePickerComponent.extend({
             markActiveMonth($el, d.getMonth() === month);
             markToday($el, d);
             markSelected($el, d);
+            markAvailable($el, d);
         });
 
-        function markActiveMonth ($el, active) {
+        function markActiveMonth($el, active) {
             $el.toggleClass('day-inactive', !active);
         }
 
@@ -169,6 +197,10 @@ var DatePickerDays = DatePickerComponent.extend({
             }
 
             $el.toggleClass('day-selected', selected);
+        }
+
+        function markAvailable($el, value) {
+            $el.toggleClass('day-unavailable', !model.checkRange(value));
         }
 
     },
@@ -192,12 +224,12 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     showTime: function () {
-        this.trigger('time', this.model.get('date'));
+        this.trigger('time', this.model.get('value'));
     },
 
     useDay: function (event) {
         var $el = $(event.target),
-            value =$el.attr('data-date'),
+            value = $el.attr('data-date'),
             m = moment(value, 'YYYY-MM-DD');
 
         this.model.set({

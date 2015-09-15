@@ -160,6 +160,8 @@
                 "Format": "d"
               }
             },
+            "MinValue": "2015-10-14",
+            "MaxValue": "2015-10-20",
             "EditMask": {
               "DateTimeEditMask": {
                 "Mask": "d"
@@ -181,6 +183,7 @@
                 "Format": "g"
               }
             },
+            "MinValue": "2015-09-03",
             "EditMask": {
               "DateTimeEditMask": {
                 "Mask": "g"
@@ -202,6 +205,8 @@
                 "Format": "t"
               }
             },
+            "MinValue": "2015-09-15T09:00",
+            "MaxValue": "2015-09-15T18:30",
             "EditMask": {
               "DateTimeEditMask": {
                 "Mask": "t"

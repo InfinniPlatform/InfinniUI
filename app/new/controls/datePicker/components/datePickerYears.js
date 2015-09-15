@@ -28,6 +28,31 @@ var DatePickerYearsModel = DatePickerComponentModel.extend({
 
     onChangeYearHandler: function (model, value) {
         model.set('page', 0);
+    },
+
+    checkRange: function (value) {
+        var min = this.get('min'),
+            max = this.get('max'),
+            success = true;
+
+        var mMin = moment(min),
+            mMax = moment(max),
+            mVal = moment(value);
+
+        if (!isEmpty(min) && !isEmpty(max)) {
+            success = mVal.isBetween(min, max, 'year') || mVal.isSame(mMin, 'year') || mVal.isSame(mMax, 'year');
+        } else if (!isEmpty(min) && isEmpty(max)) {
+            success = mMin.isBefore(value, 'year') || mMin.isSame(value, 'year');
+        } else if (isEmpty(min) && !isEmpty(max)) {
+            success = mMax.isAfter(value, 'year') || mMax.isSame(value, 'year');
+        }
+
+        return success;
+
+        function isEmpty(value) {
+            return typeof value === 'undefined' || _.isEmpty(value);
+        }
+
     }
 });
 
@@ -41,7 +66,7 @@ var DatePickerYears = DatePickerComponent.extend({
         'click .btn-year-prev': "prevPage",
         'click .btn-year-next': "nextPage",
         'click .today-year': "showTodayYear",
-        'click .year': "useYear"
+        'click .year:not(".year-unavailable")': "useYear"
     },
 
     UI: {
@@ -81,6 +106,7 @@ var DatePickerYears = DatePickerComponent.extend({
             $el.attr('data-year', year);
             markTodayYear($el, year);
             markSelected($el, year);
+            markAvailable($el, year);
         });
 
         this.ui.yearBegin.text(startYear);
@@ -92,6 +118,10 @@ var DatePickerYears = DatePickerComponent.extend({
 
         function markSelected($el, value) {
             $el.toggleClass('year-selected', value === year);
+        }
+        function markAvailable($el, value) {
+            var date = moment([value]);
+            $el.toggleClass('year-unavailable', !model.checkRange(date));
         }
 
     },

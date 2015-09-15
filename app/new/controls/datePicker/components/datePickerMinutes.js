@@ -3,6 +3,39 @@ var DatePickerMinutesModel = DatePickerComponentModel.extend({
     initialize: function () {
         DatePickerComponentModel.prototype.initialize.call(this);
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
+    },
+
+    checkRange: function (value) {
+        var min = this.get('min'),
+            max = this.get('max'),
+            success = true;
+
+        var mMin = moment(min),
+            mMax = moment(max),
+            mVal = moment(value);
+
+        [mMin, mMax].forEach(function (val) {
+            val.set({
+                year: mVal.year(),
+                month: mVal.month(),
+                date: mVal.date()
+            });
+        });
+
+
+        if (!isEmpty(min) && !isEmpty(max)) {
+            success = mVal.isBetween(min, max, 'minute') || mVal.isSame(mMin, 'minute') || mVal.isSame(mMax, 'minute');
+        } else if (!isEmpty(min) && isEmpty(max)) {
+            success = mMin.isBefore(value, 'minute') || mMin.isSame(value, 'minute');
+        } else if (isEmpty(min) && !isEmpty(max)) {
+            success = mMax.isAfter(value, 'minute') || mMax.isSame(value, 'minute');
+        }
+
+        return success;
+
+        function isEmpty(value) {
+            return typeof value === 'undefined' || _.isEmpty(value);
+        }
     }
 
 });
@@ -14,7 +47,7 @@ var DatePickerMinutes = DatePickerComponent.extend({
     template: InfinniUI.Template["new/controls/datePicker/template/time/minutes.tpl.html"],
 
     events: {
-        "click .minute": "useMinute"
+        "click .minute:not('.minute-unavailable')": "useMinute"
     },
 
     UI: {
@@ -30,25 +63,29 @@ var DatePickerMinutes = DatePickerComponent.extend({
     },
 
     fillMinutesTable: function () {
-        var minute = this.model.get('minute');
+        var
+            model = this.model,
+            minute = model.get('minute');
 
         this.ui.minute.each(function (i, el) {
             var $el = $(el);
             var minute = $el.attr('data-minute');
             markSelected($el, parseInt(minute, 10));
+            markAvailable($el, parseInt(minute, 10))
         });
 
         function markSelected($el, value) {
             $el.toggleClass('minute-selected', value === minute);
         }
+
+        function markAvailable($el, value) {
+            var date = moment(model.get('date')).minute(value);
+            $el.toggleClass('minute-unavailable', !model.checkRange(date));
+        }
     },
 
     initOnChangeHandlers: function () {
-        this.listenTo(this.model, 'change:minute', this.onChangeMinuteHandler);
-    },
-
-    onChangeMinuteHandler: function () {
-        this.fillMinutesTable();
+        this.listenTo(this.model, 'change:date', this.fillMinutesTable);
     },
 
     useMinute: function (event) {

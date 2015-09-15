@@ -35,6 +35,8 @@ var DatePickerComponent = Backbone.View.extend({
                 today = this.model.get('today');
 
             date = value || today;
+        } else {
+            date = new Date(date);
         }
         this.model.set('date', date);
     }

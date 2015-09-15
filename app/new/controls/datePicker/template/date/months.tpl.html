@@ -7,6 +7,17 @@
         background: #d4e2ee;
     }
 
+    .month-unavailable {
+        background-color: #dddddd;
+        cursor: not-allowed;
+        color: #777777;
+        opacity: 1;
+    }
+
+    .month-list {
+        cursor: pointer;
+    }
+
     .month-selected {
         border: 1px solid #FF0000;
     }
@@ -28,7 +39,7 @@
         </th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="month-list">
     <tr>
         <td class="month"></td>
         <td class="month"></td>

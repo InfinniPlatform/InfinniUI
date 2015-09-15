@@ -12,7 +12,8 @@ var DatePickerComponentModel = Backbone.Model.extend({
                 day: moment(value).date(),
                 hour: moment(value).hour(),
                 minute: moment(value).minute(),
-                second: moment(value).second()
+                second: moment(value).second(),
+                millisecond: moment(value).millisecond()
             })
         } else {
             model.set({
@@ -21,7 +22,8 @@ var DatePickerComponentModel = Backbone.Model.extend({
                 day: null,
                 hour: null,
                 minute: null,
-                second: null
+                second: null,
+                millisecond: null
             });
         }
     },
@@ -45,7 +47,12 @@ var DatePickerComponentModel = Backbone.Model.extend({
                 break;
         }
         this.set('date', date);
+    },
+
+    checkRange: function (value) {
+        return true;
     }
+
 
 });
 

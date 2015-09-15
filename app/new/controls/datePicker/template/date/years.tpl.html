@@ -7,6 +7,19 @@
         color: #000000;
     }
 
+
+    .year-unavailable {
+        background-color: #dddddd;
+        cursor: not-allowed;
+        color: #777777;
+        opacity: 1;
+    }
+
+    .year-list {
+        cursor: pointer;
+    }
+
+
     .year-begin, .year-end {
         opacity: 0.5;
     }
@@ -35,7 +48,7 @@
         </th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="year-list">
     <tr class="years">
         <td class="year year-begin">1999</td>
         <td class="year">2000</td>
