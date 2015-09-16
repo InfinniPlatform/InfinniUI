@@ -15,8 +15,8 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
         this.applyMetadata(params);
 
-        if (args.view && args.view.registerElement) {
-            args.view.registerElement(element);
+        if (args.parentView && args.parentView.registerElement) {
+            args.parentView.registerElement(element);
         }
 
         return element;
