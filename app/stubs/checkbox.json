@@ -205,6 +205,7 @@
                 "Format": "t"
               }
             },
+            "Enabled": false,
             "MinValue": "2015-09-15T09:00",
             "MaxValue": "2015-09-15T18:30",
             "EditMask": {

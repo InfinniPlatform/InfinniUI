@@ -48,7 +48,10 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
         this.renderControlEditor({
             el: this.ui.editor,
-            multiline: false
+            multiline: false,
+            convert: function (value) {
+                return InfinniUI.DateUtils.toISO8601(value);
+            }
         });
 
         return this;
@@ -59,7 +62,8 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
         this
             .listenTo(this.model, 'change:minValue', this.onChangeMinValueHandler)
-            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler);
+            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler)
+            .listenTo(this.model, 'change:enabled', this.OnChangeEnabledHandler);
     },
 
     onChangeMinValueHandler: function (model, value) {
@@ -72,6 +76,10 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
     onChangeIncrementHandler: function (model, value) {
 
+    },
+
+    OnChangeEnabledHandler: function (model, enabled) {
+        this.ui.dropdown.prop('disabled', !enabled);
     },
 
     onChangeModeHandler: function (model, value) {
