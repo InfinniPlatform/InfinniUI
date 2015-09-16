@@ -49,7 +49,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
             editMask;
 
         if (metadata.EditMask) {
-            editMask = builder.build(params.parent, metadata.EditMask);
+            editMask = builder.build(metadata.EditMask, {parentView: params.parentView});
         }
         params.element.setEditMask(editMask);
         return this;

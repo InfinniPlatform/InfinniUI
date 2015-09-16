@@ -1,4 +1,4 @@
-describe('TextEditorBase', function () {
+describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
             Text: 'Пациенты',
@@ -28,6 +28,12 @@ describe('TextEditorBase', function () {
                         "NumberFormat": {
                             "Format": "n2"
                         }
+                    },
+
+                    "EditMask": {
+                        "NumberEditMask": {
+                            "Mask": "n3"
+                        }
                     }
                 }
             }]
@@ -56,11 +62,16 @@ describe('TextEditorBase', function () {
 
             // Then
             function onViewReady(view, $layout){
-                $layout.detach();
 
-                var $input = $layout.find('.pl-text-box-input');
+                var $input = $layout.find('.pl-text-box-input'),
+                    $inputMask = $layout.find('input.pl-control-editor');
 
                 assert.equal($input.val(), '2,22', 'binding and formatting is right');
+
+                $input.focus(); // для обновления значения в маске
+                assert.equal($inputMask.val(), '2,222', 'mask is right');
+
+                $layout.detach();
             }
         });
 

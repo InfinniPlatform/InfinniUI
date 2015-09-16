@@ -1,4 +1,4 @@
-describe('TextEditorBase', function () {
+describe('TextEditorBase (Element)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
             Text: 'Пациенты',
@@ -27,6 +27,12 @@ describe('TextEditorBase', function () {
                     "DisplayFormat": {
                         "NumberFormat": {
                             "Format": "n2"
+                        }
+                    },
+
+                    "EditMask": {
+                        "NumberEditMask": {
+                            "Mask": "n3"
                         }
                     }
                 }
@@ -87,8 +93,10 @@ describe('TextEditorBase', function () {
 
                 var textbox = view.getContext().controls['TextBox1'];
                 var formatter = textbox.getDisplayFormat();
+                var mask = textbox.getEditMask();
 
                 assert.equal(formatter.format(2.22222), '2,22', 'applied format is right (n2)');
+                assert.equal(mask.mask, 'n3', 'applied mask is right (n3)');
             }
         });
 

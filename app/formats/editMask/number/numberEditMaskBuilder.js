@@ -9,7 +9,7 @@ function NumberEditMaskBuilder () {
 
         editMask.mask = args.metadata.Mask;
 
-        editMask.format = args.builder.buildType(args.view, 'NumberFormat', {Format: args.metadata.Mask});
+        editMask.format = args.builder.buildType('NumberFormat', {Format: args.metadata.Mask}, {parentView: args.parentView});
 
         return editMask;
     }
