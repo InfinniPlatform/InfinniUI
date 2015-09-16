@@ -77,7 +77,7 @@ _.extend(Element.prototype, {
     },
 
     setParentEnabledOnChild: function (value) {
-        var elements = this.getChildElements();
+        var elements = this.getChildElementsOld();
         if (_.isEmpty(elements) === false) {
             for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
                 if (typeof elements[i].setParentEnabled === 'undefined') {
@@ -146,7 +146,7 @@ _.extend(Element.prototype, {
         }
     },
 
-    getChildElements: function () {
+    getChildElementsOld: function () {
         return this.control.getChildElements();
     },
 
