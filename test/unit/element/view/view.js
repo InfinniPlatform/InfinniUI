@@ -38,7 +38,8 @@ describe('View', function () {
 
     it('should get dataSources', function () {
         //Given
-        var view = new View();
+        var view = new View(),
+            dataSource = new DocumentDataSource({view: view});
 
         //When
         var dataSources = view.getDataSources();
@@ -48,7 +49,7 @@ describe('View', function () {
         assert.instanceOf(dataSources, Collection);
 
         //When
-        dataSources.add('dataSource');
+        dataSources.add(dataSource);
 
         //Then
         assert.equal(view.getDataSources().length, 1, 'getDataSources should not override dataSource');
@@ -243,10 +244,11 @@ describe('View', function () {
         it('should refresh context on add dataSource', function () {
             //Given
             var view = new View();
+            var dataSource = new DocumentDataSource({view: view, name: 'dataSource'});
             var dataSources = view.getDataSources();
 
             //When
-            dataSources.add({name: 'dataSource'});
+            dataSources.add(dataSource);
             var context = view.getContext();
 
             //Then
@@ -257,8 +259,8 @@ describe('View', function () {
             //Given
             var view = new View();
             var dataSources = view.getDataSources();
-            var oldDataSource = { name: 'oldDataSource' };
-            var newDataSource = { name: 'newDataSource' };
+            var oldDataSource = new DocumentDataSource({view: view, name: 'oldDataSource'});
+            var newDataSource = new DocumentDataSource({view: view, name: 'newDataSource'});
 
             dataSources.add(oldDataSource);
 
@@ -275,7 +277,7 @@ describe('View', function () {
             //Given
             var view = new View();
             var dataSources = view.getDataSources();
-            var removedDataSource = { name: 'removedDataSource' };
+            var removedDataSource = new DocumentDataSource({view: view, name: 'removedDataSource'});
 
             dataSources.add(removedDataSource);
             assert.isDefined(view.getContext().dataSources['removedDataSource']);
@@ -292,8 +294,8 @@ describe('View', function () {
             //Given
             var view = new View();
             var dataSources = view.getDataSources();
-            var oldDataSource = { name: 'oldDataSource' };
-            var newDataSource = { name: 'newDataSource' };
+            var oldDataSource = new DocumentDataSource({view: view, name: 'oldDataSource'});
+            var newDataSource = new DocumentDataSource({view: view, name: 'newDataSource'});
 
             dataSources.add(oldDataSource);
 

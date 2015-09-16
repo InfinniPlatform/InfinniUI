@@ -3,7 +3,7 @@
  * @augments ContainerBuilder
  */
 function ViewBuilder() {
-    _.superClass(StackPanelBuilder, this);
+    _.superClass(ViewBuilder, this);
 }
 
 _.inherit(ViewBuilder, ContainerBuilder);
