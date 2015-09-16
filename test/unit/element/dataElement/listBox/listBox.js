@@ -53,7 +53,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $stackPanel = $('#sandbox').children();
-                //$stackPanel.detach();
+                $stackPanel.detach();
 
                 onListboxReady($stackPanel);
             });
@@ -82,7 +82,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -110,7 +110,7 @@ describe('ListBox', function () {
                     }
                 ]
             }
-        }
+        }]
     };
 
     describe('render2', function () {
@@ -160,7 +160,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -199,7 +199,7 @@ describe('ListBox', function () {
                     }
                 ]
             }
-        }
+        }]
     };
 
     describe('render lb', function () {
@@ -247,7 +247,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             ListBox: {
                 "ItemTemplate": {
@@ -268,7 +268,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render lb2', function () {
@@ -317,7 +317,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             ListBox: {
                 "ItemTemplate": {
@@ -337,7 +337,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render lb3', function () {
@@ -384,7 +384,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -395,7 +395,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render simple list templating', function () {
@@ -451,7 +451,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -463,7 +463,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render property list templating ', function () {
@@ -518,7 +518,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -530,7 +530,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        }
+        }]
     };
 
     describe('render property list formatting ', function () {
@@ -585,7 +585,7 @@ describe('ListBox', function () {
                 }
             }
         ],
-        LayoutPanel: {
+        Items: [{
 
             StackPanel: {
                 Name: 'MainViewPanel',
@@ -599,7 +599,7 @@ describe('ListBox', function () {
                     }
                 }
             }
-        },
+        }],
 
         Scripts: [
             {
@@ -627,7 +627,7 @@ describe('ListBox', function () {
                 view.open();
 
                 var $stackPanel = $('#sandbox').children();
-                //$stackPanel.detach();
+                $stackPanel.detach();
 
                 onStackPanelReady($stackPanel);
             });
