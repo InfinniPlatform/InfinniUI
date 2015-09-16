@@ -22,7 +22,8 @@ describe('DataSourceBuilder', function () {
     describe('build DocumentDataSource', function () {
         it('should build documentDataSource', function () {
             // Given When
-            var createdDataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
+            var view = new View(),
+                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view});
 
             // Then
             assert.equal(createdDataSource.getConfigId(), 'Demography');
@@ -38,12 +39,17 @@ describe('DataSourceBuilder', function () {
 
         it('should subscribe documentDataSource on changeProperty', function (done) {
             // Given
-            var view = fakeView(),
-                createdDataSource = builder.buildType(view, 'DocumentDataSource', metadata);
+            var view = new View(),
+                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view}),
+                scriptMetadata = {
+                    Name:"OnSelectedItemModified",
+                    Body: 'window.documentDataSourceTest = 1;'
+                };
 
-            view.scripts = {
-                OnSelectedItemModified: new Script('window.documentDataSourceTest = 1;', 'OnSelectedItemModified')
-            }
+            view.getScripts().add({
+                name: 'OnSelectedItemModified',
+                func: builder.buildType('Script', scriptMetadata, {parentView: view})
+            });
 
             createdDataSource.updateItems(onItemUpdates);
 

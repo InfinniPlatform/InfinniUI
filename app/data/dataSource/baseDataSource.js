@@ -267,7 +267,11 @@ var BaseDataSource = Backbone.Model.extend({
             return undefined;
         }
 
-        if(property != '$'){
+        if(property == ''){
+            return this.getItems();
+        }else if(property == '$'){
+            return selectedItem;
+        }else{
             if(property.substr(0,2) == '$.'){
                 relativeProperty = property.substr(2);
                 source = selectedItem;
@@ -282,8 +286,6 @@ var BaseDataSource = Backbone.Model.extend({
             }
 
             return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-        }else{
-            return selectedItem;
         }
     },
 
@@ -296,7 +298,19 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        if(property != '$'){
+        if(property == ''){
+            oldValue = this.getItems();
+            this._setItems(value);
+
+        }else if(property == '$'){
+            if(value != selectedItem){
+                oldValue = this._copyObject(selectedItem);
+                this._replaceAllProperties(selectedItem, value);
+            }else{
+                return;
+            }
+
+        }else{
             if(property.substr(0,2) == '$.'){
                 relativeProperty = property.substr(2);
                 source = selectedItem;
@@ -313,14 +327,6 @@ var BaseDataSource = Backbone.Model.extend({
             oldValue = InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
             if(value != oldValue){
                 InfinniUI.ObjectUtils.setPropertyValue(source, relativeProperty, value);
-            }else{
-                return;
-            }
-
-        }else{
-            if(value != selectedItem){
-                oldValue = this._copyObject(selectedItem);
-                this._replaceAllProperties(selectedItem, value);
             }else{
                 return;
             }
