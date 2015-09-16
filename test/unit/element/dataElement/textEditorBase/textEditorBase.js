@@ -73,6 +73,7 @@ describe('TextEditorBase', function () {
             assert.equal(textBox.getEditMask(), mask, 'new edit mask is right');
         });
 
+        
         it('Building TextEditorBase (Textbox) by Metadata', function () {
             // Given
             var metadata = metadata_1;
