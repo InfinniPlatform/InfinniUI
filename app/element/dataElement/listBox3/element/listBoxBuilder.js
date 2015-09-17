@@ -18,7 +18,7 @@ _.extend(ListBoxBuilder.prototype, {
         this.initValueSelector(params);
         this.initItemsBinding(params);
         this.initItemTemplate(params);
-
+        this.initGroupTemplate(params);
         this.initScriptsHandlers(params);
 
 
@@ -93,6 +93,71 @@ _.extend(ListBoxBuilder.prototype, {
         if (items) {
             element.setItems(items);
         }
+    },
+
+    initGroupTemplate: function (params) {
+        var groupTemplate = {};
+        var metadata = params.metadata,
+            builder = params.builder,
+            element = params.element;
+
+        if (!metadata.GroupTemplate) {
+            return null;
+        }
+
+        metadata = metadata.GroupTemplate.BaseListGroup;
+
+        var
+            valueSelector,
+            itemTemplate;
+
+        if (metadata.ValueProperty) {
+            valueSelector = function (value, index) {
+                return InfinniUI.ObjectUtils.getPropertyValue(value, metadata.ValueProperty);
+            }
+        } else {
+            valueSelector = function (value, index) {
+                return value;
+            }
+        }
+        groupTemplate.valueSelector = valueSelector;
+
+        if (metadata.ItemTemplate) {
+            itemTemplate = function (value, index) {
+                var collectionProperty = new ListBoxItemCollectionProperty('', index, params.collectionProperty);
+                var itemTemplateElement = builder.build(params.parent, metadata.ItemTemplate, collectionProperty, {parentElement: element});
+                return itemTemplateElement.render();
+            };
+        } else {
+            var format;
+            if (metadata.ItemFormat) {
+                format = builder.build(params.parent, metadata.ItemFormat, params.collectionProperty);
+            }
+
+            if (metadata.DisplayProperty) {
+                itemTemplate = function (value, index) {
+                    var propertyValue = InfinniUI.ObjectUtils.getPropertyValue(value, metadata.DisplayProperty);
+                    if (format) {
+                        propertyValue = format.format(propertyValue);
+                    }
+
+                    return String(propertyValue);
+                }
+            } else {
+                itemTemplate = function(value, index) {
+                    var valueProperty = format ? format(value) : value;
+
+                    return String(valueProperty);
+                }
+            }
+        }
+
+        groupTemplate.itemTemplate = itemTemplate;
+        element.setCollapsible(!!metadata.Collapsible);
+        element.setCollapsed(!!metadata.Collapsed);
+        element.setGroupTemplate(groupTemplate);
+
+        return groupTemplate;
     },
 
     initItemTemplate: function (params) {

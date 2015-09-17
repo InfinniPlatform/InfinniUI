@@ -32,55 +32,113 @@ var ListBoxView = ControlView.extend({
         this.$el.html(this.template());
         this.bindUIElements();
         this.trigger('render');
-        this.renderItems();
+        this.renderContent();
         this.postrenderingActions();
         return this;
     },
 
     initUIHandler: function () {
         this.listenTo(this.model, 'change:multiSelect', function () {
-            this.renderItems();
+            this.renderContent();
         });
 
         this.listenTo(this.model, 'change:items', function () {
-            this.renderItems();
+            this.renderContent();
         });
     },
 
-    renderItems: function () {
-        var
-            model = this.model,
-            items = model.get('items'),
-            itemTemplate = model.get('itemTemplate'),
-            view = this,
-            $items;
-
-        if (Array.isArray(this.$items)) {
-            this.$items.forEach(function ($item) {
-                view.stopListening($item);
-                $item.remove();
-            });
+    cleanViewItems: function () {
+        if (!Array.isArray(this.itemsView)) {
+            this.itemsView = [];
+            return;
         }
 
+        this.itemsView.forEach(function (itemView) {
+            this.stopListening(itemView);
+            itemView.remove();
+        }.bind(this));
+
+        this.itemsView = [];
+    },
+
+    renderContent: function (){
+        var
+            model = this.model,
+            groupTemplate = model.get('groupTemplate'),
+            items = model.get('items'),
+            itemTemplate = model.get('itemTemplate');
+
+        this.cleanViewItems();
+
+        if (groupTemplate) {
+            //Группированный список
+            var valueSelector = groupTemplate.valueSelector;
+            var itemsGroup;
+            var groupedItems = _.groupBy(items, function (item) {
+                return valueSelector(item);
+            });
+
+            for (var groupValue in groupedItems) {
+                if (!groupedItems.hasOwnProperty(groupValue)) {
+                    continue;
+                }
+                var _index;
+                itemsGroup = groupedItems[groupValue].map(function (item) {
+                   return {
+                       item: item,
+                       index: items.indexOf(item)
+                   };
+                });
+
+                var item = itemsGroup[0];
+                var viewGroup = new ListBoxGroup({
+                    header: groupTemplate.itemTemplate(item.item, item.index),
+                    body: this.renderItems(itemsGroup),
+                    collapsed: model.get('collapsed'),
+                    collapsible: model.get('collapsible')
+                });
+                this.itemsView.push(viewGroup);
+
+                var $group = viewGroup.render().$el;
+                this.ui.container.append($group);
+            }
+        } else {
+            //Простой список
+            items = items.map(function (item, index) {
+                return {
+                    item: item,
+                    index: index
+                }
+            });
+            this.ui.container.append(this.renderItems(items));
+        }
+
+    },
+
+    renderItems: function (items) {
+        var
+            model = this.model,
+            itemTemplate = model.get('itemTemplate'),
+            view = this,
+            $items = [];
+
         if (Array.isArray(items)) {
-            $items = items.map(function(item, index) {
-                var content = itemTemplate(item, index);
+            $items = items.map(function(data) {
+                var content = itemTemplate(data.item, data.index);
                 var itemView = view.createItemView({
-                    content: content, 
-                    index: index,
+                    content: content,
+                    index: data.index,
                     model: model
                 });
 
                 view.listenTo(itemView, 'toggle',  view.onToggleItemHandler);
-
+                view.itemsView.push(itemView);
                 return itemView.render().$el;
             });
-
-            this.$items = $items;
-            this.ui.container.append($items);
         }
-    },
 
+        return $items;
+    },
 
     onToggleItemHandler: function (index) {
 
