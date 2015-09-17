@@ -96,6 +96,18 @@ _.extend(ListBox.prototype, {
 
     getItemTemplate: function () {
         return this.control.get('itemTemplate');
+    },
+
+    setCollapsible: function (value) {
+        this.control.set('collapsible', value);
+    },
+
+    setCollapsed: function (value) {
+        this.control.set('collapsed', value);
+    },
+
+    setGroupTemplate: function (value) {
+        this.control.set('groupTemplate', value);
     }
 
 }, valuePropertyMixin);

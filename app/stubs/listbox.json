@@ -10,6 +10,23 @@
         {
           "ListBox": {
             "Name": "ListBox1",
+            "GroupTemplate": {
+              "BaseListGroup": {
+                "ValueProperty": "Assignee.Role",
+                "~DisplayProperty": "Assignee.Role",
+                "Collapsible": true,
+                "ItemTemplate": {
+                  "Label": {
+                    "Text": {
+                      "PropertyBinding": {
+                        "DataSource": "MainDataSource",
+                        "Property": "$.Assignee.RoleDisplayText"
+                      }
+                    }
+                  }
+                }
+              }
+            },
             "Items": {
               "PropertyBinding": {
                 "DataSource": "MainDataSource"
@@ -30,6 +47,25 @@
                   },
                   {
                     "ListBox": {
+
+                      "GroupTemplate": {
+                        "BaseListGroup": {
+                          "ValueProperty": "PublicNotification.DisplayName",
+                          "DisplayProperty": "PublicNotification.DisplayName",
+                          "Collapsible": true,
+                          "~ItemTemplate": {
+                            "Label": {
+                              "Text": {
+                                "PropertyBinding": {
+                                  "DataSource": "MainDataSource",
+                                  "Property": "$.Assignee.RoleDisplayText"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+
                       "Name": "ListBox2",
                       "Items": {
                         "PropertyBinding": {
@@ -97,7 +133,9 @@
           {
             "Assignee": {
               "Id": "b765bf88-e2f3-4eb5-9d5b-8e32b0ea93bd",
-              "DisplayName": "Petrov Petr"
+              "DisplayName": "Petrov Petr",
+              "Role": "Казначей",
+              "RoleDisplayText": "$"
             },
             "PersonalNotifications": [
               {
@@ -277,7 +315,9 @@
           {
             "Assignee": {
               "Id": "9107d6d6-7517-4e1c-9f3f-e9685f508628",
-              "DisplayName": "Евдокимова Анна"
+              "DisplayName": "Евдокимова Анна",
+              "Role": "Казначей",
+              "RoleDisplayText": "$"
             },
             "PersonalNotifications": [
               {
@@ -400,7 +440,9 @@
           {
             "Assignee": {
               "Id": "edbd9ed2-6a75-4230-9b72-bb2aea4efca3",
-              "DisplayName": "Иванов Иван"
+              "DisplayName": "Иванов Иван",
+              "Role": "Казначей",
+              "RoleDisplayText": "$"
             },
             "PersonalNotifications": [
               {
@@ -533,7 +575,9 @@
           {
             "Assignee": {
               "Id": "3f607d51-2266-4a2a-bd0a-89103c646a71",
-              "DisplayName": "Сидоров Сидор"
+              "DisplayName": "Сидоров Сидор",
+              "Role": "Не казначей",
+              "RoleDisplayText": "%"
             },
             "PersonalNotifications": [
               {
