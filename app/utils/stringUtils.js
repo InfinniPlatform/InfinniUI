@@ -1,4 +1,4 @@
-﻿var stringUtils = {
+var stringUtils = {
     format: function(value,args){
         return value.replace(/{(\d+)}/g, function (match, number) {
             return typeof args[number] != 'undefined'
@@ -22,6 +22,19 @@
             i++;
             return indexes[i-1];
         });
+    },
+
+    padLeft: function a (value, len, char) {
+        if (typeof char == 'undefined' || char === null) {
+            char = ' ';
+        }
+
+        var str = String(value);
+
+        if (str.length < len) {
+            return new Array(len - str.length + 1).join(char) + str;
+        }
+        return str;
     }
 };
 

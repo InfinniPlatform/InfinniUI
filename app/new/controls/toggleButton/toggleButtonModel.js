@@ -1,11 +1,11 @@
 var ToggleButtonModel = ControlModel.extend( _.extend({
 
     defaults: _.defaults({
-        value: true,
+        value: false,
         textOn: 'ON',
         textOff: 'OFF',
         horizontalAlignment: 'Left'
-    }),
+    }, ControlModel.prototype.defaults),
 
     initialize: function () {
         ControlModel.prototype.initialize.apply(this, arguments);

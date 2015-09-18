@@ -48,8 +48,8 @@ describe('NumericBox', function () {
             numericBox2.setValue(5);
 
             // Then
-            assert.equal(numericBox1.getValue(), 20);
-            assert.equal(numericBox2.getValue(), 20);
+            assert.equal(numericBox1.getValue(), 50);
+            assert.equal(numericBox2.getValue(), 5);
 
             assert.equal(numericBox.getValue(), 15);
             assert.equal(numericBox.getMinValue(), 10);

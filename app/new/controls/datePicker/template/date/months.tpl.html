@@ -1,0 +1,69 @@
+<style>
+    .month {
+        padding: 10px;
+    }
+
+    .month-today {
+        background: #d4e2ee;
+    }
+
+    .month-unavailable {
+        background-color: #dddddd;
+        cursor: not-allowed;
+        color: #777777;
+        opacity: 1;
+    }
+
+    .month-list {
+        cursor: pointer;
+    }
+
+    .month-selected {
+        border: 1px solid #FF0000;
+    }
+
+    .year {
+        text-align: center;
+    }
+
+</style>
+<table>
+    <thead>
+    <tr class="navigation">
+        <th class="navigation-prev">
+            <button class="btn-year btn-year-prev">&laquo;</button>
+        </th>
+        <th class="year" colspan="2">Год</th>
+        <th class="navigation-next">
+            <button class="btn-year btn-year-next">&raquo;</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody class="month-list">
+    <tr>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+    </tr>
+    <tr>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+    </tr>
+    <tr>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+        <td class="month"></td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th colspan="4">
+            <button class="today today-month">Сегодня</button>
+        </th>
+    </tr>
+    </tfoot>
+</table>

@@ -6,7 +6,8 @@ InfinniUI.localizations['ru-RU'].dateTimeFormatInfo = {
     dateSeparator: '.',
     timeSeparator: ':',
     amDesignator: '',
-    pmDesignator: ''
+    pmDesignator: '',
+    firstDayOfWeek: 1
 };
 
 InfinniUI.localizations['en-US'].dateTimeFormatInfo = {
@@ -17,5 +18,6 @@ InfinniUI.localizations['en-US'].dateTimeFormatInfo = {
     dateSeparator: '/',
     timeSeparator: ':',
     amDesignator: 'AM',
-    pmDesignator: 'PM'
+    pmDesignator: 'PM',
+    firstDayOfWeek: 0
 };

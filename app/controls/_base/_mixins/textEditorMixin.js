@@ -104,9 +104,9 @@ var textEditorMixin = {
      * @param value
      * @returns {boolean}
      */
-//    onEditorValidate: function (value) {
-//        return true;
-//    },
+    onEditorValidate: function (value) {
+        return true;
+    },
 
     /**
      * Обработчик применения значения из поля ввода с маской

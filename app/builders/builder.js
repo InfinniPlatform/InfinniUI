@@ -8,6 +8,7 @@ function Builder() {
     };
 
     this.buildType = function (metadataType, metadataValue, args) {
+        args = args || {};
         if (objectBuilders[metadataType] === undefined) {
             return null;
         }

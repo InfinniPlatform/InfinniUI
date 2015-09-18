@@ -8,7 +8,7 @@
     "jquery": "1.x",
     "benchmark": "1.x",
     "metronic": "https://dl.dropboxusercontent.com/u/50646144/metronic/metronic.zip",
-    "moment": "2.6.0",
+    "moment": "latest",
     "ractive": "0.5.x",
     "signalr": "2.1.1",
     "jstree": "~3.0.9",

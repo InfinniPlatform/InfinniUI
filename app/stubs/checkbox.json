@@ -122,7 +122,7 @@
             "HintText": "I'm TextBox hint",
             "LabelText": "Text label",
             "Enabled": true,
-            "~EditMask": {
+            "EditMask": {
               "NumberEditMask": {
                 "Mask": "n3"
               }
@@ -130,6 +130,93 @@
             "Value": {
               "PropertyBinding": {
                 "DataSource": "MainDataSource"
+              }
+            }
+          }
+        },
+        {
+          "NumericBox": {
+            "HintText": "I'm NumericBox hint",
+            "LabelText": "Numeric label",
+            "Enabled": true,
+            "MinValue": 0,
+            "EditMask": {
+              "NumberEditMask": {
+                "Mask": "n3"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource"
+              }
+            }
+          }
+        },
+        {
+          "DatePicker": {
+            "Mode": "Date",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "d"
+              }
+            },
+            "MinValue": "2015-10-14",
+            "MaxValue": "2015-10-20",
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "d"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
+              }
+            }
+          }
+        },
+        {
+          "DatePicker": {
+            "Mode": "DateTime",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "g"
+              }
+            },
+            "MinValue": "2015-09-03",
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "g"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
+              }
+            }
+          }
+        },
+        {
+          "DatePicker": {
+            "Mode": "Time",
+            "DisplayFormat": {
+              "DateTimeFormat": {
+                "Format": "t"
+              }
+            },
+            "Enabled": false,
+            "MinValue": "2015-09-15T09:00",
+            "MaxValue": "2015-09-15T18:30",
+            "EditMask": {
+              "DateTimeEditMask": {
+                "Mask": "t"
+              }
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "birthday"
               }
             }
           }

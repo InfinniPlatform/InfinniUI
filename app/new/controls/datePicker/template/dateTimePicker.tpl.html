@@ -1,0 +1,8 @@
+<label for="<%- guid %>"><%- labelText%></label>
+<input <% if (!enabled) { %> disabled <% } %> class="pl-control form-control pl-datepicker-input" type="text" id="<%- guid %>" value="<%- value %>">
+<div class="pl-control-editor"></div>
+<button <% if (!enabled) { %> disabled <% } %> class="pl-datepicker-calendar">&#128198;</button>
+
+<div class="pl-control-hint-text"><%- hintText %></div>
+<div class="pl-control-error-text"><%- errorText %></div>
+<div class="pl-control-warning-text"><%- warningText %></div>

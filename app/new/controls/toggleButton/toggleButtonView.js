@@ -1,37 +1,44 @@
-var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype */{
+/**
+ * @class ToggleButtonView
+ * @augments ControlView
+ * @mixes editorBaseViewMixin
+ */
+var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype */ _.extend({}, editorBaseViewMixin, {
 
     template: InfinniUI.Template["new/controls/toggleButton/template/toggleButton.tpl.html"],
 
-    UI: {
+    UI: _.extend({}, editorBaseViewMixin.UI, {
         textOn: '.togglebutton-label-on',
         textOff: '.togglebutton-label-off',
         container: '.togglebutton-container'
-    },
+    }),
 
     events: {
         'click': 'onClickHandler'
     },
 
-    initialize: function () {
-        this.once('render', this.initOnChangeHandler, this)
-    },
-
     render: function () {
-        var model = this.model;
-
         this.prerenderingActions();
-
-        this.$el.html(this.template({
-            textOn: model.get('textOn'),
-            textOff: model.get('textOff')
-        }));
-        this.bindUIElements();
+        this.renderTemplate(this.template);
         this.postrenderingActions();
-
         this.trigger('render');
-        this.onChangeValueHandler();
+        this.applyValue();
         return this;
     },
+
+    getData: function () {
+        var model = this.model;
+
+        return _.extend({},
+            ControlView.prototype.getData.call(this),
+            editorBaseViewMixin.getData.call(this),
+            {
+                textOn: model.get('textOn'),
+                textOff: model.get('textOff')
+            }
+        );
+    },
+
 
     onClickHandler: function (event) {
         var model = this.model;
@@ -39,6 +46,9 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     },
 
     initOnChangeHandler: function () {
+        ControlView.prototype.initOnChangeHandler.call(this);
+        editorBaseViewMixin.initOnChangeHandler.call(this);
+
         var model = this.model;
 
         this
@@ -56,8 +66,11 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     },
 
     onChangeValueHandler: function (model, value) {
+        this.applyValue();
+    },
+
+    applyValue: function () {
+        var value = this.model.get('value');
         this.switchClass('toggle', value ? 'on' : 'off', this.$el);
     }
-
-
-});
+}));

@@ -3,16 +3,15 @@ describe('ToggleButton', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
             var toggleButton = new ToggleButton(),
-                $el, $control;
+                $el;
 
             // When
             $el = toggleButton.render();
-            $control = $el.find('input');
 
             // Then
-            assert.isTrue($control.prop('checked'), 'checked');
+            assert.isTrue($el.hasClass('toggle-off'));
             assert.isUndefined($el.attr('data-pl-name'), 'data-pl-name');
-            assert.isFalse($control.prop('disabled'), 'disabled');
+            assert.isFalse($el.hasClass('pl-disabled'));
             assert.isFalse($el.hasClass('hidden'), 'hidden');
             assert.isTrue($el.hasClass('pull-left'), 'pull-left');
             assert.isFalse($el.hasClass('center-block'), 'center-block');
@@ -21,15 +20,13 @@ describe('ToggleButton', function () {
         it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
             var toggleButton = new ToggleButton(),
-                $el, $control;
+                $el;
 
             // When
             $el = toggleButton.render();
-            $('body').prepend($el);
-            $control = $el.find('input');
             toggleButton.setValue(false);
-            toggleButton.setTextOn('Ð”Ð');
-            toggleButton.setTextOff('ÐÐ•Ð¢');
+            toggleButton.setTextOn('on');
+            toggleButton.setTextOff('off');
 
             toggleButton.setName('newName');
             toggleButton.setEnabled(false);
@@ -37,10 +34,9 @@ describe('ToggleButton', function () {
             toggleButton.setHorizontalAlignment('Center');
 
             // Then
-            assert.isTrue($el.prop('textContent').length == 6);
-            assert.isFalse($control.prop('checked'));
+            assert.isTrue($el.hasClass('toggle-off'));
             assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
+            assert.isTrue($el.hasClass('pl-disabled'));
             assert.isTrue($el.hasClass('hidden'));
             assert.isFalse($el.hasClass('pull-left'));
             assert.isTrue($el.hasClass('center-block'));
