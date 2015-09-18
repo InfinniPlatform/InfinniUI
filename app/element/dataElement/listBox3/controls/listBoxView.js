@@ -70,6 +70,10 @@ var ListBoxView = ControlView.extend({
 
         this.cleanViewItems();
 
+        if (!Array.isArray(items)) {
+            return;
+        }
+        
         if (groupTemplate) {
             //Группированный список
             var valueSelector = groupTemplate.valueSelector;
