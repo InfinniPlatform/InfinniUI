@@ -75,7 +75,7 @@ var DataBinding = Backbone.Model.extend({
     },
 
     _isRelativeProperty: function(property){
-        return ! /^\d/.test(property);
+        return ! /^\d/.test(property) && property != '';
     },
 
     getSource: function () {

@@ -265,7 +265,7 @@ describe('Container (Control)', function () {
                                     }
                                 },
                                 "GroupItemTemplate": {
-                                    "TextBox": {
+                                    "Label": {
                                         "Value": {
                                             "PropertyBinding":{
                                                 "Source": "ObjectDataSource1",
@@ -295,7 +295,7 @@ describe('Container (Control)', function () {
 
             // Then
             function onViewReady(view, $layout){
-                $layout.detach();
+                //$layout.detach();
 
                 assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox');
             }
@@ -343,7 +343,7 @@ describe('Container (Control)', function () {
         it('should render listBox without grouping', function () {
             // Given When
             var metadata = metadata2;
-            applyViewMetadata(metadata, onViewReady);
+            /*applyViewMetadata(metadata, onViewReady);*/
 
             // Then
             function onViewReady(view, $layout){

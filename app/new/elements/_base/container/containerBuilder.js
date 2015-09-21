@@ -123,28 +123,20 @@ _.extend(ContainerBuilder.prototype, {
         element.setGroupValueSelector(groupValueSelector);
     },
 
-    initGroupItemTemplate: function(params){
+    initGroupItemTemplate: function(params, itemsBinding){
         var metadata = params.metadata;
         var element = params.element;
         var itemTemplate;
-        var binding;
         var property;
-
-        binding = params.builder.build(metadata.Items, {
-            parentView: params.parentView,
-            basePathOfProperty: params.basePathOfProperty
-        });
-
-        binding.bindElement(element, 'items');
 
         if(metadata.GroupItemTemplate){
             itemTemplate = this.buildItemTemplate(metadata.GroupItemTemplate, params);
         }else if(metadata.GroupItemFormat){
-            itemTemplate = this.buildItemFormat(binding, metadata.GroupItemFormat, params);
+            itemTemplate = this.buildItemFormat(itemsBinding, metadata.GroupItemFormat, params);
         }else if(metadata.GroupItemSelector){
-            itemTemplate = this.buildItemSelector(binding, metadata.GroupItemSelector, params);
+            itemTemplate = this.buildItemSelector(itemsBinding, metadata.GroupItemSelector, params);
         }else if(metadata.GroupItemProperty){
-                itemTemplate = this.buildItemProperty(binding, metadata.GroupItemProperty, params);
+                itemTemplate = this.buildItemProperty(itemsBinding, metadata.GroupItemProperty, params);
         }
 
         if(itemTemplate){

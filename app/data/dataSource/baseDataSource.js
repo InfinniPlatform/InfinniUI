@@ -263,10 +263,6 @@ var BaseDataSource = Backbone.Model.extend({
             bindingByIndexRegEx = /^\d/,
             relativeProperty, source;
 
-        if(!selectedItem){
-            return undefined;
-        }
-
         if(property == ''){
             return this.getItems();
         }else if(property == '$'){
@@ -285,7 +281,10 @@ var BaseDataSource = Backbone.Model.extend({
                 }
             }
 
-            return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
+
+                return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
+
+
         }
     },
 
