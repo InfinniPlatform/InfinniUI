@@ -15,48 +15,49 @@ describe('Container (Control)', function () {
     }
 
     describe('StackPanel as exemplar of Container', function () {
-        var metadata1 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "LTE" },
-                            { "Id": 2, "Display": "3G" },
-                            { "Id": 3, "Display": "2G" }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemTemplate": {
-                        "TextBox": {
-                            "Name": "TextBox1",
-                            "Value": {
-                                "PropertyBinding":{
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
-                                }
-                            }
-                        }
-                    },
-                    "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }
-            }]
-        };
 
         it('should render stackPanel with templating items', function () {
-            // Given When
-            var metadata = metadata1;
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding":{
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }]
+            };
+
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
@@ -70,54 +71,54 @@ describe('Container (Control)', function () {
         });
 
 
-        var metadata2 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "LTE" },
-                            { "Id": 2, "Display": "3G" },
-                            { "Id": 3, "Display": "2G" }
+        it('should render stackPanel with not templating items', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "Items" : [
+                            {
+                                "TextBox": {
+                                    "Name": "TextBox1",
+                                    "Value": {
+                                        "PropertyBinding":{
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "Display"
+                                        }
+                                    }
+                                }
+                            },{
+                                "TextBox": {
+                                    "Name": "TextBox2",
+                                    "Value": {
+                                        "PropertyBinding":{
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "Id"
+                                        }
+                                    }
+                                }
+                            }
                         ]
                     }
-                }
-            ],
-            Items: [{
+                }]
+            };
 
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "Items" : [
-                        {
-                            "TextBox": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "Display"
-                                    }
-                                }
-                            }
-                        },{
-                            "TextBox": {
-                                "Name": "TextBox2",
-                                "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "Id"
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                }
-            }]
-        };
-
-        it('should render stackPanel with not templating items', function () {
-            // Given When
-            var metadata = metadata2;
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
@@ -130,38 +131,38 @@ describe('Container (Control)', function () {
             }
         });
 
-        var metadata3 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            "LTE",
-                            "3G",
-                            "2G"
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }
-            }]
-        };
-
 
         it('should render stackPanel with simple items', function () {
-            // Given When
-            var metadata = metadata3;
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                "LTE",
+                                "3G",
+                                "2G"
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }]
+            };
+
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
@@ -173,47 +174,47 @@ describe('Container (Control)', function () {
                 assert.equal($layout.find('.label-control').first().text(), 'LTE', 'content of first element is right');
             }
         });
-
-
-        var metadata4 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            {
-                                Name: {Temp: "LTE"}
-                            },
-                            {
-                                Name: {Temp: "3G"}
-                            },
-                            {
-                                Name: {Temp: "2G"}
-                            }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemProperty": "Name.Temp",
-                    "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }
-            }]
-        };
 
 
         it('should render stackPanel with property items', function () {
-            // Given When
-            var metadata = metadata4;
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {
+                                    Name: {Temp: "LTE"}
+                                },
+                                {
+                                    Name: {Temp: "3G"}
+                                },
+                                {
+                                    Name: {Temp: "2G"}
+                                }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemProperty": "Name.Temp",
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }]
+            };
+
+
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
@@ -227,44 +228,45 @@ describe('Container (Control)', function () {
         });
 
 
-        var metadata5 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            {
-                                Name: {Temp: "LTE"}
-                            },
-                            {
-                                Name: {Temp: "3G"}
-                            },
-                            {
-                                Name: {Temp: "2G"}
-                            }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemFormat": "Connect: {Name.Temp}",
-                    "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }
-            }]
-        };
 
         it('should render stackPanel with formatting items', function () {
-            // Given When
-            var metadata = metadata5;
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {
+                                    Name: {Temp: "LTE"}
+                                },
+                                {
+                                    Name: {Temp: "3G"}
+                                },
+                                {
+                                    Name: {Temp: "2G"}
+                                }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemFormat": "Connect: {Name.Temp}",
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }]
+            };
+
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
@@ -278,54 +280,53 @@ describe('Container (Control)', function () {
         });
 
 
-
-        var metadata6 = {
-            Text: 'Пациенты',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            {
-                                Name: {Temp: "LTE"}
-                            },
-                            {
-                                Name: {Temp: "3G"}
-                            },
-                            {
-                                Name: {Temp: "2G"}
-                            }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemSelector":{
-                        Name: 'GetTitle'
-                    },
-                    "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+        it('should render stackPanel with selector items', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {
+                                    Name: {Temp: "LTE"}
+                                },
+                                {
+                                    Name: {Temp: "3G"}
+                                },
+                                {
+                                    Name: {Temp: "2G"}
+                                }
+                            ]
                         }
                     }
-                }
-            }],
+                ],
+                Items: [{
 
-            Scripts: [
-                {
-                    Name: 'GetTitle',
-                    Body: "return '!! ' + args.value.Name.Temp;"
-                }
-            ]
-        };
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemSelector":{
+                            Name: 'GetTitle'
+                        },
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }],
 
-        it('should render stackPanel with selector items', function () {
-            // Given When
-            var metadata = metadata6;
+                Scripts: [
+                    {
+                        Name: 'GetTitle',
+                        Body: "return '!! ' + args.value.Name.Temp;"
+                    }
+                ]
+            };
+
+            // When
             applyViewMetadata(metadata, onViewReady);
 
             // Then
