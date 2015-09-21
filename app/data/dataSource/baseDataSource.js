@@ -342,6 +342,7 @@
                     var validation = data.ValidationMessage;
                     self.showErrors(validation.ValidationErrors);
                     self.showWarnings(validation.ValidationWarnings);
+                    onSuccess(data);
                 }
             });
 
