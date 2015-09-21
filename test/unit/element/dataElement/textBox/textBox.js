@@ -1,4 +1,58 @@
 describe('TextBox', function () {
+    var builder = new ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('TextBox', {});
+
+        describe('Implementing TextBox Methods', function () {
+            ['getMultiline', 'setMultiline', 'getLineCount', 'setLineCount']
+                .forEach(function (methodName) {
+                    it(methodName, function() {
+                        checkMethod(element, methodName);
+                    });
+
+                });
+        });
+
+        describe('Implementing TextEditorBase Methods', function () {
+            ['getLabelText', 'setLabelText', 'getLabelFloating', 'setLabelFloating', 'getDisplayFormat',
+                'setDisplayFormat', 'getEditMask', 'setEditMask']
+                .forEach(function (methodName) {
+                    it(methodName, function() {
+                        checkMethod(element, methodName);
+                    });
+                });
+        });
+
+        describe('Implementing EditorBase Methods', function () {
+            ['getValue', 'setValue', 'getHintText', 'setHintText', 'getErrorText','setErrorText', 'getWarningText',
+                'setWarningText']
+                .forEach(function (methodName) {
+                    it(methodName, function() {
+                        checkMethod(element, methodName);
+                    });
+                });
+        });
+
+        describe('Implementing Element Methods', function () {
+            ['getView', '!getParent', '!setParent', 'getName', 'setName','getText', 'setText',
+                '!getFocusable', '!setFocusable', '!getFocused', '!setFocused', 'getEnabled','setEnabled', 'getVisible',
+                'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
+                'setVerticalAlignment','!getTextHorizontalAlignment', '!setTextHorizontalAlignment',
+                '!getTextVerticalAlignment','!setTextVerticalAlignment', '!getTextStyle', '!setTextStyle','!getForeground',
+                '!setForeground', '!getBackground', '!setBackground', '!getTexture', '!setTexture', 'getChildElements',
+                'getProperty', 'setProperty']
+                .forEach(function (methodName) {
+                    it(methodName, function() {
+                        checkMethod(element, methodName);
+                    });
+
+                });
+        });
+
+        //@TODO Add Checking Events
+    });
+
     describe('render', function () {
 
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
