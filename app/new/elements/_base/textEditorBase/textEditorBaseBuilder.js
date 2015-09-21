@@ -36,7 +36,9 @@ _.extend(TextEditorBaseBuilder.prototype, {
             displayFormat;
 
         if (metadata.DisplayFormat) {
-            displayFormat = builder.build(metadata.DisplayFormat, {parentView: params.parentView});
+            displayFormat = builder.buildType('ObjectFormat', {
+                Format: metadata.DisplayFormat
+            }, {parentView: params.parentView});
         }
         params.element.setDisplayFormat(displayFormat);
         return this;
