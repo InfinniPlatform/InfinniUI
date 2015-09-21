@@ -33,6 +33,18 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         return this;
     },
 
+    getData: function () {
+        var data = TextEditorBaseView.prototype.getData.call(this);
+        var model = this.model;
+        return _.extend(
+            data,
+            {
+                multiline: model.get('multiline'),
+                lineCount: model.get('lineCount')
+            }
+        );
+    },
+
     renderTextBoxEditor: function () {
         var model = this.model;
         this.renderControlEditor({
