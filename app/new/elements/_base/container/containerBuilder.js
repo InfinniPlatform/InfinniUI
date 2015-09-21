@@ -17,7 +17,7 @@ _.extend(ContainerBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         itemsBinding = this.initItems(params);
-        this.initGroup(params);
+        this.initGroup(params, itemsBinding);
 
         return itemsBinding;
     },
