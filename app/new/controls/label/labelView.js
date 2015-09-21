@@ -1,109 +1,97 @@
-var LabelView = ControlView.extend({
+/**
+ * @class LabelView
+ * @augments ControlView
+ * @mixes editorBaseViewMixin
+ */
+var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends LabelView.prototype */{
     className: 'pl-label',
 
     template: InfinniUI.Template["new/controls/label/template/label.tpl.html"],
 
-    UI: {
+    UI: _.extend({}, editorBaseViewMixin.UI, {
         control: 'label',
         container: 'div'
-    },
+    }),
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
 
-        this.initHorizontalTextAlignment();
-        this.initUpdateLineCount();
-        this.initTextWrapping();
-        this.initForeground();
-        this.initBackground();
-        this.initTextStyle();
-        this.initValue();
+        //this.initHorizontalTextAlignment();
+        //this.initUpdateLineCount();
+        //this.initTextWrapping();
+        //this.initForeground();
+        //this.initBackground();
+        //this.initTextStyle();
     },
 
-    initValue: function () {
-        this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:lineCount', this.updateValue);
-        this.listenTo(this.model, 'change:text', this.updateValue);
-        this.updateValue();
+    getData: function () {
+        return _.extend(
+            {},
+            ControlView.prototype.getData.call(this),
+            editorBaseViewMixin.getData.call(this),
+            {
+                text: this.getLabelText() 
+            }
+        );
     },
 
     render: function () {
+        var model = this.model;
+
         this.prerenderingActions();
-
-        this.$el
-            .html(this.template({}));
-
-        this.bindUIElements();
-        this.updateBackground();
-        this.updateForeground();
-        this.updateTextStyle();
-        this.updateValue();
-        this.updateLineCount();
-        this.updateTextWrapping();
-        this.updateHorizontalAlignment();
-        this.updateHorizontalTextAlignment();
+        this.renderTemplate(this.template);
+        this.trigger('render');
         this.postrenderingActions();
         return this;
     },
 
-    /**
-     * @private
-     * Установка значение Name у контейнера элемента
-     */
-    applyName: function () {
-        this.$el.attr('data-name', this.model.get('name'));
+    initOnChangeHandler: function () {
+        ControlView.prototype.initOnChangeHandler.call(this);
+        editorBaseViewMixin.initOnChangeHandler.call(this);
+
+        this
+            .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
+            .listenTo(this.model, 'change:textWrapping', this.onChangeTextWrappingHandler)
+            .listenTo(this.model, 'change:lineCount', this.onChangeLineCountHandler)
     },
 
-    /**
-     * @private
-     */
-    updateValue: function () {
-        var control, text;
+    onChangeDisplayFormatHandler: function () {
+        this.updateText();
+    },
 
-        if(!this.wasRendered) {
+    onChangeValueHandler: function() {
+        this.updateText();
+    },
+
+    onChangeTextWrappingHandler: function (model, value) {
+
+    },
+
+    onChangeLineCountHandler: function (model, value) {
+
+    },
+
+    updateText: function () {
+        if (!this.wasRendered) {
             return;
         }
 
-        control = this.ui.control;
-        text = this.getTextLabel();
-
-        //var lineCount = this.model.get('lineCount');
+        var
+            control = this.ui.control,
+            text = this.getLabelText();
 
         control.attr('title', text);
-        //this.$el.toggleClass('pl-label-oneline', lineCount === 1);
-
-        //Сохраняем форматирование пробелами и экранируем <>
-        //text = text.replace(/</g, '&lt;')
-        //    .replace(/>/g, '&gt;');
-        //
-        //
-        //
-        //var line = 0;
-        //if (typeof lineCount === 'undefined' || lineCount === null) {
-        //    text = text.replace(/\n/g, '<br>');
-        //} else {
-        //    text = text.replace(/\n/g, function (char) {
-        //        line++;
-        //        return line < lineCount ? '<br>' : char;
-        //    });
-        //}
-        //text = text.replace(/\s/g, '&nbsp;');
         control.text(text);
     },
 
-    /**
-     * @private
-     * Возвращает текст для контрола.
-     * @returns {String}
-     */
-    getTextLabel: function () {
-        var text = this.model.get('value');
-        var format = this.model.get('format');
+    getLabelText: function () {
+        var model = this.model;
+        var value = model.get('value');
+        var text;
+        var format = model.get('displayFormat');
 
-        if (typeof text !== 'undefined' && text !== null) {
-            if (typeof format !== 'undefined' && format !== null) {
-                text = format.format(text);
-            }
+        if (typeof value !== 'undefined' && value !== null) {
+            text = typeof format === 'function' ? format(value) : value;
         }else{
             text = this.model.get('text');
             if (typeof text === 'undefined' || text == null) {
@@ -113,13 +101,14 @@ var LabelView = ControlView.extend({
 
         return text;
     }
-});
 
-_.extend(LabelView.prototype,
-    horizontalTextAlignmentPropertyMixin,
-    foregroundPropertyMixin,
-    backgroundPropertyMixin,
-    textStylePropertyMixin,
-    lineCountPropertyMixin,
-    textWrappingPropertyMixin
-);
+}));
+
+//_.extend(LabelView.prototype,
+//    horizontalTextAlignmentPropertyMixin,
+//    foregroundPropertyMixin,
+//    backgroundPropertyMixin,
+//    textStylePropertyMixin,
+//    lineCountPropertyMixin,
+//    textWrappingPropertyMixin
+//);

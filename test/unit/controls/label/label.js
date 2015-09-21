@@ -32,24 +32,24 @@ describe('Label', function () {
                 //Then
                 assert.isTrue($el.hasClass('hidden'));
             });
-
-            it('Setting property: horizontalAlignment', function () {
-                //Given
-                var $el = label.render();
-                assert.isTrue($el.hasClass('horizontalTextAlignment-Left'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Right'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-
-                //When
-                label.setHorizontalTextAlignment('Right');
-
-                //Then
-                assert.isTrue($el.hasClass('horizontalTextAlignment-Right'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Left'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-            });
+            //
+            //it('Setting property: horizontalAlignment', function () {
+            //    //Given
+            //    var $el = label.render();
+            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Left'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Right'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
+            //
+            //    //When
+            //    label.setHorizontalTextAlignment('Right');
+            //
+            //    //Then
+            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Right'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Left'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
+            //});
 
             it('Setting property: text', function () {
                 //Given

@@ -115,7 +115,7 @@ describe('DatePicker', function () {
 
             assert.equal(element.getLabelText(), "Datepicker's label", 'LabelText');
             assert.equal(element.getLabelFloating(), true, 'LabelFloating');
-            assert.instanceOf(element.getDisplayFormat(), DateTimeFormat, 'DateTimeFormat');
+            assert.instanceOf(element.getDisplayFormat(), ObjectFormat, 'DateTimeFormat');
             assert.instanceOf(element.getEditMask(), DateTimeEditMask, 'EditMask');
 
             assert.equal(element.getHintText(), "Hint", 'HintText');

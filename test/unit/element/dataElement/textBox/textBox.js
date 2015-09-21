@@ -15,39 +15,15 @@ describe('TextBox', function () {
         });
 
         describe('Implementing TextEditorBase Methods', function () {
-            ['getLabelText', 'setLabelText', 'getLabelFloating', 'setLabelFloating', 'getDisplayFormat',
-                'setDisplayFormat', 'getEditMask', 'setEditMask']
-                .forEach(function (methodName) {
-                    it(methodName, function() {
-                        checkMethod(element, methodName);
-                    });
-                });
+            checkTextEditorBaseMethods(element);
         });
 
         describe('Implementing EditorBase Methods', function () {
-            ['getValue', 'setValue', 'getHintText', 'setHintText', 'getErrorText','setErrorText', 'getWarningText',
-                'setWarningText']
-                .forEach(function (methodName) {
-                    it(methodName, function() {
-                        checkMethod(element, methodName);
-                    });
-                });
+            checkEditorBaseMethods(element);
         });
 
         describe('Implementing Element Methods', function () {
-            ['getView', '!getParent', '!setParent', 'getName', 'setName','getText', 'setText',
-                '!getFocusable', '!setFocusable', '!getFocused', '!setFocused', 'getEnabled','setEnabled', 'getVisible',
-                'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
-                'setVerticalAlignment','!getTextHorizontalAlignment', '!setTextHorizontalAlignment',
-                '!getTextVerticalAlignment','!setTextVerticalAlignment', '!getTextStyle', '!setTextStyle','!getForeground',
-                '!setForeground', '!getBackground', '!setBackground', '!getTexture', '!setTexture', 'getChildElements',
-                'getProperty', 'setProperty']
-                .forEach(function (methodName) {
-                    it(methodName, function() {
-                        checkMethod(element, methodName);
-                    });
-
-                });
+            checkElementMethods(element);
         });
 
         it('Events onLoad, onValueChanged', function () {
