@@ -227,6 +227,116 @@ describe('Container (Control)', function () {
         });
 
 
+        var metadata5 = {
+            Text: 'Пациенты',
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            {
+                                Name: {Temp: "LTE"}
+                            },
+                            {
+                                Name: {Temp: "3G"}
+                            },
+                            {
+                                Name: {Temp: "2G"}
+                            }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                StackPanel: {
+                    Name: 'MainViewPanel',
+                    "ItemFormat": "Connect: {Name.Temp}",
+                    "Items" : {
+                        "PropertyBinding": {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }
+            }]
+        };
+
+        it('should render stackPanel with formatting items', function () {
+            // Given When
+            var metadata = metadata5;
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                $layout.detach();
+
+                assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
+                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.label-control').first().text(), 'Connect: LTE', 'content of first element is right');
+            }
+        });
+
+
+
+        var metadata6 = {
+            Text: 'Пациенты',
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            {
+                                Name: {Temp: "LTE"}
+                            },
+                            {
+                                Name: {Temp: "3G"}
+                            },
+                            {
+                                Name: {Temp: "2G"}
+                            }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                StackPanel: {
+                    Name: 'MainViewPanel',
+                    "ItemSelector":{
+                        Name: 'GetTitle'
+                    },
+                    "Items" : {
+                        "PropertyBinding": {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }
+            }],
+
+            Scripts: [
+                {
+                    Name: 'GetTitle',
+                    Body: "return '!! ' + args.value.Name.Temp;"
+                }
+            ]
+        };
+
+        it('should render stackPanel with selector items', function () {
+            // Given When
+            var metadata = metadata6;
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                $layout.detach();
+
+                assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
+                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.label-control').first().text(), '!! LTE', 'content of first element is right');
+            }
+        });
     });
 
 
@@ -295,9 +405,12 @@ describe('Container (Control)', function () {
 
             // Then
             function onViewReady(view, $layout){
-                //$layout.detach();
+                $layout.detach();
 
-                assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+                assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox is right');
+                assert.lengthOf($layout.find('.pl-listbox-group-i'), 2, 'length of rendered group is right');
+                assert.equal($layout.find('.pl-text-box-input').first().val(), 'LTE', 'value in template is right');
+                assert.equal($.trim( $layout.find('.pl-listbox-group-title').last().text() ), '2G', 'group value in template is right');
             }
         });
 
@@ -343,234 +456,18 @@ describe('Container (Control)', function () {
         it('should render listBox without grouping', function () {
             // Given When
             var metadata = metadata2;
-            /*applyViewMetadata(metadata, onViewReady);*/
+            applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout){
                 $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+                assert.equal($layout.find('.pl-text-box-input').first().val(), 'LTE', 'value in template is right');
             }
         });
 
     });
 
-
-
-
-
-    var metadata5 = {
-        Text: 'Пациенты',
-        DataSources : [
-            {
-                ObjectDataSource: {
-                    "Name": "ObjectDataSource1",
-                    "Items": [
-                        { "Id": 1, "Display": "LTE" },
-                        { "Id": 2, "Display": "2G" },
-                        { "Id": 3, "Display": "2G" }
-                    ]
-                }
-            }
-        ],
-        Items: [{
-
-            ListBox: {
-                "ItemTemplate": {
-                    "Label": {
-                        "Value": {
-                            "PropertyBinding":{
-                                "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
-                            }
-                        }
-                    }
-                },
-                "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
-            }
-        }]
-    };
-
-    describe('render lb3', function () {
-        it('should render listBox without grouping', function () {
-            // Given When
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType('View', metadata5, {parentView: fakeView()});
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            var view = linkView.createView(function (view) {
-                view.open();
-
-                var $listbox = $('#sandbox').children();
-                $listbox.detach();
-
-                onListboxReady($listbox);
-            });
-
-            // Then
-            function onListboxReady($listbox){
-                assert.lengthOf($listbox.find('.pl-listbox-body'), 3, 'length of rendered listbox');
-            }
-        });
-    });
-
-
-
-
-
-    var metadata8 = {
-        Text: 'Пациенты',
-        DataSources : [
-            {
-                ObjectDataSource: {
-                    "Name": "ObjectDataSource1",
-                    "Items": [
-                        {
-                            Name: {Temp: "LTE"}
-                        },
-                        {
-                            Name: {Temp: "3G"}
-                        },
-                        {
-                            Name: {Temp: "2G"}
-                        }
-                    ]
-                }
-            }
-        ],
-        Items: [{
-
-            StackPanel: {
-                Name: 'MainViewPanel',
-                "ItemFormat": "Connect: {Name.Temp}",
-                "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
-            }
-        }]
-    };
-
-    describe('render property list formatting ', function () {
-        it('should render stackPanel with formatting items', function () {
-            // Given When
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType('View', metadata8, {parentView: fakeView()});
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            var view = linkView.createView(function (view) {
-                view.open();
-
-                var $stackPanel = $('#sandbox').children();
-                $stackPanel.detach();
-
-                onStackPanelReady($stackPanel);
-            });
-
-            // Then
-            function onStackPanelReady($stackPanel){
-                assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), 'Connect: LTE', 'content of first element is right');
-            }
-        });
-    });
-
-    var metadata9 = {
-        Text: 'Пациенты',
-        DataSources : [
-            {
-                ObjectDataSource: {
-                    "Name": "ObjectDataSource1",
-                    "Items": [
-                        {
-                            Name: {Temp: "LTE"}
-                        },
-                        {
-                            Name: {Temp: "3G"}
-                        },
-                        {
-                            Name: {Temp: "2G"}
-                        }
-                    ]
-                }
-            }
-        ],
-        Items: [{
-
-            StackPanel: {
-                Name: 'MainViewPanel',
-                "ItemSelector":{
-                    Name: 'GetTitle'
-                },
-                "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
-            }
-        }],
-
-        Scripts: [
-            {
-                Name: 'GetTitle',
-                Body: "return '!! ' + args.value.Name.Temp;"
-            }
-        ]
-    };
-
-    describe('render property list formatting ', function () {
-        it('should render stackPanel with formatting items', function () {
-            // Given When
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType('View', metadata9, {parentView: fakeView()});
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            var view = linkView.createView(function (view) {
-                view.open();
-
-                var $stackPanel = $('#sandbox').children();
-                $stackPanel.detach();
-
-                onStackPanelReady($stackPanel);
-            });
-
-            // Then
-            function onStackPanelReady($stackPanel){
-                assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), '!! LTE', 'content of first element is right');
-            }
-        });
-    });
 
 });
