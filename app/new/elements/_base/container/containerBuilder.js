@@ -79,10 +79,10 @@ _.extend(ContainerBuilder.prototype, {
         element.getItems().addAll(fakeItems);
     },
 
-    initGroup: function(params){
+    initGroup: function(params, itemsBinding){
         if(this.hasGrouping(params)){
             this.initGroupValueSelector(params);
-            this.initGroupItemTemplate(params);
+            this.initGroupItemTemplate(params, itemsBinding);
         }
     },
 
