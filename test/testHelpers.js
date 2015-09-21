@@ -18,6 +18,16 @@ function fakeView(view) {
     return view;
 }
 
+
+function checkMethod(element, name) {
+    var method = element[name];
+    if (name.indexOf('!') === 0) {
+        assert.isUndefined(method, name.substring(1));
+    } else {
+        assert.isFunction(method, name);
+    }
+}
+
 //Эта хрень по идее из платформы должна приходить, а она в лаунчере
 window.providerRegister.register('MetadataDataSource', function (metadataValue) {
     return new MetadataProviderREST(new QueryConstructorMetadata('', metadataValue));

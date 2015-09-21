@@ -3,9 +3,6 @@ describe('DatePicker', function () {
 
     describe('API', function () {
         var element = builder.buildType('DatePicker', {});
-        it('Create element', function () {
-            assert.isObject(element);
-        });
 
         describe('Implementing DatePicker Methods', function () {
             ['getMinValue', 'setMinValue', 'getMaxValue', 'setMaxValue', 'getMode', 'setMode']
@@ -38,16 +35,16 @@ describe('DatePicker', function () {
         });
 
         describe('Implementing Element Methods', function () {
-            ['getView', 'getParent', 'setParent', 'getName', 'setName','getText', 'setText',
-                'getFocusable', 'setFocusable', 'getFocused', 'setFocused', 'getEnabled','setEnabled', 'getVisible',
+            ['getView', '!getParent', '!setParent', 'getName', 'setName','getText', 'setText',
+                '!getFocusable', '!setFocusable', '!getFocused', '!setFocused', 'getEnabled','setEnabled', 'getVisible',
                 'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
-                'setVerticalAlignment','getTextHorizontalAlignment', 'setTextHorizontalAlignment',
-                'getTextVerticalAlignment','setTextVerticalAlignment', 'getTextStyle', 'setTextStyle','getForeground',
-                'setForeground', 'getBackground', 'setBackground', 'getTexture', 'setTexture', 'getChildElements',
+                'setVerticalAlignment','!getTextHorizontalAlignment', '!setTextHorizontalAlignment',
+                '!getTextVerticalAlignment','!setTextVerticalAlignment', '!getTextStyle', '!setTextStyle','!getForeground',
+                '!setForeground', '!getBackground', '!setBackground', '!getTexture', '!setTexture', 'getChildElements',
                 'getProperty', 'setProperty']
                 .forEach(function (methodName) {
                     it(methodName, function() {
-                        assert.isFunction(element[methodName], methodName);
+                        checkMethod(element, methodName);
                     });
 
                 });
@@ -142,13 +139,9 @@ describe('DatePicker', function () {
             datePicker.render();
 
             // When
-            datePicker.setMinDate('2014-01-01');
-            datePicker.setMaxDate('2014-12-31');
             datePicker.setValue('2014-07-29');
 
             // Then
-            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMinDate()).substr(0, 10), '2014-01-01');
-            assert.equal(InfinniUI.DateUtils.toISO8601(datePicker.getMaxDate()).substr(0, 10), '2014-12-31');
             assert.equal(datePicker.getValue().substr(0, 10), '2014-07-29');
         });
 
@@ -173,7 +166,7 @@ describe('DatePicker', function () {
             // Then
             assert.equal(onValueChangedFlag, 2);
         });
-        
+
     });
 });
 
