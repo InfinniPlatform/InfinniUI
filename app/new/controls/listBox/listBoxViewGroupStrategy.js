@@ -59,5 +59,29 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
             });
 
         });
+    },
+
+    updateValue: function(ignoreWasRendered){
+        var listbox = this.listbox;
+
+        if(!listbox.wasRendered && ignoreWasRendered != true){
+            return;
+        }
+
+        listbox.ui.items.removeClass('pl-listbox-i-chosen');
+        listbox.ui.checkingInputs.prop('checked', false);
+
+        var value = listbox.model.get('value'),
+            indexOfChoosingItem; // = ;
+
+        if($.isArray(value)){
+            for(var i= 0, ii=value.length; i < ii; i++){
+                indexOfChoosingItem = listbox.model.itemIndexByValue(value[i]);
+                if(indexOfChoosingItem != -1){
+                    listbox.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
+                    listbox.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
+                }
+            }
+        }
     }
 });

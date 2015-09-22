@@ -9,7 +9,8 @@ var ListBoxView = ControlView.extend({
     class: 'pl-listbox',
 
     UI: {
-        items: '.listbox-items'
+        items: '.pl-listbox-i',
+        checkingInputs: '.pl-listbox-input input'
     },
 
     initialize: function (options) {
@@ -23,11 +24,17 @@ var ListBoxView = ControlView.extend({
         });
 
         this.initGrouping();
+        this.initValue();
     },
 
     initGrouping: function(){
         this.updateGrouping();
         this.listenTo(this.model, 'change:groupValueSelector', this.updateGrouping);
+    },
+
+    initValue: function(){
+        this.updateValue();
+        this.listenTo(this.model, 'change:value', this.updateValue);
     },
 
     updateGrouping: function(){
@@ -51,6 +58,10 @@ var ListBoxView = ControlView.extend({
 
         this.strategy.appendItemsContent(preparedItems);
 
+        this.bindUIElements();
+
+        this.updateValue(true);
+
         this.postrenderingActions();
         return this;
     },
@@ -73,5 +84,31 @@ var ListBoxView = ControlView.extend({
 
     getGroupItemTemplate: function(){
         return this.model.get('groupItemTemplate');
+    },
+
+    updateValue: function(ignoreWasRendered){
+        if(!this.wasRendered && ignoreWasRendered != true){
+            return;
+        }
+
+        this.ui.items.removeClass('pl-listbox-i-chosen');
+        this.ui.checkingInputs.prop('checked', false);
+
+        var value = this.model.get('value'),
+            indexOfChoosingItem;
+
+        if(!this.isMultiselect() && value !== undefined && value !== null){
+            value = [value];
+        }
+
+        if($.isArray(value)){
+            for(var i= 0, ii=value.length; i < ii; i++){
+                indexOfChoosingItem = this.model.itemIndexByValue(value[i]);
+                if(indexOfChoosingItem != -1){
+                    this.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
+                    this.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
+                }
+            }
+        }
     }
 });

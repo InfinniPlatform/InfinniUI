@@ -14,6 +14,7 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
     },
 
     initialize: function () {
+        var that = this;
         ContainerModel.prototype.initialize.apply(this, arguments);
         this.initialize_editorBaseModel();
 
@@ -27,6 +28,10 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         }, this);
 
         this.on('toggleValue', this.onToggleValue, this);
+
+        this.get('items').onChange(function(){
+            that.clearItemsStringifyCache();
+        });
     },
 
     onSelectedItemChanged: function (handler) {
@@ -80,5 +85,65 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
             result = comparator.isEqual(value, val);
         }
         return result;
+    },
+
+    valueByItem: function(item){
+        var valueSelector = this.get('valueSelector');
+        if(!valueSelector){
+            return item;
+        }else{
+            return valueSelector(undefined, {value: item});
+        }
+    },
+
+    itemInfoByValue: function(value){
+        if(!this.itemsStringifyCache){
+            this.updateItemsStringifyCache();
+        }
+
+        var stringifyValue = JSON.stringify(value);
+        return this.itemsStringifyCache[stringifyValue];
+    },
+
+    itemByValue: function(value){
+        var itemInfo = this.itemInfoByValue(value);
+
+        if(!itemInfo){
+            return undefined;
+        }else{
+            return itemInfo.item;
+        }
+    },
+
+    itemIndexByValue: function(value){
+        var itemInfo = this.itemInfoByValue(value);
+
+        if(!itemInfo){
+            return -1;
+        }else{
+            return itemInfo.index;
+        }
+    },
+
+    updateItemsStringifyCache: function(){
+        var items = this.get('items'),
+            that = this,
+            stringify,
+            value;
+        this.itemsStringifyCache = {};
+
+        items.forEach(function(item, index){
+            value = that.valueByItem(item);
+            stringify = JSON.stringify(value);
+            that.itemsStringifyCache[stringify] = {
+                item: item,
+                index: index
+            };
+        });
+    },
+
+    clearItemsStringifyCache: function(){
+        this.itemsStringifyCache = undefined;
     }
+
 }, editorBaseModelMixin));
