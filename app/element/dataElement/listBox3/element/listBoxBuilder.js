@@ -96,7 +96,33 @@ _.extend(ListBoxBuilder.prototype, {
     },
 
     initGroupTemplate: function (params) {
-        var groupTemplate = {};
+        var groupTemplate = {
+            sortGroupValue: function (values) {
+                var direction = this.sortDirection;
+                if (!Array.isArray(values) || direction === 'None') {
+                    return;
+                }
+
+                values.sort(comparator);
+
+                function comparator(a, b) {
+                    var compare = 0;
+                    if (a !== b) {
+                        switch (direction) {
+                            case 'Ascending':
+                                compare = (a < b) ? -1 : 1;
+                                break;
+                            case 'Descending':
+                                compare = (a < b) ?  1 : -1;
+                                break;
+                            default:
+                                return 0;
+                        }
+                    }
+                    return compare;
+                }
+            }
+        };
         var metadata = params.metadata,
             builder = params.builder,
             parent = params.parent,
@@ -117,6 +143,15 @@ _.extend(ListBoxBuilder.prototype, {
             valueSelector = function (value, index) {
                 return InfinniUI.ObjectUtils.getPropertyValue(value, metadata.ValueProperty);
             }
+        } else if (metadata.ValueSelector) {
+            valueSelector = function (value, index) {
+                var message = {
+                    value: value,
+                    index: index
+                };
+                var executor = new ScriptExecutor(parent);
+                return executor.executeScript(metadata.ValueSelector.Name, message);
+            }
         } else {
             valueSelector = function (value, index) {
                 return value;
@@ -132,7 +167,7 @@ _.extend(ListBoxBuilder.prototype, {
             };
         } else if (metadata.DisplaySelector) {
 
-            var itemTemplate = function (value, index) {
+            itemTemplate = function (value, index) {
                 var message = {
                     value: value,
                     index: index
@@ -163,6 +198,8 @@ _.extend(ListBoxBuilder.prototype, {
                 }
             }
         }
+
+        groupTemplate.sortDirection = metadata.SortDirection || 'None';
 
         groupTemplate.itemTemplate = itemTemplate;
         element.setCollapsible(!!metadata.Collapsible);

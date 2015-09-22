@@ -82,16 +82,15 @@ var ListBoxView = ControlView.extend({
                 return valueSelector(item);
             });
 
-            for (var groupValue in groupedItems) {
-                if (!groupedItems.hasOwnProperty(groupValue)) {
-                    continue;
-                }
+            var groupValues = Object.keys(groupedItems);
+            groupTemplate.sortGroupValue(groupValues);
+            groupValues.forEach(function (groupValue) {
                 var _index;
                 itemsGroup = groupedItems[groupValue].map(function (item) {
-                   return {
-                       item: item,
-                       index: items.indexOf(item)
-                   };
+                    return {
+                        item: item,
+                        index: items.indexOf(item)
+                    };
                 });
 
                 var item = itemsGroup[0];
@@ -105,7 +104,7 @@ var ListBoxView = ControlView.extend({
 
                 var $group = viewGroup.render().$el;
                 this.ui.container.append($group);
-            }
+            }, this);
         } else {
             //Простой список
             items = items.map(function (item, index) {

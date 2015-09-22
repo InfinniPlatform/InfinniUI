@@ -50,11 +50,15 @@
 
                       "GroupTemplate": {
                         "BaseListGroup": {
-                          "ValueProperty": "PublicNotification.DisplayName",
+                          "~ValueProperty": "PublicNotification.DisplayName",
                           "~DisplayProperty": "PublicNotification.DisplayName",
                           "DisplaySelector": {
                             "Name": "DisplaySelector"
                           },
+                          "ValueSelector": {
+                            "Name": "ValueSelector"
+                          },
+                          "SortDirection": "Ascending",
                           "Collapsible": true,
                           "~ItemTemplate": {
                             "Label": {
@@ -145,7 +149,7 @@
                 "Id": "c9ece2d4-5f73-4acf-a559-09d59fde6d0a",
                 "PublicNotification": {
                   "Id": "e1ea1fc8-2bca-410f-8ae1-4736f496f102",
-                  "DisplayName": "Взнос события петрова"
+                  "DisplayName": "Взнос события петрова1"
                 },
                 "IsAssignee": false,
                 "HasAssignee": false,
@@ -192,7 +196,7 @@
                 "Id": "00ce3d7b-af84-4cc1-b668-cd034334b9cc",
                 "PublicNotification": {
                   "Id": "081b2735-120d-4505-82b4-f3a7548b4bc5",
-                  "DisplayName": "Взнос мой"
+                  "DisplayName": "Взнос события петрова4"
                 },
                 "IsAssignee": false,
                 "HasAssignee": false,
@@ -239,7 +243,7 @@
                 "Id": "ceb091c6-18c3-44cf-85b0-f9b12f53b506",
                 "PublicNotification": {
                   "Id": "ceefebb9-9a54-49ce-ad2e-1a2a12fe1ba5",
-                  "DisplayName": "Взнос11"
+                  "DisplayName": "Взнос события петрова2"
                 },
                 "IsAssignee": false,
                 "HasAssignee": false,
@@ -276,7 +280,7 @@
                 "Id": "a9f7a0a1-4958-49ea-9d03-da4fa60628f5",
                 "PublicNotification": {
                   "Id": "5754377b-e0cd-4e0f-b67a-667d8356ad4f",
-                  "DisplayName": "Отдельный взнос"
+                  "DisplayName": "Взнос события петрова3"
                 },
                 "IsAssignee": false,
                 "HasAssignee": false,
@@ -814,6 +818,10 @@
     {
       "Name": "DisplaySelector",
       "Body": "return args.value.PublicNotification.DisplayName + '(' + args.index + ')';"
+    },
+    {
+      "Name": "ValueSelector",
+      "Body": "return 5 - args.value.PublicNotification.DisplayName.replace(/[^\\d]/g, '');"
     }
   ],
   "Text": "Ресурс",
