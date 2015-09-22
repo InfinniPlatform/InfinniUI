@@ -170,10 +170,10 @@ _.extend(ContainerBuilder.prototype, {
 
     buildItemFormat: function(itemsBinding, itemFormatMetadata, params){
 
+        var format = this.buildDisplayFormat(itemFormatMetadata, params);
         return function(context, args){
             var index = args.index;
             var label = new Label(this);
-            var format = new ObjectFormat();
 
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
@@ -184,7 +184,6 @@ _.extend(ContainerBuilder.prototype, {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
 
-            format.setFormat(itemFormatMetadata);
             label.setDisplayFormat(format);
 
             binding.bindSource(source, sourceProperty);
@@ -265,5 +264,5 @@ _.extend(ContainerBuilder.prototype, {
             return builder.build(itemsMetadata[index], argumentForBuilder);
         };
     }
-});
+}, displayFormatBuilderMixin);
 

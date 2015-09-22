@@ -1,12 +1,17 @@
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ * @mixes displayFormatBuilderMixin
+ * @mixes editorBaseBuilderMixin
+ */
 function LabelBuilder() {
     _.superClass(TextEditorBaseBuilder, this);
     this.initialize_editorBaseBuilder();
 }
 
 _.inherit(LabelBuilder, ElementBuilder);
-
 _.extend(LabelBuilder.prototype, {
-
     applyMetadata: function(params){
         var element = params.element;
         ElementBuilder.prototype.applyMetadata.call(this, params);
@@ -25,22 +30,8 @@ _.extend(LabelBuilder.prototype, {
 
     initDisplayFormat: function (params) {
         var metadata = params.metadata;
-        var element = params.element;
-        var displayFormat;
-
-        if (metadata.DisplayFormat) {
-            var format = params.builder.buildType('ObjectFormat', {});
-            displayFormat = function (context, args) {
-                args = args || {};
-                return format.format(args.value);
-            }
-        } else {
-            displayFormat = function (context, args) {
-                args = args || {};
-                return args.value;
-            }
-        }
-        element.setDisplayFormat(displayFormat);
+        var format = this.buildDisplayFormat(metadata.DisplayFormat, params);
+        params.element.setDisplayFormat(format);
     },
 
     initScriptsHandlers: function(params){
@@ -69,7 +60,8 @@ _.extend(LabelBuilder.prototype, {
     }
 
 },
-    editorBaseBuilderMixin
+    editorBaseBuilderMixin,
+    displayFormatBuilderMixin
     //builderHorizontalTextAlignmentPropertyMixin,
     //builderBackgroundMixin,
     //builderForegroundMixin,

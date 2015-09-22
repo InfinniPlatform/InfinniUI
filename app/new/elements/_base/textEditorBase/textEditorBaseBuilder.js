@@ -3,6 +3,7 @@
  * @constructor
  * @augments ElementBuilder
  * @mixes editorBaseBuilderMixin
+ * @mixes displayFormatBuilderMixin
  *
  */
 function TextEditorBaseBuilder() {
@@ -30,17 +31,13 @@ _.extend(TextEditorBaseBuilder.prototype, {
     },
 
     initDisplayFormat: function (params) {
+
+
         var
             metadata = params.metadata,
-            builder = params.builder,
-            displayFormat;
+            format = this.buildDisplayFormat(metadata.DisplayFormat, params);
 
-        if (metadata.DisplayFormat) {
-            displayFormat = builder.buildType('ObjectFormat', {
-                Format: metadata.DisplayFormat
-            }, {parentView: params.parentView});
-        }
-        params.element.setDisplayFormat(displayFormat);
+        params.element.setDisplayFormat(format);
         return this;
     },
 
@@ -56,7 +53,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
         params.element.setEditMask(editMask);
         return this;
     }
-}, editorBaseBuilderMixin);
+}, editorBaseBuilderMixin, displayFormatBuilderMixin);
 
 
 

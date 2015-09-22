@@ -91,7 +91,7 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
         var format = model.get('displayFormat');
 
         if (typeof value !== 'undefined' && value !== null) {
-            text = typeof format === 'function' ? format(value) : value;
+            text = typeof format === 'function' ? format(null, {value: value}) : value;
         }else{
             text = this.model.get('text');
             if (typeof text === 'undefined' || text == null) {

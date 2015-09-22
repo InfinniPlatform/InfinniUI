@@ -83,11 +83,7 @@ describe('DatePicker', function () {
 
                     "LabelText": "Datepicker's label",
                     "LabelFloating": true,
-                    "DisplayFormat": {
-                        "DateTimeFormat": {
-                            "Format": "d"
-                        }
-                    },
+                    "DisplayFormat": "{:d}",
                     "EditMask": {
                         "DateTimeEditMask": {
                             "Mask": "d"
@@ -115,7 +111,7 @@ describe('DatePicker', function () {
 
             assert.equal(element.getLabelText(), "Datepicker's label", 'LabelText');
             assert.equal(element.getLabelFloating(), true, 'LabelFloating');
-            assert.instanceOf(element.getDisplayFormat(), ObjectFormat, 'DateTimeFormat');
+            assert.isFunction(element.getDisplayFormat(), 'DateTimeFormat');
             assert.instanceOf(element.getEditMask(), DateTimeEditMask, 'EditMask');
 
             assert.equal(element.getHintText(), "Hint", 'HintText');
