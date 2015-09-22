@@ -99,7 +99,9 @@ _.extend(ListBoxBuilder.prototype, {
         var groupTemplate = {};
         var metadata = params.metadata,
             builder = params.builder,
+            parent = params.parent,
             element = params.element;
+
 
         if (!metadata.GroupTemplate) {
             return null;
@@ -128,6 +130,16 @@ _.extend(ListBoxBuilder.prototype, {
                 var itemTemplateElement = builder.build(params.parent, metadata.ItemTemplate, collectionProperty, {parentElement: element});
                 return itemTemplateElement.render();
             };
+        } else if (metadata.DisplaySelector) {
+
+            var itemTemplate = function (value, index) {
+                var message = {
+                    value: value,
+                    index: index
+                };
+                var executor = new ScriptExecutor(parent);
+                return executor.executeScript(metadata.DisplaySelector.Name, message);
+            }
         } else {
             var format;
             if (metadata.ItemFormat) {

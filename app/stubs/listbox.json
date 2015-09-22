@@ -51,7 +51,10 @@
                       "GroupTemplate": {
                         "BaseListGroup": {
                           "ValueProperty": "PublicNotification.DisplayName",
-                          "DisplayProperty": "PublicNotification.DisplayName",
+                          "~DisplayProperty": "PublicNotification.DisplayName",
+                          "DisplaySelector": {
+                            "Name": "DisplaySelector"
+                          },
                           "Collapsible": true,
                           "~ItemTemplate": {
                             "Label": {
@@ -807,6 +810,10 @@
     {
       "Name": "OnSelectedItemChanged1",
       "Body": "console.log('OnSelectedItemChanged1', arguments);"
+    },
+    {
+      "Name": "DisplaySelector",
+      "Body": "return args.value.PublicNotification.DisplayName + '(' + args.index + ')';"
     }
   ],
   "Text": "Ресурс",
