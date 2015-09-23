@@ -22,7 +22,9 @@ window.messageTypes = {
     onKeyDown: {name: 'onKeyDown'},
 
     onCreateLayoutPanel: {name: 'onCreateLayoutPanel'},
-    onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'}
+    onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
+    onDeleteItem: {name: 'onDeleteItem'},
+    onSaveItem: {name: 'onSaveItem'}
 
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 

@@ -316,16 +316,16 @@
     };
 
     this.saveItem = function (item, onSuccess/*, onError*/) {
-        var invokeCallback = function (callback) {
+        var self = this;
+        var invokeCallback = function (callback, data) {
             if (typeof callback === 'function') {
                 var args = Array.prototype.slice.call(arguments, 1);
                 callback.apply(undefined, args);
             }
+            self.trigger('OnSaveItem', data);
         };
 
         var idProperty = that.getIdProperty() || "Id";
-
-        var self = this;
 
         var attemptSave = function (warnings) {
             dataProvider.replaceItem(item, warnings, function (data) {
@@ -357,6 +357,7 @@
             if ((data.IsValid || data.IsValid == undefined) ) {
                 removeById(item);
                 currentStrategy.onItemDeleted(item);
+                self.trigger('OnDeleteItem', item);
             }else{
                 var validation = data.ValidationMessage;
                 self.showErrors(validation.ValidationErrors);
@@ -640,7 +641,10 @@
     };
 
 
+    _.extend(this, Backbone.Events);
 }
+
+
 
 function isMainDataSource(ds) {
     return ds.getName() == 'MainDataSource';

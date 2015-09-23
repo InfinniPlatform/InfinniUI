@@ -156,6 +156,8 @@ function View() {
         this.context.ParentView = this;
 
         var that = this;
+        var exchange = messageBus.getExchange('global');
+
         //добавляем операции глобального контекста
         this.context.Global = {
 
@@ -181,6 +183,14 @@ function View() {
                 var action = builder.build(that, executeActionMetadata);
 
                 action.execute(resultCallback);
+            },
+
+            onDeleteItem: function (callback) {
+                exchange.subscribe(messageTypes.onDeleteItem, callback);
+            },
+
+            onSaveItem: function (callback) {
+                exchange.subscribe(messageTypes.onSaveItem, callback);
             },
 
             session: new AuthenticationProvider(InfinniUI.config.serverUrl),
