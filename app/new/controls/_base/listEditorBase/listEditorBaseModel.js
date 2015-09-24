@@ -4,30 +4,12 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         multiSelect: false
     }, ContainerModel.prototype.defaults),
 
-    getValueFromItem: function (item) {
-        var
-            valueSelector = this.get('valueSelector'),
-            value;
-
-        value = valueSelector(undefined, {value: item});
-        return value;
-    },
-
     initialize: function () {
         var that = this;
         ContainerModel.prototype.initialize.apply(this, arguments);
         this.initialize_editorBaseModel();
 
-        this.on('change:selectedItem', function (model, value) {
-            this.set('value', this.getValueFromItem(value));
-            //var message = {
-            //    value: val
-            //};
-            //console.log('onValueChanging', message.value);
-            //this.trigger('onValueChanging', message);
-        }, this);
-
-        this.on('toggleValue', this.onToggleValue, this);
+        this.bindSelectedItemsWithValue();
 
         this.get('items').onChange(function(){
             that.clearItemsStringifyCache();
@@ -35,7 +17,9 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
     },
 
     onSelectedItemChanged: function (handler) {
-        this.on('onValueChanging', handler);
+        this.on('change:selectedItem', function(source, newSelectedItem){
+            handler({value: newSelectedItem});
+        });
     },
 
     onToggleValue: function (val) {
@@ -87,6 +71,26 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         return result;
     },
 
+    bindSelectedItemsWithValue: function(){
+        this.on('change:selectedItem', function (model, newSelectedItem) {
+            var value = this.get('value'),
+                newItemValue = this.valueByItem(newSelectedItem);
+
+            if(!this.get('multiSelect') && !this.isStringifyEqualValues(newItemValue, value)){
+                this.set('value', newItemValue);
+            }
+        }, this);
+
+        this.on('change:value', function (model, newValue) {
+            var selectedItem = this.get('selectedItem'),
+                newSelectedItem = this.itemByValue(newValue);
+
+            if(!this.get('multiSelect') && selectedItem != newSelectedItem){
+                this.set('selectedItem', newSelectedItem);
+            }
+        }, this);
+    },
+
     valueByItem: function(item){
         var valueSelector = this.get('valueSelector');
         if(!valueSelector){
@@ -125,6 +129,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         }
     },
 
+    itemIndexByItem: function(item){
+        var value = this.valueByItem(item);
+        return this.itemIndexByValue(value);
+    },
+
     updateItemsStringifyCache: function(){
         var items = this.get('items'),
             that = this,
@@ -144,6 +153,10 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
 
     clearItemsStringifyCache: function(){
         this.itemsStringifyCache = undefined;
+    },
+
+    isStringifyEqualValues: function(v1, v2){
+        return JSON.stringify(v1) == JSON.stringify(v2);
     }
 
 }, editorBaseModelMixin));

@@ -8,6 +8,10 @@ var ListBoxView = ControlView.extend({
 
     class: 'pl-listbox',
 
+    events: {
+        'change .pl-listbox-input': 'onChangeHandler'
+    },
+
     UI: {
         items: '.pl-listbox-i',
         checkingInputs: '.pl-listbox-input input'
@@ -25,6 +29,7 @@ var ListBoxView = ControlView.extend({
 
         this.initGrouping();
         this.initValue();
+        this.initSelectedItem();
     },
 
     initGrouping: function(){
@@ -35,6 +40,11 @@ var ListBoxView = ControlView.extend({
     initValue: function(){
         this.updateValue();
         this.listenTo(this.model, 'change:value', this.updateValue);
+    },
+
+    initSelectedItem: function(){
+        this.updateSelectedItem();
+        this.listenTo(this.model, 'change:selectedItem', this.updateSelectedItem);
     },
 
     updateGrouping: function(){
@@ -61,6 +71,7 @@ var ListBoxView = ControlView.extend({
         this.bindUIElements();
 
         this.updateValue(true);
+        this.updateSelectedItem(true);
 
         this.postrenderingActions();
         return this;
@@ -84,6 +95,28 @@ var ListBoxView = ControlView.extend({
 
     getGroupItemTemplate: function(){
         return this.model.get('groupItemTemplate');
+    },
+
+    onChangeHandler: function(){
+        var $checked = this.ui.checkingInputs.filter(':checked').parent().parent(),
+            valueForModel = null,
+            val;
+
+        if(this.isMultiselect()){
+            valueForModel = [];
+
+            $checked.each(function(i, el){
+                val = $(el).data('pl-data-item');
+                valueForModel.push(val);
+            });
+
+        }else{
+            if($checked.length > 0){
+                valueForModel = $checked.data('pl-data-item');
+            }
+        }
+
+        this.model.set('value', valueForModel);
     },
 
     updateValue: function(ignoreWasRendered){
@@ -110,5 +143,18 @@ var ListBoxView = ControlView.extend({
                 }
             }
         }
+    },
+
+    updateSelectedItem: function(ignoreWasRendered){
+        if(!this.wasRendered && ignoreWasRendered != true){
+            return;
+        }
+
+        this.ui.items.removeClass('pl-listbox-i-selected');
+
+        var selectedItem = this.model.get('selectedItem'),
+            indexOfItem = this.model.itemIndexByItem(selectedItem);
+
+        this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
     }
 });

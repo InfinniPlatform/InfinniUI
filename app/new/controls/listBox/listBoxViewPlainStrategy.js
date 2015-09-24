@@ -24,31 +24,14 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
         var $listbox = this.listbox.$el,
             itemTemplate = this.listbox.getItemTemplate(),
             items = preparedItems.items,
-            itemEl;
+            itemEl, $el;
 
         $listbox.find('.pl-listbox-body').each(function(i, el){
+            $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
-            $(el).append(itemEl.render());
+            $el.append(itemEl.render());
+
+            $el.parent().data('pl-data-item', items[i]);
         });
-    },
-
-    updateValue: function(ignoreWasRendered){
-        var listbox = this.listbox;
-
-
-        if(!listbox.wasRendered && ignoreWasRendered != true){
-            return;
-        }
-
-        var value = listbox.model.get('value'),
-            indexOfChoosingItem = listbox.model.itemIndexByValue(value);
-
-        listbox.ui.items.removeClass('pl-listbox-i-chosen');
-        listbox.ui.checkingInputs.prop('checked', false);
-
-        if(indexOfChoosingItem != -1){
-            listbox.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
-            listbox.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
-        }
     }
 });

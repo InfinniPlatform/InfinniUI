@@ -11,13 +11,13 @@ _.extend(ListEditorBaseBuilder.prototype, {
 
     applyMetadata: function (params) {
         var itemsBinding;
-
         itemsBinding = ContainerBuilder.prototype.applyMetadata.call(this, params);
-        this.applyMetadata_editorBaseBuilder(params);
 
         this.initSelecting(params, itemsBinding);
 
         this.initValueFeatures(params);
+
+        this.applyMetadata_editorBaseBuilder(params);
     },
 
 
@@ -25,15 +25,30 @@ _.extend(ListEditorBaseBuilder.prototype, {
         var metadata = params.metadata;
         var element = params.element;
         var dataSource = itemsBinding.getSource();
+        var sourceProperty = itemsBinding.getSourceProperty();
+        var isBindingOnWholeDS = sourceProperty == '';
+        var that = this;
 
-        dataSource.setSelectedItem(null);
+        if(isBindingOnWholeDS){
+            dataSource.setSelectedItem(null);
 
-        dataSource.onSelectedItemChanged(function(context, args){
-            element.setSelectedItem(args.value);
-        });
+            dataSource.onSelectedItemChanged(function(context, args){
+                var currentSelectedItem = element.getSelectedItem(),
+                    newSelectedItem = args.value;
+
+                if(newSelectedItem != currentSelectedItem){
+                    element.setSelectedItem(newSelectedItem);
+                }
+            });
+        }
 
         element.onSelectedItemChanged(function(context, args){
-            dataSource.setSelectedItem(args.value);
+            var currentSelectedItem = dataSource.getSelectedItem(),
+                newSelectedItem = args.value;
+
+            if(isBindingOnWholeDS && newSelectedItem != currentSelectedItem){
+                dataSource.setSelectedItem(newSelectedItem);
+            }
 
             if (metadata.OnSelectedItemChanged) {
                 new ScriptExecutor(params.parent).executeScript(metadata.OnSelectedItemChanged.Name, args);
