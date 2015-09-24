@@ -1,25 +1,37 @@
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ * @mixes displayFormatBuilderMixin
+ * @mixes editorBaseBuilderMixin
+ */
 function LabelBuilder() {
     _.superClass(TextEditorBaseBuilder, this);
     this.initialize_editorBaseBuilder();
 }
 
 _.inherit(LabelBuilder, ElementBuilder);
-
 _.extend(LabelBuilder.prototype, {
-
     applyMetadata: function(params){
+        var element = params.element;
         ElementBuilder.prototype.applyMetadata.call(this, params);
         this.applyMetadata_editorBaseBuilder(params);
 
-        params.element.setLineCount(params.metadata.LineCount);
-        params.element.setTextWrapping(params.metadata.TextWrapping);
+        element.setLineCount(params.metadata.LineCount);
+        element.setTextWrapping(params.metadata.TextWrapping);
+        this.initDisplayFormat(params);
         this.initScriptsHandlers(params);
-        this.initFormatProperty(params);
-        this.initHorizontalTextAlignmentProperty(params);
-        this.initForeground(params);
-        this.initBackground(params);
-        this.initTextStyle(params);
+        //this.initHorizontalTextAlignmentProperty(params);
+        //this.initForeground(params);
+        //this.initBackground(params);
+        //this.initTextStyle(params);
 
+    },
+
+    initDisplayFormat: function (params) {
+        var metadata = params.metadata;
+        var format = this.buildDisplayFormat(metadata.DisplayFormat, params);
+        params.element.setDisplayFormat(format);
     },
 
     initScriptsHandlers: function(params){
@@ -49,9 +61,9 @@ _.extend(LabelBuilder.prototype, {
 
 },
     editorBaseBuilderMixin,
-    builderFormatPropertyMixin,
-    builderHorizontalTextAlignmentPropertyMixin,
-    builderBackgroundMixin,
-    builderForegroundMixin,
-    builderTextStyleMixin
+    displayFormatBuilderMixin
+    //builderHorizontalTextAlignmentPropertyMixin,
+    //builderBackgroundMixin,
+    //builderForegroundMixin,
+    //builderTextStyleMixin
 );

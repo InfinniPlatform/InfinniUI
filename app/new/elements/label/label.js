@@ -27,14 +27,22 @@ _.extend(Label.prototype, {
 
         getTextWrapping: function () {
             return this.control.get('textWrapping');
+        },
+
+        getDisplayFormat: function () {
+            return this.control.get('displayFormat');
+        },
+
+        setDisplayFormat: function (value) {
+            return this.control.set('displayFormat', value);
         }
 
     },
-    editorBaseMixin,
-    formatPropertyMixin,
-    elementHorizontalTextAlignmentMixin,
+    editorBaseMixin
+    //formatPropertyMixin,
+    //elementHorizontalTextAlignmentMixin,
     //@TODO TextTrimming
-    elementBackgroundMixin,
-    elementForegroundMixin,
-    elementTextStyleMixin
+    //elementBackgroundMixin,
+    //elementForegroundMixin,
+    //elementTextStyleMixin
 );

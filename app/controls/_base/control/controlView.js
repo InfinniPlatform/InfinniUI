@@ -51,7 +51,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     initText: function () {
         this.listenTo(this.model, 'change:text', this.updateText);
-        this.updateText();
+        //this.updateText();
     },
 
     initValidationState: function(){

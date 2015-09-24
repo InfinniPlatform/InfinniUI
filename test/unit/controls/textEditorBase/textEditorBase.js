@@ -1,7 +1,7 @@
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
-            Text: 'Пациенты',
+            Text: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -24,11 +24,7 @@ describe('TextEditorBase (Control)', function () {
                             "Property": "$.Display"
                         }
                     },
-                    "DisplayFormat": {
-                        "NumberFormat": {
-                            "Format": "n2"
-                        }
-                    },
+                    "DisplayFormat": "{:n2}",
 
                     "EditMask": {
                         "NumberEditMask": {
@@ -68,7 +64,7 @@ describe('TextEditorBase (Control)', function () {
 
                 assert.equal($input.val(), '2,22', 'binding and formatting is right');
 
-                $input.focus(); // для обновления значения в маске
+                $input.focus(); // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
                 assert.equal($inputMask.val(), '2,222', 'mask is right');
 
                 $layout.detach();
