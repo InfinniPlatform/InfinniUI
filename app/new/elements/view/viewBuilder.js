@@ -55,7 +55,7 @@ _.extend(ViewBuilder.prototype, {
             var dataSources = builder.buildMany(metadata.DataSources, {parentView: element});
 
             element.getDataSources()
-                .addAll(dataSources);
+                .set(dataSources);
         }
 
         if(metadata.OnOpening){

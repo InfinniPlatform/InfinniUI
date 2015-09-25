@@ -76,7 +76,7 @@ _.extend(ContainerBuilder.prototype, {
         var itemTemplate = this.buildItemTemplateForUniqueItem(itemsMetadata, params);
 
         element.setItemTemplate(itemTemplate);
-        element.getItems().addAll(fakeItems);
+        element.getItems().set(fakeItems);
     },
 
     initGroup: function(params, itemsBinding){
