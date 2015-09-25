@@ -72,7 +72,7 @@ _.extend(ContainerBuilder.prototype, {
     initNotTemplatingItems: function(params){
         var itemsMetadata = params.metadata.Items;
         var element = params.element;
-        var fakeItems = new Array(itemsMetadata.length);
+        var fakeItems = (new Array(itemsMetadata.length + 1)).join(' ').split('');
         var itemTemplate = this.buildItemTemplateForUniqueItem(itemsMetadata, params);
 
         element.setItemTemplate(itemTemplate);
