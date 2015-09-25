@@ -22,7 +22,7 @@ function Collection (items, idProperty, comparator) {
      * @type {string|null}
      * @protected
      */
-    this._idProperty = typeof idProperty === 'undefined' ? null : idProperty;
+    this._idProperty = idProperty;
 
     /**
      * @type {function}
@@ -38,6 +38,12 @@ function Collection (items, idProperty, comparator) {
         }
         return 0;
     }
+
+    /**
+     *
+     * @type {CollectionEventManager}
+     */
+    this.events = new CollectionEventManager();
 }
 
 Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
@@ -127,9 +133,14 @@ Collection.prototype.push = function (value) {
     var item = this.createCollectionItem(value, items.length);
 
     items.push(item);
+
+    this.events.onAdd([value]);
     return true;
 };
 
+/**
+ * @description Добавляет элемент в конец коллекции. @see {@link Collection.push}
+ */
 Collection.prototype.add = Collection.prototype.push;
 
 /**
@@ -143,13 +154,17 @@ Collection.prototype.addAll = function (values) {
     }
 
     var items = this._items;
+    var changed = values.length > 0;
 
     values.forEach(function (value) {
         var item = this.createCollectionItem(value, items.length);
         items.push(item);
     }, this);
 
-    return values.length > 0;
+    if (changed) {
+        this.events.onAdd(values);
+    }
+    return changed;
 };
 
 /**
@@ -162,6 +177,7 @@ Collection.prototype.insert = function (index, newItem) {
     var item = this.createCollectionItem(newItem, index);
     this._items.splice(index, 0, item);
 
+    this.events.onAdd([newItem], index);
     return true;
 };
 
@@ -177,13 +193,18 @@ Collection.prototype.insertAll = function (index, newItems) {
     }
 
     var items = this._items;
+    var changed = newItems.length > 0;
+
     newItems.forEach(function(value, i) {
         var start = index + i;
         var item = this.createCollectionItem(value, start);
         items.splice(start, 0, item);
     }, this);
 
-    return newItems.length > 0;
+    if (changed) {
+        this.events.onAdd(newItems, index);
+    }
+    return changed;
 };
 
 /**
@@ -198,15 +219,22 @@ Collection.prototype.reset = function (newItems) {
         return false;
     }
 
-    changed = this._items.length > 0;
-    this._items.length = 0;
+    changed = this._items.length !== newItems.length;
 
     items = newItems.map(function (value, index) {
-        changed = true;
+        if (!changed) {
+            changed = !this.isEqual(value, this.getCollectionItemValue(index));
+        }
         return this.createCollectionItem(value, index);
+
     }, this);
 
+    this._items.length = 0;
+
     Array.prototype.push.apply(this._items, items);
+    if (changed) {
+        this.events.onReset();
+    }
     return changed;
 };
 
@@ -223,12 +251,25 @@ Collection.prototype.set = function (newItems) {
         return false;
     }
 
+    var changed = items.length !== newItems.length;
+    var _newItems = newItems.slice();
     var matched, i = 0;
-    var itemValue, newValue = null;
+    var itemValue, newValue = null, newValueIndex;
+
+    if (!changed) {
+        for (var j = 0; j < items.length; j = j + 1) {
+            if (!this.isEqual(this.getCollectionItemValue(j), _newItems[j])) {
+                changed = true;
+                break;
+            }
+        }
+    }
+
     while(i < items.length) {
         itemValue = this.getCollectionItemValue(i);
-        matched = newItems.some(function(value, newItem) {
+        matched = _newItems.some(function(value, newItem, newItemIndex) {
             newValue = newItem;
+            newValueIndex = newItemIndex;
             return this.isEqual(newItem, value);
         }.bind(this, itemValue));
 
@@ -240,8 +281,19 @@ Collection.prototype.set = function (newItems) {
 
         //Обновляем значение совпадающего элемента
         this.updateCollectionItem(items[i], newValue);
+        //Удаляем использованный элемент из первоначального списка
+        _newItems.splice(newValueIndex, 1);
         i = i + 1;
     }
+
+    _newItems.forEach(function (newItem) {
+        items.push(this.createCollectionItem(newItem, items.length));
+    }, this);
+
+    if (changed) {
+        this.events.onReset();
+    }
+    return changed;
 };
 
 /**
@@ -262,6 +314,9 @@ Collection.prototype.replace = function (oldItem, newItem) {
         }
     }
 
+    if (changed) {
+        this.events.onReplace([oldItem], [newItem]);
+    }
     return changed;
 };
 
@@ -276,6 +331,7 @@ Collection.prototype.pop = function () {
 
     var itemValue = this.getCollectionItemValue(this.length - 1);
     this._items.pop();
+    this.events.onRemove([itemValue], this._items.length);
     return itemValue;
 };
 
@@ -286,9 +342,12 @@ Collection.prototype.pop = function () {
  */
 Collection.prototype.remove = function (item) {
     var itemValue;
+    var itemIndex;
+
     var changed = true;
     for (var i = 0; i < this._items.length; i = i + 1) {
         itemValue = this.getCollectionItemValue(i);
+        itemIndex = i;
         if (this.isEqual(item, itemValue)) {
             this._items.splice(i, 1);
             changed = true;
@@ -296,6 +355,9 @@ Collection.prototype.remove = function (item) {
         }
     }
 
+    if (changed) {
+        this.events.onRemove([item], itemIndex);
+    }
     return changed;
 };
 
@@ -310,9 +372,12 @@ Collection.prototype.removeById = function (id) {
     }
 
     var itemValue;
+    var itemIndex;
+
     var changed = true;
     for (var i = 0; i < this._items.length; i = i + 1) {
         itemValue = this.getCollectionItemValue(i);
+        itemIndex = i;
         if (this.getValueId(itemValue) === id) {
             this._items.splice(i, 1);
             changed = true;
@@ -320,6 +385,9 @@ Collection.prototype.removeById = function (id) {
         }
     }
 
+    if (changed) {
+        this.events.onRemove([itemValue], itemIndex);
+    }
     return changed;
 };
 
@@ -333,7 +401,10 @@ Collection.prototype.removeAt = function (index) {
         return false;
     }
 
+    var item = this.getCollectionItemValue(index);
     this._items.splice(index, 1);
+
+    this.events.onRemove([item], index);
     return true;
 };
 
@@ -350,6 +421,7 @@ Collection.prototype.removeAll = function (items) {
 
     var collectionItems = this._items;
     var deletedItems = [];
+    var changed;
 
     items.forEach(function (value) {
 
@@ -363,7 +435,16 @@ Collection.prototype.removeAll = function (items) {
         });
     }, this);
 
-    return deletedItems.length > 0;
+    changed = deletedItems.length > 0;
+
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+        //@TODO Добавить параметр oldStartingIndex для события
+        this.events.onRemove(values);
+    }
+    return changed;
 };
 
 
@@ -375,6 +456,8 @@ Collection.prototype.removeAll = function (items) {
  */
 Collection.prototype.removeRange = function (fromIndex, count) {
     var items = this._items;
+    var changed;
+
     if (fromIndex >= items.length) {
         return false;
     }
@@ -383,8 +466,17 @@ Collection.prototype.removeRange = function (fromIndex, count) {
         count = items.length - fromIndex;
     }
 
-    items.splice(fromIndex, count);
-    return count > 1;
+    var deletedItems = items.splice(fromIndex, count);
+    changed = deletedItems.length > 0;
+
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
+        this.events.onRemove(values, fromIndex);
+    }
+    return changed;
 };
 
 
@@ -400,6 +492,7 @@ Collection.prototype.removeEvery = function (predicate, thisArg) {
     }
 
     var items = this._items;
+    var changed;
     var deletedItems = items.filter(function (item, index) {
         var itemValue = this.getItemValue(item);
         return predicate.call(thisArg, itemValue, index, this);
@@ -410,7 +503,15 @@ Collection.prototype.removeEvery = function (predicate, thisArg) {
         items.splice(index, 1);
     });
 
-    return deletedItems.length > 0;
+    changed = deletedItems.length > 0;
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
+        this.events.onRemove(values);
+    }
+    return changed;
 };
 
 
@@ -421,9 +522,17 @@ Collection.prototype.removeEvery = function (predicate, thisArg) {
 Collection.prototype.clear = function () {
     var
         items = this._items,
-        changed = items.length > 0;
+        changed = items.length > 0,
+        values = items.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
 
     items.length = 0;
+
+    if (changed) {
+        this.events.onRemove(values, 0);
+    }
 
     return changed;
 };
@@ -494,6 +603,10 @@ Collection.prototype.indexOf = function (item, fromIndex) {
     var
         items = this._items,
         index = -1;
+
+    if (typeof fromIndex === 'undefined') {
+        fromIndex = 0;
+    }
 
     for (var i = fromIndex;  i < items.length; i = i + 1) {
         var itemValue = this.getItemValue(items[i]);
@@ -666,8 +779,140 @@ Collection.prototype.filter = function (predicate, thisArg) {
         }, this);
 };
 
+/**
+ * @description Возвращает указанный диапазон элементов коллекции
+ * @param {number} fromIndex
+ * @param {number} [count]
+ * @returns {Array}
+ */
+Collection.prototype.take = function (fromIndex, count) {
+    var items = this._items;
+
+    if (typeof count == 'undefined') {
+        count = items.length;
+    }
+
+    return items
+        .slice(fromIndex, fromIndex + count)
+        .map(function(item) {
+            return this.getItemValue(item);
+        }, this);
+};
+
+/**
+ * @description Возвращает массив всех элементов коллекции
+ * @returns {Array} Массив, содержащий все элементы коллекции
+ */
+Collection.prototype.toArray = function () {
+    return this._items.map(function (item) {
+        return this.getItemValue(item);
+    }, this);
+};
+
+/**
+ * @description Перемещает элемент коллекции в позицию с указанным индексом
+ * @param {number} oldIndex
+ * @param {number} newIndex
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.move = function (oldIndex, newIndex) {
+    var items = this._items,
+        item;
+
+    if (oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex) {
+        return false;
+    }
+
+    item = items.splice(oldIndex, 1).pop();
+
+    if (oldIndex > newIndex) {
+        items.splice(newIndex, 0, item);
+    } else {
+        items.splice(newIndex - 1, 0, item);
+    }
+
+    var changed = items[oldIndex] !== item;
+
+    if (changed) {
+        var value = this.getItemValue(item);
+        this.events.onMove([value], [value], oldIndex, newIndex);
+    }
+    return changed;
+};
+
+/**
+ * @description Сортирует список элементов коллекции
+ * @param {function} comparator
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.sort = function (comparator) {
+    if (typeof comparator !== 'function') {
+        comparator = this._comparator;
+    }
+
+    var
+        items = this._items,
+        collection = this,
+        _items= items.slice(),
+        changed = false;
+
+    items.sort(function(item1, item2) {
+        return comparator(collection.getItemValue(item1), collection.getItemValue(item2));
+    });
+
+    for (var i = 0; i < items.length; i = i + 1) {
+        if (items[i] !== _items[i]) {
+            changed = true;
+            break;
+        }
+    }
+
+    if (changed) {
+        this.events.onReset();
+    }
+    return changed;
+};
+
+/**
+ * @description Создает копию коллекции элементов
+ * @returns {Collection} Новый экземпляр коллекции элементов, который является копией исходной коллекции
+ */
+Collection.prototype.clone = function () {
+    return new this.constructor(this.toArray(), this._idProperty, this.comparator);
+};
 
 
+Collection.prototype.onAdd = function (handler) {
+    this.events.on('add', handler);
+};
+
+Collection.prototype.onReplace = function (handler) {
+    this.events.on('replace', handler);
+};
+
+Collection.prototype.onRemove = function (handler) {
+    this.events.on('remove', handler);
+};
+
+Collection.prototype.onMove = function (handler) {
+    this.events.on('move', handler);
+};
+
+Collection.prototype.onReset = function (handler) {
+    this.events.on('reset', handler);
+};
+
+Collection.prototype.onChange = function (handler) {
+    this.events.on('change', handler);
+};
+
+Collection.prototype.toString = function () {
+    return this._items
+        .map(function (item) {
+            return JSON.stringify(this.getItemValue(item));
+        }, this)
+        .join(',');
+};
 
 /**
  * @protected
@@ -749,7 +994,6 @@ Collection.prototype.getItemValue = function (item) {
         return item.__value;
     }
 };
-
 
 /**
  * @typedef {Object} CollectionItem

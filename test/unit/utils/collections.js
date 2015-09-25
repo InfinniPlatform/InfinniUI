@@ -6,6 +6,34 @@ describe("Collection", function () {
     var objectsCollections;
     var idProperty = 'id';
 
+
+
+    function bindAllEvents(collection) {
+        var events = 'onAdd,onReplace,onRemove,onMove,onReset,onChange'.split(',');
+        var handlers = [];
+
+        events.forEach(function (event) {
+
+            collection[event](function (context, argument) {
+                handlers.push(event);
+            });
+        });
+
+        return {
+            checkEvent: function (event, count) {
+                if (typeof count === 'undefined') {
+                    count = 1;
+                }
+                return handlers.filter(function (name) {
+                    return name === event;
+                }).length === count;
+            },
+            reset: function () {
+                handlers = [];
+            }
+        }
+    }
+
     function getArray(length, value) {
         value = value || null;
 
@@ -132,24 +160,28 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
-            collection.onAdd(function (context, args) {
-                console.log(context, args);
-            });
             changed = collection.push('A');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.push('B');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.push('C');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B","C"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
 
         it("should add objects", function () {
@@ -161,21 +193,28 @@ describe("Collection", function () {
                     {id: 3, title: 'Three'}
                 ],
                 changed,
-                collection = new Collection([], idProperty);
+                collection = new Collection([], idProperty),
+                handlers = bindAllEvents(collection);
 
             changed = collection.push(objects[0]);
             assert.isTrue(changed, 'One changed');
             assert.equal(String(collection), '{"id":1,"title":"One"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.push(objects[1]);
             assert.isTrue(changed, 'Two changed');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.push(objects[2]);
             assert.isTrue(changed, 'Three changed');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
 
     });
@@ -185,21 +224,28 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
             changed = collection.add('A');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.add('B');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.add('C');
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B","C"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
 
         it("should add objects", function () {
@@ -211,21 +257,28 @@ describe("Collection", function () {
                     {id: 3, title: 'Three'}
                 ],
                 changed,
-                collection = new Collection([], idProperty);
+                collection = new Collection([], idProperty),
+                handlers = bindAllEvents(collection);
 
             changed = collection.add(objects[0]);
             assert.isTrue(changed, 'One changed');
             assert.equal(String(collection), '{"id":1,"title":"One"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.add(objects[1]);
             assert.isTrue(changed, 'Two changed');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.add(objects[2]);
             assert.isTrue(changed, 'Three changed');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
     });
 
@@ -234,32 +287,42 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
             changed = collection.addAll(['A', 'B']);
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.addAll(['C', 'D']);
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B","C","D"');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
 
         it("should add all objects", function () {
             //When
             var
                 changed,
-                collection = new Collection([], 'id');
+                collection = new Collection([], 'id'),
+                handlers = bindAllEvents(collection);
 
             changed = collection.addAll([{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed);
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
 
-
+            handlers.reset();
             changed = collection.addAll([{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed);
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"},{"id":3,"title":"Three"},{"id":4,"title":"Four"}');
+            assert.isTrue(handlers.checkEvent('onAdd'));
+            assert.isTrue(handlers.checkEvent('onChange'));
         });
     });
 
@@ -268,42 +331,56 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
             changed = collection.insert(0, 'A');
             assert.isTrue(changed, 'Changed on insert "A"');
             assert.equal(String(collection), '"A"');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insert(0, 'B');
             assert.isTrue(changed, 'Changed on insert "B"');
             assert.equal(String(collection), '"B","A"');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insert(0, 'C');
             assert.isTrue(changed, 'Changed on insert "C"');
             assert.equal(String(collection), '"C","B","A"');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should insert objects", function () {
             //When
             var
                 changed,
-                collection = new Collection([], idProperty);
+                collection = new Collection([], idProperty),
+                handlers = bindAllEvents(collection);
 
             changed = collection.insert(0, {id: 1, title: 'One'});
             assert.isTrue(changed, 'One changed');
             assert.equal(String(collection), '{"id":1,"title":"One"}');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insert(0, {id: 2, title: 'Two'});
             assert.isTrue(changed, 'Two changed');
             assert.equal(String(collection), '{"id":2,"title":"Two"},{"id":1,"title":"One"}');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insert(0, {id: 3, title: 'Three'});
             assert.isTrue(changed, 'Three changed');
             assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":2,"title":"Two"},{"id":1,"title":"One"}');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
     });
 
@@ -313,32 +390,42 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
             changed = collection.insertAll(0, ['A', 'B']);
             assert.isTrue(changed, 'Changed on insert ["A", "B"]');
             assert.equal(String(collection), '"A","B"');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insertAll(0, ['C', 'D']);
             assert.isTrue(changed, 'Changed on insert ["C", "D"');
             assert.equal(String(collection), '"C","D","A","B"');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should insert all objects", function () {
             //When
             var
                 changed,
-                collection = new Collection([], 'id');
+                collection = new Collection([], 'id'),
+                handlers = bindAllEvents(collection);
 
             changed = collection.insertAll(0, [{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed, 'Changed step 1');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.insertAll(0, [{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed, 'Changed step 2');
             assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":4,"title":"Four"},{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onAdd'), 'onAdd event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
     });
 
@@ -348,50 +435,65 @@ describe("Collection", function () {
             //When
             var
                 changed,
-                collection = new Collection();
+                collection = new Collection(),
+                handlers = bindAllEvents(collection);
 
             changed = collection.reset(['A', 'B']);
             assert.isTrue(changed, 'Changed on step 1');
             assert.equal(String(collection), '"A","B"');
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.reset(['C', 'D']);
             assert.isTrue(changed, 'Changed on step 2');
             assert.equal(String(collection), '"C","D"');
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
+            handlers.reset();
             changed = collection.reset(['C', 'D']);
             assert.isFalse(changed, 'Not changed on step 3');
             assert.equal(String(collection), '"C","D"');
+            assert.isFalse(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isFalse(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should reset objects", function () {
             //When
             var
                 changed,
-                collection = new Collection([], 'id');
+                collection = new Collection([], 'id'),
+                handlers = bindAllEvents(collection);
 
             changed = collection.reset([{id: 1, title: 'One'}, {id: 2, title: 'Two'}]);
             assert.isTrue(changed, 'Changed step 1');
             assert.equal(String(collection), '{"id":1,"title":"One"},{"id":2,"title":"Two"}');
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
-
+            handlers.reset();
             changed = collection.reset([{id: 3, title: 'Three'}, {id: 4, title: 'Four'}]);
             assert.isTrue(changed, 'Changed step 2');
             assert.equal(String(collection), '{"id":3,"title":"Three"},{"id":4,"title":"Four"}');
-
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
     });
 
     describe("set()", function () {
         it("should set items", function () {
-            var collection = new Collection(['Apple', 'Banana', 'Pineapple']);
+            var collection = new Collection(['Apple', 'Banana', 'Pineapple']),
+                handlers = bindAllEvents(collection);
 
             assert.deepEqual(collection.toArray(), ['Apple', 'Banana', 'Pineapple']);
 
             collection.set(['Apple', 'Melon']);
 
             assert.deepEqual(collection.toArray(), ['Apple', 'Melon']);
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should set objects", function () {
@@ -399,7 +501,8 @@ describe("Collection", function () {
                 {key: 1, value: 'Apple'},
                 {key: 2, value: 'Banana'},
                 {key: 3, value: 'Pineapple'}
-            ], 'key');
+            ], 'key'),
+                handlers = bindAllEvents(collection);
 
             assert.deepEqual(collection.toArray().map(function (item) {
                 return item.value;
@@ -413,6 +516,8 @@ describe("Collection", function () {
             assert.deepEqual(collection.toArray().map(function (item) {
                 return item.value;
             }), ['Apple', 'Melon']);
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
     });
@@ -421,19 +526,26 @@ describe("Collection", function () {
         it("should replace item", function () {
             //When
             var collection = new Collection(['A', 'B', 'C']);
+            var handlers = bindAllEvents(collection);
+
             var changed = collection.replace('C', 'D');
             //Then
             assert.isTrue(changed);
             assert.equal(String(collection), '"A","B","D"');
+            assert.isTrue(handlers.checkEvent('onReplace'), 'onReplace event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should replace object", function () {
             //When
             var collection = new Collection([{id: 1, title: "A"}, {id: 2, title: "B"}], 'id');
+            var handlers = bindAllEvents(collection);
             var changed = collection.replace({id: 2, title: "B"}, {id: 3, title: "C"});
 
             assert.isTrue(changed);
             assert.equal(String(collection), '{"id":1,"title":"A"},{"id":3,"title":"C"}');
+            assert.isTrue(handlers.checkEvent('onReplace'), 'onReplace event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         })
     });
 
@@ -442,14 +554,19 @@ describe("Collection", function () {
         it("should pop item", function () {
             //When
             var items = ['A', 'B', 'C'],
-                collection = new Collection(['A', 'B', 'C']);
+                collection = new Collection(['A', 'B', 'C']),
+                handlers = bindAllEvents(collection);
+
             var item2 = collection.pop(); // 'C'
             var item1 = collection.pop(); // 'B'
             var item0 = collection.pop(); // 'A
+
             //Then
             assert.equal(item2, items[2]);
             assert.equal(item1, items[1]);
             assert.equal(item0, items[0]);
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
         it("should pop object", function () {
@@ -474,6 +591,7 @@ describe("Collection", function () {
         it("should remove item", function () {
             var
                 collection = new Collection(['A', 'B', 'C']),
+                handlers = bindAllEvents(collection),
                 change;
 
             change = collection.remove('B'); // [ 'A', 'C' ]
@@ -487,6 +605,9 @@ describe("Collection", function () {
             change = collection.remove('C'); // [ ]
             assert.equal(collection.length, 0);
             assert.isTrue(change);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
         it("should remove object", function () {
@@ -494,7 +615,8 @@ describe("Collection", function () {
                 {id: 1, title: "One"},
                 {id: 2, title: "Two"},
                 {id: 3, title: "Three"}
-            ], 'id'), change;
+            ], 'id'), change,
+                handlers = bindAllEvents(collection);
 
             change = collection.remove({id: 2, title: "Two"});
             assert.isTrue(change);
@@ -508,6 +630,8 @@ describe("Collection", function () {
             assert.isTrue(change);
             assert.equal(collection.length, 0);
 
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
     });
@@ -519,7 +643,9 @@ describe("Collection", function () {
                 {key: 1, value: 'A'},
                 {key: 2, value: 'B'},
                 {key: 3, value: 'C'}
-            ], 'key'), changed;
+            ], 'key'),
+                handlers = bindAllEvents(collection),
+                changed;
 
             changed = collection.removeById(2);
             assert.equal(String(collection), '{"key":1,"value":"A"},{"key":3,"value":"C"}');
@@ -532,6 +658,9 @@ describe("Collection", function () {
             changed = collection.removeById(3);
             assert.equal(collection.length, 0);
             assert.isTrue(changed, 'deleted 3');
+
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
     });
@@ -539,7 +668,8 @@ describe("Collection", function () {
     describe("removeAt()", function () {
 
         it("should remove item by index", function () {
-            var collection = new Collection(['A', 'B', 'C']);
+            var collection = new Collection(['A', 'B', 'C']),
+                handlers = bindAllEvents(collection);
 
             assert.isTrue(collection.removeAt(1));
             assert.deepEqual(collection.toArray(), ['A', 'C']);
@@ -549,6 +679,9 @@ describe("Collection", function () {
 
             assert.isTrue(collection.removeAt(0));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
         it("should remove object by index", function () {
@@ -556,7 +689,9 @@ describe("Collection", function () {
                 {key: 1, value: 'A'},
                 {key: 2, value: 'B'},
                 {key: 3, value: 'C'}
-            ], 'key'), changed;
+            ], 'key'),
+                handlers = bindAllEvents(collection),
+                changed;
 
             assert.isTrue(collection.removeAt(1));
             assert.deepEqual(collection.toArray(), [
@@ -571,18 +706,26 @@ describe("Collection", function () {
 
             assert.isTrue(collection.removeAt(0));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 3), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 3), 'onChange event');
         });
 
     });
 
     describe("removeAll()", function () {
         it("should remove all item", function () {
-            var collection = new Collection(['A', 'B', 'C', 'D']);
+            var collection = new Collection(['A', 'B', 'C', 'D']),
+                handlers = bindAllEvents(collection);
+
             assert.isTrue(collection.removeAll(['A', 'C']));
             assert.deepEqual(collection.toArray(), ['B', 'D']);
 
             assert.isTrue(collection.removeAll(['B', 'D']));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 2), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 2), 'onChange event');
         });
 
         it("should remove all objects", function () {
@@ -591,7 +734,8 @@ describe("Collection", function () {
                 {key: 2, value: 'B'},
                 {key: 3, value: 'C'},
                 {key: 4, value: 'D'}
-            ], 'key');
+            ], 'key'),
+                handlers = bindAllEvents(collection);
 
             assert.isTrue(collection.removeAll([
                 {key: 1, value: 'A'},
@@ -605,18 +749,26 @@ describe("Collection", function () {
                 {key: 2, value: 'B'},
                 {key: 4, value: 'D'}]));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 2), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 2), 'onChange event');
         });
     });
 
     describe("removeRange", function () {
 
         it("should remove range items", function () {
-            var collection = new Collection(['A', 'B', 'C', 'D']);
+            var collection = new Collection(['A', 'B', 'C', 'D']),
+                handlers = bindAllEvents(collection);
+
             assert.isTrue(collection.removeRange(1, 2));
             assert.deepEqual(collection.toArray(), ['A', 'D']);
 
             assert.isTrue(collection.removeRange(0));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 2), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 2), 'onChange event');
         });
 
         it("should remove range items", function () {
@@ -624,13 +776,17 @@ describe("Collection", function () {
                 null,
                 null,
                 {key: 1, value: 'A'}, {key: 2, value: 'B'}
-            ], 'key');
+            ], 'key'),
+                handlers = bindAllEvents(collection);
 
             assert.isTrue(collection.removeRange(1, 2));
             assert.deepEqual(collection.toArray(), [null, {key: 2, value: 'B'}]);
 
             assert.isTrue(collection.removeRange(0));
             assert.deepEqual(collection.toArray(), []);
+
+            assert.isTrue(handlers.checkEvent('onRemove', 2), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange', 2), 'onChange event');
         });
 
     });
@@ -640,13 +796,16 @@ describe("Collection", function () {
         it("should remove every item", function () {
             var
                 changed,
-                collection = new Collection([1, 10, 2, 20, 3, 30]);
+                collection = new Collection([1, 10, 2, 20, 3, 30]),
+                handlers = bindAllEvents(collection);
 
             changed = collection.removeEvery(function (item, index, collection) {
                 return item >= 10;
             });
             assert.isTrue(changed);
             assert.deepEqual(collection.toArray(), [1, 2, 3]);
+            assert.isTrue(handlers.checkEvent('onRemove'), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should remove every object", function () {
@@ -657,7 +816,8 @@ describe("Collection", function () {
                     {key: 1, value: 'A'},
                     {key: 2, value: 'B'},
                     {key: 3, value: 'A'}
-                ], 'key');
+                ], 'key'),
+                handlers = bindAllEvents(collection);
 
             changed = collection.removeEvery(function (item, index, collection) {
                 return item && item.key % 2 === 1;
@@ -669,7 +829,10 @@ describe("Collection", function () {
                 null,
                 {key: 2, value: 'B'}
             ]);
+            assert.isTrue(handlers.checkEvent('onRemove'), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
 
+            handlers.reset();
             changed = collection.removeEvery(function (item, index, collection) {
                 return item === null;
             });
@@ -678,17 +841,20 @@ describe("Collection", function () {
             assert.deepEqual(collection.toArray(), [
                 {key: 2, value: 'B'}
             ]);
-
-
+            assert.isTrue(handlers.checkEvent('onRemove'), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
     });
 
     describe("clear()", function () {
         it("should clear collection", function () {
-            var collection = new Collection([ 'A', 'B', 'C' ]);
+            var collection = new Collection(['A', 'B', 'C']),
+                handlers = bindAllEvents(collection);
 
             assert.isTrue(collection.clear());
             assert.equal(collection.length, 0);
+            assert.isTrue(handlers.checkEvent('onRemove'), 'onRemove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
     });
 
@@ -999,12 +1165,19 @@ describe("Collection", function () {
     describe("move()", function () {
 
         it("should move items", function () {
-            var collection = new Collection(['A', 'B', 'C']);
+            var collection = new Collection(['A', 'B', 'C']),
+                handlers = bindAllEvents(collection);
 
             collection.move(2, 0);
-            assert.deepEqual(collection.toArray(), [ 'C', 'A', 'B' ]);
+            assert.deepEqual(collection.toArray(), ['C', 'A', 'B']);
+            assert.isTrue(handlers.checkEvent('onMove'), 'onMove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
+
+            handlers.reset();
             collection.move(2, 1);
-            assert.deepEqual(collection.toArray(), [ 'C', 'B', 'A' ]);
+            assert.deepEqual(collection.toArray(), ['C', 'B', 'A']);
+            assert.isTrue(handlers.checkEvent('onMove'), 'onMove event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
     });
 
@@ -1012,6 +1185,7 @@ describe("Collection", function () {
 
         it("should sort items", function () {
             var collection = new Collection([3, 30, 2, 20, 1, 10]),
+                handlers = bindAllEvents(collection),
                 comparator = function (a, b) {
                     return a - b
                 };
@@ -1020,6 +1194,8 @@ describe("Collection", function () {
 
             assert.isTrue(changed);
             assert.deepEqual(collection.toArray(), [1, 2, 3, 10, 20, 30]);
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should sort items", function () {
@@ -1063,7 +1239,7 @@ describe("Collection", function () {
     });
 
     describe("Events", function () {
-        var 
+        var
             collection,
             events = 'onAdd,onReplace,onRemove,onMove,onReset,onChange'.split(','),
             handlers,
@@ -1072,10 +1248,10 @@ describe("Collection", function () {
 
                 events.forEach(function (event) {
 
-                    collection[event](function(context, argument) {
+                    collection[event](function (context, argument) {
                         handlers.push(event);
                     });
-                });                
+                });
             }
 
 
@@ -1083,7 +1259,7 @@ describe("Collection", function () {
             it("should raise onAdd & onChange event", function () {
                 //when
                 collection = new Collection();
-                bindEvents();                
+                bindEvents();
                 collection.add('A');
                 //then
                 assert.equal("onAdd,onChange", handlers.join(','));
@@ -1094,7 +1270,7 @@ describe("Collection", function () {
             it("should raise onReplace & onChange event", function () {
                 //when
                 collection = new Collection(['A']);
-                bindEvents();                
+                bindEvents();
                 collection.replace('A', 'B');
                 //then
                 assert.equal("onReplace,onChange", handlers.join(','));
@@ -1106,7 +1282,7 @@ describe("Collection", function () {
             it("should raise onRemove & onChange event", function () {
                 //when
                 collection = new Collection(['A']);
-                bindEvents();                
+                bindEvents();
                 collection.remove('A');
                 //then
                 assert.equal("onRemove,onChange", handlers.join(','));
@@ -1117,8 +1293,8 @@ describe("Collection", function () {
         describe("Collection.onMove", function () {
             it("should raise onMove & onChange event", function () {
                 //when
-                collection = new Collection([ 'A', 'B' ]);
-                bindEvents();                
+                collection = new Collection(['A', 'B']);
+                bindEvents();
                 collection.move(1, 0);
                 //then
                 assert.equal("onMove,onChange", handlers.join(','));
@@ -1130,11 +1306,11 @@ describe("Collection", function () {
             it("should raise onReset & onChange event", function () {
                 //when
                 collection = new Collection();
-                bindEvents();                
-                collection.reset([ 'A', 'B' ]);
+                bindEvents();
+                collection.reset(['A', 'B']);
                 //then
                 assert.equal("onReset,onChange", handlers.join(','));
-                assert.deepEqual(collection.toArray(), [ 'A', 'B' ]);
+                assert.deepEqual(collection.toArray(), ['A', 'B']);
             });
         });
 
@@ -1143,10 +1319,10 @@ describe("Collection", function () {
                 //when
                 collection = new Collection();
                 bindEvents();
-                collection.set([ 'A', 'B' ]);
+                collection.set(['A', 'B']);
                 //then
                 assert.equal("onReset,onChange", handlers.join(','));
-                assert.deepEqual(collection.toArray(), [ 'A', 'B' ]);
+                assert.deepEqual(collection.toArray(), ['A', 'B']);
             });
         });
     })
