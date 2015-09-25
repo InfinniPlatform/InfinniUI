@@ -2,7 +2,7 @@
  * @class
  * @augments ControlView
  */
-var StackPanelView = ControlView.extend(
+var StackPanelView = ContainerView.extend(
     /** @lends StackPanelView.prototype */
     {
         tagName: 'ul',
@@ -15,19 +15,16 @@ var StackPanelView = ControlView.extend(
         },
 
         initialize: function (options) {
-            ControlView.prototype.initialize.call(this, options);
+            ContainerView.prototype.initialize.call(this, options);
 
-            var that = this;
-            this.model.get('items').onChange(function(){
-                that.rerender();
-            });
             this.initOrientation();
         },
 
         render: function () {
             this.prerenderingActions();
 
-            this.$el.empty();
+            this.removeChildElements();
+
             this.$el.html(this.template({
                 items: this.model.get('items')
             }));
@@ -43,11 +40,13 @@ var StackPanelView = ControlView.extend(
             var $items = this.$el.find('.pl-stack-panel-i'),
                 items = this.model.get('items'),
                 itemTemplate = this.model.get('itemTemplate'),
+                that = this,
                 element, item;
 
             $items.each(function(i, el){
                 item = items.getByIndex(i);
                 element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
                 $(el)
                     .append(element.render());
             });

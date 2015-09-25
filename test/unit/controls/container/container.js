@@ -393,6 +393,18 @@ describe('Container (Control)', function () {
                 assert.instanceOf(stackPanel.getParent(), View, 'stackPanel parent is View');
                 assert.lengthOf(stackPanel.getChildElements(), 3, 'length of stackPanel children is right');
                 assert.equal(stackPanel.getChildElements()[0].getParent(), stackPanel, 'child of stackPanel has parent - stackPanel');
+
+                // When
+                var ds = view.getContext().dataSources['ObjectDataSource1'],
+                    items = ds.getItems();
+
+                items.reverse();
+
+                ds.setItems(items);
+                ds.updateItems();
+
+                // Then
+                assert.lengthOf(stackPanel.getChildElements(), 3, 'length of stackPanel children is right (after updating items)');
             }
         });
     });

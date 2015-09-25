@@ -23,6 +23,10 @@ var ContainerView = ControlView.extend(
             }
 
             this.childElements = [];
+        },
+
+        addChildElement: function(child){
+            this.childElements.push(child);
         }
     }
 );
