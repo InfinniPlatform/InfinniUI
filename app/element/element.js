@@ -16,6 +16,10 @@ _.extend(Element.prototype, {
         throw ('Не перегружен абстрактный метод Element.createControl');
     },
 
+    setParent: function(parentElement){
+        this.parent = parentElement;
+    },
+
     getParent: function(){
         return this.parent;
     },
