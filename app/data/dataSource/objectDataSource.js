@@ -7,6 +7,7 @@ var ObjectDataSource = BaseDataSource.extend({
 
     setItems: function(items){
         this.get('dataProvider').setItems(items);
+        this.updateItems();
     }
 
 });

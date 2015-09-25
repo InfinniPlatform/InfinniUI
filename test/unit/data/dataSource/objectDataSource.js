@@ -52,24 +52,14 @@ describe('ObjectDataSource', function () {
     }
 
     describe('ObjectDataSource base api', function () {
-        it('should get list of data', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
+        it('should get list of data', function () {
+            // Given //When
+            var dataSource = createObjectDataSource(),
+                items = dataSource.getItems();
 
-            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
-
-            //When
-            dataSource.updateItems(
-                function(context, args){
-
-                    // Then
-                    assert.isTrue(args.value.length > 0, 'data provider returns items');
-                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
-                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
-                    done();
-
-                }
-            );
+            // Then
+            assert.isTrue(dataSource.isDataReady(), 'dataReady status is right');
+            assert.isTrue(items.length > 0, 'data provider returns items');
         });
 
         it('should create document', function (done) {
