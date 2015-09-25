@@ -1238,6 +1238,28 @@ describe("Collection", function () {
         });
     });
 
+    describe('Custom properties', function () {
+
+        it ('should set property', function () {
+            // Given
+            var collection = new Collection([3,2,1]);
+            collection
+                .setProperty(0, 'name', 'three')
+                .setProperty(1, 'name', 'two')
+                .setProperty(2, 'name', 'one');
+
+            // When
+            collection.sort();
+
+            // Then
+            assert.deepEqual(collection.toArray(), [1, 2, 3]);
+            assert.equal(collection.getProperty(0, 'name'), 'one');
+            assert.equal(collection.getProperty(1, 'name'), 'two');
+            assert.equal(collection.getProperty(2, 'name'), 'three');
+        });
+
+    });
+
     describe("Events", function () {
         var
             collection,
