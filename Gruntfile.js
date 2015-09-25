@@ -35,8 +35,7 @@
             '!app/controls/toggleButton/**/*.js',
             '!app/element/dataElement/toggleButton/**/*.js',
             '!app/element/dataElement/textBox/**/*.*',
-            '!app/controls/textBox/**/*.*',
-            '!app/utils/collection/**/*.*'
+            '!app/controls/textBox/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
