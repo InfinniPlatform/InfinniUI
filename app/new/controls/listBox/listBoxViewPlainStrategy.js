@@ -24,11 +24,13 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
         var $listbox = this.listbox.$el,
             itemTemplate = this.listbox.getItemTemplate(),
             items = preparedItems.items,
+            listbox = this.listbox,
             itemEl, $el;
 
         $listbox.find('.pl-listbox-body').each(function(i, el){
             $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
+            listbox.addChildElement(itemEl);
             $el.append(itemEl.render());
 
             $el.parent().data('pl-data-item', items[i]);

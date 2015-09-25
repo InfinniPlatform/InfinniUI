@@ -1,4 +1,4 @@
-var ListBoxView = ControlView.extend({
+var ListBoxView = ContainerView.extend({
 
     template: {
         plain: InfinniUI.Template["new/controls/listBox/template/listBox.tpl.html"],
@@ -21,11 +21,7 @@ var ListBoxView = ControlView.extend({
         var that = this;
 
         //@TODO Реализовать обработку значений по умолчанию!
-        ControlView.prototype.initialize.call(this, options);
-
-        this.model.get('items').onChange(function(){
-            that.rerender();
-        });
+        ContainerView.prototype.initialize.call(this, options);
 
         this.initGrouping();
         this.initValue();
@@ -62,6 +58,8 @@ var ListBoxView = ControlView.extend({
 
         var preparedItems = this.strategy.prepareItemsForRendering();
         var template = this.strategy.getTemplate();
+
+        this.removeChildElements();
 
         this.$el.html(template(preparedItems));
         this.bindUIElements();

@@ -45,14 +45,17 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
             groupTitleTemplate = this.listbox.getGroupItemTemplate(),
             index = 0,
             groups = preparedItems.groups,
+            listbox = this.listbox,
             itemEl, titleEl;
 
         $listbox.find('.pl-listbox-group-title').each(function(i, el){
             titleEl = groupTitleTemplate(undefined, {index: index, item: groups[i]});
+            listbox.addChildElement(titleEl);
             $(el).append(titleEl.render());
 
             _.forEach( groups[i].items, function(item){
                 itemEl = itemTemplate(undefined, {index: i, item: item});
+                listbox.addChildElement(itemEl);
                 $listboxItems.eq(index).append(itemEl.render());
 
                 $listboxItems.eq(index).parent()
