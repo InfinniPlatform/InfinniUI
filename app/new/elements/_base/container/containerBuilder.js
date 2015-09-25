@@ -231,6 +231,7 @@ _.extend(ContainerBuilder.prototype, {
         return function(context, args) {
             var index = args.index;
             var argumentForBuilder = {
+                parent: params.element,
                 parentView: params.parentView
             };
 
@@ -257,6 +258,7 @@ _.extend(ContainerBuilder.prototype, {
         return function(context, args) {
             var index = args.index;
             var argumentForBuilder = {
+                parent: params.element,
                 parentView: params.parentView,
                 basePathOfProperty: basePathOfProperty
             };

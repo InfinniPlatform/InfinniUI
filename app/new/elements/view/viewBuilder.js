@@ -10,7 +10,7 @@ _.inherit(ViewBuilder, ContainerBuilder);
 
 _.extend(ViewBuilder.prototype, {
     createElement: function (params) {
-        return new View();
+        return new View(params.parent);
     },
 
     applyMetadata: function (params) {

@@ -84,6 +84,10 @@ _.extend(Control.prototype, {
 
     onKeyUp: function (handler) {
         this.controlView.$el.on('keyup', handler);
+    },
+
+    remove: function(){
+        this.controlView.remove();
     }
 });
 

@@ -1,9 +1,12 @@
-var Element = function (parentView) {
-    this.parentView = parentView;
+var Element = function (parent) {
+    this.parent = parent;
     this.control = this.createControl();
     this.state = {
         Enabled: true
     };
+
+    this.childElements = [];
+
     this.eventStore = new EventStore();
 };
 
@@ -13,7 +16,25 @@ _.extend(Element.prototype, {
         throw ('Не перегружен абстрактный метод Element.createControl');
     },
 
+    getParent: function(){
+        return this.parent;
+    },
+
+    getChildElements: function(){
+        return this.childElements;
+    },
+
     getView: function () {
+        if(!this.parentView){
+            if(this.parent instanceof View){
+                this.parentView = this.parent;
+            }else{
+                if(this.parent.getView){
+                    this.parentView = this.parent.getView();
+                }
+            }
+        }
+
         return this.parentView;
     },
 
@@ -171,7 +192,7 @@ _.extend(Element.prototype, {
     },
 
     getChildElements: function () {
-        return this.control.getChildElements();
+        return this.childElements;
     },
 
     onLoaded: function (handler) {
@@ -205,7 +226,7 @@ _.extend(Element.prototype, {
     },
 
     getScriptsStorage: function () {
-        return this.parentView;
+        return this.getView();
     },
 
     /**
@@ -306,6 +327,32 @@ _.extend(Element.prototype, {
         return this.control.onMouseMove(callback);
     },
 
+    remove: function(isInitiatedByParent){
+        var children = this.childElements;
+
+        for(var i = 0, ii = children.length; i < ii; i++){
+            children[i].remove(true);
+        }
+
+        this.control.remove();
+
+        if(this.parent && this.parent.removeChild && !isInitiatedByParent){
+            this.parent.removeChild(this);
+        }
+
+        this.childElements = undefined;
+    },
+
+    removeChild: function(child){
+        var index = this.childElements.indexOf(child);
+        if(index != -1){
+            this.childElements.splice(index, 1);
+        }
+    },
+
+    addChild: function(child){
+        this.childElements.push(child);
+    },
 
     _getHandlingKeyEventData: function(nativeData){
         var result = {};

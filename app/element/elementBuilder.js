@@ -19,6 +19,10 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             args.parentView.registerElement(element);
         }
 
+        if (args.parent && args.parent.addChild) {
+            args.parent.addChild(element);
+        }
+
         return element;
     },
 

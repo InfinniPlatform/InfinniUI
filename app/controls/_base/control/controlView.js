@@ -253,8 +253,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         //@TODO Обработка View при изменении свойства Enabled
     }
 
-
-
 });
 
 _.extend(ControlView.prototype, bindUIElementsMixin, eventHandlerMixin);

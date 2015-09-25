@@ -338,6 +338,63 @@ describe('Container (Control)', function () {
                 assert.equal($layout.find('.label-control').first().text(), '!! LTE', 'content of first element is right');
             }
         });
+
+
+        it('should stackPanel has child and parent (templating items)', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding":{
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        }
+                    }
+                }]
+            };
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                $layout.detach();
+
+                var stackPanel = view.getContext().controls['MainViewPanel'];
+
+                assert.instanceOf(stackPanel.getParent(), View, 'stackPanel parent is View');
+                assert.lengthOf(stackPanel.getChildElements(), 3, 'length of stackPanel children is right');
+                assert.equal(stackPanel.getChildElements()[0].getParent(), stackPanel, 'child of stackPanel has parent - stackPanel');
+            }
+        });
     });
 
 

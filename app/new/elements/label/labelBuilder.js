@@ -52,7 +52,7 @@ _.extend(LabelBuilder.prototype, {
     },
 
     createElement: function(params){
-        var label = new Label(params.view);
+        var label = new Label(params.parent);
         label.getHeight = function () {
             return 34;
         };
