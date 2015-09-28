@@ -663,7 +663,7 @@ describe('Container (Control)', function () {
 
         // Then
         function onViewReady(view, $layout){
-            //$layout.detach();
+            $layout.detach();
 
             assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox');
             assert.equal($layout.find('.pl-text-box-input').eq(0).val(), '2G', 'value in template is right');
