@@ -5,6 +5,7 @@
  */
 function Button(parent) {
     _.superClass(Button, this, parent);
+    this.isFirstAction = true;
 }
 
 _.inherit(Button, Element);
@@ -18,13 +19,23 @@ Button.prototype.setContent = function (value) {
 };
 
 Button.prototype.setAction = function (value) {
-    this.control.set('action', value);
+    var control = this.control;
+    control.set('action', value);
 
-    this.onClick(function () {
-        if (value) {
-            value.execute();
-        }
-    });
+    if (this.isFirstAction) {
+        this.isFirstAction = false;
+
+        this.onClick(function () {
+            var action =control.get('action');
+            if (action ) {
+                action .execute();
+            }
+        });
+    }
+};
+
+Button.prototype.getAction = function () {
+    return this.control.get('action');
 };
 
 Button.prototype.onClick = function (handler) {
@@ -33,6 +44,10 @@ Button.prototype.onClick = function (handler) {
 
 Button.prototype.click = function () {
     this.control.click();
+};
+
+Button.prototype.createControl = function () {
+    return new ButtonControl();
 };
 
 

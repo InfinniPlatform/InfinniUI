@@ -1,15 +1,21 @@
 describe('ButtonControl', function () {
     describe('render', function () {
+        var builder = new ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('Button', {});
+        });
+
         it('should render button with correct class', function () {
             //Given
-            var button = new ButtonControl();
-            button.set('text','Click me!');
+            button.setText('Click me!');
 
             //When
-            var $el = button.render().children();
+            var $el = button.render();
 
             //Then
-            assert.isTrue($el.hasClass('btn'));
+            assert.isTrue($el.hasClass('pl-button'));
             assert.equal($.trim($el.text()), 'Click me!');
         });
     });

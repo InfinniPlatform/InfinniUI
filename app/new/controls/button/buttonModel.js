@@ -5,7 +5,6 @@
 var ButtonModel = ControlModel.extend({
 
     defaults: _.defaults({
-
     }, ControlModel.prototype.defaults),
 
     initialize: function () {

@@ -21,11 +21,11 @@ _.extend(ButtonControl.prototype, {
     },
 
     onClick: function (handler) {
-        this.controlView.on('click', handler);
+        this.controlView.on('onClick', handler);
     },
 
     click: function () {
-        this.controlView.click();
+        this.controlView.trigger('onClick');
     }
 });
 

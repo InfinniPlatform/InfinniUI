@@ -31,9 +31,8 @@ ButtonContentTemplateBuilder.prototype.buildTextTemplate = function () {
         params = this.params,
         element = params.element;
     return function (context, args) {
-        //@TODO Отрефакторить чтобы всегда возращать объект, который можно сразу вставить в DOM (Строку или $JQuery)
         return {
-            render: element.getText()
+            render: element.getText.bind(element)
         };
     }
 };

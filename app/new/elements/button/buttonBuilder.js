@@ -19,10 +19,10 @@ _.extend(ButtonBuilder.prototype, {
 
         var contentBuilder = new ButtonContentTemplateBuilder(params);
         element.setContent(contentBuilder.build());
-        element.onPropertyChanged(function (context, args) {
-            if (args && args.property === 'Text') {
+        element.onPropertyChanged('text', function (context, args) {
+            //if (args && args.property === 'text') {
                 element.setContent(contentBuilder.buildTextTemplate());
-            }
+            //}
         });
 
         if (metadata.Action) {

@@ -1,8 +1,15 @@
 describe('Button', function () {
     describe('render', function () {
+        var button;
+        var builder = new ApplicationBuilder();
+
+        beforeEach(function () {
+            button = builder.buildType('Button', {});
+        });
+
         it('should create', function () {
             // Given
-            var button = new Button();
+            //var button = new Button();
 
             // When
             var $el = button.render();
@@ -13,7 +20,7 @@ describe('Button', function () {
 
         it('should set enabled', function () {
             // Given
-            var button = new Button();
+            //var button = new Button();
             button.setText('button');
             var $el = button.render();
 
@@ -27,7 +34,7 @@ describe('Button', function () {
 
         it('should set text', function () {
             // Given
-            var button = new Button();
+            //var button = new Button();
             button.setText('button');
             var $el = button.render();
 
@@ -41,9 +48,9 @@ describe('Button', function () {
 
         it('should set and get action', function () {
             // Given
-            var button = new Button();
-
-            assert.isNull(button.getAction());
+            //var button = new Button();
+            var action = button.getAction();
+            assert.isTrue(typeof action === 'undefined' || action === null);
 
             // When
             button.render();
@@ -55,7 +62,8 @@ describe('Button', function () {
 
         it('should execute action on click', function () {
             // Given
-            var button = new Button(),
+            var
+                //button = new Button(),
                 onLastActionExecute = 0,
                 onNewActionExecute = 0;
 
@@ -85,7 +93,8 @@ describe('Button', function () {
 
         it('event onClick', function () {
             // Given
-            var button = new Button(),
+            var
+                //button = new Button(),
                 onClickFlag = 0;
 
             button.onClick(function(){

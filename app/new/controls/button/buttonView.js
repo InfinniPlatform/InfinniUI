@@ -4,6 +4,8 @@
  */
 var ButtonView = ControlView.extend({
 
+    className: 'pl-button',
+
     template: InfinniUI.Template["new/controls/button/template/button.tpl.html"],
 
     UI: {
@@ -37,19 +39,13 @@ var ButtonView = ControlView.extend({
         return _.extend({},
             ControlView.prototype.getData.call(this),
             {
-                content: content()
+                content: this.getRenderedContent()
             }
         );
     },
 
-    click: function () {
-        if (this.ui.button) {
-            this.ui.button.click();
-        }
-    },
-
     onClickHandler: function (event) {
-
+        this.trigger('onClick');
     },
 
     OnChangeEnabledHandler: function (model, value) {
@@ -57,7 +53,17 @@ var ButtonView = ControlView.extend({
     },
 
     onChangeContentHandler: function (model, value) {
-        this.ui.button.html(value);
+        this.ui.button.html(this.getRenderedContent());
+    },
+
+    getRenderedContent: function () {
+        var model = this.model;
+        var content = model.get('content');
+
+        if (typeof content === 'function') {
+            return content.call(null, null, {}).render();
+        }
+        return '';
     }
 
 });
