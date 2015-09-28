@@ -14,14 +14,21 @@ _.extend(DocumentViewerBuilder.prototype, {
 
 
         if(params.metadata.Value){
-            var binding  = this.initValueProperty(params);
-            binding.onPropertyValueChanged(function (dataSourceName, value) {
+            if(typeof params.metadata.Value == 'string'){
+                params.element.setValueExist(true);
+                params.element.setUrl(params.metadata.Value);
+
+            }else{
+                var binding  = this.initValueProperty(params);
+                binding.onPropertyValueChanged(function (dataSourceName, value) {
+                    params.element.setUrl(binding.getFileUrl());
+                });
+
+                params.element.setValueExist(true);
+
                 params.element.setUrl(binding.getFileUrl());
-            });
+            }
 
-            params.element.setValueExist(true);
-
-            params.element.setUrl(binding.getFileUrl());
         }else{
             params.element.setDataSource(params.metadata.DataSource);
             params.element.setPrintViewType(params.metadata.PrintViewType);
