@@ -32,20 +32,5 @@ describe('ButtonBuilder', function () {
             assert.isNotNull(button.getAction());
         });
 
-        it('should pass parentView for builder', function () {
-            //Given
-            var builder = new ButtonBuilder(),
-                applicationBuilder = {
-                    build: function (parentView, metadata) {
-                        //Then
-                        assert.equal(parentView, 42);
-                    }
-                },
-                parentView = 42,
-                metadata = { Action: 23 };
-
-            //When
-            builder.build(null, {builder: applicationBuilder, view: parentView, metadata: metadata});
-        });
     });
 });
