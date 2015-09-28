@@ -1,7 +1,17 @@
 describe('Button', function () {
+    var builder = new ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Button', {});
+
+        describe('Implementing Element Methods', function () {
+            checkElementMethods(element);
+        });
+
+    });
+
     describe('render', function () {
         var button;
-        var builder = new ApplicationBuilder();
 
         beforeEach(function () {
             button = builder.buildType('Button', {});
