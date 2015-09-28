@@ -62,10 +62,6 @@ _.extend(ListEditorBase.prototype, {
         this.control.onSelectedItemChanged(this.createControlEventHandler(this, handler));
     },
 
-    setValueComparator: function (comparator) {
-        this.control.set('valueComparator', comparator);
-    },
-
     getValueComparator: function () {
         return this.control.get('valueComparator');
     }

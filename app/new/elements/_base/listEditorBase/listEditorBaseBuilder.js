@@ -87,8 +87,6 @@ _.extend(ListEditorBaseBuilder.prototype, {
             }
         }
         element.setValueSelector(valueSelector);
-
-        element.setValueComparator(new ComparatorId());
     }
 }, editorBaseBuilderMixin);
 /*

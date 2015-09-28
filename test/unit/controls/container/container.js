@@ -605,4 +605,70 @@ describe('Container (Control)', function () {
             assert.equal($.trim( $layout.find('.pl-listbox-group-title').last().text() ), 'Connect: 2G', 'group value in template is right');
         }
     });
+
+    it('should render listBox with sorting items', function () {
+        // Given
+        var metadata = {
+            Text: 'Пациенты',
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 2, "Display": "LTE" },
+                            { "Id": 1, "Display": "2G" },
+                            { "Id": 3, "Display": "2G" }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                ListBox: {
+                    "ItemTemplate": {
+                        "TextBox": {
+                            "Name": "TextBox1",
+                            "Value": {
+                                "PropertyBinding":{
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
+                                }
+                            }
+                        }
+                    },
+                    "Items" : {
+                        "PropertyBinding": {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    },
+
+                    "ItemComparator": {
+                        "Name": "IdComparator"
+                    }
+                }
+            }],
+
+            "Scripts":[
+                {
+                    Name: 'IdComparator',
+                    Body: "return args.item2.Id - args.item1.Id;"
+                }
+            ]
+        };
+
+
+        // When
+        applyViewMetadata(metadata, onViewReady);
+
+        // Then
+        function onViewReady(view, $layout){
+            //$layout.detach();
+
+            assert.lengthOf($layout.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+            assert.equal($layout.find('.pl-text-box-input').eq(0).val(), '2G', 'value in template is right');
+            assert.equal($layout.find('.pl-text-box-input').eq(1).val(), 'LTE', 'value in template is right');
+            assert.equal($layout.find('.pl-text-box-input').eq(2).val(), '2G', 'value in template is right');
+        }
+    });
 });

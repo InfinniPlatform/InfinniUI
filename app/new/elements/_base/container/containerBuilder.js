@@ -47,16 +47,23 @@ _.extend(ContainerBuilder.prototype, {
             basePathOfProperty: params.basePathOfProperty
         });
 
-        binding.bindElement(element, 'items');
+        binding.setMode(BindingModes.toElement);
 
-        if(metadata.ItemTemplate){
+        if('ItemComparator' in metadata){
+            this.bindElementItemsWithSorting(binding, params);
+        }else{
+            binding.bindElement(element, 'items');
+        }
+
+
+        if('ItemTemplate' in metadata){
             itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
-        }else if(metadata.ItemFormat){
+        }else if('ItemFormat' in metadata){
             itemTemplate = this.buildItemFormat(binding, metadata.ItemFormat, params);
-        }else if(metadata.ItemSelector){
+        }else if('ItemSelector' in metadata){
             itemTemplate = this.buildItemSelector(binding, metadata.ItemSelector, params);
         }else{
-            if(metadata.ItemProperty){
+            if('ItemProperty' in metadata){
                 property = metadata.ItemProperty;
             }else{
                 property = '';
@@ -227,16 +234,24 @@ _.extend(ContainerBuilder.prototype, {
         var element = params.element;
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
+        var that = this;
 
         return function(context, args) {
             var index = args.index;
+            var bindingIndex;
             var argumentForBuilder = {
                 parent: params.element,
                 parentView: params.parentView
             };
 
             if(index !== undefined && index !== null){
-                argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+                bindingIndex = that.bindingIndexByItemsIndex(index, params);
+
+                if(bindingIndex !== undefined && bindingIndex !== null){
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', bindingIndex);
+                }else{
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+                }
             }
 
             return builder.build(templateMetadata, argumentForBuilder);
@@ -265,6 +280,41 @@ _.extend(ContainerBuilder.prototype, {
 
             return builder.build(itemsMetadata[index], argumentForBuilder);
         };
+    },
+
+    bindingIndexByItemsIndex: function(index, params){
+        var element = params.element,
+            items = element.getItems();
+
+        return items.getProperty(index, 'bindingIndex');
+    },
+
+    bindElementItemsWithSorting: function(binding, params){
+        var metadata = params.metadata,
+            element = params.element,
+            scriptExecutor = new ScriptExecutor(params.parent),
+            itemComparator = function(item1, item2){
+                return scriptExecutor.executeScript(metadata.ItemComparator, {item1: item1, item2: item2});
+            };
+
+        binding.bindElement({
+            setProperty: function(name, value){
+                var items = element.getItems(),
+                    isCollectionChanged = items.set(value, true);
+
+                items.forEach(function(item, index, collection){
+                    collection.setProperty(index, 'bindingIndex', index);
+                });
+
+                if(isCollectionChanged){
+                    items.sort(itemComparator);
+                }
+            },
+
+            onPropertyChanged: function(){}
+
+        }, 'items');
     }
+
 }, displayFormatBuilderMixin);
 

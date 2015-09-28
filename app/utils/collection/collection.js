@@ -244,7 +244,7 @@ Collection.prototype.reset = function (newItems) {
  * @param {Array} newItems
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.set = function (newItems) {
+Collection.prototype.set = function (newItems, silent) {
     var items = this._items;
 
     if (!Array.isArray(newItems)) {
@@ -290,7 +290,7 @@ Collection.prototype.set = function (newItems) {
         items.push(this.createCollectionItem(newItem, items.length));
     }, this);
 
-    if (changed) {
+    if (changed && !silent) {
         this.events.onReset();
     }
     return changed;
@@ -597,7 +597,7 @@ Collection.prototype.find = function (predicate, thisArg) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с начала
  * @param {*} item
  * @param {number} [fromIndex = 0]
- * @returns {number} Индекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.indexOf = function (item, fromIndex) {
     var
@@ -624,7 +624,7 @@ Collection.prototype.indexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
  * @param {*} item
  * @param {number} [fromIndex]
- * @returns {number} Индекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.lastIndexOf = function (item, fromIndex) {
     var
@@ -654,7 +654,7 @@ Collection.prototype.lastIndexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции, удовлетворяющего условию
  * @param {function} predicate
  * @param [thisArg]
- * @returns {*} Индекс первого найденного элемента коллекции, удовлетворяющего указанному условию
+ * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
  */
 Collection.prototype.findIndex = function (predicate, thisArg) {
     if (typeof predicate !== 'function') {
