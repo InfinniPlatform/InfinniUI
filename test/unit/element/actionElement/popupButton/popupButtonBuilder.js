@@ -52,8 +52,6 @@ describe('PopupButtonBuilder', function () {
             assert.isNotNull(button.getAction());
             assert.equal(2,button.getItems().length);
 
-            assert.isTrue(button.getItems()[0] instanceof Button)
-            assert.isTrue(button.getItems()[1] instanceof Button)
         });
     });
 });

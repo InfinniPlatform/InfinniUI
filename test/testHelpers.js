@@ -64,6 +64,16 @@ function checkElementMethods(element) {
         });
 }
 
+function checkContainerMethods(element) {
+    ['getItemTemplate', 'setItemTemplate', 'getItems']
+        .forEach(function (methodName) {
+            it(methodName, function () {
+                checkMethod(element, methodName);
+            });
+
+        });
+}
+
 //Эта хрень по идее из платформы должна приходить, а она в лаунчере
 window.providerRegister.register('MetadataDataSource', function (metadataValue) {
     return new MetadataProviderREST(new QueryConstructorMetadata('', metadataValue));
