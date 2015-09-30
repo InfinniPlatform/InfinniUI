@@ -20,9 +20,5 @@ _.extend(ButtonControl.prototype, {
 
     click: function(){
         this.controlView.$el.click();
-    },
-
-    onClick: function(handler){
-        this.controlView.$el.click(handler);
     }
 });
