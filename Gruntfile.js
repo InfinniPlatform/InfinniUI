@@ -40,7 +40,7 @@
             '!app/controls/popupButton/**/*.*',
             '!app/element/actionElement/popupButton/**/*.*',
 
-            'bootstrap_framework/dist/bootstrap.js'
+            'bootstrap_framework/js/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
