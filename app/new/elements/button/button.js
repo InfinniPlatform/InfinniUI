@@ -5,10 +5,14 @@
  */
 function Button(parent) {
     _.superClass(Button, this, parent);
-    this.isFirstAction = true;
+    this.init();
 }
 
 _.inherit(Button, Element);
+
+Button.prototype.init = function () {
+    this.isFirstAction = true;
+};
 
 Button.prototype.getContent = function () {
     return this.control.get('content');

@@ -37,7 +37,9 @@
             '!app/element/dataElement/textBox/**/*.*',
             '!app/controls/textBox/**/*.*',
             '!app/element/actionElement/button/**/*.*',
-            '!app/controls/button/**/*.*'
+            '!app/controls/button/**/*.*',
+            '!app/controls/popupButton/**/*.*',
+            '!app/element/actionElement/popupButton/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
