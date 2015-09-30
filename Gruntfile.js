@@ -3,7 +3,6 @@
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-jscs');
-    //grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -54,7 +53,6 @@
             'bower_components/ulogin/index.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
-            'bower_components/metronic/assets/admin/layout/scripts/layout.js',
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js'
         ],
@@ -130,8 +128,7 @@
                 src: [
                     'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
                     'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png',
-                    'bower_components/metronic/assets/global/plugins/select2/select2-spinner.gif'
+                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png'
                 ],
                 dest: 'out/css/'
             },
@@ -140,8 +137,8 @@
                 flatten: true,
                 src: [],
                 dest: 'out/images/'
-            },
-            images: {
+            }
+            /*images: {
                 files: [
                     {
                         cwd: 'bower_components/metronic/assets/global/img/',
@@ -162,16 +159,7 @@
                         expand: true
                     }
                 ]
-            }
-        },
-
-        jscs: {
-            default: {
-                src: ['app/element/dataElement/dataGrid/**/*.js', 'app/controls/dataGrid/**/*.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
+            }*/
         },
 
         watch: {
