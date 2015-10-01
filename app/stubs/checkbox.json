@@ -29,28 +29,11 @@
       }
     }
   ],
-  "LayoutPanel": {
+  "Items": [{
     "StackPanel": {
       "Name": "",
       "Orientation": "Horizontal",
       "Items": [
-        {
-          "CheckBox": {
-            "Text": "Подписаться на новости",
-            "Value": {
-              "PropertyBinding": {
-                "DataSource": "MainDataSource",
-                "Property": "IsSubscribe"
-              }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged"
-            },
-            "OnValueChanging": {
-              "Name": "OnValueChanging"
-            }
-          }
-        },
         {
           "ToggleButton": {
             "Text": "Subscribe",
@@ -61,57 +44,6 @@
             },
             "OnValueChanging": {
               "Name": "ToggleButtonOnValueChanging"
-            }
-          }
-        },
-        {
-          "ListBox": {
-            "~ItemTemplate": {
-              "StackPanel": {
-                "Name": "",
-                "Items": [
-                  {
-                    "TextBox": {
-                      "Value": {
-                        "PropertyBinding": {
-                          "DataSource": "BloodGroupDataSource",
-                          "Property": "$.Id"
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            "~ItemProperty": "DisplayName",
-            "ItemFormat": {
-              "ObjectFormat": {
-                "Format": "{Id}: {DisplayName}"
-              }
-            },
-            "GroupValueSelector": {
-              "Name": "GroupValueSelector"
-            },
-            "GroupItemProperty": "",
-            "~GroupItemFormat": {
-              "ObjectFormat": {
-                "Format": "{}"
-              }
-            },
-            "~ItemSelector": {
-              "Name": "ItemSelector"
-            },
-            "MultiSelect": false,
-            "ValueSelector": {
-              "Name": "ValueSelector"
-            },
-            "Items": {
-              "PropertyBinding": {
-                "DataSource": "BloodGroupDataSource"
-              }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged"
             }
           }
         },
@@ -129,7 +61,8 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource"
+                "Source": "MainDataSource",
+                "Property": "$"
               }
             }
           }
@@ -147,7 +80,8 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource"
+                "Source": "MainDataSource",
+                "Property": "$"
               }
             }
           }
@@ -169,7 +103,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -191,7 +125,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -215,7 +149,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -223,7 +157,7 @@
         }
       ]
     }
-  },
+  }],
   "Scripts": [
     {
       "Name": "OnValueChanged",
