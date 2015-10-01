@@ -28,9 +28,9 @@ _.extend(ButtonBuilder.prototype, {
             element.setAction(action);
         }
 
-        if (params.view && metadata.OnClick){
+        if (metadata.OnClick){
             element.onClick(function() {
-                new ScriptExecutor(params.parentView).executeScript(metadata.OnClick.Name);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name);
             });
         }
     }

@@ -44,7 +44,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Button', new ButtonBuilder());
         builder.register('ToolBar', new ToolBarBuilder());
         builder.register('ToolBarButton', new ButtonBuilder());
-        builder.register('ToolBarSeparator', new ToolBarSeparatorBuilder());
+        //builder.register('ToolBarSeparator', new ToolBarSeparatorBuilder());
         builder.register('ComboBox', new ComboBoxBuilder());
         builder.register('RadioGroup', new RadioGroupBuilder());
         builder.register('SearchPanel', new SearchPanelBuilder());

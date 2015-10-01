@@ -1,7 +1,7 @@
 describe('TextEditorBase (Element)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
-            Text: 'Пациенты',
+            Text: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -24,11 +24,7 @@ describe('TextEditorBase (Element)', function () {
                             "Property": "$.Display"
                         }
                     },
-                    "DisplayFormat": {
-                        "NumberFormat": {
-                            "Format": "n2"
-                        }
-                    },
+                    "DisplayFormat": "{:n2}",
 
                     "EditMask": {
                         "NumberEditMask": {
@@ -56,7 +52,10 @@ describe('TextEditorBase (Element)', function () {
         it('Base functional', function () {
             // Given
             var textBox = new TextBox();
-            var format = new ObjectFormat();
+            var format = function (context, args) {
+                var format = new ObjectFormat();
+                return format.format(args.value);
+            };
             var mask = new DateTimeEditMask();
 
             assert.isNull(textBox.getLabelText(), 'default label text is null');
@@ -95,7 +94,7 @@ describe('TextEditorBase (Element)', function () {
                 var formatter = textbox.getDisplayFormat();
                 var mask = textbox.getEditMask();
 
-                assert.equal(formatter.format(2.22222), '2,22', 'applied format is right (n2)');
+                assert.equal(formatter(null, {value: 2.22222}), '2,22', 'applied format is right (n2)');
                 assert.equal(mask.mask, 'n3', 'applied mask is right (n3)');
             }
         });

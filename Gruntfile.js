@@ -23,6 +23,7 @@
             'app/new/elements/*.js',
             'app/**/*.js',
             'extensions/**/*.js',
+            'bootstrap_framework/js/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js',
@@ -39,8 +40,9 @@
             '!app/controls/button/**/*.*',
             '!app/controls/popupButton/**/*.*',
             '!app/element/actionElement/popupButton/**/*.*',
+            '!app/element/actionElement/toolBar/**/*.*',
+            '!app/controls/toolBar/**/*.*'
 
-            'bootstrap_framework/js/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',

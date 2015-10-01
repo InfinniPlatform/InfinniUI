@@ -1,6 +1,6 @@
 describe('ViewBuilder', function () {
     var viewMetadata = {
-        Text: 'Пациенты',
+        Text: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
         Icon: 'Icon',
         DataSources: [
             {
@@ -105,7 +105,7 @@ describe('ViewBuilder', function () {
         var script = view.getScripts().pop();
         assert.property(script, 'name');
         assert.property(script, 'func');
-        assert.instanceOf(script.func, Script);
+        assert.instanceOf(script.func, Function);
     });
 
     it('should build Parameters', function () {
