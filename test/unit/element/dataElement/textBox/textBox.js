@@ -65,17 +65,32 @@ describe('TextBox', function () {
                     }
                 }
             };
-            window.Test = {textBox:1, textBoxLoaded:false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.textBox = 5"}, {Name:"OnLoaded", Body:"window.Test.textBoxLoaded = true"}]);
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnValueChanged',
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+            scripts.add({
+                name: 'OnLoaded',
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
 
             //When
-            var build = builder.build(view, metadata);
-            build.setValue(true);
-            $(build.render());
+            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
+            element.setValue(true);
+            element.render();
 
             // Then
-            assert.equal(window.Test.textBox, 5);
-            assert.isTrue(window.Test.textBoxLoaded);
+            assert.equal(events.OnLoaded, 1);
+            assert.equal(events.OnValueChanged, 1);
         });
         //@TODO Add Checking Events
     });

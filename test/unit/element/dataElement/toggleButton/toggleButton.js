@@ -79,17 +79,34 @@ describe('ToggleButton', function () {
                     Name: 'OnLoaded'
                 }
             };
-            window.Test = {toggleButton:1, toggleButtonLoaded:false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.toggleButton = 5"}, {Name:"OnLoaded", Body:"window.Test.toggleButtonLoaded = true"}]);
+
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnValueChanged',
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+            scripts.add({
+                name: 'OnLoaded',
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
+
 
             //When
-            var build = toggleButton.build(null, {builder: toggleButton, view: view, metadata: metadata});
-            build.setValue(false);
-            $(build.render());
+            var element = toggleButton.build(null, {builder: toggleButton, parentView: view, parent: view, metadata: metadata});
+            element.setValue(true);
+            element.render();
 
             // Then
-            assert.equal(window.Test.toggleButton, 5);
-            assert.isTrue(window.Test.toggleButtonLoaded);
+            assert.equal(events.OnLoaded, 1, 'OnLoaded');
+            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
         });
     });
 });

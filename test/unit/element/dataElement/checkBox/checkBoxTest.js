@@ -51,7 +51,7 @@ describe('CheckBox', function () {
 
         it('should be true if scriptsHandlers call', function () {
             //Given
-            var checkBox = new CheckBoxBuilder();
+            var builder = new ApplicationBuilder();
             var view = new View();
             var metadata = {
                 OnValueChanged:{
@@ -62,16 +62,35 @@ describe('CheckBox', function () {
                 }
             };
             window.Test = {checkBox:1, checkBoxLoaded: false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.checkBox = 5"}, {Name:"OnLoaded", Body:"window.Test.checkBoxLoaded = true"}]);
+            var scripts = view.getScripts();
+            var events = {
+                OnValueChanged: false,
+                OnLoaded: false
+            };
+
+            scripts.add({
+                name: "OnValueChanged",
+                func: function () {
+                    events.OnValueChanged = true;
+                }
+            });
+            scripts.add({
+                name: "OnLoaded",
+                func: function () {
+                    events.OnLoaded = true;
+                }
+            });
 
             //When
-            var build = checkBox.build(null, {builder: checkBox, view: view, metadata: metadata});
-            $(build.render());
-            build.setValue(true);
+            var checkboxBuilder= new CheckBoxBuilder();
+
+            var checkbox = checkboxBuilder.build(null, {builder: builder, parentView: view, parent: view, metadata: metadata});
+            checkbox.render();
+            checkbox.setValue(true);
 
             // Then
-            assert.equal(window.Test.checkBox, 5);
-            assert.isTrue(window.Test.checkBoxLoaded);
+            assert.equal(events.OnValueChanged, true);
+            assert.equal(events.OnLoaded, true);
         });
     });
 });

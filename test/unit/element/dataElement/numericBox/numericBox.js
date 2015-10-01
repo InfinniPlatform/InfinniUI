@@ -87,7 +87,7 @@ describe('NumericBox', function () {
             assert.equal(onValueChanged, 1);
         });
 
-        it('should be true if scriptsHandlers call', function () {
+        it('should be triggered events: OnValueChanged, OnLoaded', function () {
             //Given
             var builder = new ApplicationBuilder();
             var view = new View();
@@ -101,18 +101,34 @@ describe('NumericBox', function () {
                     }
                 }
             };
-            window.Test = {numericBox:1, numericBoxLoaded: false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.numericBox = 5"}, {Name:"OnLoaded", Body:"window.Test.numericBoxLoaded = true"}]);
+            var scripts = view.getScripts();
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+
+            scripts.add({
+                name: "OnValueChanged",
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+
+            scripts.add({
+                name: "OnLoaded",
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
 
             //When
-            //var build = numericBox.build(numericBox, view, metadata);
-            var build = builder.build(view, metadata);
-            build.setValue(true);
-            $(build.render());
+            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
+            element.setValue(true);
+            element.render();
 
             // Then
-            assert.equal(window.Test.numericBox, 5);
-            assert.isTrue(window.Test.numericBoxLoaded);
+            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
+            assert.equal(events.OnLoaded, 1, 'OnLoaded');
         });
     });
 });
