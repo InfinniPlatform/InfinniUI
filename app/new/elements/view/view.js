@@ -65,7 +65,7 @@ _.extend(View.prototype,
         },
 
         registerElement: function(element){
-            this.context.controls[element.getName()] = element;
+            this.context.controls[element.name] = element;
         },
 
         getIcon: function(){

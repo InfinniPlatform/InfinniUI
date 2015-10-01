@@ -10,6 +10,14 @@ var Element = function (parent) {
     this.eventStore = new EventStore();
 };
 
+Object.defineProperties(Element.prototype, {
+    name: {
+        get: function () {
+            return this.getName()
+        }
+    }
+});
+
 _.extend(Element.prototype, {
 
     createControl: function () {
