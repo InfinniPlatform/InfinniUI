@@ -8,7 +8,24 @@ describe('Button', function () {
             checkElementMethods(element);
         });
 
+        it('should set getContent', function () {
+
+            var element = new Button();
+            assert.equal(typeof element.getContent(), 'undefined');
+
+            // when
+            element.setContent(content);
+
+            // then
+            assert.isTrue(element.getContent() === content);
+
+            function content(context, args) {
+                return 'button content';
+            }
+        });
+
     });
+
 
     describe('render', function () {
         var button;
@@ -124,9 +141,22 @@ describe('Button', function () {
         it('should be true if scriptsHandlers call', function () {
             //Given
             var view = new View();
-            view.setScripts([{Name:"OnClick", Body:"window.Test.button = 5"}, {Name: 'OnLoaded', Body:"window.Test.buttonLoaded = true"}]);
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnClick',
+                func: function (context, args) {
+                    window.Test.button = 5;
+                }
+            });
 
-            var button = new ButtonBuilder();
+            scripts.add({
+                name: 'OnLoaded',
+                func: function (context, args) {
+                    window.Test.buttonLoaded = true;
+                }
+            });
+
+            var buttonBuilder = new ButtonBuilder();
             var metadata = {
                 OnClick:{
                     Name: 'OnClick'
@@ -138,9 +168,11 @@ describe('Button', function () {
             window.Test = {button:1, buttonLoaded: false};
 
             //When
-            var build = button.build(null, {builder: button, view: view, metadata: metadata});
-            var $button = $(build.render());
-            $button.find('button').click();
+            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
+            button.render();
+            //var $button = $(button.render());
+            //$button.find('button').click();
+            button.click();
 
             // Then
             assert.equal(window.Test.button, 5);
