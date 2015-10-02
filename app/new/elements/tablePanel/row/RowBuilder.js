@@ -2,22 +2,22 @@
  * @constructor
  * @augments ContainerBuilder
  */
-function GridRowBuilder() {
-    _.superClass(GridRowBuilder, this);
+function RowBuilder() {
+    _.superClass(RowBuilder, this);
 }
 
-_.inherit(GridRowBuilder, ContainerBuilder);
+_.inherit(RowBuilder, ContainerBuilder);
 
-_.extend(GridRowBuilder.prototype,
-    /** @lends GridRowBuilder.prototype*/
+_.extend(RowBuilder.prototype,
+    /** @lends RowBuilder.prototype*/
     {
         createElement: function (params) {
-            return new GridRow(params.parent);
+            return new Row(params.parent);
         },
 
         /**
          * @param {Object} params
-         * @param {GridRowBuilder} params.element
+         * @param {RowBuilder} params.element
          * @param {Object} params.metadata
          */
         applyMetadata: function (params) {
