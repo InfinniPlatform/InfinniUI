@@ -320,9 +320,9 @@
         var invokeCallback = function (callback, data) {
             if (typeof callback === 'function') {
                 var args = Array.prototype.slice.call(arguments, 1);
-                callback.apply(undefined, args, {isCreated: item && item.__Id});
+                callback.apply(undefined, args, {isCreated: !!(item && item.__Id)});
             }
-            self.trigger('OnSaveItem', data, {isCreated: item && item.__Id});
+            self.trigger('OnSaveItem', data, {isCreated: !!(item && item.__Id)});
         };
 
         var idProperty = that.getIdProperty() || "Id";
@@ -344,7 +344,7 @@
                     self.showWarnings(validation.ValidationWarnings);
 
                     if(onSuccess){
-                        onSuccess(data, {isCreated: item && item.__Id});
+                        onSuccess(data, {isCreated: !!(item && item.__Id)});
                     }
                 }
             });
