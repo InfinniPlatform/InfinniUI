@@ -322,7 +322,7 @@
                 var args = Array.prototype.slice.call(arguments, 1);
                 callback.apply(undefined, args, {isCreated: item && item.__Id});
             }
-            self.trigger('OnSaveItem', data);
+            self.trigger('OnSaveItem', data, {isCreated: item && item.__Id});
         };
 
         var idProperty = that.getIdProperty() || "Id";
