@@ -30,43 +30,58 @@
     }
   ],
   "Items": [{
-    "StackPanel": {
+    "TablePanel": {
       "Name": "",
-      "Orientation": "Horizontal",
       "Items": [
-        {
-          "ToggleButton": {
-            "Text": "Subscribe",
-            "TextOn": "yes",
-            "TextOff": "no",
-            "OnValueChanged": {
-              "Name": "ToggleButtonOnValueChanged"
-            },
-            "OnValueChanging": {
-              "Name": "ToggleButtonOnValueChanging"
-            }
-          }
-        },
-        {
-          "TextBox": {
-            "Multiline": false,
-            "LineCount": 5,
-            "HintText": "I'm TextBox hint",
-            "LabelText": "Text label",
-            "Enabled": true,
-            "EditMask": {
-              "NumberEditMask": {
-                "Mask": "n3"
+          {
+              "Row": {
+                  "Items": [
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [{
+                                  "ToggleButton": {
+                                      "Text": "Subscribe",
+                                      "TextOn": "yes",
+                                      "TextOff": "no",
+                                      "OnValueChanged": {
+                                          "Name": "ToggleButtonOnValueChanged"
+                                      },
+                                      "OnValueChanging": {
+                                          "Name": "ToggleButtonOnValueChanging"
+                                      }
+                                  }
+                              }]
+                          }
+                      },
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [{
+                                  "TextBox": {
+                                      "Multiline": false,
+                                      "LineCount": 5,
+                                      "HintText": "I'm TextBox hint",
+                                      "LabelText": "Text label",
+                                      "Enabled": true,
+                                      "EditMask": {
+                                          "NumberEditMask": {
+                                              "Mask": "n3"
+                                          }
+                                      },
+                                      "Value": {
+                                          "PropertyBinding": {
+                                              "Source": "MainDataSource",
+                                              "Property": "$"
+                                          }
+                                      }
+                                  }
+                              }]
+                          }
+                      }
+                  ]
               }
-            },
-            "Value": {
-              "PropertyBinding": {
-                "Source": "MainDataSource",
-                "Property": "$"
-              }
-            }
-          }
-        },
+          },
         {
           "NumericBox": {
             "HintText": "I'm NumericBox hint",

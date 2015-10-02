@@ -2,13 +2,15 @@
  * @class
  * @augments ControlView
  */
-var RowView = ContainerView.extend(
-    /** @lends RowView.prototype */
+var CellView = ContainerView.extend(
+    /** @lends CellView.prototype */
     {
-        className: 'pl-row row',
+        className: 'pl-cell',
 
         initialize: function (options) {
             ContainerView.prototype.initialize.call(this, options);
+
+            this.initColumnSpan();
         },
 
         render: function () {
@@ -34,6 +36,30 @@ var RowView = ContainerView.extend(
                 that.$el
                     .append(element.render());
             });
+        },
+
+        initColumnSpan: function () {
+            this.listenTo(this.model, 'change:columnSpan', this.updateColumnSpan);
+            this.updateColumnSpan();
+        },
+
+        updateColumnSpan: function () {
+            var columnSpan = this.model.get('columnSpan'),
+                currentColumnSpan = this.columnSpan;
+
+            if(columnSpan != currentColumnSpan){
+
+                if(currentColumnSpan){
+                    this.$el
+                        .removeClass('col-xs-' + currentColumnSpan);
+                }
+
+                this.$el
+                    .addClass('col-xs-' + columnSpan);
+
+                this.columnSpan = columnSpan;
+            }
+
         }
     }
 );

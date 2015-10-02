@@ -2,22 +2,22 @@
  * @constructor
  * @augments ContainerBuilder
  */
-function GridPanelBuilder() {
-    _.superClass(GridPanelBuilder, this);
+function TablePanelBuilder() {
+    _.superClass(TablePanelBuilder, this);
 }
 
-_.inherit(GridPanelBuilder, ContainerBuilder);
+_.inherit(TablePanelBuilder, ContainerBuilder);
 
-_.extend(GridPanelBuilder.prototype,
-    /** @lends GridPanelBuilder.prototype*/
+_.extend(TablePanelBuilder.prototype,
+    /** @lends TablePanelBuilder.prototype*/
     {
         createElement: function (params) {
-            return new GridPanel(params.parent);
+            return new TablePanel(params.parent);
         },
 
         /**
          * @param {Object} params
-         * @param {GridkPanel} params.element
+         * @param {TablePanel} params.element
          * @param {Object} params.metadata
          */
         applyMetadata: function (params) {

@@ -3,14 +3,14 @@
  * @constructor
  * @augments Container
  */
-function GridPanel(parent) {
-    _.superClass(GridPanel, this, parent);
+function TablePanel(parent) {
+    _.superClass(TablePanel, this, parent);
 }
 
-_.inherit(GridPanel, Container);
+_.inherit(TablePanel, Container);
 
-_.extend(GridPanel.prototype, {
+_.extend(TablePanel.prototype, {
     createControl: function () {
-        return new GridPanelControl();
+        return new TablePanelControl();
     }
 });

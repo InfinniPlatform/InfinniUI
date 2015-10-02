@@ -27,7 +27,7 @@ _.extend(CellBuilder.prototype,
 
             ContainerBuilder.prototype.applyMetadata.call(this, params);
 
-            this.element.setColumnSpan(metadata.ColumnSpan);
+            params.element.setColumnSpan(metadata.ColumnSpan);
         }
 
     });
