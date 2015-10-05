@@ -1,33 +1,75 @@
+//Given
 this.Given(/^я не авторизован в системе$/, function (next) {
-	next();
+	if(window.configWindow.currentUser){
+		window.configWindow.contextApp.context.Global.session.signOut(function () {
+			window.configWindow.location.reload();
+			next();
+		});	
+	} else {
+		next();
+	}
 });
 
-this.When(/^ввожу в поле Логин "([^"]*)"$/, function (login, next) {
-	var api = window.parentCommitteeWindow.contextApp;
-	var signInView = api.getChildView('SignInView');
-	
-	chai.assert.isTrue(signInView != null, 'SignInView not found');
-
-	signInView.getContext().Controls['Login'].setValue('ivan@test.ru');
-	signInView.getContext().Controls['Password'].setValue('ivan@test.ru');
-	signInView.getContext().Controls['SignInButton'].click(); 
-
-	setTimeout( next , 1000);
+this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewName, next) {
+	window.testHelpers.waitView(viewName, 
+		function(){
+			window.currentView = window.configWindow.contextApp.getChildView(viewName);
+			window.currentViewContext = window.currentView.getContext();
+			next();
+		}
+	);
 });
 
+
+//When
+this.When(/^введу в поле "([^"]*)" значение "([^"]*)"$/, function (fieldName, value, next) {
+	try{
+		window.currentViewContext.Controls[fieldName].setValue(value);
+		next();
+	} catch(err){
+		next(err);
+	}
+});
+
+this.When(/^нажму кнопку "([^"]*)"$/, function (buttonName, next) {
+	try{
+		window.currentViewContext.Controls[buttonName].click();
+		next();
+	} catch(err){
+		next(err);
+	}
+});
+
+
+//Then
 this.Then(/^система авторизует меня под пользователем "([^"]*)"$/, function (userName, next) {
-	var assert = chai.assert;
+	var haveUser = function(){		
+		return window.configWindow.currentUser != null;
+	};
 
-	assert.isTrue(window.parentCommitteeWindow.currentUser != null, 'Authorized user not found');
-	assert.equal(window.parentCommitteeWindow.currentUser.UserName, userName);
+	var checkUserName = function(){
+		try{
+			chai.assert.equal(window.configWindow.currentUser.UserName, userName);
+			next();
+		}catch(err){
+			next(err);
+		}
+	};
 
-	next();
+	var fail = function(){
+		next(new Error('User is undefined'));
+	};
+
+	window.testHelpers.waitCondition(haveUser, checkUserName, fail);
 });
 
 this.Then(/^система отобразит экран "([^"]*)"$/, function (viewName, next) {
-	var expectationView = window.parentCommitteeWindow.contextApp.getChildView(viewName);
 
-	chai.assert.isTrue(expectationView != null, viewName + ' not found');
-
-	next();
+	window.testHelpers.waitView(viewName, 
+		next,
+		function(){
+			next(new Error(viewName + ' not found'));
+		}
+	);
 });
+

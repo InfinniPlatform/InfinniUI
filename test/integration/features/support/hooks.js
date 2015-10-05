@@ -1,11 +1,15 @@
 this.BeforeScenario( function(scenario, callback) {
 
-	window.parentCommitteeWindow = window.open("http://localhost:8181/launcher/");	
-	//TODO: do signOut;
-	setTimeout( callback , 1000);
+	window.configWindow = window.open("http://localhost:8181/launcher/");	
+
+	window.testHelpers.waitCondition(function(){
+		return window.configWindow.contextApp != null;
+	}, callback);
 });
 
+
+
 this.AfterScenario( function(scenario, callback) {
-	window.parentCommitteeWindow.close();
+	window.configWindow.close();
 	callback();
 });
