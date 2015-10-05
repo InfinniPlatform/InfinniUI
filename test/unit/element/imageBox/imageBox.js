@@ -1,4 +1,40 @@
 describe('ImageBox', function () {
+    describe('urlConstructor', function () {
+        var urlConstructor = new DocumentUploadQueryConstructor('http://127.0.0.1', {configId: 'config', documentId: 'document'});
+
+        it('construct upload url', function () {
+            var url = urlConstructor.getUploadUrl('photo', '11');
+
+            assert.equal(url,
+                'http://127.0.0.1/'
+                + 'RestfulApi/Upload/configuration/uploadbinarycontent/?linkedData='
+                +  '{"Configuration":"config","Metadata":"document","DocumentId":"11","FieldName":"photo"}');
+        });
+
+        it('construct download url', function () {
+            var url = urlConstructor.getFileUrl('photo', '11');
+
+            assert.equal(url,
+                'http://127.0.0.1/'
+                + 'RestfulApi/UrlEncodedData/configuration/downloadbinarycontent/?Form='
+                +  '{"Configuration":"config","Metadata":"document","DocumentId":"11","FieldName":"photo"}');
+        });
+
+    });
+
+    describe('debug', function () {
+
+        var builder = new ApplicationBuilder();
+            var view = new View();
+            var metadata = {};
+
+            var element = builder.buildType("ImageBox", metadata, {parent: view, parentView: view, builder: builder});
+
+            var $el = element.render();
+            $('body').append($el);
+
+    });
+
     describe('Render', function () {
         var element;
 

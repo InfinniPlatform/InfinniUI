@@ -33,5 +33,7 @@ var editorBaseBuilderMixin = {
 
             dataBinding.bindElement(params.element, 'value');
         }
+
+        return dataBinding;
     }
 };

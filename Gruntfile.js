@@ -41,7 +41,9 @@
             '!app/controls/popupButton/**/*.*',
             '!app/element/actionElement/popupButton/**/*.*',
             '!app/element/actionElement/toolBar/**/*.*',
-            '!app/controls/toolBar/**/*.*'
+            '!app/controls/toolBar/**/*.*',
+            '!app/controls/imageBox/**/*.*',
+            '!app/element/imageBox/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -111,6 +113,9 @@
     grunt.initConfig({
         concat: {
             app: {
+                options: {
+                    sourceMap: true
+                },
                 src: appFiles,
                 dest: 'out/app.js'
             },
