@@ -3,7 +3,6 @@
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-jscs');
-    //grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -24,6 +23,7 @@
             'app/new/elements/*.js',
             'app/**/*.js',
             'extensions/**/*.js',
+            'bootstrap_framework/js/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js',
@@ -42,63 +42,28 @@
             '!app/element/actionElement/popupButton/**/*.*',
             '!app/element/actionElement/toolBar/**/*.*',
             '!app/controls/toolBar/**/*.*'
+
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
             'bower_components/underscore/underscore.js',
             'bower_components/backbone/backbone.js',
-            'bower_components/metronic/assets/global/plugins/select2/select2.js',
             'bower_components/moment/moment.js',
             'bower_components/moment/lang/ru.js',
-            'bower_components/ractive/ractive.js',
             'bower_components/signalr/jquery.signalR.js',
             'bower_components/jstree/dist/jstree.js',
             'bower_components/ulogin/index.js',
-            'bower_components/metronic/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.ru.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modal.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
-            'bower_components/metronic/assets/global/plugins/uniform/jquery.uniform.js',
-			'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.js',
-			'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
-			'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js',
-            'bower_components/metronic/assets/global/scripts/metronic.js',
             'bower_components/JavaScript-MD5/js/md5.js',
-            'bower_components/metronic/assets/admin/layout/scripts/layout.js',
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js'
         ],
-        appStyleFiles = ['app/styles/main.less'],
+        appStyleFiles = [
+            'app/styles/main.less'
+        ],
         vendorCssFiles = [
             'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
-            'bower_components/font-awesome/css/font-awesome.min.css',
-            'bower_components/metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css',
-            'bower_components/metronic/assets/global/plugins/uniform/css/uniform.default.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-select/bootstrap-select.min.css',
-            'bower_components/metronic/assets/global/plugins/select2/select2.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/css/datepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/css/datetimepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/css/bootstrap-modal.css',
-            'bower_components/metronic/assets/global/css/components.css',
-            'bower_components/metronic/assets/global/css/plugins.css',
-            'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.css',
-
-            'bower_components/metronic/assets/admin/layout/css/layout.css',
-            'bower_components/metronic/assets/admin/layout/css/custom.css',
-
-            'bower_components/metronic/assets/admin/layout/css/themes/darkblue.css'
+            'bower_components/font-awesome/css/font-awesome.min.css'
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
@@ -165,8 +130,7 @@
                 src: [
                     'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
                     'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png',
-                    'bower_components/metronic/assets/global/plugins/select2/select2-spinner.gif'
+                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png'
                 ],
                 dest: 'out/css/'
             },
@@ -175,8 +139,8 @@
                 flatten: true,
                 src: [],
                 dest: 'out/images/'
-            },
-            images: {
+            }
+            /*images: {
                 files: [
                     {
                         cwd: 'bower_components/metronic/assets/global/img/',
@@ -197,16 +161,7 @@
                         expand: true
                     }
                 ]
-            }
-        },
-
-        jscs: {
-            default: {
-                src: ['app/element/dataElement/dataGrid/**/*.js', 'app/controls/dataGrid/**/*.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
+            }*/
         },
 
         watch: {

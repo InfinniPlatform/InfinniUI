@@ -10,6 +10,8 @@ moment.locale('ru');
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
+    window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+
     setTimeout(layoutManager.init.bind(layoutManager), 1000);
     window.providerRegister.register('MetadataDataSource', function (metadataValue) {
         var $pageContent = $('body');
@@ -37,7 +39,7 @@ moment.locale('ru');
     rootView.open($target);
     openHomePage()
         .done(function (viewMetadata) {
-            var action = builder.buildType(rootView, 'OpenViewAction', viewMetadata);
+            var action = builder.buildType('OpenViewAction', viewMetadata, {parentView: rootView});
             action.execute(function(){window.contextApp = arguments[0];});
         });
 

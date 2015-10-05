@@ -29,111 +29,59 @@
       }
     }
   ],
-  "LayoutPanel": {
-    "StackPanel": {
+  "Items": [{
+    "TablePanel": {
       "Name": "",
-      "Orientation": "Horizontal",
       "Items": [
-        {
-          "CheckBox": {
-            "Text": "Подписаться на новости",
-            "Value": {
-              "PropertyBinding": {
-                "DataSource": "MainDataSource",
-                "Property": "IsSubscribe"
-              }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged"
-            },
-            "OnValueChanging": {
-              "Name": "OnValueChanging"
-            }
-          }
-        },
-        {
-          "ToggleButton": {
-            "Text": "Subscribe",
-            "TextOn": "yes",
-            "TextOff": "no",
-            "OnValueChanged": {
-              "Name": "ToggleButtonOnValueChanged"
-            },
-            "OnValueChanging": {
-              "Name": "ToggleButtonOnValueChanging"
-            }
-          }
-        },
-        {
-          "ListBox": {
-            "~ItemTemplate": {
-              "StackPanel": {
-                "Name": "",
-                "Items": [
-                  {
-                    "TextBox": {
-                      "Value": {
-                        "PropertyBinding": {
-                          "DataSource": "BloodGroupDataSource",
-                          "Property": "$.Id"
-                        }
+          {
+              "Row": {
+                  "Items": [
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [{
+                                  "ToggleButton": {
+                                      "Text": "Subscribe",
+                                      "TextOn": "yes",
+                                      "TextOff": "no",
+                                      "OnValueChanged": {
+                                          "Name": "ToggleButtonOnValueChanged"
+                                      },
+                                      "OnValueChanging": {
+                                          "Name": "ToggleButtonOnValueChanging"
+                                      }
+                                  }
+                              }]
+                          }
+                      },
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [{
+                                  "TextBox": {
+                                      "Multiline": false,
+                                      "LineCount": 5,
+                                      "HintText": "I'm TextBox hint",
+                                      "LabelText": "Text label",
+                                      "Enabled": true,
+                                      "EditMask": {
+                                          "NumberEditMask": {
+                                              "Mask": "n3"
+                                          }
+                                      },
+                                      "Value": {
+                                          "PropertyBinding": {
+                                              "Source": "MainDataSource",
+                                              "Property": "$"
+                                          }
+                                      }
+                                  }
+                              }]
+                          }
                       }
-                    }
-                  }
-                ]
+                  ]
               }
-            },
-            "~ItemProperty": "DisplayName",
-            "ItemFormat": {
-              "ObjectFormat": {
-                "Format": "{Id}: {DisplayName}"
-              }
-            },
-            "GroupValueSelector": {
-              "Name": "GroupValueSelector"
-            },
-            "GroupItemProperty": "",
-            "~GroupItemFormat": {
-              "ObjectFormat": {
-                "Format": "{}"
-              }
-            },
-            "~ItemSelector": {
-              "Name": "ItemSelector"
-            },
-            "MultiSelect": false,
-            "ValueSelector": {
-              "Name": "ValueSelector"
-            },
-            "Items": {
-              "PropertyBinding": {
-                "DataSource": "BloodGroupDataSource"
-              }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged"
-            }
-          }
-        },
-        {
-          "TextBox": {
-            "Multiline": false,
-            "LineCount": 5,
-            "HintText": "I'm TextBox hint",
-            "LabelText": "Text label",
-            "Enabled": true,
-            "EditMask": {
-              "NumberEditMask": {
-                "Mask": "n3"
-              }
-            },
-            "Value": {
-              "PropertyBinding": {
-                "DataSource": "MainDataSource"
-              }
-            }
-          }
-        },
+          },
         {
           "NumericBox": {
             "HintText": "I'm NumericBox hint",
@@ -147,7 +95,8 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource"
+                "Source": "MainDataSource",
+                "Property": "$"
               }
             }
           }
@@ -169,7 +118,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -191,7 +140,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -215,7 +164,7 @@
             },
             "Value": {
               "PropertyBinding": {
-                "DataSource": "MainDataSource",
+                "Source": "MainDataSource",
                 "Property": "birthday"
               }
             }
@@ -223,7 +172,7 @@
         }
       ]
     }
-  },
+  }],
   "Scripts": [
     {
       "Name": "OnValueChanged",

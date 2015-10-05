@@ -26,6 +26,10 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TabPanel', new TabPanelBuilder());
         builder.register('TabPage', new TabPageBuilder());
 
+        builder.register('TablePanel', new TablePanelBuilder());
+        builder.register('Cell', new CellBuilder());
+        builder.register('Row', new RowBuilder());
+
         builder.register('MenuBar', new MenuBarBuilder());
         
         builder.register('DataGrid', new DataGridBuilder());
