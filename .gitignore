@@ -35,3 +35,4 @@ node_modules
 # Bower
 bower_components/*
 bower_cache/*
+test/integration/example/features/
