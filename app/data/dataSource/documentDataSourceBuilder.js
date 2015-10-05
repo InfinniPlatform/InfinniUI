@@ -24,8 +24,8 @@ function DocumentDataSourceBuilder() {
             .on('OnDeleteItem', function (data) {
                 exchange.send(messageTypes.onDeleteItem, {value: data, source: dataSource});
             })
-            .on('OnSaveItem', function (data) {
-                exchange.send(messageTypes.onSaveItem, {value: data, source: dataSource});
+            .on('OnSaveItem', function (data, params) {
+                exchange.send(messageTypes.onSaveItem, {value: data, source: dataSource, isCreated: params.isCreated});
             });
     }
 }

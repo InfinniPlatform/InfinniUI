@@ -73,7 +73,7 @@ moment.lang('ru');
 
 })(
     $('body'),
-    //'/app/stubs/viewer.json'
+    //'/app/stubs/datasource.json'
     {ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage', OpenMode: 'Container'}
 );
 

@@ -4,7 +4,7 @@ var ButtonView = ControlView.extend({
     template: InfinniUI.Template["controls/button/template/button.tpl.html"],
 
     events: {
-        'click': 'onClickHandler'
+
     },
 
     UI: {
@@ -56,10 +56,6 @@ var ButtonView = ControlView.extend({
         var isEnabled = this.model.get('enabled');
 
         this.ui.button.prop('disabled', !isEnabled || !pEnabled);
-    },
-
-    onClickHandler: function (e) {
-        this.trigger('onClick', e);
     }
 
 });
