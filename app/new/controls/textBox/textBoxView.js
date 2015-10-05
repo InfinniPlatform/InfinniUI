@@ -9,6 +9,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
     },
 
+    class: 'pl-textbox form-group',
+
     UI: _.extend({}, TextEditorBaseView.prototype.UI),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {

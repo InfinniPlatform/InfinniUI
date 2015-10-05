@@ -10,7 +10,10 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        hintText: '.pl-control-hint-text',
+        errorText: '.pl-control-error-text',
+        warningText: '.pl-control-warning-text'
     }),
 
     events: {
