@@ -12,7 +12,7 @@
 }
 
 .togglebutton-box {
-  width: 100px;
+  width: 66px;
   border: 1px solid @pl-primary1;
   border-radius: @border-radius-base;
   overflow: hidden;
@@ -27,11 +27,19 @@
 .togglebutton-container .togglebutton-handle-on,
 .togglebutton-container .togglebutton-handle-label,
 .togglebutton-container .togglebutton-handle-off {
-  padding: 5px 10px;
-  width: 50px;
   cursor: pointer;
   display: inline-block;
   text-align: center;
+}
+
+.togglebutton-container .togglebutton-handle-on,
+.togglebutton-container .togglebutton-handle-off {
+  width: 50px;
+  padding: 5px 10px;
+}
+
+.togglebutton-container .togglebutton-handle-label{
+  width: 14px;
 }
 
 .togglebutton-handle-on {
