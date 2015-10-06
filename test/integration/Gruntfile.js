@@ -3,12 +3,12 @@
         concat: {
             feature: {
                 src: ["features/*.feature"],
-                dest: 'example/features/feature.feature'
+                dest: 'out/feature.feature'
             },
 			
 			step_definitions: {
                 src: ["features/support/*.js", "features/step_definitions/*.js"],
-                dest: 'example/features/step_definitions.js'
+                dest: 'out/step_definitions.js'
             }
         }
     });

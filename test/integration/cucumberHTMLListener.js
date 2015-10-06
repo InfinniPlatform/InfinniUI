@@ -1,34 +1,3 @@
-﻿function runIntegrat(){
-	var supportCode, 
-		xhr = new XMLHttpRequest();
-		 
-	xhr.open('GET', 'features/feature.feature', false);
-	xhr.send();
-	if(xhr.status != 200)
-		return;
-		
-	var featureSource = '# language: ru\n' + xhr.responseText;
-	
-	xhr.open('GET', 'features/step_definitions.js', false);
-	xhr.send();
-	if(xhr.status != 200)
-		return;
-		
-	eval('supportCode   = function() {' + xhr.responseText + '};');	
-	
-	 
-	var listener = CucumberHTMLListener($('#test-result'));
-	var cucumber = Cucumber(featureSource, supportCode);
-	cucumber.attachListener(listener);
-
-	try {
-		cucumber.start(function() {});
-    } catch(err) {
-		debugger;
-	};
-};
-
-
 function CucumberHTMLListener($root) {
 	var formatter = new CucumberHTML.DOMFormatter($root);
 
