@@ -5,11 +5,9 @@ _.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
 _.extend(DocumentDataSourceBuilder.prototype, {
     applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
         dataSource.setConfigId(metadata.ConfigId);
         dataSource.setDocumentId(metadata.DocumentId);
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
-
-        this.initUploader(dataSource);
     },
 
     createDataSource: function(parent){
@@ -18,12 +16,12 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         });
     },
 
-    initUploader: function (metadata) {
-        var dataProviderUpload = window.providerRegister.build('DocumentUploadProvider', {
-            documentId: metadata.documentId,
-            configId: metadata.configId
+    initFileProvider: function (dataSource) {
+        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+            documentId: dataSource.getDocumentId(),
+            configId: dataSource.getConfigId()
         });
 
-        this.setUploadDataProvider(dataProviderUpload);
+        dataSource.setFileProvider(fileProvider);
     }
 });

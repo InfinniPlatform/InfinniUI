@@ -27,6 +27,7 @@ _.extend(ImageBoxBuilder.prototype, {
         //    toElement: toElement
         //});
 
+
         if (binding) {
             var ds = binding.getSource();
             var uploadProvider = ds.getUploadDataProvider();
@@ -46,11 +47,14 @@ _.extend(ImageBoxBuilder.prototype, {
                 });
             });
 
+            params.element.onValueChanged(function () {
+                ds.setFile(params.element.getFile(), binding.getElementProperty());
+            });
         }
 
         var file;
 
-        params.element.onValueChanged(onValueChanged);
+
 
         //@TODO ds.afterSave(afterSave)
 
@@ -61,13 +65,6 @@ _.extend(ImageBoxBuilder.prototype, {
 
             //  upload/delete file
             //@TODO uploadFile(instanceId, file)
-        }
-
-        function onValueChanged (context, args) {
-            //get & store file's content
-            //
-            //@TODO file = loadFile();
-            //
         }
 
         function toSource(context, args) {

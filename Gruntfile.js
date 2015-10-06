@@ -114,7 +114,7 @@
         concat: {
             app: {
                 options: {
-                    sourceMap: true
+                    sourceMap: false
                 },
                 src: appFiles,
                 dest: 'out/app.js'

@@ -1,3 +1,8 @@
+/**
+ * @constructor
+ * @augments Backbone.Model
+ * @mixes dataSourceFileProviderMixin
+ */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
@@ -29,15 +34,15 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-    initialize: function(){
+    initialize: function () {
         this.initDataProvider();
 
-        if(!this.get('view')){
+        if (!this.get('view')) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
     },
 
-    initDataProvider: function(){
+    initDataProvider: function () {
         throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
     },
 
@@ -54,10 +59,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     onPropertyChanged: function (property, handler) {
-        if(typeof property == 'function'){
+        if (typeof property == 'function') {
             handler = property;
             this.on('onPropertyChanged', handler);
-        }else{
+        } else {
             this.on('onPropertyChanged:' + property, handler);
         }
 
@@ -83,39 +88,39 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onItemDeleted', handler);
     },
 
-    getName: function(){
+    getName: function () {
         return this.get('name');
     },
 
-    setName: function(name){
+    setName: function (name) {
         this.set('name', name);
     },
 
-    getView: function(){
+    getView: function () {
         return this.get('view');
     },
 
-    getItems: function(){
+    getItems: function () {
         return this.get('items');
     },
 
-    _setItems: function(items){
+    _setItems: function (items) {
         var indexOfItemsById;
 
         this.set('isDataReady', true);
         this.set('items', items);
         this._clearModifiedSet();
-        if(items && items.length > 0){
+        if (items && items.length > 0) {
             indexOfItemsById = this._indexItemsById(items);
             this.set('itemsById', indexOfItemsById);
 
             this.setSelectedItem(items[0]);
-        }else{
+        } else {
             this.setSelectedItem(null);
         }
     },
 
-    _addItems: function(newItems){
+    _addItems: function (newItems) {
         var indexedItemsById = this.get('itemsById'),
             items = this.getItems(),
             newIndexedItemsById;
@@ -124,31 +129,31 @@ var BaseDataSource = Backbone.Model.extend({
 
         items = _.union(items, newItems);
         this.set('items', items);
-        if(newItems && newItems.length > 0){
+        if (newItems && newItems.length > 0) {
             newIndexedItemsById = this._indexItemsById(newItems);
             _.extend(indexedItemsById, newIndexedItemsById);
             this.set('itemsById', indexedItemsById);
         }
     },
 
-    getSelectedItem: function(){
+    getSelectedItem: function () {
         return this.get('selectedItem');
     },
 
-    setSelectedItem: function(item, success, error){
+    setSelectedItem: function (item, success, error) {
         var currentSelectedItem = this.getSelectedItem(),
             items = this.get('itemsById'),
             itemId = this._idOfItem(item);
 
-        if(item == currentSelectedItem){
+        if (item == currentSelectedItem) {
             return;
         }
 
-        if(item !== null){
-            if(!items[itemId]){
-                if(!error){
+        if (item !== null) {
+            if (!items[itemId]) {
+                if (!error) {
                     throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
-                }else{
+                } else {
                     error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
                     return;
                 }
@@ -160,13 +165,13 @@ var BaseDataSource = Backbone.Model.extend({
         this._notifyAboutSelectedItem(item, success);
     },
 
-    _notifyAboutSelectedItem: function(item, successHandler){
+    _notifyAboutSelectedItem: function (item, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onSelectedItemChanged', context, argument);
@@ -201,7 +206,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageNumber: function (value) {
-        if(!Number.isInteger(value) || value < 0){
+        if (!Number.isInteger(value) || value < 0) {
             throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
         }
 
@@ -216,7 +221,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageSize: function (value) {
-        if(!Number.isInteger(value) || value < 0){
+        if (!Number.isInteger(value) || value < 0) {
             throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
         }
 
@@ -226,16 +231,16 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    isModifiedItems : function () {
+    isModifiedItems: function () {
         return this.isModified();
     },
 
-    isModified : function (item) {
-        if(arguments.length == 0){
+    isModified: function (item) {
+        if (arguments.length == 0) {
             return _.size(this.get('modifiedItems')) > 0;
         }
 
-        if (item != null && item !== undefined) {
+        if (item === null || item === undefined) {
             return false;
         }
         else {
@@ -244,89 +249,89 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _includeItemToModifiedSet: function(item){
+    _includeItemToModifiedSet: function (item) {
         var itemId = this._idOfItem(item);
         this.get('modifiedItems')[itemId] = item;
     },
 
-    _excludeItemFromModifiedSet: function(item){
+    _excludeItemFromModifiedSet: function (item) {
         var itemId = this._idOfItem(item);
         delete this.get('modifiedItems')[itemId];
     },
 
-    _clearModifiedSet: function(){
+    _clearModifiedSet: function () {
         this.set('modifiedItems', {});
     },
 
-    getProperty: function(property){
+    getProperty: function (property) {
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, source;
 
-        if(property == ''){
+        if (property == '') {
             return this.getItems();
-        }else if(property == '$'){
+        } else if (property == '$') {
             return selectedItem;
-        }else{
-            if(property.substr(0,2) == '$.'){
+        } else {
+            if (property.substr(0, 2) == '$.') {
                 relativeProperty = property.substr(2);
                 source = selectedItem;
-            }else{
+            } else {
                 relativeProperty = property;
 
-                if(bindingByIndexRegEx.test(property)){
+                if (bindingByIndexRegEx.test(property)) {
                     source = this.getItems();
-                }else{
+                } else {
                     source = selectedItem;
                 }
             }
 
 
-                return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
+            return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
 
 
         }
     },
 
-    setProperty: function(property, value){
+    setProperty: function (property, value) {
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, oldValue, source;
 
-        if(!selectedItem){
+        if (!selectedItem) {
             return;
         }
 
-        if(property == ''){
+        if (property == '') {
             oldValue = this.getItems();
             this._setItems(value);
 
-        }else if(property == '$'){
-            if(value != selectedItem){
+        } else if (property == '$') {
+            if (value != selectedItem) {
                 oldValue = this._copyObject(selectedItem);
                 this._replaceAllProperties(selectedItem, value);
-            }else{
+            } else {
                 return;
             }
 
-        }else{
-            if(property.substr(0,2) == '$.'){
+        } else {
+            if (property.substr(0, 2) == '$.') {
                 relativeProperty = property.substr(2);
                 source = selectedItem;
-            }else{
+            } else {
                 relativeProperty = property;
 
-                if(bindingByIndexRegEx.test(property)){
+                if (bindingByIndexRegEx.test(property)) {
                     source = this.getItems();
-                }else{
+                } else {
                     source = selectedItem;
                 }
             }
 
             oldValue = InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-            if(value != oldValue){
+            if (value != oldValue) {
                 InfinniUI.ObjectUtils.setPropertyValue(source, relativeProperty, value);
-            }else{
+            } else {
                 return;
             }
         }
@@ -335,7 +340,7 @@ var BaseDataSource = Backbone.Model.extend({
         this._notifyAboutPropertyChanged(property, value, oldValue);
     },
 
-    _notifyAboutPropertyChanged : function (property, newValue, oldValue) {
+    _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
@@ -347,76 +352,85 @@ var BaseDataSource = Backbone.Model.extend({
         this.trigger('onPropertyChanged:' + property, context, argument);
     },
 
-    saveItem : function (item, success, error) {
+    saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
-            that = this,
+            ds = this,
             validateResult;
 
-        if(!this.isModified(item)){
+        if (!this.isModified(item)) {
             this._notifyAboutItemSaved(item, success);
             return;
         }
 
         validateResult = this.validateOnErrors(item);
-        if(!validateResult.isValid){
+        if (!validateResult.isValid) {
             this._notifyAboutFailValidationBySaving(item, validateResult, error);
             return;
         }
 
-        dataProvider.saveItem(item, function(data){
-            if( !('isValid' in data) || data.isValid === true ){
-                that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved(item, success);
-            }else{
-                that._notifyAboutFailValidationBySaving(item, data, error);
+        dataProvider.saveItem(item, function (data) {
+            if (!('isValid' in data) || data.isValid === true) {
+                //@TODO Что приходит в ответ на сохранение?????
+                ds.uploadFiles(data.instanceId)
+                    .then(function () {
+                        ds._excludeItemFromModifiedSet(item);
+                        ds._notifyAboutItemSaved(item, success);
+                    }, function (err) {
+                        console.log(err);
+                        if (error) {
+                            error(err);
+                        }
+                    });
+            } else {
+                ds._notifyAboutFailValidationBySaving(item, data, error);
             }
         });
     },
 
-    _notifyAboutItemSaved: function(item, successHandler){
+    _notifyAboutItemSaved: function (item, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onItemSaved', context, argument);
     },
 
-    _notifyAboutFailValidationBySaving: function(item, validationResult, errorHandler){
+    _notifyAboutFailValidationBySaving: function (item, validationResult, errorHandler) {
         this._notifyAboutValidation(validationResult, errorHandler, 'error');
     },
 
-    deleteItem : function (item, success, error) {
+    deleteItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
             that = this,
             itemId = this._idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
-        if(!isItemInSet){
+        if (!isItemInSet) {
             this._notifyAboutMissingDeletedItem(item, error);
             return;
         }
 
-        dataProvider.deleteItem(item, function(data){
-            if( !('isValid' in data) || data.isValid === true ){
+        dataProvider.deleteItem(item, function (data) {
+            if (!('isValid' in data) || data.isValid === true) {
                 that._handleDeletedItem(item, success);
-            }else{
+            } else {
                 that._notifyAboutFailValidationByDeleting(item, data, error);
             }
         });
     },
 
-    _handleDeletedItem: function(item, successHandler){
+    _handleDeletedItem: function (item, successHandler) {
         var items = this.get('items'),
             idProperty = this.get('idProperty'),
             itemId = this._idOfItem(item),
             selectedItem = this.getSelectedItem();
 
-        for(var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++){
-            if(items[i][idProperty] == itemId){
+        for (var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++) {
+            if (items[i][idProperty] == itemId) {
                 items.splice(i, 1);
                 needExit = true;
             }
@@ -424,26 +438,26 @@ var BaseDataSource = Backbone.Model.extend({
         delete this.get('itemsById')[itemId];
         this._excludeItemFromModifiedSet(item);
 
-        if(selectedItem && selectedItem[idProperty] == itemId){
+        if (selectedItem && selectedItem[idProperty] == itemId) {
             this.setSelectedItem(null);
         }
 
         this._notifyAboutItemDeleted(item, successHandler);
     },
 
-    _notifyAboutItemDeleted: function(item, successHandler){
+    _notifyAboutItemDeleted: function (item, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onItemDeleted', context, argument);
     },
 
-    _notifyAboutMissingDeletedItem: function(item, errorHandler){
+    _notifyAboutMissingDeletedItem: function (item, errorHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
@@ -452,29 +466,29 @@ var BaseDataSource = Backbone.Model.extend({
             message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
         };
 
-        if(errorHandler){
+        if (errorHandler) {
             errorHandler(context, argument);
         }
     },
 
-    _notifyAboutFailValidationByDeleting: function(item, errorData, errorHandler){
+    _notifyAboutFailValidationByDeleting: function (item, errorData, errorHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
         argument.error = errorData;
 
-        if(errorHandler){
+        if (errorHandler) {
             errorHandler(context, argument);
         }
     },
 
-    isDataReady: function(){
+    isDataReady: function () {
         return this.get('isDataReady');
     },
 
-    getItems: function(){
-        if(!this.isDataReady()){
+    getItems: function () {
+        if (!this.isDataReady()) {
             logger.warn({
                 message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',
                 source: this
@@ -484,8 +498,8 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('items');
     },
 
-    updateItems: function(onSuccess, onError){
-        if (!this.get('isUpdateSuspended')){
+    updateItems: function (onSuccess, onError) {
+        if (!this.get('isUpdateSuspended')) {
             var filters = this.getFilter(),
                 pageNumber = this.get('pageNumber'),
                 pageSize = this.get('pageSize'),
@@ -494,28 +508,28 @@ var BaseDataSource = Backbone.Model.extend({
                 that = this;
 
             this.set('isRequestInProcess', true);
-            dataProvider.getItems( filters, pageNumber, pageSize, sorting, function(data){
+            dataProvider.getItems(filters, pageNumber, pageSize, sorting, function (data) {
 
                 that.set('isRequestInProcess', false);
                 that._handleUpdatedItemsData(data, onSuccess);
 
-            }, onError );
+            }, onError);
         }
 
     },
 
-    _handleUpdatedItemsData: function(itemsData, successHandler){
+    _handleUpdatedItemsData: function (itemsData, successHandler) {
         this._setItems(itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
 
-    _notifyAboutItemsUpdated: function(itemsData, successHandler){
+    _notifyAboutItemsUpdated: function (itemsData, successHandler) {
         var context = this.getContext(),
             argument = {
                 value: itemsData
             };
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onItemsUpdated', context, argument);
@@ -523,7 +537,7 @@ var BaseDataSource = Backbone.Model.extend({
         this._notifyAboutItemsUpdatedAsPropertChanged(itemsData);
     },
 
-    _notifyAboutItemsUpdatedAsPropertChanged: function(itemsData){
+    _notifyAboutItemsUpdatedAsPropertChanged: function (itemsData) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
@@ -535,8 +549,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.trigger('onPropertyChanged:', context, argument);
     },
 
-    addNextItems: function(success, error){
-        if (!this.get('isUpdateSuspended')){
+    addNextItems: function (success, error) {
+        if (!this.get('isUpdateSuspended')) {
             var filters = this.getFilter(),
                 pageNumber = this.get('pageNumber'),
                 pageSize = this.get('pageSize'),
@@ -546,131 +560,131 @@ var BaseDataSource = Backbone.Model.extend({
 
             this.set('isRequestInProcess', true);
             this.set('pageNumber', pageNumber + 1);
-            dataProvider.getItems( filters, pageNumber + 1, pageSize, sorting, function(data){
+            dataProvider.getItems(filters, pageNumber + 1, pageSize, sorting, function (data) {
 
                 that.set('isRequestInProcess', false);
                 that._handleAddedItems(data, success);
 
-            }, error );
+            }, error);
         }
     },
 
-    _handleAddedItems: function(itemsData, successHandler){
+    _handleAddedItems: function (itemsData, successHandler) {
         this._addItems(itemsData);
         this._notifyAboutItemsAdded(itemsData, successHandler);
 
     },
 
-    _notifyAboutItemsAdded: function(itemsData, successHandler){
+    _notifyAboutItemsAdded: function (itemsData, successHandler) {
         var context = this.getContext(),
             argument = {
                 value: itemsData
             };
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onItemsAdded', context, argument);
     },
 
-    createItem: function(success, error){
+    createItem: function (success, error) {
         var dataProvider = this.get('dataProvider'),
             idProperty = this.get('idProperty'),
             that = this,
             localItem;
 
-        if(this.get('fillCreatedItem')){
+        if (this.get('fillCreatedItem')) {
             dataProvider.createItem(
                 function (item) {
                     that._handleDataForCreatingItem(item, success);
                 },
                 idProperty
             );
-        }else{
+        } else {
             localItem = dataProvider.createLocalItem(idProperty);
             this._handleDataForCreatingItem(localItem, success);
         }
     },
 
-    _handleDataForCreatingItem: function(itemData, successHandler){
+    _handleDataForCreatingItem: function (itemData, successHandler) {
         this._setItems([itemData]);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
 
-    _notifyAboutItemCreated: function(createdItem, successHandler){
+    _notifyAboutItemCreated: function (createdItem, successHandler) {
         var context = this.getContext(),
             argument = {
                 value: createdItem
             };
 
-        if(successHandler){
+        if (successHandler) {
             successHandler(context, argument);
         }
         this.trigger('onItemCreated', context, argument);
     },
 
-    getFilter: function(){
+    getFilter: function () {
         return this.get('criteriaList');
     },
 
-    setFilter: function(filter){
+    setFilter: function (filter) {
         this.set('criteriaList', filter);
         this.updateItems();
     },
 
-    setIdFilter: function(itemId){
+    setIdFilter: function (itemId) {
         var dataProvider = this.get('dataProvider'),
             idFilter = dataProvider.createIdFilter(itemId);
 
         this.setFilter(idFilter);
     },
 
-    getErrorValidator: function(){
+    getErrorValidator: function () {
         return this.get('errorValidator');
     },
 
-    setErrorValidator: function(validatingFunction){
+    setErrorValidator: function (validatingFunction) {
         this.set('errorValidator', validatingFunction);
     },
 
-    getWarningValidator: function(){
+    getWarningValidator: function () {
         return this.get('warningValidator');
     },
 
-    setWarningValidator: function(validatingFunction){
+    setWarningValidator: function (validatingFunction) {
         this.set('warningValidator', validatingFunction);
     },
 
-    validateOnErrors: function(item, callback){
+    validateOnErrors: function (item, callback) {
         return this._validatingActions(item, callback, 'error');
     },
 
-    validateOnWarnings: function(item, callback){
+    validateOnWarnings: function (item, callback) {
         return this._validatingActions(item, callback, 'warning');
     },
 
-    _validatingActions: function(item, callback, validationType){
+    _validatingActions: function (item, callback, validationType) {
         var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
             result = {
                 isValid: true,
-                items:[]
+                items: []
             },
             isCheckingOneItem = !!item,
             context = this.getContext(),
             items, subResult, itemIndex;
 
-        if(validatingFunction){
-            if(isCheckingOneItem){
+        if (validatingFunction) {
+            if (isCheckingOneItem) {
 
                 result = validatingFunction(context, item);
 
-            }else{
+            } else {
 
                 items = this.getItems();
-                for(var i = 0, ii = items.length; i < ii; i++){
+                for (var i = 0, ii = items.length; i < ii; i++) {
 
                     subResult = validatingFunction(context, items[i]);
-                    if(!subResult.isValid) {
+                    if (!subResult.isValid) {
                         this._addIndexToPropertiesOfValidationMessage(subResult.items, i);
                         result.isValid = false;
                         result.items = _.union(result.items, subResult.items);
@@ -686,38 +700,38 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
-    _addIndexToPropertiesOfValidationMessage: function(validationMessages, index){
-        for(var i = 0, ii = validationMessages.length; i < ii; i++){
+    _addIndexToPropertiesOfValidationMessage: function (validationMessages, index) {
+        for (var i = 0, ii = validationMessages.length; i < ii; i++) {
             validationMessages[i].property = index + '.' + validationMessages[i].property;
         }
     },
 
-    _notifyAboutValidation: function(validationResult, validationHandler, validationType){
+    _notifyAboutValidation: function (validationResult, validationHandler, validationType) {
         var context = this.getContext(),
             argument = {
                 value: validationResult
             };
 
-        if(validationHandler){
+        if (validationHandler) {
             validationHandler(context, argument);
         }
 
-        if(validationType == 'error'){
+        if (validationType == 'error') {
             this.trigger('onErrorValidator', context, argument);
-        }else{
+        } else {
             this.trigger('onWarningValidator', context, argument);
         }
     },
 
-    getContext: function(){
+    getContext: function () {
         return this.getView().getContext();
     },
 
-    _indexItemsById: function(items){
+    _indexItemsById: function (items) {
         var idProperty = this.get('idProperty'),
             result = {},
             idValue;
-        for(var i = 0, ii = items.length; i < ii; i++){
+        for (var i = 0, ii = items.length; i < ii; i++) {
             idValue = items[i][idProperty];
             result[idValue] = items[i];
         }
@@ -725,15 +739,15 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
-    _idOfItem: function(item){
+    _idOfItem: function (item) {
         var idProperty = this.get('idProperty');
-        if(!item){
+        if (!item) {
             return undefined;
         }
         return item[idProperty];
     },
 
-    _replaceAllProperties: function(currentObject, newPropertiesSet){
+    _replaceAllProperties: function (currentObject, newPropertiesSet) {
         for (var property in currentObject) {
             delete(currentObject[property]);
         }
@@ -743,14 +757,16 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _copyObject: function(currentObject){
+    _copyObject: function (currentObject) {
         return JSON.parse(JSON.stringify(currentObject));
     },
 
-    _getArgumentTemplate: function(){
+    _getArgumentTemplate: function () {
         return {
             source: this
         };
     }
 
 });
+
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);

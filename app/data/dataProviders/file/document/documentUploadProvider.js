@@ -19,9 +19,21 @@ var DocumentUploadProvider = function (urlConstructor, successCallback, failCall
  * @param {Function} resultCallback
  */
 DocumentUploadProvider.prototype.uploadFile = function (fieldName, instanceId, file, resultCallback) {
+    var deferred = $.Deferred();
     var requestData = this.urlConstructor.constructUploadFileRequest(fieldName, instanceId, file);
-    new RequestExecutor(resultCallback, this.successCallback, this.failCallback)
-        .makeRequestRaw(requestData);
+    new RequestExecutor(resultCallback, function () {
+        deferred.resolve();
+        if (this.successCallback) {
+            this.successCallback();
+        }
+    }, function (err) {
+        deferred.reject(err);
+        if (this.failCallback) {
+            this.failCallback();
+        }
+    }).makeRequestRaw(requestData);
+
+    return deferred.promise();
 };
 
 /**

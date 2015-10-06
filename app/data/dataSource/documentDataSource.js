@@ -93,5 +93,3 @@ var DocumentDataSource = BaseDataSource.extend({
     }
 
 });
-
-_.extend(DocumentDataSource.prototype, dataSourceUploadMixin);
