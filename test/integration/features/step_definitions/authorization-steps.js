@@ -1,47 +1,72 @@
-//Given
+
+// Given
+
 this.Given(/^я не авторизован в системе$/, function (next) {
 	if(window.configWindow.currentUser){
 		window.configWindow.contextApp.context.Global.session.signOut(function () {
 			window.configWindow.location.reload();
 			next();
-		});	
+		},
+		next);	
 	} else {
 		next();
 	}
 });
 
-this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewName, next) {
-	window.testHelpers.waitView(viewName, 
+this.Given(/^я авторизован в системе под пользователем "([^"]*)"$/, function (userName, next) {
+
+	var loginPassword = window.autorizationInfo.LoginPassword;
+	chai.assert.include(Object.keys(loginPassword), userName);
+
+	window.testHelpers.waitView("SignInView", 
 		function(){
-			window.currentView = window.configWindow.contextApp.getChildView(viewName);
-			window.currentViewContext = window.currentView.getContext();
-			next();
-		}
-	);
+			window.configWindow.contextApp.context.Global.session.signInInternal(userName, 
+				loginPassword[userName], 
+				true,
+				function () {
+					window.configWindow.location.reload();
+					next();
+				},
+				function () {			
+					next(new Error("autorization failed"));
+				}
+			);
+		},
+		function(){
+			next(new Error("SignInView not found"));
+		});
+});
+
+this.Given(/^я авторизован в системе с ролью "([^"]*)"$/, function (role, next) {
+	var roles = window.autorizationInfo.Roles;
+	var loginPassword = window.autorizationInfo.LoginPassword;
+
+	chai.assert.include(Object.keys(roles), role);
+	chai.assert.include(Object.keys(loginPassword), roles[role]);
+
+	window.testHelpers.waitView("SignInView", 
+		function(){
+			window.configWindow.contextApp.context.Global.session.signInInternal(roles[role], 
+				loginPassword[roles[role]], 
+				true,
+				function () {
+					window.configWindow.location.reload();
+					next();
+				},
+				function () {			
+					next(new Error("autorization failed"));
+				}
+			);
+		},
+		function(){
+			next(new Error("SignInView not found"));
+		});
 });
 
 
-//When
-this.When(/^введу в поле "([^"]*)" значение "([^"]*)"$/, function (fieldName, value, next) {
-	try{
-		window.currentViewContext.Controls[fieldName].setValue(value);
-		next();
-	} catch(err){
-		next(err);
-	}
-});
 
-this.When(/^нажму кнопку "([^"]*)"$/, function (buttonName, next) {
-	try{
-		window.currentViewContext.Controls[buttonName].click();
-		next();
-	} catch(err){
-		next(err);
-	}
-});
+// Then
 
-
-//Then
 this.Then(/^система авторизует меня под пользователем "([^"]*)"$/, function (userName, next) {
 	var haveUser = function(){		
 		return window.configWindow.currentUser != null;
@@ -62,14 +87,3 @@ this.Then(/^система авторизует меня под пользова
 
 	window.testHelpers.waitCondition(haveUser, checkUserName, fail);
 });
-
-this.Then(/^система отобразит экран "([^"]*)"$/, function (viewName, next) {
-
-	window.testHelpers.waitView(viewName, 
-		next,
-		function(){
-			next(new Error(viewName + ' not found'));
-		}
-	);
-});
-
