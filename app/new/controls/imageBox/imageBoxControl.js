@@ -20,6 +20,10 @@ _.extend(ImageBoxControl.prototype, {
 
     createControlView: function (model) {
         return new ImageBoxView({model: model});
+    },
+
+    onChangeFile: function (handler) {
+        this.controlModel.on('change:file', handler);
     }
 }, editorBaseControlMixin);
 
