@@ -6,7 +6,10 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     initialize: function () {
         this.wasRendered = false;
+        this.once('render', this.initUpdatingOfProperties, this);
+    },
 
+    initUpdatingOfProperties: function(){
         this.initVisible();
         this.initHorizontalAlignment();
         this.initVerticalAlignment();
@@ -15,8 +18,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.initText();
         this.initValidationState();
         this.initStyle();
-
-        this.once('render', this.initOnChangeHandler, this);
     },
 
     initVisible: function () {
