@@ -40,8 +40,17 @@ window.testHelpers = {
 		var waitView = function(){
 			if(!window.configWindow.contextApp)
 				return false;
-			var childViews = window.configWindow.contextApp.getChildViews();
-			return Object.keys(childViews).includes(viewName);
+			var view = window.configWindow.contextApp.getChildView(viewName);
+			return view && view.isLoaded();
+		};
+
+		window.testHelpers.waitCondition(waitView, success, error, maxTimeout, step);
+	},
+
+	waitModalView: function(viewName, success, error, maxTimeout, step){
+		var waitView = function(){
+			var view = window.currentView.getChildView(viewName);
+			return view && view.isLoaded();
 		};
 
 		window.testHelpers.waitCondition(waitView, success, error, maxTimeout, step);

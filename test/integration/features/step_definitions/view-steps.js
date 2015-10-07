@@ -55,17 +55,38 @@ this.Then(/^система отобразит окно-сообщение "([^"]
 });
 
 this.Then(/^система отобразит список кнопок: (.*?)$/, function (values, next) {
-	var valuesArray = values
+	var extValues = values
 						.split(",")
 						.map(function(item){
-							return item.trim();
+							var result = item.trim();
+							return result.substring(1, result.length - 1);
 						});
-	var abc = $(".btn-group.open .dropdown-menu > li");
-	debugger;
+
+	var actValues = window.configWindow.$(".btn-group.open .dropdown-menu > li .btntext")
+					.map(function(index, item){
+						return $(item).text();
+					})
+					.toArray();
+	
+	chai.assert.deepEqual(actValues, extValues);
+
 	next();
 });
 
 this.Then(/^система отобразит модальное окно "([^"]*)"$/, function (dialogView, next) {
+	window.testHelpers.waitModalView(dialogView, 
+		function(){
+			window.currentView = window.currentView.getChildView(dialogView);
+			window.currentViewContext = window.currentView.getContext();
+			next();
+		},
+		function(){
+			next(new Error(dialogView + ' not found'));
+		}
+	);
+});
+
+this.Then(/^система отобразит в модальном окне страницу "([^"]*)"$/, function (page, next) {
 	debugger;
 	next();
 });

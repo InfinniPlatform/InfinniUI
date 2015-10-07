@@ -12,7 +12,8 @@ this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonName, n
 
 this.When(/^я нажму на выпадающий список "([^"]*)"$/, function (buttonName, next) {
 	try{
-		window.currentViewContext.Controls[buttonName].click();
+		var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
+		window.configWindow.$( buttonSelector ).click();
 		next();
 	} catch(err){
 		next(err);

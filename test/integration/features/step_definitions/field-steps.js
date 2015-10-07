@@ -24,6 +24,15 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
 	}
 });
 
+this.When(/^я введу в поле типа дата "([^"]*)" значение "Сегодня"$/, function (fieldName, next) {
+	try{
+		window.currentViewContext.Controls[fieldName].setValue( new Date() );
+		next();
+	} catch(err){
+		next(err);
+	}
+});
+
 // Then
 
 this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next) {
@@ -35,9 +44,10 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
 	var checkValue = function(){
 		try{
 			var field = window.currentViewContext.Controls[fieldName];
-
 			chai.assert.isDefined(field);
-			chai.assert.equal(field.getValue(), value);
+
+			var actValue = field.getValue();
+			chai.assert.isTrue( (actValue == value) || (actValue.DisplayName == value), actValue + ' != ' + value + ' and ' + actValue.DisplayName + ' != ' + value);
 
 			next();
 		} catch (err){

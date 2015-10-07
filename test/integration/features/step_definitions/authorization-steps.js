@@ -25,7 +25,9 @@ this.Given(/^я авторизован в системе под пользова
 				true,
 				function () {
 					window.configWindow.location.reload();
-					next();
+					window.testHelpers.waitCondition(function(){
+						return  window.configWindow.contextApp && window.configWindow.contextApp.isLoaded();
+					}, next);
 				},
 				function () {			
 					next(new Error("autorization failed"));

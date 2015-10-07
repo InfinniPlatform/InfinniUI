@@ -90,6 +90,7 @@
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
         templateFiles = ["app/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',
+        outerExtensionIntegrationTest = '*.Extensions/**/integrationTests/**/*.js',
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
         outerExtensionFavicon = '*.Extensions/*.ico',
@@ -316,6 +317,7 @@
                     tmpPNG = grunt.config.get('copy.png.src').slice(0);
 
                 tmp.push(extensionPath + outerExtensionScript);
+                tmp.push('!' + extensionPath + outerExtensionIntegrationTest);                
                 tmpLess.push(extensionPath + outerExtensionStyle);
                 tmpLess.push(extensionPath + outerExtensionLessStyle);
                 tmpFavicon.push(extensionPath + outerExtensionFavicon);
