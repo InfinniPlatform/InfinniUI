@@ -15,7 +15,7 @@ this.Given(/^я не авторизован в системе$/, function (next)
 
 this.Given(/^я авторизован в системе под пользователем "([^"]*)"$/, function (userName, next) {
 
-	var loginPassword = window.autorizationInfo.LoginPassword;
+	var loginPassword = window.IntegrationTestConfig.autorizationInfo.LoginPassword;
 	chai.assert.include(Object.keys(loginPassword), userName);
 
 	window.testHelpers.waitView("SignInView", 
@@ -38,8 +38,8 @@ this.Given(/^я авторизован в системе под пользова
 });
 
 this.Given(/^я авторизован в системе с ролью "([^"]*)"$/, function (role, next) {
-	var roles = window.autorizationInfo.Roles;
-	var loginPassword = window.autorizationInfo.LoginPassword;
+	var roles = window.IntegrationTestConfig.autorizationInfo.Roles;
+	var loginPassword = window.IntegrationTestConfig.autorizationInfo.LoginPassword;
 
 	chai.assert.include(Object.keys(roles), role);
 	chai.assert.include(Object.keys(loginPassword), roles[role]);

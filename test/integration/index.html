@@ -9,12 +9,46 @@
     <script type="text/javascript" src="vendor/cucumber.js"></script>
   	<script src="/bower_components/chai/chai.js"></script>
 
-    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="out/auth.js"></script>
+
   	<script type="text/javascript" src="helpers.js"></script>
     <script type="text/javascript" src="cucumberHTMLListener.js"></script>
+    <script> 
+      function runIntegrationTests(){
+        var supportCode, 
+          xhr = new XMLHttpRequest();
+           
+        xhr.open('GET', window.IntegrationTestConfig.featurePath, false);
+        xhr.send();
+        if(xhr.status != 200)
+          return;
+          
+        var featureSource = '# language: ru\n' + xhr.responseText;
+        
+        xhr.open('GET', window.IntegrationTestConfig.stepDefinitionsPath, false);
+        xhr.send();
+        if(xhr.status != 200)
+          return;
+          
+        eval('supportCode   = function() {' + xhr.responseText + '};'); 
+        
+         
+        var listener = CucumberHTMLListener($('#test-result'));
+        var cucumber = Cucumber(featureSource, supportCode);
+        cucumber.attachListener(listener);
+
+        try {
+          cucumber.start(function() {});
+          } catch(err) {
+            console.log(err);
+          $('#test-result').text(err.message);
+        };
+      };
+    </script>
   </head>
-  
-  <body onload="runIntegrat()">  
+
+  <body onload="runIntegrationTests()">  
 	 <div id="test-result"></div>
   </body>
 </html>

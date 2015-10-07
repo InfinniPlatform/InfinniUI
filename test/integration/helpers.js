@@ -47,19 +47,3 @@ window.testHelpers = {
 		window.testHelpers.waitCondition(waitView, success, error, maxTimeout, step);
 	}
 };
-
-
-window.autorizationInfo = {
-	Roles: {
-		"Председатель": "ivan@test.ru",
-		"Родитель": "petr@test.ru"
-	},
-
-	LoginPassword: {
-		"ivan@test.ru": "ivan@test.ru",
-		"petr@test.ru": "petr@test.ru",
-		"oksana@test.ru": "oksana@test.ru",
-		"olga@test.ru": "olga@test.ru",
-		"irina@test.ru": "irina@test.ru"
-	}
-}

@@ -1,6 +1,6 @@
 this.BeforeScenario( function(scenario, callback) {
 
-	window.configWindow = window.open("http://localhost:8181/launcher/");	
+	window.configWindow = window.open(window.IntegrationTestConfig.host);	
 	
 	var signOut = function(){
 		window.configWindow.contextApp.context.Global.session.signOut(function () {
