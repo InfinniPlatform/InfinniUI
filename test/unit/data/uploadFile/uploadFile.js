@@ -38,7 +38,7 @@ describe('FileProvider', function () {
 
         beforeEach(function () {
             //register fake upload provider
-            window.providerRegister.register('DocumentFileProvider', function (metadata) {
+            window.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
                 return {
                     uploadFile: function () {
                         var deferred = $.Deferred();

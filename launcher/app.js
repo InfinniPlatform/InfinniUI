@@ -13,7 +13,7 @@ moment.locale('ru');
             configId: metadata.configId
         };
         var urlConstructor = new DocumentUploadQueryConstructor(host, params);
-        return new DocumentUploadProvider(urlConstructor);
+        return new DocumentFileProvider(urlConstructor);
     });
 
     window.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {

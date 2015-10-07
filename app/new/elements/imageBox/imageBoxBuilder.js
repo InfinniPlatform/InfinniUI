@@ -20,38 +20,44 @@ _.extend(ImageBoxBuilder.prototype, {
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
+
+
         // Привязка данных односторонняя т.к.:
         // 1. по значению из источника данных - сформировать URL изображения.
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
 
-        var binding = this.applyMetadata_editorBaseBuilder(params, {
-                valueProperty: 'url',
-                mode: 'toElement'
+        var converter = {
+            toElement: function (context, args) {
+                var value = args.value;
+                var binding = args.binding;
+                var ds = binding.getSource();
+                var fileProvider = ds.getFileProvider();
+                var url = null;
+                //Формируем URL изображения
+                if (value && value.ContentId && fileProvider) {
+                    url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
+                }
+                return url;
             }
-        );
+        };
+
+        var binding = this.applyMetadata_editorBaseBuilder(params, {
+            valueProperty: 'url',
+            converter: converter
+        });
 
         if (binding) {
+            binding.setMode(BindingModes.toElement);
+
             var ds = binding.getSource();
             var fileProvider = ds.getFileProvider();
 
-            binding.setConverter({
-                toElement: function (context, args) {
-                    var value = args.value;
-                    var id = InfinniUI.ObjectUtils.getPropertyValue(ds.getSelectedItem(), ds.getIdProperty());
-                    //Формируем URL изображения
-                    return fileProvider.getFileUrl(binding.getSourceProperty(), id);
-                }
-            });
-
-            params.element.onPropertyChanged(function (context, args) {
+            params.element.onPropertyChanged('file', function (context, args) {
                 var property = args.property,
                     value = args.value;
 
-                if (property !== 'file') {
-                    return;
-                }
                 //Файл в очередь на загрузк
-                ds.setFile(binding.getSourceProperty(), file);
+                ds.setFile(binding.getSourceProperty(), value);
             })
         }
 

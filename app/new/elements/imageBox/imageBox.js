@@ -20,6 +20,14 @@ _.extend(ImageBox.prototype, {
 
     createControl: function () {
         return new ImageBoxControl();
+    },
+
+    setUrl: function (value) {
+        this.control.set('url', value);
+    },
+
+    getUrl: function () {
+        return this.control.get('url');
     }
 
 }, editorBaseMixin);

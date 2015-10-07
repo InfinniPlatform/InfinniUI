@@ -5,7 +5,7 @@
  * @param {Function} [failCallback]
  * @constructor
  */
-var DocumentUploadProvider = function (urlConstructor, successCallback, failCallback) {
+var DocumentFileProvider = function (urlConstructor, successCallback, failCallback) {
     this.urlConstructor = urlConstructor;
     this.successCallback = successCallback;
     this.failCallback = failCallback;
@@ -18,7 +18,7 @@ var DocumentUploadProvider = function (urlConstructor, successCallback, failCall
  * @param {*} file
  * @param {Function} resultCallback
  */
-DocumentUploadProvider.prototype.uploadFile = function (fieldName, instanceId, file, resultCallback) {
+DocumentFileProvider.prototype.uploadFile = function (fieldName, instanceId, file, resultCallback) {
     var deferred = $.Deferred();
     var requestData = this.urlConstructor.constructUploadFileRequest(fieldName, instanceId, file);
     new RequestExecutor(resultCallback, function () {
@@ -42,6 +42,6 @@ DocumentUploadProvider.prototype.uploadFile = function (fieldName, instanceId, f
  * @param {string} instanceId
  * @returns {String}
  */
-DocumentUploadProvider.prototype.getFileUrl = function (fieldName, instanceId) {
+DocumentFileProvider.prototype.getFileUrl = function (fieldName, instanceId) {
     return this.urlConstructor.getFileUrl(fieldName, instanceId);
 };

@@ -6,9 +6,9 @@ var editorBaseBuilderMixin = {
     /**
      *
      * @param params
-     * @param {Object} [bindingOptions]
-     * @param {string} [bindingOptions.valueProperty = 'value'] Имя свойства значения в элементе
-     * @param {string} [bindingOptions.mode = ] Режим работы DataBinding.mode
+     * @param {Object} [bindingOptions
+     * @param {Function} [bindingOptions.converter] Конвертер
+     * @param {string} [bindingOptions.valueProperty="value'] Имя атрибута значения
      * @returns {*}
      */
     applyMetadata_editorBaseBuilder: function (params, bindingOptions) {
@@ -18,8 +18,7 @@ var editorBaseBuilderMixin = {
 
         bindingOptions = bindingOptions || {};
         _.defaults(bindingOptions, {
-            valueProperty: 'value',
-            mode: 'TwoWay'
+            valueProperty: 'value'
         });
 
         element.setHintText(metadata.HintText);
@@ -44,16 +43,10 @@ var editorBaseBuilderMixin = {
                 basePathOfProperty: params.basePathOfProperty
             };
 
-            for(var i in metadata.Value) {
-                //@TODO Исправить после исключения задания типа привязки в метаданных!!
-                if (metadata.Value.hasOwnProperty(i)) {
-                    metadata.Value[i]['Mode'] = bindingOptions.mode;
-                    break;
-                }
-            }
-
             var dataBinding = params.builder.build(metadata.Value, buildParams);
-
+            if (bindingOptions.converter) {
+                dataBinding.setConverter(bindingOptions.converter);
+            }
             dataBinding.bindElement(params.element, bindingOptions.valueProperty);
         }
 
