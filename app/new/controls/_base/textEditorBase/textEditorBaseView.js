@@ -27,35 +27,21 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     initHandlersForProperties: function(){
-        
-    },
+        ControlView.prototype.initHandlersForProperties.call(this);
+        editorBaseViewMixin.initHandlersForProperties.call(this);
 
-    initUpdatingOfProperties: function(){
-        ControlView.prototype.initUpdatingOfProperties.call(this);
-        editorBaseViewMixin.initUpdatingOfProperties.call(this);
-
-        this.initLabelText();
-        this.initLabelFloating();
-        this.initDisplayFormat();
-        this.initEditMask();
-    },
-
-    initLabelText: function(){
         this.listenTo(this.model, 'change:labelText', this.updateLabelText);
-        this.updateLabelText();
-    },
-
-    initLabelFloating: function(){
         this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
-        this.updateLabelFloating();
-    },
-
-    initDisplayFormat: function(){
         this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
+        this.listenTo(this.model, 'change:editMask', this.updateEditMask);
     },
 
-    initEditMask: function(){
-        this.listenTo(this.model, 'change:editMask', this.updateEditMask);
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+        editorBaseViewMixin.updateProperties.call(this);
+
+        this.updateLabelText();
+        this.updateLabelFloating();
     },
 
     updateValue: function(){

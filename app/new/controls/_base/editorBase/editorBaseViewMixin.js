@@ -74,6 +74,13 @@ var editorBaseViewMixin = {
 
     },
 
+    updateEnabled: function () {
+        ControlView.prototype.updateEnabled.call(this);
+
+        var isEnabled = this.model.get('enabled');
+        this.ui.control.prop('disabled', !isEnabled);
+    },
+
     onInvalidHandler: function (model, error) {
         // что ита???
         //@TODO Можно ли использовать поля из API или реализовывать вывод ошибок отдельно?

@@ -23,24 +23,20 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
     }),
 
-    initUpdatingOfProperties: function(){
-        TextEditorBaseView.prototype.initUpdatingOfProperties.call(this);
+    initHandlersForProperties: function(){
+        TextEditorBaseView.prototype.initHandlersForProperties.call(this);
 
-        this.initMultiline();
-        this.initLineCount();
-    },
-
-    initMultiline: function(){
         this.listenTo(this.model, 'change:multiline', this.updateMultiline);
-        this.updateMultiline();
+        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
     },
 
-    initLineCount: function(){
-        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
+    updateProperties: function(){
+        TextEditorBaseView.prototype.updateProperties.call(this);
+
         this.updateLineCount();
     },
 
-    initMultiline: function(){
+    updateMultiline: function(){
         this.rerender();
     },
 
@@ -56,6 +52,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         this.prerenderingActions();
         this.renderTemplate(template);
         this.renderTextBoxEditor();
+        this.updateProperties();
+
         this.trigger('render');
         this.postrenderingActions();
         return this;
@@ -83,45 +81,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         });
 
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        TextEditorBaseView.prototype.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:lineCount', this.onChangeLineCountHandler)
-            .listenTo(this.model, 'change:multiline', this.onChangeMultilineHandler)
-    },
-
-    onChangeLineCountHandler: function (model, value) {
-        if (!value) {
-            return;
-        }
-        this.ui.control.prop('rows', model.get('lineCount'));
-    },
-
-    onChangeMultilineHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeLabelTextHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeLabelFloatingHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeDisplayFormatHandler: function ( ){
-        this.renderControl();
-    },
-
-    onChangeEditMaskHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
     }
 
 });
