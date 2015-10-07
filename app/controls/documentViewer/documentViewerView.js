@@ -79,11 +79,15 @@ var DocumentViewerView = ControlView.extend({
 
     urlRender: function(){
         var that = this,
+            urlId,
             renderFrame = function(){
                 if(this.model.get('url')){
                     var url = encodeURI(this.model.get('url'));
-                    this.sendRequest(url, function(data){
-                        that.renderPdf(data);
+                    urlId = guid();
+                    this.sendRequest(url, function(data, id){
+                        if(id == urlId){
+                            that.renderPdf(data);
+                        }
                     });
                 }
             }.bind(this);
@@ -110,7 +114,7 @@ var DocumentViewerView = ControlView.extend({
         return Math.round((Math.random() * 100000));
     },
 
-    sendRequest: function(url, handler){
+    sendRequest: function(url, handler, id){
         var xmlhttp = this.getXmlHttp();
 
         xmlhttp.open('GET', url, true);
@@ -120,7 +124,7 @@ var DocumentViewerView = ControlView.extend({
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
                 if(xmlhttp.status == 200) {
-                    handler(xmlhttp.response);
+                    handler(xmlhttp.response, id);
                 }
             }
         };
