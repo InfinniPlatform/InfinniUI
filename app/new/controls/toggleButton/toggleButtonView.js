@@ -8,8 +8,8 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     template: InfinniUI.Template["new/controls/toggleButton/template/toggleButton.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
-        textOn: '.togglebutton-label-on',
-        textOff: '.togglebutton-label-off',
+        textOn: '.togglebutton-handle-on',
+        textOff: '.togglebutton-handle-off',
         container: '.togglebutton-container'
     }),
 
@@ -23,6 +23,24 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
 
         this.listenTo(this.model, 'change:textOn', this.updateTextOn);
         this.listenTo(this.model, 'change:textOff', this.updateTextOff);
+    },
+
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+        editorBaseViewMixin.updateProperties.call(this);
+
+        this.updateTextOn();
+        this.updateTextOff();
+    },
+
+    updateTextOn: function () {
+        var textOn = this.model.get('textOn');
+        this.ui.textOn.text(textOn);
+    },
+
+    updateTextOff: function () {
+        var textOff = this.model.get('textOff');
+        this.ui.textOff.text(textOff);
     },
 
     render: function () {
@@ -52,31 +70,6 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     onClickHandler: function (event) {
         var model = this.model;
         model.set('value', !model.get('value'));
-    },
-
-    initOnChangeHandler: function () {
-        ControlView.prototype.initOnChangeHandler.call(this);
-        editorBaseViewMixin.initOnChangeHandler.call(this);
-
-        var model = this.model;
-
-        this
-            .listenTo(model, 'change:textOn', this.updateTextOn)
-            .listenTo(model, 'change:textOff', this.updateTextOff)
-            .listenTo(model, 'change:value', this.onChangeValueHandler);
-    },
-
-    updateTextOn: function (model, value) {
-        this.ui.textOn.text(value);
-    },
-
-    updateTextOff: function (model, value) {
-        this.ui.textOff.text(value);
-    },
-
-    onChangeValueHandler: function (model, value) {
-        debugger;
-        this.applyValue();
     },
 
     updateValue: function () {
