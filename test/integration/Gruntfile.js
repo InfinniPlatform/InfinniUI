@@ -26,10 +26,14 @@
 
     grunt.registerTask('build', function (extensionPath) {
         if (extensionPath) {
-            var featurePath = extensionPath + '*.Extensions/**/**/*.feature';
+            var featurePath = extensionPath + '*.Extensions/**/*.feature';
             var authInfoPath = extensionPath + '*.Extensions/**/auth.js';
 
+            var stepDefinitionsArray = grunt.config.get('concat.step_definitions.src');
+            stepDefinitionsArray.push(extensionPath + '*.Extensions/**/step_definitions/*.js');
+
             grunt.config.set('concat.feature.src', [featurePath]);
+            grunt.config.set('concat.step_definitions.src', stepDefinitionsArray);
             grunt.config.set('copy.auth.src', [authInfoPath]);
         }
 
