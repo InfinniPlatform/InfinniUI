@@ -20,8 +20,10 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     render: function () {
         this.prerenderingActions();
         this.renderTemplate(this.template);
-        this.postrenderingActions();
+        this.updateProperties();
+
         this.trigger('render');
+        this.postrenderingActions();
         return this;
     },
 
