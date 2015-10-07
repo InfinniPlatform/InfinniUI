@@ -88,7 +88,7 @@ var DocumentViewerView = ControlView.extend({
                         if(id == urlId){
                             that.renderPdf(data);
                         }
-                    });
+                    }, urlId);
                 }
             }.bind(this);
 
