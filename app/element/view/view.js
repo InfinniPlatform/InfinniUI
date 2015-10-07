@@ -4,6 +4,7 @@ function View() {
     var culture = new Culture(InfinniUI.config.lang);
 
     var isLoading = false;
+    var isLoaded = false;
 
     this.onLoadedHandlers = $.Deferred();
 
@@ -296,6 +297,9 @@ function View() {
         var that = this;
 
         this.onLoadedHandlers.resolve(this);
+
+        isLoaded = true;
+
         setTimeout(function () {
             eventStore.executeEvent('onLoaded');
             that.childLayout.css('visibility', 'visible');
@@ -309,6 +313,10 @@ function View() {
 
     this.isLoading = function () {
         return isLoading;
+    };
+
+    this.isLoaded = function () {
+        return isLoaded;
     };
 
     var childViews = {};
