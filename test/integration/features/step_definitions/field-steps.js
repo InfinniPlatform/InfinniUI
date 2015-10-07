@@ -51,3 +51,12 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
 
 	window.testHelpers.waitCondition(haveValue, checkValue, fail);
 });
+
+this.Then(/^флаг "([^"]*)" будет иметь значение "([^"]*)"$/, function (flagName, value, next) {
+	var flag = window.currentViewContext.Controls[flagName];
+
+	chai.assert.isDefined(flag);
+	chai.assert.equal(flag.getValue(), JSON.parse(value));
+
+	next();
+});
