@@ -93,6 +93,7 @@
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
         outerExtensionFavicon = '*.Extensions/*.ico',
+        outerExtensionPdf = '*.Extensions/**/*.pdf',
         outerExtensionPNG = '*.Extensions/*.png';
 
     grunt.initConfig({
@@ -162,6 +163,12 @@
                 flatten: true,
                 src: [],
                 dest: 'out/images/'
+            },
+            pdf:{
+                expand: true,
+                flatten: true,
+                src: [],
+                dest: 'out/docs/'
             },
             png:{
                 expand: true,
@@ -305,16 +312,19 @@
                 var tmp = appFiles.slice(0),
                     tmpLess = appStyleFiles.slice(0),
                     tmpFavicon = grunt.config.get('copy.favicon.src').slice(0),
+                    tmpPdf = grunt.config.get('copy.pdf.src').slice(0),
                     tmpPNG = grunt.config.get('copy.png.src').slice(0);
 
                 tmp.push(extensionPath + outerExtensionScript);
                 tmpLess.push(extensionPath + outerExtensionStyle);
                 tmpLess.push(extensionPath + outerExtensionLessStyle);
                 tmpFavicon.push(extensionPath + outerExtensionFavicon);
+                tmpPdf.push(extensionPath + outerExtensionPdf);
                 tmpPNG.push(extensionPath + outerExtensionPNG);
 
                 grunt.config.set('copy.png.src', tmpPNG);
                 grunt.config.set('copy.favicon.src', tmpFavicon);
+                grunt.config.set('copy.pdf.src', tmpPdf);
                 grunt.config.set('concat.app.src', tmp);
                 grunt.config.set('less.default.src', tmpLess);
             }else{

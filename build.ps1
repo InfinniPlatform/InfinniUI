@@ -1,21 +1,22 @@
-
-# Название будущего архива (папки)
+# РќР°Р·РІР°РЅРёРµ Р±СѓРґСѓС‰РµРіРѕ Р°СЂС…РёРІР° (РїР°РїРєРё)
 $BundleName = "ParentCommittee"
-# Список файлов, которые будем копировать в архив (папку)
+# РЎРїРёСЃРѕРє С„Р°Р№Р»РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґРµРј РєРѕРїРёСЂРѕРІР°С‚СЊ РІ Р°СЂС…РёРІ (РїР°РїРєСѓ)
 $BundleFiles = @("launcher", "out", "extensions", "index.html", "app")
 
-# Если задан аргумент build, берём имя архива из этого аргумента
+# Р•СЃР»Рё Р·Р°РґР°РЅ Р°СЂРіСѓРјРµРЅС‚ build, Р±РµСЂС‘Рј РёРјСЏ Р°СЂС…РёРІР° РёР· СЌС‚РѕРіРѕ Р°СЂРіСѓРјРµРЅС‚Р°
 If (($args.Length -gt 0) -And ($args[0] -Match "build:(../)?(\w+).*")) { $BundleName = $matches[2] }
 
-$FileName  = "$(Get-Location)\$(Get-Date -Format "yyyy-MM-dd-HH-mm-ss")-$BundleName-bundle.zip"
+#$FileName  = "$(Get-Location)\$(Get-Date -Format "yyyy-MM-dd-HH-mm-ss")-$BundleName-bundle.zip"
+$FileName = "$(Get-Location)\UI.zip"
+$BundleDir = "$(Get-Location)\$BundleName-Bundle"
 
-$BundleDir="$(Get-Location)\$BundleName-Bundle"
+If (Test-Path $FileName) {Remove-Item $FileName}
 
-# Создаём пустую папку, в которую будем копировать всё нужное
+# РЎРѕР·РґР°С‘Рј РїСѓСЃС‚СѓСЋ РїР°РїРєСѓ, РІ РєРѕС‚РѕСЂСѓСЋ Р±СѓРґРµРј РєРѕРїРёСЂРѕРІР°С‚СЊ РІСЃС‘ РЅСѓР¶РЅРѕРµ
 If (Test-Path $BundleDir) {Remove-Item -Recurse -Force $BundleDir}
 New-Item -ItemType directory -Path $BundleDir | Out-Null
 
-# Копируем всё нужное в созданную папку
+# РљРѕРїРёСЂСѓРµРј РІСЃС‘ РЅСѓР¶РЅРѕРµ РІ СЃРѕР·РґР°РЅРЅСѓСЋ РїР°РїРєСѓ
 
 ForEach ($File in $BundleFiles) {
     If (Test-Path -Path "$(Get-Location)\$File" ) {
@@ -25,23 +26,23 @@ ForEach ($File in $BundleFiles) {
     }
 }
  
-# Архивируем и убираем за собой
+# РђСЂС…РёРІРёСЂСѓРµРј Рё СѓР±РёСЂР°РµРј Р·Р° СЃРѕР±РѕР№
 $7ZPath = "$($env:ProgramFiles)\7-Zip\7z.exe"
 If (Test-Path -PathType Leaf -Path "$7ZPath" ) {
     Write "7-Zip found, using it."
-    $Arguments = @("a", "-tzip", "$FileName", "$BundleDir", "-r")
+    $Arguments = @("a", "-tzip", "$FileName", "$BundleDir\*", "-r")
     If (Test-path $FileName) {Remove-item $FileName}
     & $7ZPath $Arguments | Out-Null
     Write "Bundle $FileName Created!"
     Remove-Item -Recurse -Force $BundleDir
-} ElseIf (Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -recurse | Get-ItemProperty -name Version -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Where {$_.Version -ge '4.5' } ) {
-# .Net Framework версии 4.5 и выше имеет встроенные механизмы сжатия. Если 7-Zip найти не удалось, используем их.
-    Write "7-Zip not found, using native .Net 4.5 and above compression modules."
-    If (Test-path "$FileName") {Remove-item "$FileName.zip"}
-    Add-Type -assembly "system.io.compression.filesystem"
-    [io.compression.zipfile]::CreateFromDirectory($BundleDir, "$FileName", "Optimal", $true)
-    Remove-Item -Recurse -Force $BundleDir
-    Write "Bundle $FileName Created!"
+#} ElseIf (Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -recurse | Get-ItemProperty -name Version -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Where {$_.Version -ge '4.5' } ) {
+## .Net Framework РІРµСЂСЃРёРё 4.5 Рё РІС‹С€Рµ РёРјРµРµС‚ РІСЃС‚СЂРѕРµРЅРЅС‹Рµ РјРµС…Р°РЅРёР·РјС‹ СЃР¶Р°С‚РёСЏ. Р•СЃР»Рё 7-Zip РЅР°Р№С‚Рё РЅРµ СѓРґР°Р»РѕСЃСЊ, РёСЃРїРѕР»СЊР·СѓРµРј РёС….
+#    Write "7-Zip not found, using native .Net 4.5 and above compression modules."
+#    If (Test-path "$FileName") {Remove-item "$FileName.zip"}
+#    Add-Type -assembly "system.io.compression.filesystem"
+#    [io.compression.zipfile]::CreateFromDirectory("$BundleDir\*", $FileName", "Optimal", $true)
+#    Remove-Item -Recurse -Force $BundleDir
+#    Write "Bundle $FileName Created!"
 } else {
     Write "Archiver not found, so leaving $BundleDir unarchived."
     Write "Bundle directory $BundleDir created!"
