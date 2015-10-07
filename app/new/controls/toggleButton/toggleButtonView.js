@@ -17,6 +17,14 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
         'click': 'onClickHandler'
     },
 
+    initHandlersForProperties: function(){
+        ControlView.prototype.initHandlersForProperties.call(this);
+        editorBaseViewMixin.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:textOn', this.updateTextOn);
+        this.listenTo(this.model, 'change:textOff', this.updateTextOff);
+    },
+
     render: function () {
         this.prerenderingActions();
         this.renderTemplate(this.template);
