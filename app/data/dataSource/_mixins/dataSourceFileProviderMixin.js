@@ -19,6 +19,8 @@ var dataSourceFileProviderMixin = {
             queue = [];
             this.set('queueFiles', queue);
         }
+        //Отмечаем элемент данных как измененный при установке файла на загрузку
+        this._includeItemToModifiedSet(this.getSelectedItem());
 
         var items = queue.filter(function(item) {
             return item.name === propertyName;

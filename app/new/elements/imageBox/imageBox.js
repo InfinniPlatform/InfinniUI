@@ -20,10 +20,6 @@ _.extend(ImageBox.prototype, {
 
     createControl: function () {
         return new ImageBoxControl();
-    },
-
-    onChangeFile: function (handler) {
-        this.control.onChangeFile(handler);
     }
 
 }, editorBaseMixin);

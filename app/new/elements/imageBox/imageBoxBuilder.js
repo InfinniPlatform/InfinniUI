@@ -19,33 +19,41 @@ _.extend(ImageBoxBuilder.prototype, {
 
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
-        var binding = this.applyMetadata_editorBaseBuilder(params);
+
+        // Привязка данных односторонняя т.к.:
+        // 1. по значению из источника данных - сформировать URL изображения.
+        // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
+
+        var binding = this.applyMetadata_editorBaseBuilder(params, {
+                valueProperty: 'url',
+                mode: 'toElement'
+            }
+        );
 
         if (binding) {
             var ds = binding.getSource();
-            var uploadProvider = ds.getUploadDataProvider();
+            var fileProvider = ds.getFileProvider();
 
             binding.setConverter({
-                toSource: toSource,
-                toElement: toElement
+                toElement: function (context, args) {
+                    var value = args.value;
+                    var id = InfinniUI.ObjectUtils.getPropertyValue(ds.getSelectedItem(), ds.getIdProperty());
+                    //Формируем URL изображения
+                    return fileProvider.getFileUrl(binding.getSourceProperty(), id);
+                }
             });
 
+            params.element.onPropertyChanged(function (context, args) {
+                var property = args.property,
+                    value = args.value;
+
+                if (property !== 'file') {
+                    return;
+                }
+                //Файл в очередь на загрузк
+                ds.setFile(binding.getSourceProperty(), file);
+            })
         }
-
-
-        function toSource(context, args) {
-            var value = args.value;
-            //@TODO Добавить файл в очередь на загрузку:
-            //ds.setFile(params.element.getFile(), binding.getElementProperty());
-        }
-
-        function toElement(context, args) {
-            var value = args.value;
-
-            //@TODO Сгенерировать URL ч/з ds.fileProvider
-            //@TODO params.element.setURL(url);
-        }
-
 
     }
 
