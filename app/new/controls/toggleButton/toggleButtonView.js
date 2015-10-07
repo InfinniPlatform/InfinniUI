@@ -22,7 +22,6 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
         this.renderTemplate(this.template);
         this.postrenderingActions();
         this.trigger('render');
-        this.applyValue();
         return this;
     },
 
@@ -66,10 +65,11 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     },
 
     onChangeValueHandler: function (model, value) {
+        debugger;
         this.applyValue();
     },
 
-    applyValue: function () {
+    updateValue: function () {
         var value = this.model.get('value');
         this.switchClass('toggle', value ? 'on' : 'off', this.$el);
     }

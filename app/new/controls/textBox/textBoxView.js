@@ -9,7 +9,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
     },
 
-    class: 'pl-textbox form-group',
+    className: 'pl-textbox form-group',
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI),
 
@@ -22,6 +22,32 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         'focus .pl-text-area-input': 'onFocusControlHandler',
         'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
     }),
+
+    initUpdatingOfProperties: function(){
+        TextEditorBaseView.prototype.initUpdatingOfProperties.call(this);
+
+        this.initMultiline();
+        this.initLineCount();
+    },
+
+    initMultiline: function(){
+        this.listenTo(this.model, 'change:multiline', this.updateMultiline);
+        this.updateMultiline();
+    },
+
+    initLineCount: function(){
+        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
+        this.updateLineCount();
+    },
+
+    initMultiline: function(){
+        this.rerender();
+    },
+
+    updateLineCount: function(){
+        var lineCount = this.model.get('lineCount');
+        this.ui.control.attr('rows', lineCount);
+    },
 
     render: function () {
         var model = this.model;
