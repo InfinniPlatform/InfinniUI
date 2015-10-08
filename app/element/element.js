@@ -95,7 +95,14 @@ _.extend(Element.prototype, {
         if (typeof this[subscribingMethodName]  == 'function') {
             this[subscribingMethodName](handler);
         }else{
-            this.control.on('change:'+ propertyName, handler);
+            this.control.on('change:'+ propertyName, function(model, value){
+                var context = this.getView().getContext(),
+                    args = {
+                        oldValue: model.previous(propertyName),
+                        newValue: value
+                    };
+                handler(context, args);
+            }.bind(this));
         }
     },
 

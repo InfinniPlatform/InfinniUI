@@ -143,7 +143,7 @@ var DataBinding = Backbone.Model.extend({
         var converter = this.get('converter');
 
         if(converter != null && converter.toSource != null){
-            value = converter.toSource(context, {value: value});
+            value = converter.toSource(context, {value: value, binding: this});
         }
 
         source.setProperty(sourceProperty, value);
@@ -169,7 +169,7 @@ var DataBinding = Backbone.Model.extend({
         var converter = this.get('converter');
 
         if(converter != null && converter.toElement != null){
-            value = converter.toElement(context, {value: value});
+            value = converter.toElement(context, {value: value, binding: this});
         }
 
         element.setProperty(elementProperty, value);

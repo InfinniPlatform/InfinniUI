@@ -1,4 +1,4 @@
-function BaseDataSourceBuilder(){};
+function BaseDataSourceBuilder(){}
 
 _.extend(BaseDataSourceBuilder.prototype, {
     build: function (context, args) {
@@ -6,6 +6,7 @@ _.extend(BaseDataSourceBuilder.prototype, {
         dataSource.suspendUpdate();
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
+        this.initFileProvider(dataSource, args.metadata);
 
         if(args.parentView.onLoading){
             args.parentView.onLoading(function () {
@@ -66,5 +67,9 @@ _.extend(BaseDataSourceBuilder.prototype, {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name);
             });
         }
+    },
+
+    initFileProvider: function (dataSource, metadata) {
+
     }
 });

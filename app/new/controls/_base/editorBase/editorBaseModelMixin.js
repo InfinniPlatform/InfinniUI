@@ -63,11 +63,10 @@ var editorBaseModelMixin = {
         }
 
         if (hasAttributes) {
-            ContainerModel.prototype.set.call(this, attributes, options);
+            return ContainerModel.prototype.set.call(this, attributes, options);
         }
 
-        return this;
-
+        return false;
     },
 
     getValue: function () {

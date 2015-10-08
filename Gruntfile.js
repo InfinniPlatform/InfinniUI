@@ -43,7 +43,11 @@
             '!app/controls/popupButton/**/*.*',
             '!app/element/actionElement/popupButton/**/*.*',
             '!app/element/actionElement/toolBar/**/*.*',
-            '!app/controls/toolBar/**/*.*'
+            '!app/controls/toolBar/**/*.*',
+            '!app/controls/imageBox/**/*.*',
+            '!app/element/imageBox/**/*.*',
+            '!app/element/dataElement/uploadFileBox/**/*.*',
+            '!app/controls/uploadFileBox/**/*.*'
 
         ],
         vendorFiles = [
@@ -78,6 +82,9 @@
     grunt.initConfig({
         concat: {
             app: {
+                options: {
+                    sourceMap: false
+                },
                 src: appFiles,
                 dest: 'out/app.js'
             },

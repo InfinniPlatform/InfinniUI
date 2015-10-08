@@ -1,4 +1,26 @@
 describe('UploadFileBox', function () {
+
+    describe('debug', function () {
+
+        it('render', function () {
+            var builder = new ApplicationBuilder();
+            var view = new View();
+            var metadata = {
+                MaxSize: 0,
+                AcceptTypes: [
+                    'image/png'
+                ]
+            };
+
+            var element = builder.buildType("FileBox", metadata, {parent: view, parentView: view, builder: builder});
+
+            var $el = element.render();
+            $('body').append($el);
+        });
+
+
+    });
+
     describe('UploadFileBox', function () {
 
         var element;

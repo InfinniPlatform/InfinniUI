@@ -39,7 +39,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TextBox', new TextBoxBuilder());
         builder.register('CheckBox', new CheckBoxBuilder());
         builder.register('ImageBox', new ImageBoxBuilder());
-        builder.register('UploadFileBox', new UploadFileBoxBuilder());
+        builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
         builder.register('LinkLabel', new LinkLabelBuilder());
         builder.register('DatePicker', new DatePickerBuilder());

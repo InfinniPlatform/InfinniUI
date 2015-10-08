@@ -38,7 +38,7 @@ var ControlModel = Backbone.Model.extend({
                 attrs[name] = defaults[name];
             }
         }
-        Backbone.Model.prototype.set.call(this, attrs, options);
+        return Backbone.Model.prototype.set.call(this, attrs, options);
     }
 
 });
