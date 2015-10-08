@@ -3,7 +3,7 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
     var queueReplaceItem = new DataProviderReplaceItemQueue();
 
     this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentRequest(criteriaList, pageNumber, pageSize, sorting));
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructReadDocumentRequest(criteriaList, pageNumber, pageSize, sorting));
     };
 
     this.createItem = function (resultCallback, idProperty) {
@@ -49,7 +49,7 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         var request = (function (success) {
             return function (data) {
                 var request = new RequestExecutor(success, successCallback, failCallback);
-                return request.makeRequest(urlConstructor.constructSetDocumentRequest(data.value, data.warnings));
+                return request.makeRequest(urlConstructor.constructUpdateDocumentRequest(data.value, data.warnings));
             }
         })(callback);
 
@@ -86,6 +86,26 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
 
         criteriaList = criteriaList || [];
         criteriaList.push(criteria);
-        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructGetDocumentRequest(criteriaList, 0, 1));
+        new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructReadDocumentRequest(criteriaList, 0, 1));
     };
+
+
+    this.getCreateAction = proxyTo(urlConstructor, 'getCreateAction');
+    this.setCreateAction = proxyTo(urlConstructor, 'setCreateAction');
+    this.getReadAction = proxyTo(urlConstructor, 'getReadAction');
+    this.setReadAction = proxyTo(urlConstructor, 'setReadeAction');
+    this.getUpdateAction = proxyTo(urlConstructor, 'getUpdateAction');
+    this.setUpdateAction = proxyTo(urlConstructor, 'setUpdateAction');
+    this.getDeleteAction = proxyTo(urlConstructor, 'getDeleteAction');
+    this.setDeleteAction = proxyTo(urlConstructor, 'setDeleteAction');
+
+    function proxyTo(obj, methodName) {
+        return function () {
+            var args = Array.prototype.slice.call(arguments);
+            var method = obj[methodName];
+            if (typeof method === 'function') {
+                return method.apply(obj, args);
+            }
+        }
+    }
 }
