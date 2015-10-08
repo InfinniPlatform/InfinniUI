@@ -24,7 +24,6 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     },
 
     onChangeFileHandler: function () {
-        console.log(arguments);
         var file = null;
         var files = this.ui.input[0].files;
 

@@ -20,7 +20,16 @@ _.extend(ImageBoxBuilder.prototype, {
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
+        var element = params.element;
+        var metadata = params.metadata;
 
+        if (Array.isArray(metadata.AcceptTypes)) {
+            element.setAcceptTypes(metadata.AcceptTypes);
+        }
+
+        if (metadata.MaxSize !== null && typeof metadata.MaxSize !== 'undefined') {
+            element.setMaxSize(metadata.MaxSize);
+        }
 
         // Привязка данных односторонняя т.к.:
         // 1. по значению из источника данных - сформировать URL изображения.

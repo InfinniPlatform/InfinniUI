@@ -39,7 +39,12 @@ describe('ImageBox', function () {
         it('render', function () {
             var builder = new ApplicationBuilder();
             var view = new View();
-            var metadata = {};
+            var metadata = {
+                MaxSize: 0,
+                AcceptTypes: [
+                    'image/png'
+                ]
+            };
 
             var element = builder.buildType("ImageBox", metadata, {parent: view, parentView: view, builder: builder});
 
@@ -124,7 +129,6 @@ describe('ImageBox', function () {
 
 
         it('Should set image url', function (done) {
-            debugger;
             var builder = new ApplicationBuilder();
 
             //Build view
@@ -182,26 +186,17 @@ describe('ImageBox', function () {
             element = new ImageBox();
         });
 
-        it('Default property value', function () {
-            // Given
-
-            //$('body').append(element.render());
-            assert.strictEqual(element.getReadOnly(), false);
-            assert.strictEqual(element.getMaxSize(), 0);
-
-        });
-
         it('Setting properties', function () {
 
             // Given
-            element.setReadOnly(true);
+            element.setEnabled(true);
             element.setAcceptTypes(['video/*']);
             element.setMaxSize(50000);
-            element.setValue({Info: {}});
+            //element.setValue({Info: {}});
 
-            assert.equal(element.getReadOnly(), true);
-            assert.deepEqual(element.getAcceptTypes(), ['video/*']);
-            assert.deepEqual(element.getValue(), {Info: {}});
+            assert.equal(element.getEnabled(), true);
+            assert.deepEqual(element.getAcceptTypes().toArray(), ['video/*']);
+            //assert.deepEqual(element.getValue(), {Info: {}});
             assert.equal(element.getMaxSize(), 50000);
         });
 
