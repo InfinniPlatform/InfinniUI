@@ -49,7 +49,7 @@ describe('ImageBox', function () {
             var element = builder.buildType("ImageBox", metadata, {parent: view, parentView: view, builder: builder});
 
             var $el = element.render();
-            $('body').append($el);
+            //$('body').append($el);
         });
 
 

@@ -43,7 +43,9 @@
             '!app/element/actionElement/toolBar/**/*.*',
             '!app/controls/toolBar/**/*.*',
             '!app/controls/imageBox/**/*.*',
-            '!app/element/imageBox/**/*.*'
+            '!app/element/imageBox/**/*.*',
+            '!app/element/dataElement/uploadFileBox/**/*.*',
+            '!app/controls/uploadFileBox/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
