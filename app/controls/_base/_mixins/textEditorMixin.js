@@ -50,6 +50,10 @@ var textEditorMixin = {
             this.onEditorHideControl();
             //Проброс события от редактора маски к контролу
             this.trigger('editor:show');
+
+            if(this.ui.editorWrap){
+                this.ui.editorWrap.show();
+            }
         });
 
         this.listenTo(editor, 'editor:hide', function () {
@@ -57,6 +61,10 @@ var textEditorMixin = {
             this.onEditorShowControl();
             //Проброс события от редактора маски к контролу
             this.trigger('editor:hide');
+
+            if(this.ui.editorWrap){
+                this.ui.editorWrap.hide();
+            }
         });
 
         this.listenTo(editor, 'onKeyDown', function (data) {
@@ -124,6 +132,10 @@ var textEditorMixin = {
      */
     onEditorShowControl: function () {
         this.ui.control.show();
+
+        if(this.ui.controlWrap){
+            this.ui.controlWrap.show();
+        }
     },
 
     /**
@@ -131,6 +143,10 @@ var textEditorMixin = {
      */
     onEditorHideControl: function () {
         this.ui.control.hide();
+
+        if(this.ui.controlWrap){
+            this.ui.controlWrap.hide();
+        }
     }
 
     /**

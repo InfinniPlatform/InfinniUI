@@ -50,10 +50,12 @@ var TextEditor = Backbone.View.extend({
     },
 
     render: function () {
+        this.$el.find('.pl-control-editor').remove();
+
         if (this.options.multiline) {
-            this.$el.html(this.templateTextArea({lineCount: this.options.lineCount}));
+            this.$el.prepend(this.templateTextArea({lineCount: this.options.lineCount}));
         } else {
-            this.$el.html(this.templateTextBox({inputType: this.options.inputType}));
+            this.$el.prepend(this.templateTextBox({inputType: this.options.inputType}));
         }
         this.bindUIElements();
 
