@@ -1,44 +1,13 @@
 <div class="backdrop"></div>
 
-<style>
-    .datepicker-datetime {
-        position: relative;
-    }
-
-    .backdrop {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    .pl-datepicker-dropdown {
-        position: absolute;
-        top: 100px;
-        left: 200px;
-    }
-    .datepicker-date {
-        background: #ffffff;
-        position: relative;
-        border: 1px solid #000000;
-    }
-
-    .datepicker-date a.time {
-        display: none;
-    }
-
-    .datepicker-clear {
-        width: 100%;
-    }
-
-
-</style>
 
 <div class="datepicker-date">
     <div class="days"></div>
     <div class="months" style="display: none;"></div>
     <div class="years"  style="display: none;"></div>
-    <button class="datepicker-clear">Очистить</button>
+    <div class="pl-datepicker-footer btn-group btn-group-sm" role="group">
+        <a class="today today-date btn btn-default">Сегодня</a>
+        <a class="datepicker-clear btn btn-default">Очистить</a>
+    </div>
 </div>
 

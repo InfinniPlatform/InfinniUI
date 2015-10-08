@@ -12,7 +12,8 @@ var DatePickerDropdown = Backbone.View.extend({
 
     events: {
         'click .backdrop': 'onClickBackdropHandler',
-        'click .datepicker-clear': 'onClickClearValueHandler'
+        'click .datepicker-clear': 'onClickClearValueHandler',
+        'click .today-date': 'onClickTodayHandler'
     },
 
     render: function () {
@@ -48,6 +49,10 @@ var DatePickerDropdown = Backbone.View.extend({
 
         options.el = this.ui.days;
         var days = new DatePickerDays(options);
+
+        this.months = months;
+        this.years = years;
+        this.days = days;
 
         this.workflow(days, months, years, value)(value);
     },
@@ -112,8 +117,18 @@ var DatePickerDropdown = Backbone.View.extend({
             years.show();
         }
 
-    }
+    },
 
+    onClickTodayHandler: function () {
+        var days = this.days,
+            months = this.months,
+            years = this.years,
+            today = moment().toDate();
+
+        days.setDate(today);
+        months.setDate(today);
+        years.setDate(today);
+    }
 
 });
 

@@ -10,7 +10,8 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
-        editor: '.pl-control-editor'
+        editor: '.pl-control-editor',
+        label: '.pl-control-label'
     }),
 
     events: {
@@ -24,6 +25,55 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     initialize: function () {
         ControlView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     },
+
+    initHandlersForProperties: function(){
+        ControlView.prototype.initHandlersForProperties.call(this);
+        editorBaseViewMixin.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:labelText', this.updateLabelText);
+        this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
+        this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
+        this.listenTo(this.model, 'change:editMask', this.updateEditMask);
+    },
+
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+        editorBaseViewMixin.updateProperties.call(this);
+
+        this.updateLabelText();
+        this.updateLabelFloating();
+    },
+
+    updateValue: function(){
+        this.ui.control.val(this.getDisplayValue());
+    },
+
+    updateLabelText: function(){
+        var labelText = this.model.get('labelText');
+        if(labelText){
+            this.ui.label
+                .text(labelText)
+                .removeClass('hidden');
+        }else{
+            this.ui.label
+                .text('')
+                .addClass('hidden');
+        }
+
+    },
+
+    updateLabelFloating: function(){
+
+    },
+
+    updateDisplayFormat: function(){
+        this.updateValue();
+    },
+
+    updateEditMask: function(){
+        this.updateValue();
+    },
+
 
     /**
      * Рендеринг редактора значений
@@ -47,17 +97,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         this.renderEditor(options);
     },
 
-    initOnChangeHandler: function () {
-        ControlView.prototype.initOnChangeHandler.call(this);
-        editorBaseViewMixin.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:labelText', this.onChangeLabelTextHandler)
-            .listenTo(this.model, 'change:labelFloating', this.onChangeLabelFloatingHandler)
-            .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
-            .listenTo(this.model, 'change:editMask', this.onChangeEditMaskHandler);
-    },
-
     getData: function () {
         var model = this.model;
 
@@ -68,26 +107,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
                 labelFloating: model.get('labelFloating'),
                 value: this.getDisplayValue()
             });
-    },
-
-    onChangeLabelTextHandler: function () {
-
-    },
-
-    onChangeLabelFloatingHandler: function () {
-
-    },
-
-    onChangeDisplayFormatHandler: function () {
-
-    },
-
-    onChangeEditMaskHandler: function () {
-
-    },
-
-    onChangeValueHandler: function (model, value) {
-        this.ui.control.val(this.getDisplayValue());
     },
 
     onEditorValidate: function (value) {

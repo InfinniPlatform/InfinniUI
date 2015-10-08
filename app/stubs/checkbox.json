@@ -78,6 +78,34 @@
                                   }
                               }]
                           }
+                      },
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [{
+                                  "DatePicker": {
+                                    "Mode": "Date",
+                                    "DisplayFormat": {
+                                      "DateTimeFormat": {
+                                        "Format": "d"
+                                      }
+                                    },
+                                    "MinValue": "2015-9-14",
+                                    "MaxValue": "2015-10-20",
+                                    "EditMask": {
+                                      "DateTimeEditMask": {
+                                        "Mask": "d"
+                                      }
+                                    },
+                                    "Value": {
+                                      "PropertyBinding": {
+                                        "Source": "MainDataSource",
+                                        "Property": "birthday"
+                                      }
+                                    }
+                                  }
+                               }]
+                          }
                       }
                   ]
               }
@@ -97,29 +125,6 @@
               "PropertyBinding": {
                 "Source": "MainDataSource",
                 "Property": "$"
-              }
-            }
-          }
-        },
-        {
-          "DatePicker": {
-            "Mode": "Date",
-            "DisplayFormat": {
-              "DateTimeFormat": {
-                "Format": "d"
-              }
-            },
-            "MinValue": "2015-10-14",
-            "MaxValue": "2015-10-20",
-            "EditMask": {
-              "DateTimeEditMask": {
-                "Mask": "d"
-              }
-            },
-            "Value": {
-              "PropertyBinding": {
-                "Source": "MainDataSource",
-                "Property": "birthday"
               }
             }
           }

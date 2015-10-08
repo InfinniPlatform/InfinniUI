@@ -6,56 +6,28 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     initialize: function () {
         this.wasRendered = false;
-
-        this.initVisible();
-        this.initHorizontalAlignment();
-        this.initVerticalAlignment();
-        this.initEnabled();
-        this.initName();
-        this.initText();
-        this.initValidationState();
-        this.initStyle();
-
-        this.once('render', this.initOnChangeHandler, this);
+        this.once('render', this.initHandlersForProperties, this);
     },
 
-    initVisible: function () {
+    initHandlersForProperties: function(){
         this.listenTo(this.model, 'change:visible', this.updateVisible);
-        this.updateVisible();
-    },
-
-    initHorizontalAlignment: function () {
         this.listenTo(this.model, 'change:horizontalAlignment', this.updateHorizontalAlignment);
-        this.updateHorizontalAlignment();
-    },
-
-    initVerticalAlignment: function () {
         this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
-        this.updateVerticalAlignment();
-    },
-
-    initEnabled: function () {
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
-        this.updateEnabled();
-    },
-
-    initName: function () {
         this.listenTo(this.model, 'change:name', this.updateName);
-        this.updateName();
-    },
-
-    initStyle: function () {
         this.listenTo(this.model, 'change:style', this.updateStyle);
-        this.updateStyle();
-    },
-
-    initText: function () {
         this.listenTo(this.model, 'change:text', this.updateText);
-        //this.updateText();
+        this.listenTo(this.model, 'change:validationState', this.updateValidationState);
     },
 
-    initValidationState: function(){
-        this.listenTo(this.model, 'change:validationState', this.updateValidationState);
+    updateProperties: function(){
+        this.updateVisible();
+        this.updateHorizontalAlignment();
+        this.updateVerticalAlignment();
+        this.updateEnabled();
+        this.updateName();
+        this.updateText();
+        this.updateStyle();
         this.updateValidationState();
     },
 
@@ -224,11 +196,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.bindUIElements();
     },
 
-    initOnChangeHandler: function () {
-        this
-            .listenTo(this.model, 'change:enabled', this.onChangeEnabledHandler);
-    },
-
     getData: function () {
         var model = this.model;
         return {
@@ -247,10 +214,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             background: model.get('background'),
             texture: model.get('texture')
         }
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        //@TODO Обработка View при изменении свойства Enabled
     }
 
 });

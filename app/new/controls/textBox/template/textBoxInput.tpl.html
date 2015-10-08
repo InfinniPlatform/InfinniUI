@@ -1,8 +1,10 @@
-<label class="pl-control-label" for="<%- guid %>"><%- labelText%></label>
-<input <% if (!enabled) { %> disabled <% } %> class="pl-control form-control pl-text-box-input" type="text" id="<%- guid %>" value="<%- value %>">
+<label class="pl-control-label" for="<%- guid %>"></label>
+<input class="pl-control form-control pl-text-box-input" type="text" id="<%- guid %>">
+
 <div class="pl-control-editor"></div>
-<div class="pl-control-hint-text"><%- hintText %></div>
-<div class="pl-control-error-text"><%- errorText %></div>
-<div class="pl-control-warning-text"><%- warningText %></div>
+
+<div class="pl-control-hint-text help-block hidden"></div>
+<div class="pl-control-error-text help-block hidden"></div>
+<div class="pl-control-warning-text help-block hidden"></div>
 
 

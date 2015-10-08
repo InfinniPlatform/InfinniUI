@@ -7,7 +7,9 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
     template: InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
-        dropdown: '.pl-datepicker-calendar'
+        dropdownButton: '.pl-datepicker-calendar',
+        controlWrap: '.control-wrap',
+        editorWrap: '.editor-wrap'
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
@@ -18,15 +20,58 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
     initialize: function () {
         TextEditorBaseView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        this.applyDataPickerStrategy(this.model.get('mode'));
-        this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
+        this.updateMode();
+        this.listenTo(this.model, 'change:mode', this.updateMode);
+    },
+
+    initHandlersForProperties: function(){
+        TextEditorBaseView.prototype.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:minValue', this.updateMinValue);
+        this.listenTo(this.model, 'change:maxValue', this.updateMaxValue);
+    },
+
+    updateProperties: function(){
+        TextEditorBaseView.prototype.updateProperties.call(this);
+    },
+
+    updateMode: function(){
+        var mode = this.model.get('mode');
+        _.extend(this, datePickerStrategy[mode]);
+
+        this.rerender();
+    },
+
+    updateMinValue: function(){
+        var mode = this.model.get('mode');
+        _.extend(this, datePickerStrategy[mode]);
+
+        this.rerender();
+    },
+
+    updateMaxValue: function(){
+        var mode = this.model.get('mode');
+        _.extend(this, datePickerStrategy[mode]);
+
+        this.rerender();
+    },
+
+    updateEnabled: function(){
+        TextEditorBaseView.prototype.updateEnabled.call(this);
+
+        var isEnabled = this.model.get('enabled');
+        this.ui.dropdownButton.prop('disabled', !isEnabled);
     },
 
     render: function () {
         this.prerenderingActions();
+
         this.renderTemplate(this.getTemplate());
+        this.updateProperties();
         this.renderDatePickerEditor();
+
         this.trigger('render');
+
         this.postrenderingActions();
         return this;
     },
@@ -55,43 +100,6 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
         });
 
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        TextEditorBaseView.prototype.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:minValue', this.onChangeMinValueHandler)
-            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler)
-            .listenTo(this.model, 'change:enabled', this.OnChangeEnabledHandler);
-    },
-
-    onChangeMinValueHandler: function (model, value) {
-
-    },
-
-    onChangeMaxValueHandler: function (model, value) {
-
-    },
-
-    onChangeIncrementHandler: function (model, value) {
-
-    },
-
-    OnChangeEnabledHandler: function (model, enabled) {
-        this.ui.dropdown.prop('disabled', !enabled);
-    },
-
-    onChangeModeHandler: function (model, value) {
-        this.applyDataPickerStrategy(value);
-    },
-
-    applyDataPickerStrategy: function (mode) {
-        _.extend(this, datePickerStrategy[mode]);
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
     },
 
     /**

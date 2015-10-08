@@ -14,6 +14,7 @@
 .togglebutton-box {
   width: 66px;
   border: 1px solid @pl-primary1;
+  transition: border 0.5s;
   border-radius: @border-radius-base;
   overflow: hidden;
 }
@@ -35,11 +36,11 @@
 .togglebutton-container .togglebutton-handle-on,
 .togglebutton-container .togglebutton-handle-off {
   width: 50px;
-  padding: 5px 10px;
+  padding: @padding-base-vertical 10px;
 }
 
 .togglebutton-container .togglebutton-handle-label{
-  width: 14px;
+  width: 6px;
 }
 
 .togglebutton-handle-on {

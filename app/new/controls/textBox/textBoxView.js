@@ -9,6 +9,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
     },
 
+    className: 'pl-textbox form-group',
+
     UI: _.extend({}, TextEditorBaseView.prototype.UI),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
@@ -21,6 +23,28 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
     }),
 
+    initHandlersForProperties: function(){
+        TextEditorBaseView.prototype.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:multiline', this.updateMultiline);
+        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
+    },
+
+    updateProperties: function(){
+        TextEditorBaseView.prototype.updateProperties.call(this);
+
+        this.updateLineCount();
+    },
+
+    updateMultiline: function(){
+        this.rerender();
+    },
+
+    updateLineCount: function(){
+        var lineCount = this.model.get('lineCount');
+        this.ui.control.attr('rows', lineCount);
+    },
+
     render: function () {
         var model = this.model;
         var template = model.get('multiline') ? this.template.multiline : this.template.oneline;
@@ -28,6 +52,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         this.prerenderingActions();
         this.renderTemplate(template);
         this.renderTextBoxEditor();
+        this.updateProperties();
+
         this.trigger('render');
         this.postrenderingActions();
         return this;
@@ -55,45 +81,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         });
 
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        TextEditorBaseView.prototype.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:lineCount', this.onChangeLineCountHandler)
-            .listenTo(this.model, 'change:multiline', this.onChangeMultilineHandler)
-    },
-
-    onChangeLineCountHandler: function (model, value) {
-        if (!value) {
-            return;
-        }
-        this.ui.control.prop('rows', model.get('lineCount'));
-    },
-
-    onChangeMultilineHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeLabelTextHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeLabelFloatingHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeDisplayFormatHandler: function ( ){
-        this.renderControl();
-    },
-
-    onChangeEditMaskHandler: function () {
-        this.renderControl();
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
     }
 
 });
