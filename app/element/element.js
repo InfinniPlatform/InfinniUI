@@ -40,9 +40,12 @@ _.extend(Element.prototype, {
         if(!this.parentView){
             if(this.parent instanceof View){
                 this.parentView = this.parent;
+
             }else{
-                if(this.parent.getView){
+                if(this.parent && this.parent.getView){
                     this.parentView = this.parent.getView();
+                }else{
+                    this.parentView = null;
                 }
             }
         }
@@ -96,7 +99,8 @@ _.extend(Element.prototype, {
             this[subscribingMethodName](handler);
         }else{
             this.control.on('change:'+ propertyName, function(model, value){
-                var context = this.getView().getContext(),
+                var parentView = this.getView(),
+                    context = parentView ? parentView.getContext() : undefined,
                     args = {
                         oldValue: model.previous(propertyName),
                         newValue: value
