@@ -220,6 +220,10 @@ var DatePickerDays = DatePickerComponent.extend({
     },
 
     showToday: function () {
+        this.today();
+    },
+
+    today: function () {
         this.model.today();
     },
 

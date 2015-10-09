@@ -125,9 +125,13 @@ var DatePickerDropdown = Backbone.View.extend({
             years = this.years,
             today = moment().toDate();
 
-        days.setDate(today);
-        months.setDate(today);
-        years.setDate(today);
+        //days.setDate(today);
+        //months.setDate(today);
+        //years.setDate(today);
+
+        days.today();
+        months.today();
+        years.today();
     }
 
 });

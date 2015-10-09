@@ -4,6 +4,8 @@
  */
 var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
+    className: "pl-numericbox form-group",
+
     template: InfinniUI.Template["new/controls/numericBox/template/numericBox.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
@@ -24,6 +26,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
         this.prerenderingActions();
         this.renderTemplate(this.template);
         this.renderNumericBoxEditor();
+        this.updateProperties();
         this.trigger('render');
         this.postrenderingActions();
         return this;
@@ -52,27 +55,6 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
         });
 
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        TextEditorBaseView.prototype.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:minValue', this.onChangeMinValueHandler)
-            .listenTo(this.model, 'change:maxValue', this.onChangeMaxValueHandler)
-            .listenTo(this.model, 'change:increment', this.onChangeIncrementHandler);
-    },
-
-    onChangeMinValueHandler: function (model, value) {
-
-    },
-
-    onChangeMaxValueHandler: function (model, value) {
-
-    },
-
-    onChangeIncrementHandler: function (model, value) {
-
     },
 
     onChangeEnabledHandler: function (model, value) {

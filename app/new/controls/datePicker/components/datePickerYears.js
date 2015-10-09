@@ -135,6 +135,10 @@ var DatePickerYears = DatePickerComponent.extend({
     },
 
     showTodayYear: function () {
+        this.today();
+    },
+
+    today: function () {
         this.model.resetPage();
     },
 
