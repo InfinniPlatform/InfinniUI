@@ -52,8 +52,8 @@ describe('DatePickerControl', function () {
             var datePicker = builder.buildType('DatePicker', {});
             datePicker.setEnabled(false);
 
-            var $el = datePicker.render().find('.pl-datepicker-input, button.pl-datepicker-calendar');
-            assert.equal($el.length, 2);
+            var $el = datePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
+            assert.equal($el.length, 3);
             $el.each(function (i, el) {
                 var $el = $(el);
                 assert.isTrue($el.prop('disabled'));

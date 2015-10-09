@@ -9,7 +9,7 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
     template: InfinniUI.Template["new/controls/label/template/label.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
-        control: 'label',
+        control: '.label-control',
         container: 'div'
     }),
 
@@ -22,6 +22,50 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
         //this.initForeground();
         //this.initBackground();
         //this.initTextStyle();
+    },
+
+    initHandlersForProperties: function(){
+        ControlView.prototype.initHandlersForProperties.call(this);
+        editorBaseViewMixin.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
+        this.listenTo(this.model, 'change:textWrapping', this.updateTextWrapping);
+        this.listenTo(this.model, 'change:textTrimming', this.updateTextTrimming);
+        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
+    },
+
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+        editorBaseViewMixin.updateProperties.call(this);
+    },
+
+    updateValue: function(){
+        var textForLabel = this.getLabelText();
+        this.ui.control
+            .text(textForLabel)
+            .attr('title', textForLabel);
+    },
+
+    updateDisplayFormat: function(){
+        this.updateValue();
+    },
+
+    updateTextWrapping: function(){
+        var textWrapping = this.model.get('textWrapping');
+        this.ui.control.toggleClass('pl-text-wrapping', textWrapping);
+    },
+
+    updateTextTrimming: function(){
+        var textTrimming = this.model.get('textTrimming');
+        this.ui.control.toggleClass('pl-text-trimming', textTrimming);
+    },
+
+    updateText: function () {
+        this.updateValue();
+    },
+
+    updateLineCount: function(){
+
     },
 
     getData: function () {
@@ -40,48 +84,12 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
         this.prerenderingActions();
         this.renderTemplate(this.template);
+
+        this.updateProperties();
+
         this.trigger('render');
         this.postrenderingActions();
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        ControlView.prototype.initOnChangeHandler.call(this);
-        editorBaseViewMixin.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:displayFormat', this.onChangeDisplayFormatHandler)
-            .listenTo(this.model, 'change:textWrapping', this.onChangeTextWrappingHandler)
-            .listenTo(this.model, 'change:lineCount', this.onChangeLineCountHandler)
-    },
-
-    onChangeDisplayFormatHandler: function () {
-        this.updateText();
-    },
-
-    onChangeValueHandler: function() {
-        this.updateText();
-    },
-
-    onChangeTextWrappingHandler: function (model, value) {
-
-    },
-
-    onChangeLineCountHandler: function (model, value) {
-
-    },
-
-    updateText: function () {
-        if (!this.wasRendered) {
-            return;
-        }
-
-        var
-            control = this.ui.control,
-            text = this.getLabelText();
-
-        control.attr('title', text);
-        control.text(text);
     },
 
     getLabelText: function () {
