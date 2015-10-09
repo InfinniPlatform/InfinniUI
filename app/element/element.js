@@ -1,12 +1,20 @@
 
 var Element = function (parentView) {
-    this.parent = null;
+    //this.parent = null;
     this.children = new ChildrenElementCollection(this);
     this.parentView = parentView;
     this.control = this.createControl();
     this.state = {
         Enabled: true
     };
+
+    Object.defineProperties(this, {
+        parent: {
+            get:function () {
+                return this.getParent()
+            }
+        }
+    });
     this.eventStore = new EventStore();
 };
 
