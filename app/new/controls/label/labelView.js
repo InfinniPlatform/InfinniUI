@@ -14,13 +14,6 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-
-        //this.initHorizontalTextAlignment();
-        //this.initUpdateLineCount();
-        //this.initTextWrapping();
-        //this.initForeground();
-        //this.initBackground();
-        //this.initTextStyle();
     },
 
     initHandlersForProperties: function(){
@@ -110,12 +103,3 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
     }
 
 }));
-
-//_.extend(LabelView.prototype,
-//    horizontalTextAlignmentPropertyMixin,
-//    foregroundPropertyMixin,
-//    backgroundPropertyMixin,
-//    textStylePropertyMixin,
-//    lineCountPropertyMixin,
-//    textWrappingPropertyMixin
-//);
