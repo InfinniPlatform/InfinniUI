@@ -17,9 +17,16 @@
   }
 }
 
-.datepicker-datetime {
-  position: relative;
+
+.pl-datetimepicker-footer{
+  width:100%;
+  border-top: 1px solid @picker-divider;
+
+  .btn{
+    width:100%
+  }
 }
+
 
 .backdrop {
   position: fixed;
@@ -29,12 +36,12 @@
   left: 0;
 }
 
-.pl-datepicker-dropdown {
+.pl-datepicker-dropdown, .pl-timepicker-dropdown {
   position: absolute;
-  top: 100px;
-  left: 200px;
+  z-index: 1000;
 }
-.datepicker-date {
+
+.datepicker-date, .datepicker-time, .datepicker-datetime {
   background: #ffffff;
   position: relative;
   border: 1px solid @btn-default-border;
@@ -53,12 +60,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-}
-
-.datepicker-datetime {
-  background: #ffffff;
-  position: relative;
-  border: 1px solid #000000;
 }
 
 .days {
@@ -87,16 +88,6 @@
   left: 0;
 }
 
-.datepicker-time {
-  background: #ffffff;
-  position: relative;
-  border: 1px solid #000000;
-}
-
-.pl-timepicker-dropdown {
-  position: absolute;
-}
-
 .datepicker-clear {
   position: relative;
 }
@@ -111,7 +102,7 @@
   opacity: 0.5;
 }
 
-.day-unavailable {
+.day-unavailable, .year-unavailable, .month-unavailable {
   background-color: @pl-background4;
   cursor: not-allowed;
   color: #777777;
@@ -148,6 +139,16 @@
   text-align: center;
 }
 
+.navigation {
+  cursor: default;
+}
+
+.navigation {
+  .years, .year {
+    cursor: pointer;
+  }
+}
+
 .navigation-next {
   text-align: right;
 }
@@ -164,13 +165,6 @@
 
 .month-today {
   background: #d4e2ee;
-}
-
-.month-unavailable {
-  background-color: #dddddd;
-  cursor: not-allowed;
-  color: #777777;
-  opacity: 1;
 }
 
 .month-list {
@@ -195,14 +189,6 @@
   color: #000000;
 }
 
-
-.year-unavailable {
-  background-color: #dddddd;
-  cursor: not-allowed;
-  color: #777777;
-  opacity: 1;
-}
-
 .year-list {
   cursor: pointer;
 }
@@ -217,4 +203,10 @@
 }
 .year-today {
   background: #d4e2ee;
+}
+
+.times {
+  td {
+    text-align: center;
+  }
 }

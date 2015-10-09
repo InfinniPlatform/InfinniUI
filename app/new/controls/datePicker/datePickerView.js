@@ -4,6 +4,8 @@
  */
 var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototype */{
 
+    className: "pl-datepicker form-group",
+
     template: InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
