@@ -9,8 +9,7 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
     template: InfinniUI.Template["new/controls/label/template/label.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
-        control: '.label-control',
-        container: 'div'
+        control: '.label-control'
     }),
 
     initialize: function () {
