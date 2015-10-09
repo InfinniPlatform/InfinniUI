@@ -11,19 +11,23 @@
         "Items": [
           {
             "Id": 1,
-            "DisplayName": "I"
+            "DisplayName": "I",
+            "SomeField": ""
           },
           {
             "Id": 2,
-            "DisplayName": "II"
+            "DisplayName": "II",
+            "SomeField": "val"
           },
           {
             "Id": 3,
-            "DisplayName": "III"
+            "DisplayName": "III",
+            "SomeField": 3
           },
           {
             "Id": 4,
-            "DisplayName": "IV"
+            "DisplayName": "IV",
+            "SomeField": null
           }
         ]
       }
@@ -176,6 +180,48 @@
           }
         }
       ]
+    }
+  }, {
+    "ListBox": {
+      "Items": {
+        "PropertyBinding":{
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        }
+      },
+
+      "ItemTemplate":{
+        "StackPanel": {
+          "Items":[
+            {
+              "Label":{
+                "Value":{
+                  "PropertyBinding": {
+                    "Source": "BloodGroupDataSource",
+                    "Property": "$.DisplayName"
+                  }
+                }
+              }
+            },
+            {
+              "Label":{
+                "Value":{
+                  "PropertyBinding": {
+                    "Source": "BloodGroupDataSource",
+                    "Property": "$.Id"
+                  }
+                },
+                "Visible": {
+                  "PropertyBinding": {
+                    "Source": "BloodGroupDataSource",
+                    "Property": "$.SomeField"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
     }
   }],
   "Scripts": [

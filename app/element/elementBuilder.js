@@ -51,21 +51,20 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var metadata = params.metadata,
             element = params.element;
 
-        if(metadata.Text && typeof metadata.Text == 'object'){
-            this.initTextBinding(params, metadata.Text);
-        }else{
-            element.setText(metadata.Text);
-        }
-
         //element.setVisible(metadata.Visible);
-        this.initBindingToProperty(params, metadata.Visible, 'Visible', true);
+        this.initBindingToProperty(params, 'Text');
+        this.initBindingToProperty(params, 'Visible', true);
+        this.initBindingToProperty(params, 'Enabled', true);
 
-        element.setHorizontalAlignment(metadata.HorizontalAlignment);
+        element.setHorizontalAlignment(metadata.HorizontalAignment);
         element.setVerticalAlignment(metadata.VerticalAlignment);
         element.setName(metadata.Name);
-        element.setEnabled(metadata.Enabled);
 
         element.setStyle(metadata.Style);
+
+        if (metadata.TextStyle) {
+            element.setTextStyle;
+        }
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {
@@ -86,66 +85,35 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
     },
 
-    initTextBinding: function(params, bindingMetadata){
+    initBindingToProperty: function(params, propertyName, isBooleanBinding){
         var metadata = params.metadata;
-        var args = {
-            parentView: params.parentView,
-            basePathOfProperty: params.basePathOfProperty
-        };
+        var propertyMetadata = metadata[propertyName];
+        var element = params.element;
+        var lowerCasePropertyName = propertyName.toLowerCase();
 
-        var dataBinding = params.builder.build(metadata.Text, args);
-
-        dataBinding.setElement(params.element);
-
-        if (dataBinding != null) {
-            dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                params.element.setText(dataBinding.getPropertyValue());
-            });
-
-            var data = dataBinding.getPropertyValue();
-            if (data) {
-                params.element.setText(data);
-            }
-        }
-
-        //dataBinding.refresh();
-        return dataBinding;
-    },
-
-    initBindingToProperty: function(params, bindingMetadata, propertyName, isBooleanBinding){
-        var metadata = params.metadata;
-        var args = {
-            parentView: params.parentView,
-            basePathOfProperty: params.basePathOfProperty
-        };
-
-        if(!metadata[propertyName] || typeof metadata[propertyName] != 'object'){
-            params.element['set' + propertyName](metadata[propertyName]);
+        if(!propertyMetadata || typeof propertyMetadata != 'object'){
+            params.element['set' + propertyName](propertyMetadata);
             return null;
-        }else{
-            var dataBinding = params.builder.build(metadata[propertyName], args);
-            dataBinding.setSetterName('set' + propertyName);
-            dataBinding.setElement(params.element);
 
-            if (dataBinding != null) {
-                dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                    if(isBooleanBinding){
-                        params.element['set' + propertyName](!!dataBinding.getPropertyValue());
-                    }else{
-                        params.element['set' + propertyName](dataBinding.getPropertyValue());
+        }else{
+            var args = {
+                parent: params.parent,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            };
+
+            var dataBinding = params.builder.build(metadata[propertyName], args);
+
+            if(isBooleanBinding){
+                dataBinding.setMode(BindingModes.toElement);
+                dataBinding.setConverter({
+                    toElement: function (context, args) {
+                        return !!args.value;
                     }
                 });
-
-                var data = dataBinding.getPropertyValue();
-                if(isBooleanBinding){
-                    params.element['set' + propertyName](!!data);
-                }else{
-                    if (data) {
-                        params.element['set' + propertyName](data);
-                    }
-                }
-
             }
+
+            dataBinding.bindElement(element, lowerCasePropertyName);
 
             return dataBinding;
         }
