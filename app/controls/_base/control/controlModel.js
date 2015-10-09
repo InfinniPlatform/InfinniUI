@@ -7,6 +7,10 @@ var ControlModel = Backbone.Model.extend({
         visible: true,
         horizontalAlignment: 'Stretch',
         verticalAlignment: 'Top',
+        textStyle: null,
+        background: null,
+        foreground: null,
+        texture: null,
         isLoaded: false,
         validationState: 'success',
         validationMessage: ''

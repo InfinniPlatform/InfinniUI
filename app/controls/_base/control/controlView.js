@@ -17,6 +17,12 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.listenTo(this.model, 'change:name', this.updateName);
         this.listenTo(this.model, 'change:style', this.updateStyle);
         this.listenTo(this.model, 'change:text', this.updateText);
+
+        this.listenTo(this.model, 'change:textStyle', this.updateTextStyle);
+        this.listenTo(this.model, 'change:background', this.updateBackground);
+        this.listenTo(this.model, 'change:foreground', this.updateForeground);
+        this.listenTo(this.model, 'change:texture', this.updateTexture);
+
         this.listenTo(this.model, 'change:validationState', this.updateValidationState);
     },
 
@@ -28,6 +34,12 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.updateName();
         this.updateText();
         this.updateStyle();
+
+        this.updateTextStyle();
+        this.updateBackground();
+        this.updateForeground();
+        this.updateTexture();
+
         this.updateValidationState();
     },
 
@@ -107,10 +119,84 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     },
 
+    updateTextStyle: function () {
+        var customStyle = this.model.get('textStyle');
+
+        if(this.currentTextStyle){
+            this.$el
+                .removeClass( this.valueToTextClassName(this.currentTextStyle) );
+        }
+
+        if(customStyle){
+            this.$el
+                .addClass( this.valueToTextClassName(customStyle) );
+        }
+
+        this.currentTextStyle = customStyle;
+    },
+
+    updateBackground: function () {
+        var customStyle = this.model.get('background');
+
+        if(this.currentBackground){
+            this.$el
+                .removeClass( this.valueToBackgroundClassName(this.currentBackground) );
+        }
+
+        if(customStyle){
+            this.$el
+                .addClass( this.valueToBackgroundClassName(customStyle) );
+        }
+
+        this.currentBackground = customStyle;
+    },
+
+    updateForeground: function () {
+        var customStyle = this.model.get('foreground');
+
+        if(this.currentForeground){
+            this.$el
+                .removeClass( this.valueToForegroundClassName(this.currentForeground) );
+        }
+
+        if(customStyle){
+            this.$el
+                .addClass( this.valueToForegroundClassName(customStyle) );
+        }
+
+        this.currentForeground = customStyle;
+    },
+
+    updateTexture: function () {
+        var customStyle = this.model.get('texture');
+
+        if(this.currentTexture){
+            this.$el
+                .removeClass( this.valueToTextureClassName(this.currentTexture) );
+        }
+
+        if(customStyle){
+            this.$el
+                .addClass( this.valueToTextureClassName(customStyle) );
+        }
+
+        this.currentTexture = customStyle;
+    },
+
     updateStyle: function () {
         var customStyle = this.model.get('style');
-        this.$el
-            .addClass(customStyle);
+
+        if(this.currentStyle){
+            this.$el
+                .removeClass(this.currentStyle);
+        }
+
+        if(customStyle){
+            this.$el
+                .addClass(customStyle);
+        }
+
+        this.currentStyle = customStyle;
     },
 
     updateValidationState: function () {
@@ -188,6 +274,22 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             return (name.match(regexp) || []).join(' ');
         })
             .addClass(startWith + value);
+    },
+
+    valueToBackgroundClassName: function(value){
+        return 'pl-' + value.toLowerCase() + '-bg';
+    },
+
+    valueToForegroundClassName: function(value){
+        return 'pl-' + value.toLowerCase() + '-fg';
+    },
+
+    valueToTextClassName: function(value){
+        return 'pl-' + value.toLowerCase();
+    },
+
+    valueToTextureClassName: function(value){
+        return 'pl-' + value.toLowerCase();
     },
 
     renderTemplate: function (template) {

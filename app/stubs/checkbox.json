@@ -195,6 +195,7 @@
           "Items":[
             {
               "Label":{
+                "Background": "Primary1",
                 "Value":{
                   "PropertyBinding": {
                     "Source": "BloodGroupDataSource",

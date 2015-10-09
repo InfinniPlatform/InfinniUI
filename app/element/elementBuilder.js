@@ -51,20 +51,18 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var metadata = params.metadata,
             element = params.element;
 
-        //element.setVisible(metadata.Visible);
         this.initBindingToProperty(params, 'Text');
         this.initBindingToProperty(params, 'Visible', true);
         this.initBindingToProperty(params, 'Enabled', true);
+        this.initBindingToProperty(params, 'HorizontalAignment', true);
+        this.initBindingToProperty(params, 'VerticalAlignment', true);
+        this.initBindingToProperty(params, 'TextStyle', true);
+        this.initBindingToProperty(params, 'Foreground', true);
+        this.initBindingToProperty(params, 'Background', true);
+        this.initBindingToProperty(params, 'Texture', true);
+        this.initBindingToProperty(params, 'Style', true);
 
-        element.setHorizontalAlignment(metadata.HorizontalAignment);
-        element.setVerticalAlignment(metadata.VerticalAlignment);
         element.setName(metadata.Name);
-
-        element.setStyle(metadata.Style);
-
-        if (metadata.TextStyle) {
-            element.setTextStyle;
-        }
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {
@@ -92,7 +90,9 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var lowerCasePropertyName = propertyName.toLowerCase();
 
         if(!propertyMetadata || typeof propertyMetadata != 'object'){
-            params.element['set' + propertyName](propertyMetadata);
+            if(propertyMetadata !== undefined){
+                params.element['set' + propertyName](propertyMetadata);
+            }
             return null;
 
         }else{

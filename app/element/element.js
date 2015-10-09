@@ -214,6 +214,46 @@ _.extend(Element.prototype, {
         }
     },
 
+    getTextStyle: function () {
+        return this.control.get('textStyle');
+    },
+
+    setTextStyle: function (textStyle) {
+        if (typeof textStyle == 'string') {
+            this.control.set('textStyle', textStyle);
+        }
+    },
+
+    getBackground: function () {
+        return this.control.get('background');
+    },
+
+    setBackground: function (background) {
+        if (typeof background == 'string') {
+            this.control.set('background', background);
+        }
+    },
+
+    getForeground: function () {
+        return this.control.get('foreground');
+    },
+
+    setForeground: function (foreground) {
+        if (typeof foreground == 'string') {
+            this.control.set('foreground', foreground);
+        }
+    },
+
+    getTexture: function () {
+        return this.control.get('texture');
+    },
+
+    setTexture: function (texture) {
+        if (typeof texture == 'string') {
+            this.control.set('texture', texture);
+        }
+    },
+
     getChildElements: function () {
         return this.childElements;
     },
