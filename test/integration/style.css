@@ -1,0 +1,15 @@
+.scenario {
+    margin-left: 30px;
+}
+
+section.passed .header{
+	background-color: green;
+}
+
+section.failed .header{
+	background-color: red;
+}
+
+li.failed{
+	background-color: red;
+}

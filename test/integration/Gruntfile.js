@@ -9,37 +9,41 @@
 			step_definitions: {
                 src: ["features/support/*.js", "features/step_definitions/*.js"],
                 dest: 'out/step_definitions.js'
-            }
-        },
-        copy: {
-            auth: {
-                expand: true,
-                flatten: true,
-                src: [],
-                dest: 'out/'
+            },
+
+            app: {
+				src: ["app/*.js"],
+                dest: 'out/app.js'
+            },
+
+            vendor: {
+				src: ["vendor/*.js"],
+                dest: 'out/vendor.js'
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('build', function (extensionPath) {
         if (extensionPath) {
-            var featurePath = extensionPath + '*.Extensions/**/*.feature';
-            var authInfoPath = extensionPath + '*.Extensions/**/auth.js';
+            var extFeaturesPath = extensionPath + '*.Extensions/**/*.feature';
+            var extStepDefinitionsPath = extensionPath + '*.Extensions/**/integrationTests/**/step_definitions/*.js';
+            var extTestHelpersPath = extensionPath + '*.Extensions/**/integrationTests/*.js';
 
             var stepDefinitionsArray = grunt.config.get('concat.step_definitions.src');
-            stepDefinitionsArray.push(extensionPath + '*.Extensions/**/step_definitions/*.js');
+            stepDefinitionsArray.push(extStepDefinitionsPath);
 
-            grunt.config.set('concat.feature.src', [featurePath]);
+            var appArray = grunt.config.get('concat.app.src');
+            appArray.push(extTestHelpersPath);
+
+            grunt.config.set('concat.feature.src', [extFeaturesPath]);
             grunt.config.set('concat.step_definitions.src', stepDefinitionsArray);
-            grunt.config.set('copy.auth.src', [authInfoPath]);
+            grunt.config.set('concat.app.src', appArray);
         }
 
          var tasks = [
-            'concat',
-            'copy'
+            'concat'
          ];
 
         grunt.task.run(tasks);
