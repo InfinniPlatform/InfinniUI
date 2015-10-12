@@ -22,53 +22,28 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         });
     },
 
-    onToggleValue: function (val) {
+    toggleValue: function (value) {
         var
-            value = this.get('value'),
+            currentValue = this.get('value'),
             multiSelect = this.get('multiSelect'),
-            newValue;
+            index;
 
-        if (this.hasValue(val)) {
-            if (!multiSelect || !Array.isArray(value)) {
-                return;
+        if(multiSelect){
+            index = currentValue.indexOf(value);
+
+            if(index == -1){
+                currentValue.push(value);
+            }else{
+                currentValue.splice(index, 1);
             }
 
-            var comparator = this.get('valueComparator');
-            newValue = value.filter(function (i) {
-                return !comparator.isEqual(i, val);
-            }, this);
-        } else {
-            if (multiSelect) {
-                if (Array.isArray(value)) {
-                    newValue = value.slice();
-                } else {
-                    newValue = [];
-                }
-                newValue.push(val);
-            } else {
-                newValue = val;
+            this.set('value', currentValue);
+
+        }else{
+            if(value != currentValue){
+                this.set('value', value);
             }
         }
-        this.set('value', newValue);
-    },
-
-    hasValue: function (val) {
-        var multiSelect = this.get('multiSelect');
-        var value = this.get('value');
-        var comparator = this.get('valueComparator');
-        var result = false;
-
-
-        if (multiSelect) {
-            if (Array.isArray(value)) {
-                result = value.some(function (i) {
-                    return comparator.isEqual(i, val);
-                }, this);
-            }
-        } else {
-            result = comparator.isEqual(value, val);
-        }
-        return result;
     },
 
     bindSelectedItemsWithValue: function(){
