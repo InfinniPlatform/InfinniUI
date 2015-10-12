@@ -252,6 +252,13 @@ window.InfinniUI.ObjectUtils = (function () {
                 var propertyPathTerms = splitPropertyPath(propertyPath);
                 setPropertyByPath(target, propertyPathTerms, _.clone(propertyValue));
             }
+        },
+
+        setPropertyValueDirect: function (target, propertyPath, propertyValue) {
+            if (target !== null && target !== undefined && !_.isEmpty(propertyPath)) {
+                var propertyPathTerms = splitPropertyPath(propertyPath);
+                setPropertyByPath(target, propertyPathTerms, propertyValue);
+            }
         }
     };
 })();

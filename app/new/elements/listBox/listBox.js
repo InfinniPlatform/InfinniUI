@@ -1,9 +1,9 @@
-function ListBox(parent) {
-    _.superClass(ListBox, this, parent);
+function ListBox(parent, viewMode) {
+    _.superClass(ListBox, this, parent, viewMode);
 }
 
 _.inherit(ListBox, ListEditorBase);
 
-ListBox.prototype.createControl = function () {
-    return new ListBoxControl();
+ListBox.prototype.createControl = function (viewMode) {
+    return new ListBoxControl(viewMode);
 };

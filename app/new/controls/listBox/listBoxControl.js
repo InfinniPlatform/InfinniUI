@@ -1,5 +1,5 @@
-function ListBoxControl(parent) {
-    _.superClass(ListBoxControl, this, parent);
+function ListBoxControl(viewMode) {
+    _.superClass(ListBoxControl, this, viewMode);
 }
 
 _.inherit(ListBoxControl, ListEditorBaseControl);
@@ -10,8 +10,14 @@ _.extend(ListBoxControl.prototype, {
         return new ListBoxModel();
     },
 
-    createControlView: function (model) {
-        return new ListBoxView({model: model});
+    createControlView: function (model, viewMode) {
+        if(!viewMode || ! viewMode in window.window.InfinniUI.Listbox){
+            viewMode = 'base';
+        }
+
+        var ViewClass = window.InfinniUI.Listbox.viewModes[viewMode];
+
+        return new ViewClass({model: model});
     }
 });
 

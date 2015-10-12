@@ -1,5 +1,5 @@
-function ListEditorBase(parent) {
-    _.superClass(ListEditorBase, this, parent);
+function ListEditorBase(parent, viewMode) {
+    _.superClass(ListEditorBase, this, parent, viewMode);
 
     this.initialize_editorBase();
 }

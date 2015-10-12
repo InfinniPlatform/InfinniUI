@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @constructor
  * @augments Backbone.Model
  * @mixes dataSourceFileProviderMixin
@@ -376,7 +376,7 @@ var BaseDataSource = Backbone.Model.extend({
                         ds._excludeItemFromModifiedSet(item);
                         ds._notifyAboutItemSaved(item, success);
                     }, function (err) {
-                        console.log(err);
+                        logger.error(err);
                         if (error) {
                             error(err);
                         }

@@ -1,6 +1,6 @@
-var Element = function (parent) {
+var Element = function (parent, viewMode) {
     this.parent = parent;
-    this.control = this.createControl();
+    this.control = this.createControl(viewMode);
     this.state = {
         Enabled: true
     };
@@ -20,7 +20,7 @@ Object.defineProperties(Element.prototype, {
 
 _.extend(Element.prototype, {
 
-    createControl: function () {
+    createControl: function (viewMode) {
         throw ('Не перегружен абстрактный метод Element.createControl');
     },
 

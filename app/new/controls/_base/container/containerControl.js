@@ -4,8 +4,8 @@
  * @constructor
  * @augments Control
  */
-function ContainerControl(parent) {
-    _.superClass(ContainerControl, this, parent);
+function ContainerControl(viewMode) {
+    _.superClass(ContainerControl, this, viewMode);
 }
 
 _.inherit(ContainerControl, Control);

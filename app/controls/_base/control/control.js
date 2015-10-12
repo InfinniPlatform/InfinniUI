@@ -2,9 +2,9 @@
  * @description Базовый класс контролов
  * @class Control
  */
-var Control = function () {
+var Control = function (viewMode) {
     this.controlModel = this.createControlModel();
-    this.controlView = this.createControlView(this.controlModel);
+    this.controlView = this.createControlView(this.controlModel, viewMode);
 
     this.initHandlers();
 
@@ -16,7 +16,7 @@ _.extend(Control.prototype, {
         throw ('Не перегружен абстрактный метод Control.createControlModel()');
     },
 
-    createControlView: function (model) {
+    createControlView: function (model, viewMode) {
         throw ('Не перегружен абстрактный метод Control.createControlView()');
     },
 

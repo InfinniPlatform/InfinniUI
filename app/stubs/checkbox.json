@@ -210,6 +210,8 @@
     }
   }, {
     "ListBox": {
+      "ViewMode": "common",
+
       "Items": {
         "PropertyBinding":{
           "Source": "BloodGroupDataSource",

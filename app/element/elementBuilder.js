@@ -62,6 +62,10 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         this.initBindingToProperty(params, 'Texture', true);
         this.initBindingToProperty(params, 'Style', true);
 
+        if('Name' in metadata){
+            element.setName(metadata.Name);
+        }
+
         element.setName(metadata.Name);
 
         if (metadata.OnLoaded) {

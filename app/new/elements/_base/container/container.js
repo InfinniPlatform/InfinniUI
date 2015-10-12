@@ -3,8 +3,8 @@
  * @constructor
  * @augments Element
  */
-function Container(parent) {
-    _.superClass(Container, this, parent);
+function Container(parent, viewMode) {
+    _.superClass(Container, this, parent, viewMode);
 }
 
 _.inherit(Container, Element);
