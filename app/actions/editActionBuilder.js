@@ -54,3 +54,42 @@ function EditActionBuilder() {
         return action;
     };
 }
+
+
+/*
+function BaseActionBuilder(){
+
+}
+
+_.extend(BaseActionBuilder.prototype, {
+    build: function(context, args){
+        var that = this,
+            action = function(){
+                that.executingAction(args);
+            };
+
+        return action;
+    },
+
+    executingAction: function(params){
+        var metadata = params.metadata;
+        var parentView = params.parentView;
+        var builder = params.builder;
+        var editingItemId;
+
+        if('itemId' in params){
+            editingItemId = params.itemId;
+        }else{
+            var dataSource = parentView.getContext().dataSources[metadata.DataSource];
+            var editItem = dataSource.getSelectedItem();
+            editingItemId = dataSource.idOfItem(editItem);
+        }
+
+
+        var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+
+        linkView.createView(function(createdView){
+
+        });
+    }
+});*/
