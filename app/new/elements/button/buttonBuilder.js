@@ -25,7 +25,9 @@ _.extend(ButtonBuilder.prototype, {
 
         if (metadata.Action) {
             var action = builder.build(metadata.Action, params);
-            element.setAction(action);
+            element.onClick(function(){
+                action.execute();
+            });
         }
 
         if (metadata.OnClick){

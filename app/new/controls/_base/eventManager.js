@@ -10,13 +10,13 @@ EventManager.prototype.on = function (name, handler) {
     return this;
 };
 
-EventManager.prototype.trigger = function (name, message) {
+EventManager.prototype.trigger = function (name, message, context) {
     var eventHandlers = this.handlers[name];
     var response = true;
     if (Array.isArray(eventHandlers)) {
         response = eventHandlers
             .map(function (handler) {
-                return handler.call(undefined, message);
+                return handler.call(context, message);
             })
             .every(function (result) {
                 return result !== false;
