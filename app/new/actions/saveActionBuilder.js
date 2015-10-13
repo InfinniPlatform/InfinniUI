@@ -16,7 +16,7 @@ function SaveActionBuilder() {
 
         action.setAction(function (callback) {
             var selectedItem = parentDataSource.getSelectedItem();
-            parentDataSource.saveItem(selectedItem, callback);
+            parentDataSource.saveItem(selectedItem, callback, callback);
         });
 
         return action;

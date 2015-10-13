@@ -67,20 +67,23 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Validation', new ValidationBuilder());
         builder.register('Criteria', new CriteriaBuilder());
 
-        builder.register('OpenViewAction', new OpenViewActionBuilder());
-        builder.register('AddAction', new AddActionBuilder());
-        builder.register('EditAction', new EditActionBuilder());
-        builder.register('SaveAction', new SaveActionBuilder());
-        builder.register('DeleteAction', new DeleteActionBuilder());
-        builder.register('CancelAction', new CancelActionBuilder());
-        builder.register('AddItemAction', new AddItemActionBuilder());
-        builder.register('SaveItemAction', new SaveItemActionBuilder());
-        builder.register('EditItemAction', new EditItemActionBuilder());
-        builder.register('DeleteItemAction', new DeleteItemActionBuilder());
-        builder.register('SelectAction', new SelectActionBuilder());
+
         builder.register('AcceptAction', new AcceptActionBuilder());
+        builder.register('AddAction', new AddActionBuilder());
+        builder.register('AddItemAction', new AddItemActionBuilder());
+        builder.register('CancelAction', new CancelActionBuilder());
+        builder.register('DeleteAction', new DeleteActionBuilder());
+        builder.register('DeleteItemAction', new DeleteItemActionBuilder());
+        builder.register('EditAction', new EditActionBuilder());
+        builder.register('EditItemAction', new EditItemActionBuilder());
+        builder.register('OpenViewAction', new OpenViewActionBuilder());
         builder.register('PrintReportAction', new PrintReportActionBuilder());
         builder.register('PrintViewAction', new PrintViewActionBuilder());
+        builder.register('SaveAction', new SaveActionBuilder());
+        builder.register('SaveItemAction', new SaveItemActionBuilder());
+        builder.register('SelectAction', new SelectActionBuilder());
+        builder.register('UpdateAction', new UpdateActionBuilder());
+
 
         builder.register('BooleanFormat', new BooleanFormatBuilder());
         builder.register('DateTimeFormat', new DateTimeFormatBuilder());
