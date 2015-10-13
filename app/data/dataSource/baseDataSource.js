@@ -76,6 +76,10 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onPropertyChanged', handler);
     },
 
+    onItemSaved: function (handler) {
+        this.on('onItemSaved', handler);
+    },
+
     onItemCreated: function (handler) {
         this.on('onItemCreated', handler);
     },
