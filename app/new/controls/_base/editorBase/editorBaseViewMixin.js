@@ -14,7 +14,7 @@ var editorBaseViewMixin = {
     },
 
     initHandlersForProperties: function(){
-        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'onValueChanged', this.updateValue);
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);

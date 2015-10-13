@@ -212,6 +212,8 @@
     "ListBox": {
       "ViewMode": "common",
 
+      "MultiSelect": true,
+
       "Items": {
         "PropertyBinding":{
           "Source": "BloodGroupDataSource",

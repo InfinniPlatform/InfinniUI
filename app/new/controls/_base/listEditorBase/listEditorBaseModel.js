@@ -26,9 +26,10 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         var
             currentValue = this.get('value'),
             multiSelect = this.get('multiSelect'),
-            index;
+            index, clonedValue;
 
         if(multiSelect){
+            currentValue = currentValue || [];
             index = currentValue.indexOf(value);
 
             if(index == -1){
@@ -37,7 +38,9 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
                 currentValue.splice(index, 1);
             }
 
-            this.set('value', currentValue);
+            clonedValue = currentValue.slice();
+
+            this.set('value', clonedValue);
 
         }else{
             if(value != currentValue){

@@ -35,7 +35,7 @@ var BaseListBoxView = ContainerView.extend({
 
     initValue: function(){
         this.updateValue();
-        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'onValueChanged', this.updateValue);
     },
 
     initSelectedItem: function(){
