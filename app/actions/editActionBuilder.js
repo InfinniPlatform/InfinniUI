@@ -55,8 +55,31 @@ function EditActionBuilder() {
     };
 }
 
+function BaseAction(parentView){
+    this.parentView = parentView;
+}
 
-/*
+_.extend(BaseAction.prototype, {
+    execute: function(){
+
+    },
+
+    setProperty: function(name, value){
+        this[name] = value;
+    },
+
+    getProperty: function(name){
+        return this[name];
+    }
+});
+
+//---------------------------------------
+
+function EditAction(){
+
+}
+
+
 function BaseActionBuilder(){
 
 }
@@ -75,6 +98,7 @@ _.extend(BaseActionBuilder.prototype, {
         var metadata = params.metadata;
         var parentView = params.parentView;
         var builder = params.builder;
+        var that = this;
         var editingItemId;
 
         if('itemId' in params){
@@ -89,7 +113,21 @@ _.extend(BaseActionBuilder.prototype, {
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
 
         linkView.createView(function(createdView){
+            that.handleViewReady(createdView, parentView, editingItemId, dataSource)
+        });
+    },
 
+    handleViewReady: function(editView, parentView, editingItemId, parentDataSource){
+        var editDataSource = editView.getContext().dataSources['MainDataSource'];
+        var that = this;
+
+        editDataSource.setIdFilter(editingItemId);
+
+        editDataSource.resumeUpdate();
+        editDataSource.updateItems();
+
+        editView.onClose(function(){
+            that.handleClosingView();
         });
     }
-});*/
+});
