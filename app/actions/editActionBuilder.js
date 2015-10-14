@@ -1,4 +1,4 @@
-function EditActionBuilder() {
+function EditActionBuildero() {
     this.build = function (context, args) {
         var action = new BaseAction(args.view);
 
@@ -75,21 +75,74 @@ _.extend(BaseAction.prototype, {
 
 //---------------------------------------
 
-function EditAction(){
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseAction);
+
+
+_.extend(EditAction.prototype, {
+    execute: function(){
+        var linkView = this.getProperty('linkView');
+
+        linkView.createView(function(createdView){
+            that.handleViewReady(createdView);
+        });
+    },
+
+    handleViewReady: function(editView){
+        var editDataSource = editView.getContext().dataSources['MainDataSource'];
+        var editingItemId = this.getProperty('editingItemId');
+        var that = this;
+
+        editDataSource.setIdFilter(editingItemId);
+
+        editDataSource.resumeUpdate();
+        editDataSource.updateItems();
+
+        editView.onClose(function(){
+            that.handleClosingView();
+        });
+    },
+
+    handleClosingView: function(){
+        
+    }
+});
+
+
+//---------------------------------------
+
+
+function EditActionBuilder(){
 
 }
 
 
-function BaseActionBuilder(){
-
-}
-
-_.extend(BaseActionBuilder.prototype, {
+_.extend(EditActionBuilder.prototype, {
     build: function(context, args){
-        var that = this,
-            action = function(){
-                that.executingAction(args);
-            };
+        var action = new EditActionBuilder(args.parentView);
+
+        var metadata = args.metadata;
+        var parentView = args.parentView;
+        var builder = args.builder;
+        var dataSource = parentView.getContext().dataSources[metadata.DataSource];
+        var editingItemId;
+        var linkView;
+
+        if('itemId' in args){
+            editingItemId = args.itemId;
+        }else{
+            var editItem = dataSource.getSelectedItem();
+            editingItemId = dataSource.idOfItem(editItem);
+        }
+
+        action.setProperty('editingItemId', editingItemId);
+        action.setProperty('parentDataSource', dataSource);
+
+        linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+        action.setProperty('linkView', linkView);
 
         return action;
     },
