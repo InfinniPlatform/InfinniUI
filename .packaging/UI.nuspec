@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>InfinniUI</id>
-    <version>1.0</version>
+    <version>{INFINNI_UI_VERSION}</version>
     <authors>InfinnitySolutions</authors>
     <owners>InfinnitySolutions</owners>    
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
