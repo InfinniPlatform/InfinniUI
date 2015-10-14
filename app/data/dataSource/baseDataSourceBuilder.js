@@ -10,7 +10,7 @@ _.extend(BaseDataSourceBuilder.prototype, {
 
         dataSource.resumeUpdate();
 
-        if(args.parentView.onLoading){
+        /*if(args.parentView.onLoading){
             args.parentView.onLoading(function () {
                 //dataSource.resumeUpdate();
                 dataSource.updateItems();
@@ -18,7 +18,7 @@ _.extend(BaseDataSourceBuilder.prototype, {
         }else{
             //dataSource.resumeUpdate();
             dataSource.updateItems();
-        }
+        }*/
 
         return dataSource;
     },

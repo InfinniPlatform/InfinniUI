@@ -4,7 +4,9 @@ function BaseAction(parentView){
 
 _.extend(BaseAction.prototype, {
     execute: function(){
-
+        if(this.action){
+            this.action.apply(undefined, arguments);
+        }
     },
 
     setProperty: function(name, value){
@@ -13,6 +15,10 @@ _.extend(BaseAction.prototype, {
 
     getProperty: function(name){
         return this[name];
+    },
+
+    setAction: function(action){
+        this.action = action;
     }
 });
 

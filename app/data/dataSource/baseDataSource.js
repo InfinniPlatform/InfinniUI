@@ -268,6 +268,10 @@ var BaseDataSource = Backbone.Model.extend({
             bindingByIndexRegEx = /^\d/,
             relativeProperty, source;
 
+        if(!this.isDataReady()){
+            return undefined;
+        }
+
         if (property == '') {
             return this.getItems();
         } else if (property == '$') {
@@ -338,6 +342,22 @@ var BaseDataSource = Backbone.Model.extend({
 
         this._includeItemToModifiedSet(selectedItem);
         this._notifyAboutPropertyChanged(property, value, oldValue);
+    },
+
+    prepareAndGetProperty: function(property, onReady){
+        var that = this;
+
+        if (this.get('isDataReady')){
+            onReady( this.getProperty(property) );
+        }else{
+            if (!this.get('isRequestInProcess')){
+                this.updateItems();
+            }
+
+            this.once('onItemsUpdated', function(){
+                onReady( that.getProperty(property) );
+            });
+        }
     },
 
     _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
