@@ -49,10 +49,17 @@ window.testHelpers = {
 
 	waitModalView: function(viewName, success, error, maxTimeout, step){
 		var waitView = function(){
-			var view = window.currentView.getChildView(viewName);
+			var view = window.currentView.getChildView(viewName) || window.configWindow.contextApp.getChildView(viewName);
 			return view && view.isLoaded();
 		};
 
 		window.testHelpers.waitCondition(waitView, success, error, maxTimeout, step);
+	},
+
+	getCurrentDate: function(){
+		var today = new Date();
+		//YYYY-MM-DD
+        var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
+        return currentDate;
 	}
 };
