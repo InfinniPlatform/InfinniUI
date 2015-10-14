@@ -12,8 +12,7 @@ var DataBinding = Backbone.Model.extend({
         source: null,
         sourceProperty: null,
         element: null,
-        elementProperty: null,
-        isLazy: false
+        elementProperty: null
     },
 
 
@@ -24,15 +23,6 @@ var DataBinding = Backbone.Model.extend({
     getMode: function () {
         return this.get('mode');
     },
-
-    setLazyMode: function (isLazy) {
-        this.set('isLazy', isLazy);
-    },
-
-    isLazy: function () {
-        return this.get('isLazy');
-    },
-
 
     setConverter: function (converter) {
         this.set('converter', converter);
@@ -122,17 +112,7 @@ var DataBinding = Backbone.Model.extend({
 
         if(this.shouldRefreshElement(this.get('mode')) && source){
             value = source.getProperty(sourceProperty);
-
-            if(this.isLazy()){
-                this._setValueToElement(value);
-
-            }else{
-                if(value === undefined && typeof source.prepareAndGetProperty == 'function'){
-                    source.prepareAndGetProperty(sourceProperty, function(){});
-                }else{
-                    this._setValueToElement(value);
-                }
-            }
+            this._setValueToElement(value);
         }
     },
 
@@ -212,21 +192,5 @@ var DataBinding = Backbone.Model.extend({
 
     shouldRefreshElement: function(mode){
         return mode == BindingModes.twoWay || mode == BindingModes.toElement;
-    },
-
-    forceValueFromSource: function(){
-        var sourceProperty = this.get('sourceProperty');
-        var source = this.get('source');
-        var that = this;
-        var value;
-
-        if(this.shouldRefreshElement(this.get('mode')) && source){
-            value = source.getProperty(sourceProperty);
-            if(value === undefined && typeof source.prepareAndGetProperty == 'function'){
-                source.prepareAndGetProperty(sourceProperty, function(){});
-            }else{
-                this._setValueToElement(value);
-            }
-        }
     }
 });

@@ -17,9 +17,7 @@ var editorBaseBuilderMixin = {
         var element = params.element;
 
         bindingOptions = bindingOptions || {};
-        _.defaults(bindingOptions, {
-            valueProperty: 'value'
-        });
+        bindingOptions.valueProperty = bindingOptions.valueProperty || 'value';
 
         element.setHintText(metadata.HintText);
         element.setErrorText(metadata.ErrorText);
@@ -48,6 +46,11 @@ var editorBaseBuilderMixin = {
                 dataBinding.setConverter(bindingOptions.converter);
             }
             dataBinding.bindElement(params.element, bindingOptions.valueProperty);
+
+            var source = dataBinding.getSource();
+            if(typeof source.tryInitData == 'function'){
+                source.tryInitData();
+            }
         }
 
         return dataBinding;

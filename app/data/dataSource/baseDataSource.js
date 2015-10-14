@@ -360,6 +360,12 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    tryInitData: function(){
+        if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
+            this.updateItems();
+        }
+    },
+
     _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();

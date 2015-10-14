@@ -17,6 +17,9 @@ _.extend(ContainerBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         itemsBinding = this.initItems(params);
+        if(itemsBinding){
+            this.tuneItemsBinding(itemsBinding);
+        }
         this.initGroup(params, itemsBinding);
 
         return itemsBinding;
@@ -84,6 +87,13 @@ _.extend(ContainerBuilder.prototype, {
 
         element.setItemTemplate(itemTemplate);
         element.getItems().set(fakeItems);
+    },
+
+    tuneItemsBinding: function(itemsBinding){
+        var source = itemsBinding.getSource();
+        if(typeof source.tryInitData == 'function'){
+            source.tryInitData();
+        }
     },
 
     initGroup: function(params, itemsBinding){
