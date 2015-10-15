@@ -1,3 +1,4 @@
+@echo off
 ::Check versions
 IF [%1] == [] (
 	echo "Set UI version as parameter!"
@@ -18,3 +19,6 @@ popd
 
 ::Create packages
 nuget Pack UI.nuspec
+
+::Clean up
+del UI.nuspec /Q /F

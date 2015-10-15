@@ -10,8 +10,8 @@
     <copyright>Copyright 2015</copyright>        
   </metadata>
   <files>
-    <file target="lib\net45\launcher" src="..\launcher\**" />
-    <file target="lib\net45\app" src="..\app\**" />
-    <file target="lib\net45\out" src="..\out\**" />    
+    <file target="launcher" src="..\launcher\**" />
+    <file target="app" src="..\app\**" />
+    <file target="out" src="..\out\**" />    
   </files>
 </package>
