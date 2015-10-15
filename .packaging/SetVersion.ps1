@@ -3,8 +3,8 @@ Param ([string]$Version)
 $NuspecFilePath = ".\UI.nuspec"
 $Stub = "{INFINNI_UI_VERSION}"
 
-(Get-Content $NuspecFilePath) | 
+(Get-Content ".\Templates\UI.Template.nuspec") | 
 Foreach-Object {$_ -replace $Stub, $Version} | 
-Set-Content $NuspecFilePath
+Set-Content ".\UI.nuspec"
 
 Write-Host "InfinniUI $Version is set."

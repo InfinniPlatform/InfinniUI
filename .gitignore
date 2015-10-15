@@ -36,3 +36,5 @@ node_modules
 # Bower
 bower_components/*
 bower_cache/*
+.packaging/*.nupkg
+.packaging/UI.nuspec
