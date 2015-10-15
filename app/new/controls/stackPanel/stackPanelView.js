@@ -60,6 +60,8 @@ var StackPanelView = ContainerView.extend(
         updateOrientation: function () {
             var orientation = this.model.get('orientation');
             this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
-        }
+        },
+
+        updateGrouping: function(){}
     }
 );

@@ -1,4 +1,4 @@
-var BaseListBoxView = ContainerView.extend({
+var BaseListBoxView = ListEditorBaseView.extend({
 
     template: {
         plain: InfinniUI.Template["new/controls/listBox/baseView/template/listBox.tpl.html"],
@@ -12,31 +12,15 @@ var BaseListBoxView = ContainerView.extend({
         'change .pl-listbox-input': 'onChangeHandler'
     },
 
-    UI: {
+    UI: _.defaults({
         items: '.pl-listbox-i',
         checkingInputs: '.pl-listbox-input input'
-    },
+    }, ListEditorBaseView.prototype.UI),
 
     initialize: function (options) {
         //@TODO Реализовать обработку значений по умолчанию!
-        ContainerView.prototype.initialize.call(this, options);
+        ListEditorBaseView.prototype.initialize.call(this, options);
 
-        this.listenTo(this.model, 'change:groupValueSelector', this.updateGrouping);
-        this.updateGrouping();
-    },
-
-    initHandlersForProperties: function(){
-        ContainerView.prototype.initHandlersForProperties.call(this);
-
-        this.listenTo(this.model, 'change:selectedItem', this.updateSelectedItem);
-        this.listenTo(this.model, 'onValueChanged', this.updateValue);
-    },
-
-    updateProperties: function(){
-        ContainerView.prototype.updateProperties.call(this);
-
-        this.updateValue();
-        this.updateSelectedItem();
     },
 
     updateGrouping: function(){
@@ -100,6 +84,8 @@ var BaseListBoxView = ContainerView.extend({
         this.bindUIElements();
 
         this.updateProperties();
+
+        this.trigger('render');
 
         this.postrenderingActions();
         return this;

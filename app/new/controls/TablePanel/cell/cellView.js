@@ -60,6 +60,8 @@ var CellView = ContainerView.extend(
                 this.columnSpan = columnSpan;
             }
 
-        }
+        },
+
+        updateGrouping: function(){}
     }
 );

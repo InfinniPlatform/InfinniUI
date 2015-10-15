@@ -80,6 +80,8 @@ var PopupButtonView = ContainerView.extend({
         this.trigger('render');
         this.postrenderingActions();
         return this;
-    }
+    },
+
+    updateGrouping: function(){}
 
 });

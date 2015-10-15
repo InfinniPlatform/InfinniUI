@@ -46,5 +46,7 @@ var ToolBarView = ContainerView.extend({
         }, this);
 
         return $elements;
-    }
+    },
+
+    updateGrouping: function(){}
 });

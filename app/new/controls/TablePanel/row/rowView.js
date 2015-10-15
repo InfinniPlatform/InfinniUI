@@ -34,6 +34,8 @@ var RowView = ContainerView.extend(
                 that.$el
                     .append(element.render());
             });
-        }
+        },
+
+        updateGrouping: function(){}
     }
 );
