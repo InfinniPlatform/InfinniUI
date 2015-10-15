@@ -255,6 +255,44 @@
         }
       }
     }
+  }, {
+    "GridPanel":{
+      "Items": [{
+        "Cell": {
+          "ColumnSpan": 9,
+          "Items": [{
+            "ToggleButton": {
+              "Text": "Subscribe",
+              "TextOn": "yes",
+              "TextOff": "no",
+              "OnValueChanged": {
+                "Name": "ToggleButtonOnValueChanged"
+              },
+              "OnValueChanging": {
+                "Name": "ToggleButtonOnValueChanging"
+              }
+            }
+          }]
+        }
+      },{
+        "Cell": {
+          "ColumnSpan": 9,
+          "Items": [{
+            "ToggleButton": {
+              "Text": "Subscribe",
+              "TextOn": "",
+              "TextOff": "",
+              "OnValueChanged": {
+                "Name": "ToggleButtonOnValueChanged"
+              },
+              "OnValueChanging": {
+                "Name": "ToggleButtonOnValueChanging"
+              }
+            }
+          }]
+        }
+      }]
+    }
   }],
   "Scripts": [
     {

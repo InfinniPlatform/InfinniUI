@@ -13,17 +13,23 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
-            'app/element/**/metadata.js',
+            'app/element/**/metadata.js', // old
             'app/config.js',
             'app/utils/**/*.js',
             'app/messaging/**/*.js',
-            'app/controls/_base/**/*.js',
-            //'app/new/elements/_base/**/*.js',
-            'app/element/_mixins/*.js',
-            'app/element/*.js',
-            'app/new/elements/*.js',
+            'app/controls/_base/**/*.js', // old
+
             'app/new/controls/_base/**/*.js',
+            'app/new/controls/**/*.js',
+
+            'app/element/_mixins/*.js',
+            'app/element/*.js', // old
+
+            'app/new/elements/_base/**/*.js',
+            'app/new/elements/**/*.js',
+
             'app/**/*.js',
+
             'extensions/**/*.js',
             'bootstrap_framework/js/*.js',
             '!app/utils/pdf/**/*.js',
