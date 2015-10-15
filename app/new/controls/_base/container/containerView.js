@@ -10,6 +10,10 @@ var ContainerView = ControlView.extend(
             ControlView.prototype.initialize.call(this, options);
 
             this.childElements = [];
+        },
+
+        initHandlersForProperties: function(){
+            ControlView.prototype.initHandlersForProperties.call(this);
 
             var that = this;
             this.model.get('items').onChange(function(){
