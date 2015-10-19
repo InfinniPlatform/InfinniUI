@@ -5,18 +5,10 @@ function OpenViewActionBuilder(){
 
 _.extend(OpenViewActionBuilder.prototype, {
     build: function(context, args){
-        var action = new BaseAction(args.view);
-        action.setAction(function (callback) {
-            args.builder.build(args.metadata.View, {parentView: args.parentView}).createView(function (view) {
-                if (callback) {
-                    view.onLoaded(function () {
-                        callback(view);
-                    });
-                }
+        var action = new OpenViewAction();
 
-                view.open();
-            });
-        });
+        var linkView = args.builder.build(args.metadata.View, {parentView: args.parentView});
+        action.setProperty('linkView', linkView);
 
         return action;
     }
