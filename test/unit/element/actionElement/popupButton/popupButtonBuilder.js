@@ -6,7 +6,7 @@ describe('PopupButtonBuilder', function () {
             var metadata = {
                 Text: "Click me",
                 Action: {
-                    OpenViewAction: {
+                    OpenAction: {
                         View: {
                             InlineView: {
                                 "ConfigId": "Structure",

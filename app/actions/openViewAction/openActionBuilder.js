@@ -1,11 +1,11 @@
-function OpenViewActionBuilder(){
+function OpenActionBuilder(){
 
 }
 
 
-_.extend(OpenViewActionBuilder.prototype, {
+_.extend(OpenActionBuilder.prototype, {
     build: function(context, args){
-        var action = new OpenViewAction();
+        var action = new OpenAction();
 
         var linkView = args.builder.build(args.metadata.View, {parentView: args.parentView});
         action.setProperty('linkView', linkView);

@@ -1,10 +1,10 @@
-describe('OpenViewAction', function () {
+describe('OpenAction', function () {
     it('successful build', function () {
         // Given
         var view = new View();
         var builder = new ApplicationBuilder();
         var metadata = {
-            OpenViewAction: {
+            OpenAction: {
                 View: {
                     InlineView: {
 

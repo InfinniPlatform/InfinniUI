@@ -1,11 +1,11 @@
-function OpenViewAction(parentView){
-    _.superClass(OpenViewAction, this, parentView);
+function OpenAction(parentView){
+    _.superClass(OpenAction, this, parentView);
 }
 
-_.inherit(OpenViewAction, BaseAction);
+_.inherit(OpenAction, BaseAction);
 
 
-_.extend(OpenViewAction.prototype, {
+_.extend(OpenAction.prototype, {
     execute: function(callback){
         var linkView = this.getProperty('linkView');
 

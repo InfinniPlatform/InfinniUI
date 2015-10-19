@@ -8,7 +8,7 @@ describe('ButtonBuilder', function () {
                 Visible: false,
                 HorizontalAlignment: 'Right',
                 Action: {
-                    OpenViewAction: {
+                    OpenAction: {
                         View: {
                             InlineView: {
                                 "ConfigId": "Structure",
