@@ -8,15 +8,17 @@ _.extend(BaseDataSourceBuilder.prototype, {
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
         this.initFileProvider(dataSource, args.metadata);
 
-        if(args.parentView.onLoading){
+        dataSource.resumeUpdate();
+
+        /*if(args.parentView.onLoading){
             args.parentView.onLoading(function () {
-                dataSource.resumeUpdate();
+                //dataSource.resumeUpdate();
                 dataSource.updateItems();
             });
         }else{
-            dataSource.resumeUpdate();
+            //dataSource.resumeUpdate();
             dataSource.updateItems();
-        }
+        }*/
 
         return dataSource;
     },

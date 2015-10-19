@@ -1,4 +1,4 @@
-var BaseListBoxView = ContainerView.extend({
+var BaseListBoxView = ListEditorBaseView.extend({
 
     template: {
         plain: InfinniUI.Template["new/controls/listBox/baseView/template/listBox.tpl.html"],
@@ -12,35 +12,15 @@ var BaseListBoxView = ContainerView.extend({
         'change .pl-listbox-input': 'onChangeHandler'
     },
 
-    UI: {
+    UI: _.defaults({
         items: '.pl-listbox-i',
         checkingInputs: '.pl-listbox-input input'
-    },
+    }, ListEditorBaseView.prototype.UI),
 
     initialize: function (options) {
-        var that = this;
-
         //@TODO Реализовать обработку значений по умолчанию!
-        ContainerView.prototype.initialize.call(this, options);
+        ListEditorBaseView.prototype.initialize.call(this, options);
 
-        this.initGrouping();
-        this.initValue();
-        this.initSelectedItem();
-    },
-
-    initGrouping: function(){
-        this.updateGrouping();
-        this.listenTo(this.model, 'change:groupValueSelector', this.updateGrouping);
-    },
-
-    initValue: function(){
-        this.updateValue();
-        this.listenTo(this.model, 'onValueChanged', this.updateValue);
-    },
-
-    initSelectedItem: function(){
-        this.updateSelectedItem();
-        this.listenTo(this.model, 'change:selectedItem', this.updateSelectedItem);
     },
 
     updateGrouping: function(){
@@ -51,6 +31,41 @@ var BaseListBoxView = ContainerView.extend({
         }else{
             this.strategy = new ListBoxViewPlainStrategy(this);
         }
+    },
+
+    updateValue: function(){
+        this.ui.items.removeClass('pl-listbox-i-chosen');
+        this.ui.checkingInputs.prop('checked', false);
+
+        var value = this.model.get('value'),
+            indexOfChoosingItem;
+
+        if(!this.isMultiselect() && value !== undefined && value !== null){
+            value = [value];
+        }
+
+        if($.isArray(value)){
+            for(var i= 0, ii=value.length; i < ii; i++){
+                indexOfChoosingItem = this.model.itemIndexByValue(value[i]);
+                if(indexOfChoosingItem != -1){
+                    this.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
+                    this.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
+                }
+            }
+        }
+    },
+
+    updateSelectedItem: function(ignoreWasRendered){
+        if(!this.wasRendered && ignoreWasRendered != true){
+            return;
+        }
+
+        this.ui.items.removeClass('pl-listbox-i-selected');
+
+        var selectedItem = this.model.get('selectedItem'),
+            indexOfItem = this.model.itemIndexByItem(selectedItem);
+
+        this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
     },
 
     render: function () {
@@ -68,8 +83,9 @@ var BaseListBoxView = ContainerView.extend({
 
         this.bindUIElements();
 
-        this.updateValue(true);
-        this.updateSelectedItem(true);
+        this.updateProperties();
+
+        this.trigger('render');
 
         this.postrenderingActions();
         return this;
@@ -115,45 +131,6 @@ var BaseListBoxView = ContainerView.extend({
         }
 
         this.model.set('value', valueForModel);
-    },
-
-    updateValue: function(ignoreWasRendered){
-        if(!this.wasRendered && ignoreWasRendered != true){
-            return;
-        }
-
-        this.ui.items.removeClass('pl-listbox-i-chosen');
-        this.ui.checkingInputs.prop('checked', false);
-
-        var value = this.model.get('value'),
-            indexOfChoosingItem;
-
-        if(!this.isMultiselect() && value !== undefined && value !== null){
-            value = [value];
-        }
-
-        if($.isArray(value)){
-            for(var i= 0, ii=value.length; i < ii; i++){
-                indexOfChoosingItem = this.model.itemIndexByValue(value[i]);
-                if(indexOfChoosingItem != -1){
-                    this.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
-                    this.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
-                }
-            }
-        }
-    },
-
-    updateSelectedItem: function(ignoreWasRendered){
-        if(!this.wasRendered && ignoreWasRendered != true){
-            return;
-        }
-
-        this.ui.items.removeClass('pl-listbox-i-selected');
-
-        var selectedItem = this.model.get('selectedItem'),
-            indexOfItem = this.model.itemIndexByItem(selectedItem);
-
-        this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
     }
 });
 

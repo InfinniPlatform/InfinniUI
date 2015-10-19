@@ -147,7 +147,7 @@ var BaseDataSource = Backbone.Model.extend({
     setSelectedItem: function (item, success, error) {
         var currentSelectedItem = this.getSelectedItem(),
             items = this.get('itemsById'),
-            itemId = this._idOfItem(item);
+            itemId = this.idOfItem(item);
 
         if (item == currentSelectedItem) {
             return;
@@ -248,18 +248,18 @@ var BaseDataSource = Backbone.Model.extend({
             return false;
         }
         else {
-            var itemId = this._idOfItem(item);
+            var itemId = this.idOfItem(item);
             return itemId in this.get('modifiedItems');
         }
     },
 
     _includeItemToModifiedSet: function (item) {
-        var itemId = this._idOfItem(item);
+        var itemId = this.idOfItem(item);
         this.get('modifiedItems')[itemId] = item;
     },
 
     _excludeItemFromModifiedSet: function (item) {
-        var itemId = this._idOfItem(item);
+        var itemId = this.idOfItem(item);
         delete this.get('modifiedItems')[itemId];
     },
 
@@ -271,6 +271,10 @@ var BaseDataSource = Backbone.Model.extend({
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, source;
+
+        if(!this.isDataReady()){
+            return undefined;
+        }
 
         if (property == '') {
             return this.getItems();
@@ -344,6 +348,28 @@ var BaseDataSource = Backbone.Model.extend({
         this._notifyAboutPropertyChanged(property, value, oldValue);
     },
 
+    prepareAndGetProperty: function(property, onReady){
+        var that = this;
+
+        if (this.get('isDataReady')){
+            onReady( this.getProperty(property) );
+        }else{
+            if (!this.get('isRequestInProcess')){
+                this.updateItems();
+            }
+
+            this.once('onItemsUpdated', function(){
+                onReady( that.getProperty(property) );
+            });
+        }
+    },
+
+    tryInitData: function(){
+        if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
+            this.updateItems();
+        }
+    },
+
     _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
@@ -410,7 +436,7 @@ var BaseDataSource = Backbone.Model.extend({
     deleteItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
             that = this,
-            itemId = this._idOfItem(item),
+            itemId = this.idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
         if (!isItemInSet) {
@@ -430,7 +456,7 @@ var BaseDataSource = Backbone.Model.extend({
     _handleDeletedItem: function (item, successHandler) {
         var items = this.get('items'),
             idProperty = this.get('idProperty'),
-            itemId = this._idOfItem(item),
+            itemId = this.idOfItem(item),
             selectedItem = this.getSelectedItem();
 
         for (var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++) {
@@ -743,7 +769,7 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
-    _idOfItem: function (item) {
+    idOfItem: function (item) {
         var idProperty = this.get('idProperty');
         if (!item) {
             return undefined;

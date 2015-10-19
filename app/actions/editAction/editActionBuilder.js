@@ -1,4 +1,38 @@
-function EditActionBuilder() {
+function EditActionBuilder(){
+
+}
+
+
+_.extend(EditActionBuilder.prototype, {
+    build: function(context, args){
+        var action = new EditActionBuilder(args.parentView);
+
+        var metadata = args.metadata;
+        var parentView = args.parentView;
+        var builder = args.builder;
+        var dataSource = parentView.getContext().dataSources[metadata.DataSource];
+        var editingItemId;
+        var linkView;
+
+        if('itemId' in args){
+            editingItemId = args.itemId;
+        }else{
+            var editItem = dataSource.getSelectedItem();
+            editingItemId = dataSource.idOfItem(editItem);
+        }
+
+        linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+
+        action.setProperty('linkView', linkView);
+        action.setProperty('editingItemId', editingItemId);
+        action.setProperty('parentDataSource', dataSource);
+
+        return action;
+    }
+});
+
+
+/*function EditActionBuildero() {
     this.build = function (context, args) {
         var action = new BaseAction(args.view);
 
@@ -14,10 +48,10 @@ function EditActionBuilder() {
                 if(!editItem){
                     new MessageBox({
                         type: 'error',
-                        text:'РќРµ РІС‹Р±СЂР°РЅ РѕР±СЉРµРєС‚ РґР»СЏ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ.',
+                        text:'Не выбран объект для редактирования.',
                         buttons:[
                             {
-                                name:'Р—Р°РєСЂС‹С‚СЊ'
+                                name:'Закрыть'
                             }
                         ]
                     });
@@ -53,4 +87,4 @@ function EditActionBuilder() {
 
         return action;
     };
-}
+}*/

@@ -2,10 +2,10 @@
  * @class
  * @augments ControlView
  */
-var RowView = ContainerView.extend(
-    /** @lends RowView.prototype */
+var GridPanelView = ContainerView.extend(
+    /** @lends GridPanelView.prototype */
     {
-        className: 'pl-row row',
+        className: 'pl-grid-panel',
 
         initialize: function (options) {
             ContainerView.prototype.initialize.call(this, options);
@@ -17,6 +17,8 @@ var RowView = ContainerView.extend(
             this.removeChildElements();
 
             this.renderItemsContents();
+
+            this.trigger('render');
 
             this.postrenderingActions();
             return this;

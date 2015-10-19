@@ -35,12 +35,12 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
 
     updateTextOn: function () {
         var textOn = this.model.get('textOn');
-        this.ui.textOn.text(textOn);
+        this.ui.textOn.html(textOn || '&nbsp;');
     },
 
     updateTextOff: function () {
         var textOff = this.model.get('textOff');
-        this.ui.textOff.text(textOff);
+        this.ui.textOff.html(textOff || '&nbsp;');
     },
 
     render: function () {

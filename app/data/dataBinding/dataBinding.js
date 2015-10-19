@@ -24,7 +24,6 @@ var DataBinding = Backbone.Model.extend({
         return this.get('mode');
     },
 
-
     setConverter: function (converter) {
         this.set('converter', converter);
     },
@@ -108,6 +107,7 @@ var DataBinding = Backbone.Model.extend({
     _initPropertyOnElement: function(){
         var sourceProperty = this.get('sourceProperty');
         var source = this.get('source');
+        var that = this;
         var value;
 
         if(this.shouldRefreshElement(this.get('mode')) && source){

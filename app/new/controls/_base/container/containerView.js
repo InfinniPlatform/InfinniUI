@@ -5,11 +5,21 @@
 var ContainerView = ControlView.extend(
     /** @lends ContainerView.prototype */
     {
-
         initialize: function (options) {
             ControlView.prototype.initialize.call(this, options);
 
             this.childElements = [];
+
+            this.listenTo(this.model, 'change:groupValueSelector', this.updateGrouping);
+            this.updateGrouping();
+        },
+
+        updateGrouping: function(){
+            throw 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.';
+        },
+
+        initHandlersForProperties: function(){
+            ControlView.prototype.initHandlersForProperties.call(this);
 
             var that = this;
             this.model.get('items').onChange(function(){
