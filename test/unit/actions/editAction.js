@@ -9,7 +9,7 @@ describe('EditAction', function () {
 
         var metadata = {
             EditAction: {
-                View: {
+                LinkView: {
                     InlineView: {
 
                     }

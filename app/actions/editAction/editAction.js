@@ -6,15 +6,16 @@ _.inherit(EditAction, BaseAction);
 
 
 _.extend(EditAction.prototype, {
-    execute: function(){
+    execute: function(callback){
         var linkView = this.getProperty('linkView');
+        var that = this;
 
         linkView.createView(function(createdView){
-            that.handleViewReady(createdView);
+            that.handleViewReady(createdView, callback);
         });
     },
 
-    handleViewReady: function(editView){
+    handleViewReady: function(editView, callback){
         var editDataSource = editView.getContext().dataSources['MainDataSource'];
         var editingItemId = this.getProperty('editingItemId');
         var that = this;
@@ -27,23 +28,21 @@ _.extend(EditAction.prototype, {
         editView.open();
 
         editView.onClose(function(){
-            that.handleClosingView();
+            var dialogResult = editView.getDialogResult();
+            that.handleClosingView(dialogResult, callback);
         });
     },
 
-    handleClosingView: function(){
+    handleClosingView: function(dialogResult, callback){
         var parentDataSource = this.getProperty('parentDataSource');
+        var editingItemId = this.getProperty('editingItemId');
 
         if(parentDataSource){
             parentDataSource.updateItems();
         }
 
-        /*
-         if (callback && closeResult == dialogResult.accept) {
-
-         callback(editItemId);
+         if (callback && dialogResult == DialogResult.accept) {
+             callback(editingItemId);
          }
-
-         */
     }
 });
