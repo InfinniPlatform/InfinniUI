@@ -1,6 +1,6 @@
 function AddActionBuilder(){
     this.build = function(context, args){
-        var action = new EditAction(args.parentView);
+        var action = new AddAction(args.parentView);
 
         var metadata = args.metadata;
         var parentView = args.parentView;
