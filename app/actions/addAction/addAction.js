@@ -22,20 +22,22 @@ _.extend(AddAction.prototype, {
 
         editView.onClose(function(){
             var dialogResult = editView.getDialogResult();
-            that.handleClosingView(dialogResult, callback);
+
+            if (dialogResult == DialogResult.accept) {
+                that.handleClosingView(callback);
+            }
         });
     },
 
-    handleClosingView: function(dialogResult, callback){
+    handleClosingView: function(callback){
         var parentDataSource = this.getProperty('parentDataSource');
-        var editingItemId = this.getProperty('editingItemId');
 
         if(parentDataSource){
             parentDataSource.updateItems();
         }
 
-        if (callback && dialogResult == DialogResult.accept) {
-            callback(editingItemId);
+        if (callback) {
+            callback();
         }
     }
 });

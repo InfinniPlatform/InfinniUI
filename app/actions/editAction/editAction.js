@@ -29,11 +29,14 @@ _.extend(EditAction.prototype, {
 
         editView.onClose(function(){
             var dialogResult = editView.getDialogResult();
-            that.handleClosingView(dialogResult, callback);
+
+            if (dialogResult == DialogResult.accept) {
+                that.handleClosingView(callback);
+            }
         });
     },
 
-    handleClosingView: function(dialogResult, callback){
+    handleClosingView: function(callback){
         var parentDataSource = this.getProperty('parentDataSource');
         var editingItemId = this.getProperty('editingItemId');
 
@@ -41,7 +44,7 @@ _.extend(EditAction.prototype, {
             parentDataSource.updateItems();
         }
 
-         if (callback && dialogResult == DialogResult.accept) {
+         if (callback) {
              callback(editingItemId);
          }
     }
