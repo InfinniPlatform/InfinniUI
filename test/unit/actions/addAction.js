@@ -25,5 +25,4 @@ describe('AddAction', function () {
         assert.isNotNull( addAction );
         assert.isNotNull( addAction.execute, 'action should have execute' );
     });
-
 });
