@@ -15,4 +15,11 @@ function MessageExchange() {
 
         return subscription;
     };
+
+    this.unsubscribeByType = function(messageType){
+        subscriptions = _.filter(subscriptions,
+            function(item){
+                return item.messageType.name != messageType.name;
+            });
+    };
 }

@@ -24,8 +24,9 @@ window.messageTypes = {
     onCreateLayoutPanel: {name: 'onCreateLayoutPanel'},
     onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
     onDeleteItem: {name: 'onDeleteItem'},
-    onSaveItem: {name: 'onSaveItem'}
+    onSaveItem: {name: 'onSaveItem'},
 
+    onFilterError: {name: 'onFilterError'}
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 
 };

@@ -32,10 +32,26 @@ function EditActionBuilder() {
                 var editDataSource = _.find(editView.getDataSources(), function (ds) {
                     return isMainDataSource(ds);
                 });
+                var closeEditView = function(){
+                    editView.close();
+
+                    new MessageBox({
+                        text: 'Документ не найден.',
+                        type: 'error',
+                        buttons: [
+                            {
+                                name: 'Ок.'
+                            }
+                        ]
+                    });
+                };
 
                 editDataSource.suspendUpdate();
                 editDataSource.setEditMode();
                 editDataSource.setIdFilter(editItemId);
+
+                messageBus.getExchange(editItemId)
+                    .subscribe(messageTypes.onFilterError, closeEditView);
 
                 editView.onClosed(function (closeResult) {
                     parentDataSource.updateItems();

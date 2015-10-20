@@ -52,9 +52,12 @@ function EditDataSourceStrategy(dataSource) {
                     callback([item[0]]);
                 }
                 else {
-                    throw stringUtils.format('document with identifier {0} not found.', [itemId]);
+                    console.log('%c Document with identifier %s not found.', 'color: red', itemId);
+
+                    messageBus.getExchange(itemId).send(messageTypes.onFilterError);
                 }
 
+                messageBus.getExchange(itemId).unsubscribeByType(messageTypes.onFilterError);
             });
         }
         else {
