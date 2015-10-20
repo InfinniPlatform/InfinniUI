@@ -12,7 +12,7 @@ function ParameterBuilder() {
             //если существует Builder для хранящегося в параметре значения
             //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)
             //иначе устанвливаем в параметре значение из метаданных
-            if($.isPlainObject(metadata.Value)) {
+            if(this.isBinding(metadata.Value)) {
 				var dataBinding = builder.build(parent, metadata.Value, collectionProperty);
                 // Установка обработчика изменения значения в источнике данных
                 dataBinding.onPropertyValueChanged(function(dataSourceName,value){
@@ -38,5 +38,24 @@ function ParameterBuilder() {
 
 
         return parameter;
+    };
+
+    this.isBinding = function(value){
+        if($.isPlainObject(value)){
+            var key = this.getFirstObjectKey(value);
+            if(key && key.indexOf('Binding') > -1){
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    this.getFirstObjectKey = function(obj){
+        for(var k in obj){
+            return k;
+        }
+
+        return undefined;
     };
 }
