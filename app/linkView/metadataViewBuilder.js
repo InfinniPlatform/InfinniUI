@@ -7,13 +7,13 @@ function MetadataViewBuilder() {
             metadata.OpenMode = 'Page';
         }
 
-        var linkView = new LinkView(args.view, function (resultCallback) {
-            if(args.view.handleOnLoaded){
-                args.view.handleOnLoaded(function(){
-                    createView(args.builder, args.view, metadata, resultCallback);
+        var linkView = new LinkView(args.parentView, function (resultCallback) {
+            if(args.parentView.handleOnLoaded){
+                args.parentView.handleOnLoaded(function(){
+                    createView(args.builder, args.parentView, metadata, resultCallback);
                 });
             }else{
-                createView(args.builder, args.view, metadata, resultCallback);
+                createView(args.builder, args.parentView, metadata, resultCallback);
             }
         });
         linkView.setOpenMode(metadata.OpenMode);

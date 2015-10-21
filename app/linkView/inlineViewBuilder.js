@@ -3,8 +3,8 @@ function InlineViewBuilder() {
         var that = this,
             metadata = args.metadata;
 
-        var linkView = new LinkView(args.view, function (resultCallback) {
-            var params = that.buildParameters(args.view, metadata.Parameters, args.builder);
+        var linkView = new LinkView(args.parentView, function (resultCallback) {
+            var params = that.buildParameters(args.parentView, metadata.Parameters, args.builder);
             var view = args.builder.buildType('View', metadata.View, {parentView: args.parentView, parameters: params});
 
             if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
