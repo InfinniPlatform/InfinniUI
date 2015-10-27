@@ -7,8 +7,7 @@ describe('SelectAction', function () {
         var metadata = {
             SelectAction: {
                 View: {
-                    InlineView: {
-
+                    ExistsView: {
                     }
                 },
                 SourceValue: {

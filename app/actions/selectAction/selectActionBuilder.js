@@ -6,12 +6,12 @@ function SelectActionBuilder() {
         var action = new SelectAction(parentView);
 
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
-        var dstBinding = builder.build(metadata['DestinationValue'], {parentView: parentView});
-        var srcBinding = builder.build(metadata['SourceValue'], {parentView: parentView});
 
         action.setProperty('linkView', linkView);
-        action.setProperty('srcBinding', srcBinding);
-        action.setProperty('dstBinding', dstBinding);
+        action.setProperty('srcDataSourceName', metadata.SourceValue.DataBinding.Source);
+        action.setProperty('srcPropertyName', metadata.SourceValue.DataBinding.Property);
+        action.setProperty('dstDataSourceName', metadata.DestinationValue.DataBinding.Source);
+        action.setProperty('dstPropertyName', metadata.DestinationValue.DataBinding.Property);
 
         return action;
     }

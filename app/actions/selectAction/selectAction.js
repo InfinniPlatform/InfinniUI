@@ -8,8 +8,12 @@ _.inherit(SelectAction, BaseAction);
 _.extend(SelectAction.prototype, {
     execute: function(callback){
         var linkView = this.getProperty('linkView');
-        var srcBinding = this.getProperty('srcBinding');
-        var dstBinding = this.getProperty('dstBinding');
+
+        var srcDataSourceName = this.getProperty('srcDataSourceName');
+        var srcPropertyName = this.getProperty('srcPropertyName');
+
+        var dstDataSourceName = this.getProperty('dstDataSourceName');
+        var dstPropertyName = this.getProperty('dstPropertyName');
 
         linkView.createView(function(createdView){
 
@@ -17,8 +21,11 @@ _.extend(SelectAction.prototype, {
                 var dialogResult = createdView.getDialogResult();
 
                 if (dialogResult == DialogResult.accepted) {
-                    var value = srcBinding.getPropertyValue();
-                    dstBinding.setPropertyValue(value);
+                    var srcDataSource = createdView.getDataSources()[srcDataSourceName];
+                    var dstDataSource = createdView.getDataSources()[dstDataSourceName];
+
+                    var value = srcDataSource.getProperty(srcPropertyName);
+                    dstDataSource.setProperty(srcPropertyName, value);
 
                     if (callback) {
                         callback(value);
