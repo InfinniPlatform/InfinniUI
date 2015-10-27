@@ -37,7 +37,7 @@ function MetadataViewBuilder() {
                     }
                 }
 
-                var view = builder.buildType(parent, "View", viewMetadata, undefined, params);
+                var view = builder.buildType("View", viewMetadata, {parentView: parent, params: params});
 
                 if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
                     InfinniUI.views.appendView(metadata, viewMetadata, view);
@@ -57,7 +57,7 @@ function MetadataViewBuilder() {
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    param = builder.buildType(parentView, 'Parameter', parametersMetadata[i])
+                    param = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView})
                     result[param.getName()] = param;
                 }
             }

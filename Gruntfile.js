@@ -31,7 +31,6 @@
             'app/**/*.js',
 
             'extensions/**/*.js',
-            'bootstrap_framework/js/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js',
@@ -60,6 +59,8 @@
             'bower_components/jquery/dist/jquery.js',
             'bower_components/underscore/underscore.js',
             'bower_components/backbone/backbone.js',
+            'bootstrap-framework/js/tooltip.js',
+            'bootstrap-framework/js/*.js',
             'bower_components/moment/moment.js',
             'bower_components/moment/lang/ru.js',
             'bower_components/signalr/jquery.signalR.js',

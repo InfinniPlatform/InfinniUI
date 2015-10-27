@@ -24,7 +24,11 @@ _.extend(ButtonBuilder.prototype, {
         });
 
         if (metadata.Action) {
-            var action = builder.build(metadata.Action, params);
+            var args = {
+                parentView: params.parentView,
+                parent: element
+            }
+            var action = builder.build(metadata.Action, args);
             element.onClick(function(){
                 action.execute();
             });

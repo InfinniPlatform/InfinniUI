@@ -63,7 +63,7 @@ var OpenModeDialogStrategy = function (linkView) {
         });
 
         $modal.find('h3').html(view.getText());
-        view.onTextChange(function(){
+        view.onPropertyChanged('text', function(){
             $modal.find('h3').html(view.getText());
         });
     }
