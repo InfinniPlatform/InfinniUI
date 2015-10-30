@@ -27,9 +27,9 @@ describe('ComboBox', function () {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource1",
                             "Items": [
-                                {"Id": 1, "Display": "LTE"},
-                                {"Id": 2, "Display": "2G"},
-                                {"Id": 3, "Display": "2G"}
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "2G", "State": "Deprecated"}
                             ]
                         }
                     },{
@@ -55,6 +55,17 @@ describe('ComboBox', function () {
                                 }
                             }
                         },
+                        "GroupItemTemplate": {
+                            "Label": {
+                                "Value": {
+                                    "PropertyBinding":{
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.State"
+                                    }
+                                }
+                            }
+                        },
+                        "GroupValueProperty": "State",
                         "Items": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource1",
