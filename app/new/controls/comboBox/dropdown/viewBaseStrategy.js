@@ -24,3 +24,13 @@ ComboBoxBaseViewStrategy.prototype.getModelAttribute = function (attributeName) 
 ComboBoxBaseViewStrategy.prototype.getTemplate = function () {
 
 };
+
+ComboBoxBaseViewStrategy.prototype.addOnClickEventListener = function (el) {
+    var params = Array.prototype.slice.call(arguments, 1);
+    var handler = this.trigger.bind(this, 'click');
+    el.addEventListener('click', function () {
+        handler.apply(this, params);
+    });
+};
+
+_.extend(ComboBoxBaseViewStrategy.prototype, Backbone.Events);

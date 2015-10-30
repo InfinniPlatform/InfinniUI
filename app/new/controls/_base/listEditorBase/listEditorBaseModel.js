@@ -29,7 +29,7 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
             index, clonedValue;
 
         if(multiSelect){
-            currentValue = currentValue || [];
+            currentValue = Array.isArray(currentValue) ? currentValue : [];
             index = currentValue.indexOf(value);
 
             if(index == -1){

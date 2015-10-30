@@ -18,6 +18,8 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
 
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
+        this.listenTo(this.strategy, 'click', this.onClickItemHandler);
+        this.model.onValueChanged(this.onChangeValueHandler.bind(this));
     },
 
     render: function () {
@@ -38,10 +40,20 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.model.set('dropdown', false);
     },
 
+    onChangeValueHandler: function () {
+        debugger;
+        var value = this.model.getValue();
+        console.log('change:value', value);
+    },
+
     onChangeDropdownHandler: function (model, dropdown) {
         if (!dropdown) {
             this.remove();
         }
+    },
+
+    onClickItemHandler: function (item) {
+        this.model.toggleItem(item);
     }
 });
 

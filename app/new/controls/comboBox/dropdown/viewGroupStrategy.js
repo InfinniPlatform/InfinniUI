@@ -47,11 +47,14 @@ ComboBoxGroupViewStrategy.prototype.renderItems = function () {
         );
         //Шаблонизированные элементы группы
         var $items = items.map(function (item) {
-            return itemTemplate(undefined, {
+            var $item = itemTemplate(undefined, {
                 value: item,
                 index: collection.indexOf(item)
             }).render();
-        });
+
+            this.addOnClickEventListener($item[0], item);
+            return $item;
+        }, this);
 
         var groupView = new ComboBoxGroupView({
             header: $header.render(),

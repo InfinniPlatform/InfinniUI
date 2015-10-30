@@ -29,7 +29,7 @@ describe('ComboBox', function () {
                             "Items": [
                                 {"Id": 1, "Display": "LTE", "State": "New"},
                                 {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "2G", "State": "Deprecated"}
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
                             ]
                         }
                     },{
@@ -45,7 +45,7 @@ describe('ComboBox', function () {
 
                     ComboBox: {
                         "ItemTemplate": {
-                            "TextBox": {
+                            "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "PropertyBinding":{
@@ -72,6 +72,8 @@ describe('ComboBox', function () {
                                 "Property": ""
                             }
                         },
+                        "ValueProperty": "Id",
+                        "MultiSelect": true,
                         "Value": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource2",

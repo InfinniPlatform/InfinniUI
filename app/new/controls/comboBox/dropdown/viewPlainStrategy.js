@@ -11,15 +11,6 @@ function ComboBoxPlainViewStrategy(dropdownView) {
 ComboBoxPlainViewStrategy.prototype = Object.create(ComboBoxBaseViewStrategy.prototype);
 ComboBoxPlainViewStrategy.prototype.constructor = ComboBoxPlainViewStrategy;
 
-//ComboBoxPlainViewStrategy.prototype.prepareItemsForRendering = function () {
-//    var items = model.getModelAttribute('items'),
-//        result = {
-//            items: items.toArray()
-//        };
-//
-//    return result;
-//};
-
 ComboBoxPlainViewStrategy.prototype.renderItems = function () {
     var
         itemTemplate = this.getModelAttribute('itemTemplate'),
@@ -30,10 +21,16 @@ ComboBoxPlainViewStrategy.prototype.renderItems = function () {
     if (items) {
         itemsAsArray = items.toArray()
     }
+
+
     if (Array.isArray(itemsAsArray)) {
         $items = itemsAsArray.map(function (item, index) {
-            return itemTemplate(undefined, {value: item, index: index}).render();
-        });
+            var $item = itemTemplate(undefined, {value: item, index: index}).render();
+            var el = $item[0];
+
+            this.addOnClickEventListener($item[0], item);
+            return $item;
+        }, this);
     }
     this.dropdownView.setItemsContent($items);
 };
