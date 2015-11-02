@@ -11,9 +11,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
     initialize: function () {
         var isGrouped = this.model.get('groupValueSelector') != null;
 
-        if(isGrouped){
+        if (isGrouped) {
             this.strategy = new ComboBoxGroupViewStrategy(this);
-        }else{
+        } else {
             this.strategy = new ComboBoxPlainViewStrategy(this);
         }
 
@@ -26,7 +26,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
         var template = this.strategy.getTemplate();
         this.$el.html(template());
         this.bindUIElements();
-        this.strategy.renderItems();
+        var $items = this.strategy.renderItems();
+        this.$items = $items;
+        //console.log($items);
         return this.$el;
     },
 
@@ -42,8 +44,34 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     onChangeValueHandler: function () {
         debugger;
-        var value = this.model.getValue();
+        var model = this.model;
+        var value = model.getValue();
+
+        if (!Array.isArray(this.$items)) {
+            return;
+        }
+
+        var $items = this.$items;
+
         console.log('change:value', value);
+
+        var isMultiSelect = !!model.get('multiSelect');
+        var items = [];
+
+        if (isMultiSelect && Array.isArray(value)) {
+            items = value.map(function (val) {
+                return model.itemByValue(val);
+            });
+        } else {
+            items = [model.itemByValue(value)];
+        }
+
+        $items.forEach(function ($item) {
+            var selected = items.indexOf($item.data('pl-data-item')) !== -1;
+            $item.toggleClass('pl-combobox-selected', selected);
+        });
+
+
     },
 
     onChangeDropdownHandler: function (model, dropdown) {

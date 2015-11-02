@@ -65,7 +65,7 @@ describe('ComboBox', function () {
                                 }
                             }
                         },
-                        "GroupValueProperty": "State",
+                        "~GroupValueProperty": "State",
                         "Items": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource1",

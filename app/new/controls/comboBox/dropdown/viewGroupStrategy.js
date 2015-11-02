@@ -15,14 +15,10 @@ ComboBoxGroupViewStrategy.prototype.template = InfinniUI.Template["new/controls/
 
 ComboBoxGroupViewStrategy.prototype.renderItems = function () {
     var
-        itemTemplate = this.getModelAttribute('itemTemplate'),
-        groupingFunction = this.getModelAttribute('groupValueSelector'),
-        groupItemTemplate = this.getModelAttribute('groupItemTemplate'),
-        $items,
-        $groups = [],
         collection = this.getModelAttribute('items'),
+        groupingFunction = this.getModelAttribute('groupValueSelector'),
         groups = {},
-        itemsAsArray;
+        $items;
 
     collection.forEach(function (item, index) {
         var groupKey = groupingFunction(undefined, {value: item, index: index});
@@ -34,8 +30,22 @@ ComboBoxGroupViewStrategy.prototype.renderItems = function () {
         groups[groupKey].push(item);
     });
 
+    $items = this.renderGroups(groups);
+    return $items;
+};
 
-    var $groups = [];
+/**
+ * @description Рендереинг группированных элементов
+ * @param {Array.<Object>} groups
+ * @returns {Array.<jQuery>} Элементы групп
+ */
+ComboBoxGroupViewStrategy.prototype.renderGroups = function (groups) {
+    var
+        groupItemTemplate = this.getModelAttribute('groupItemTemplate'),
+        collection = this.getModelAttribute('items'),
+        $items= [],
+        $groupItems,
+        $groups = [];
 
     for (var name in groups) {
         var items = groups[name];
@@ -46,26 +56,22 @@ ComboBoxGroupViewStrategy.prototype.renderItems = function () {
             }
         );
         //Шаблонизированные элементы группы
-        var $items = items.map(function (item) {
-            var $item = itemTemplate(undefined, {
-                value: item,
-                index: collection.indexOf(item)
-            }).render();
-
-            this.addOnClickEventListener($item[0], item);
-            return $item;
-        }, this);
+        var $groupItems = this._renderItems(items);
 
         var groupView = new ComboBoxGroupView({
             header: $header.render(),
-            items: $items
+            items: $groupItems
         });
 
+        Array.prototype.push.apply($items, $groupItems);
         $groups.push(groupView.render());
     }
 
     this.dropdownView.setItemsContent($groups);
+
+    return $items;
 };
+
 
 ComboBoxGroupViewStrategy.prototype.getTemplate = function () {
     return this.template;
