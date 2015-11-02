@@ -1,4 +1,4 @@
-function PrintViewActionBuilder() {
+function oldPrintViewActionBuilder() {
     this.build = function (context, args){
         var action = new BaseAction(args.view);
 
