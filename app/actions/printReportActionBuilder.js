@@ -1,4 +1,4 @@
-function PrintReportActionBuilder() {
+function oldPrintReportActionBuilder() {
     this.build = function (context, args) {
         var action = new BaseAction(args.view);
 
