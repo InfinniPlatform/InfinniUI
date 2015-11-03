@@ -15,10 +15,11 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     },
 
     applyMetadata: function (params) {
-        ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
+        var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
+        this.initValueTemplate(data.valueBinding, params);
     },
 
-    buildValueTemplate: function (params) {
+    initValueTemplate: function (binding, params) {
 
         var metadata = params.metadata;
         var element = params.element;
@@ -31,14 +32,39 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         } else if ('ValueFormat' in metadata) {
             valueTemplate = this.buildValueTemplateByFormat(metadata.ValueFormat, params);
         } else {
-            valueTemplate = this.buildValueTemplateByDefault(params);
+            valueTemplate = this.buildValueTemplateByDefault(binding, params);
         }
 
         element.setValueTemplate(valueTemplate);
     },
 
-    buildValueTemplate: function (valueTemplateMetadata, params) {
+    buildValueTemplate: function (templateMetadata, params) {
+        var element = params.element;
+        var builder = params.builder;
+        var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
+        var that = this;
 
+        return function(context, args) {
+            var index = args.index;
+            var bindingIndex;
+            var argumentForBuilder = {
+                parent: params.element,
+                parentView: params.parentView
+            };
+
+            if(index !== undefined && index !== null){
+                //bindingIndex = that.bindingIndexByItemsIndex(index, params);
+                bindingIndex = index;
+
+                if(bindingIndex !== undefined && bindingIndex !== null){
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', bindingIndex);
+                }else{
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+                }
+            }
+
+            return builder.build(templateMetadata, argumentForBuilder);
+        };
     },
 
     buildValueTemplateByFormat: function (valueFormatMetadata, params) {
@@ -53,15 +79,29 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         };
     },
 
-    buildValueTemplateByDefault: function (params) {
+    buildValueTemplateByDefault: function (binding, params) {
         return function (context, args) {
             var index = args.index;
             var value = args.value;
 
             var label = new Label(this);
+            label.setHorizontalAlignment('Left');
+            var labelBinding = new DataBinding(this);
 
+            var source = binding.getSource();
+            var property = binding.getSourceProperty();
 
-            label.setValue(value);
+            if (params.element.getMultiSelect()) {
+                if (property && property !== '') {
+                    property = [property, index].join('.');
+                } else {
+                    property = String(index);
+                }
+            }
+
+            labelBinding.bindSource(source, property);
+            labelBinding.bindElement(label, 'value');
+
             return label;
         };
     }

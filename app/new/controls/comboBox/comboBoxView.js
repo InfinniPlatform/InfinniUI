@@ -11,22 +11,43 @@ var ComboBoxView = ListEditorBaseView.extend({
     UI: _.defaults({
         //items: '.pl-listbox-i',
         //checkingInputs: '.pl-listbox-input input'
+        value: '.pl-combobox__value'
     }, ListEditorBaseView.prototype.UI),
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
-        var model = this.model;
+        var model = this.model,
+            view = this;
         this.on('render', function () {
+            view.renderValue();
             model.on('change:dropdown', function (model, dropdown) {
                 if (dropdown) {
                     var dropdownView = new ComboBoxDropdownView({
                         model: model
                     });
 
-                    $('body').append(dropdownView.render());
+                    var $dropdown = dropdownView.render();
+
+                    var rect = view.$el[0].getBoundingClientRect();
+                    var style = {
+                        position: "absolute",
+                        top: window.pageYOffset + rect.bottom,
+                        left: window.pageXOffset + rect.left,
+                        width: rect.width
+                    };
+                    //@TODO Добавить алгоритм определения куда расхлапывать список вверх/вниз
+                    //Для расхлопывания вверх:
+                    //bottom: pageYOffset - rect.height
+                    //Для расхлопывания вниз:
+                    //top: window.pageYOffset + rect.bottom
+
+                    $dropdown.css(style);
+                    $('body').append($dropdown);
                 }
             });
-        });
+            model.onValueChanged(this.onChangeValueHandler.bind(this));
+
+        }, this);
     },
 
     render: function () {
@@ -72,7 +93,28 @@ var ComboBoxView = ListEditorBaseView.extend({
             toggle = !model.get('dropdown');
         }
         model.set('dropdown', toggle);
-    }
+    },
 
+    onChangeValueHandler: function () {
+        this.renderValue();
+    },
+
+    renderValue: function () {
+        var model = this.model,
+            multiSelect = model.get('multiSelect'),
+            value = this.model.get('value'),
+            $value = [],
+            valueTemplate = this.model.get('valueTemplate');
+
+        if (multiSelect && Array.isArray(value)) {
+            $value = value.map(function(val, i) {
+                return valueTemplate(null, {value: val, index: i}).render();
+            });
+        } else {
+            $value = valueTemplate(null, {value: value}).render();
+        }
+        this.ui.value.empty();
+        this.ui.value.append($value);
+    }
 
 });

@@ -28,7 +28,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.bindUIElements();
         var $items = this.strategy.renderItems();
         this.$items = $items;
-        //console.log($items);
+        this.markCheckedItems();
         return this.$el;
     },
 
@@ -43,7 +43,10 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     onChangeValueHandler: function () {
-        debugger;
+        this.markCheckedItems();
+    },
+
+    markCheckedItems: function () {
         var model = this.model;
         var value = model.getValue();
 
@@ -52,9 +55,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
 
         var $items = this.$items;
-
-        console.log('change:value', value);
-
         var isMultiSelect = !!model.get('multiSelect');
         var items = [];
 
@@ -70,8 +70,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
             var selected = items.indexOf($item.data('pl-data-item')) !== -1;
             $item.toggleClass('pl-combobox-selected', selected);
         });
-
-
     },
 
     onChangeDropdownHandler: function (model, dropdown) {
@@ -82,6 +80,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     onClickItemHandler: function (item) {
         this.model.toggleItem(item);
+        this.model.set('dropdown', false);
     }
 });
 

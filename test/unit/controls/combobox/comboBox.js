@@ -35,8 +35,11 @@ describe('ComboBox', function () {
                     },{
                         ObjectDataSource: {
                             "Name": "ObjectDataSource2",
-                            "Items": [
+                            "~Items": [
                                 { "Value": { "Id": 2, "Display": "2G" }}
+                            ],
+                            "Items": [
+                                { "Value": "2G" }
                             ]
                         }
                     }
@@ -72,8 +75,38 @@ describe('ComboBox', function () {
                                 "Property": ""
                             }
                         },
-                        "ValueProperty": "Id",
-                        "MultiSelect": true,
+                        "ValueProperty": "Display",
+                        "~ValueTemplate": {
+                            "StackPanel": {
+                                "Orientation": "Horizontal",
+                                "Items": [
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "Value.$.Display"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "Value.$.Id"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+
+                        },
+                        "MultiSelect": false,
                         "Value": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource2",
