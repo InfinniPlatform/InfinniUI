@@ -1,6 +1,6 @@
 describe('ComboBox', function () {
 
-    function applyViewMetadata(metadata, onViewReady){
+    function applyViewMetadata(metadata, onViewReady) {
         var linkView = new LinkView(null, function (resultCallback) {
             var builder = new ApplicationBuilder();
             var view = builder.buildType('View', metadata, {parentView: fakeView()});
@@ -15,14 +15,19 @@ describe('ComboBox', function () {
     }
 
 
-
-    describe('render', function (){
+    describe('render', function () {
 
         it('debug', function () {
             // Given
             var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
+                "Text": 'Пациенты',
+                "Scripts": [
+                    {
+                        "Name": "ValueSelector1",
+                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                    }
+                ],
+                "DataSources": [
                     {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource1",
@@ -32,26 +37,26 @@ describe('ComboBox', function () {
                                 {"Id": 3, "Display": "3G", "State": "Deprecated"}
                             ]
                         }
-                    },{
+                    }, {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource2",
                             "~Items": [
-                                { "Value": { "Id": 2, "Display": "2G" }}
+                                {"Value": {"Id": 2, "Display": "2G"}}
                             ],
                             "Items": [
-                                { "Value": "2G" }
+                                {"Value": {"Id": 2, "DisplayName": "2G"}}
                             ]
                         }
                     }
                 ],
-                Items: [{
+                "Items": [{
 
                     ComboBox: {
                         "ItemTemplate": {
                             "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
+                                    "PropertyBinding": {
                                         "Source": "ObjectDataSource1",
                                         "Property": "$.Display"
                                     }
@@ -61,7 +66,7 @@ describe('ComboBox', function () {
                         "GroupItemTemplate": {
                             "Label": {
                                 "Value": {
-                                    "PropertyBinding":{
+                                    "PropertyBinding": {
                                         "Source": "ObjectDataSource1",
                                         "Property": "$.State"
                                     }
@@ -75,7 +80,9 @@ describe('ComboBox', function () {
                                 "Property": ""
                             }
                         },
-                        "ValueProperty": "Display",
+                        "ValueSelector": "ValueSelector1",
+                        "~ValueProperty": "DisplayName",
+                        "ValueFormat": "{:DisplayName}",
                         "~ValueTemplate": {
                             "StackPanel": {
                                 "Orientation": "Horizontal",
@@ -86,7 +93,7 @@ describe('ComboBox', function () {
                                             "Value": {
                                                 "PropertyBinding": {
                                                     "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Display"
+                                                    "Property": "Value.DisplayName"
                                                 }
                                             }
                                         }
@@ -97,7 +104,7 @@ describe('ComboBox', function () {
                                             "Value": {
                                                 "PropertyBinding": {
                                                     "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Id"
+                                                    "Property": "Value.Id"
                                                 }
                                             }
                                         }
@@ -122,7 +129,7 @@ describe('ComboBox', function () {
             applyViewMetadata(metadata, onViewReady);
 
             // Then
-            function onViewReady(view, $layout){
+            function onViewReady(view, $layout) {
                 //$layout.detach();
 
                 //var $items = $layout.find('.pl-listbox-i'),

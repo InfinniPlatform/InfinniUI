@@ -30,7 +30,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         if ('ValueTemplate' in metadata) {
             valueTemplate = this.buildValueTemplate(metadata.ValueTemplate, params);
         } else if ('ValueFormat' in metadata) {
-            valueTemplate = this.buildValueTemplateByFormat(metadata.ValueFormat, params);
+            valueTemplate = this.buildValueTemplateByFormat(binding, metadata.ValueFormat, params);
         } else {
             valueTemplate = this.buildValueTemplateByDefault(binding, params);
         }
@@ -44,7 +44,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
         var that = this;
 
-        return function(context, args) {
+        return function (context, args) {
             var index = args.index;
             var bindingIndex;
             var argumentForBuilder = {
@@ -52,13 +52,13 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
                 parentView: params.parentView
             };
 
-            if(index !== undefined && index !== null){
+            if (index !== undefined && index !== null) {
                 //bindingIndex = that.bindingIndexByItemsIndex(index, params);
                 bindingIndex = index;
 
-                if(bindingIndex !== undefined && bindingIndex !== null){
+                if (bindingIndex !== undefined && bindingIndex !== null) {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', bindingIndex);
-                }else{
+                } else {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
                 }
             }
@@ -67,16 +67,42 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         };
     },
 
-    buildValueTemplateByFormat: function (valueFormatMetadata, params) {
-        var format = this.buildDisplayFormat(valueFormatMetadata, params);
-        return function(context, args){
+    buildValueTemplateByFormat: function (binding, valueFormatMetadata, params) {
+        var format = this.buildDisplayFormat({Format: valueFormatMetadata}, params); //@TODO Исправить. Убрать Format..
+        return function (context, args) {
             var index = args.index;
-            var label = new Label(this);
+            var value = args.value;
 
+            var label = new Label(this);
+            label.setHorizontalAlignment('Left');
             label.setDisplayFormat(format);
-            label.setValue(format.call(null, args));
+            var labelBinding = new DataBinding(this);
+            labelBinding.setMode(BindingModes.toElement);
+
+            var source = binding.getSource();
+            var property = binding.getSourceProperty();
+
+            if (params.element.getMultiSelect()) {
+                if (property && property !== '') {
+                    property = [property, index].join('.');
+                } else {
+                    property = String(index);
+                }
+            }
+
+            labelBinding.bindSource(source, property);
+            labelBinding.bindElement(label, 'value');
+
             return label;
         };
+        //return function(context, args){
+        //    var index = args.index;
+        //    var label = new Label(this);
+        //
+        //    label.setDisplayFormat(format);
+        //    label.setValue(format.call(null, args));
+        //    return label;
+        //};
     },
 
     buildValueTemplateByDefault: function (binding, params) {
@@ -87,6 +113,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
             var label = new Label(this);
             label.setHorizontalAlignment('Left');
             var labelBinding = new DataBinding(this);
+            labelBinding.setMode(BindingModes.toElement);
 
             var source = binding.getSource();
             var property = binding.getSourceProperty();
