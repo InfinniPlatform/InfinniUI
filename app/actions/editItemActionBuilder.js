@@ -1,4 +1,4 @@
-function EditItemActionBuilder() {
+function oldEditItemActionBuilder() {
 
     var baseItemActionBuilder = null;
 

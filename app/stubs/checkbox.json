@@ -249,6 +249,56 @@
                             },
                             {
                                 "Button": {
+                                    "Text": "Edit",
+                                    "Action": {
+                                        "EditItemAction": {
+                                            "LinkView":{
+                                                "InlineView": {
+                                                    "View": {
+                                                        "Items": [
+                                                            {
+                                                                "TextBox": {
+                                                                    "Value": {
+                                                                        "PropertyBinding": {
+                                                                            "Source": "MainDataSource",
+                                                                            "Property": "Name"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "Button": {
+                                                                    "Text": "Save",
+                                                                    "Action": {
+                                                                        "AcceptAction": {}
+                                                                    }
+                                                                }
+                                                            }
+                                                        ],
+                                                        "DataSources": [
+                                                            {
+                                                                "ObjectDataSource": {
+                                                                    "Name": "MainDataSource"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    "OpenMode": "Dialog",
+                                                    "Text": "OpenDialog"
+                                                }
+                                            },
+                                            "Items": {
+                                                "DataBinding": {
+                                                    "Source": "PatientDataSource",
+                                                    "Property": "Diseases"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Button": {
                                     "Text": "Delete",
                                     "Action": {
                                         "DeleteItemAction": {
