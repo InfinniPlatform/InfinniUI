@@ -1,4 +1,4 @@
-function AddItemActionBuilder() {
+function oldAddItemActionBuilder() {
     this.build = function (context, args) {
         var action = new BaseItemActionBuilder().build(context, args);
         action.setAction(function (callback) {
