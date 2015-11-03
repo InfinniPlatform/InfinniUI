@@ -26,7 +26,8 @@ _.extend(ButtonBuilder.prototype, {
         if (metadata.Action) {
             var args = {
                 parentView: params.parentView,
-                parent: element
+                parent: element,
+                basePathOfProperty: params.basePathOfProperty
             }
             var action = builder.build(metadata.Action, args);
             element.onClick(function(){

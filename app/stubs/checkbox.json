@@ -31,6 +31,27 @@
           }
         ]
       }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "PatientDataSource",
+         "Items": [
+             {
+                 "Id": 1,
+                 "Diseases": [
+                     {
+                         "Name": "allergosis"
+                     },
+                     {
+                         "Name": "dermatomycosis"
+                     },
+                     {
+                         "Name": "cold"
+                     }
+                 ]
+             }
+         ]
+      }
     }
   ],
   "Items": [{
@@ -181,8 +202,77 @@
         },
         {
           "Button": {
-            "Text": "My Button"
+            "Text": "Open View",
+            "Action":{
+                 "OpenAction": {
+                     "View": {
+                         "InlineView": {
+                             "View": {
+                                 "Scripts": [{
+                                     "Name": "close",
+                                     "Body": "context.view.close();"
+                                 }],
+                                 "Items": [
+                                     {
+                                         "Button": {
+                                             "Text": "Close",
+                                             "OnClick": "close"
+                                         }
+                                     }
+                                 ]
+                             },
+                             "OpenMode": "Dialog",
+                             "Text": "OpenDialog"
+                         }
+
+                     }
+                 }
+             }
           }
+        },
+        {
+            "ListBox":{
+                "Name": "PatientListBox",
+                "ItemTemplate": {
+                    "StackPanel":{
+                        "Orientation": "Horizontal",
+                        "Items": [
+                            {
+                                "Label": {
+                                    "Value": {
+                                        "PropertyBinding": {
+                                            "Source": "PatientDataSource",
+                                            "Property": "Diseases.$.Name"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Button": {
+                                    "Text": "Delete",
+                                    "Action": {
+                                        "DeleteItemAction": {
+                                            "Items": {
+                                                "DataBinding": {
+                                                    "Source": "PatientDataSource",
+                                                    "Property": "Diseases"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+
+                },
+                "Items": {
+                    "PropertyBinding": {
+                        "Source": "PatientDataSource",
+                        "Property": "Diseases"
+                    }
+                }
+            }
         },
         {
           "PopupButton": {

@@ -1,4 +1,4 @@
-function DeleteItemActionBuilder() {
+function oldDeleteItemActionBuilder() {
 
     var baseItemActionBuilder = null;
 
