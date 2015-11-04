@@ -11,6 +11,7 @@ var ComboBoxView = ListEditorBaseView.extend({
     UI: _.defaults({
         //items: '.pl-listbox-i',
         //checkingInputs: '.pl-listbox-input input'
+        label: '.pl-control-label',
         value: '.pl-combobox__value'
     }, ListEditorBaseView.prototype.UI),
 
@@ -58,12 +59,9 @@ var ComboBoxView = ListEditorBaseView.extend({
 
         //this.removeChildElements();
 
-        this.$el.html(this.template());
-        this.bindUIElements();
+        this.renderTemplate(this.getTemplate());
 
-        this.bindUIElements();
-
-        //this.updateProperties();
+        this.updateProperties();
 
         this.trigger('render');
 
@@ -71,12 +69,33 @@ var ComboBoxView = ListEditorBaseView.extend({
         return this;
     },
 
+    getTemplate: function () {
+        return this.template;
+    },
+
     onClickGripHandler: function () {
         this.toggleDropdown();
     },
 
+    updateProperties: function(){
+        ListEditorBaseView.prototype.updateProperties.call(this);
+
+        this.updateLabelText();
+    },
+
     updateGrouping: function(){
         this.toggleDropdown(false);
+    },
+
+    updateLabelText: function () {
+        var labelText = this.model.get('labelText');
+        if (labelText && labelText !== '') {
+            this.ui.label.text(labelText);
+            this.ui.label.toggleClass('hidden', false);
+        } else {
+            this.ui.label.toggleClass('hidden', true);
+        }
+
     },
 
     updateValue: function(){

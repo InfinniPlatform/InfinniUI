@@ -30,17 +30,18 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
 
         if(multiSelect){
             currentValue = Array.isArray(currentValue) ? currentValue : [];
-            index = currentValue.indexOf(value);
 
-            if(index == -1){
-                currentValue.push(value);
-            }else{
-                currentValue.splice(index, 1);
+            var valueAsString = JSON.stringify(value);
+
+            var newValue = currentValue.filter(function(val) {
+                return JSON.stringify(val) !== valueAsString;
+            });
+
+            if (newValue.length === currentValue.length) {
+                newValue.push(value);
             }
 
-            clonedValue = currentValue.slice();
-
-            this.set('value', clonedValue);
+            this.set('value', newValue);
 
         }else{
             if(value != currentValue){

@@ -17,6 +17,368 @@ describe('ComboBox', function () {
 
     describe('render', function () {
 
+        it('ValueSelector', function () {
+            // Given
+            var metadata = {
+                "Text": 'Пациенты',
+                "Scripts": [
+                    {
+                        "Name": "ValueSelector1",
+                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                    }
+                ],
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    }, {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                {"Value": {"Id": 2, "DisplayName": "2G"}}
+                            ]
+                        }
+                    }
+                ],
+                "Items": [{
+
+                    ComboBox: {
+                        "LabelText": "Combobox Label",
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding": {
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        },
+                        "ValueSelector": "ValueSelector1",
+                        "ValueFormat": "{Id} - {DisplayName}",
+                        "MultiSelect": false,
+                        "Value": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource2",
+                                "Property": "Value"
+                            }
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                $layout.detach();
+                var $label = $layout.find('.pl-combobox > .pl-control-label'),
+                    $value = $layout.find('.pl-combobox__value');
+
+                assert.equal($label.text(), 'Combobox Label');
+                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2 - 2G');
+            }
+        });
+
+        it('ValueSelector multiselect', function () {
+            // Given
+            var metadata = {
+                "Text": 'Пациенты',
+                "Scripts": [
+                    {
+                        "Name": "ValueSelector1",
+                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                    }
+                ],
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    }, {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                {"Value": [
+                                    {"Id": 2, "DisplayName": "2G"},
+                                    {"Id": 3, "DisplayName": "3G"}
+                                ]}
+                            ]
+                        }
+                    }
+                ],
+                "Items": [{
+
+                    ComboBox: {
+                        "LabelText": "Combobox Label",
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding": {
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        },
+                        "ValueSelector": "ValueSelector1",
+                        "ValueFormat": "{Id} - {DisplayName}",
+                        "MultiSelect": true,
+                        "Value": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource2",
+                                "Property": "Value"
+                            }
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                $layout.detach();
+                var $label = $layout.find('.pl-combobox > .pl-control-label'),
+                    $value = $layout.find('.pl-combobox__value');
+
+                assert.equal($label.text(), 'Combobox Label');
+                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2 - 2G\n3 - 3G');
+            }
+        });
+
+        it('ValueTemplate', function () {
+            // Given
+            var metadata = {
+                "Text": 'Пациенты',
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    }, {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                {"Value": {"Id": 2, "Display": "2G","State": "Deprecated"}}
+                            ]
+                        }
+                    }
+                ],
+                "Items": [{
+
+                    ComboBox: {
+                        "LabelText": "Combobox Label",
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding": {
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        },
+                        "ValueTemplate": {
+                            "StackPanel": {
+                                "Orientation": "Horizontal",
+                                "Items": [
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "$.Value.Display"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "$.Value.Id"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+
+                        },
+                        "MultiSelect": false,
+                        "Value": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource2",
+                                "Property": "$.Value"
+                            }
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                $layout.detach();
+                var $label = $layout.find('.pl-combobox > .pl-control-label'),
+                    $value = $layout.find('.pl-combobox__value');
+
+                assert.equal($label.text(), 'Combobox Label');
+                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2G\n\n\n    2\n\n');
+            }
+        });
+
+        it('ValueTemplate multiselect', function () {
+            // Given
+            var metadata = {
+                "Text": 'Пациенты',
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    }, {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                {"Value": [
+                                    {"Id": 2, "Display": "2G","State": "Deprecated"},
+                                    {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                                ]}
+                            ]
+                        }
+                    }
+                ],
+                "Items": [{
+
+                    ComboBox: {
+                        "LabelText": "Combobox Label",
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "PropertyBinding": {
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
+                                    }
+                                }
+                            }
+                        },
+                        "Items": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
+                            }
+                        },
+                        "ValueTemplate": {
+                            "StackPanel": {
+                                "Orientation": "Horizontal",
+                                "Items": [
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "Value.$.Display"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "Label": {
+                                            "HorizontalAlignment": "Left",
+                                            "Value": {
+                                                "PropertyBinding": {
+                                                    "Source": "ObjectDataSource2",
+                                                    "Property": "Value.$.Id"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+
+                        },
+                        "MultiSelect": true,
+                        "Value": {
+                            "PropertyBinding": {
+                                "Source": "ObjectDataSource2",
+                                "Property": "$.Value"
+                            }
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                $layout.detach();
+                var $label = $layout.find('.pl-combobox > .pl-control-label'),
+                    $value = $layout.find('.pl-combobox__value');
+
+                assert.equal($label.text(), 'Combobox Label');
+                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2G\n\n\n    2\n\n\n    3G\n\n\n    3\n\n');
+            }
+        });
+        return;
         it('debug', function () {
             // Given
             var metadata = {
@@ -40,10 +402,10 @@ describe('ComboBox', function () {
                     }, {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource2",
-                            "~Items": [
+                            "Items": [
                                 {"Value": {"Id": 2, "Display": "2G"}}
                             ],
-                            "Items": [
+                            "~Items": [
                                 {"Value": {"Id": 2, "DisplayName": "2G"}}
                             ]
                         }
@@ -52,6 +414,7 @@ describe('ComboBox', function () {
                 "Items": [{
 
                     ComboBox: {
+                        "~LabelText": "Combobox Label",
                         "ItemTemplate": {
                             "Label": {
                                 "Name": "TextBox1",
@@ -80,9 +443,9 @@ describe('ComboBox', function () {
                                 "Property": ""
                             }
                         },
-                        "ValueSelector": "ValueSelector1",
+                        "~ValueSelector": "ValueSelector1",
                         "~ValueProperty": "DisplayName",
-                        "ValueFormat": "{:DisplayName}",
+                        "ValueFormat": "{Id} - {Display}",
                         "~ValueTemplate": {
                             "StackPanel": {
                                 "Orientation": "Horizontal",
@@ -93,7 +456,7 @@ describe('ComboBox', function () {
                                             "Value": {
                                                 "PropertyBinding": {
                                                     "Source": "ObjectDataSource2",
-                                                    "Property": "Value.DisplayName"
+                                                    "Property": "Value.$.Display"
                                                 }
                                             }
                                         }
@@ -104,7 +467,7 @@ describe('ComboBox', function () {
                                             "Value": {
                                                 "PropertyBinding": {
                                                     "Source": "ObjectDataSource2",
-                                                    "Property": "Value.Id"
+                                                    "Property": "Value.$.Id"
                                                 }
                                             }
                                         }
@@ -113,7 +476,7 @@ describe('ComboBox', function () {
                             }
 
                         },
-                        "MultiSelect": false,
+                        "MultiSelect": true,
                         "Value": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource2",

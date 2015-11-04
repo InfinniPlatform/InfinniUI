@@ -17,6 +17,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     applyMetadata: function (params) {
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
+        params.element.setLabelText(params.metadata.LabelText);
     },
 
     initValueTemplate: function (binding, params) {
@@ -68,7 +69,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     },
 
     buildValueTemplateByFormat: function (binding, valueFormatMetadata, params) {
-        var format = this.buildDisplayFormat({Format: valueFormatMetadata}, params); //@TODO Исправить. Убрать Format..
+        var format = this.buildDisplayFormat(valueFormatMetadata, params);
         return function (context, args) {
             var index = args.index;
             var value = args.value;

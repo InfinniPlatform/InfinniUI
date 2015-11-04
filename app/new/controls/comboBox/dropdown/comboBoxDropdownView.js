@@ -38,8 +38,12 @@ var ComboBoxDropdownView = Backbone.View.extend({
         $items.append(content);
     },
 
-    onClickBackdropHandler: function () {
+    close: function () {
         this.model.set('dropdown', false);
+    },
+
+    onClickBackdropHandler: function () {
+        this.close();
     },
 
     onChangeValueHandler: function () {
@@ -79,8 +83,13 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     onClickItemHandler: function (item) {
-        this.model.toggleItem(item);
-        this.model.set('dropdown', false);
+        var model = this.model,
+            isSingleSelect = !model.get('multiSelect');
+
+        model.toggleItem(item);
+        if (isSingleSelect) {
+            this.close();
+        }
     }
 });
 

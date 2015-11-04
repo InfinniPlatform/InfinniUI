@@ -13,6 +13,14 @@ ComboBox.prototype.createControl = function () {
     return new ComboBoxControl();
 };
 
+ComboBox.prototype.getLabelText = function () {
+    return this.control.get('labelText');
+};
+
+ComboBox.prototype.setLabelText = function (value) {
+    this.control.set('labelText', value);
+};
+
 ComboBox.prototype.setValueTemplate = function (value) {
     this.control.set('valueTemplate', value);
 };
