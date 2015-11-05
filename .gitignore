@@ -36,5 +36,7 @@ node_modules
 # Bower
 bower_components/*
 bower_cache/*
+test/integration/bower_cache/*
+test/integration/bower_components/*
 .packaging/*.nupkg
 .packaging/UI.nuspec
