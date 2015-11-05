@@ -3,8 +3,8 @@ var ComboBoxModel = ListEditorBaseModel.extend({
         ListEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     },
 
-    toggleItem: function (item) {
+    toggleItem: function (item, toggle) {
         var value = this.valueByItem(item);
-        this.toggleValue(value);
+        this.toggleValue(value, toggle);
     }
 });

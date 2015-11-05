@@ -22,7 +22,7 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         });
     },
 
-    toggleValue: function (value) {
+    toggleValue: function (value, toggle) {
         var
             currentValue = this.get('value'),
             multiSelect = this.get('multiSelect'),
@@ -37,8 +37,10 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
                 return JSON.stringify(val) !== valueAsString;
             });
 
-            if (newValue.length === currentValue.length) {
-                newValue.push(value);
+            if (typeof toggle === 'undefined' || toggle === true) {
+                if (newValue.length === currentValue.length) {
+                    newValue.push(value);
+                }
             }
 
             this.set('value', newValue);

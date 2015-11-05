@@ -126,14 +126,37 @@ var ComboBoxView = ListEditorBaseView.extend({
             valueTemplate = this.model.get('valueTemplate');
 
         if (multiSelect && Array.isArray(value)) {
-            $value = value.map(function(val, i) {
-                return valueTemplate(null, {value: val, index: i}).render();
+            var valueView = new ComboBoxValues({
+                items: value.map(function(val, i) {
+                    return {
+                        "$value": valueTemplate(null, {value: val, index: i}).render(),
+                        "value": val,
+                        "index": i
+                    };
+                    //return valueTemplate(null, {value: val, index: i}).render();
+                })
             });
+            this.listenTo(valueView, 'remove', this.onRemoveValueHandler);
+            this.listenTo(valueView, 'search', _.debounce(this.onSearchValueHandler.bind(this), 300));
+            $value = valueView.render();
+
+
+            //$value = value.map(function(val, i) {
+            //    return valueTemplate(null, {value: val, index: i}).render();
+            //});
         } else {
             $value = valueTemplate(null, {value: value}).render();
         }
         this.ui.value.empty();
         this.ui.value.append($value);
+    },
+
+    onRemoveValueHandler: function (value) {
+        this.model.toggleValue(value, false);
+    },
+
+    onSearchValueHandler: function (text) {
+        console.log('search', text);
     }
 
 });

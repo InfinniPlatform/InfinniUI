@@ -378,7 +378,7 @@ describe('ComboBox', function () {
                 assert.equal($value.text().replace(/^\s+|\s$/, ''), '2G\n\n\n    2\n\n\n    3G\n\n\n    3\n\n');
             }
         });
-        return;
+
         it('debug', function () {
             // Given
             var metadata = {
@@ -402,11 +402,11 @@ describe('ComboBox', function () {
                     }, {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": {"Id": 2, "Display": "2G"}}
-                            ],
                             "~Items": [
-                                {"Value": {"Id": 2, "DisplayName": "2G"}}
+                                {"Value": [{"Id": 2, "Display": "2G"}]}
+                            ],
+                            "Items": [
+                                {"Value": [{"Id": 2, "DisplayName": "2G"}]}
                             ]
                         }
                     }
@@ -443,9 +443,9 @@ describe('ComboBox', function () {
                                 "Property": ""
                             }
                         },
-                        "~ValueSelector": "ValueSelector1",
+                        "ValueSelector": "ValueSelector1",
                         "~ValueProperty": "DisplayName",
-                        "ValueFormat": "{Id} - {Display}",
+                        "ValueFormat": "{Id} - {DisplayName}",
                         "~ValueTemplate": {
                             "StackPanel": {
                                 "Orientation": "Horizontal",
