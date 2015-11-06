@@ -1,11 +1,15 @@
 var ComboBoxDropdownView = Backbone.View.extend({
 
     events: {
-        'click .backdrop': 'onClickBackdropHandler'
+        'click .backdrop': 'onClickBackdropHandler',
+        //'keypress .pl-combobox-search-text': 'onKeyPressHandler',
+        //'keydown .pl-combobox-search-text': 'onKeyDownHandler',
+        'keyup .pl-combobox-filter-text': 'onKeyUpHandler'
     },
 
     UI: {
-        items: '.pl-combobox-items'
+        items: '.pl-combobox-items',
+        text: '.pl-combobox-filter-text'
     },
 
     initialize: function () {
@@ -20,16 +24,27 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
+
+        var items = this.model.get('items');
+
+        var view = this;
+        items.onChange(function () {
+            view.renderItems();
+        });
     },
 
     render: function () {
         var template = this.strategy.getTemplate();
         this.$el.html(template());
         this.bindUIElements();
+        this.renderItems();
+        return this.$el;
+    },
+
+    renderItems: function () {
         var $items = this.strategy.renderItems();
         this.$items = $items;
         this.markCheckedItems();
-        return this.$el;
     },
 
     setItemsContent: function (content) {
@@ -90,7 +105,14 @@ var ComboBoxDropdownView = Backbone.View.extend({
         if (isSingleSelect) {
             this.close();
         }
+    },
+
+    onKeyUpHandler: function (event) {
+        //@TODO grow input
+        var text = this.ui.text.val();
+        this.trigger('search', text);
     }
+
 });
 
 _.extend(ComboBoxDropdownView.prototype, bindUIElementsMixin);

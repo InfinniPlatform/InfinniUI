@@ -27,6 +27,8 @@ var ComboBoxView = ListEditorBaseView.extend({
                         model: model
                     });
 
+                    this.listenTo(dropdownView, 'search', _.debounce(view.onSearchValueHandler.bind(view), 300));
+
                     var $dropdown = dropdownView.render();
 
                     var rect = view.$el[0].getBoundingClientRect();
@@ -155,8 +157,13 @@ var ComboBoxView = ListEditorBaseView.extend({
         this.model.toggleValue(value, false);
     },
 
+    /**
+     * @description Устанока фильтра быстрого выбора элемента из списка
+     * @param {string} text
+     */
     onSearchValueHandler: function (text) {
-        console.log('search', text);
+        this.model.set('search', text);
+        //console.log('search', text);
     }
 
 });

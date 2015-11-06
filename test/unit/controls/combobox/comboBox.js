@@ -386,7 +386,7 @@ describe('ComboBox', function () {
                 "Scripts": [
                     {
                         "Name": "ValueSelector1",
-                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                        "Body": "return typeof args.value === 'undefined' ? null : {Id: args.value.Id, DisplayName: args.value.Display};"
                     }
                 ],
                 "DataSources": [
@@ -406,7 +406,7 @@ describe('ComboBox', function () {
                                 {"Value": [{"Id": 2, "Display": "2G"}]}
                             ],
                             "Items": [
-                                {"Value": [{"Id": 2, "DisplayName": "2G"}]}
+                                {"Value": {"Id": 2, "DisplayName": "2G"}}
                             ]
                         }
                     }
@@ -476,7 +476,7 @@ describe('ComboBox', function () {
                             }
 
                         },
-                        "MultiSelect": true,
+                        "MultiSelect": false,
                         "Value": {
                             "PropertyBinding": {
                                 "Source": "ObjectDataSource2",

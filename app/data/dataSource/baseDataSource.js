@@ -149,7 +149,7 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        if (item !== null) {
+        if (item !== null && typeof item !== 'undefined') {
             if (!items[itemId]) {
                 if (!error) {
                     throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
@@ -158,6 +158,8 @@ var BaseDataSource = Backbone.Model.extend({
                     return;
                 }
             }
+        } else {
+            item = null;
         }
 
         this.set('selectedItem', item);

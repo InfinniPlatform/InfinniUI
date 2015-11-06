@@ -15,9 +15,29 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     },
 
     applyMetadata: function (params) {
+        var element = params.element;
+
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
-        params.element.setLabelText(params.metadata.LabelText);
+        element.setLabelText(params.metadata.LabelText);
+
+        (function (binding) {
+            var source = binding.getSource();
+            element.onPropertyChanged('search', function (context, args) {
+                var value = args.newValue;
+                source.setFilter([
+                    {
+                        criteriaType: 64,
+                        property: 'Display',
+                        value: value
+                    }
+                ]);
+
+                console.log('change:search', args);
+                console.log(source.getItems());
+            });
+
+        })(data.itemsBinding);
     },
 
     initValueTemplate: function (binding, params) {

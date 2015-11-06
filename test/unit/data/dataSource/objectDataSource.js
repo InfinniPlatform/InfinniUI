@@ -284,7 +284,7 @@ describe('ObjectDataSource', function () {
             assert.lengthOf(ds.getItems(), 3, 'Apply filter');
 
             ds.setFilter([]);
-            
+
             // Then
             items = ds.getItems();
             assert.isTrue(ds.isDataReady(), 'dataReady status is right');
