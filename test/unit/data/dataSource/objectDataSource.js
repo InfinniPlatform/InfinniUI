@@ -247,4 +247,49 @@ describe('ObjectDataSource', function () {
         });
     });
 
+    describe('ObjectDataSource filter', function () {
+        it('should get filtered list of data', function () {
+            // Given //When
+            var ds = createObjectDataSource(),
+                items;
+
+            //When
+            ds.setFilter([
+                {
+                    criteriaType: 64,
+                    property: "FirstName",
+                    value: "Иван"
+                }
+            ]);
+
+            // Then
+            items = ds.getItems();
+            assert.isTrue(ds.isDataReady(), 'dataReady status is right');
+            assert.lengthOf(items, 3, 'data provider returns items');
+        });
+
+        it('should reset filter', function () {
+            // Given //When
+            var ds = createObjectDataSource(),
+                items;
+
+            //When
+            ds.setFilter([
+                {
+                    criteriaType: 64,
+                    property: "FirstName",
+                    value: "Иван"
+                }
+            ]);
+            assert.lengthOf(ds.getItems(), 3, 'Apply filter');
+
+            ds.setFilter([]);
+            
+            // Then
+            items = ds.getItems();
+            assert.isTrue(ds.isDataReady(), 'dataReady status is right');
+            assert.lengthOf(items, 7, 'clear filter');
+        });
+
+    });
 });
