@@ -278,16 +278,38 @@
         "Cell": {
           "ColumnSpan": 9,
           "Items": [{
-            "ToggleButton": {
-              "Text": "Subscribe",
-              "TextOn": "",
-              "TextOff": "",
-              "OnValueChanged": {
-                "Name": "ToggleButtonOnValueChanged"
-              },
-              "OnValueChanging": {
-                "Name": "ToggleButtonOnValueChanging"
-              }
+            "ExtensionPanel": {
+              "ExtensionName":"Testt",
+              "Parameters": [
+                {
+                  "Name": "p1",
+                  "Value": {
+                    "PropertyBinding": {
+                      "Source": "BloodGroupDataSource",
+                      "Property": ""
+                    }
+                  }
+                }
+              ],
+              "Items": [{
+                "NumericBox": {
+                  "HintText": "I'm NumericBox hint",
+                  "LabelText": "Numeric label",
+                  "Enabled": true,
+                  "MinValue": 0,
+                  "EditMask": {
+                    "NumberEditMask": {
+                      "Mask": "n3"
+                    }
+                  },
+                  "Value": {
+                    "PropertyBinding": {
+                      "Source": "MainDataSource",
+                      "Property": "$"
+                    }
+                  }
+                }
+              }]
             }
           }]
         }
