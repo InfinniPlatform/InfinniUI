@@ -1,73 +1,70 @@
 describe('Parameters', function () {
 
-    /*it('should get/set value from datasource', function () {
+    it('Parameter base API', function () {
 
-        var provider = new FakeDataProvider();
-
-        window.providerRegister.register('DocumentDataSource', function () {
-            return provider;
-        });
-
-        var builder = new ApplicationBuilder();
-
+        // Given When
         var view = fakeView();
+        var parameter = new Parameter({view: view, name: 'name'});
 
-        var metadata = {
-            Name: 'PatientDataSource',
-            ConfigId: 'Demography',
-            DocumentId: 'Patient',
-            IdProperty: 'Id',
-            CreateAction: 'CreateDocument',
-            GetAction: 'GetDocument',
-            UpdateAction: 'SetDocument',
-            DeleteAction: 'DeleteDocument',
-            FillCreatedItem: true
-        };
+        // Then
+        assert.equal(parameter.getView(), view, 'view is right');
+        assert.equal(parameter.getName(), 'name', 'name is right');
+    });
 
+    it('Parameter value and property', function () {
 
-        var items = null;
-        provider.getItems(null, 0, 10, null,  function (data) {
-            items = data;
-        });
+        // Given
+        var parameter = new Parameter({view: fakeView(), name: 'name'}),
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
 
-        var dataSource = builder.buildType(view, 'DocumentDataSource', metadata);
+        assert.isUndefined(parameter.getValue(), 'start value is undefined');
+        assert.isUndefined(parameter.getProperty(''), 'start property is undefined');
+        assert.isUndefined(parameter.getProperty('f1'), 'start property is undefined 2');
+        assert.isUndefined(parameter.getProperty('f1.value'), 'start property is undefined 3');
 
-        var dataBinding = new PropertyBinding(view, dataSource.getName(), '$.LastName');
+        //When
+        parameter.setValue(val);
 
-        view.parameters = [];
+        // Then
+        assert.equal(parameter.getValue(), val, 'value after setting is right');
+        assert.equal(parameter.getProperty(''), val, 'property after setting is right');
+        assert.equal(parameter.getProperty('f1'), val.f1, 'property after setting is right 2');
+        assert.equal(parameter.getProperty('f1.value'), val.f1.value, 'property after setting is right 3');
+    });
 
-        view.addParameter = function (parameter) {view.parameters.push(parameter);};
-        view.getParameter = function () {return view.parameters[0];};
-        view.getDataSource = function () {return dataSource;};
+    it('Parameter handling property changed', function () {
 
-        var parameter = builder.buildType(view, 'Parameter', {
-            Name: 'Patient',
-            Value: {
-                PropertyBinding: {
-                    DataSource: 'PatientDataSource',
-                    Property: '$'
-                }
-            }
-        });
+        // Given
+        var parameter = new Parameter({view: fakeView(), name: 'name'}),
+            handlerWasCalled = false,
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
 
-        var parameterBinding = builder.buildType(view, 'ParameterBinding', {
-            Parameter: "Patient",
-            Property: "LastName"
-        });
+        parameter.setValue(10);
 
-        parameter.addDataBinding(parameterBinding);
+        parameter.onPropertyChanged(onPropertyChangedHandler);
 
+        //When
+        parameter.setValue(val);
 
-        //dataSource.setEditMode();
-        dataSource.resumeUpdate();
-        dataSource.setSelectedItem(items[0]);
-        parameter.addDataBinding(dataBinding);
+        // Then
+        function onPropertyChangedHandler(context, args){
+            assert.equal(args.newValue, val, 'new value is right');
+            assert.equal(args.oldValue, 10, 'old value is right');
 
+            handlerWasCalled = true;
+        }
 
-        assert.isTrue(_.isEqual(items[0], parameter.getValue()));
-        assert.equal(items[0].LastName, parameterBinding.getPropertyValue());
-        parameterBinding.setPropertyValue('2014');
-        assert.equal('2014', parameter.getValue().LastName);
-    });*/
+        assert.isTrue(handlerWasCalled, 'handler was called');
+    });
 
 });

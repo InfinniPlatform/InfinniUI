@@ -1,41 +1,29 @@
 function ParameterBuilder() {
 
     this.build = function (context, args) {
+        var metadata = args.metadata;
+        var builder = args.builder;
+        var parentView = args.parentView;
 
-        if(args.metadata.Value){
-            var parameter = new Parameter();
 
-            parameter.setName(args.metadata.Name);
 
-            var dataBinding = args.builder.build(args.metadata.Value, {parentView: args.parentView});
+        if('Value' in metadata){
+            var parameter = new Parameter({view: parentView});
+            parameter.setName(metadata['Name']);
+
+            var dataBinding = builder.build(metadata['Value'], {parentView: parentView});
 
             //если существует Builder для хранящегося в параметре значения
             //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)
             //иначе устанвливаем в параметре значение из метаданных
             if(dataBinding != null) {
+                dataBinding.bindElement(parameter, '');
 
-                // Установка обработчика изменения значения в источнике данных
-                dataBinding.onPropertyValueChanged(function(dataSourceName,value){
-                    parameter.setValue(dataBinding.getPropertyValue());
-                });
-
-                var data = dataBinding.getPropertyValue();
-                if (data) {
-                    parameter.setValue(data);
-                }
-
-                // При изменении значения параметра, уведомление DataSource ч/з DataBinding
-                parameter.onValueChanged(function (dataSourceName, value) {
-                    dataBinding.setPropertyValue(value);
-                });
             }
             else {
-                parameter.setValue(args.metadata.Value);
+                parameter.setValue(metadata['Value']);
             }
-        }else{
-
         }
-
 
         return parameter;
     };
