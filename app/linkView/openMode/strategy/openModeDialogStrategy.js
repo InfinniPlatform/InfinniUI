@@ -62,7 +62,7 @@ var OpenModeDialogStrategy = function (linkView) {
             $modal.modal('hide');
         });
 
-        $modal.find('h3').html(view.getText());
+        $modal.find('.modal-title').html(view.getText());
         view.onPropertyChanged('text', function(){
             $modal.find('h3').html(view.getText());
         });
