@@ -29,6 +29,7 @@ var Parameter = Backbone.Model.extend({
 
     setName: function(newName){
         this.set('name', newName);
+        this.name = newName;
     },
 
     getView: function(){
