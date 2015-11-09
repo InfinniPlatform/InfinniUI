@@ -34,21 +34,22 @@ _.extend(DeleteItemAction.prototype, {
             propertyName = this.getProperty('propertyName'),
             index = this.getProperty('index');
 
-        var propertyValue = dataSource.getProperty(propertyName);
+        // важно для изменения массива использовать setProperty (иначе не произойдёт OnItemsUpdate)
+        // и соответственно работать с массивом по ссылке нельзя
+        var items = _.clone( dataSource.getProperty(propertyName) );
 
-        if( !_.isArray(propertyValue) ){
+        if( !_.isArray(items) ){
             console.log("%c %s: некорректное свойство %s", "color: red", dataSource.getName(), propertyName );
             return;
         }
 
-        if( (!_.isFinite(index)) || (index >= propertyValue.length) ){
+        if( (!_.isFinite(index)) || (index >= items.length) ){
             console.log("%c DeleteItemAction: некорректный индекс элемента", "color: red");
             return;
         }
 
-        var newValue = _.clone(propertyValue);
-        newValue.splice(index, 1);
-        dataSource.setProperty(propertyName, newValue);
+        items.splice(index, 1);
+        dataSource.setProperty(propertyName, items);
 
         if ( _.isFunction(callback) ) {
             callback();

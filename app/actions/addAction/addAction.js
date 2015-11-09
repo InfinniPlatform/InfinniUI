@@ -23,7 +23,7 @@ _.extend(AddAction.prototype, {
         editView.onClose(function(){
             var dialogResult = editView.getDialogResult();
 
-            if (dialogResult == DialogResult.accept) {
+            if (dialogResult == DialogResult.accepted) {
                 that.handleClosingView(callback);
             }
         });

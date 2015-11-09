@@ -27,10 +27,10 @@ _.extend(EditAction.prototype, {
 
         editView.open();
 
-        editView.onClose(function(){
+        editView.onClosed(function(){
             var dialogResult = editView.getDialogResult();
 
-            if (dialogResult == DialogResult.accept) {
+            if (dialogResult == DialogResult.accepted) {
                 that.handleClosingView(callback);
             }
         });
