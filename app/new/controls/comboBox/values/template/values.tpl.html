@@ -9,6 +9,15 @@
         padding: 0;
     }
 
+    .pl-combobox-values:before, .pl-combobox-values:after {
+        content: "";
+        display: table;
+    }
+
+    .pl-combobox-values:after {
+        clear: both;
+    }
+
     .pl-combobox-value, .pl-combobox-search {
         display: block;
         float: left;

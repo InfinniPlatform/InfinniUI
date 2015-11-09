@@ -6,5 +6,6 @@ var ComboBoxModel = ListEditorBaseModel.extend({
     toggleItem: function (item, toggle) {
         var value = this.valueByItem(item);
         this.toggleValue(value, toggle);
+        this.trigger('toggle');
     }
 });

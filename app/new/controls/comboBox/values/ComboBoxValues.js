@@ -19,7 +19,8 @@ var ComboBoxValues = Backbone.View.extend({
     events: {
         'keypress .pl-combobox-search-text': 'onKeyPressHandler',
         'keydown .pl-combobox-search-text': 'onKeyDownHandler',
-        'keyup .pl-combobox-search-text': 'onKeyUpHandler'
+        'keyup .pl-combobox-search-text': 'onKeyUpHandler',
+        'click': 'onClickHandler'
     },
 
     UI: {
@@ -66,6 +67,10 @@ var ComboBoxValues = Backbone.View.extend({
         tab: 9
     },
 
+    setFocus: function () {
+        this.ui.text.focus();
+    },
+
     onKeyPressHandler: function (event) {
         var key = event.which;
 
@@ -95,6 +100,10 @@ var ComboBoxValues = Backbone.View.extend({
 
     onRemoveValueHandler: function (value) {
         this.trigger('remove', value);
+    },
+
+    onClickHandler: function (event) {
+        this.setFocus();
     }
 
 });

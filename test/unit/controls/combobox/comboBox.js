@@ -403,7 +403,7 @@ describe('ComboBox', function () {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource2",
                             "~Items": [
-                                {"Value": [{"Id": 2, "Display": "2G"}]}
+                                {"Value": [{"Id": 2, "DisplayName": "2G"}]}
                             ],
                             "Items": [
                                 {"Value": {"Id": 2, "DisplayName": "2G"}}

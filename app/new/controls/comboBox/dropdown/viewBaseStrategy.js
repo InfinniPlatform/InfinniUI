@@ -63,6 +63,8 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
     return $items;
 };
 
+ComboBoxBaseViewStrategy.prototype.toggle
+
 /**
  *
  * @param {jQuery} $el

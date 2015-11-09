@@ -5,12 +5,11 @@ var ComboBoxView = ListEditorBaseView.extend({
     template: InfinniUI.Template["new/controls/comboBox/template/combobox.tpl.html"],
 
     events: {
-        'click .pl-combobox__grip': 'onClickGripHandler'
+        'click .pl-combobox__grip': 'onClickGripHandler',
+        'click .pl-combobox__value': 'onClickValueHandler'
     },
 
     UI: _.defaults({
-        //items: '.pl-listbox-i',
-        //checkingInputs: '.pl-listbox-input input'
         label: '.pl-control-label',
         value: '.pl-combobox__value'
     }, ListEditorBaseView.prototype.UI),
@@ -23,9 +22,14 @@ var ComboBoxView = ListEditorBaseView.extend({
             view.renderValue();
             model.on('change:dropdown', function (model, dropdown) {
                 if (dropdown) {
+                    model.set('search', '');//Сброс фильтра
+                    if (view.dropDownView) {
+                        view.dropDownView.remove();
+                    }
                     var dropdownView = new ComboBoxDropdownView({
                         model: model
                     });
+                    view.dropDownView = dropdownView;
 
                     this.listenTo(dropdownView, 'search', _.debounce(view.onSearchValueHandler.bind(view), 300));
 
@@ -46,6 +50,9 @@ var ComboBoxView = ListEditorBaseView.extend({
 
                     $dropdown.css(style);
                     $('body').append($dropdown);
+                    if (!model.get('multiSelect')) {
+                        dropdownView.setSearchFocus();
+                    }
                 }
             });
             model.onValueChanged(this.onChangeValueHandler.bind(this));
@@ -120,6 +127,10 @@ var ComboBoxView = ListEditorBaseView.extend({
         this.renderValue();
     },
 
+    rerender: function () {
+
+    },
+
     renderValue: function () {
         var model = this.model,
             multiSelect = model.get('multiSelect'),
@@ -135,17 +146,12 @@ var ComboBoxView = ListEditorBaseView.extend({
                         "value": val,
                         "index": i
                     };
-                    //return valueTemplate(null, {value: val, index: i}).render();
                 })
             });
+            valueView.listenTo(model, 'toggle', valueView.setFocus);
             this.listenTo(valueView, 'remove', this.onRemoveValueHandler);
             this.listenTo(valueView, 'search', _.debounce(this.onSearchValueHandler.bind(this), 300));
             $value = valueView.render();
-
-
-            //$value = value.map(function(val, i) {
-            //    return valueTemplate(null, {value: val, index: i}).render();
-            //});
         } else {
             $value = valueTemplate(null, {value: value}).render();
         }
@@ -162,8 +168,12 @@ var ComboBoxView = ListEditorBaseView.extend({
      * @param {string} text
      */
     onSearchValueHandler: function (text) {
+        this.toggleDropdown(true);
         this.model.set('search', text);
-        //console.log('search', text);
+    },
+
+    onClickValueHandler: function (event) {
+        this.toggleDropdown(true);
     }
 
 });

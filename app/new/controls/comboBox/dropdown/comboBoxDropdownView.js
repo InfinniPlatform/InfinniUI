@@ -9,7 +9,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     UI: {
         items: '.pl-combobox-items',
-        text: '.pl-combobox-filter-text'
+        text: '.pl-combobox-filter-text',
+        noItems: '.pl-combobox-items-empty',
+        search: '.pl-combobox-items-empty > span'
     },
 
     initialize: function () {
@@ -22,6 +24,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
 
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
+        this.listenTo(this.model, 'change:search', this.onChangeSearchHandler);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
 
@@ -35,7 +38,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     render: function () {
         var template = this.strategy.getTemplate();
-        this.$el.html(template());
+        this.$el.html(template({
+            multiSelect: this.model.get('multiSelect')
+        }));
         this.bindUIElements();
         this.renderItems();
         return this.$el;
@@ -44,6 +49,11 @@ var ComboBoxDropdownView = Backbone.View.extend({
     renderItems: function () {
         var $items = this.strategy.renderItems();
         this.$items = $items;
+        var items = this.model.get('items');
+
+        var noItems = (items && items.length == 0);
+        this.ui.noItems.toggleClass('hidden', !noItems);
+
         this.markCheckedItems();
     },
 
@@ -55,6 +65,10 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     close: function () {
         this.model.set('dropdown', false);
+    },
+
+    setSearchFocus: function () {
+        this.ui.text.focus();
     },
 
     onClickBackdropHandler: function () {
@@ -98,19 +112,20 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     onClickItemHandler: function (item) {
-        var model = this.model,
-            isSingleSelect = !model.get('multiSelect');
+        var model = this.model;
 
         model.toggleItem(item);
-        if (isSingleSelect) {
-            this.close();
-        }
+        this.close();
     },
 
     onKeyUpHandler: function (event) {
         //@TODO grow input
         var text = this.ui.text.val();
         this.trigger('search', text);
+    },
+
+    onChangeSearchHandler: function (model, value) {
+        this.ui.search.text(value);
     }
 
 });
