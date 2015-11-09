@@ -15,7 +15,7 @@ var ViewModel = ContainerModel.extend({
         ContainerModel.prototype.initialize.apply(this);
 
         this.set('scripts', new Collection([], 'name'));
-        this.set('parameters', new Collection());
-        this.set('dataSources', new Collection());
+        this.set('parameters', new Collection([], 'name'));
+        this.set('dataSources', new Collection([], 'name'));
     }
 });

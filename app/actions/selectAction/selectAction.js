@@ -21,8 +21,8 @@ _.extend(SelectAction.prototype, {
                 var dialogResult = createdView.getDialogResult();
 
                 if (dialogResult == DialogResult.accepted) {
-                    var srcDataSource = createdView.getDataSources()[srcDataSourceName];
-                    var dstDataSource = createdView.getDataSources()[dstDataSourceName];
+                    var srcDataSource = createdView.getContext().dataSources[srcDataSourceName];
+                    var dstDataSource = createdView.getContext().dataSources[dstDataSourceName];
 
                     var value = srcDataSource.getProperty(srcPropertyName);
                     dstDataSource.setProperty(srcPropertyName, value);

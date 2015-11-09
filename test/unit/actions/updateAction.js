@@ -2,10 +2,10 @@ describe('UpdateAction', function () {
     it('successful build', function () {
         // Given
         var view = new View();
-        var dataSource = new ObjectDataSource({ view: view });
+        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
         var builder = new ApplicationBuilder();
 
-        view.getDataSources()['MainDS'] = dataSource;
+        view.getDataSources().push(dataSource);
 
         var metadata = {
             UpdateAction: {
@@ -24,12 +24,12 @@ describe('UpdateAction', function () {
     it('should update DataSource', function () {
         // Given
         var view = new View();
-        var dataSource = new ObjectDataSource({ view: view });
+        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
         var builder = new UpdateActionBuilder();
 
         window.dsWasUpdated = false;
 
-        view.getDataSources()['MainDS'] = dataSource;
+        view.getDataSources().push(dataSource);
         dataSource.onItemsUpdated(function(){
             window.dsWasUpdated = true;
         });

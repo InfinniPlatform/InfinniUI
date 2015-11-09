@@ -10,7 +10,7 @@ _.extend(EditActionBuilder.prototype, {
         var metadata = args.metadata;
         var parentView = args.parentView;
         var builder = args.builder;
-        var dataSource = parentView.getDataSources()[metadata.DataSource];
+        var dataSource = parentView.getContext().dataSources[metadata.DataSource];
         var editingItemId;
         var linkView;
 

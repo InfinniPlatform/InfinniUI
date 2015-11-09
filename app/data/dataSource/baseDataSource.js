@@ -98,6 +98,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     setName: function (name) {
         this.set('name', name);
+        this.name = name;
     },
 
     getView: function () {

@@ -1,6 +1,6 @@
 function Parameter(){
 
-    var _name;
+    var name;
     var _value;
     var _bindings = [];
 
@@ -22,11 +22,11 @@ function Parameter(){
     };
 
     this.getName = function(){
-        return _name;
+        return name;
     };
 
     this.setName = function(value){
-        _name = value;
+        name = value;
     };
 
     this.getValue = function() {

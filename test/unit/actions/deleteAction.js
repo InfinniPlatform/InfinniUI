@@ -3,9 +3,9 @@ describe('DeleteAction', function () {
         // Given
         var view = new View();
         var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ view: view });
+        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
 
-        view.getDataSources()['SomeDS'] = dataSource;
+        view.getDataSources().push(dataSource);
 
         var metadata = {
             DeleteAction: {
@@ -26,7 +26,7 @@ describe('DeleteAction', function () {
         // Given
         var view = new View();
         var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ view: view });
+        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
 
         var items = [
             {
@@ -40,9 +40,10 @@ describe('DeleteAction', function () {
         ];
         var selectedItem = items[0];
 
-        view.getDataSources()['SomeDS'] = dataSource;
         dataSource.setItems(items);
         dataSource.setSelectedItem(selectedItem);
+
+        view.getDataSources().push(dataSource);
 
         var metadata = {
             DeleteAction: {

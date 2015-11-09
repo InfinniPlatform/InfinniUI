@@ -1,9 +1,9 @@
 describe('SaveAction', function () {
     function createViewWithDataSource(dataSourceName){
         var view = new View();
-        var dataSource = new ObjectDataSource({ view: view });
+        var dataSource = new ObjectDataSource({ name: dataSourceName, view: view });
 
-        view.getDataSources()[dataSourceName] = dataSource;
+        view.getDataSources().push(dataSource);
 
         return view;
     }

@@ -5,7 +5,7 @@ function DeleteActionBuilder(){
 
 _.extend(DeleteActionBuilder.prototype, {
     build: function(context, args){
-        var dataSource = args.parentView.getDataSources()[args.metadata.DataSource];
+        var dataSource = args.parentView.getContext().dataSources[args.metadata.DataSource];
         var accept = (args.metadata['Accept'] === false) ? false: true;
 
         var action = new DeleteAction(args.parentView);
