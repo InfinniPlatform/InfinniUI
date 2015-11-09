@@ -256,39 +256,27 @@ Collection.prototype.set = function (newItems, silent) {
     var matched, i = 0;
     var itemValue, newValue = null, newValueIndex;
 
-    if (!changed) {
-        for (var j = 0; j < items.length; j = j + 1) {
-            if (!this.isEqual(this.getCollectionItemValue(j), _newItems[j])) {
-                changed = true;
-                break;
+
+
+    _newItems.forEach(function(newItem, index){
+        if (index < items.length) {
+            //Изменение элементов
+            if (!changed) {
+                changed = !this.isEqual(this.getCollectionItemValue(index), _newItems[index]);
             }
+            if (changed) {
+                this.updateCollectionItem(items[index], newItem);
+            }
+        } else {
+            //Новые элементы
+            changed = true;
+            items.push(this.createCollectionItem(newItem, items.length));
         }
-    }
-
-    while(i < items.length) {
-        itemValue = this.getCollectionItemValue(i);
-        matched = _newItems.some(function(value, newItem, newItemIndex) {
-            newValue = newItem;
-            newValueIndex = newItemIndex;
-            return this.isEqual(newItem, value);
-        }.bind(this, itemValue));
-
-        if (!matched) {
-            //Удаляем элемент, не содержащийся в новом списке
-            items.splice(i, 1);
-            continue;
-        }
-
-        //Обновляем значение совпадающего элемента
-        this.updateCollectionItem(items[i], newValue);
-        //Удаляем использованный элемент из первоначального списка
-        _newItems.splice(newValueIndex, 1);
-        i = i + 1;
-    }
-
-    _newItems.forEach(function (newItem) {
-        items.push(this.createCollectionItem(newItem, items.length));
     }, this);
+
+    if (newItems.length < items.length) {
+        items.splice(newItems.length)
+    }
 
     if (changed && !silent) {
         this.events.onReset();
@@ -597,7 +585,7 @@ Collection.prototype.find = function (predicate, thisArg) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с начала
  * @param {*} item
  * @param {number} [fromIndex = 0]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.indexOf = function (item, fromIndex) {
     var
@@ -624,7 +612,7 @@ Collection.prototype.indexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
  * @param {*} item
  * @param {number} [fromIndex]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.lastIndexOf = function (item, fromIndex) {
     var
@@ -654,7 +642,7 @@ Collection.prototype.lastIndexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции, удовлетворяющего условию
  * @param {function} predicate
  * @param [thisArg]
- * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
+ * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
  */
 Collection.prototype.findIndex = function (predicate, thisArg) {
     if (typeof predicate !== 'function') {
