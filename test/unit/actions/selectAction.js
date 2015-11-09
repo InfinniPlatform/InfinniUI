@@ -6,7 +6,7 @@ describe('SelectAction', function () {
 
         var metadata = {
             SelectAction: {
-                View: {
+                LinkView: {
                     ExistsView: {
                     }
                 },

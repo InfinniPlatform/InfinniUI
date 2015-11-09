@@ -5,7 +5,7 @@ describe('OpenAction', function () {
         var builder = new ApplicationBuilder();
         var metadata = {
             OpenAction: {
-                View: {
+                LinkView: {
                     InlineView: {
 
                     }
