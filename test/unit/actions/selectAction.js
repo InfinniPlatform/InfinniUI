@@ -11,16 +11,12 @@ describe('SelectAction', function () {
                     }
                 },
                 SourceValue: {
-                    DataBinding: {
-                        Source: 'FirstDS',
-                        Property: 'Name'
-                    }
+                    Source: 'FirstDS',
+                    Property: 'Name'
                 },
                 DestinationValue: {
-                    DataBinding: {
-                        Source: 'SecondDS',
-                        Property: 'Name'
-                    }
+                    Source: 'SecondDS',
+                    Property: 'Name'
                 }
             }
         };

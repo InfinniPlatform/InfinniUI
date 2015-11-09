@@ -237,44 +237,42 @@
                     "AddItemAction": {
                         "LinkView":{
                             "InlineView": {
-                                  "View": {
-                                      "Items": [
-                                          {
-                                              "TextBox": {
-                                                  "Value": {
-                                                      "PropertyBinding": {
-                                                          "Source": "MainDataSource",
-                                                          "Property": "Name"
-                                                      }
-                                                  }
-                                              }
-                                          },
-                                          {
-                                              "Button": {
-                                                  "Text": "Save",
-                                                  "Action": {
-                                                      "AcceptAction": {}
-                                                  }
-                                              }
-                                          }
-                                      ],
-                                      "DataSources": [
-                                          {
-                                              "ObjectDataSource": {
-                                                  "Name": "MainDataSource"
-                                              }
-                                          }
-                                      ]
-                                  },
-                                  "OpenMode": "Dialog",
-                                  "Text": "OpenDialog"
-                              }
+                                "View": {
+                                    "Items": [
+                                        {
+                                            "TextBox": {
+                                                "Value": {
+                                                    "PropertyBinding": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "Name"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "Button": {
+                                                "Text": "Save",
+                                                "Action": {
+                                                    "AcceptAction": {}
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "DataSources": [
+                                        {
+                                            "ObjectDataSource": {
+                                                "Name": "MainDataSource"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "Text": "OpenDialog",
+                                "OpenMode": "Dialog"
+                            }
                         },
                         "Items": {
-                            "DataBinding": {
-                                "Source": "PatientDataSource",
-                                "Property": "Diseases"
-                            }
+                            "Source": "PatientDataSource",
+                            "Property": "Diseases"
                         }
                     }
                 }
@@ -338,10 +336,8 @@
                                                 }
                                             },
                                             "Items": {
-                                                "DataBinding": {
-                                                    "Source": "PatientDataSource",
-                                                    "Property": "Diseases"
-                                                }
+                                                "Source": "PatientDataSource",
+                                                "Property": "Diseases"
                                             }
                                         }
                                     }
@@ -353,10 +349,8 @@
                                     "Action": {
                                         "DeleteItemAction": {
                                             "Items": {
-                                                "DataBinding": {
-                                                    "Source": "PatientDataSource",
-                                                    "Property": "Diseases"
-                                                }
+                                                "Source": "PatientDataSource",
+                                                "Property": "Diseases"
                                             }
                                         }
                                     }
