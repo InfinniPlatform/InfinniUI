@@ -53,7 +53,9 @@
             '!app/controls/imageBox/**/*.*',
             '!app/element/imageBox/**/*.*',
             '!app/element/dataElement/uploadFileBox/**/*.*',
-            '!app/controls/uploadFileBox/**/*.*'
+            '!app/controls/uploadFileBox/**/*.*',
+            '!app/controls/comboBox/**/*.*',
+            '!app/element/dataElement/comboBox/**/*.*'
 
         ],
         vendorFiles = [

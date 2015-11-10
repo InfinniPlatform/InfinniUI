@@ -9,6 +9,11 @@ _.inherit(ContainerBuilder, ElementBuilder);
  */
 _.extend(ContainerBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {{itemsBinding: {DataBinding}}}
+     */
     applyMetadata: function (params) {
         var metadata = params.metadata;
         var element = params.element;
@@ -22,7 +27,9 @@ _.extend(ContainerBuilder.prototype, {
         }
         this.initGroup(params, itemsBinding);
 
-        return itemsBinding;
+        return {
+            itemsBinding: itemsBinding
+        };
     },
 
     initItems: function(params){
