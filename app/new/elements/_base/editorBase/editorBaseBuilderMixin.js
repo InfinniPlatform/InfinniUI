@@ -11,8 +11,15 @@ var editorBaseBuilderMixin = {
      * @param {string} [bindingOptions.valueProperty="value'] Имя атрибута значения
      * @returns {*}
      */
-    applyMetadata_editorBaseBuilder: function (params, bindingOptions) {
 
+
+    /**
+     *
+     * @param params
+     * @param bindingOptions
+     * @returns {{valueBinding: {DataBinding}}}
+     */
+    applyMetadata_editorBaseBuilder: function (params, bindingOptions) {
         var metadata = params.metadata;
         var element = params.element;
 
@@ -53,6 +60,8 @@ var editorBaseBuilderMixin = {
             }
         }
 
-        return dataBinding;
+        return {
+            valueBinding: dataBinding
+        };
     }
 };
