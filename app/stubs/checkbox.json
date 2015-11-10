@@ -313,10 +313,76 @@
             }
           }]
         }
-      }]
+      },
+        {
+          "Cell": {
+            "ColumnSpan": 9,
+            "Items": [{
+              "ExtensionPanel": {
+                "ExtensionName":"Testt",
+                "Parameters": [
+                  {
+                    "Name": "p1",
+                    "Value": {
+                      "PropertyBinding": {
+                        "Source": "BloodGroupDataSource",
+                        "Property": ""
+                      }
+                    }
+                  }
+                ],
+                "Items": [{
+                    "Panel": {
+                      "OnExpanded": {
+                        "Name": "OnExpanded"
+                      },
+                      "OnCollapsed": {
+                        "Name": "OnCollapsed"
+                      },
+                      "OnExpanding": {
+                        "Name": "OnExpanding"
+                      },
+                      "OnCollapsing": {
+                        "Name": "OnCollapsing"
+                      },
+                      "~HeaderTemplate": {
+                        "Label": {
+                          "Text": "Static text"
+                        }
+                      },
+                      "~Header": "My panel's header",
+                      "Header": {
+                        "Source": "BloodGroupDataSource",
+                        "Property": "0.DisplayName"
+                      },
+                      "~Collapsed": true,
+                      "Collapsible": true,
+                      "Items": []
+                    }
+                  }]
+              }
+            }]
+          }
+        }]
     }
   }],
   "Scripts": [
+    {
+      "Name": "OnExpanded",
+      "Body": "console.log('OnExpanded');"
+    },
+    {
+      "Name": "OnCollapsed",
+      "Body": "console.log('OnCollapsed');"
+    },
+    {
+      "Name": "OnExpanding",
+      "Body": "console.log('OnExpanding');"
+    },
+    {
+      "Name": "OnCollapsing",
+      "Body": "console.log('OnCollapsing');"
+    },
     {
       "Name": "OnValueChanged",
       "Body": "console.log('OnValueChanged', args);"

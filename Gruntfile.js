@@ -55,8 +55,9 @@
             '!app/element/dataElement/uploadFileBox/**/*.*',
             '!app/controls/uploadFileBox/**/*.*',
             '!app/controls/comboBox/**/*.*',
-            '!app/element/dataElement/comboBox/**/*.*'
-
+            '!app/element/dataElement/comboBox/**/*.*',
+            '!app/controls/panel/**/*.*',
+            '!app/element/layoutPanel/panel/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
