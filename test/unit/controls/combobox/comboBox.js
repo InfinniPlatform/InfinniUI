@@ -90,8 +90,10 @@ describe('ComboBox', function () {
                 var $label = $layout.find('.pl-combobox > .pl-control-label'),
                     $value = $layout.find('.pl-combobox__value');
 
+
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2 - 2G');
+                assert.equal($value.length, 1);
+                assert.equal($value.find('.label-control').text(), '2 - 2G');
             }
         });
 
@@ -172,7 +174,7 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2 - 2G\n3 - 3G');
+                assert.equal($value.find('.label-control').text(), '2 - 2G3 - 3G');
             }
         });
 
@@ -272,7 +274,7 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2G\n\n\n    2\n\n');
+                assert.equal($value.find('.label-control').text(), '2G2');
             }
         });
 
@@ -375,133 +377,133 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.text().replace(/^\s+|\s$/, ''), '2G\n\n\n    2\n\n\n    3G\n\n\n    3\n\n');
+                assert.equal($value.find('.label-control').text(), '2G23G3');
             }
         });
 
-        it('debug', function () {
-            // Given
-            var metadata = {
-                "Text": 'Пациенты',
-                "Scripts": [
-                    {
-                        "Name": "ValueSelector1",
-                        "Body": "return typeof args.value === 'undefined' ? null : {Id: args.value.Id, DisplayName: args.value.Display};"
-                    }
-                ],
-                "DataSources": [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
-                            ]
-                        }
-                    }, {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "~Items": [
-                                {"Value": [{"Id": 2, "DisplayName": "2G"}]}
-                            ],
-                            "Items": [
-                                {"Value": {"Id": 2, "DisplayName": "2G"}}
-                            ]
-                        }
-                    }
-                ],
-                "Items": [{
-
-                    ComboBox: {
-                        "~LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
-                                }
-                            }
-                        },
-                        "GroupItemTemplate": {
-                            "Label": {
-                                "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.State"
-                                    }
-                                }
-                            }
-                        },
-                        "~GroupValueProperty": "State",
-                        "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
-                        },
-                        "ValueSelector": "ValueSelector1",
-                        "~ValueProperty": "DisplayName",
-                        "ValueFormat": "{Id} - {DisplayName}",
-                        "~ValueTemplate": {
-                            "StackPanel": {
-                                "Orientation": "Horizontal",
-                                "Items": [
-                                    {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Display"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Id"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-
-                        },
-                        "MultiSelect": false,
-                        "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
-                        }
-                    }
-                }]
-            };
-
-
-            // When
-            applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout) {
-                //$layout.detach();
-
-                //var $items = $layout.find('.pl-listbox-i'),
-                //    $chosen = $layout.find('.pl-listbox-i.pl-listbox-i-chosen');
-
-                //assert.lengthOf($chosen, 1, 'length of chosen item is right');
-                //assert.equal($items.index($chosen), 1, 'index of chosen item is right');
-            }
-        });
+        //it('debug', function () {
+        //    // Given
+        //    var metadata = {
+        //        "Text": 'Пациенты',
+        //        "Scripts": [
+        //            {
+        //                "Name": "ValueSelector1",
+        //                "Body": "return typeof args.value === 'undefined' ? null : {Id: args.value.Id, DisplayName: args.value.Display};"
+        //            }
+        //        ],
+        //        "DataSources": [
+        //            {
+        //                ObjectDataSource: {
+        //                    "Name": "ObjectDataSource1",
+        //                    "Items": [
+        //                        {"Id": 1, "Display": "LTE", "State": "New"},
+        //                        {"Id": 2, "Display": "2G", "State": "Deprecated"},
+        //                        {"Id": 3, "Display": "3G", "State": "Deprecated"}
+        //                    ]
+        //                }
+        //            }, {
+        //                ObjectDataSource: {
+        //                    "Name": "ObjectDataSource2",
+        //                    "~Items": [
+        //                        {"Value": [{"Id": 2, "DisplayName": "2G"}]}
+        //                    ],
+        //                    "Items": [
+        //                        {"Value": {"Id": 2, "DisplayName": "2G"}}
+        //                    ]
+        //                }
+        //            }
+        //        ],
+        //        "Items": [{
+        //
+        //            ComboBox: {
+        //                "~LabelText": "Combobox Label",
+        //                "ItemTemplate": {
+        //                    "Label": {
+        //                        "Name": "TextBox1",
+        //                        "Value": {
+        //                            "PropertyBinding": {
+        //                                "Source": "ObjectDataSource1",
+        //                                "Property": "$.Display"
+        //                            }
+        //                        }
+        //                    }
+        //                },
+        //                "GroupItemTemplate": {
+        //                    "Label": {
+        //                        "Value": {
+        //                            "PropertyBinding": {
+        //                                "Source": "ObjectDataSource1",
+        //                                "Property": "$.State"
+        //                            }
+        //                        }
+        //                    }
+        //                },
+        //                "~GroupValueProperty": "State",
+        //                "Items": {
+        //                    "PropertyBinding": {
+        //                        "Source": "ObjectDataSource1",
+        //                        "Property": ""
+        //                    }
+        //                },
+        //                "ValueSelector": "ValueSelector1",
+        //                "~ValueProperty": "DisplayName",
+        //                "ValueFormat": "{Id} - {DisplayName}",
+        //                "~ValueTemplate": {
+        //                    "StackPanel": {
+        //                        "Orientation": "Horizontal",
+        //                        "Items": [
+        //                            {
+        //                                "Label": {
+        //                                    "HorizontalAlignment": "Left",
+        //                                    "Value": {
+        //                                        "PropertyBinding": {
+        //                                            "Source": "ObjectDataSource2",
+        //                                            "Property": "Value.$.Display"
+        //                                        }
+        //                                    }
+        //                                }
+        //                            },
+        //                            {
+        //                                "Label": {
+        //                                    "HorizontalAlignment": "Left",
+        //                                    "Value": {
+        //                                        "PropertyBinding": {
+        //                                            "Source": "ObjectDataSource2",
+        //                                            "Property": "Value.$.Id"
+        //                                        }
+        //                                    }
+        //                                }
+        //                            }
+        //                        ]
+        //                    }
+        //
+        //                },
+        //                "MultiSelect": false,
+        //                "Value": {
+        //                    "PropertyBinding": {
+        //                        "Source": "ObjectDataSource2",
+        //                        "Property": "$.Value"
+        //                    }
+        //                }
+        //            }
+        //        }]
+        //    };
+        //
+        //
+        //    // When
+        //    applyViewMetadata(metadata, onViewReady);
+        //
+        //    // Then
+        //    function onViewReady(view, $layout) {
+        //        //$layout.detach();
+        //
+        //        //var $items = $layout.find('.pl-listbox-i'),
+        //        //    $chosen = $layout.find('.pl-listbox-i.pl-listbox-i-chosen');
+        //
+        //        //assert.lengthOf($chosen, 1, 'length of chosen item is right');
+        //        //assert.equal($items.index($chosen), 1, 'index of chosen item is right');
+        //    }
+        //});
 
     });
 
