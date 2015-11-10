@@ -2,14 +2,26 @@
     margin-left: 30px;
 }
 
+// Scenario
+
 section.passed .header{
 	background-color: green;
+}
+
+section.skipped .header{
+	background-color: yellow;
 }
 
 section.failed .header{
 	background-color: red;
 }
 
+// Step
+
 li.failed{
 	background-color: red;
+}
+
+li.skipped{
+	background-color: yellow;
 }
