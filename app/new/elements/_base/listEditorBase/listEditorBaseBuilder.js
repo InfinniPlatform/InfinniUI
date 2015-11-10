@@ -12,14 +12,16 @@ _.extend(ListEditorBaseBuilder.prototype, {
     applyMetadata: function (params) {
         var itemsBinding;
 
-        var data = ContainerBuilder.prototype.applyMetadata.call(this, params);
-        itemsBinding = data.itemsBinding;
+        var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call(this, params);
+            itemsBinding = applyingMetadataResult.itemsBinding,
+            applyingMetadataResult2;
 
         this.initSelecting(params, itemsBinding);
 
         this.initValueFeatures(params);
 
-        return _.extend(data, this.applyMetadata_editorBaseBuilder(params));
+        applyingMetadataResult2 = this.applyMetadata_editorBaseBuilder(params);
+        return _.extend(applyingMetadataResult, applyingMetadataResult2);
     },
 
 
