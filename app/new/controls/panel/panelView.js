@@ -24,12 +24,12 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     render: function () {
         this.prerenderingActions();
 
-        //this.removeChildElements();
-
+        this.removeChildElements();
+        console.log(this.model.get('items'));
         this.$el.html(this.template({
-            //items: this.model.get('items')
+            items: this.model.get('items')
         }));
-        //this.renderItemsContents();
+        this.renderItemsContents();
 
         this.bindUIElements();
 
@@ -63,30 +63,33 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     },
 
     updateHeader: function () {
+        var model = this.model;
+
         this.ui.header.empty();
-        var headerTemplate = this.model.get('headerTemplate');
+        var headerTemplate = model.get('headerTemplate');
         if (typeof headerTemplate === 'function') {
-            this.ui.header.append(headerTemplate().render());
+            var header = model.get('header');
+            this.ui.header.append(headerTemplate(null, {value: header}).render());
         }
     },
 
 
 
-    //renderItemsContents: function () {
-    //    var $items = this.$el.find('.pl-stack-panel-i'),
-    //        items = this.model.get('items'),
-    //        itemTemplate = this.model.get('itemTemplate'),
-    //        that = this,
-    //        element, item;
-    //
-    //    $items.each(function (i, el) {
-    //        item = items.getByIndex(i);
-    //        element = itemTemplate(undefined, {item: item, index: i});
-    //        that.addChildElement(element);
-    //        $(el)
-    //            .append(element.render());
-    //    });
-    //},
+    renderItemsContents: function () {
+        var $items = this.$el.find('.pl-panel-i'),
+            items = this.model.get('items'),
+            itemTemplate = this.model.get('itemTemplate'),
+            that = this,
+            element, item;
+
+        $items.each(function (i, el) {
+            item = items.getByIndex(i);
+            element = itemTemplate(undefined, {item: item, index: i});
+            that.addChildElement(element);
+            $(el)
+                .append(element.render());
+        });
+    },
     //
     //initOrientation: function () {
     //    this.listenTo(this.model, 'change:orientation', this.updateOrientation);

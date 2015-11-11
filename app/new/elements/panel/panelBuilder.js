@@ -35,7 +35,11 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
             //Header указывает на DataBinding
             var
                 builder = params.builder,
-                binding = builder.buildType('PropertyBinding', metadata.Header, {parent: element, parentView: params.parentView});
+                binding = builder.buildType('PropertyBinding', metadata.Header, {
+                    parent: element,
+                    parentView: params.parentView,
+                    basePathOfProperty: params.basePathOfProperty
+                });
 
             binding.bindElement(element, 'header');
         } else {
@@ -112,9 +116,8 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
     buildDefaultHeaderTemplate: function (params) {
 
         return function (context, args) {
-            var value = params.element.getHeader();
             var label = new Label(this);
-            label.setText(value);
+            label.setText(args.value);
             return label;
         }
     },
