@@ -38,6 +38,10 @@ this.BeforeScenario( function(scenario, callback) {
 		});
 });
 
+this.AfterFeatures(function(){
+	console.log("Tests finished!");
+});
+
 this.AfterScenario( function(scenario, callback) {
 	window.configWindow.close();
 	callback();
