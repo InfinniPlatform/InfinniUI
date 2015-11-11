@@ -33,6 +33,22 @@ _.extend(ButtonBuilder.prototype, {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name);
             });
         }
-    }
+    },
+
+    buildContentTemplate: function (templateMetadata, params) {
+        var element = params.element;
+        var builder = params.builder;
+        var basePathOfProperty = params.basePathOfProperty;
+
+        return function(context, args) {
+            var argumentForBuilder = {
+                parent: params.element,
+                parentView: params.parentView,
+                basePathOfProperty: basePathOfProperty
+            };
+
+            return builder.build(templateMetadata, argumentForBuilder);
+        };
+    },
 });
 
