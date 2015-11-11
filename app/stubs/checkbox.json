@@ -318,48 +318,29 @@
           "Cell": {
             "ColumnSpan": 9,
             "Items": [{
-              "ExtensionPanel": {
-                "ExtensionName":"Testt",
-                "Parameters": [
+              "ScrollPanel": {
+                "Name":"ScrollPanel_1",
+                "Items": [{
+                  "Label": {
+                    "Text": "Label 1"
+                  }
+                },
                   {
-                    "Name": "p1",
-                    "Value": {
-                      "PropertyBinding": {
-                        "Source": "BloodGroupDataSource",
-                        "Property": ""
-                      }
+                    "Label": {
+                      "Text": "Label 2"
+                    }
+                  },
+                  {
+                    "Label": {
+                      "Text": "Label 3"
+                    }
+                  },
+                  {
+                    "Label": {
+                      "Text": "Label 4"
                     }
                   }
-                ],
-                "Items": [{
-                    "Panel": {
-                      "OnExpanded": {
-                        "Name": "OnExpanded"
-                      },
-                      "OnCollapsed": {
-                        "Name": "OnCollapsed"
-                      },
-                      "OnExpanding": {
-                        "Name": "OnExpanding"
-                      },
-                      "OnCollapsing": {
-                        "Name": "OnCollapsing"
-                      },
-                      "~HeaderTemplate": {
-                        "Label": {
-                          "Text": "Static text"
-                        }
-                      },
-                      "~Header": "My panel's header",
-                      "Header": {
-                        "Source": "BloodGroupDataSource",
-                        "Property": "0.DisplayName"
-                      },
-                      "~Collapsed": true,
-                      "Collapsible": true,
-                      "Items": []
-                    }
-                  }]
+                ]
               }
             }]
           }

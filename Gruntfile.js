@@ -14,6 +14,7 @@
             'app/utils/strict.js',
             'app/utils/namespace.js',
             'app/element/**/metadata.js', // old
+            'app/new/elements/**/metadata/*.js',
             'app/config.js',
             'app/utils/**/*.js',
             'app/messaging/**/*.js',
@@ -57,7 +58,9 @@
             '!app/controls/comboBox/**/*.*',
             '!app/element/dataElement/comboBox/**/*.*',
             '!app/controls/panel/**/*.*',
-            '!app/element/layoutPanel/panel/**/*.*'
+            '!app/element/layoutPanel/panel/**/*.*',
+            '!app/controls/scrollPanel/**/*.*',
+            '!app/element/layoutPanel/scrollPanel/**/*.*',
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
