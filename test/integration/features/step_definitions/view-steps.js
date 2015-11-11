@@ -104,3 +104,22 @@ this.Then(/^система отобразит значения выпадающ�
 
     next();
 });
+
+this.Then(/^система отобразит валидационное сообщение "([^"]*)"$/, function(msg, next){
+	var haveToastr = function(){
+		return window.configWindow.$("#toast-container") !== null;
+	};
+	var success = function(){
+		var actual = window.configWindow.$("#toast-container .toast-message")[0].innerHTML;
+		msg = msg.replace(/'/g, '"');
+		if(msg === actual){
+			next();
+		}else{
+			next(new Error("\"" + msg + "\" != \"" + actual + "\""));
+		}
+	};
+	var fail = function(){
+		next(new Error("Окно не найдено"));
+	};
+	window.testHelpers.waitCondition(haveToastr, success, fail);
+});
