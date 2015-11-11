@@ -10,6 +10,17 @@ this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonName, n
     }
 });
 
+this.When(/^я нажму на ссылку "([^"]*)"$/, function (linkName, next) {
+    try {
+		var link = window.currentViewContext.Controls[linkName];
+		chai.assert.isDefined(link);
+        link.control.controlView.$el.click();
+		next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 this.When(/^я нажму на выпадающий список кнопок "([^"]*)"$/, function (buttonName, next) {
     try {
         var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
