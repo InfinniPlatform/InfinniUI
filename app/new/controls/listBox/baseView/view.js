@@ -65,7 +65,9 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var selectedItem = this.model.get('selectedItem'),
             indexOfItem = this.model.itemIndexByItem(selectedItem);
 
-        this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
+        if(indexOfItem >= 0){
+            this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
+        }
     },
 
     render: function () {

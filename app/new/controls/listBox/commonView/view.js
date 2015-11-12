@@ -17,7 +17,7 @@ var CommonListBoxView = BaseListBoxView.extend({
         $listBox.get(0).addEventListener('click', function(e){
             e = $.event.fix(e);
             var $el = $(e.target),
-                $currentListItem, itemValue;
+                $currentListItem, item;
 
             while($el.get(0) != $listBox.get(0)){
                 if($el.hasClass('pl-listbox-i')){
@@ -28,8 +28,10 @@ var CommonListBoxView = BaseListBoxView.extend({
             }
 
             if($currentListItem.length > 0){
-                itemValue = $currentListItem.data('plDataItem');
-                that.model.toggleValue(itemValue);
+                item = $currentListItem.data('pl-data-item');
+                that.model.toggleValue(item);
+
+                that.model.set('selectedItem', item);
             }
 
         }, true);
