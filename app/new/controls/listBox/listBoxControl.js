@@ -11,8 +11,8 @@ _.extend(ListBoxControl.prototype, {
     },
 
     createControlView: function (model, viewMode) {
-        if(!viewMode || ! viewMode in window.window.InfinniUI.Listbox){
-            viewMode = 'base';
+        if(!viewMode || ! viewMode in window.InfinniUI.Listbox){
+            viewMode = 'common';
         }
 
         var ViewClass = window.InfinniUI.Listbox.viewModes[viewMode];

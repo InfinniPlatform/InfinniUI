@@ -3,10 +3,10 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends LabelView.prototype */{
+var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends LabelView.prototype */{
     className: 'pl-label',
 
-    template: InfinniUI.Template["new/controls/label/template/label.tpl.html"],
+    template: InfinniUI.Template["new/controls/label/commonView/template/label.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.label-control'
@@ -103,3 +103,5 @@ var LabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
     }
 
 }));
+
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Label.viewModes.common', CommonLabelView);
