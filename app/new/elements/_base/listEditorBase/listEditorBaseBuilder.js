@@ -12,7 +12,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
     applyMetadata: function (params) {
         var itemsBinding;
 
-        var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call(this, params);
+        var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call(this, params),
             itemsBinding = applyingMetadataResult.itemsBinding,
             applyingMetadataResult2;
 
