@@ -181,7 +181,17 @@
         },
         {
           "Button": {
-            "Text": "My Button"
+            "ContentTemplate": {
+              "Label":{
+                "Name": "b1",
+                "Value":{
+                  "PropertyBinding": {
+                    "Source": "BloodGroupDataSource",
+                    "Property": "$.DisplayName"
+                  }
+                }
+              }
+            }
           }
         },
         {
