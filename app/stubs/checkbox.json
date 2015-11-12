@@ -323,10 +323,57 @@
             }
           }]
         }
-      }]
+      },
+        {
+          "Cell": {
+            "ColumnSpan": 9,
+            "Items": [{
+              "ScrollPanel": {
+                "Name":"ScrollPanel_1",
+                "Items": [{
+                  "Label": {
+                    "Text": "Label 1"
+                  }
+                },
+                  {
+                    "Label": {
+                      "Text": "Label 2"
+                    }
+                  },
+                  {
+                    "Label": {
+                      "Text": "Label 3"
+                    }
+                  },
+                  {
+                    "Label": {
+                      "Text": "Label 4"
+                    }
+                  }
+                ]
+              }
+            }]
+          }
+        }]
     }
   }],
   "Scripts": [
+    {
+      "Name": "OnExpanded",
+      "Body": "console.log('OnExpanded');"
+    },
+    {
+      "Name": "OnCollapsed",
+      "Body": "console.log('OnCollapsed');"
+    },
+    {
+      "Name": "OnExpanding",
+      "Body": "console.log('OnExpanding');"
+    },
+    {
+      "Name": "OnCollapsing",
+      "Body": "console.log('OnCollapsing');"
+    },
     {
       "Name": "OnValueChanged",
       "Body": "console.log('OnValueChanged', args);"

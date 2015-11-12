@@ -36,9 +36,9 @@ _.extend(ContainerBuilder.prototype, {
         var metadata = params.metadata;
         var itemsBinding = null;
 
-        if($.isArray(metadata.Items)){  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
+        if(Array.isArray(metadata.Items)){  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
             this.initNotTemplatingItems(params);
-        }else{                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
+        }else if (metadata.Items) {                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
             itemsBinding = this.initTemplatingItems(params);
         }
 
