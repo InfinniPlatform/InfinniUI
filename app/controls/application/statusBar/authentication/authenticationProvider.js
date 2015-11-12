@@ -155,6 +155,31 @@ _.extend(AuthenticationProvider.prototype, {
         this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
     },
 
+    setSessionData: function(claimType, claimValue, resultCallback, errorCallback) {
+        var claim = {
+            "id" : null,
+            "changesObject" : {                
+                "ClaimType": claimType,
+                "ClaimValue": claimValue
+            },
+            "replace" : false
+        };
+
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
+    },
+
+    getSessionData: function(claimType, resultCallback, errorCallback) {
+        var claim = {
+            "id" : null,
+            "changesObject" : {                
+                "ClaimType": claimType,                
+            },
+            "replace" : false
+        };
+
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getclaim', claim, resultCallback, errorCallback);
+    },
+
     /**
      * Выход пользователя из системы.
      *
