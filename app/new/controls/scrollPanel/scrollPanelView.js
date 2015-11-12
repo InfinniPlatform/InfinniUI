@@ -47,6 +47,10 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
         this.updateVerticalScroll();
     },
 
+    /**
+     * @protected
+     * @description Set one of CSS class: "pl-horizontal-scroll-(visible|hidden|auto)",
+     */
     updateHorizontalScroll: function () {
         var name = '';
         switch (this.model.get('horizontalScroll')) {
@@ -64,6 +68,10 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
         this.switchClass('pl-horizontal-scroll', name, this.$el);
     },
 
+    /**
+     * @protected
+     * @description Set one of CSS class: "pl-vertical-scroll-(visible|hidden|auto)",
+     */
     updateVerticalScroll: function (model, value) {
         var name = '';
         switch (this.model.get('verticalScroll')) {
@@ -96,16 +104,6 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
                 .append(element.render());
         });
     },
-    //
-    //initOrientation: function () {
-    //    this.listenTo(this.model, 'change:orientation', this.updateOrientation);
-    //    this.updateOrientation();
-    //},
-
-    //updateOrientation: function () {
-    //    var orientation = this.model.get('orientation');
-    //    this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
-    //},
 
     updateGrouping: function () {
 

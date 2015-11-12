@@ -11,7 +11,7 @@ var ScrollPanelModel = ContainerModel.extend(/** @lends ScrollPanelModel.prototy
     defaults: _.defaults(
         {
             horizontalScroll: ScrollVisibility.auto,
-            collapsed: ScrollVisibility.auto
+            verticalScroll: ScrollVisibility.auto
         },
         ContainerModel.prototype.defaults
     )

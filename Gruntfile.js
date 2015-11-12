@@ -60,7 +60,7 @@
             '!app/controls/panel/**/*.*',
             '!app/element/layoutPanel/panel/**/*.*',
             '!app/controls/scrollPanel/**/*.*',
-            '!app/element/layoutPanel/scrollPanel/**/*.*',
+            '!app/element/layoutPanel/scrollPanel/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
