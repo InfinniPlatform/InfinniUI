@@ -16,11 +16,7 @@ _.extend(PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype *
 
     applyMetadata: function (params) {
         ContainerBuilder.prototype.applyMetadata.call(this, params);
-        ButtonBuilder.prototype.applyButtonMetadata.call(this, params);
-    },
+        this.applyButtonMetadata.call(this, params);
+    }
 
-    applyButtonMetadata: ButtonBuilder.prototype.applyButtonMetadata,
-    initTemplatingContent: ButtonBuilder.prototype.initTemplatingContent,
-    buildContentTemplate: ButtonBuilder.prototype.buildContentTemplate
-
-});
+}, buttonBuilderMixin);

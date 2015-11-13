@@ -33,8 +33,8 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
     updateValue: function(){
         var textForLabel = this.getLabelText();
-        var $control = this.ui.control || this.$el;
-        $control
+        var $label = this.getLabelElement();
+        $label
             .text(textForLabel)
             .attr('title', textForLabel);
     },
@@ -45,12 +45,12 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
     updateTextWrapping: function(){
         var textWrapping = this.model.get('textWrapping');
-        this.ui.control.toggleClass('pl-text-wrapping', textWrapping);
+        this.getLabelElement().toggleClass('pl-text-wrapping', textWrapping);
     },
 
     updateTextTrimming: function(){
         var textTrimming = this.model.get('textTrimming');
-        this.ui.control.toggleClass('pl-text-trimming', textTrimming);
+        this.getLabelElement().toggleClass('pl-text-trimming', textTrimming);
     },
 
     updateText: function () {
@@ -101,6 +101,10 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
         }
 
         return text;
+    },
+
+    getLabelElement: function(){
+        return this.ui.control;
     }
 
 }));

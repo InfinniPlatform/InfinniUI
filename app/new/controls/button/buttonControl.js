@@ -18,20 +18,13 @@ _.extend(ButtonControl.prototype, {
 
     createControlView: function (model, viewMode) {
         if(!viewMode || ! viewMode in window.InfinniUI.Button){
-            viewMode = 'link';
+            viewMode = 'common';
         }
 
         var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
 
         return new ViewClass({model: model});
-    },
-
-    onClick: function (handler) {
-        this.controlView.on('onClick', handler);
-    },
-
-    click: function () {
-        this.controlView.trigger('onClick');
     }
-});
+
+}, buttonControlMixin);
 

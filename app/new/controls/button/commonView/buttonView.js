@@ -70,7 +70,7 @@ var CommonButtonView = ControlView.extend({
     },
 
     getButtonElement: function(){
-        return this.ui.button || this.$el;
+        return this.ui.button;
     }
 
 });

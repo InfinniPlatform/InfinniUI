@@ -15,6 +15,10 @@ var LinkButtonView = CommonButtonView.extend({
     template: function(){return '';},
 
     UI: {
+    },
+
+    getButtonElement: function(){
+        return this.$el;
     }
 
 });

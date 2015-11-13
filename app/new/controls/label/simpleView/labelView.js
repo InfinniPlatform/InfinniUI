@@ -9,7 +9,11 @@ var SimpleLabelView = CommonLabelView.extend({
     template: function(){return '';},
     UI: _.extend({}, editorBaseViewMixin.UI, {
 
-    })
+    }),
+
+    getLabelElement: function(){
+        return this.$el;
+    }
 
 });
 

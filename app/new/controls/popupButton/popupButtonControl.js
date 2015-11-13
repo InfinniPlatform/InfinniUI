@@ -4,7 +4,7 @@ function PopupButtonControl(parent) {
 
 _.inherit(PopupButtonControl, ContainerControl);
 
-_.extend(PopupButtonControl.prototype, ButtonControl.prototype, /** @lends PopupButtonControl.prototype */ {
+_.extend(PopupButtonControl.prototype, /** @lends PopupButtonControl.prototype */ {
 
     createControlModel: function () {
         return new PopupButtonModel();
@@ -13,5 +13,6 @@ _.extend(PopupButtonControl.prototype, ButtonControl.prototype, /** @lends Popup
     createControlView: function (model) {
         return new PopupButtonView({model: model});
     }
-});
+
+}, buttonControlMixin);
 
