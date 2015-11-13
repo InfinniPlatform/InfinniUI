@@ -1,9 +1,9 @@
 
 this.BeforeScenario( function(scenario, callback) {
 	console.log('Before scenario');
-		//delete all indices, create repository and restore
+		//delete indices, create repository and restore
 		client.indices.delete({
-			"index": "_all",
+			"index": "administrationcustomization,authorization,pta",
 			"waitForCompletion": true
 		}).then(function(){
 			client.snapshot.createRepository({
