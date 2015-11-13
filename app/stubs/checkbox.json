@@ -34,6 +34,38 @@
     }
   ],
   "Items": [{
+    "MenuBar": {
+      "Items": [
+        {
+            "PopupButton": {
+            "Text": "Delete",
+            "Items": [
+              {
+                "Button": {
+                  "Text": "Delete rows"
+                }
+              },
+              {
+                "Button": {
+                  "Text": "Delete columns"
+                }
+              },
+              {
+                "Button": {
+                  "Text": "Delete cells"
+                }
+              }
+            ]
+          }
+        },{
+          "Button": {
+            "Text": "Delete columns"
+          }
+        }
+      ]
+    }
+
+  },{
     "TablePanel": {
       "Name": "",
       "Items": [
