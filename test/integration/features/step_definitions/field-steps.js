@@ -46,8 +46,8 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
             var field = window.currentViewContext.Controls[fieldName];
             chai.assert.isDefined(field);
 
-            var actValue = field.getValue();
-            chai.assert.isTrue((actValue == value) || (actValue.DisplayName == value), actValue + ' != ' + value + ' and ' + actValue.DisplayName + ' != ' + value);
+            var actValue = field.getText();
+            chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
 
             next();
         } catch (err) {
