@@ -2,7 +2,7 @@
  * @class ButtonView
  * @augments ControlView
  */
-var ButtonView = ControlView.extend({
+var CommonButtonView = ControlView.extend({
 
     className: 'pl-button',
 
@@ -29,20 +29,21 @@ var ButtonView = ControlView.extend({
             content: content
         };
         var contentElement;
+        var $button = this.getButtonElement();
 
         if(contentTemplate){
             contentElement = contentTemplate(null, args);
-            this.ui.button.html(contentElement.render());
+            $button.html(contentElement.render());
 
         }else if(content !== undefined && content !== null){
-            this.ui.button.html(content);
+            $button.html(content);
         }
     },
 
     updateText: function(){
         var textForButton = this.model.get('text');
         if (typeof textForButton == 'string'){
-            this.ui.button.html(textForButton);
+            this.getButtonElement().html(textForButton);
         }
     },
 
@@ -50,7 +51,7 @@ var ButtonView = ControlView.extend({
         ControlView.prototype.updateEnabled.call(this);
 
         var isEnabled = this.model.get('enabled');
-        this.ui.button.prop('disabled', !isEnabled);
+        this.getButtonElement().prop('disabled', !isEnabled);
     },
 
     render: function () {
@@ -66,6 +67,13 @@ var ButtonView = ControlView.extend({
 
     onClickHandler: function (event) {
         this.trigger('onClick');
+    },
+
+    getButtonElement: function(){
+        return this.ui.button || this.$el;
     }
 
 });
+
+
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.common', CommonButtonView);

@@ -16,8 +16,14 @@ _.extend(ButtonControl.prototype, {
         return new ButtonModel();
     },
 
-    createControlView: function (model) {
-        return new ButtonView({model: model});
+    createControlView: function (model, viewMode) {
+        if(!viewMode || ! viewMode in window.InfinniUI.Button){
+            viewMode = 'link';
+        }
+
+        var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
+
+        return new ViewClass({model: model});
     },
 
     onClick: function (handler) {

@@ -33,7 +33,8 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
     updateValue: function(){
         var textForLabel = this.getLabelText();
-        this.ui.control
+        var $control = this.ui.control || this.$el;
+        $control
             .text(textForLabel)
             .attr('title', textForLabel);
     },
