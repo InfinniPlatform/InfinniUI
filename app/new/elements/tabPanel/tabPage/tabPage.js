@@ -65,6 +65,18 @@ TabPage.prototype.onClosed = function (handler) {
 };
 
 /**
+ * @description Возвращает значение, определябщее что данная вкладка выбрана
+ * @returns {boolean}
+ */
+TabPage.prototype.getSelected = function () {
+    return this.control.get('selected');
+};
+
+TabPage.prototype.setSelected = function (value) {
+    this.control.set('selected', value);
+};
+
+/**
  * @protected
  * @returns {PanelControl}
  */

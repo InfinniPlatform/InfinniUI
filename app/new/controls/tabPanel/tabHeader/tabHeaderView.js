@@ -14,6 +14,10 @@ var TabHeaderView = Backbone.View.extend({
 
     template: InfinniUI.Template["new/controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
 
+    events: {
+        "click": "onClickHandler"
+    },
+
     UI: {
         label: '.pl-tabheader-text'
     },
@@ -48,10 +52,19 @@ var TabHeaderView = Backbone.View.extend({
     },
 
     /**
+     *
+     * @param {boolean} value
+     */
+    setSelected: function (value) {
+        this.model.set('selected', value);
+    },
+
+    /**
      * @protected
      */
     updateProperties: function () {
         this.updateTextHandler();
+        this.updateSelectedHandler();
     },
 
     /**
@@ -60,6 +73,7 @@ var TabHeaderView = Backbone.View.extend({
     onRenderedHandler: function () {
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
+        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
     },
 
     /**
@@ -68,6 +82,18 @@ var TabHeaderView = Backbone.View.extend({
     updateTextHandler: function () {
         var text = this.model.get('text');
         this.ui.label.text(text);
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedHandler: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('pl-active active', selected);
+    },
+
+    onClickHandler: function (event) {
+        this.trigger('selected');
     }
 
 });

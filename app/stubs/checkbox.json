@@ -329,7 +329,7 @@
             "ColumnSpan": 9,
             "Items": [{
               "TabPanel": {
-                "HeaderLocation": "Left",
+                "HeaderLocation": "Right",
                 "Items": [
                   {
                     "TabPage": {

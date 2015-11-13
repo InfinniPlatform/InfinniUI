@@ -4,7 +4,7 @@
  */
 var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
 
-    className: 'pl-tabpage',
+    className: 'pl-tabpage hidden',
 
     template: InfinniUI.Template["new/controls/tabPanel/tabPage/template/tabPage.tpl.html"],
 
@@ -14,19 +14,19 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
 
     initHandlersForProperties: function () {
         ContainerView.prototype.initHandlersForProperties.call(this);
-        //this.listenTo(this.model, 'change:tabPageProperty', this.updateTabPageProperty);
+        this.listenTo(this.model, 'change:selected', this.updateSelected);
     },
 
     updateProperties: function () {
         ContainerView.prototype.updateProperties.call(this);
-        //this.updateTabPageProperty();
+        this.updateSelected();
     },
 
     render: function () {
         this.prerenderingActions();
 
         this.removeChildElements();
-        console.log(this.model.get('items'));
+        
         this.$el.html(this.template({
             items: this.model.get('items')
         }));
@@ -55,6 +55,11 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
             $(el)
                 .append(element.render());
         });
+    },
+
+    updateSelected: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('hidden', !selected);
     },
 
     /**

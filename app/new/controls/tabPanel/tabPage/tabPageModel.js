@@ -10,7 +10,8 @@ var TabPageModel = ContainerModel.extend(/** @lends TabPageModel.prototype */ {
 
     defaults: _.defaults(
         {
-            canClose: false
+            canClose: false,
+            selected: false
         },
         ContainerModel.prototype.defaults
     )

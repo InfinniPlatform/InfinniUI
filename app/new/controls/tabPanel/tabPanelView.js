@@ -23,6 +23,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         ContainerView.prototype.initHandlersForProperties.call(this);
         this.listenTo(this.model, 'change:headerLocation', this.onChangeHeaderLocation);
         this.listenTo(this.model, 'change:headerOrientation', this.updateHeaderOrientation);
+        this.listenTo(this.model, 'change:selectedItem', this.updateSelectedItem);
     },
 
     render: function () {
@@ -31,6 +32,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         this.renderTemplate(this.getTemplate());
 
         this.renderItemsContents();
+        this.checkSelectedItem();
 
         this.postrenderingActions();
 
@@ -47,19 +49,61 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         this.removeChildElements();
         this.ui.content.empty();
+        this.model.set('selectedItemIndex', -1);
 
+        var data = [];
         items.forEach(function (item, index) {
-            var
-                elTab = this.renderTabContent(item, index);
-
-            this.renderTabHeader(elTab, item, index);
+            data.push({
+                tabElement: this.renderTabContent(item, index),
+                item: item,
+                index: index
+            });
         }, this);
+
+        this.renderTabHeaders(data);
     },
 
-    renderTabHeader: function (tabPageElement, item, index) {
+    /**
+     * @protected
+     * @param {Array.<Object>} data
+     */
+    renderTabHeaders: function (data) {
+        var header,
+            model = this.model,
+            items = model.get('items'),
+            selectedItem = model.get('selectedItem');
+
+        if (Array.isArray(this.tabHeaders)) {
+            while (header = this.tabHeaders.pop()) {
+                this.stopListening(header);
+                header.remove();
+            }
+        }
+
+        this.tabHeaders = data.map(function (data) {
+            var selected = items.indexOf(data.item) !== -1;
+            var header = this.renderTabHeader(data.tabElement, selected);
+
+            this.listenTo(header, 'selected', function () {
+                model.set('selectedItem', data.tabElement);
+            });
+
+            return header;
+        }, this);
+
+    },
+
+    /**
+     *
+     * @param {TabPage} tabPageElement
+     * @param {boolean} selected
+     * @returns {TabHeaderView}
+     */
+    renderTabHeader: function (tabPageElement, selected) {
         var header = new TabHeaderView({
             text: tabPageElement.getText(),
-            canClose: tabPageElement.getCanClose()
+            canClose: tabPageElement.getCanClose(),
+            selected: selected
         });
 
         tabPageElement.onPropertyChanged('text', function () {
@@ -71,6 +115,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         });
 
         this.ui.header.append(header.render().$el);
+        return header;
     },
 
     renderTabContent: function (item, index) {
@@ -120,6 +165,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
     updateProperties: function () {
         ContainerView.prototype.updateProperties.call(this);
         this.updateHeaderOrientation();
+        this.updateSelectedItem();
     },
 
     /**
@@ -136,6 +182,67 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
     updateHeaderOrientation: function () {
         //@TODO Реализовать TabPanel.updateHeaderOrientation()
     },
+
+
+    /**
+     * @protected
+     * @description Проверяет чтобы одна из вкладок была активна
+     */
+    checkSelectedItem: function () {
+        var
+            model = this.model,
+            tabPages = this.childElements,
+            selectedItem = model.get('selectedItem');
+
+        if (!Array.isArray(tabPages)) {
+            model.set('selectedItem', null);
+        } else if (tabPages.length) {
+            if (tabPages.indexOf(selectedItem) === -1) {
+                model.set('selectedItem', tabPages[0]);
+            }
+        } else {
+            model.set('selectedItem', null);
+        }
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedItem: function () {
+        if (!this.wasRendered) {
+            return;
+        }
+
+        var
+            tabPages = this.childElements,
+            tabHeaders = this.tabHeaders,
+            selectedItem = this.model.get('selectedItem'),
+            selectedIndex = tabPages.indexOf(selectedItem);
+
+        //TabPage
+        if (Array.isArray(tabPages)) {
+            tabPages.forEach(function (tabPage) {
+                tabPage.setSelected(false);
+            });
+
+            if (selectedIndex !== -1) {
+                tabPages[selectedIndex].setSelected(true);
+            }
+        }
+
+        //TabHeader
+        if (Array.isArray(tabHeaders)) {
+            tabHeaders.forEach(function (tabHeader) {
+                tabHeader.setSelected(false);
+            });
+            if (selectedIndex !== -1) {
+                tabHeaders[selectedIndex].setSelected(true);
+            }
+        }
+
+    },
+
+
 
     /**
      * @protected
