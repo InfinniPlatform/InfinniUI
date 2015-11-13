@@ -200,20 +200,17 @@
             "Items": [
               {
                 "Button": {
-                  "Text": "Delete rows",
-                  "ViewMode": "link"
+                  "Text": "Delete rows"
                 }
               },
               {
                 "Button": {
-                  "Text": "Delete columns",
-                  "ViewMode": "link"
+                  "Text": "Delete columns"
                 }
               },
               {
                 "Button": {
-                  "Text": "Delete cells",
-                  "ViewMode": "link"
+                  "Text": "Delete cells"
                 }
               }
             ]

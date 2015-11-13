@@ -11,7 +11,8 @@ var PopupButtonView = ContainerView.extend({
     },
 
     UI: {
-        button: '.pl-popup-button__button'
+        button: '.pl-popup-button__button',
+        grip: '.pl-popup-button__grip'
     },
 
     updateProperties: function(){
@@ -79,7 +80,9 @@ var PopupButtonView = ContainerView.extend({
 
         this.$dropdown.addClass('open');
         this.alignDropdown();
-        new ActionOnLoseFocus(this.$dropdown, function(){
+
+        var $ignoredElements = this.$dropdown.add (this.ui.grip);
+        new ActionOnLoseFocus($ignoredElements, function(){
             that.close();
         });
     },
@@ -103,6 +106,8 @@ var PopupButtonView = ContainerView.extend({
     onClickGripHandler: function(){
         if(!this.$dropdown.hasClass('open')){
             this.open();
+        }else{
+            this.close();
         }
     },
 
