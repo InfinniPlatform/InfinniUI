@@ -26,6 +26,10 @@ _.extend(Label.prototype, {
 
         getTextWrapping: function () {
             return this.control.get('textWrapping');
+        },
+
+        getText: function(){
+            return this.control.get('text') || this.control.get('value');
         }
 
     },
