@@ -28,6 +28,7 @@
             '!app/utils/exel-builder/*.js',
             '!app/element/dataElement/listBox/**/*.*'
         ],
+        extFiles = [],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
             'bower_components/underscore/underscore.js',
@@ -102,6 +103,10 @@
             app: {
                 src: appFiles,
                 dest: 'out/app.js'
+            },
+            extensions: {
+                src: extFiles,
+                dest: 'out/extension.js'
             },
             vendor: {
                 src: vendorFiles,
@@ -310,7 +315,8 @@
     grunt.task.registerTask('build',
         function (extensionPath) {
             if (extensionPath) {
-                var tmp = appFiles.slice(0),
+                var
+                    tmp = [],
                     tmpLess = appStyleFiles.slice(0),
                     tmpFavicon = grunt.config.get('copy.favicon.src').slice(0),
                     tmpPdf = grunt.config.get('copy.pdf.src').slice(0),
@@ -327,7 +333,7 @@
                 grunt.config.set('copy.png.src', tmpPNG);
                 grunt.config.set('copy.favicon.src', tmpFavicon);
                 grunt.config.set('copy.pdf.src', tmpPdf);
-                grunt.config.set('concat.app.src', tmp);
+                grunt.config.set('concat.extensions.src', tmp);
                 grunt.config.set('less.default.src', tmpLess);
             }else{
                 grunt.config.set('concat.app.src', appFiles);
