@@ -346,6 +346,7 @@
                   {
                     "TabPage": {
                       "Text": "Header of Page2",
+                      "CanClose": true,
                       "Items": [
                         {
                           "Label": {

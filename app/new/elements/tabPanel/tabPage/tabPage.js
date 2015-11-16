@@ -43,9 +43,21 @@ TabPage.prototype.setCanClose = function (value) {
 
 /**
  * @description Закрывает страницу
+ * @param {Function} [success] Необязательный. Обработчик события о том, что страница была закрыта
+ * @param {Function} [error] Необязательный. Обработчик события о том, что при закрытии произошла ошибка
  */
-TabPage.prototype.close = function () {
+TabPage.prototype.close = function (success, error) {
+    var canClose = this.getCanClose();
+    if (canClose) {
+        //@TODO Добавить обработку сообщений onClosing
+        //canClose = this.control.trigger('closing');
+    }
 
+    if (canClose) {
+        typeof error === 'function' && error();
+    } else {
+        typeof success === 'function' && success();
+    }
 };
 
 /**

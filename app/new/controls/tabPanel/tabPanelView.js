@@ -88,6 +88,10 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
                 model.set('selectedItem', data.tabElement);
             });
 
+            this.listenTo(header, 'close', function () {
+                data.tabElement.close();
+            });
+
             return header;
         }, this);
 

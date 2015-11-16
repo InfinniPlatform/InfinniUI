@@ -26,7 +26,7 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
         this.prerenderingActions();
 
         this.removeChildElements();
-        
+
         this.$el.html(this.template({
             items: this.model.get('items')
         }));

@@ -15,11 +15,13 @@ var TabHeaderView = Backbone.View.extend({
     template: InfinniUI.Template["new/controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
 
     events: {
-        "click": "onClickHandler"
+        "click": "onClickHandler",
+        "click .pl-close": "onClickCloseHandler"
     },
 
     UI: {
-        label: '.pl-tabheader-text'
+        label: '.pl-tabheader-text',
+        close: '.pl-close'
     },
 
     initialize: function (options) {
@@ -64,6 +66,7 @@ var TabHeaderView = Backbone.View.extend({
      */
     updateProperties: function () {
         this.updateTextHandler();
+        this.updateCanClose();
         this.updateSelectedHandler();
     },
 
@@ -74,6 +77,7 @@ var TabHeaderView = Backbone.View.extend({
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
         this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
+        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
     },
 
     /**
@@ -87,6 +91,14 @@ var TabHeaderView = Backbone.View.extend({
     /**
      * @protected
      */
+    updateCanClose: function () {
+        var canClose = this.model.get('canClose');
+        this.ui.close.toggleClass('hidden', !canClose);
+    },
+
+    /**
+     * @protected
+     */
     updateSelectedHandler: function () {
         var selected = this.model.get('selected');
         this.$el.toggleClass('pl-active active', selected);
@@ -94,6 +106,11 @@ var TabHeaderView = Backbone.View.extend({
 
     onClickHandler: function (event) {
         this.trigger('selected');
+    },
+
+    onClickCloseHandler: function (event) {
+        event.stopPropagation();
+        this.trigger('close');
     }
 
 });
