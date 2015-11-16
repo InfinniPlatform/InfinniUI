@@ -60,7 +60,11 @@
           }
         },{
           "Button": {
-            "Text": "Delete columns",
+            "ContentTemplate": {
+              "Icon": {
+                "Value": "anchor"
+              }
+            },
             "HorizontalAlignment": "Right"
           }
         }
