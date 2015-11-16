@@ -4,8 +4,8 @@
  * @constructor
  * @augments Control
  */
-function ButtonControl(parent) {
-    _.superClass(ButtonControl, this, parent);
+function ButtonControl(viewMode) {
+    _.superClass(ButtonControl, this, viewMode);
 }
 
 _.inherit(ButtonControl, Control);

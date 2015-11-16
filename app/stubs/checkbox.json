@@ -55,11 +55,13 @@
                   "Text": "Delete cells"
                 }
               }
-            ]
+            ],
+            "HorizontalAlignment": "Right"
           }
         },{
           "Button": {
-            "Text": "Delete columns"
+            "Text": "Delete columns",
+            "HorizontalAlignment": "Right"
           }
         }
       ]
