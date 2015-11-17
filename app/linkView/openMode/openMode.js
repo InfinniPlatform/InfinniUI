@@ -66,9 +66,13 @@ var OpenMode = function () {
 
         //Получаем следущее доступное приложение
         var ln = applications.length;
-        if (ln > 1) {
-            var next = (i < ln) ? applications[i] : applications[ln - 1];
-            return next.applicationView;
+        if (ln > 0) {
+            if(i != -1){
+                var next = (i < ln) ? applications[i] : applications[ln - 1];
+                return next.applicationView;
+            }else{
+                return applications[ln - 1];
+            }
         }
     };
 
