@@ -29,6 +29,9 @@
             'app/new/elements/_base/**/*.js',
             'app/new/elements/**/*.js',
 
+            'app/actions/*.js',
+            'app/actions/**/*.js',
+
             'app/**/*.js',
 
             'extensions/**/*.js',

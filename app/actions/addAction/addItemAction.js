@@ -2,44 +2,19 @@ function AddItemAction(parentView){
     _.superClass(AddItemAction, this, parentView);
 }
 
-_.inherit(AddItemAction, BaseAction);
+_.inherit(AddItemAction, BaseEditAction);
 
 
 _.extend(AddItemAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView');
-        var that = this;
-
-        linkView.createView(function(createdView){
-            that.handleViewReady(createdView, callback);
-        });
-    },
-
-    handleViewReady: function(editView, callback){
-        var sourceSourceName = this.getProperty('SourceSource');
-        var editDataSource = editView.getContext().dataSources[sourceSourceName];
-        var that = this;
-
-        this.setProperty('editView', editView);
+    setSelectedItem: function(){
+        var editDataSource = this.getEditDataSource();
 
         editDataSource.setItems([{}]);
         editDataSource.setSelectedItem({});
-
-        editView.open();
-
-        editView.onClosed(function(){
-            var dialogResult = editView.getDialogResult();
-
-            if (dialogResult == DialogResult.accepted) {
-                that.handleClosingView(callback);
-            }
-        });
     },
 
-    handleClosingView: function(callback){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('SourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
+    save: function(){
+        var editDataSource =  this.getEditDataSource();
 
         var destinationSourceName = this.getProperty('DestinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
@@ -50,9 +25,13 @@ _.extend(AddItemAction.prototype, {
         var items = _.clone(destinationSource.getProperty(destinationProperty));
         items.push(newItem);
         destinationSource.setProperty(destinationProperty, items);
+    },
 
-        if (_.isFunction(callback)) {
-            callback();
-        }
+    getEditDataSource: function(){
+        var editView = this.getProperty('editView');
+        var editSourceName = this.getProperty('SourceSource');
+        var editDataSource = editView.getContext().dataSources[editSourceName];
+
+        return editDataSource;
     }
 });
