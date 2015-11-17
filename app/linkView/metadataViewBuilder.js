@@ -28,7 +28,6 @@ function MetadataViewBuilder() {
         window.providerRegister.build('MetadataDataSource', metadata).getViewMetadata(function (viewMetadata) {
             if (viewMetadata !== null) {
 
-                // Ваша платформа - говно
                 for (var key in viewMetadata.RequestParameters) {
                     var param = viewMetadata.RequestParameters[key];
                     if (metadata.Parameters[param.Name] != param.Value) {
