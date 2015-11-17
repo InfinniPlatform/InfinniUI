@@ -27,11 +27,13 @@
             'app/element/*.js', // old
 
             'app/new/elements/_base/**/*.js',
+            'app/new/elements/listBox/**/*.js',
             'app/new/elements/**/*.js',
 
             'app/**/*.js',
 
             'extensions/**/*.js',
+
             'bootstrap_framework/js/*.js',
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',

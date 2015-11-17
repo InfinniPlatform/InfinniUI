@@ -258,10 +258,6 @@
     }
   }, {
     "ListBox": {
-      "ViewMode": "common",
-
-      "MultiSelect": true,
-
       "Items": {
         "PropertyBinding":{
           "Source": "BloodGroupDataSource",
@@ -304,6 +300,27 @@
       }
     }
   }, {
+    "RadioGroup": {
+
+      "Items": {
+        "PropertyBinding":{
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        }
+      },
+
+      "ItemTemplate":{
+        "Label":{
+          "Value":{
+            "PropertyBinding": {
+              "Source": "BloodGroupDataSource",
+              "Property": "$.DisplayName"
+            }
+          }
+        }
+      }
+    }
+  },{
     "GridPanel":{
       "Items": [{
         "Cell": {

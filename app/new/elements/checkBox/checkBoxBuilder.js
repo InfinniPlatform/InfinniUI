@@ -1,19 +1,21 @@
 function CheckBoxBuilder() {
     _.superClass(CheckBoxBuilder, this);
-    this.initialize_editorBaseBuilder();
 }
 
-_.inherit(CheckBoxBuilder, ElementBuilder);
+_.inherit(CheckBoxBuilder, ListBoxBuilder);
 
 _.extend(CheckBoxBuilder.prototype, {
 
     createElement: function (params) {
-        return new CheckBox(params.parent);
+        var viewMode = params.metadata['ViewMode'] || 'checking';
+        return new ListBox(params.parent, viewMode);
     },
 
     applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-        this.applyMetadata_editorBaseBuilder(params);
+        var element = params.element;
+        ListBoxBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setMultiSelect(true);
     }
 
-}, editorBaseBuilderMixin);
+});
