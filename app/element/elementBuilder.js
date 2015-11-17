@@ -5,7 +5,6 @@
 var ElementBuilder = function () {
 };
 
-//о боги, зачем все это???
 _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
     build: function (context, args){
