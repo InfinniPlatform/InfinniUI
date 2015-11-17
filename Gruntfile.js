@@ -242,6 +242,10 @@
         },
 
         less : {
+            extension: {
+                src: [],
+                dest: 'out/css/extension.css'
+            },
             default: {
                 src: appStyleFiles,
                 dest: 'app/styles/main.css'
@@ -316,25 +320,26 @@
         function (extensionPath) {
             if (extensionPath) {
                 var
+                    path = require('path'),
                     tmp = [],
-                    tmpLess = appStyleFiles.slice(0),
+                    less = [],
                     tmpFavicon = grunt.config.get('copy.favicon.src').slice(0),
                     tmpPdf = grunt.config.get('copy.pdf.src').slice(0),
                     tmpPNG = grunt.config.get('copy.png.src').slice(0);
 
-                tmp.push(extensionPath + outerExtensionScript);
-                tmp.push('!' + extensionPath + outerExtensionIntegrationTest);                
-                tmpLess.push(extensionPath + outerExtensionStyle);
-                tmpLess.push(extensionPath + outerExtensionLessStyle);
-                tmpFavicon.push(extensionPath + outerExtensionFavicon);
-                tmpPdf.push(extensionPath + outerExtensionPdf);
-                tmpPNG.push(extensionPath + outerExtensionPNG);
+                tmp.push(path.join(extensionPath, outerExtensionScript),
+                    '!' + path.join(extensionPath, outerExtensionIntegrationTest));
+                less.push(path.join(extensionPath, outerExtensionStyle),
+                    path.join(extensionPath, outerExtensionLessStyle));
+                tmpFavicon.push(path.join(extensionPath, outerExtensionFavicon));
+                tmpPdf.push(path.join(extensionPath, outerExtensionPdf));
+                tmpPNG.push(path.join(extensionPath, outerExtensionPNG));
 
                 grunt.config.set('copy.png.src', tmpPNG);
                 grunt.config.set('copy.favicon.src', tmpFavicon);
                 grunt.config.set('copy.pdf.src', tmpPdf);
                 grunt.config.set('concat.extensions.src', tmp);
-                grunt.config.set('less.default.src', tmpLess);
+                grunt.config.set('less.extension.src', less);
             }else{
                 grunt.config.set('concat.app.src', appFiles);
                 grunt.config.set('less.default.src', appStyleFiles);
