@@ -79,14 +79,16 @@
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
             'app/utils/exel-builder/excel-builder.dist.js',
-            'app/utils/pdf/build/pdf.js'
+            'app/utils/pdf/build/pdf.js',
+            'bower_components/toastr/toastr.js'
         ],
         appStyleFiles = [
             'app/styles/main.less'
         ],
         vendorCssFiles = [
             'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
-            'bower_components/font-awesome/css/font-awesome.min.css'
+            'bower_components/font-awesome/css/font-awesome.min.css',
+            'bower_components/toastr/toastr.css'
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],

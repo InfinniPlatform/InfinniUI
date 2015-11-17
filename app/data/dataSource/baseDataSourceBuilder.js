@@ -1,6 +1,11 @@
-function BaseDataSourceBuilder(){}
+/**
+ * @constructor
+ * @mixes DataSourceValidationNotifierMixin
+ */
+function BaseDataSourceBuilder() {
+}
 
-_.extend(BaseDataSourceBuilder.prototype, {
+_.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
     build: function (context, args) {
         var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
@@ -11,19 +16,19 @@ _.extend(BaseDataSourceBuilder.prototype, {
         dataSource.resumeUpdate();
 
         /*if(args.parentView.onLoading){
-            args.parentView.onLoading(function () {
-                //dataSource.resumeUpdate();
-                dataSource.updateItems();
-            });
-        }else{
-            //dataSource.resumeUpdate();
-            dataSource.updateItems();
-        }*/
+         args.parentView.onLoading(function () {
+         //dataSource.resumeUpdate();
+         dataSource.updateItems();
+         });
+         }else{
+         //dataSource.resumeUpdate();
+         dataSource.updateItems();
+         }*/
 
         return dataSource;
     },
 
-    applyMetadata: function(builder, parentView, metadata, dataSource){
+    applyMetadata: function (builder, parentView, metadata, dataSource) {
         var idProperty = metadata.IdProperty;
         if (idProperty) {
             dataSource.setIdProperty(idProperty);
@@ -36,11 +41,11 @@ _.extend(BaseDataSourceBuilder.prototype, {
 
         dataSource.setErrorValidator(metadata.ValidationErrors);
         dataSource.setWarningValidator(metadata.ValidationWarnings);
-
+        this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
     },
 
-    createDataSource: function(parent){
+    createDataSource: function (parent) {
         throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
     },
 
@@ -48,7 +53,7 @@ _.extend(BaseDataSourceBuilder.prototype, {
         //Скриптовые обработчики на события
         if (parentView && metadata.OnSelectedItemChanged) {
             dataSource.onSelectedItemChanged(function () {
-                    new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name);
             });
         }
 
@@ -75,3 +80,6 @@ _.extend(BaseDataSourceBuilder.prototype, {
 
     }
 });
+
+
+_.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
