@@ -54,6 +54,11 @@ _.extend(LinkLabel.prototype, {
                     action.execute();
                 }
             }.bind(this));
+        },
+
+        click: function () {
+
+            this.control.click();
         }
 
     },

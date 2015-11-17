@@ -12,6 +12,10 @@ _.extend(LinkLabelControl.prototype, {
 
     createControlView: function (model) {
         return new LinkLabelView({model: model});
+    },
+
+    click: function(){
+        this.controlView.$el.click();
     }
 
 }, controlValuePropertyMixin);
