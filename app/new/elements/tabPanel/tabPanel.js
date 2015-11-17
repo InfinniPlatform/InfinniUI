@@ -84,7 +84,22 @@ TabPanel.prototype.getSelectedItem = function () {
  * @param {Function} handler
  */
 TabPanel.prototype.onSelectedItemChanged = function (handler) {
-    this.control.on('selectedItemChanged', handler);
+    this.control.on('change:selectedItem', handler);
+};
+
+/**
+ * @description Недокументированный метод. Закрывает заданную вкладку
+ * @param {TabPage} element
+ */
+TabPanel.prototype.closeTab = function (element) {
+    var
+        index = this.childElements.indexOf(element);
+
+    if (index === -1 ) {
+        throw new Error('TabPage not found in TabPanel.childElements');
+    } else {
+        this.getItems().removeAt(index);
+    }
 };
 
 /**

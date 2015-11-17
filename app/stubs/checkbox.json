@@ -329,7 +329,10 @@
             "ColumnSpan": 9,
             "Items": [{
               "TabPanel": {
-                "HeaderLocation": "Right",
+                "OnSelectedItemChanged": {
+                  "Name": "OnSelectedItemChanged"
+                },
+                "HeaderLocation": "Left",
                 "Items": [
                   {
                     "TabPage": {
@@ -347,10 +350,29 @@
                     "TabPage": {
                       "Text": "Header of Page2",
                       "CanClose": true,
+                      "OnClosing": {
+                        "Name": "OnClosing"
+                      },
+                      "OnClosed": {
+                        "Name": "OnClosed2"
+                      },
                       "Items": [
                         {
                           "Label": {
                             "Text": "Content of Page2"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "TabPage": {
+                      "Text": "Header of Page3",
+                      "CanClose": true,
+                      "Items": [
+                        {
+                          "Label": {
+                            "Text": "Content of Page3"
                           }
                         }
                       ]
@@ -408,6 +430,18 @@
     {
       "Name": "GroupValueSelector",
       "Body": "return args.value.Id;"
+    },
+    {
+      "Name": "OnClosing",
+      "Body": "var defer = $.Deferred(); console.log('close TabPage after 3 sec');setTimeout(function () {defer.resolve('ok');}, 3000); return defer.promise();"
+    },
+    {
+      "Name": "OnClosed2",
+      "Body": "console.log('OnClosed2');"
+    },
+    {
+      "Name": "OnSelectedItemChanged",
+      "Body": "console.log('OnSelectedItemChanged');"
     }
   ]
 }

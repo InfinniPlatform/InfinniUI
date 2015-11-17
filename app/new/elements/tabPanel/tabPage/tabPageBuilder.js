@@ -29,7 +29,33 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
         element.setIcon(metadata.Icon);
         element.setCanClose(metadata.CanClose);
 
+        this.initScriptHandlers(params);
+
         return data;
+    },
+
+    /**
+     * @protected
+     * @param params
+     */
+    initScriptHandlers: function (params) {
+        var
+            metadata = params.metadata,
+            element = params.element;
+
+        if (metadata.OnClosing) {
+            element.onClosing(function () {
+                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosing.Name, {});
+            });
+        }
+
+        if (metadata.OnClosed) {
+            element.onClosed(function () {
+                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosed.Name, {});
+            });
+        }
     }
+
+
 
 });

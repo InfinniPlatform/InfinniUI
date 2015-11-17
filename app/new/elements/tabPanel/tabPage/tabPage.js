@@ -5,6 +5,12 @@
  */
 function TabPage(parent) {
     _.superClass(TabPage, this, parent);
+    this.events = new EventsManager();
+    var element = this;
+
+    this.control.on('close', function () {
+        element.close();
+    });
 }
 
 _.inherit(TabPage, Container);
@@ -47,16 +53,24 @@ TabPage.prototype.setCanClose = function (value) {
  * @param {Function} [error] Необязательный. Обработчик события о том, что при закрытии произошла ошибка
  */
 TabPage.prototype.close = function (success, error) {
-    var canClose = this.getCanClose();
-    if (canClose) {
-        //@TODO Добавить обработку сообщений onClosing
-        //canClose = this.control.trigger('closing');
-    }
+    var
+        canClose = this.getCanClose(),
+        element = this,
+        events = this.events;
 
     if (canClose) {
-        typeof error === 'function' && error();
-    } else {
-        typeof success === 'function' && success();
+        this.events.trigger('closing')
+            .done(function () {
+                //@TODO Закрыть представление
+                if (element.parent) {
+                    element.parent.closeTab(element);
+                }
+                typeof success === 'function' && success();
+                events.trigger('closed');
+            })
+            .fail(function () {
+                typeof error === 'function' && error();
+            });
     }
 };
 
@@ -65,7 +79,7 @@ TabPage.prototype.close = function (success, error) {
  * @param handler
  */
 TabPage.prototype.onClosing = function (handler) {
-    this.control.on('closing', handler)
+    this.events.on('closing', handler)
 };
 
 /**
@@ -73,7 +87,7 @@ TabPage.prototype.onClosing = function (handler) {
  * @param handler
  */
 TabPage.prototype.onClosed = function (handler) {
-    this.control.on('closed', handler)
+    this.events.on('closed', handler)
 };
 
 /**

@@ -29,7 +29,22 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
         element.setHeaderLocation(metadata.HeaderLocation);
         element.setHeaderOrientation(metadata.HeaderOrientation);
 
+        this.initScriptHandlers(params);
         return data;
+    },
+
+    initScriptHandlers: function (params) {
+        var
+            metadata = params.metadata,
+            element = params.element;
+
+        if (metadata.OnSelectedItemChanged) {
+            element.onSelectedItemChanged(function (context, args) {
+                return new ScriptExecutor(params.parentView)
+                    .executeScript(metadata.OnSelectedItemChanged.Name, args);
+            });
+        }
     }
+
 
 });
