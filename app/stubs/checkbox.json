@@ -383,26 +383,54 @@
           "Cell": {
             "ColumnSpan": 9,
             "Items": [{
-              "ScrollPanel": {
-                "Name":"ScrollPanel_1",
-                "Items": [{
-                  "Label": {
-                    "Text": "Label 1"
-                  }
+              "TabPanel": {
+                "OnSelectedItemChanged": {
+                  "Name": "OnSelectedItemChanged"
                 },
+                "HeaderLocation": "Left",
+                "Items": [
                   {
-                    "Label": {
-                      "Text": "Label 2"
+                    "TabPage": {
+                      "Text": "Header of Page1",
+                      "Items": [
+                        {
+                          "Label": {
+                            "Text": "Content of Page1"
+                          }
+                        }
+                      ]
                     }
                   },
                   {
-                    "Label": {
-                      "Text": "Label 3"
+                    "TabPage": {
+                      "Text": "Header of Page2",
+                      "CanClose": true,
+                      "OnClosing": {
+                        "Name": "OnClosing"
+                      },
+                      "OnClosed": {
+                        "Name": "OnClosed2"
+                      },
+                      "Items": [
+                        {
+                          "Label": {
+                            "Text": "Content of Page2"
+                          }
+                        }
+                      ]
                     }
                   },
                   {
-                    "Label": {
-                      "Text": "Label 4"
+                    "TabPage": {
+                      "Text": "Header of Page3",
+                      "CanClose": true,
+                      "Items": [
+                        {
+                          "Label": {
+                            "Text": "Content of Page3"
+                          }
+                        }
+                      ]
                     }
                   }
                 ]
@@ -457,6 +485,18 @@
     {
       "Name": "GroupValueSelector",
       "Body": "return args.value.Id;"
+    },
+    {
+      "Name": "OnClosing",
+      "Body": "var defer = $.Deferred(); console.log('close TabPage after 3 sec');setTimeout(function () {defer.resolve('ok');}, 3000); return defer.promise();"
+    },
+    {
+      "Name": "OnClosed2",
+      "Body": "console.log('OnClosed2');"
+    },
+    {
+      "Name": "OnSelectedItemChanged",
+      "Body": "console.log('OnSelectedItemChanged');"
     }
   ]
 }
