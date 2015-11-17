@@ -22,7 +22,7 @@ _.extend(ContainerBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         itemsBinding = this.initItems(params);
-        if(itemsBinding){
+        if (itemsBinding) {
             this.tuneItemsBinding(itemsBinding);
         }
         this.initGroup(params, itemsBinding);
@@ -32,20 +32,20 @@ _.extend(ContainerBuilder.prototype, {
         };
     },
 
-    initItems: function(params){
+    initItems: function (params) {
         var metadata = params.metadata;
         var itemsBinding = null;
 
-        if(Array.isArray(metadata.Items)){  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
+        if (Array.isArray(metadata.Items)) {  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
             this.initNotTemplatingItems(params);
-        }else if (metadata.Items) {                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
+        } else if (metadata.Items) {                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
             itemsBinding = this.initTemplatingItems(params);
         }
 
         return itemsBinding;
     },
 
-    initTemplatingItems: function(params){
+    initTemplatingItems: function (params) {
         var metadata = params.metadata;
         var element = params.element;
         var itemTemplate;
@@ -59,23 +59,23 @@ _.extend(ContainerBuilder.prototype, {
 
         binding.setMode(BindingModes.toElement);
 
-        if('ItemComparator' in metadata){
+        if ('ItemComparator' in metadata) {
             this.bindElementItemsWithSorting(binding, params);
-        }else{
+        } else {
             binding.bindElement(element, 'items');
         }
 
 
-        if('ItemTemplate' in metadata){
+        if ('ItemTemplate' in metadata) {
             itemTemplate = this.buildItemTemplate(metadata.ItemTemplate, params);
-        }else if('ItemFormat' in metadata){
+        } else if ('ItemFormat' in metadata) {
             itemTemplate = this.buildItemFormat(binding, metadata.ItemFormat, params);
-        }else if('ItemSelector' in metadata){
+        } else if ('ItemSelector' in metadata) {
             itemTemplate = this.buildItemSelector(binding, metadata.ItemSelector, params);
-        }else{
-            if('ItemProperty' in metadata){
+        } else {
+            if ('ItemProperty' in metadata) {
                 property = metadata.ItemProperty;
-            }else{
+            } else {
                 property = '';
             }
             itemTemplate = this.buildItemProperty(binding, property, params);
@@ -86,31 +86,31 @@ _.extend(ContainerBuilder.prototype, {
         return binding;
     },
 
-    initNotTemplatingItems: function(params){
+    initNotTemplatingItems: function (params) {
         var itemsMetadata = params.metadata.Items;
         var element = params.element;
-        var fakeItems = (new Array(itemsMetadata.length + 1)).join(' ').split('');
-        var itemTemplate = this.buildItemTemplateForUniqueItem(itemsMetadata, params);
-
+        //var fakeItems = (new Array(itemsMetadata.length + 1)).join(' ').split('');
+        var items = itemsMetadata.slice(0);
+        element.getItems().set(items);
+        var itemTemplate = this.buildItemTemplateForUniqueItem(items, params);
         element.setItemTemplate(itemTemplate);
-        element.getItems().set(fakeItems);
     },
 
-    tuneItemsBinding: function(itemsBinding){
+    tuneItemsBinding: function (itemsBinding) {
         var source = itemsBinding.getSource();
-        if(typeof source.tryInitData == 'function'){
+        if (typeof source.tryInitData == 'function') {
             source.tryInitData();
         }
     },
 
-    initGroup: function(params, itemsBinding){
-        if(this.hasGrouping(params)){
+    initGroup: function (params, itemsBinding) {
+        if (this.hasGrouping(params)) {
             this.initGroupValueSelector(params);
             this.initGroupItemTemplate(params, itemsBinding);
         }
     },
 
-    hasGrouping: function(params){
+    hasGrouping: function (params) {
         return params.metadata.GroupValueSelector || params.metadata.GroupValueProperty;
     },
 
@@ -147,30 +147,30 @@ _.extend(ContainerBuilder.prototype, {
         element.setGroupValueSelector(groupValueSelector);
     },
 
-    initGroupItemTemplate: function(params, itemsBinding){
+    initGroupItemTemplate: function (params, itemsBinding) {
         var metadata = params.metadata;
         var element = params.element;
         var itemTemplate;
         var property;
 
-        if(metadata.GroupItemTemplate){
+        if (metadata.GroupItemTemplate) {
             itemTemplate = this.buildItemTemplate(metadata.GroupItemTemplate, params);
-        }else if(metadata.GroupItemFormat){
+        } else if (metadata.GroupItemFormat) {
             itemTemplate = this.buildItemFormat(itemsBinding, metadata.GroupItemFormat, params);
-        }else if(metadata.GroupItemSelector){
+        } else if (metadata.GroupItemSelector) {
             itemTemplate = this.buildItemSelector(itemsBinding, metadata.GroupItemSelector, params);
-        }else if(metadata.GroupItemProperty){
-                itemTemplate = this.buildItemProperty(itemsBinding, metadata.GroupItemProperty, params);
+        } else if (metadata.GroupItemProperty) {
+            itemTemplate = this.buildItemProperty(itemsBinding, metadata.GroupItemProperty, params);
         }
 
-        if(itemTemplate){
+        if (itemTemplate) {
             element.setGroupItemTemplate(itemTemplate);
         }
     },
 
-    buildItemProperty: function(itemsBinding, itemPropertyMetadata, params){
+    buildItemProperty: function (itemsBinding, itemPropertyMetadata, params) {
 
-        return function(context, args){
+        return function (context, args) {
             var index = args.index;
             var label = new Label(this);
             var sourceProperty;
@@ -178,10 +178,10 @@ _.extend(ContainerBuilder.prototype, {
             var binding = new DataBinding(this);
 
             sourceProperty = index.toString();
-            if(itemsBinding.getSourceProperty() != ''){
+            if (itemsBinding.getSourceProperty() != '') {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
-            if(itemPropertyMetadata != ''){
+            if (itemPropertyMetadata != '') {
                 sourceProperty = sourceProperty + '.' + itemPropertyMetadata;
             }
 
@@ -192,10 +192,10 @@ _.extend(ContainerBuilder.prototype, {
         };
     },
 
-    buildItemFormat: function(itemsBinding, itemFormatMetadata, params){
+    buildItemFormat: function (itemsBinding, itemFormatMetadata, params) {
 
         var format = this.buildDisplayFormat(itemFormatMetadata, params);
-        return function(context, args){
+        return function (context, args) {
             var index = args.index;
             var label = new Label(this);
 
@@ -204,7 +204,7 @@ _.extend(ContainerBuilder.prototype, {
             var binding = new DataBinding(this);
 
             sourceProperty = index.toString();
-            if(itemsBinding.getSourceProperty() != ''){
+            if (itemsBinding.getSourceProperty() != '') {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
 
@@ -218,7 +218,7 @@ _.extend(ContainerBuilder.prototype, {
 
     },
 
-    buildItemSelector: function(itemsBinding, itemSelectorMetadata, params){
+    buildItemSelector: function (itemsBinding, itemSelectorMetadata, params) {
 
         return function (context, args) {
             var index = args.index;
@@ -230,12 +230,12 @@ _.extend(ContainerBuilder.prototype, {
             var binding = new DataBinding(this);
 
             sourceProperty = index.toString();
-            if(itemsBinding.getSourceProperty() != ''){
+            if (itemsBinding.getSourceProperty() != '') {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
 
             binding.setConverter({
-                toElement: function(_context, _args){
+                toElement: function (_context, _args) {
                     return scriptExecutor.executeScript(itemSelectorMetadata.Name, _args);
                 }
             });
@@ -253,7 +253,7 @@ _.extend(ContainerBuilder.prototype, {
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
         var that = this;
 
-        return function(context, args) {
+        return function (context, args) {
             var index = args.index;
             var bindingIndex;
             var argumentForBuilder = {
@@ -261,12 +261,12 @@ _.extend(ContainerBuilder.prototype, {
                 parentView: params.parentView
             };
 
-            if(index !== undefined && index !== null){
+            if (index !== undefined && index !== null) {
                 bindingIndex = that.bindingIndexByItemsIndex(index, params);
 
-                if(bindingIndex !== undefined && bindingIndex !== null){
+                if (bindingIndex !== undefined && bindingIndex !== null) {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', bindingIndex);
-                }else{
+                } else {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
                 }
             }
@@ -287,48 +287,52 @@ _.extend(ContainerBuilder.prototype, {
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
 
-        return function(context, args) {
-            var index = args.index;
-            var argumentForBuilder = {
-                parent: params.element,
-                parentView: params.parentView,
-                basePathOfProperty: basePathOfProperty
-            };
+        return function (context, args) {
 
-            return builder.build(itemsMetadata[index], argumentForBuilder);
+            var
+                index = args.index,
+                item = element.getItems().getByIndex(index),
+                argumentForBuilder = {
+                    parent: params.element,
+                    parentView: params.parentView,
+                    basePathOfProperty: basePathOfProperty
+                };
+
+            return builder.build(item, argumentForBuilder);
         };
     },
 
-    bindingIndexByItemsIndex: function(index, params){
+    bindingIndexByItemsIndex: function (index, params) {
         var element = params.element,
             items = element.getItems();
 
         return items.getProperty(index, 'bindingIndex');
     },
 
-    bindElementItemsWithSorting: function(binding, params){
+    bindElementItemsWithSorting: function (binding, params) {
         var metadata = params.metadata,
             element = params.element,
             scriptExecutor = new ScriptExecutor(params.parent),
-            itemComparator = function(item1, item2){
+            itemComparator = function (item1, item2) {
                 return scriptExecutor.executeScript(metadata.ItemComparator, {item1: item1, item2: item2});
             };
 
         binding.bindElement({
-            setProperty: function(name, value){
+            setProperty: function (name, value) {
                 var items = element.getItems(),
                     isCollectionChanged = items.set(value, true);
 
-                items.forEach(function(item, index, collection){
+                items.forEach(function (item, index, collection) {
                     collection.setProperty(index, 'bindingIndex', index);
                 });
 
-                if(isCollectionChanged){
+                if (isCollectionChanged) {
                     items.sort(itemComparator);
                 }
             },
 
-            onPropertyChanged: function(){}
+            onPropertyChanged: function () {
+            }
 
         }, 'items');
     }
