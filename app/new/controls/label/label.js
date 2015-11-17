@@ -11,8 +11,14 @@ _.extend(LabelControl.prototype, {
         return new LabelModel();
     },
 
-    createControlView: function (model) {
-        return new LabelView({model: model});
+    createControlView: function (model, viewMode) {
+        if(!viewMode || ! viewMode in window.InfinniUI.Label){
+            viewMode = 'common';
+        }
+
+        var ViewClass = window.InfinniUI.Label.viewModes[viewMode];
+
+        return new ViewClass({model: model});
     }
 
 }, editorBaseControlMixin);

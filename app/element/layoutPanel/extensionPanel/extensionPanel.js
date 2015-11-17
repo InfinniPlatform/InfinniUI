@@ -2,16 +2,11 @@ function ExtensionPanel(parentView) {
     _.superClass(ExtensionPanel, this, parentView);
 }
 
-_.inherit(ExtensionPanel, Element);
+_.inherit(ExtensionPanel, Container);
 
 _.extend(ExtensionPanel.prototype, {
     createControl: function () {
         var control = new ExtensionPanelControl();
-
-        control.controlModel.getContext = function () {
-            return this.getContext();
-        }.bind(this);
-
         return control;
     },
 
@@ -19,15 +14,11 @@ _.extend(ExtensionPanel.prototype, {
         return this.control.set('extensionName', extensionName);
     },
 
-    setParameters: function (value) {
-        return this.control.set('parameters', value);
+    setParameters: function (parameters) {
+        return this.control.set('parameters', parameters);
     },
 
-    setItems: function(items){
-        this.control.set('items', items);
+    setContext: function (context) {
+        this.control.set('context', context);
     }
-
-    //setContext: function (value) {
-    //    return this.control.set('context', value);
-    //}
 });

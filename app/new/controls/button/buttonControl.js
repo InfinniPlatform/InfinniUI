@@ -4,8 +4,8 @@
  * @constructor
  * @augments Control
  */
-function ButtonControl(parent) {
-    _.superClass(ButtonControl, this, parent);
+function ButtonControl(viewMode) {
+    _.superClass(ButtonControl, this, viewMode);
 }
 
 _.inherit(ButtonControl, Control);
@@ -16,16 +16,15 @@ _.extend(ButtonControl.prototype, {
         return new ButtonModel();
     },
 
-    createControlView: function (model) {
-        return new ButtonView({model: model});
-    },
+    createControlView: function (model, viewMode) {
+        if(!viewMode || ! viewMode in window.InfinniUI.Button){
+            viewMode = 'common';
+        }
 
-    onClick: function (handler) {
-        this.controlView.on('onClick', handler);
-    },
+        var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
 
-    click: function () {
-        this.controlView.trigger('onClick');
+        return new ViewClass({model: model});
     }
-});
+
+}, buttonControlMixin);
 

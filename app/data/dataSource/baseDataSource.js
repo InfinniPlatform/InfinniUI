@@ -99,6 +99,8 @@ var BaseDataSource = Backbone.Model.extend({
     setName: function (name) {
         this.set('name', name);
         this.name = name;
+
+        window[name] = this;
     },
 
     getView: function () {
@@ -149,6 +151,11 @@ var BaseDataSource = Backbone.Model.extend({
         var currentSelectedItem = this.getSelectedItem(),
             items = this.get('itemsById'),
             itemId = this.idOfItem(item);
+
+
+        if (typeof item == 'undefined') {
+            item = null;
+        }
 
         if (item == currentSelectedItem) {
             return;

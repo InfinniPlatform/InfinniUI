@@ -54,19 +54,18 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         this.initBindingToProperty(params, 'Text');
         this.initBindingToProperty(params, 'Visible', true);
         this.initBindingToProperty(params, 'Enabled', true);
-        this.initBindingToProperty(params, 'HorizontalAignment', true);
-        this.initBindingToProperty(params, 'VerticalAlignment', true);
-        this.initBindingToProperty(params, 'TextStyle', true);
-        this.initBindingToProperty(params, 'Foreground', true);
-        this.initBindingToProperty(params, 'Background', true);
-        this.initBindingToProperty(params, 'Texture', true);
-        this.initBindingToProperty(params, 'Style', true);
+        this.initBindingToProperty(params, 'HorizontalAlignment');
+        this.initBindingToProperty(params, 'VerticalAlignment');
+        this.initBindingToProperty(params, 'TextStyle');
+        this.initBindingToProperty(params, 'Foreground');
+        this.initBindingToProperty(params, 'Background');
+        this.initBindingToProperty(params, 'Texture');
+        this.initBindingToProperty(params, 'Style');
 
         if('Name' in metadata){
             element.setName(metadata.Name);
         }
 
-        element.setName(metadata.Name);
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {

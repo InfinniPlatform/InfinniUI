@@ -86,6 +86,9 @@ var editorBaseViewMixin = {
 
     onInvalidHandler: function (model, error) {
         // что ита???
+        // вот ето -  @see {@link http://backbonejs.org/#Model-validate} !!!
+
+
         //@TODO Можно ли использовать поля из API или реализовывать вывод ошибок отдельно?
         //this.model.set('errorText', error);
     }

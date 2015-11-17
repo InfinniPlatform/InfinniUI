@@ -1,7 +1,7 @@
-var ObjectDataProvider = function(items, idProperty){
+var ObjectDataProvider = function (items, idProperty) {
     this.items = items || [];
     this.idProperty = idProperty || 'Id';
-}
+};
 
 _.extend(ObjectDataProvider.prototype, {
 
@@ -10,7 +10,9 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-        resultCallback(this.items);
+        var filter = new FilterCriteriaType();
+        var callback = filter.getFilterCallback(criteriaList);
+        resultCallback(this.items.filter(callback));
     },
 
     createItem: function (resultCallback) {
@@ -25,9 +27,9 @@ _.extend(ObjectDataProvider.prototype, {
                 isValid: true
             };
 
-        if(itemIndex == -1){
+        if (itemIndex == -1) {
             items.push(item);
-        }else{
+        } else {
             items[itemIndex] = item;
         }
 
@@ -41,17 +43,17 @@ _.extend(ObjectDataProvider.prototype, {
                 isValid: true
             };
 
-        if(itemIndex == -1){
+        if (itemIndex == -1) {
             result.isValid = false;
             result.message = 'Удаляемый элемент не найден';
-        }else{
+        } else {
             items.splice(itemIndex, 1);
         }
 
         resultCallback(result);
     },
 
-    createIdFilter: function(id){
+    createIdFilter: function (id) {
         return [{
             "Property": "Id",
             "Value": id,
@@ -63,8 +65,8 @@ _.extend(ObjectDataProvider.prototype, {
         var itemId = item[this.idProperty],
             items = this.items;
 
-        for(var i = 0, ii = items.length; i < ii; i++){
-            if(items[i][this.idProperty] === itemId ) {
+        for (var i = 0, ii = items.length; i < ii; i++) {
+            if (items[i][this.idProperty] === itemId) {
                 return i;
             }
         }
@@ -80,7 +82,7 @@ _.extend(ObjectDataProvider.prototype, {
         return result;
     },
 
-    _generateLocalId: function(){
+    _generateLocalId: function () {
         return guid();
     }
 });

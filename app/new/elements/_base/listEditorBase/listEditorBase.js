@@ -25,30 +25,6 @@ _.extend(ListEditorBase.prototype, {
         this.control.set('valueSelector', value);
     },
 
-    getGroupValueSelector: function () {
-        return this.control.get('groupValueSelector');
-    },
-
-    setGroupValueSelector: function (value) {
-        this.control.set('groupValueSelector', value);
-    },
-
-    getGroupItemTemplate: function () {
-        return this.control.get('groupItemTemplate');
-    },
-
-    setGroupItemTemplate: function (value) {
-        this.control.set('groupItemTemplate', value);
-    },
-
-    getGroupItemComparator: function () {
-        return this.control.get('groupItemComparator');
-    },
-
-    setGroupItemComparator: function (value) {
-        this.control.set('groupItemComparator', value);
-    },
-
     getSelectedItem: function () {
         return this.control.get('selectedItem');
     },

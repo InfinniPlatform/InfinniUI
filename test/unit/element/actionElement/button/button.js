@@ -11,7 +11,7 @@ describe('Button', function () {
         it('should set getContent', function () {
 
             var element = new Button();
-            assert.equal(typeof element.getContent(), 'undefined');
+            assert.isNull(element.getContent());
 
             // when
             element.setContent(content);

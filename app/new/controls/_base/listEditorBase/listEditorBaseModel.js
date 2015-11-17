@@ -22,25 +22,28 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         });
     },
 
-    toggleValue: function (value) {
+    toggleValue: function (value, toggle) {
         var
             currentValue = this.get('value'),
             multiSelect = this.get('multiSelect'),
             index, clonedValue;
 
         if(multiSelect){
-            currentValue = currentValue || [];
-            index = currentValue.indexOf(value);
+            currentValue = Array.isArray(currentValue) ? currentValue : [];
 
-            if(index == -1){
-                currentValue.push(value);
-            }else{
-                currentValue.splice(index, 1);
+            var valueAsString = JSON.stringify(value);
+
+            var newValue = currentValue.filter(function(val) {
+                return JSON.stringify(val) !== valueAsString;
+            });
+
+            if (typeof toggle === 'undefined' || toggle === true) {
+                if (newValue.length === currentValue.length) {
+                    newValue.push(value);
+                }
             }
 
-            clonedValue = currentValue.slice();
-
-            this.set('value', clonedValue);
+            this.set('value', newValue);
 
         }else{
             if(value != currentValue){
@@ -50,23 +53,24 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
     },
 
     bindSelectedItemsWithValue: function(){
-        this.on('change:selectedItem', function (model, newSelectedItem) {
-            var value = this.get('value'),
-                newItemValue = this.valueByItem(newSelectedItem);
-
-            if(!this.get('multiSelect') && !this.isStringifyEqualValues(newItemValue, value)){
-                this.set('value', newItemValue);
-            }
-        }, this);
-
-        this.on('change:value', function (model, newValue) {
-            var selectedItem = this.get('selectedItem'),
-                newSelectedItem = this.itemByValue(newValue);
-
-            if(!this.get('multiSelect') && selectedItem != newSelectedItem){
-                this.set('selectedItem', newSelectedItem);
-            }
-        }, this);
+        return;
+        //this.on('change:selectedItem', function (model, newSelectedItem) {
+        //    var value = this.get('value'),
+        //        newItemValue = this.valueByItem(newSelectedItem);
+        //
+        //    if(!this.get('multiSelect') && !this.isStringifyEqualValues(newItemValue, value)){
+        //        this.set('value', newItemValue);
+        //    }
+        //}, this);
+        //
+        //this.on('change:value', function (model, newValue) {
+        //    var selectedItem = this.get('selectedItem'),
+        //        newSelectedItem = this.itemByValue(newValue);
+        //
+        //    if(!this.get('multiSelect') && selectedItem != newSelectedItem){
+        //        this.set('selectedItem', newSelectedItem);
+        //    }
+        //}, this);
     },
 
     valueByItem: function(item){

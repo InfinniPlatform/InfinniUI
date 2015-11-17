@@ -65,7 +65,9 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var selectedItem = this.model.get('selectedItem'),
             indexOfItem = this.model.itemIndexByItem(selectedItem);
 
-        this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
+        if(indexOfItem >= 0){
+            this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
+        }
     },
 
     render: function () {
@@ -114,6 +116,7 @@ var BaseListBoxView = ListEditorBaseView.extend({
     onChangeHandler: function(){
         var $checked = this.ui.checkingInputs.filter(':checked').parent().parent(),
             valueForModel = null,
+            model = this.model,
             val;
 
         if(this.isMultiselect()){
@@ -121,12 +124,12 @@ var BaseListBoxView = ListEditorBaseView.extend({
 
             $checked.each(function(i, el){
                 val = $(el).data('pl-data-item');
-                valueForModel.push(val);
+                valueForModel.push(model.valueByItem(val));
             });
 
         }else{
             if($checked.length > 0){
-                valueForModel = $checked.data('pl-data-item');
+                valueForModel = model.valueByItem($checked.data('pl-data-item'));
             }
         }
 

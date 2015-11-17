@@ -7,39 +7,41 @@ _.inherit(ButtonBuilder, ElementBuilder);
 _.extend(ButtonBuilder.prototype, {
 
     createElement: function (params) {
-        return new Button(params.parent);
+        var viewMode = this.detectViewMode(params);
+        return new Button(params.parent, viewMode);
+    },
+
+    detectViewMode: function(params){
+        var viewMode = params.metadata['ViewMode'];
+        var el = params.parent;
+        var exit = false;
+
+        if(!viewMode){
+            while(!exit){
+                if(el){
+                    if(el instanceof PopupButton || el instanceof MenuBar){
+                        viewMode = 'link';
+                        exit = true;
+                    }else{
+                        el = el.parent;
+                    }
+                }else{
+                    exit = true;
+                }
+            }
+
+        }
+
+        return viewMode
     },
 
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
-        var element = params.element;
-        var metadata = params.metadata;
-        var builder = params.builder;
-
-        var contentBuilder = new ButtonContentTemplateBuilder(params);
-        element.setContent(contentBuilder.build());
-        element.onPropertyChanged('text', function (context, args) {
-            element.setContent(contentBuilder.buildTextTemplate());
-        });
-
-        if (metadata.Action) {
-            var args = {
-                parentView: params.parentView,
-                parent: element,
-                basePathOfProperty: params.basePathOfProperty
-            }
-            var action = builder.build(metadata.Action, args);
-            element.onClick(function(){
-                action.execute();
-            });
-        }
-
-        if (metadata.OnClick){
-            element.onClick(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name);
-            });
-        }
+        this.applyButtonMetadata(params);
     }
-});
+
+}, buttonBuilderMixin);
+
+
 

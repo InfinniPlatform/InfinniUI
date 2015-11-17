@@ -50,10 +50,12 @@ _.extend(FileBoxBuilder.prototype, {
             }
         };
 
-        var binding = this.applyMetadata_editorBaseBuilder(params, {
+        var data = this.applyMetadata_editorBaseBuilder(params, {
             valueProperty: 'url',
             converter: converter
         });
+
+        var binding = data.valueBinding;
 
         if (binding) {
             binding.setMode(BindingModes.toElement);

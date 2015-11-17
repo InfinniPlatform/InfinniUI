@@ -63,7 +63,7 @@ moment.locale('ru');
             })
                 .then(function (data) {
                     defer.resolve({
-                        View: {
+                        LinkView: {
                             InlineView: {
                                 View: data,
                                 OpenMode: "Container"
