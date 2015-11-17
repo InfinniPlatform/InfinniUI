@@ -38,15 +38,34 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
         dataSource.setPageSize(metadata.PageSize || 15);
         dataSource.setPageNumber(metadata.PageNumber || 0);
-
-        dataSource.setErrorValidator(metadata.ValidationErrors);
-        dataSource.setWarningValidator(metadata.ValidationWarnings);
+        this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
     },
 
     createDataSource: function (parent) {
         throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+    },
+
+    /**
+     * @protected
+     * @description Инициализация обработчиков для валидации данных
+     * @param parentView
+     * @param dataSource
+     * @param metadata
+     */
+    initValidation: function (parentView, dataSource, metadata) {
+        if (metadata.ValidationErrors) {
+            dataSource.setErrorValidator(function (context, args) {
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name, args);
+            });
+        }
+
+        if (metadata.ValidationWarnings) {
+            dataSource.setWarningValidator(function (context, args) {
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name, args);
+            });
+        }
     },
 
     initScriptsHandlers: function (parentView, metadata, dataSource) {

@@ -2,7 +2,10 @@
   "DataSources": [
     {
       "ObjectDataSource": {
-        "Name": "MainDataSource"
+        "Name": "MainDataSource",
+        "ValidationErrors": {
+          "Name": "ValidationErrors"
+        }
       }
     },
     {
@@ -497,6 +500,10 @@
     {
       "Name": "OnSelectedItemChanged",
       "Body": "console.log('OnSelectedItemChanged');"
+    },
+    {
+      "Name": "ValidationErrors",
+      "Body": "console.log(arguments); debugger; console.log('ValidationErrors'); return {isValid: false, items: [{message: 'Error'}, {property: 'birthday', message: 'birthday error'}]};"
     }
   ]
 }

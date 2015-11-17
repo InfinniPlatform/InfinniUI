@@ -1,5 +1,5 @@
 var editorBaseBuilderMixin = {
-    initialize_editorBaseBuilder: function(){
+    initialize_editorBaseBuilder: function () {
 
     },
 
@@ -55,13 +55,55 @@ var editorBaseBuilderMixin = {
             dataBinding.bindElement(params.element, bindingOptions.valueProperty);
 
             var source = dataBinding.getSource();
-            if(typeof source.tryInitData == 'function'){
+            if (typeof source.tryInitData == 'function') {
                 source.tryInitData();
             }
+
+            this.initValidationResultText(element, dataBinding);
         }
 
         return {
             valueBinding: dataBinding
         };
+    },
+
+    /**
+     * @description Инициализация подписки на события валидации для оповещения элемента
+     * @param binding
+     */
+    initValidationResultText: function (element, binding) {
+        var source = binding.getSource();
+        var property = binding.getSourceProperty();
+
+        source.onErrorValidator(function (context, args) {
+            var result = args.value,
+                text = '';
+
+            if (!result.isValid && Array.isArray(result.items)) {
+                text = getTextForItems(result.items);
+            }
+            element.setErrorText(text);
+        });
+
+        source.onWarningValidator(function (context, args) {
+            var result = args.value,
+                text = '';
+
+            if (!result.isValid && Array.isArray(result.items)) {
+                text = getTextForItems(result.items);
+            }
+            element.setWarningText(text);
+        });
+
+        function getTextForItems(items, callback) {
+            return items
+                .filter(function (item) {
+                    return property === item.property;
+                })
+                .map(function (item) {
+                    return item.message;
+                })
+                .join(' ');
+        }
     }
 };
