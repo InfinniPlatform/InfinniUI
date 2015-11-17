@@ -33,7 +33,7 @@ TabPanel.prototype.setHeaderLocation = function (value) {
  * @returns {*}
  */
 TabPanel.prototype.getHeaderOrientation = function () {
-    return this.control.get('headerLocation');
+    return this.control.get('headerOrientation');
 };
 
 /**
