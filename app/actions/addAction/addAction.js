@@ -30,10 +30,11 @@ _.extend(AddAction.prototype, {
     },
 
     handleClosingView: function(callback){
-        var parentDataSource = this.getProperty('parentDataSource');
+        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
-        if(parentDataSource){
-            parentDataSource.updateItems();
+        if(destinationSource){
+            destinationSource.updateItems();
         }
 
         if (callback) {

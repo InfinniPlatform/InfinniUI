@@ -272,7 +272,7 @@
               "Button": {
                   "Text": "Add Disease",
                   "Action": {
-                      "AddItemAction": {
+                      "AddAction": {
                           "LinkView":{
                               "InlineView": {
                                   "View": {
@@ -308,9 +308,12 @@
                                   "OpenMode": "Dialog"
                               }
                           },
-                          "Items": {
+                          "DestinationValue": {
                               "Source": "PatientDataSource",
                               "Property": "Diseases"
+                          },
+                          "SourceValue": {
+                              "Source": "MainDataSource"
                           }
                       }
                   }

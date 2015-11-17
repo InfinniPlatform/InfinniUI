@@ -14,7 +14,9 @@ describe('AddAction', function () {
 
                     }
                 },
-                DataSource: 'SomeDS'
+                DestinationValue: {
+                    Source: 'SomeDS'
+                }
             }
         };
 
