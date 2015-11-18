@@ -81,7 +81,7 @@ describe('Button', function () {
 
             // When
             button.render();
-            button.setAction(new OpenViewActionBuilder().build(null, {}));
+            button.setAction(new OpenActionBuilder().build(null, {}));
 
             // Then
             assert.isNotNull(button.getAction());

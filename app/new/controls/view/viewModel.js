@@ -7,14 +7,15 @@ var DialogResult = {
 var ViewModel = ContainerModel.extend({
 
     defaults: _.defaults({
-        dialogResult: DialogResult.none
+        dialogResult: DialogResult.none,
+        isApplication: false
     }, ContainerModel.prototype.defaults),
 
     initialize: function () {
         ContainerModel.prototype.initialize.apply(this);
 
         this.set('scripts', new Collection([], 'name'));
-        this.set('parameters', new Collection());
-        this.set('dataSources', new Collection());
+        this.set('parameters', new Collection([], 'name'));
+        this.set('dataSources', new Collection([], 'name'));
     }
 });

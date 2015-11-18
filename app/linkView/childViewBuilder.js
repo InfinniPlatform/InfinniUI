@@ -1,6 +1,6 @@
 function ChildViewBuilder() {
     this.build = function (context, args) {
-        var linkView = args.view.getChildView(args.metadata.Name);
+        var linkView = args.parentView.getChildView(args.metadata.Name);
         linkView.setOpenMode(args.metadata.OpenMode);
         linkView.setContainer(args.metadata.Container);
         if (['Application', 'Page', 'Dialog'].indexOf(args.metadata.OpenMode) > -1) {

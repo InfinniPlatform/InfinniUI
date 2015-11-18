@@ -84,6 +84,10 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onWarningValidator', handler);
     },
 
+onItemSaved: function (handler) {
+        this.on('onItemSaved', handler);
+    },
+
     onItemCreated: function (handler) {
         this.on('onItemCreated', handler);
     },
@@ -102,6 +106,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     setName: function (name) {
         this.set('name', name);
+        this.name = name;
 
         window[name] = this;
     },

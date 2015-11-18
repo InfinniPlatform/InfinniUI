@@ -30,6 +30,9 @@
             'app/new/elements/listBox/**/*.js',
             'app/new/elements/**/*.js',
 
+            'app/actions/*.js',
+            'app/actions/**/*.js',
+
             'app/**/*.js',
 
             'extensions/**/*.js',

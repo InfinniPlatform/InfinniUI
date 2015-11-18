@@ -49,7 +49,7 @@ moment.locale('ru');
     rootView.open($target);
     openHomePage()
         .done(function (viewMetadata) {
-            var action = builder.buildType('OpenViewAction', viewMetadata, {parentView: rootView});
+            var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
             action.execute(function(){window.contextApp = arguments[0];});
         });
 
@@ -63,7 +63,7 @@ moment.locale('ru');
             })
                 .then(function (data) {
                     defer.resolve({
-                        View: {
+                        LinkView: {
                             InlineView: {
                                 View: data,
                                 OpenMode: "Container"

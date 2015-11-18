@@ -34,6 +34,27 @@
           }
         ]
       }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "PatientDataSource",
+        "Items": [
+           {
+              "Id": 1,
+              "Diseases": [
+                  {
+                      "Name": "allergosis"
+                  },
+                  {
+                      "Name": "dermatomycosis"
+                  },
+                  {
+                      "Name": "cold"
+                  }
+              ]
+           }
+        ]
+      }
     }
   ],
   "Items": [{
@@ -220,6 +241,180 @@
             }
           }
         },
+          {
+              "Button": {
+                  "Text": "Open View",
+                  "Action":{
+                      "OpenAction": {
+                          "LinkView": {
+                              "InlineView": {
+                                  "View": {
+                                      "Scripts": [{
+                                          "Name": "close",
+                                          "Body": "context.view.close();"
+                                      }],
+                                      "Items": [
+                                          {
+                                              "Button": {
+                                                  "Text": "Close",
+                                                  "OnClick": "close"
+                                              }
+                                          }
+                                      ]
+                                  },
+                                  "OpenMode": "Dialog",
+                                  "Text": "OpenDialog"
+                              }
+
+                          }
+                      }
+                  }
+              }
+          },
+          {
+              "Button": {
+                  "Text": "Add Disease",
+                  "Action": {
+                      "AddAction": {
+                          "LinkView":{
+                              "InlineView": {
+                                  "View": {
+                                      "Items": [
+                                          {
+                                              "TextBox": {
+                                                  "Value": {
+                                                      "PropertyBinding": {
+                                                          "Source": "MainDataSource",
+                                                          "Property": "Name"
+                                                      }
+                                                  }
+                                              }
+                                          },
+                                          {
+                                              "Button": {
+                                                  "Text": "Save",
+                                                  "Action": {
+                                                      "AcceptAction": {}
+                                                  }
+                                              }
+                                          }
+                                      ],
+                                      "DataSources": [
+                                          {
+                                              "ObjectDataSource": {
+                                                  "Name": "MainDataSource"
+                                              }
+                                          }
+                                      ]
+                                  },
+                                  "Text": "OpenDialog",
+                                  "OpenMode": "Dialog"
+                              }
+                          },
+                          "DestinationValue": {
+                              "Source": "PatientDataSource",
+                              "Property": "Diseases"
+                          },
+                          "SourceValue": {
+                              "Source": "MainDataSource"
+                          }
+                      }
+                  }
+              }
+          },
+          {
+              "ListBox":{
+                  "Name": "PatientListBox",
+                  "ItemTemplate": {
+                      "StackPanel":{
+                          "Orientation": "Horizontal",
+                          "Items": [
+                              {
+                                  "Label": {
+                                      "Value": {
+                                          "PropertyBinding": {
+                                              "Source": "PatientDataSource",
+                                              "Property": "Diseases.$.Name"
+                                          }
+                                      }
+                                  }
+                              },
+                              {
+                                  "Button": {
+                                      "Text": "Edit",
+                                      "Action": {
+                                          "EditAction": {
+                                              "LinkView":{
+                                                  "InlineView": {
+                                                      "View": {
+                                                          "Items": [
+                                                              {
+                                                                  "TextBox": {
+                                                                      "Value": {
+                                                                          "PropertyBinding": {
+                                                                              "Source": "MainDataSource",
+                                                                              "Property": "Name"
+                                                                          }
+                                                                      }
+                                                                  }
+                                                              },
+                                                              {
+                                                                  "Button": {
+                                                                      "Text": "Save",
+                                                                      "Action": {
+                                                                          "AcceptAction": {}
+                                                                      }
+                                                                  }
+                                                              }
+                                                          ],
+                                                          "DataSources": [
+                                                              {
+                                                                  "ObjectDataSource": {
+                                                                      "Name": "MainDataSource"
+                                                                  }
+                                                              }
+                                                          ]
+                                                      },
+                                                      "OpenMode": "Dialog",
+                                                      "Text": "OpenDialog"
+                                                  }
+                                              },
+                                              "DestinationValue": {
+                                                  "Source": "PatientDataSource",
+                                                  "Property": "Diseases"
+                                              },
+                                              "SourceValue": {
+                                                  "Source": "MainDataSource"
+                                              }
+                                          }
+                                      }
+                                  }
+                              },
+                              {
+                                  "Button": {
+                                      "Text": "Delete",
+                                      "Action": {
+                                          "DeleteAction": {
+                                              "DestinationValue": {
+                                                  "Source": "PatientDataSource",
+                                                  "Property": "Diseases"
+                                              }
+                                          }
+                                      }
+                                  }
+                              }
+                          ]
+                      }
+
+                  },
+                  "Items": {
+                      "PropertyBinding": {
+                          "Source": "PatientDataSource",
+                          "Property": "Diseases"
+                      }
+                  }
+              }
+          },
         {
           "Button": {
             "ContentTemplate": {
@@ -235,6 +430,7 @@
             }
           }
         },
+
         {
           "PopupButton": {
             "Text": "Delete",
