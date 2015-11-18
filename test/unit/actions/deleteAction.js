@@ -10,7 +10,9 @@ describe('DeleteAction', function () {
         var metadata = {
             DeleteAction: {
                 Accept: false,
-                DataSource: 'SomeDS'
+                DestinationValue: {
+                    Source: 'SomeDS'
+                }
             }
         };
 
@@ -48,7 +50,9 @@ describe('DeleteAction', function () {
         var metadata = {
             DeleteAction: {
                 Accept: false,
-                DataSource: 'SomeDS'
+                DestinationValue: {
+                    Source: 'SomeDS'
+                }
             }
         };
 

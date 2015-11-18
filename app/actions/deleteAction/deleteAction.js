@@ -10,21 +10,6 @@ _.extend(DeleteAction.prototype, {
         var accept = this.getProperty('accept');
         var that = this;
 
-        var deleteSelectedFromParentDataSource = function () {
-            var parentDataSource = that.getProperty('parentDataSource'),
-                editItem = parentDataSource.getSelectedItem();
-
-            var onSuccessDelete = function () {
-                parentDataSource.updateItems();
-
-                if (callback) {
-                    callback();
-                }
-            };
-
-            parentDataSource.deleteItem(editItem, onSuccessDelete);
-        };
-
         if(accept){
             new MessageBox({
                 text: 'Вы уверены, что хотите удалить?',
@@ -32,7 +17,9 @@ _.extend(DeleteAction.prototype, {
                     {
                         name: 'Да',
                         type: 'action',
-                        onClick: deleteSelectedFromParentDataSource
+                        onClick: function() {
+                            that.remove(callback);
+                        }
                     },
                     {
                         name: 'Нет'
@@ -40,7 +27,22 @@ _.extend(DeleteAction.prototype, {
                 ]
             });
         } else {
-            deleteSelectedFromParentDataSource();
+            this.remove(callback);
         }
+    },
+
+    remove: function (callback) {
+        var dataSource = this.getProperty('destinationSource'),
+            editItem = dataSource.getSelectedItem();
+
+        var onSuccessDelete = function () {
+            dataSource.updateItems();
+
+            if (_.isFunction(callback)) {
+                callback();
+            }
+        };
+
+        dataSource.deleteItem(editItem, onSuccessDelete);
     }
 });

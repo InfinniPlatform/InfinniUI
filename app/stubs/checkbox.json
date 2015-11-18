@@ -391,8 +391,8 @@
                                   "Button": {
                                       "Text": "Delete",
                                       "Action": {
-                                          "DeleteItemAction": {
-                                              "Items": {
+                                          "DeleteAction": {
+                                              "DestinationValue": {
                                                   "Source": "PatientDataSource",
                                                   "Property": "Diseases"
                                               }

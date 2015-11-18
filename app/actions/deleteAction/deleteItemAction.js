@@ -17,7 +17,9 @@ _.extend(DeleteItemAction.prototype, {
                     {
                         name: 'Да',
                         type: 'action',
-                        onClick: that.deleteSelectedItemFromArrayProperty.bind(this, callback)
+                        onClick: function(){
+                            that.remove(callback)
+                        }
                     },
                     {
                         name: 'Нет'
@@ -25,26 +27,27 @@ _.extend(DeleteItemAction.prototype, {
                 ]
             });
         } else {
-            this.deleteSelectedItemFromArrayProperty(callback);
+            this.remove(callback);
         }
     },
 
-    deleteSelectedItemFromArrayProperty: function (callback) {
-        var dataSource = this.getProperty('dataSource'),
-            propertyName = this.getProperty('propertyName'),
+    remove: function (callback) {
+        var dataSource = this.getProperty('destinationSource'),
+            propertyName = this.getProperty('destinationProperty'),
             index = this.getProperty('index');
 
-        // важно для изменения массива использовать setProperty (иначе не произойдёт OnItemsUpdate)
-        // и соответственно работать с массивом по ссылке нельзя
+        // важно для изменения массива использовать именно setProperty (иначе не произойдёт OnItemsUpdate),
+        // поэтому работать с массивом по ссылке нельзя
         var items = _.clone( dataSource.getProperty(propertyName) );
 
         if( !_.isArray(items) ){
-            console.log("%c %s: некорректное свойство %s", "color: red", dataSource.getName(), propertyName );
+            var message = stringUtils.format("{0}: некорректное свойство {1}", "color: red", [dataSource.getName(), propertyName]);
+            logger.error( message );
             return;
         }
 
         if( (!_.isFinite(index)) || (index >= items.length) ){
-            console.log("%c DeleteItemAction: некорректный индекс элемента", "color: red");
+            logger.error("DeleteItemAction: некорректный индекс элемента");
             return;
         }
 

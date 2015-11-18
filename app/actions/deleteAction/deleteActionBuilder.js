@@ -1,18 +1,25 @@
 function DeleteActionBuilder(){
+    this.build = function(context, args){
+        var metadata = args.metadata,
+            parentView = args.parentView;
+        var action;
 
-}
+        var accept = (metadata['Accept'] !== false);
+        var dataSource = parentView.getContext().dataSources[metadata.DestinationValue.Source];
 
 
-_.extend(DeleteActionBuilder.prototype, {
-    build: function(context, args){
-        var dataSource = args.parentView.getContext().dataSources[args.metadata.DataSource];
-        var accept = (args.metadata['Accept'] === false) ? false: true;
+        if( _.isEmpty(metadata.DestinationValue.Property) ){
+            action = new DeleteAction(parentView);
+        } else {
+            action = new DeleteItemAction(parentView);
 
-        var action = new DeleteAction(args.parentView);
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
+        }
 
         action.setProperty('accept', accept);
-        action.setProperty('parentDataSource', dataSource);
+        action.setProperty('destinationSource', dataSource);
 
         return action;
     }
-});
+}
