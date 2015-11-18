@@ -143,3 +143,19 @@ this.When(/^я выберу пункт "([^"]*)"$/, function (value, next) {
 
 	window.testHelpers.waitCondition(haveValue, success, fail);
 });
+
+this.When(/^я нажму в окне-сообщении на кнопку "([^"]*)"$/, function(buttonText, next){
+	var haveButton = function(){
+		return window.configWindow.$.find('.messagebox:visible .modal-footer :contains({btnText})'.replace('{btnText}', buttonText)).length > 0;
+	}
+	var success = function(){
+		var button = window.configWindow.$.find('.messagebox:visible .modal-footer :contains({btnText})'.replace('{btnText}', buttonText))[0];
+		button.click();
+		next();
+	}
+	var fail = function(){
+		next(new Error(buttonText + ' not found!'));
+	}
+	
+	window.testHelpers.waitCondition(haveButton, success, fail);
+});
