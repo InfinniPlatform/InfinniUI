@@ -2,12 +2,21 @@
 // When
 
 this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonName, next) {
-    try {
-        window.currentViewContext.Controls[buttonName].click();
-        next();
-    } catch (err) {
-        next(err);
+	var haveButton = function(){
+		return window.currentViewContext.Controls[buttonName] != undefined;
+	}
+    var success = function(){
+    	try {
+	        window.currentViewContext.Controls[buttonName].click();
+	        next();
+	    } catch (err) {
+	        next(err);
+	    }
     }
+    var fail = function(){
+    	next(new Error(buttonName + " not found!"));
+    }
+	window.testHelpers.waitCondition(haveButton, success, fail);
 });
 
 this.When(/^я нажму на ссылку "([^"]*)"$/, function (linkName, next) {
@@ -78,27 +87,59 @@ this.When(/^я нажму на ссылку "([^"]*)" в списке "([^"]*)"$
 });
 
 this.When(/^я нажму на выпадающий список кнопок "([^"]*)"$/, function (buttonName, next) {
-    try {
-        var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
-        window.configWindow.$(buttonSelector).click();
-        next();
-    } catch (err) {
-        next(err);
-    }
+	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
+	
+	var haveButton = function(){
+		return window.configWindow.$(buttonSelector).length != 0;
+	}
+	var success = function(){
+		try {
+			window.configWindow.$(buttonSelector).click();
+			next();
+		} catch (err) {
+			next(err);
+    	}
+	}
+	var fail = function(){
+		next(new Error(buttonName + ' not found!'));
+	}
+    window.testHelpers.waitCondition(haveButton, success, fail);
 });
 
 this.When(/^я нажму на выпадающий список "([^"]*)"$/, function (buttonName, next) {
-    try {
-        var buttonSelector = "[data-pl-name=\"{buttonName}\"] .select2-chosen".replace("{buttonName}", buttonName);
-        window.configWindow.$(buttonSelector).mousedown(); //click() не срабатывает
-        setTimeout(next, 100); //TODO: Найти аналог (элементы списка подгружаются после раскрытия)
-    } catch (err) {
-        next(err);
-    }
+	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .select2-chosen".replace("{buttonName}", buttonName);
+
+	var haveButton = function(){
+		return window.configWindow.$(buttonSelector).length != 0;
+	}
+	var success = function(){
+		try {
+	        window.configWindow.$(buttonSelector).mousedown(); //click() не срабатывает
+	        next();
+	    } catch (err) {
+	        next(err);
+    	}
+	}
+	var fail = function(){
+		next(new Error(buttonName + ' not found!'));
+	}
+
+	window.testHelpers.waitCondition(haveButton, success, fail);
 });
 
 this.When(/^я выберу пункт "([^"]*)"$/, function (value, next) {
     var selector = ".select2-results > li .select2-result-label:contains('{VALUE}')".replace("{VALUE}", value);
-    window.configWindow.$(selector).mousedown().mouseup(); //TODO: Это бред конечно, но пока click() не работает
-    setTimeout(next, 3000);
+
+    var haveValue = function(){
+    	return window.configWindow.$(selector).length != 0;
+    }
+    var success = function(){
+    	window.configWindow.$(selector).mousedown().mouseup(); //TODO: Это бред конечно, но пока click() не работает
+    	next();
+    }
+    var fail = function(){
+		next(new Error(value + ' not found!'));
+	}
+
+	window.testHelpers.waitCondition(haveValue, success, fail);
 });
