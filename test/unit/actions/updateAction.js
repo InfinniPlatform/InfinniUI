@@ -9,7 +9,9 @@ describe('UpdateAction', function () {
 
         var metadata = {
             UpdateAction: {
-                DataSource: 'MainDS'
+                DestinationValue: {
+                    Source: 'MainDS'
+                }
             }
         };
 
@@ -35,7 +37,9 @@ describe('UpdateAction', function () {
         });
 
         var metadata = {
-            DataSource: 'MainDS'
+            DestinationValue: {
+                Source: 'MainDS'
+            }
         };
 
         var updateAction = builder.build(null, {parentView: view, metadata: metadata});

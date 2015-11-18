@@ -8,8 +8,8 @@ _.inherit(UpdateAction, BaseAction);
 _.extend(UpdateAction.prototype, {
     execute: function(callback){
 
-        var parentDataSource = this.getProperty('parentDataSource');
+        var dataSource = this.getProperty('dataSource');
 
-        parentDataSource.updateItems(callback, callback);
+        dataSource.updateItems(callback, callback);
     }
 });

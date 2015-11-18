@@ -1,11 +1,11 @@
 function UpdateActionBuilder() {
     this.build = function (context, args) {
 
-        var parentDataSource = args.parentView.getContext().dataSources[args.metadata.DataSource];
+        var dataSource = args.parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
 
         var action = new UpdateAction(args.parentView);
 
-        action.setProperty('parentDataSource', parentDataSource);
+        action.setProperty('dataSource', dataSource);
 
         return action;
     }
