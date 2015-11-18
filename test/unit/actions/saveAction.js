@@ -14,7 +14,9 @@ describe('SaveAction', function () {
         var builder = new ApplicationBuilder();
         var metadata = {
             SaveAction: {
-                DataSource: 'MainDS'
+                DestinationValue: {
+                    Source: 'MainDS'
+                }
             }
         };
 
@@ -36,7 +38,9 @@ describe('SaveAction', function () {
         });
 
         var metadata = {
-            DataSource: 'MainDS',
+            DestinationValue: {
+                Source: 'MainDS'
+            },
             CanClose: false
         };
 

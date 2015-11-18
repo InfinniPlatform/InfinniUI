@@ -1,12 +1,12 @@
 function SaveActionBuilder() {
     this.build = function (context, args) {
         var parentView = args.parentView;
-        var parentDataSource = parentView.getContext().dataSources[args.metadata.DataSource];
-        var canClose = (args.metadata.CanClose === false) ? false: true;
+        var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+        var canClose = (args.metadata.CanClose !== false);
 
         var action = new SaveAction(parentView);
 
-        action.setProperty('parentDataSource', parentDataSource);
+        action.setProperty('dataSource', dataSource);
         action.setProperty('canClose', canClose);
 
         return action;

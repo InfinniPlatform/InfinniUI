@@ -8,7 +8,7 @@ _.inherit(SaveAction, BaseAction);
 _.extend(SaveAction.prototype, {
     execute: function(callback){
         var parentView = this.parentView;
-        var parentDataSource = this.getProperty('parentDataSource');
+        var dataSource = this.getProperty('dataSource');
         var canClose = this.getProperty('canClose');
 
         var onSuccessSave = function(data){
@@ -17,12 +17,12 @@ _.extend(SaveAction.prototype, {
                 parentView.close();
             }
 
-            if(callback){
+            if(_.isFunction(callback)){
                 callback(data);
             }
         };
 
-        var selectedItem = parentDataSource.getSelectedItem();
-        parentDataSource.saveItem(selectedItem, onSuccessSave, callback);
+        var selectedItem = dataSource.getSelectedItem();
+        dataSource.saveItem(selectedItem, onSuccessSave, callback);
     }
 });
