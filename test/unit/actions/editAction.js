@@ -14,7 +14,12 @@ describe('EditAction', function () {
 
                     }
                 },
-                DataSource: 'SomeDS'
+                DestinationValue: {
+                    Source: 'SomeDS'
+                },
+                SourceValue: {
+                    Source: 'EditDS'
+                }
             }
         };
 

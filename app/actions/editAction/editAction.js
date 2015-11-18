@@ -2,50 +2,34 @@ function EditAction(parentView){
     _.superClass(EditAction, this, parentView);
 }
 
-_.inherit(EditAction, BaseAction);
+_.inherit(EditAction, BaseEditAction);
 
 
 _.extend(EditAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView');
-        var that = this;
+    setSelectedItem: function(){
+        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+        var editDataSource = this.getEditDataSource();
 
-        linkView.createView(function(createdView){
-            that.handleViewReady(createdView, callback);
-        });
+        var selectedItem = destinationSource.getSelectedItem();
+
+        editDataSource.setSelectedItem(selectedItem);
     },
 
-    handleViewReady: function(editView, callback){
-        var editDataSource = editView.getContext().dataSources['MainDataSource'];
-        var editingItemId = this.getProperty('editingItemId');
-        var that = this;
+    save: function(){
+        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
-        editDataSource.setIdFilter(editingItemId);
-
-        editDataSource.resumeUpdate();
-        editDataSource.updateItems();
-
-        editView.open();
-
-        editView.onClosed(function(){
-            var dialogResult = editView.getDialogResult();
-
-            if (dialogResult == DialogResult.accepted) {
-                that.handleClosingView(callback);
-            }
-        });
-    },
-
-    handleClosingView: function(callback){
-        var parentDataSource = this.getProperty('parentDataSource');
-        var editingItemId = this.getProperty('editingItemId');
-
-        if(parentDataSource){
-            parentDataSource.updateItems();
+        if(destinationSource){
+            destinationSource.updateItems();
         }
+    },
 
-         if (callback) {
-             callback(editingItemId);
-         }
+    getEditDataSource: function(){
+        var editView = this.getProperty('editView');
+        var editSourceName = this.getProperty('SourceSource');
+        var editDataSource = editView.getContext().dataSources[editSourceName];
+
+        return editDataSource;
     }
 });

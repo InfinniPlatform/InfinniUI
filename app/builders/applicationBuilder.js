@@ -75,7 +75,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('DeleteAction', new DeleteActionBuilder());
         builder.register('DeleteItemAction', new DeleteItemActionBuilder());
         builder.register('EditAction', new EditActionBuilder());
-        builder.register('EditItemAction', new EditItemActionBuilder());
         builder.register('OpenAction', new OpenActionBuilder());
         builder.register('PrintReportAction', new PrintReportActionBuilder());
         builder.register('PrintViewAction', new PrintViewActionBuilder());

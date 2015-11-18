@@ -340,7 +340,7 @@
                                   "Button": {
                                       "Text": "Edit",
                                       "Action": {
-                                          "EditItemAction": {
+                                          "EditAction": {
                                               "LinkView":{
                                                   "InlineView": {
                                                       "View": {
@@ -376,9 +376,12 @@
                                                       "Text": "OpenDialog"
                                                   }
                                               },
-                                              "Items": {
+                                              "DestinationValue": {
                                                   "Source": "PatientDataSource",
                                                   "Property": "Diseases"
+                                              },
+                                              "SourceValue": {
+                                                  "Source": "MainDataSource"
                                               }
                                           }
                                       }
