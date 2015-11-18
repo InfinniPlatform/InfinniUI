@@ -104,7 +104,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 basePathOfProperty: params.basePathOfProperty
             };
 
-            var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
+            var dataBinding = params.builder.build(metadata[propertyName], args);
 
             if(isBooleanBinding){
                 dataBinding.setMode(BindingModes.toElement);
