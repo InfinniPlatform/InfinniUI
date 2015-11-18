@@ -4,7 +4,7 @@ function PrintViewActionBuilder() {
 
         var action = new PrintViewAction(args.parentView);
 
-        var dataSource = args.parentView.getContext().dataSources[args.metadata.DataSource];
+        var dataSource = args.parentView.getContext().dataSources[args.metadata.SourceValue.Source];
         var printViewBaseFormData = {
             PrintViewId : args.metadata.PrintViewId,
             PrintViewType : args.metadata.PrintViewType
