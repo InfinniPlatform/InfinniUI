@@ -38,6 +38,7 @@
             'extensions/**/*.js',
 
             'bootstrap_framework/js/*.js',
+            
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js'
