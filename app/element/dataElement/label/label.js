@@ -29,7 +29,7 @@ _.extend(Label.prototype, {
         },
 
         getText: function(){
-            return this.control.get('text') || this.control.get('value');
+            return this.control.get('text') || this.control.getLabelText();
         }
 
     },

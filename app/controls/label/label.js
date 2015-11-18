@@ -12,6 +12,10 @@ _.extend(LabelControl.prototype, {
 
     createControlView: function (model) {
         return new LabelView({model: model});
+    },
+
+    getLabelText: function () {
+        return this.controlView.getTextLabel();
     }
 
 }, controlValuePropertyMixin);
