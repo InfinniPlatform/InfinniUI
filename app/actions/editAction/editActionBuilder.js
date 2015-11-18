@@ -1,11 +1,33 @@
 function EditActionBuilder(){
+    this.build = function(context, args){
+        var metadata = args.metadata,
+            parentView = args.parentView,
+            builder = args.builder;
+        var action;
 
+        if( _.isEmpty(metadata.DestinationValue.Property) ){
+            action = new EditAction(parentView);
+        } else {
+            action = new EditItemAction(parentView);
+
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
+        }
+
+        var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+
+        action.setProperty('linkView', linkView);
+        action.setProperty('destinationSource', metadata.DestinationValue.Source);
+        action.setProperty('sourceSource', metadata.SourceValue.Source);
+
+        return action;
+    }
 }
 
 
 _.extend(EditActionBuilder.prototype, {
     build: function(context, args){
-        var action = new EditActionBuilder(args.parentView);
+        var action = new EditAction(args.parentView);
 
         var metadata = args.metadata;
         var parentView = args.parentView;
@@ -30,61 +52,3 @@ _.extend(EditActionBuilder.prototype, {
         return action;
     }
 });
-
-
-/*function EditActionBuildero() {
-    this.build = function (context, args) {
-        var action = new BaseAction(args.view);
-
-        action.setAction(function (callback) {
-            var parentDataSource = args.view.getDataSource(args.metadata.DataSource),
-                editItem, idProperty, editItemId;
-
-            if(args.itemId){
-                editItemId = args.itemId;
-            }else{
-                editItem = parentDataSource.getSelectedItem();
-
-                if(!editItem){
-                    new MessageBox({
-                        type: 'error',
-                        text:'Не выбран объект для редактирования.',
-                        buttons:[
-                            {
-                                name:'Закрыть'
-                            }
-                        ]
-                    });
-                    return;
-                }
-
-                idProperty = parentDataSource.getIdProperty();
-                editItemId = InfinniUI.ObjectUtils.getPropertyValue(editItem, idProperty);
-            }
-
-            var linkView = args.builder.build(args.view, args.metadata.View);
-            linkView.createView(function (editView) {
-                var editDataSource = _.find(editView.getDataSources(), function (ds) {
-                    return isMainDataSource(ds);
-                });
-
-                editDataSource.suspendUpdate();
-                editDataSource.setEditMode();
-                editDataSource.setIdFilter(editItemId);
-
-                editView.onClosed(function (closeResult) {
-                    parentDataSource.updateItems();
-
-                    if (callback && closeResult == dialogResult.accept) {
-
-                        callback(editItemId);
-                    }
-                });
-
-                editView.open();
-            });
-        });
-
-        return action;
-    };
-}*/

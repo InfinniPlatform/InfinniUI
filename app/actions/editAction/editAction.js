@@ -2,48 +2,34 @@ function EditAction(parentView){
     _.superClass(EditAction, this, parentView);
 }
 
-_.inherit(EditAction, BaseAction);
+_.inherit(EditAction, BaseEditAction);
 
 
 _.extend(EditAction.prototype, {
-    execute: function(){
-        var linkView = this.getProperty('linkView');
+    setSelectedItem: function(){
+        var destinationSourceName = this.getProperty('destinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+        var editDataSource = this.getEditDataSource();
 
-        linkView.createView(function(createdView){
-            that.handleViewReady(createdView);
-        });
+        var selectedItem = destinationSource.getSelectedItem();
+
+        editDataSource.setSelectedItem(selectedItem);
     },
 
-    handleViewReady: function(editView){
-        var editDataSource = editView.getContext().dataSources['MainDataSource'];
-        var editingItemId = this.getProperty('editingItemId');
-        var that = this;
+    save: function(){
+        var destinationSourceName = this.getProperty('destinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
-        editDataSource.setIdFilter(editingItemId);
-
-        editDataSource.resumeUpdate();
-        editDataSource.updateItems();
-
-        editView.open();
-
-        editView.onClose(function(){
-            that.handleClosingView();
-        });
-    },
-
-    handleClosingView: function(){
-        var parentDataSource = this.getProperty('parentDataSource');
-
-        if(parentDataSource){
-            parentDataSource.updateItems();
+        if(destinationSource){
+            destinationSource.updateItems();
         }
+    },
 
-        /*
-         if (callback && closeResult == dialogResult.accept) {
+    getEditDataSource: function(){
+        var editView = this.getProperty('editView');
+        var editSourceName = this.getProperty('sourceSource');
+        var editDataSource = editView.getContext().dataSources[editSourceName];
 
-         callback(editItemId);
-         }
-
-         */
+        return editDataSource;
     }
 });

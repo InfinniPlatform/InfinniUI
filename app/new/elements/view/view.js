@@ -64,6 +64,27 @@ _.extend(View.prototype,
             });
         },
 
+        getApplicationView: function(){
+            var isApplication = this.control.get('isApplication');
+            var parent = this.parent;
+
+            if (isApplication) {
+                return this;
+            } else {
+                return _.isEmpty(parent) ? null : parent.getApplicationView();
+            }
+        },
+
+        isApplication: function (param) {
+            var result = this.control.get('isApplication');
+
+            if (_.isBoolean(param)) {
+                this.control.set('isApplication', param);
+            }
+
+            return result;
+        },
+
         registerElement: function(element){
             this.context.controls[element.name] = element;
         },
