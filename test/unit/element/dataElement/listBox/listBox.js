@@ -22,18 +22,14 @@ describe('ListBox', function () {
                     "TextBox": {
                         "Name": "TextBox1",
                         "Value": {
-                            "PropertyBinding":{
-                                "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Display"
                         }
                     }
                 },
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -91,20 +87,16 @@ describe('ListBox', function () {
                         "TextBox": {
                             "Name": "TextBox1",
                             "Value": {
-                                "PropertyBinding":{
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "Display"
-                                }
+                                "Source": "ObjectDataSource1",
+                                "Property": "Display"
                             }
                         }
                     },{
                         "TextBox": {
                             "Name": "TextBox2",
                             "Value": {
-                                "PropertyBinding":{
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "Id"
-                                }
+                                "Source": "ObjectDataSource1",
+                                "Property": "Id"
                             }
                         }
                     }
@@ -171,29 +163,23 @@ describe('ListBox', function () {
                                 "TextBox": {
                                     "Name": "TextBox1",
                                     "Value": {
-                                        "PropertyBinding":{
-                                            "Source": "ObjectDataSource1",
-                                            "Property": "$.Display"
-                                        }
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
                                     }
                                 }
                             },
                             "GroupItemTemplate": {
                                 "TextBox": {
                                     "Value": {
-                                        "PropertyBinding":{
-                                            "Source": "ObjectDataSource1",
-                                            "Property": "$.Display"
-                                        }
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "$.Display"
                                     }
                                 }
                             },
                             "GroupValueProperty": "Display",
                             "Items" : {
-                                "PropertyBinding": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": ""
-                                }
+                                "Source": "ObjectDataSource1",
+                                "Property": ""
                             }
                         }
                     }
@@ -254,18 +240,14 @@ describe('ListBox', function () {
                     "TextBox": {
                         "Name": "TextBox1",
                         "Value": {
-                            "PropertyBinding":{
-                                "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Display"
                         }
                     }
                 },
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -323,18 +305,14 @@ describe('ListBox', function () {
                 "ItemTemplate": {
                     "Label": {
                         "Value": {
-                            "PropertyBinding":{
-                                "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Display"
                         }
                     }
                 },
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -389,10 +367,8 @@ describe('ListBox', function () {
             StackPanel: {
                 Name: 'MainViewPanel',
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -457,10 +433,8 @@ describe('ListBox', function () {
                 Name: 'MainViewPanel',
                 "ItemProperty": "Name.Temp",
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -524,10 +498,8 @@ describe('ListBox', function () {
                 Name: 'MainViewPanel',
                 "ItemFormat": "Connect: {Name.Temp}",
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }]
@@ -593,10 +565,8 @@ describe('ListBox', function () {
                     Name: 'GetTitle'
                 },
                 "Items" : {
-                    "PropertyBinding": {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
                 }
             }
         }],

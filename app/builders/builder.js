@@ -60,7 +60,7 @@ function Builder() {
     };
 
     this.buildBinding = function(bindingMetadata, args){
-        var dataBinding = params.builder.buildType('PropertyBinding', bindingMetadata, args);
+        var dataBinding = this.buildType('PropertyBinding', bindingMetadata, args);
 
         return dataBinding;
     };

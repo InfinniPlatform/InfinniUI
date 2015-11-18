@@ -107,8 +107,6 @@ onItemSaved: function (handler) {
     setName: function (name) {
         this.set('name', name);
         this.name = name;
-
-        window[name] = this;
     },
 
     getView: function () {

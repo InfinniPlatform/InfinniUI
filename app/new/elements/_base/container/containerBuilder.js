@@ -52,7 +52,7 @@ _.extend(ContainerBuilder.prototype, {
         var binding;
         var property;
 
-        binding = params.builder.build(metadata.Items, {
+        binding = params.builder.buildBinding(metadata.Items, {
             parentView: params.parentView,
             basePathOfProperty: params.basePathOfProperty
         });

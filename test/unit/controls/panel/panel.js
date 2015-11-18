@@ -63,10 +63,8 @@ describe('PanelControl', function () {
                                                             "StackPanel": {
                                                                 "Name": "StackPanel_1",
                                                                 "Items": {
-                                                                    "PropertyBinding": {
-                                                                        "Source": "BloodGroupDataSource",
-                                                                        "Property": ""
-                                                                    }
+                                                                    "Source": "BloodGroupDataSource",
+                                                                    "Property": ""
                                                                 },
                                                                 "ItemTemplate": {
                                                                     "Panel": {
@@ -79,10 +77,8 @@ describe('PanelControl', function () {
                                                                             {
                                                                                 "Label": {
                                                                                     "Text": {
-                                                                                        "PropertyBinding": {
-                                                                                            "Source": "BloodGroupDataSource",
-                                                                                            "Property": "$.Id"
-                                                                                        }
+                                                                                        "Source": "BloodGroupDataSource",
+                                                                                        "Property": "$.Id"
                                                                                     }
                                                                                 }
                                                                             }

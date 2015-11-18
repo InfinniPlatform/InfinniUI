@@ -149,10 +149,8 @@ describe('ImageBox', function () {
             //build ImageBox
             var imageBoxMetadata = {
                 Value: {
-                    PropertyBinding: {
-                        Source: 'MyDataSource',
-                        Property: PROPERTY_NAME
-                    }
+                    Source: 'MyDataSource',
+                    Property: PROPERTY_NAME
                 }
             };
             var imageBox = builder.buildType('ImageBox', imageBoxMetadata, {parent: view, parentView: view});

@@ -71,10 +71,8 @@ describe('ScriptExecutor', function () {
                             "MultiSelect": true,
                             "ShowClear": true,
                             "Value" : {
-                                "PropertyBinding" : {
-                                    "DataSource" : "PatientDataSource",
-                                    "Property" : "LastName"
-                                }
+                                "DataSource" : "PatientDataSource",
+                                "Property" : "LastName"
                             }
                         }
                     }

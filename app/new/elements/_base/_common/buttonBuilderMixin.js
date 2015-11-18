@@ -37,7 +37,7 @@ var buttonBuilderMixin = {
         }
 
         if('Content' in metadata){
-            contentBinding = builder.build(metadata['Content'], {
+            contentBinding = builder.buildBinding(metadata['Content'], {
                 parentView: params.parentView,
                 basePathOfProperty: params.basePathOfProperty
             });

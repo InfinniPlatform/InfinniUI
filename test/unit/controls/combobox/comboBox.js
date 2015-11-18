@@ -54,27 +54,21 @@ describe('ComboBox', function () {
                             "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
                         "ValueFormat": "{Id} - {DisplayName}",
                         "MultiSelect": false,
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "Value"
                         }
                     }
                 }]
@@ -137,27 +131,21 @@ describe('ComboBox', function () {
                             "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
                         "ValueFormat": "{Id} - {DisplayName}",
                         "MultiSelect": true,
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "Value"
                         }
                     }
                 }]
@@ -209,18 +197,14 @@ describe('ComboBox', function () {
                             "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "ValueTemplate": {
                             "StackPanel": {
@@ -230,10 +214,8 @@ describe('ComboBox', function () {
                                         "Label": {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "$.Value.Display"
-                                                }
+                                                "Source": "ObjectDataSource2",
+                                                "Property": "$.Value.Display"
                                             }
                                         }
                                     },
@@ -241,10 +223,8 @@ describe('ComboBox', function () {
                                         "Label": {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "$.Value.Id"
-                                                }
+                                                "Source": "ObjectDataSource2",
+                                                "Property": "$.Value.Id"
                                             }
                                         }
                                     }
@@ -254,10 +234,8 @@ describe('ComboBox', function () {
                         },
                         "MultiSelect": false,
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -312,18 +290,14 @@ describe('ComboBox', function () {
                             "Label": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "ValueTemplate": {
                             "StackPanel": {
@@ -333,10 +307,8 @@ describe('ComboBox', function () {
                                         "Label": {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Display"
-                                                }
+                                                "Source": "ObjectDataSource2",
+                                                "Property": "Value.$.Display"
                                             }
                                         }
                                     },
@@ -344,10 +316,8 @@ describe('ComboBox', function () {
                                         "Label": {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
-                                                "PropertyBinding": {
-                                                    "Source": "ObjectDataSource2",
-                                                    "Property": "Value.$.Id"
-                                                }
+                                                "Source": "ObjectDataSource2",
+                                                "Property": "Value.$.Id"
                                             }
                                         }
                                     }
@@ -357,10 +327,8 @@ describe('ComboBox', function () {
                         },
                         "MultiSelect": true,
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]

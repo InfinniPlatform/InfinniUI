@@ -73,20 +73,6 @@ describe('Button', function () {
         });
 
 
-        it('should set and get action', function () {
-            // Given
-            //var button = new Button();
-            var action = button.getAction();
-            assert.isTrue(typeof action === 'undefined' || action === null);
-
-            // When
-            button.render();
-            button.setAction(new OpenActionBuilder().build(null, {}));
-
-            // Then
-            assert.isNotNull(button.getAction());
-        });
-
         it('should execute action on click', function () {
             // Given
             var

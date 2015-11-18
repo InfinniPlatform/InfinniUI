@@ -51,20 +51,6 @@ describe('PopupButtonElement', function () {
         });
 
 
-        it('should set and get action', function () {
-            // Given
-            //var button = new PopupButton();
-
-            assert.isTrue(typeof button.getAction() === 'undefined');
-
-            // When
-            button.render();
-            button.setAction(new OpenActionBuilder().build(null, {}));
-
-            // Then
-            assert.isTrue(typeof button.getAction() !== 'undefined' && button.getAction() !== null);
-        });
-
         it('should execute action on click', function (done) {
             // Given
             var button = new PopupButton(),

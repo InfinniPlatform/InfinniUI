@@ -19,10 +19,8 @@ describe('TextEditorBase (Control)', function () {
                 "TextBox": {
                     "Name": "TextBox1",
                     "Value": {
-                        "PropertyBinding":{
-                            "Source": "ObjectDataSource1",
-                            "Property": "$.Display"
-                        }
+                        "Source": "ObjectDataSource1",
+                        "Property": "$.Display"
                     },
                     "DisplayFormat": "{:n2}",
 

@@ -48,24 +48,18 @@ describe('ListEditorBase (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -122,24 +116,18 @@ describe('ListEditorBase (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -192,24 +180,18 @@ describe('ListEditorBase (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -271,24 +253,18 @@ describe('ListEditorBase (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -357,24 +333,18 @@ describe('ListEditorBase (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         },
                         "Value": {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource2",
-                                "Property": "$.Value"
-                            }
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
                         }
                     }
                 }]
@@ -398,9 +368,8 @@ describe('ListEditorBase (Control)', function () {
 
                 // Then
                 assert.lengthOf($chosen, 1, 'length of chosen item is right');
-                assert.lengthOf($selected, 1, 'length of selected item is right');
-                assert.equal($items.index($chosen), $items.index($selected), 'index of chosen and selected is equal');
-                assert.equal(selectedItem.Id, 2, 'value in DS is right');
+                assert.lengthOf($selected, 0, 'length of selected item is right');
+                assert.isNull(selectedItem, 'value in DS is right');
                 assert.equal(ds2.getProperty('Value.Id'), 2, 'selected item in DS is right');
 
                 // When
@@ -411,9 +380,7 @@ describe('ListEditorBase (Control)', function () {
 
                 // Then
                 assert.lengthOf($chosen, 1, 'length of chosen item is right (after changing)');
-                assert.lengthOf($selected, 1, 'length of selected item is right (after changing)');
-                assert.equal($items.index($chosen), $items.index($selected), 'index of chosen and selected is equal (after changing)');
-                assert.equal(selectedItem.Id, 3, 'value in DS is right (after changing)');
+                assert.lengthOf($selected, 0, 'length of selected item is right (after changing)');
                 assert.equal(ds2.getProperty('Value.Id'), 3, 'selected item in DS is right (after changing)');
 
                 // When
@@ -425,9 +392,8 @@ describe('ListEditorBase (Control)', function () {
                 // Then
                 assert.lengthOf($chosen, 1, 'length of chosen item is right (after 2 changing)');
                 assert.lengthOf($selected, 1, 'length of selected item is right (after 2 changing)');
-                assert.equal($items.index($chosen), $items.index($selected), 'index of chosen and selected is equal (after 2 changing)');
                 assert.equal(selectedItem.Id, 1, 'value in DS is right (after 2 changing)');
-                assert.equal(ds2.getProperty('Value.Id'), 1, 'selected item in DS is right (after 2 changing)');
+                assert.equal(ds2.getProperty('Value.Id'), 3, 'selected item in DS is right (after 2 changing)');
             }
         });
     });

@@ -136,10 +136,8 @@
                                           }
                                       },
                                       "Value": {
-                                          "PropertyBinding": {
-                                              "Source": "MainDataSource",
-                                              "Property": "$"
-                                          }
+                                        "Source": "MainDataSource",
+                                        "Property": "$"
                                       }
                                   }
                               }]
@@ -164,10 +162,8 @@
                                       }
                                     },
                                     "Value": {
-                                      "PropertyBinding": {
-                                        "Source": "MainDataSource",
-                                        "Property": "birthday"
-                                      }
+                                      "Source": "MainDataSource",
+                                      "Property": "birthday"
                                     }
                                   }
                                }]
@@ -188,10 +184,8 @@
               }
             },
             "Value": {
-              "PropertyBinding": {
-                "Source": "MainDataSource",
-                "Property": "$"
-              }
+              "Source": "MainDataSource",
+              "Property": "$"
             }
           }
         },
@@ -210,10 +204,8 @@
               }
             },
             "Value": {
-              "PropertyBinding": {
-                "Source": "MainDataSource",
-                "Property": "birthday"
-              }
+              "Source": "MainDataSource",
+              "Property": "birthday"
             }
           }
         },
@@ -234,10 +226,8 @@
               }
             },
             "Value": {
-              "PropertyBinding": {
-                "Source": "MainDataSource",
-                "Property": "birthday"
-              }
+              "Source": "MainDataSource",
+              "Property": "birthday"
             }
           }
         },
@@ -283,10 +273,8 @@
                                           {
                                               "TextBox": {
                                                   "Value": {
-                                                      "PropertyBinding": {
-                                                          "Source": "MainDataSource",
-                                                          "Property": "Name"
-                                                      }
+                                                    "Source": "MainDataSource",
+                                                    "Property": "Name"
                                                   }
                                               }
                                           },
@@ -332,10 +320,8 @@
                               {
                                   "Label": {
                                       "Value": {
-                                          "PropertyBinding": {
-                                              "Source": "PatientDataSource",
-                                              "Property": "Diseases.$.Name"
-                                          }
+                                        "Source": "PatientDataSource",
+                                        "Property": "Diseases.$.Name"
                                       }
                                   }
                               },
@@ -351,10 +337,8 @@
                                                               {
                                                                   "TextBox": {
                                                                       "Value": {
-                                                                          "PropertyBinding": {
-                                                                              "Source": "MainDataSource",
-                                                                              "Property": "Name"
-                                                                          }
+                                                                        "Source": "MainDataSource",
+                                                                        "Property": "Name"
                                                                       }
                                                                   }
                                                               },
@@ -408,10 +392,8 @@
 
                   },
                   "Items": {
-                      "PropertyBinding": {
-                          "Source": "PatientDataSource",
-                          "Property": "Diseases"
-                      }
+                    "Source": "PatientDataSource",
+                    "Property": "Diseases"
                   }
               }
           },
@@ -421,10 +403,8 @@
               "Label":{
                 "Name": "b1",
                 "Value":{
-                  "PropertyBinding": {
-                    "Source": "BloodGroupDataSource",
-                    "Property": "$.DisplayName"
-                  }
+                  "Source": "BloodGroupDataSource",
+                  "Property": "$.DisplayName"
                 }
               }
             }
@@ -458,10 +438,8 @@
   }, {
     "ListBox": {
       "Items": {
-        "PropertyBinding":{
-          "Source": "BloodGroupDataSource",
-          "Property": ""
-        }
+        "Source": "BloodGroupDataSource",
+        "Property": ""
       },
 
       "ItemTemplate":{
@@ -471,26 +449,20 @@
               "Label":{
                 "Background": "Primary1",
                 "Value":{
-                  "PropertyBinding": {
-                    "Source": "BloodGroupDataSource",
-                    "Property": "$.DisplayName"
-                  }
+                  "Source": "BloodGroupDataSource",
+                  "Property": "$.DisplayName"
                 }
               }
             },
             {
               "Label":{
                 "Value":{
-                  "PropertyBinding": {
-                    "Source": "BloodGroupDataSource",
-                    "Property": "$.Id"
-                  }
+                  "Source": "BloodGroupDataSource",
+                  "Property": "$.Id"
                 },
                 "Visible": {
-                  "PropertyBinding": {
-                    "Source": "BloodGroupDataSource",
-                    "Property": "$.SomeField"
-                  }
+                  "Source": "BloodGroupDataSource",
+                  "Property": "$.SomeField"
                 }
               }
             }
@@ -502,19 +474,15 @@
     "RadioGroup": {
 
       "Items": {
-        "PropertyBinding":{
-          "Source": "BloodGroupDataSource",
-          "Property": ""
-        }
+        "Source": "BloodGroupDataSource",
+        "Property": ""
       },
 
       "ItemTemplate":{
         "Label":{
           "Value":{
-            "PropertyBinding": {
-              "Source": "BloodGroupDataSource",
-              "Property": "$.DisplayName"
-            }
+            "Source": "BloodGroupDataSource",
+            "Property": "$.DisplayName"
           }
         }
       }
@@ -548,10 +516,8 @@
                 {
                   "Name": "p1",
                   "Value": {
-                    "PropertyBinding": {
-                      "Source": "BloodGroupDataSource",
-                      "Property": ""
-                    }
+                    "Source": "BloodGroupDataSource",
+                    "Property": ""
                   }
                 }
               ],
@@ -567,10 +533,8 @@
                     }
                   },
                   "Value": {
-                    "PropertyBinding": {
-                      "Source": "MainDataSource",
-                      "Property": "$"
-                    }
+                    "Source": "MainDataSource",
+                    "Property": "$"
                   }
                 }
               }]

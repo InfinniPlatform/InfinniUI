@@ -40,18 +40,14 @@ describe('Container (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -96,20 +92,16 @@ describe('Container (Control)', function () {
                                 "TextBox": {
                                     "Name": "TextBox1",
                                     "Value": {
-                                        "PropertyBinding":{
-                                            "Source": "ObjectDataSource1",
-                                            "Property": "Display"
-                                        }
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "Display"
                                     }
                                 }
                             },{
                                 "TextBox": {
                                     "Name": "TextBox2",
                                     "Value": {
-                                        "PropertyBinding":{
-                                            "Source": "ObjectDataSource1",
-                                            "Property": "Id"
-                                        }
+                                        "Source": "ObjectDataSource1",
+                                        "Property": "Id"
                                     }
                                 }
                             }
@@ -153,10 +145,8 @@ describe('Container (Control)', function () {
                     StackPanel: {
                         Name: 'MainViewPanel',
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -204,10 +194,8 @@ describe('Container (Control)', function () {
                         Name: 'MainViewPanel',
                         "ItemProperty": "Name.Temp",
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -257,10 +245,8 @@ describe('Container (Control)', function () {
                         Name: 'MainViewPanel',
                         "ItemFormat": "Connect: {Name.Temp}",
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -310,10 +296,8 @@ describe('Container (Control)', function () {
                             Name: 'GetTitle'
                         },
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }],
@@ -364,18 +348,14 @@ describe('Container (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -436,18 +416,14 @@ describe('Container (Control)', function () {
                             "TextBox": {
                                 "Name": "TextBox1",
                                 "Value": {
-                                    "PropertyBinding":{
-                                        "Source": "ObjectDataSource1",
-                                        "Property": "$.Display"
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
                                 }
                             }
                         },
                         "Items" : {
-                            "PropertyBinding": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            }
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
                         }
                     }
                 }]
@@ -495,29 +471,23 @@ describe('Container (Control)', function () {
                                     "TextBox": {
                                         "Name": "TextBox1",
                                         "Value": {
-                                            "PropertyBinding":{
-                                                "Source": "ObjectDataSource1",
-                                                "Property": "$.Display"
-                                            }
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "$.Display"
                                         }
                                     }
                                 },
                                 "GroupItemTemplate": {
                                     "Label": {
                                         "Value": {
-                                            "PropertyBinding":{
-                                                "Source": "ObjectDataSource1",
-                                                "Property": "$.Display"
-                                            }
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "$.Display"
                                         }
                                     }
                                 },
                                 "GroupValueProperty": "Display",
                                 "Items" : {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": ""
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": ""
                                 }
                             }
                         }
@@ -569,20 +539,16 @@ describe('Container (Control)', function () {
                                     "TextBox": {
                                         "Name": "TextBox1",
                                         "Value": {
-                                            "PropertyBinding":{
-                                                "Source": "ObjectDataSource1",
-                                                "Property": "$.Display"
-                                            }
+                                            "Source": "ObjectDataSource1",
+                                            "Property": "$.Display"
                                         }
                                     }
                                 },
                                 "GroupItemFormat": "Connect: {Display}",
                                 "GroupValueProperty": "Display",
                                 "Items" : {
-                                    "PropertyBinding": {
-                                        "Source": "ObjectDataSource1",
-                                        "Property": ""
-                                    }
+                                    "Source": "ObjectDataSource1",
+                                    "Property": ""
                                 }
                             }
                         }
@@ -629,18 +595,14 @@ describe('Container (Control)', function () {
                         "TextBox": {
                             "Name": "TextBox1",
                             "Value": {
-                                "PropertyBinding":{
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
-                                }
+                                "Source": "ObjectDataSource1",
+                                "Property": "$.Display"
                             }
                         }
                     },
                     "Items" : {
-                        "PropertyBinding": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
                     },
 
                     "ItemComparator": {

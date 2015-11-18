@@ -48,7 +48,7 @@ var editorBaseBuilderMixin = {
                 basePathOfProperty: params.basePathOfProperty
             };
 
-            var dataBinding = params.builder.build(metadata.Value, buildParams);
+            var dataBinding = params.builder.buildBinding(metadata.Value, buildParams);
             if (bindingOptions.converter) {
                 dataBinding.setConverter(bindingOptions.converter);
             }

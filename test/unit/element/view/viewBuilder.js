@@ -25,10 +25,8 @@ describe('ViewBuilder', function () {
             "TextBox": {
                 "Name": "TextBox1",
                 "Value": {
-                    "PropertyBinding":{
-                        "Source": "objectDataSource1",
-                        "Property": "$.Display"
-                    }
+                    "Source": "objectDataSource1",
+                    "Property": "$.Display"
                 }
             }
         }],
