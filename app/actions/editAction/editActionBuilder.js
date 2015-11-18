@@ -10,15 +10,15 @@ function EditActionBuilder(){
         } else {
             action = new EditItemAction(parentView);
 
-            action.setProperty('DestinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
             action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
         }
 
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
 
         action.setProperty('linkView', linkView);
-        action.setProperty('DestinationSource', metadata.DestinationValue.Source);
-        action.setProperty('SourceSource', metadata.SourceValue.Source);
+        action.setProperty('destinationSource', metadata.DestinationValue.Source);
+        action.setProperty('sourceSource', metadata.SourceValue.Source);
 
         return action;
     }

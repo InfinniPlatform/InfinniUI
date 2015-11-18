@@ -7,7 +7,7 @@ _.inherit(EditAction, BaseEditAction);
 
 _.extend(EditAction.prototype, {
     setSelectedItem: function(){
-        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
         var editDataSource = this.getEditDataSource();
 
@@ -17,7 +17,7 @@ _.extend(EditAction.prototype, {
     },
 
     save: function(){
-        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
         if(destinationSource){
@@ -27,7 +27,7 @@ _.extend(EditAction.prototype, {
 
     getEditDataSource: function(){
         var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('SourceSource');
+        var editSourceName = this.getProperty('sourceSource');
         var editDataSource = editView.getContext().dataSources[editSourceName];
 
         return editDataSource;

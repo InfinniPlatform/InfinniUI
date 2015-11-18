@@ -12,14 +12,14 @@ function AddActionBuilder(){
         } else {
             action = new AddItemAction(parentView);
 
-            action.setProperty('DestinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('SourceSource', metadata.SourceValue.Source);
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('sourceSource', metadata.SourceValue.Source);
         }
 
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
 
         action.setProperty('linkView', linkView);
-        action.setProperty('DestinationSource', metadata.DestinationValue.Source);
+        action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
         return action;
     }

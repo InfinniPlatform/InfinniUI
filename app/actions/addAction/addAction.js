@@ -10,7 +10,7 @@ _.extend(AddAction.prototype, {
     },
 
     save: function(){
-        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
         if(destinationSource){

@@ -11,9 +11,9 @@ _.extend(EditItemAction.prototype, {
 
         var index = this.getProperty('index');
 
-        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
-        var destinationProperty = this.getProperty('DestinationProperty');
+        var destinationProperty = this.getProperty('destinationProperty');
 
         var items =destinationSource.getProperty(destinationProperty);
         var item = _.clone(items[index]);
@@ -25,9 +25,9 @@ _.extend(EditItemAction.prototype, {
     save: function(){
         var editDataSource =  this.getEditDataSource();
 
-        var destinationSourceName = this.getProperty('DestinationSource');
+        var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
-        var destinationProperty = this.getProperty('DestinationProperty');
+        var destinationProperty = this.getProperty('destinationProperty');
 
         var index = this.getProperty('index');
 
@@ -38,7 +38,7 @@ _.extend(EditItemAction.prototype, {
 
     getEditDataSource: function(){
         var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('SourceSource');
+        var editSourceName = this.getProperty('sourceSource');
         var editDataSource = editView.getContext().dataSources[editSourceName];
 
         return editDataSource;
