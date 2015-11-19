@@ -45,9 +45,20 @@ _.extend(ViewBuilder.prototype, {
         }
 
         if (metadata.Parameters) {
+            var passedParams = params.params || {};
+            var param;
+
             for (var i = 0, len = metadata.Parameters.length; i < len; ++i) {
-                var param = builder.buildType('Parameter', metadata.Parameters[i], {parentView: element});
-                parameters.add(param);
+                param = passedParams[metadata.Parameters[i]['Name']];
+
+                if(param){
+                    parameters.add(param);
+                    if(metadata.Parameters[i]['OnPropertyChanged']){
+                        param.onPropertyChanged(function(){
+                            new ScriptExecutor(element).executeScript(metadata.Parameters[i]['OnPropertyChanged']);
+                        });
+                    }
+                }
             }
         }
 

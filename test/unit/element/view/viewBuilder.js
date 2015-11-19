@@ -34,7 +34,6 @@ describe('ViewBuilder', function () {
         Parameters: [
             {
                 Name: 'param1',
-                Value: {},
                 OnPropertyChanged: 'OnParameterChanged'
             }
         ],
