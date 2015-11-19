@@ -58,9 +58,9 @@ function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
         if (failCallback) {
             failCallback(err);
         }
-        if (resultCallback) {
-            resultCallback(err.responseJSON);
-        }
+        //if (resultCallback) {
+        //    resultCallback(err.responseJSON);
+        //}
     };
 
     var cacheRequest = function (requestData, request) {
