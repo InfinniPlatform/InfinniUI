@@ -91,4 +91,4 @@ _.extend(Logger.prototype, {
     }
 })
 
-var logger = new Logger();
+window.InfinniUI.global.logger = new Logger();

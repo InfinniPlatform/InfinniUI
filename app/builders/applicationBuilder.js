@@ -3,6 +3,8 @@
         this.builder = new Builder();
         this.registerElementBuilders();
     }
+
+    window.InfinniUI.global.factory = this;
 }
 
 _.extend(ApplicationBuilder.prototype, {

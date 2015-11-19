@@ -25,7 +25,8 @@ _.extend(View.prototype,
                 scripts: {},
                 parameters: {},
                 dataSources: {},
-                controls: {}
+                controls: {},
+                global: InfinniUI.global
             };
 
             var that = this;

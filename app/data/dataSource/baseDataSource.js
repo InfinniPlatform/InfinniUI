@@ -399,6 +399,7 @@ onItemSaved: function (handler) {
     saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
             ds = this,
+            logger = window.InfinniUI.global.logger,
             validateResult;
 
         if (!this.isModified(item)) {
@@ -532,6 +533,8 @@ onItemSaved: function (handler) {
     },
 
     getItems: function () {
+        var logger = window.InfinniUI.global.logger;
+
         if (!this.isDataReady()) {
             logger.warn({
                 message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',

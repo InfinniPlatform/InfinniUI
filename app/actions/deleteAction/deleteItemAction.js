@@ -34,7 +34,8 @@ _.extend(DeleteItemAction.prototype, {
     remove: function (callback) {
         var dataSource = this.getProperty('destinationSource'),
             propertyName = this.getProperty('destinationProperty'),
-            index = this.getProperty('index');
+            index = this.getProperty('index'),
+            logger = window.InfinniUI.global.logger;
 
         // важно для изменения массива использовать именно setProperty (иначе не произойдёт OnItemsUpdate),
         // поэтому работать с массивом по ссылке нельзя

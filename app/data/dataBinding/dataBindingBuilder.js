@@ -3,6 +3,7 @@ var DataBindingBuilder = function () {};
 DataBindingBuilder.prototype.build = function (context, args) {
     var result = new DataBinding();
     var metadata = args.metadata;
+    var logger = window.InfinniUI.global.logger;
     var property;
 
     if(metadata.Source == null){
