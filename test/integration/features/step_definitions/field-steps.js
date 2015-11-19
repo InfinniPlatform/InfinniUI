@@ -89,6 +89,29 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
     window.testHelpers.waitCondition(haveValue, checkValue, fail);
 });
 
+this.Then(/^значение в поле "([^"]*)" списка "([^"]*)" равно "([^"]*)"$/, function(fieldName, listBoxName, value, next){
+	var haveControls = function(){
+		return 	window.currentViewContext.Controls[listBoxName] != undefined &&
+				window.currentViewContext.Controls[fieldName] != undefined;
+	}
+	var success = function(){
+		var elements = window.currentViewContext.Controls[listBoxName].children.findAllChildrenByName(fieldName);
+		var isSuccess = false;
+
+		for(var i = 0;i < elements.length && !isSuccess;i++){
+			isSuccess = elements[i].getText() === value;
+		}
+
+		isSuccess ? next() : next(new Error(value + ' not found!'));
+	}
+	var fail = function(){
+		var errorString = (window.currentViewContext.Controls[listBoxName] == undefined ? listBoxName : fieldName) + " not found!";
+		next(new Error(errorString));
+	}
+
+	window.testHelpers.waitCondition(haveControls, success, fail);
+});
+
 this.Then(/^значение в поле типа дата "([^"]*)" равно Сегодня$/, function (fieldName, next) {
     var haveValue = function () {
         return (window.currentViewContext.Controls[fieldName] != undefined);
