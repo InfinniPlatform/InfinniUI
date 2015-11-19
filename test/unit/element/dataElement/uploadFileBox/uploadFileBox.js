@@ -21,38 +21,38 @@ describe('UploadFileBox', function () {
 
     });
 
-    describe('UploadFileBox', function () {
-
-        var element;
-
-        beforeEach (function () {
-            element = new UploadFileBox();
-        });
-
-        it('Default property value', function () {
-            // Given
-
-            //$('body').append(element.render());
-            assert.strictEqual(element.getReadOnly(), false);
-            assert.strictEqual(element.getMaxSize(), 0);
-
-        });
-
-        it('Setting properties', function () {
-
-            // Given
-            element.setReadOnly(true);
-            element.setAcceptTypes(['video/*']);
-            element.setMaxSize(50000);
-            element.setValue({Info: {}});
-
-            assert.equal(element.getReadOnly(), true);
-            assert.deepEqual(element.getAcceptTypes(), ['video/*']);
-            assert.deepEqual(element.getValue(), {Info: {}});
-            assert.equal(element.getMaxSize(), 50000);
-        });
-
-    });
+    //describe('UploadFileBox', function () {
+    //
+    //    var element;
+    //
+    //    beforeEach (function () {
+    //        element = new UploadFileBox();
+    //    });
+    //
+    //    it('Default property value', function () {
+    //        // Given
+    //
+    //        //$('body').append(element.render());
+    //        assert.strictEqual(element.getReadOnly(), false);
+    //        assert.strictEqual(element.getMaxSize(), 0);
+    //
+    //    });
+    //
+    //    it('Setting properties', function () {
+    //
+    //        // Given
+    //        element.setReadOnly(true);
+    //        element.setAcceptTypes(['video/*']);
+    //        element.setMaxSize(50000);
+    //        element.setValue({Info: {}});
+    //
+    //        assert.equal(element.getReadOnly(), true);
+    //        assert.deepEqual(element.getAcceptTypes(), ['video/*']);
+    //        assert.deepEqual(element.getValue(), {Info: {}});
+    //        assert.equal(element.getMaxSize(), 50000);
+    //    });
+    //
+    //});
 
 
 //    describe('UploadFileBox data binding', function () {

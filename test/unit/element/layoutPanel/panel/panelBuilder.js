@@ -15,10 +15,8 @@ describe('PanelBuilder', function () {
             }
         };
 
-        var applicationBuilder = new ApplicationBuilder();
-
-        //Then
-        var panel = applicationBuilder.build(applicationBuilder, metadata);
+        var builder = new ApplicationBuilder();
+        var panel = builder.build(metadata, {parentView: fakeView()});
 
         //When
         assert.equal(panel.getText(), 'panel');

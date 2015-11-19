@@ -48,32 +48,6 @@ describe('ComboBox', function () {
             assert.equal(onLoadFlag, 1);
             assert.equal(onValueChanged, 1);
         });
-
-        //TODO: когда починят comboBox
-        it('should be true if scriptsHandlers call', function () {
-            //Given
-            var comboBox = new ComboBoxBuilder();
-            var view = new View();
-            var metadata = {
-                OnValueChanged:{
-                    Name: 'OnValueChanged'
-                },
-                OnLoaded:{
-                    Name: 'OnLoaded'
-                }
-            };
-            window.Test = {comboBox:1, comboBoxLoaded: false};
-            view.getScripts.add([{Name:"OnValueChanged", Body:"window.Test.comboBox = 5"}, {Name:"OnLoaded", Body:"window.Test.comboBoxLoaded = true"}]);
-
-            //When
-            var build = comboBox.build(comboBox, view, metadata);
-            build.setValue(true);
-            $(build.render());
-
-            // Then
-            assert.equal(window.Test.comboBox, 5);
-            assert.isTrue(window.Test.comboBoxLoaded);
-        });
     });
 
 

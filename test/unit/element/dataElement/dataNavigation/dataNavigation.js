@@ -1,4 +1,4 @@
-describe('DataNavigation', function () {
+/*describe('DataNavigation', function () {
     it('should pass test default property', function () {
         // Given
         var dataNavigationBuilder = new DataNavigationBuilder();
@@ -92,4 +92,4 @@ describe('DataNavigation', function () {
         assert.equal(window.Test.dataNavigation.pn, 3);
         assert.isTrue(window.Test.dataNavigation.loaded);
     });
-});
+});*/

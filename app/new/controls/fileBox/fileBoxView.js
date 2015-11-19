@@ -22,6 +22,97 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         'click .file-remove': 'onClickRemoveImageHandler'
     },
 
+    initHandlersForProperties: function(){
+        ControlView.prototype.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:fileName', this.updateFileName);
+        this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
+        this.listenTo(this.model, 'change:url', this.updateUrl);
+
+        this.listenTo(this.model, 'change:hintText', this.updateHintText);
+        this.listenTo(this.model, 'change:errorText', this.updateErrorText);
+        this.listenTo(this.model, 'change:warningText', this.updateWarningText);
+    },
+
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+
+        this.updateHintText();
+        this.updateErrorText();
+        this.updateWarningText();
+    },
+
+    updateHintText: function(){
+        var hintText = this.model.get('hintText');
+        if(hintText){
+            this.ui.hintText
+                .text(hintText)
+                .removeClass('hidden');
+        }else{
+            this.ui.hintText
+                .text('')
+                .addClass('hidden');
+        }
+
+    },
+
+    updateErrorText: function(){
+        var errorText = this.model.get('errorText');
+        if(errorText){
+            this.ui.errorText
+                .text(errorText)
+                .removeClass('hidden');
+        }else{
+            this.ui.errorText
+                .text('')
+                .addClass('hidden');
+        }
+
+    },
+
+    updateWarningText: function(){
+        var warningText = this.model.get('warningText');
+        if(warningText){
+            this.ui.warningText
+                .text(warningText)
+                .removeClass('hidden');
+        }else{
+            this.ui.warningText
+                .text('')
+                .addClass('hidden');
+        }
+
+    },
+
+    updateEnabled: function () {
+        ControlView.prototype.updateEnabled.call(this);
+
+        var isEnabled = this.model.get('enabled');
+        this.ui.input.prop('disabled', !isEnabled);
+    },
+
+    updateFileName: function () {
+        var fileName = this.model.get('fileName');
+        this.ui.name.text(fileName);
+        this.ui.file.toggle(typeof fileName !== 'undefined' && fileName !== null && fileName.length);
+    },
+
+    updateFileSize: function () {
+        var fileSize = this.model.get('fileSize');
+
+        var text = '';
+        if (typeof fileSize !== 'undefined' && fileSize !== null) {
+            text = InfinniUI.format.humanFileSize(fileSize);
+        }
+        this.ui.size.text(text);
+    },
+
+    updateUrl: function () {
+        var url = this.model.get('url');
+
+
+    },
+
     onClickRemoveImageHandler: function () {
         this.model.removeFile();
         this.ui.input.val('');
@@ -39,50 +130,14 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     render: function () {
         this.prerenderingActions();
+
         this.renderTemplate(this.template);
-        this.postrenderingActions();
+        this.updateProperties();
+
         this.trigger('render');
+
+        this.postrenderingActions();
         return this;
-    },
-
-    initOnChangeHandler: function () {
-        ControlView.prototype.initOnChangeHandler.call(this);
-        editorBaseViewMixin.initOnChangeHandler.call(this);
-
-        this
-            .listenTo(this.model, 'change:fileName', this.onChangeFileNameHandler)
-            .listenTo(this.model, 'change:fileSize', this.onChangeFileSizeHandler)
-            .listenTo(this.model, 'change:url', this.onChangeUrlHandler)
-            .listenTo(this.model, 'change:enabled', this.OnChangeEnabledHandler);
-    },
-
-    onChangeFileNameHandler: function (model, value) {
-        this.ui.name.text(value);
-        this.ui.file.toggle(typeof value !== 'undefined' && value !== null && value.length);
-    },
-
-    onChangeFileSizeHandler: function (model, value) {
-        var text = '';
-        if (typeof value !== 'undefined' && value !== null) {
-            text = InfinniUI.format.humanFileSize(value);
-        }
-        this.ui.size.text(text);
-    },
-
-    getData: function () {
-
-        return _.extend({},
-            ControlView.prototype.getData.call(this),
-            editorBaseViewMixin.getData.call(this)
-        );
-    },
-
-    OnChangeEnabledHandler: function (model, value) {
-        this.ui.input.prop('disabled', !value);
-    },
-
-    onChangeUrlHandler: function (model, value) {
-
     }
 
 }));
