@@ -109,9 +109,10 @@ describe('ViewBuilder', function () {
         // Given
         var viewBuilder = new ViewBuilder();
         var metadata = viewMetadata;
+        var param = new Parameter({name: 'param1'});
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, params: {param1: param}});
 
         // Then
         assert.equal(view.getParameters().length, 1);
