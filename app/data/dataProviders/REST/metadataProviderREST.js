@@ -13,13 +13,7 @@ function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallb
 
     this.getViewMetadata = function (resultCallback, onFail) {
         var data = metadataUrlConstructor.constructViewMetadataRequest();
-        new RequestExecutor(resultCallback,successCallback,function (err) {
-            [onFail, failCallback].forEach(function (callback) {
-                if(typeof callback === 'function') {
-                    callback.call(null, err);
-                }
-            });
-        }, this.cache).makeRequest(data);
+        new RequestExecutor(resultCallback,successCallback,failCallback, this.cache).makeRequest(data);
     };
 
     this.getConfigMetadata = function (resultCallback) {

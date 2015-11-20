@@ -34,7 +34,7 @@ function MetadataViewBuilder() {
                         param.Value = metadata.Parameters[param.Name];
                     }
                 }
-                
+
                 var view = builder.buildType(parent, "View", viewMetadata, undefined, params);
 
                 if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
@@ -45,13 +45,6 @@ function MetadataViewBuilder() {
             } else {
                 console.log(stringUtils.format('view metadata for {0} not found.', [metadata]));
             }
-        }, function (err) {
-            if (err.status == 0) {
-                console.log('view metadata request failed', metadata);
-            } else {
-                throw new Error(stringUtils.format('view metadata for {0} not found.', [metadata]));
-            }
-
         });
     };
 
