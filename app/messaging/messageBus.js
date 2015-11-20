@@ -1,4 +1,4 @@
-function MessageBus() {
+function MessageBus(view) {
     var subscriptions = {};
 
     this.send = function (messageType, messageBody) {
@@ -23,6 +23,10 @@ function MessageBus() {
         if(subscriptions[messageType]){
             delete subscriptions[messageType];
         }
+    };
+
+    this.getView = function(){
+        return view;
     };
 }
 
