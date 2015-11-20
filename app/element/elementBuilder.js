@@ -73,14 +73,14 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
 
         if (metadata.OnGotFocus){
-            params.element.onGotFocus(function() {
-                new ScriptExecutor(params.view).executeScript(metadata.OnGotFocus.Name);
+            element.onGotFocus(function() {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name, {source: element});
             });
         }
 
         if (metadata.OnLostFocus){
-            params.element.onLostFocus(function() {
-                new ScriptExecutor(params.view).executeScript(metadata.OnLostFocus.Name);
+            element.onLostFocus(function() {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name, {source: element});
             });
         }
     },

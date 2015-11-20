@@ -33,6 +33,16 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
         this.updateTextOff();
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.ui.container.attr('tabindex', 0);
+        } else {
+            this.ui.container.removeAttr('tabindex');
+        }
+    },
+
     updateTextOn: function () {
         var textOn = this.model.get('textOn');
         this.ui.textOn.html(textOn || '&nbsp;');
