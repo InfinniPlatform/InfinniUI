@@ -9,7 +9,9 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.once('render', this.initHandlersForProperties, this);
     },
 
-    initHandlersForProperties: function(){
+    classNameFocused: 'pl-focused',
+
+    initHandlersForProperties: function () {
         this.listenTo(this.model, 'change:visible', this.updateVisible);
         this.listenTo(this.model, 'change:horizontalAlignment', this.updateHorizontalAlignment);
         this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
@@ -24,9 +26,39 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.listenTo(this.model, 'change:texture', this.updateTexture);
 
         this.listenTo(this.model, 'change:validationState', this.updateValidationState);
+
+
+        this.listenTo(this.model, 'change:focusable', this.updateFocusable);
+        this.listenTo(this.model, 'change:focused', this.updateFocused);
+
+        this.initFocusHandlers();
     },
 
-    updateProperties: function(){
+    initFocusHandlers: function () {
+        var
+            $el = this.$el,
+            el = this.el,
+            model = this.model;
+
+        $el
+            .on('focusin', onFocusIn)
+            .on('focusout', onFocusOut);
+
+        function onFocusIn(event) {
+            model.set('focused', true);
+        }
+
+        function onFocusOut(event) {
+            if ($.contains(el, event.relatedTarget)) {
+                //focus out to element inside control
+            } else {
+                //focus out
+                model.set('focused', false);
+            }
+        }
+    },
+
+    updateProperties: function () {
         this.updateVisible();
         this.updateHorizontalAlignment();
         this.updateVerticalAlignment();
@@ -41,7 +73,40 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.updateTexture();
 
         this.updateValidationState();
+
+        this.updateFocusable();
+        this.updateFocused();
     },
+
+    /**
+     * @description Изменяет контрол в соответсвии со значением focusable. Напр. добавить tabindex="0"
+     */
+    updateFocusable: function () {
+
+    },
+
+    /**
+     * @description Возвращает элемент, который должен получить фокус
+     */
+    getElementForFocus: function () {
+        return this.$el;
+    },
+
+    updateFocused: function () {
+        var focused = this.model.get('focused');
+
+        var $el = this.getElementForFocus();
+        if ($el && $el.length) {
+            $el.focus();
+        }
+        this.$el.toggleClass(this.classNameFocused, focused);
+    },
+
+
+    onFocusHandler: function (event) {
+        console.log('onFocus');
+    },
+
 
     updateVisible: function () {
         var isVisible = this.model.get('visible');
@@ -68,8 +133,8 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         var regexp = new RegExp('(^|\\s)' + prefix + '\\S+', 'ig');
 
         this.$el.removeClass(function (i, name) {
-            return (name.match(regexp) || []).join(' ');
-        })
+                return (name.match(regexp) || []).join(' ');
+            })
             .addClass(prefix + verticalAlignment);
     },
 
@@ -122,14 +187,14 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateTextStyle: function () {
         var customStyle = this.model.get('textStyle');
 
-        if(this.currentTextStyle){
+        if (this.currentTextStyle) {
             this.$el
-                .removeClass( this.valueToTextClassName(this.currentTextStyle) );
+                .removeClass(this.valueToTextClassName(this.currentTextStyle));
         }
 
-        if(customStyle){
+        if (customStyle) {
             this.$el
-                .addClass( this.valueToTextClassName(customStyle) );
+                .addClass(this.valueToTextClassName(customStyle));
         }
 
         this.currentTextStyle = customStyle;
@@ -138,14 +203,14 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateBackground: function () {
         var customStyle = this.model.get('background');
 
-        if(this.currentBackground){
+        if (this.currentBackground) {
             this.$el
-                .removeClass( this.valueToBackgroundClassName(this.currentBackground) );
+                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
         }
 
-        if(customStyle){
+        if (customStyle) {
             this.$el
-                .addClass( this.valueToBackgroundClassName(customStyle) );
+                .addClass(this.valueToBackgroundClassName(customStyle));
         }
 
         this.currentBackground = customStyle;
@@ -154,14 +219,14 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateForeground: function () {
         var customStyle = this.model.get('foreground');
 
-        if(this.currentForeground){
+        if (this.currentForeground) {
             this.$el
-                .removeClass( this.valueToForegroundClassName(this.currentForeground) );
+                .removeClass(this.valueToForegroundClassName(this.currentForeground));
         }
 
-        if(customStyle){
+        if (customStyle) {
             this.$el
-                .addClass( this.valueToForegroundClassName(customStyle) );
+                .addClass(this.valueToForegroundClassName(customStyle));
         }
 
         this.currentForeground = customStyle;
@@ -170,14 +235,14 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateTexture: function () {
         var customStyle = this.model.get('texture');
 
-        if(this.currentTexture){
+        if (this.currentTexture) {
             this.$el
-                .removeClass( this.valueToTextureClassName(this.currentTexture) );
+                .removeClass(this.valueToTextureClassName(this.currentTexture));
         }
 
-        if(customStyle){
+        if (customStyle) {
             this.$el
-                .addClass( this.valueToTextureClassName(customStyle) );
+                .addClass(this.valueToTextureClassName(customStyle));
         }
 
         this.currentTexture = customStyle;
@@ -186,12 +251,12 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateStyle: function () {
         var customStyle = this.model.get('style');
 
-        if(this.currentStyle){
+        if (this.currentStyle) {
             this.$el
                 .removeClass(this.currentStyle);
         }
 
-        if(customStyle){
+        if (customStyle) {
             this.$el
                 .addClass(customStyle);
         }
@@ -202,34 +267,40 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateValidationState: function () {
         var newState = this.model.get('validationState'),
             message = this.model.get('validationMessage');
-        switch(newState){
+        switch (newState) {
 
-            case 'success': {
+            case 'success':
+            {
                 this.$el
                     .removeClass('has-warning has-error');
                 this.hideErrorMessage();
-            }break;
+            }
+                break;
 
-            case 'warning': {
+            case 'warning':
+            {
                 this.$el
                     .removeClass('has-error')
                     .addClass('has-warning');
                 this.showErrorMessage(message);
-            }break;
+            }
+                break;
 
-            case 'error': {
+            case 'error':
+            {
                 this.$el
                     .removeClass('has-warning')
                     .addClass('has-error');
                 this.showErrorMessage(message);
-            }break;
+            }
+                break;
 
         }
 
     },
 
-    showErrorMessage: function(message){
-        var $errorIcn = $(_.template('<i class="2 error-icn fa fa-warning" data-placement="left" title="<%-message%>"></i>')({message:message}));
+    showErrorMessage: function (message) {
+        var $errorIcn = $(_.template('<i class="2 error-icn fa fa-warning" data-placement="left" title="<%-message%>"></i>')({message: message}));
 
         this.hideErrorMessage();
         this.$el.find('.form-control:first')
@@ -238,7 +309,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         $errorIcn.tooltip({'container': 'body'});
     },
 
-    hideErrorMessage: function(){
+    hideErrorMessage: function () {
         this.$el.find('.error-icn')
             .remove();
     },
@@ -271,24 +342,24 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         var regexp = new RegExp('(^|\\s)' + startWith + '\\S+', 'ig');
         var $element = $el || this.$el;
         $element.removeClass(function (i, name) {
-            return (name.match(regexp) || []).join(' ');
-        })
+                return (name.match(regexp) || []).join(' ');
+            })
             .addClass(startWith + value);
     },
 
-    valueToBackgroundClassName: function(value){
+    valueToBackgroundClassName: function (value) {
         return 'pl-' + value.toLowerCase() + '-bg';
     },
 
-    valueToForegroundClassName: function(value){
+    valueToForegroundClassName: function (value) {
         return 'pl-' + value.toLowerCase() + '-fg';
     },
 
-    valueToTextClassName: function(value){
+    valueToTextClassName: function (value) {
         return 'pl-' + value.toLowerCase();
     },
 
-    valueToTextureClassName: function(value){
+    valueToTextureClassName: function (value) {
         return 'pl-' + value.toLowerCase();
     },
 

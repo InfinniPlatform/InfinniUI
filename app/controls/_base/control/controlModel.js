@@ -13,11 +13,16 @@ var ControlModel = Backbone.Model.extend({
         texture: null,
         isLoaded: false,
         validationState: 'success',
-        validationMessage: ''
+        validationMessage: '',
+        focusable: true,
+        focused: false
     },
 
     initialize: function(){
         this.set('guid', guid(), {silent: true});
+        this.on('change:focused', function (model, value) {
+            this.trigger(value ? 'OnGotFocus' : 'OnLostFocus');
+        });
     },
     
     set: function (key, val, options) {

@@ -262,12 +262,28 @@ _.extend(Element.prototype, {
         this.control.onLoaded(handler);
     },
 
+    getFocusable: function () {
+        return this.control.get('focusable')
+    },
+
+    setFocusable: function (value) {
+        this.control.get('focusable', !!value)
+    },
+
+    getFocused: function () {
+        return this.control.get('focused');
+    },
+
+    setFocused: function (value) {
+        return this.control.set('focused', !!value);
+    },
+
     onLostFocus: function (handler) {
-        this.control.controlView.addEventHandler('OnLostFocus', handler);
+        this.control.on('OnLostFocus', handler);
     },
 
     onGotFocus: function (handler) {
-        this.control.controlView.addEventHandler('OnGotFocus', handler);
+        this.control.on('OnGotFocus', handler);
     },
 
     getIsLoaded: function () {
