@@ -1,5 +1,5 @@
-function Label() {
-    _.superClass(Label, this);
+function Label(parentView) {
+    _.superClass(Label, this, parentView);
 }
 
 _.inherit(Label, Element);
