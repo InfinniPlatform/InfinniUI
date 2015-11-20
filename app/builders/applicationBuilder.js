@@ -39,6 +39,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ListBox', new ListBoxBuilder());
 
         builder.register('TextBox', new TextBoxBuilder());
+        builder.register('PasswordBox', new PasswordBoxBuilder());
         builder.register('CheckBox', new CheckBoxBuilder());
         builder.register('ImageBox', new ImageBoxBuilder());
         builder.register('FileBox', new FileBoxBuilder());
