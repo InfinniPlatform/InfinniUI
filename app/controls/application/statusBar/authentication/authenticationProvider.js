@@ -82,31 +82,12 @@ _.extend(AuthenticationProvider.prototype, {
      */
     signInInternal: function (userName, password, remember, resultCallback, errorCallback) {
         var signInInternalForm = {
-            "id" : null,
-            "changesObject" : {
-                "UserName" : userName,
-                "Password" : password,
-                "Remember" : remember
-            },
-            "replace" : false
+            UserName: userName,
+            Password: password,
+            Remember: remember
         };
 
-        var that = this;
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/signin', signInInternalForm, function() {
-
-                var args = _.toArray(arguments);
-                if(resultCallback){
-                    resultCallback.apply(this, args);
-                }
-
-                that.handlers.onSignInInternal.fire.apply(that.handlers.onSignInInternal, args);
-                var exchange = messageBus.getExchange('global');
-                exchange.send('OnSignInInternal', {value: args});
-
-        }, errorCallback);
-
-
-
+        this.sendPostRequest('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
     },
 
     /**
