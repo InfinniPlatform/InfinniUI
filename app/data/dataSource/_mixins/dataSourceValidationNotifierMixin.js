@@ -41,7 +41,7 @@ var DataSourceValidationNotifierMixin = {
         result.items.forEach(function (item) {
             if (typeof item.property === 'undefined' || _.isEmpty(item.property)) {
 
-                var exchange = messageBus.getExchange('global');
+                var exchange = window.InfinniUI.global.messageBus;
                 exchange.send(messageTypes.onNotifyUser, {messageText: item.message, messageType: validationType});
             }
         });

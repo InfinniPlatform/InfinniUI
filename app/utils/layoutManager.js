@@ -280,7 +280,7 @@ var layoutManager = {
         this.windowHeight = $(window).height();
         this.onChangeLayout(container);
         if (this.exchange === null) {
-            this.exchange = messageBus.getExchange('global');
+            this.exchange = window.InfinniUI.global.messageBus;
             this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
         }
 

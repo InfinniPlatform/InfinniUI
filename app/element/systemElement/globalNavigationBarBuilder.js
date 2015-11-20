@@ -24,7 +24,7 @@ _.extend(GlobalNavigationBarBuilder.prototype, {
     },
 
     getGlobalMessageBus: function () {
-        return messageBus.getExchange('global');
+        return window.InfinniUI.global.messageBus;
     },
 
     /**

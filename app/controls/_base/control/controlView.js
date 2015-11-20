@@ -52,7 +52,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     },
 
     onUpdateVisible: function () {
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
         exchange.send('OnChangeLayout', {});
     },
 

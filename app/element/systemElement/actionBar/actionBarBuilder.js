@@ -14,7 +14,7 @@ _.extend(ActionBarBuilder.prototype, {
         //params.element.setApplicationView(applicationView);
 
 
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
 
         exchange.subscribe(messageTypes.onViewOpened, this.onViewOpened.bind(this, params));
 

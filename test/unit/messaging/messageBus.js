@@ -1,26 +1,51 @@
 describe('MessageBus', function () {
-    var bus;
+    var messageBus;
 
     beforeEach(function () {
-        bus = new MessageBus();
+        messageBus = new MessageBus();
     });
 
-    describe('getExchange', function () {
-        it('should throw error for empty exchangeName', function () {
-            try {
-                bus.getExchange();
-            } catch (e) {
-                assert.ok(true);
-                return;
-            }
+    describe('send', function () {
+        it('should send', function () {
+            var flag = 0;
 
-            assert.fail();
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
+                flag += obj;
+            });
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
+                flag += obj;
+            });
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
+                flag += obj;
+            });
+
+            messageBus.send(messageTypes.onViewOpened.name, 2);
+
+            assert.equal(flag, 6);
         });
 
-        it('should return exchange', function () {
-            var exchange = bus.getExchange('test');
+        it('should deliver message to valid subscribers', function () {
+            var flag1 = 0,
+                flag2 = 0;
 
-            assert.isNotNull(exchange);
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
+                flag1 += obj;
+            });
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
+                flag1 += obj;
+            });
+            messageBus.subscribe(messageTypes.onViewClosed.name, function (obj) {
+                flag2 += obj;
+            });
+            messageBus.subscribe(messageTypes.onViewClosed.name, function (obj) {
+                flag2 += obj;
+            });
+
+            messageBus.send(messageTypes.onViewOpened.name, 1);
+            messageBus.send(messageTypes.onViewClosed.name, 2);
+
+            assert.equal(flag1, 2, 'first handler flag is right');
+            assert.equal(flag2, 4, 'second handler flag is right');
         });
-    })
+    });
 });

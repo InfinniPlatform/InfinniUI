@@ -4,7 +4,7 @@
  */
 InfinniUI.NotifyService = (function () {
 
-    var exchange = messageBus.getExchange('global');
+    var exchange = window.InfinniUI.global.messageBus;
 
     exchange.subscribe(messageTypes.onNotifyUser, function (message) {
         var

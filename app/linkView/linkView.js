@@ -35,7 +35,7 @@ LinkView.prototype.createView = function (resultCallback) {
         view.onOpened(function (args) {
             view.onClosed(function () {
                 args.$layout.remove();
-                messageBus.getExchange('global')
+                window.InfinniUI.global.messageBus
                     .send(messageTypes.onViewClosed, {view: view});
             });
 

@@ -26,7 +26,7 @@ var OpenModeApplicationStrategy = function (linkView) {
                 $rootContainer.data('view', view);
             }
 
-            messageBus.getExchange('global')
+            window.InfinniUI.global.messageBus
                 .send(messageTypes.onViewOpened, {
                     source: linkView,
                     view: view,
@@ -43,7 +43,7 @@ var OpenModeApplicationStrategy = function (linkView) {
     };
 
     var subscribe = function (view) {
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
 
         view.onClosing(function () {
             //Запросить закрытие всех представлений приложения, открытых в режиме Page и затем закрыть Application

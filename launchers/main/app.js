@@ -155,7 +155,7 @@ $.ajaxSetup({
             })([500]);
         });
 
-        messageBus.getExchange('global').subscribe(messageTypes.onViewClosed, function () {
+        window.InfinniUI.global.messageBus.subscribe(messageTypes.onViewClosed, function () {
             var $pageContent = $('body');
             setTimeout(function () {
                 //adaptHeightInsideElement($('body'));

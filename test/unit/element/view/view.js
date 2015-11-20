@@ -294,8 +294,10 @@ describe('View', function () {
             //Given
             var view = new View();
             var dataSources = view.getDataSources();
-            var oldDataSource = new DocumentDataSource({view: view, name: 'oldDataSource'});
-            var newDataSource = new DocumentDataSource({view: view, name: 'newDataSource'});
+            var oldDataSource = new DocumentDataSource({view: view});
+            var newDataSource = new DocumentDataSource({view: view});
+            oldDataSource.setName('oldDataSource');
+            newDataSource.setName('newDataSource');
 
             dataSources.add(oldDataSource);
 

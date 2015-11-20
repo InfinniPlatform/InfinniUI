@@ -39,7 +39,7 @@ var linkView = builder.buildType(rootView, 'AutoView', metadata);
 linkView.setOpenMode('Application');
 linkView.createView(function (view) {
 
-    messageBus.getExchange('global').subscribe(messageTypes.onViewClosed, function(){
+    window.InfinniUI.global.messageBus.subscribe(messageTypes.onViewClosed, function(){
         setTimeout( layoutManager.init.bind(layoutManager), 100);
     });
 

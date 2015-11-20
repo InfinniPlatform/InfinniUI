@@ -22,7 +22,7 @@ var OpenModeContainerStrategy = function (linkView) {
             $rootContainer.append($elView);
             $rootContainer.data('view', view);
         } else {//Есть элемент с указанным именем
-            messageBus.getExchange('global')
+            window.InfinniUI.global.messageBus
                 .send(messageTypes.onViewOpened, {
                     source: linkView,
                     view: view,
@@ -34,7 +34,7 @@ var OpenModeContainerStrategy = function (linkView) {
     };
 
     var subscribe = function (view) {
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
 
         exchange.subscribe(messageTypes.onViewClosing, function (message) {
             if (message.view !== view) {

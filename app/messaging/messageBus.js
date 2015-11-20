@@ -1,17 +1,29 @@
 function MessageBus() {
-    var messageExchanges = {};
+    var subscriptions = {};
 
-    this.getExchange = function (exchangeName) {
-        if (_.isEmpty(exchangeName)) {
-            throw new Error('exchangeName should be specified');
+    this.send = function (messageType, messageBody) {
+        if(subscriptions[messageType]){
+            _.each(subscriptions[messageType], function (subscription) {
+                subscription.handle(messageBody);
+            });
         }
+    };
 
-        if (!messageExchanges.hasOwnProperty(exchangeName)) {
-            messageExchanges[exchangeName] = new MessageExchange();
+    this.subscribe = function (messageType, messageHandler) {
+        if(!subscriptions[messageType]){
+            subscriptions[messageType] = [];
         }
+        var subscription = new Subscription(messageType, messageHandler);
+        subscriptions[messageType].push(subscription);
 
-        return messageExchanges[exchangeName];
+        return subscription;
+    };
+
+    this.unsubscribeByType = function(messageType){
+        if(subscriptions[messageType]){
+            delete subscriptions[messageType];
+        }
     };
 }
 
-window.messageBus = new MessageBus();
+window.InfinniUI.global.messageBus = new MessageBus();

@@ -50,7 +50,7 @@ _.extend(ViewPanelBuilder.prototype, {
             }
         }
 
-        messageBus.getExchange('global').subscribe(messageTypes.onViewOpened,
+        window.InfinniUI.global.messageBus.subscribe(messageTypes.onViewOpened,
             this.onViewOpened.bind(this, params));
 
     },

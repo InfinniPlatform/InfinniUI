@@ -71,7 +71,7 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onActiveRoleChanged.fire.apply(this.handlers.onActiveRoleChanged, args);
-            var exchange = messageBus.getExchange('global');
+            var exchange = window.InfinniUI.global.messageBus;
             exchange.send('OnActiveRoleChanged', {value: args});
         }, errorCallback);
     },
@@ -101,7 +101,7 @@ _.extend(AuthenticationProvider.prototype, {
                 }
 
                 that.handlers.onSignInInternal.fire.apply(that.handlers.onSignInInternal, args);
-                var exchange = messageBus.getExchange('global');
+                var exchange = window.InfinniUI.global.messageBus;
                 exchange.send('OnSignInInternal', {value: args});
 
         }, errorCallback);
@@ -175,7 +175,7 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
-            var exchange = messageBus.getExchange('global');
+            var exchange = window.InfinniUI.global.messageBus;
             exchange.send('OnSignOut', {value: args});
         }.bind(this), errorCallback);
     },

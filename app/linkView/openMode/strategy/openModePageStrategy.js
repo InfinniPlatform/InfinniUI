@@ -28,7 +28,7 @@ var OpenModePageStrategy = function (linkView) {
                 $rootContainer.data('view', view);
             }
 
-            messageBus.getExchange('global')
+            window.InfinniUI.global.messageBus
                 .send(messageTypes.onViewOpened, {
                     source: linkView,
                     view: view,
@@ -46,7 +46,7 @@ var OpenModePageStrategy = function (linkView) {
     };
 
     var subscribe = function (view) {
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
 
         exchange.subscribe(messageTypes.onViewClosing, function (message) {
             //Обработчик запроса на закрытие представления
