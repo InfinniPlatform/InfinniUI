@@ -12,7 +12,8 @@ _.extend(AuthenticationProvider.prototype, {
     handlers: {
         onActiveRoleChanged: $.Callbacks(),
         onSignInInternal: $.Callbacks(),
-        onSignOut: $.Callbacks()
+        onSignOut: $.Callbacks(),
+        onError: $.Callbacks()
     },
 
     /**
@@ -221,6 +222,8 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     sendGetRequest: function (requestUri, resultCallback, errorCallback) {
+        var that = this;
+
         $.ajax(this.baseAddress + requestUri, {
             type: 'GET',
             xhrFields: {
@@ -235,14 +238,19 @@ _.extend(AuthenticationProvider.prototype, {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
+
+                that.handlers.onError.fire(error.responseJSON);
             }
         });
     },
 
     sendPostRequest: function (requestUri, requestData, resultCallback, errorCallback) {
+        var that = this;
+
         if (requestData !== null) {
             requestData = JSON.stringify(requestData);
         }
+
         $.ajax(this.baseAddress + requestUri, {
             type: 'POST',
             xhrFields: {
@@ -259,6 +267,8 @@ _.extend(AuthenticationProvider.prototype, {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
+
+                that.handlers.onError.fire(error.responseJSON);
             }
         });
     },
@@ -273,5 +283,9 @@ _.extend(AuthenticationProvider.prototype, {
 
     onSignOut: function(handler){
         this.handlers.onSignOut.add(handler);
+    },
+
+    onError: function(handler){
+        this.handlers.onError.add(handler);
     }
 });
