@@ -46,3 +46,9 @@ this.AfterScenario( function(scenario, callback) {
 	window.configWindow.close();
 	callback();
 });
+
+this.AfterStep(function(step, callback){
+	setTimeout(function() {
+		callback();
+	}, 200);
+});
