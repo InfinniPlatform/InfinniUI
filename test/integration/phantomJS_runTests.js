@@ -72,11 +72,11 @@ var mainFunc = function(){
 				for(var a = 0;a < steps.length;a++){
 					
 					var step = steps.item(a);
-					var status = step.className.split(' ')[1];
+					var stepStatus = step.className.split(' ')[1];
 					var stepName = step.getElementsByClassName('keyword').item(0).innerHTML + step.getElementsByClassName('name').item(0).innerHTML;
 					var error = step.getElementsByClassName('error');
 					StepStarted(stepName);
-					switch(status){
+					switch(stepStatus){
 						case "passed":
 							StepPassed(stepName);
 							break;
