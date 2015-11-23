@@ -30,6 +30,7 @@ var ScrollPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
     },
 
     render: function () {
@@ -49,3 +50,5 @@ var ScrollPanelView = ControlView.extend({
         return this;
     }
 });
+
+_.extend(ScrollPanelView.prototype, layoutPanelViewMixin);

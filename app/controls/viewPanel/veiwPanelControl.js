@@ -23,6 +23,7 @@ var ViewPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
         //this.listenToOnce(this.model, 'change:layout', this.onChangeLayoutHandler); //Почему так было??
         this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
     },
@@ -41,3 +42,5 @@ var ViewPanelView = ControlView.extend({
         return this;
     }
 });
+
+_.extend(ViewPanelView.prototype, layoutPanelViewMixin);

@@ -8,6 +8,7 @@ var StackPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
         this.listenTo(this.model, 'itemsIsChange', this.rerender);
 
         this.initOrientation();
@@ -74,3 +75,5 @@ var StackPanelView = ControlView.extend({
         return $wrap.prepend($item);
     }
 });
+
+_.extend(StackPanelView.prototype, layoutPanelViewMixin);

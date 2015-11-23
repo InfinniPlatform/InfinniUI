@@ -19,3 +19,5 @@ _.extend(ViewPanel.prototype, {
     }
 
 });
+
+_.extend(ViewPanel.prototype, layoutPanelMixin);

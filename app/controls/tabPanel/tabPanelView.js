@@ -24,6 +24,7 @@ var TabPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
 
         this.listenTo(this.model, 'add:page', this.onAddPageHandler);
         this.listenTo(this.model, 'remove:page', this.onRemovePageHandler);
@@ -176,3 +177,5 @@ var TabPanelView = ControlView.extend({
 
 
 });
+
+_.extend(TabPanelView.prototype, layoutPanelViewMixin);

@@ -3,6 +3,7 @@
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
         this.extensionObject = null;
     },
 
@@ -45,3 +46,5 @@
         }
     }
 });
+
+_.extend(ExtensionPanelView.prototype, layoutPanelViewMixin);

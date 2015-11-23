@@ -64,9 +64,9 @@ _.extend(ViewBuilder.prototype, {
             var linkView = params.builder.build(view, childViewMetadata.LinkView);
             view.addChildView(childViewMetadata.Name, linkView);
         });
-
-
-        view.setLayoutPanel(params.builder.build(view, metadata.LayoutPanel));
+        var layoutPanel = params.builder.build(view, metadata.LayoutPanel);
+        layoutPanel.setViewName(metadata.Name);
+        view.setLayoutPanel(layoutPanel);
     },
 
     onChangeTextHandler: function(params) {

@@ -93,3 +93,5 @@ _.extend(TabPanel.prototype, {
     }
 
 });
+
+_.extend(TabPanel.prototype, layoutPanelMixin);

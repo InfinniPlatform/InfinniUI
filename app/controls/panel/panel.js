@@ -73,6 +73,7 @@ var PanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
+        this.initLayoutPanelViewMixin();
         this.isFirstCollapse = true;
     },
 
@@ -145,3 +146,5 @@ var PanelView = ControlView.extend({
         }
     }
 });
+
+_.extend(PanelView.prototype, layoutPanelViewMixin);

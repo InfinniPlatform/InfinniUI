@@ -7,3 +7,5 @@ _.inherit(GridPanel, AbstractGridPanel);
 GridPanel.prototype.createControl = function () {
     return new GridPanelControl();
 };
+
+_.extend(GridPanel.prototype, layoutPanelMixin);

@@ -41,3 +41,5 @@ _.extend(Panel.prototype, {
         return this.control.onCollapsed(handler);
     }
 });
+
+_.extend(Panel.prototype, layoutPanelMixin);

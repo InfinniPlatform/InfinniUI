@@ -123,6 +123,8 @@ var ControlView = Backbone.View.extend({
             currentName = this.$el.attr('data-pl-name');
         if (newName != currentName && typeof newName == 'string') {
             this.$el.attr('data-pl-name', newName);
+        } else {
+            this.$el.attr('data-pl-name', '');
         }
     },
 

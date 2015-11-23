@@ -5,6 +5,7 @@ function View() {
 
     var isLoading = false;
     var isLoaded = false;
+    var name;
 
     this.onLoadedHandlers = $.Deferred();
 
@@ -223,7 +224,6 @@ function View() {
         //not implemented
     };
 
-    var name;
     this.setName = function (value) {
         name = value;
     };

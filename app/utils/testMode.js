@@ -2,7 +2,10 @@
     'use strict';
 
     var DATA_NAME_ATTRIBUTE = 'data-pl-name';
+    var DATA_NAME_VIEW_ATTRIBUTE = 'data-pl-name-view';
+    var NO_NAME = 'No name';
     var DATA_NAME_SELECTOR = '[' + DATA_NAME_ATTRIBUTE + ']:first';
+    var DATA_NAME_VIEW_SELECTOR = '[' + DATA_NAME_VIEW_ATTRIBUTE + ']:first';
 
     var location = window.location;
     if (location.hash !== '#test') {
@@ -34,28 +37,36 @@
     InfoElement.prototype.setElement = function (el) {
         var
             $el = $(el),
-            name = getName($el);
+            name = getName($el),
+            viewName = getViewName($el);
 
-        if (!name) {
-            $el = $el.parents(DATA_NAME_SELECTOR);
-            if ($el.length) {
-                name = getName($el);
-            }
-        }
-
-        if ($el && name) {
-            this.showInfo($el, name);
+        if ($el) {
+            this.showInfo($el, viewName, _.isEmpty(name) ? NO_NAME : name);
         } else {
             this.hideInfo();
         }
 
         function getName($el) {
-            return $el.attr(DATA_NAME_ATTRIBUTE);
+            var $e = $el.parents(DATA_NAME_SELECTOR);
+            if ($e.length) {
+                return $e.attr(DATA_NAME_ATTRIBUTE);
+            }
+        }
+
+        function getViewName($el) {
+            var $e = $el.parents(DATA_NAME_VIEW_SELECTOR);
+            if($e.length) {
+                return $e.attr(DATA_NAME_VIEW_ATTRIBUTE);
+            }
         }
     };
 
-    InfoElement.prototype.showInfo = function ($el, name) {
+    InfoElement.prototype.showInfo = function ($el, viewName, name) {
         var el = $el[0];
+        if (el === this.popup.el) {
+            return;
+        }
+
         if (this.currentElement !== el) {
             this.marker
                 .reset(this.$currentElement)
@@ -64,14 +75,17 @@
             this.currentElement = el;
             this.$currentElement = $el;
             console.log(name);
+
+            var position = $el.offset();
+            if (typeof position !== 'undefined') {
+                var scrollLeft = $(document).scrollLeft();
+                var scrollTop = $(document).scrollTop();
+                this.popup
+                    .setText(viewName + ':' + name)
+                    .setPosition(position.left - scrollLeft, position.top - scrollTop)
+                    .show();
+            }
         }
-        var position = $el.offset();
-        var scrollLeft = $(document).scrollLeft();
-        var scrollTop = $(document).scrollTop();
-        this.popup
-            .setText(name)
-            .setPosition(position.left - scrollLeft, position.top - scrollTop)
-            .show();
     };
 
     InfoElement.prototype.updatePosition = function () {
@@ -100,6 +114,7 @@
     function Popup() {
         this.id = 'pl-test-mode-popup';
         this.$el = $('<div id="' + this.id +'" style="position:absolute; border: 2px solid red;background: #000000;color: #ffffff;display:none;z-index:99999;"></div>');
+        this.el = this.$el[0];
     }
 
     Popup.prototype.render = function () {

@@ -25,3 +25,5 @@ _.extend(StackPanel.prototype, {
     }
 
 });
+
+_.extend(StackPanel.prototype, layoutPanelMixin);

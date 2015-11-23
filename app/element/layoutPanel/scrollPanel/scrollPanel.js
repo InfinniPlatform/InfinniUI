@@ -37,3 +37,5 @@ _.extend(ScrollPanel.prototype, {
         this.control.set('layoutPanel', value);
     }
 });
+
+_.extend(ScrollPanel.prototype, layoutPanelMixin);

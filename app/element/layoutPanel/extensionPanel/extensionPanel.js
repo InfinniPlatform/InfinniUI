@@ -31,3 +31,5 @@ _.extend(ExtensionPanel.prototype, {
     //    return this.control.set('context', value);
     //}
 });
+
+_.extend(ExtensionPanel.prototype, layoutPanelMixin);
