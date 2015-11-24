@@ -17,7 +17,7 @@
             },
 
             vendor: {
-				src: ["vendor/*.js"],
+				src: ["vendor/*.js", "bower_components/elasticsearch/elasticsearch.js"],
                 dest: 'out/vendor.js'
             }
         }
