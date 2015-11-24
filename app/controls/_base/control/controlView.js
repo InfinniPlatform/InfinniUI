@@ -32,6 +32,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.listenTo(this.model, 'change:focused', this.updateFocused);
 
         this.initFocusHandlers();
+        this.initTooltipHandlers();
     },
 
     initFocusHandlers: function () {
@@ -54,6 +55,31 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             } else {
                 //focus out
                 model.set('focused', false);
+            }
+        }
+    },
+
+    initTooltipHandlers: function () {
+        var
+            view = this,
+            $el = this.$el,
+            el = this.el,
+            model = this.model;
+
+        $el
+            .on('mouseover', onMouseOver)
+            .on('mouseout', onMouseOut);
+
+        function onMouseOver(event) {
+            model.set('showToolTip', true);
+        }
+
+        function onMouseOut(event) {
+            if ($.contains(el, event.relatedTarget)) {
+                //mouse out to element inside control
+            } else {
+                console.log(el, event.relatedTarget);
+                model.set('showToolTip', false);
             }
         }
     },

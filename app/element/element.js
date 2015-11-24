@@ -286,6 +286,14 @@ _.extend(Element.prototype, {
         this.control.on('OnGotFocus', handler);
     },
 
+    setToolTip: function (value) {
+        this.control.set('toolTip', value);
+    },
+
+    getToolTip: function () {
+        return this.control.get('toolTip');
+    },
+
     getIsLoaded: function () {
         return this.control.get('isLoaded');
     },
@@ -404,6 +412,28 @@ _.extend(Element.prototype, {
                 handler(eventData);
             };
         return this.control.onMouseMove(callback);
+    },
+
+    onShowToolTip: function (handler) {
+        var control = this.control;
+
+        control.on('change:showToolTip', function () {
+            var showToolTip = control.get('showToolTip');
+            if (showToolTip && typeof handler === 'function') {
+                handler();
+            }
+        });
+    },
+
+    onHideToolTip: function (handler) {
+        var control = this.control;
+
+        control.on('change:showToolTip', function () {
+            var showToolTip = control.get('showToolTip');
+            if (!showToolTip && typeof handler === 'function') {
+                handler();
+            }
+        });
     },
 
     remove: function(isInitiatedByParent){

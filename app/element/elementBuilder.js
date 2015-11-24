@@ -60,6 +60,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         this.initBindingToProperty(params, 'Background');
         this.initBindingToProperty(params, 'Texture');
         this.initBindingToProperty(params, 'Style');
+        this.initToolTip(params);
 
         if('Name' in metadata){
             element.setName(metadata.Name);
@@ -119,6 +120,36 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
             return dataBinding;
         }
+    },
+
+    initToolTip: function (params) {
+        var
+            exchange = window.InfinniUI.global.messageBus,
+            builder = params.builder,
+            element = params.element,
+            metadata = params.metadata,
+            tooltip;
+
+        if (metadata.ToolTip) {
+            var argumentForBuilder = {
+                parent: element,
+                parentView: params.parentView
+            };
+            tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
+            element.setToolTip(tooltip);
+            exchange.send(messageTypes.onToolTip.name, {source: element, content: tooltip.render()});
+        }
+
+        element.onShowToolTip(function () {
+            if (tooltip) {
+                exchange.send(messageTypes.onToolTipShow.name, {source: element, content: tooltip.render()});
+            }
+        });
+
+        element.onHideToolTip(function () {
+            exchange.send(messageTypes.onToolTipHide.name, {source: element});
+        });
+
     }
 
 });

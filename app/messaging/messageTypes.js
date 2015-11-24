@@ -23,7 +23,10 @@ window.messageTypes = {
 
     onCreateLayoutPanel: {name: 'onCreateLayoutPanel'},
     onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
-    onNotifyUser: {name: 'onNotifyUser'}
+    onNotifyUser: {name: 'onNotifyUser'},
+    onToolTip: {name: 'onToolTip'},
+    onToolTipShow: {name: 'onToolTipShow'},
+    onToolTipHide: {name: 'onToolTipHide'}
 
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 

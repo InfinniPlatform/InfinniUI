@@ -15,7 +15,8 @@ var ControlModel = Backbone.Model.extend({
         validationState: 'success',
         validationMessage: '',
         focusable: true,
-        focused: false
+        focused: false,
+        showToolTip: false//Тоолтип не показывается
     },
 
     initialize: function(){

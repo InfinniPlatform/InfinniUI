@@ -110,6 +110,11 @@
                                       "Text": "Subscribe",
                                       "TextOn": "yes",
                                       "TextOff": "no",
+                                    "ToolTip": {
+                                      "Label": {
+                                        "Text": "Simple tooltip"
+                                      }
+                                    },
                                       "OnValueChanged": {
                                           "Name": "ToggleButtonOnValueChanged"
                                       },
@@ -124,21 +129,22 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "TextBox": {
-                                      "Multiline": false,
-                                      "LineCount": 5,
+                                  "PasswordBox": {
+                                    "LabelText": "Password",
                                       "HintText": "I'm TextBox hint",
                                       "LabelText": "Text label",
                                       "Enabled": true,
-                                      "EditMask": {
-                                          "NumberEditMask": {
-                                              "Mask": "n3"
-                                          }
-                                      },
-                                      "Value": {
-                                        "Source": "MainDataSource",
-                                        "Property": "$"
+                                    "ToolTip": {
+                                      "Button": {
+                                        "Text": "I'm TextBox tooltip"
                                       }
+                                    },
+                                    "OnGotFocus": {
+                                      "Name": "OnGotFocus"
+                                    },
+                                    "OnLostFocus": {
+                                      "Name": "OnLostFocus"
+                                    }
                                   }
                               }]
                           }
@@ -664,6 +670,14 @@
     {
       "Name": "ValidationErrors",
       "Body": "console.log(arguments); debugger; console.log('ValidationErrors'); return {isValid: false, items: [{message: 'Error'}, {property: 'birthday', message: 'birthday error'}]};"
+    },
+    {
+      "Name": "OnGotFocus",
+      "Body": "console.log('OnGotFocus', args.source);"
+    },
+    {
+      "Name": "OnLostFocus",
+      "Body": "console.log('OnLostFocus', args.source);"
     }
   ]
 }
