@@ -17,7 +17,7 @@
             },
 
             vendor: {
-				src: ["vendor/*.js", "bower_components/elasticsearch/elasticsearch.js"],
+				src: ["vendor/*.js", "bower_components/elasticsearch/elasticsearch.js", "../../bower_components/chai/chai.js"],
                 dest: 'out/vendor.js'
             }
         }
