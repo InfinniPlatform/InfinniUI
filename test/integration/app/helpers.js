@@ -61,5 +61,27 @@ window.testHelpers = {
 		//YYYY-MM-DD
         var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
         return currentDate;
+	},
+	
+	getControlByName: function(controlName){
+		var indexInfo = /\[(\d+)\]/.exec(controlName);
+		
+		if(indexInfo == null){
+			return window.currentViewContext.Controls[controlName];
+		}else{
+			var itemIndex = parseInt(indexInfo[1]);
+			var itemName = controlName.match(/\w+/)[0];
+			
+			if(window.currentListBox == undefined || itemIndex.toString() == "NaN" || window.currentListBox.children.get(itemIndex) == undefined){
+				return undefined;
+			}
+			
+			var gridPanel = window.currentListBox.children.get(itemIndex);
+			var result = gridPanel.children.findAllChildrenByName(itemName)[0];
+			
+			window.currentListBox.setSelectedItem(window.currentListBox.getItems()[itemIndex]);
+					
+			return result;
+		}
 	}
 };
