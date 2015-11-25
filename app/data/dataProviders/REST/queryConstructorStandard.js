@@ -10,12 +10,12 @@
  * @param {string} [metadata.DeleteAction = 'DeleteDocument']
  * @constructor
  */
-function QueryConstructorStandard(host, metadata) {
+function QueryConstructorStandard(host) {
 
     this._host = host;
 
-    this._configId = metadata.ConfigId;
-    this._documentId = metadata.DocumentId;
+    //this._configId = metadata.ConfigId;
+    //this._documentId = metadata.DocumentId;
 
     this._actions = {
         CreateAction: 'CreateDocument',
@@ -24,10 +24,10 @@ function QueryConstructorStandard(host, metadata) {
         DeleteAction: 'DeleteDocument'
     };
 
-    this.setCreateAction(metadata.CreateAction);
-    this.setReadAction(metadata.ReadAction);
-    this.setUpdateAction(metadata.UpdateAction);
-    this.setDeleteAction(metadata.DeleteAction);
+    //this.setCreateAction(metadata.CreateAction);
+    //this.setReadAction(metadata.ReadAction);
+    //this.setUpdateAction(metadata.UpdateAction);
+    //this.setDeleteAction(metadata.DeleteAction);
 }
 
 _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard.prototype */{
@@ -74,6 +74,14 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
         return this._actions.DeleteAction;
     },
 
+    setConfigId: function(configId){
+        this._configId = configId;
+    },
+
+    setDocumentId: function(documentId){
+        this._documentId = documentId;
+    },
+
     constructCreateDocumentRequest: function () {
         return {
             requestUrl: this._constructUrl('CreateAction'),
@@ -105,8 +113,8 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     _constructUrl: function (action) {
         return this.urlTemplate({
             host: this._host,
-            api: this._configId,
-            document: this._documentId,
+            api: 'RestfulApi', //this._configId,
+            document: 'configuration', //this._documentId,
             action: this._actions[action]
         });
         //var urlTemplate = '{0}/{1}/StandardApi/{2}/{3}',

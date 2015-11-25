@@ -35,7 +35,7 @@ moment.locale('ru');
     });
 
     window.providerRegister.register('DocumentDataSource', function (metadataValue) {
-        return new DataProviderREST(metadataValue, new QueryConstructorStandard(host, metadataValue));
+        return new DataProviderREST(new QueryConstructorStandard(host, metadataValue));
     });
 
     window.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
