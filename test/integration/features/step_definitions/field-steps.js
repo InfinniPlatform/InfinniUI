@@ -150,9 +150,10 @@ this.Then(/^флаг "([^"]*)" будет иметь значение "([^"]*)"$
         var flag = window.testHelpers.getControlByName(flagName);
 
         chai.assert.isDefined(flag);
-        chai.assert.equal(flag.getValue(), JSON.parse(value));
-
-        next();
+        //chai.assert.equal(flag.getValue(), JSON.parse(value));
+        
+        //Если вызывать так как было, то тест зависает
+        flag.getValue() == JSON.parse(value) ? next() : next(new Error("Error flag value"));
     }
     var fail = function(){
         next(new Error(flagName + ' not found!'));
