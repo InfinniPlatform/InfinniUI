@@ -133,7 +133,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
     },
 
     setSessionData: function(claimType, claimValue, resultCallback, errorCallback) {
@@ -146,7 +146,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
     },
 
     getSessionData: function(claimType, resultCallback, errorCallback) {
@@ -158,7 +158,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getclaim', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getsessiondata', claim, resultCallback, errorCallback);
     },
 
     /**
@@ -172,7 +172,7 @@ _.extend(AuthenticationProvider.prototype, {
             "changesObject" : {},
             "replace" : false
         };
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/signout', signOutInternalForm);
+        
         this.sendPostRequest('/Auth/SignOut', null, function(){
             var args = _.toArray(arguments);
             if(resultCallback){
