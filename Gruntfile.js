@@ -37,7 +37,7 @@
 
             'extensions/**/*.js',
 
-            'bootstrap_framework/js/*.js',
+            'bootstrap-framework/js/*.js',
 
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',

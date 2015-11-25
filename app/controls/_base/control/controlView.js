@@ -78,7 +78,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             if ($.contains(el, event.relatedTarget)) {
                 //mouse out to element inside control
             } else {
-                console.log(el, event.relatedTarget);
                 model.set('showToolTip', false);
             }
         }
