@@ -21,7 +21,6 @@ InfinniUI.ToolTipService = (function () {
         return source.control.controlView.$el
     }
     function showToolTip($element, content) {
-        console.log(content);
         $element
             .tooltip({
                 html: true,

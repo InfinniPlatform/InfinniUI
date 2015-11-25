@@ -19,6 +19,7 @@ _.extend(Label.prototype, {
         setLineCount: function (value) {
             this.control.set('lineCount', value);
         },
+
         setTextWrapping: function (value) {
             if (typeof value === 'boolean') {
                 this.control.set('textWrapping', value);
@@ -27,6 +28,16 @@ _.extend(Label.prototype, {
 
         getTextWrapping: function () {
             return this.control.get('textWrapping');
+        },
+
+        setTextTrimming: function (value) {
+            if (typeof value === 'boolean') {
+                this.control.set('textTrimming', value);
+            }
+        },
+
+        getTextTrimming: function () {
+            return this.control.get('textTrimming');
         },
 
         getDisplayFormat: function () {

@@ -20,6 +20,11 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
         ControlView.prototype.initHandlersForProperties.call(this);
         editorBaseViewMixin.initHandlersForProperties.call(this);
 
+        this.updateDisplayFormat();
+        this.updateTextWrapping();
+        this.updateTextTrimming();
+        this.updateLineCount();
+
         this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
         this.listenTo(this.model, 'change:textWrapping', this.updateTextWrapping);
         this.listenTo(this.model, 'change:textTrimming', this.updateTextTrimming);
