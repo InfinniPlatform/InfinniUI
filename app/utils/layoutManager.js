@@ -285,10 +285,10 @@ var layoutManager = {
         }
 
 
-        var exchange = messageBus.getExchange('modal-dialog');
+        /*var exchange = messageBus.getExchange('modal-dialog');
         exchange.subscribe(messageTypes.onLoading, function () {
             this.resizeDialog();
-        }.bind(this));
+        }.bind(this));*/
     },
 
     onChangeLayout: function (container) {

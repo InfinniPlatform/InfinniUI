@@ -1,4 +1,4 @@
-function DataProviderREST(metadata, urlConstructor, successCallback, failCallback) {
+function DataProviderREST(urlConstructor, successCallback, failCallback) {
 
     var queueReplaceItem = new DataProviderReplaceItemQueue();
 
@@ -59,6 +59,31 @@ function DataProviderREST(metadata, urlConstructor, successCallback, failCallbac
         }, request);
 
     };
+
+    this.setConfigId = function(configId){
+        urlConstructor.setConfigId (configId);
+    };
+
+    this.setDocumentId = function(documentId){
+        urlConstructor.setDocumentId (documentId);
+    };
+
+    this.setCreateAction = function(actionName){
+        urlConstructor.setCreateAction (actionName);
+    };
+
+    this.setReadAction = function(actionName){
+        urlConstructor.setReadAction (actionName);
+    };
+
+    this.setUpdateAction = function(actionName){
+        urlConstructor.setUpdateAction (actionName);
+    };
+
+    this.setDeleteAction = function(actionName){
+        urlConstructor.setDeleteAction (actionName);
+    };
+
 
     function adaptAnswerOnSavingItem(data){
         if(data.IsValid){
