@@ -158,6 +158,10 @@ _.extend(View.prototype,
             }
         },
 
+        getScriptsStorage: function(){
+            return this;
+        },
+
         onOpening: function(callback){
             this.eventManager.on('onOpening', callback);
         },
