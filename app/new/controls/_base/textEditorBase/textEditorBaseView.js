@@ -46,6 +46,9 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     updateValue: function(){
         this.ui.control.val(this.getDisplayValue());
+
+        var isEmpty = _.isEmpty(this.getDisplayValue());
+        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
     },
 
     updateLabelText: function(){
@@ -63,7 +66,8 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     updateLabelFloating: function(){
-
+        var labelFloating = this.model.get('labelFloating');
+        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updateDisplayFormat: function(){
