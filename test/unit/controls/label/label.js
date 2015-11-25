@@ -66,6 +66,34 @@ describe('Label', function () {
                 //Then
                 assert.equal($label.html(), 'New Label');
             });
+
+            it('Setting property: textWrapping', function () {
+                //Given
+                var $el = label.render(),
+                    $label = $('label', $el);
+
+                assert.isTrue($label.hasClass('pl-text-wrapping'), 'default value must be true');
+
+                //When
+                label.setTextWrapping(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-wrapping'), 'should not wrap if value false');
+            });
+
+            it('Setting property: textTrimming', function () {
+                //Given
+                var $el = label.render(),
+                    $label = $('label', $el);
+
+                assert.isTrue($label.hasClass('pl-text-trimming'), 'default value must be true');
+
+                //When
+                label.setTextTrimming(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-trimming'), 'should not trim if value false');
+            });
         });
 
     });

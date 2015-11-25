@@ -3,7 +3,8 @@ var LabelModel = ControlModel.extend(_.extend({
     defaults: _.defaults({
         horizontalTextAlignment: 'Left',
         verticalAlignment: 'Top',
-        textWrapping: true
+        textWrapping: true,
+        textTrimming: true
     }, ControlModel.prototype.defaults),
 
     initialize: function(){

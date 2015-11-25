@@ -19,6 +19,8 @@ _.extend(LabelBuilder.prototype, {
 
         element.setLineCount(params.metadata.LineCount);
         element.setTextWrapping(params.metadata.TextWrapping);
+        element.setTextTrimming(params.metadata.TextTrimming);
+        
         this.initDisplayFormat(params);
         this.initScriptsHandlers(params);
         //this.initHorizontalTextAlignmentProperty(params);
