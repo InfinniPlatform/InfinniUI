@@ -149,14 +149,38 @@ this.Then(/^флаг "([^"]*)" будет иметь значение "([^"]*)"$
     var success = function(){
         var flag = window.testHelpers.getControlByName(flagName);
 
-        chai.assert.isDefined(flag);
-        //chai.assert.equal(flag.getValue(), JSON.parse(value));
-        
-        //Если вызывать так как было, то тест зависает
-        flag.getValue() == JSON.parse(value) ? next() : next(new Error("Error flag value"));
+        try{
+            chai.assert.isDefined(flag);
+            chai.assert.equal(flag.getValue(), JSON.parse(value));
+            next();
+        }catch(err){
+            next(err);
+        }
     }
     var fail = function(){
         next(new Error(flagName + ' not found!'));
     }
     window.testHelpers.waitCondition(haveFlag, success, fail);
+});
+
+this.When(/^я поменяю значение флага "([^"]*)" на "([^"]*)"$/, function(flagName, value, next){
+	var haveFlag = function(){
+		return window.testHelpers.getControlByName(flagName) != undefined;
+	}
+	var success = function(){
+		var flag = window.testHelpers.getControlByName(flagName);
+		var parseValue = JSON.parse(value);
+		
+		if(typeof parseValue == "boolean"){
+			flag.setValue(parseValue);
+			next();
+		}else{
+			next(new Error("'" + value + "' is not correct value"));
+		}
+	}
+	var fail = function(){
+		next(new Error(flagName + ' not found!'));
+	}
+	
+	window.testHelpers.waitCondition(haveFlag, success, fail);
 });
