@@ -39,7 +39,9 @@
 
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
-            '!app/utils/exel-builder/*.js'
+            '!app/utils/exel-builder/*.js',
+            '!app/controls/dataGrid/**/*.*',
+            '!app/element/dataElement/dataGrid/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -55,6 +57,7 @@
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
+            'bootstrap-framework/js/tooltip.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
