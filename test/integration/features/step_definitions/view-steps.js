@@ -138,3 +138,18 @@ this.Then(/^система отобразит список валидацион�
 	};
 	window.testHelpers.waitCondition(haveToastr, success, fail);
 });
+
+this.Then(/^система не отобразит валидационных сообщений$/, function(next){
+	var haveToastr = function(){
+		return 	window.configWindow.$("#toast-container") !== null &&
+				window.configWindow.$("#toast-container").length != 0;
+	};
+	var success = function(){
+		next();
+	}
+	var fail = function(){
+		next(new Error("Было обнаружено одно или несколько окон"));
+	};
+	
+	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
+});
