@@ -9,12 +9,12 @@ function View(parent) {
     this.eventManager = new EventManager();
 
     this.handlers = {
-        onLoaded: $.Callbacks()
+        onLoaded: $.Deferred()
     };
 
-    this.initHandlers();
-
     this._initContext();
+
+    this._initHandlers();
 }
 
 _.inherit(View, Container);
@@ -22,12 +22,24 @@ _.inherit(View, Container);
 _.extend(View.prototype,
     {
 
-        initHandlers: function(){
+        _initHandlers: function(){
             var that = this;
+            var dataSources = this.getContext().dataSources;
+            var readyDsDeferred = [];
 
             this.control.onLoaded(function(){
+                for(var k in dataSources){
+                    readyDsDeferred.push(dataSources[k].getCurrentRequestPromise());
+                }
 
+                $.when.apply($, readyDsDeferred).done(function(){
+                    that._notifyAboutDsReady();
+                });
             });
+        },
+
+        _notifyAboutDsReady: function(){
+            this.handlers.onLoaded.resolve();
         },
 
         createControl: function () {
@@ -177,9 +189,9 @@ _.extend(View.prototype,
             return this;
         },
 
-        /*onLoaded: function (handler) {
-            this.handlers.onLoaded.add(handler);
-        },*/
+        onLoaded: function (handler) {
+            this.handlers.onLoaded.done(handler);
+        },
 
         onOpening: function(callback){
             this.eventManager.on('onOpening', callback);

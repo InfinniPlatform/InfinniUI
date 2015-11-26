@@ -794,7 +794,7 @@ var BaseDataSource = Backbone.Model.extend({
         return item[idProperty];
     },
 
-    currentRequestPromise: function(){
+    getCurrentRequestPromise: function(){
         var promise = $.Deferred();
         var logger = window.InfinniUI.global.logger;
 

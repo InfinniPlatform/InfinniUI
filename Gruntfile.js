@@ -55,6 +55,7 @@
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
+            'bootstrap-framework/js/tooltip.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [

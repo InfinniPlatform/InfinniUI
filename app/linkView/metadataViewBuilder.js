@@ -3,9 +3,9 @@ function MetadataViewBuilder() {
     this.build = function (context, args){
         var metadata = args.metadata;
 
-        if (metadata.OpenMode === 'Container' && metadata.Container === 'Content') {
+        /*if (metadata.OpenMode === 'Container' && metadata.Container === 'Content') {
             metadata.OpenMode = 'Page';
-        }
+        }*/
 
         var linkView = new LinkView(args.parentView, function (resultCallback) {
             if(args.parentView.handleOnLoaded){
