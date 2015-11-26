@@ -39,9 +39,7 @@
 
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
-            '!app/utils/exel-builder/*.js',
-            '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*'
+            '!app/utils/exel-builder/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
