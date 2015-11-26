@@ -141,8 +141,12 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "Frame": {
-                                    "Value": {
+                                  "DataGrid": {
+                                    "Items": {
+                                      "Source": "PatientDataSource",
+                                      "Property": "Diseases"
+                                    },
+                                    "~Value": {
                                       "Source": "ds1",
                                       "Property": "url"
                                     },
@@ -151,10 +155,10 @@
                                         "Text": "I'm TextBox tooltip"
                                       }
                                     },
-                                    "OnGotFocus": {
+                                    "~OnGotFocus": {
                                       "Name": "OnGotFocus"
                                     },
-                                    "OnLostFocus": {
+                                    "~OnLostFocus": {
                                       "Name": "OnLostFocus"
                                     }
                                   }
