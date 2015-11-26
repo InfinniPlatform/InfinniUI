@@ -177,9 +177,9 @@ _.extend(View.prototype,
             return this;
         },
 
-        onLoaded: function (handler) {
+        /*onLoaded: function (handler) {
             this.handlers.onLoaded.add(handler);
-        },
+        },*/
 
         onOpening: function(callback){
             this.eventManager.on('onOpening', callback);
