@@ -10,6 +10,7 @@ _.extend(ViewPanelBuilder.prototype, {
         var builder = params.builder;
         var panel = params.element;
         var metadata = params.metadata;
+        var parentView = params.parentView;
 
         /* Костыль для обработки OpenMode = Inline */
         if (_.isEmpty(metadata.Name)) {
@@ -17,7 +18,7 @@ _.extend(ViewPanelBuilder.prototype, {
             panel.setName(metadata.Name);
         }
 
-        this.registerLayoutPanel(params);
+        //this.registerLayoutPanel(params);
 
         if (typeof metadata.View !== 'undefined' && metadata.View !== null) {
             var linkView = builder.build(params.view, metadata.View);

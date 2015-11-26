@@ -53,6 +53,7 @@ _.extend(View.prototype,
                 parameters: {},
                 dataSources: {},
                 controls: {},
+                messageBus: new MessageBus(),
                 global: InfinniUI.global
             };
 
