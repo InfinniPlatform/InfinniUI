@@ -68,9 +68,12 @@ this.Then(/^система отобразит список кнопок: (.*?)$/
 					})
 					.toArray();
 
-    chai.assert.deepEqual(actValues, extValues);
-
-    next();
+    try{
+		chai.assert.deepEqual(actValues, extValues);
+		next();
+	}catch(err){
+		next(err);
+	}
 });
 
 this.Then(/^система отобразит модальное окно "([^"]*)"$/, function (dialogView, next) {
@@ -100,26 +103,53 @@ this.Then(/^система отобразит значения выпадающ�
 					})
 					.toArray();
 
-    chai.assert.deepEqual(actValues, extValues);
-
-    next();
+    try{
+		chai.assert.deepEqual(actValues, extValues);
+    	next();
+	}catch(err){
+	    next(err);
+	}
 });
 
-this.Then(/^система отобразит валидационное сообщение "([^"]*)"$/, function(msg, next){
+this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
 	var haveToastr = function(){
 		return window.configWindow.$("#toast-container") !== null;
 	};
 	var success = function(){
-		var actual = window.configWindow.$("#toast-container .toast-message")[0].innerHTML;
-		msg = msg.replace(/'/g, '"');
-		if(msg === actual){
+		var actual = window.configWindow.$("#toast-container .toast-message");
+		var actualMessages = [];
+		for(var i = 0;i < actual.length;i++){
+			actualMessages.push(actual[i].innerHTML);
+		}
+		var messages = msgs.split(',').map(function(item){
+			var result = item.trim();
+			return result.substring(1, result.length - 1).replace(/'/g, '"')
+		});
+		
+		try{
+			chai.assert.deepEqual(actualMessages, messages);
 			next();
-		}else{
-			next(new Error("\"" + msg + "\" != \"" + actual + "\""));
+		}catch(err){
+			next(err);
 		}
 	};
 	var fail = function(){
 		next(new Error("Окно не найдено"));
 	};
 	window.testHelpers.waitCondition(haveToastr, success, fail);
+});
+
+this.Then(/^система не отобразит валидационных сообщений$/, function(next){
+	var haveToastr = function(){
+		return 	window.configWindow.$("#toast-container") !== null &&
+				window.configWindow.$("#toast-container").length != 0;
+	};
+	var success = function(){
+		next();
+	}
+	var fail = function(){
+		next(new Error("Было обнаружено одно или несколько окон"));
+	};
+	
+	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
 });

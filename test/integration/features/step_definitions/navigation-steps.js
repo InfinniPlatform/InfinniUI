@@ -7,8 +7,13 @@ this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonName, n
 	}
     var success = function(){
     	try {
-	        window.testHelpers.getControlByName(buttonName).click();
-	        next();
+			var button = window.testHelpers.getControlByName(buttonName);
+			if(button.getVisible()){
+				button.click();
+				next();	
+			}else{
+				next(new Error(buttonName + ': Visible == false'));
+			}
 	    } catch (err) {
 	        next(err);
 	    }
