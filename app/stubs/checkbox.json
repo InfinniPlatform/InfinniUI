@@ -10,6 +10,18 @@
     },
     {
       "ObjectDataSource": {
+        "Name": "ds1",
+        "Items": [
+          {
+            "Id": 1,
+            "DisplayName": "I",
+            "url": "http://jira.infinnity.ru/"
+          }
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
         "Name": "BloodGroupDataSource",
         "Items": [
           {
@@ -129,12 +141,12 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "PasswordBox": {
-                                    "LabelText": "Password",
-                                      "HintText": "I'm TextBox hint",
-                                      "LabelText": "Text label",
-                                      "Enabled": true,
-                                    "ToolTip": {
+                                  "Frame": {
+                                    "Value": {
+                                      "Source": "ds1",
+                                      "Property": "url"
+                                    },
+                                    "~ToolTip": {
                                       "Button": {
                                         "Text": "I'm TextBox tooltip"
                                       }

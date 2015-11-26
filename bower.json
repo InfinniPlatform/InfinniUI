@@ -16,7 +16,6 @@
     "jquery-bootpag": "1.0.7",
     "ulogin": "http://ulogin.ru/js/ulogin.js",
     "blockUI": "*",
-    "toastr": "~2.1.2",
-    "bootstrap": "~3.3.5"
+    "toastr": "~2.1.2"
   }
 }

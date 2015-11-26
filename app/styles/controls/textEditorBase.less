@@ -1,0 +1,18 @@
+.pl-label-floating.pl-empty-text-editor .pl-control-label{
+  position: relative;
+  z-index: 3;
+
+  transition: all 0.5s ease;
+  will-change: left, top, contents;
+  pointer-events: none;
+}
+
+.pl-label-floating.pl-empty-text-editor:not(.pl-focused) .pl-control-label{
+  top: 32px;
+  left: 12px;
+}
+
+.pl-label-floating.pl-empty-text-editor.pl-focused .pl-control-label{
+  top: 0px;
+  left: 0px;
+}

@@ -37,8 +37,6 @@
 
             'extensions/**/*.js',
 
-            'bootstrap-framework/js/*.js',
-
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js'
@@ -57,7 +55,7 @@
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
-            'bower_components/bootstrap/js/tooltip.js'
+            'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
             'app/styles/main.less'
