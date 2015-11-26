@@ -8,6 +8,12 @@ function View(parent) {
 
     this.eventManager = new EventManager();
 
+    this.handlers = {
+        onLoaded: $.Callbacks()
+    };
+
+    this.initHandlers();
+
     this._initContext();
 }
 
@@ -15,6 +21,15 @@ _.inherit(View, Container);
 
 _.extend(View.prototype,
     {
+
+        initHandlers: function(){
+            var that = this;
+
+            this.control.onLoaded(function(){
+
+            });
+        },
+
         createControl: function () {
             return new ViewControl();
         },
@@ -160,6 +175,10 @@ _.extend(View.prototype,
 
         getScriptsStorage: function(){
             return this;
+        },
+
+        onLoaded: function (handler) {
+            this.handlers.onLoaded.add(handler);
         },
 
         onOpening: function(callback){

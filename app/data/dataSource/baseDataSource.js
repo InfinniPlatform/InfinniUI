@@ -794,6 +794,28 @@ var BaseDataSource = Backbone.Model.extend({
         return item[idProperty];
     },
 
+    currentRequestPromise: function(){
+        var promise = $.Deferred();
+        var logger = window.InfinniUI.global.logger;
+
+        if(this.get('isRequestInProcess')){
+            this.once('change:isDataReady', function(){
+                if(this.isDataReady()){
+                    promise.resolve();
+                }else{
+                    logger.warn({
+                        message: 'BaseDataSource: strange, expected other dataReady status',
+                        source: this
+                    });
+                }
+            });
+        }else{
+            promise.resolve();
+        }
+
+        return promise;
+    },
+
     _replaceAllProperties: function (currentObject, newPropertiesSet) {
         for (var property in currentObject) {
             delete(currentObject[property]);
