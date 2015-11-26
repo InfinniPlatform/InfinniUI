@@ -289,3 +289,5 @@ _.extend(AuthenticationProvider.prototype, {
         this.handlers.onError.add(handler);
     }
 });
+
+InfinniUI.global.session = new AuthenticationProvider(InfinniUI.config.serverUrl);
