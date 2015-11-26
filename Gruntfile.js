@@ -60,7 +60,6 @@
             'bower_components/metronic/assets/global/scripts/metronic.js',
             'bower_components/JavaScript-MD5/js/md5.js',
             'bower_components/metronic/assets/admin/layout/scripts/layout.js',
-            'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js'
         ],
         appStyleFiles = ['app/styles/main.less'],
