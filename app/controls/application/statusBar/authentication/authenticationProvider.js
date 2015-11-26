@@ -12,24 +12,23 @@ _.extend(AuthenticationProvider.prototype, {
     handlers: {
         onActiveRoleChanged: $.Callbacks(),
         onSignInInternal: $.Callbacks(),
-        onSignOut: $.Callbacks(),
-        onError: $.Callbacks()
+        onSignOut: $.Callbacks()
     },
 
     /**
-     * Возвращает информацию о текущем пользователе.
-     *
-     * @public
-     */
+          * Возвращает информацию о текущем пользователе.
+          *
+          * @public
+          */
     getCurrentUser: function(resultCallback, errorCallback) {
         this.sendGetRequest('/Auth/GetCurrentUser', resultCallback, errorCallback);
     },
 
     /**
-     * Изменяет пароль текущего пользователя.
-     *
-     * @public
-     */
+          * Изменяет пароль текущего пользователя.
+          *
+          * @public
+          */
     changePassword: function (oldPassword, newPassword, resultCallback, errorCallback) {
         var changePasswordForm = {
             OldPassword: oldPassword,
@@ -40,10 +39,10 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     /**
-     * Изменяет персональную информацию текущего пользователя.
-     *
-     * @public
-     */
+          * Изменяет персональную информацию текущего пользователя.
+          *
+          * @public
+          */
     changeProfile: function (displayName, description, resultCallback, errorCallback) {
         var changeProfileForm = {
             DisplayName: displayName,
@@ -54,10 +53,10 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     /**
-     * Изменяет активную роль текущего пользователя.
-     *
-     * @public
-     */
+          * Изменяет активную роль текущего пользователя.
+          *
+          * @public
+          */
     changeActiveRole: function (activeRole, resultCallback, errorCallback) {
         var changeActiveRoleForm = {
             ActiveRole: activeRole
@@ -71,68 +70,49 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onActiveRoleChanged.fire.apply(this.handlers.onActiveRoleChanged, args);
-            var exchange = window.InfinniUI.global.messageBus;
+            var exchange = messageBus.getExchange('global');
             exchange.send('OnActiveRoleChanged', {value: args});
         }, errorCallback);
     },
 
     /**
-     * Осуществляет вход пользователя в систему через внутренний провайдер.
-     *
-     * @public
-     */
+          * Осуществляет вход пользователя в систему через внутренний провайдер.
+          *
+          * @public
+          */
     signInInternal: function (userName, password, remember, resultCallback, errorCallback) {
         var signInInternalForm = {
-            "id" : null,
-            "changesObject" : {
-                "UserName" : userName,
-                "Password" : password,
-                "Remember" : remember
-            },
-            "replace" : false
+            UserName: userName,
+            Password: password,
+            Remember: remember
         };
 
-        var that = this;
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/signin', signInInternalForm, function() {
-
-                var args = _.toArray(arguments);
-                if(resultCallback){
-                    resultCallback.apply(this, args);
-                }
-
-                that.handlers.onSignInInternal.fire.apply(that.handlers.onSignInInternal, args);
-                var exchange = window.InfinniUI.global.messageBus;
-                exchange.send('OnSignInInternal', {value: args});
-
-        }, errorCallback);
-
-
-
+        this.sendPostRequest('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
     },
 
     /**
-     * Возвращает форму входа пользователя в систему через внешний провайдер.
-     *
-     * @public
-     */
+          * Возвращает форму входа пользователя в систему через внешний провайдер.
+          *
+          * @public
+          */
     getSignInExternalForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
         this.getExternalLoginForm('/Auth/SignInExternal', successUrl, failureUrl, resultCallback, errorCallback);
     },
 
     /**
-     * Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
-     *
-     * @public
-     */
+          * Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
+          *
+          * @public
+          */
     getLinkExternalLoginForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
         this.getExternalLoginForm('/Auth/LinkExternalLogin', successUrl, failureUrl, resultCallback, errorCallback);
     },
 
     /**
-     * Удаляет у текущего пользователя имя входа у внешнего провайдера.
-     *
-     * @public
-     */
+          * Удаляет у текущего пользователя имя входа у внешнего провайдера.
+          *
+          * @public
+          */
     unlinkExternalLogin: function (provider, providerKey, resultCallback, errorCallback) {
         var unlinkExternalLoginForm = {
             Provider: provider,
@@ -153,21 +133,46 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/addclaim', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
+    },
+
+    setSessionData: function(claimType, claimValue, resultCallback, errorCallback) {
+        var claim = {
+            "id" : null,
+            "changesObject" : {
+                "ClaimType": claimType,
+                "ClaimValue": claimValue
+            },
+            "replace" : false
+        };
+
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
+    },
+
+    getSessionData: function(claimType, resultCallback, errorCallback) {
+        var claim = {
+            "id" : null,
+            "changesObject" : {
+                "ClaimType": claimType,
+            },
+            "replace" : false
+        };
+
+        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getsessiondata', claim, resultCallback, errorCallback);
     },
 
     /**
-     * Выход пользователя из системы.
-     *
-     * @public
-     */
+          * Выход пользователя из системы.
+          *
+          * @public
+          */
     signOut: function (resultCallback, errorCallback) {
         var signOutInternalForm = {
             "id" : null,
             "changesObject" : {},
             "replace" : false
         };
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/signout', signOutInternalForm);
+
         this.sendPostRequest('/Auth/SignOut', null, function(){
             var args = _.toArray(arguments);
             if(resultCallback){
@@ -175,7 +180,7 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
-            var exchange = window.InfinniUI.global.messageBus;
+            var exchange = messageBus.getExchange('global');
             exchange.send('OnSignOut', {value: args});
         }.bind(this), errorCallback);
     },
@@ -222,8 +227,6 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     sendGetRequest: function (requestUri, resultCallback, errorCallback) {
-        var that = this;
-
         $.ajax(this.baseAddress + requestUri, {
             type: 'GET',
             xhrFields: {
@@ -238,19 +241,14 @@ _.extend(AuthenticationProvider.prototype, {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
-
-                that.handlers.onError.fire(error.responseJSON);
             }
         });
     },
 
     sendPostRequest: function (requestUri, requestData, resultCallback, errorCallback) {
-        var that = this;
-
         if (requestData !== null) {
             requestData = JSON.stringify(requestData);
         }
-
         $.ajax(this.baseAddress + requestUri, {
             type: 'POST',
             xhrFields: {
@@ -267,8 +265,6 @@ _.extend(AuthenticationProvider.prototype, {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
-
-                that.handlers.onError.fire(error.responseJSON);
             }
         });
     },
@@ -283,10 +279,6 @@ _.extend(AuthenticationProvider.prototype, {
 
     onSignOut: function(handler){
         this.handlers.onSignOut.add(handler);
-    },
-
-    onError: function(handler){
-        this.handlers.onError.add(handler);
     }
 });
 
