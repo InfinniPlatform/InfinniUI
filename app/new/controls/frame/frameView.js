@@ -30,7 +30,7 @@ var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
     updateValue: function(){
         var value = this.model.get('value');
 
-        iframe.attr('src', value);
+        this.ui.iframe.attr('src', value);
     },
 
     getData: function () {

@@ -62,7 +62,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('DataNavigation', new DataNavigationBuilder());
         builder.register('DocumentViewer', new DocumentViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
-        //builder.register('Frame', new FrameBuilder());
+        builder.register('Frame', new FrameBuilder());
 
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
         builder.register('DataBinding', new DataBindingBuilder());
