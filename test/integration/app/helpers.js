@@ -60,7 +60,7 @@ window.testHelpers = {
 		var today = new Date();
 		//YYYY-MM-DD
         var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
-        return currentDate;
+        return window.configWindow.moment(currentDate).toISOString();
 	},
 	
 	getControlByName: function(controlName){
