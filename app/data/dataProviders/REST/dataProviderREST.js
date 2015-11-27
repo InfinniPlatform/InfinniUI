@@ -38,7 +38,7 @@ function DataProviderREST(urlConstructor, successCallback, failCallback) {
     this.saveItem = function (value, resultCallback, warnings, idProperty) {
 
         var callback = function(data){
-            data = adaptAnswerOnSavingItem();
+            data = adaptAnswerOnSavingItem(data);
             resultCallback(data);
         };
 
