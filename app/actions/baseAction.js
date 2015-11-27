@@ -12,10 +12,10 @@ _.extend(BaseAction.prototype, {
     }
 });
 
-InfinniUI.global.executeAction = function (executeActionMetadata, resultCallback) {
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
     var builder = new ApplicationBuilder();
 
-    var action = builder.build(that, executeActionMetadata);
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
 
     action.execute(resultCallback);
 };
