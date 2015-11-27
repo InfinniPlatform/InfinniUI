@@ -64,16 +64,25 @@ DataGridColumnBuilder.prototype.buildCellTemplate = function (column, metadata, 
     var cellTemplate;
 
     if ('CellTemplate' in metadata) {
-        cellTemplate = this.buildValueTemplate(metadata.CellTemplate, params);
+        throw  new Error('CellTemplate');
+        //cellTemplate = this.buildValueTemplate(metadata.CellTemplate, params);
     } else if ('CellFormat' in metadata) {
-        cellTemplate = this.buildValueTemplateByFormat(binding, metadata.CellFormat, params);
+        throw  new Error('CellFormat');
+        //cellTemplate = this.buildValueTemplateByFormat(binding, metadata.CellFormat, params);
     } else {
-        cellTemplate = this.buildValueTemplateByDefault(binding, params);
+        cellTemplate = this.buildCellTemplateByDefault(params);
     }
     column.setCellTemplate(cellTemplate);
     return this;
 };
 
+DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (column, metadata, params) {
+    return function (context, args) {
+        var index = args.index;
+
+        debugger;
+    }
+};
 
 /**
  * @protected

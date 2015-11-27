@@ -6,7 +6,7 @@ DataGridColumn.prototype.setHeader = function (value) {
     this.setProperty('header', value);
 };
 
-DataGridColumn.prototype.getHeader = function (value) {
+DataGridColumn.prototype.getHeader = function () {
     return this.getProperty('header');
 };
 
@@ -14,11 +14,11 @@ DataGridColumn.prototype.setCellTemplate = function (value) {
     this.setProperty('cellTemplate', value);
 };
 
-DataGridColumn.prototype.getCellTemplate = function (value) {
+DataGridColumn.prototype.getCellTemplate = function () {
     return this.getProperty('cellTemplate');
 };
 
-DataGridColumn.prototype.setCellSelector = function () {
+DataGridColumn.prototype.setCellSelector = function (value) {
     this.setProperty('cellSelector', value);
 };
 
@@ -26,7 +26,7 @@ DataGridColumn.prototype.getCellSelector = function () {
     return this.getProperty('cellSelector');
 };
 
-DataGridColumn.prototype.setHeaderTemplate = function () {
+DataGridColumn.prototype.setHeaderTemplate = function (value) {
     this.setProperty('cellHeaderTemplate', value);
 };
 

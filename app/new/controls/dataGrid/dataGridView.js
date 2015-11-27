@@ -40,8 +40,7 @@ var DataGridView = ListEditorBaseView.extend({
         console.log(this.model.toJSON());
         this.bindUIElements();
 
-        this.bindUIElements();
-
+        this.renderItems();
         this.updateProperties();
 
         this.trigger('render');
@@ -49,6 +48,24 @@ var DataGridView = ListEditorBaseView.extend({
         this.postrenderingActions();
         return this;
 
+
+    },
+
+    renderItems: function () {
+        var
+            model = this.model,
+            $listbox = this.$el,
+            itemTemplate = model.get('itemTemplate'),
+            items = model.get('items'),
+            itemEl, $el;
+
+        items.forEach(function (item, index) {
+            itemEl = itemTemplate(undefined, {index: index, item: item});
+            //listbox.addChildElement(itemEl);
+            $el.append(itemEl.render());
+
+            $el.parent().data('pl-data-item', item);
+        });
 
     }
 

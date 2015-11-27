@@ -21,8 +21,8 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
             element = params.element,
             collection = element.getColumns();
 
-        if (Array.isArray(metadata.columns)) {
-            var columns = metadata.columns.map(function (columnMetaData) {
+        if (Array.isArray(metadata.Columns)) {
+            var columns = metadata.Columns.map(function (columnMetaData) {
                 return this.buildColumn(columnMetaData, params);
             }, this);
 
@@ -33,6 +33,31 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
     buildColumn: function (metadata, params) {
         return this.columnBuilder.build(params.element, metadata, params);
+    },
+
+    buildItemProperty: function (itemsBinding, itemPropertyMetadata, params) {
+        var dataGrid = params.element;
+
+        return function (context, args) {
+            var index = args.index;
+            var row = new DataGridRow(dataGrid);
+            var sourceProperty;
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            sourceProperty = index.toString();
+            if (itemsBinding.getSourceProperty() != '') {
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+            if (itemPropertyMetadata != '') {
+                sourceProperty = sourceProperty + '.' + itemPropertyMetadata;
+            }
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(row, 'value');
+
+            return row;
+        };
     }
 
 });

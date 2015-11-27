@@ -143,9 +143,19 @@
                               "Items": [{
                                   "DataGrid": {
                                     "Items": {
-                                      "Source": "PatientDataSource",
-                                      "Property": "Diseases"
+                                      "Source": "BloodGroupDataSource",
+                                      "Property": ""
                                     },
+                                    "Columns": [
+                                      {
+                                        "Header": "ID",
+                                        "CellProperty": "Id"
+                                      },
+                                      {
+                                        "Header": "DISPLAY NAME",
+                                        "CellProperty": "DisplayName"
+                                      }
+                                    ],
                                     "~Value": {
                                       "Source": "ds1",
                                       "Property": "url"
