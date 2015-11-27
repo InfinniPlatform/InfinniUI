@@ -99,7 +99,12 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            var actValue = field.getValue().Date;
+            var actValue = field.getValue();
+            
+            if(typeof actValue != "string"){
+                actValue = actValue.Date;
+            }
+            
             var value = window.testHelpers.getCurrentDate();
             chai.assert.isTrue(actValue == value);
 
