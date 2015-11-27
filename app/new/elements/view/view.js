@@ -6,6 +6,8 @@
 function View(parent) {
     _.superClass(View, this, parent);
 
+    var that = this;
+
     this.eventManager = new EventManager();
 
     this.handlers = {
@@ -14,7 +16,9 @@ function View(parent) {
 
     this._initContext();
 
-    this._initHandlers();
+    this.control.get('dataSources').onChange(function(){
+        that._initDataSourceHandlers();
+    });
 }
 
 _.inherit(View, Container);
@@ -22,7 +26,7 @@ _.inherit(View, Container);
 _.extend(View.prototype,
     {
 
-        _initHandlers: function(){
+        _initDataSourceHandlers: function(){
             var that = this;
             var dataSources = this.getContext().dataSources;
             var readyDsDeferred = [];
