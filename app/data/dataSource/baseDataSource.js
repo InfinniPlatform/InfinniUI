@@ -139,7 +139,6 @@ var BaseDataSource = Backbone.Model.extend({
             newIndexedItemsById;
 
         this.set('isDataReady', true);
-
         items = _.union(items, newItems);
         this.set('items', items);
         if (newItems && newItems.length > 0) {
@@ -794,20 +793,22 @@ var BaseDataSource = Backbone.Model.extend({
         return item[idProperty];
     },
 
-    currentRequestPromise: function(){
+    getCurrentRequestPromise: function(){
         var promise = $.Deferred();
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
             this.once('change:isDataReady', function(){
-                if(this.isDataReady()){
-                    promise.resolve();
-                }else{
-                    logger.warn({
-                        message: 'BaseDataSource: strange, expected other dataReady status',
-                        source: this
-                    });
-                }
+                this.once('change:selectedItem', function(){
+                    if(this.isDataReady()){
+                        promise.resolve();
+                    }else{
+                        logger.warn({
+                            message: 'BaseDataSource: strange, expected other dataReady status',
+                            source: this
+                        });
+                    }
+                });
             });
         }else{
             promise.resolve();
