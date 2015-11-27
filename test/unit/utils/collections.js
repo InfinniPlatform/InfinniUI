@@ -872,6 +872,17 @@ describe("Collection", function () {
             assert.equal(collection.getById(2), objects[1]);
             assert.equal(collection.getById(3), objects[2]);
         });
+
+        it("should return undefined on missing id", function () {
+            var objects = [
+                    {key: 1, value: 'A'},
+                    {key: 2, value: 'B'},
+                    {key: 3, value: 'C'}
+                ],
+                collection = new Collection(objects, 'key');
+
+            assert.isTrue(typeof collection.getById(4) === 'undefined');
+        });
     });
 
     describe("getByIndex()", function () {
