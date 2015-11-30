@@ -11,14 +11,14 @@ _.extend(SaveAction.prototype, {
         var dataSource = this.getProperty('dataSource');
         var canClose = this.getProperty('canClose');
 
-        var onSuccessSave = function(data){
+        var onSuccessSave = function(context, args){
             if(canClose){
                 parentView.setDialogResult(DialogResult.accepted);
                 parentView.close();
             }
 
             if(_.isFunction(callback)){
-                callback(data);
+                callback(context, args);
             }
         };
 

@@ -406,7 +406,7 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved(item, success);
+            this._notifyAboutItemSaved(item, 'notModified', success);
             return;
         }
 
@@ -422,7 +422,7 @@ var BaseDataSource = Backbone.Model.extend({
                 ds.uploadFiles(data.instanceId)
                     .then(function () {
                         ds._excludeItemFromModifiedSet(item);
-                        ds._notifyAboutItemSaved(item, success);
+                        ds._notifyAboutItemSaved(item, data, success);
                     }, function (err) {
                         logger.error(err);
                         if (error) {
@@ -435,11 +435,12 @@ var BaseDataSource = Backbone.Model.extend({
         });
     },
 
-    _notifyAboutItemSaved: function (item, successHandler) {
+    _notifyAboutItemSaved: function (item, result, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
+        argument.result = result;
 
         if (successHandler) {
             successHandler(context, argument);
