@@ -314,7 +314,7 @@ _.extend(ContainerBuilder.prototype, {
             element = params.element,
             scriptExecutor = new ScriptExecutor(params.parent),
             itemComparator = function (item1, item2) {
-                return scriptExecutor.executeScript(metadata.ItemComparator, {item1: item1, item2: item2});
+                return scriptExecutor.executeScript(metadata.ItemComparator.Name, {item1: item1, item2: item2});
             };
 
         binding.bindElement({
