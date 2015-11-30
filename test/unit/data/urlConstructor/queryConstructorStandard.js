@@ -19,14 +19,14 @@ describe('QueryConstructorStandard', function () {
 
             // given
             // when
-            var instance = new QueryConstructorStandard('http://localhost', {
-                ConfigId: 'myConfig',
-                DocumentId: 'myDocument'
-            });
+            var instance = new QueryConstructorStandard('http://localhost');
+
+            instance.setConfigId('myConfig');
+            instance.setDocumentId('myDocument');
 
             // then
             var data = instance.constructCreateDocumentRequest();
-            assert.equal(data.requestUrl, 'http://localhost/myConfig/StandardApi/myDocument/CreateDocument');
+            assert.equal(data.requestUrl, 'http://localhost/RestfulApi/StandardApi/configuration/CreateDocument');
             assert.deepEqual(data.args, {
                 id: null,
                 changesObject: {
@@ -41,14 +41,14 @@ describe('QueryConstructorStandard', function () {
 
             // given
             // when
-            var instance = new QueryConstructorStandard('http://localhost', {
-                ConfigId: 'myConfig',
-                DocumentId: 'myDocument'
-            });
+            var instance = new QueryConstructorStandard('http://localhost');
+
+            instance.setConfigId('myConfig');
+            instance.setDocumentId('myDocument');
 
             // then
             var data = instance.constructReadDocumentRequest([], 1, 10, 'ASC');
-            assert.equal(data.requestUrl, 'http://localhost/myConfig/StandardApi/myDocument/GetDocument');
+            assert.equal(data.requestUrl, 'http://localhost/RestfulApi/StandardApi/configuration/GetDocument');
             assert.deepEqual(data.args, {
                 id: null,
                 changesObject: {
@@ -67,14 +67,14 @@ describe('QueryConstructorStandard', function () {
 
             // given
             // when
-            var instance = new QueryConstructorStandard('http://localhost', {
-                ConfigId: 'myConfig',
-                DocumentId: 'myDocument'
-            });
+            var instance = new QueryConstructorStandard('http://localhost');
+
+            instance.setConfigId('myConfig');
+            instance.setDocumentId('myDocument');
 
             // then
             var data = instance.constructUpdateDocumentRequest({title: "My title"}, false);
-            assert.equal(data.requestUrl, 'http://localhost/myConfig/StandardApi/myDocument/SetDocument');
+            assert.equal(data.requestUrl, 'http://localhost/RestfulApi/StandardApi/configuration/SetDocument');
             assert.deepEqual(data.args, {
                 id: null,
                 changesObject: {
@@ -91,14 +91,14 @@ describe('QueryConstructorStandard', function () {
 
             // given
             // when
-            var instance = new QueryConstructorStandard('http://localhost', {
-                ConfigId: 'myConfig',
-                DocumentId: 'myDocument'
-            });
+            var instance = new QueryConstructorStandard('http://localhost');
+
+            instance.setConfigId('myConfig');
+            instance.setDocumentId('myDocument');
 
             // then
             var data = instance.constructDeleteDocumentRequest('myDocumentId');
-            assert.equal(data.requestUrl, 'http://localhost/myConfig/StandardApi/myDocument/DeleteDocument');
+            assert.equal(data.requestUrl, 'http://localhost/RestfulApi/StandardApi/configuration/DeleteDocument');
             assert.deepEqual(data.args, {
                 id: null,
                 changesObject: {
