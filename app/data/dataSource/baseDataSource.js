@@ -131,6 +131,8 @@ var BaseDataSource = Backbone.Model.extend({
         } else {
             this.setSelectedItem(null);
         }
+
+        this.trigger('settingNewItemsComplete');
     },
 
     _addItems: function (newItems) {
@@ -146,6 +148,8 @@ var BaseDataSource = Backbone.Model.extend({
             _.extend(indexedItemsById, newIndexedItemsById);
             this.set('itemsById', indexedItemsById);
         }
+
+        this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -798,17 +802,15 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('change:isDataReady', function(){
-                this.once('change:selectedItem', function(){
-                    if(this.isDataReady()){
-                        promise.resolve();
-                    }else{
-                        logger.warn({
-                            message: 'BaseDataSource: strange, expected other dataReady status',
-                            source: this
-                        });
-                    }
-                });
+            this.once('settingNewItemsComplete', function(){
+                if(this.isDataReady()){
+                    promise.resolve();
+                }else{
+                    logger.warn({
+                        message: 'BaseDataSource: strange, expected other dataReady status',
+                        source: this
+                    });
+                }
             });
         }else{
             promise.resolve();
