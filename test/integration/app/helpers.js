@@ -56,10 +56,14 @@ window.testHelpers = {
 		window.testHelpers.waitCondition(waitView, success, error, maxTimeout, step);
 	},
 
-	getCurrentDate: function(){
-		var today = new Date();
+	getDate: function(iterator){
+		iterator = iterator || 0;
+		iterator *= 1000 * 60 * 60 * 24; 
+		
+		var today = new Date(Date.now() + iterator);
 		//YYYY-MM-DD
         var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
+		
         return window.configWindow.moment(currentDate).toISOString();
 	},
 	
@@ -72,7 +76,7 @@ window.testHelpers = {
 			var itemIndex = parseInt(indexInfo[1]);
 			var itemName = controlName.match(/\w+/)[0];
 			
-			if(window.currentListBox == undefined || itemIndex.toString() == "NaN" || window.currentListBox.children.get(itemIndex) == undefined){
+			if(window.currentListBox == undefined || isNaN(itemIndex) || window.currentListBox.children.get(itemIndex) == undefined){
 				return undefined;
 			}
 			

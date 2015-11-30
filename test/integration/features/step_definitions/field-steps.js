@@ -42,15 +42,21 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
     window.testHelpers.waitCondition(haveField, success, fail);
 });
 
-this.When(/^я введу в поле типа дата "([^"]*)" значение Сегодня$/, function (fieldName, next) {
+this.When(/^я введу в поле типа дата "([^"]*)" значение "([^"]*)"$/, function (fieldName, dateString, next) {
     var haveField = function(){
         return window.testHelpers.getControlByName(fieldName) != undefined;
     }
     var success = function(){
         try {
-            var value = window.testHelpers.getCurrentDate();
-            window.testHelpers.getControlByName(fieldName).setValue(value);
-            next();
+			var date = dateString.match(/[а-я]*/i)[0];
+			var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+			if(date === "Сегодня" && !isNaN(iterator)){
+				var value = window.testHelpers.getDate(iterator);
+				window.testHelpers.getControlByName(fieldName).setValue(value);
+				next();
+			}else{
+				next(new Error("Incorrect value: '" + dateString + "'"));
+			}
         } catch (err) {
             next(err);
         }
@@ -89,7 +95,7 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
     window.testHelpers.waitCondition(haveValue, checkValue, fail);
 });
 
-this.Then(/^значение в поле типа дата "([^"]*)" равно Сегодня$/, function (fieldName, next) {
+this.Then(/^значение в поле типа дата "([^"]*)" равно "([^"]*)"$/, function (fieldName, dateString, next) {
     var haveValue = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
     };
@@ -105,10 +111,16 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
                 actValue = actValue.Date;
             }
             
-            var value = window.testHelpers.getCurrentDate();
-            chai.assert.isTrue(actValue == value);
-
-            next();
+			var date = dateString.match(/[а-я]*/i)[0];
+			var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+			
+			if(date === "Сегодня" && !isNaN(iterator)){
+				var value = window.testHelpers.getDate(iterator);
+				chai.assert.equal(new Date(value).getTime(), new Date(actValue).getTime(), value + ' != ' + actValue);
+				next();
+			}else{
+				next(new Error("Incorrect value: '" + dateString + "'"));
+			}
         } catch (err) {
             next(err);
         }
