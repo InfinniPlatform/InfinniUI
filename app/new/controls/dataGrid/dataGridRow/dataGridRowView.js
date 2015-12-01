@@ -10,12 +10,18 @@ var DataGridRowView = ControlView.extend({
 
     render: function () {
         this.prerenderingActions();
+        var $el = this.$el;
 
-        this.$el.empty();
-
-        console.log(this.model.toJSON());
-
-
+        $el.empty();
+        console.log('render row');
+        var templates = this.model.get('cellTemplates');
+        if(Array.isArray(templates)) {
+            templates.forEach(function (template) {
+                var $cell = $('<td></td>');
+                $cell.append(template().render());
+                $el.append($cell);
+            });
+        }
         this.updateProperties();
 
         this.trigger('render');

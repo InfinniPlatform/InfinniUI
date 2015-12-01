@@ -149,11 +149,26 @@
                                     "Columns": [
                                       {
                                         "Header": "ID",
+                                        "CellFormat": "{Id}, {DisplayName}"
+                                      },
+                                      {
+                                        "Header": "ID",
                                         "CellProperty": "Id"
                                       },
                                       {
                                         "Header": "DISPLAY NAME",
                                         "CellProperty": "DisplayName"
+                                      },
+                                      {
+                                        "Header": "Template",
+                                        "CellTemplate": {
+                                          "TextBox": {
+                                            "Value": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "$.DisplayName"
+                                            }
+                                          }
+                                        }
                                       }
                                     ],
                                     "~Value": {

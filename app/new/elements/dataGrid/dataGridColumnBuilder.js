@@ -7,6 +7,8 @@ function DataGridColumnBuilder () {
 
 }
 
+_.extend(DataGridColumnBuilder.prototype, displayFormatBuilderMixin);
+
 /**
  *
  * @param {DataGrid} element
@@ -64,24 +66,98 @@ DataGridColumnBuilder.prototype.buildCellTemplate = function (column, metadata, 
     var cellTemplate;
 
     if ('CellTemplate' in metadata) {
-        throw  new Error('CellTemplate');
-        //cellTemplate = this.buildValueTemplate(metadata.CellTemplate, params);
+        cellTemplate = this.buildCellTemplateByTemplate(params, metadata.CellTemplate);
     } else if ('CellFormat' in metadata) {
-        throw  new Error('CellFormat');
-        //cellTemplate = this.buildValueTemplateByFormat(binding, metadata.CellFormat, params);
+        cellTemplate = this.buildCellTemplateByFormat(params, metadata.CellFormat);
     } else {
-        cellTemplate = this.buildCellTemplateByDefault(params);
+        var cellProperty = 'CellProperty' in metadata ? metadata.CellProperty : '';
+        cellTemplate = this.buildCellTemplateByDefault(params, cellProperty);
     }
     column.setCellTemplate(cellTemplate);
     return this;
 };
 
-DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (column, metadata, params) {
-    return function (context, args) {
-        var index = args.index;
+DataGridColumnBuilder.prototype.buildCellTemplateByTemplate = function (params, cellTemplateMetadata) {
+    var dataGrid = params.element;
+    var builder = params.builder;
+    var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
 
-        debugger;
+    return function (itemsBinding) {
+        return function  (context, args) {
+            var index = args.index;
+            var argumentForBuilder = {
+                parent: dataGrid,
+                parentView: params.parentView
+            };
+            argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+
+            return builder.build(cellTemplateMetadata, argumentForBuilder);
+        }
+
+    };
+};
+
+DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function (params, cellFormatMetadata) {
+    var column = params.element,
+        grid = column.parent,
+        format = this.buildDisplayFormat(cellFormatMetadata, params);
+
+    return function  (itemsBinding) {
+        return function (context, args) {
+            var index = args.index;
+            var label = new Label(this);
+
+            var sourceProperty = itemsBinding.getSourceProperty();
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            sourceProperty = index.toString();
+            if (itemsBinding.getSourceProperty() != '') {
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+
+            label.setDisplayFormat(format);
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(label, 'value');
+
+            return label;
+        };
+    };
+
+};
+
+DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (params, cellProperty) {
+    var column = params.element,
+        grid = column.parent;
+
+    return function  (itemsBinding) {
+
+        return function (context, args) {
+            var index = args.index;
+            var label = new Label(grid);
+
+
+            var sourceProperty;
+            var source = itemsBinding.getSource();
+            var binding = new DataBinding(this);
+
+            sourceProperty = index.toString();
+            if (itemsBinding.getSourceProperty() != '') {
+                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
+            }
+
+            if (cellProperty != '') {
+                sourceProperty = sourceProperty + '.' + cellProperty;
+            }
+
+            binding.bindSource(source, sourceProperty);
+            binding.bindElement(label, 'value');
+
+            return label;
+        }
     }
+
 };
 
 /**

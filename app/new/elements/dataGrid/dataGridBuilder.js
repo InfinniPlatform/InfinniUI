@@ -41,20 +41,15 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         return function (context, args) {
             var index = args.index;
             var row = new DataGridRow(dataGrid);
-            var sourceProperty;
-            var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
 
-            sourceProperty = index.toString();
-            if (itemsBinding.getSourceProperty() != '') {
-                sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
-            }
-            if (itemPropertyMetadata != '') {
-                sourceProperty = sourceProperty + '.' + itemPropertyMetadata;
-            }
+            var columns = dataGrid.getColumns();
 
-            binding.bindSource(source, sourceProperty);
-            binding.bindElement(row, 'value');
+            var cellItemTemplates = columns.toArray().map(function (column, index) {
+                var cellTemplate = column.getCellTemplate();
+                var template = cellTemplate(itemsBinding);
+                return template.bind(column, context, args);
+            });
+            row.setCellTemplates(cellItemTemplates);
 
             return row;
         };

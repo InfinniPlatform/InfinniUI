@@ -9,6 +9,10 @@ _.extend(DataGridRow.prototype, {
 
     createControl: function () {
         return new DataGridRowControl()
+    },
+
+    setCellTemplates: function (cellTemplates) {
+        this.control.set('cellTemplates', cellTemplates);
     }
 
 });
