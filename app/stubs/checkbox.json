@@ -186,6 +186,20 @@
                                   }
                                }]
                           }
+                      },
+                      {
+                          "Cell": {
+                              "ColumnSpan": 3,
+                              "Items": [
+                                  {
+                                      "PdfViewer": {
+                                          "Name": "GuidelineDocumentViewer",
+                                          "MaxSize": 1048576,
+                                          "Value": "/out/docs/MainGuideline.pdf"
+                                      }
+                                  }
+                              ]
+                          }
                       }
                   ]
               }

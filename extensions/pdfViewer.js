@@ -1,4 +1,4 @@
-function PdfViewer() {
+function oldPdfViewer() {
     this.render = function (target, parameters, context) {
         var href = null;
         var documentViewer = context.ParentView.getContext().Controls['DocumentViewer'];
