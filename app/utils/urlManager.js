@@ -34,5 +34,38 @@ var urlManager = {
             history.pushState(null, null, newUrl);
         }
 
+    },
+
+    setParameter: function(name, value){
+        var oldSearch = location.search;
+        var newSearch = _.isEmpty(oldSearch) ?
+            stringUtils.format("?{0}={1}", [name, value]) :
+            stringUtils.format("{0}&{1}={2}", [oldSearch, name, value]);
+
+        var newUrl = stringUtils.format("{0}//{1}{2}{3}{4}",[location.protocol, location.host, location.pathname, newSearch, location.hash]);
+
+        history.pushState(null, null, newUrl);
+    },
+
+    deleteParameter: function(name){
+        var params = urlManager.getParams();
+        delete params[name];
+
+        var newSearch = generateSearch(params);
+
+        var newUrl = stringUtils.format("{0}//{1}{2}{3}{4}",[location.protocol, location.host, location.pathname, newSearch, location.hash]);
+        history.pushState(null, null, newUrl);
+
+        function generateSearch(params){
+            var paramsArray = [];
+            _.mapObject(params, function(val, key){
+                var param = stringUtils.format("{0}={1}",[key, val]);
+                paramsArray.push( param );
+            });
+
+            return _.isEmpty(paramsArray) ?
+                "" :
+                "?" + paramsArray.join("&");
+        };
     }
 };
