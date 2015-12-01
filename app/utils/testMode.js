@@ -13,43 +13,59 @@
     }
 
     $(function () {
+
+        patchBootstrapTooltip();
         var info = new InfoElement();
 
-        $(document).on('mousemove', function (event) {
+        $(document).on('mouseover', function (event) {
             info.setElement(event.target);
         });
 
-        setInterval(500, function () {
-            info.updatePosition();
-        });
+        function patchBootstrapTooltip() {
+            $.fn.tooltip.Constructor.prototype.getTitle = function () {
+                var $e = this.$element;
+                var o  = this.options;
 
+                return o.title;
+            }
+        }
     });
 
 
     /*************************************/
 
     function InfoElement() {
-        this.popup = new Popup();
         this.marker = new Marker();
-        this.currentElement = null;
+        this.$currentControl = null;
     }
 
     InfoElement.prototype.setElement = function (el) {
         var
             $el = $(el),
-            name = getName($el),
-            viewName = getViewName($el);
+            $control = getControl($el),
+            name = getName($control),
+            viewName = getViewName($control);
 
-        if ($el) {
-            this.showInfo($el, viewName, _.isEmpty(name) ? NO_NAME : name);
-        } else {
-            this.hideInfo();
+        this.hideInfo();
+        if ($control) {
+            this.showInfo($control, viewName, _.isEmpty(name) ? NO_NAME : name);
+        }
+
+        function getControl($el) {
+            var $control;
+
+            var name = $el.attr(DATA_NAME_ATTRIBUTE);
+            if (typeof name !== 'undefined') {
+                $control = $el;
+            } else {
+                $control = $el.parents(DATA_NAME_SELECTOR);
+            }
+            return $control;
         }
 
         function getName($el) {
-            var $e = $el.parents(DATA_NAME_SELECTOR);
-            if ($e.length) {
-                return $e.attr(DATA_NAME_ATTRIBUTE);
+            if ($el.length) {
+                return $el.attr(DATA_NAME_ATTRIBUTE);
             }
         }
 
@@ -61,103 +77,29 @@
         }
     };
 
-    InfoElement.prototype.showInfo = function ($el, viewName, name) {
-        var el = $el[0];
-        if (el === this.popup.el) {
-            return;
+    InfoElement.prototype.showInfo = function ($control, viewName, name) {
+        if (this.$currentControl && this.$currentControl[0]!== $control[0]) {
+            this.marker.reset(this.$currentControl);
         }
+        this.marker.highlight($control);
 
-        if (this.currentElement !== el) {
-            this.marker
-                .reset(this.$currentElement)
-                .highlight($el);
+        this.$currentControl = $control;
 
-            this.currentElement = el;
-            this.$currentElement = $el;
-            console.log(name);
-
-            var position = $el.offset();
-            if (typeof position !== 'undefined') {
-                var scrollLeft = $(document).scrollLeft();
-                var scrollTop = $(document).scrollTop();
-                this.popup
-                    .setText(viewName + ':' + name)
-                    .setPosition(position.left - scrollLeft, position.top - scrollTop)
-                    .show();
-            }
-        }
-    };
-
-    InfoElement.prototype.updatePosition = function () {
-        var $el = this.$currentElement;
-
-        if (!$el) {
-            return;
-        }
-
-        var position = $el.offset();
-        var scrollLeft = $(document).scrollLeft();
-        var scrollTop = $(document).scrollTop();
-        this.popup
-            .setPosition(position.left - scrollLeft, position.top - scrollTop);
+        $control.tooltip({
+            title: viewName + ':' + name,
+            placement: "auto"
+        })
+            .tooltip('show');
     };
 
     InfoElement.prototype.hideInfo = function () {
-        this.marker
-            .reset(this.$currentElement);
-
-        this.popup.hide();
-    };
-
-    /************************************************/
-
-    function Popup() {
-        this.id = 'pl-test-mode-popup';
-        this.$el = $('<div id="' + this.id +'" style="position:absolute; border: 2px solid red;background: #000000;color: #ffffff;display:none;z-index:99999;"></div>');
-        this.el = this.$el[0];
-    }
-
-    Popup.prototype.render = function () {
-        $('body').append(this.$el);
-    };
-
-    Popup.prototype.checkDOM = function () {
-        if ($("#" + this.id).length === 0) {
-            this.render();
+        if (this.$currentControl) {
+            this.marker
+                .reset(this.$currentControl);
+            this.$currentControl.tooltip('destroy');
         }
     };
 
-
-    Popup.prototype.hide = function () {
-        var $el = this.$el;
-        $el.css('display', 'none');
-    };
-
-    Popup.prototype.setText = function (text) {
-        var $el = this.$el;
-        $el.text(text);
-        return this;
-    };
-
-    Popup.prototype.show = function () {
-        this.checkDOM();
-        var $el = this.$el;
-        $el.css({
-            display: 'inline-block'
-        });
-
-        return this;
-    };
-
-    Popup.prototype.setPosition = function (x, y) {
-        var $el = this.$el;
-        $el.css({
-            top: y,
-            left: x
-        });
-
-        return this;
-    };
 
 
     /********************************************/
