@@ -64,7 +64,8 @@ window.testHelpers = {
 		//YYYY-MM-DD
         var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
 		
-        return window.configWindow.moment(currentDate).toISOString();
+        // TODO: Следить за датами
+        return window.configWindow.moment(currentDate).format("YYYY-MM-DDTHH:mm:ss.SSS");
 	},
 	
 	getControlByName: function(controlName){
