@@ -24,6 +24,8 @@ function QueryConstructorStandard(host) {
         DeleteAction: 'DeleteDocument'
     };
 
+    this.isCustom = false;
+
     //this.setCreateAction(metadata.CreateAction);
     //this.setReadAction(metadata.ReadAction);
     //this.setUpdateAction(metadata.UpdateAction);
@@ -36,7 +38,8 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
 
     setCreateAction: function (value) {
         if (value) {
-            this._actions.CreateAction = value
+            this._actions.CreateAction = value;
+            this.isCustom = true;
         }
     },
 
@@ -47,6 +50,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     setReadAction: function (value) {
         if (value) {
             this._actions.ReadAction = value;
+            this.isCustom = true;
         }
     },
 
@@ -57,6 +61,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     setUpdateAction: function (value) {
         if (value) {
             this._actions.UpdateAction = value;
+            this.isCustom = true;
         }
     },
 
@@ -67,6 +72,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     setDeleteAction: function (value) {
         if (value) {
             this._actions.DeleteAction = value;
+            this.isCustom = true;
         }
     },
 
@@ -113,7 +119,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     _constructUrl: function (action) {
         return this.urlTemplate({
             host: this._host,
-            api: 'RestfulApi', //this._configId,
+            api: this.isCustom ? 'AdministrationCustomization' : 'RestfulApi', //this._configId,
             document: 'configuration', //this._documentId,
             action: this._actions[action]
         });

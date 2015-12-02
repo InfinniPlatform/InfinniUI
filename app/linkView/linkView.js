@@ -1,49 +1,86 @@
-function LinkView(parentView, viewFactory) {
+function LinkView(parentView) {
     this.openMode = 'Page';
     this.parentView = parentView;
-    this.viewFactory = viewFactory;
+
+    //this.viewTemplate = function(){return '';};
 }
 
-LinkView.prototype.setOpenMode = function (mode) {
-    if (_.isEmpty(mode)) return;
-    this.openMode = mode;
-};
+_.extend(LinkView.prototype, {
+    template: {
+        Dialog: InfinniUI.Template["linkView/template/dialog.tpl.html"]
+    },
 
-LinkView.prototype.getOpenMode = function () {
-    return this.openMode;
-};
+    setOpenMode: function (mode) {
+        if (_.isEmpty(mode)) return;
+        this.openMode = mode;
+    },
 
-LinkView.prototype.getContainer = function () {
-    //return _.isEmpty(this.container) ? 'MainContainer' : this.container;
-    return this.container;
-};
+    getOpenMode: function () {
+        return this.openMode;
+    },
 
-LinkView.prototype.setContainer = function (container) {
-    this.container = container;
-};
+    getContainer: function () {
+        //return _.isEmpty(this.container) ? 'MainContainer' : this.container;
+        return this.container;
+    },
 
-LinkView.prototype.template = {
-    Dialog: InfinniUI.Template["linkView/template/dialog.tpl.html"]
-};
+    setContainer: function (container) {
+        this.container = container;
+    },
 
-LinkView.prototype.createView = function (resultCallback) {
+    setViewTemplate: function(viewTemplate){
+        this.viewTemplate = viewTemplate;
+    },
 
-    var openMode = InfinniUI.global.openMode;
-    var openModeStrategy = openMode.getStrategy(this);
+    createView: function (resultCallback) {
+        var that = this;
 
-    this.viewFactory(function (view) {
-        view.onOpened(function (args) {
-            view.onClosed(function () {
-                args.$layout.remove();
-                window.InfinniUI.global.messageBus
-                    .send(messageTypes.onViewClosed, {view: view});
-            });
+        this.viewTemplate(function(createdView){
+            that.view = createdView;
 
-            openModeStrategy.open(view, args.$layout);
-            //view.getExchange().send(messageTypes.onLoading, {});
+            that._initViewHandler(createdView);
         });
 
-        resultCallback(view);
-    });
+        var openMode = InfinniUI.global.openMode;
+        var openModeStrategy = openMode.getStrategy(this);
 
-};
+        this.viewFactory(function (view) {
+            view.onOpened(function (args) {
+                view.onClosed(function () {
+                    args.$layout.remove();
+                    window.InfinniUI.global.messageBus
+                        .send(messageTypes.onViewClosed, {view: view});
+                });
+
+                openModeStrategy.open(view, args.$layout);
+                //view.getExchange().send(messageTypes.onLoading, {});
+            });
+
+            resultCallback(view);
+        });
+
+    },
+
+    _initViewHandler: function(view){
+        var that = this;
+
+        view.onOpened(function (args) {
+
+            var openMode = that.openMode;
+
+            switch(openMode){
+                case 'Page': {
+
+                } break;
+            }
+
+            //view.onClosed(function () {
+            //    args.$layout.remove();
+            //    window.InfinniUI.global.messageBus
+            //        .send(messageTypes.onViewClosed, {view: view});
+            //});
+
+             openModeStrategy.open(view, args.$layout);
+        });
+    }
+});
