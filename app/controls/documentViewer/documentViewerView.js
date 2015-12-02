@@ -31,29 +31,18 @@ var DocumentViewerView = ControlView.extend({
         return this;
     },
 
-    renderDocument: function () {
-        var valueExist = this.model.get('valueExist');
-        if(valueExist){
-            this.urlRender();
-            //this.normalRender();
-        }else{
-            this.normalRender();
-        }
-    },
-
-    normalRender: function(){
+    renderDocument: function(){
         var that = this,
             renderFrame = function(){
             this.$el.empty();
-            var query = dataSource.getQueryFilter();
             var requestData = {
                 PrintViewId: this.model.get('viewId'),
                 PrintViewType : 'ListView',
-                ConfigId: dataSource.getConfigId(),
-                DocumentId: dataSource.getDocumentId(),
+                ConfigId: this.model.get('configId'),
+                DocumentId: this.model.get('documentId'),
                 PageNumber: dataSource.getPageNumber(),
                 PageSize: dataSource.getPageSize(),
-                Query: query == null ? null : query.items
+                Query: dataSource.getFilter()
             };
 
             var urlParams = $.param({Form: JSON.stringify(requestData)}).replace(/%22/g, '%27');
@@ -62,9 +51,8 @@ var DocumentViewerView = ControlView.extend({
             });
         }.bind(this);
 
-        var dataSource = this.model.get('view').getDataSource(this.model.get('dataSource'));
-
-        //dataSource.addDataBinding({onSetPropertyValue: $.noop, bind: $.noop});
+        var parentView = this.model.get('view');
+        var dataSource = parentView.getContext().dataSources[this.model.get('dataSource')];
 
         if (typeof this.onDataSourceItemsUpdated !== 'undefined') {
             this.onDataSourceItemsUpdated.unsubscribe();
@@ -75,22 +63,6 @@ var DocumentViewerView = ControlView.extend({
         });
 
         renderFrame();
-    },
-
-    urlRender: function(){
-        var that = this,
-            renderFrame = function(){
-                if(this.model.get('url')){
-                    var url = encodeURI(this.model.get('url'));
-                    this.sendRequest(url, function(data){
-                        that.renderPdf(data);
-                    });
-                }
-            }.bind(this);
-
-        renderFrame();
-
-        this.listenTo(this.model, 'change:url', renderFrame);
     },
 
     renderPdf: function(data){
