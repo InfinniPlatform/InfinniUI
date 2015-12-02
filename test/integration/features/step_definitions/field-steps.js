@@ -201,3 +201,58 @@ this.When(/^я поменяю значение флага "([^"]*)" на "([^"]*
 	
 	window.testHelpers.waitCondition(haveFlag, success, fail);
 });
+
+this.Then(/^значение в текстовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next){
+	var haveField = function () {
+        return window.testHelpers.getControlByName(fieldName) != undefined;
+    };
+
+    var checkValue = function () {
+        try {
+            var field = window.testHelpers.getControlByName(fieldName);
+            chai.assert.isDefined(field);
+
+            var actValue = field.getValue();
+            chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    var fail = function () {
+        next(new Error(fieldName + ' is undefined'));
+    };
+
+    window.testHelpers.waitCondition(haveField, checkValue, fail);
+});
+
+this.Then(/^значение в числовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next){
+	var haveField = function () {
+        return window.testHelpers.getControlByName(fieldName) != undefined;
+    };
+
+    var checkValue = function () {
+        try {
+            var field = window.testHelpers.getControlByName(fieldName);
+            chai.assert.isDefined(field);
+			
+			value = parseInt(value);
+
+            var actValue = field.getValue();
+			chai.assert.typeOf(actValue, 'number');
+            chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    var fail = function () {
+        next(new Error(fieldName + ' is undefined'));
+    };
+
+    window.testHelpers.waitCondition(haveField, checkValue, fail);
+});
