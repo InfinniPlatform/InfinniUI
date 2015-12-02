@@ -90,7 +90,7 @@ function PrintViewActionBuilder() {
         xmlhttp.open('POST', url, true);
         xmlhttp.withCredentials = true;
         xmlhttp.responseType = 'arraybuffer';
-        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
                 if(xmlhttp.status == 200) {
@@ -98,9 +98,7 @@ function PrintViewActionBuilder() {
                 }
             }
         };
-        xmlhttp.send($.param({
-            Form: (JSON.stringify(params)).replace(/"/g, '\'')
-        }));
+        xmlhttp.send((JSON.stringify(params)).replace(/"/g, '\''));
     };
 
     this.getXmlHttp = function(){
