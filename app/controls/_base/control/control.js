@@ -54,6 +54,10 @@ _.extend(Control.prototype, {
         });
     },
 
+    onBeforeClick: function (handler) {
+        this.controlView.on('beforeClick', handler);
+    },
+
     onMouseDoubleClick: function (handler) {
         this.controlView.$el.on('dblclick', handler);
     },

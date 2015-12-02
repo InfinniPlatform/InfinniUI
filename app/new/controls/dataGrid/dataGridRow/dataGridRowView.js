@@ -4,8 +4,10 @@ var DataGridRowView = ControlView.extend({
 
     tagName: 'tr',
 
-    events: {
+    events: {},
 
+    initialize: function () {
+        ControlView.prototype.initialize.call(this);
     },
 
     render: function () {
@@ -15,7 +17,7 @@ var DataGridRowView = ControlView.extend({
         $el.empty();
         console.log('render row');
         var templates = this.model.get('cellTemplates');
-        if(Array.isArray(templates)) {
+        if (Array.isArray(templates)) {
             templates.forEach(function (template) {
                 var $cell = $('<td></td>');
                 $cell.append(template().render());

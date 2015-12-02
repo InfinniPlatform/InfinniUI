@@ -44,7 +44,10 @@
             "DisplayName": "IV",
             "SomeField": null
           }
-        ]
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
       }
     },
     {
@@ -169,6 +172,17 @@
                                             }
                                           }
                                         }
+                                      },
+                                      {
+                                        "Header": "Actions",
+                                        "CellTemplate": {
+                                          "Button": {
+                                            "Text": "Remove",
+                                            "OnClick": {
+                                              "Name": "OnClickRemove"
+                                            }
+                                          }
+                                        }
                                       }
                                     ],
                                     "~Value": {
@@ -221,6 +235,7 @@
           },
         {
           "NumericBox": {
+            "Visible": false,
             "HintText": "I'm NumericBox hint",
             "LabelText": "Numeric label",
             "Enabled": true,
@@ -238,6 +253,7 @@
         },
         {
           "DatePicker": {
+            "Visible": false,
             "Mode": "DateTime",
             "DisplayFormat": {
               "DateTimeFormat": {
@@ -258,6 +274,7 @@
         },
         {
           "DatePicker": {
+            "Visible": false,
             "Mode": "Time",
             "DisplayFormat": {
               "DateTimeFormat": {
@@ -360,6 +377,7 @@
           {
               "ListBox":{
                   "Name": "PatientListBox",
+                "Visible": false,
                   "ItemTemplate": {
                       "StackPanel":{
                           "Orientation": "Horizontal",
@@ -570,6 +588,7 @@
               ],
               "Items": [{
                 "NumericBox": {
+                  "Visible": false,
                   "HintText": "I'm NumericBox hint",
                   "LabelText": "Numeric label",
                   "Enabled": true,
@@ -719,6 +738,14 @@
     {
       "Name": "OnLostFocus",
       "Body": "console.log('OnLostFocus', args.source);"
+    },
+    {
+      "Name": "OnSelectedItemChanged_1",
+      "Body": "console.log('OnSelectedItemChanged_1', args/*, args.source, args.value*/);"
+    },
+    {
+      "Name": "OnClickRemove",
+      "Body": "console.log('Remove', context.dataSources.BloodGroupDataSource.getSelectedItem());"
     }
   ]
 }

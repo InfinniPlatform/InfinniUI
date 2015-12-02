@@ -28,7 +28,18 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateSelectedItem: function () {
+        console.log('updateSelectedItem');
+        var CLASS_SELECTED = 'info';
+        var $items = this.ui.items.children();
 
+        $items.removeClass(CLASS_SELECTED);
+
+        var selectedItem = this.model.get('selectedItem');
+        var items = this.model.get('items');
+        var index = items.indexOf(selectedItem);
+        if (index !== -1 && index < $items.length ) {
+            $($items[index]).toggleClass(CLASS_SELECTED, true);
+        }
     },
 
     render: function () {
@@ -85,6 +96,9 @@ var DataGridView = ListEditorBaseView.extend({
 
         items.forEach(function (item, index) {
             itemEl = itemTemplate(undefined, {index: index, item: item});
+            itemEl.onBeforeClick(function() {
+                model.set('selectedItem', item);
+            });
             //listbox.addChildElement(itemEl);
             $items.append(itemEl.render());
             //$el.parent().data('pl-data-item', item);

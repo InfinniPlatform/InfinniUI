@@ -342,6 +342,10 @@ _.extend(Element.prototype, {
         this.state[name] = value;
     },
 
+    onBeforeClick: function (handler) {
+        return this.control.onBeforeClick(handler);
+    },
+
     onKeyDown: function (handler) {
         var that = this,
             callback = function (nativeEventData) {
