@@ -20,7 +20,12 @@ RequestExecutorDataStrategy.prototype.strategies = {
                 withCredentials: true
             },
             success: onSuccess,
-            error: onFail,
+            error: function(response){
+                if(response.status == 0){
+                    messageBus.getExchange('global').send(messageTypes.onServiceFail);
+                }
+                onFail(arguments);
+            },
             data: JSON.stringify(requestData.args),
             contentType: "application/json;charset=UTF-8"
         });

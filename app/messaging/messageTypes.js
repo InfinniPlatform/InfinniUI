@@ -26,7 +26,8 @@ window.messageTypes = {
     onDeleteItem: {name: 'onDeleteItem'},
     onSaveItem: {name: 'onSaveItem'},
 
-    onFilterError: {name: 'onFilterError'}
+    onFilterError: {name: 'onFilterError'},
+    onServiceFail: {name: 'onServiceFail'}
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 
 };
