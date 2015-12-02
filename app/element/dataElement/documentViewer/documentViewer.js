@@ -14,10 +14,6 @@ _.extend(DocumentViewer.prototype, {
         return this.control.set('view', view);
     },
 
-    setParent: function(parent){
-        this.parent = parent;
-    },
-
     setPrintViewId: function(viewId) {
         return this.control.set('viewId', viewId);
     },
@@ -35,7 +31,7 @@ _.extend(DocumentViewer.prototype, {
     },
 
     build: function (){
-        this.control.controlView.renderDocument();
+        this.control.renderDocument();
     }
 
 }, valuePropertyMixin);
