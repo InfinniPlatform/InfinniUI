@@ -36,7 +36,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     urlTemplate: _.template('<%=host%>/<%=api%>/StandardApi/<%=document%>/<%=action%>'),
 
     setCreateAction: function (value) {
-        if (value) {
+        if (value && this._actions.CreateAction != value) {
             this._actions.CreateAction = value;
             this.isCustom = true;
         }
@@ -47,7 +47,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     },
 
     setReadAction: function (value) {
-        if (value) {
+        if (value && this._actions.ReadAction != value) {
             this._actions.ReadAction = value;
             this.isCustom = true;
         }
@@ -58,7 +58,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     },
 
     setUpdateAction: function (value) {
-        if (value) {
+        if (value && this._actions.UpdateAction != value) {
             this._actions.UpdateAction = value;
             this.isCustom = true;
         }
@@ -69,7 +69,7 @@ _.extend(QueryConstructorStandard.prototype, /** @lends QueryConstructorStandard
     },
 
     setDeleteAction: function (value) {
-        if (value) {
+        if (value && this._actions.DeleteAction != value) {
             this._actions.DeleteAction = value;
             this.isCustom = true;
         }
