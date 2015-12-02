@@ -13,10 +13,7 @@ _.extend(DocumentViewerBuilder.prototype, {
         params.element.setView(params.parentView);
         params.element.setParent(params.parent);
 
-        params.element.setConfigId(params.metadata.ConfigId);
-        params.element.setDocumentId(params.metadata.DocumentId);
         params.element.setPrintViewId(params.metadata.PrintViewId);
-        params.element.setPrintViewType(params.metadata.PrintViewType);
         params.element.setSource(params.metadata.Source.Source);
     },
 

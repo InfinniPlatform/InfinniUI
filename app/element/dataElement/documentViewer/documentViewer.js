@@ -18,30 +18,6 @@ _.extend(DocumentViewer.prototype, {
         this.parent = parent;
     },
 
-    setConfigId: function(configId) {
-        return this.control.set('configId', configId);
-    },
-
-    getConfigId: function() {
-        return this.control.get('configId');
-    },
-
-    setDocumentId: function(documentId) {
-        return this.control.set('documentId', documentId);
-    },
-
-    getDocumentId: function() {
-        return this.control.get('documentId');
-    },
-
-    setPrintViewType: function(viewType) {
-        return this.control.set('viewType', viewType);
-    },
-
-    getPrintViewType: function() {
-        return this.control.get('viewType');
-    },
-
     setPrintViewId: function(viewId) {
         return this.control.set('viewId', viewId);
     },

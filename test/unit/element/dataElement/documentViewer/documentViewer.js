@@ -5,7 +5,6 @@ describe('DocumentViewer', function () {
         var view = new View();
         var metadata = {
             PrintViewId: "PrintView",
-            PrintViewType: "ObjectView",
             Source: {
                 Source: "MainDataSource"
             }
@@ -18,7 +17,6 @@ describe('DocumentViewer', function () {
         //Then
         assert.equal(documentViewer.getName(), 'DocumentViewer');
         assert.equal(documentViewer.getPrintViewId(), 'PrintView');
-        assert.equal(documentViewer.getPrintViewType(), 'ObjectView');
         assert.equal(documentViewer.getSource(), 'MainDataSource');
         assert.isTrue(documentViewer.getEnabled());
         assert.isTrue(documentViewer.getVisible());
