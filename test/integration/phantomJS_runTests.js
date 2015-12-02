@@ -12,6 +12,9 @@ page.onConsoleMessage = function(msg) {
 			phantom.exit();
 		}, 2000);
 	}
+	if(msg.indexOf('Unhandled rejection') != -1){
+		phantom.exit();
+	}
 };
 
 page.onPageCreated = function(newPage) {
