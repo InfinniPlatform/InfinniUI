@@ -2,7 +2,7 @@ function LinkView(parentView) {
     this.openMode = 'Page';
     this.parentView = parentView;
 
-    //this.viewTemplate = function(){return '';};
+    this.viewTemplate = function(){return '';};
 }
 
 _.extend(LinkView.prototype, {
@@ -35,11 +35,13 @@ _.extend(LinkView.prototype, {
     createView: function (resultCallback) {
         var that = this;
 
-        this.viewTemplate(function(createdView){
+        this.viewTemplate(onViewReady);
+
+        function onViewReady(createdView){
             that.view = createdView;
 
             that._initViewHandler(createdView);
-        });
+        }
 
         var openMode = InfinniUI.global.openMode;
         var openModeStrategy = openMode.getStrategy(this);
@@ -66,6 +68,7 @@ _.extend(LinkView.prototype, {
 
         view.onOpened(function (args) {
 
+            var openMode = that.openMode;
             var openMode = that.openMode;
 
             switch(openMode){
