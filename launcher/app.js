@@ -35,6 +35,14 @@ moment.lang('ru');
         mainView;
 
     rootView.open($target);
+
+    messageBus.getExchange('global')
+        .subscribe(messageTypes.onServiceFail,
+        function(){
+            location = InfinniUI.config.serviceUnavailablePage;
+        }
+    );
+
     openHomePage()
         .done(function (viewMetadata) {
             var action = builder.buildType(rootView, 'OpenViewAction', viewMetadata);
