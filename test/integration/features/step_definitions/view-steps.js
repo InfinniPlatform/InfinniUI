@@ -162,3 +162,69 @@ this.Then(/^система не отобразит валидационных с
 	
 	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
 });
+
+this.Then(/^я не увижу элемента "([^"]*)"$/, function(elementName, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	}
+	var wasFound = function(){
+		var element = window.testHelpers.getControlByName(elementName);
+		
+		if(!!element.getVisible && !element.getVisible()){
+			next();
+		}else{
+			var errorString = !!element.getVisible ? 'was found' : 'getVisible is undefined';
+			next(new Error(elementName + ': ' + errorString));
+		}
+	}
+	var wasntFound = function(){
+		next();
+	}
+	
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound, 5000, 500);
+});
+
+this.Then(/^я не увижу элемента "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	}
+	var wasFound = function(){
+		var element = window.testHelpers.getControlByName(elementName);
+		
+		try{
+			if(element.getText() != elementText){
+				next();
+			}else{
+				next(new Error(elementName + ' was found!'));
+			}
+		}catch(err){
+			next(err);
+		}
+	}
+	var wasntFound = function(){
+		next();
+	}
+	
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound, 5000, 500);
+});
+
+this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	}
+	var wasFound = function(){
+		var element = window.testHelpers.getControlByName(elementName);
+		
+		try{
+			chai.assert.equal(element.getText(), elementText);
+			next();
+		}catch(err){
+			next(err);
+		}
+	}
+	var wasntFound = function(){
+		next(new Error(elementName + ' not found!'));
+	}
+	
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+});
