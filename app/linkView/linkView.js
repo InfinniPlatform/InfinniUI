@@ -6,9 +6,6 @@ function LinkView(parentView) {
 }
 
 _.extend(LinkView.prototype, {
-    template: {
-        Dialog: InfinniUI.Template["linkView/template/dialog.tpl.html"]
-    },
 
     setOpenMode: function (mode) {
         if (_.isEmpty(mode)) return;
@@ -19,13 +16,8 @@ _.extend(LinkView.prototype, {
         return this.openMode;
     },
 
-    getContainer: function () {
-        //return _.isEmpty(this.container) ? 'MainContainer' : this.container;
-        return this.container;
-    },
-
-    setContainer: function (container) {
-        this.container = container;
+    setContainer: function(containerName){
+        this.containerName = containerName;
     },
 
     setViewTemplate: function(viewTemplate){
@@ -41,49 +33,36 @@ _.extend(LinkView.prototype, {
             that.view = createdView;
 
             that._initViewHandler(createdView);
+
+            resultCallback(createdView);
         }
-
-        var openMode = InfinniUI.global.openMode;
-        var openModeStrategy = openMode.getStrategy(this);
-
-        this.viewFactory(function (view) {
-            view.onOpened(function (args) {
-                view.onClosed(function () {
-                    args.$layout.remove();
-                    window.InfinniUI.global.messageBus
-                        .send(messageTypes.onViewClosed, {view: view});
-                });
-
-                openModeStrategy.open(view, args.$layout);
-                //view.getExchange().send(messageTypes.onLoading, {});
-            });
-
-            resultCallback(view);
-        });
 
     },
 
     _initViewHandler: function(view){
         var that = this;
+        var openMode = that.openMode;
+        var context = this.parentView.getContext();
+        var openStrategy;
+        var container;
 
-        view.onOpened(function (args) {
+        switch(openMode){
+            case 'Container': {
+                container = context.controls[this.containerName];
 
-            var openMode = that.openMode;
-            var openMode = that.openMode;
+                openStrategy = new OpenModeContainerStrategy();
+                openStrategy.setView(view);
+                openStrategy.setContainer(container);
+                view.setOpenStrategy(openStrategy);
+            } break;
 
-            switch(openMode){
-                case 'Page': {
+            case 'Dialog': {
+                openStrategy = new OpenModeDialogStrategy();
+                openStrategy.setView(view);
+                view.setOpenStrategy(openStrategy);
+            } break;
+        }
 
-                } break;
-            }
-
-            //view.onClosed(function () {
-            //    args.$layout.remove();
-            //    window.InfinniUI.global.messageBus
-            //        .send(messageTypes.onViewClosed, {view: view});
-            //});
-
-             openModeStrategy.open(view, args.$layout);
-        });
+        view.open();
     }
 });

@@ -29,13 +29,15 @@ var ViewPanelView = ControlView.extend({
 
     onChangeLayoutHandler: function (model, layout) {
         this.$el.empty();
-        this.$el.append(layout);
+        this.$el.append(layout.render());
     },
 
     render: function () {
         this.prerenderingActions();
 
-        this.$el.append(this.model.get('layout'));
+        var layout = this.model.get('layout');
+
+        this.$el.append(layout.render());
 
         this.postrenderingActions();
         return this;

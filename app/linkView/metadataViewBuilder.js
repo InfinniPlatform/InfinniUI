@@ -10,7 +10,9 @@ _.extend(MetadataViewBuilder.prototype, {
         var linkView = new LinkView(args.parentView);
 
         linkView.setViewTemplate(viewTemplate);
-        linkView.setOpenMode(metadata.OpenMode);
+        if('OpenMode' in metadata){
+            linkView.setOpenMode(metadata.OpenMode);
+        }
         linkView.setContainer(metadata.Container);
 
         return linkView;

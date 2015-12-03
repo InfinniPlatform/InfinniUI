@@ -10,6 +10,9 @@ function View(parent) {
 
     this.eventManager = new EventManager();
 
+    this.openStrategy = new OpenModeDefaultStrategy();
+    this.openStrategy.setView(this);
+
     this.handlers = {
         onLoaded: $.Deferred()
     };
@@ -161,7 +164,9 @@ _.extend(View.prototype,
 
             if(this.eventManager.trigger('onOpening', scriptArgs, context)){
 
-                scriptArgs.$layout = this.render();
+                //scriptArgs.$layout = this.render();
+                this.openStrategy.open();
+
                 this.eventManager.trigger('onOpened', scriptArgs, context);
 
                 if(success){
@@ -192,6 +197,10 @@ _.extend(View.prototype,
 
         getScriptsStorage: function(){
             return this;
+        },
+
+        setOpenStrategy: function(openStrategy){
+            this.openStrategy = openStrategy;
         },
 
         onLoaded: function (handler) {
