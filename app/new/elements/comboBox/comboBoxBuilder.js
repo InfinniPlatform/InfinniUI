@@ -21,23 +21,23 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         this.initValueTemplate(data.valueBinding, params);
         element.setLabelText(params.metadata.LabelText);
 
-        (function (binding) {
-            var source = binding.getSource();
-            element.onPropertyChanged('search', function (context, args) {
-                var value = args.newValue;
-                source.setFilter([
-                    {
-                        criteriaType: 64,
-                        property: 'Display',
-                        value: value
-                    }
-                ]);
-
-                console.log('change:search', args);
-                console.log(source.getItems());
-            });
-
-        })(data.itemsBinding);
+        //(function (binding) {
+        //    var source = binding.getSource();
+        //    element.onPropertyChanged('search', function (context, args) {
+        //        var value = args.newValue;
+        //        source.setFilter([
+        //            {
+        //                criteriaType: 64,
+        //                property: 'Display',
+        //                value: value
+        //            }
+        //        ]);
+        //
+        //        console.log('change:search', args);
+        //        console.log(source.getItems());
+        //    });
+        //
+        //})(data.itemsBinding);
     },
 
     initValueTemplate: function (binding, params) {
@@ -127,28 +127,35 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     },
 
     buildValueTemplateByDefault: function (binding, params) {
+
         return function (context, args) {
             var index = args.index;
             var value = args.value;
 
             var label = new Label(this);
             label.setHorizontalAlignment('Left');
-            var labelBinding = new DataBinding(this);
-            labelBinding.setMode(BindingModes.toElement);
 
-            var source = binding.getSource();
-            var property = binding.getSourceProperty();
+            //if (binding) {
+                //var labelBinding = new DataBinding(this);
+                //labelBinding.setMode(BindingModes.toElement);
+                //
+                //var source = binding.getSource();
+                //var property = binding.getSourceProperty();
+                //
+                //if (params.element.getMultiSelect()) {
+                //    if (property && property !== '') {
+                //        property = [property, index].join('.');
+                //    } else {
+                //        property = String(index);
+                //    }
+                //}
+                //
+                //labelBinding.bindSource(source, property);
+                //labelBinding.bindElement(label, 'value');
 
-            if (params.element.getMultiSelect()) {
-                if (property && property !== '') {
-                    property = [property, index].join('.');
-                } else {
-                    property = String(index);
-                }
-            }
-
-            labelBinding.bindSource(source, property);
-            labelBinding.bindElement(label, 'value');
+            //} else {
+                label.setValue(value);
+            //}
 
             return label;
         };

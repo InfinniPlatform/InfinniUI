@@ -10,24 +10,11 @@ _.extend(DocumentViewerBuilder.prototype, {
 
         this.initScriptsHandlers(params);
 
-        params.element.setView(params.view);
+        params.element.setView(params.parentView);
+        params.element.setParent(params.parent);
 
-
-        if(params.metadata.Value){
-            var binding  = this.initValueProperty(params);
-            binding.onPropertyValueChanged(function (dataSourceName, value) {
-                params.element.setUrl(binding.getFileUrl());
-            });
-
-            params.element.setValueExist(true);
-
-            params.element.setUrl(binding.getFileUrl());
-        }else{
-            params.element.setDataSource(params.metadata.DataSource);
-            params.element.setPrintViewType(params.metadata.PrintViewType);
-            params.element.setPrintViewId(params.metadata.PrintViewId);
-        }
-        //this.initDataSource(params);
+        params.element.setPrintViewId(params.metadata.PrintViewId);
+        params.element.setSource(params.metadata.Source.Source);
     },
 
     createElement: function (params) {

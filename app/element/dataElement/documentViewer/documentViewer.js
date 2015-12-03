@@ -14,14 +14,6 @@ _.extend(DocumentViewer.prototype, {
         return this.control.set('view', view);
     },
 
-    setPrintViewType: function(viewType) {
-        return this.control.set('viewType', viewType);
-    },
-
-    getPrintViewType: function() {
-        return this.control.get('viewType');
-    },
-
     setPrintViewId: function(viewId) {
         return this.control.set('viewId', viewId);
     },
@@ -30,20 +22,16 @@ _.extend(DocumentViewer.prototype, {
         return this.control.get('viewId');
     },
 
-    setDataSource: function (dataSource) {
+    setSource: function (dataSource) {
         return this.control.set('dataSource', dataSource);
     },
 
-    getDataSource: function () {
+    getSource: function () {
         return this.control.get('dataSource');
     },
 
-    setUrl: function (url) {
-        return this.control.set('url', url);
-    },
-
-    setValueExist: function(val){
-        return this.control.set('valueExist', val);
+    build: function (){
+        this.control.renderDocument();
     }
 
 }, valuePropertyMixin);
