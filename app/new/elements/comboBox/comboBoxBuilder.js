@@ -21,23 +21,23 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         this.initValueTemplate(data.valueBinding, params);
         element.setLabelText(params.metadata.LabelText);
 
-        (function (binding) {
-            var source = binding.getSource();
-            element.onPropertyChanged('search', function (context, args) {
-                var value = args.newValue;
-                source.setFilter([
-                    {
-                        criteriaType: 64,
-                        property: 'Display',
-                        value: value
-                    }
-                ]);
-
-                console.log('change:search', args);
-                console.log(source.getItems());
-            });
-
-        })(data.itemsBinding);
+        //(function (binding) {
+        //    var source = binding.getSource();
+        //    element.onPropertyChanged('search', function (context, args) {
+        //        var value = args.newValue;
+        //        source.setFilter([
+        //            {
+        //                criteriaType: 64,
+        //                property: 'Display',
+        //                value: value
+        //            }
+        //        ]);
+        //
+        //        console.log('change:search', args);
+        //        console.log(source.getItems());
+        //    });
+        //
+        //})(data.itemsBinding);
     },
 
     initValueTemplate: function (binding, params) {
