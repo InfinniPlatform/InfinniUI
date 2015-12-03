@@ -36,11 +36,13 @@ var ComboBoxView = ListEditorBaseView.extend({
                     var $dropdown = dropdownView.render();
 
                     var rect = view.$el[0].getBoundingClientRect();
+                    //@TODO Вынести общие стили в css
                     var style = {
                         position: "absolute",
                         top: window.pageYOffset + rect.bottom,
                         left: window.pageXOffset + rect.left,
-                        width: rect.width
+                        width: rect.width,
+                        "z-index": 2000
                     };
                     //@TODO Добавить алгоритм определения куда расхлапывать список вверх/вниз
                     //Для расхлопывания вверх:
