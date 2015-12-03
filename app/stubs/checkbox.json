@@ -101,6 +101,33 @@
                 "Value": "anchor"
               }
             },
+
+            "Action": {
+              "OpenAction": {
+                "LinkView": {
+                  "InlineView": {
+                    "View": {
+                      "Scripts": [{
+                        "Name": "close",
+                        "Body": "context.view.close();"
+                      }],
+                      "Items": [
+                        {
+                          "Button": {
+                            "Text": "Close",
+                            "OnClick": "close"
+                          }
+                        }
+                      ]
+                    },
+                    "OpenMode": "Dialog",
+                    "Text": "OpenDialog"
+                  }
+
+                }
+              }
+            },
+
             "HorizontalAlignment": "Right"
           }
         }

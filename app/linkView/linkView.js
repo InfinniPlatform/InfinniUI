@@ -62,7 +62,5 @@ _.extend(LinkView.prototype, {
                 view.setOpenStrategy(openStrategy);
             } break;
         }
-
-        view.open();
     }
 });

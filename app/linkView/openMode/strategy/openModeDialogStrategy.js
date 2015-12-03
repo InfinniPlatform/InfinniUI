@@ -69,7 +69,7 @@ var OpenModeDialogStrategy = function () {
     //}
 };
 
-_.extend(OpenModeContainerStrategy.prototype, {
+_.extend(OpenModeDialogStrategy.prototype, {
     template: InfinniUI.Template["linkView/template/dialog.tpl.html"],
 
     setView: function(view){
