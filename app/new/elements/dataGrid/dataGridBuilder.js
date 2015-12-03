@@ -1,5 +1,6 @@
 function DataGridBuilder() {
     _.superClass(DataGridBuilder, this);
+    this.columnBuilder = new DataGridColumnBuilder();
 }
 
 _.inherit(DataGridBuilder, ListEditorBaseBuilder);
@@ -40,8 +41,7 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
         return function (context, args) {
             var index = args.index;
-            var row = new DataGridRow(dataGrid);
-
+            var row = dataGrid.createRow();
             var columns = dataGrid.getColumns();
 
             var cellItemTemplates = columns.toArray().map(function (column, index) {
@@ -50,11 +50,10 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
                 return template.bind(column, context, args);
             });
             row.setCellTemplates(cellItemTemplates);
+            row.setMultiSelect(dataGrid.getMultiSelect());
 
             return row;
         };
     }
 
 });
-
-DataGridBuilder.prototype.columnBuilder = new DataGridColumnBuilder();

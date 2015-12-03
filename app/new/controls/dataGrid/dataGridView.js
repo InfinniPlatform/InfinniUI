@@ -24,7 +24,29 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateValue: function () {
+        var CLASS_VALUE = 'pl-grid-value';
+        var
+            model = this.model,
+            value = model.get('value'),
+            $items = this.ui.items.children(),
+            indexOfChoosingItem;
 
+        if(!model.get('multiSelect') && value !== undefined && value !== null){
+            value = [value];
+        }
+
+        $items.toggleClass(CLASS_VALUE, false);
+
+        if($.isArray(value)){
+            for(var i= 0; i < value.length; i++){
+                indexOfChoosingItem = model.itemIndexByValue(value[i]);
+                if(indexOfChoosingItem != -1 && indexOfChoosingItem < $items.length){
+                    $($items[indexOfChoosingItem]).toggleClass(CLASS_VALUE, true);
+                }
+            }
+        }
+
+        console.log('update value', this.model.get('value'));
     },
 
     updateSelectedItem: function () {
@@ -98,6 +120,7 @@ var DataGridView = ListEditorBaseView.extend({
             itemEl = itemTemplate(undefined, {index: index, item: item});
             itemEl.onBeforeClick(function() {
                 model.set('selectedItem', item);
+                model.toggleValue(item);
             });
             //listbox.addChildElement(itemEl);
             $items.append(itemEl.render());

@@ -27,12 +27,36 @@
           {
             "Id": 1,
             "DisplayName": "I",
-            "SomeField": ""
+            "SomeField": "",
+            "Array": [
+              {
+                "Id": 5,
+                "DisplayName": "I-1"
+              },
+              {
+                "Id": 6,
+                "DisplayName": "I-2"
+              },
+              {
+                "Id": 7,
+                "DisplayName": "I-3"
+              }
+            ]
           },
           {
             "Id": 2,
             "DisplayName": "II",
-            "SomeField": "val"
+            "SomeField": "val",
+            "Array": [
+              {
+                "Id": 8,
+                "DisplayName": "II-1"
+              },
+              {
+                "Id": 9,
+                "DisplayName": "II-2"
+              }
+            ]
           },
           {
             "Id": 3,
@@ -145,10 +169,12 @@
                               "ColumnSpan": 3,
                               "Items": [{
                                   "DataGrid": {
+                                    "Visible": true,
                                     "Items": {
                                       "Source": "BloodGroupDataSource",
                                       "Property": ""
                                     },
+                                    "MultiSelect": true,
                                     "Columns": [
                                       {
                                         "Header": "ID",
@@ -170,6 +196,27 @@
                                               "Source": "BloodGroupDataSource",
                                               "Property": "$.DisplayName"
                                             }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "Header": "Nested grid",
+                                        "CellTemplate": {
+                                          "DataGrid": {
+                                            "Items": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "$.Array"
+                                            },
+                                            "Columns": [
+                                              {
+                                                "Header": "Id",
+                                                "CellFormat": "{Id}"
+                                              },
+                                              {
+                                                "Header": "Display Name",
+                                                "CellProperty": "DisplayName"
+                                              }
+                                            ]
                                           }
                                         }
                                       },
@@ -378,6 +425,7 @@
               "ListBox":{
                   "Name": "PatientListBox",
                 "Visible": false,
+                "MultiSelect": true,
                   "ItemTemplate": {
                       "StackPanel":{
                           "Orientation": "Horizontal",

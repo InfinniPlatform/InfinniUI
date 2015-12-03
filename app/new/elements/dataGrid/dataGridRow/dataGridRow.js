@@ -13,6 +13,10 @@ _.extend(DataGridRow.prototype, {
 
     setCellTemplates: function (cellTemplates) {
         this.control.set('cellTemplates', cellTemplates);
+    },
+
+    setMultiSelect: function (multiSelect) {
+        this.control.set('multiSelect', multiSelect);
     }
 
 });

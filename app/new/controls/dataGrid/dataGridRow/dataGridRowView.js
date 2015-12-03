@@ -6,6 +6,15 @@ var DataGridRowView = ControlView.extend({
 
     events: {},
 
+    template: {
+        singleSelect: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/singleSelect.tpl.html"],
+        multiSelect: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/multiSelect.tpl.html"]
+    },
+
+    UI: {
+        toggle: '.toggle'
+    },
+
     initialize: function () {
         ControlView.prototype.initialize.call(this);
     },
@@ -14,7 +23,12 @@ var DataGridRowView = ControlView.extend({
         this.prerenderingActions();
         var $el = this.$el;
 
-        $el.empty();
+
+        var templateName = this.model.get('multiSelect') ? 'multiSelect' : 'singleSelect';
+        var template = this.template[templateName];
+        $el.html(template());
+        this.bindUIElements();
+
         console.log('render row');
         var templates = this.model.get('cellTemplates');
         if (Array.isArray(templates)) {

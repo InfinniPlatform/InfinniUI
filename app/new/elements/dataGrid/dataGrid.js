@@ -12,6 +12,10 @@ DataGrid.prototype.getColumns = function () {
     return this.control.get('columns');
 };
 
+DataGrid.prototype.createRow = function () {
+    return new DataGridRow(this);
+};
+
 DataGrid.prototype.createControl = function () {
     return new DataGridControl();
 };
