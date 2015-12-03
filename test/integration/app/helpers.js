@@ -1,8 +1,9 @@
 window.testHelpers = {
 
 	DEFAULT_VALUES: {
-		maxTimeout: 10000,
-		timeoutStep: 10
+		/* Оптимальное время проверки существования элемента, иначе зависает */
+		maxTimeout: 6000,
+		timeoutStep: 500
 	},
 
 	waitCondition: function(condition, success, error, maxTimeout, step){
