@@ -1,5 +1,5 @@
 var OpenModeDialogStrategy = function () {
-    
+
 };
 
 _.extend(OpenModeDialogStrategy.prototype, {
