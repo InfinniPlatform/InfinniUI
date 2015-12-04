@@ -120,7 +120,8 @@
                         }
                       ]
                     },
-                    "OpenMode": "Dialog",
+                    "OpenMode": "Container",
+                    "Container": "PanelForView",
                     "Text": "OpenDialog"
                   }
 
@@ -168,22 +169,8 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "Frame": {
-                                    "Value": {
-                                      "Source": "ds1",
-                                      "Property": "url"
-                                    },
-                                    "~ToolTip": {
-                                      "Button": {
-                                        "Text": "I'm TextBox tooltip"
-                                      }
-                                    },
-                                    "OnGotFocus": {
-                                      "Name": "OnGotFocus"
-                                    },
-                                    "OnLostFocus": {
-                                      "Name": "OnLostFocus"
-                                    }
+                                  "ViewPanel": {
+                                    "Name": "PanelForView"
                                   }
                               }]
                           }
