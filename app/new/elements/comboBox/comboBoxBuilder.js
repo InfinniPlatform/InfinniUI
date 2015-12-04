@@ -97,23 +97,23 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
             var label = new Label(this);
             label.setHorizontalAlignment('Left');
             label.setDisplayFormat(format);
-            var labelBinding = new DataBinding(this);
-            labelBinding.setMode(BindingModes.toElement);
-
-            var source = binding.getSource();
-            var property = binding.getSourceProperty();
-
-            if (params.element.getMultiSelect()) {
-                if (property && property !== '') {
-                    property = [property, index].join('.');
-                } else {
-                    property = String(index);
-                }
-            }
-
-            labelBinding.bindSource(source, property);
-            labelBinding.bindElement(label, 'value');
-
+            //var labelBinding = new DataBinding(this);
+            //labelBinding.setMode(BindingModes.toElement);
+            //
+            //var source = binding.getSource();
+            //var property = binding.getSourceProperty();
+            //
+            //if (params.element.getMultiSelect()) {
+            //    if (property && property !== '') {
+            //        property = [property, index].join('.');
+            //    } else {
+            //        property = String(index);
+            //    }
+            //}
+            //
+            //labelBinding.bindSource(source, property);
+            //labelBinding.bindElement(label, 'value');
+            label.setValue(value);
             return label;
         };
         //return function(context, args){
