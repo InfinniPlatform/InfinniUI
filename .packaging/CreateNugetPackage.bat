@@ -13,6 +13,7 @@ pushd ..
 rd /S /Q out\
 
 ::Build project
+call npm install
 call bower install
 call grunt build
 popd
