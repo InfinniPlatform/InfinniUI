@@ -24,7 +24,7 @@ RequestExecutorDataStrategy.prototype.strategies = {
                 if(response.status == 0){
                     messageBus.getExchange('global').send(messageTypes.onServiceFail);
                 }
-                onFail(arguments);
+                onFail.apply(null, _.toArray(arguments));
             },
             data: JSON.stringify(requestData.args),
             contentType: "application/json;charset=UTF-8"
