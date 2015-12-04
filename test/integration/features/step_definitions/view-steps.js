@@ -163,7 +163,7 @@ this.Then(/^система не отобразит валидационных с
 	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
 });
 
-this.Then(/^я не увижу элемента "([^"]*)"$/, function(elementName, next){
+this.Then(/^я не увижу элемент "([^"]*)"$/, function(elementName, next){
 	var haveElement = function(){
 		return window.testHelpers.getControlByName(elementName) != undefined;
 	}
@@ -184,7 +184,7 @@ this.Then(/^я не увижу элемента "([^"]*)"$/, function(elementNam
 	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound, 5000, 500);
 });
 
-this.Then(/^я не увижу элемента "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
+this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
 	var haveElement = function(){
 		return window.testHelpers.getControlByName(elementName) != undefined;
 	}
