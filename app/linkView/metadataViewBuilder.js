@@ -1,66 +1,67 @@
 function MetadataViewBuilder() {
 
-    this.build = function (context, args){
+}
+
+_.extend(MetadataViewBuilder.prototype, {
+
+    build: function (context, args){
         var metadata = args.metadata;
+        var viewTemplate = this.buildViewTemplate(args);
+        var linkView = new LinkView(args.parentView);
 
-        if (metadata.OpenMode === 'Container' && metadata.Container === 'Content') {
-            metadata.OpenMode = 'Page';
+        linkView.setViewTemplate(viewTemplate);
+        if('OpenMode' in metadata){
+            linkView.setOpenMode(metadata.OpenMode);
         }
-
-        var linkView = new LinkView(args.parentView, function (resultCallback) {
-            if(args.parentView.handleOnLoaded){
-                args.parentView.handleOnLoaded(function(){
-                    createView(args.builder, args.parentView, metadata, resultCallback);
-                });
-            }else{
-                createView(args.builder, args.parentView, metadata, resultCallback);
-            }
-        });
-        linkView.setOpenMode(metadata.OpenMode);
         linkView.setContainer(metadata.Container);
+
         return linkView;
-    };
+    },
 
+    buildViewTemplate: function(params){
+        var metadata = params.metadata;
+        var that = this;
 
-    var createView = function (builder, parent, metadata, resultCallback) {
-        var params = buildParameters(parent, metadata.Parameters, builder);
+        return function(onViewReadyHandler){
+            var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
 
-        window.providerRegister.build('MetadataDataSource', metadata).getViewMetadata(function (viewMetadata) {
-            if (viewMetadata !== null) {
+            metadataProvider.getViewMetadata( function(viewMetadata){
+                that.buildViewByMetadata(params, viewMetadata, onViewReadyHandler);
+            });
+        };
+    },
 
-                for (var key in viewMetadata.RequestParameters) {
-                    var param = viewMetadata.RequestParameters[key];
-                    if (metadata.Parameters[param.Name] != param.Value) {
-                        //debugger;
-                        param.Value = metadata.Parameters[param.Name];
-                    }
-                }
+    buildViewByMetadata: function(params, viewMetadata, onViewReadyHandler){
+        var builder = params.builder;
+        var parentView = params.parentView;
+        var logger = InfinniUI.global.logger;
+        var parameters = this.buildParameters(params);
 
-                var view = builder.buildType("View", viewMetadata, {parentView: parent, params: params});
+        if (viewMetadata !== null) {
 
-                if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
-                    InfinniUI.views.appendView(metadata, viewMetadata, view);
-                }
+            var view = builder.buildType("View", viewMetadata, {parentView: parentView, params: parameters});
 
-                resultCallback(view);
-            } else {
-                throw stringUtils.format('view metadata for {0} not found.', [metadata]);
-            }
-        });
-    };
+            onViewReadyHandler(view);
+        } else {
+            logger.error('view metadata for ' + metadata + ' not found.');
+        }
+    },
 
-    var buildParameters = function(parentView, parametersMetadata, builder){
-        var result = {},
-            param;
+    buildParameters: function(params){
+        var parametersMetadata = params.metadata['Parameters'];
+        var builder = params.builder;
+        var parentView = params.parentView;
+        var result = {};
+        var parameter;
 
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    param = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView})
-                    result[param.getName()] = param;
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView})
+                    result[parameter.getName()] = parameter;
                 }
             }
         }
         return result;
-    };
-}
+    }
+});

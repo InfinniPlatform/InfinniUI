@@ -61,6 +61,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
         builder.register('DocumentViewer', new DocumentViewerBuilder());
+        builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
 

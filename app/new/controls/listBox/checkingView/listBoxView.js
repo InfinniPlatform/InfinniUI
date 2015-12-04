@@ -32,7 +32,7 @@ var CheckingListBoxView = BaseListBoxView.extend({
                 $el = $el.parent();
             }
 
-            if($currentListItem.length > 0){
+            if($currentListItem && $currentListItem.length > 0){
                 item = $currentListItem.data('pl-data-item');
                 that.model.toggleValue(item);
 

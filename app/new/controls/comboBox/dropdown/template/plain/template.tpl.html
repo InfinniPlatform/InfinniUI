@@ -1,4 +1,4 @@
-<div class="backdrop" style="position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.5);"></div>
+<div class="backdrop" style="position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0, 0, 0, 0);"></div>
 
 <style>
     .pl-combobox-items > .pl-combobox-selected {
@@ -10,6 +10,7 @@
         border-left: 1px solid #cccccc;
         border-right: 1px solid #cccccc;
         padding: 5px;
+        z-index: 2001;
     }
 
     .pl-combobox-dropdown.dropdown-direction-down {
@@ -27,7 +28,7 @@
 
 <div class="pl-combobox-dropdown">
     <% if (!multiSelect) {%>
-    <div class="form-group pl-combobox-filter">
+    <div class="form-group pl-combobox-filter hidden">
         <input type="text" class="pl-combobox-filter-text form-control">
     </div>
     <% } %>

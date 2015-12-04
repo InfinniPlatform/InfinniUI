@@ -536,16 +536,17 @@ Collection.prototype.getById = function (id) {
     }
 
     var items = this._items;
-    var itemValue;
+    var itemValue, result;
 
     for (var i = 0; i < items.length; i = i + 1) {
         itemValue = this.getCollectionItemValue(i);
         if (this.getValueId(itemValue) === id) {
+            result = itemValue;
             break;
         }
     }
 
-    return itemValue;
+    return result;
 };
 
 /**

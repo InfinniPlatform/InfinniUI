@@ -11,3 +11,11 @@ _.extend(BaseAction.prototype, {
         return this[name];
     }
 });
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};

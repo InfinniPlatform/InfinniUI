@@ -6,15 +6,49 @@
 function View(parent) {
     _.superClass(View, this, parent);
 
+    var that = this;
+
     this.eventManager = new EventManager();
 
+    this.openStrategy = new OpenModeDefaultStrategy();
+    this.openStrategy.setView(this);
+
+    this.handlers = {
+        onLoaded: $.Deferred()
+    };
+
     this._initContext();
+
+    this.control.get('dataSources').onChange(function(){
+        that._initDataSourceHandlers();
+    });
 }
 
 _.inherit(View, Container);
 
 _.extend(View.prototype,
     {
+
+        _initDataSourceHandlers: function(){
+            var that = this;
+            var dataSources = this.getContext().dataSources;
+            var readyDsDeferred = [];
+
+            this.control.onLoaded(function(){
+                for(var k in dataSources){
+                    readyDsDeferred.push(dataSources[k].getCurrentRequestPromise());
+                }
+
+                $.when.apply($, readyDsDeferred).done(function(){
+                    that._notifyAboutDsReady();
+                });
+            });
+        },
+
+        _notifyAboutDsReady: function(){
+            this.handlers.onLoaded.resolve();
+        },
+
         createControl: function () {
             return new ViewControl();
         },
@@ -26,6 +60,7 @@ _.extend(View.prototype,
                 parameters: {},
                 dataSources: {},
                 controls: {},
+                messageBus: new MessageBus(),
                 global: InfinniUI.global
             };
 
@@ -129,7 +164,9 @@ _.extend(View.prototype,
 
             if(this.eventManager.trigger('onOpening', scriptArgs, context)){
 
-                scriptArgs.$layout = this.render();
+                //scriptArgs.$layout = this.render();
+                this.openStrategy.open();
+
                 this.eventManager.trigger('onOpened', scriptArgs, context);
 
                 if(success){
@@ -160,6 +197,14 @@ _.extend(View.prototype,
 
         getScriptsStorage: function(){
             return this;
+        },
+
+        setOpenStrategy: function(openStrategy){
+            this.openStrategy = openStrategy;
+        },
+
+        onLoaded: function (handler) {
+            this.handlers.onLoaded.done(handler);
         },
 
         onOpening: function(callback){

@@ -1,26 +1,22 @@
-function DocumentViewerBuilder() {
+function PdfViewerBuilder() {
 }
 
-_.inherit(DocumentViewerBuilder, ElementBuilder);
+_.inherit(PdfViewerBuilder, ElementBuilder);
 
-_.extend(DocumentViewerBuilder.prototype, {
+_.extend(PdfViewerBuilder.prototype, {
 
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.initScriptsHandlers(params);
 
-        params.element.setView(params.parentView);
-        params.element.setParent(params.parent);
-
-        params.element.setPrintViewId(params.metadata.PrintViewId);
-        params.element.setSource(params.metadata.Source.Source);
+        params.element.setUrl(params.metadata.Value);
     },
 
     createElement: function (params) {
-        return new DocumentViewer(params.view);
-    },
 
+    return new PdfViewer(params.parentView);
+},
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 

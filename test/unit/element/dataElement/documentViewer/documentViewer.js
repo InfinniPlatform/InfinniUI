@@ -5,8 +5,9 @@ describe('DocumentViewer', function () {
         var view = new View();
         var metadata = {
             PrintViewId: "PrintView",
-            PrintViewType: "ObjectView",
-            DataSource: "MainDataSource"
+            Source: {
+                Source: "MainDataSource"
+            }
         };
         var documentViewer = documentViewerBuilder.build(null, {builder: documentViewerBuilder, view: view, metadata: metadata});
 
@@ -16,8 +17,7 @@ describe('DocumentViewer', function () {
         //Then
         assert.equal(documentViewer.getName(), 'DocumentViewer');
         assert.equal(documentViewer.getPrintViewId(), 'PrintView');
-        assert.equal(documentViewer.getPrintViewType(), 'ObjectView');
-        assert.equal(documentViewer.getDataSource(), 'MainDataSource');
+        assert.equal(documentViewer.getSource(), 'MainDataSource');
         assert.isTrue(documentViewer.getEnabled());
         assert.isTrue(documentViewer.getVisible());
         assert.equal(documentViewer.getHorizontalAlignment(), 'Stretch');

@@ -132,9 +132,11 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     updateFocused: function () {
         var focused = this.model.get('focused');
 
-        var $el = this.getElementForFocus();
-        if ($el && $el.length) {
-            $el.focus();
+        if (focused) {
+            var $el = this.getElementForFocus();
+            if ($el && $el.length) {
+                $el.focus();
+            }
         }
         this.$el.toggleClass(this.classNameFocused, focused);
     },

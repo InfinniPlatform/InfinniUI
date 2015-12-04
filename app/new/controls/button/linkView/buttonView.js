@@ -12,6 +12,10 @@ var LinkButtonView = CommonButtonView.extend({
         href: 'javascript:;'
     },
 
+    events: {
+        'click': 'onClickHandler'
+    },
+
     template: function(){return '';},
 
     UI: {

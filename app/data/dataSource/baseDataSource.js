@@ -131,6 +131,8 @@ var BaseDataSource = Backbone.Model.extend({
         } else {
             this.setSelectedItem(null);
         }
+
+        this.trigger('settingNewItemsComplete');
     },
 
     _addItems: function (newItems) {
@@ -139,7 +141,6 @@ var BaseDataSource = Backbone.Model.extend({
             newIndexedItemsById;
 
         this.set('isDataReady', true);
-
         items = _.union(items, newItems);
         this.set('items', items);
         if (newItems && newItems.length > 0) {
@@ -147,6 +148,8 @@ var BaseDataSource = Backbone.Model.extend({
             _.extend(indexedItemsById, newIndexedItemsById);
             this.set('itemsById', indexedItemsById);
         }
+
+        this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -403,7 +406,7 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved(item, success);
+            this._notifyAboutItemSaved(item, 'notModified', success);
             return;
         }
 
@@ -419,7 +422,7 @@ var BaseDataSource = Backbone.Model.extend({
                 ds.uploadFiles(data.instanceId)
                     .then(function () {
                         ds._excludeItemFromModifiedSet(item);
-                        ds._notifyAboutItemSaved(item, success);
+                        ds._notifyAboutItemSaved(item, data, success);
                     }, function (err) {
                         logger.error(err);
                         if (error) {
@@ -432,11 +435,12 @@ var BaseDataSource = Backbone.Model.extend({
         });
     },
 
-    _notifyAboutItemSaved: function (item, successHandler) {
+    _notifyAboutItemSaved: function (item, result, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
+        argument.result = result;
 
         if (successHandler) {
             successHandler(context, argument);
@@ -792,6 +796,28 @@ var BaseDataSource = Backbone.Model.extend({
             return undefined;
         }
         return item[idProperty];
+    },
+
+    getCurrentRequestPromise: function(){
+        var promise = $.Deferred();
+        var logger = window.InfinniUI.global.logger;
+
+        if(this.get('isRequestInProcess')){
+            this.once('settingNewItemsComplete', function(){
+                if(this.isDataReady()){
+                    promise.resolve();
+                }else{
+                    logger.warn({
+                        message: 'BaseDataSource: strange, expected other dataReady status',
+                        source: this
+                    });
+                }
+            });
+        }else{
+            promise.resolve();
+        }
+
+        return promise;
     },
 
     _replaceAllProperties: function (currentObject, newPropertiesSet) {
