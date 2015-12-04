@@ -4,7 +4,10 @@ DataBindingBuilder.prototype.build = function (context, args) {
     var result = new DataBinding();
     var metadata = args.metadata;
     var logger = window.InfinniUI.global.logger;
+    var converter = {};
     var property;
+    var scriptName;
+
 
     if(metadata.Source == null){
         logger.error('DataBindingBuilder: не указан источник.');
@@ -29,7 +32,15 @@ DataBindingBuilder.prototype.build = function (context, args) {
     }
 
     if(metadata.Converter){
-        result.setConverter(metadata.Converter);
+        if(metadata['Converter']['ToSource']){
+            scriptName = metadata['Converter']['ToSource'];
+            converter.toSource = context.scripts[scriptName];
+        }
+        if(metadata['Converter']['ToElement']){
+            scriptName = metadata['Converter']['ToElement'];
+            converter.toElement = context.scripts[scriptName];
+        }
+        result.setConverter(converter);
     }
 
     return result;
