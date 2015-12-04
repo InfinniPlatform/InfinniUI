@@ -18,6 +18,8 @@ _.extend(ViewPanelBuilder.prototype, {
             panel.setName(metadata.Name);
         }
 
+        InfinniUI.global.containers[metadata.Name] = panel;
+
         //this.registerLayoutPanel(params);
 
         if (typeof metadata.View !== 'undefined' && metadata.View !== null) {
@@ -101,3 +103,6 @@ _.extend(ViewPanelBuilder.prototype, {
 },
     builderLayoutPanelMixin
 );
+
+
+InfinniUI.global.containers = {};
