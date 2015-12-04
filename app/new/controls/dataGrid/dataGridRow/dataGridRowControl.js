@@ -11,6 +11,10 @@ _.inherit(DataGridRowControl, Control);
 
 _.extend(DataGridRowControl.prototype, {
 
+    onToggle: function (handler) {
+        this.controlView.on('toggle', handler);
+    },
+
     createControlModel: function () {
         return new DataGridRowModel();
     },

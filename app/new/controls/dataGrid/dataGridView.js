@@ -113,21 +113,32 @@ var DataGridView = ListEditorBaseView.extend({
             model = this.model,
             itemTemplate = model.get('itemTemplate'),
             items = model.get('items'),
-            itemEl,
             $items = this.ui.items;
 
+        this.removeChildElements();
         items.forEach(function (item, index) {
-            itemEl = itemTemplate(undefined, {index: index, item: item});
-            itemEl.onBeforeClick(function() {
+            var element = itemTemplate(undefined, {index: index, item: item});
+
+            element.onBeforeClick(function() {
                 model.set('selectedItem', item);
+            });
+            element.onToggle(function() {
                 model.toggleValue(item);
             });
-            //listbox.addChildElement(itemEl);
-            $items.append(itemEl.render());
+            this.addChildElement(element);
+            $items.append(element.render());
             //$el.parent().data('pl-data-item', item);
-        });
+            return element;
+        }, this);
 
     }
 
+
 });
+
+function HashMap () {
+
+}
+
+
 

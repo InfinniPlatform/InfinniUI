@@ -1,5 +1,6 @@
 function DataGridRow() {
     _.superClass(DataGridRow, this);
+
 }
 
 _.inherit(DataGridRow, Element);
@@ -17,6 +18,10 @@ _.extend(DataGridRow.prototype, {
 
     setMultiSelect: function (multiSelect) {
         this.control.set('multiSelect', multiSelect);
+    },
+
+    onToggle: function (handler) {
+        this.control.onToggle(handler);
     }
 
 });
