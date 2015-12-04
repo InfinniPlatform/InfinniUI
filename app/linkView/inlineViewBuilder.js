@@ -3,32 +3,56 @@ function InlineViewBuilder() {
         var that = this,
             metadata = args.metadata;
 
-        var linkView = new LinkView(args.parentView, function (resultCallback) {
-            var params = that.buildParameters(args.parentView, metadata.Parameters, args.builder);
-            var view = args.builder.buildType('View', metadata.View, {parentView: args.parentView, parameters: params});
+        var linkView = new LinkView(args.parentView);
 
-            if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
-                InfinniUI.views.appendView(null, metadata.View, view);
-            }
-            resultCallback(view);
+        linkView.setViewTemplate(function(onViewReadyHandler){
+            that.buildViewByMetadata(args, args.metadata['View'], onViewReadyHandler);
         });
-        linkView.setOpenMode(metadata.OpenMode);
-        linkView.setContainer(metadata.Container);
+
+        if('OpenMode' in metadata){
+            linkView.setOpenMode(metadata.OpenMode);
+        }
+
+        if('Container' in metadata){
+            linkView.setContainer(metadata.Container);
+        }
+
         return linkView;
     };
 
-   this.buildParameters = function(parentView, parametersMetadata, builder){
-       var result = {},
-           param;
 
-       if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
-           for (var i = 0; i < parametersMetadata.length; i++) {
-               if (parametersMetadata[i].Value !== undefined) {
-                   param = builder.buildType(parentView, 'Parameter', parametersMetadata[i])
-                   result[param.getName()] = param;
-               }
-           }
-       }
-       return result;
-   };
+
+    this.buildViewByMetadata = function(params, viewMetadata, onViewReadyHandler){
+        var builder = params.builder;
+        var parentView = params.parentView;
+        var parameters = this.buildParameters(params);
+
+        if (viewMetadata !== null) {
+
+            var view = builder.buildType("View", viewMetadata, {parentView: parentView, params: parameters});
+
+            onViewReadyHandler(view);
+        } else {
+            logger.error('view metadata for ' + metadata + ' not found.');
+        }
+    };
+
+
+   this.buildParameters = function(params){
+        var parametersMetadata = params.metadata['Parameters'];
+        var builder = params.builder;
+        var parentView = params.parentView;
+        var result = {};
+        var parameter;
+
+        if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
+            for (var i = 0; i < parametersMetadata.length; i++) {
+                if (parametersMetadata[i].Value !== undefined) {
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView})
+                    result[parameter.getName()] = parameter;
+                }
+            }
+        }
+        return result;
+    };
 }

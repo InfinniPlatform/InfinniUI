@@ -101,6 +101,34 @@
                 "Value": "anchor"
               }
             },
+
+            "Action": {
+              "OpenAction": {
+                "LinkView": {
+                  "InlineView": {
+                    "View": {
+                      "Scripts": [{
+                        "Name": "close",
+                        "Body": "context.view.close();"
+                      }],
+                      "Items": [
+                        {
+                          "Button": {
+                            "Text": "Close",
+                            "OnClick": "close"
+                          }
+                        }
+                      ]
+                    },
+                    "OpenMode": "Container",
+                    "Container": "PanelForView",
+                    "Text": "OpenDialog"
+                  }
+
+                }
+              }
+            },
+
             "HorizontalAlignment": "Right"
           }
         }
@@ -141,22 +169,8 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "Frame": {
-                                    "Value": {
-                                      "Source": "ds1",
-                                      "Property": "url"
-                                    },
-                                    "~ToolTip": {
-                                      "Button": {
-                                        "Text": "I'm TextBox tooltip"
-                                      }
-                                    },
-                                    "OnGotFocus": {
-                                      "Name": "OnGotFocus"
-                                    },
-                                    "OnLostFocus": {
-                                      "Name": "OnLostFocus"
-                                    }
+                                  "ViewPanel": {
+                                    "Name": "PanelForView"
                                   }
                               }]
                           }

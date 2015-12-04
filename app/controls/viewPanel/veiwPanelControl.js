@@ -14,7 +14,7 @@ ViewPanelControl.prototype.createControlView = function (model) {
 
 var ViewPanelModel = Backbone.Model.extend({
     defaults: _.defaults({
-        layout: ''
+        layout: null
     }, ControlModel.prototype.defaults)
 });
 
@@ -29,13 +29,17 @@ var ViewPanelView = ControlView.extend({
 
     onChangeLayoutHandler: function (model, layout) {
         this.$el.empty();
-        this.$el.append(layout);
+        this.$el.append(layout.render());
     },
 
     render: function () {
         this.prerenderingActions();
 
-        this.$el.append(this.model.get('layout'));
+        var layout = this.model.get('layout');
+
+        if(layout){
+            this.$el.append(layout.render());
+        }
 
         this.postrenderingActions();
         return this;
