@@ -17,6 +17,7 @@ var DataGridView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
+        this.childElements = new HashMap();
     },
 
     updateGrouping: function () {
@@ -24,44 +25,44 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateValue: function () {
-        var CLASS_VALUE = 'pl-grid-value';
         var
             model = this.model,
             value = model.get('value'),
-            $items = this.ui.items.children(),
-            indexOfChoosingItem;
+            indices = [],
+            items = model.get('items');
 
         if(!model.get('multiSelect') && value !== undefined && value !== null){
             value = [value];
         }
 
-        $items.toggleClass(CLASS_VALUE, false);
-
-        if($.isArray(value)){
-            for(var i= 0; i < value.length; i++){
-                indexOfChoosingItem = model.itemIndexByValue(value[i]);
-                if(indexOfChoosingItem != -1 && indexOfChoosingItem < $items.length){
-                    $($items[indexOfChoosingItem]).toggleClass(CLASS_VALUE, true);
-                }
-            }
+        if (Array.isArray(value)) {
+            indices = value.map(function (val) {
+                    return model.itemIndexByValue(val);
+                })
+                .filter(function (index) {
+                    return index !== -1;
+                });
         }
+
+        this.childElements.forEach(function (rowElement, item) {
+            var index = items.indexOf(item);
+            var toggle = indices.indexOf(index) !== -1;
+            rowElement.toggle(toggle);
+        });
 
         console.log('update value', this.model.get('value'));
     },
 
     updateSelectedItem: function () {
-        console.log('updateSelectedItem');
-        var CLASS_SELECTED = 'info';
-        var $items = this.ui.items.children();
+        var
+            model = this.model,
+            selectedItem = model.get('selectedItem');
 
-        $items.removeClass(CLASS_SELECTED);
+        this.childElements.forEach(function (rowElement, item) {
+            rowElement.setSelected(item === selectedItem);
+        });
 
-        var selectedItem = this.model.get('selectedItem');
-        var items = this.model.get('items');
-        var index = items.indexOf(selectedItem);
-        if (index !== -1 && index < $items.length ) {
-            $($items[index]).toggleClass(CLASS_SELECTED, true);
-        }
+        console.log('update selected Item', this.model.get('value'));
     },
 
     render: function () {
@@ -125,20 +126,23 @@ var DataGridView = ListEditorBaseView.extend({
             element.onToggle(function() {
                 model.toggleValue(item);
             });
-            this.addChildElement(element);
+            this.addChildElement(item, element);
             $items.append(element.render());
-            //$el.parent().data('pl-data-item', item);
-            return element;
         }, this);
 
+    },
+
+    addChildElement: function(item, element){
+        this.childElements.add(item, element);
+    },
+
+    removeChildElements: function () {
+        this.childElements.clear(function (element) {
+            element.remove();
+        });
     }
 
 
 });
-
-function HashMap () {
-
-}
-
 
 

@@ -174,7 +174,7 @@
                                       "Source": "BloodGroupDataSource",
                                       "Property": ""
                                     },
-                                    "MultiSelect": true,
+                                    "MultiSelect": false,
                                     "Columns": [
                                       {
                                         "Header": "ID",
@@ -203,6 +203,7 @@
                                         "Header": "Nested grid",
                                         "CellTemplate": {
                                           "DataGrid": {
+                                            "MultiSelect": true,
                                             "Items": {
                                               "Source": "BloodGroupDataSource",
                                               "Property": "$.Array"

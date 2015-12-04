@@ -16,6 +16,14 @@ _.extend(DataGridRow.prototype, {
         this.control.set('cellTemplates', cellTemplates);
     },
 
+    toggle: function (toggle) {
+        this.control.set('toggle', toggle);
+    },
+
+    setSelected: function (selected) {
+        this.control.set('selected', selected);
+    },
+
     setMultiSelect: function (multiSelect) {
         this.control.set('multiSelect', multiSelect);
     },

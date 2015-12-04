@@ -2,6 +2,8 @@ var DataGridRowView = ControlView.extend({
 
     className: 'pl-datagrid-row',
 
+    classNameSelected: 'info',
+
     tagName: 'tr',
 
     events: {},
@@ -20,6 +22,18 @@ var DataGridRowView = ControlView.extend({
         this.on('render', function () {
             this.ui.toggle.on('click', this.onToggleHandler.bind(this));
         }, this);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:toggle', this.updateToggle);
+        this.listenTo(this.model, 'change:selected', this.updateSelected);
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateToggle();
+        this.updateSelected();
     },
 
     render: function () {
@@ -47,6 +61,16 @@ var DataGridRowView = ControlView.extend({
 
         this.postrenderingActions();
         return this;
+    },
+
+    updateToggle: function () {
+        var toggle = this.model.get('toggle');
+        this.ui.toggle.prop('checked', !!toggle);
+    },
+
+    updateSelected: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass(this.classNameSelected, !!selected);
     },
 
     onToggleHandler: function (event) {
