@@ -1,49 +1,66 @@
-function LinkView(parentView, viewFactory) {
+function LinkView(parentView) {
     this.openMode = 'Page';
     this.parentView = parentView;
-    this.viewFactory = viewFactory;
+
+    this.viewTemplate = function(){return '';};
 }
 
-LinkView.prototype.setOpenMode = function (mode) {
-    if (_.isEmpty(mode)) return;
-    this.openMode = mode;
-};
+_.extend(LinkView.prototype, {
 
-LinkView.prototype.getOpenMode = function () {
-    return this.openMode;
-};
+    setOpenMode: function (mode) {
+        if (_.isEmpty(mode)) return;
+        this.openMode = mode;
+    },
 
-LinkView.prototype.getContainer = function () {
-    //return _.isEmpty(this.container) ? 'MainContainer' : this.container;
-    return this.container;
-};
+    getOpenMode: function () {
+        return this.openMode;
+    },
 
-LinkView.prototype.setContainer = function (container) {
-    this.container = container;
-};
+    setContainer: function(containerName){
+        this.containerName = containerName;
+    },
 
-LinkView.prototype.template = {
-    Dialog: InfinniUI.Template["linkView/template/dialog.tpl.html"]
-};
+    setViewTemplate: function(viewTemplate){
+        this.viewTemplate = viewTemplate;
+    },
 
-LinkView.prototype.createView = function (resultCallback) {
+    createView: function (resultCallback) {
+        var that = this;
 
-    var openMode = InfinniUI.global.openMode;
-    var openModeStrategy = openMode.getStrategy(this);
+        this.viewTemplate(onViewReady);
 
-    this.viewFactory(function (view) {
-        view.onOpened(function (args) {
-            view.onClosed(function () {
-                args.$layout.remove();
-                window.InfinniUI.global.messageBus
-                    .send(messageTypes.onViewClosed, {view: view});
-            });
+        function onViewReady(createdView){
+            that.view = createdView;
 
-            openModeStrategy.open(view, args.$layout);
-            //view.getExchange().send(messageTypes.onLoading, {});
-        });
+            that._initViewHandler(createdView);
 
-        resultCallback(view);
-    });
+            resultCallback(createdView);
+        }
 
-};
+    },
+
+    _initViewHandler: function(view){
+        var that = this;
+        var openMode = that.openMode;
+        var context = this.parentView.getContext();
+        var openStrategy;
+        var container;
+
+        switch(openMode){
+            case 'Container': {
+                container = context.controls[this.containerName];
+
+                openStrategy = new OpenModeContainerStrategy();
+                openStrategy.setView(view);
+                openStrategy.setContainer(container);
+                view.setOpenStrategy(openStrategy);
+            } break;
+
+            case 'Dialog': {
+                openStrategy = new OpenModeDialogStrategy();
+                openStrategy.setView(view);
+                view.setOpenStrategy(openStrategy);
+            } break;
+        }
+    }
+});
