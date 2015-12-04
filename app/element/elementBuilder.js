@@ -91,6 +91,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var propertyMetadata = metadata[propertyName];
         var element = params.element;
         var lowerCasePropertyName = propertyName.toLowerCase();
+        var converter;
 
         if(!propertyMetadata || typeof propertyMetadata != 'object'){
             if(propertyMetadata !== undefined){
@@ -109,11 +110,15 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
             if(isBooleanBinding){
                 dataBinding.setMode(BindingModes.toElement);
-                dataBinding.setConverter({
-                    toElement: function (context, args) {
-                        return !!args.value;
-                    }
-                });
+
+                converter = dataBinding.getConverter();
+                if(!converter || _.size(converter) == 0){
+                    dataBinding.setConverter({
+                        toElement: function (context, args) {
+                            return !!args.value;
+                        }
+                    });
+                }
             }
 
             dataBinding.bindElement(element, lowerCasePropertyName);
