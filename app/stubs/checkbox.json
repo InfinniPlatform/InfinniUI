@@ -1,6 +1,13 @@
 {
   "DataSources": [
     {
+      "DocumentDataSource": {
+        "Name": "MainDataSource2",
+        "ConfigId": "AdministrationCustomization",
+        "DocumentId": "User"
+      }
+    },
+    {
       "ObjectDataSource": {
         "Name": "MainDataSource",
         "ValidationErrors": {
@@ -27,12 +34,36 @@
           {
             "Id": 1,
             "DisplayName": "I",
-            "SomeField": ""
+            "SomeField": "",
+            "Array": [
+              {
+                "Id": 5,
+                "DisplayName": "I-1"
+              },
+              {
+                "Id": 6,
+                "DisplayName": "I-2"
+              },
+              {
+                "Id": 7,
+                "DisplayName": "I-3"
+              }
+            ]
           },
           {
             "Id": 2,
             "DisplayName": "II",
-            "SomeField": "val"
+            "SomeField": "val",
+            "Array": [
+              {
+                "Id": 8,
+                "DisplayName": "II-1"
+              },
+              {
+                "Id": 9,
+                "DisplayName": "II-2"
+              }
+            ]
           },
           {
             "Id": 3,
@@ -44,7 +75,10 @@
             "DisplayName": "IV",
             "SomeField": null
           }
-        ]
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
       }
     },
     {
@@ -101,34 +135,6 @@
                 "Value": "anchor"
               }
             },
-
-            "Action": {
-              "OpenAction": {
-                "LinkView": {
-                  "InlineView": {
-                    "View": {
-                      "Scripts": [{
-                        "Name": "close",
-                        "Body": "context.view.close();"
-                      }],
-                      "Items": [
-                        {
-                          "Button": {
-                            "Text": "Close",
-                            "OnClick": "close"
-                          }
-                        }
-                      ]
-                    },
-                    "OpenMode": "Container",
-                    "Container": "PanelForView",
-                    "Text": "OpenDialog"
-                  }
-
-                }
-              }
-            },
-
             "HorizontalAlignment": "Right"
           }
         }
@@ -146,21 +152,13 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "ToggleButton": {
-                                      "Text": "Subscribe",
-                                      "TextOn": "yes",
-                                      "TextOff": "no",
-                                    "ToolTip": {
-                                      "Label": {
-                                        "Text": "Simple tooltip"
-                                      }
-                                    },
-                                      "OnValueChanged": {
-                                          "Name": "ToggleButtonOnValueChanged"
-                                      },
-                                      "OnValueChanging": {
-                                          "Name": "ToggleButtonOnValueChanging"
-                                      }
+                                  "ComboBox": {
+                                    "ValueFormat": "{FirstName} {LastName}",
+                                    "ItemFormat": "{Email} ({FirstName})",
+                                    "Items": {
+                                      "Source": "MainDataSource2",
+                                      "Property": ""
+                                    }
                                   }
                               }]
                           }
@@ -169,8 +167,110 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "ViewPanel": {
-                                    "Name": "PanelForView"
+                                  "DataGrid": {
+                                    "Visible": true,
+                                    "Items": {
+                                      "Source": "BloodGroupDataSource",
+                                      "Property": ""
+                                    },
+                                    "MultiSelect": false,
+                                    "Columns": [
+                                      {
+                                        "Header": "ID",
+                                        "CellFormat": "{Id}, {DisplayName}"
+                                      },
+                                      {
+                                        "Header": "ID",
+                                        "CellProperty": "Id"
+                                      },
+                                      {
+                                        "Header": "DISPLAY NAME",
+                                        "CellProperty": "DisplayName"
+                                      },
+                                      {
+                                        "Header": "Combobox",
+                                        "CellTemplate": {
+                                          "DataGrid": {
+                                            "Columns": [
+                                              {
+                                                "Header": "FirstName",
+                                                "CellProperty": "FirstName"
+                                              },
+                                              {
+                                                "Header": "LastName",
+                                                "CellProperty": "LastName"
+                                              }
+                                            ],
+                                            "~ValueFormat": "{FirstName} {LastName}",
+                                            "~ItemFormat": "{Email} ({FirstName})",
+                                            "Items": {
+                                              "Source": "MainDataSource2",
+                                              "Property": ""
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "Header": "Template",
+                                        "CellTemplate": {
+                                          "TextBox": {
+                                            "Value": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "$.DisplayName"
+                                            }
+                                          }
+                                        }
+                                      },
+
+                                      {
+                                        "Header": "Nested grid",
+                                        "CellTemplate": {
+                                          "DataGrid": {
+                                            "MultiSelect": true,
+                                            "Items": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "$.Array"
+                                            },
+                                            "Columns": [
+                                              {
+                                                "Header": "Id",
+                                                "CellFormat": "{Id}"
+                                              },
+                                              {
+                                                "Header": "Display Name",
+                                                "CellProperty": "DisplayName"
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "Header": "Actions",
+                                        "CellTemplate": {
+                                          "Button": {
+                                            "Text": "Remove",
+                                            "OnClick": {
+                                              "Name": "OnClickRemove"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    ],
+                                    "~Value": {
+                                      "Source": "ds1",
+                                      "Property": "url"
+                                    },
+                                    "~ToolTip": {
+                                      "Button": {
+                                        "Text": "I'm TextBox tooltip"
+                                      }
+                                    },
+                                    "~OnGotFocus": {
+                                      "Name": "OnGotFocus"
+                                    },
+                                    "~OnLostFocus": {
+                                      "Name": "OnLostFocus"
+                                    }
                                   }
                               }]
                           }
@@ -200,26 +300,13 @@
                                   }
                                }]
                           }
-                      },
-                      {
-                          "Cell": {
-                              "ColumnSpan": 3,
-                              "Items": [
-                                  {
-                                      "PdfViewer": {
-                                          "Name": "GuidelineDocumentViewer",
-                                          "MaxSize": 1048576,
-                                          "Value": "/out/docs/MainGuideline.pdf"
-                                      }
-                                  }
-                              ]
-                          }
                       }
                   ]
               }
           },
         {
           "NumericBox": {
+            "Visible": false,
             "HintText": "I'm NumericBox hint",
             "LabelText": "Numeric label",
             "Enabled": true,
@@ -237,6 +324,7 @@
         },
         {
           "DatePicker": {
+            "Visible": false,
             "Mode": "DateTime",
             "DisplayFormat": {
               "DateTimeFormat": {
@@ -257,6 +345,7 @@
         },
         {
           "DatePicker": {
+            "Visible": false,
             "Mode": "Time",
             "DisplayFormat": {
               "DateTimeFormat": {
@@ -359,6 +448,8 @@
           {
               "ListBox":{
                   "Name": "PatientListBox",
+                "Visible": false,
+                "MultiSelect": true,
                   "ItemTemplate": {
                       "StackPanel":{
                           "Orientation": "Horizontal",
@@ -569,6 +660,7 @@
               ],
               "Items": [{
                 "NumericBox": {
+                  "Visible": false,
                   "HintText": "I'm NumericBox hint",
                   "LabelText": "Numeric label",
                   "Enabled": true,
@@ -718,6 +810,14 @@
     {
       "Name": "OnLostFocus",
       "Body": "console.log('OnLostFocus', args.source);"
+    },
+    {
+      "Name": "OnSelectedItemChanged_1",
+      "Body": "console.log('OnSelectedItemChanged_1', args/*, args.source, args.value*/);"
+    },
+    {
+      "Name": "OnClickRemove",
+      "Body": "console.log('Remove', context.dataSources.BloodGroupDataSource.getSelectedItem());"
     }
   ]
 }

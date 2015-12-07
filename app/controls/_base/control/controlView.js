@@ -7,9 +7,21 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     initialize: function () {
         this.wasRendered = false;
         this.once('render', this.initHandlersForProperties, this);
+        this.initDomHandlers();
+
     },
 
     classNameFocused: 'pl-focused',
+
+    initDomHandlers: function () {
+        var
+            view = this,
+            $el = this.$el;
+
+        $el[0].addEventListener('click', function (event) {
+            view.trigger('beforeClick', null, {value: event});
+        }, true);
+    },
 
     initHandlersForProperties: function () {
         this.listenTo(this.model, 'change:visible', this.updateVisible);
