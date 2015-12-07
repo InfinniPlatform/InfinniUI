@@ -39,9 +39,14 @@ _.extend(View.prototype,
                     readyDsDeferred.push(dataSources[k].getCurrentRequestPromise());
                 }
 
-                $.when.apply($, readyDsDeferred).done(function(){
+                if(readyDsDeferred.length > 0){
+                    $.when.apply($, readyDsDeferred).done(function(){
+                        that._notifyAboutDsReady();
+                    });
+                }else{
                     that._notifyAboutDsReady();
-                });
+                }
+
             });
         },
 

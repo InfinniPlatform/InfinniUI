@@ -48,7 +48,7 @@ _.extend(LinkView.prototype, {
 
         switch(openMode){
             case 'Container': {
-                container = context.controls[this.containerName];
+                container = InfinniUI.global.containers[this.containerName]; //context.controls[this.containerName];
 
                 openStrategy = new OpenModeContainerStrategy();
                 openStrategy.setView(view);
