@@ -27,9 +27,9 @@
 
     grunt.registerTask('build', function (extensionPath) {
         if (extensionPath) {
-            var extFeaturesPath = extensionPath + '*.Extensions/**/*.feature';
-            var extStepDefinitionsPath = extensionPath + '*.Extensions/**/integrationTests/**/step_definitions/*.js';
-            var extTestHelpersPath = extensionPath + '*.Extensions/**/integrationTests/*.js';
+            var extFeaturesPath = extensionPath + '*.IntegrationTests/**/*.feature';
+            var extStepDefinitionsPath = extensionPath + '*.IntegrationTests/**/step_definitions/*.js';
+            var extTestHelpersPath = extensionPath + '*.IntegrationTests/**/*.js';
 
             var stepDefinitionsArray = grunt.config.get('concat.step_definitions.src');
             stepDefinitionsArray.push(extStepDefinitionsPath);
