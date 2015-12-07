@@ -1,6 +1,13 @@
 {
   "DataSources": [
     {
+      "DocumentDataSource": {
+        "Name": "MainDataSource2",
+        "ConfigId": "AdministrationCustomization",
+        "DocumentId": "User"
+      }
+    },
+    {
       "ObjectDataSource": {
         "Name": "MainDataSource",
         "ValidationErrors": {
@@ -145,21 +152,13 @@
                           "Cell": {
                               "ColumnSpan": 3,
                               "Items": [{
-                                  "ToggleButton": {
-                                      "Text": "Subscribe",
-                                      "TextOn": "yes",
-                                      "TextOff": "no",
-                                    "ToolTip": {
-                                      "Label": {
-                                        "Text": "Simple tooltip"
-                                      }
-                                    },
-                                      "OnValueChanged": {
-                                          "Name": "ToggleButtonOnValueChanged"
-                                      },
-                                      "OnValueChanging": {
-                                          "Name": "ToggleButtonOnValueChanging"
-                                      }
+                                  "ComboBox": {
+                                    "ValueFormat": "{FirstName} {LastName}",
+                                    "ItemFormat": "{Email} ({FirstName})",
+                                    "Items": {
+                                      "Source": "MainDataSource2",
+                                      "Property": ""
+                                    }
                                   }
                               }]
                           }
@@ -189,6 +188,29 @@
                                         "CellProperty": "DisplayName"
                                       },
                                       {
+                                        "Header": "Combobox",
+                                        "CellTemplate": {
+                                          "DataGrid": {
+                                            "Columns": [
+                                              {
+                                                "Header": "FirstName",
+                                                "CellProperty": "FirstName"
+                                              },
+                                              {
+                                                "Header": "LastName",
+                                                "CellProperty": "LastName"
+                                              }
+                                            ],
+                                            "~ValueFormat": "{FirstName} {LastName}",
+                                            "~ItemFormat": "{Email} ({FirstName})",
+                                            "Items": {
+                                              "Source": "MainDataSource2",
+                                              "Property": ""
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
                                         "Header": "Template",
                                         "CellTemplate": {
                                           "TextBox": {
@@ -199,6 +221,7 @@
                                           }
                                         }
                                       },
+
                                       {
                                         "Header": "Nested grid",
                                         "CellTemplate": {

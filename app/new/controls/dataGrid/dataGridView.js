@@ -50,7 +50,6 @@ var DataGridView = ListEditorBaseView.extend({
             rowElement.toggle(toggle);
         });
 
-        console.log('update value', this.model.get('value'));
     },
 
     updateSelectedItem: function () {
@@ -62,7 +61,6 @@ var DataGridView = ListEditorBaseView.extend({
             rowElement.setSelected(item === selectedItem);
         });
 
-        console.log('update selected Item', this.model.get('value'));
     },
 
     render: function () {
@@ -70,7 +68,6 @@ var DataGridView = ListEditorBaseView.extend({
 
         this.$el.html(this.template());
 
-        console.log(this.model.toJSON());
         this.bindUIElements();
 
         this.renderHeaders();

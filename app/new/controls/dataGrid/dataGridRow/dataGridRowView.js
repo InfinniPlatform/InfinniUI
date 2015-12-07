@@ -46,7 +46,6 @@ var DataGridRowView = ControlView.extend({
         $el.html(template());
         this.bindUIElements();
 
-        console.log('render row');
         var templates = this.model.get('cellTemplates');
         if (Array.isArray(templates)) {
             templates.forEach(function (template) {
