@@ -39,7 +39,8 @@ moment.lang('ru');
     messageBus.getExchange('global')
         .subscribe(messageTypes.onServiceFail,
         function(){
-            location = InfinniUI.config.serviceUnavailablePage;
+            var frame = stringUtils.format('<iframe style="min-height: 100vh; min-width: 100vw;" src="{0}"></iframe>', [InfinniUI.config.serviceUnavailablePage]);
+            $('body').html($(frame));
         }
     );
 
