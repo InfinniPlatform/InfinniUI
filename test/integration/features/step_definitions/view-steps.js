@@ -157,7 +157,12 @@ this.Then(/^система не отобразит валидационных с
 		next();
 	}
 	var fail = function(){
-		next(new Error("Было обнаружено одно или несколько окон"));
+		var msgs = window.configWindow.$("#toast-container .toast-message");
+		var line = "";
+		for(var i = 0;i < msgs.length;i++){
+			line += msgs[i].innerHTML + ", ";
+		}
+		next(new Error("Было обнаружено одно или несколько окон: " + line.substring(0, line.length - 2)));
 	};
 	
 	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
@@ -217,6 +222,27 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		
 		try{
 			chai.assert.equal(element.getText(), elementText);
+			next();
+		}catch(err){
+			next(err);
+		}
+	}
+	var wasntFound = function(){
+		next(new Error(elementName + ' not found!'));
+	}
+	
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+});
+
+this.Then(/^я увижу элемент "([^"]*)"$/, function(elementName, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	}
+	var wasFound = function(){
+		var element = window.testHelpers.getControlByName(elementName);
+		
+		try{
+			chai.assert.isTrue(element.getVisible(), elementName + ': Visible == false');
 			next();
 		}catch(err){
 			next(err);
