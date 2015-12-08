@@ -1,19 +1,19 @@
-function ListBoxViewGroupStrategy(listbox) {
-    this.listbox = listbox;
+function StackPanelViewGroupStrategy(stackPanel) {
+    this.stackPanel = stackPanel;
 };
 
-_.extend(ListBoxViewGroupStrategy.prototype, {
+_.extend(StackPanelViewGroupStrategy.prototype, {
 
     prepareItemsForRendering: function(){
-        var items = this.listbox.getItems(),
+        var items = this.stackPanel.getItems(),
             inputName = 'listbox-' + guid(),
             result = {
-                isMultiselect: this.listbox.isMultiselect(),
+                isMultiselect: this.stackPanel.isMultiselect(),
                 inputName: inputName,
                 groups: []
             },
             groups = {},
-            groupingFunction = this.listbox.getGroupValueSelector();
+            groupingFunction = this.stackPanel.getGroupValueSelector();
 
         items.forEach(function(item, index){
             var groupKey = groupingFunction(undefined, {value:item});
@@ -35,30 +35,30 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
     },
 
     getTemplate: function(){
-        return this.listbox.template.grouped;
+        return this.stackPanel.template.grouped;
     },
 
     appendItemsContent: function(preparedItems){
-        var $listbox = this.listbox.$el,
-            $listboxItems = $listbox.find('.pl-listbox-body'),
-            itemTemplate = this.listbox.getItemTemplate(),
-            groupTitleTemplate = this.listbox.getGroupItemTemplate(),
+        var $stackPanel = this.stackPanel.$el,
+            $stackPanelItems = $stackPanel.find('.pl-stack-panel-i'),
+            itemTemplate = this.stackPanel.getItemTemplate(),
+            groupTitleTemplate = this.stackPanel.getGroupItemTemplate(),
             index = 0,
             groups = preparedItems.groups,
-            listbox = this.listbox,
+            stackPanel = this.stackPanel,
             itemEl, titleEl;
 
-        $listbox.find('.pl-listbox-group-title').each(function(i, el){
+        $stackPanel.find('.pl-stack-panel-group-title').each(function(i, el){
             titleEl = groupTitleTemplate(undefined, {index: index, item: groups[i]});
-            listbox.addChildElement(titleEl);
+            stackPanel.addChildElement(titleEl);
             $(el).append(titleEl.render());
 
             _.forEach( groups[i].items, function(item){
                 itemEl = itemTemplate(undefined, {index: i, item: item});
-                listbox.addChildElement(itemEl);
-                $listboxItems.eq(index).append(itemEl.render());
+                stackPanel.addChildElement(itemEl);
+                $stackPanelItems.eq(index).append(itemEl.render());
 
-                $listboxItems.eq(index).parent()
+                $stackPanelItems.eq(index).parent()
                     .data('pl-data-item', item);
 
                 index++;

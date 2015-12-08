@@ -1,15 +1,12 @@
-function ListBoxViewPlainStrategy(listbox) {
-    this.listbox = listbox;
+function StackPanelViewPlainStrategy(stackPanel) {
+    this.stackPanel = stackPanel;
 };
 
-_.extend(ListBoxViewPlainStrategy.prototype, {
+_.extend(StackPanelViewPlainStrategy.prototype, {
 
     prepareItemsForRendering: function(){
-        var items = this.listbox.getItems(),
-            inputName = 'listbox-' + guid(),
+        var items = this.stackPanel.getItems(),
             result = {
-                isMultiselect: this.listbox.isMultiselect(),
-                inputName: inputName,
                 items: items.toArray()
             };
 
@@ -17,20 +14,20 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
     },
 
     getTemplate: function(){
-        return this.listbox.template.plain;
+        return this.stackPanel.template.plain;
     },
 
     appendItemsContent: function(preparedItems){
-        var $listbox = this.listbox.$el,
-            itemTemplate = this.listbox.getItemTemplate(),
+        var $stackPanel = this.stackPanel.$el,
+            itemTemplate = this.stackPanel.getItemTemplate(),
             items = preparedItems.items,
-            listbox = this.listbox,
+            stackPanel = this.stackPanel,
             itemEl, $el;
 
-        $listbox.find('.pl-listbox-body').each(function(i, el){
+        $stackPanel.find('.pl-stack-panel-i').each(function(i, el){
             $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
-            listbox.addChildElement(itemEl);
+            stackPanel.addChildElement(itemEl);
             $el.append(itemEl.render());
 
             $el.parent().data('pl-data-item', items[i]);
