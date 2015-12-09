@@ -45,7 +45,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     },
 
     updateLabelFloating: function () {
-
+        var labelFloating = this.model.get('labelFloating');
+        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updatePasswordChar: function () {
