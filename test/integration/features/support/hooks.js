@@ -1,5 +1,7 @@
 
 this.BeforeScenario( function(scenario, callback) {
+	var snapshotPath = window.navigator.platform.indexOf('Linux') == -1 ? "C:\\ESbackups" : "/tmp/ESbackups"
+	
 	console.log('Before scenario');
 		//delete indices, create repository and restore
 		client.indices.delete({
@@ -12,7 +14,7 @@ this.BeforeScenario( function(scenario, callback) {
 					"type": "fs",
 					"settings": {
 						"compress": "true",
-						"location": "C:\\ESbackups"
+						"location": snapshotPath
 					}
 				}
 			}).then(function(){
