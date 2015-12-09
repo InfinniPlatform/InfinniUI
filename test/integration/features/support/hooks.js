@@ -31,10 +31,14 @@ this.BeforeScenario( function(scenario, callback) {
 							callback();
 						});	
 					};
+					
+					var error = function(){
+						console.log('signOut not called!');
+					}
 				
 					window.testHelpers.waitCondition(function(){
 						return window.configWindow.contextApp != null;
-					}, signOut);
+					}, signOut, error);
 				});	
 			});
 		});
