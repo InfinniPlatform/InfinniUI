@@ -6,7 +6,7 @@ IF [%1] == [] (
 )
 
 ::Set package version in files
-powershell -NoProfile -ExecutionPolicy Bypass -Command ".\SetVersion.ps1 %1"
+powershell -NoProfile -ExecutionPolicy Bypass -Command ".\SetTemplateStubs.ps1 %1"
 
 pushd ..
 ::Clear build artifacts
