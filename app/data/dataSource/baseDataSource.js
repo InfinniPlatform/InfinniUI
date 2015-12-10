@@ -419,7 +419,7 @@ var BaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function (data) {
             if (!('isValid' in data) || data.isValid === true) {
                 //@TODO Что приходит в ответ на сохранение?????
-                ds.uploadFiles(data.instanceId)
+                ds.uploadFiles(data.Id)
                     .then(function () {
                         ds._excludeItemFromModifiedSet(item);
                         ds._notifyAboutItemSaved(item, data, success);
