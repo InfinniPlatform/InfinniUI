@@ -23,10 +23,8 @@ window.testHelpers = {
 			if( i * step >= maxTimeout ){
 				if($.isFunction(error)){
 					error();
-				} else {
-					debugger;
 				}
-
+				
 				return;
 			}
 			
