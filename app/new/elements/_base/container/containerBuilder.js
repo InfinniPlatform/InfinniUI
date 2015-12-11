@@ -59,11 +59,11 @@ _.extend(ContainerBuilder.prototype, {
 
         binding.setMode(BindingModes.toElement);
 
-        if ('ItemComparator' in metadata) {
-            this.bindElementItemsWithSorting(binding, params);
-        } else {
-            binding.bindElement(element, 'items');
-        }
+        //if ('ItemComparator' in metadata) {
+        this.bindElementItemsWithSorting(binding, params);
+        //} else {
+        //    binding.bindElement(element, 'items');
+        //}
 
 
         if ('ItemTemplate' in metadata) {
@@ -310,6 +310,8 @@ _.extend(ContainerBuilder.prototype, {
     },
 
     bindElementItemsWithSorting: function (binding, params) {
+        // нетривиальный биндинг элементов нужен для того, чтобы правильно учитывались индексы при сортировке элементов
+
         var metadata = params.metadata,
             element = params.element,
             scriptExecutor = new ScriptExecutor(params.parent),
