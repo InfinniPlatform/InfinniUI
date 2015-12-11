@@ -14,7 +14,7 @@ page.onConsoleMessage = function (msg) {
     }
     /* Ситуации, при которых может произойти зацикливание */
     if (msg.indexOf('Unhandled rejection') != -1 ||
-		msg.indexOF('signOut not called') != -1
+		msg.indexOf('signOut not called') != -1
 	) {
         phantom.exit(2);
     }
@@ -29,7 +29,7 @@ page.onPageCreated = function (newPage) {
         console.log('CONSOLE: ' + msg);
         /* Ситуации, при которых может произойти зацикливание */
         if (msg.indexOf('Unhandled rejection') != -1 ||
-            msg.indexOF('signOut not called') != -1
+            msg.indexOf('signOut not called') != -1
         ) {
             phantom.exit(2);
         }
