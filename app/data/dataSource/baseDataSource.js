@@ -585,10 +585,10 @@ var BaseDataSource = Backbone.Model.extend({
         }
         this.trigger('onItemsUpdated', context, argument);
 
-        this._notifyAboutItemsUpdatedAsPropertChanged(itemsData);
+        this._notifyAboutItemsUpdatedAsPropertyChanged(itemsData);
     },
 
-    _notifyAboutItemsUpdatedAsPropertChanged: function (itemsData) {
+    _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
