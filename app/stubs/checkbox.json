@@ -382,7 +382,9 @@
                                           {
                                               "Button": {
                                                   "Text": "Close",
-                                                  "OnClick": "close"
+                                                  "OnClick": {
+                                                    "Name": "close"
+                                                  }
                                               }
                                           }
                                       ]

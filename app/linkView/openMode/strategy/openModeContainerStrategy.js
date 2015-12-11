@@ -17,5 +17,10 @@ _.extend(OpenModeContainerStrategy.prototype, {
         }
 
         this.container.setLayout(this.view);
+    },
+
+    close: function () {
+        this.container.setLayout(null);
+        this.view.remove();
     }
 });

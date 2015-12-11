@@ -191,6 +191,8 @@ _.extend(View.prototype,
             if(this.eventManager.trigger('onClosing', scriptArgs, context)){
                 this.eventManager.trigger('onClosed', scriptArgs, context);
 
+                this.openStrategy.close();
+
                 if(success){
                     success(context, scriptArgs);
                 }

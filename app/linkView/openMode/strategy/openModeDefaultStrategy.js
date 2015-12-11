@@ -19,5 +19,9 @@ _.extend(OpenModeDefaultStrategy.prototype, {
         $container
             .append(this.view.render())
             .data('view', this.view);
+    },
+
+    close: function () {
+        this.view.remove();
     }
 });
