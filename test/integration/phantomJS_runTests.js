@@ -27,6 +27,12 @@ page.onPageCreated = function (newPage) {
     };
     newPage.onConsoleMessage = function (msg) {
         console.log('CONSOLE: ' + msg);
+        /* Ситуации, при которых может произойти зацикливание */
+        if (msg.indexOf('Unhandled rejection') != -1 ||
+            msg.indexOF('signOut not called') != -1
+        ) {
+            phantom.exit(2);
+        }
     };
     newPage.onLoadFinished = function () {
         console.log('New child page url:' + newPage.url);
