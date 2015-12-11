@@ -68,7 +68,7 @@ TabPanel.prototype.getHeaderTemplate = function () {
  * @returns {boolean} успешность выделения дочернего элемента панели. false - элемент не был выделен, true - элемент успешно выделен
  */
 TabPanel.prototype.setSelectedItem = function (value) {
-    return this.control.set('selectedItem', value);
+    return this.control.setSelectedItem(value);
 };
 
 /**
