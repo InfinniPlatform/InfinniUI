@@ -1,5 +1,6 @@
 var ComboBoxDropdownView = Backbone.View.extend({
 
+    className: "pl-dropdown-container",
     events: {
         'click .backdrop': 'onClickBackdropHandler',
         //'keypress .pl-combobox-search-text': 'onKeyPressHandler',

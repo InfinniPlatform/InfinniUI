@@ -1,6 +1,6 @@
 var DatePickerDropdown = Backbone.View.extend({
 
-    className: 'pl-datepicker-dropdown',
+    className: 'pl-datepicker-dropdown pl-dropdown-container',
 
     template: InfinniUI.Template["new/controls/datePicker/template/datePicker.dropdown.tpl.html"],
 
