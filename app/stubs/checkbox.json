@@ -374,11 +374,29 @@
                           "LinkView": {
                               "InlineView": {
                                   "View": {
+                                    "Text": "My Dialog",
                                       "Scripts": [{
                                           "Name": "close",
                                           "Body": "context.view.close();"
                                       }],
                                       "Items": [
+                                        {
+                                          "DatePicker": {
+                                            "Mode": "Date",
+                                            "DisplayFormat": {
+                                              "DateTimeFormat": {
+                                                "Format": "d"
+                                              }
+                                            },
+                                            "MinValue": "2015-9-14",
+                                            "MaxValue": "2015-10-20",
+                                            "EditMask": {
+                                              "DateTimeEditMask": {
+                                                "Mask": "d"
+                                              }
+                                            }
+                                          }
+                                        },
                                           {
                                               "Button": {
                                                   "Text": "Close",

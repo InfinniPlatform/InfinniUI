@@ -9,10 +9,25 @@ _.extend(OpenModeDialogStrategy.prototype, {
         this.view = view;
     },
 
-    open: function(){
-        var $modal = $(this.template())
-                .appendTo($('body'));
+    assignDialogTitle: function ($title) {
+        var view = this.view;
 
+        this.view.onPropertyChanged("text", function (context, args) {
+            setTitle();
+        });
+
+        setTitle();
+
+        function setTitle() {
+            $title.text(view.getText());
+        }
+    },
+
+    open: function(){
+        var $template = $(this.template());
+        this.assignDialogTitle($('h4', $template));
+
+        var $modal = $template.appendTo($('body'));
         this.$modal = $modal;
 
         $modal.on('shown.bs.modal', function (e) {
@@ -57,6 +72,6 @@ _.extend(OpenModeDialogStrategy.prototype, {
             this.$modal.modal('hide');
             this.$modal.remove();
         }
-        
+
     }
 });
