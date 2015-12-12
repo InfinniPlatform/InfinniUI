@@ -150,7 +150,7 @@
                   "Items": [
                       {
                           "Cell": {
-                              "ColumnSpan": 3,
+                              "ColumnSpan": 2,
                               "Items": [{
                                   "ComboBox": {
                                     "ValueFormat": "{FirstName} {LastName}",
@@ -165,7 +165,7 @@
                       },
                       {
                           "Cell": {
-                              "ColumnSpan": 3,
+                              "ColumnSpan": 5,
                               "Items": [{
                                   "DataGrid": {
                                     "Visible": true,
@@ -300,7 +300,51 @@
                                   }
                                }]
                           }
+                      },
+                    {
+                      "Cell": {
+                        "ColumnSpan": 2,
+                        "Items": [
+                          {
+                            "Panel": {
+                              "Header": "Outer panel",
+                              "Items": [
+                                {
+                                  "Panel": {
+                                    "Collapsible": true,
+                                    "Header": "First Inner panel",
+                                    "Items": [
+                                      {
+                                        "TextBox": {
+                                          "LabelText": "My text 1"
+                                        }
+                                      },
+                                      {
+                                        "TextBox": {
+                                          "LabelText": "My text 2"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Panel": {
+                                    "Header": "Second Inner panel",
+                                    "Items": [
+                                      {
+                                        "TextBox": {
+                                          "LabelText": "My text 3"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
                       }
+                    }
                   ]
               }
           },
@@ -374,11 +418,29 @@
                           "LinkView": {
                               "InlineView": {
                                   "View": {
+                                    "Text": "My Dialog",
                                       "Scripts": [{
                                           "Name": "close",
                                           "Body": "context.view.close();"
                                       }],
                                       "Items": [
+                                        {
+                                          "DatePicker": {
+                                            "Mode": "Date",
+                                            "DisplayFormat": {
+                                              "DateTimeFormat": {
+                                                "Format": "d"
+                                              }
+                                            },
+                                            "MinValue": "2015-9-14",
+                                            "MaxValue": "2015-10-20",
+                                            "EditMask": {
+                                              "DateTimeEditMask": {
+                                                "Mask": "d"
+                                              }
+                                            }
+                                          }
+                                        },
                                           {
                                               "Button": {
                                                   "Text": "Close",
