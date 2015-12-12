@@ -30,7 +30,9 @@ var BaseDataSource = Backbone.Model.extend({
         warningValidator: null,
         showingWarnings: false,
 
-        isRequestInProcess: false
+        isRequestInProcess: false,
+
+        bindingBuilder: function(){} // нужен для создания биндингов в фильтрах
 
     },
 
@@ -678,8 +680,9 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('criteriaList');
     },
 
-    setFilter: function (filter) {
-        /*var boundFilter = new BoundFilter(this.getView(), filter);
+    setFilter: function (filters) {
+        /*var bindingBuilder = this.get('bindingBuilder');
+        var boundFilter = new BoundFilter(filters, bindingBuilder);
         var that = this;
 
         if(boundFilter.isReady()){
@@ -690,7 +693,7 @@ var BaseDataSource = Backbone.Model.extend({
             that._setCriteriaList(newCriteriaList);
         });*/
 
-        this._setCriteriaList(filter);
+        this.that._setCriteriaList(filters);
     },
 
     _setCriteriaList: function(criteriaList){
@@ -833,6 +836,10 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         return promise;
+    },
+
+    setBindingBuilder: function(bindingBuilder){
+        this.set('bindingBuilder', bindingBuilder);
     },
 
     _replaceAllProperties: function (currentObject, newPropertiesSet) {

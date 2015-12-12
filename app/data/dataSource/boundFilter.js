@@ -1,7 +1,7 @@
-var BoundFilter = function(parentView, filterMetadata){
-    this.parentView = parentView;
-    this.filterMetadata = filterMetadata;
-    this.isReady = false;
+var BoundFilter = function(filtersMetadata, bindingBuilder){
+    this.filtersMetadata = filtersMetadata;
+    this.filters = filtersMetadata.slice(0);
+    this.bindingBuilder = bindingBuilder;
     this.bindings = {};
     this.handlers = {
         onChange: $.Callbacks()
@@ -13,30 +13,48 @@ var BoundFilter = function(parentView, filterMetadata){
 _.extend(BoundFilter.prototype, {
 
     init: function(){
+        var binding;
+        var filter;
+        var that = this;
 
+        if($.isArray(this.filtersMetadata)){
+            for(var i = 0, ii = this.filtersMetadata.length; i < ii; i++){
+                filter = this.filtersMetadata[i];
+
+                if('Value' in filter && $.isPlainObject(filter['Value'])){
+                    binding = this.bindingBuilder(filter['Value']);
+
+                    binding.bindElement({
+
+                        setProperty: function(context, args){
+                            that.handlers.onChange.fire(args.value);
+                        },
+
+                        onPropertyChanged: function(){}
+                    });
+
+                    this.bindings[i] = binding;
+                }
+            }
+        }
     },
 
     isReady: function(){
-        return this.isReady;
+        var source = this.bindings.getSource();
+
+        for(var k in this.bindings){
+            if('isReady' in source){
+                if(!source.isReady()){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     },
 
     getCriteriaList: function(){
-        var result = [];
-        var filter;
-        var value;
-
-        if($.isArray(this.filterMetadata)){
-            for(var i = 0, ii = this.filterMetadata.length; i < ii; i++){
-                filter = this.filterMetadata[i];
-
-                if('Value' in filter && $.isPlainObject(filter['Value'])){
-                    this.bindings[i] = new DataBinding();
-                }
-            }
-
-        }else{
-            return [];
-        }
+        return this.filters;
     },
 
     onChange: function(handler){
