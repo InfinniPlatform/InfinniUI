@@ -20,7 +20,7 @@ var buttonBuilderMixin = {
 
         if (metadata.OnClick){
             element.onClick(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name, {source: element});
             });
         }
     },
