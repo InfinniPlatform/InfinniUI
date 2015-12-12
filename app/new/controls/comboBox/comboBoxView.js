@@ -41,8 +41,7 @@ var ComboBoxView = ListEditorBaseView.extend({
                         position: "absolute",
                         top: window.pageYOffset + rect.bottom,
                         left: window.pageXOffset + rect.left,
-                        width: rect.width,
-                        "z-index": 2000
+                        width: rect.width
                     };
                     //@TODO Добавить алгоритм определения куда расхлапывать список вверх/вниз
                     //Для расхлопывания вверх:

@@ -1,6 +1,6 @@
 var DateTimePickerDropdown = DatePickerDropdown.extend({
 
-    className: 'pl-datepicker-dropdown',
+    className: 'pl-datepicker-dropdown pl-dropdown-container',
 
     template: InfinniUI.Template["new/controls/datePicker/template/dateTimePicker.dropdown.tpl.html"],
 
