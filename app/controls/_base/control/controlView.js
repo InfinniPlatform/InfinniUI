@@ -26,6 +26,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     initHandlersForProperties: function () {
         this.listenTo(this.model, 'change:visible', this.updateVisible);
         this.listenTo(this.model, 'change:horizontalAlignment', this.updateHorizontalAlignment);
+        this.listenTo(this.model, 'change:textHorizontalAlignment', this.updateTextHorizontalAlignment);
         this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
         this.listenTo(this.model, 'change:name', this.updateName);
@@ -97,6 +98,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     updateProperties: function () {
         this.updateVisible();
+        this.updateTextHorizontalAlignment();
         this.updateHorizontalAlignment();
         this.updateVerticalAlignment();
         this.updateEnabled();
@@ -175,6 +177,10 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
                 return (name.match(regexp) || []).join(' ');
             })
             .addClass(prefix + verticalAlignment);
+    },
+
+    updateTextHorizontalAlignment: function () {
+        this.switchClass('pl-text-horizontal', this.model.get('textHorizontalAlignment'));
     },
 
     updateHorizontalAlignment: function () {

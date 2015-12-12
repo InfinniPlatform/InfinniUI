@@ -54,6 +54,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         this.initBindingToProperty(params, 'Visible', true);
         this.initBindingToProperty(params, 'Enabled', true);
         this.initBindingToProperty(params, 'HorizontalAlignment');
+        this.initBindingToProperty(params, 'TextHorizontalAlignment');
         this.initBindingToProperty(params, 'VerticalAlignment');
         this.initBindingToProperty(params, 'TextStyle');
         this.initBindingToProperty(params, 'Foreground');

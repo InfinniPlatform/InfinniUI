@@ -193,6 +193,15 @@ _.extend(Element.prototype, {
         }
     },
 
+    getTextHorizontalAlignment: function () {
+        return this.control.get('textHorizontalAlignment');
+    },
+
+    setTextHorizontalAlignment: function (value) {
+        if (InfinniUI.Metadata.isValidValue(value, InfinniUI.Metadata.TextHorizontalAlignment)) {
+            this.control.set('textHorizontalAlignment', value);
+        }
+    },
 
     getHorizontalAlignment: function () {
         return this.control.get('horizontalAlignment');

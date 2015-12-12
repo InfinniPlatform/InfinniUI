@@ -15,6 +15,7 @@
             'app/utils/namespace.js',
             'app/element/**/metadata.js', // old
             'app/new/elements/**/metadata/*.js',
+            'app/element/**/metadata/*.js',
             'app/config.js',
             'app/utils/**/*.js',
             'app/messaging/**/*.js',
@@ -80,7 +81,10 @@
         concat: {
             app: {
                 options: {
-                    sourceMap: false
+                    sourceMap: false,
+                    process: function(src, filepath) {
+                        return '//####' + filepath + '\n' + src;
+                    }
                 },
                 src: appFiles,
                 dest: 'out/app.js'

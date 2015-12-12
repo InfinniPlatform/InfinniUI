@@ -84,7 +84,7 @@ _.extend(LinkLabelBuilder.prototype,
     },
     builderValuePropertyMixin,
     builderFormatPropertyMixin,
-    builderHorizontalTextAlignmentPropertyMixin,
+    //builderHorizontalTextAlignmentPropertyMixin,
     builderBackgroundMixin,
     builderForegroundMixin,
     builderTextStyleMixin

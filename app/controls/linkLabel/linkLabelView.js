@@ -216,6 +216,6 @@ _.extend(LinkLabelView.prototype,
     backgroundPropertyMixin,
     textStylePropertyMixin,
     lineCountPropertyMixin,
-    textWrappingPropertyMixin,
-    horizontalTextAlignmentPropertyMixin
+    textWrappingPropertyMixin
+    //horizontalTextAlignmentPropertyMixin
 );
