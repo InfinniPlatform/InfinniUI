@@ -84,6 +84,12 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name, {source: element});
             });
         }
+
+        if (metadata.OnMouseDoubleClick){
+            element.onMouseDoubleClick(function() {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDoubleClick.Name, {source: element});
+            });
+        }
     },
 
     initBindingToProperty: function(params, propertyName, isBooleanBinding){
