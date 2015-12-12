@@ -1,0 +1,159 @@
+{
+  "DataSources": [
+    {
+      "DocumentDataSource": {
+        "Name": "BloodGroupDataSource",
+        "ConfigId": "AdministrationCustomization",
+        "DocumentId": "User",
+        "~Items": [
+          {
+            "Id": 1,
+            "DisplayName": "I",
+            "SomeField": "",
+            "Array": [
+              {
+                "Id": 5,
+                "DisplayName": "I-1"
+              },
+              {
+                "Id": 6,
+                "DisplayName": "I-2"
+              },
+              {
+                "Id": 7,
+                "DisplayName": "I-3"
+              }
+            ]
+          },
+          {
+            "Id": 2,
+            "DisplayName": "II",
+            "SomeField": "val",
+            "Array": [
+              {
+                "Id": 8,
+                "DisplayName": "II-1"
+              },
+              {
+                "Id": 9,
+                "DisplayName": "II-2"
+              }
+            ]
+          },
+          {
+            "Id": 3,
+            "DisplayName": "III",
+            "SomeField": 3
+          },
+          {
+            "Id": 4,
+            "DisplayName": "IV",
+            "SomeField": null
+          }
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
+      }
+    }
+  ],
+  "Items": [
+    {
+      "~DataGrid": {
+        "Items": {
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        },
+        "Columns": [
+          {
+            "Header": "Email",
+            "CellProperty": "Email"
+          }
+        ]
+      }
+    },
+    {
+      "~ListBox": {
+        "Items": {
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        },
+        "ItemTemplate": {
+          "StackPanel": {
+            "Items": [{
+              "Label": {
+                "Value": {
+                  "Source": "BloodGroupDataSource",
+                  "Property": "$.Email"
+                }
+              }
+            }]
+          }
+        }
+      }
+    }, {
+      "TablePanel": {
+        "Items": {
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        },
+        "ItemTemplate": {
+          "Row": {
+            "Items": [{
+              "Cell": {
+                "ColumnSpan": 9,
+                "Items": [{
+                  "TextBox": {
+                    "Value": {
+                      "Source": "BloodGroupDataSource",
+                      "Property": "$.FirstName"
+                    }
+                  }
+                }]
+              }
+            },{
+              "Cell": {
+                "ColumnSpan": 3,
+                "Items": [{
+                  "Button": {
+                    "Name": "FeeButton",
+                    "Image": "rub",
+                    "Style": "button-link green-icon",
+                    "Text": {
+                      "Source": "BloodGroupDataSource",
+                      "Property": "$.Email"
+                    },
+                    "OnClick": {
+                      "Name": "PaymentButtonOnClick"
+                    }
+                  }
+                }]
+              }
+            }]
+          }
+        }
+      }
+    },
+    {
+      "~ComboBox": {
+        "Items": {
+          "Source": "BloodGroupDataSource",
+          "Property": ""
+        },
+        "ItemFormat": "{Email} ({FirstName})",
+        "ValueFormat": "{Email}"
+      }
+    }
+  ],
+  "Scripts": [
+    {
+      "Name": "PaymentButtonOnClick",
+      "Body": "console.log('PaymentButtonOnClick');"
+    },
+    {
+      "Name": "OnSelectedItemChanged_1",
+      "Body": "console.log('OnSelectedItemChanged_1');"
+    }
+  ]
+}
+

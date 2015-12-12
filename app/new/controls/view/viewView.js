@@ -30,8 +30,10 @@ var ViewView = ContainerView.extend(
 
             items.forEach(function(item, i){
                 element = itemTemplate(undefined, {item: item, index: i});
-                that.$el
-                    .append(element.render());
+                if (element) {
+                    that.$el
+                        .append(element.render());
+                }
             });
         },
 

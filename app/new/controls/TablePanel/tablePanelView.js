@@ -17,7 +17,7 @@ var TablePanelView = ContainerView.extend(
             this.removeChildElements();
 
             this.renderItemsContents();
-
+            this.trigger('render');
             this.postrenderingActions();
             return this;
         },
