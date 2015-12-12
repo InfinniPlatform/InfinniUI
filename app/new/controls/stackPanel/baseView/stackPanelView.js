@@ -8,7 +8,10 @@ var StackPanelView = ContainerView.extend(
         tagName: 'ul',
         className: 'pl-stack-panel',
 
-        template: InfinniUI.Template["new/controls/stackPanel/template/stackPanel.tpl.html"],
+        template: {
+            plain: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanel.tpl.html"],
+            grouped: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanelGrouped.tpl.html"]
+        },
 
         UI: {
             items: '.stackpanel-items'
@@ -38,9 +41,7 @@ var StackPanelView = ContainerView.extend(
             var preparedItems = this.strategy.prepareItemsForRendering();
             var template = this.strategy.getTemplate();
 
-            this.$el.html(template({
-                items: preparedItems
-            }));
+            this.$el.html(template(preparedItems));
 
             this.strategy.appendItemsContent(preparedItems);
 
@@ -74,6 +75,22 @@ var StackPanelView = ContainerView.extend(
         updateOrientation: function () {
             var orientation = this.model.get('orientation');
             this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
-        }
+        },
+
+        getItems: function(){
+            return this.model.get('items');
+        },
+
+        getItemTemplate: function(){
+            return this.model.get('itemTemplate');
+        },
+
+        getGroupValueSelector: function(){
+            return this.model.get('groupValueSelector');
+        },
+
+        getGroupItemTemplate: function(){
+            return this.model.get('groupItemTemplate');
+        },
     }
 );
