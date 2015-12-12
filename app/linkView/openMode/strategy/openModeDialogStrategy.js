@@ -13,6 +13,8 @@ _.extend(OpenModeDialogStrategy.prototype, {
         var $modal = $(this.template())
                 .appendTo($('body'));
 
+        this.$modal = $modal;
+
         $modal.on('shown.bs.modal', function (e) {
             $(e.target).find('.first-focus-element-in-modal').focus();
         });
@@ -47,5 +49,14 @@ _.extend(OpenModeDialogStrategy.prototype, {
                 $modal.find('.lastfocuselementinmodal').focus();
             }
         });
+    },
+
+    close: function () {
+        this.view.remove();
+        if (this.$modal) {
+            this.$modal.modal('hide');
+            this.$modal.remove();
+        }
+        
     }
 });

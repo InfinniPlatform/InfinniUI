@@ -26,12 +26,12 @@ DocumentFileProvider.prototype.uploadFile = function (fieldName, instanceId, fil
         if (this.successCallback) {
             this.successCallback();
         }
-    }, function (err) {
+    }.bind(this), function (err) {
         deferred.reject(err);
         if (this.failCallback) {
             this.failCallback();
         }
-    }).makeRequestRaw(requestData);
+    }.bind(this)).makeRequestRaw(requestData);
 
     return deferred.promise();
 };

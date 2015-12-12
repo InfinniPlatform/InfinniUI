@@ -16,6 +16,9 @@ describe('AddAction', function () {
                 },
                 DestinationValue: {
                     Source: 'SomeDS'
+                },
+                SourceValue: {
+                    Source: 'EditDS'
                 }
             }
         };

@@ -7,6 +7,12 @@ _.inherit(AddAction, BaseEditAction);
 
 _.extend(AddAction.prototype, {
     setSelectedItem: function(){
+        var editView = this.getProperty('editView');
+        var editSourceName = this.getProperty('sourceSource');
+        var editDataSource = editView.getContext().dataSources[editSourceName];
+
+        // create new item and set it selected
+		editDataSource.createItem();
     },
 
     save: function(){

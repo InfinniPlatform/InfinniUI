@@ -13,13 +13,13 @@ function AddActionBuilder(){
             action = new AddItemAction(parentView);
 
             action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('sourceSource', metadata.SourceValue.Source);
         }
 
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
 
         action.setProperty('linkView', linkView);
         action.setProperty('destinationSource', metadata.DestinationValue.Source);
+		action.setProperty('sourceSource', metadata.SourceValue.Source);
 
         return action;
     }

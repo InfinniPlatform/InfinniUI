@@ -63,10 +63,10 @@ _.extend(FileBoxBuilder.prototype, {
             params.element.onPropertyChanged('file', function (context, args) {
                 var ds = binding.getSource();
                 var property = args.property,
-                    value = args.value;
+                    file = args.newValue;
 
                 //Файл в очередь на загрузк
-                ds.setFile(binding.getSourceProperty(), value);
+                ds.setFile(file, binding.getSourceProperty());
             })
         }
 

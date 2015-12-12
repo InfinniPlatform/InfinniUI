@@ -27,8 +27,9 @@
         var extensionName = this.model.get('extensionName'),
             context = this.model.get('context'),
             itemTemplate = this.model.get('itemTemplate'),
-            parameters = this.model.get('parameters');
+            parameters = this.model.get('parameters'),
+            items = this.model.get('items');
 
-        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate});
+        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items});
     }
 });

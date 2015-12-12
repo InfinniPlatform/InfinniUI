@@ -14,6 +14,10 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         input: '.pl-control'
     }),
 
+    events: {
+        'blur .pl-control': 'onBlurHandler'
+    },
+
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
     },
@@ -41,7 +45,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     },
 
     updateLabelFloating: function () {
-
+        var labelFloating = this.model.get('labelFloating');
+        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updatePasswordChar: function () {
@@ -79,6 +84,14 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.trigger('render');
         this.postrenderingActions();
         return this;
+    },
+
+    onBlurHandler: function () {
+        var model = this.model;
+
+        var value = this.ui.input.val();
+
+        model.set('value', value);
     }
 
 }));
