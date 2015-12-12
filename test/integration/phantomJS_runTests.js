@@ -16,6 +16,7 @@ page.onConsoleMessage = function (msg) {
     if (msg.indexOf('Unhandled rejection') != -1 ||
 		msg.indexOf('signOut not called') != -1
 	) {
+        page.pages[0].render('Error logs/' + msg.replace(/[?:"]*/g, "") + '.png');
         phantom.exit(2);
     }
 
@@ -40,6 +41,7 @@ page.onPageCreated = function (newPage) {
         if (msg.indexOf('Unhandled rejection') != -1 ||
             msg.indexOf('signOut not called') != -1
         ) {
+            newPage.render('Error logs/' + msg.replace(/[?:"]*/g, "") + '.png');
             phantom.exit(2);
         }
     };
