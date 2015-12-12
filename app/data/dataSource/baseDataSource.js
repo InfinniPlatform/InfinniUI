@@ -679,7 +679,22 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setFilter: function (filter) {
-        this.set('criteriaList', filter);
+        /*var boundFilter = new BoundFilter(this.getView(), filter);
+        var that = this;
+
+        if(boundFilter.isReady()){
+            that._setCriteriaList(boundFilter.getCriteriaList());
+        }
+
+        boundFilter.onChange(function(newCriteriaList){
+            that._setCriteriaList(newCriteriaList);
+        });*/
+
+        this._setCriteriaList(filter);
+    },
+
+    _setCriteriaList: function(criteriaList){
+        this.set('criteriaList', criteriaList);
         this.updateItems();
     },
 
