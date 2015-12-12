@@ -315,9 +315,13 @@ _.extend(ContainerBuilder.prototype, {
         var metadata = params.metadata,
             element = params.element,
             scriptExecutor = new ScriptExecutor(params.parent),
+            itemComparator;
+
+        if(metadata.ItemComparator){
             itemComparator = function (item1, item2) {
                 return scriptExecutor.executeScript(metadata.ItemComparator.Name, {item1: item1, item2: item2});
             };
+        }
 
         binding.bindElement({
             setProperty: function (name, value) {
@@ -328,7 +332,7 @@ _.extend(ContainerBuilder.prototype, {
                     collection.setProperty(index, 'bindingIndex', index);
                 });
 
-                if (isCollectionChanged) {
+                if (itemComparator && isCollectionChanged) {
                     items.sort(itemComparator);
                 }
             },
