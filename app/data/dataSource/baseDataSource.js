@@ -693,7 +693,7 @@ var BaseDataSource = Backbone.Model.extend({
             that._setCriteriaList(newCriteriaList);
         });*/
 
-        this.that._setCriteriaList(filters);
+        this._setCriteriaList(filters);
     },
 
     _setCriteriaList: function(criteriaList){
