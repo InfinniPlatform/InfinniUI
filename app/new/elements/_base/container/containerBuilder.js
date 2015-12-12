@@ -326,15 +326,29 @@ _.extend(ContainerBuilder.prototype, {
         binding.bindElement({
             setProperty: function (name, value) {
                 var items = element.getItems(),
+                    isCollectionChanged;
+
+                if(itemComparator){
+
                     isCollectionChanged = items.set(value, true);
 
-                items.forEach(function (item, index, collection) {
-                    collection.setProperty(index, 'bindingIndex', index);
-                });
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
 
-                if (itemComparator && isCollectionChanged) {
-                    items.sort(itemComparator);
+                    if (isCollectionChanged) {
+                        items.sort(itemComparator);
+                    }
+
+                }else{
+
+                    isCollectionChanged = items.set(value);
+
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
                 }
+
             },
 
             onPropertyChanged: function () {
