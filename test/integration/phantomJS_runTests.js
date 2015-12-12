@@ -16,13 +16,13 @@ page.onConsoleMessage = function (msg) {
     if (msg.indexOf('Unhandled rejection') != -1 ||
 		msg.indexOf('signOut not called') != -1
 	) {
-        page.pages[0].render('Error logs/' + msg.replace(/[?:"]*/g, "") + '.png');
+        page.pages[0].render('ErrorLogs/' + msg.replace(/[?:"]*/g, "") + '.png');
         phantom.exit(2);
     }
 
     if (msg.indexOf('Take screenshot') != -1) {
         var fileName = msg.substring(msg.indexOf(':') + 1);
-        page.pages[0].render('Error logs/' + fileName + '.png');
+        page.pages[0].render('ErrorLogs/' + fileName + '.png');
     }
 };
 
@@ -41,7 +41,7 @@ page.onPageCreated = function (newPage) {
         if (msg.indexOf('Unhandled rejection') != -1 ||
             msg.indexOf('signOut not called') != -1
         ) {
-            newPage.render('Error logs/' + msg.replace(/[?:"]*/g, "") + '.png');
+            newPage.render('ErrorLogs/' + msg.replace(/[?:"]*/g, "") + '.png');
             phantom.exit(2);
         }
     };
