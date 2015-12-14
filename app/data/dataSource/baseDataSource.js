@@ -660,7 +660,17 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function (itemData, successHandler) {
-        this._setItems([itemData]);
+        var items = this.get('items');
+
+        if(items) {
+            items = items.slice();
+            items.push(itemData);
+        }else{
+            items = [itemData];
+        }
+
+        this._setItems(items);
+        this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
 
