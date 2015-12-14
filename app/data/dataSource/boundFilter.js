@@ -28,9 +28,11 @@ _.extend(BoundFilter.prototype, {
     },
 
     isReady: function(){
-        var source = this.bindings.getSource();
+        var source;
 
         for(var k in this.bindings){
+            source = this.bindings[k].getSource();
+
             if('isReady' in source){
                 if(!source.isReady()){
                     return false;
