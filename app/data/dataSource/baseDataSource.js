@@ -42,6 +42,8 @@ var BaseDataSource = Backbone.Model.extend({
         if (!this.get('view')) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
+
+        this._onPropertyChangesList = [];
     },
 
     initDataProvider: function () {
@@ -61,6 +63,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     onPropertyChanged: function (property, handler) {
+        var list = this._onPropertyChangesList;
+        if (list.indexOf(property) === -1) {
+            list.push(property);
+        }
         if (typeof property == 'function') {
             handler = property;
             this.on('onPropertyChanged', handler);
@@ -390,15 +396,89 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var
+            ds = this,
+            context = this.getContext(),
+            argument = this._getArgumentTemplate(),
+            selectedItem = ds.getSelectedItem(),
+            items = ds.getItems(),
+            selectedItemIndex = items.indexOf(selectedItem);
 
         argument.property = property;
         argument.newValue = newValue;
         argument.oldValue = oldValue;
 
         this.trigger('onPropertyChanged', context, argument);
+
+        /**
+         * Генерация событий на обновление связанных полей ($ и Значения вложенных полей)
+         */
+        this._onPropertyChangesList
+            .filter(function (name) {
+                var prop, matched = false;
+                if (property === name) {
+                    matched = false;
+                } else if (property.length && name.length){
+                    if (isBindToSelectedItem(name) && isBindToSelectedItem(property)) {
+                        if (name.indexOf(property) === 0) {
+                            matched = true;
+                        }
+                    } else  if (isBindToSelectedItem(name)) {
+                        prop = resolveProperty(name);
+                        if (prop.indexOf(property) === 0) {
+                            matched = true;
+                        }
+                    } else if (isBindToSelectedItem(property)) {
+                        prop = resolveProperty(property);
+                        if (name.indexOf(prop) === 0) {
+                            matched = true;
+                        }
+                    }
+                }
+
+                return matched;
+            })
+            .map(function (name) {
+                var prop,
+                    argument = ds._getArgumentTemplate();
+
+                argument.property = name;
+
+                if(isBindToSelectedItem(name)) {
+                    var prop1 = resolveProperty(name),
+                        prop2 = resolveProperty(property);
+
+                    prop = prop1.substr(prop2.length);
+                } else {
+                    prop = name.substr(property.length);
+                }
+
+                prop = prop.replace(/^\.+/, '');
+
+                argument.newValue = InfinniUI.ObjectUtils.getPropertyValue(newValue, prop);
+                argument.oldValue = InfinniUI.ObjectUtils.getPropertyValue(oldValue, prop);
+
+                return argument
+            })
+            .forEach(function (argument) {
+                ds.trigger('onPropertyChanged:' + argument.property, context, argument);
+            });
+
+        argument.property = property;
         this.trigger('onPropertyChanged:' + property, context, argument);
+
+        function resolveProperty () {
+
+        }
+        function resolveProperty(property) {
+            return property.replace(/^\$/, selectedItemIndex);
+        }
+
+        function  isBindToSelectedItem(property) {
+            return /^\$/.test(property);
+        }
+
+
     },
 
     saveItem: function (item, success, error) {
