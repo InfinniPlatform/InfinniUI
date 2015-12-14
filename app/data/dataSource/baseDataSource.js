@@ -134,7 +134,8 @@ var BaseDataSource = Backbone.Model.extend({
             this.setSelectedItem(null);
         }
 
-        this.trigger('settingNewItemsComplete');
+        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
+        //this.trigger('settingNewItemsComplete');
     },
 
     _addItems: function (newItems) {
@@ -151,7 +152,8 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('itemsById', indexedItemsById);
         }
 
-        this.trigger('settingNewItemsComplete');
+        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
+        //this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -586,8 +588,6 @@ var BaseDataSource = Backbone.Model.extend({
             successHandler(context, argument);
         }
         this.trigger('onItemsUpdated', context, argument);
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(itemsData);
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {
@@ -823,7 +823,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('settingNewItemsComplete', function(){
+            this.once('onPropertyChanged:', function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
