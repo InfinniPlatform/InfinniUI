@@ -681,7 +681,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setFilter: function (filters) {
-        /*var bindingBuilder = this.get('bindingBuilder');
+        var bindingBuilder = this.get('bindingBuilder');
         var boundFilter = new BoundFilter(filters, bindingBuilder);
         var that = this;
 
@@ -690,10 +690,12 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         boundFilter.onChange(function(newCriteriaList){
-            that._setCriteriaList(newCriteriaList);
-        });*/
+            if(boundFilter.isReady()){
+                that._setCriteriaList(newCriteriaList);
+            }
+        });
 
-        this._setCriteriaList(filters);
+        //this._setCriteriaList(filters);
     },
 
     _setCriteriaList: function(criteriaList){

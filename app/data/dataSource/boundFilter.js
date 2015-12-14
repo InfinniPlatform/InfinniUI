@@ -13,7 +13,6 @@ var BoundFilter = function(filtersMetadata, bindingBuilder){
 _.extend(BoundFilter.prototype, {
 
     init: function(){
-        var binding;
         var filter;
         var that = this;
 
@@ -22,18 +21,7 @@ _.extend(BoundFilter.prototype, {
                 filter = this.filtersMetadata[i];
 
                 if('Value' in filter && $.isPlainObject(filter['Value'])){
-                    binding = this.bindingBuilder(filter['Value']);
-
-                    binding.bindElement({
-
-                        setProperty: function(context, args){
-                            that.handlers.onChange.fire(args.value);
-                        },
-
-                        onPropertyChanged: function(){}
-                    });
-
-                    this.bindings[i] = binding;
+                    this.bindToValue(filter['Value'], i);
                 }
             }
         }
@@ -59,6 +47,23 @@ _.extend(BoundFilter.prototype, {
 
     onChange: function(handler){
         this.handlers.onChange.add(handler);
+    },
+
+    bindToValue: function(valueMetadata, indexOfFilter){
+        var binding = this.bindingBuilder(valueMetadata);
+        var that = this;
+
+        binding.bindElement({
+
+            setProperty: function(context, args){
+                that.filters[indexOfFilter]['Value'] = args.value;
+                that.handlers.onChange.fire(that.filters);
+            },
+
+            onPropertyChanged: function(){}
+        });
+
+        this.bindings[indexOfFilter] = binding;
     }
 
 });
