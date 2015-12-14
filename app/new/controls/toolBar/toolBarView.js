@@ -19,8 +19,10 @@ var ToolBarView = ContainerView.extend({
 
         this.renderTemplate(this.template);
         this.ui.container.append(this.renderItems());
-        this.postrenderingActions();
+        this.updateProperties();
         this.trigger('render');
+
+        this.postrenderingActions();
 
         return this;
     },
