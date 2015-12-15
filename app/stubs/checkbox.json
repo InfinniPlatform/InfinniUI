@@ -248,6 +248,8 @@
                                         "Header": "Actions",
                                         "CellTemplate": {
                                           "Button": {
+                                            "Background": "primary1",
+                                            "Foreground": "primary1",
                                             "Text": "Remove",
                                             "OnClick": {
                                               "Name": "OnClickRemove"
