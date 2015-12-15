@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin
+ * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -140,7 +140,8 @@ var BaseDataSource = Backbone.Model.extend({
             this.setSelectedItem(null);
         }
 
-        this.trigger('settingNewItemsComplete');
+        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
+        //this.trigger('settingNewItemsComplete');
     },
 
     _addItems: function (newItems) {
@@ -157,7 +158,8 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('itemsById', indexedItemsById);
         }
 
-        this.trigger('settingNewItemsComplete');
+        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
+        //this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -666,8 +668,6 @@ var BaseDataSource = Backbone.Model.extend({
             successHandler(context, argument);
         }
         this.trigger('onItemsUpdated', context, argument);
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(itemsData);
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {
@@ -740,7 +740,17 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function (itemData, successHandler) {
-        this._setItems([itemData]);
+        var items = this.get('items');
+
+        if(items) {
+            items = items.slice();
+            items.push(itemData);
+        }else{
+            items = [itemData];
+        }
+
+        this._setItems(items);
+        this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
 
@@ -761,7 +771,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setFilter: function (filters) {
-        /*var bindingBuilder = this.get('bindingBuilder');
+        var bindingBuilder = this.get('bindingBuilder');
         var boundFilter = new BoundFilter(filters, bindingBuilder);
         var that = this;
 
@@ -770,10 +780,12 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         boundFilter.onChange(function(newCriteriaList){
-            that._setCriteriaList(newCriteriaList);
-        });*/
+            if(boundFilter.isReady()){
+                that._setCriteriaList(newCriteriaList);
+            }
+        });
 
-        this._setCriteriaList(filters);
+        //this._setCriteriaList(filters);
     },
 
     _setCriteriaList: function(criteriaList){
@@ -901,7 +913,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('settingNewItemsComplete', function(){
+            this.once('onPropertyChanged:', function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
@@ -944,4 +956,4 @@ var BaseDataSource = Backbone.Model.extend({
 
 });
 
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin, dataSourceLookupMixin);

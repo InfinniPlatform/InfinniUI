@@ -248,6 +248,8 @@
                                         "Header": "Actions",
                                         "CellTemplate": {
                                           "Button": {
+                                            "Background": "primary1",
+                                            "Foreground": "primary1",
                                             "Text": "Remove",
                                             "OnClick": {
                                               "Name": "OnClickRemove"
@@ -796,6 +798,37 @@
                           }
                         }
                       ]
+                    }
+                  }
+                ]
+              }
+            }]
+          }
+        },{
+          "Cell": {
+            "ColumnSpan": 9,
+            "Items": [{
+              "StackPanel": {
+                "Orientation": "Horizontal",
+                "Items":[
+                  {
+                    "StackPanel": {
+                    "Items":[
+                      {
+                        "Label": {
+                          "Text": "Content of Page1"
+                        }
+                      },
+                      {
+                        "Label": {
+                          "Text": "Content of Page2"
+                        }
+                      }
+                    ]}
+                  },
+                  {
+                    "Label": {
+                      "Text": "Content of Page3"
                     }
                   }
                 ]

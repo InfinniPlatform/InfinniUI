@@ -37,7 +37,7 @@ var ImageBoxModel = ControlModel.extend( _.extend({
     setFile: function (file) {
         if (this.set('file', file, {validate: true})) {
             this.set('errorText', '');
-        };
+        }
     },
 
     removeFile: function () {
@@ -52,12 +52,12 @@ var ImageBoxModel = ControlModel.extend( _.extend({
             this.fileLoader = fileLoader;
 
             fileLoader.then(function (file, content) {
-                model.set('url', content);
+                model.set('value', content);
             }, function (err) {
                 console.log(err);
             });
         } else {
-            model.set('url', null);
+            model.set('value', null);
         }
     },
 
