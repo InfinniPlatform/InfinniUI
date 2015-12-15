@@ -21,9 +21,11 @@ _.extend(BaseEditAction.prototype, {
 
         this.setProperty('editView', editView);
 
-        that.setSelectedItem();
-
         editView.open();
+
+        editView.onBeforeLoaded(function(){
+            that.setSelectedItem();
+        });
 
         editView.onClosed(function(){
             var dialogResult = editView.getDialogResult();
