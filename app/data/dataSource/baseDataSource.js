@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin
+ * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -956,4 +956,4 @@ var BaseDataSource = Backbone.Model.extend({
 
 });
 
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin, dataSourceLookupMixin);

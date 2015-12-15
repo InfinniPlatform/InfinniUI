@@ -22,7 +22,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     initHandlersForProperties: function(){
         ControlView.prototype.initHandlersForProperties.call(this);
 
-        this.listenTo(this.model, 'change:url', this.updateUrl);
+        this.listenTo(this.model, 'change:value', this.updateUrl);
 
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
@@ -32,6 +32,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
+        this.updateUrl();
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
@@ -87,7 +88,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     },
 
     updateUrl: function () {
-        var url = this.model.get('url');
+        var url = this.model.get('value');
 
         this.ui.img.attr('src', url);
         var none = url === null || typeof url === 'undefined';

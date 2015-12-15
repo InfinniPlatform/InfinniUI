@@ -40,18 +40,27 @@ _.extend(ImageBoxBuilder.prototype, {
                 var value = args.value;
                 var binding = args.binding;
                 var ds = binding.getSource();
+                var sourceProperty = binding.getSourceProperty();
                 var fileProvider = ds.getFileProvider();
                 var url = null;
                 //Формируем URL изображения
-                if (value && value.ContentId && fileProvider) {
-                    url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
+
+                if (value && value.Info && value.Info.ContentId && fileProvider) {
+                    var contentId = value.Info.ContentId;
+                    var idProperty = ds.idProperty || "Id";
+                    var instanceId = ds.lookupPropertyValue(idProperty, function (value) {
+                        return value && value.Info.ContentId  === contentId ;
+                    }, sourceProperty);
+                    if (typeof instanceId !== 'undefined') {
+                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
+                    }
                 }
                 return url;
             }
         };
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
-            valueProperty: 'url',
+            //valueProperty: 'url',
             converter: converter
         });
 
@@ -68,7 +77,17 @@ _.extend(ImageBoxBuilder.prototype, {
 
                 //Файл в очередь на загрузк
                 ds.setFile(file, binding.getSourceProperty());
-            })
+            });
+
+            params.element.onPropertyChanged('value', function (context, args) {
+                var url = null;
+                var value = args.newValue;
+                //Формируем URL изображения
+                if (value && value.ContentId && fileProvider) {
+                    url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
+                }
+                params.element.setProperty('url', url);
+            });
         }
 
     }
