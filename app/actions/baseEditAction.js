@@ -21,7 +21,7 @@ _.extend(BaseEditAction.prototype, {
 
         this.setProperty('editView', editView);
 
-        this.setSelectedItem();
+        that.setSelectedItem();
 
         editView.open();
 

@@ -5,7 +5,7 @@
 var GridPanelView = ContainerView.extend(
     /** @lends GridPanelView.prototype */
     {
-        className: 'pl-grid-panel',
+        className: 'pl-grid-panel pl-clearfix',
 
         initialize: function (options) {
             ContainerView.prototype.initialize.call(this, options);

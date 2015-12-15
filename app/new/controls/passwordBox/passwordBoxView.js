@@ -56,6 +56,9 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     updateValue: function(){
         var value = this.model.get('value');
         this.ui.input.val(value);
+
+        var isEmpty = _.isEmpty(value);
+        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
     },
 
     updateEnabled: function () {

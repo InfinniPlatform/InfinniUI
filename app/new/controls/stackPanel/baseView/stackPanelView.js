@@ -50,6 +50,7 @@ var StackPanelView = ContainerView.extend(
 
             this.trigger('render');
 
+
             this.postrenderingActions();
             return this;
         },
