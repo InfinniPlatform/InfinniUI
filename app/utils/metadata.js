@@ -11,3 +11,7 @@ InfinniUI.Metadata.isValidValue = function (value, metadata) {
 
     return result;
 };
+
+InfinniUI.Metadata.isPredefinedIdentifierProperty = function (propName) {
+    return $.inArray( propName, [ "$", "#" ] );
+};
