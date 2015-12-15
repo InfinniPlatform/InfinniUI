@@ -87,10 +87,8 @@
         "Items": [
            {
               "Id": 1,
+               "Name": "Иванов",
               "Diseases": [
-                  {
-                      "Name": "allergosis"
-                  },
                   {
                       "Name": "dermatomycosis"
                   },
@@ -98,7 +96,16 @@
                       "Name": "cold"
                   }
               ]
-           }
+           },
+            {
+                "Id": 2,
+                "Name": "Петров",
+                "Diseases": [
+                    {
+                        "Name": "allergosis"
+                    }
+                ]
+            }
         ]
       }
     }
@@ -837,7 +844,63 @@
           }
         }]
     }
-  }],
+  },{
+      "StackPanel":{
+          "Items": {
+              "Source": "PatientDataSource",
+              "Property": ""
+          },
+          "ItemTemplate": {
+              "TablePanel": {
+                  "Items":[{
+                      "Row": {
+                          "Items": [
+                              {
+                                  "Cell": {
+                                      "ColumnSpan": 6,
+                                      "Items": [
+                                          {
+                                              "Label":{
+                                                  "Value": {
+                                                      "Source": "PatientDataSource",
+                                                      "Property": "#.Name"
+                                                  }
+                                              }
+                                          }
+                                      ]
+                                  }
+                              },
+                              {
+                                  "Cell": {
+                                      "ColumnSpan": 6,
+                                      "Items": [
+                                          {
+                                              "StackPanel":{
+                                                  "Items": {
+                                                      "Source": "PatientDataSource",
+                                                      "Property": "#.Diseases"
+                                                  },
+                                                  "ItemTemplate": {
+                                                      "Label":{
+                                                          "Value": {
+                                                              "Source": "PatientDataSource",
+                                                              "Property": "#.Diseases.#.Name"
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                          }
+                                      ]
+                                  }
+                              }
+                          ]
+}
+}]
+                  }
+              }
+          }
+      }
+  ],
   "Scripts": [
     {
       "Name": "OnExpanded",
