@@ -7,6 +7,12 @@ var GridPanelView = ContainerView.extend(
     {
         className: 'pl-grid-panel pl-clearfix',
 
+        columnCount: 12,
+
+        template: {
+            row: InfinniUI.Template["new/controls/GridPanel/template/row.tpl.html"]
+        },
+
         initialize: function (options) {
             ContainerView.prototype.initialize.call(this, options);
         },
@@ -27,15 +33,37 @@ var GridPanelView = ContainerView.extend(
         renderItemsContents: function(){
             var items = this.model.get('items'),
                 itemTemplate = this.model.get('itemTemplate'),
-                that = this,
+                view = this,
+                row = [],
+                rowSize = 0,
                 element, item;
 
             items.forEach(function(item, i){
                 element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
+                var span = element.getColumnSpan();
+                if (rowSize + span > view.columnCount) {
+                    view.renderRow(row);
+                    row.length = 0;
+                    rowSize = 0;
+                }
+
+                row.push(element);
+                rowSize += span;
             });
+
+            if (row.length) {
+                view.renderRow(row);
+            }
+        },
+
+        renderRow: function (row) {
+            var view = this;
+            var $row = $(this.template.row());
+            $row.append(row.map(function(element) {
+                view.addChildElement(element);
+                return element.render();
+            }));
+            this.$el.append($row);
         },
 
         updateGrouping: function(){}
