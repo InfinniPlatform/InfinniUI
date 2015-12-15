@@ -61,14 +61,14 @@ _.extend(ImageBox.prototype, {
         if (Array.isArray(types)) {
             collection.set(types)
         }
-    },
-
-    setUrl: function (value) {
-        this.control.set('url', value);
-    },
-
-    getUrl: function () {
-        return this.control.get('url');
     }
+
+    //setUrl: function (value) {
+    //    this.control.set('url', value);
+    //},
+    //
+    //getUrl: function () {
+    //    return this.control.get('url');
+    //}
 
 }, editorBaseMixin);

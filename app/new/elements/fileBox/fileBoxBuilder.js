@@ -51,7 +51,7 @@ _.extend(FileBoxBuilder.prototype, {
         };
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
-            valueProperty: 'url',
+            //valueProperty: 'url',
             converter: converter
         });
 

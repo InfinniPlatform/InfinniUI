@@ -79,15 +79,15 @@ _.extend(ImageBoxBuilder.prototype, {
                 ds.setFile(file, binding.getSourceProperty());
             });
 
-            params.element.onPropertyChanged('value', function (context, args) {
-                var url = null;
-                var value = args.newValue;
-                //Формируем URL изображения
-                if (value && value.ContentId && fileProvider) {
-                    url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
-                }
-                params.element.setProperty('url', url);
-            });
+            //params.element.onPropertyChanged('value', function (context, args) {
+            //    var url = null;
+            //    var value = args.newValue;
+            //    //Формируем URL изображения
+            //    if (value && value.ContentId && fileProvider) {
+            //        url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
+            //    }
+            //    params.element.setProperty('url', url);
+            //});
         }
 
     }
