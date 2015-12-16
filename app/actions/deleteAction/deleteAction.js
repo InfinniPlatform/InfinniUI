@@ -45,6 +45,7 @@ _.extend(DeleteAction.prototype, {
         dataSource.deleteItem(this.getDestinationSelectedItem(), onSuccessDelete);
     },
 
+    // todo: повторяет метод из EditAction, придумать, как обобщить
     getDestinationSelectedItem: function(){
         var destinationSource = this.getProperty('destinationSource');
         var propertyName = this.getProperty('destinationProperty');

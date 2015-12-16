@@ -7,7 +7,7 @@ _.inherit(EditAction, BaseEditAction);
 
 _.extend(EditAction.prototype, {
     setSelectedItem: function(){
-        var editDataSource = this.getEditDataSource();
+        var editDataSource = this._getEditDataSource();
 
         if(!editDataSource.isDataReady()){
             var message = stringUtils.format('{0} не инициализирован. Невозможно установить текущий элемент.', [editDataSource.getName()]);
@@ -27,14 +27,7 @@ _.extend(EditAction.prototype, {
         }
     },
 
-    getEditDataSource: function(){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('sourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
-
-        return editDataSource;
-    },
-
+    // todo: повторяется в DeleteAction, придумать, как обобщить
     getDestinationSelectedItem: function(){
         var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];

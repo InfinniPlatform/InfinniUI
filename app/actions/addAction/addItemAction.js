@@ -7,14 +7,14 @@ _.inherit(AddItemAction, BaseEditAction);
 
 _.extend(AddItemAction.prototype, {
     setSelectedItem: function(){
-        var editDataSource = this.getEditDataSource();
+        var editDataSource = this._getEditDataSource();
 
         editDataSource.setItems([{}]);
         editDataSource.setSelectedItem({});
     },
 
     save: function(){
-        var editDataSource =  this.getEditDataSource();
+        var editDataSource =  this._getEditDataSource();
 
         var destinationSourceName = this.getProperty('destinationSource');
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
@@ -25,13 +25,5 @@ _.extend(AddItemAction.prototype, {
         var items = _.clone(destinationSource.getProperty(destinationProperty));
         items.push(newItem);
         destinationSource.setProperty(destinationProperty, items);
-    },
-
-    getEditDataSource: function(){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('sourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
-
-        return editDataSource;
     }
 });

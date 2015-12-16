@@ -541,7 +541,7 @@
                                                   "Label": {
                                                       "Value": {
                                                           "Source": "PatientDataSource",
-                                                          "Property": "Diseases.$.Name"
+                                                          "Property": "Diseases.#.Name"
                                                       }
                                                   }
                                               },
@@ -671,7 +671,7 @@
                                           "Background": "Primary1",
                                           "Value": {
                                               "Source": "BloodGroupDataSource",
-                                              "Property": "$.DisplayName"
+                                              "Property": "#.DisplayName"
                                           }
                                       }
                                   },
@@ -679,11 +679,11 @@
                                       "Label": {
                                           "Value": {
                                               "Source": "BloodGroupDataSource",
-                                              "Property": "$.Id"
+                                              "Property": "#.Id"
                                           },
                                           "Visible": {
                                               "Source": "BloodGroupDataSource",
-                                              "Property": "$.SomeField"
+                                              "Property": "#.SomeField"
                                           }
                                       }
                                   }
@@ -704,7 +704,7 @@
                           "Label": {
                               "Value": {
                                   "Source": "BloodGroupDataSource",
-                                  "Property": "$.DisplayName"
+                                  "Property": "#.DisplayName"
                               }
                           }
                       }

@@ -44,5 +44,13 @@ _.extend(BaseEditAction.prototype, {
         if (_.isFunction(callback)) {
             callback();
         }
+    },
+
+    _getEditDataSource: function(){
+        var editView = this.getProperty('editView');
+        var editSourceName = this.getProperty('sourceSource');
+        var editDataSource = editView.getContext().dataSources[editSourceName];
+
+        return editDataSource;
     }
 });
