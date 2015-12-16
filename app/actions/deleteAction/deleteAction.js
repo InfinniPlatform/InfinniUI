@@ -32,8 +32,7 @@ _.extend(DeleteAction.prototype, {
     },
 
     remove: function (callback) {
-        var dataSource = this.getProperty('destinationSource'),
-            editItem = dataSource.getSelectedItem();
+        var dataSource = this.getProperty('destinationSource');
 
         var onSuccessDelete = function () {
             dataSource.updateItems();
@@ -43,6 +42,20 @@ _.extend(DeleteAction.prototype, {
             }
         };
 
-        dataSource.deleteItem(editItem, onSuccessDelete);
+        dataSource.deleteItem(this.getDestinationSelectedItem(), onSuccessDelete);
+    },
+
+    getDestinationSelectedItem: function(){
+        var destinationSource = this.getProperty('destinationSource');
+        var propertyName = this.getProperty('destinationProperty');
+
+        if( _.isEmpty(propertyName) ){
+            return destinationSource.getSelectedItem();
+        }
+
+        var index = this.getProperty('index');
+        var destinationSourceItems = destinationSource.getItems();
+
+        return destinationSourceItems[index];
     }
 });
