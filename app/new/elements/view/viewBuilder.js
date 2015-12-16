@@ -71,25 +71,25 @@ _.extend(ViewBuilder.prototype, {
 
         if(metadata.OnOpening){
             element.onOpening(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnOpening);
+                new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
             });
         }
 
         if(metadata.OnOpened){
             element.onOpened(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnOpened);
+                new ScriptExecutor(element).executeScript(metadata.OnOpened.Name || metadata.OnOpened);
             });
         }
 
         if(metadata.OnClosing){
             element.onClosing(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnClosing);
+                new ScriptExecutor(element).executeScript(metadata.OnClosing.Name || metadata.OnClosing);
             });
         }
 
         if(metadata.OnClosed){
             element.onClosed(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnClosed);
+                new ScriptExecutor(element).executeScript(metadata.OnClosed.Name || metadata.OnClosed);
             });
         }
 

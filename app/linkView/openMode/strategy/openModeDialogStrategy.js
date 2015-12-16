@@ -46,6 +46,11 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         this._initBehaviorFocusingInModal($modal, $modalBody);
 
+        var view = this.view;
+        $modal.find('.pl-close-modal').on('click', function(){
+            view.close();
+        });
+
     },
 
     _initBehaviorFocusingInModal: function($modal, $modalBody){
