@@ -61,6 +61,8 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         this.initBindingToProperty(params, 'Background');
         this.initBindingToProperty(params, 'Texture');
         this.initBindingToProperty(params, 'Style');
+        this.initBindingToProperty(params, 'Tag');
+
         this.initToolTip(params);
 
         if('Name' in metadata){

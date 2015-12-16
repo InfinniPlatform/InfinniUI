@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin
+ * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -252,12 +252,13 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setPageSize: function (value) {
-        if (!Number.isInteger(value) || value < 0) {
-            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
+        var pageSize = parseInt(value, 10);
+        if (!Number.isInteger(pageSize) || pageSize < 0) {
+            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + pageSize + '. Должно быть целое, неотрицательное число.';
         }
 
-        if (value != this.get('pageSize')) {
-            this.set('pageSize', value);
+        if (pageSize != this.get('pageSize')) {
+            this.set('pageSize', pageSize);
             this.updateItems();
         }
     },
@@ -542,7 +543,7 @@ var BaseDataSource = Backbone.Model.extend({
             itemId = this.idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
-        if (!isItemInSet) {
+        if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
             return;
         }
@@ -956,4 +957,4 @@ var BaseDataSource = Backbone.Model.extend({
 
 });
 
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin, dataSourceLookupMixin);

@@ -14,6 +14,7 @@ function View(parent) {
     this.openStrategy.setView(this);
 
     this.handlers = {
+        onBeforeLoaded: $.Deferred(),
         onLoaded: $.Deferred()
     };
 
@@ -51,6 +52,7 @@ _.extend(View.prototype,
         },
 
         _notifyAboutDsReady: function(){
+            this.handlers.onBeforeLoaded.resolve();
             this.handlers.onLoaded.resolve();
         },
 
@@ -208,6 +210,10 @@ _.extend(View.prototype,
 
         setOpenStrategy: function(openStrategy){
             this.openStrategy = openStrategy;
+        },
+
+        onBeforeLoaded: function (handler) {
+            this.handlers.onBeforeLoaded.done(handler);
         },
 
         onLoaded: function (handler) {

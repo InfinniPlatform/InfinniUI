@@ -8,17 +8,20 @@ function DeleteActionBuilder(){
         var dataSource = parentView.getContext().dataSources[metadata.DestinationValue.Source];
 
 
-        if( _.isEmpty(metadata.DestinationValue.Property) ){
+        if( _.isEmpty(metadata.DestinationValue.Property) || InfinniUI.Metadata.isPredefinedIdentifierProperty(metadata.DestinationValue.Property) ){
             action = new DeleteAction(parentView);
         } else {
             action = new DeleteItemAction(parentView);
-
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
         }
 
         action.setProperty('accept', accept);
         action.setProperty('destinationSource', dataSource);
+
+        if( !_.isEmpty(metadata.DestinationValue.Property) ){
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
+        }
+
 
         return action;
     }

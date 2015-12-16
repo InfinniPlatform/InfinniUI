@@ -86,11 +86,8 @@
         "Name": "PatientDataSource",
         "Items": [
            {
-              "Id": 1,
+               "Name": "Иванов",
               "Diseases": [
-                  {
-                      "Name": "allergosis"
-                  },
                   {
                       "Name": "dermatomycosis"
                   },
@@ -98,7 +95,15 @@
                       "Name": "cold"
                   }
               ]
-           }
+           },
+            {
+                "Name": "Петров",
+                "Diseases": [
+                    {
+                        "Name": "allergosis"
+                    }
+                ]
+            }
         ]
       }
     }
@@ -141,703 +146,815 @@
       ]
     }
 
-  },{
-    "TablePanel": {
-      "Name": "",
-      "Items": [
-          {
-              "Row": {
-                  "Items": [
-                      {
-                          "Cell": {
-                              "ColumnSpan": 2,
-                              "Items": [{
-                                  "ComboBox": {
-                                    "ValueFormat": "{FirstName} {LastName}",
-                                    "ItemFormat": "{Email} ({FirstName})",
-                                    "Items": {
-                                      "Source": "MainDataSource2",
-                                      "Property": ""
-                                    }
-                                  }
-                              }]
-                          }
-                      },
-                      {
-                          "Cell": {
-                              "ColumnSpan": 5,
-                              "Items": [{
-                                  "DataGrid": {
-                                    "Visible": true,
-                                    "Items": {
-                                      "Source": "BloodGroupDataSource",
-                                      "Property": ""
-                                    },
-                                    "MultiSelect": false,
-                                    "Columns": [
-                                      {
-                                        "Header": "ID",
-                                        "CellFormat": "{Id}, {DisplayName}"
-                                      },
-                                      {
-                                        "Header": "ID",
-                                        "CellProperty": "Id"
-                                      },
-                                      {
-                                        "Header": "DISPLAY NAME",
-                                        "CellProperty": "DisplayName"
-                                      },
-                                      {
-                                        "Header": "Combobox",
-                                        "CellTemplate": {
-                                          "DataGrid": {
-                                            "Columns": [
-                                              {
-                                                "Header": "FirstName",
-                                                "CellProperty": "FirstName"
-                                              },
-                                              {
-                                                "Header": "LastName",
-                                                "CellProperty": "LastName"
-                                              }
-                                            ],
-                                            "~ValueFormat": "{FirstName} {LastName}",
-                                            "~ItemFormat": "{Email} ({FirstName})",
-                                            "Items": {
-                                              "Source": "MainDataSource2",
-                                              "Property": ""
-                                            }
-                                          }
-                                        }
-                                      },
-                                      {
-                                        "Header": "Template",
-                                        "CellTemplate": {
-                                          "TextBox": {
-                                            "Value": {
-                                              "Source": "BloodGroupDataSource",
-                                              "Property": "$.DisplayName"
-                                            }
-                                          }
-                                        }
-                                      },
-
-                                      {
-                                        "Header": "Nested grid",
-                                        "CellTemplate": {
-                                          "DataGrid": {
-                                            "MultiSelect": true,
-                                            "Items": {
-                                              "Source": "BloodGroupDataSource",
-                                              "Property": "$.Array"
-                                            },
-                                            "Columns": [
-                                              {
-                                                "Header": "Id",
-                                                "CellFormat": "{Id}"
-                                              },
-                                              {
-                                                "Header": "Display Name",
-                                                "CellProperty": "DisplayName"
-                                              }
-                                            ]
-                                          }
-                                        }
-                                      },
-                                      {
-                                        "Header": "Actions",
-                                        "CellTemplate": {
-                                          "Button": {
-                                            "Background": "primary1",
-                                            "Foreground": "primary1",
-                                            "Text": "Remove",
-                                            "OnClick": {
-                                              "Name": "OnClickRemove"
-                                            }
-                                          }
-                                        }
-                                      }
-                                    ],
-                                    "~Value": {
-                                      "Source": "ds1",
-                                      "Property": "url"
-                                    },
-                                    "~ToolTip": {
-                                      "Button": {
-                                        "Text": "I'm TextBox tooltip"
-                                      }
-                                    },
-                                    "~OnGotFocus": {
-                                      "Name": "OnGotFocus"
-                                    },
-                                    "~OnLostFocus": {
-                                      "Name": "OnLostFocus"
-                                    }
-                                  }
-                              }]
-                          }
-                      },
-                      {
-                          "Cell": {
-                              "ColumnSpan": 3,
-                              "Items": [{
-                                  "DatePicker": {
-                                    "Mode": "Date",
-                                    "DisplayFormat": {
-                                      "DateTimeFormat": {
-                                        "Format": "d"
-                                      }
-                                    },
-                                    "MinValue": "2015-9-14",
-                                    "MaxValue": "2015-10-20",
-                                    "EditMask": {
-                                      "DateTimeEditMask": {
-                                        "Mask": "d"
-                                      }
-                                    },
-                                    "Value": {
-                                      "Source": "MainDataSource",
-                                      "Property": "birthday"
-                                    }
-                                  }
-                               }]
-                          }
-                      },
-                    {
-                      "Cell": {
-                        "ColumnSpan": 2,
-                        "Items": [
+  },
+  {
+      "ScrollPanel": {
+          "Items": [
+              {
+                  "TablePanel": {
+                      "Name": "",
+                      "Items": [
                           {
-                            "Panel": {
-                              "Header": "Outer panel",
-                              "Items": [
-                                {
-                                  "Panel": {
-                                    "Collapsible": true,
-                                    "Header": "First Inner panel",
-                                    "Items": [
+                              "Row": {
+                                  "Items": [
                                       {
-                                        "TextBox": {
-                                          "LabelText": "My text 1"
-                                        }
+                                          "Cell": {
+                                              "ColumnSpan": 2,
+                                              "Items": [
+                                                  {
+                                                      "ComboBox": {
+                                                          "ValueFormat": "{FirstName} {LastName}",
+                                                          "ItemFormat": "{Email} ({FirstName})",
+                                                          "Items": {
+                                                              "Source": "MainDataSource2",
+                                                              "Property": ""
+                                                          }
+                                                      }
+                                                  }
+                                              ]
+                                          }
                                       },
                                       {
-                                        "TextBox": {
-                                          "LabelText": "My text 2"
-                                        }
-                                      }
-                                    ]
-                                  }
-                                },
-                                {
-                                  "Panel": {
-                                    "Header": "Second Inner panel",
-                                    "Items": [
-                                      {
-                                        "TextBox": {
-                                          "LabelText": "My text 3"
-                                        }
-                                      }
-                                    ]
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-              }
-          },
-        {
-          "NumericBox": {
-            "Visible": false,
-            "HintText": "I'm NumericBox hint",
-            "LabelText": "Numeric label",
-            "Enabled": true,
-            "MinValue": 0,
-            "EditMask": {
-              "NumberEditMask": {
-                "Mask": "n3"
-              }
-            },
-            "Value": {
-              "Source": "MainDataSource",
-              "Property": "$"
-            }
-          }
-        },
-        {
-          "DatePicker": {
-            "Visible": false,
-            "Mode": "DateTime",
-            "DisplayFormat": {
-              "DateTimeFormat": {
-                "Format": "g"
-              }
-            },
-            "MinValue": "2015-09-03",
-            "EditMask": {
-              "DateTimeEditMask": {
-                "Mask": "g"
-              }
-            },
-            "Value": {
-              "Source": "MainDataSource",
-              "Property": "birthday"
-            }
-          }
-        },
-        {
-          "DatePicker": {
-            "Visible": false,
-            "Mode": "Time",
-            "DisplayFormat": {
-              "DateTimeFormat": {
-                "Format": "t"
-              }
-            },
-            "Enabled": false,
-            "MinValue": "2015-09-15T09:00",
-            "MaxValue": "2015-09-15T18:30",
-            "EditMask": {
-              "DateTimeEditMask": {
-                "Mask": "t"
-              }
-            },
-            "Value": {
-              "Source": "MainDataSource",
-              "Property": "birthday"
-            }
-          }
-        },
-          {
-              "Button": {
-                  "Text": "Open View",
-                  "Action":{
-                      "OpenAction": {
-                          "LinkView": {
-                              "InlineView": {
-                                  "View": {
-                                    "Text": "My Dialog",
-                                      "Scripts": [{
-                                          "Name": "close",
-                                          "Body": "context.view.close();"
-                                      }],
-                                      "Items": [
-                                        {
-                                          "DatePicker": {
-                                            "Mode": "Date",
-                                            "DisplayFormat": {
-                                              "DateTimeFormat": {
-                                                "Format": "d"
-                                              }
-                                            },
-                                            "MinValue": "2015-9-14",
-                                            "MaxValue": "2015-10-20",
-                                            "EditMask": {
-                                              "DateTimeEditMask": {
-                                                "Mask": "d"
-                                              }
-                                            }
-                                          }
-                                        },
-                                          {
-                                              "Button": {
-                                                  "Text": "Close",
-                                                  "OnClick": {
-                                                    "Name": "close"
-                                                  }
-                                              }
-                                          }
-                                      ]
-                                  },
-                                  "OpenMode": "Dialog",
-                                  "Text": "OpenDialog"
-                              }
-
-                          }
-                      }
-                  }
-              }
-          },
-          {
-              "Button": {
-                  "Text": "Add Disease",
-                  "Action": {
-                      "AddAction": {
-                          "LinkView":{
-                              "InlineView": {
-                                  "View": {
-                                      "Items": [
-                                          {
-                                              "TextBox": {
-                                                  "Value": {
-                                                    "Source": "MainDataSource",
-                                                    "Property": "Name"
-                                                  }
-                                              }
-                                          },
-                                          {
-                                              "Button": {
-                                                  "Text": "Save",
-                                                  "Action": {
-                                                      "AcceptAction": {}
-                                                  }
-                                              }
-                                          }
-                                      ],
-                                      "DataSources": [
-                                          {
-                                              "ObjectDataSource": {
-                                                  "Name": "MainDataSource"
-                                              }
-                                          }
-                                      ]
-                                  },
-                                  "Text": "OpenDialog",
-                                  "OpenMode": "Dialog"
-                              }
-                          },
-                          "DestinationValue": {
-                              "Source": "PatientDataSource",
-                              "Property": "Diseases"
-                          },
-                          "SourceValue": {
-                              "Source": "MainDataSource"
-                          }
-                      }
-                  }
-              }
-          },
-          {
-              "ListBox":{
-                  "Name": "PatientListBox",
-                "Visible": false,
-                "MultiSelect": true,
-                  "ItemTemplate": {
-                      "StackPanel":{
-                          "Orientation": "Horizontal",
-                          "Items": [
-                              {
-                                  "Label": {
-                                      "Value": {
-                                        "Source": "PatientDataSource",
-                                        "Property": "Diseases.$.Name"
-                                      }
-                                  }
-                              },
-                              {
-                                  "Button": {
-                                      "Text": "Edit",
-                                      "Action": {
-                                          "EditAction": {
-                                              "LinkView":{
-                                                  "InlineView": {
-                                                      "View": {
-                                                          "Items": [
+                                          "Cell": {
+                                              "ColumnSpan": 5,
+                                              "Items": [
+                                                  {
+                                                      "DataGrid": {
+                                                          "Visible": true,
+                                                          "Items": {
+                                                              "Source": "BloodGroupDataSource",
+                                                              "Property": ""
+                                                          },
+                                                          "MultiSelect": false,
+                                                          "Columns": [
                                                               {
-                                                                  "TextBox": {
-                                                                      "Value": {
-                                                                        "Source": "MainDataSource",
-                                                                        "Property": "Name"
+                                                                  "Header": "ID",
+                                                                  "CellFormat": "{Id}, {DisplayName}"
+                                                              },
+                                                              {
+                                                                  "Header": "ID",
+                                                                  "CellProperty": "Id"
+                                                              },
+                                                              {
+                                                                  "Header": "DISPLAY NAME",
+                                                                  "CellProperty": "DisplayName"
+                                                              },
+                                                              {
+                                                                  "Header": "Combobox",
+                                                                  "CellTemplate": {
+                                                                      "DataGrid": {
+                                                                          "Columns": [
+                                                                              {
+                                                                                  "Header": "FirstName",
+                                                                                  "CellProperty": "FirstName"
+                                                                              },
+                                                                              {
+                                                                                  "Header": "LastName",
+                                                                                  "CellProperty": "LastName"
+                                                                              }
+                                                                          ],
+                                                                          "~ValueFormat": "{FirstName} {LastName}",
+                                                                          "~ItemFormat": "{Email} ({FirstName})",
+                                                                          "Items": {
+                                                                              "Source": "MainDataSource2",
+                                                                              "Property": ""
+                                                                          }
                                                                       }
                                                                   }
                                                               },
                                                               {
-                                                                  "Button": {
-                                                                      "Text": "Save",
-                                                                      "Action": {
-                                                                          "AcceptAction": {}
+                                                                  "Header": "Template",
+                                                                  "CellTemplate": {
+                                                                      "TextBox": {
+                                                                          "Value": {
+                                                                              "Source": "BloodGroupDataSource",
+                                                                              "Property": "$.DisplayName"
+                                                                          }
+                                                                      }
+                                                                  }
+                                                              },
+
+                                                              {
+                                                                  "Header": "Nested grid",
+                                                                  "CellTemplate": {
+                                                                      "DataGrid": {
+                                                                          "MultiSelect": true,
+                                                                          "Items": {
+                                                                              "Source": "BloodGroupDataSource",
+                                                                              "Property": "$.Array"
+                                                                          },
+                                                                          "Columns": [
+                                                                              {
+                                                                                  "Header": "Id",
+                                                                                  "CellFormat": "{Id}"
+                                                                              },
+                                                                              {
+                                                                                  "Header": "Display Name",
+                                                                                  "CellProperty": "DisplayName"
+                                                                              }
+                                                                          ]
+                                                                      }
+                                                                  }
+                                                              },
+                                                              {
+                                                                  "Header": "Actions",
+                                                                  "CellTemplate": {
+                                                                      "Button": {
+                                                                          "Background": "primary1",
+                                                                          "Foreground": "primary1",
+                                                                          "Text": "Remove",
+                                                                          "OnClick": {
+                                                                              "Name": "OnClickRemove"
+                                                                          }
                                                                       }
                                                                   }
                                                               }
                                                           ],
-                                                          "DataSources": [
+                                                          "~Value": {
+                                                              "Source": "ds1",
+                                                              "Property": "url"
+                                                          },
+                                                          "~ToolTip": {
+                                                              "Button": {
+                                                                  "Text": "I'm TextBox tooltip"
+                                                              }
+                                                          },
+                                                          "~OnGotFocus": {
+                                                              "Name": "OnGotFocus"
+                                                          },
+                                                          "~OnLostFocus": {
+                                                              "Name": "OnLostFocus"
+                                                          }
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      },
+                                      {
+                                          "Cell": {
+                                              "ColumnSpan": 3,
+                                              "Items": [
+                                                  {
+                                                      "DatePicker": {
+                                                          "Mode": "Date",
+                                                          "DisplayFormat": {
+                                                              "DateTimeFormat": {
+                                                                  "Format": "d"
+                                                              }
+                                                          },
+                                                          "MinValue": "2015-9-14",
+                                                          "MaxValue": "2015-10-20",
+                                                          "EditMask": {
+                                                              "DateTimeEditMask": {
+                                                                  "Mask": "d"
+                                                              }
+                                                          },
+                                                          "Value": {
+                                                              "Source": "MainDataSource",
+                                                              "Property": "birthday"
+                                                          }
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      },
+                                      {
+                                          "Cell": {
+                                              "ColumnSpan": 2,
+                                              "Items": [
+                                                  {
+                                                      "Panel": {
+                                                          "Header": "Outer panel",
+                                                          "Items": [
                                                               {
-                                                                  "ObjectDataSource": {
-                                                                      "Name": "MainDataSource"
+                                                                  "Panel": {
+                                                                      "Collapsible": true,
+                                                                      "Header": "First Inner panel",
+                                                                      "Items": [
+                                                                          {
+                                                                              "TextBox": {
+                                                                                  "LabelText": "My text 1"
+                                                                              }
+                                                                          },
+                                                                          {
+                                                                              "TextBox": {
+                                                                                  "LabelText": "My text 2"
+                                                                              }
+                                                                          }
+                                                                      ]
+                                                                  }
+                                                              },
+                                                              {
+                                                                  "Panel": {
+                                                                      "Header": "Second Inner panel",
+                                                                      "Items": [
+                                                                          {
+                                                                              "TextBox": {
+                                                                                  "LabelText": "My text 3"
+                                                                              }
+                                                                          }
+                                                                      ]
                                                                   }
                                                               }
                                                           ]
-                                                      },
-                                                      "OpenMode": "Dialog",
-                                                      "Text": "OpenDialog"
+                                                      }
                                                   }
-                                              },
-                                              "DestinationValue": {
-                                                  "Source": "PatientDataSource",
-                                                  "Property": "Diseases"
-                                              },
-                                              "SourceValue": {
-                                                  "Source": "MainDataSource"
-                                              }
+                                              ]
                                           }
                                       }
+                                  ]
+                              }
+                          },
+                          {
+                              "NumericBox": {
+                                  "Visible": false,
+                                  "HintText": "I'm NumericBox hint",
+                                  "LabelText": "Numeric label",
+                                  "Enabled": true,
+                                  "MinValue": 0,
+                                  "EditMask": {
+                                      "NumberEditMask": {
+                                          "Mask": "n3"
+                                      }
+                                  },
+                                  "Value": {
+                                      "Source": "MainDataSource",
+                                      "Property": "$"
                                   }
-                              },
-                              {
-                                  "Button": {
-                                      "Text": "Delete",
-                                      "Action": {
-                                          "DeleteAction": {
-                                              "DestinationValue": {
-                                                  "Source": "PatientDataSource",
-                                                  "Property": "Diseases"
+                              }
+                          },
+                          {
+                              "DatePicker": {
+                                  "Visible": false,
+                                  "Mode": "DateTime",
+                                  "DisplayFormat": {
+                                      "DateTimeFormat": {
+                                          "Format": "g"
+                                      }
+                                  },
+                                  "MinValue": "2015-09-03",
+                                  "EditMask": {
+                                      "DateTimeEditMask": {
+                                          "Mask": "g"
+                                      }
+                                  },
+                                  "Value": {
+                                      "Source": "MainDataSource",
+                                      "Property": "birthday"
+                                  }
+                              }
+                          },
+                          {
+                              "DatePicker": {
+                                  "Visible": false,
+                                  "Mode": "Time",
+                                  "DisplayFormat": {
+                                      "DateTimeFormat": {
+                                          "Format": "t"
+                                      }
+                                  },
+                                  "Enabled": false,
+                                  "MinValue": "2015-09-15T09:00",
+                                  "MaxValue": "2015-09-15T18:30",
+                                  "EditMask": {
+                                      "DateTimeEditMask": {
+                                          "Mask": "t"
+                                      }
+                                  },
+                                  "Value": {
+                                      "Source": "MainDataSource",
+                                      "Property": "birthday"
+                                  }
+                              }
+                          },
+                          {
+                              "Button": {
+                                  "Text": "Open View",
+                                  "Action": {
+                                      "OpenAction": {
+                                          "LinkView": {
+                                              "InlineView": {
+                                                  "View": {
+                                                      "Text": "My Dialog",
+                                                      "Scripts": [
+                                                          {
+                                                              "Name": "close",
+                                                              "Body": "context.view.close();"
+                                                          }
+                                                      ],
+                                                      "Items": [
+                                                          {
+                                                              "DatePicker": {
+                                                                  "Mode": "Date",
+                                                                  "DisplayFormat": {
+                                                                      "DateTimeFormat": {
+                                                                          "Format": "d"
+                                                                      }
+                                                                  },
+                                                                  "MinValue": "2015-9-14",
+                                                                  "MaxValue": "2015-10-20",
+                                                                  "EditMask": {
+                                                                      "DateTimeEditMask": {
+                                                                          "Mask": "d"
+                                                                      }
+                                                                  }
+                                                              }
+                                                          },
+                                                          {
+                                                              "Button": {
+                                                                  "Text": "Close",
+                                                                  "OnClick": {
+                                                                      "Name": "close"
+                                                                  }
+                                                              }
+                                                          }
+                                                      ]
+                                                  },
+                                                  "OpenMode": "Dialog",
+                                                  "Text": "OpenDialog"
                                               }
+
                                           }
                                       }
                                   }
                               }
-                          ]
-                      }
+                          },
+                          {
+                              "Button": {
+                                  "Text": "Add Disease",
+                                  "Action": {
+                                      "AddAction": {
+                                          "LinkView": {
+                                              "InlineView": {
+                                                  "View": {
+                                                      "Items": [
+                                                          {
+                                                              "TextBox": {
+                                                                  "Value": {
+                                                                      "Source": "MainDataSource",
+                                                                      "Property": "Name"
+                                                                  }
+                                                              }
+                                                          },
+                                                          {
+                                                              "Button": {
+                                                                  "Text": "Save",
+                                                                  "Action": {
+                                                                      "AcceptAction": {}
+                                                                  }
+                                                              }
+                                                          }
+                                                      ],
+                                                      "DataSources": [
+                                                          {
+                                                              "ObjectDataSource": {
+                                                                  "Name": "MainDataSource"
+                                                              }
+                                                          }
+                                                      ]
+                                                  },
+                                                  "Text": "OpenDialog",
+                                                  "OpenMode": "Dialog"
+                                              }
+                                          },
+                                          "DestinationValue": {
+                                              "Source": "PatientDataSource",
+                                              "Property": "Diseases"
+                                          },
+                                          "SourceValue": {
+                                              "Source": "MainDataSource"
+                                          }
+                                      }
+                                  }
+                              }
+                          },
+                          {
+                              "ListBox": {
+                                  "Name": "PatientListBox",
+                                  "Visible": false,
+                                  "MultiSelect": true,
+                                  "ItemTemplate": {
+                                      "StackPanel": {
+                                          "Orientation": "Horizontal",
+                                          "Items": [
+                                              {
+                                                  "Label": {
+                                                      "Value": {
+                                                          "Source": "PatientDataSource",
+                                                          "Property": "Diseases.#.Name"
+                                                      }
+                                                  }
+                                              },
+                                              {
+                                                  "Button": {
+                                                      "Text": "Edit",
+                                                      "Action": {
+                                                          "EditAction": {
+                                                              "LinkView": {
+                                                                  "InlineView": {
+                                                                      "View": {
+                                                                          "Items": [
+                                                                              {
+                                                                                  "TextBox": {
+                                                                                      "Value": {
+                                                                                          "Source": "MainDataSource",
+                                                                                          "Property": "Name"
+                                                                                      }
+                                                                                  }
+                                                                              },
+                                                                              {
+                                                                                  "Button": {
+                                                                                      "Text": "Save",
+                                                                                      "Action": {
+                                                                                          "AcceptAction": {}
+                                                                                      }
+                                                                                  }
+                                                                              }
+                                                                          ],
+                                                                          "DataSources": [
+                                                                              {
+                                                                                  "ObjectDataSource": {
+                                                                                      "Name": "MainDataSource"
+                                                                                  }
+                                                                              }
+                                                                          ]
+                                                                      },
+                                                                      "OpenMode": "Dialog",
+                                                                      "Text": "OpenDialog"
+                                                                  }
+                                                              },
+                                                              "DestinationValue": {
+                                                                  "Source": "PatientDataSource",
+                                                                  "Property": "Diseases"
+                                                              },
+                                                              "SourceValue": {
+                                                                  "Source": "MainDataSource"
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+                                              },
+                                              {
+                                                  "Button": {
+                                                      "Text": "Delete",
+                                                      "Action": {
+                                                          "DeleteAction": {
+                                                              "DestinationValue": {
+                                                                  "Source": "PatientDataSource",
+                                                                  "Property": "Diseases"
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+                                              }
+                                          ]
+                                      }
 
-                  },
-                  "Items": {
-                    "Source": "PatientDataSource",
-                    "Property": "Diseases"
+                                  },
+                                  "Items": {
+                                      "Source": "PatientDataSource",
+                                      "Property": "Diseases"
+                                  }
+                              }
+                          },
+                          {
+                              "Button": {
+                                  "ContentTemplate": {
+                                      "Label": {
+                                          "Name": "b1",
+                                          "Value": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "$.DisplayName"
+                                          }
+                                      }
+                                  }
+                              }
+                          },
+
+                          {
+                              "PopupButton": {
+                                  "Text": "Delete",
+                                  "Items": [
+                                      {
+                                          "Button": {
+                                              "Text": "Delete rows"
+                                          }
+                                      },
+                                      {
+                                          "Button": {
+                                              "Text": "Delete columns"
+                                          }
+                                      },
+                                      {
+                                          "Button": {
+                                              "Text": "Delete cells"
+                                          }
+                                      }
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              {
+                  "ListBox": {
+                      "Items": {
+                          "Source": "BloodGroupDataSource",
+                          "Property": ""
+                      },
+
+                      "ItemTemplate": {
+                          "StackPanel": {
+                              "Items": [
+                                  {
+                                      "Label": {
+                                          "Background": "Primary1",
+                                          "Value": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "#.DisplayName"
+                                          }
+                                      }
+                                  },
+                                  {
+                                      "Label": {
+                                          "Value": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "#.Id"
+                                          },
+                                          "Visible": {
+                                              "Source": "BloodGroupDataSource",
+                                              "Property": "#.SomeField"
+                                          }
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  }
+              },
+              {
+                  "RadioGroup": {
+
+                      "Items": {
+                          "Source": "BloodGroupDataSource",
+                          "Property": ""
+                      },
+
+                      "ItemTemplate": {
+                          "Label": {
+                              "Value": {
+                                  "Source": "BloodGroupDataSource",
+                                  "Property": "#.DisplayName"
+                              }
+                          }
+                      }
+                  }
+              },
+              {
+                  "GridPanel": {
+                      "Items": [
+                          {
+                              "Cell": {
+                                  "ColumnSpan": 9,
+                                  "Items": [
+                                      {
+                                          "ToggleButton": {
+                                              "Text": "Subscribe",
+                                              "TextOn": "yes",
+                                              "TextOff": "no",
+                                              "OnValueChanged": {
+                                                  "Name": "ToggleButtonOnValueChanged"
+                                              },
+                                              "OnValueChanging": {
+                                                  "Name": "ToggleButtonOnValueChanging"
+                                              }
+                                          }
+                                      }
+                                  ]
+                              }
+                          },
+                          {
+                              "Cell": {
+                                  "ColumnSpan": 9,
+                                  "Items": [
+                                      {
+                                          "ExtensionPanel": {
+                                              "ExtensionName": "Testt",
+                                              "Parameters": [
+                                                  {
+                                                      "Name": "p1",
+                                                      "Value": {
+                                                          "Source": "BloodGroupDataSource",
+                                                          "Property": ""
+                                                      }
+                                                  }
+                                              ],
+                                              "Items": [
+                                                  {
+                                                      "NumericBox": {
+                                                          "Visible": false,
+                                                          "HintText": "I'm NumericBox hint",
+                                                          "LabelText": "Numeric label",
+                                                          "Enabled": true,
+                                                          "MinValue": 0,
+                                                          "EditMask": {
+                                                              "NumberEditMask": {
+                                                                  "Mask": "n3"
+                                                              }
+                                                          },
+                                                          "Value": {
+                                                              "Source": "MainDataSource",
+                                                              "Property": "$"
+                                                          }
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      }
+                                  ]
+                              }
+                          },
+                          {
+                              "Cell": {
+                                  "ColumnSpan": 9,
+                                  "Items": [
+                                      {
+                                          "TabPanel": {
+                                              "OnSelectedItemChanged": {
+                                                  "Name": "OnSelectedItemChanged"
+                                              },
+                                              "HeaderLocation": "Left",
+                                              "Items": [
+                                                  {
+                                                      "TabPage": {
+                                                          "Text": "Header of Page1",
+                                                          "Items": [
+                                                              {
+                                                                  "Label": {
+                                                                      "Text": "Content of Page1"
+                                                                  }
+                                                              }
+                                                          ]
+                                                      }
+                                                  },
+                                                  {
+                                                      "TabPage": {
+                                                          "Text": "Header of Page2",
+                                                          "CanClose": true,
+                                                          "OnClosing": {
+                                                              "Name": "OnClosing"
+                                                          },
+                                                          "OnClosed": {
+                                                              "Name": "OnClosed2"
+                                                          },
+                                                          "Items": [
+                                                              {
+                                                                  "Label": {
+                                                                      "Text": "Content of Page2"
+                                                                  }
+                                                              }
+                                                          ]
+                                                      }
+                                                  },
+                                                  {
+                                                      "TabPage": {
+                                                          "Text": "Header of Page3",
+                                                          "CanClose": true,
+                                                          "Items": [
+                                                              {
+                                                                  "Label": {
+                                                                      "Text": "Content of Page3"
+                                                                  }
+                                                              }
+                                                          ]
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      }
+                                  ]
+                              }
+                          },
+                          {
+                              "Cell": {
+                                  "ColumnSpan": 9,
+                                  "Items": [
+                                      {
+                                          "StackPanel": {
+                                              "Orientation": "Horizontal",
+                                              "Items": [
+                                                  {
+                                                      "StackPanel": {
+                                                          "Items": [
+                                                              {
+                                                                  "Label": {
+                                                                      "Text": "Content of Page1"
+                                                                  }
+                                                              },
+                                                              {
+                                                                  "Label": {
+                                                                      "Text": "Content of Page2"
+                                                                  }
+                                                              }
+                                                          ]
+                                                      }
+                                                  },
+                                                  {
+                                                      "Label": {
+                                                          "Text": "Content of Page3"
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      }
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              },
+              {
+                  "StackPanel": {
+                      "Items": {
+                          "Source": "PatientDataSource",
+                          "Property": ""
+                      },
+                      "ItemTemplate": {
+                          "TablePanel": {
+                              "Items": [
+                                  {
+                                      "Row": {
+                                          "Items": [
+                                              {
+                                                  "Cell": {
+                                                      "ColumnSpan": 3,
+                                                      "Items": [
+                                                          {
+                                                              "Button": {
+                                                                  "Text": "Remove",
+                                                                  "Action": {
+                                                                      "DeleteAction": {
+                                                                          "DestinationValue": {
+                                                                              "Source": "PatientDataSource",
+                                                                              "Property": "#"
+                                                                          }
+                                                                      }
+                                                                  }
+                                                              }
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              {
+                                                  "Cell": {
+                                                      "ColumnSpan": 3,
+                                                      "Items": [
+                                                          {
+                                                              "Label": {
+                                                                  "Value": {
+                                                                      "Source": "PatientDataSource",
+                                                                      "Property": "#.Name"
+                                                                  }
+                                                              }
+                                                          }
+                                                      ]
+                                                  }
+                                              },
+                                              {
+                                                  "Cell": {
+                                                      "ColumnSpan": 6,
+                                                      "Items": [
+                                                          {
+                                                              "StackPanel": {
+                                                                  "Items": {
+                                                                      "Source": "PatientDataSource",
+                                                                      "Property": "#.Diseases"
+                                                                  },
+                                                                  "ItemTemplate": {
+                                                                      "Label": {
+                                                                          "Value": {
+                                                                              "Source": "PatientDataSource",
+                                                                              "Property": "#.Diseases.#.Name"
+                                                                          }
+                                                                      }
+                                                                  }
+                                                              }
+                                                          }
+                                                      ]
+                                                  }
+                                              }
+                                          ]
+                                      }
+                                  }
+                              ]
+                          }
+                      }
                   }
               }
-          },
-        {
-          "Button": {
-            "ContentTemplate": {
-              "Label":{
-                "Name": "b1",
-                "Value":{
-                  "Source": "BloodGroupDataSource",
-                  "Property": "$.DisplayName"
-                }
-              }
-            }
-          }
-        },
-
-        {
-          "PopupButton": {
-            "Text": "Delete",
-            "Items": [
-              {
-                "Button": {
-                  "Text": "Delete rows"
-                }
-              },
-              {
-                "Button": {
-                  "Text": "Delete columns"
-                }
-              },
-              {
-                "Button": {
-                  "Text": "Delete cells"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }, {
-    "ListBox": {
-      "Items": {
-        "Source": "BloodGroupDataSource",
-        "Property": ""
-      },
-
-      "ItemTemplate":{
-        "StackPanel": {
-          "Items":[
-            {
-              "Label":{
-                "Background": "Primary1",
-                "Value":{
-                  "Source": "BloodGroupDataSource",
-                  "Property": "$.DisplayName"
-                }
-              }
-            },
-            {
-              "Label":{
-                "Value":{
-                  "Source": "BloodGroupDataSource",
-                  "Property": "$.Id"
-                },
-                "Visible": {
-                  "Source": "BloodGroupDataSource",
-                  "Property": "$.SomeField"
-                }
-              }
-            }
           ]
-        }
       }
-    }
-  }, {
-    "RadioGroup": {
-
-      "Items": {
-        "Source": "BloodGroupDataSource",
-        "Property": ""
-      },
-
-      "ItemTemplate":{
-        "Label":{
-          "Value":{
-            "Source": "BloodGroupDataSource",
-            "Property": "$.DisplayName"
-          }
-        }
-      }
-    }
-  },{
-    "GridPanel":{
-      "Items": [{
-        "Cell": {
-          "ColumnSpan": 9,
-          "Items": [{
-            "ToggleButton": {
-              "Text": "Subscribe",
-              "TextOn": "yes",
-              "TextOff": "no",
-              "OnValueChanged": {
-                "Name": "ToggleButtonOnValueChanged"
-              },
-              "OnValueChanging": {
-                "Name": "ToggleButtonOnValueChanging"
-              }
-            }
-          }]
-        }
-      },{
-        "Cell": {
-          "ColumnSpan": 9,
-          "Items": [{
-            "ExtensionPanel": {
-              "ExtensionName":"Testt",
-              "Parameters": [
-                {
-                  "Name": "p1",
-                  "Value": {
-                    "Source": "BloodGroupDataSource",
-                    "Property": ""
-                  }
-                }
-              ],
-              "Items": [{
-                "NumericBox": {
-                  "Visible": false,
-                  "HintText": "I'm NumericBox hint",
-                  "LabelText": "Numeric label",
-                  "Enabled": true,
-                  "MinValue": 0,
-                  "EditMask": {
-                    "NumberEditMask": {
-                      "Mask": "n3"
-                    }
-                  },
-                  "Value": {
-                    "Source": "MainDataSource",
-                    "Property": "$"
-                  }
-                }
-              }]
-            }
-          }]
-        }
-      },
-        {
-          "Cell": {
-            "ColumnSpan": 9,
-            "Items": [{
-              "TabPanel": {
-                "OnSelectedItemChanged": {
-                  "Name": "OnSelectedItemChanged"
-                },
-                "HeaderLocation": "Left",
-                "Items": [
-                  {
-                    "TabPage": {
-                      "Text": "Header of Page1",
-                      "Items": [
-                        {
-                          "Label": {
-                            "Text": "Content of Page1"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "TabPage": {
-                      "Text": "Header of Page2",
-                      "CanClose": true,
-                      "OnClosing": {
-                        "Name": "OnClosing"
-                      },
-                      "OnClosed": {
-                        "Name": "OnClosed2"
-                      },
-                      "Items": [
-                        {
-                          "Label": {
-                            "Text": "Content of Page2"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "TabPage": {
-                      "Text": "Header of Page3",
-                      "CanClose": true,
-                      "Items": [
-                        {
-                          "Label": {
-                            "Text": "Content of Page3"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }]
-          }
-        },{
-          "Cell": {
-            "ColumnSpan": 9,
-            "Items": [{
-              "StackPanel": {
-                "Orientation": "Horizontal",
-                "Items":[
-                  {
-                    "StackPanel": {
-                    "Items":[
-                      {
-                        "Label": {
-                          "Text": "Content of Page1"
-                        }
-                      },
-                      {
-                        "Label": {
-                          "Text": "Content of Page2"
-                        }
-                      }
-                    ]}
-                  },
-                  {
-                    "Label": {
-                      "Text": "Content of Page3"
-                    }
-                  }
-                ]
-              }
-            }]
-          }
-        }]
-    }
-  }],
+  }
+  ],
   "Scripts": [
     {
       "Name": "OnExpanded",

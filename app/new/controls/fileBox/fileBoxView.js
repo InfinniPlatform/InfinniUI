@@ -108,7 +108,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     },
 
     updateUrl: function () {
-        var url = this.model.get('url');
+        //var url = this.model.get('url');
 
 
     },

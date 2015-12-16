@@ -29,7 +29,7 @@ function InlineViewBuilder() {
 
         if (viewMetadata !== null) {
 
-            var view = builder.buildType("View", viewMetadata, {parentView: parentView, params: parameters});
+            var view = builder.buildType("View", viewMetadata, {parentView: parentView, parent: params.parent, params: parameters});
 
             onViewReadyHandler(view);
         } else {

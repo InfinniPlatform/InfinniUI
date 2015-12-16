@@ -32,15 +32,16 @@ describe('DeleteAction', function () {
 
         var items = [
             {
-                Id: 1,
                 Name: 'First'
             },
             {
-                Id: 2,
                 Name: 'Second'
+            },
+            {
+                Name: 'Third'
             }
         ];
-        var selectedItem = items[0];
+        var selectedItem = items[1];
 
         dataSource.setItems(items);
         dataSource.setSelectedItem(selectedItem);
@@ -58,13 +59,13 @@ describe('DeleteAction', function () {
 
         var deleteAction = builder.build(metadata, {parentView: view});
 
-        assert.equal(dataSource.getItems().length, 2);
+        assert.equal(dataSource.getItems().length, 3);
 
         // When
         deleteAction.execute();
 
         // Then
-        assert.equal(dataSource.getItems().length, 1);
+        assert.equal(dataSource.getItems().length, 2);
         assert.notInclude(dataSource.getItems(), selectedItem);
     });
 

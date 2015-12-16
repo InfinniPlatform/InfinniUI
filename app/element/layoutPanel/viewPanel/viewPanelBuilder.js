@@ -23,10 +23,14 @@ _.extend(ViewPanelBuilder.prototype, {
         //this.registerLayoutPanel(params);
 
         if (typeof metadata.View !== 'undefined' && metadata.View !== null) {
-            var linkView = builder.build(params.view, metadata.View);
+            //var linkView = builder.build(params.view, metadata.View);
+            var linkView = builder.build(metadata.View, {
+                parentView: params.parentView,
+                parent: params.element
+            });
 
-            var onOpening = function (layout) {
-                panel.setLayout(layout);
+            var onOpening = function (message) {
+                panel.setLayout(message.source);
             };
 
             if (typeof linkView !== 'undefined' && linkView !== null) {
@@ -38,9 +42,9 @@ _.extend(ViewPanelBuilder.prototype, {
                 }
 
                 linkView.createView(function (view) {
-                    var editDataSource = _.find(view.getDataSources(), function (ds) {
-                        return isMainDataSource(ds);
-                    });
+                    //var editDataSource = _.find(view.getDataSources(), function (ds) {
+                    //    return isMainDataSource(ds);
+                    //});
                     //editDataSource.suspendUpdate();
                     //editDataSource.setEditMode();
 
@@ -98,7 +102,7 @@ _.extend(ViewPanelBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ViewPanel(params.view);
+        return new ViewPanel(params.parent);
     }
 },
     builderLayoutPanelMixin

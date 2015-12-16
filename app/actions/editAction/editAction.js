@@ -7,9 +7,7 @@ _.inherit(EditAction, BaseEditAction);
 
 _.extend(EditAction.prototype, {
     setSelectedItem: function(){
-        var destinationSourceName = this.getProperty('destinationSource');
-        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
-        var editDataSource = this.getEditDataSource();
+        var editDataSource = this._getEditDataSource();
 
         if(!editDataSource.isDataReady()){
             var message = stringUtils.format('{0} не инициализирован. Невозможно установить текущий элемент.', [editDataSource.getName()]);
@@ -17,9 +15,7 @@ _.extend(EditAction.prototype, {
             return;
         }
 
-        var selectedItem = destinationSource.getSelectedItem();
-
-        editDataSource.setSelectedItem(selectedItem);
+        editDataSource.setSelectedItem( this.getDestinationSelectedItem() );
     },
 
     save: function(){
@@ -31,11 +27,19 @@ _.extend(EditAction.prototype, {
         }
     },
 
-    getEditDataSource: function(){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('sourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
+    // todo: повторяется в DeleteAction, придумать, как обобщить
+    getDestinationSelectedItem: function(){
+        var destinationSourceName = this.getProperty('destinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+        var propertyName = this.getProperty('destinationProperty');
 
-        return editDataSource;
+        if( _.isEmpty(propertyName) ){
+            return destinationSource.getSelectedItem();
+        }
+
+        var index = this.getProperty('index');
+        var destinationSourceItems = destinationSource.getItems();
+
+        return destinationSourceItems[index];
     }
 });

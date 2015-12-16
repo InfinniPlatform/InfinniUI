@@ -1,5 +1,21 @@
-.pl-label-floating.pl-empty-text-editor .pl-control-label{
+.pl-label-floating.pl-empty-text-editor:not(.pl-focused) {
+  color: #ccc;
+}
+
+.pl-label-floating {
   position: relative;
+  padding-top: 16px; //место для лейбла
+
+  .pl-control-label{
+    position: absolute;
+  }
+}
+
+.pl-label-floating:not(.pl-empty-text-editor) label, .pl-label-floating.pl-focused label{
+  font-size: 12px;
+}
+
+.pl-label-floating.pl-empty-text-editor .pl-control-label{
   z-index: 3;
 
   transition: all 0.5s ease;
@@ -7,16 +23,17 @@
   pointer-events: none;
 }
 
-.pl-label-floating.pl-empty-text-editor:not(.pl-focused) .pl-control-label{
-  top: 32px;
-  left: 12px;
+.pl-label-floating.pl-empty-text-editor:not(.pl-focused) .pl-control-label {
+  top: 26px;
+  left: 6px;
 }
 
+.pl-label-floating.pl-empty-text-editor.pl-focused .pl-control-label, .pl-label-floating:not(.pl-empty-text-editor) .pl-control-label{
+  top: 4px;
+  left: 0px;
+}
+
+// для numericbox нужен отступ побольше, из-за кнопок -/+
 .pl-numericbox.pl-label-floating.pl-empty-text-editor:not(.pl-focused) .pl-control-label{
   left: 44px;
-}
-
-.pl-label-floating.pl-empty-text-editor.pl-focused .pl-control-label{
-  top: 0px;
-  left: 0px;
 }

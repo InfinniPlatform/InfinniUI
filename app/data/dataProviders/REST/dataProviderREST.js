@@ -98,7 +98,9 @@ function DataProviderREST(urlConstructor, successCallback, failCallback) {
         return data;
     }
 
-    this.deleteItem = function (instanceId, resultCallback) {
+    this.deleteItem = function (item, resultCallback) {
+        var instanceId = item["Id"];
+
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructDeleteDocumentRequest(instanceId));
     };
 

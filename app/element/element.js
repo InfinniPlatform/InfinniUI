@@ -311,6 +311,14 @@ _.extend(Element.prototype, {
         this.control.set('isLoaded', true);
     },
 
+    setTag: function (value) {
+        this.control.set('tag', value);
+    },
+
+    getTag: function () {
+        return this.control.get('tag');
+    },
+
     render: function () {
         return this.control.render();
     },
