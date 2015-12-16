@@ -102,7 +102,7 @@ _.extend(ViewPanelBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new ViewPanel(params.view);
+        return new ViewPanel(params.parent);
     }
 },
     builderLayoutPanelMixin

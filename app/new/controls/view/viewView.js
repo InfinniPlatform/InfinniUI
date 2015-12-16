@@ -18,6 +18,9 @@ var ViewView = ContainerView.extend(
 
             this.renderItemsContents();
 
+            this.updateProperties();
+            this.trigger('render');
+
             this.postrenderingActions();
             return this;
         },
