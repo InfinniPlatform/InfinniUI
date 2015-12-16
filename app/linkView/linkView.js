@@ -42,13 +42,12 @@ _.extend(LinkView.prototype, {
     _initViewHandler: function(view){
         var that = this;
         var openMode = that.openMode;
-        var context = this.parentView.getContext();
         var openStrategy;
         var container;
 
         switch(openMode){
             case 'Container': {
-                container = InfinniUI.global.containers[this.containerName]; //context.controls[this.containerName];
+                container = InfinniUI.global.containers[this.containerName];
 
                 openStrategy = new OpenModeContainerStrategy();
                 openStrategy.setView(view);

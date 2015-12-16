@@ -1,12 +1,12 @@
 describe('ListEditorBase (Control)', function () {
 
     function applyViewMetadata(metadata, onViewReady){
-        var linkView = new LinkView(null, function (resultCallback) {
-            var builder = new ApplicationBuilder();
-            var view = builder.buildType('View', metadata, {parentView: fakeView()});
-            resultCallback(view);
-        });
-        linkView.setOpenMode('Application');
+        metadata = {
+            View: metadata
+        };
+
+        var appBuilder = new ApplicationBuilder();
+        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata});
 
         var view = linkView.createView(function (view) {
             view.open();
@@ -102,7 +102,7 @@ describe('ListEditorBase (Control)', function () {
                             "Items": [
                                 { "Value": [
                                     { "Id": 2, "Display": "2G" },
-                                    {"Id": 3, "Display": "2G"}
+                                    { "Id": 3, "Display": "2G" }
                                 ]}
                             ]
                         }
@@ -394,6 +394,76 @@ describe('ListEditorBase (Control)', function () {
                 assert.lengthOf($selected, 1, 'length of selected item is right (after 2 changing)');
                 assert.equal(selectedItem.Id, 1, 'value in DS is right (after 2 changing)');
                 assert.equal(ds2.getProperty('Value.Id'), 3, 'selected item in DS is right (after 2 changing)');
+            }
+        });
+
+        it('should set value by passed items', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE"},
+                                {"Id": 2, "Display": "2G"},
+                                {"Id": 3, "Display": "2G"}
+                            ]
+                        }
+                    },{
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                { "Value": 2 }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    ListBox: {
+                        "Name": "LB",
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "$.Display"
+                                }
+                            }
+                        },
+                        "Items": {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        },
+                        "Value": {
+                            "Source": "ObjectDataSource2",
+                            "Property": "$.Value"
+                        },
+                        "ValueProperty": "Id"
+                    }
+                }]
+            };
+
+
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            function onViewReady(view, $layout){
+
+                var listBox = view.getContext().controls['LB'];
+                var firstItem = listBox.getItems().getByIndex(0);
+                var value = listBox.getValue();
+                assert.equal(value, 2, 'first value in listbox is right');
+
+                // When
+                listBox.setValueItem(firstItem);
+
+                // Then
+                var value = listBox.getValue();
+                assert.equal(value, 1, 'setValueItem set value right');
             }
         });
     });

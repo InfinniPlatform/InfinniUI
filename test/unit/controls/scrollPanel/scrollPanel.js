@@ -1,12 +1,12 @@
 describe('ScrollPanelControl', function () {
 
-    function applyViewMetadata(metadata, onViewReady) {
-        var linkView = new LinkView(null, function (resultCallback) {
-            var builder = new ApplicationBuilder();
-            var view = builder.buildType('View', metadata, {parentView: fakeView()});
-            resultCallback(view);
-        });
-        linkView.setOpenMode('Application');
+    function applyViewMetadata(metadata, onViewReady){
+        metadata = {
+            View: metadata
+        };
+
+        var appBuilder = new ApplicationBuilder();
+        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata});
 
         var view = linkView.createView(function (view) {
             view.open();
