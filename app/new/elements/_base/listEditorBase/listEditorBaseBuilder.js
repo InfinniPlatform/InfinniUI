@@ -55,7 +55,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
             }
 
             if (metadata.OnSelectedItemChanged) {
-                new ScriptExecutor(params.parent).executeScript(metadata.OnSelectedItemChanged.Name, args);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnSelectedItemChanged.Name, args);
             }
         });
     },
@@ -78,7 +78,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
 
         if (metadata.ValueSelector) {
             valueSelector = function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.parent);
+                var scriptExecutor = new ScriptExecutor(params.element.getScriptsStorage());
                 return scriptExecutor.executeScript(metadata.ValueSelector.Name, args)
             };
         } else if (metadata.ValueProperty) {

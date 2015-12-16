@@ -133,7 +133,7 @@ _.extend(ContainerBuilder.prototype, {
 
         if (metadata.GroupValueSelector) {
             groupValueSelector = function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.parent);
+                var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
                 return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
             };
         } else if (metadata.GroupValueProperty) {
