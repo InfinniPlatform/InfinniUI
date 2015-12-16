@@ -25,6 +25,25 @@ _.extend(ListEditorBase.prototype, {
         this.control.set('valueSelector', value);
     },
 
+    setValueItem: function(item){
+        var result;
+        var isMultiSelect = this.getMultiSelect();
+        var valueSelector = this.getValueSelector();
+
+        if(isMultiSelect){
+            result = [];
+
+            for(var i = 0, ii = item.length; i < ii; i++){
+                result[i] = valueSelector(null, {value: item[i]});
+            }
+
+        }else{
+            result = valueSelector(null, {value: item});
+        }
+
+        this.setValue(result);
+    },
+
     getSelectedItem: function () {
         return this.control.get('selectedItem');
     },
@@ -41,4 +60,5 @@ _.extend(ListEditorBase.prototype, {
     getValueComparator: function () {
         return this.control.get('valueComparator');
     }
+
 }, editorBaseMixin);
