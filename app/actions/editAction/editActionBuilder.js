@@ -16,8 +16,11 @@ function EditActionBuilder(){
         action.setProperty('linkView', linkView);
         action.setProperty('destinationSource', metadata.DestinationValue.Source);
         action.setProperty('sourceSource', metadata.SourceValue.Source);
-        action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-        action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
+
+        if( !_.isEmpty(metadata.DestinationValue.Property) ){
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
+        }
 
         return action;
     }
