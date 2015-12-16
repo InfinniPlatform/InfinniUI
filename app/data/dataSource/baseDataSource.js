@@ -543,7 +543,7 @@ var BaseDataSource = Backbone.Model.extend({
             itemId = this.idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
-        if (!isItemInSet) {
+        if (itemId !== undefined && !isItemInSet) {
             this._notifyAboutMissingDeletedItem(item, error);
             return;
         }

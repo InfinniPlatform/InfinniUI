@@ -86,7 +86,6 @@
         "Name": "PatientDataSource",
         "Items": [
            {
-              "Id": 1,
                "Name": "Иванов",
               "Diseases": [
                   {
@@ -98,7 +97,6 @@
               ]
            },
             {
-                "Id": 2,
                 "Name": "Петров",
                 "Diseases": [
                     {

@@ -62,16 +62,7 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     _getIndexOfItem: function (item) {
-        var itemId = item[this.idProperty],
-            items = this.items;
-
-        for (var i = 0, ii = items.length; i < ii; i++) {
-            if (items[i][this.idProperty] === itemId) {
-                return i;
-            }
-        }
-
-        return -1;
+        return  _.indexOf(this.items, item);
     },
 
     createLocalItem: function (idProperty) {
