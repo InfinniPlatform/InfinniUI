@@ -5,4 +5,4 @@ InfinniUI.config.serverUrl = 'http://localhost:9900';
 InfinniUI.config.configId = 'PTA';
 InfinniUI.config.configName = 'Хабинет';
 InfinniUI.config.useLoaderIndicator = true;
-InfinniUI.config.serviceUnavailablePage = '/launcher/503.html';
+InfinniUI.config.serviceUnavailablePage = '/503.html';
