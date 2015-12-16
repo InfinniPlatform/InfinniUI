@@ -6,7 +6,7 @@ var StackPanelView = ContainerView.extend(
     /** @lends StackPanelView.prototype */
     {
         tagName: 'ul',
-        className: 'pl-stack-panel',
+        className: 'pl-stack-panel pl-clearfix',
 
         template: {
             plain: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanel.tpl.html"],
