@@ -135,13 +135,33 @@ var BaseDataSource = Backbone.Model.extend({
             indexOfItemsById = this._indexItemsById(items);
             this.set('itemsById', indexOfItemsById);
 
-            this.setSelectedItem(items[0]);
+            if( !this._restoreSelectedItem() ){
+                this.setSelectedItem(items[0]);
+            }
+
         } else {
             this.setSelectedItem(null);
         }
 
         this._notifyAboutItemsUpdatedAsPropertyChanged(items);
         //this.trigger('settingNewItemsComplete');
+    },
+
+    _restoreSelectedItem: function(){
+        var selectedItem = this.getSelectedItem(),
+            selectedItemId = this.idOfItem(selectedItem);
+
+        if( selectedItemId != null ){
+            var items = this.get('itemsById');
+            var newSelectedItem = items[selectedItemId];
+
+            if( newSelectedItem != null ){
+                this.setSelectedItem(newSelectedItem);
+                return true;
+            }
+        }
+
+        return false;
     },
 
     _addItems: function (newItems) {
@@ -655,21 +675,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler) {
-        var selectedItem = this.getSelectedItem(),
-            selectedItemId = this.idOfItem(selectedItem);
-
         this._setItems(itemsData);
-
-        // restore selected item
-        if( selectedItemId != null ){
-            var items = this.get('itemsById');
-            var newSelectedItem = items[selectedItemId];
-
-            if( newSelectedItem != null ){
-                this.setSelectedItem(newSelectedItem);
-            }
-        }
-
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
 

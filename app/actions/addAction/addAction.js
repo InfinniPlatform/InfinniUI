@@ -12,7 +12,9 @@ _.extend(AddAction.prototype, {
         var editDataSource = editView.getContext().dataSources[editSourceName];
 
         // create new item and set it selected
-		editDataSource.createItem();
+        editView.onBeforeLoaded(function() {
+            editDataSource.createItem();
+        });
     },
 
     save: function(){

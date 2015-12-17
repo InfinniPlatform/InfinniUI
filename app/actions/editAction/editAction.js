@@ -9,14 +9,14 @@ _.extend(EditAction.prototype, {
     setSelectedItem: function(){
         var editDataSource = this._getEditDataSource();
 
-        if(!editDataSource.isDataReady()){
-            var message = stringUtils.format('{0} не инициализирован. Невозможно установить текущий элемент.', [editDataSource.getName()]);
-            InfinniUI.global.logger.error( message );
-            return;
-        }
+        var destinationSourceName = this.getProperty('destinationSource');
+        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
-        var selectedItem = _.clone( this.getDestinationSelectedItem() );
-        editDataSource.setSelectedItem( selectedItem );
+        var selectedItem = this._getSelectedItem(destinationSource);
+        var selectedItemId = destinationSource.idOfItem(selectedItem);
+
+        var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
+        editDataSource.setFilter( criteria );
     },
 
     save: function(){
@@ -28,19 +28,16 @@ _.extend(EditAction.prototype, {
         }
     },
 
-    // todo: повторяется в DeleteAction, придумать, как обобщить
-    getDestinationSelectedItem: function(){
-        var destinationSourceName = this.getProperty('destinationSource');
-        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+    _getSelectedItem: function( source ){
         var propertyName = this.getProperty('destinationProperty');
 
         if( _.isEmpty(propertyName) ){
-            return destinationSource.getSelectedItem();
+            return source.getSelectedItem();
         }
 
         var index = this.getProperty('index');
-        var destinationSourceItems = destinationSource.getItems();
+        var sourceItems = source.getItems();
 
-        return destinationSourceItems[index];
+        return sourceItems[index];
     }
 });
