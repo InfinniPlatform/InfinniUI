@@ -91,6 +91,32 @@
             );
         });
 
+        it('should restore selected item after updating', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    var items = dataSource.getItems();
+                    var selectedItem = items[3];
+                    dataSource.setSelectedItem(selectedItem);
+
+                    //When
+                    dataSource.updateItems(
+                        function(context, args){
+                            //Then
+                            assert.equal(dataSource.getSelectedItem(), selectedItem);
+                            done();
+                        }
+                    );
+                }
+            );
+        });
+
         it('should create document', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeDataProvider);
