@@ -27,13 +27,13 @@ describe('Element', function () {
             textBox.setProperty('visible', false);
 
             // Then
-            function onValueChanged(){
+            function onValueChanged() {
                 assert.equal(textBox.getProperty('value'), 'test');
                 assert.equal(step, 1);
                 step++;
             }
 
-            function onVisibleChanged(){
+            function onVisibleChanged() {
                 assert.equal(textBox.getProperty('visible'), false);
                 assert.equal(step, 2);
                 done();
@@ -44,18 +44,34 @@ describe('Element', function () {
         it('Handling DOM event', function (done) {
             // Given
             var textBox = new TextBox();
-            textBox.onMouseDoubleClick(onMouseDoubleClickHandler);
+            textBox.onDoubleClick(onMouseDoubleClickHandler);
 
             // When
             var $el = textBox.render();
             $el.trigger('dblclick');
 
             // Then
-            function onMouseDoubleClickHandler(eventData){
+            function onMouseDoubleClickHandler(eventData) {
                 assert.equal(eventData.source, textBox, 'eventData has right source');
                 done();
             }
 
+        });
+
+        it('Click event', function (done) {
+            // Given
+            var textBox = new TextBox();
+            textBox.onClick(onMouseClickHandler);
+            
+            // When
+            var $el = textBox.render();
+            $el.trigger('click');
+            
+            //Then
+            function onMouseClickHandler(eventData) {
+                assert.equal(eventData.source, textBox, 'eventData has right source');
+                done();
+            }
         });
     });
 });
