@@ -15,7 +15,8 @@ _.extend(EditAction.prototype, {
             return;
         }
 
-        editDataSource.setSelectedItem( this.getDestinationSelectedItem() );
+        var selectedItem = _.clone( this.getDestinationSelectedItem() );
+        editDataSource.setSelectedItem( selectedItem );
     },
 
     save: function(){
