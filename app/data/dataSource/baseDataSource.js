@@ -32,6 +32,8 @@ var BaseDataSource = Backbone.Model.extend({
 
         isRequestInProcess: false,
 
+        isLazy: true,
+
         bindingBuilder: function(){} // нужен для создания биндингов в фильтрах
 
     },
@@ -947,6 +949,14 @@ var BaseDataSource = Backbone.Model.extend({
 
     setBindingBuilder: function(bindingBuilder){
         this.set('bindingBuilder', bindingBuilder);
+    },
+
+    setIsLazy: function(isLazy){
+        this.set('isLazy', isLazy);
+    },
+
+    getIsLazy: function(){
+        return this.get('isLazy');
     },
 
     _replaceAllProperties: function (currentObject, newPropertiesSet) {

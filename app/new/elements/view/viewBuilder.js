@@ -67,6 +67,12 @@ _.extend(ViewBuilder.prototype, {
 
             element.getDataSources()
                 .set(dataSources);
+
+            for(var i = 0, ii = dataSources.length; i < ii; i++){
+                if(!dataSources[i].isLazy()){
+                    dataSources[i].updateItems();
+                }
+            }
         }
 
         if(metadata.OnOpening){
