@@ -71,14 +71,14 @@ describe('PanelControl', function () {
                                                                         "Collapsible": true,
                                                                         "Header": {
                                                                             "Source": "BloodGroupDataSource",
-                                                                            "Property": "$.DisplayName"
+                                                                            "Property": "#.DisplayName"
                                                                         },
                                                                         "Items": [
                                                                             {
                                                                                 "Label": {
                                                                                     "Text": {
                                                                                         "Source": "BloodGroupDataSource",
-                                                                                        "Property": "$.Id"
+                                                                                        "Property": "#.Id"
                                                                                     }
                                                                                 }
                                                                             }

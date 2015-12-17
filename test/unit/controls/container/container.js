@@ -41,7 +41,7 @@ describe('Container (Control)', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -417,7 +417,7 @@ describe('Container (Control)', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -472,7 +472,7 @@ describe('Container (Control)', function () {
                                         "Name": "TextBox1",
                                         "Value": {
                                             "Source": "ObjectDataSource1",
-                                            "Property": "$.Display"
+                                            "Property": "#.Display"
                                         }
                                     }
                                 },
@@ -480,7 +480,7 @@ describe('Container (Control)', function () {
                                     "Label": {
                                         "Value": {
                                             "Source": "ObjectDataSource1",
-                                            "Property": "$.Display"
+                                            "Property": "#.Display"
                                         }
                                     }
                                 },
@@ -540,7 +540,7 @@ describe('Container (Control)', function () {
                                         "Name": "TextBox1",
                                         "Value": {
                                             "Source": "ObjectDataSource1",
-                                            "Property": "$.Display"
+                                            "Property": "#.Display"
                                         }
                                     }
                                 },
@@ -596,7 +596,7 @@ describe('Container (Control)', function () {
                             "Name": "TextBox1",
                             "Value": {
                                 "Source": "ObjectDataSource1",
-                                "Property": "$.Display"
+                                "Property": "#.Display"
                             }
                         }
                     },

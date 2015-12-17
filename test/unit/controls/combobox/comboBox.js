@@ -55,7 +55,7 @@ describe('ComboBox', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -132,7 +132,7 @@ describe('ComboBox', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -198,7 +198,7 @@ describe('ComboBox', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -291,7 +291,7 @@ describe('ComboBox', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -308,7 +308,7 @@ describe('ComboBox', function () {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
                                                 "Source": "ObjectDataSource2",
-                                                "Property": "Value.$.Display"
+                                                "Property": "Value.#.Display"
                                             }
                                         }
                                     },
@@ -317,7 +317,7 @@ describe('ComboBox', function () {
                                             "HorizontalAlignment": "Left",
                                             "Value": {
                                                 "Source": "ObjectDataSource2",
-                                                "Property": "Value.$.Id"
+                                                "Property": "Value.#.Id"
                                             }
                                         }
                                     }
