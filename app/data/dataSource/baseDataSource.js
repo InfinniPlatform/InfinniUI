@@ -655,7 +655,21 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler) {
+        var selectedItem = this.getSelectedItem(),
+            selectedItemId = this.idOfItem(selectedItem);
+
         this._setItems(itemsData);
+
+        // restore selected item
+        if( selectedItemId != null ){
+            var items = this.get('itemsById');
+            var newSelectedItem = items[selectedItemId];
+
+            if( newSelectedItem != null ){
+                this.setSelectedItem(newSelectedItem);
+            }
+        }
+
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
 
