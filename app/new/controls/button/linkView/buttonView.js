@@ -21,6 +21,38 @@ var LinkButtonView = CommonButtonView.extend({
     UI: {
     },
 
+    updateBackground: function () {
+        var customStyle = this.model.get('background');
+
+        if (this.currentBackground) {
+            this.$el
+                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
+        }
+
+        if (customStyle) {
+            this.$el
+                .addClass(this.valueToBackgroundClassName(customStyle));
+        }
+
+        this.currentBackground = customStyle;
+    },
+
+    //updateForeground: function () {
+    //    var customStyle = this.model.get('foreground');
+    //
+    //    if (this.currentBackground) {
+    //        this.ui.button
+    //            .removeClass(this.valueToBackgroundClassName(this.currentBackground));
+    //    }
+    //
+    //    if (customStyle) {
+    //        this.ui.button
+    //            .addClass(this.valueToBackgroundClassName(customStyle));
+    //    }
+    //
+    //    this.currentBackground = customStyle;
+    //},
+
     getButtonElement: function(){
         return this.$el;
     }
