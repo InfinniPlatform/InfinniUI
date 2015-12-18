@@ -102,7 +102,11 @@
 
 // Common styles
 .btn {
+
   text-transform: uppercase;
+  background-color: white;
+  @shadow: 0 3px 1px 0 rgba(0, 0, 0, 0.14);
+  .box-shadow(@shadow);
 
   // Remove the gradient for the pressed/active state
   &:active,

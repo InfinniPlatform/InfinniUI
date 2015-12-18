@@ -122,18 +122,31 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             };
 
             var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
+            var oldConverter;
 
             if (isBooleanBinding) {
                 dataBinding.setMode(BindingModes.toElement);
 
                 converter = dataBinding.getConverter();
-                if (!converter || _.size(converter) == 0) {
-                    dataBinding.setConverter({
-                        toElement: function (context, args) {
-                            return !!args.value;
-                        }
-                    });
+                if (!converter) {
+                    converter = {};
                 }
+
+                if(!converter.toElement){
+                    converter.toElement = function (context, args) {
+                        return !!args.value;
+                    };
+                }else{
+                    oldConverter = converter.toElement;
+
+                    converter.toElement = function (context, args) {
+                        var tmp = oldConverter(context, args);
+                        return !!tmp;
+                    };
+                }
+
+
+                dataBinding.setConverter(converter);
             }
 
             dataBinding.bindElement(element, lowerCasePropertyName);

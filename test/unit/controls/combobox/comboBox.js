@@ -87,7 +87,7 @@ describe('ComboBox', function () {
 
                 assert.equal($label.text(), 'Combobox Label');
                 assert.equal($value.length, 1);
-                assert.equal($value.find('.label-control').text(), '2 - 2G');
+                assert.equal($value.find('.pl-label').text(), '2 - 2G');
             }
         });
 
@@ -162,7 +162,7 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.label-control').text(), '2 - 2G3 - 3G');
+                assert.equal($value.find('.pl-label').text(), '2 - 2G3 - 3G');
             }
         });
 
@@ -252,7 +252,7 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.label-control').text(), '2G2');
+                assert.equal($value.find('.pl-label').text(), '2G2');
             }
         });
 
@@ -345,7 +345,7 @@ describe('ComboBox', function () {
                     $value = $layout.find('.pl-combobox__value');
 
                 assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.label-control').text(), '2G23G3');
+                assert.equal($value.find('.pl-label').text(), '2G23G3');
             }
         });
 

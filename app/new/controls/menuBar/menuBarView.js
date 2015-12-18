@@ -26,6 +26,9 @@ var MenuBarView = ContainerView.extend(
 
             this.bindUIElements();
 
+            this.updateProperties();
+            this.trigger('render');
+
             this.postrenderingActions();
             return this;
         },

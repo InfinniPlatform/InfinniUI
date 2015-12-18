@@ -55,8 +55,7 @@ describe('Label', function () {
                 //Given
                 label.setText('Default Label');
 
-                var $el = label.render(),
-                    $label = $('label', $el);
+                var $label = label.render();
 
                 assert.equal($label.html(), 'Default Label');
 
@@ -69,8 +68,7 @@ describe('Label', function () {
 
             it('Setting property: textWrapping', function () {
                 //Given
-                var $el = label.render(),
-                    $label = $('label', $el);
+                var $label = label.render();
 
                 assert.isTrue($label.hasClass('pl-text-wrapping'), 'default value must be true');
 
@@ -83,8 +81,7 @@ describe('Label', function () {
 
             it('Setting property: textTrimming', function () {
                 //Given
-                var $el = label.render(),
-                    $label = $('label', $el);
+                var $label = label.render();
 
                 assert.isTrue($label.hasClass('pl-text-trimming'), 'default value must be true');
 

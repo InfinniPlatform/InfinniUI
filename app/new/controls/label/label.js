@@ -1,5 +1,5 @@
-var LabelControl = function () {
-    _.superClass(LabelControl, this);
+var LabelControl = function (viewMode) {
+    _.superClass(LabelControl, this, viewMode);
     this.initialize_editorBaseControl();
 };
 
@@ -13,7 +13,7 @@ _.extend(LabelControl.prototype, {
 
     createControlView: function (model, viewMode) {
         if(!viewMode || ! viewMode in window.InfinniUI.Label){
-            viewMode = 'common';
+            viewMode = 'simple';
         }
 
         var ViewClass = window.InfinniUI.Label.viewModes[viewMode];
