@@ -17,12 +17,6 @@ var buttonBuilderMixin = {
                 action.execute();
             });
         }
-
-        if (metadata.OnClick){
-            element.onClick(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name, {source: element});
-            });
-        }
     },
 
     initTemplatingContent: function(params){
