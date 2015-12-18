@@ -54,6 +54,22 @@ var CommonButtonView = ControlView.extend({
         this.getButtonElement().prop('disabled', !isEnabled);
     },
 
+    updateBackground: function () {
+        var customStyle = this.model.get('background');
+
+        if (this.currentBackground) {
+            this.ui.button
+                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
+        }
+
+        if (customStyle) {
+            this.ui.button
+                .addClass(this.valueToBackgroundClassName(customStyle));
+        }
+
+        this.currentBackground = customStyle;
+    },
+
     render: function () {
         this.prerenderingActions();
 
