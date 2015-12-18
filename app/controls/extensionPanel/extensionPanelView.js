@@ -15,6 +15,9 @@
 
         this.extensionObject.render();
 
+        this.updateProperties();
+        this.trigger('render');
+
         this.postrenderingActions();
         return this;
     },
