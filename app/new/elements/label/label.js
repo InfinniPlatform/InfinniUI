@@ -1,5 +1,5 @@
-function Label() {
-    _.superClass(Label, this);
+function Label(parent, viewMode) {
+    _.superClass(Label, this, parent, viewMode);
     this.initialize_editorBase();
 }
 

@@ -160,8 +160,8 @@ describe('Container (Control)', function () {
                 $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($layout.find('.label-control').first().text(), 'LTE', 'content of first element is right');
+                assert.lengthOf($layout.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.pl-label').first().text(), 'LTE', 'content of first element is right');
             }
         });
 
@@ -210,8 +210,8 @@ describe('Container (Control)', function () {
                 $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($layout.find('.label-control').first().text(), 'LTE', 'content of first element is right');
+                assert.lengthOf($layout.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.pl-label').first().text(), 'LTE', 'content of first element is right');
             }
         });
 
@@ -260,8 +260,8 @@ describe('Container (Control)', function () {
                 $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($layout.find('.label-control').first().text(), 'Connect: LTE', 'content of first element is right');
+                assert.lengthOf($layout.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.pl-label').first().text(), 'Connect: LTE', 'content of first element is right');
             }
         });
 
@@ -318,8 +318,8 @@ describe('Container (Control)', function () {
                 $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($layout.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($layout.find('.label-control').first().text(), '!! LTE', 'content of first element is right');
+                assert.lengthOf($layout.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($layout.find('.pl-label').first().text(), '!! LTE', 'content of first element is right');
             }
         });
 

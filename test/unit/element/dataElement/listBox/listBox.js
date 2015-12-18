@@ -400,8 +400,8 @@ describe('ListBox', function () {
             // Then
             function onStackPanelReady($stackPanel){
                 assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), 'LTE', 'content of first element is right');
+                assert.lengthOf($stackPanel.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($stackPanel.find('.pl-label').first().text(), 'LTE', 'content of first element is right');
             }
         });
     });
@@ -466,8 +466,8 @@ describe('ListBox', function () {
             // Then
             function onStackPanelReady($stackPanel){
                 assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), 'LTE', 'content of first element is right');
+                assert.lengthOf($stackPanel.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($stackPanel.find('.pl-label').first().text(), 'LTE', 'content of first element is right');
             }
         });
     });
@@ -531,8 +531,8 @@ describe('ListBox', function () {
             // Then
             function onStackPanelReady($stackPanel){
                 assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), 'Connect: LTE', 'content of first element is right');
+                assert.lengthOf($stackPanel.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($stackPanel.find('.pl-label').first().text(), 'Connect: LTE', 'content of first element is right');
             }
         });
     });
@@ -605,8 +605,8 @@ describe('ListBox', function () {
             // Then
             function onStackPanelReady($stackPanel){
                 assert.lengthOf($stackPanel.find('.pl-stack-panel-i'), 3, 'length of rendered stackPanel');
-                assert.lengthOf($stackPanel.find('.label-control').not(':empty'), 3, 'length of rendered stackPanel');
-                assert.equal($stackPanel.find('.label-control').first().text(), '!! LTE', 'content of first element is right');
+                assert.lengthOf($stackPanel.find('.pl-label').not(':empty'), 3, 'length of rendered stackPanel');
+                assert.equal($stackPanel.find('.pl-label').first().text(), '!! LTE', 'content of first element is right');
             }
         });
     });

@@ -133,8 +133,8 @@ describe('PanelControl', function () {
                     var $el = $(el),
                         $header = $el.find('.pl-panel-header'),
                         $body = $el.find('.pl-panel-body'),
-                        header = $header.find('.label-control').text(),
-                        body = $body.find('.label-control').text();
+                        header = $header.find('.pl-label').text(),
+                        body = $body.find('.pl-label').text();
 
                     assert.isTrue($header.hasClass('pl-collapsible'));
                     assert.isFalse($header.hasClass('pl-collapsed'));
@@ -271,7 +271,7 @@ describe('PanelControl', function () {
                 var $panel = $layout.find('.pl-panel'),
                     $header = $panel.find('.pl-panel-header'),
                     $body = $panel.find('.pl-panel-body'),
-                    header = $header.find('.label-control').text(),
+                    header = $header.find('.pl-label').text(),
                     $items = $body.find('.pl-panel-i');
 
 
@@ -279,7 +279,7 @@ describe('PanelControl', function () {
                 assert.isTrue($header.hasClass('pl-collapsible'));
                 assert.isTrue($header.hasClass('pl-collapsed'));
                 $items.each(function (index, el) {
-                    var text = $('.label-control', el).text();
+                    var text = $('.pl-label', el).text();
 
                     switch(index) {
                         case 0:
