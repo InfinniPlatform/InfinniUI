@@ -719,6 +719,7 @@
                                   "Items": [
                                       {
                                           "ToggleButton": {
+                                              "Name": "TB",
                                               "Text": "Subscribe",
                                               "TextOn": "yes",
                                               "TextOff": "no",
@@ -780,6 +781,14 @@
                                   "Items": [
                                       {
                                           "TabPanel": {
+                                              "Visible": {
+                                                "Source": "TB",
+                                                "Property": "value",
+                                                "Converter": {
+                                                  "ToElement": "preconverter"
+                                                }
+                                              },
+
                                               "OnSelectedItemChanged": {
                                                   "Name": "OnSelectedItemChanged"
                                               },
@@ -1032,6 +1041,10 @@
     {
       "Name": "OnClickRemove",
       "Body": "console.log('Remove', context.dataSources.BloodGroupDataSource.getSelectedItem());"
+    },
+    {
+      "Name": "preconverter",
+      "Body": "console.log(args.value); return args.value;"
     }
   ]
 }
