@@ -955,7 +955,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('isLazy', isLazy);
     },
 
-    getIsLazy: function(){
+    isLazy: function(){
         return this.get('isLazy');
     },
 
