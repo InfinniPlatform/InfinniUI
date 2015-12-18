@@ -58,7 +58,11 @@ _.extend(Control.prototype, {
         this.controlView.on('beforeClick', handler);
     },
 
-    onMouseDoubleClick: function (handler) {
+    onClick: function (handler) {
+        this.controlView.$el.on('click', handler);
+    },
+
+    onDoubleClick: function (handler) {
         this.controlView.$el.on('dblclick', handler);
     },
 
@@ -90,7 +94,7 @@ _.extend(Control.prototype, {
         this.controlView.$el.on('keyup', handler);
     },
 
-    remove: function(){
+    remove: function () {
         this.controlView.remove();
     }
 });

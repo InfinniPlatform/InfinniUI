@@ -24,27 +24,27 @@ _.extend(Element.prototype, {
         throw ('Не перегружен абстрактный метод Element.createControl');
     },
 
-    setParent: function(parentElement){
+    setParent: function (parentElement) {
         this.parent = parentElement;
     },
 
-    getParent: function(){
+    getParent: function () {
         return this.parent;
     },
 
-    getChildElements: function(){
+    getChildElements: function () {
         return this.childElements;
     },
 
     getView: function () {
-        if(!this.parentView){
-            if(this.parent instanceof View){
+        if (!this.parentView) {
+            if (this.parent instanceof View) {
                 this.parentView = this.parent;
 
-            }else{
-                if(this.parent && this.parent.getView){
+            } else {
+                if (this.parent && this.parent.getView) {
                     this.parentView = this.parent.getView();
-                }else{
+                } else {
                     this.parentView = null;
                 }
             }
@@ -67,7 +67,7 @@ _.extend(Element.prototype, {
         var getterMethodName = 'get' + this._upperFirstSymbol(name);
         if (typeof this[getterMethodName] == 'function') {
             return this[getterMethodName]();
-        }else{
+        } else {
             throw 'expect that ' + getterMethodName + ' is getter function';
         }
     },
@@ -78,27 +78,27 @@ _.extend(Element.prototype, {
 
         if (typeof this[setterMethodName] == 'function') {
             this[setterMethodName](value);
-        }else{
-            if(this._isCollectionProperty(name)){
+        } else {
+            if (this._isCollectionProperty(name)) {
                 getterMethodName = 'get' + this._upperFirstSymbol(name);
                 this[getterMethodName]().set(value);
-            }else{
+            } else {
                 throw 'expect that ' + setterMethodName + ' is setter function';
             }
         }
     },
 
-    _isCollectionProperty: function(propertyName){
+    _isCollectionProperty: function (propertyName) {
         var getterMethodName = 'get' + this._upperFirstSymbol(propertyName);
         return (typeof this[getterMethodName] == 'function') && this[getterMethodName]() instanceof Collection;
     },
 
     onPropertyChanged: function (propertyName, handler) {
         var subscribingMethodName = 'on' + this._upperFirstSymbol(propertyName) + 'Changed';
-        if (typeof this[subscribingMethodName]  == 'function') {
+        if (typeof this[subscribingMethodName] == 'function') {
             this[subscribingMethodName](handler);
-        }else{
-            this.control.on('change:'+ propertyName, function(model, value){
+        } else {
+            this.control.on('change:' + propertyName, function (model, value) {
                 var parentView = this.getView(),
                     context = parentView ? parentView.getContext() : undefined,
                     args = {
@@ -183,12 +183,12 @@ _.extend(Element.prototype, {
         }
     },
 
-    getStyle: function(){
+    getStyle: function () {
         return this.control.get('style');
     },
 
-    setStyle: function(style){
-        if(typeof style == 'string'){
+    setStyle: function (style) {
+        if (typeof style == 'string') {
             this.control.set('style', style);
         }
     },
@@ -381,13 +381,22 @@ _.extend(Element.prototype, {
         return this.control.onKeyUp(callback);
     },
 
-    onMouseDoubleClick: function (handler) {
+    onClick: function (handler) {
         var that = this,
             callback = function (nativeEventData) {
                 var eventData = that._getHandlingMouseEventData(nativeEventData);
                 handler(eventData);
             };
-        return this.control.onMouseDoubleClick(callback);
+        return this.control.onClick(callback);
+    },
+
+    onDoubleClick: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onDoubleClick(callback);
     },
 
     onMouseDown: function (handler) {
@@ -457,34 +466,34 @@ _.extend(Element.prototype, {
         });
     },
 
-    remove: function(isInitiatedByParent){
+    remove: function (isInitiatedByParent) {
         var children = this.childElements;
 
-        for(var i = 0, ii = children.length; i < ii; i++){
+        for (var i = 0, ii = children.length; i < ii; i++) {
             children[i].remove(true);
         }
 
         this.control.remove();
 
-        if(this.parent && this.parent.removeChild && !isInitiatedByParent){
+        if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
             this.parent.removeChild(this);
         }
 
         this.childElements = undefined;
     },
 
-    removeChild: function(child){
+    removeChild: function (child) {
         var index = this.childElements.indexOf(child);
-        if(index != -1){
+        if (index != -1) {
             this.childElements.splice(index, 1);
         }
     },
 
-    addChild: function(child){
+    addChild: function (child) {
         this.childElements.push(child);
     },
 
-    _getHandlingKeyEventData: function(nativeData){
+    _getHandlingKeyEventData: function (nativeData) {
         var result = {};
 
         result = {
@@ -498,7 +507,7 @@ _.extend(Element.prototype, {
         return result;
     },
 
-    _getHandlingMouseEventData: function(nativeData){
+    _getHandlingMouseEventData: function (nativeData) {
         var result = {};
 
         result = {
@@ -512,7 +521,7 @@ _.extend(Element.prototype, {
         return result;
     },
 
-    _upperFirstSymbol: function(s){
+    _upperFirstSymbol: function (s) {
         return s[0].toUpperCase() + s.substr(1);
     }
 });

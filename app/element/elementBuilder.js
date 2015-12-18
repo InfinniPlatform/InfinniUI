@@ -7,10 +7,10 @@ var ElementBuilder = function () {
 
 _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
-    build: function (context, args){
+    build: function (context, args) {
         args = args || {};
         var element = this.createElement(args);
-        var params = _.extend(args, {element: element});
+        var params = _.extend(args, { element: element });
 
         this.applyMetadata(params);
 
@@ -65,50 +65,56 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
         this.initToolTip(params);
 
-        if('Name' in metadata){
+        if ('Name' in metadata) {
             element.setName(metadata.Name);
         }
 
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
             });
         }
 
-        if (metadata.OnGotFocus){
-            element.onGotFocus(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name, {source: element});
+        if (metadata.OnGotFocus) {
+            element.onGotFocus(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name || metadata.OnGotFocus, { source: element });
             });
         }
 
-        if (metadata.OnLostFocus){
-            element.onLostFocus(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name, {source: element});
+        if (metadata.OnLostFocus) {
+            element.onLostFocus(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name || metadata.OnLostFocus, { source: element });
             });
         }
 
-        if (metadata.OnMouseDoubleClick){
-            element.onMouseDoubleClick(function() {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDoubleClick.Name, {source: element});
+        if (metadata.OnDoubleClick) {
+            element.onDoubleClick(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, { source: element });
+            });
+        }
+
+        if (metadata.OnClick) {
+            element.onClick(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, { source: element });
             });
         }
     },
 
-    initBindingToProperty: function(params, propertyName, isBooleanBinding){
+    initBindingToProperty: function (params, propertyName, isBooleanBinding) {
         var metadata = params.metadata;
         var propertyMetadata = metadata[propertyName];
         var element = params.element;
         var lowerCasePropertyName = propertyName.toLowerCase();
         var converter;
 
-        if(!propertyMetadata || typeof propertyMetadata != 'object'){
-            if(propertyMetadata !== undefined){
+        if (!propertyMetadata || typeof propertyMetadata != 'object') {
+            if (propertyMetadata !== undefined) {
                 params.element['set' + propertyName](propertyMetadata);
             }
             return null;
 
-        }else{
+        } else {
             var args = {
                 parent: params.parent,
                 parentView: params.parentView,
@@ -117,11 +123,11 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
             var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
 
-            if(isBooleanBinding){
+            if (isBooleanBinding) {
                 dataBinding.setMode(BindingModes.toElement);
 
                 converter = dataBinding.getConverter();
-                if(!converter || _.size(converter) == 0){
+                if (!converter || _.size(converter) == 0) {
                     dataBinding.setConverter({
                         toElement: function (context, args) {
                             return !!args.value;
@@ -151,17 +157,17 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             };
             tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
             element.setToolTip(tooltip);
-            exchange.send(messageTypes.onToolTip.name, {source: element, content: tooltip.render()});
+            exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
         }
 
         element.onShowToolTip(function () {
             if (tooltip) {
-                exchange.send(messageTypes.onToolTipShow.name, {source: element, content: tooltip.render()});
+                exchange.send(messageTypes.onToolTipShow.name, { source: element, content: tooltip.render() });
             }
         });
 
         element.onHideToolTip(function () {
-            exchange.send(messageTypes.onToolTipHide.name, {source: element});
+            exchange.send(messageTypes.onToolTipHide.name, { source: element });
         });
 
     }
