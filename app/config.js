@@ -6,3 +6,4 @@ InfinniUI.config.configId = 'PTA';
 InfinniUI.config.configName = 'Хабинет';
 InfinniUI.config.useLoaderIndicator = true;
 InfinniUI.config.serviceUnavailablePage = '/503.html';
+InfinniUI.config.faqBaseUrl = "help.habinet.ru";
