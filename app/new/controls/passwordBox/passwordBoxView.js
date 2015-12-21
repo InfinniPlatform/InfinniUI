@@ -5,7 +5,7 @@
  */
 var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
 
-    className: 'pl-password-box',
+    className: 'pl-password-box form-group',
 
     template: InfinniUI.Template["new/controls/passwordBox/template/passwordBox.tpl.html"],
 

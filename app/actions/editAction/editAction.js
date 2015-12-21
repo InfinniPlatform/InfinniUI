@@ -31,7 +31,7 @@ _.extend(EditAction.prototype, {
     _getSelectedItem: function( source ){
         var propertyName = this.getProperty('destinationProperty');
 
-        if( _.isEmpty(propertyName) ){
+        if( _.isEmpty(propertyName) || propertyName == '$' ){
             return source.getSelectedItem();
         }
 
