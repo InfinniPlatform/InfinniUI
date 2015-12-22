@@ -170,7 +170,29 @@
                                                               "Property": ""
                                                           }
                                                       }
+                                                  },{
+                                                  "ViewPanel": {
+                                                    "Name": "PanelForView",
+                                                    "LinkView": {
+                                                      "InlineView": {
+                                                        "View": {
+                                                          "Scripts": [{
+                                                            "Name": "close",
+                                                            "Body": "context.view.close();"
+                                                          }],
+                                                          "Items": [
+                                                            {
+                                                              "Button": {
+                                                                "Text": "Close",
+                                                                "OnClick": "close"
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
                                                   }
+                                                }
                                               ]
                                           }
                                       },

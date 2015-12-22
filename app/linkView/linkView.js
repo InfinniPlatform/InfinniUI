@@ -1,5 +1,5 @@
 function LinkView(parentView) {
-    this.openMode = 'Page';
+    this.openMode = 'Default';
     this.parentView = parentView;
 
     this.viewTemplate = function(){return '';};

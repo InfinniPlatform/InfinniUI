@@ -54,6 +54,10 @@ _.extend(Control.prototype, {
         });
     },
 
+    isLoaded: function () {
+        return this.controlModel.get('isLoaded');
+    },
+
     onBeforeClick: function (handler) {
         this.controlView.on('beforeClick', handler);
     },
