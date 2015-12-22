@@ -7,7 +7,7 @@ _.extend(MetadataViewBuilder.prototype, {
     build: function (context, args){
         var metadata = args.metadata;
         var viewTemplate = this.buildViewTemplate(args);
-        var linkView = new LinkView(args.parentView);
+        var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
         if('OpenMode' in metadata){

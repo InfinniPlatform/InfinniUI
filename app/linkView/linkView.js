@@ -1,6 +1,6 @@
-function LinkView(parentView) {
+function LinkView(parent) {
     this.openMode = 'Default';
-    this.parentView = parentView;
+    this.parent = parent;
 
     this.viewTemplate = function(){return '';};
 }

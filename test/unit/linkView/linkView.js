@@ -12,15 +12,15 @@ describe('LinkView', function () {
             assert.equal(view.getOpenMode(), 'Dialog');
         });
 
-        it('should set openMode Page by default', function () {
+        it('should set openMode Default by default', function () {
             //Given
             var view = new LinkView();
 
             //Then
-            assert.equal(view.getOpenMode(), 'Page');
+            assert.equal(view.getOpenMode(), 'Default');
         });
 
-        it('should set openMode Page if no mode passed', function () {
+        it('should set openMode Default if no mode passed', function () {
             //Given
             var view = new LinkView();
 
@@ -28,7 +28,7 @@ describe('LinkView', function () {
             view.setOpenMode(null);
 
             //Then
-            assert.equal(view.getOpenMode(), 'Page');
+            assert.equal(view.getOpenMode(), 'Default');
         });
     });
 });
