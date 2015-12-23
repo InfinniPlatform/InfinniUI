@@ -185,7 +185,7 @@
                                                             {
                                                               "Button": {
                                                                 "Text": "Close",
-                                                                "OnClick": "close"
+                                                                "OnClick": "{alert(5);}"
                                                               }
                                                             }
                                                           ]
