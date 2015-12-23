@@ -10,7 +10,6 @@ _.extend(OpenModeDefaultStrategy.prototype, {
     open: function(){
         var $container = launcherConfig.$rootContainer || $('body');
         var oldView = $container.data('view');
-        var $view = this.view.render();
 
         if(oldView){
             oldView.close();

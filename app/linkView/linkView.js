@@ -1,6 +1,6 @@
-function LinkView(parentView) {
-    this.openMode = 'Page';
-    this.parentView = parentView;
+function LinkView(parent) {
+    this.openMode = 'Default';
+    this.parent = parent;
 
     this.viewTemplate = function(){return '';};
 }
@@ -44,6 +44,13 @@ _.extend(LinkView.prototype, {
         var openMode = that.openMode;
         var openStrategy;
         var container;
+
+        if(view.setParent){
+            view.setParent(this.parent);
+        }
+        if(this.parent && this.parent.addChild){
+            this.parent.addChild(view);
+        }
 
         switch(openMode){
             case 'Container': {

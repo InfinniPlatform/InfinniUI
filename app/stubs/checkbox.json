@@ -1,4 +1,5 @@
 {
+  "OnLoaded": "OL2",
   "DataSources": [
     {
       "DocumentDataSource": {
@@ -170,7 +171,29 @@
                                                               "Property": ""
                                                           }
                                                       }
+                                                  },{
+                                                  "ViewPanel": {
+                                                    "Name": "PanelForView",
+                                                    "LinkView": {
+                                                      "InlineView": {
+                                                        "View": {
+                                                          "Scripts": [{
+                                                            "Name": "close",
+                                                            "Body": "context.view.close();"
+                                                          }],
+                                                          "Items": [
+                                                            {
+                                                              "Button": {
+                                                                "Text": "Close",
+                                                                "OnClick": "close"
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
                                                   }
+                                                }
                                               ]
                                           }
                                       },
@@ -436,11 +459,15 @@
                                           "LinkView": {
                                               "InlineView": {
                                                   "View": {
+                                                      "OnLoaded": "OL",
                                                       "Text": "My Dialog",
                                                       "Scripts": [
                                                           {
                                                               "Name": "close",
                                                               "Body": "context.view.close();"
+                                                          },{
+                                                              "Name": "OL",
+                                                              "Body": "debugger;"
                                                           }
                                                       ],
                                                       "Items": [

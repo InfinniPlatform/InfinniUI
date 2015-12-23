@@ -373,10 +373,12 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
      *
      * @param {Boolean} [onLoaded=true]
      */
-    postrenderingActions: function (onLoaded) {
-        var triggerEvent = typeof onLoaded === 'undefined' ? true : onLoaded;
+    postrenderingActions: function (triggeringOnLoaded) {
         this.delegateEvents();
-        if (triggerEvent) {
+
+        triggeringOnLoaded = triggeringOnLoaded === undefined ? true : triggeringOnLoaded;
+
+        if (triggeringOnLoaded) {
             this.trigger('onLoaded');
         }
     },

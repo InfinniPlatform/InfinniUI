@@ -271,6 +271,10 @@ _.extend(Element.prototype, {
         this.control.onLoaded(handler);
     },
 
+    isLoaded: function () {
+        this.control.isLoaded();
+    },
+
     getFocusable: function () {
         return this.control.get('focusable')
     },
