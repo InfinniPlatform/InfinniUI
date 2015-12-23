@@ -19,7 +19,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
         setTitle();
 
         function setTitle() {
-            $title.text(view.getText());
+            $title.text(view.getText() || "");
         }
     },
 
