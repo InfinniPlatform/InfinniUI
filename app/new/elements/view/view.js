@@ -171,7 +171,6 @@ _.extend(View.prototype,
 
             if(this.eventManager.trigger('onOpening', scriptArgs, context)){
 
-                //scriptArgs.$layout = this.render();
                 this.openStrategy.open();
 
                 this.eventManager.trigger('onOpened', scriptArgs, context);

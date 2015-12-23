@@ -471,6 +471,12 @@ _.extend(Element.prototype, {
     },
 
     remove: function (isInitiatedByParent) {
+        if(this.isRemoved){
+            var logger = window.InfinniUI.global.logger;
+            logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
+            return;
+        }
+
         var children = this.childElements;
 
         for (var i = 0, ii = children.length; i < ii; i++) {
