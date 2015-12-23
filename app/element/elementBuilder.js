@@ -131,7 +131,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 if (!converter) {
                     converter = {};
                 }
-
+                
                 if(!converter.toElement){
                     converter.toElement = function (context, args) {
                         return !!args.value;
