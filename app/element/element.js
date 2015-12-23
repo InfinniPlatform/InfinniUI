@@ -483,6 +483,8 @@ _.extend(Element.prototype, {
             this.parent.removeChild(this);
         }
 
+        this.isRemoved = true;
+
         this.childElements = undefined;
     },
 
@@ -494,7 +496,14 @@ _.extend(Element.prototype, {
     },
 
     addChild: function (child) {
-        this.childElements.push(child);
+        if(!this.isRemoved){
+            this.childElements.push(child);
+
+        }else{
+            var logger = window.InfinniUI.global.logger;
+            logger.warn('Element.addChild: Попытка добавить потомка в удаленный элемент');
+        }
+
     },
 
     _getHandlingKeyEventData: function (nativeData) {

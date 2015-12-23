@@ -187,6 +187,12 @@ _.extend(View.prototype,
 
         close: function(success, error){
 
+            if(this.isClosing){
+                return;
+            }else{
+                this.isClosing = true;
+            }
+
             var context = this.getContext();
             var scriptArgs = this._getScriptArgs();
 

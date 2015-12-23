@@ -49,7 +49,9 @@ var ViewPanelView = ControlView.extend({
 
     onChangeLayoutHandler: function (model, layout) {
         this.$el.empty();
-        this.$el.append(layout.render());
+        if(layout){
+            this.$el.append(layout.render());
+        }
     },
 
     render: function () {

@@ -8,6 +8,7 @@ _.extend(ViewPanel.prototype, {
 
     setLayout: function (layout) {
         var oldLayout = this.getLayout();
+
         if(oldLayout) {
             oldLayout.close();
         }
