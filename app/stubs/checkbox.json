@@ -1,4 +1,5 @@
 {
+  "OnLoaded": "OL2",
   "DataSources": [
     {
       "DocumentDataSource": {
@@ -458,11 +459,15 @@
                                           "LinkView": {
                                               "InlineView": {
                                                   "View": {
+                                                      "OnLoaded": "OL",
                                                       "Text": "My Dialog",
                                                       "Scripts": [
                                                           {
                                                               "Name": "close",
                                                               "Body": "context.view.close();"
+                                                          },{
+                                                              "Name": "OL",
+                                                              "Body": "debugger;"
                                                           }
                                                       ],
                                                       "Items": [

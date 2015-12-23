@@ -45,6 +45,13 @@ _.extend(LinkView.prototype, {
         var openStrategy;
         var container;
 
+        if(view.setParent){
+            view.setParent(this.parent);
+        }
+        if(this.parent && this.parent.addChild){
+            this.parent.addChild(view);
+        }
+
         switch(openMode){
             case 'Container': {
                 container = InfinniUI.global.containers[this.containerName];

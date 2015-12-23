@@ -73,6 +73,8 @@ _.extend(ViewBuilder.prototype, {
                     dataSources[i].updateItems();
                 }
             }
+        }else{
+            element.noDataSourceOnView();
         }
 
         if(metadata.OnOpening){

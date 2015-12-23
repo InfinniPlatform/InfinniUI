@@ -240,6 +240,10 @@ _.extend(View.prototype,
             return {
                 source: this
             };
+        },
+
+        noDataSourceOnView: function(){
+            this._initDataSourceHandlers();
         }
     }
 );

@@ -11,6 +11,7 @@ _.extend(ViewPanel.prototype, {
         if(oldLayout) {
             oldLayout.close();
         }
+
         this.control.set('layout', layout);
     },
 

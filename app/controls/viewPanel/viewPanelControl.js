@@ -12,10 +12,31 @@ ViewPanelControl.prototype.createControlView = function (model) {
     return new ViewPanelView({model: model});
 };
 
-var ViewPanelModel = Backbone.Model.extend({
+var ViewPanelModel = ControlModel.extend({
     defaults: _.defaults({
         layout: null
-    }, ControlModel.prototype.defaults)
+    }, ControlModel.prototype.defaults),
+
+    initialize: function(){
+        var that = this;
+
+        ControlModel.prototype.initialize.apply(this);
+
+        this.once('change:layout', function (model, layout) {
+            if(layout && layout.onLoaded){
+                that.subscribeOnLoaded();
+            }
+        });
+    },
+
+    subscribeOnLoaded: function(){
+        var that = this;
+        var layout = this.get('layout');
+
+        layout.onLoaded(function(){
+            that.set('isLoaded', true);
+        });
+    }
 });
 
 var ViewPanelView = ControlView.extend({
@@ -23,7 +44,6 @@ var ViewPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-        //this.listenToOnce(this.model, 'change:layout', this.onChangeLayoutHandler); //Почему так было??
         this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
     },
 
