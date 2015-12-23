@@ -10,12 +10,12 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     UI: _.extend({}, editorBaseViewMixin.UI, {
         input: 'input',
         img: 'img',
-        remove: '.image-remove'
+        remove: '.pl-image-remove'
     }),
 
     events: {
         'change input': 'onChangeFileHandler',
-        'click .image-remove': 'onClickRemoveImageHandler'
+        'click .pl-image-remove': 'onClickRemoveImageHandler'
     },
 
 
