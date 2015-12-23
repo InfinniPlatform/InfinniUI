@@ -4,16 +4,19 @@ InfinniUI.ToolTipService = (function () {
 
     var exchange = window.InfinniUI.global.messageBus;
 
-    exchange.subscribe(messageTypes.onToolTip.name, function (message) {
+    exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+        var message = args.value;
         initToolTip(getSourceElement(message.source));
     });
 
-    exchange.subscribe(messageTypes.onToolTipShow.name, function (message) {
+    exchange.subscribe(messageTypes.onToolTipShow.name, function (context, args) {
+        var message = args.value;
         showToolTip(getSourceElement(message.source), message.content);
     });
 
 
-    exchange.subscribe(messageTypes.onToolTipHide.name, function (message) {
+    exchange.subscribe(messageTypes.onToolTipHide.name, function (context, args) {
+        var message = args.value;
         hideToolTip(getSourceElement(message.source), message.content);
     });
 
