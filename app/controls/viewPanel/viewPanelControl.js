@@ -63,6 +63,9 @@ var ViewPanelView = ControlView.extend({
             this.$el.append(layout.render());
         }
 
+        this.updateProperties();
+        this.trigger('render');
+
         this.postrenderingActions(false);
         return this;
     }
