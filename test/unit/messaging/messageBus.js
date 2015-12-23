@@ -9,14 +9,14 @@ describe('MessageBus', function () {
         it('should send', function () {
             var flag = 0;
 
-            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
-                flag += obj;
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (context, obj) {
+                flag += obj.value;
             });
-            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
-                flag += obj;
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (context, obj) {
+                flag += obj.value;
             });
-            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
-                flag += obj;
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (context, obj) {
+                flag += obj.value;
             });
 
             messageBus.send(messageTypes.onViewOpened.name, 2);
@@ -28,17 +28,17 @@ describe('MessageBus', function () {
             var flag1 = 0,
                 flag2 = 0;
 
-            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
-                flag1 += obj;
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (context, obj) {
+                flag1 += obj.value;
             });
-            messageBus.subscribe(messageTypes.onViewOpened.name, function (obj) {
-                flag1 += obj;
+            messageBus.subscribe(messageTypes.onViewOpened.name, function (context, obj) {
+                flag1 += obj.value;
             });
-            messageBus.subscribe(messageTypes.onViewClosed.name, function (obj) {
-                flag2 += obj;
+            messageBus.subscribe(messageTypes.onViewClosed.name, function (context, obj) {
+                flag2 += obj.value;
             });
-            messageBus.subscribe(messageTypes.onViewClosed.name, function (obj) {
-                flag2 += obj;
+            messageBus.subscribe(messageTypes.onViewClosed.name, function (context, obj) {
+                flag2 += obj.value;
             });
 
             messageBus.send(messageTypes.onViewOpened.name, 1);
