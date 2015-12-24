@@ -7,13 +7,13 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     initialize: function () {
         this.wasRendered = false;
         this.once('render', this.initHandlersForProperties, this);
-        this.initDomHandlers();
+        this._initDomHandlers();
 
     },
 
     classNameFocused: 'pl-focused',
 
-    initDomHandlers: function () {
+    _initDomHandlers: function () {
         var
             view = this,
             $el = this.$el;
