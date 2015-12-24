@@ -66,13 +66,13 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
     initValidation: function (parentView, dataSource, metadata) {
         if (metadata.ValidationErrors) {
             dataSource.setErrorValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name, args);
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
             });
         }
 
         if (metadata.ValidationWarnings) {
             dataSource.setWarningValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name, args);
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name || metadata.ValidationWarnings, args);
             });
         }
     },
@@ -81,25 +81,25 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         //Скриптовые обработчики на события
         if (parentView && metadata.OnSelectedItemChanged) {
             dataSource.onSelectedItemChanged(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged);
             });
         }
 
         if (parentView && metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated);
             });
         }
 
         if (parentView && metadata.OnSelectedItemModified) {
             dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
             });
         }
 
         if (parentView && metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name);
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
             });
         }
     },

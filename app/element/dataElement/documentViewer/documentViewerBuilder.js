@@ -27,7 +27,7 @@ _.extend(DocumentViewerBuilder.prototype, {
         //Скриптовые обработчики на события
         if (params.view && metadata.OnLoaded){
             params.element.onLoaded(function() {
-                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
             });
         }
     }

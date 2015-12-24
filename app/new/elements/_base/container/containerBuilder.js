@@ -134,7 +134,7 @@ _.extend(ContainerBuilder.prototype, {
         if (metadata.GroupValueSelector) {
             groupValueSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name, args)
+                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name || metadata.GroupValueSelector, args)
             };
         } else if (metadata.GroupValueProperty) {
             groupValueSelector = function (context, args) {
@@ -236,7 +236,7 @@ _.extend(ContainerBuilder.prototype, {
 
             binding.setConverter({
                 toElement: function (_context, _args) {
-                    return scriptExecutor.executeScript(itemSelectorMetadata.Name, _args);
+                    return scriptExecutor.executeScript(itemSelectorMetadata.Name || itemSelectorMetadata, _args);
                 }
             });
 

@@ -11,7 +11,7 @@ var builderBaseTextElementMixin = {
 
         if (metadata.OnKeyDown) {
             element.onKeyDown(function (data) {
-                new ScriptExecutor(view).executeScript(metadata.OnKeyDown.Name, data);
+                new ScriptExecutor(view).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, data);
             });
         }
 

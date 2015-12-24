@@ -193,7 +193,7 @@ var DataGridBuilder = function () {
 
         if (metadata.OnKeyDown) {
             dataGrid.onKeyDown(function (data) {
-                new ScriptExecutor(view).executeScript(metadata.OnKeyDown.Name, data);
+                new ScriptExecutor(view).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, data);
             });
         }
 
@@ -265,19 +265,19 @@ var DataGridBuilder = function () {
         // Скриптовые обработчики на события
         if (parent && metadata.OnLoaded){
             dataGrid.onLoaded(function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name);
+                new ScriptExecutor(parent).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
             });
         }
 
         if (parent && metadata.OnValueChanged) {
             dataGrid.onValueChanged (function () {
-                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name);
+                new ScriptExecutor(parent).executeScript(metadata.OnValueChanged.Name || metadata.OnValueChanged);
             });
         }
 
         if(parent && metadata.OnDoubleClick) {
             dataGrid.onDoubleClick(function (args) {
-                new ScriptExecutor(parent).executeScript(metadata.OnDoubleClick.Name, args);
+                new ScriptExecutor(parent).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, args);
             });
         }
     };

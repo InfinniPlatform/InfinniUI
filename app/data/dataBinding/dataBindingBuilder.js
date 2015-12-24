@@ -34,11 +34,11 @@ DataBindingBuilder.prototype.build = function (context, args) {
     if(metadata.Converter){
         if(metadata['Converter']['ToSource']){
             scriptName = metadata['Converter']['ToSource'];
-            converter.toSource = context.scripts[scriptName];
+            converter.toSource = this.scriptByNameOrBody(scriptName, context);
         }
         if(metadata['Converter']['ToElement']){
             scriptName = metadata['Converter']['ToElement'];
-            converter.toElement = context.scripts[scriptName];
+            converter.toElement = this.scriptByNameOrBody(scriptName, context);
         }
         result.setConverter(converter);
     }
@@ -52,4 +52,18 @@ DataBindingBuilder.prototype.findSource = function(view, sourceName){
     var parameter = context.parameters[sourceName];
     var element = context.controls[sourceName];
     return dataSource || parameter || element;
+};
+
+DataBindingBuilder.prototype.isScriptBody = function(value){
+    return value && value.substr(0, 1) == '{';
+};
+
+DataBindingBuilder.prototype.scriptByNameOrBody = function(nameOrBody, context){
+    if(this.isScriptBody(nameOrBody)){
+        var scriptExecutor = new ScriptExecutor(context.view);
+        return scriptExecutor.buildScriptByBody(nameOrBody);
+    }else{
+        return context.scripts[nameOrBody];
+    }
+
 };

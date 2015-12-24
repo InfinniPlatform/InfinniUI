@@ -33,12 +33,12 @@ var editorBaseBuilderMixin = {
         if (metadata.OnValueChanging) {
             element.onValueChanging(function (context, args) {
                 var scriptExecutor = new ScriptExecutor(params.parentView);
-                return scriptExecutor.executeScript(metadata.OnValueChanging.Name, args);
+                return scriptExecutor.executeScript(metadata.OnValueChanging.Name || metadata.OnValueChanging, args);
             });
         }
         if (metadata.OnValueChanged) {
             element.onValueChanged(function (context, args) {
-                new ScriptExecutor(params.parentView).executeScript(metadata.OnValueChanged.Name, args);
+                new ScriptExecutor(params.parentView).executeScript(metadata.OnValueChanged.Name || metadata.OnValueChanged, args);
             });
         }
 

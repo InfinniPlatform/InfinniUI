@@ -45,13 +45,13 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
         if (metadata.OnClosing) {
             element.onClosing(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosing.Name, {});
+                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosing.Name || metadata.OnClosing, {});
             });
         }
 
         if (metadata.OnClosed) {
             element.onClosed(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosed.Name, {});
+                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosed.Name || metadata.OnClosed, {});
             });
         }
     }

@@ -174,7 +174,7 @@ DataGridColumnBuilder.prototype.buildCellSelector = function (column, metadata, 
     if (metadata.CellSelector) {
         cellSelector = function (context, args) {
             var scriptExecutor = new ScriptExecutor(params.parent);
-            return scriptExecutor.executeScript(metadata.CellSelector.Name, args)
+            return scriptExecutor.executeScript(metadata.CellSelector.Name || metadata.CellSelector, args)
         };
     } else if (metadata.CellProperty) {
         var propertyName = metadata.CellProperty;
