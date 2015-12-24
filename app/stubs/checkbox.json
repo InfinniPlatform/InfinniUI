@@ -500,7 +500,7 @@
                                                           }
                                                       ]
                                                   },
-                                                  "DialogWidth": "100%",
+                                                  "DialogWidth": "ExtraLarge",
                                                   "OpenMode": "Dialog",
                                                   "Text": "OpenDialog"
                                               }

@@ -27,7 +27,11 @@ _.extend(LinkView.prototype, {
     },
 
     setDialogWidth: function(dialogWidth){
-        this.dialogWidth = dialogWidth.toLowerCase();
+        dialogWidth = dialogWidth.toLowerCase();
+        if(dialogWidth == 'extralarge'){
+            dialogWidth = '100%';
+        }
+        this.dialogWidth = dialogWidth;
     },
 
     createView: function (resultCallback) {
