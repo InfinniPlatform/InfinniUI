@@ -1,12 +1,17 @@
-<div class="file">
-    <div class="file_name"></div>
-    <div class="file_size"></div>
-    <button class="file-remove" type="button">Удалить</button>
+<div class="pl-filebox-link">
+    <div class="pl-filebox-empty">
+        <span>Файл не загружен</span>
+    </div>
+    <div class="pl-filebox-info">
+        <a class="pl-filebox-download" target="_blank"></a>
+        <span class="pl-filebox-size"></span>
+        <button class="pl-filebox-remove" type="button">Удалить</button>
+    </div>
 </div>
 
-<div style="position: relative;overflow: hidden;">
-    <input type="file" style="display: block;height: 2000px;width: 2000px;position: absolute;right:-50px;bottom: -50px;outline: none;">
-    <div style="text-align: center;background-color: #777777;padding: 20px;">Выбрать файл</div>
+<div class="pl-filebox-file">
+    <input type="file">
+    <div class="pl-filebox-grip">Выбрать файл</div>
 </div>
 
 <div class="pl-control-hint-text"></div>

@@ -40,12 +40,28 @@ _.extend(FileBoxBuilder.prototype, {
                 var value = args.value;
                 var binding = args.binding;
                 var ds = binding.getSource();
+                var sourceProperty = binding.getSourceProperty();
                 var fileProvider = ds.getFileProvider();
                 var url = null;
+                var info = {};
                 //Формируем URL изображения
-                if (value && value.ContentId && fileProvider) {
-                    url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
+                if (value && value.Info && value.Info.ContentId && fileProvider) {
+                    info = value.Info;
+                    var contentId = info.ContentId;
+                    var idProperty = ds.idProperty || "Id";
+                    var instanceId = ds.lookupPropertyValue(idProperty, function (value) {
+                        return value && value.Info.ContentId  === contentId ;
+                    }, sourceProperty);
+                    if (typeof instanceId !== 'undefined') {
+                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
+                    }
                 }
+
+                element.setFileName(info.Name)
+                    .setFileSize(info.Size)
+                    .setFileTime(info.Time)
+                    .setFileType(info.Type);
+
                 return url;
             }
         };
