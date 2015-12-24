@@ -11,7 +11,8 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         input: 'input',
         img: 'img',
         file: '.pl-image-file',
-        remove: '.pl-image-remove'
+        remove: '.pl-image-remove',
+        uploadButton: '.pl-image-file-upload-button'
     }),
 
     events: {
@@ -96,6 +97,14 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
 
         this.ui.input.prop('disabled', !isEnabled || readOnly);
         this.ui.remove.prop('disabled', !isEnabled || readOnly);
+    },
+
+    updateText: function () {
+        var textForButton = this.model.get('text');
+
+        if (typeof textForButton == 'string'){
+            this.ui.uploadButton.text(textForButton);
+        }
     },
 
     updateUrl: function () {
