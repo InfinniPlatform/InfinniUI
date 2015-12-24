@@ -164,6 +164,7 @@
                                               "Items": [
                                                   {
                                                       "ComboBox": {
+                                                          "Name": "CBX",
                                                           "ValueFormat": "{FirstName} {LastName}",
                                                           "ItemFormat": "{Email} ({FirstName})",
                                                           "Items": {
@@ -203,6 +204,7 @@
                                               "Items": [
                                                   {
                                                       "DataGrid": {
+                                                          "Name": "DG",
                                                           "Visible": true,
                                                           "Items": {
                                                               "Source": "BloodGroupDataSource",
@@ -498,6 +500,7 @@
                                                           }
                                                       ]
                                                   },
+                                                  "DialogWidth": "100%",
                                                   "OpenMode": "Dialog",
                                                   "Text": "OpenDialog"
                                               }
@@ -1073,6 +1076,10 @@
     {
       "Name": "preconverter",
       "Body": "console.log(args.value); return args.value;"
+    },
+    {
+      "Name": "OL2",
+      "Body": ""
     }
   ]
 }

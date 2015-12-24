@@ -10,10 +10,18 @@ _.extend(MetadataViewBuilder.prototype, {
         var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
+
         if('OpenMode' in metadata){
             linkView.setOpenMode(metadata.OpenMode);
         }
-        linkView.setContainer(metadata.Container);
+
+        if('Container' in metadata){
+            linkView.setContainer(metadata.Container);
+        }
+
+        if('DialogWidth' in metadata){
+            linkView.setDialogWidth(metadata.DialogWidth);
+        }
 
         return linkView;
     },

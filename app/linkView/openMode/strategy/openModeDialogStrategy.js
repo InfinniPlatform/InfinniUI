@@ -1,5 +1,5 @@
 var OpenModeDialogStrategy = function () {
-
+    this.dialogWidth = 'default';
 };
 
 _.extend(OpenModeDialogStrategy.prototype, {
@@ -7,6 +7,10 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
     setView: function(view){
         this.view = view;
+    },
+
+    setDialogWidth: function(dialogWidth){
+        this.dialogWidth = dialogWidth;
     },
 
     assignDialogTitle: function ($title) {
@@ -24,7 +28,8 @@ _.extend(OpenModeDialogStrategy.prototype, {
     },
 
     open: function(){
-        var $template = $(this.template());
+        var modalParams = {dialogWidth: this.dialogWidth};
+        var $template = $(this.template(modalParams));
         this.assignDialogTitle($('h4', $template));
 
         var $modal = $template.appendTo($('body'));

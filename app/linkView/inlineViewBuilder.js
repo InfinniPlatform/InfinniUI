@@ -17,6 +17,10 @@ function InlineViewBuilder() {
             linkView.setContainer(metadata.Container);
         }
 
+        if('DialogWidth' in metadata){
+            linkView.setDialogWidth(metadata.DialogWidth);
+        }
+
         return linkView;
     };
 

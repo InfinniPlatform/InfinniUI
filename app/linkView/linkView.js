@@ -3,6 +3,8 @@ function LinkView(parent) {
     this.parent = parent;
 
     this.viewTemplate = function(){return '';};
+
+    this.dialogWidth;
 }
 
 _.extend(LinkView.prototype, {
@@ -22,6 +24,10 @@ _.extend(LinkView.prototype, {
 
     setViewTemplate: function(viewTemplate){
         this.viewTemplate = viewTemplate;
+    },
+
+    setDialogWidth: function(dialogWidth){
+        this.dialogWidth = dialogWidth;
     },
 
     createView: function (resultCallback) {
@@ -64,6 +70,10 @@ _.extend(LinkView.prototype, {
 
             case 'Dialog': {
                 openStrategy = new OpenModeDialogStrategy();
+                openStrategy.setView(view);
+                if(this.dialogWidth){
+                    openStrategy.setDialogWidth(this.dialogWidth);
+                }
                 openStrategy.setView(view);
                 view.setOpenStrategy(openStrategy);
             } break;
