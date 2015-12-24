@@ -61,7 +61,29 @@ _.extend(FileBox.prototype, {
         if (Array.isArray(types)) {
             collection.set(types)
         }
+    },
+
+    // НЕдокументированные методы
+    setFileName: function (value) {
+        this.control.set('fileName', value);
+        return this;
+    },
+
+    setFileSize: function (value) {
+        this.control.set('fileSize', value);
+        return this;
+    },
+
+    setFileTime: function (value) {
+        this.control.set('fileTime', value);
+        return this;
+    },
+
+    setFileType: function (value) {
+        this.control.set('fileType', value);
+        return this;
     }
+
     //
     //setUrl: function (value) {
     //    this.control.set('url', value);

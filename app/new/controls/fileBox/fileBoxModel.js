@@ -5,6 +5,12 @@
  */
 var FileBoxModel = ControlModel.extend( _.extend({
 
+    defaults: _.defaults({
+
+        },
+        editorBaseModelMixin.defaults_editorBaseModel,
+        ControlModel.prototype.defaults
+    ),
     initialize: function () {
         ControlModel.prototype.initialize.apply(this, arguments);
         this.initialize_editorBaseModel();
@@ -52,7 +58,8 @@ var FileBoxModel = ControlModel.extend( _.extend({
             model.set('fileName', null);
             model.set('fileSize', null);
         }
-    },
+        model.set('value', null);
+    }
 
     //stopLoadingFile: function () {
     //    var fileLoader = this.fileLoader;

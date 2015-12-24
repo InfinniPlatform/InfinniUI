@@ -11,15 +11,18 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         input: 'input',
-        name: '.file_name',
-        size: '.file_size',
-        file: '.file',
-        remove: '.file-remove'
+        link: '.pl-filebox-link',
+        download: '.pl-filebox-download',
+        fileSize: '.pl-filebox-size',
+        file: '.pl-filebox-file',
+        remove: '.pl-filebox-remove',
+        empty: '.pl-filebox-empty',
+        info: '.pl-filebox-info'
     }),
 
     events: {
         'change input': 'onChangeFileHandler',
-        'click .file-remove': 'onClickRemoveImageHandler'
+        'click .pl-filebox-remove': 'onClickRemoveImageHandler'
     },
 
     initHandlersForProperties: function(){
@@ -27,7 +30,9 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
         this.listenTo(this.model, 'change:fileName', this.updateFileName);
         this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
-        this.listenTo(this.model, 'change:url', this.updateUrl);
+        this.listenTo(this.model, 'change:fileTime', this.updateFileTime);
+        this.listenTo(this.model, 'change:fileType', this.updateFileType);
+        this.listenTo(this.model, 'change:value', this.updateUrl);
 
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
@@ -36,6 +41,12 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
+
+        this.updateFileName();
+        this.updateFileSize();
+        this.updateFileType();
+        this.updateFileTime();
+        this.updateUrl();
 
         this.updateHintText();
         this.updateErrorText();
@@ -88,13 +99,21 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         ControlView.prototype.updateEnabled.call(this);
 
         var isEnabled = this.model.get('enabled');
-        this.ui.input.prop('disabled', !isEnabled);
+        var fileName = this.model.get('fileName');
+        this.updateRemoveButtonState();
+        this.ui.file.toggleClass('hidden', !isEnabled);
     },
 
     updateFileName: function () {
         var fileName = this.model.get('fileName');
-        this.ui.name.text(fileName);
-        this.ui.file.toggle(typeof fileName !== 'undefined' && fileName !== null && fileName.length);
+        var enabled = this.model.get('enabled');
+
+        this.ui.download.text(fileName);
+
+        this.ui.empty.toggleClass('hidden', !!fileName);
+        this.ui.info.toggleClass('hidden', !fileName);
+
+        this.updateRemoveButtonState();
     },
 
     updateFileSize: function () {
@@ -104,12 +123,35 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         if (typeof fileSize !== 'undefined' && fileSize !== null) {
             text = InfinniUI.format.humanFileSize(fileSize);
         }
-        this.ui.size.text(text);
+        this.ui.fileSize.text(text);
+    },
+
+    updateRemoveButtonState: function () {
+        var enabled = this.model.get('enabled');
+        var fileName = this.model.get('fileName');
+        this.ui.remove.toggleClass('hidden', !enabled ||!fileName);
+        this.ui.remove.prop('disabled', !enabled || !fileName);
+    },
+
+    updateFileTime: function () {
+        var time = this.model.get('fileTime');
+
+        //@TODO Update file's datetime on view
+    },
+
+    updateFileType: function () {
+        var fileType = this.model.get('fileType');
+
+        //@TODO Update file's mime type on view
     },
 
     updateUrl: function () {
-        //var url = this.model.get('url');
-
+        var url = this.model.get('value');
+        if (!url) {
+            this.ui.download.removeAttr('href');
+        } else {
+            this.ui.download.attr('href', url);
+        }
 
     },
 
