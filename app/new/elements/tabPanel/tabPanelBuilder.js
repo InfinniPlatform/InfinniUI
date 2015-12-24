@@ -38,6 +38,11 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
             metadata = params.metadata,
             element = params.element;
 
+        element.onSelectedItemChanged(function (context, args) {
+            var exchange = window.InfinniUI.global.messageBus;
+            exchange.send('OnChangeLayout', {});
+        });
+
         if (metadata.OnSelectedItemChanged) {
             element.onSelectedItemChanged(function (context, args) {
                 return new ScriptExecutor(params.parentView)
