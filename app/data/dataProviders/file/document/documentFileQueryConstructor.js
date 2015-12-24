@@ -16,6 +16,10 @@ DocumentUploadQueryConstructor.prototype.template = {
     upload: _.template('<%= host %>/RestfulApi/Upload/configuration/uploadbinarycontent/?linkedData=<%= data %>')
 };
 
+DocumentUploadQueryConstructor.prototype.normalizeFieldName = function (fieldName) {
+    return String(fieldName).replace(/^[\d\$]+\./, '');
+};
+
 /**
  * @public
  * @param fieldName
@@ -47,7 +51,7 @@ DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, insta
         Configuration: this.configId,
         Metadata: this.documentId,
         DocumentId: instanceId,
-        FieldName: fieldName
+        FieldName: this.normalizeFieldName(fieldName)
     };
     var template = this.template.download;
 
@@ -69,7 +73,7 @@ DocumentUploadQueryConstructor.prototype.getUploadUrl = function (fieldName, ins
         "Configuration": this.configId,
         "Metadata": this.documentId,
         "DocumentId": instanceId,
-        "FieldName": fieldName
+        "FieldName": this.normalizeFieldName(fieldName)
     };
 
     var template = this.template.upload;
