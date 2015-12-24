@@ -10,6 +10,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     UI: _.extend({}, editorBaseViewMixin.UI, {
         input: 'input',
         img: 'img',
+        file: '.pl-image-file',
         remove: '.pl-image-remove'
     }),
 
@@ -23,7 +24,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         ControlView.prototype.initHandlersForProperties.call(this);
 
         this.listenTo(this.model, 'change:value', this.updateUrl);
-
+        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
@@ -36,6 +37,13 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
+        this.updateReadOnly();
+    },
+
+    updateReadOnly: function () {
+        var readOnly = this.model.get('readOnly');
+
+        this.ui.file.toggleClass('hidden', readOnly);
     },
 
     updateHintText: function(){
@@ -84,15 +92,19 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         ControlView.prototype.updateEnabled.call(this);
 
         var isEnabled = this.model.get('enabled');
-        this.ui.input.prop('disabled', !isEnabled);
+        var readOnly = this.model.get('readOnly');
+
+        this.ui.input.prop('disabled', !isEnabled || readOnly);
+        this.ui.remove.prop('disabled', !isEnabled || readOnly);
     },
 
     updateUrl: function () {
         var url = this.model.get('value');
+        var readOnly = this.model.get('readOnly');
 
         this.ui.img.attr('src', url);
         var none = url === null || typeof url === 'undefined';
-        this.ui.remove.toggle(!none);
+        this.ui.remove.toggle(!none && !readOnly);
         this.ui.img.toggle(!none);
     },
 

@@ -50,7 +50,13 @@ _.extend(ImageBox.prototype, {
     /**
      *  Методы, не описанные в документации
      */
+    setReadOnly: function (value) {
+        this.control.set('readOnly', value);
+    },
 
+    getReadOnly: function () {
+        return this.control.get('readOnly');
+    },
 
     /**
      * @description Недокументированный!
