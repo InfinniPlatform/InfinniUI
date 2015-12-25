@@ -20,7 +20,6 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
         this.prerenderingActions();
 
         this.removeChildElements();
-        console.log(this.model.get('items'));
         this.$el.html(this.template({
             items: this.model.get('items')
         }));
