@@ -48,11 +48,7 @@ _.extend(ImageBoxBuilder.prototype, {
                 //Формируем URL изображения
 
                 if (value && value.Info && value.Info.ContentId && fileProvider) {
-                    var contentId = value.Info.ContentId;
-                    var idProperty = ds.idProperty || "Id";
-                    var instanceId = ds.lookupPropertyValue(idProperty, function (value) {
-                        return value && value.Info.ContentId  === contentId ;
-                    }, sourceProperty);
+                    var instanceId = ds.lookupIdPropertyValue(sourceProperty);
                     if (typeof instanceId !== 'undefined') {
                         url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
                     }
