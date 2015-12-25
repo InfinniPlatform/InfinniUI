@@ -19,8 +19,11 @@ _.extend(ButtonBuilder.prototype, {
         if(!viewMode){
             while(!exit){
                 if(el){
-                    if(el instanceof PopupButton || el instanceof MenuBar){
+                    if(el instanceof PopupButton){
                         viewMode = 'link';
+                        exit = true;
+                    }else if(el instanceof MenuBar){
+                        viewMode = 'menuItem';
                         exit = true;
                     }else{
                         el = el.parent;
