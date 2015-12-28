@@ -6,7 +6,7 @@
 function View(parent) {
     _.superClass(View, this, parent);
 
-    var that = this;
+    var view = this;
 
     this.eventManager = new EventManager();
 
@@ -20,8 +20,20 @@ function View(parent) {
 
     this._initContext();
 
+    var parentView = this.getView();
+
+    if (parentView) {
+        parentView.onClosing && parentView.onClosing(function (context, message) {
+            return view.eventManager.trigger('onClosing', view.getContext(), view._getScriptArgs())
+        });
+
+        parentView.onClosed && parentView.onClosed(function (context, message) {
+            view.eventManager.trigger('onClosed', view.getContext(), view._getScriptArgs());
+        });
+    }
+
     this.control.get('dataSources').onChange(function(){
-        that._initDataSourceHandlers();
+        view._initDataSourceHandlers();
     });
 }
 
