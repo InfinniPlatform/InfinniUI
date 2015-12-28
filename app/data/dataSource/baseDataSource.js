@@ -317,10 +317,31 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('modifiedItems', {});
     },
 
+    /**
+     * @description Проверяет формат имя свойства атрибута
+     * @param propertyName
+     * @private
+     */
+    _checkPropertyName: function (propertyName) {
+        var result = true;
+        try {
+            if (propertyName && propertyName.length > 0) {
+                result = propertyName.match(/^[\$#@\d]+/);
+            }
+            if (!result) {
+                throw new Error('Wrong property name "' + propertyName + '"');
+            }
+        } catch (e) {
+            console.debug(e);
+        }
+    },
+
     getProperty: function (property) {
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, source;
+
+        this._checkPropertyName(property);
 
         if(!this.isDataReady()){
             return undefined;
@@ -352,6 +373,9 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     setProperty: function (property, value) {
+
+        this._checkPropertyName(property);
+
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, oldValue, source;

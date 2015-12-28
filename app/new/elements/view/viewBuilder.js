@@ -17,7 +17,7 @@ _.extend(ViewBuilder.prototype, {
 
         var parentView = params.parentView;
 
-        // новые params, где parentView будет уже текущая вьюха
+        // РЅРѕРІС‹Рµ params, РіРґРµ parentView Р±СѓРґРµС‚ СѓР¶Рµ С‚РµРєСѓС‰Р°СЏ РІСЊСЋС…Р°
         params = _.extend({}, params);
         params.parentView = params.element;
 
@@ -91,7 +91,7 @@ _.extend(ViewBuilder.prototype, {
 
         if(metadata.OnClosing){
             element.onClosing(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnClosing.Name || metadata.OnClosing);
+                return new ScriptExecutor(element).executeScript(metadata.OnClosing.Name || metadata.OnClosing);
             });
         }
 
