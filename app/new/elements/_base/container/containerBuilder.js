@@ -251,6 +251,7 @@ _.extend(ContainerBuilder.prototype, {
         var element = params.element;
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
+        var propertyForSource = params.metadata['Items']['Property'] || '';
         var that = this;
 
         return function (context, args) {
@@ -265,9 +266,9 @@ _.extend(ContainerBuilder.prototype, {
                 bindingIndex = that.bindingIndexByItemsIndex(index, params);
 
                 if (bindingIndex !== undefined && bindingIndex !== null) {
-                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', bindingIndex);
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild(propertyForSource, bindingIndex);
                 } else {
-                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+                    argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild(propertyForSource, index);
                 }
             }
 

@@ -349,7 +349,7 @@ describe('Container (Control)', function () {
                                 "Name": "TextBox1",
                                 "Value": {
                                     "Source": "ObjectDataSource1",
-                                    "Property": "$.Display"
+                                    "Property": "#.Display"
                                 }
                             }
                         },
@@ -385,6 +385,139 @@ describe('Container (Control)', function () {
 
                 // Then
                 assert.lengthOf(stackPanel.getChildElements(), 3, 'length of stackPanel children is right (after updating items)');
+            }
+        });
+
+        it('should stackPanel working with relative binding', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [{
+                                "It": [{ "Id": 1, "Display": "LTE" },
+                                    { "Id": 2, "Display": "3G" },
+                                    { "Id": 3, "Display": "2G" }
+                                ]
+                            }]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "@.#.Display"
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.It"
+                        }
+                    }
+                }]
+            };
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                $layout.detach();
+
+                assert.lengthOf($layout.find('.pl-text-box-input'), 3, 'count of textboxes is right');
+                assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE', 'value in first textbox is right');
+                assert.equal($layout.find('.pl-text-box-input:last').val(), '2G', 'value in last textbox is right');
+            }
+        });
+
+        it('should stackPanel working with deep relative binding', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [{
+                                "It": [{
+                                        id: 1,
+                                        subIt: [{ "Id": 1, "Display": "LTE" },
+                                            { "Id": 2, "Display": "3G" },
+                                            { "Id": 3, "Display": "2G" }]
+                                    },{
+                                        id: 2,
+                                        subIt: [{ "Id": 1, "Display": "LTE-2" },
+                                            { "Id": 2, "Display": "3G-2" },
+                                            { "Id": 3, "Display": "2G-2" }]
+                                    }
+                                ]
+                            }]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    StackPanel: {
+                        Name: 'MainViewPanel',
+                        "ItemTemplate": {
+                            "StackPanel": {
+                                "Items" : [
+                                    {
+                                        "Label":{
+                                            "Value":{
+                                                "Source": "ObjectDataSource1",
+                                                "Property": "@.#.id"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "StackPanel": {
+                                            "Items" : {
+                                                "Source": "ObjectDataSource1",
+                                                "Property": "@.#.subIt"
+                                            },
+                                            "ItemTemplate":{
+                                                "TextBox": {
+                                                    "Name": "TextBox1",
+                                                    "Value": {
+                                                        "Source": "ObjectDataSource1",
+                                                        "Property": "@.#.Display"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.It"
+                        }
+                    }
+                }]
+            };
+
+            // When
+            applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                //$layout.detach();
+
+                assert.lengthOf($layout.find('.pl-text-box-input'), 6, 'count of textboxes is right');
+                assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE', 'value in first textbox is right');
+                assert.equal($layout.find('.pl-text-box-input:last').val(), '2G-2', 'value in last textbox is right');
             }
         });
     });

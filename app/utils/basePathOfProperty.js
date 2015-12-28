@@ -1,14 +1,19 @@
 function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
-    if(!parentBasePath){
+
+
+    if(this.isRelativeProperty(basePathOfProperty)){
+        this.basePathOfProperty = parentBasePath.basePathOfProperty + this.excludeFirstChar(basePathOfProperty);
+    }else{
         this.basePathOfProperty = basePathOfProperty;
+    }
+
+    if(!parentBasePath){
         if(baseIndex !== undefined && baseIndex !== null){
             this.indexesInParentLists = [baseIndex];
             this.basePathOfProperty += baseIndex;
         }
 
     }else{
-        this.basePathOfProperty = parentBasePath.basePathOfProperty + '.' + basePathOfProperty;
-
         this.indexesInParentLists = parentBasePath.indexesInParentLists ? parentBasePath.indexesInParentLists.slice() : [];
         this.indexesInParentLists.push(baseIndex);
 
@@ -20,7 +25,13 @@ function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
 _.extend(BasePathOfProperty.prototype, {
     /*возвращает полный путь к свойству элемента в коллекции*/
     resolveProperty: function(property) {
-        return stringUtils.formatProperty(property, this.indexesInParentLists)
+        if(this.isRelativeProperty(property)){
+            property = this.excludeFirstChar(property);
+            return stringUtils.formatProperty(this.basePathOfProperty + property, this.indexesInParentLists);
+        }else{
+            return stringUtils.formatProperty(property, this.indexesInParentLists);
+        }
+
     },
 
     /*возвращает полный путь к свойству элемента в коллекции по заданному относительному пути*/
@@ -42,5 +53,13 @@ _.extend(BasePathOfProperty.prototype, {
     /*создает BasePathOfProperty следующего уровня с относительным путем*/
     buildRelativeChild: function(basePathOfProperty, baseIndex){
         return new BasePathOfProperty(basePathOfProperty, baseIndex, this);
+    },
+
+    isRelativeProperty: function(property){
+        return property.substr(0,1) == '@';
+    },
+
+    excludeFirstChar: function(str){
+        return str.substr(1, str.length - 1);
     }
 });
