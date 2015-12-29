@@ -817,7 +817,7 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('criteriaList');
     },
 
-    setFilter: function (filters) {
+    setFilter: function (filters, onSuccess, onError) {
         var bindingBuilder = this.get('bindingBuilder');
         var boundFilter = new BoundFilter(filters, bindingBuilder);
         var that = this;
@@ -828,16 +828,16 @@ var BaseDataSource = Backbone.Model.extend({
 
         boundFilter.onChange(function(newCriteriaList){
             if(boundFilter.isReady()){
-                that._setCriteriaList(newCriteriaList);
+                that._setCriteriaList(newCriteriaList, onSuccess, onError);
             }
         });
 
         //this._setCriteriaList(filters);
     },
 
-    _setCriteriaList: function(criteriaList){
+    _setCriteriaList: function(criteriaList, onSuccess, onError){
         this.set('criteriaList', criteriaList);
-        this.updateItems();
+        this.updateItems(onSuccess, onError);
     },
 
     setIdFilter: function (itemId) {
