@@ -70,7 +70,7 @@ _.extend(ViewBuilder.prototype, {
 
             for(var i = 0, ii = dataSources.length; i < ii; i++){
                 if(!dataSources[i].isLazy()){
-                    dataSources[i].updateItems();
+                    dataSources[i].tryInitData();
                 }
             }
         }else{
