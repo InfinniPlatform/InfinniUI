@@ -11,6 +11,16 @@ var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototy
         }
     ),
 
+    transformValue: function (value) {
+        if (typeof value !== 'undefined' && value !== null) {
+            var value = +value;
+            if (isNaN(value) || !isFinite(value)) {
+                value = null;
+            }
+        }
+        return value;
+    },
+
     initialize: function () {
         TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     },

@@ -12,7 +12,12 @@ var editorBaseModelMixin = {
         this.isInited = true;
     },
 
+    transformValue: function (value) {
+        return value;
+    },
+
     _setValue: function(value, options) {
+        value = this.transformValue(value);
         var
             oldValue = this.get('value'),
             message = {
