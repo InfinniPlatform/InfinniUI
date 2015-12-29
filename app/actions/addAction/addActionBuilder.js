@@ -15,7 +15,7 @@ function AddActionBuilder(){
             action.setProperty('destinationProperty', metadata.DestinationValue.Property);
         }
 
-        var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+        var linkView = builder.build(metadata['LinkView'], {parent: args.parent, parentView: parentView});
 
         action.setProperty('linkView', linkView);
         action.setProperty('destinationSource', metadata.DestinationValue.Source);
