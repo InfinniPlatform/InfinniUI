@@ -27,7 +27,9 @@ _.extend(OpenModeDialogStrategy.prototype, {
      * @param {boolean} closeButton
      */
     setCloseButton: function (closeButton) {
-        this.closeButton = !!closeButton;
+        if (typeof closeButton !== 'undefined' && closeButton !== null) {
+            this.closeButton = !!closeButton;
+        }
     },
 
     open: function(){
