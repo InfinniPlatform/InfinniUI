@@ -6,7 +6,7 @@ _.extend(MetadataViewBuilder.prototype, {
 
     build: function (context, args){
         var metadata = args.metadata;
-        var viewTemplate = this.buildViewTemplate(args);
+        var viewTemplate = this.buildViewTemplate(args, onViewReady);
         var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
@@ -23,10 +23,19 @@ _.extend(MetadataViewBuilder.prototype, {
             linkView.setDialogWidth(metadata.DialogWidth);
         }
 
+        if ('CloseButton' in metadata) {
+            linkView.setCloseButton(!!metadata.CloseButton);
+        }
+
+        var that = this;
+        function onViewReady(view) {
+            linkView.setHeaderTemplate(that.buildHeaderTemplate(view, args));
+        }
+
         return linkView;
     },
 
-    buildViewTemplate: function(params){
+    buildViewTemplate: function(params, cb){
         var metadata = params.metadata;
         var that = this;
 
@@ -34,7 +43,12 @@ _.extend(MetadataViewBuilder.prototype, {
             var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
 
             metadataProvider.getViewMetadata( function(viewMetadata){
-                that.buildViewByMetadata(params, viewMetadata, onViewReadyHandler);
+                that.buildViewByMetadata(params, viewMetadata, onReady);
+                function onReady() {
+                    var args = Array.prototype.slice.call(arguments);
+                    cb.apply(null, args);
+                    onViewReadyHandler.apply(null, args);
+                }
             });
         };
     },
@@ -72,4 +86,4 @@ _.extend(MetadataViewBuilder.prototype, {
         }
         return result;
     }
-});
+}, viewBuilderMixin);

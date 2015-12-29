@@ -6,7 +6,12 @@ function InlineViewBuilder() {
         var linkView = new LinkView(args.parentView);
 
         linkView.setViewTemplate(function(onViewReadyHandler){
-            that.buildViewByMetadata(args, args.metadata['View'], onViewReadyHandler);
+
+            that.buildViewByMetadata(args, args.metadata['View'], function (view) {
+                linkView.setHeaderTemplate(that.buildHeaderTemplate(view, args));
+
+                return onViewReadyHandler.call(null, view);
+            });
         });
 
         if('OpenMode' in metadata){
@@ -58,5 +63,8 @@ function InlineViewBuilder() {
             }
         }
         return result;
-    };
+   };
+
+    _.extend(this, viewBuilderMixin);
 }
+
