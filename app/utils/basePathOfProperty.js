@@ -25,6 +25,10 @@ function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
 _.extend(BasePathOfProperty.prototype, {
     /*возвращает полный путь к свойству элемента в коллекции*/
     resolveProperty: function(property) {
+        if(property === undefined || property === null){
+            property = '';
+        }
+
         if(this.isRelativeProperty(property)){
             property = this.excludeFirstChar(property);
             return stringUtils.formatProperty(this.basePathOfProperty + property, this.indexesInParentLists);
