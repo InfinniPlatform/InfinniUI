@@ -1,0 +1,104 @@
+{
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "ds",
+        "Items": [
+          {
+            "Name": "name 1",
+            "Operation": "income",
+            "Value": 100
+          },
+          {
+            "Name": "name 2",
+            "Operation": "income",
+            "Value": 200
+          },
+          {
+            "Name": "name 3",
+            "Operation": "income",
+            "Value": 300
+          },
+          {
+            "Name": "name 4",
+            "Operation": "outcome",
+            "Value": 100
+          }
+        ]
+      }
+    }
+  ],
+  "Items": [
+    {
+      "DataGrid": {
+        "Items": {
+          "Source": "ds",
+          "Property": ""
+        },
+        "ShowSelectors": false,
+        "Columns": [
+          {
+            "Header": "Name",
+            "CellProperty": "Name"
+          },
+          {
+            "Header": "Operation",
+            "CellProperty": "Operation"
+          },
+          {
+            "Header": "Value",
+            "CellProperty": "Value"
+          }
+        ]
+      }
+    },
+    {
+      "StackPanel": {
+        "ItemTemplate": {
+          "Panel": {
+            "Collapsible": true,
+            "Collapsed": true,
+            "~Header": {
+              "Source": "ds",
+              "Property": "#.Name"
+            },
+            "HeaderTemplate": {
+              "Button": {
+                "ContentTemplate": {
+                  "StackPanel": {
+                    "Orientation": "Horizontal",
+                    "Items": [
+                      {
+                        "Icon": {
+                          "Value": "plus"
+                        }
+                      },
+                      {
+                        "Label": {
+                          "Value": {
+                            "Source": "ds",
+                            "Property": "#.Name"
+                          }
+                        }
+
+                      }
+                    ]
+                  }
+                }
+              }
+
+            }
+          }
+        },
+        "Items": {
+          "Source": "ds",
+          "Property": ""
+        }
+      }
+    }
+  ],
+  "Scripts": [
+
+  ]
+
+}

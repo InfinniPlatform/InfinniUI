@@ -12,6 +12,16 @@ DataGrid.prototype.getColumns = function () {
     return this.control.get('columns');
 };
 
+DataGrid.prototype.setShowSelectors = function (value) {
+    if (typeof value !== 'undefined' && value !== null) {
+        this.control.set('showSelectors', !!value);
+    }
+};
+
+DataGrid.prototype.getShowSelectors = function () {
+    return this.control.get('showSelectors');
+};
+
 DataGrid.prototype.createRow = function () {
     return new DataGridRow(this);
 };
