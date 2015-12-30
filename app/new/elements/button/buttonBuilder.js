@@ -22,11 +22,17 @@ _.extend(ButtonBuilder.prototype, {
                     if(el instanceof PopupButton){
                         viewMode = 'link';
                         exit = true;
+
                     }else if(el instanceof MenuBar){
                         viewMode = 'menuItem';
                         exit = true;
+
+                    }else if(el instanceof View){
+                        exit = true;
+
                     }else{
                         el = el.parent;
+
                     }
                 }else{
                     exit = true;
@@ -45,6 +51,3 @@ _.extend(ButtonBuilder.prototype, {
     }
 
 }, buttonBuilderMixin);
-
-
-
