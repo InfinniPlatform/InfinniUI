@@ -135,7 +135,8 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         return function(context, args) {
             var argumentForBuilder = {
                 parent: element,
-                parentView: params.parentView
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
             };
 
             return builder.build(headerTemplateMetadata, argumentForBuilder);
