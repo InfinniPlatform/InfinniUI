@@ -1,6 +1,6 @@
 var ComboBoxView = ListEditorBaseView.extend({
 
-    className: 'pl-combobox',
+    className: 'pl-combobox form-group',
 
     template: InfinniUI.Template["new/controls/comboBox/template/combobox.tpl.html"],
 
