@@ -92,13 +92,10 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
     renderDatePickerEditor: function () {
         var model = this.model;
-
         this.renderControlEditor({
             el: this.ui.editor,
             multiline: false,
-            convert: function (value) {
-                return InfinniUI.DateUtils.toISO8601(value);
-            }
+            convert: this.convertValue
         });
 
         return this;

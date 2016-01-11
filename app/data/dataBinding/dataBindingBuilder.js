@@ -19,11 +19,12 @@ DataBindingBuilder.prototype.build = function (context, args) {
         logger.error('DataBindingBuilder: некорректный источник.');
         throw new Error('DataBindingBuilder: declared source not found.');
     }
+    var metadataProperty = typeof metadata.Property === 'undefined' || metadata.Property === null ? "" : metadata.Property;
 
     if(args.basePathOfProperty){
-        property = args.basePathOfProperty.resolveProperty(metadata.Property);
+        property = args.basePathOfProperty.resolveProperty(metadataProperty);
     }else{
-        property = metadata.Property;
+        property = metadataProperty;
     }
     result.bindSource(source, property);
 

@@ -8,6 +8,7 @@ var datePickerStrategy = {
             var calendar = new DatePickerDropdown({
                 model: this.model
             });
+
             calendar.render();
             $('body').append(calendar.$el);
 
@@ -17,8 +18,12 @@ var datePickerStrategy = {
             });
 
             this.listenTo(calendar, 'date', function (date) {
-                this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+                this.model.set('value', this.convertValue(date));
             });
+        },
+
+        convertValue: function (value) {
+            return InfinniUI.DateUtils.toISO8601(value, {resetTime: true});
         }
     },
 
@@ -42,7 +47,12 @@ var datePickerStrategy = {
             this.listenTo(calendar, 'date', function (date) {
                 this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
             });
+        },
+
+        convertValue: function (value) {
+            return InfinniUI.DateUtils.toISO8601(value);
         }
+
     },
 
     Time: {
@@ -65,7 +75,12 @@ var datePickerStrategy = {
             this.listenTo(calendar, 'date', function (date) {
                 this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
             });
+        },
+
+        convertValue: function (value) {
+            return InfinniUI.DateUtils.toISO8601(value);
         }
+
     }
 
 };
