@@ -20,7 +20,7 @@ _.extend(DatePickerControl.prototype, {
                 val = InfinniUI.DateUtils.toISO8601(val);
             }
 
-            Control.prototype.set.call(this, key, val);
+            Control.prototype.set.call(this, key, val === null ? undefined : val);
         }else{
             Control.prototype.set.call(this, key, val);
         }
