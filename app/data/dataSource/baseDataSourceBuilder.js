@@ -10,6 +10,9 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
 
+        var bindingBuilder = this.buildBindingBuilder(args);
+        dataSource.setBindingBuilder(bindingBuilder);
+
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
         this.initFileProvider(dataSource, args.metadata);
 
@@ -102,6 +105,16 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
             });
         }
+    },
+
+    buildBindingBuilder: function(params){
+
+        return function(bindingMetadata){
+            return params.builder.buildBinding(bindingMetadata, {
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+        };
     },
 
     initFileProvider: function (dataSource, metadata) {
