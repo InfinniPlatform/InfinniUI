@@ -57,8 +57,8 @@ _.extend(BoundFilter.prototype, {
 
         binding.bindElement({
 
-            setProperty: function(context, args){
-                that.filters[indexOfFilter]['Value'] = args.value;
+            setProperty: function(propName, propValue){
+                that.filters[indexOfFilter]['Value'] = propValue;
                 that.handlers.onChange.fire(that.filters);
             },
 
