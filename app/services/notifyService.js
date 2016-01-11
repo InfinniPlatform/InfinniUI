@@ -6,10 +6,10 @@ InfinniUI.NotifyService = (function () {
 
     var exchange = window.InfinniUI.global.messageBus;
 
-    exchange.subscribe(messageTypes.onNotifyUser, function (message) {
+    exchange.subscribe(messageTypes.onNotifyUser, function (context, args) {
         var
-            messageText = message.messageText,
-            messageType = message.messageType || 'info';
+            messageText = args.value.messageText,
+            messageType = args.value.messageType || 'info';
 
         var type;
 

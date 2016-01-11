@@ -2,6 +2,7 @@ function MessageBus(view) {
     var subscriptions = {};
 
     this.send = function (messageType, messageBody) {
+        messageType = patchMessageType(messageType);
         if (subscriptions[messageType]) {
             var context;
             if (view && view.getContext) {
@@ -14,6 +15,7 @@ function MessageBus(view) {
     };
 
     this.subscribe = function (messageType, messageHandler) {
+        messageType = patchMessageType(messageType);
         if (!subscriptions[messageType]) {
             subscriptions[messageType] = [];
         }
@@ -22,6 +24,7 @@ function MessageBus(view) {
     };
 
     this.unsubscribeByType = function (messageType) {
+        messageType = patchMessageType(messageType);
         if (subscriptions[messageType]) {
             delete subscriptions[messageType];
         }
@@ -30,6 +33,15 @@ function MessageBus(view) {
     this.getView = function () {
         return view;
     };
+
+    function patchMessageType(messageType) {
+
+        if (typeof messageType === 'object' && typeof messageType.name !== 'undefined') {
+            messageType = messageType.name;
+        }
+
+        return messageType;
+    }
 }
 
 window.InfinniUI.global.messageBus = new MessageBus();
