@@ -87,7 +87,7 @@ function QueryConstructorStandard(host, metadata) {
     var constructUrl = function (host, action) {
         var urlTemplate = '{0}/{1}/StandardApi/{2}/{3}',
             document = 'configuration',
-            api = 'RestfulApi';
+            api = 'SystemConfig';
 
         if (_.contains(['CreateDocument', 'GetDocument', 'SetDocument', 'DeleteDocument', 'GetDocumentCrossConfig'], action) == false) {
             document = documentId;

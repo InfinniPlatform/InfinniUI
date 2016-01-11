@@ -126,14 +126,14 @@ describe('DataProviderREST', function () {
 
         dataProviderREST.getItems(null, function () {
 
-            assert.include(this.url, 'http://localhost:9000/RestfulApi/StandardApi/configuration/GetDocument');
+            assert.include(this.url, 'http://localhost:9000/SystemConfig/StandardApi/configuration/GetDocument');
         });
     });
     it('DataProviderREST should GetDocument', function () {
 
         dataProviderREST.createItem(null, function () {
 
-            assert.include(this.url, 'http://localhost:9000/RestfulApi/StandardApi/configuration/CreateDocument');
+            assert.include(this.url, 'http://localhost:9000/SystemConfig/StandardApi/configuration/CreateDocument');
 
         });
     });
@@ -141,14 +141,14 @@ describe('DataProviderREST', function () {
 
         dataProviderREST.replaceItem({}, null, function () {
 
-            assert.include(this.url, 'http://localhost:9000/RestfulApi/StandardApi/configuration/SetDocument');
+            assert.include(this.url, 'http://localhost:9000/SystemConfig/StandardApi/configuration/SetDocument');
         });
     });
     it('DataProviderREST should DeleteDocument', function () {
 
         dataProviderREST.deleteItem(1, null, function () {
 
-            assert.include(this.url, 'http://localhost:9000/RestfulApi/StandardApi/configuration/DeleteDocument');
+            assert.include(this.url, 'http://localhost:9000/SystemConfig/StandardApi/configuration/DeleteDocument');
         });
     });
 

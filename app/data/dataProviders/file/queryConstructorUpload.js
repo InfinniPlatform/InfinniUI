@@ -44,7 +44,7 @@ QueryConstructorUpload.prototype.getFileUrl = function (fieldName, instanceId) {
         "DocumentId": instanceId,
         "FieldName": fieldName
     };
-    var urlTemplate = '{0}/RestfulApi/UrlEncodedData/configuration/downloadbinarycontent/?Form={1}';
+    var urlTemplate = '{0}/SystemConfig/UrlEncodedData/configuration/downloadbinarycontent/?Form={1}';
 
     return stringUtils.format(urlTemplate, [this.host, JSON.stringify(data)]);
 };
@@ -63,7 +63,7 @@ QueryConstructorUpload.prototype.getUploadUrl = function (instanceId, fieldName)
         "DocumentId": instanceId,
         "FieldName": fieldName
     };
-    var urlTemplate = '{0}/RestfulApi/Upload/configuration/uploadbinarycontent/?linkedData={1}';
+    var urlTemplate = '{0}/SystemConfig/Upload/configuration/uploadbinarycontent/?linkedData={1}';
 
     return stringUtils.format(urlTemplate, [this.host, JSON.stringify(data)]);
 };

@@ -29,7 +29,7 @@ router.route('/test')
         res.send(nope(req));
     });
 
-router.route('/RestfulApi/Upload/configuration/uploadbinarycontent/')
+router.route('/SystemConfig/Upload/configuration/uploadbinarycontent/')
     .options(cors())
     .post(cors(), function(req, res) {
         res.send(nope(req));

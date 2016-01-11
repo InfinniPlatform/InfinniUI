@@ -133,7 +133,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/SystemConfig/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
     },
 
     setSessionData: function(claimType, claimValue, resultCallback, errorCallback) {
@@ -146,7 +146,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/SystemConfig/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
     },
 
     getSessionData: function(claimType, resultCallback, errorCallback) {
@@ -158,7 +158,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getsessiondata', claim, resultCallback, errorCallback);
+        this.sendPostRequest('/SystemConfig/StandardApi/authorization/getsessiondata', claim, resultCallback, errorCallback);
     },
 
     /**

@@ -108,7 +108,7 @@ var DataNavigationView = ControlView.extend({
         };
 
         //get count of documents with filters
-        $.ajax(InfinniUI.config.serverUrl + '/RestfulApi/StandardApi/configuration/getnumberofdocuments', {
+        $.ajax(InfinniUI.config.serverUrl + '/SystemConfig/StandardApi/configuration/getnumberofdocuments', {
             type: 'POST',
             xhrFields: {
                 withCredentials: true
