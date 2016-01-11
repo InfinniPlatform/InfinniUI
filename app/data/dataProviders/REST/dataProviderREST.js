@@ -86,13 +86,28 @@ function DataProviderREST(urlConstructor, successCallback, failCallback) {
 
 
     function adaptAnswerOnSavingItem(data){
-        if(data.IsValid){
+        if("IsValid" in data){
             data.isValid = data.IsValid;
             delete data.IsValid;
         }
 
         if(data.ValidationMessage && data.ValidationMessage.ValidationErrors){
-            data.items = data.ValidationMessage.ValidationErrors;
+            var errors = data.ValidationMessage.ValidationErrors;
+            var items = [];
+            if (typeof errors.Message !== 'undefined') {
+                if (!Array.isArray(errors.Message)) {
+                    items = [{Message: errors.Message}];
+                } else {
+                    items = errors.Message;
+                }
+            }
+            data.items = items.map(function (item) {
+                return {
+                    message: item.Message,
+                    property: item.Property
+                }
+            });
+
             delete data.ValidationMessage.ValidationErrors;
         }
         return data;

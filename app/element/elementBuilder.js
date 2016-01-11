@@ -72,7 +72,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
         if (metadata.OnLoaded) {
             element.onLoaded(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded, { source: element });
             });
         }
 

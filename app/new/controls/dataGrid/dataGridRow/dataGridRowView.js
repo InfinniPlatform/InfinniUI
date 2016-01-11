@@ -14,6 +14,7 @@ var DataGridRowView = ControlView.extend({
     },
 
     UI: {
+        toggleCell: '.pl-toggle-cell',
         toggle: '.toggle'
     },
 
@@ -34,6 +35,7 @@ var DataGridRowView = ControlView.extend({
         ControlView.prototype.updateProperties.call(this);
         this.updateToggle();
         this.updateSelected();
+        this.updateShowSelectors();
     },
 
     render: function () {
@@ -60,6 +62,11 @@ var DataGridRowView = ControlView.extend({
 
         this.postrenderingActions();
         return this;
+    },
+
+    updateShowSelectors: function () {
+        var showSelectors = this.model.get('showSelectors');
+        this.ui.toggleCell.toggleClass('hidden', !showSelectors);
     },
 
     updateToggle: function () {

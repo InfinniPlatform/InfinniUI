@@ -12,12 +12,23 @@ var DataGridView = ListEditorBaseView.extend({
 
     UI: _.defaults({
         header: 'tr',
+        toggleCell: ".pl-toggle-cell",
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI),
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
         this.childElements = new HashMap();
+    },
+
+    updateProperties: function () {
+        ListEditorBaseView.prototype.updateProperties.call(this);
+        this.updateShowSelectors();
+    },
+
+    updateShowSelectors: function () {
+        var showSelectors = this.model.get('showSelectors');
+        this.ui.toggleCell.toggleClass('hidden', !showSelectors);
     },
 
     updateGrouping: function () {

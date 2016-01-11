@@ -272,7 +272,7 @@ _.extend(Element.prototype, {
     },
 
     isLoaded: function () {
-        this.control.isLoaded();
+        return this.control.isLoaded();
     },
 
     getFocusable: function () {

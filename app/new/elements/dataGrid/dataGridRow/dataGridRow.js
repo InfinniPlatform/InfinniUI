@@ -28,6 +28,10 @@ _.extend(DataGridRow.prototype, {
         this.control.set('multiSelect', multiSelect);
     },
 
+    setShowSelectors: function (showSelectors) {
+        this.control.set('showSelectors', showSelectors);
+    },
+
     onToggle: function (handler) {
         this.control.onToggle(handler);
     }

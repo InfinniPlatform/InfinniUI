@@ -14,6 +14,7 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
     applyMetadata: function (params) {
         ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
+        params.element.setShowSelectors(params.metadata.ShowSelectors);
         this.applyColumnsMetadata(params);
     },
 
@@ -51,7 +52,7 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
             });
             row.setCellTemplates(cellItemTemplates);
             row.setMultiSelect(dataGrid.getMultiSelect());
-
+            row.setShowSelectors(dataGrid.getShowSelectors());
             return row;
         };
     }
