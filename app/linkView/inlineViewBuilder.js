@@ -8,8 +8,6 @@ function InlineViewBuilder() {
         linkView.setViewTemplate(function(onViewReadyHandler){
 
             that.buildViewByMetadata(args, args.metadata['View'], function (view) {
-                linkView.setHeaderTemplate(that.buildHeaderTemplate(view, args));
-
                 return onViewReadyHandler.call(null, view);
             });
         });
@@ -64,7 +62,5 @@ function InlineViewBuilder() {
         }
         return result;
    };
-
-    _.extend(this, viewBuilderMixin);
 }
 

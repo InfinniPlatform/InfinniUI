@@ -6,7 +6,7 @@ _.extend(MetadataViewBuilder.prototype, {
 
     build: function (context, args){
         var metadata = args.metadata;
-        var viewTemplate = this.buildViewTemplate(args, onViewReady);
+        var viewTemplate = this.buildViewTemplate(args);
         var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
@@ -23,15 +23,6 @@ _.extend(MetadataViewBuilder.prototype, {
             linkView.setDialogWidth(metadata.DialogWidth);
         }
 
-        if ('CloseButton' in metadata) {
-            linkView.setCloseButton(!!metadata.CloseButton);
-        }
-
-        var that = this;
-        function onViewReady(view) {
-            linkView.setHeaderTemplate(that.buildHeaderTemplate(view, args));
-        }
-
         return linkView;
     },
 
@@ -46,7 +37,9 @@ _.extend(MetadataViewBuilder.prototype, {
                 that.buildViewByMetadata(params, viewMetadata, onReady);
                 function onReady() {
                     var args = Array.prototype.slice.call(arguments);
-                    cb.apply(null, args);
+                    if (cb) {
+                        cb.apply(null, args);
+                    }
                     onViewReadyHandler.apply(null, args);
                 }
             });
@@ -86,4 +79,4 @@ _.extend(MetadataViewBuilder.prototype, {
         }
         return result;
     }
-}, viewBuilderMixin);
+});

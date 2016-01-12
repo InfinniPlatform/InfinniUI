@@ -8,7 +8,8 @@ var ViewModel = ContainerModel.extend({
 
     defaults: _.defaults({
         dialogResult: DialogResult.none,
-        isApplication: false
+        isApplication: false,
+        closeButton: true
     }, ContainerModel.prototype.defaults),
 
     initialize: function () {

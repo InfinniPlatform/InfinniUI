@@ -1,4 +1,4 @@
-var viewBuilderMixin = {
+var viewBuilderHeaderTemplateMixin = {
 
     /**
      * @protected

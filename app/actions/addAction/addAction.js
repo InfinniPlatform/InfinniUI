@@ -7,22 +7,34 @@ _.inherit(AddAction, BaseEditAction);
 
 _.extend(AddAction.prototype, {
     setSelectedItem: function(){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('sourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
+        var editDataSource = this.getProperty('editDataSource'),
+            editView = editDataSource.getView();
 
-        // create new item and set it selected
-        editView.onBeforeLoaded(function() {
-            editDataSource.createItem();
-        });
+        if( this._isObjectDataSource(editDataSource) ) {
+            editDataSource.setItems([{}]);
+            editDataSource.setSelectedItem({});
+        } else {
+            editView.onBeforeLoaded(function() {
+                editDataSource.createItem();
+            });
+        }
     },
 
     save: function(){
-        var destinationSourceName = this.getProperty('destinationSource');
-        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
 
-        if(destinationSource){
-            destinationSource.updateItems();
+        if( this._isObjectDataSource(editDataSource) ) {
+            var items = destinationDataSource.getProperty(destinationProperty),
+                newItem = editDataSource.getSelectedItem();
+
+            items = _.clone(items);
+            items.push(newItem);
+
+            destinationDataSource.setProperty(destinationProperty, items);
+        } else {
+            destinationDataSource.updateItems();
         }
     }
 });

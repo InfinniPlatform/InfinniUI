@@ -1,6 +1,5 @@
 var OpenModeDialogStrategy = function () {
     this.dialogWidth = 'default';
-    this.closeButton = true;
 };
 
 _.extend(OpenModeDialogStrategy.prototype, {
@@ -10,26 +9,8 @@ _.extend(OpenModeDialogStrategy.prototype, {
         this.view = view;
     },
 
-    /**
-     * @description Устанаваливает шаблон заголовка диалогового окна
-     * @param {function} template
-     */
-    setHeaderTemplate: function (template) {
-        this.headerTemplate  = template;
-    },
-
     setDialogWidth: function(dialogWidth){
         this.dialogWidth = dialogWidth;
-    },
-
-    /**
-     * @description Устанавливает флаг видимости стандартной кнопки закрытия диалога
-     * @param {boolean} closeButton
-     */
-    setCloseButton: function (closeButton) {
-        if (typeof closeButton !== 'undefined' && closeButton !== null) {
-            this.closeButton = !!closeButton;
-        }
     },
 
     open: function(){
@@ -57,13 +38,13 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         this._initBehaviorFocusingInModal($modal, $modalBody);
 
-        var
-            header = this.headerTemplate();
-        $closeButton.toggleClass('hidden', !this.closeButton);
-        $header.append(header.render());
-
-
         var view = this.view;
+
+        var
+            headerTemplate = view.getHeaderTemplate();
+        $closeButton.toggleClass('hidden', !view.getCloseButton());
+        $header.append(headerTemplate().render());
+
         $modal.find('.pl-close-modal').on('click', function(){
             view.close();
         });

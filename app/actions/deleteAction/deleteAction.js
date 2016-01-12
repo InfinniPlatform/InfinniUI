@@ -32,8 +32,21 @@ _.extend(DeleteAction.prototype, {
     },
 
     remove: function (callback) {
-        var dataSource = this.getProperty('destinationSource');
+        var dataSource = this.getProperty('destinationSource'),
+            property = this.getProperty('destinationProperty');
 
+        if( this._isPredefinedIdentifierProperty(property) ) {
+            this._deleteDocument(dataSource, property);
+        } else {
+            this._deleteItem(dataSource, property);
+        }
+
+        if ( _.isFunction(callback) ) {
+            callback();
+        }
+    },
+
+    _deleteDocument: function(dataSource, property){
         var onSuccessDelete = function () {
             dataSource.updateItems();
 
@@ -42,21 +55,22 @@ _.extend(DeleteAction.prototype, {
             }
         };
 
-        dataSource.deleteItem(this.getDestinationSelectedItem(), onSuccessDelete);
+        var selectedItem = dataSource.getProperty(property);
+        dataSource.deleteItem(selectedItem, onSuccessDelete);
     },
 
-    // todo: повторяет метод из EditAction, придумать, как обобщить
-    getDestinationSelectedItem: function(){
-        var destinationSource = this.getProperty('destinationSource');
-        var propertyName = this.getProperty('destinationProperty');
+    _deleteItem: function(dataSource, property){
+        var propertyPathList = property.split("."),
+            index = propertyPathList.pop(),
+            parentProperty = propertyPathList.join("."),
+            items = dataSource.getProperty(parentProperty);
 
-        if( _.isEmpty(propertyName) ){
-            return destinationSource.getSelectedItem();
-        }
+        items = _.clone( items );
+        items.splice(index, 1);
+        dataSource.setProperty(parentProperty, items);
+    },
 
-        var index = this.getProperty('index');
-        var destinationSourceItems = destinationSource.getItems();
-
-        return destinationSourceItems[index];
+    _isPredefinedIdentifierProperty: function(propertyName){
+        return propertyName == '$' || propertyName == '#';
     }
 });
