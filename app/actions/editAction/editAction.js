@@ -7,30 +7,43 @@ _.inherit(EditAction, BaseEditAction);
 
 _.extend(EditAction.prototype, {
     setSelectedItem: function(){
-        var editDataSource = this._getEditDataSource();
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
 
-        var destinationSourceName = this.getProperty('destinationSource');
-        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
 
-        var selectedItem = this._getSelectedItem(destinationSource);
-        var selectedItemId = editDataSource.idOfItem(selectedItem);
+        if( this._isObjectDataSource(editDataSource) ) {
+            this.setItem(editDataSource, selectedItem);
+        } else {
+            this.setDocument(editDataSource, selectedItem);
+        }
+    },
+
+    setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
 
         var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
         editDataSource.setFilter( criteria );
     },
 
-    save: function(){
-        var destinationSourceName = this.getProperty('destinationSource');
-        var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
+    setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
 
-        if(destinationSource){
-            destinationSource.updateItems();
-        }
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
     },
 
-    _getSelectedItem: function( source ){
-        var destinationProperty = this.getProperty('destinationProperty');
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
 
-        return source.getProperty(destinationProperty);
+        if( this._isObjectDataSource(editDataSource) ) {
+            var item = editDataSource.getSelectedItem();
+            destinationDataSource.setProperty(destinationProperty, item);
+        } else {
+            destinationDataSource.updateItems();
+        }
     }
 });

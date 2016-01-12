@@ -41,10 +41,9 @@ describe('DeleteAction', function () {
                 Name: 'Third'
             }
         ];
-        var selectedItem = items[1];
+        var index = 1;
 
         dataSource.setItems(items);
-        dataSource.setSelectedItem(selectedItem);
 
         view.getDataSources().push(dataSource);
 
@@ -52,7 +51,8 @@ describe('DeleteAction', function () {
             DeleteAction: {
                 Accept: false,
                 DestinationValue: {
-                    Source: 'SomeDS'
+                    Source: 'SomeDS',
+                    Property: index.toString()
                 }
             }
         };
@@ -66,7 +66,7 @@ describe('DeleteAction', function () {
 
         // Then
         assert.equal(dataSource.getItems().length, 2);
-        assert.notInclude(dataSource.getItems(), selectedItem);
+        assert.notInclude(dataSource.getItems(), items[index]);
     });
 
 });
