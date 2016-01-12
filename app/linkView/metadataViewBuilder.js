@@ -23,10 +23,6 @@ _.extend(MetadataViewBuilder.prototype, {
             linkView.setDialogWidth(metadata.DialogWidth);
         }
 
-        if ('CloseButton' in metadata) {
-            linkView.setCloseButton(!!metadata.CloseButton);
-        }
-
         return linkView;
     },
 

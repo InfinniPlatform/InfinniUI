@@ -78,6 +78,7 @@ _.extend(ViewBuilder.prototype, {
         }
 
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
+        element.setCloseButton(metadata.CloseButton);
 
         if(metadata.OnOpening){
             element.onOpening(function() {

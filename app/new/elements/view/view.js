@@ -275,6 +275,24 @@ _.extend(View.prototype,
             return this.headerTemplate;
         },
 
+        /**
+         * @description Устанавливает флаг видитмости кнопки закрытия
+         * @param {boolean} value
+         */
+        setCloseButton: function (value) {
+            if (typeof value === 'boolean') {
+                this.control.set('closeButton', value);
+            }
+        },
+
+        /**
+         * @description Возвращает флаг видимости кнопки закрытия
+         * @returns {boolean}
+         */
+        getCloseButton: function () {
+            return this.control.get('closeButton');
+        },
+
         noDataSourceOnView: function(){
             this._initDataSourceHandlers();
         }

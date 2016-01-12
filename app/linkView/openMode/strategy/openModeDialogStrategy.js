@@ -1,6 +1,5 @@
 var OpenModeDialogStrategy = function () {
     this.dialogWidth = 'default';
-    this.closeButton = true;
 };
 
 _.extend(OpenModeDialogStrategy.prototype, {
@@ -12,16 +11,6 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
     setDialogWidth: function(dialogWidth){
         this.dialogWidth = dialogWidth;
-    },
-
-    /**
-     * @description Устанавливает флаг видимости стандартной кнопки закрытия диалога
-     * @param {boolean} closeButton
-     */
-    setCloseButton: function (closeButton) {
-        if (typeof closeButton !== 'undefined' && closeButton !== null) {
-            this.closeButton = !!closeButton;
-        }
     },
 
     open: function(){
@@ -53,7 +42,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         var
             headerTemplate = view.getHeaderTemplate();
-        $closeButton.toggleClass('hidden', !this.closeButton);
+        $closeButton.toggleClass('hidden', !view.getCloseButton());
         $header.append(headerTemplate().render());
 
         $modal.find('.pl-close-modal').on('click', function(){
