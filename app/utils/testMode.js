@@ -24,7 +24,7 @@
         function patchBootstrapTooltip() {
             $.fn.tooltip.Constructor.prototype.getTitle = function () {
                 var $e = this.$element;
-                var o  = this.options;
+                var o = this.options;
 
                 return o.title;
             }
@@ -34,9 +34,35 @@
 
     /*************************************/
 
+    function ClickManager() {
+        this._unsubscribe = [];
+    }
+
+    ClickManager.prototype.append = function (element, handler) {
+        var EVENT_NAME = 'contextmenu';
+        this.clear();
+
+        if (typeof element === 'undefined' || element === null) {
+            return;
+        }
+        element.addEventListener(EVENT_NAME, handler, true);
+        this._unsubscribe.push(function () {
+            element.removeEventListener(EVENT_NAME, handler, true);
+        });
+        return this;
+    };
+
+    ClickManager.prototype.clear = function () {
+        this._unsubscribe.forEach(function (fn) {
+            fn.call();
+        });
+        return this;
+    };
+
     function InfoElement() {
         this.marker = new Marker();
         this.$currentControl = null;
+        this.clickManager = new ClickManager();
     }
 
     InfoElement.prototype.setElement = function (el) {
@@ -71,35 +97,42 @@
 
         function getViewName($el) {
             var $e = $el.parents(DATA_NAME_VIEW_SELECTOR);
-            if($e.length) {
+            if ($e.length) {
                 return $e.attr(DATA_NAME_VIEW_ATTRIBUTE);
             }
         }
     };
 
+    InfoElement.prototype.copyInfo = function (viewName, name) {
+        if (viewName || name) {
+            window.prompt("Copy to clipboard: Ctrl+C", viewName + ':' + name);
+        }
+    };
+
     InfoElement.prototype.showInfo = function ($control, viewName, name) {
-        if (this.$currentControl && this.$currentControl[0]!== $control[0]) {
+        if (this.$currentControl && this.$currentControl[0] !== $control[0]) {
             this.marker.reset(this.$currentControl);
+            this.clickManager.clear();
         }
         this.marker.highlight($control);
-
         this.$currentControl = $control;
+        this.clickManager.append($control[0], this.copyInfo.bind(this, viewName, name));
 
         $control.tooltip({
-            title: viewName + ':' + name,
-            placement: "auto"
-        })
+                title: viewName + ':' + name,
+                placement: "auto"
+            })
             .tooltip('show');
     };
 
     InfoElement.prototype.hideInfo = function () {
+        this.clickManager.clear();
         if (this.$currentControl) {
             this.marker
                 .reset(this.$currentControl);
             this.$currentControl.tooltip('destroy');
         }
     };
-
 
 
     /********************************************/
