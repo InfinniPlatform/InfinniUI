@@ -263,10 +263,6 @@ _.extend(Element.prototype, {
         }
     },
 
-    getChildElements: function () {
-        return this.childElements;
-    },
-
     onLoaded: function (handler) {
         this.control.onLoaded(handler);
     },
