@@ -18,6 +18,9 @@ var RowView = ContainerView.extend(
 
             this.renderItemsContents();
 
+            this.updateProperties();
+            this.trigger('render');
+
             this.postrenderingActions();
             return this;
         },
