@@ -41,7 +41,9 @@ _.extend(MetadataViewBuilder.prototype, {
                 that.buildViewByMetadata(params, viewMetadata, onReady);
                 function onReady() {
                     var args = Array.prototype.slice.call(arguments);
-                    cb.apply(null, args);
+                    if (cb) {
+                        cb.apply(null, args);
+                    }
                     onViewReadyHandler.apply(null, args);
                 }
             });
