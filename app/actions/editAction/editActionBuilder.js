@@ -2,14 +2,10 @@ function EditActionBuilder(){
     this.build = function(context, args){
         var metadata = args.metadata,
             parentView = args.parentView,
-            builder = args.builder;
-        var action;
+            builder = args.builder,
+            destinationProperty;
 
-        if( _.isEmpty(metadata.DestinationValue.Property)  || InfinniUI.Metadata.isPredefinedIdentifierProperty(metadata.DestinationValue.Property) ){
-            action = new EditAction(parentView);
-        } else {
-            action = new EditItemAction(parentView);
-        }
+        var action = new EditAction(parentView);
 
         var linkView = builder.build(metadata['LinkView'], {parent: args.parent, parentView: parentView});
 
@@ -17,10 +13,8 @@ function EditActionBuilder(){
         action.setProperty('destinationSource', metadata.DestinationValue.Source);
         action.setProperty('sourceSource', metadata.SourceValue.Source);
 
-        if( !_.isEmpty(metadata.DestinationValue.Property) ){
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
-        }
+        destinationProperty = args.basePathOfProperty.resolveProperty(metadata.DestinationValue.Property);
+        action.setProperty('destinationProperty', destinationProperty);
 
         return action;
     }

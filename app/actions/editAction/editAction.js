@@ -13,7 +13,7 @@ _.extend(EditAction.prototype, {
         var destinationSource = this.parentView.getContext().dataSources[destinationSourceName];
 
         var selectedItem = this._getSelectedItem(destinationSource);
-        var selectedItemId = destinationSource.idOfItem(selectedItem);
+        var selectedItemId = editDataSource.idOfItem(selectedItem);
 
         var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
         editDataSource.setFilter( criteria );
@@ -29,15 +29,8 @@ _.extend(EditAction.prototype, {
     },
 
     _getSelectedItem: function( source ){
-        var propertyName = this.getProperty('destinationProperty');
+        var destinationProperty = this.getProperty('destinationProperty');
 
-        if( _.isEmpty(propertyName) || propertyName == '$' ){
-            return source.getSelectedItem();
-        }
-
-        var index = this.getProperty('index');
-        var sourceItems = source.getItems();
-
-        return sourceItems[index];
+        return source.getProperty(destinationProperty);
     }
 });
