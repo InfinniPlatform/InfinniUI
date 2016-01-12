@@ -1,27 +1,21 @@
 function DeleteActionBuilder(){
     this.build = function(context, args){
         var metadata = args.metadata,
-            parentView = args.parentView;
-        var action;
+            parentView = args.parentView,
+            sourceName = metadata.DestinationValue.Source,
+            propertyName = metadata.DestinationValue.Property || '$';
 
-        var accept = (metadata['Accept'] !== false);
-        var dataSource = parentView.getContext().dataSources[metadata.DestinationValue.Source];
+        var action = new DeleteAction(parentView);
 
-
-        if( _.isEmpty(metadata.DestinationValue.Property) || InfinniUI.Metadata.isPredefinedIdentifierProperty(metadata.DestinationValue.Property) ){
-            action = new DeleteAction(parentView);
-        } else {
-            action = new DeleteItemAction(parentView);
-        }
+        var accept = (metadata['Accept'] !== false),
+            dataSource = parentView.getContext().dataSources[sourceName],
+            destinationProperty = (args.basePathOfProperty != null) ?
+                                    args.basePathOfProperty.resolveProperty( propertyName ) :
+                                    propertyName;
 
         action.setProperty('accept', accept);
         action.setProperty('destinationSource', dataSource);
-
-        if( !_.isEmpty(metadata.DestinationValue.Property) ){
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
-        }
-
+        action.setProperty('destinationProperty', destinationProperty);
 
         return action;
     }

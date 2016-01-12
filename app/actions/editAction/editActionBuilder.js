@@ -3,24 +3,20 @@ function EditActionBuilder(){
         var metadata = args.metadata,
             parentView = args.parentView,
             builder = args.builder;
-        var action;
 
-        if( _.isEmpty(metadata.DestinationValue.Property)  || InfinniUI.Metadata.isPredefinedIdentifierProperty(metadata.DestinationValue.Property) ){
-            action = new EditAction(parentView);
-        } else {
-            action = new EditItemAction(parentView);
-        }
+        var destinationProperty = (args.basePathOfProperty != null) ?
+            args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
+            metadata.DestinationValue.Property;
+
+        var action = new EditAction(parentView);
 
         var linkView = builder.build(metadata['LinkView'], {parent: args.parent, parentView: parentView});
-
         action.setProperty('linkView', linkView);
-        action.setProperty('destinationSource', metadata.DestinationValue.Source);
-        action.setProperty('sourceSource', metadata.SourceValue.Source);
 
-        if( !_.isEmpty(metadata.DestinationValue.Property) ){
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-            action.setProperty('index', _.last(args.basePathOfProperty.indexesInParentLists));
-        }
+        action.setProperty('sourceSource', metadata.SourceValue.Source);
+        action.setProperty('destinationSource', metadata.DestinationValue.Source);
+
+        action.setProperty('destinationProperty', destinationProperty || '$');
 
         return action;
     }

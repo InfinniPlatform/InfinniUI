@@ -17,14 +17,17 @@ _.extend(BaseEditAction.prototype, {
     },
 
     handleViewReady: function(editView){
-        var that = this;
+        var editSourceName = this.getProperty('sourceSource'),
+            editDataSource = editView.getContext().dataSources[editSourceName],
+            destinationSourceName = this.getProperty('destinationSource'),
+            destinationDataSource = this.parentView.getContext().dataSources[destinationSourceName],
+            that = this;
 
-        this.setProperty('editView', editView);
-
-        that.setSelectedItem();
+        this.setProperty('editDataSource', editDataSource);
+        this.setProperty('destinationDataSource', destinationDataSource);
+        this.setSelectedItem();
 
         editView.open();
-
 
         editView.onClosed(function(){
             var dialogResult = editView.getDialogResult();
@@ -45,11 +48,7 @@ _.extend(BaseEditAction.prototype, {
         }
     },
 
-    _getEditDataSource: function(){
-        var editView = this.getProperty('editView');
-        var editSourceName = this.getProperty('sourceSource');
-        var editDataSource = editView.getContext().dataSources[editSourceName];
-
-        return editDataSource;
+    _isObjectDataSource: function( source ) {
+        return 'setItems' in source;
     }
 });
