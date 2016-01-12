@@ -34,10 +34,6 @@ _.extend(LinkView.prototype, {
         this.dialogWidth = dialogWidth;
     },
 
-    setHeaderTemplate: function (template) {
-        this.headerTemplate = template;
-    },
-
     setCloseButton: function (closeButton) {
         this.closeButton = closeButton;
     },
@@ -86,7 +82,6 @@ _.extend(LinkView.prototype, {
                 if(this.dialogWidth){
                     openStrategy.setDialogWidth(this.dialogWidth);
                 }
-                openStrategy.setHeaderTemplate(this.headerTemplate);
                 openStrategy.setCloseButton(this.closeButton);
 
                 openStrategy.setView(view);

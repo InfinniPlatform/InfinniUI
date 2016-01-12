@@ -10,14 +10,6 @@ _.extend(OpenModeDialogStrategy.prototype, {
         this.view = view;
     },
 
-    /**
-     * @description Устанаваливает шаблон заголовка диалогового окна
-     * @param {function} template
-     */
-    setHeaderTemplate: function (template) {
-        this.headerTemplate  = template;
-    },
-
     setDialogWidth: function(dialogWidth){
         this.dialogWidth = dialogWidth;
     },
@@ -57,13 +49,13 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         this._initBehaviorFocusingInModal($modal, $modalBody);
 
-        var
-            header = this.headerTemplate();
-        $closeButton.toggleClass('hidden', !this.closeButton);
-        $header.append(header.render());
-
-
         var view = this.view;
+
+        var
+            headerTemplate = view.getHeaderTemplate();
+        $closeButton.toggleClass('hidden', !this.closeButton);
+        $header.append(headerTemplate().render());
+
         $modal.find('.pl-close-modal').on('click', function(){
             view.close();
         });

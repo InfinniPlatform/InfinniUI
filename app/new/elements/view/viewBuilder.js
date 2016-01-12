@@ -77,6 +77,8 @@ _.extend(ViewBuilder.prototype, {
             element.noDataSourceOnView();
         }
 
+        element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
+
         if(metadata.OnOpening){
             element.onOpening(function() {
                 new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
@@ -103,4 +105,6 @@ _.extend(ViewBuilder.prototype, {
 
         ContainerBuilder.prototype.applyMetadata.call(this, params);
     }
-});
+},
+    viewBuilderHeaderTemplateMixin
+);

@@ -16,5 +16,14 @@ _.extend(ObjectDataSourceBuilder.prototype, {
             dataSource.setItems(metadata.Items);
         }
 
+    },
+
+    initFileProvider: function (dataSource) {
+        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+            documentId: "documentId",
+            configId: "configId"
+        });
+
+        dataSource.setFileProvider(fileProvider);
     }
 });

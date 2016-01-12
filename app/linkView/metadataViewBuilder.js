@@ -6,7 +6,7 @@ _.extend(MetadataViewBuilder.prototype, {
 
     build: function (context, args){
         var metadata = args.metadata;
-        var viewTemplate = this.buildViewTemplate(args, onViewReady);
+        var viewTemplate = this.buildViewTemplate(args);
         var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
@@ -25,11 +25,6 @@ _.extend(MetadataViewBuilder.prototype, {
 
         if ('CloseButton' in metadata) {
             linkView.setCloseButton(!!metadata.CloseButton);
-        }
-
-        var that = this;
-        function onViewReady(view) {
-            linkView.setHeaderTemplate(that.buildHeaderTemplate(view, args));
         }
 
         return linkView;
@@ -86,4 +81,4 @@ _.extend(MetadataViewBuilder.prototype, {
         }
         return result;
     }
-}, viewBuilderMixin);
+});

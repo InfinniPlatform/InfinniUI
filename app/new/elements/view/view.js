@@ -259,6 +259,22 @@ _.extend(View.prototype,
             };
         },
 
+        /**
+         * @description Устанаваливает шаблон заголовка
+         * @param {Function} template
+         */
+        setHeaderTemplate: function (template) {
+            this.headerTemplate  = template;
+        },
+
+        /**
+         * @description Возвращает шаблон заголовка
+         * @returns {Function|*}
+         */
+        getHeaderTemplate: function () {
+            return this.headerTemplate;
+        },
+
         noDataSourceOnView: function(){
             this._initDataSourceHandlers();
         }
