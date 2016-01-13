@@ -1,7 +1,9 @@
 ﻿
+@pl-bootstrap-theme-path: "../../bootstrap-framework/less/theme.less";
+@pl-extension: "some.less";
 
 @import "../../bootstrap-framework/less/bootstrap.less";
-@import "../../bootstrap-framework/less/theme.less";
+@import "@{pl-bootstrap-theme-path}";
 
 @import "mixins/clearfix.less";
 @import "utils.less";
@@ -28,3 +30,5 @@
 
 @import "controls/image.less";
 @import "controls/view.less";
+
+@import (optional) "@{pl-extension}";

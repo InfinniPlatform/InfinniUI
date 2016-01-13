@@ -202,6 +202,9 @@
 
         less : {
             default: {
+                options:{
+                    modifyVars: {}
+                },
                 src: appStyleFiles,
                 dest: 'app/styles/main.css'
             }
@@ -272,8 +275,8 @@
     });
 
     grunt.task.registerTask('build',
-        function (extensionPath) {
-            if (extensionPath) {
+        function (props, p2) {
+            /*if (extensionPath) {
                 var tmp = appFiles.slice(0),
                     tmpLess = appStyleFiles.slice(0),
                     tmpFavicon = grunt.config.get('copy.favicon.src').slice(0);
@@ -289,10 +292,22 @@
             }else{
                 grunt.config.set('concat.app.src', appFiles);
                 grunt.config.set('less.default.src', appStyleFiles);
-            }
+            }*/
 
             //grunt.log.writeln(extensionPath + outerExtensionScript);
             //grunt.log.writeln(grunt.config().concat.app.src);
+
+            grunt.log.writeln('arr!');
+            grunt.log.writeln(props);
+            grunt.log.writeln(p2);
+
+            if(props.replace){
+                if(props.replace.less){
+                    for(var k in props.replace.less){
+                        grunt.config.set('less.default.options.modifyVars.' + k, props.replace.less[k]);
+                    }
+                }
+            }
 
             var tasks = [
                 'less',
