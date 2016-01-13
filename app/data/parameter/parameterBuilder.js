@@ -4,6 +4,7 @@ function ParameterBuilder() {
         var metadata = args.metadata;
         var builder = args.builder;
         var parentView = args.parentView;
+        var basePathOfProperty = args.basePathOfProperty;
 
 
 
@@ -12,7 +13,7 @@ function ParameterBuilder() {
             parameter.setName(metadata['Name']);
 
             if(this.isBindingMetadata(metadata['Value'])){
-                var dataBinding = builder.buildBinding(metadata['Value'], {parentView: parentView});
+                var dataBinding = builder.buildBinding(metadata['Value'], {parentView: parentView, basePathOfProperty: basePathOfProperty});
                 dataBinding.bindElement(parameter, '');
             }else{
                 parameter.setValue(metadata['Value']);

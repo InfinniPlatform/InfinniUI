@@ -123,10 +123,6 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('view');
     },
 
-    getItems: function () {
-        return this.get('items');
-    },
-
     _setItems: function (items) {
         var indexOfItemsById;
 
