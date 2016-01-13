@@ -1,3 +1,15 @@
+<%function buildListboxInput(i, isMultiselect, inputName){
+    if(isMultiselect){
+    %>
+        <input type = "checkbox" name="<%= inputName + '-' + i %>" />
+    <%
+    }else{
+    %>
+        <input type = "radio" name="<%= inputName %>" />
+    <%
+    }
+}%>
+
 <ul class="pl-listbox-control list-group">
     <% items.forEach(function(item, index){%>
         <li class="pl-listbox-i list-group-item" tabindex="0">
@@ -8,15 +20,3 @@
         </li>
     <%});%>
 </ul>
-
-<%function buildListboxInput(i, isMultiselect, inputName){
-    if(isMultiselect){
-        %>
-            <input type = "checkbox" name="<%= inputName + '-' + i %>" />
-        <%
-    }else{
-        %>
-            <input type = "radio" name="<%= inputName %>" />
-        <%
-    }
-}%>
