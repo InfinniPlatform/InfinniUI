@@ -36,17 +36,13 @@ _.extend(DeleteAction.prototype, {
             property = this.getProperty('destinationProperty');
 
         if( this._isPredefinedIdentifierProperty(property) ) {
-            this._deleteDocument(dataSource, property);
+            this._deleteDocument(dataSource, property, callback);
         } else {
-            this._deleteItem(dataSource, property);
-        }
-
-        if ( _.isFunction(callback) ) {
-            callback();
+            this._deleteItem(dataSource, property, callback);
         }
     },
 
-    _deleteDocument: function(dataSource, property){
+    _deleteDocument: function(dataSource, property, callback){
         var onSuccessDelete = function () {
             dataSource.updateItems();
 
@@ -59,7 +55,7 @@ _.extend(DeleteAction.prototype, {
         dataSource.deleteItem(selectedItem, onSuccessDelete);
     },
 
-    _deleteItem: function(dataSource, property){
+    _deleteItem: function(dataSource, property, callback){
         var propertyPathList = property.split("."),
             index = propertyPathList.pop(),
             parentProperty = propertyPathList.join("."),
@@ -68,6 +64,10 @@ _.extend(DeleteAction.prototype, {
         items = _.clone( items );
         items.splice(index, 1);
         dataSource.setProperty(parentProperty, items);
+
+        if (_.isFunction(callback)) {
+            callback();
+        }
     },
 
     _isPredefinedIdentifierProperty: function(propertyName){
