@@ -3,6 +3,14 @@
   "DataSources": [
     {
       "DocumentDataSource": {
+        "Name": "user",
+        "ConfigId": "AdministrationCustomization",
+        "DocumentId": "User",
+        "PageSize": 3
+      }
+    },
+    {
+      "DocumentDataSource": {
         "Name": "MainDataSource2",
         "ConfigId": "AdministrationCustomization",
         "DocumentId": "User"
@@ -152,8 +160,23 @@
       "ScrollPanel": {
           "Items": [
             {
+              "ListBox": {
+                "Items": {
+                  "Source": "user"
+                },
+                "ItemTemplate": {
+                  "Label": {
+                    "Text": {
+                      "Source": "user",
+                      "Property": "#.Email"
+                    }
+                  }
+                }
+              }
+            },
+            {
               "DataNavigation": {
-                "DataSource": "BloodGroupDataSource"
+                "DataSource": "user"
               }
             },
               {

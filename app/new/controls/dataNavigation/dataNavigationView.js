@@ -16,10 +16,12 @@ var DataNavigationView = ControlView.extend({
 
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:pageStart', this.updateButtons);
     },
 
     updateProperties: function() {
         ControlView.prototype.updateProperties.call(this);
+        this.updateButtons();
     },
 
     render: function () {
@@ -27,40 +29,64 @@ var DataNavigationView = ControlView.extend({
 
         this.renderTemplate(this.template);
         this.updateProperties();
-        this.renderButtons();
         this.trigger('render');
-
         this.postrenderingActions();
         return this;
     },
 
     renderButtons: function () {
         var
-            buttons = this.model.get('_buttonsTemplate'),
-            buttonsCount = this.model.get('_buttonsCount');
-
-        var template = buttons.slice();
-        var index = template.indexOf('page');
-        if (index > -1) {
-            for (var i = 0; i < buttonsCount - 1; i = i + 1) {
-                template.splice(index, 0, 'page');
-            }
-        }
+            template = this.model.get('_buttonsTemplate'),
+            buttonsCount = this.model.get('_buttonsCount'),
+            buttons;
 
         this._removeChildViews();
 
-        var buttons = template.map(function (buttonType) {
-            var buttonView = this.buttonsFactory.createButton(buttonType);
-            this.listenTo(buttonView, 'command', this.onCommandHandler);
-            this._appendChildView(buttonView);
-            return buttonView.render().$el;
+        var
+            buttonsFactory = this.buttonsFactory,
+            model = this.model;
+
+        buttons = template.reduce(function (buttons, buttonType) {
+            if (buttonType === 'page') {
+                var pageNumber = model.get('pageNumber');
+                var pageStart = model.get('pageStart');
+                for (var i = 0; i < buttonsCount; i = i + 1) {
+                    var button = buttonsFactory.createButton(buttonType, {pageNumber: pageStart + i});
+                    buttons.push(button)
+                }
+            } else {
+                var button = buttonsFactory.createButton(buttonType);
+                buttons.push(button);
+            }
+
+            return buttons;
+        }, []);
+
+        var $buttons = buttons.map(function (button) {
+            this.listenTo(button, 'command', this.onCommandHandler);
+            this._appendChildView(button);
+            return button.render().$el;
         }, this);
 
-        this.ui.buttons.append(buttons);
+        this.ui.buttons.append($buttons);
     },
 
-    onCommandHandler: function () {
-        console.log(arguments);
+    updateButtons: function () {
+        this.renderButtons()
+    },
+
+    onCommandHandler: function (name, options) {
+        switch (name) {
+            case "prev":
+                this.model.prevPage();
+                break;
+            case "next":
+                this.model.nextPage();
+                break;
+            case "page":
+                this.model.set('pageNumber', options.pageNumber);
+                break;
+        }
     },
 
     _removeChildViews: function () {

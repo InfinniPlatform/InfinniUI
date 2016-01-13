@@ -12,6 +12,10 @@ _.extend(DataNavigationControl.prototype, {
 
     createControlView: function (model) {
         return new DataNavigationView({model: model});
+    },
+
+    onPageNumberChanged: function (handler) {
+        this.controlModel.onPageNumberChanged(handler);
     }
 
 });

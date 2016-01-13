@@ -9,7 +9,7 @@ DataNavigationButtonFactory.prototype.buttons = {
     "next": DataNavigationNextButton
 };
 
-DataNavigationButtonFactory.prototype.createButton = function (type) {
+DataNavigationButtonFactory.prototype.createButton = function (type, options) {
 
     var buttonConstructor = this.buttons[type];
     if (typeof buttonConstructor !== 'function') {
@@ -17,7 +17,7 @@ DataNavigationButtonFactory.prototype.createButton = function (type) {
         return;
     }
 
-    var button = new buttonConstructor();
-    button.setParent(this);
+    var button = new buttonConstructor(options);
+    button.setParent(this._dataNavigation);
     return button;
 };

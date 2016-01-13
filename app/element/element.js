@@ -512,6 +512,25 @@ _.extend(Element.prototype, {
 
     },
 
+    createControlEventHandler: function(element, handler, additionParams) {
+        var context;
+        additionParams = additionParams || {};
+
+        if (element.parentView) {
+            context = element.parentView.context;
+        }
+
+        return function (message) {
+            _.extend(
+                message,
+                additionParams
+            );
+            message.source = element;
+
+            return handler.call(undefined, context, message);
+        };
+    },
+
     _getHandlingKeyEventData: function (nativeData) {
         var result = {};
 

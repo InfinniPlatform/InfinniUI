@@ -20,6 +20,18 @@ _.extend(DataNavigation.prototype, {
 
     getAvailablePageSizes: function () {
         return this.control.get('availablePageSizes');
+    },
+
+    setPageNumber: function (value) {
+        this.control.set('pageNumber', value)
+    },
+
+    getPageNumber: function () {
+        return this.control.get('pageNumber');
+    },
+
+    onPageNumberChanged: function (handler) {
+        this.control.onPageNumberChanged(this.createControlEventHandler(this, handler));
     }
 
 });

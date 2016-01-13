@@ -19,6 +19,34 @@ _.extend(DataNavigationBuilder.prototype, {
         if (Array.isArray(metadata.AvailablePageSizes)) {
             element.getAvailablePageSizes().reset(metadata.AvailablePageSizes);
         }
+
+        var ds = this.findDataSource(params);
+        if (ds) {
+            element.setDataSource(ds);
+            element.setPageNumber(ds.getPageNumber());
+            element.onPageNumberChanged(function (context, message) {
+                ds.setPageNumber(message.value);
+            });
+        } else {
+            console.error('DataSource not found');
+        }
+
+    },
+
+    findDataSource: function (params) {
+        var
+            name = params.metadata.DataSource,
+            parent = params.parent,
+            view = parent.getView(),
+            context,
+            dataSource;
+
+        if (name && view) {
+            context = view.getContext();
+            dataSource = context.dataSources[name];
+        }
+
+        return dataSource;
     }
 
 });

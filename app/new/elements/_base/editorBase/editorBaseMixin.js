@@ -45,24 +45,6 @@ var editorBaseMixin = {
         this.control.onValueChanged(
             this.createControlEventHandler(this, handler, {property: 'value'})
         );
-    },
-
-    createControlEventHandler: function(element, handler, additionParams) {
-        var context;
-        additionParams = additionParams || {};
-
-        if (element.parentView) {
-            context = element.parentView.context;
-        }
-
-        return function (message) {
-            _.extend(
-                message,
-                additionParams
-            );
-            message.source = element;
-
-            return handler.call(undefined, context, message);
-        };
     }
+
 };

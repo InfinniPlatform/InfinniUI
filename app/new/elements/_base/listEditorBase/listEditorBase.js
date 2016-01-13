@@ -53,7 +53,6 @@ _.extend(ListEditorBase.prototype, {
     },
 
     onSelectedItemChanged: function (handler) {
-        //@TODO Вынести createControlEventHandler в базовый элемент?
         this.control.onSelectedItemChanged(this.createControlEventHandler(this, handler));
     },
 

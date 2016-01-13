@@ -6,6 +6,11 @@ var DataNavigationPrevButton = DataNavigationBaseButton.extend({
         "click": "onClickHandler"
     },
 
+    initialize: function (options) {
+        this.model = new DataNavigationBaseButtonModel();
+        DataNavigationBaseButton.prototype.initialize.call(this, options);
+    },
+
     onClickHandler: function (event) {
         this.trigger('command', "prev");
     }
