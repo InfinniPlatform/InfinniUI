@@ -16,6 +16,10 @@ _.extend(DataNavigationControl.prototype, {
 
     onPageNumberChanged: function (handler) {
         this.controlModel.onPageNumberChanged(handler);
+    },
+
+    onPageSizeChanged: function (handler) {
+        this.controlModel.onPageSizeChanged(handler);
     }
 
 });

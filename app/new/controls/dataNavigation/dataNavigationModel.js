@@ -13,6 +13,7 @@ var DataNavigationModel = ControlModel.extend({
         ControlModel.prototype.initialize.apply(this, arguments);
         this.set('availablePageSizes', new Collection());
         this.on('change:pageNumber', this.updatePageStart, this);
+        this.on('change:pageSize', this.updatePageSize, this);
     },
 
     updatePageStart: function () {
@@ -31,6 +32,11 @@ var DataNavigationModel = ControlModel.extend({
         this.set('pageStart', pageStart);
     },
 
+    updatePageSize: function () {
+        //сьрос навигации
+        this.set('pageNumber', 0);
+    },
+
     nextPage: function () {
         var pageNumber = this.get('pageNumber');
         this.set('pageNumber', pageNumber + 1);
@@ -47,5 +53,12 @@ var DataNavigationModel = ControlModel.extend({
         this.on('change:pageNumber', function (model, value) {
             handler.call(null, {value: value});
         });
+    },
+
+    onPageSizeChanged: function (handler) {
+        this.on('change:pageSize', function (model, value) {
+            handler.call(null, {value: value});
+        });
     }
+
 });

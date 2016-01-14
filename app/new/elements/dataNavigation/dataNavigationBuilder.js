@@ -24,8 +24,14 @@ _.extend(DataNavigationBuilder.prototype, {
         if (ds) {
             element.setDataSource(ds);
             element.setPageNumber(ds.getPageNumber());
+            element.setPageSize(ds.getPageSize());
+
             element.onPageNumberChanged(function (context, message) {
                 ds.setPageNumber(message.value);
+            });
+
+            element.onPageSizeChanged(function (context, message) {
+                ds.setPageSize(message.value);
             });
         } else {
             console.error('DataSource not found');

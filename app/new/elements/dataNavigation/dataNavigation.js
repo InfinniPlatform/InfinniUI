@@ -32,6 +32,18 @@ _.extend(DataNavigation.prototype, {
 
     onPageNumberChanged: function (handler) {
         this.control.onPageNumberChanged(this.createControlEventHandler(this, handler));
+    },
+
+    setPageSize: function (value) {
+        this.control.set('pageSize', value)
+    },
+
+    getPageSize: function () {
+        return this.control.get('pageSize');
+    },
+
+    onPageSizeChanged: function (handler) {
+        this.control.onPageSizeChanged(this.createControlEventHandler(this, handler));
     }
 
 });
