@@ -41,7 +41,7 @@ DocumentUploadQueryConstructor.prototype.constructUploadFileRequest = function (
  * @param fieldName
  * @returns {String}
  */
-DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, instanceId) {
+DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, instanceId, contentId) {
 
     if (typeof instanceId === 'undefined' || instanceId === null) {
         return null;
@@ -51,6 +51,7 @@ DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, insta
         Configuration: this.configId,
         Metadata: this.documentId,
         DocumentId: instanceId,
+        ContentId: contentId,
         FieldName: this.normalizeFieldName(fieldName)
     };
     var template = this.template.download;
