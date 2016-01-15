@@ -275,42 +275,7 @@
     });
 
     grunt.task.registerTask('build',
-        function (props) {
-            /*if (extensionPath) {
-                var tmp = appFiles.slice(0),
-                    tmpLess = appStyleFiles.slice(0),
-                    tmpFavicon = grunt.config.get('copy.favicon.src').slice(0);
-
-                tmp.push(extensionPath + outerExtensionScript);
-                tmpLess.push(extensionPath + outerExtensionStyle);
-                tmpLess.push(extensionPath + outerExtensionLessStyle);
-                tmpFavicon.push(extensionPath + outerExtensionFavicon);
-
-                grunt.config.set('copy.favicon.src', tmpFavicon);
-                grunt.config.set('concat.app.src', tmp);
-                grunt.config.set('less.default.src', tmpLess);
-            }else{
-                grunt.config.set('concat.app.src', appFiles);
-                grunt.config.set('less.default.src', appStyleFiles);
-            }*/
-
-            //grunt.log.writeln(extensionPath + outerExtensionScript);
-            //grunt.log.writeln(grunt.config().concat.app.src);
-            //grunt build:{\"override\"\:{\"less\"\:{\"pl-extension\"\:\"arr.less\"}}}
-
-            if(props){
-                var basePath = '';
-                eval('props = ' + props);
-                grunt.log.writeln(props);
-                if(props.override){
-                    if(props.override.less){
-                        for(var k in props.override.less){
-                            grunt.config.set('less.default.options.modifyVars.' + k, basePath + props.override.less[k]);
-                            grunt.log.writeln(grunt.config.get('less.default.options.modifyVars.' + k));
-                        }
-                    }
-                }
-            }
+        function () {
 
 
             var tasks = [
@@ -323,7 +288,7 @@
                 'concat',
                 'copy'
             ];
-            grunt.task.run(tasks);
+            //grunt.task.run(tasks);
         }
     );
 

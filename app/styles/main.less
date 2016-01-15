@@ -1,6 +1,8 @@
-﻿
+﻿// переменные путей до некоторых файлов
+@pl-platform-variables-path: "pl-variables.less";
+@pl-bootstrap-variables-path: "variables.less";
 @pl-bootstrap-theme-path: "../../bootstrap-framework/less/theme.less";
-@pl-extension: "some.less";
+@pl-extension-path: "some.less";
 
 @import "../../bootstrap-framework/less/bootstrap.less";
 @import "@{pl-bootstrap-theme-path}";
@@ -31,4 +33,4 @@
 @import "controls/image.less";
 @import "controls/view.less";
 
-@import (optional) "@{pl-extension}";
+@import (optional) "@{pl-extension-path}";
