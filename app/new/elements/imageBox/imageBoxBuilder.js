@@ -50,7 +50,7 @@ _.extend(ImageBoxBuilder.prototype, {
                 if (value && value.Info && value.Info.ContentId && fileProvider) {
                     var instanceId = ds.lookupIdPropertyValue(sourceProperty);
                     if (typeof instanceId !== 'undefined') {
-                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
+                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId, value.Info.ContentId);
                     }
                 }
                 return url;

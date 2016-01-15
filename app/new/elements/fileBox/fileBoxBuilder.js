@@ -49,7 +49,7 @@ _.extend(FileBoxBuilder.prototype, {
                     info = value.Info;
                     var instanceId = ds.lookupIdPropertyValue(sourceProperty);
                     if (typeof instanceId !== 'undefined') {
-                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
+                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId, value.Info.ContentId);
                     }
                 }
 
