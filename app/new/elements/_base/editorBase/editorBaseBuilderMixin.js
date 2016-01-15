@@ -75,25 +75,30 @@ var editorBaseBuilderMixin = {
         var source = binding.getSource();
         var property = binding.getSourceProperty();
 
-        source.onErrorValidator(function (context, args) {
-            var result = args.value,
-                text = '';
+        if(typeof source.onErrorValidator == 'function'){
+            source.onErrorValidator(function (context, args) {
+                var result = args.value,
+                    text = '';
 
-            if (!result.isValid && Array.isArray(result.items)) {
-                text = getTextForItems(result.items);
-            }
-            element.setErrorText(text);
-        });
+                if (!result.isValid && Array.isArray(result.items)) {
+                    text = getTextForItems(result.items);
+                }
+                element.setErrorText(text);
+            });
+        }
 
-        source.onWarningValidator(function (context, args) {
-            var result = args.value,
-                text = '';
+        if(typeof source.onWarningValidator == 'function'){
+            source.onWarningValidator(function (context, args) {
+                var result = args.value,
+                    text = '';
 
-            if (!result.isValid && Array.isArray(result.items)) {
-                text = getTextForItems(result.items);
-            }
-            element.setWarningText(text);
-        });
+                if (!result.isValid && Array.isArray(result.items)) {
+                    text = getTextForItems(result.items);
+                }
+                element.setWarningText(text);
+            });
+        }
+
 
         function getTextForItems(items, callback) {
             return items
