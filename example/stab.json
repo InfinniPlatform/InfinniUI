@@ -99,6 +99,7 @@
                   "Items": [
                     {
                       "NumericBox": {
+                        "Background": "Primary1",
                         "HintText": "I'm NumericBox hint",
                         "LabelText": "Numeric label",
                         "Enabled": true,
