@@ -5,13 +5,16 @@ var DataNavigationView = ControlView.extend({
     className: 'pl-data-navigation',
 
     UI: {
-        buttons: 'ul'
+        buttons: 'ul',
+        sizes: '.pl-page-size'
     },
 
     initialize: function (options) {
         ControlView.prototype.initialize.call(this, options);
         this._childViews = [];
         this.buttonsFactory = new DataNavigationButtonFactory(this);
+        this._pageSizes = new DataNavigationPageSizes();
+        this._pageSizes.setParent(this);
     },
 
     initHandlersForProperties: function() {
@@ -30,8 +33,13 @@ var DataNavigationView = ControlView.extend({
         this.renderTemplate(this.template);
         this.updateProperties();
         this.trigger('render');
+        this.renderPageSizes();
         this.postrenderingActions();
         return this;
+    },
+
+    renderPageSizes: function () {
+        this.ui.sizes.append(this._pageSizes.render().$el);
     },
 
     renderButtons: function () {

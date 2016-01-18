@@ -28,6 +28,8 @@ var DataNavigationModel = ControlModel.extend({
         } else if (pageNumber === pageStart) {
             //Сдвинуть кнопки навигации вправо, чтобы выбранная страница была в центре
             pageStart = Math.max(0, pageStart - Math.floor(buttonsCount / 2));
+        } else if (pageNumber + 1 < pageStart) {
+            pageStart = Math.max(0, pageNumber - 1);
         }
         this.set('pageStart', pageStart);
     },
