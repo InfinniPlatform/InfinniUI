@@ -99,6 +99,12 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, { source: element });
             });
         }
+
+        if (metadata.OnKeyDown) {
+            element.onKeyDown(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, { source: element });
+            });
+        }
     },
 
     initBindingToProperty: function (params, propertyName, isBooleanBinding) {
