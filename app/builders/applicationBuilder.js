@@ -102,6 +102,12 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ActionBar', new ActionBarBuilder());
 
         builder.register('Script', new ScriptBuilder());
+
+
+        var registerQueue = ApplicationBuilder.registerQueue;
+        for(var i = 0, ii = registerQueue.length; i<ii; i++){
+            builder.register(registerQueue[i].name, registerQueue[i].builder);
+        }
     },
 
     build: function(metadataValue, args){
@@ -116,3 +122,12 @@ _.extend(ApplicationBuilder.prototype, {
         return this.builder.buildMany(metadataValue, args);
     }
 });
+
+ApplicationBuilder.registerQueue = [];
+
+ApplicationBuilder.addToRegisterQueue = function(name, builder){
+    ApplicationBuilder.registerQueue.push({
+        name: name,
+        builder: builder
+    });
+};

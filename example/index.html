@@ -5,75 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
 
-    <!--<link href='http://fonts.googleapis.com/css?family=Scada:700,400&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
-    <!--link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/-->
-    <link href="/out/css/vendor.css" rel="stylesheet" type="text/css"/>
-    <link href="/app/styles/main.css" rel="stylesheet" type="text/css"/>
-    <link href="/out/css/extension.css" rel="stylesheet" type="text/css"/>
-    <link rel="icon" type="image/png" href="/out/images/favicon.ico" />
-	
-	<meta property="og:title" content="Онлайн-сервис: &quot;Хабинет&quot;">
-	<meta property="og:image" content="/out/images/sharePictureHabinet.png">
-	<meta property="og:description" content="Кабинет для родительских собраний в интернете. Сэкономьте свое время! Участвуйте в классных делах Вашего ребенка, не отрываясь от своих дел.">
-	<meta property="og:url" content="http://habinet.ru/">
-	<meta name="title" content="Онлайн-сервис: &quot;Хабинет&quot;">
-	<meta name="description" content="Кабинет для родительских собраний в интернете. Сэкономьте свое время! Участвуйте в классных делах Вашего ребенка, не отрываясь от своих дел.">
-	<meta name="image" content="/out/images/sharePictureHabinet.png">
-	<link rel="image_src" href="/out/images/sharePictureHabinet.png">
+    <!-- Стили платформы скомпилированные вместе со стилями расширений (конфигурации) -->
+    <link href="/platform/css/vendor.css" rel="stylesheet" type="text/css"/>
+    <link href="/platform/css/main.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Фавикон -->
+    <link rel="icon" type="image/png" href="img/favicon.ico" />
 	
 </head>
 <body class="page-header-fixed" id="page-content">
 
-    <script src="launcherConfig.js"></script>
-    <script src="/app/utils/pdf/build/pdf.js"></script>
-    <script src="/out/vendor.js"></script>
-    <script src="/out/templates.js"></script>
-    <script src="/out/app.js"></script>
-    <script src="/out/extension.js"></script>
-    <script src="app.js"></script>
+    <script src="config.js"></script>
+
+    <script src="js/launcherConfig.js"></script>
+    <!-- <script src="/app/utils/pdf/build/pdf.js"></script> -->
+    <script src="/platform/vendor.js"></script>
+    <script src="/platform/templates.js"></script>
+    <script src="/platform/app.js"></script>
+
+    <script src="out/templates.js"></script>
+    <script src="out/app.js"></script>
+
+    <script src="js/app.js"></script>
     <script type="application/javascript">
-jQuery(function () {
-//    $(document).on('contextmenu', function() {
-//        return false;
-//    });
+        jQuery(function () {
+        //    $(document).on('contextmenu', function() {
+        //        return false;
+        //    });
 
-//    Metronic.init();
-//    Layout.init();
+        //    Metronic.init();
+        //    Layout.init();
 
-    var resize;
-    $(window).resize(function () {
-        if (resize) {
-            clearTimeout(resize);
-        }
-        resize = setTimeout(function () {
-            _runResizeHandlers();
-        }, 50); // wait 50ms until window resize finishes.
-    });
+            var resize;
+            $(window).resize(function () {
+                if (resize) {
+                    clearTimeout(resize);
+                }
+                resize = setTimeout(function () {
+                    _runResizeHandlers();
+                }, 50); // wait 50ms until window resize finishes.
+            });
 
-    function _runResizeHandlers() {
-        resizeContent();
-    }
+            function _runResizeHandlers() {
+                resizeContent();
+            }
 
-    function getViewPort() {
-        var e = window, a = 'inner';
-        if (!('innerWidth' in window)) {
-            a = 'client';
-            e = document.documentElement || document.body;
-        }
-        return {
-            width: e[a + 'Width'],
-            height: e[a + 'Height']
-        }
-    }
+            function getViewPort() {
+                var e = window, a = 'inner';
+                if (!('innerWidth' in window)) {
+                    a = 'client';
+                    e = document.documentElement || document.body;
+                }
+                return {
+                    width: e[a + 'Width'],
+                    height: e[a + 'Height']
+                }
+            }
 
-    function resizeContent () {
-        var height = getViewPort().height - (46 + 51); //46px высота толбаров
-        $("#page-content").css('height', height + 'px');
-    }
+            function resizeContent () {
+                var height = getViewPort().height - (46 + 51); //46px высота толбаров
+                $("#page-content").css('height', height + 'px');
+            }
 
-    resizeContent();
-});
-</script>
+            resizeContent();
+        });
+    </script>
 
 </body>
 </html>

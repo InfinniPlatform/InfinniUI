@@ -299,13 +299,12 @@
             //grunt build:{\"override\"\:{\"less\"\:{\"pl-extension\"\:\"arr.less\"}}}
 
             if(props){
-                var basePath = '';
                 eval('props = ' + props);
                 grunt.log.writeln(props);
                 if(props.override){
                     if(props.override.less){
                         for(var k in props.override.less){
-                            grunt.config.set('less.default.options.modifyVars.' + k, basePath + props.override.less[k]);
+                            grunt.config.set('less.default.options.modifyVars.' + k, props.override.less[k]);
                             grunt.log.writeln(grunt.config.get('less.default.options.modifyVars.' + k));
                         }
                     }
