@@ -35,3 +35,8 @@ node_modules
 # Bower
 bower_components/*
 bower_cache/*
+
+# Example
+example/out/*
+example/node_modules/*
+example/platform/*
