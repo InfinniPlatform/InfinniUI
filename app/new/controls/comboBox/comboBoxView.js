@@ -84,7 +84,10 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     onClickGripHandler: function () {
-        this.toggleDropdown();
+        var enabled = this.model.get('enabled');
+        if (enabled) {
+            this.toggleDropdown();
+        }
     },
 
     updateProperties: function(){
@@ -105,6 +108,13 @@ var ComboBoxView = ListEditorBaseView.extend({
         } else {
             this.ui.label.toggleClass('hidden', true);
         }
+
+    },
+
+    updateEnabled: function () {
+        ListEditorBaseView.prototype.updateEnabled.call(this);
+
+        var enabled = this.model.get('enabled');
 
     },
 
@@ -174,7 +184,11 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     onClickValueHandler: function (event) {
-        this.toggleDropdown(true);
+        var enabled = this.model.get('enabled');
+
+        if (enabled) {
+            this.toggleDropdown(true);
+        }
     }
 
 });
