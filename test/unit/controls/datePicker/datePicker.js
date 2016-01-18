@@ -53,7 +53,7 @@ describe('DatePickerControl', function () {
             datePicker.setEnabled(false);
 
             var $el = datePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
-            assert.equal($el.length, 3);
+            assert.equal($el.length, 2);
             $el.each(function (i, el) {
                 var $el = $(el);
                 assert.isTrue($el.prop('disabled'));
