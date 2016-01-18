@@ -26,6 +26,7 @@ var editorBaseBuilderMixin = {
         bindingOptions = bindingOptions || {};
         bindingOptions.valueProperty = bindingOptions.valueProperty || 'value';
 
+        element.setLabelFloating(metadata.LabelFloating);
         element.setHintText(metadata.HintText);
         element.setErrorText(metadata.ErrorText);
         element.setWarningText(metadata.WarningText);

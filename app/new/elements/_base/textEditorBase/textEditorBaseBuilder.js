@@ -23,7 +23,6 @@ _.extend(TextEditorBaseBuilder.prototype, {
         var element = params.element;
 
         element.setLabelText(metadata.LabelText);
-        element.setLabelFloating(metadata.LabelFloating);
 
         this
             .initDisplayFormat(params)

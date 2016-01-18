@@ -4,7 +4,8 @@ var editorBaseModelMixin = {
         value: null,
         hintText: null,
         errorText: null,
-        warningText: null
+        warningText: null,
+        labelFloating: false
     },
 
     initialize_editorBaseModel: function(){

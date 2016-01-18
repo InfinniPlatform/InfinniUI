@@ -5,9 +5,7 @@
  */
 var PasswordBoxModel = ControlModel.extend(_.extend({
 
-    defaults: _.defaults({
-            labelFloating: false
-        },
+    defaults: _.defaults(
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults
     ),

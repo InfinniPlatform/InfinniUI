@@ -22,6 +22,7 @@ var editorBaseViewMixin = {
 
     updateProperties: function(){
         this.updateValue();
+        this.updateLabelFloating();
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
@@ -30,6 +31,11 @@ var editorBaseViewMixin = {
 
     updateValue: function(){
         throw 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.';
+    },
+
+    updateLabelFloating: function () {
+        var labelFloating = this.model.get('labelFloating');
+        this.$el.toggleClass("pl-label-floating", labelFloating === true);
     },
 
     updateHintText: function(){

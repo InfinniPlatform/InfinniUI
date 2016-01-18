@@ -41,7 +41,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         editorBaseViewMixin.updateProperties.call(this);
 
         this.updateLabelText();
-        this.updateLabelFloating();
     },
 
     updateValue: function(){
@@ -63,11 +62,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
                 .addClass('hidden');
         }
 
-    },
-
-    updateLabelFloating: function(){
-        var labelFloating = this.model.get('labelFloating');
-        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updateDisplayFormat: function(){

@@ -11,6 +11,14 @@ var editorBaseMixin = {
         this.control.setValue(value);
     },
 
+    getLabelFloating: function () {
+        return this.control.get('labelFloating');
+    },
+
+    setLabelFloating: function (value) {
+        this.control.set('labelFloating', value);
+    },
+
     getHintText: function () {
         return this.control.get('hintText');
     },

@@ -35,18 +35,12 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         ControlView.prototype.updateProperties.call(this);
         editorBaseViewMixin.updateProperties.call(this);
         this.updateLabelText();
-        this.updateLabelFloating();
         this.updatePasswordChar();
     },
 
     updateLabelText: function () {
         var labelText = this.model.get('labelText');
         this.ui.label.text(labelText);
-    },
-
-    updateLabelFloating: function () {
-        var labelFloating = this.model.get('labelFloating');
-        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updatePasswordChar: function () {

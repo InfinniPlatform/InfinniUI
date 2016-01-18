@@ -20,7 +20,6 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
                 element = params.element;
 
             element.setLabelText(metadata.LabelText);
-            element.setLabelFloating(metadata.LabelFloating);
             element.setPasswordChar(metadata.PasswordChar);
         },
 
