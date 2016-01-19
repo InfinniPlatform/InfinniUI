@@ -20,24 +20,23 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
         element.setLabelText(params.metadata.LabelText);
+        element.setAutocomplete(params.metadata.Autocomplete);
 
-        //(function (binding) {
-        //    var source = binding.getSource();
-        //    element.onPropertyChanged('search', function (context, args) {
-        //        var value = args.newValue;
-        //        source.setFilter([
-        //            {
-        //                criteriaType: 64,
-        //                property: 'Display',
-        //                value: value
-        //            }
-        //        ]);
-        //
-        //        console.log('change:search', args);
-        //        console.log(source.getItems());
-        //    });
-        //
-        //})(data.itemsBinding);
+        (function (binding) {
+            var source = binding.getSource();
+            var fullSearchFilter = {
+                CriteriaType: criteriaType.FullTextSearch,
+                Property: "",
+                Value: null
+            };
+            element.onPropertyChanged('search', function (context, args) {
+                fullSearchFilter.Value = args.newValue;
+                if (source.setFilter) {
+                    source.setFilter([fullSearchFilter]);
+                }
+            });
+
+        })(data.itemsBinding);
     },
 
     initValueTemplate: function (binding, params) {
