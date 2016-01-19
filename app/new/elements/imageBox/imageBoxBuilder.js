@@ -77,6 +77,25 @@ _.extend(ImageBoxBuilder.prototype, {
                 ds.setFile(file, binding.getSourceProperty());
             });
 
+            ds.onItemsUpdated(function (context, args) {
+                /**
+                 * @TODO Принудительное обновление изображений. Удалить после изменений на backend'е,
+                 * когда будет изменяться BlobInfo
+                 */
+                var element = params.element;
+                var url = element.getValue();
+                var pattern = /&salt=.*$/;
+                if (url) {
+                    var salt = '&salt=' + Date.now();
+                    if (pattern.test(url)) {
+                        url.replace(pattern, salt);
+                    } else {
+                        url += salt;
+                    }
+                    element.setValue(url);
+                }
+            });
+
             //params.element.onPropertyChanged('value', function (context, args) {
             //    var url = null;
             //    var value = args.newValue;
