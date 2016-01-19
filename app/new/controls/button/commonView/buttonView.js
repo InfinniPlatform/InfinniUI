@@ -81,13 +81,6 @@ var CommonButtonView = ControlView.extend({
         return this;
     },
 
-    onClickHandler: function (event) {
-        var enabled = this.model.get('enabled');
-        if (enabled) {
-            this.trigger('onClick');
-        }
-    },
-
     getButtonElement: function(){
         return this.ui.button;
     }
