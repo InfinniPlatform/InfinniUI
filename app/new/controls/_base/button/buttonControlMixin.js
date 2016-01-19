@@ -1,7 +1,7 @@
 var buttonControlMixin = {
 
     click: function () {
-        this.controlView.trigger('onClick');
+        this.controlView.$el.click();
     }
 
 };
