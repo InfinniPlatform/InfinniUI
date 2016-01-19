@@ -168,6 +168,8 @@ var ComboBoxView = ListEditorBaseView.extend({
         }
         this.ui.value.empty();
         this.ui.value.append($value);
+
+        editorBaseViewMixin.updateValueState.call(this);
     },
 
     onRemoveValueHandler: function (value) {

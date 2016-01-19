@@ -44,10 +44,8 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     },
 
     updateValue: function(){
+        editorBaseViewMixin.updateValueState.call(this);
         this.ui.control.val(this.getDisplayValue());
-
-        var isEmpty = _.isEmpty(this.getDisplayValue());
-        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
     },
 
     updateLabelText: function(){
