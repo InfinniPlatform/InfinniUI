@@ -33,6 +33,12 @@ var editorBaseViewMixin = {
         throw 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.';
     },
 
+    updateValueState: function(){
+        var value = this.model.get('value');
+        var isEmpty = _.isEmpty(value);
+        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
+    },
+
     updateLabelFloating: function () {
         var labelFloating = this.model.get('labelFloating');
         this.$el.toggleClass("pl-label-floating", labelFloating === true);
