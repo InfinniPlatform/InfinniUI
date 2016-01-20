@@ -19,8 +19,9 @@ RequestExecutorDataStrategy.prototype.strategies = {
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: onFail,
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: this.onErrorRequest(onFail),
             data: JSON.stringify(requestData.args),
             contentType: "application/json;charset=UTF-8"
         });
@@ -34,14 +35,17 @@ RequestExecutorDataStrategy.prototype.strategies = {
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: onFail,
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: this.onErrorRequest(onFail),
             processData: false,
             contentType: false,
             data: requestData.args
         });
     }
 };
+
+_.extend(RequestExecutorDataStrategy.prototype, ajaxRequestMixin);
 
 function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
 

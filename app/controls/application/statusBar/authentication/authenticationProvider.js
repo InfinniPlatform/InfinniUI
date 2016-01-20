@@ -232,16 +232,13 @@ _.extend(AuthenticationProvider.prototype, {
             xhrFields: {
                 withCredentials: true
             },
-            success: function (data) {
-                if(resultCallback) {
-                    resultCallback(data);
-                }
-            },
-            error: function (error) {
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(resultCallback),
+            error: this.onErrorRequest(function (error) {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
-            }
+            })
         });
     },
 
@@ -256,16 +253,13 @@ _.extend(AuthenticationProvider.prototype, {
             },
             data: requestData,
             contentType: 'application/json',
-            success: function (data) {
-                if(resultCallback) {
-                    resultCallback(data);
-                }
-            },
-            error: function (error) {
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(resultCallback),
+            error: this.onErrorRequest(function (error) {
                 if(errorCallback) {
                     errorCallback(error.responseJSON);
                 }
-            }
+            })
         });
     },
 
@@ -281,5 +275,7 @@ _.extend(AuthenticationProvider.prototype, {
         this.handlers.onSignOut.add(handler);
     }
 });
+
+_.extend(AuthenticationProvider.prototype, ajaxRequestMixin);
 
 InfinniUI.global.session = new AuthenticationProvider(InfinniUI.config.serverUrl);

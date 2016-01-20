@@ -26,7 +26,7 @@
 
             'app/element/_mixins/*.js',
             'app/element/*.js', // old
-
+            'app/data/_common/**/*.js',
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
             'app/new/elements/**/*.js',
@@ -152,6 +152,12 @@
                 src: [],
                 dest: 'out/images/'
             }
+            //media: {
+            //    expand: true,
+            //    flatten: true,
+            //    src: ['app/styles/media/**/*.*'],
+            //    dest: 'out/css/media/'
+            //}
             /*images: {
                 files: [
                     {

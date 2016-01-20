@@ -1,15 +1,15 @@
 function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallback) {
 
-    var makeRequest = function (requestData) {
-        return $.ajax({
-            type: 'post',
-            url: requestData.requestUrl,
-            data: JSON.stringify(requestData.args),
-            contentType: "application/json;charset=UTF-8",
-            success: successCallback,
-            fail: failCallback
-        });
-    };
+    //var makeRequest = function (requestData) {
+    //    return $.ajax({
+    //        type: 'post',
+    //        url: requestData.requestUrl,
+    //        data: JSON.stringify(requestData.args),
+    //        contentType: "application/json;charset=UTF-8",
+    //        success: successCallback,
+    //        fail: failCallback
+    //    });
+    //};
 
     this.getViewMetadata = function (resultCallback) {
         var data = metadataUrlConstructor.constructViewMetadataRequest();
@@ -29,6 +29,4 @@ function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallb
     this.setCache = function (cache) {
         this.cache = cache;
     }
-
-
 }
