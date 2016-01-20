@@ -23,14 +23,16 @@ function View(parent) {
     var parentView = this.getView();
 
     if (parentView) {
+        // перед закрытием родительской view необходимо также убедиться, что могут быть закрыты все дочерние view
         parentView.onClosing && parentView.onClosing(function (context, message) {
-            return view.eventManager.trigger('onClosing', view.getContext(), view._getScriptArgs())
+            if(!view.isRemoved) {
+                return view.eventManager.trigger('onClosing', view.getContext(), view._getScriptArgs());
+            }
         });
 
+        // при закрытии родительской view необходимо закрыть все дочерние view
         parentView.onClosed && parentView.onClosed(function (context, message) {
-            if(!view.isRemoved){
-                view.eventManager.trigger('onClosed', view.getContext(), view._getScriptArgs());
-            }
+            view.close(null, null, true);
         });
     }
 
@@ -198,7 +200,7 @@ _.extend(View.prototype,
             }
         },
 
-        close: function(success, error){
+        close: function(success, error, notCallOnClosing){
 
             if(this.isClosing){
                 return;
@@ -209,7 +211,7 @@ _.extend(View.prototype,
             var context = this.getContext();
             var scriptArgs = this._getScriptArgs();
 
-            if(this.eventManager.trigger('onClosing', scriptArgs, context)){
+            if( notCallOnClosing || this.eventManager.trigger('onClosing', scriptArgs, context) ){
                 this.eventManager.trigger('onClosed', scriptArgs, context);
 
                 this.openStrategy.close();
