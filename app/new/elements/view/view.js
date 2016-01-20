@@ -28,7 +28,9 @@ function View(parent) {
         });
 
         parentView.onClosed && parentView.onClosed(function (context, message) {
-            view.eventManager.trigger('onClosed', view.getContext(), view._getScriptArgs());
+            if(!view.isRemoved){
+                view.eventManager.trigger('onClosed', view.getContext(), view._getScriptArgs());
+            }
         });
     }
 
