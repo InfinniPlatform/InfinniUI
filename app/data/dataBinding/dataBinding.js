@@ -141,12 +141,13 @@ var DataBinding = Backbone.Model.extend({
     },
 
     _setValueToSource: function(value){
+        var element = this.get('element');
         var source = this.get('source');
         var sourceProperty = this.get('sourceProperty');
         var converter = this.get('converter');
 
         if(converter != null && converter.toSource != null){
-            value = converter.toSource(context, {value: value, binding: this});
+            value = converter.toSource(context, {value: value, binding: this, source: element});
         }
 
         source.setProperty(sourceProperty, value);
@@ -167,13 +168,14 @@ var DataBinding = Backbone.Model.extend({
     },
 
     _setValueToElement: function(value){
+        var source = this.get('source');
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
         var converter = this.get('converter');
         var context = this._getContext();
 
         if(converter != null && converter.toElement != null){
-            value = converter.toElement(context, {value: value, binding: this});
+            value = converter.toElement(context, {value: value, binding: this, source: source});
         }
 
         element.setProperty(elementProperty, value);

@@ -11,6 +11,14 @@ var editorBaseMixin = {
         this.control.setValue(value);
     },
 
+    getLabelFloating: function () {
+        return this.control.get('labelFloating');
+    },
+
+    setLabelFloating: function (value) {
+        this.control.set('labelFloating', value);
+    },
+
     getHintText: function () {
         return this.control.get('hintText');
     },
@@ -45,24 +53,6 @@ var editorBaseMixin = {
         this.control.onValueChanged(
             this.createControlEventHandler(this, handler, {property: 'value'})
         );
-    },
-
-    createControlEventHandler: function(element, handler, additionParams) {
-        var context;
-        additionParams = additionParams || {};
-
-        if (element.parentView) {
-            context = element.parentView.context;
-        }
-
-        return function (message) {
-            _.extend(
-                message,
-                additionParams
-            );
-            message.source = element;
-
-            return handler.call(undefined, context, message);
-        };
     }
+
 };

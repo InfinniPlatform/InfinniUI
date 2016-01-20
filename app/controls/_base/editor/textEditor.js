@@ -24,9 +24,10 @@ var TextEditor = Backbone.View.extend({
         'click .pl-control-editor': 'onClickEditorHandler',
         'focus .pl-control-editor': 'onFocusEditorHandler',
         'paste .pl-control-editor': 'onPasteEditorHandler',
-        'contextmenu .pl-control-editor': 'onContextMenuEditorHandler',
+        //'contextmenu .pl-control-editor': 'onContextMenuEditorHandler',
         'mousewheel .pl-control-editor': 'onMouseWheelEditorHandler',
-        'mouseleave .pl-control-editor': 'onMouseLeaveEditorHandler'
+        'mouseleave .pl-control-editor': 'onMouseLeaveEditorHandler',
+        'input .pl-control-editor': 'onInputHandler'
     },
 
     /**
@@ -409,6 +410,10 @@ var TextEditor = Backbone.View.extend({
             this.$el.hide();
             this.onBlurEditorHandler();
         }
+    },
+
+    onInputHandler: function(event){
+        this.options.parent.model.set('value', this.ui.editor.val());
     },
 
     /**

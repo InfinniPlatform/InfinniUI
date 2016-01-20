@@ -5,7 +5,6 @@
  */
 var TextEditorBaseModel = ControlModel.extend(/** @lends TextEditorBaseModel.prototype */ {
     defaults: _.defaults({
-            labelFloating: false,
             labelText: null,
             displayFormat: null,
             editMask: null

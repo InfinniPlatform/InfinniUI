@@ -36,6 +36,7 @@
           "Property": ""
         },
         "ShowSelectors": false,
+        "MultiSelect": true,
         "Columns": [
           {
             "Header": "Name",

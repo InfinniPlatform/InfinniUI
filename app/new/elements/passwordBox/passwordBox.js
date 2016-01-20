@@ -21,14 +21,6 @@ _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
             this.control.set('labelText', value);
         },
 
-        getLabelFloating: function () {
-            return this.control.get('labelFloating');
-        },
-
-        setLabelFloating: function (value) {
-            this.control.set('labelFloating', value);
-        },
-
         getPasswordChar: function () {
             return this.control.get('passwordChar');
         },

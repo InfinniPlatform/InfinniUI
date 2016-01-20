@@ -22,6 +22,7 @@ var buttonMixin = {
 
     setAction: function (value) {
         var control = this.control;
+
         control.set('action', value);
 
         if (this.isFirstAction) {
@@ -29,6 +30,7 @@ var buttonMixin = {
 
             this.onClick(function () {
                 var action = control.get('action');
+
                 if (action ) {
                     action.execute();
                 }
@@ -40,12 +42,22 @@ var buttonMixin = {
         return this.control.get('action');
     },
 
-    onClick: function (handler) {
-        this.control.onClick(handler);
-    },
-
     click: function () {
         this.control.click();
+    },
+
+    onClick: function(handler){
+        var that = this;
+
+        Element.prototype.onClick.call(this, onClickHandlerWrap);
+
+        function onClickHandlerWrap(args){
+            var enabled = that.getEnabled();
+
+            if(enabled){
+                handler(args);
+            }
+        }
     }
 
 };

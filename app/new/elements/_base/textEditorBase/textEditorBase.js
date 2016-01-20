@@ -22,14 +22,6 @@ _.extend(TextEditorBase.prototype, {
         return this.control.get('labelText');
     },
 
-    setLabelFloating: function (value) {
-        this.control.set('labelFloating', value);
-    },
-
-    getLabelFloating: function () {
-        return this.control.get('labelFloating');
-    },
-
     setDisplayFormat: function (value) {
         this.control.set('displayFormat', value);
     },

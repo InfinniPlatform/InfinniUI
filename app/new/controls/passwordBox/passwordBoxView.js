@@ -35,7 +35,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         ControlView.prototype.updateProperties.call(this);
         editorBaseViewMixin.updateProperties.call(this);
         this.updateLabelText();
-        this.updateLabelFloating();
         this.updatePasswordChar();
     },
 
@@ -44,21 +43,15 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.ui.label.text(labelText);
     },
 
-    updateLabelFloating: function () {
-        var labelFloating = this.model.get('labelFloating');
-        this.$el.toggleClass("pl-label-floating", labelFloating);
-    },
-
     updatePasswordChar: function () {
         //Can't use on native input[type=password]
     },
 
     updateValue: function(){
+        editorBaseViewMixin.updateValueState.call(this);
+
         var value = this.model.get('value');
         this.ui.input.val(value);
-
-        var isEmpty = _.isEmpty(value);
-        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
     },
 
     updateEnabled: function () {

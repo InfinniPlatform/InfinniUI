@@ -210,7 +210,7 @@ var layoutManager = {
 
             var $el = $(this.getSelector(), $modal);
 
-            $el.parentsUntil('.modal').attr('style', 'height: auto');
+            $el.parentsUntil('.modal').css('height', 'auto');
 
             $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
 

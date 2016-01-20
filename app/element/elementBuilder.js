@@ -89,14 +89,20 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
 
         if (metadata.OnDoubleClick) {
-            element.onDoubleClick(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, { source: element });
+            element.onDoubleClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, args);
             });
         }
 
         if (metadata.OnClick) {
-            element.onClick(function () {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, { source: element });
+            element.onClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, args);
+            });
+        }
+
+        if (metadata.OnKeyDown) {
+            element.onKeyDown(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, args);
             });
         }
     },

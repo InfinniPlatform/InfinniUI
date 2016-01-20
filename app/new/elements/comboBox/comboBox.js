@@ -36,3 +36,13 @@ ComboBox.prototype.setValueFormat = function (value) {
 ComboBox.prototype.getValueFormat = function () {
     return this.control.get('valueFormat');
 };
+
+ComboBox.prototype.getAutocomplete = function () {
+    return this.control.get('autocomplete');
+};
+
+ComboBox.prototype.setAutocomplete = function (value) {
+    if (typeof value === 'boolean') {
+        this.control.set('autocomplete', value);
+    }
+};

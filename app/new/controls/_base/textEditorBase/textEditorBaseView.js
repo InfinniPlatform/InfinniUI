@@ -41,14 +41,11 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         editorBaseViewMixin.updateProperties.call(this);
 
         this.updateLabelText();
-        this.updateLabelFloating();
     },
 
     updateValue: function(){
+        editorBaseViewMixin.updateValueState.call(this);
         this.ui.control.val(this.getDisplayValue());
-
-        var isEmpty = _.isEmpty(this.getDisplayValue());
-        this.$el.toggleClass("pl-empty-text-editor", isEmpty);
     },
 
     updateLabelText: function(){
@@ -63,11 +60,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
                 .addClass('hidden');
         }
 
-    },
-
-    updateLabelFloating: function(){
-        var labelFloating = this.model.get('labelFloating');
-        this.$el.toggleClass("pl-label-floating", labelFloating);
     },
 
     updateDisplayFormat: function(){

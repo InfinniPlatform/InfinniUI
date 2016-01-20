@@ -41,6 +41,8 @@
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js',
+            '!app/controls/dataNavigation/**/*.*',
+            '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
             '!app/element/dataElement/dataGrid/**/*.*'
         ],

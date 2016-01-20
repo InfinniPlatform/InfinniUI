@@ -50,7 +50,7 @@ _.extend(ImageBoxBuilder.prototype, {
                 if (value && value.Info && value.Info.ContentId && fileProvider) {
                     var instanceId = ds.lookupIdPropertyValue(sourceProperty);
                     if (typeof instanceId !== 'undefined') {
-                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId);
+                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId, value.Info.ContentId);
                     }
                 }
                 return url;
@@ -75,6 +75,25 @@ _.extend(ImageBoxBuilder.prototype, {
 
                 //Файл в очередь на загрузк
                 ds.setFile(file, binding.getSourceProperty());
+            });
+
+            ds.onItemsUpdated(function (context, args) {
+                /**
+                 * @TODO Принудительное обновление изображений. Удалить после изменений на backend'е,
+                 * когда будет изменяться BlobInfo
+                 */
+                var element = params.element;
+                var url = element.getValue();
+                var pattern = /&salt=.*$/;
+                if (url) {
+                    var salt = '&salt=' + Date.now();
+                    if (pattern.test(url)) {
+                        url.replace(pattern, salt);
+                    } else {
+                        url += salt;
+                    }
+                    element.setValue(url);
+                }
             });
 
             //params.element.onPropertyChanged('value', function (context, args) {

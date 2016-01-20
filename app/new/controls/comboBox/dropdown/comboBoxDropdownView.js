@@ -26,6 +26,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
         this.listenTo(this.model, 'change:search', this.onChangeSearchHandler);
+        this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
 
@@ -37,12 +38,17 @@ var ComboBoxDropdownView = Backbone.View.extend({
         });
     },
 
+    updateProperties: function () {
+        this.updateAutocomplete();
+    },
+
     render: function () {
         var template = this.strategy.getTemplate();
         this.$el.html(template({
             multiSelect: this.model.get('multiSelect')
         }));
         this.bindUIElements();
+        this.updateProperties();
         this.renderItems();
         return this.$el;
     },
@@ -110,6 +116,11 @@ var ComboBoxDropdownView = Backbone.View.extend({
         if (!dropdown) {
             this.remove();
         }
+    },
+
+    updateAutocomplete: function () {
+        var autocomplete = this.model.get('autocomplete');
+        this.ui.text.toggleClass('hidden', !autocomplete);
     },
 
     onClickItemHandler: function (item) {

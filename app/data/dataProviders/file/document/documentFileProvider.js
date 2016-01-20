@@ -42,6 +42,6 @@ DocumentFileProvider.prototype.uploadFile = function (fieldName, instanceId, fil
  * @param {string} instanceId
  * @returns {String}
  */
-DocumentFileProvider.prototype.getFileUrl = function (fieldName, instanceId) {
-    return this.urlConstructor.getFileUrl(fieldName, instanceId);
+DocumentFileProvider.prototype.getFileUrl = function (fieldName, instanceId, contentId) {
+    return this.urlConstructor.getFileUrl(fieldName, instanceId, contentId);
 };
