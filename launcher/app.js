@@ -4,6 +4,8 @@ moment.locale('ru');
 
 (function ($target/*, metadata*/, homePageMetadata) {
 
+    new AjaxLoaderIndicator($target, {delay: 50});
+
     var host = InfinniUI.config.serverUrl;
 
     //Регистрация провайдера для работы с прикрепленными к документам файлами
