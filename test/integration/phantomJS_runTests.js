@@ -3,26 +3,14 @@ var url = 'http://localhost:8181/test/integration';
 
 page.settings.webSecurityEnabled = false;
 
-console.log('Status: started!');
-
 page.onConsoleMessage = function (msg) {
     console.log('CONSOLE: ' + msg);
-    if (msg === "Tests finished!") {
-        setTimeout(function () {
-            phantom.exit();
-        }, 2000);
-    }
     /* Ситуации, при которых может произойти зацикливание */
     if (msg.indexOf('Unhandled rejection') != -1 ||
 		msg.indexOf('signOut not called') != -1
 	) {
         page.pages[0].render('ErrorLogs/' + msg.replace(/[?:"]*/g, "") + '.png');
         phantom.exit(2);
-    }
-
-    if (msg.indexOf('Take screenshot') != -1) {
-        var fileName = msg.substring(msg.indexOf(':') + 1);
-        page.pages[0].render('ErrorLogs/' + fileName + '.png');
     }
 };
 
@@ -50,10 +38,18 @@ page.onPageCreated = function (newPage) {
     };
 };
 
-page.clearMemoryCache();
+page.onCallback = function(data) {
+    switch(data.command){
+        case 'Tests finished':
+            phantom.exit();
+            break;
+        case 'Take screenshot':
+            page.pages[0].render('ErrorLogs/' + data.fileName + '.png');
+            break;
+    }
+};
 
 page.open(url, function (status) {
-
     if (status === 'success') {
         console.log('Status: openned!');
     } else {

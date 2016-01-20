@@ -18,7 +18,7 @@ function CucumberHTMLListener($root) {
                         line: feature.getLine(),
                         description: feature.getDescription()
                     });
-                    console.log("##teamcity[testSuiteStarted name='" + window.cucumberCurrentFeature + "']");
+                    tsm.suiteStarted(window.cucumberCurrentFeature);
                     break;
 
                 case 'BeforeScenario':
@@ -30,7 +30,7 @@ function CucumberHTMLListener($root) {
                         line: scenario.getLine(),
                         description: scenario.getDescription()
                     });
-                    console.log("##teamcity[testSuiteStarted name='" + window.cucumberCurrentScenario + "']");
+                    tsm.testStarted(window.cucumberCurrentScenario);
                     break;
 
                 case 'BeforeStep':
@@ -42,11 +42,9 @@ function CucumberHTMLListener($root) {
                     .replace(/\[/g, "|[")
                     .replace(/\]/g, "|]")
                     .replace(/:/g, "");
-                    console.log("##teamcity[testStarted name='" + window.cucumberCurrentStep + "']");
                     break;
 
                 case 'StepResult':
-                    var teamcityOutput = "##teamcity[";
                     var result;
                     var stepResult = event.getPayloadItem('stepResult');
                     if (stepResult.isSuccessful()) {
@@ -55,35 +53,28 @@ function CucumberHTMLListener($root) {
                         result = { status: 'pending' };
                     } else if (stepResult.isUndefined() || stepResult.isSkipped()) {
                         result = { status: 'skipped' };
-                        teamcityOutput += "testIgnored name='" + window.cucumberCurrentStep + "'";
                     } else {
                         var error = stepResult.getFailureException();
                         var errorMessage = error.stack || error;
                         result = { status: 'failed', error_message: errorMessage };
-                        teamcityOutput += "testFailed name='" + window.cucumberCurrentStep + "' details='" + errorMessage.toString().replace(/\n/g, "|n|r") + "'";
                         var screenshotName =    window.cucumberCurrentFeature.toString().replace(/[?:"]*/g, "") + '.' +
                                                 window.cucumberCurrentScenario.toString().replace(/[?:"]*/g, "") + '.' +
                                                 window.cucumberCurrentStep.toString().replace(/[?:"]*/g, "");
-                        console.log('Take screenshot:' + screenshotName);
+                        tsm.testFailed(window.cucumberCurrentScenario, errorMessage.toString().replace(/\n/g, "|n|r"));
+                        if(window.callPhantom){
+                            window.callPhantom({command: 'Take screenshot', fileName: screenshotName});
+                        }
                     }
                     formatter.match({ uri: 'report.feature', step: { line: currentStep.getLine() } });
                     formatter.result(result);
-                    teamcityOutput += "]";
-                    if (teamcityOutput != "##teamcity[]") {
-                        console.log(teamcityOutput);
-                    }
-                    break;
-
-                case 'AfterStep':
-                    console.log("##teamcity[testFinished name='" + window.cucumberCurrentStep + "']");
                     break;
 
                 case 'AfterScenario':
-                    console.log("##teamcity[testSuiteFinished name='" + window.cucumberCurrentScenario + "']");
+                    tsm.testFinished(window.cucumberCurrentScenario);
                     break;
 
                 case 'AfterFeature':
-                    console.log("##teamcity[testSuiteFinished name='" + window.cucumberCurrentFeature + "']");
+                    tsm.suiteFinished(window.cucumberCurrentFeature);
                     break;
             }
             callback();
