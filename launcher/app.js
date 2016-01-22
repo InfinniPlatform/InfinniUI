@@ -90,8 +90,8 @@ moment.locale('ru');
 
 })(
     $('body'),
-    '/app/stubs/checkbox.json'
-    //{ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
+    //'/app/stubs/checkbox.json'
+    {ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
 );
 
 
