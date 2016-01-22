@@ -37,6 +37,5 @@ bower_components/*
 bower_cache/*
 
 # Example
-example/out/*
+example/www/compiled/*
 example/node_modules/*
-example/platform/*

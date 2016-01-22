@@ -4,10 +4,7 @@
     grunt.loadNpmTasks('grunt-contrib-connect');
 
     var appFiles = [
-            'js/**/*.js',
-
-            '!js/app.js',
-            '!js/launcherConfig.js'
+            'js/**/*.js'
         ],
         templateFiles = ["js/**/*.tpl.html"];
 
@@ -21,7 +18,7 @@
                     }
                 },
                 src: appFiles,
-                dest: 'out/app.js'
+                dest: 'www/compiled/js/app.js'
             }
         },
 
@@ -35,7 +32,7 @@
                     }
                 },
                 files : {
-                    "out/templates.js" : templateFiles
+                    "www/compiled/js/templates.js" : templateFiles
                 }
             }
         },
@@ -43,9 +40,11 @@
         connect: {
             http: {
                 options: {
-                    open: 'http://localhost:8181/test/unit/',
+                    base: 'www',
                     hostname : '*',
-                    port: '8181'
+                    port: 8181,
+                    open:'http:/localhost:8181',
+                    keepalive: true
                 }
             }
         }
