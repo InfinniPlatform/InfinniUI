@@ -89,7 +89,7 @@
                     }
                 },
                 src: appFiles,
-                dest: 'out/app.js'
+                dest: 'out/platform.js'
             },
             vendor: {
                 src: vendorFiles,
