@@ -14,7 +14,7 @@ RequestExecutorDataStrategy.prototype.strategies = {
 
     json: function (requestData, onSuccess, onFail) {
         return $.ajax({
-            type: 'post',
+            type: requestData.method || 'post',
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
@@ -28,9 +28,10 @@ RequestExecutorDataStrategy.prototype.strategies = {
     },
 
     raw: function (requestData, onSuccess, onFail) {
-
+        var method = requestData.method || 'post';
+        var processData = method.toUpperCase() === 'GET';
         return $.ajax({
-            type: 'post',
+            type: method,
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
@@ -38,7 +39,7 @@ RequestExecutorDataStrategy.prototype.strategies = {
             beforeSend: this.onBeforeRequest(),
             success: this.onSuccessRequest(onSuccess),
             error: this.onErrorRequest(onFail),
-            processData: false,
+            processData: processData,
             contentType: false,
             data: requestData.args
         });
@@ -97,6 +98,5 @@ function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
     this.makeRequestRaw = function (requestData) {
         return cacheRequest(requestData, request.bind(undefined, 'raw'))
     };
-
 
 }

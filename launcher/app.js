@@ -22,6 +22,10 @@ moment.locale('ru');
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
+    window.providerRegister.register('ServerActionProvider', function (metadataValue) {
+        return new ServerActionProvider(new QueryConstructorServerAction(host, metadataValue));
+    });
+
     window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
     setTimeout(layoutManager.init.bind(layoutManager), 1000);
