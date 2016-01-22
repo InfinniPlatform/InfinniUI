@@ -54,6 +54,9 @@ this.AfterFeatures(function(){
     if(window.callPhantom){
         window.callPhantom({command: 'Tests finished'});
     }
+    if(location.hash === "#enableClosing"){
+        window.close();
+    }
 });
 
 this.AfterScenario( function(scenario, callback) {
@@ -62,7 +65,5 @@ this.AfterScenario( function(scenario, callback) {
 });
 
 this.AfterStep(function(step, callback){
-	setTimeout(function() {
-		callback();
-	}, 200);
+	callback();
 });

@@ -24,6 +24,8 @@ function CucumberHTMLListener($root) {
                 case 'BeforeScenario':
                     var scenario = event.getPayloadItem('scenario');
                     window.cucumberCurrentScenario = scenario.getName();
+                    window.cucumberIsIgnored = false;
+                    window.cucumberIsFailed = false;
                     formatter.scenario({
                         keyword: scenario.getKeyword(),
                         name: scenario.getName(),
@@ -53,6 +55,10 @@ function CucumberHTMLListener($root) {
                         result = { status: 'pending' };
                     } else if (stepResult.isUndefined() || stepResult.isSkipped()) {
                         result = { status: 'skipped' };
+                        if(!window.cucumberIsIgnored && !window.cucumberIsFailed){
+                            tsm.testIgnored(window.cucumberCurrentScenario);
+                            window.cucumberIsIgnored = true;
+                        }
                     } else {
                         var error = stepResult.getFailureException();
                         var errorMessage = error.stack || error;
@@ -61,6 +67,7 @@ function CucumberHTMLListener($root) {
                                                 window.cucumberCurrentScenario.toString().replace(/[?:"]*/g, "") + '.' +
                                                 window.cucumberCurrentStep.toString().replace(/[?:"]*/g, "");
                         tsm.testFailed(window.cucumberCurrentScenario, errorMessage.toString().replace(/\n/g, "|n|r"));
+                        window.cucumberIsFailed = true;
                         if(window.callPhantom){
                             window.callPhantom({command: 'Take screenshot', fileName: screenshotName});
                         }
