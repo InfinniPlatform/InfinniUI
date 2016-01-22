@@ -61,6 +61,7 @@
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
             'bootstrap-framework/js/tooltip.js',
+            'bower_components/jquery.cookie/jquery.cookie.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [

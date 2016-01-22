@@ -22,6 +22,10 @@ moment.locale('ru');
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
+    window.providerRegister.register('ServerActionProvider', function (metadataValue) {
+        return new ServerActionProvider(new QueryConstructorServerAction(host, metadataValue));
+    });
+
     window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
     setTimeout(layoutManager.init.bind(layoutManager), 1000);
@@ -86,8 +90,8 @@ moment.locale('ru');
 
 })(
     $('body'),
-    //'/app/stubs/checkbox.json'
-    {ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
+    '/app/stubs/checkbox.json'
+    //{ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
 );
 
 

@@ -85,6 +85,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('SaveAction', new SaveActionBuilder());
         builder.register('SelectAction', new SelectActionBuilder());
         builder.register('UpdateAction', new UpdateActionBuilder());
+        builder.register('ServerAction', new ServerActionBuilder());
 
 
         builder.register('BooleanFormat', new BooleanFormatBuilder());
