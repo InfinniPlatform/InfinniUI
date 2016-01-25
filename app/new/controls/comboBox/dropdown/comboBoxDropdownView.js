@@ -10,6 +10,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     UI: {
         items: '.pl-combobox-items',
+        filter: '.pl-combobox-filter',
         text: '.pl-combobox-filter-text',
         noItems: '.pl-combobox-items-empty',
         search: '.pl-combobox-items-empty > span'
@@ -120,7 +121,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     updateAutocomplete: function () {
         var autocomplete = this.model.get('autocomplete');
-        this.ui.text.toggleClass('hidden', !autocomplete);
+        this.ui.filter.toggleClass('hidden', !autocomplete);
     },
 
     onClickItemHandler: function (item) {
