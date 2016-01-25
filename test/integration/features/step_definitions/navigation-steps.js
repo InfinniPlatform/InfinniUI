@@ -167,3 +167,35 @@ this.When(/^я выберу вкладку "([^"]*)" на панели "([^"]*)"
     
     window.testHelpers.waitCondition(havePanel, success, fail);
 });
+
+this.When(/^я нажму на радиокнопку "([^"]*)" в группе "([^"]*)"$/, function(buttonText, radioGroupName, next){
+	var haveGroup = function(){
+		return window.testHelpers.getControlByName(radioGroupName) != undefined;
+	}
+	var success = function(){
+		var radioGroup = window.testHelpers.getControlByName(radioGroupName);
+		var items = radioGroup.getItems().toArray();
+		var check = false;
+
+		items.forEach(function(item){
+			for(var property in item){
+				if(item[property] === buttonText){
+					radioGroup.setSelectedItem(item);
+					radioGroup.setValue(item);
+					check = true;
+				}
+			}
+		});
+
+		if(check){
+			next();
+		}else{
+			next(new Error(buttonText + ' not found!'));
+		}
+	}
+	var fail = function(){
+		next(new Error(radioGroupName + ' not found!'));
+	}
+
+	window.testHelpers.waitCondition(haveGroup, success, fail);
+});
