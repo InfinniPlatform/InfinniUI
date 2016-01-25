@@ -36,7 +36,7 @@ this.Then(/^система отобразит окно-сообщение "([^"]
     };
 
     var checkMessageText = function () {
-        var messageBody = window.configWindow.$.find('.messagebox:visible > .modal-body');
+        var messageBody = window.configWindow.$.find('.messagebox:visible .modal-body');
         var text = $.trim($(messageBody).text());
 
         try {
