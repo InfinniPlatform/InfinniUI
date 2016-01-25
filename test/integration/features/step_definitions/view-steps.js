@@ -148,6 +148,27 @@ this.Then(/^система отобразит список валидацион�
 	window.testHelpers.waitCondition(haveToastr, success, fail);
 });
 
+this.Then(/^система отобразит вкладку "([^"]*)" на панели "([^"]*)"$/, function(fieldText, panelName, next){
+	var havePanel = function(){
+		return window.testHelpers.getControlByName(panelName) != undefined;
+	}
+	var success = function(){
+		var panel = window.testHelpers.getControlByName(panelName);
+		var selectedItem = panel.getSelectedItem();
+
+		if(selectedItem.getText() == fieldText){
+			next();
+		}else{
+			next(new Error(fieldText + ' not selected!'));
+		}
+	}
+	var fail = function(){
+		next(new Error(panelName + ' not found!'));
+	}
+
+	window.testHelpers.waitCondition(havePanel, success, fail);
+});
+
 this.Then(/^система не отобразит валидационных сообщений$/, function(next){
 	var haveToastr = function(){
 		return 	window.configWindow.$("#toast-container") !== null &&
