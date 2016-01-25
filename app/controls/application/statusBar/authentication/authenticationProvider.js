@@ -21,7 +21,7 @@ _.extend(AuthenticationProvider.prototype, {
           * @public
           */
     getCurrentUser: function(resultCallback, errorCallback) {
-        this.sendPostRequest('/Auth/GetCurrentUser', resultCallback, errorCallback);
+        this.sendGetRequest('/Auth/GetCurrentUser', resultCallback, errorCallback);
     },
 
     /**
