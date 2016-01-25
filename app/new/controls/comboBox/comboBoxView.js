@@ -41,7 +41,7 @@ var ComboBoxView = ListEditorBaseView.extend({
                     //@TODO Вынести общие стили в css
                     var style = {
                         position: "absolute",
-                        top: window.pageYOffset + rect.bottom,
+                        top: window.pageYOffset + rect.bottom/* + parseInt(view.$el.css('margin-bottom'))*/,
                         left: window.pageXOffset + rect.left,
                         width: rect.width
                     };
