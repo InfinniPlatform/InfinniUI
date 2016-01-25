@@ -40,7 +40,12 @@
         
          
         var listener = CucumberHTMLListener($('#test-result'));
-        var cucumber = Cucumber(featureSource, supportCode);
+        var options = {
+            tags: [
+                "~@ignore"
+            ]
+        }
+        var cucumber = Cucumber(featureSource, supportCode, options);
         cucumber.attachListener(listener);
         
         try {
