@@ -46,3 +46,14 @@ ComboBox.prototype.setAutocomplete = function (value) {
         this.control.set('autocomplete', value);
     }
 };
+
+ComboBox.prototype.setShowClear = function (value) {
+    if (typeof value === 'boolean') {
+        this.control.set('showClear', value);
+    }
+};
+
+ComboBox.prototype.getShowClear = function () {
+    return this.control.get('showClear');
+};
+

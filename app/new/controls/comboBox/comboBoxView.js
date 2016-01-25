@@ -6,12 +6,14 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     events: {
         'click .pl-combobox__grip': 'onClickGripHandler',
-        'click .pl-combobox__value': 'onClickValueHandler'
+        'click .pl-combobox__value': 'onClickValueHandler',
+        'click .pl-combobox__clear': 'onClickClearHandler'
     },
 
     UI: _.defaults({
         label: '.pl-control-label',
-        value: '.pl-combobox__value'
+        value: '.pl-combobox__value',
+        clear: '.pl-combobox__clear'
     }, ListEditorBaseView.prototype.UI),
 
     initialize: function (options) {
@@ -83,6 +85,10 @@ var ComboBoxView = ListEditorBaseView.extend({
         return this.template;
     },
 
+    onClickClearHandler: function () {
+        this.model.set('value', null);
+    },
+
     onClickGripHandler: function () {
         var enabled = this.model.get('enabled');
         if (enabled) {
@@ -119,7 +125,13 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     updateValue: function(){
+        var
+            model = this.model,
+            showClear = model.get('showClear'),
+            value = model.get('value'),
+            noValue = value === null || typeof value === 'undefined';
 
+        this.ui.clear.toggleClass('hidden', !showClear || noValue);
     },
 
     updateSelectedItem: function () {
