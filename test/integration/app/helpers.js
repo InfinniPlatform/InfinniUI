@@ -76,7 +76,7 @@ window.testHelpers = {
 			var itemIndex = parseInt(indexInfo[1]);
 			var itemName = controlName.match(/\w+/)[0];
 			
-			if(window.currentListBox == undefined || isNaN(itemIndex) || window.currentListBox.children.get(itemIndex) == undefined){
+			if(window.currentListBox == undefined || isNaN(itemIndex) || !window.currentListBox.children || window.currentListBox.children.get(itemIndex) == undefined){
 				return undefined;
 			}
 			
