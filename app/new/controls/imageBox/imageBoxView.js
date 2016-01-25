@@ -5,6 +5,8 @@
  */
 var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.extend({}, editorBaseViewMixin, {
 
+    className: 'pl-imagebox',
+
     template: InfinniUI.Template["new/controls/imageBox/template/imageBox.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
@@ -25,7 +27,6 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         ControlView.prototype.initHandlersForProperties.call(this);
 
         this.listenTo(this.model, 'change:value', this.updateUrl);
-        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
@@ -38,83 +39,25 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
-        this.updateReadOnly();
     },
 
-    updateReadOnly: function () {
-        var readOnly = this.model.get('readOnly');
-
-        this.ui.file.toggleClass('hidden', readOnly);
-    },
-
-    updateHintText: function(){
-        var hintText = this.model.get('hintText');
-        if(hintText){
-            this.ui.hintText
-                .text(hintText)
-                .removeClass('hidden');
-        }else{
-            this.ui.hintText
-                .text('')
-                .addClass('hidden');
-        }
-
-    },
-
-    updateErrorText: function(){
-        var errorText = this.model.get('errorText');
-        if(errorText){
-            this.ui.errorText
-                .text(errorText)
-                .removeClass('hidden');
-        }else{
-            this.ui.errorText
-                .text('')
-                .addClass('hidden');
-        }
-
-    },
-
-    updateWarningText: function(){
-        var warningText = this.model.get('warningText');
-        if(warningText){
-            this.ui.warningText
-                .text(warningText)
-                .removeClass('hidden');
-        }else{
-            this.ui.warningText
-                .text('')
-                .addClass('hidden');
-        }
-
+    updateText: function () {
+        var text = this.model.get('text');
+        this.ui.uploadButton.text(text);
     },
 
     updateEnabled: function () {
         ControlView.prototype.updateEnabled.call(this);
-
         var isEnabled = this.model.get('enabled');
-        var readOnly = this.model.get('readOnly');
-
-        this.ui.input.prop('disabled', !isEnabled || readOnly);
-        this.ui.remove.prop('disabled', !isEnabled || readOnly);
-    },
-
-    updateText: function () {
-        var textForButton = this.model.get('text');
-
-        if (typeof textForButton == 'string'){
-            this.ui.uploadButton.text(textForButton);
-        }
+        this.ui.input.prop('disabled', !isEnabled);
     },
 
     updateUrl: function () {
         var url = this.model.get('value');
-        var readOnly = this.model.get('readOnly');
 
         this.ui.img.attr('src', url);
         var none = url === null || typeof url === 'undefined';
-        this.ui.remove.toggle(!none && !readOnly);
-        this.ui.img.toggle(!none);
+        this.$el.toggleClass('pl-empty', none);
     },
 
     onClickRemoveImageHandler: function () {
