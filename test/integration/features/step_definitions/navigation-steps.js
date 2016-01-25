@@ -134,3 +134,36 @@ this.When(/^я выберу список "([^"]*)"$/, function(listBoxName, next
 	
 	window.testHelpers.waitCondition(haveList, success, fail);
 });
+
+this.When(/^я выберу вкладку "([^"]*)" на панели "([^"]*)"$/, function(fieldText, panelName, next){
+    var havePanel = function(){
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }
+    var success = function(){
+        try {
+            var panel = window.testHelpers.getControlByName(panelName);
+            var tabPanels = panel.getChildElements();
+            var index = -1;
+            
+            for(var i = 0;i < tabPanels.length && index == -1;i++){
+                if(tabPanels[i].getText() === fieldText){
+                    index = i;
+                }
+            }
+            
+            if(index != -1){
+                panel.setSelectedItem(tabPanels[index]);
+                next();
+            }else{
+                next(new Error(fieldText + ' not found!'));
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+    var fail = function(){
+        next(new Error(panelName + ' not found!'));
+    }
+    
+    window.testHelpers.waitCondition(havePanel, success, fail);
+});

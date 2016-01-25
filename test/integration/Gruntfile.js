@@ -7,7 +7,10 @@
             },
 			
 			step_definitions: {
-                src: ["features/support/*.js", "features/step_definitions/*.js"],
+                src: [
+                "features/support/*.js", 
+                "features/step_definitions/*.js"
+                ],
                 dest: 'out/step_definitions.js'
             },
 
@@ -17,7 +20,11 @@
             },
 
             vendor: {
-				src: ["vendor/*.js", "bower_components/elasticsearch/elasticsearch.js", "../../bower_components/chai/chai.js"],
+				src: [
+                "vendor/*.js", 
+                "bower_components/elasticsearch/elasticsearch.js", 
+                "../../bower_components/chai/chai.js"
+                ],
                 dest: 'out/vendor.js'
             }
         }
