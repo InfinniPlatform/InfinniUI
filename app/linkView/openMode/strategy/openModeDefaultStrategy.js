@@ -8,7 +8,7 @@ _.extend(OpenModeDefaultStrategy.prototype, {
     },
 
     open: function(){
-        var $container = launcherConfig.$rootContainer || $('body');
+        var $container = InfinniUI.config.$rootContainer || $('body');
         var oldView = $container.data('view');
 
         if(oldView){
