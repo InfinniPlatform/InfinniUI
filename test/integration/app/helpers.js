@@ -76,14 +76,16 @@ window.testHelpers = {
 			var itemIndex = parseInt(indexInfo[1]);
 			var itemName = controlName.match(/\w+/)[0];
 			
-			if(window.currentListBox == undefined || isNaN(itemIndex) || !window.currentListBox.children || window.currentListBox.children.get(itemIndex) == undefined){
+			if(window.currentListBox == undefined || isNaN(itemIndex) || window.currentListBox.getItems().getByIndex(itemIndex) == undefined){
 				return undefined;
 			}
 			
-			var gridPanel = window.currentListBox.children.get(itemIndex);
-			var result = gridPanel.children.findAllChildrenByName(itemName)[0];
+			var childElement = window.currentListBox.getChildElements()[itemIndex];
+			var result = childElement.findAllChildrenByName(itemName)[0];
 			
-			window.currentListBox.setSelectedItem(window.currentListBox.getItems()[itemIndex]);
+			if(window.currentListBox.setSelectedItem){
+				window.currentListBox.setSelectedItem(window.currentListBox.getItems().getByIndex(itemIndex));
+			}
 					
 			return result;
 		}
