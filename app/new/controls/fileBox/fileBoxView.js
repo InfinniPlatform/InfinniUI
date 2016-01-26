@@ -17,7 +17,8 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         file: '.pl-filebox-file',
         remove: '.pl-filebox-remove',
         empty: '.pl-filebox-empty',
-        info: '.pl-filebox-info'
+        info: '.pl-filebox-info',
+        gripButton: '.pl-filebox-grip'
     }),
 
     events: {
@@ -51,6 +52,11 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
+    },
+
+    updateText: function () {
+        var text = this.model.get('text');
+        this.ui.gripButton.text(text);
     },
 
     updateHintText: function(){
