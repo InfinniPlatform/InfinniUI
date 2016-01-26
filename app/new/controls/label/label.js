@@ -12,13 +12,17 @@ _.extend(LabelControl.prototype, {
     },
 
     createControlView: function (model, viewMode) {
-        if(!viewMode || ! viewMode in window.InfinniUI.Label){
+        if(!viewMode || ! (viewMode in window.InfinniUI.Label)){
             viewMode = 'simple';
         }
 
         var ViewClass = window.InfinniUI.Label.viewModes[viewMode];
 
         return new ViewClass({model: model});
+    },
+    
+    getDisplayValue: function () {
+        return this.controlView.getLabelText();
     }
 
 }, editorBaseControlMixin);

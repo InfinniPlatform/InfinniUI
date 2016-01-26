@@ -46,6 +46,10 @@ _.extend(Label.prototype, {
 
         setDisplayFormat: function (value) {
             return this.control.set('displayFormat', value);
+        },
+        
+        getDisplayValue: function () {
+            return this.control.getDisplayValue();
         }
 
     },
