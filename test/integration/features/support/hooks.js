@@ -51,7 +51,7 @@ var openHost = function(callback){
 
 var deleteIndicies = function(){
     return client.indices.delete({
-        "index": "administrationcustomization,authorization,pta",
+        "index": "_all",
         "waitForCompletion": true
     });
 };
