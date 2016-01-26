@@ -4,7 +4,9 @@ this.BeforeScenario( function(scenario, callback) {
 
     var createRepositoryPromise = deleteIndiciesPromise.then(createRepository, createRepository);
 
-    var restoreIndiciesPromise = createRepositoryPromise.then(restoreIndicies);
+    var refreshPromise = createRepositoryPromise.then(refresh);
+
+    var restoreIndiciesPromise = refreshPromise.then(restoreIndicies);
 
     restoreIndiciesPromise.then(function(){
         openHost(callback);
@@ -78,3 +80,7 @@ var restoreIndicies = function(){
         "waitForCompletion": true
     });
 };
+
+var refresh = function(){
+    return client.indices.refresh();
+}
