@@ -1,11 +1,11 @@
 <div class="pl-image">
     <img>
-    <button class="pl-image-remove" type="button">Удалить</button>
+    <span class="pl-image-remove" type="button" title="Удалить"></span>
 </div>
 
-<div class="pl-image-file hidden" style="position: relative; overflow: hidden;">
-    <input type="file" class="pl-image-file-input">
-    <div class="pl-image-file-upload-button"></div>
+<div class="pl-image-file">
+    <input type="file" class="pl-image-file-input" id="<%- guid %>">
+    <label class="pl-image-file-upload-button" for="<%- guid %>">Выберите файл</label>
 </div>
 
 <div class="pl-control-hint-text"></div>

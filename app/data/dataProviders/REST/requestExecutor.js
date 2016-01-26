@@ -14,34 +14,39 @@ RequestExecutorDataStrategy.prototype.strategies = {
 
     json: function (requestData, onSuccess, onFail) {
         return $.ajax({
-            type: 'post',
+            type: requestData.method || 'post',
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: onFail,
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: this.onErrorRequest(onFail),
             data: JSON.stringify(requestData.args),
             contentType: "application/json;charset=UTF-8"
         });
     },
 
     raw: function (requestData, onSuccess, onFail) {
-
+        var method = requestData.method || 'post';
+        var processData = method.toUpperCase() === 'GET';
         return $.ajax({
-            type: 'post',
+            type: method,
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: onFail,
-            processData: false,
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: this.onErrorRequest(onFail),
+            processData: processData,
             contentType: false,
             data: requestData.args
         });
     }
 };
+
+_.extend(RequestExecutorDataStrategy.prototype, ajaxRequestMixin);
 
 function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
 
@@ -93,6 +98,5 @@ function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
     this.makeRequestRaw = function (requestData) {
         return cacheRequest(requestData, request.bind(undefined, 'raw'))
     };
-
 
 }

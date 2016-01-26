@@ -467,8 +467,8 @@ _.extend(Element.prototype, {
     },
 
     remove: function (isInitiatedByParent) {
+        var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
-            var logger = window.InfinniUI.global.logger;
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
             return;
         }
@@ -482,7 +482,12 @@ _.extend(Element.prototype, {
         this.control.remove();
 
         if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
-            this.parent.removeChild(this);
+            if(this.parent.isRemoved){
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+            }else{
+                this.parent.removeChild(this);
+            }
+
         }
 
         this.isRemoved = true;

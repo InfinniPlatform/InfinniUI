@@ -1,16 +1,32 @@
 function BaseAction(parentView){
     this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
 }
 
 _.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
     setProperty: function(name, value){
-        this[name] = value;
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
     },
 
     getProperty: function(name){
-        return this[name];
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
     }
-});
+
+}, Backbone.Events);
 
 InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
     var builder = new ApplicationBuilder();

@@ -21,6 +21,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         this.initValueTemplate(data.valueBinding, params);
         element.setLabelText(params.metadata.LabelText);
         element.setAutocomplete(params.metadata.Autocomplete);
+        element.setShowClear(params.metadata.ShowClear);
 
         (function (binding) {
             var source = binding.getSource();

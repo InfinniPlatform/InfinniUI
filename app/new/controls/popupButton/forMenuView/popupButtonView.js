@@ -84,7 +84,9 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
         var $result = $(template({items: items}));
 
         this.appendItemsContent($result, items);
-
+        $result.on('click', function () {
+            this.close();
+        }.bind(this));
         return $result;
     },
 

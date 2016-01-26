@@ -33,6 +33,8 @@
     }
   }
 
+  //Классы элементов находящиеся вне диалога и которые могут получать фокус
+  Modal.ALLOWED_CONTROL_CLASSES = ['pl-combobox-filter-text'];
   Modal.VERSION  = '3.3.5'
 
   Modal.TRANSITION_DURATION = 300
@@ -141,7 +143,13 @@
       .off('focusin.bs.modal') // guard against infinite focus loop
       .on('focusin.bs.modal', $.proxy(function (e) {
         if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
-          this.$element.trigger('focus')
+          var $el = $(e.target);
+          var allowed = Modal.ALLOWED_CONTROL_CLASSES.some(function (className) {
+            return $el.hasClass(className);
+          });
+          if (!allowed) {
+            this.$element.trigger('focus')
+          }
         }
       }, this))
   }

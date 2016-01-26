@@ -26,7 +26,7 @@
 
             'app/element/_mixins/*.js',
             'app/element/*.js', // old
-
+            'app/data/_common/**/*.js',
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
             'app/new/elements/**/*.js',
@@ -61,6 +61,7 @@
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
             'bootstrap-framework/js/tooltip.js',
+            'bower_components/jquery.cookie/jquery.cookie.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
@@ -152,6 +153,12 @@
                 src: [],
                 dest: 'out/images/'
             }
+            //media: {
+            //    expand: true,
+            //    flatten: true,
+            //    src: ['app/styles/media/**/*.*'],
+            //    dest: 'out/css/media/'
+            //}
             /*images: {
                 files: [
                     {

@@ -1,0 +1,7 @@
+{
+  "name": "infinniUIIntegationTest",
+  "private": true,
+  "devDependencies": {
+    "elasticsearch": "~8.2.0"
+  }
+}

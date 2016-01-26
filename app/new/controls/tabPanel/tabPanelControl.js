@@ -29,9 +29,8 @@ _.extend(TabPanelControl.prototype, /** @lends TabPanelControl.prototype */ {
             if (index !== -1) {
                 selectedItem = elements[index];
             }
+            this.controlModel.set('selectedItem', selectedItem);
         }
-
-        this.controlModel.set('selectedItem', selectedItem);
     },
 
     createControlModel: function () {
