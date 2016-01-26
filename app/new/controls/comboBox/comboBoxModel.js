@@ -1,7 +1,7 @@
 var ComboBoxModel = ListEditorBaseModel.extend({
 
     defaults: _.defaults({
-        showClear: false,
+        showClear: true,
         autocomplete: false,
         valueTemplate: function(context, args){
             return {
