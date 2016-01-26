@@ -85,7 +85,10 @@ var TextEditor = Backbone.View.extend({
             editMask.reset(value);
             displayValue = editMask.getText();
         }
-        this.ui.editor.val(displayValue);
+        if (this.ui.editor.val() !== displayValue) {
+            this.ui.editor.val(displayValue);
+        }
+
         this.setIsValid(true);//По умолчанию считаем переданное значение валидно
     },
 

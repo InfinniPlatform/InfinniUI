@@ -36,6 +36,46 @@ _.extend(Element.prototype, {
         return this.childElements;
     },
 
+    findAllChildrenByType: function (type) {
+        return this._findAllChildren(predicate, getChildElements);
+
+        function predicate() {
+            return this.constructor.name === type;
+        }
+
+        function getChildElements(element) {
+            return element.findAllChildrenByType(type);
+        }
+    },
+
+    findAllChildrenByName: function (name) {
+        return this._findAllChildren(predicate, getChildElements);
+
+        function predicate () {
+            return this.getName() === name;
+        }
+
+        function getChildElements (element) {
+            return element.findAllChildrenByName(name);
+        }
+
+    },
+
+    _findAllChildren: function (predicate, getChildElements) {
+        var elements = this.getChildElements();
+        var items = [];
+        if (Array.isArray(elements)) {
+            elements.forEach(function (element) {
+                if (predicate.call(element)) {
+                    items.push(element);
+                }
+                Array.prototype.push.apply(items, getChildElements(element));
+            });
+        }
+
+        return items;
+    },
+
     getView: function () {
         if (!this.parentView) {
             if (this.parent instanceof View) {
