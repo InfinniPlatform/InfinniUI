@@ -84,8 +84,7 @@ moment.locale('ru');
 
 })(
     $('body'),
-    'stab.json'
-    //{ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
+    window.InfinniUI.config.homePage
 );
 
 
