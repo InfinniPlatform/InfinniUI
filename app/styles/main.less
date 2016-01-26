@@ -1,7 +1,11 @@
-﻿
+﻿// переменные путей до некоторых файлов
+@pl-override-platform-variables-path: "some.less";
+@pl-override-bootstrap-variables-path: "some.less";
+@pl-bootstrap-theme-path: "../../bootstrap-framework/less/theme.less";
+@pl-extension-path: "some.less";
 
 @import "../../bootstrap-framework/less/bootstrap.less";
-@import "../../bootstrap-framework/less/theme.less";
+@import "@{pl-bootstrap-theme-path}";
 
 @import "mixins/clearfix.less";
 @import "utils.less";
@@ -30,4 +34,8 @@
 @import "controls/imageBox.less";
 @import "controls/view.less";
 
+
 @import "controls/dataNavigation";
+
+@import (optional) "@{pl-extension-path}";
+

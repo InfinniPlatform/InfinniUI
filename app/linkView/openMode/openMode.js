@@ -21,7 +21,7 @@ var OpenMode = function () {
     };
 
     this.getRootContainer = function () {
-        return launcherConfig.$rootContainer || $('body');
+        return InfinniUI.config.$rootContainer || $('body');
     };
 
     this.resolveContainer = function (list, callback) {

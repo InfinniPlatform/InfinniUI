@@ -4,8 +4,6 @@ moment.locale('ru');
 
 (function ($target/*, metadata*/, homePageMetadata) {
 
-    new AjaxLoaderIndicator($target, {delay: 50});
-
     var host = InfinniUI.config.serverUrl;
 
     //Регистрация провайдера для работы с прикрепленными к документам файлами
@@ -20,10 +18,6 @@ moment.locale('ru');
 
     window.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
-    });
-
-    window.providerRegister.register('ServerActionProvider', function (metadataValue) {
-        return new ServerActionProvider(new QueryConstructorServerAction(host, metadataValue));
     });
 
     window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
@@ -90,8 +84,7 @@ moment.locale('ru');
 
 })(
     $('body'),
-    '/app/stubs/checkbox.json'
-    //{ConfigId: InfinniUI.config.configId, DocumentId: 'Common', MetadataName: 'HomePage'}
+    window.InfinniUI.config.homePage
 );
 
 
