@@ -1,5 +1,8 @@
 
 this.BeforeScenario( function(scenario, callback) {
+
+    window.toastrMessageCount = 0;
+
 	var deleteIndiciesPromise = deleteIndicies();
 
     var createRepositoryPromise = deleteIndiciesPromise.then(createRepository, createRepository);
@@ -29,11 +32,16 @@ this.AfterScenario( function(scenario, callback) {
 });
 
 this.AfterStep(function(step, callback){
+    if(!window.configWindow.toastr.options.onShown){
+        window.configWindow.toastr.options.onShown = function(){
+            window.toastrMessageCount++;
+        }
+    }
 	callback();
 });
 
 var openHost = function(callback){
-    window.configWindow = window.open(window.IntegrationTestConfig.host);   
+    window.configWindow = window.open(window.IntegrationTestConfig.host);
 
     var signOut = function(){
         window.configWindow.contextApp.context.global.session.signOut(function () {

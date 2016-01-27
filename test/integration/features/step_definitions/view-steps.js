@@ -121,10 +121,6 @@ this.Then(/^система отобразит значения выпадающ�
 });
 
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
-	window.toastrMessageCount = 0;
-	window.configWindow.toastr.options.onShown = function(){
-		window.toastrMessageCount++;
-	}
 	window.toastrActualMessageCount = msgs.split(',').map(function(item){
 		var result = item.trim();
 		return result.substring(1, result.length - 1).replace(/'/g, '"')
@@ -146,6 +142,7 @@ this.Then(/^система отобразит список валидацион�
 		
 		try{
 			chai.assert.deepEqual(actualMessages, messages);
+			window.toastrMessageCount = 0;
 			next();
 		}catch(err){
 			next(err);
