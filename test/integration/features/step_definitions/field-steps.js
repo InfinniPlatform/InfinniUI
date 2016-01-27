@@ -218,6 +218,11 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             chai.assert.isDefined(field);
 
             var actValue = field.getValue();
+
+            if(typeof actValue == "number"){
+                value = parseInt(value);
+            }
+
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();
