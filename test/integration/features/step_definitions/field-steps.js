@@ -58,7 +58,7 @@ this.When(/^я введу в поле типа дата "([^"]*)" значени
                 date = window.testHelpers.getFormattedDate(dateString);
 				window.testHelpers.getControlByName(fieldName).setValue(date);
 			}
-            
+
             next();
         } catch (err) {
             next(err);
@@ -82,7 +82,7 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            var actValue = field.getText();
+            var actValue = field.getDisplayValue();
             chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
 
             next();
@@ -217,7 +217,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            var actValue = field.getValue();
+            var actValue = field.getDisplayValue();
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();
@@ -245,7 +245,7 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
 			
 			value = parseInt(value);
 
-            var actValue = field.getValue();
+            var actValue = field.getDisplayValue();
 			chai.assert.typeOf(actValue, 'number');
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 

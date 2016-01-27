@@ -218,7 +218,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		var element = window.testHelpers.getControlByName(elementName);
 		
 		try{
-			if(element.getText() != elementText){
+			if((element.getDisplayValue ? element.getDisplayValue() : element.getText()) != elementText){
 				next();
 			}else{
 				next(new Error(elementName + ' was found!'));
@@ -242,7 +242,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		var element = window.testHelpers.getControlByName(elementName);
 		
 		try{
-			chai.assert.equal(element.getText(), elementText);
+			chai.assert.equal((element.getDisplayValue ? element.getDisplayValue() : element.getText()), elementText);
 			next();
 		}catch(err){
 			next(err);
