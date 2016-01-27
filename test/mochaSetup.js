@@ -144,6 +144,7 @@ var forTeamcity = function(){
 
 			runner.on('end', function() {
 				console.log("##teamcity[testSuiteFinished name='mocha.suite' duration='" + stats.duration + "']");
+				window.close();
 			});
 		}
 
