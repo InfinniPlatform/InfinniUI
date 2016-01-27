@@ -217,7 +217,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            var actValue = field.getDisplayValue();
+            var actValue = field.getValue();
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();

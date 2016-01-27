@@ -64,7 +64,7 @@ window.testHelpers = {
         var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
 		
         // TODO: Следить за датами
-        return getFormattedDate(currentDate);
+        return this.getFormattedDate(currentDate);
 	},
 
 	getFormattedDate: function(date){
