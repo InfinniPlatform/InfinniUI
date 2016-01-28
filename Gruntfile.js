@@ -287,7 +287,7 @@
         function (props) {
 
 
-            if(typeof props == "string"){
+            if(typeof props == "string" && props.indexOf('{') == -1){
                 props = require(props);
             }
 

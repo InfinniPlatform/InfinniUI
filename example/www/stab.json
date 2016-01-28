@@ -4,7 +4,10 @@
     "ObjectDataSource":{
       "Name": "Clone",
       "Items":{
-        "Source": "BloodGroupDataSource"
+        "Source": "BloodGroupDataSource",
+        "Converter":{
+          "ToElement":"{return [args.value[0]];}"
+        }
       }
     }
   },

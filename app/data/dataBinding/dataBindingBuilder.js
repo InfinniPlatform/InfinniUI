@@ -5,6 +5,7 @@ DataBindingBuilder.prototype.build = function (context, args) {
     var metadata = args.metadata;
     var logger = window.InfinniUI.global.logger;
     var converter = {};
+    var that = this;
     var property;
     var scriptName;
 
@@ -33,11 +34,11 @@ DataBindingBuilder.prototype.build = function (context, args) {
         if(metadata.Converter){
             if(metadata['Converter']['ToSource']){
                 scriptName = metadata['Converter']['ToSource'];
-                converter.toSource = this.scriptByNameOrBody(scriptName, context);
+                converter.toSource = that.scriptByNameOrBody(scriptName, context);
             }
             if(metadata['Converter']['ToElement']){
                 scriptName = metadata['Converter']['ToElement'];
-                converter.toElement = this.scriptByNameOrBody(scriptName, context);
+                converter.toElement = that.scriptByNameOrBody(scriptName, context);
             }
             result.setConverter(converter);
         }
