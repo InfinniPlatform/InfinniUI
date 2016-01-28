@@ -35,6 +35,7 @@ var DataBinding = Backbone.Model.extend({
 
     bindSource: function (source, property) {
         var logger = window.InfinniUI.global.logger;
+        var element = this.getElement();
 
         if(this.get('source') != null){
             var message = stringUtils.format('DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [this.get('source').getName(), source.getName()])
@@ -45,6 +46,10 @@ var DataBinding = Backbone.Model.extend({
         this.set('sourceProperty', property);
 
         var that = this;
+
+        if(element){
+            this._initPropertyOnElement();
+        }
 
         source.onPropertyChanged(property, function(context, argument){
             that.onSourcePropertyChangedHandler(context, argument);
@@ -114,8 +119,13 @@ var DataBinding = Backbone.Model.extend({
         var value;
 
         if(this.shouldRefreshElement(this.get('mode')) && source){
-            value = source.getProperty(sourceProperty);
-            this._setValueToElement(value);
+            if(typeof source.isDataReady == 'function' && !source.isDataReady()){
+                return;
+
+            }else{
+                value = source.getProperty(sourceProperty);
+                this._setValueToElement(value);
+            }
         }
     },
 

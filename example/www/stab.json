@@ -1,13 +1,20 @@
 {
   "OnLoaded": "OL2",
-  "DataSources": [
+  "DataSources": [{
+    "ObjectDataSource":{
+      "Name": "Clone",
+      "Items":{
+        "Source": "BloodGroupDataSource"
+      }
+    }
+  },
     {
       "ObjectDataSource": {
         "Name": "BloodGroupDataSource",
         "Items": [
           {
             "Id": 1,
-            "DisplayName": "I",
+            "DisplayName": "44",
             "SomeField": "",
             "Array": [
               {
@@ -128,6 +135,30 @@
               {
                 "TestElement":{
                   "TestProperty": "Value Of Test Property In TestElement"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
+                "StackPanel":{
+                  "Items": {
+                    "Source": "Clone",
+                    "Property": ""
+                  },
+
+                  "ItemTemplate":{
+                    "Label":{
+                      "Value": {
+                        "Source": "Clone",
+                        "Property": "#.DisplayName"
+                      }
+                    }
+                  }
                 }
               }
             ]

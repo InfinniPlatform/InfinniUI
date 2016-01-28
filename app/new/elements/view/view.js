@@ -13,6 +13,9 @@ function View(parent) {
     this.openStrategy = new OpenModeDefaultStrategy();
     this.openStrategy.setView(this);
 
+    this.members = {};
+    this.membersDeferreds = {};
+
     this.handlers = {
         onBeforeLoaded: $.Deferred(),
         onLoaded: $.Deferred()
@@ -108,6 +111,7 @@ _.extend(View.prototype,
 
                 newParameters.forEach(function(item){
                     that.context.parameters[item.name] = item;
+                    that.registerMember(item.name, item);
                 });
             });
 
@@ -119,6 +123,7 @@ _.extend(View.prototype,
 
                 newParameters.forEach(function(item){
                     that.context.dataSources[item.get('name')] = item;
+                    that.registerMember(item.name, item);
                 });
             });
         },
@@ -146,6 +151,8 @@ _.extend(View.prototype,
 
         registerElement: function(element){
             this.context.controls[element.name] = element;
+
+            this.registerMember(element.name, element);
         },
 
         getIcon: function(){
@@ -299,6 +306,27 @@ _.extend(View.prototype,
 
         noDataSourceOnView: function(){
             this._initDataSourceHandlers();
+        },
+
+        registerMember: function(memberName, member){
+            this.members[memberName] = member;
+
+            if(memberName in this.membersDeferreds){
+                this.membersDeferreds[memberName].resolve(member);
+            }
+        },
+
+        getDeferredOfMember: function(memberName){
+            if(! (memberName in this.membersDeferreds) ){
+                this.membersDeferreds[memberName] = $.Deferred();
+
+                if(this.members[memberName]){
+                    var member = this.members[memberName];
+                    this.membersDeferreds[memberName].resolve(member);
+                }
+            }
+
+            return this.membersDeferreds[memberName];
         }
     }
 );

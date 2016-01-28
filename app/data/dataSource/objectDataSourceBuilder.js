@@ -13,7 +13,20 @@ _.extend(ObjectDataSourceBuilder.prototype, {
     applyMetadata: function(builder, parent, metadata, dataSource){
         BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
         if(metadata.Items){
-            dataSource.setItems(metadata.Items);
+            if($.isArray(metadata.Items)){
+                dataSource.setItems(metadata.Items);
+            }
+
+            if($.isPlainObject(metadata.Items)){
+                var binding = builder.buildBinding(metadata.Items, {
+                    parentView: parent
+                });
+
+                binding.setMode(BindingModes.toElement);
+
+                binding.bindElement(dataSource, '');
+            }
+
         }
 
     },

@@ -14,35 +14,34 @@ DataBindingBuilder.prototype.build = function (context, args) {
         throw new Error('DataBindingBuilder: not declared source in DataBinding metadata.');
     }
 
-    var source = this.findSource(args.parentView, metadata.Source);
-    if(source == null){
-        logger.error('DataBindingBuilder: некорректный источник.');
-        throw new Error('DataBindingBuilder: declared source not found.');
-    }
-    var metadataProperty = typeof metadata.Property === 'undefined' || metadata.Property === null ? "" : metadata.Property;
 
-    if(args.basePathOfProperty){
-        property = args.basePathOfProperty.resolveProperty(metadataProperty);
-    }else{
-        property = metadataProperty;
-    }
-    result.bindSource(source, property);
+    var sourceDeferred = args.parentView.getDeferredOfMember(metadata.Source);
+    sourceDeferred.done(function(source){
+        var metadataProperty = typeof metadata.Property === 'undefined' || metadata.Property === null ? "" : metadata.Property;
 
-    if(metadata.Mode){
-        result.setMode(metadata.Mode);
-    }
-
-    if(metadata.Converter){
-        if(metadata['Converter']['ToSource']){
-            scriptName = metadata['Converter']['ToSource'];
-            converter.toSource = this.scriptByNameOrBody(scriptName, context);
+        if(args.basePathOfProperty){
+            property = args.basePathOfProperty.resolveProperty(metadataProperty);
+        }else{
+            property = metadataProperty;
         }
-        if(metadata['Converter']['ToElement']){
-            scriptName = metadata['Converter']['ToElement'];
-            converter.toElement = this.scriptByNameOrBody(scriptName, context);
+        result.bindSource(source, property);
+
+        if(metadata.Mode){
+            result.setMode(metadata.Mode);
         }
-        result.setConverter(converter);
-    }
+
+        if(metadata.Converter){
+            if(metadata['Converter']['ToSource']){
+                scriptName = metadata['Converter']['ToSource'];
+                converter.toSource = this.scriptByNameOrBody(scriptName, context);
+            }
+            if(metadata['Converter']['ToElement']){
+                scriptName = metadata['Converter']['ToElement'];
+                converter.toElement = this.scriptByNameOrBody(scriptName, context);
+            }
+            result.setConverter(converter);
+        }
+    });
 
     return result;
 };

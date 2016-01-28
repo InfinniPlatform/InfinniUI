@@ -376,15 +376,16 @@ var BaseDataSource = Backbone.Model.extend({
             bindingByIndexRegEx = /^\d/,
             relativeProperty, oldValue, source;
 
-        if (!selectedItem) {
-            return;
-        }
-
         if (property == '') {
-            oldValue = this.getItems();
+            oldValue = this.get('items');
             this._setItems(value);
 
         } else if (property == '$') {
+
+            if (!selectedItem) {
+                return;
+            }
+
             if (value != selectedItem) {
                 oldValue = this._copyObject(selectedItem);
                 this._replaceAllProperties(selectedItem, value);
@@ -393,6 +394,11 @@ var BaseDataSource = Backbone.Model.extend({
             }
 
         } else {
+
+            if (!selectedItem) {
+                return;
+            }
+
             if (property.substr(0, 2) == '$.') {
                 relativeProperty = property.substr(2);
                 source = selectedItem;
