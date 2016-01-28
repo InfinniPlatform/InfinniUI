@@ -222,9 +222,19 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 	}
 	var wasFound = function(){
 		var element = window.testHelpers.getControlByName(elementName);
+
+		var actText = element.getText();
+
+		if(!actText){
+			actText = element.getValue();
+		}
+
+		if(element.getDisplayValue){
+			actText = element.getDisplayValue();
+		}
 		
 		try{
-			if((element.getDisplayValue ? element.getDisplayValue() : element.getText()) != elementText){
+			if(actText != elementText){
 				next();
 			}else{
 				next(new Error(elementName + ' was found!'));
@@ -247,8 +257,18 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 	var wasFound = function(){
 		var element = window.testHelpers.getControlByName(elementName);
 		
+		var actText = element.getText();
+
+		if(!actText){
+			actText = element.getValue();
+		}
+
+		if(element.getDisplayValue){
+			actText = element.getDisplayValue();
+		}
+
 		try{
-			chai.assert.equal((element.getDisplayValue ? element.getDisplayValue() : element.getText()), elementText);
+			chai.assert.equal(actText, elementText);
 			next();
 		}catch(err){
 			next(err);
