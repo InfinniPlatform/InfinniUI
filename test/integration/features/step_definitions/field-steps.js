@@ -50,13 +50,16 @@ this.When(/^я введу в поле типа дата "([^"]*)" значени
         try {
 			var date = dateString.match(/[а-я]*/i)[0];
 			var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+
 			if(date === "Сегодня" && !isNaN(iterator)){
 				var value = window.testHelpers.getDate(iterator);
 				window.testHelpers.getControlByName(fieldName).setValue(value);
-				next();
 			}else{
-				next(new Error("Incorrect value: '" + dateString + "'"));
+                date = window.testHelpers.getFormattedDate(dateString);
+				window.testHelpers.getControlByName(fieldName).setValue(date);
 			}
+
+            next();
         } catch (err) {
             next(err);
         }
@@ -79,7 +82,7 @@ this.Then(/^значение в поле "([^"]*)" равно "([^"]*)"$/, funct
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            var actValue = field.getText();
+            var actValue = field.getDisplayValue();
             chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
 
             next();
@@ -117,10 +120,12 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
 			if(date === "Сегодня" && !isNaN(iterator)){
 				var value = window.testHelpers.getDate(iterator);
 				chai.assert.equal(new Date(value).getTime(), new Date(actValue).getTime(), value + ' != ' + actValue);
-				next();
 			}else{
-				next(new Error("Incorrect value: '" + dateString + "'"));
+                date = window.testHelpers.getFormattedDate(dateString);
+				chai.assert.equal(new Date(date).getTime(), new Date(actValue).getTime(), date + ' != ' + actValue);
 			}
+
+            next();
         } catch (err) {
             next(err);
         }
@@ -213,6 +218,11 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             chai.assert.isDefined(field);
 
             var actValue = field.getValue();
+
+            if(typeof actValue == "number"){
+                value = parseInt(value);
+            }
+
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();
@@ -240,7 +250,7 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
 			
 			value = parseInt(value);
 
-            var actValue = field.getValue();
+            var actValue = field.getDisplayValue();
 			chai.assert.typeOf(actValue, 'number');
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 

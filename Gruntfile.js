@@ -287,9 +287,13 @@
         function (props) {
 
 
+            if(typeof props == "string"){
+                props = require(props);
+            }
+
             if(props){
                 eval('props = ' + props);
-                grunt.log.writeln(props);
+
                 if(props.override){
                     if(props.override.less){
                         for(var k in props.override.less){

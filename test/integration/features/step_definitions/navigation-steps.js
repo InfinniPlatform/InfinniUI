@@ -199,3 +199,22 @@ this.When(/^я нажму на радиокнопку "([^"]*)" в группе 
 
 	window.testHelpers.waitCondition(haveGroup, success, fail);
 });
+
+this.When(/^я выберу в текущем списке элемент под номером "([^"]*)"$/, function(index, next){
+	if(!window.currentListBox){
+		next(new Error("Список не выбран"));
+	}else{
+		try{
+			var item = window.currentListBox.getItems().getByIndex(index);
+
+			if(item){
+				window.currentListBox.setSelectedItem(item);
+				next();
+			}else{
+				next(new Error("Out of range, length = " + window.currentListBox.getItems().toArray().length));
+			}
+		}catch(err){
+			next(err);
+		}
+	}
+});

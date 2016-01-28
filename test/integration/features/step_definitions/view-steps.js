@@ -121,14 +121,19 @@ this.Then(/^система отобразит значения выпадающ�
 });
 
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
+	window.toastrActualMessageCount = msgs.split(',').map(function(item){
+		var result = item.trim();
+		return result.substring(1, result.length - 1).replace(/'/g, '"')
+	}).length;
+
 	var haveToastr = function(){
-		return window.configWindow.$("#toast-container") !== null;
+		return window.toastrMessageCount == window.toastrActualMessageCount;
 	};
 	var success = function(){
 		var actual = window.configWindow.$("#toast-container .toast-message");
 		var actualMessages = [];
 		for(var i = 0;i < actual.length;i++){
-			actualMessages.push(actual[i].innerHTML);
+			actualMessages.push(actual[i].innerText);
 		}
 		var messages = msgs.split(',').map(function(item){
 			var result = item.trim();
@@ -137,13 +142,14 @@ this.Then(/^система отобразит список валидацион�
 		
 		try{
 			chai.assert.deepEqual(actualMessages, messages);
+			window.toastrMessageCount = 0;
 			next();
 		}catch(err){
 			next(err);
 		}
 	};
 	var fail = function(){
-		next(new Error("Окно не найдено"));
+		next(new Error("Ожидается: " + window.toastrActualMessageCount + " Реально: " + window.toastrMessageCount + " сообщений"));
 	};
 	window.testHelpers.waitCondition(haveToastr, success, fail);
 });
@@ -186,7 +192,7 @@ this.Then(/^система не отобразит валидационных с
 		next(new Error("Было обнаружено одно или несколько окон: " + line.substring(0, line.length - 2)));
 	};
 	
-	window.testHelpers.waitCondition(haveToastr, fail, success, 3000, 500);
+	window.testHelpers.waitCondition(haveToastr, fail, success);
 });
 
 this.Then(/^я не увижу элемент "([^"]*)"$/, function(elementName, next){
@@ -207,7 +213,7 @@ this.Then(/^я не увижу элемент "([^"]*)"$/, function(elementName,
 		next();
 	}
 	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound, 5000, 500);
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
 
 this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
@@ -218,7 +224,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		var element = window.testHelpers.getControlByName(elementName);
 		
 		try{
-			if(element.getText() != elementText){
+			if((element.getDisplayValue ? element.getDisplayValue() : element.getText()) != elementText){
 				next();
 			}else{
 				next(new Error(elementName + ' was found!'));
@@ -231,7 +237,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		next();
 	}
 	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound, 5000, 500);
+	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
 
 this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
@@ -242,7 +248,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		var element = window.testHelpers.getControlByName(elementName);
 		
 		try{
-			chai.assert.equal(element.getText(), elementText);
+			chai.assert.equal((element.getDisplayValue ? element.getDisplayValue() : element.getText()), elementText);
 			next();
 		}catch(err){
 			next(err);

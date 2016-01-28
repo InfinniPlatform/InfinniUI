@@ -63,6 +63,11 @@ var ComboBoxView = ListEditorBaseView.extend({
         }, this);
     },
 
+    initHandlersForProperties: function(){
+        ListEditorBaseView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:showClear', this.updateShowClear);
+    },
+
     render: function () {
         this.prerenderingActions();
 
@@ -100,6 +105,7 @@ var ComboBoxView = ListEditorBaseView.extend({
         ListEditorBaseView.prototype.updateProperties.call(this);
 
         this.updateLabelText();
+        this.updateShowClear();
     },
 
     updateGrouping: function(){
@@ -125,6 +131,10 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     updateValue: function(){
+        this.updateShowClear();
+    },
+
+    updateShowClear: function () {
         var
             model = this.model,
             showClear = model.get('showClear'),
