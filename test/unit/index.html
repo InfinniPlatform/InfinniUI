@@ -17,8 +17,9 @@
 <script src="/test/mochaSetup.js"></script>
 
 <script>
-    var launcherConfig = {};
-    launcherConfig.$rootContainer = $('#sandbox');
+    window.InfinniUI = window.InfinniUI || {};
+    window.InfinniUI.config = window.InfinniUI.config || {};
+    window.InfinniUI.config.$rootContainer = $('#sandbox');
 </script>
 <script src="/out/templates.js"></script>
 <script src="/out/platform.js"></script>
