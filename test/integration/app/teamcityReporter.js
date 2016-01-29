@@ -1,6 +1,6 @@
 var tsm = {
     suiteStarted: function(suiteName){
-        console.log("##teamcity[testSuiteStarted name='" + suiteName + "']")
+        console.log("##teamcity[testSuiteStarted name='" + suiteName + "']");
     },
     
     suiteFinished: function(suiteName){
@@ -15,8 +15,8 @@ var tsm = {
         console.log("##teamcity[testFinished name='" + testName + "']");
     },
     
-    testFailed: function(testName, errorMesage){
-        console.log("##teamcity[testFailed name='" + testName + "' details='" + errorMesage + "']");
+    testFailed: function(testName, errorMesage, stackTrace){
+        console.log("##teamcity[testFailed name='" + testName + "' message='" + errorMesage + "' details='" + stackTrace + "']");
     },
     
     testIgnored: function(testName){
