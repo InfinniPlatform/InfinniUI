@@ -54,7 +54,8 @@ _.extend(ViewBuilder.prototype, {
                 param = passedParams[parameterName];
 
                 if(!param){
-                    param = new Parameter({view: element, name: parameterName});
+                    param = new Parameter({view: element});
+                    param.setName(parameterName);
                 }
 
                 parameters.add(param);
