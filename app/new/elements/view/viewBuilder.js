@@ -47,6 +47,7 @@ _.extend(ViewBuilder.prototype, {
         if (metadata.Parameters) {
             var passedParams = params.params || {};
             var parameterName;
+            var defaultValue;
             var param;
 
             for (var i = 0, len = metadata.Parameters.length; i < len; ++i) {
@@ -56,6 +57,12 @@ _.extend(ViewBuilder.prototype, {
                 if(!param){
                     param = new Parameter({view: element});
                     param.setName(parameterName);
+
+
+                    if('DefaultValue' in metadata.Parameters[i]){
+                        defaultValue = metadata.Parameters[i]['DefaultValue'];
+                        param.setValue(defaultValue);
+                    }
                 }
 
                 parameters.add(param);
