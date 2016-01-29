@@ -5,7 +5,7 @@ this.BeforeScenario( function(scenario, callback) {
 
 	var deleteIndiciesPromise = deleteIndicies();
 
-    var createRepositoryPromise = deleteIndiciesPromise.then(createRepository, createRepository);
+    var createRepositoryPromise = deleteIndiciesPromise.then(createRepository);
 
     var refreshPromise = createRepositoryPromise.then(refresh);
 
@@ -17,6 +17,8 @@ this.BeforeScenario( function(scenario, callback) {
 });
 
 this.AfterFeatures(function(){
+    console.log('Test finished!');
+
     if(window.callPhantom){
         window.callPhantom({command: 'Tests finished'});
     }
@@ -52,6 +54,7 @@ var openHost = function(callback){
     
     var error = function(){
         console.log('signOut not called!');
+        callback();
     };
 
     window.testHelpers.waitCondition(function(){
