@@ -46,18 +46,30 @@ _.extend(ViewBuilder.prototype, {
 
         if (metadata.Parameters) {
             var passedParams = params.params || {};
+            var parameterName;
+            var defaultValue;
             var param;
 
             for (var i = 0, len = metadata.Parameters.length; i < len; ++i) {
-                param = passedParams[metadata.Parameters[i]['Name']];
+                parameterName = metadata.Parameters[i]['Name'];
+                param = passedParams[parameterName];
 
-                if(param){
-                    parameters.add(param);
-                    if(metadata.Parameters[i]['OnPropertyChanged']){
-                        param.onPropertyChanged(function(){
-                            new ScriptExecutor(element).executeScript(metadata.Parameters[i]['OnPropertyChanged']);
-                        });
+                if(!param){
+                    param = new Parameter({view: element});
+                    param.setName(parameterName);
+
+
+                    if('DefaultValue' in metadata.Parameters[i]){
+                        defaultValue = metadata.Parameters[i]['DefaultValue'];
+                        param.setValue(defaultValue);
                     }
+                }
+
+                parameters.add(param);
+                if(metadata.Parameters[i]['OnPropertyChanged']){
+                    param.onPropertyChanged(function(){
+                        new ScriptExecutor(element).executeScript(metadata.Parameters[i]['OnPropertyChanged']);
+                    });
                 }
             }
         }
