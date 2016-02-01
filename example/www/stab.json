@@ -1,6 +1,64 @@
 {
   "OnLoaded": "OL2",
   "DataSources": [{
+    "ObjectDataSource": {
+      "Name": "BigDataSource",
+      "Items": [
+        {
+          "Id": 1,
+          "DisplayName": "I",
+          "SomeField": "",
+          "Array": [
+            {
+              "Id": 5,
+              "DisplayName": "I-1"
+            },
+            {
+              "Id": 6,
+              "DisplayName": "I-2"
+            },
+            {
+              "Id": 7,
+              "DisplayName": "I-3"
+            }
+          ]
+        },
+        {
+          "Id": 2,
+          "DisplayName": "II",
+          "SomeField": "val",
+          "Array": [
+            {
+              "Id": 8,
+              "DisplayName": "II-1"
+            },
+            {
+              "Id": 9,
+              "DisplayName": "II-2"
+            }
+          ]
+        },
+        {
+          "Id": 3,
+          "DisplayName": "III",
+          "SomeField": 3,
+          "Array": [
+            {
+              "Id": 10,
+              "DisplayName": "III-1"
+            },
+            {
+              "Id": 11,
+              "DisplayName": "III-2"
+            }
+          ]
+        }
+      ],
+      "OnSelectedItemChanged": {
+        "Name": "OnSelectedItemChanged_1"
+      }
+    }
+  },{
     "ObjectDataSource":{
       "Name": "Clone",
       "Items":{
@@ -60,9 +118,7 @@
             "SomeField": null
           }
         ],
-        "OnSelectedItemChanged": {
-          "Name": "OnSelectedItemChanged_1"
-        }
+        "OnSelectedItemChanged": "{alert();}"
       }
     }
   ],
@@ -148,17 +204,25 @@
             "ColumnSpan": 4,
             "Items": [
               {
-                "StackPanel":{
+                "ListBox":{
                   "Items": {
-                    "Source": "Clone",
+                    "Source": "BigDataSource",
                     "Property": ""
                   },
 
                   "ItemTemplate":{
-                    "Label":{
-                      "Value": {
-                        "Source": "Clone",
-                        "Property": "#.DisplayName"
+                    "ListBox": {
+                      "Items": {
+                        "Source": "BigDataSource",
+                        "Property": "#.Array"
+                      },
+                      "ItemTemplate": {
+                        "Label": {
+                          "Text": {
+                            "Source": "BigDataSource",
+                            "Property": "@.#.DisplayName"
+                          }
+                        }
                       }
                     }
                   }
