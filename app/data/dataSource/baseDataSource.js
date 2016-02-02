@@ -825,7 +825,7 @@ var BaseDataSource = Backbone.Model.extend({
         var that = this;
 
         if(boundFilter.isReady()){
-            that._setCriteriaList(boundFilter.getCriteriaList());
+            that._setCriteriaList(boundFilter.getCriteriaList(), onSuccess, onError);
         }
 
         boundFilter.onChange(function(newCriteriaList){
