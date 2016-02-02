@@ -218,3 +218,29 @@ this.When(/^я выберу в текущем списке элемент под
 		}
 	}
 });
+
+this.When(/^я отмечу в текущем списке элемент под номером "([^"]*)"$/, function(index, next){
+	if(!window.currentListBox){
+		next(new Error("Список не выбран"));
+	}else{
+		try{
+			var item = window.currentListBox.getItems().getByIndex(index);
+
+			if(item){
+				var list = window.currentListBox.getValue();
+
+				if(!list){
+					list = [];
+				}
+
+				list.push(item);
+
+				window.currentListBox.setValue(list);
+			}else{
+				next(new Error("Out of range, length = " + window.currentListBox.getItems().toArray().length));
+			}
+		}catch(err){
+			next(err);
+		}
+	}
+});
