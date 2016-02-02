@@ -236,6 +236,8 @@ this.When(/^я отмечу в текущем списке элемент под
 				list.push(item);
 
 				window.currentListBox.setValue(list);
+
+				next();
 			}else{
 				next(new Error("Out of range, length = " + window.currentListBox.getItems().toArray().length));
 			}
