@@ -225,7 +225,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 
 		var actText = element.getText();
 
-		if(!actText){
+		if(!actText && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -234,6 +234,11 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		}
 		
 		try{
+			if(!actText){
+				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+			}
+
 			if(actText != elementText){
 				next();
 			}else{
@@ -259,7 +264,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		
 		var actText = element.getText();
 
-		if(!actText){
+		if(!actText && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -268,6 +273,11 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		}
 
 		try{
+			if(!actText){
+				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+			}
+			
 			chai.assert.equal(actText, elementText);
 			next();
 		}catch(err){
