@@ -73,6 +73,17 @@ window.testHelpers = {
 		// YYYY-MM-DD
 		return String.prototype.concat(date.getFullYear(), '-', date.getMonth() + 1, '-', date.getDate()); //+1 - January-0
 	},
+
+	convertDate: function(date){
+		// TODO: Только если формат даты "DD.MM.YYYY"
+		if(date.indexOf('.') != -1){
+			var items = date.split('.');
+
+			return this.getFormattedDate(items[2] + '-' + items[1] + '-' + items[0]);
+		}
+
+		return this.getFormattedDate(date);
+	},
 	
 	getControlByName: function(controlName){
 		var indexInfo = /\[(\d+)\]/.exec(controlName);

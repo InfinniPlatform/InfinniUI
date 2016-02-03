@@ -109,8 +109,13 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
             chai.assert.isDefined(field);
 
             var actValue = field.getValue();
+
+            if(field.getDisplayValue){
+                actValue = field.getDisplayValue();
+            }
             
             if(typeof actValue == "string"){
+                actValue = window.testHelpers.convertDate(actValue);
                 actValue = new Date(actValue).getTime();
             }else{
                 var standartDate = window.testHelpers.getStandartDate(actValue);
