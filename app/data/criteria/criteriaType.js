@@ -16,7 +16,8 @@ var CriteriaType = (function () {
         IsEndsWith: IsEndsWith,
         IsNotEndsWith: IsNotEndsWith,
         IsIn: IsIn,
-        isNotIn: isNotIn
+        isNotIn: isNotIn,
+        FullTextSearch: FullTextSearch
     };
 
     function IsEquals(target, property, value) {
@@ -104,6 +105,17 @@ var CriteriaType = (function () {
 
     function isNotIn(target, property, value) {
         return !IsIn(target, property, value);
+    }
+
+    function FullTextSearch(target, property, value) {
+        if (value === '' || typeof value === 'undefined' || value === null) {
+            return true;
+        }
+
+        var text = JSON.stringify(target);
+        text = text.replace(/\"[^\"]+\"\:/g, '').toLowerCase();
+
+        return text.indexOf(String(value).toLowerCase()) !== -1;
     }
 
 })();

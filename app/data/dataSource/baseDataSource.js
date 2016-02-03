@@ -32,15 +32,27 @@ var BaseDataSource = Backbone.Model.extend({
 
         isRequestInProcess: false,
 
-        isLazy: true,
+        isLazy: true
 
-        bindingBuilder: function(){} // нужен для создания биндингов в фильтрах
+    },
 
+    setQueryFilter: function (queryFilter) {
+        this._queryFilter = queryFilter;
+
+        queryFilter.onChange(function(newCriteriaList){
+            if(queryFilter.isReady()){
+                this._setCriteriaList(newCriteriaList);
+            }
+        }.bind(this));
+
+    },
+
+    getQueryFilter: function () {
+        return this._queryFilter;
     },
 
     initialize: function () {
         this.initDataProvider();
-
         if (!this.get('view')) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
@@ -819,22 +831,15 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('criteriaList');
     },
 
-    setFilter: function (filters, onSuccess, onError) {
-        var bindingBuilder = this.get('bindingBuilder');
-        var boundFilter = new BoundFilter(filters, bindingBuilder);
+    setFilter: function (value, onSuccess, onError) {
+        var filter = this.getQueryFilter();
+        filter.setCriteria(value);
+
         var that = this;
 
-        if(boundFilter.isReady()){
-            that._setCriteriaList(boundFilter.getCriteriaList(), onSuccess, onError);
+        if(filter.isReady()){
+            this._setCriteriaList(filter.getCriteriaList(), onSuccess, onError);
         }
-
-        boundFilter.onChange(function(newCriteriaList){
-            if(boundFilter.isReady()){
-                that._setCriteriaList(newCriteriaList, onSuccess, onError);
-            }
-        });
-
-        //this._setCriteriaList(filters);
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){
@@ -979,9 +984,9 @@ var BaseDataSource = Backbone.Model.extend({
         return promise;
     },
 
-    setBindingBuilder: function(bindingBuilder){
-        this.set('bindingBuilder', bindingBuilder);
-    },
+    //setBindingBuilder: function(bindingBuilder){
+    //    this.set('bindingBuilder', bindingBuilder);
+    //},
 
     setIsLazy: function(isLazy){
         this.set('isLazy', isLazy);
