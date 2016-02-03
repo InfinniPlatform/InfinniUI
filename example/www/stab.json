@@ -1,64 +1,42 @@
 {
   "OnLoaded": "OL2",
-  "DataSources": [{
-    "ObjectDataSource": {
-      "Name": "BigDataSource",
-      "Items": [
-        {
-          "Id": 1,
-          "DisplayName": "I",
-          "SomeField": "",
-          "Array": [
-            {
-              "Id": 5,
-              "DisplayName": "I-1"
-            },
-            {
-              "Id": 6,
-              "DisplayName": "I-2"
-            },
-            {
-              "Id": 7,
-              "DisplayName": "I-3"
-            }
-          ]
-        },
-        {
-          "Id": 2,
-          "DisplayName": "II",
-          "SomeField": "val",
-          "Array": [
-            {
-              "Id": 8,
-              "DisplayName": "II-1"
-            },
-            {
-              "Id": 9,
-              "DisplayName": "II-2"
-            }
-          ]
-        },
-        {
-          "Id": 3,
-          "DisplayName": "III",
-          "SomeField": 3,
-          "Array": [
-            {
-              "Id": 10,
-              "DisplayName": "III-1"
-            },
-            {
-              "Id": 11,
-              "DisplayName": "III-2"
-            }
-          ]
-        }
-      ],
-      "OnSelectedItemChanged": {
-        "Name": "OnSelectedItemChanged_1"
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "Test",
+        "Items": [
+          {"Id": 1, "Name": "One", "Group": "odd"},
+          {"Id": 2, "Name": "Two", "Group": "even"},
+          {"Id": 3, "Name": "Three", "Group": "odd"},
+          {"Id": 4, "Name": "Four", "Group": "even"},
+          {"Id": 5, "Name": "Five", "Group": "odd"},
+          {"Id": 6, "Name": "Six", "Group": "even"},
+          {"Id": 7, "Name": "Seven", "Group": "odd"}
+        ],
+        "Query": [
+          {
+            "Property": "Group",
+            "Value": "odd",
+            "CriteriaType": 1
+          }
+        ]
       }
-    }
-  },{
+    },
+    {
+      "DocumentDataSource": {
+        "Name": "Child",
+        "ConfigId": "PTA",
+        "DocumentId": "Child",
+        "Query": [
+          {
+            "Property": "Name",
+            "Value": "е",
+            "CriteriaType": 65536
+          }
+        ]
+      }
+    },
+    {
     "ObjectDataSource":{
       "Name": "Clone",
       "Items":{
@@ -71,12 +49,29 @@
   },
     {
       "ObjectDataSource": {
+        "Name": "Numbers",
+        "Items": [
+          {"value": 0},
+          {"value": 1},
+          {"value": 2},
+          {"value": 3},
+          {"value": 4},
+          {"value": 5},
+          {"value": 6},
+          {"value": 7},
+          {"value": 8},
+          {"value": 9}
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
         "Name": "BloodGroupDataSource",
         "Items": [
           {
             "Id": 1,
             "DisplayName": "44",
-            "SomeField": "22",
+            "SomeField": "",
             "Array": [
               {
                 "Id": 5,
@@ -118,7 +113,9 @@
             "SomeField": null
           }
         ],
-        "OnSelectedItemChanged": "{alert();}"
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
       }
     }
   ],
@@ -204,112 +201,17 @@
             "ColumnSpan": 4,
             "Items": [
               {
-                "ViewPanel": {
-                  "Name": "pp1",
-                  "LinkView": {
-                    "InlineView": {
-                      "View": {
-                        "Parameters": [
-                          {
-                            "Name": "p1"
-                          }
-                        ],
-                        "Scripts": [{
-                          "Name": "close",
-                          "Body": "context.view.close();"
-                        }],
-                        "Items": [
-                          {
-                            "Button": {
-                              "Text": {
-                                "Source": "p1",
-                                "Property": "SomeField"
-                              },
-                              "OnClick": "{debugger;}"
-                            }
-                          },              {
-                            "ViewPanel": {
-                              "Name": "p1",
-                              "LinkView": {
-                                "InlineView": {
-                                  "View": {
-                                    "Parameters": [
-                                      {
-                                        "Name": "p2"
-                                      }
-                                    ],
-                                    "Scripts": [{
-                                      "Name": "close",
-                                      "Body": "context.view.close();"
-                                    }],
-                                    "Items": [
-                                      {
-                                        "Button": {
-                                          "Text": {
-                                            "Source": "p2",
-                                            "Property": "DisplayName"
-                                          },
-                                          "OnClick": "{debugger;}"
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "Parameters": [
-                                    {
-                                      "Name": "p2",
-                                      "Value":{
-                                        "Source": "p1",
-                                        "Property": ""
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      "Parameters": [
-                        {
-                          "Name": "p1",
-                          "Value":{
-                            "Source": "BloodGroupDataSource",
-                            "Property": "$"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        },
-
-        {
-          "Cell": {
-            "ColumnSpan": 4,
-            "Items": [
-              {
-                "ListBox":{
+                "StackPanel":{
                   "Items": {
-                    "Source": "BigDataSource",
+                    "Source": "Clone",
                     "Property": ""
                   },
 
                   "ItemTemplate":{
-                    "ListBox": {
-                      "Items": {
-                        "Source": "BigDataSource",
-                        "Property": "$.Array"
-                      },
-                      "ItemTemplate": {
-                        "Label": {
-                          "Text": {
-                            "Source": "BigDataSource",
-                            "Property": "$.Array.#.DisplayName"
-                          }
-                        }
+                    "Label":{
+                      "Value": {
+                        "Source": "Clone",
+                        "Property": "#.DisplayName"
                       }
                     }
                   }
@@ -319,6 +221,48 @@
           }
         }
       ]
+    }
+  },
+    {
+      "DataGrid": {
+        "Columns": [
+          {
+            "Header": "Id",
+            "CellProperty": "Id"
+          },
+          {
+            "Header": "Name",
+            "CellProperty": "Name"
+          },
+          {
+            "Header": "Group",
+            "CellProperty": "Group"
+          },
+          {
+            "Header": "Fuck",
+            "CellSelector": "{return JSON.stringify(args.value.Array);}"
+          }
+        ],
+        "Items": {
+          "Source": "Test"
+        }
+      }
+    },
+    {
+    "ComboBox": {
+      "ItemTemplate": {
+        "Label": {
+          "Text": {
+            "Source": "Test",
+            "Property": "#.Name"
+          }
+        }
+      },
+      "Autocomplete": true,
+      "OnValueChanged": "{console.log(args);}",
+      "Items": {
+        "Source": "Test"
+      }
     }
   }]
 }

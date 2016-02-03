@@ -21,7 +21,7 @@ _.extend(AuthenticationProvider.prototype, {
           * @public
           */
     getCurrentUser: function(resultCallback, errorCallback) {
-        this.sendGetRequest('/Auth/GetCurrentUser', resultCallback, errorCallback);
+        this.sendPostRequest('/Auth/GetCurrentUser', {}, resultCallback, errorCallback);
     },
 
     /**
@@ -187,7 +187,7 @@ _.extend(AuthenticationProvider.prototype, {
 
     getExternalLoginForm: function (requestUri, successUrl, failureUrl, resultCallback, errorCallback) {
         var url = this.baseAddress + requestUri;
-        this.sendGetRequest('/Auth/GetExternalProviders',
+        this.sendPostRequest('/Auth/GetExternalProviders', {},
             function (result) {
                 var formElement = $(document.createElement('form'));
                 formElement.attr('method', 'POST');

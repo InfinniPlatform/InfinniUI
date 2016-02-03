@@ -1,6 +1,5 @@
 {
-  "name": "InfinniUI",
-  "private": true,
+  "name": "infinni-ui",
   "dependencies": {
     "backbone": "~1.1.2",
     "mocha": "1.x",
@@ -17,5 +16,19 @@
     "blockUI": "*",
     "toastr": "~2.1.2",
     "jquery.cookie": "~1.4.1"
-  }
+  },
+  "homepage": "https://github.com/InfinniPlatform/InfinniUI",
+  "authors": [
+    "InfinnitySolutions <info@infinnity.ru>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "infinnitysolutions",
+    "infinnity",
+    "infinni-ui",
+    "ui-framework"
+  ],
+  "license": "GPL"
 }

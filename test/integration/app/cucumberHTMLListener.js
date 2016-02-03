@@ -66,8 +66,18 @@ function CucumberHTMLListener($root) {
                         var screenshotName =    window.cucumberCurrentFeature.toString().replace(/[?:"]*/g, "") + '.' +
                                                 window.cucumberCurrentScenario.toString().replace(/[?:"]*/g, "") + '.' +
                                                 window.cucumberCurrentStep.toString().replace(/[?:"]*/g, "");
-                        tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage.toString().replace(/\n/g, "|n|r"));
+
+                        errorMessage = errorMessage.toString()
+                        .replace(/\n/g, "|n|r")
+                        .replace(/'/g, "|'")
+                        .replace(/\[/g, "|[")
+                        .replace(/\]/g, "|]")
+                        .replace(/:/g, "");
+
+                        tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
+
                         window.cucumberIsFailed = true;
+                        
                         if(window.callPhantom){
                             window.callPhantom({command: 'Take screenshot', fileName: screenshotName});
                         }

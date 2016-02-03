@@ -72,14 +72,14 @@ describe('FilterCriteriaType', function () {
 
         var filter = [
             {
-                criteriaType: filterCriteriaType.CriteriaTypeCode.IsEquals,
-                property: "Id",
-                value: 11
+                CriteriaType: filterCriteriaType.CriteriaTypeCode.IsEquals,
+                Property: "Id",
+                Value: 11
             },
             {
-                criteriaType: filterCriteriaType.CriteriaTypeCode.IsContains,
-                property: "DisplayName",
-                value: "**"
+                CriteriaType: filterCriteriaType.CriteriaTypeCode.IsContains,
+                Property: "DisplayName",
+                Value: "**"
             }
         ];
 

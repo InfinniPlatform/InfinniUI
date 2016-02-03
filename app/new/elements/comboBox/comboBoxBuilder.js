@@ -30,11 +30,16 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
                 Property: "",
                 Value: null
             };
+
+            if (!source.getQueryFilter) {
+                return;
+            }
+
+            var queryFilter = source.getQueryFilter();
+            var criteria = queryFilter.appendCriteria(fullSearchFilter);
+
             element.onPropertyChanged('search', function (context, args) {
-                fullSearchFilter.Value = args.newValue;
-                if (source.setFilter) {
-                    source.setFilter([fullSearchFilter]);
-                }
+                criteria.value = args.newValue;
             });
 
         })(data.itemsBinding);

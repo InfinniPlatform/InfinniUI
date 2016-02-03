@@ -31,10 +31,9 @@
             // Given
             window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
-
-            var dataSource = new DocumentDataSource({
-                view: fakeView()
-            });
+            var builder = new ApplicationBuilder();
+            var view = fakeView();
+            var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
             //When
             dataSource.suspendUpdate();

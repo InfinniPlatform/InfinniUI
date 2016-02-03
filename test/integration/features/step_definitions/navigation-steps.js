@@ -46,6 +46,22 @@ this.When(/^я нажму на ссылку "([^"]*)"$/, function (linkName, nex
 	window.testHelpers.waitCondition(haveLink, success, fail);
 });
 
+this.When(/^я нажму на элемент "([^"]*)"$/, function(elementName, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	};
+	var success = function(){
+		window.testHelpers.getControlByName(elementName).control.controlView.$el.click();
+
+		next();
+	};
+	var fail = function(){
+		next(new Error(elementName + ' not found!'));
+	};
+
+	window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
 this.When(/^я нажму на выпадающий список кнопок "([^"]*)"$/, function (buttonName, next) {
 	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
 	
@@ -67,14 +83,14 @@ this.When(/^я нажму на выпадающий список кнопок "(
 });
 
 this.When(/^я нажму на выпадающий список "([^"]*)"$/, function (buttonName, next) {
-	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .select2-chosen".replace("{buttonName}", buttonName);
+	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-combobox__grip".replace("{buttonName}", buttonName);
 
 	var haveButton = function(){
 		return window.configWindow.$(buttonSelector).length != 0;
 	}
 	var success = function(){
 		try {
-	        window.configWindow.$(buttonSelector).mousedown(); //click() не срабатывает
+	        window.configWindow.$(buttonSelector)[0].click();
 	        next();
 	    } catch (err) {
 	        next(err);
@@ -88,13 +104,13 @@ this.When(/^я нажму на выпадающий список "([^"]*)"$/, fu
 });
 
 this.When(/^я выберу пункт "([^"]*)"$/, function (value, next) {
-    var selector = ".select2-results > li .select2-result-label:contains('{VALUE}')".replace("{VALUE}", value);
+    var selector = ".pl-combobox-items > .pl-label:contains('{VALUE}')".replace("{VALUE}", value);
 
     var haveValue = function(){
     	return window.configWindow.$(selector).length != 0;
     }
     var success = function(){
-    	window.configWindow.$(selector).mousedown().mouseup(); //TODO: Это бред конечно, но пока click() не работает
+    	window.configWindow.$(selector)[0].click();
     	next();
     }
     var fail = function(){
@@ -209,6 +225,34 @@ this.When(/^я выберу в текущем списке элемент под
 
 			if(item){
 				window.currentListBox.setSelectedItem(item);
+				next();
+			}else{
+				next(new Error("Out of range, length = " + window.currentListBox.getItems().toArray().length));
+			}
+		}catch(err){
+			next(err);
+		}
+	}
+});
+
+this.When(/^я отмечу в текущем списке элемент под номером "([^"]*)"$/, function(index, next){
+	if(!window.currentListBox){
+		next(new Error("Список не выбран"));
+	}else{
+		try{
+			var item = window.currentListBox.getItems().getByIndex(index);
+
+			if(item){
+				var list = window.currentListBox.getValue();
+
+				if(!list){
+					list = [];
+				}
+
+				list.push(item);
+
+				window.currentListBox.setValue(list);
+
 				next();
 			}else{
 				next(new Error("Out of range, length = " + window.currentListBox.getItems().toArray().length));

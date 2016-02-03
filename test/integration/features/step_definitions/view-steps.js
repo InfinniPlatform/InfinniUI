@@ -121,10 +121,14 @@ this.Then(/^система отобразит значения выпадающ�
 });
 
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
-	window.toastrActualMessageCount = msgs.split(',').map(function(item){
-		var result = item.trim();
-		return result.substring(1, result.length - 1).replace(/'/g, '"')
-	}).length;
+	var getMessages = function(arrayString){
+		return arrayString.split('", ').map(function(item){
+			var result = item.trim();
+			return result.replace(/"/g, "").replace(/'/g, '"');
+		});
+	};
+
+	window.toastrActualMessageCount = getMessages(msgs).length;
 
 	var haveToastr = function(){
 		return window.toastrMessageCount == window.toastrActualMessageCount;
@@ -132,13 +136,12 @@ this.Then(/^система отобразит список валидацион�
 	var success = function(){
 		var actual = window.configWindow.$("#toast-container .toast-message");
 		var actualMessages = [];
+
 		for(var i = 0;i < actual.length;i++){
 			actualMessages.push(actual[i].innerText);
 		}
-		var messages = msgs.split(',').map(function(item){
-			var result = item.trim();
-			return result.substring(1, result.length - 1).replace(/'/g, '"')
-		});
+
+		var messages = getMessages(msgs);
 		
 		try{
 			chai.assert.deepEqual(actualMessages, messages);
@@ -225,7 +228,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 
 		var actText = element.getText();
 
-		if(!actText){
+		if((actText === undefined || actText === null) && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -234,6 +237,11 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		}
 		
 		try{
+			if(actText === undefined || actText === null){
+				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+			}
+
 			if(actText != elementText){
 				next();
 			}else{
@@ -259,7 +267,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		
 		var actText = element.getText();
 
-		if(!actText){
+		if((actText === undefined || actText === null) && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -268,6 +276,11 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		}
 
 		try{
+			if(actText === undefined || actText === null){
+				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+			}
+			
 			chai.assert.equal(actText, elementText);
 			next();
 		}catch(err){
