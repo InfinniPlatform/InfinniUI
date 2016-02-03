@@ -121,10 +121,14 @@ this.Then(/^система отобразит значения выпадающ�
 });
 
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
-	window.toastrActualMessageCount = msgs.split(',').map(function(item){
-		var result = item.trim();
-		return result.substring(1, result.length - 1).replace(/'/g, '"')
-	}).length;
+	var getMessages = function(arrayString){
+		return arrayString.split('", ').map(function(item){
+			var result = item.trim();
+			return result.replace(/"/g, "").replace(/'/g, '"');
+		});
+	};
+
+	window.toastrActualMessageCount = getMessages(msgs).length;
 
 	var haveToastr = function(){
 		return window.toastrMessageCount == window.toastrActualMessageCount;
@@ -132,13 +136,12 @@ this.Then(/^система отобразит список валидацион�
 	var success = function(){
 		var actual = window.configWindow.$("#toast-container .toast-message");
 		var actualMessages = [];
+
 		for(var i = 0;i < actual.length;i++){
 			actualMessages.push(actual[i].innerText);
 		}
-		var messages = msgs.split(',').map(function(item){
-			var result = item.trim();
-			return result.substring(1, result.length - 1).replace(/'/g, '"')
-		});
+
+		var messages = getMessages(msgs);
 		
 		try{
 			chai.assert.deepEqual(actualMessages, messages);
