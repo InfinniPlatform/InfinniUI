@@ -57,11 +57,9 @@ window.testHelpers = {
 
 	getDate: function(iterator){
 		iterator = iterator || 0;
-		iterator *= 1000 * 60 * 60 * 24; 
+		iterator *= 1000 * 60 * 60 * 24;
 		
-		var today = new Date(Date.now() + iterator);
-		// YYYY-MM-DD
-        var currentDate = String.prototype.concat(today.getFullYear(), '-', today.getMonth() + 1, '-', today.getDate()); //+1 - January-0
+        var currentDate = this.getStandartDate(new Date(Date.now() + iterator));
 		
         // TODO: Следить за датами
         return this.getFormattedDate(currentDate);
@@ -69,6 +67,11 @@ window.testHelpers = {
 
 	getFormattedDate: function(date){
 		return window.configWindow.moment(date).format("YYYY-MM-DDTHH:mm:ss.SSS");
+	},
+
+	getStandartDate: function(date){
+		// YYYY-MM-DD
+		return String.prototype.concat(date.getFullYear(), '-', date.getMonth() + 1, '-', date.getDate()); //+1 - January-0
 	},
 	
 	getControlByName: function(controlName){

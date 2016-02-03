@@ -110,8 +110,12 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
 
             var actValue = field.getValue();
             
-            if(typeof actValue != "string"){
-                actValue = actValue.Date;
+            if(typeof actValue == "string"){
+                actValue = new Date(actValue).getTime();
+            }else{
+                var standartDate = window.testHelpers.getStandartDate(actValue);
+                var formattedDate = window.testHelpers.getFormattedDate(standartDate);
+                actValue = new Date(formattedDate).getTime();
             }
             
 			var date = dateString.match(/[а-я]*/i)[0];
@@ -119,10 +123,10 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
 			
 			if(date === "Сегодня" && !isNaN(iterator)){
 				var value = window.testHelpers.getDate(iterator);
-				chai.assert.equal(new Date(value).getTime(), new Date(actValue).getTime(), value + ' != ' + actValue);
+				chai.assert.equal(new Date(value).getTime(), actValue);
 			}else{
                 date = window.testHelpers.getFormattedDate(dateString);
-				chai.assert.equal(new Date(date).getTime(), new Date(actValue).getTime(), date + ' != ' + actValue);
+				chai.assert.equal(new Date(date).getTime(), actValue);
 			}
 
             next();
