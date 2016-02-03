@@ -9,15 +9,24 @@ var stringUtils = {
     },
 
     formatProperty: function(property, indexes){
-        if(!indexes || indexes.length == 0){
+        if(!indexes || indexes.length == 0 || property == ''){
             return property;
         }
 
-        var i = 0;
-        return property.replace(/\#/g, function(){
-            i++;
-            return indexes[i-1];
-        });
+        var propertyPaths = property.split('.');
+
+        var j = indexes.length-1;
+
+        for(var i = propertyPaths.length-1; i>=0; i--){
+            if(propertyPaths[i] == '#' && j >= 0){
+                propertyPaths[i] = indexes[j];
+                j--;
+            }else if(propertyPaths[i] == '$' || stringUtils.isNumeric(propertyPaths[i])){
+                j--;
+            }
+        }
+
+        return propertyPaths.join('.');
     },
 
     padLeft: function a (value, len, char) {
@@ -31,6 +40,10 @@ var stringUtils = {
             return new Array(len - str.length + 1).join(char) + str;
         }
         return str;
+    },
+
+    isNumeric: function(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     }
 };
 

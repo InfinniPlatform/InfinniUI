@@ -76,7 +76,7 @@
           {
             "Id": 1,
             "DisplayName": "44",
-            "SomeField": "",
+            "SomeField": "22",
             "Array": [
               {
                 "Id": 5,
@@ -204,6 +204,93 @@
             "ColumnSpan": 4,
             "Items": [
               {
+                "ViewPanel": {
+                  "Name": "pp1",
+                  "LinkView": {
+                    "InlineView": {
+                      "View": {
+                        "Parameters": [
+                          {
+                            "Name": "p1"
+                          }
+                        ],
+                        "Scripts": [{
+                          "Name": "close",
+                          "Body": "context.view.close();"
+                        }],
+                        "Items": [
+                          {
+                            "Button": {
+                              "Text": {
+                                "Source": "p1",
+                                "Property": "SomeField"
+                              },
+                              "OnClick": "{debugger;}"
+                            }
+                          },              {
+                            "ViewPanel": {
+                              "Name": "p1",
+                              "LinkView": {
+                                "InlineView": {
+                                  "View": {
+                                    "Parameters": [
+                                      {
+                                        "Name": "p2"
+                                      }
+                                    ],
+                                    "Scripts": [{
+                                      "Name": "close",
+                                      "Body": "context.view.close();"
+                                    }],
+                                    "Items": [
+                                      {
+                                        "Button": {
+                                          "Text": {
+                                            "Source": "p2",
+                                            "Property": "DisplayName"
+                                          },
+                                          "OnClick": "{debugger;}"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "Parameters": [
+                                    {
+                                      "Name": "p2",
+                                      "Value":{
+                                        "Source": "p1",
+                                        "Property": ""
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "Parameters": [
+                        {
+                          "Name": "p1",
+                          "Value":{
+                            "Source": "BloodGroupDataSource",
+                            "Property": "$"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
                 "ListBox":{
                   "Items": {
                     "Source": "BigDataSource",
@@ -214,13 +301,13 @@
                     "ListBox": {
                       "Items": {
                         "Source": "BigDataSource",
-                        "Property": "#.Array"
+                        "Property": "$.Array"
                       },
                       "ItemTemplate": {
                         "Label": {
                           "Text": {
                             "Source": "BigDataSource",
-                            "Property": "@.#.DisplayName"
+                            "Property": "$.Array.#.DisplayName"
                           }
                         }
                       }

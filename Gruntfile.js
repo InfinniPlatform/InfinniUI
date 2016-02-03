@@ -224,9 +224,10 @@
                 options: {
                     open: 'http://localhost:8181/test/unit/',
                     hostname : '*',
-                    port: '8181'
+                    port: '8181',
+                    keepalive: true
                 }
-            },
+            }/*,
             https: {
                 options: {
                     open: 'http://localhost:8181/test/unit/',
@@ -237,7 +238,7 @@
                     cert: grunt.file.read('certificates/server.crt').toString(),
                     ca: grunt.file.read('certificates/ca.crt').toString()
                 }
-            }
+            }*/
         },
 
         clean:{
