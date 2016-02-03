@@ -24,11 +24,11 @@ FilterCriteriaType.prototype.getCriteriaCallback = function (criteria) {
         return true;
     };
 
-    if (criteria && criteria.criteriaType) {
-        var method = this.getCriteriaByCode(criteria.criteriaType);
+    if (criteria && criteria.CriteriaType) {
+        var method = this.getCriteriaByCode(criteria.CriteriaType);
         if (typeof method === 'function') {
             filter = function (value) {
-                return method(value, criteria.property, criteria.value);
+                return method(value, criteria.Property, criteria.Value);
             }
         }
     }
@@ -52,7 +52,8 @@ FilterCriteriaType.prototype.CriteriaTypeCode = {
     IsEndsWith: 4096,
     IsNotEndsWith: 8192,
     IsIn: 16384,
-    IsNotIn: 32768
+    IsNotIn: 32768,
+    FullTextSearch: 65536
 };
 
 FilterCriteriaType.prototype.decodeCriteria = function (name) {

@@ -41,9 +41,10 @@ describe('ObjectDataSource', function () {
     window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
     function createObjectDataSource(){
-        var dataSource = new ObjectDataSource({
-                view: fakeView()
-            }),
+
+        var builder = new ApplicationBuilder();
+        var view = fakeView();
+        var dataSource = builder.buildType('ObjectDataSource', {}, {parent: view, parentView: view, builder: builder}),
             initItems = JSON.parse(JSON.stringify(items));
 
         dataSource.setItems(initItems);
@@ -256,9 +257,9 @@ describe('ObjectDataSource', function () {
             //When
             ds.setFilter([
                 {
-                    criteriaType: 64,
-                    property: "FirstName",
-                    value: "Иван"
+                    CriteriaType: 64,
+                    Property: "FirstName",
+                    Value: "Иван"
                 }
             ]);
 

@@ -44,7 +44,9 @@
             '!app/controls/dataNavigation/**/*.*',
             '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*'
+            '!app/element/dataElement/dataGrid/**/*.*',
+            '!app/controls/treeView/**/*.*',
+            '!app/element/dataElement/treeView/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -224,9 +226,11 @@
                 options: {
                     open: 'http://localhost:8181/test/unit/',
                     hostname : '*',
-                    port: '8181'
+                    port: '8181',
+                    keepalive: true
                 }
-            },
+            }
+            /*,
             https: {
                 options: {
                     open: 'http://localhost:8181/test/unit/',
@@ -238,6 +242,7 @@
                     ca: grunt.file.read('certificates/ca.crt').toString()
                 }
             }
+            */
         },
 
         clean:{
