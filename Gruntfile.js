@@ -44,9 +44,7 @@
             '!app/controls/dataNavigation/**/*.*',
             '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*',
-            '!app/controls/treeView/**/*.*',
-            '!app/element/dataElement/treeView/**/*.*'
+            '!app/element/dataElement/dataGrid/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
