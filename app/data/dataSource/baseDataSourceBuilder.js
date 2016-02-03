@@ -10,8 +10,8 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
 
-        var bindingBuilder = this.buildBindingBuilder(args);
-        dataSource.setBindingBuilder(bindingBuilder);
+        var queryFilter = new QueryFilter([], this.buildBindingBuilder(args));
+        dataSource.setQueryFilter(queryFilter);
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
         this.initFileProvider(dataSource, args.metadata);
@@ -42,8 +42,10 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.setPageSize(metadata.PageSize || 15);
         dataSource.setPageNumber(metadata.PageNumber || 0);
 
+        var queryMetadata;
         if('Query' in metadata){
-            dataSource.setFilter(metadata['Query']);
+            var queryFilter = dataSource.getQueryFilter();
+            queryFilter.setCriteria(metadata.Query);
         }
 
         if('IsLazy' in metadata){
