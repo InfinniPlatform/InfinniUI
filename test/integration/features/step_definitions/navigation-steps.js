@@ -46,6 +46,22 @@ this.When(/^я нажму на ссылку "([^"]*)"$/, function (linkName, nex
 	window.testHelpers.waitCondition(haveLink, success, fail);
 });
 
+this.When(/^я нажму на элемент "([^"]*)"$/, function(elementName, next){
+	var haveElement = function(){
+		return window.testHelpers.getControlByName(elementName) != undefined;
+	};
+	var success = function(){
+		window.testHelpers.getControlByName(elementName).control.controlView.$el.click();
+
+		next();
+	};
+	var fail = function(){
+		next(new Error(elementName + ' not found!'));
+	};
+
+	window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
 this.When(/^я нажму на выпадающий список кнопок "([^"]*)"$/, function (buttonName, next) {
 	var buttonSelector = "[data-pl-name=\"{buttonName}\"] .pl-popup-btn-toggle".replace("{buttonName}", buttonName);
 	
