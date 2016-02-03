@@ -225,7 +225,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 
 		var actText = element.getText();
 
-		if(!actText && element.getValue){
+		if((actText === undefined || actText === null) && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -234,7 +234,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 		}
 		
 		try{
-			if(!actText){
+			if(actText === undefined || actText === null){
 				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
 				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
 			}
@@ -264,7 +264,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		
 		var actText = element.getText();
 
-		if(!actText && element.getValue){
+		if((actText === undefined || actText === null) && element.getValue){
 			actText = element.getValue();
 		}
 
@@ -273,7 +273,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 		}
 
 		try{
-			if(!actText){
+			if(actText === undefined || actText === null){
 				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
 				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
 			}
