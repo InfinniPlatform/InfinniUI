@@ -921,7 +921,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationHandler, validationType) {
+    _notifyAboutValidation: function (validationResult, validationHandler) {
         var context = this.getContext(),
             argument = {
                 value: validationResult
@@ -930,12 +930,8 @@ var BaseDataSource = Backbone.Model.extend({
         if (validationHandler) {
             validationHandler(context, argument);
         }
+        this.trigger('onErrorValidator', context, argument);
 
-        if (validationType == 'error') {
-            this.trigger('onErrorValidator', context, argument);
-        } else {
-            this.trigger('onWarningValidator', context, argument);
-        }
     },
 
     getContext: function () {
