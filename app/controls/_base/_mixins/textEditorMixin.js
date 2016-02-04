@@ -101,7 +101,11 @@ var textEditorMixin = {
     onMouseenterControlHandler: function (event) {
         //TODO: при ховере показывается маска (UI-854: убрал) по просьбе TeamLead'a
         //При ховере Editor нужен, чтобы при клике по полю, курсор выставлялся в указаннкю позицию
-        if(this.model.get('enabled')) {
+        var enabled = this.model.get('enabled'),
+            value = this.model.get('value'),
+            isEmpty = value === '' || value === null || typeof value === undefined;
+
+        if(enabled && !isEmpty) {
             this.showEditor(this.model.get('value'), true);
             this.onEditorHideControl();
         }
