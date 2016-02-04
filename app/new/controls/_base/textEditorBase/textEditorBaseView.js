@@ -85,7 +85,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         options = _.defaults(options, {
             el: this.ui.editor,
             multiline: false,
-            lineCount: 1,
+            //lineCount: 1,
             inputType: 'text'
         });
 
