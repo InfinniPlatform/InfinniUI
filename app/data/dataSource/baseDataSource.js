@@ -828,7 +828,8 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getFilter: function () {
-        return this.get('criteriaList');
+        var queryFilter = this.getQueryFilter();
+        return queryFilter ? queryFilter.getCriteriaList() : [];
     },
 
     setFilter: function (value, onSuccess, onError) {
