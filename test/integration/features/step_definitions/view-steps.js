@@ -91,7 +91,11 @@ this.Then(/^система отобразит модальное окно "([^"]
 
 this.When(/^я закрою текущее модальное окно$/, function(next){
 	if(window.currentView.close != undefined){
-		window.currentView.close();
+		var previousView = window.currentView.getView();
+
+        window.currentView.close();
+        window.currentView = previousView;
+
 		next();
 	}else{
 		next(new Error('Method close() not found!'));
