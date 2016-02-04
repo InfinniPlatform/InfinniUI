@@ -22,7 +22,8 @@ _.extend(QueryFilter.prototype, {
         criteria.criteriaType = ('CriteriaType' in itemCriteria) ? itemCriteria.CriteriaType : itemCriteria.criteriaType;
 
         var value = ('Value' in itemCriteria) ? itemCriteria.Value : itemCriteria.value;
-        if (_.isObject(value)) {
+        if (value !== null && typeof value === 'object' && !Array.isArray(value) && value.constructor !== Date) {
+            //Объект не массив и не дата = DataBinding
             this.bindToValue(criteria, value);
         } else {
             criteria.value = value;
