@@ -22,9 +22,6 @@ _.extend(ContainerBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         itemsBinding = this.initItems(params);
-        if (itemsBinding) {
-            this.tuneItemsBinding(itemsBinding);
-        }
         this.initGroup(params, itemsBinding);
 
         return {

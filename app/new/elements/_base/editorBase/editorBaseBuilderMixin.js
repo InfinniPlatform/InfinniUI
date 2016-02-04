@@ -55,11 +55,6 @@ var editorBaseBuilderMixin = {
             }
             dataBinding.bindElement(params.element, bindingOptions.valueProperty);
 
-            var source = dataBinding.getSource();
-            if (typeof source.tryInitData == 'function') {
-                source.tryInitData();
-            }
-
             this.initValidationResultText(element, dataBinding);
         }
 

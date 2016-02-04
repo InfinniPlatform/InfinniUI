@@ -12,9 +12,17 @@ var DataBinding = Backbone.Model.extend({
         source: null,
         sourceProperty: null,
         element: null,
-        elementProperty: null
+        elementProperty: null,
+        defaultValue: null
     },
 
+    getDefaultValue: function(){
+        return this.get('defaultValue');
+    },
+
+    setDefaultValue: function(value){
+        this.set('defaultValue', value);
+    },
 
     setMode: function (mode) {
         this.set('mode', mode);
@@ -120,6 +128,12 @@ var DataBinding = Backbone.Model.extend({
 
         if(this.shouldRefreshElement(this.get('mode')) && source){
             if(typeof source.isDataReady == 'function' && !source.isDataReady()){
+                if(typeof source.tryInitData == 'function'){
+                    if(this.getDefaultValue() !== null){
+                        this._setValueToElement(this.getDefaultValue(), true);
+                    }
+                    source.tryInitData();
+                }
                 return;
 
             }else{
@@ -177,14 +191,14 @@ var DataBinding = Backbone.Model.extend({
         }
     },
 
-    _setValueToElement: function(value){
+    _setValueToElement: function(value, notConverting){
         var source = this.get('source');
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
         var converter = this.get('converter');
         var context = this._getContext();
 
-        if(converter != null && converter.toElement != null){
+        if(converter != null && converter.toElement != null && !notConverting){
             value = converter.toElement(context, {value: value, binding: this, source: source});
         }
 

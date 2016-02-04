@@ -15,6 +15,9 @@ DataBindingBuilder.prototype.build = function (context, args) {
         throw new Error('DataBindingBuilder: not declared source in DataBinding metadata.');
     }
 
+    if('DefaultValue' in metadata){
+        result.setDefaultValue(metadata['DefaultValue']);
+    }
 
     var sourceDeferred = args.parentView.getDeferredOfMember(metadata.Source);
     sourceDeferred.done(function(source){
