@@ -3,15 +3,32 @@
   "DataSources": [
     {
       "ObjectDataSource": {
+        "Name": "ObjectDataSource1",
+        "Items": [
+          {"Id": 1, "Display": "LTE"},
+          {"Id": 2, "Display": "2G"},
+          {"Id": 3, "Display": "2G"}
+        ]
+      }
+    },{
+      "ObjectDataSource": {
+        "Name": "ObjectDataSource2",
+        "Items": [
+          { "Value": { "Id": 2, "Display": "2G" }}
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
         "Name": "Test",
         "Items": [
-          {"Id": 1, "Name": "One", "Group": "odd"},
-          {"Id": 2, "Name": "Two", "Group": "even"},
-          {"Id": 3, "Name": "Three", "Group": "odd"},
-          {"Id": 4, "Name": "Four", "Group": "even"},
-          {"Id": 5, "Name": "Five", "Group": "odd"},
-          {"Id": 6, "Name": "Six", "Group": "even"},
-          {"Id": 7, "Name": "Seven", "Group": "odd"}
+          {"Id": 1, "Num": "1", "Name": "One", "Group": "odd"},
+          {"Id": 2, "Num": "2", "Name": "Two", "Group": "even"},
+          {"Id": 3, "Num": "3", "Name": "Three", "Group": "odd"},
+          {"Id": 4, "Num": "4", "Name": "Four", "Group": "even"},
+          {"Id": 5, "Num": "5", "Name": "Five", "Group": "odd"},
+          {"Id": 6, "Num": "6", "Name": "Six", "Group": "even"},
+          {"Id": 7, "Num": "7", "Name": "Seven", "Group": "odd"}
         ],
         "Query": [
           {
@@ -225,10 +242,22 @@
   },
     {
       "DataGrid": {
+        "MultiSelect": true,
         "Columns": [
           {
             "Header": "Id",
             "CellProperty": "Id"
+          },
+          {
+            "Header": "Id2",
+            "CellTemplate": {
+              "NumericBox": {
+                "Value": {
+                  "Source": "Test",
+                  "Property": "#.Num"
+                }
+              }
+            }
           },
           {
             "Header": "Name",
@@ -245,7 +274,8 @@
         ],
         "Items": {
           "Source": "Test"
-        }
+        },
+        "OnValueChanged": "{console.log(arguments);}"
       }
     },
     {

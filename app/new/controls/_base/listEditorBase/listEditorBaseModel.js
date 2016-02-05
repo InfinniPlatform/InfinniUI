@@ -6,13 +6,14 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
 
     initialize: function () {
         var that = this;
+        this.hashValueByItem = new HashMap();
         ContainerModel.prototype.initialize.apply(this, arguments);
         this.initialize_editorBaseModel();
 
         this.bindSelectedItemsWithValue();
 
         this.get('items').onChange(function(){
-            that.clearItemsStringifyCache();
+            that.hashValueByItem.clear();
         });
     },
 
@@ -83,12 +84,33 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
     },
 
     itemInfoByValue: function(value){
-        if(!this.itemsStringifyCache){
-            this.updateItemsStringifyCache();
+        if (this.hashValueByItem.length === 0) {
+            this.updateHashValueByItem();
+        }
+        var info,
+            index,
+            item = this.hashValueByItem.getKeyByValue(value);
+
+        if (typeof item !== 'undefined') {
+            info = {
+                item: item,
+                index: this.hashValueByItem.keys.indexOf(item)
+            }
+        } else {
+            var text = JSON.stringify(value);
+            index = this.hashValueByItem.findIndex(function (item, value) {
+                return JSON.stringify(value) === text;
+            });
+
+            if (index !== -1) {
+                info = {
+                    index: index,
+                    item: this.hashValueByItem.keys[index]
+                }
+            }
         }
 
-        var stringifyValue = JSON.stringify(value);
-        return this.itemsStringifyCache[stringifyValue];
+        return info;
     },
 
     itemByValue: function(value){
@@ -116,29 +138,14 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         return this.itemIndexByValue(value);
     },
 
-    updateItemsStringifyCache: function(){
+    updateHashValueByItem: function () {
         var items = this.get('items'),
-            that = this,
-            stringify,
             value;
-        this.itemsStringifyCache = {};
-
-        items.forEach(function(item, index){
-            value = that.valueByItem(item);
-            stringify = JSON.stringify(value);
-            that.itemsStringifyCache[stringify] = {
-                item: item,
-                index: index
-            };
-        });
-    },
-
-    clearItemsStringifyCache: function(){
-        this.itemsStringifyCache = undefined;
-    },
-
-    isStringifyEqualValues: function(v1, v2){
-        return JSON.stringify(v1) == JSON.stringify(v2);
+        this.hashValueByItem.clear();
+        items.forEach(function (item) {
+            value = this.valueByItem(item);
+            this.hashValueByItem.add(item, value);
+        }, this);
     }
 
 }, editorBaseModelMixin));
