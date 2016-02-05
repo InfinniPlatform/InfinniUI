@@ -12,6 +12,7 @@ _.extend(QueryFilter.prototype, {
             return;
         }
         this.stopListening();
+        this.off();
         this._criteriaList.length = 0;
         this._bindings.length = 0;
     },
