@@ -15,7 +15,8 @@ var DataGridRowView = ControlView.extend({
 
     UI: {
         toggleCell: '.pl-toggle-cell',
-        toggle: '.toggle'
+        toggle: '.toggle',
+        toggleControl: '.toggle input'
     },
 
     initialize: function () {
@@ -71,7 +72,7 @@ var DataGridRowView = ControlView.extend({
 
     updateToggle: function () {
         var toggle = this.model.get('toggle');
-        this.ui.toggle.prop('checked', !!toggle);
+        this.ui.toggleControl.prop('checked', !!toggle);
     },
 
     updateSelected: function () {
