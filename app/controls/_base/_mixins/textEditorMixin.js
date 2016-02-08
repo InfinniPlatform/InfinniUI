@@ -126,7 +126,7 @@ var textEditorMixin = {
      */
     onEditorDone: function (value) {
         if(typeof value === 'undefined' || value === null || !value.toString().length) {
-            value = undefined;
+            value = null;
         }
         this.model.set('value', value);
     },

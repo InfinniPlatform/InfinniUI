@@ -57,10 +57,7 @@
     "ObjectDataSource":{
       "Name": "Clone",
       "Items":{
-        "Source": "BloodGroupDataSource",
-        "Converter":{
-          "ToElement":"{return [args.value[0]];}"
-        }
+        "Source": "BloodGroupDataSource"
       }
     }
   },
@@ -189,6 +186,11 @@
                             "Mask": "n3"
                           }
                         },
+                        "DisplayFormat": {
+                          "NumberFormat": {
+                            "Format": "n2"
+                          }
+                        },
                         "Value": {
                           "Source": "BloodGroupDataSource",
                           "Property": "$.Id"
@@ -218,18 +220,19 @@
             "ColumnSpan": 4,
             "Items": [
               {
-                "StackPanel":{
-                  "Items": {
-                    "Source": "Clone",
-                    "Property": ""
+                "TextBox": {
+                  "Value":{
+                    "Source": "ObjectDataSource1",
+                    "Property": "0.Display"
                   },
-
-                  "ItemTemplate":{
-                    "Label":{
-                      "Value": {
-                        "Source": "Clone",
-                        "Property": "#.DisplayName"
-                      }
+                  "EditMask": {
+                    "NumberEditMask": {
+                      "Mask": "n3"
+                    }
+                  },
+                  "DisplayFormat": {
+                    "NumberFormat": {
+                      "Format": "n3"
                     }
                   }
                 }
