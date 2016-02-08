@@ -89,7 +89,7 @@ window.testHelpers = {
 		var indexInfo = /\[(\d+)\]/.exec(controlName);
 		
 		if(indexInfo == null){
-			return window.currentViewContext.controls[controlName];
+			return window.currentViewContext.controls[controlName] || window.configWindow.contextApp.context.controls[controlName];
 		}else{
 			var itemIndex = parseInt(indexInfo[1]);
 			var itemName = controlName.match(/\w+/)[0];
