@@ -51,7 +51,7 @@
         }
         
         if(window.location.hash != ""){
-            window.startUpParameters = JSON.parse(window.location.hash.substring(1));
+            window.startUpParameters = JSON.parse(window.location.hash.substring(1).replace(/'/g,'"'));
         }
         
         if(window.startUpParameters && window.startUpParameters.tags){
