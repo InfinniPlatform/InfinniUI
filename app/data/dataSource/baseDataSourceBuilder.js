@@ -10,7 +10,7 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
 
-        var queryFilter = new QueryFilter([], this.buildBindingBuilder(args));
+        var queryFilter = new QueryFilter(null, this.buildBindingBuilder(args));
         dataSource.setQueryFilter(queryFilter);
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
