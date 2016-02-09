@@ -23,7 +23,7 @@ this.AfterFeatures(function(){
         window.callPhantom({command: 'Tests finished'});
     }
 
-    if(location.hash === "#enableClosing"){
+    if(window.startUpParameters && window.startUpParameters.isClosing){
         window.close();
     }
 });
