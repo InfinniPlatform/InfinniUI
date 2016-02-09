@@ -29,7 +29,7 @@ _.extend(AddAction.prototype, {
             destinationProperty = this.getProperty('destinationProperty');
 
         if( this._isObjectDataSource(editDataSource) ) {
-            var items = destinationDataSource.getProperty(destinationProperty),
+            var items = destinationDataSource.getProperty(destinationProperty) || [],
                 newItem = editDataSource.getSelectedItem();
 
             items = _.clone(items);
