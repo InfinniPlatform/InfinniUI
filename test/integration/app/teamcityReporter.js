@@ -1,14 +1,14 @@
 var tsm = {
-    suiteStarted: function(suiteName){
-        console.log("##teamcity[testSuiteStarted name='" + suiteName + "']");
+    suiteStarted: function(suiteName, flowId){
+        console.log("##teamcity[testSuiteStarted name='" + suiteName + "' flowId='" + flowId + "']");
     },
     
     suiteFinished: function(suiteName){
         console.log("##teamcity[testSuiteFinished name='" + suiteName + "']");
     },
     
-    testStarted: function(testName){
-        console.log("##teamcity[testStarted name='" + testName + "']");
+    testStarted: function(testName, flowId){
+        console.log("##teamcity[testStarted name='" + testName + "' flowId='" + flowId + "']");
     },
     
     testFinished: function(testName){
