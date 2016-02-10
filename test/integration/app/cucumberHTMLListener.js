@@ -18,12 +18,7 @@ function CucumberHTMLListener($root) {
                         line: feature.getLine(),
                         description: feature.getDescription()
                     });
-                    var tags = feature.getTags();
-                    var tag = "";
-                    if(tags.length != 0){
-                        tag = tags[0].getName();
-                    }
-                    tsm.suiteStarted(window.cucumberCurrentFeature, tag);
+                    tsm.suiteStarted(window.cucumberCurrentFeature);
                     break;
 
                 case 'BeforeScenario':
@@ -37,12 +32,7 @@ function CucumberHTMLListener($root) {
                         line: scenario.getLine(),
                         description: scenario.getDescription()
                     });
-                    var tags = scenario.getTags();
-                    var tag = "";
-                    if(tags.length != 0){
-                        tag = tags[0].getName();
-                    }
-                    tsm.testStarted(window.cucumberCurrentScenario, tag);
+                    tsm.testStarted(window.cucumberCurrentScenario);
                     break;
 
                 case 'BeforeStep':
