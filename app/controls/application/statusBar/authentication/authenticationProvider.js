@@ -70,8 +70,6 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onActiveRoleChanged.fire.apply(this.handlers.onActiveRoleChanged, args);
-            var exchange = messageBus.getExchange('global');
-            exchange.send('OnActiveRoleChanged', {value: args});
         }, errorCallback);
     },
 
@@ -180,8 +178,6 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
-            var exchange = messageBus.getExchange('global');
-            exchange.send('OnSignOut', {value: args});
         }.bind(this), errorCallback);
     },
 

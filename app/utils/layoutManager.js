@@ -283,12 +283,6 @@ var layoutManager = {
             this.exchange = window.InfinniUI.global.messageBus;
             this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
         }
-
-
-        /*var exchange = messageBus.getExchange('modal-dialog');
-        exchange.subscribe(messageTypes.onLoading, function () {
-            this.resizeDialog();
-        }.bind(this));*/
     },
 
     onChangeLayout: function (container) {
