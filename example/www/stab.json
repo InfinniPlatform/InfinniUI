@@ -4,11 +4,7 @@
     {
       "ObjectDataSource": {
         "Name": "ObjectDataSource1",
-        "Items": [
-          {"Id": 1, "Display": "LTE"},
-          {"Id": 2, "Display": "2G"},
-          {"Id": 3, "Display": "2G"}
-        ]
+        "Items": []
       }
     },{
       "ObjectDataSource": {
@@ -282,21 +278,25 @@
       }
     },
     {
-    "ComboBox": {
-      "ItemTemplate": {
-        "Label": {
-          "Text": {
-            "Source": "Test",
-            "Property": "#.Name"
+      "Panel":{
+        "Header": "he",
+        "Collapsible": true,
+        "Items":[{
+          "Button": {
+            "Text": "rer"
           }
-        }
-      },
-      "Autocomplete": true,
-      "OnValueChanged": "{console.log(args);}",
-      "Items": {
-        "Source": "Test"
+        }, {
+          "Panel":{
+            "Header": "hehe",
+            
+            "Items":[{
+              "Button": {
+                "Text": "rerer"
+              }
+            }]
+          }
+        }]
       }
-    }
   }]
 }
 

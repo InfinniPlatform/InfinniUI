@@ -14,7 +14,7 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     },
 
     events: {
-        'click .pl-panel-header': 'onClickHeaderHandler'
+        'click >.pl-panel-header': 'onClickHeaderHandler'
     },
 
     initialize: function (options) {
@@ -34,10 +34,10 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
 
         this.renderItemsContents();
 
-        this.postrenderingActions();
-
         this.trigger('render');
         this.updateProperties();
+
+        this.postrenderingActions();
         return this;
     },
 
