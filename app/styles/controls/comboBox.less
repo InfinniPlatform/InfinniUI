@@ -1,3 +1,8 @@
+.pl-combobox-items {
+  overflow-y:auto;
+  max-height: 30vh;
+}
+
 .pl-combobox-items > .pl-combobox-selected {
   border-left: 4px solid #39b3d7;
 }
@@ -20,4 +25,15 @@
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   border-top: 1px solid #cccccc;
+}
+
+.pl-combobox__value {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+
+  &>.pl-label {
+    max-width: 100%;
+  }
 }

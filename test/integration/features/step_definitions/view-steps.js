@@ -246,7 +246,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
 			}
 
-			if(actText != elementText){
+			if(actText.trim() != elementText){
 				next();
 			}else{
 				next(new Error(elementName + ' was found!'));
@@ -285,7 +285,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
 			}
 			
-			chai.assert.equal(actText, elementText);
+			chai.assert.equal(actText.trim(), elementText);
 			next();
 		}catch(err){
 			next(err);
