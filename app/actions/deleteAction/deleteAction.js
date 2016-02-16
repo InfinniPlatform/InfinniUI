@@ -35,7 +35,7 @@ _.extend(DeleteAction.prototype, {
         var dataSource = this.getProperty('destinationSource'),
             property = this.getProperty('destinationProperty');
 
-        if( this._isPredefinedIdentifierProperty(property) ) {
+        if( this._isDocument(property) ) {
             this._deleteDocument(dataSource, property, callback);
         } else {
             this._deleteItem(dataSource, property, callback);
@@ -70,7 +70,7 @@ _.extend(DeleteAction.prototype, {
         }
     },
 
-    _isPredefinedIdentifierProperty: function(propertyName){
-        return propertyName == '$' || propertyName == '#';
+    _isDocument: function(propertyName){
+        return propertyName == '$' || _.isFinite(propertyName);
     }
 });
