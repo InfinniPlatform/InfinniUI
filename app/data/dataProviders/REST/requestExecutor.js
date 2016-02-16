@@ -38,7 +38,14 @@ RequestExecutorDataStrategy.prototype.strategies = {
             },
             beforeSend: this.onBeforeRequest(),
             success: this.onSuccessRequest(onSuccess),
-            error: this.onErrorRequest(onFail),
+            error: function (err) {
+                if (err.status === 200) {
+                    //@TODO Убрать этот костыль. Нужен т.к. запрос на загрузку файла возвращает 200 и пустой ответ!
+                    this.onSuccessRequest(onSuccess);
+                } else {
+                    this.onErrorRequest(onFail);
+                }
+            }.bind(this),
             processData: processData,
             contentType: false,
             data: requestData.args
