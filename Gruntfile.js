@@ -62,6 +62,7 @@
             'bower_components/toastr/toastr.js',
             'bootstrap-framework/js/tooltip.js',
             'bower_components/jquery.cookie/jquery.cookie.js',
+            'bower_components/hammerjs/hammer.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
