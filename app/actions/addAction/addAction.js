@@ -14,8 +14,7 @@ _.extend(AddAction.prototype, {
             editDataSource.setItems([{}]);
             editDataSource.setSelectedItem({});
         } else {
-            var criteria = [ { CriteriaType:1, Property: "Id", Value:  "0000"  } ];
-            editDataSource.setFilter( criteria );
+            editDataSource.suspendUpdate();
 
             editView.onBeforeLoaded(function() {
                 editDataSource.createItem();
