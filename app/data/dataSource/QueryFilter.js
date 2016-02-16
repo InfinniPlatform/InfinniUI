@@ -12,8 +12,7 @@ _.extend(QueryFilter.prototype, {
             return;
         }
         this.stopListening();
-        //this.off();
-        this._list = null;
+        this.off();
         this._criteriaList.length = 0;
         this._bindings.length = 0;
     },
@@ -41,14 +40,7 @@ _.extend(QueryFilter.prototype, {
         return criteria;
     },
 
-    setCriteria: function (list, cb) {
-        var newList = list || null,
-            currentList = this._list || null;
-
-        if (_.isEqual(newList, currentList)) {
-            return;
-        }
-
+    setCriteria: function (list) {
         this.clean();
 
         this._list = list;
@@ -58,11 +50,11 @@ _.extend(QueryFilter.prototype, {
                 this.appendCriteria(item, true);
             }, this);
         }
-        this.triggerOnChange(cb);
+        this.triggerOnChange();
     },
 
-    triggerOnChange: function (cb) {
-        this.trigger('change', this.getCriteriaList(), cb);
+    triggerOnChange: function () {
+        this.trigger('change', this.getCriteriaList());
     },
 
     getCriteriaList: function () {
@@ -74,11 +66,7 @@ _.extend(QueryFilter.prototype, {
     isReady: function () {
         return this._bindings.every(function (binding) {
             var source = binding.getSource();
-            if ('isDataReady' in source) {
-                return source.isDataReady()
-            }
-
-            return true;
+            return !('isDataReady' in source) || source.isDataReady();
         });
     },
 

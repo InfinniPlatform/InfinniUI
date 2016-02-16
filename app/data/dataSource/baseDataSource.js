@@ -39,9 +39,9 @@ var BaseDataSource = Backbone.Model.extend({
     setQueryFilter: function (queryFilter) {
         this._queryFilter = queryFilter;
 
-        queryFilter.onChange(function(newCriteriaList, cb){
+        queryFilter.onChange(function(newCriteriaList){
             if(queryFilter.isReady()){
-                this._setCriteriaList(newCriteriaList, cb);
+                this._setCriteriaList(newCriteriaList);
             }
         }.bind(this));
 
@@ -834,16 +834,18 @@ var BaseDataSource = Backbone.Model.extend({
 
     setFilter: function (value, onSuccess, onError) {
         var filter = this.getQueryFilter();
-        if (filter) {
-            filter.setCriteria(value, onSuccess);
+        filter.setCriteria(value);
+
+        var that = this;
+
+        if(filter.isReady()){
+            this._setCriteriaList(filter.getCriteriaList(), onSuccess, onError);
         }
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){
         this.set('criteriaList', criteriaList);
-        if (this.isDataReady()) {
-            this.updateItems(onSuccess, onError);
-        }
+        this.updateItems(onSuccess, onError);
     },
 
     setIdFilter: function (itemId) {
