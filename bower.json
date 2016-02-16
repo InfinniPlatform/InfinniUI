@@ -15,7 +15,8 @@
     "jquery-bootpag": "1.0.7",
     "blockUI": "*",
     "toastr": "~2.1.2",
-    "jquery.cookie": "~1.4.1"
+    "jquery.cookie": "~1.4.1",
+    "jquery-touchswipe": "~1.6.15"
   },
   "homepage": "https://github.com/InfinniPlatform/InfinniUI",
   "authors": [

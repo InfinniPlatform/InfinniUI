@@ -43,7 +43,7 @@ describe('DeleteAction', function () {
         ];
         var index = 1;
 
-        dataSource.setItems(items);
+        dataSource.setItems(_.clone(items));
 
         view.getDataSources().push(dataSource);
 
