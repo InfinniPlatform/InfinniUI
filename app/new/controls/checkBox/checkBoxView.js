@@ -8,7 +8,7 @@ var CheckBoxView = ControlView.extend(/** @lends CheckBoxView.prototype */ _.ext
     template: InfinniUI.Template["new/controls/checkBox/template/checkBox.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
-        text: 'span',
+        text: '.checkbox-label',
         input: 'input'
     }),
 
