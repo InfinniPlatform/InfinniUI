@@ -26,7 +26,7 @@ describe('CheckBox', function () {
                 checkbox.setText('Text 1');
 
                 var $el = checkbox.render(),
-                    $label = $('span', $el);
+                    $label = $('.checkbox-label', $el);
 
                 assert.equal($label.html(), 'Text 1');
 
