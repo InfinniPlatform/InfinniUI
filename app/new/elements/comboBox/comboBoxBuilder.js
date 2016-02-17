@@ -16,6 +16,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
 
     applyMetadata: function (params) {
         var element = params.element;
+        var that = this;
 
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
@@ -24,23 +25,28 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         element.setShowClear(params.metadata.ShowClear);
 
         (function (binding) {
+            var name = element.getName();
+
+            if(!name){
+                name = that.generateName();
+                element.setName(name);
+            }
+
             var source = binding.getSource();
             var fullSearchFilter = {
                 CriteriaType: criteriaType.FullTextSearch,
                 Property: "",
-                Value: null
+                Value: {
+                    "Source": name,
+                    "Property": "search"
+                }
             };
 
-            if (!source.getQueryFilter) {
+            if (!source.getFilterManager) {
                 return;
             }
 
-            var queryFilter = source.getQueryFilter();
-            var criteria = queryFilter.appendCriteria(fullSearchFilter);
-
-            element.onPropertyChanged('search', function (context, args) {
-                criteria.value = args.newValue;
-            });
+            source.addFilter([fullSearchFilter]);
 
         })(data.itemsBinding);
     },
@@ -164,5 +170,9 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
 
             return label;
         };
+    },
+
+    generateName: function(){
+        return 'combobox-' + guid();
     }
 });

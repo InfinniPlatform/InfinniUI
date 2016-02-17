@@ -142,6 +142,7 @@ _.extend(Element.prototype, {
                 var parentView = this.getView(),
                     context = parentView ? parentView.getContext() : undefined,
                     args = {
+                        property: propertyName,
                         oldValue: model.previous(propertyName),
                         newValue: value
                     };

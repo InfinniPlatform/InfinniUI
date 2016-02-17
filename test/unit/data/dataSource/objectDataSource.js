@@ -277,9 +277,9 @@ describe('ObjectDataSource', function () {
             //When
             ds.setFilter([
                 {
-                    criteriaType: 64,
-                    property: "FirstName",
-                    value: "Иван"
+                    CriteriaType: 64,
+                    Property: "FirstName",
+                    Value: "Иван"
                 }
             ]);
             assert.lengthOf(ds.getItems(), 3, 'Apply filter');

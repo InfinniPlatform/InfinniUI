@@ -57,3 +57,11 @@ ComboBox.prototype.getShowClear = function () {
     return this.control.get('showClear');
 };
 
+ComboBox.prototype.setSearch = function (value) {
+    this.control.set('search', value);
+};
+
+ComboBox.prototype.getSearch = function () {
+    return this.control.get('search');
+};
+

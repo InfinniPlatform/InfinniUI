@@ -11,6 +11,7 @@ var BaseDataSource = Backbone.Model.extend({
         pageSize: 15,
         sorting: null,
         criteriaList: [],
+        filterManager: null,
 
         view: null,
 
@@ -36,19 +37,12 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-    setQueryFilter: function (queryFilter) {
-        this._queryFilter = queryFilter;
-
-        queryFilter.onChange(function(newCriteriaList){
-            if(queryFilter.isReady()){
-                this._setCriteriaList(newCriteriaList);
-            }
-        }.bind(this));
-
+    setFilterManager: function (filterManager) {
+        this.set('filterManager', filterManager);
     },
 
-    getQueryFilter: function () {
-        return this._queryFilter;
+    getFilterManager: function () {
+        return this.get('filterManager');
     },
 
     initialize: function () {
@@ -828,19 +822,26 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getFilter: function () {
-        var queryFilter = this.getQueryFilter();
-        return queryFilter ? queryFilter.getCriteriaList() : [];
+        return this.get('criteriaList');
+    },
+
+    addFilter: function (value) {
+        var filterManager = this.getFilterManager();
+        filterManager.addFilter(value);
     },
 
     setFilter: function (value, onSuccess, onError) {
-        var filter = this.getQueryFilter();
-        filter.setCriteria(value);
+        var filterManager = this.getFilterManager();
 
-        var that = this;
+        filterManager.clean();
 
-        if(filter.isReady()){
-            this._setCriteriaList(filter.getCriteriaList(), onSuccess, onError);
-        }
+        filterManager.onChange(function(newCriteriaList){
+            if(filterManager.isReady()){
+                this._setCriteriaList(newCriteriaList, onSuccess, onError);
+            }
+        }.bind(this));
+
+        filterManager.addFilter(value);
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){
