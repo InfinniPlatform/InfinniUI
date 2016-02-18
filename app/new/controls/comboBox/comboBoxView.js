@@ -91,7 +91,10 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     onClickClearHandler: function () {
-        this.model.set('value', null);
+        var enabled = this.model.get('enabled');
+        if (enabled) {
+            this.model.set('value', null);
+        }
     },
 
     onClickGripHandler: function () {
