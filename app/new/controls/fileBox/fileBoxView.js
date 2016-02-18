@@ -33,7 +33,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
         this.listenTo(this.model, 'change:fileTime', this.updateFileTime);
         this.listenTo(this.model, 'change:fileType', this.updateFileType);
-        this.listenTo(this.model, 'change:value', this.updateUrl);
+        this.listenTo(this.model, 'change:value', this.updateValue);
 
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
@@ -47,7 +47,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.updateFileSize();
         this.updateFileType();
         this.updateFileTime();
-        this.updateUrl();
+        this.updateValue();
 
         this.updateHintText();
         this.updateErrorText();
@@ -111,25 +111,49 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     },
 
     updateFileName: function () {
-        var fileName = this.model.get('fileName');
-        var enabled = this.model.get('enabled');
-
-        this.ui.download.text(fileName);
-
-        this.ui.empty.toggleClass('hidden', !!fileName);
-        this.ui.info.toggleClass('hidden', !fileName);
-
+        //var fileName = this.model.get('fileName');
+        //var enabled = this.model.get('enabled');
+        //var value = this.model.get('value');
+        //
+        //if (value && (!fileName || fileName.length === 0)) {
+        //    fileName = 'Скачать файл';
+        //}
+        //this.ui.download.text(fileName);
+        //
+        ////this.ui.empty.toggleClass('hidden', !!fileName);
+        //this.ui.empty.toggleClass('hidden', !value);
+        //this.ui.info.toggleClass('hidden', !fileName);
+        this.updateFileInfo();
         this.updateRemoveButtonState();
     },
 
     updateFileSize: function () {
-        var fileSize = this.model.get('fileSize');
+        //var fileSize = this.model.get('fileSize');
+        //
+        //var text = '';
+        //if (typeof fileSize !== 'undefined' && fileSize !== null) {
+        //    text = InfinniUI.format.humanFileSize(fileSize);
+        //}
+        //this.ui.fileSize.text(text);
+    },
 
-        var text = '';
-        if (typeof fileSize !== 'undefined' && fileSize !== null) {
-            text = InfinniUI.format.humanFileSize(fileSize);
+    updateFileInfo: function() {
+        var model = this.model;
+        var
+            value = model.get('value'),
+            fileName = model.get('fileName');
+
+        if (!value || value.length === 0) {
+            this.ui.info.toggleClass('hidden', true);
+            this.ui.empty.toggleClass('hidden', false);
+        } else {
+            if (!fileName || fileName.length === 0) {
+                fileName = 'Скачать файл';
+            }
+            this.ui.download.text(fileName);
+            this.ui.info.toggleClass('hidden', false);
+            this.ui.empty.toggleClass('hidden', true);
         }
-        this.ui.fileSize.text(text);
     },
 
     updateRemoveButtonState: function () {
@@ -151,14 +175,22 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         //@TODO Update file's mime type on view
     },
 
-    updateUrl: function () {
-        var url = this.model.get('value');
-        if (!url) {
-            this.ui.download.removeAttr('href');
-        } else {
-            this.ui.download.attr('href', url);
-        }
+    updateValue: function () {
+        var model = this.model;
+        var value = model.get('value');
 
+        if (value && typeof value === 'object') {
+            this.updateUrl(null);
+        } else {
+            this.updateUrl(value);
+        }
+    },
+
+    updateUrl: function (url) {
+        this.ui.download.attr('href', url);
+        var none = url === null || typeof url === 'undefined';
+        this.$el.toggleClass('pl-empty', none);
+        this.updateFileInfo();
     },
 
     onClickRemoveImageHandler: function () {
