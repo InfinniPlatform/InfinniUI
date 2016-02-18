@@ -26,7 +26,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     initHandlersForProperties: function(){
         ControlView.prototype.initHandlersForProperties.call(this);
 
-        this.listenTo(this.model, 'change:value', this.updateUrl);
+        this.listenTo(this.model, 'change:value', this.updateValue);
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
@@ -35,7 +35,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
-        this.updateUrl();
+        this.updateValue();
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
@@ -52,12 +52,53 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.ui.input.prop('disabled', !isEnabled);
     },
 
-    updateUrl: function () {
-        var url = this.model.get('value');
+    updateValue: function () {
+        var model = this.model;
+        var value = model.get('value');
 
+        if (value && typeof value === 'object') {
+            //Native FileAPI File instance, start loading preview
+            this.stopLoadingFile();
+            var fileLoader = this.loadPreview(value);
+
+            this.fileLoader = fileLoader;
+
+            fileLoader.then(function (file, content) {
+                this.updateUrl(content);
+            }.bind(this), function (err) {
+                console.log(err);
+            });
+        } else {
+            this.updateUrl(value);
+        }
+    },
+
+    updateUrl: function (url) {
         this.ui.img.attr('src', url);
         var none = url === null || typeof url === 'undefined';
         this.$el.toggleClass('pl-empty', none);
+    },
+
+    stopLoadingFile: function () {
+        var fileLoader = this.fileLoader;
+        if (fileLoader && fileLoader.state() === 'pending') {
+            fileLoader.reject();
+        }
+    },
+
+    loadPreview: function (file) {
+        var defer = $.Deferred();
+        var reader = new FileReader();
+        reader.onload = (function (file) {
+            return function (event) {
+                defer.resolve(file, event.target.result);
+            };
+        }(file));
+        reader.onerror  = function (event) {
+            defer.reject(event);
+        };
+        reader.readAsDataURL(file);
+        return defer.promise();
     },
 
     onClickRemoveImageHandler: function () {

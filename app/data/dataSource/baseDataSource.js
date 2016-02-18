@@ -555,23 +555,30 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        dataProvider.saveItem(item, function (data) {
-            if (!('isValid' in data) || data.isValid === true) {
-                //@TODO Что приходит в ответ на сохранение?????
-                ds.uploadFiles(data.Id)
-                    .then(function () {
-                        ds._excludeItemFromModifiedSet(item);
-                        ds._notifyAboutItemSaved(item, data, success);
-                    }, function (err) {
-                        logger.error(err);
-                        if (error) {
-                            error(err);
-                        }
-                    });
-            } else {
-                ds._notifyAboutFailValidationBySaving(item, data, error);
-            }
+        ds.extractFiles(item, function (files, itemWithoutFiles) {
+
+            dataProvider.saveItem(itemWithoutFiles, function (data) {
+                if (!('isValid' in data) || data.isValid === true) {
+                    //@TODO Что приходит в ответ на сохранение?????
+                    ds.uploadFiles(data.Id, files)
+                        .then(function () {
+                            ds._excludeItemFromModifiedSet(item);
+                            ds._notifyAboutItemSaved(item, data, success);
+                        }, function (err) {
+                            logger.error(err);
+                            if (error) {
+                                error(err);
+                            }
+                        });
+                } else {
+                    ds._notifyAboutFailValidationBySaving(item, data, error);
+                }
+            });
+
+
         });
+
+
     },
 
     _notifyAboutItemSaved: function (item, result, successHandler) {

@@ -253,7 +253,9 @@ window.InfinniUI.ObjectUtils = (function () {
 
                 if(propertyValue instanceof Date){
                     setPropertyByPath(target, propertyPathTerms, new Date(propertyValue));
-                }else{
+                } else if(propertyValue instanceof File){
+                    setPropertyByPath(target, propertyPathTerms, propertyValue);
+                } else{
                     setPropertyByPath(target, propertyPathTerms, _.clone(propertyValue));
                 }
             }

@@ -60,6 +60,35 @@ function DataProviderREST(urlConstructor, successCallback, failCallback) {
 
     };
 
+    //this.prepareItem = function prepareItem (item) {
+    //    var value, result = {};
+    //    for(var i in item) {
+    //        if (!item.hasOwnProperty(i)) {
+    //            continue;
+    //        }
+    //
+    //        value = item[i];
+    //        if (value !== null && typeof (value) === 'object') {
+    //            if (value.constructor === Date) {
+    //                result[i] = value
+    //            }
+    //            if (value.constructor === Object) {
+    //                //Plain object
+    //                result[i] = prepareItem(value);
+    //            } else {
+    //                //Object instance
+    //                continue;
+    //            }
+    //        } else {
+    //            result[i] = value;
+    //        }
+    //
+    //    }
+    //
+    //    return result;
+    //
+    //};
+
     this.setConfigId = function(configId){
         urlConstructor.setConfigId (configId);
     };
