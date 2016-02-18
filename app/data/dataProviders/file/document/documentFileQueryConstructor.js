@@ -43,9 +43,9 @@ DocumentUploadQueryConstructor.prototype.constructUploadFileRequest = function (
  */
 DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, instanceId, contentId) {
 
-    if (typeof instanceId === 'undefined' || instanceId === null) {
-        return null;
-    }
+    //if (typeof instanceId === 'undefined' || instanceId === null) {
+    //    return null;
+    //}
 
     var data = {
         Configuration: this.configId,
