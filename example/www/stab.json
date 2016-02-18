@@ -281,7 +281,10 @@
       "Panel":{
         "Header": "he",
         "Collapsible": true,
-        "Items":[{
+        "Items": {
+          "Source":"Test"
+        },
+        "ItemTemplate":{
           "Button": {
             "Text": "rer",
             "Action": {
@@ -329,7 +332,8 @@
                       {
                         "Name": "Param",
                         "Value": {
-                          "Source":"Test"
+                          "Source":"Test",
+                          "Property": "#"
                         }
                       }
                     ]
@@ -345,7 +349,7 @@
               }
             }
           }
-        }]
+        }
       }
   }]
 }
