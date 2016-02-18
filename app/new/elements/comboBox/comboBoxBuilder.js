@@ -24,31 +24,34 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         element.setAutocomplete(params.metadata.Autocomplete);
         element.setShowClear(params.metadata.ShowClear);
 
-        (function (binding) {
-            var name = element.getName();
+        if(params.metadata.Autocomplete){
+            (function (binding) {
+                var name = element.getName();
 
-            if(!name){
-                name = that.generateName();
-                element.setName(name);
-            }
-
-            var source = binding.getSource();
-            var fullSearchFilter = {
-                CriteriaType: criteriaType.FullTextSearch,
-                Property: "",
-                Value: {
-                    "Source": name,
-                    "Property": "search"
+                if(!name){
+                    name = that.generateName();
+                    element.setName(name);
                 }
-            };
 
-            if (!source.getFilterManager) {
-                return;
-            }
+                var source = binding.getSource();
+                var fullSearchFilter = {
+                    CriteriaType: criteriaType.FullTextSearch,
+                    Property: "",
+                    Value: {
+                        "Source": name,
+                        "Property": "search"
+                    }
+                };
 
-            source.addFilter([fullSearchFilter]);
+                if (!source.getFilterManager) {
+                    return;
+                }
 
-        })(data.itemsBinding);
+                source.addFilter([fullSearchFilter]);
+
+            })(data.itemsBinding);
+        }
+
     },
 
     initValueTemplate: function (binding, params) {
