@@ -283,17 +283,67 @@
         "Collapsible": true,
         "Items":[{
           "Button": {
-            "Text": "rer"
-          }
-        }, {
-          "Panel":{
-            "Header": "hehe",
-            
-            "Items":[{
-              "Button": {
-                "Text": "rerer"
+            "Text": "rer",
+            "Action": {
+              "AddAction": {
+                "LinkView": {
+                  "InlineView": {
+                    "View": {
+                      "Items": [
+                        {
+                          "TextBox": {
+                            "Value": {
+                              "Source": "Param",
+                              "Property": "",
+                              "Converter": {
+                                "ToElement": "{debugger; /*22*/ return 1;}"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "Button": {
+                            "Text": "Save",
+                            "Action": {
+                              "AcceptAction": {}
+                            }
+                          }
+                        }
+                      ],
+                      "Parameters": [
+                        {
+                          "Name": "Param"
+                        }
+                      ],
+                      "DataSources": [
+                        {
+                          "ObjectDataSource": {
+                            "Name": "MainDataSource"
+                          }
+                        }
+                      ]
+                    },
+                    "Text": "OpenDialog",
+                    "OpenMode": "Dialog",
+                    "Parameters": [
+                      {
+                        "Name": "Param",
+                        "Value": {
+                          "Source":"Test"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "DestinationValue": {
+                  "Source": "Test",
+                  "Property": ""
+                },
+                "SourceValue": {
+                  "Source": "MainDataSource"
+                }
               }
-            }]
+            }
           }
         }]
       }
