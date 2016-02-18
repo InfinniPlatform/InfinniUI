@@ -118,7 +118,7 @@ describe('FileProvider', function () {
 
             });
         });
-
+/*
         it('DocumentDataSource.saveItem with 1 file', function (done) {
             var builder = new ApplicationBuilder();
             var view = new View;
@@ -186,7 +186,7 @@ describe('FileProvider', function () {
                 });
             });
         });
-
+*/
     });
 
 });

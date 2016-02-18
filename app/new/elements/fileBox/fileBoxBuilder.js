@@ -44,26 +44,29 @@ _.extend(FileBoxBuilder.prototype, {
                 var fileProvider = ds.getFileProvider();
                 var url = null;
                 var info = {};
-                //Формируем URL изображения
-                if (value && value.Info && value.Info.ContentId && fileProvider) {
-                    info = value.Info;
-                    var instanceId = ds.lookupIdPropertyValue(sourceProperty);
-                    if (typeof instanceId !== 'undefined') {
-                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId, value.Info.ContentId);
+                //Формируем ссылку для получения файла
+                if (value) {
+                    if (value.Info && value.Info.ContentId && fileProvider) {
+                        url = fileProvider.getFileUrl(null, null, value.Info.ContentId);
+                        //element.setFileName(info.Name)
+                        //    .setFileSize(info.Size)
+                        //    .setFileTime(info.Time)
+                        //    .setFileType(info.Type);
+
+                    } else if (typeof value === 'string') {
+                        //@TODO Добавить проверку на валидность URI
+                        url = value;
+                    } else {
+                        //Native File instance from FileAPI
+                        url = value;
                     }
                 }
-
-                element.setFileName(info.Name)
-                    .setFileSize(info.Size)
-                    .setFileTime(info.Time)
-                    .setFileType(info.Type);
 
                 return url;
             }
         };
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
-            //valueProperty: 'url',
             converter: converter
         });
 
@@ -71,14 +74,14 @@ _.extend(FileBoxBuilder.prototype, {
 
         if (binding) {
             binding.setMode(BindingModes.toElement);
+            var ds = binding.getSource();
 
             params.element.onPropertyChanged('file', function (context, args) {
-                var ds = binding.getSource();
-                var property = args.property,
-                    file = args.newValue;
+                var file = args.newValue;
 
-                //Файл в очередь на загрузк
-                ds.setFile(file, binding.getSourceProperty());
+                if (file instanceof File) {
+                    ds.setProperty(binding.getSourceProperty(), args.newValue)
+                }
             })
         }
 

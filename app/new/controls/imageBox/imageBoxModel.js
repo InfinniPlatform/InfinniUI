@@ -53,42 +53,42 @@ var ImageBoxModel = ControlModel.extend( _.extend({
     },
 
     onChangeFileHandler: function (model, file) {
-        this.stopLoadingFile();
-        if (file) {
-            var fileLoader = this.loadPreview(file);
-
-            this.fileLoader = fileLoader;
-
-            fileLoader.then(function (file, content) {
-                model.set('value', content);
-            }, function (err) {
-                console.log(err);
-            });
-        } else {
-            model.set('value', null);
-        }
+        //this.stopLoadingFile();
+        //if (file) {
+        //    var fileLoader = this.loadPreview(file);
+        //
+        //    this.fileLoader = fileLoader;
+        //
+        //    fileLoader.then(function (file, content) {
+        //        model.set('value', content);
+        //    }, function (err) {
+        //        console.log(err);
+        //    });
+        //} else {
+        //    model.set('value', null);
+        //}
     },
 
-    stopLoadingFile: function () {
-        var fileLoader = this.fileLoader;
-        if (fileLoader && fileLoader.state() === 'pending') {
-            fileLoader.reject();
-        }
-    },
-
-    loadPreview: function (file) {
-        var defer = $.Deferred();
-        var reader = new FileReader();
-        reader.onload = (function (file) {
-            return function (event) {
-                defer.resolve(file, event.target.result);
-            };
-        }(file));
-        reader.onerror  = function (event) {
-            defer.reject(event);
-        };
-        reader.readAsDataURL(file);
-        return defer.promise();
-    }
+    //stopLoadingFile: function () {
+    //    var fileLoader = this.fileLoader;
+    //    if (fileLoader && fileLoader.state() === 'pending') {
+    //        fileLoader.reject();
+    //    }
+    //},
+    //
+    //loadPreview: function (file) {
+    //    var defer = $.Deferred();
+    //    var reader = new FileReader();
+    //    reader.onload = (function (file) {
+    //        return function (event) {
+    //            defer.resolve(file, event.target.result);
+    //        };
+    //    }(file));
+    //    reader.onerror  = function (event) {
+    //        defer.reject(event);
+    //    };
+    //    reader.readAsDataURL(file);
+    //    return defer.promise();
+    //}
 
 }, editorBaseModelMixin));

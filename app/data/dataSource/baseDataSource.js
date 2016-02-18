@@ -473,21 +473,22 @@ var BaseDataSource = Backbone.Model.extend({
         this._onPropertyChangesList
             .filter(function (name) {
                 var prop, matched = false;
+                var template = property + '.';
                 if (property === name) {
                     matched = false;
                 } else if (property.length && name.length){
                     if (isBindToSelectedItem(name) && isBindToSelectedItem(property)) {
-                        if (name.indexOf(property) === 0) {
+                        if (name.indexOf(template) === 0) {
                             matched = true;
                         }
                     } else  if (isBindToSelectedItem(name)) {
                         prop = resolveProperty(name);
-                        if (prop.indexOf(property) === 0) {
+                        if (prop.indexOf(template) === 0) {
                             matched = true;
                         }
                     } else if (isBindToSelectedItem(property)) {
                         prop = resolveProperty(property);
-                        if (name.indexOf(prop) === 0) {
+                        if (name.indexOf(template) === 0) {
                             matched = true;
                         }
                     }
@@ -555,23 +556,30 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        dataProvider.saveItem(item, function (data) {
-            if (!('isValid' in data) || data.isValid === true) {
-                //@TODO Что приходит в ответ на сохранение?????
-                ds.uploadFiles(data.Id)
-                    .then(function () {
-                        ds._excludeItemFromModifiedSet(item);
-                        ds._notifyAboutItemSaved(item, data, success);
-                    }, function (err) {
-                        logger.error(err);
-                        if (error) {
-                            error(err);
-                        }
-                    });
-            } else {
-                ds._notifyAboutFailValidationBySaving(item, data, error);
-            }
+        ds.extractFiles(item, function (files, itemWithoutFiles) {
+
+            dataProvider.saveItem(itemWithoutFiles, function (data) {
+                if (!('isValid' in data) || data.isValid === true) {
+                    //@TODO Что приходит в ответ на сохранение?????
+                    ds.uploadFiles(data.Id, files)
+                        .then(function () {
+                            ds._excludeItemFromModifiedSet(item);
+                            ds._notifyAboutItemSaved(item, data, success);
+                        }, function (err) {
+                            logger.error(err);
+                            if (error) {
+                                error(err);
+                            }
+                        });
+                } else {
+                    ds._notifyAboutFailValidationBySaving(item, data, error);
+                }
+            });
+
+
         });
+
+
     },
 
     _notifyAboutItemSaved: function (item, result, successHandler) {

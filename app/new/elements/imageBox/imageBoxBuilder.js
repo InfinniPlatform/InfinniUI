@@ -47,18 +47,23 @@ _.extend(ImageBoxBuilder.prototype, {
                 var url = null;
                 //Формируем URL изображения
 
-                if (value && value.Info && value.Info.ContentId && fileProvider) {
-                    var instanceId = ds.lookupIdPropertyValue(sourceProperty);
-                    if (typeof instanceId !== 'undefined') {
-                        url = fileProvider.getFileUrl(binding.getSourceProperty(), instanceId, value.Info.ContentId);
+                if (value) {
+                    if (value.Info && value.Info.ContentId && fileProvider) {
+                        url = fileProvider.getFileUrl(null, null, value.Info.ContentId);
+                    } else if (typeof value === 'string') {
+                        //@TODO Добавить проверку на валидность URI
+                        url = value;
+                    } else {
+                        //Native File instance from FileAPI
+                        url = value;
                     }
                 }
                 return url;
             }
+
         };
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
-            //valueProperty: 'url',
             converter: converter
         });
 
@@ -67,14 +72,13 @@ _.extend(ImageBoxBuilder.prototype, {
             binding.setMode(BindingModes.toElement);
 
             var ds = binding.getSource();
-            var fileProvider = ds.getFileProvider();
 
             params.element.onPropertyChanged('file', function (context, args) {
-                var property = args.property,
-                    file = args.newValue;
+                var file = args.newValue;
 
-                //Файл в очередь на загрузк
-                ds.setFile(file, binding.getSourceProperty());
+                if (file instanceof File) {
+                    ds.setProperty(binding.getSourceProperty(), args.newValue)
+                }
             });
 
             ds.onItemsUpdated(function (context, args) {
@@ -95,16 +99,6 @@ _.extend(ImageBoxBuilder.prototype, {
                     element.setValue(url);
                 }
             });
-
-            //params.element.onPropertyChanged('value', function (context, args) {
-            //    var url = null;
-            //    var value = args.newValue;
-            //    //Формируем URL изображения
-            //    if (value && value.ContentId && fileProvider) {
-            //        url = fileProvider.getFileUrl(binding.getSourceProperty(), value.ContentId);
-            //    }
-            //    params.element.setProperty('url', url);
-            //});
         }
 
     }

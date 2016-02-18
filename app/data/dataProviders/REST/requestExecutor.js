@@ -24,9 +24,9 @@ RequestExecutorDataStrategy.prototype.strategies = {
             error: function (err) {
                 if (err.status === 200) {
                     //@TODO Убрать этот костыль. Нужен т.к. запрос на загрузку файла возвращает 200 и пустой ответ!
-                    this.onSuccessRequest(onSuccess);
+                    this.onSuccessRequest(onSuccess)();
                 } else {
-                    this.onErrorRequest(onFail);
+                    this.onErrorRequest(onFail)(err);
                 }
             }.bind(this),
             data: JSON.stringify(requestData.args),
@@ -48,9 +48,9 @@ RequestExecutorDataStrategy.prototype.strategies = {
             error: function (err) {
                 if (err.status === 200) {
                     //@TODO Убрать этот костыль. Нужен т.к. запрос на загрузку файла возвращает 200 и пустой ответ!
-                    this.onSuccessRequest(onSuccess);
+                    this.onSuccessRequest(onSuccess)();
                 } else {
-                    this.onErrorRequest(onFail);
+                    this.onErrorRequest(onFail)(err);
                 }
             }.bind(this),
             processData: processData,
