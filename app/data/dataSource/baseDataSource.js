@@ -473,21 +473,22 @@ var BaseDataSource = Backbone.Model.extend({
         this._onPropertyChangesList
             .filter(function (name) {
                 var prop, matched = false;
+                var template = property + '.';
                 if (property === name) {
                     matched = false;
                 } else if (property.length && name.length){
                     if (isBindToSelectedItem(name) && isBindToSelectedItem(property)) {
-                        if (name.indexOf(property) === 0) {
+                        if (name.indexOf(template) === 0) {
                             matched = true;
                         }
                     } else  if (isBindToSelectedItem(name)) {
                         prop = resolveProperty(name);
-                        if (prop.indexOf(property) === 0) {
+                        if (prop.indexOf(template) === 0) {
                             matched = true;
                         }
                     } else if (isBindToSelectedItem(property)) {
                         prop = resolveProperty(property);
-                        if (name.indexOf(prop) === 0) {
+                        if (name.indexOf(template) === 0) {
                             matched = true;
                         }
                     }
