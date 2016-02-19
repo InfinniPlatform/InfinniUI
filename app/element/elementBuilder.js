@@ -111,7 +111,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var metadata = params.metadata;
         var propertyMetadata = metadata[propertyName];
         var element = params.element;
-        var lowerCasePropertyName = propertyName.toLowerCase();
+        var lowerCasePropertyName = this.lowerFirstSymbol(propertyName);
         var converter;
 
         if (!propertyMetadata || typeof propertyMetadata != 'object') {
@@ -189,6 +189,10 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             exchange.send(messageTypes.onToolTipHide.name, { source: element });
         });
 
+    },
+
+    lowerFirstSymbol: function(s){
+        return s[0].toLowerCase() + s.substr(1);
     }
 
 });

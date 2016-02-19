@@ -18,9 +18,11 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var element = params.element;
         var that = this;
 
+        window.cb = element;
+
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
-        element.setLabelText(params.metadata.LabelText);
+        this.initBindingToProperty(params, 'LabelText');
         element.setAutocomplete(params.metadata.Autocomplete);
         element.setShowClear(params.metadata.ShowClear);
 

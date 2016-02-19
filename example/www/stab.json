@@ -3,28 +3,15 @@
   "DataSources": [
     {
       "ObjectDataSource": {
-        "Name": "ObjectDataSource1",
-        "Items": []
-      }
-    },{
-      "ObjectDataSource": {
-        "Name": "ObjectDataSource2",
-        "Items": [
-          { "Value": { "Id": 2, "Display": "2G" }}
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
         "Name": "Test",
         "Items": [
-          {"Id": 1, "Num": "1", "Name": "One", "Group": "odd"},
-          {"Id": 2, "Num": "2", "Name": "Two", "Group": "even"},
-          {"Id": 3, "Num": "3", "Name": "Three", "Group": "odd"},
-          {"Id": 4, "Num": "4", "Name": "Four", "Group": "even"},
-          {"Id": 5, "Num": "5", "Name": "Five", "Group": "odd"},
-          {"Id": 6, "Num": "6", "Name": "Six", "Group": "even"},
-          {"Id": 7, "Num": "7", "Name": "Seven", "Group": "odd"}
+          {"Id": 1, "Name": "One", "Group": "odd"},
+          {"Id": 2, "Name": "Two", "Group": "even"},
+          {"Id": 3, "Name": "Three", "Group": "odd"},
+          {"Id": 4, "Name": "Four", "Group": "even"},
+          {"Id": 5, "Name": "Five", "Group": "odd"},
+          {"Id": 6, "Name": "Six", "Group": "even"},
+          {"Id": 7, "Name": "Seven", "Group": "odd"}
         ],
         "Query": [
           {
@@ -50,13 +37,16 @@
       }
     },
     {
-    "ObjectDataSource":{
-      "Name": "Clone",
-      "Items":{
-        "Source": "BloodGroupDataSource"
+      "ObjectDataSource":{
+        "Name": "Clone",
+        "Items":{
+          "Source": "BloodGroupDataSource",
+          "Converter":{
+            "ToElement":"{return [args.value[0]];}"
+          }
+        }
       }
-    }
-  },
+    },
     {
       "ObjectDataSource": {
         "Name": "Numbers",
@@ -172,6 +162,7 @@
                   "Items": [
                     {
                       "NumericBox": {
+                        "Name": "NB",
                         "Background": "Primary1",
                         "HintText": "I'm NumericBox hint",
                         "LabelText": "Numeric label",
@@ -180,11 +171,6 @@
                         "EditMask": {
                           "NumberEditMask": {
                             "Mask": "n3"
-                          }
-                        },
-                        "DisplayFormat": {
-                          "NumberFormat": {
-                            "Format": "n2"
                           }
                         },
                         "Value": {
@@ -216,19 +202,18 @@
             "ColumnSpan": 4,
             "Items": [
               {
-                "TextBox": {
-                  "Value":{
-                    "Source": "ObjectDataSource1",
-                    "Property": "0.Display"
+                "StackPanel":{
+                  "Items": {
+                    "Source": "Clone",
+                    "Property": ""
                   },
-                  "EditMask": {
-                    "NumberEditMask": {
-                      "Mask": "n3"
-                    }
-                  },
-                  "DisplayFormat": {
-                    "NumberFormat": {
-                      "Format": "n3"
+
+                  "ItemTemplate":{
+                    "Label":{
+                      "Value": {
+                        "Source": "Clone",
+                        "Property": "#.DisplayName"
+                      }
                     }
                   }
                 }
@@ -241,22 +226,10 @@
   },
     {
       "DataGrid": {
-        "MultiSelect": true,
         "Columns": [
           {
             "Header": "Id",
             "CellProperty": "Id"
-          },
-          {
-            "Header": "Id2",
-            "CellTemplate": {
-              "NumericBox": {
-                "Value": {
-                  "Source": "Test",
-                  "Property": "#.Num"
-                }
-              }
-            }
           },
           {
             "Header": "Name",
@@ -273,84 +246,29 @@
         ],
         "Items": {
           "Source": "Test"
-        },
-        "OnValueChanged": "{console.log(arguments);}"
+        }
       }
     },
     {
-      "Panel":{
-        "Header": "he",
-        "Collapsible": true,
-        "Items": {
-          "Source":"Test"
+      "ComboBox": {
+        "LabelText":{
+          "Source": "NB",
+          "Property": "value"
         },
-        "ItemTemplate":{
-          "Button": {
-            "Text": "rer",
-            "Action": {
-              "AddAction": {
-                "LinkView": {
-                  "InlineView": {
-                    "View": {
-                      "Items": [
-                        {
-                          "TextBox": {
-                            "Value": {
-                              "Source": "Param",
-                              "Property": "",
-                              "Converter": {
-                                "ToElement": "{debugger; /*22*/ return 1;}"
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "Button": {
-                            "Text": "Save",
-                            "Action": {
-                              "AcceptAction": {}
-                            }
-                          }
-                        }
-                      ],
-                      "Parameters": [
-                        {
-                          "Name": "Param"
-                        }
-                      ],
-                      "DataSources": [
-                        {
-                          "ObjectDataSource": {
-                            "Name": "MainDataSource"
-                          }
-                        }
-                      ]
-                    },
-                    "Text": "OpenDialog",
-                    "OpenMode": "Dialog",
-                    "Parameters": [
-                      {
-                        "Name": "Param",
-                        "Value": {
-                          "Source":"Test",
-                          "Property": "#"
-                        }
-                      }
-                    ]
-                  }
-                },
-                "DestinationValue": {
-                  "Source": "Test",
-                  "Property": ""
-                },
-                "SourceValue": {
-                  "Source": "MainDataSource"
-                }
-              }
+        "ItemTemplate": {
+          "Label": {
+            "Text": {
+              "Source": "Test",
+              "Property": "#.Name"
             }
           }
+        },
+        "Autocomplete": true,
+        "OnValueChanged": "{console.log(args);}",
+        "Items": {
+          "Source": "Test"
         }
       }
-  }]
+    }]
 }
 
