@@ -28,7 +28,6 @@ DataBindingBuilder.prototype.build = function (context, args) {
         }else{
             property = metadataProperty;
         }
-        result.bindSource(source, property);
 
         if(metadata.Mode){
             result.setMode(metadata.Mode);
@@ -45,6 +44,8 @@ DataBindingBuilder.prototype.build = function (context, args) {
             }
             result.setConverter(converter);
         }
+
+        result.bindSource(source, property);
     });
 
     return result;
