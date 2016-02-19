@@ -559,7 +559,7 @@ _.extend(Element.prototype, {
         additionParams = additionParams || {};
 
         if (element.parentView) {
-            context = element.parentView.context;
+            context = element.getView().context;
         }
 
         return function (message) {
