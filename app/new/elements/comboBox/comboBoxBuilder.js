@@ -18,8 +18,6 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var element = params.element;
         var that = this;
 
-        window.cb = element;
-
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
         this.initBindingToProperty(params, 'LabelText');
@@ -27,31 +25,64 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         element.setShowClear(params.metadata.ShowClear);
 
         if(params.metadata.Autocomplete){
-            (function (binding) {
-                var name = element.getName();
+            var name = element.getName();
 
-                if(!name){
-                    name = that.generateName();
-                    element.setName(name);
-                }
+            if(!name){
+                name = that.generateName();
+                element.setName(name);
+            }
 
-                var source = binding.getSource();
-                var fullSearchFilter = {
-                    CriteriaType: criteriaType.FullTextSearch,
-                    Property: "",
-                    Value: {
-                        "Source": name,
-                        "Property": "search"
+
+            if(params.metadata.AutocompleteProperty){
+                (function (binding) {
+
+
+                    var source = binding.getSource();
+                    var fullSearchFilter = {
+                        CriteriaType: criteriaType.IsContains,
+                        Property: params.metadata.AutocompleteProperty,
+                        Value: {
+                            "Source": name,
+                            "Property": "search",
+                            "Converter":{
+                                "ToElement":"{var val = args.value || ''; return val;}"
+                            }
+                        }
+                    };
+
+                    if (!source.getFilterManager) {
+                        return;
                     }
-                };
 
-                if (!source.getFilterManager) {
-                    return;
-                }
+                    source.addFilter([fullSearchFilter]);
 
-                source.addFilter([fullSearchFilter]);
+                })(data.itemsBinding);
 
-            })(data.itemsBinding);
+            }else{
+                (function (binding) {
+
+
+                    var source = binding.getSource();
+                    var fullSearchFilter = {
+                        CriteriaType: criteriaType.FullTextSearch,
+                        Property: "",
+                        Value: {
+                            "Source": name,
+                            "Property": "search",
+                            "Converter":{
+                                "ToElement":"{var val = args.value || ''; return val;}"
+                            }
+                        }
+                    };
+
+                    if (!source.getFilterManager) {
+                        return;
+                    }
+
+                    source.addFilter([fullSearchFilter]);
+
+                })(data.itemsBinding);
+            }
         }
 
     },
