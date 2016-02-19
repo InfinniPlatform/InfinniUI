@@ -556,10 +556,11 @@ _.extend(Element.prototype, {
 
     createControlEventHandler: function(element, handler, additionParams) {
         var context;
+        var parentView = element.getView();
         additionParams = additionParams || {};
 
-        if (element.parentView) {
-            context = element.getView().context;
+        if (parentView) {
+            context = parentView.context;
         }
 
         return function (message) {
