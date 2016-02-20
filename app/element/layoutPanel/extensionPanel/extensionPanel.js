@@ -18,6 +18,10 @@ _.extend(ExtensionPanel.prototype, {
         return this.control.set('parameters', parameters);
     },
 
+    getParameters: function () {
+        return this.control.get('parameters');
+    },
+
     setContext: function (context) {
         this.control.set('context', context);
     }

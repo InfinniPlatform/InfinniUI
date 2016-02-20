@@ -18,7 +18,16 @@ function ParameterBuilder() {
             }else{
                 parameter.setValue(metadata['Value']);
             }
+
+            if (metadata.OnPropertyChanged) {
+                parameter.onPropertyChanged('', function (context, args) {
+                    var scriptExecutor = new ScriptExecutor(parentView);
+                    return scriptExecutor.executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
+                });
+            }
         }
+
+
 
         return parameter;
     };
