@@ -454,17 +454,17 @@ _.extend(NumberEditMask.prototype, {
         var txt = text.slice(0, index);
 
         var i = (/\d/.test(txt)) ? txt.length - txt.split('').reverse().join('').search(/\d/) - 1 : 0;
-        if (item.value === 0) {
+        
+        item.value = this.parseText(text.slice(0, i) + text.slice(i + 1), item.value);
+        item.text = this.formatMask(item.value, item.mask);
+
+        position = fractional ? position - 1 : position + item.text.length - text.length;
+
+        if (item.value === 0 && position <= 1) {
             item.value = null;
             item.text = this.formatMask(item.value, item.mask);
             position = left;
-        } else {
-            item.value = this.parseText(text.slice(0, i) + text.slice(i + 1), item.value);
-            item.text = this.formatMask(item.value, item.mask);
-            position = fractional ? position - 1 : position + item.text.length - text.length;
-
         }
-
 
         return position;
     },
