@@ -42,14 +42,10 @@ _.extend(DataNavigationBuilder.prototype, {
     findDataSource: function (params) {
         var
             name = params.metadata.DataSource,
-            parent = params.parent,
-            view,
+            view = params.parentView,
             context,
             dataSource;
-
-        if (parent) {
-            view = parent.getView()
-        }
+        
         if (name && view) {
             context = view.getContext();
             dataSource = context.dataSources[name];
