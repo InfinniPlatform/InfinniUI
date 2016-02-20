@@ -30,6 +30,10 @@ _.extend(EditAction.prototype, {
     setItem: function(editDataSource, selectedItem){
         var item = _.clone( selectedItem );
 
+        if(item === undefined || item === null){
+            item = {};
+        }
+
         editDataSource.setItems( [item] );
         editDataSource.setSelectedItem( item );
     },
