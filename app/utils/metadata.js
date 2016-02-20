@@ -11,3 +11,7 @@ InfinniUI.Metadata.isValidValue = function (value, metadata) {
 
     return result;
 };
+
+InfinniUI.Metadata.isBindingMetadata = function(metadata){
+    return $.isPlainObject(metadata) && 'Source' in metadata;
+};

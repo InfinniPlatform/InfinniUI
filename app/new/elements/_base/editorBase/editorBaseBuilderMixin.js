@@ -44,18 +44,23 @@ var editorBaseBuilderMixin = {
         }
 
         if (metadata.Value !== undefined) {
-            var buildParams = {
-                parentView: params.parentView,
-                basePathOfProperty: params.basePathOfProperty
-            };
+            if(InfinniUI.Metadata.isBindingMetadata(metadata.Value)){
+                var buildParams = {
+                    parentView: params.parentView,
+                    basePathOfProperty: params.basePathOfProperty
+                };
 
-            var dataBinding = params.builder.buildBinding(metadata.Value, buildParams);
-            if (bindingOptions.converter) {
-                dataBinding.setConverter(bindingOptions.converter);
+                var dataBinding = params.builder.buildBinding(metadata.Value, buildParams);
+                if (bindingOptions.converter) {
+                    dataBinding.setConverter(bindingOptions.converter);
+                }
+                dataBinding.bindElement(params.element, bindingOptions.valueProperty);
+
+                this.initValidationResultText(element, dataBinding);
+
+            }else{
+                params.element.setValue(metadata.Value);
             }
-            dataBinding.bindElement(params.element, bindingOptions.valueProperty);
-
-            this.initValidationResultText(element, dataBinding);
         }
 
         return {

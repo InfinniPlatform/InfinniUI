@@ -12,7 +12,7 @@ function ParameterBuilder() {
             var parameter = new Parameter({view: parentView});
             parameter.setName(metadata['Name']);
 
-            if(this.isBindingMetadata(metadata['Value'])){
+            if(InfinniUI.Metadata.isBindingMetadata(metadata['Value'])){
                 var dataBinding = builder.buildBinding(metadata['Value'], {parentView: parentView, basePathOfProperty: basePathOfProperty});
                 dataBinding.bindElement(parameter, '');
             }else{
@@ -21,9 +21,5 @@ function ParameterBuilder() {
         }
 
         return parameter;
-    };
-
-    this.isBindingMetadata = function(metadata){
-        return $.isPlainObject(metadata) && 'Source' in metadata;
     };
 }
