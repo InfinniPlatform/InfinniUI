@@ -275,7 +275,7 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
     window.testHelpers.waitCondition(haveField, checkValue, fail);
 });
 
-this.Then(/^элемент "([^"]*)" будет недоступным для редактирования$/, function (elementName, next) {
+this.Then(/^элемент "([^"]*)" будет недоступным$/, function (elementName, next) {
     var haveElement = function () {
         return window.testHelpers.getControlByName(elementName) != undefined;
     };
