@@ -163,7 +163,7 @@ this.Then(/^система отобразит список валидацион�
 this.Then(/^система отобразит вкладку "([^"]*)" на панели "([^"]*)"$/, function (fieldText, panelName, next) {
     var havePanel = function () {
         return window.testHelpers.getControlByName(panelName) != undefined;
-    }
+    };
     var success = function () {
         var panel = window.testHelpers.getControlByName(panelName);
         var selectedItem = panel.getSelectedItem();
@@ -173,10 +173,10 @@ this.Then(/^система отобразит вкладку "([^"]*)" на па
         } else {
             next(new Error(fieldText + ' not selected!'));
         }
-    }
+    };
     var fail = function () {
         next(new Error(panelName + ' not found!'));
-    }
+    };
 
     window.testHelpers.waitCondition(havePanel, success, fail);
 });
@@ -188,7 +188,7 @@ this.Then(/^система не отобразит валидационных с
     };
     var success = function () {
         next();
-    }
+    };
     var fail = function () {
         var msgs = window.configWindow.$("#toast-container .toast-message");
         var line = "";
@@ -204,7 +204,7 @@ this.Then(/^система не отобразит валидационных с
 this.Then(/^я не увижу элемент "([^"]*)"$/, function (elementName, next) {
     var haveElement = function () {
         return window.testHelpers.getControlByName(elementName) != undefined;
-    }
+    };
     var wasFound = function () {
         var element = window.testHelpers.getControlByName(elementName);
 
@@ -214,10 +214,10 @@ this.Then(/^я не увижу элемент "([^"]*)"$/, function (elementName
             var errorString = !!element.getVisible ? 'was found' : 'getVisible is undefined';
             next(new Error(elementName + ': ' + errorString));
         }
-    }
+    };
     var wasntFound = function () {
         next();
-    }
+    };
 
     window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
@@ -225,7 +225,7 @@ this.Then(/^я не увижу элемент "([^"]*)"$/, function (elementName
 this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function (elementName, elementText, next) {
     var haveElement = function () {
         return window.testHelpers.getControlByName(elementName) != undefined;
-    }
+    };
     var wasFound = function () {
         var element = window.testHelpers.getControlByName(elementName);
 
@@ -257,10 +257,10 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
         } catch (err) {
             next(err);
         }
-    }
+    };
     var wasntFound = function () {
         next();
-    }
+    };
 
     window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
@@ -268,7 +268,7 @@ this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]
 this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function (elementName, elementText, next) {
     var haveElement = function () {
         return window.testHelpers.getControlByName(elementName) != undefined;
-    }
+    };
     var wasFound = function () {
         var element = window.testHelpers.getControlByName(elementName);
 
@@ -297,10 +297,10 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
         } catch (err) {
             next(err);
         }
-    }
+    };
     var wasntFound = function () {
         next(new Error(elementName + ' not found!'));
-    }
+    };
 
     window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
@@ -308,7 +308,7 @@ this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/
 this.Then(/^я увижу элемент "([^"]*)"$/, function (elementName, next) {
     var haveElement = function () {
         return window.testHelpers.getControlByName(elementName) != undefined;
-    }
+    };
     var wasFound = function () {
         var element = window.testHelpers.getControlByName(elementName);
 
@@ -318,10 +318,10 @@ this.Then(/^я увижу элемент "([^"]*)"$/, function (elementName, nex
         } catch (err) {
             next(err);
         }
-    }
+    };
     var wasntFound = function () {
         next(new Error(elementName + ' not found!'));
-    }
+    };
 
     window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
