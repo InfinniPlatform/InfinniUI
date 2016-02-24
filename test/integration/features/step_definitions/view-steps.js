@@ -1,17 +1,16 @@
-
 // Given
 
 this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewName, next) {
     window.testHelpers.waitView(viewName,
-		function () {
-		    window.currentView = window.configWindow.contextApp.context.controls[viewName];
-		    window.currentViewContext = window.currentView.getContext();
-		    next();
-		},
-		function () {
-		    next(new Error(viewName + ' not found'));
-		}
-	);
+        function () {
+            window.currentView = window.configWindow.contextApp.context.controls[viewName];
+            window.currentViewContext = window.currentView.getContext();
+            next();
+        },
+        function () {
+            next(new Error(viewName + ' not found'));
+        }
+    );
 });
 
 
@@ -19,15 +18,15 @@ this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewNa
 
 this.Then(/^система отобразит экран "([^"]*)"$/, function (viewName, next) {
     window.testHelpers.waitView(viewName,
-		function () {
-		    window.currentView = window.configWindow.contextApp.context.controls[viewName];
-		    window.currentViewContext = window.currentView.getContext();
-		    next();
-		},
-		function () {
-		    next(new Error(viewName + ' not found'));
-		}
-	);
+        function () {
+            window.currentView = window.configWindow.contextApp.context.controls[viewName];
+            window.currentViewContext = window.currentView.getContext();
+            next();
+        },
+        function () {
+            next(new Error(viewName + ' not found'));
+        }
+    );
 });
 
 this.Then(/^система отобразит окно-сообщение "([^"]*)"$/, function (message, next) {
@@ -56,265 +55,273 @@ this.Then(/^система отобразит окно-сообщение "([^"]
 
 this.Then(/^система отобразит список кнопок: (.*?)$/, function (values, next) {
     var extValues = values
-						.split(",")
-						.map(function (item) {
-						    var result = item.trim();
-						    return result.substring(1, result.length - 1); //Удаляются кавычки
-						});
+        .split(",")
+        .map(function (item) {
+            var result = item.trim();
+            return result.substring(1, result.length - 1); //Удаляются кавычки
+        });
 
     var actValues = window.configWindow.$(".btn-group.open .dropdown-menu > li .btntext")
-					.map(function (index, item) {
-					    return $(item).text();
-					})
-					.toArray();
+        .map(function (index, item) {
+            return $(item).text();
+        })
+        .toArray();
 
-    try{
-		chai.assert.deepEqual(actValues, extValues);
-		next();
-	}catch(err){
-		next(err);
-	}
+    try {
+        chai.assert.deepEqual(actValues, extValues);
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
 this.Then(/^система отобразит модальное окно "([^"]*)"$/, function (dialogView, next) {
     window.testHelpers.waitModalView(dialogView,
-		function () {
-		    window.currentView = window.currentView.context.controls[dialogView] || window.configWindow.contextApp.context.controls[dialogView];
-		    window.currentViewContext = window.currentView.getContext();
-		    next();
-		},
-		function () {
-		    next(new Error(dialogView + ' not found'));
-		}
-	);
+        function () {
+            window.currentView = window.currentView.context.controls[dialogView] || window.configWindow.contextApp.context.controls[dialogView];
+            window.currentViewContext = window.currentView.getContext();
+            next();
+        },
+        function () {
+            next(new Error(dialogView + ' not found'));
+        }
+    );
 });
 
-this.When(/^я закрою текущее модальное окно$/, function(next){
-	if(window.currentView.close != undefined){
-		var previousView = window.currentView.getView();
+this.When(/^я закрою текущее модальное окно$/, function (next) {
+    if (window.currentView.close != undefined) {
+        var previousView = window.currentView.getView();
 
         window.currentView.close();
         window.currentView = previousView;
 
-		next();
-	}else{
-		next(new Error('Method close() not found!'));
-	}
+        next();
+    } else {
+        next(new Error('Method close() not found!'));
+    }
 });
 
 this.Then(/^система отобразит значения выпадающего списка: (.*?)$/, function (values, next) {
     var extValues = values
-						.split(",")
-						.map(function (item) {
-						    var result = item.trim();
-						    return result.substring(1, result.length - 1); //Удаляются кавычки
-						});
+        .split(",")
+        .map(function (item) {
+            var result = item.trim();
+            return result.substring(1, result.length - 1); //Удаляются кавычки
+        });
 
     var actValues = window.configWindow.$(".select2-results > li .select2-result-label")
-					.map(function (index, item) {
-					    return $(item).text();
-					})
-					.toArray();
+        .map(function (index, item) {
+            return $(item).text();
+        })
+        .toArray();
 
-    try{
-		chai.assert.deepEqual(actValues, extValues);
-    	next();
-	}catch(err){
-	    next(err);
-	}
+    try {
+        chai.assert.deepEqual(actValues, extValues);
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
-this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function(msgs, next){
-	var getMessages = function(arrayString){
-		return arrayString.split('", ').map(function(item){
-			var result = item.trim();
-			return result.replace(/"/g, "").replace(/'/g, '"');
-		});
-	};
+this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function (msgs, next) {
+    var getMessages = function (arrayString) {
+        return arrayString.split('", ').map(function (item) {
+            var result = item.trim();
+            return result.replace(/"/g, "").replace(/'/g, '"');
+        });
+    };
 
-	window.toastrActualMessageCount = getMessages(msgs).length;
+    window.toastrActualMessageCount = getMessages(msgs).length;
 
-	var haveToastr = function(){
-		return window.toastrMessageCount == window.toastrActualMessageCount;
-	};
-	var success = function(){
-		var actual = window.configWindow.$("#toast-container .toast-message");
-		var actualMessages = [];
+    var haveToastr = function () {
+        return window.toastrMessageCount == window.toastrActualMessageCount;
+    };
+    var success = function () {
+        var actual = window.configWindow.$("#toast-container .toast-message");
+        var actualMessages = [];
 
-		for(var i = 0;i < actual.length;i++){
-			actualMessages.push(actual[i].innerText);
-		}
+        for (var i = 0; i < actual.length; i++) {
+            actualMessages.push(actual[i].innerText);
+        }
 
-		var messages = getMessages(msgs);
-		
-		try{
-			chai.assert.deepEqual(actualMessages, messages);
-			window.toastrMessageCount = 0;
-			next();
-		}catch(err){
-			next(err);
-		}
-	};
-	var fail = function(){
-		next(new Error("Ожидается: " + window.toastrActualMessageCount + " Реально: " + window.toastrMessageCount + " сообщений"));
-	};
-	window.testHelpers.waitCondition(haveToastr, success, fail);
+        var messages = getMessages(msgs);
+
+        try {
+            chai.assert.deepEqual(actualMessages, messages);
+            window.toastrMessageCount = 0;
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error("Ожидается: " + window.toastrActualMessageCount + " Реально: " + window.toastrMessageCount + " сообщений"));
+    };
+    window.testHelpers.waitCondition(haveToastr, success, fail);
 });
 
-this.Then(/^система отобразит вкладку "([^"]*)" на панели "([^"]*)"$/, function(fieldText, panelName, next){
-	var havePanel = function(){
-		return window.testHelpers.getControlByName(panelName) != undefined;
-	}
-	var success = function(){
-		var panel = window.testHelpers.getControlByName(panelName);
-		var selectedItem = panel.getSelectedItem();
+this.Then(/^система отобразит вкладку "([^"]*)" на панели "([^"]*)"$/, function (fieldText, panelName, next) {
+    var havePanel = function () {
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }
+    var success = function () {
+        var panel = window.testHelpers.getControlByName(panelName);
+        var selectedItem = panel.getSelectedItem();
 
-		if(selectedItem.getText() == fieldText){
-			next();
-		}else{
-			next(new Error(fieldText + ' not selected!'));
-		}
-	}
-	var fail = function(){
-		next(new Error(panelName + ' not found!'));
-	}
+        if (selectedItem.getText() == fieldText) {
+            next();
+        } else {
+            next(new Error(fieldText + ' not selected!'));
+        }
+    }
+    var fail = function () {
+        next(new Error(panelName + ' not found!'));
+    }
 
-	window.testHelpers.waitCondition(havePanel, success, fail);
+    window.testHelpers.waitCondition(havePanel, success, fail);
 });
 
-this.Then(/^система не отобразит валидационных сообщений$/, function(next){
-	var haveToastr = function(){
-		return 	window.configWindow.$("#toast-container") !== null &&
-				window.configWindow.$("#toast-container").length != 0;
-	};
-	var success = function(){
-		next();
-	}
-	var fail = function(){
-		var msgs = window.configWindow.$("#toast-container .toast-message");
-		var line = "";
-		for(var i = 0;i < msgs.length;i++){
-			line += msgs[i].innerHTML + ", ";
-		}
-		next(new Error("Было обнаружено одно или несколько окон: " + line.substring(0, line.length - 2)));
-	};
-	
-	window.testHelpers.waitCondition(haveToastr, fail, success);
+this.Then(/^система не отобразит валидационных сообщений$/, function (next) {
+    var haveToastr = function () {
+        return window.configWindow.$("#toast-container") !== null &&
+            window.configWindow.$("#toast-container").length != 0;
+    };
+    var success = function () {
+        next();
+    }
+    var fail = function () {
+        var msgs = window.configWindow.$("#toast-container .toast-message");
+        var line = "";
+        for (var i = 0; i < msgs.length; i++) {
+            line += msgs[i].innerHTML + ", ";
+        }
+        next(new Error("Было обнаружено одно или несколько окон: " + line.substring(0, line.length - 2)));
+    };
+
+    window.testHelpers.waitCondition(haveToastr, fail, success);
 });
 
-this.Then(/^я не увижу элемент "([^"]*)"$/, function(elementName, next){
-	var haveElement = function(){
-		return window.testHelpers.getControlByName(elementName) != undefined;
-	}
-	var wasFound = function(){
-		var element = window.testHelpers.getControlByName(elementName);
-		
-		if(!!element.getVisible && !element.getVisible()){
-			next();
-		}else{
-			var errorString = !!element.getVisible ? 'was found' : 'getVisible is undefined';
-			next(new Error(elementName + ': ' + errorString));
-		}
-	}
-	var wasntFound = function(){
-		next();
-	}
-	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+this.Then(/^я не увижу элемент "([^"]*)"$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    }
+    var wasFound = function () {
+        var element = window.testHelpers.getControlByName(elementName);
+
+        if (!!element.getVisible && !element.getVisible()) {
+            next();
+        } else {
+            var errorString = !!element.getVisible ? 'was found' : 'getVisible is undefined';
+            next(new Error(elementName + ': ' + errorString));
+        }
+    }
+    var wasntFound = function () {
+        next();
+    }
+
+    window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
 
-this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
-	var haveElement = function(){
-		return window.testHelpers.getControlByName(elementName) != undefined;
-	}
-	var wasFound = function(){
-		var element = window.testHelpers.getControlByName(elementName);
+this.Then(/^я не увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function (elementName, elementText, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    }
+    var wasFound = function () {
+        var element = window.testHelpers.getControlByName(elementName);
 
-		var actText = element.getText();
+        var actText = element.getText();
 
-		if((actText === undefined || actText === null) && element.getValue){
-			actText = element.getValue();
-		}
+        if ((actText === undefined || actText === null) && element.getValue) {
+            actText = element.getValue();
+        }
 
-		if(element.getDisplayValue){
-			actText = element.getDisplayValue();
-		}
-		
-		try{
-			if(actText === undefined || actText === null){
-				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
-				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
-			}
+        if (element.getDisplayValue) {
+            actText = element.getDisplayValue();
+        }
 
-			if(actText.trim() != elementText){
-				next();
-			}else{
-				next(new Error(elementName + ' was found!'));
-			}
-		}catch(err){
-			next(err);
-		}
-	}
-	var wasntFound = function(){
-		next();
-	}
-	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+        try {
+            if (actText === undefined || actText === null) {
+                // TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+                actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+            }
+
+            if (actText.trim) {
+                actText = actText.trim();
+            }
+
+            if (actText != elementText) {
+                next();
+            } else {
+                next(new Error(elementName + ' was found!'));
+            }
+        } catch (err) {
+            next(err);
+        }
+    }
+    var wasntFound = function () {
+        next();
+    }
+
+    window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
 
-this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function(elementName, elementText, next){
-	var haveElement = function(){
-		return window.testHelpers.getControlByName(elementName) != undefined;
-	}
-	var wasFound = function(){
-		var element = window.testHelpers.getControlByName(elementName);
-		
-		var actText = element.getText();
+this.Then(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function (elementName, elementText, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    }
+    var wasFound = function () {
+        var element = window.testHelpers.getControlByName(elementName);
 
-		if((actText === undefined || actText === null) && element.getValue){
-			actText = element.getValue();
-		}
+        var actText = element.getText();
 
-		if(element.getDisplayValue){
-			actText = element.getDisplayValue();
-		}
+        if ((actText === undefined || actText === null) && element.getValue) {
+            actText = element.getValue();
+        }
 
-		try{
-			if(actText === undefined || actText === null){
-				// TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
-				actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
-			}
-			
-			chai.assert.equal(actText.trim(), elementText);
-			next();
-		}catch(err){
-			next(err);
-		}
-	}
-	var wasntFound = function(){
-		next(new Error(elementName + ' not found!'));
-	}
-	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+        if (element.getDisplayValue) {
+            actText = element.getDisplayValue();
+        }
+
+        try {
+            if (actText === undefined || actText === null) {
+                // TODO: Текст может быть определен в элементе, который лежит внутри данного элемента
+                actText = element.findAllChildrenByType('Label')[0].getDisplayValue();
+            }
+
+            if (actText.trim) {
+                actText = actText.trim();
+            }
+
+            chai.assert.equal(actText, elementText);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }
+    var wasntFound = function () {
+        next(new Error(elementName + ' not found!'));
+    }
+
+    window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
 
-this.Then(/^я увижу элемент "([^"]*)"$/, function(elementName, next){
-	var haveElement = function(){
-		return window.testHelpers.getControlByName(elementName) != undefined;
-	}
-	var wasFound = function(){
-		var element = window.testHelpers.getControlByName(elementName);
-		
-		try{
-			chai.assert.isTrue(element.getVisible(), elementName + ': Visible == false');
-			next();
-		}catch(err){
-			next(err);
-		}
-	}
-	var wasntFound = function(){
-		next(new Error(elementName + ' not found!'));
-	}
-	
-	window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+this.Then(/^я увижу элемент "([^"]*)"$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    }
+    var wasFound = function () {
+        var element = window.testHelpers.getControlByName(elementName);
+
+        try {
+            chai.assert.isTrue(element.getVisible(), elementName + ': Visible == false');
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }
+    var wasntFound = function () {
+        next(new Error(elementName + ' not found!'));
+    }
+
+    window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
 });
