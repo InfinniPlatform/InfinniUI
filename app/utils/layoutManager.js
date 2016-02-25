@@ -265,7 +265,8 @@ var layoutManager = {
             return;
         }
 
-        $body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
+        //@TODO Зачем задавалась минимальная высота диалогов?
+        //$body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
         var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
 
         //Высота для содержимого окна диалога
