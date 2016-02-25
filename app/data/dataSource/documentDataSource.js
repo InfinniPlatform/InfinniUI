@@ -90,6 +90,38 @@ var DocumentDataSource = BaseDataSource.extend({
 
         dataProvider.setDeleteAction(deleteActionName);
         this.set('deleteActionName', deleteActionName);
+    },
+
+    saveItem: function (item, success, error) {
+        var
+            dataProvider = this.get('dataProvider'),
+            ds = this;
+
+        BaseDataSource.prototype.saveItem.call(this, item, function () {
+            uploadFiles(success, error);
+        }, error);
+
+        function uploadFiles (success, error) {
+            ds.extractFiles(item, function (files, itemWithoutFiles) {
+                dataProvider.saveItem(itemWithoutFiles, function (data) {
+                    if (!('isValid' in data) || data.isValid === true) {
+                        //@TODO Что приходит в ответ на сохранение?????
+                        ds.uploadFiles(data.Id, files)
+                            .then(function () {
+                                ds._excludeItemFromModifiedSet(item);
+                                ds._notifyAboutItemSaved(item, data, success);
+                            }, function (err) {
+                                logger.error(err);
+                                if (error) {
+                                    error(err);
+                                }
+                            });
+                    } else {
+                        ds._notifyAboutFailValidationBySaving(item, data, error);
+                    }
+                });
+            });
+        }
     }
 
 });

@@ -556,30 +556,14 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        ds.extractFiles(item, function (files, itemWithoutFiles) {
-
-            dataProvider.saveItem(itemWithoutFiles, function (data) {
-                if (!('isValid' in data) || data.isValid === true) {
-                    //@TODO Что приходит в ответ на сохранение?????
-                    ds.uploadFiles(data.Id, files)
-                        .then(function () {
-                            ds._excludeItemFromModifiedSet(item);
-                            ds._notifyAboutItemSaved(item, data, success);
-                        }, function (err) {
-                            logger.error(err);
-                            if (error) {
-                                error(err);
-                            }
-                        });
-                } else {
-                    ds._notifyAboutFailValidationBySaving(item, data, error);
-                }
-            });
 
 
-        });
+        if (typeof success === 'function') {
+            var context = this.getContext(),
+                argument = this._getArgumentTemplate();
 
-
+            success.call(null, context, argument);
+        }
     },
 
     _notifyAboutItemSaved: function (item, result, successHandler) {
