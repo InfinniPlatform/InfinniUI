@@ -174,18 +174,26 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 parent: element,
                 parentView: params.parentView
             };
-            tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
+
+            if (typeof metadata.ToolTip === 'string') {
+                tooltip = builder.buildType("Label", {
+                    "Text": metadata.ToolTip
+                }, argumentForBuilder);
+            } else {
+                tooltip = builder.buildType("ToolTip", metadata.ToolTip, argumentForBuilder);
+            }
+
             element.setToolTip(tooltip);
             exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
         }
 
-        element.onShowToolTip(function () {
+        element.onShowToolTip && element.onShowToolTip(function () {
             if (tooltip) {
                 exchange.send(messageTypes.onToolTipShow.name, { source: element, content: tooltip.render() });
             }
         });
 
-        element.onHideToolTip(function () {
+        element.onHideToolTip && element.onHideToolTip(function () {
             exchange.send(messageTypes.onToolTipHide.name, { source: element });
         });
 

@@ -1,30 +1,29 @@
-
 // When
 
 this.When(/^я введу в текстовое поле "([^"]*)" значение "([^"]*)"$/, function (fieldName, value, next) {
-    var haveField = function(){
+    var haveField = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
-    }
-    var success = function(){
+    };
+    var success = function () {
         try {
             window.testHelpers.getControlByName(fieldName).setValue(value);
             next();
         } catch (err) {
             next(err);
         }
-    }
-    var fail = function(){
+    };
+    var fail = function () {
         next(new Error(fieldName + ' not found!'));
-    }
+    };
     window.testHelpers.waitCondition(haveField, success, fail);
 });
 
 
 this.When(/^я введу в числовое поле "([^"]*)" значение "([^"]*)"$/, function (fieldName, value, next) {
-    var haveField = function(){
+    var haveField = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
-    }
-    var success = function(){
+    };
+    var success = function () {
         try {
             var numValue = parseInt(value);
             chai.assert.isNumber(numValue);
@@ -35,38 +34,38 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
         } catch (err) {
             next(err);
         }
-    }
-    var fail = function(){
+    };
+    var fail = function () {
         next(new Error(fieldName + ' not found!'));
-    }
+    };
     window.testHelpers.waitCondition(haveField, success, fail);
 });
 
 this.When(/^я введу в поле типа дата "([^"]*)" значение "([^"]*)"$/, function (fieldName, dateString, next) {
-    var haveField = function(){
+    var haveField = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
-    }
-    var success = function(){
+    };
+    var success = function () {
         try {
-			var date = dateString.match(/[а-я]*/i)[0];
-			var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+            var date = dateString.match(/[а-я]*/i)[0];
+            var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
 
-			if(date === "Сегодня" && !isNaN(iterator)){
-				var value = window.testHelpers.getDate(iterator);
-				window.testHelpers.getControlByName(fieldName).setValue(value);
-			}else{
+            if (date === "Сегодня" && !isNaN(iterator)) {
+                var value = window.testHelpers.getDate(iterator);
+                window.testHelpers.getControlByName(fieldName).setValue(value);
+            } else {
                 date = window.testHelpers.getFormattedDate(dateString);
-				window.testHelpers.getControlByName(fieldName).setValue(date);
-			}
+                window.testHelpers.getControlByName(fieldName).setValue(date);
+            }
 
             next();
         } catch (err) {
             next(err);
         }
-    }
-    var fail = function(){
+    };
+    var fail = function () {
         next(new Error(fieldName + ' not found!'));
-    }
+    };
     window.testHelpers.waitCondition(haveField, success, fail);
 });
 
@@ -110,29 +109,29 @@ this.Then(/^значение в поле типа дата "([^"]*)" равно 
 
             var actValue = field.getValue();
 
-            if(field.getDisplayValue){
+            if (field.getDisplayValue) {
                 actValue = field.getDisplayValue();
             }
-            
-            if(typeof actValue == "string"){
+
+            if (typeof actValue == "string") {
                 actValue = window.testHelpers.convertDate(actValue);
                 actValue = new Date(actValue).getTime();
-            }else{
+            } else {
                 var standartDate = window.testHelpers.getStandartDate(actValue);
                 var formattedDate = window.testHelpers.getFormattedDate(standartDate);
                 actValue = new Date(formattedDate).getTime();
             }
-            
-			var date = dateString.match(/[а-я]*/i)[0];
-			var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
-			
-			if(date === "Сегодня" && !isNaN(iterator)){
-				var value = window.testHelpers.getDate(iterator);
-				chai.assert.equal(new Date(value).getTime(), actValue);
-			}else{
+
+            var date = dateString.match(/[а-я]*/i)[0];
+            var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+
+            if (date === "Сегодня" && !isNaN(iterator)) {
+                var value = window.testHelpers.getDate(iterator);
+                chai.assert.equal(new Date(value).getTime(), actValue);
+            } else {
                 date = window.testHelpers.getFormattedDate(dateString);
-				chai.assert.equal(new Date(date).getTime(), actValue);
-			}
+                chai.assert.equal(new Date(date).getTime(), actValue);
+            }
 
             next();
         } catch (err) {
@@ -174,50 +173,50 @@ this.Then(/^значение в выпадающем списке "([^"]*)" ра
 });
 
 this.Then(/^флаг "([^"]*)" будет иметь значение "([^"]*)"$/, function (flagName, value, next) {
-    var haveFlag = function(){
+    var haveFlag = function () {
         return window.testHelpers.getControlByName(flagName) != undefined;
-    }
-    var success = function(){
+    };
+    var success = function () {
         var flag = window.testHelpers.getControlByName(flagName);
 
-        try{
+        try {
             chai.assert.isDefined(flag);
             chai.assert.equal(flag.getValue(), JSON.parse(value));
             next();
-        }catch(err){
+        } catch (err) {
             next(err);
         }
-    }
-    var fail = function(){
+    };
+    var fail = function () {
         next(new Error(flagName + ' not found!'));
-    }
+    };
     window.testHelpers.waitCondition(haveFlag, success, fail);
 });
 
-this.When(/^я поменяю значение флага "([^"]*)" на "([^"]*)"$/, function(flagName, value, next){
-	var haveFlag = function(){
-		return window.testHelpers.getControlByName(flagName) != undefined;
-	}
-	var success = function(){
-		var flag = window.testHelpers.getControlByName(flagName);
-		var parseValue = JSON.parse(value);
-		
-		if(typeof parseValue == "boolean"){
-			flag.setValue(parseValue);
-			next();
-		}else{
-			next(new Error("'" + value + "' is not correct value"));
-		}
-	}
-	var fail = function(){
-		next(new Error(flagName + ' not found!'));
-	}
-	
-	window.testHelpers.waitCondition(haveFlag, success, fail);
+this.When(/^я поменяю значение флага "([^"]*)" на "([^"]*)"$/, function (flagName, value, next) {
+    var haveFlag = function () {
+        return window.testHelpers.getControlByName(flagName) != undefined;
+    };
+    var success = function () {
+        var flag = window.testHelpers.getControlByName(flagName);
+        var parseValue = JSON.parse(value);
+
+        if (typeof parseValue == "boolean") {
+            flag.setValue(parseValue);
+            next();
+        } else {
+            next(new Error("'" + value + "' is not correct value"));
+        }
+    };
+    var fail = function () {
+        next(new Error(flagName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveFlag, success, fail);
 });
 
-this.Then(/^значение в текстовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next){
-	var haveField = function () {
+this.Then(/^значение в текстовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next) {
+    var haveField = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
     };
 
@@ -228,7 +227,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
 
             var actValue = field.getValue();
 
-            if(typeof actValue == "number"){
+            if (typeof actValue == "number") {
                 value = parseInt(value);
             }
 
@@ -247,8 +246,8 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
     window.testHelpers.waitCondition(haveField, checkValue, fail);
 });
 
-this.Then(/^значение в числовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next){
-	var haveField = function () {
+this.Then(/^значение в числовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldName, value, next) {
+    var haveField = function () {
         return window.testHelpers.getControlByName(fieldName) != undefined;
     };
 
@@ -256,11 +255,11 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
         try {
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
-			
-			value = parseInt(value);
+
+            value = parseInt(value);
 
             var actValue = field.getDisplayValue();
-			chai.assert.typeOf(actValue, 'number');
+            chai.assert.typeOf(actValue, 'number');
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();
@@ -274,4 +273,26 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
     };
 
     window.testHelpers.waitCondition(haveField, checkValue, fail);
+});
+
+this.Then(/^элемент "([^"]*)" будет недоступным$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    };
+    var success = function () {
+        try {
+            if (!window.testHelpers.getControlByName(elementName).getEnabled()) {
+                next();
+            } else {
+                next(new Error(elementName + ' is enabled!'));
+            }
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(elementName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveElement, success, fail);
 });
