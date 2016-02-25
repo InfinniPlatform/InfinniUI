@@ -178,6 +178,8 @@ _.extend(AuthenticationProvider.prototype, {
             }
 
             this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
+            InfinniUI.user.onReadyDeferred = $.Deferred();
+            InfinniUI.user.onReadyDeferred.resolve(null);
         }.bind(this), errorCallback);
     },
 
