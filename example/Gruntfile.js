@@ -8,6 +8,19 @@
         ],
         templateFiles = ["js/**/*.tpl.html"];
 
+    var platformBuildArgs = JSON.stringify({
+        "override": {
+            "less": {
+                "pl-override-platform-variables-path": '\"../../example/styles/platform-variables.less\"',
+                "pl-override-bootstrap-variables-path": '\"../../example/styles/platform-variables.less\"',
+                "pl-bootstrap-theme-path": '\"../../example/styles/platform-variables.less\"',
+                "pl-extension-path": '\"../../example/styles/platform-variables.less\"'
+            }
+        }
+    });
+
+    platformBuildArgs = platformBuildArgs.replace(/:/g, '=');
+
     grunt.initConfig({
         concat: {
             app: {
@@ -48,6 +61,23 @@
                 }
             }
         }
+    });
+
+    grunt.registerTask('buildPlatform', function () {
+        var done = this.async();
+
+        grunt.util.spawn({
+                grunt: true,
+                args: ['build:' + platformBuildArgs],
+                opts: {
+                    cwd: '..'
+                }
+            }, function(error, result, code){
+                console.log(result.stdout);
+                done();
+            }
+
+        );
     });
 
     grunt.task.registerTask('build',

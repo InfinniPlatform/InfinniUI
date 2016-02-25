@@ -81,6 +81,7 @@
         outerExtensionLessStyle = '*.Extensions/**/*.less',
         outerExtensionFavicon = '*.Extensions/*.ico';
 
+
     grunt.initConfig({
         concat: {
             app: {
@@ -290,6 +291,9 @@
     grunt.task.registerTask('build',
         function (props) {
 
+            if(typeof props == "string"){
+                props = props.replace(/=/g, ':');
+            }
 
             if(typeof props == "string" && props.indexOf('{') == -1){
                 props = require(props);
@@ -302,6 +306,7 @@
                     if(props.override.less){
                         for(var k in props.override.less){
                             grunt.config.set('less.default.options.modifyVars.' + k, props.override.less[k]);
+                            grunt.log.writeln('path - ' + k);
                             grunt.log.writeln(grunt.config.get('less.default.options.modifyVars.' + k));
                         }
                     }
