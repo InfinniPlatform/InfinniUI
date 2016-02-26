@@ -3,8 +3,8 @@
  * @constructor
  * @augments Container
  */
-function StackPanel(parent) {
-    _.superClass(StackPanel, this, parent);
+function StackPanel(parent, viewMode) {
+    _.superClass(StackPanel, this, parent, viewMode);
 }
 
 _.inherit(StackPanel, Container);
@@ -19,6 +19,6 @@ StackPanel.prototype.setOrientation = function (value) {
     }
 };
 
-StackPanel.prototype.createControl = function () {
-    return new StackPanelControl();
+StackPanel.prototype.createControl = function (viewMode) {
+    return new StackPanelControl(viewMode);
 };
