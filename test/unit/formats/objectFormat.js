@@ -76,6 +76,21 @@ describe('ObjectFormat', function () {
             assert.equal(formatter_4.format(value_4, enCulture), "Weight: 123.46 kg, Weight: 789.01 kg" );
         });
 
+        it('should format when value is undefined', function () {
+            //Given
+            var formatter = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            //When
+            //Then
+            assert.equal(formatter.format(), "Hello,  !");
+        });
+
+        it('should format when value is null', function () {
+            //Given
+            var formatter = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            //When
+            //Then
+            assert.equal(formatter.format(null), "Hello,  !");
+        });
     });
 
 });
