@@ -3,6 +3,7 @@
  * @constructor
  * @augments Element
  * @mixes editorBaseMixin
+ * @mixes labelTextElementMixin
  */
 function PasswordBox(parent) {
     _.superClass(PasswordBox, this, parent);
@@ -12,14 +13,6 @@ function PasswordBox(parent) {
 _.inherit(PasswordBox, Element);
 
 _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
-
-        getLabelText: function () {
-            return this.control.get('labelText');
-        },
-
-        setLabelText: function (value) {
-            this.control.set('labelText', value);
-        },
 
         getPasswordChar: function () {
             return this.control.get('passwordChar');
@@ -34,5 +27,6 @@ _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
         }
 
     },
-    editorBaseMixin
+    editorBaseMixin,
+    labelTextElementMixin
 );
