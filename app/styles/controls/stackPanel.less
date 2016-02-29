@@ -3,6 +3,10 @@
   margin: 0;
   padding: 0;
 
+  .pl-stack-panel-i{
+    max-width: 100%;
+  }
+
   &.horizontal-orientation{
     &>.pl-stack-panel-i{
       float:left;
@@ -13,5 +17,10 @@
       clear: both;
       display: block;
     }
+  }
+
+  &.pl-form-group>.pl-stack-panel-i{
+    display: inline-block;
+    float: none;
   }
 }

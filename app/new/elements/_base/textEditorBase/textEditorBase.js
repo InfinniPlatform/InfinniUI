@@ -4,6 +4,7 @@
  * @constructor
  * @augments Element
  * @mixes editorBaseMixin
+ * @mixes labelTextElementMixin
  */
 function TextEditorBase(parent) {
     _.superClass(TextEditorBase, this, parent);
@@ -13,14 +14,6 @@ function TextEditorBase(parent) {
 _.inherit(TextEditorBase, Element);
 
 _.extend(TextEditorBase.prototype, {
-
-    setLabelText: function (value) {
-        this.control.set('labelText', value);
-    },
-
-    getLabelText: function () {
-        return this.control.get('labelText');
-    },
 
     setDisplayFormat: function (value) {
         this.control.set('displayFormat', value);
@@ -37,4 +30,4 @@ _.extend(TextEditorBase.prototype, {
     getEditMask: function () {
         return this.control.get('editMask');
     }
-}, editorBaseMixin);
+}, editorBaseMixin, labelTextElementMixin);

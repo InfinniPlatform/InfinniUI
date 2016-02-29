@@ -12,7 +12,7 @@ _.extend(StackPanelBuilder.prototype,
     /** @lends StackPanelBuilder.prototype*/
     {
         createElement: function (params) {
-            return new StackPanel(params.parent);
+            return new StackPanel(params.parent, params.metadata['ViewMode']);
         },
 
         /**

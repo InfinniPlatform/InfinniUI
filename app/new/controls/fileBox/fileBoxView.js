@@ -10,6 +10,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     className: 'pl-file-box',
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
+        label: '.pl-control-label',
         input: 'input',
         link: '.pl-filebox-link',
         download: '.pl-filebox-download',
@@ -28,7 +29,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     initHandlersForProperties: function(){
         ControlView.prototype.initHandlersForProperties.call(this);
-
+        this.listenTo(this.model, 'change:labelText', this.updateLabelText);
         this.listenTo(this.model, 'change:fileName', this.updateFileName);
         this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
         this.listenTo(this.model, 'change:fileTime', this.updateFileTime);
@@ -38,20 +39,40 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.listenTo(this.model, 'change:hintText', this.updateHintText);
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
+
+        var acceptTypes = this.model.get('acceptTypes');
+        acceptTypes.onChange(this.updateAcceptTypes.bind(this));
     },
 
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
+        this.updateLabelText();
         this.updateFileName();
         this.updateFileSize();
         this.updateFileType();
         this.updateFileTime();
+        this.updateAcceptTypes();
         this.updateValue();
 
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
+    },
+
+    updateLabelText: function () {
+        var labelText = this.model.get('labelText');
+        this.ui.label.text(labelText);
+    },
+
+    updateAcceptTypes: function () {
+        var acceptTypes = this.model.get('acceptTypes');
+        if (acceptTypes.length === 0) {
+            this.ui.input.removeAttr('accept');
+        } else {
+            var accept = acceptTypes.toArray().join(',');
+            this.ui.input.attr('accept', accept);
+        }
     },
 
     updateText: function () {

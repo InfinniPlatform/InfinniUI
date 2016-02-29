@@ -39,10 +39,14 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
     buildItemProperty: function (itemsBinding, itemPropertyMetadata, params) {
         var dataGrid = params.element;
+        var builder = this;
 
         return function (context, args) {
-            var index = args.index;
             var row = dataGrid.createRow();
+
+            ['RowStyle', 'RowBackground', 'RowForeground', 'RowTextStyle']
+                .forEach(initBindingToRowProperty.bind(null, row, args.index));
+
             var columns = dataGrid.getColumns();
 
             var cellItemTemplates = columns.toArray().map(function (column, index) {
@@ -55,6 +59,20 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
             row.setShowSelectors(dataGrid.getShowSelectors());
             return row;
         };
+
+        function initBindingToRowProperty(row, index, propertyName) {
+            var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
+            var argumentForBuilder = {
+                element: row,
+                parent: dataGrid,
+                builder: params.builder,
+                metadata: params.metadata,
+                parentView: params.parentView
+            };
+            argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
+
+            builder.initBindingToProperty(argumentForBuilder, propertyName);
+        }
     }
 
 });

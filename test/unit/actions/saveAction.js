@@ -28,6 +28,29 @@ describe('SaveAction', function () {
         assert.isNotNull( saveAction.execute, 'action should have execute' );
     });
 
+    it('should close view and set DialogResult', function (done) {
+        // Given
+        var view = createViewWithDataSource('MainDS');
+        var builder = new SaveActionBuilder();
+
+        view.onClosed(function(){
+            //Then
+            assert.equal(view.getDialogResult(), DialogResult.accepted, 'should set DialogResult');
+            done();
+        });
+
+        var metadata = {
+            DestinationValue: {
+                Source: 'MainDS'
+            }
+        };
+
+        var saveAction = builder.build(null, {parentView: view, metadata: metadata});
+
+        // When
+        saveAction.execute();
+    });
+
     it('should not close view when CanClose is false', function () {
         // Given
         var view = createViewWithDataSource('MainDS');

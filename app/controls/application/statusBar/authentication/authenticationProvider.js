@@ -172,12 +172,16 @@ _.extend(AuthenticationProvider.prototype, {
         };
 
         this.sendPostRequest('/Auth/SignOut', null, function(){
+            InfinniUI.user.onReadyDeferred = $.Deferred();
+            InfinniUI.user.onReadyDeferred.resolve(null);
+
             var args = _.toArray(arguments);
             if(resultCallback){
                 resultCallback.apply(this, args);
             }
 
             this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
+
         }.bind(this), errorCallback);
     },
 

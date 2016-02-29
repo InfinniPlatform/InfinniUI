@@ -4,8 +4,8 @@
  * @constructor
  * @augments ContainerControl
  */
-function StackPanelControl(parent) {
-    _.superClass(StackPanelControl, this, parent);
+function StackPanelControl(viewMode) {
+    _.superClass(StackPanelControl, this, viewMode);
 }
 
 _.inherit(StackPanelControl, ContainerControl);
@@ -17,8 +17,12 @@ _.extend(StackPanelControl.prototype,
             return new StackPanelModel();
         },
 
-        createControlView: function (model) {
-            return new StackPanelView({model: model});
+        createControlView: function (model, viewMode) {
+            var view = new StackPanelView({model: model});
+
+            view.viewMode = viewMode;
+
+            return view;
         }
     }
 );

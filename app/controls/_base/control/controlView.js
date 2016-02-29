@@ -115,6 +115,8 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
         this.updateFocusable();
         this.updateFocused();
+
+        this.updateViewMode();
     },
 
     /**
@@ -307,6 +309,12 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         }
 
         this.currentStyle = customStyle;
+    },
+
+    updateViewMode: function () {
+        if(this.viewMode == 'FormGroup' ){
+            this.$el.addClass('pl-form-group');
+        }
     },
 
     updateValidationState: function () {

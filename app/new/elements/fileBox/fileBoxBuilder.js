@@ -31,6 +31,8 @@ _.extend(FileBoxBuilder.prototype, {
             element.setMaxSize(metadata.MaxSize);
         }
 
+        this.initBindingToProperty(params, 'LabelText');
+
         // Привязка данных односторонняя т.к.:
         // 1. по значению из источника данных - сформировать URL изображения.
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
