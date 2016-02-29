@@ -75,7 +75,7 @@ describe('DeleteAction', function () {
 
         var view = new View();
         var builder = new ApplicationBuilder();
-        var dataSource = builder.buildType('DocumentDataSource', {IsLazy: true}, {parent: view, parentView: view, builder: builder});
+        var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
         view.getContext().dataSources['DocumentDataSource'] = dataSource;
 

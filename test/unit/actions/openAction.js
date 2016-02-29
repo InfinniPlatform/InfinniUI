@@ -45,7 +45,7 @@ describe('OpenAction', function () {
             }]
         };
 
-        var parentView = testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view){
             var btn = view.context.controls['OpenViewButton'];
 
             // When
