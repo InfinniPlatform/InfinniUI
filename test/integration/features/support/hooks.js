@@ -3,17 +3,38 @@ this.BeforeScenario( function(scenario, callback) {
 
     window.toastrMessageCount = 0;
 
-	var deleteIndiciesPromise = deleteIndicies();
+    var mongoServise = {
+        url: 'http://localhost:60520',
+        body: {
+            commands: [
+                'remove',
+                'restore'
+            ]
+        }
+    };
 
-    var createRepositoryPromise = deleteIndiciesPromise.then(createRepository);
+    var p = $.ajax({
+        url: mongoServise.url,
+        type: 'POST',
+        data: JSON.stringify(mongoServise.body)
+    });
 
-    var refreshPromise = createRepositoryPromise.then(refresh);
-
-    var restoreIndiciesPromise = refreshPromise.then(restoreIndicies);
-
-    restoreIndiciesPromise.then(function(){
+    p.always(function () {
+        // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
         openHost(callback);
     });
+
+    //var deleteIndiciesPromise = deleteIndicies();
+    //
+    //var createRepositoryPromise = deleteIndiciesPromise.then(createRepository);
+    //
+    //var refreshPromise = createRepositoryPromise.then(refresh);
+    //
+    //var restoreIndiciesPromise = refreshPromise.then(restoreIndicies);
+    //
+    //restoreIndiciesPromise.then(function(){
+    //    openHost(callback);
+    //});
 });
 
 this.AfterFeatures(function(){
@@ -94,4 +115,4 @@ var restoreIndicies = function(){
 
 var refresh = function(){
     return client.indices.refresh();
-}
+};
