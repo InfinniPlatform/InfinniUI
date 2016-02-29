@@ -3,6 +3,7 @@
  * @param parent
  * @augments Element
  * @mixes editorBaseMixin
+ * @mixes labelTextElementMixin
  * @constructor
  */
 function FileBox(parent) {
@@ -93,4 +94,7 @@ _.extend(FileBox.prototype, {
     //    return this.control.get('url');
     //}
 
-}, editorBaseMixin);
+},
+    editorBaseMixin,
+    labelTextElementMixin
+);

@@ -10,6 +10,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     className: 'pl-file-box',
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
+        label: '.pl-control-label',
         input: 'input',
         link: '.pl-filebox-link',
         download: '.pl-filebox-download',
@@ -28,7 +29,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     initHandlersForProperties: function(){
         ControlView.prototype.initHandlersForProperties.call(this);
-
+        this.listenTo(this.model, 'change:labelText', this.updateLabelText);
         this.listenTo(this.model, 'change:fileName', this.updateFileName);
         this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
         this.listenTo(this.model, 'change:fileTime', this.updateFileTime);
@@ -46,6 +47,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
+        this.updateLabelText();
         this.updateFileName();
         this.updateFileSize();
         this.updateFileType();
@@ -56,6 +58,11 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.updateHintText();
         this.updateErrorText();
         this.updateWarningText();
+    },
+
+    updateLabelText: function () {
+        var labelText = this.model.get('labelText');
+        this.ui.label.text(labelText);
     },
 
     updateAcceptTypes: function () {
