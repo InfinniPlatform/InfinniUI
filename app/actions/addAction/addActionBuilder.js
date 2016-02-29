@@ -12,13 +12,11 @@ function AddActionBuilder(){
 		action.setProperty('sourceSource', metadata.SourceValue.Source);
         action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        if( !_.isEmpty(metadata.DestinationValue.Property) ){
-            var destinationProperty = (args.basePathOfProperty != null) ?
-                                        args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
-                                        metadata.DestinationValue.Property;
+        var destinationProperty = (args.basePathOfProperty != null) ?
+            args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
+            metadata.DestinationValue.Property;
 
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-        }
+        action.setProperty('destinationProperty', destinationProperty || "");
 
         return action;
     }
