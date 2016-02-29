@@ -24,7 +24,7 @@ describe('DeleteAction', function () {
         assert.isNotNull( deleteAction.execute, 'action should have execute' );
     });
 
-    it('should delete selected item', function () {
+    it('should delete selected item from ObjectDataSource', function () {
         // Given
         var view = new View();
         var builder = new ApplicationBuilder();
@@ -69,4 +69,41 @@ describe('DeleteAction', function () {
         assert.notInclude(dataSource.getItems(), items[index]);
     });
 
+    it('should delete selected item from DocumentDataSource', function (done) {
+        // Given
+        window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+        var view = new View();
+        var builder = new ApplicationBuilder();
+        var dataSource = builder.buildType('DocumentDataSource', {IsLazy: true}, {parent: view, parentView: view, builder: builder});
+
+        view.getContext().dataSources['DocumentDataSource'] = dataSource;
+
+        var metadata = {
+            DeleteAction: {
+                Accept: false,
+                DestinationValue: {
+                    Source: 'DocumentDataSource',
+                    Property: '$'
+                }
+            }
+        };
+
+        var deleteAction = builder.build(metadata, {parentView: view});
+
+        dataSource.updateItems(
+            function(){
+                var initCount = dataSource.getItems().length;
+                var initSelectedItem = dataSource.getSelectedItem();
+
+                // When
+                deleteAction.execute();
+
+                // Then
+                assert.equal(dataSource.getItems().length, (initCount - 1) );
+                assert.notInclude(dataSource.getItems(), initSelectedItem);
+                done();
+            }
+        );
+    });
 });
