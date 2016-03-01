@@ -8,22 +8,22 @@ describe('TextBox', function () {
             ['getMultiline', 'setMultiline', 'getLineCount', 'setLineCount']
                 .forEach(function (methodName) {
                     it(methodName, function() {
-                        checkMethod(element, methodName);
+                        testHelper.checkMethod(element, methodName);
                     });
 
                 });
         });
 
         describe('Implementing TextEditorBase Methods', function () {
-            checkTextEditorBaseMethods(element);
+            testHelper.checkTextEditorBaseMethods(element);
         });
 
         describe('Implementing EditorBase Methods', function () {
-            checkEditorBaseMethods(element);
+            testHelper.checkEditorBaseMethods(element);
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
 
         it('Events onLoad, onValueChanged', function () {

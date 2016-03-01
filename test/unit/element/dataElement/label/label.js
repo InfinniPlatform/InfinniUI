@@ -5,22 +5,22 @@ describe('Label', function () {
         var element = builder.buildType('Label', {});
 
         describe('Implementing Label Methods', function () {
-            ['getDisplayFormat', 'setDisplayFormat', '!getTextTrimming', '!setTextTrimming',
+            ['getDisplayFormat', 'setDisplayFormat', 'getTextTrimming', 'setTextTrimming',
                 'getTextWrapping', 'setTextWrapping', 'getLineCount', 'setLineCount']
                 .forEach(function (methodName) {
                     it(methodName, function () {
-                        checkMethod(element, methodName);
+                        testHelper.checkMethod(element, methodName);
                     });
 
                 });
         });
 
         describe('Implementing EditorBase Methods', function () {
-            checkEditorBaseMethods(element);
+            testHelper.checkEditorBaseMethods(element);
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
     });
 

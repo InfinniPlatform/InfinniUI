@@ -5,11 +5,11 @@ describe('Frame', function () {
         var element = builder.buildType('Frame', {});
 
         describe('Implementing EditorBase Methods', function () {
-            checkEditorBaseMethods(element);
+            testHelper.checkEditorBaseMethods(element);
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
     });
 

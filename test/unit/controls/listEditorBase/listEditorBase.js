@@ -1,21 +1,5 @@
 describe('ListEditorBase (Control)', function () {
 
-    function applyViewMetadata(metadata, onViewReady){
-        metadata = {
-            View: metadata
-        };
-
-        var appBuilder = new ApplicationBuilder();
-        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata});
-
-        var view = linkView.createView(function (view) {
-            view.open();
-            onViewReady(view, $('#sandbox').children());
-        });
-    }
-
-
-
     describe('ListBox as exemplar of ListEditorBase', function (){
 
         it('should apply value to control (single selecting mode)', function () {
@@ -67,7 +51,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout){
@@ -135,7 +119,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout){
@@ -200,7 +184,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
                 $layout.detach();
@@ -273,7 +257,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
                 $layout.detach();
@@ -353,7 +337,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
                 //$layout.detach();
@@ -449,7 +433,7 @@ describe('ListEditorBase (Control)', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
 

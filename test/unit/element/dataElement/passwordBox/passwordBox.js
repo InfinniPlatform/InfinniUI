@@ -14,18 +14,18 @@ describe('PasswordBox', function () {
                 'setPasswordChar'
             ].forEach(function (methodName) {
                 it(methodName, function () {
-                    checkMethod(element, methodName);
+                    testHelper.checkMethod(element, methodName);
                 });
 
             });
         });
 
         describe('Implementing EditorBase Methods', function () {
-            checkEditorBaseMethods(element);
+            testHelper.checkEditorBaseMethods(element);
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
     });
 

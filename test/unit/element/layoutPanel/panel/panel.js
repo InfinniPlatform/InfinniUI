@@ -6,31 +6,31 @@ describe('PanelElement', function () {
 
         describe('Implementing Panel API', function () {
             it('Implement methods', function () {
-                checkMethod(element, 'getCollapsible');
-                checkMethod(element, 'setCollapsible');
-                checkMethod(element, 'getCollapsed');
-                checkMethod(element, 'setCollapsed');
-                checkMethod(element, 'getHeaderTemplate');
-                checkMethod(element, 'setHeaderTemplate');
-                checkMethod(element, 'getHeader');
-                checkMethod(element, 'setHeader');
+                testHelper.checkMethod(element, 'getCollapsible');
+                testHelper.checkMethod(element, 'setCollapsible');
+                testHelper.checkMethod(element, 'getCollapsed');
+                testHelper.checkMethod(element, 'setCollapsed');
+                testHelper.checkMethod(element, 'getHeaderTemplate');
+                testHelper.checkMethod(element, 'setHeaderTemplate');
+                testHelper.checkMethod(element, 'getHeader');
+                testHelper.checkMethod(element, 'setHeader');
             });
 
             it('Implement events subscriber', function () {
-                checkMethod(element, 'onExpanding');
-                checkMethod(element, 'onExpanded');
-                checkMethod(element, 'onCollapsing');
-                checkMethod(element, 'onCollapsed');
+                testHelper.checkMethod(element, 'onExpanding');
+                testHelper.checkMethod(element, 'onExpanded');
+                testHelper.checkMethod(element, 'onCollapsing');
+                testHelper.checkMethod(element, 'onCollapsed');
             });
 
         });
 
         describe('Implementing Container Methods', function () {
-            checkContainerMethods(element)
+            testHelper.checkContainerMethods(element)
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element)
+            testHelper.checkElementMethods(element)
         });
 
         it('Default values', function () {
