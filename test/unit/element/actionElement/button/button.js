@@ -5,7 +5,7 @@ describe('Button', function () {
         var element = builder.buildType('Button', {});
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
 
         it('should set getContent', function () {
