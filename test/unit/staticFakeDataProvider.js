@@ -42,7 +42,7 @@ _.extend(StaticFakeDataProvider.prototype, {
     ],
 
     getItems: function(criteriaList, pageNumber, pageSize, sorting, resultCallback){
-        var result = this.items;
+        var result = _.clone(this.items);
         setTimeout(function(){
             resultCallback(result);
         },100);
@@ -72,7 +72,7 @@ _.extend(StaticFakeDataProvider.prototype, {
             this.items.push(value);
         }
 
-        var result = this.items;
+        var result = _.clone(this.items);
         setTimeout(function(){
             resultCallback(result);
         },90);

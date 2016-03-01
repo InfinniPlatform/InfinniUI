@@ -201,10 +201,12 @@ describe('AddAction', function () {
                     saveBtn.click();
 
                     // Then
-                    var destinationItems = destinationDS.getItems();
-                    assert.equal(destinationItems.length, initCount + 1);
-                    assert.include(destinationItems, newItem);
-                    done();
+                    setTimeout(function(){
+                        var destinationItems = destinationDS.getItems();
+                        assert.equal(destinationItems.length, initCount + 1);
+                        assert.include(destinationItems, newItem);
+                        done();
+                    }, 250);
                 }
             );
         });
