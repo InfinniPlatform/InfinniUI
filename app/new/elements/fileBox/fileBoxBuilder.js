@@ -50,10 +50,10 @@ _.extend(FileBoxBuilder.prototype, {
                 if (value) {
                     if (value.Info && value.Info.ContentId && fileProvider) {
                         url = fileProvider.getFileUrl(null, null, value.Info.ContentId);
-                        //element.setFileName(info.Name)
-                        //    .setFileSize(info.Size)
-                        //    .setFileTime(info.Time)
-                        //    .setFileType(info.Type);
+                        element.setFileName(value.Info.Name)
+                            .setFileSize(value.Info.Size)
+                            .setFileTime(value.Info.Time)
+                            .setFileType(value.Info.Type);
 
                     } else if (typeof value === 'string') {
                         //@TODO Добавить проверку на валидность URI
