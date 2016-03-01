@@ -57,6 +57,7 @@
             'bower_components/ulogin/index.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
+            'bower_components/blockUI/jquery.blockUI.js',
             'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
