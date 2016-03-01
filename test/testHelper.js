@@ -14,11 +14,11 @@ var testHelper = {
     },
 
     checkMethod: function(element, name) {
-        var method = element[name];
         if (name.indexOf('!') === 0) {
-            assert.isUndefined(method, name.substring(1));
+            var methodName = name.substring(1);
+            assert.isUndefined(element[methodName], methodName);
         } else {
-            assert.isFunction(method, name);
+            assert.isFunction(element[name], name);
         }
     },
 
@@ -43,12 +43,12 @@ var testHelper = {
     },
 
     checkElementMethods: function(element) {
-        ['getView', '!getParent', '!setParent', 'getName', 'setName', 'getText', 'setText',
-            '!getFocusable', '!setFocusable', '!getFocused', '!setFocused', 'getEnabled', 'setEnabled', 'getVisible',
+        ['getView', 'getParent', 'setParent', 'getName', 'setName', 'getText', 'setText',
+            'getFocusable', 'setFocusable', 'getFocused', 'setFocused', 'getEnabled', 'setEnabled', 'getVisible',
             'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
-            'setVerticalAlignment', '!getTextHorizontalAlignment', '!setTextHorizontalAlignment',
-            '!getTextVerticalAlignment', '!setTextVerticalAlignment', '!getTextStyle', '!setTextStyle', '!getForeground',
-            '!setForeground', '!getBackground', '!setBackground', '!getTexture', '!setTexture', 'getChildElements',
+            'setVerticalAlignment', 'getTextHorizontalAlignment', 'setTextHorizontalAlignment',
+            '!getTextVerticalAlignment', '!setTextVerticalAlignment', 'getTextStyle', 'setTextStyle', 'getForeground',
+            'setForeground', 'getBackground', 'setBackground', 'getTexture', 'setTexture', 'getChildElements',
             'getProperty', 'setProperty']
             .forEach(function (methodName) {
                 it(methodName, function () {
