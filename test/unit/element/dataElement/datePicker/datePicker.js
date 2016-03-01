@@ -44,7 +44,7 @@ describe('DatePicker', function () {
                 'getProperty', 'setProperty']
                 .forEach(function (methodName) {
                     it(methodName, function() {
-                        checkMethod(element, methodName);
+                        testHelper.checkMethod(element, methodName);
                     });
 
                 });

@@ -6,7 +6,7 @@ describe('ToolBarElement', function () {
 
 
         describe('Implementing Container Methods', function () {
-            checkContainerMethods(element);
+            testHelper.checkContainerMethods(element);
         });
 
     });

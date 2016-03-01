@@ -7,11 +7,11 @@ describe('PopupButtonElement', function () {
         });
 
         describe('Implementing Element Methods', function () {
-            checkElementMethods(element);
+            testHelper.checkElementMethods(element);
         });
 
         describe('Implementing Container Methods', function () {
-            checkContainerMethods(element);
+            testHelper.checkContainerMethods(element);
         });
 
 
