@@ -1,20 +1,5 @@
 describe('ComboBox', function () {
 
-    function applyViewMetadata(metadata, onViewReady){
-        metadata = {
-            View: metadata
-        };
-
-        var appBuilder = new ApplicationBuilder();
-        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata});
-
-        var view = linkView.createView(function (view) {
-            view.open();
-            onViewReady(view, $('#sandbox').children());
-        });
-    }
-
-
     describe('render', function () {
 
         it('ValueSelector', function () {
@@ -76,7 +61,7 @@ describe('ComboBox', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout) {
@@ -153,7 +138,7 @@ describe('ComboBox', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout) {
@@ -243,7 +228,7 @@ describe('ComboBox', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout) {
@@ -336,7 +321,7 @@ describe('ComboBox', function () {
 
 
             // When
-            applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
             function onViewReady(view, $layout) {
