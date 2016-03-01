@@ -120,6 +120,7 @@ var DataGridView = ListEditorBaseView.extend({
     renderItems: function () {
         var
             model = this.model,
+            valueSelector = model.get('valueSelector'),
             itemTemplate = model.get('itemTemplate'),
             items = model.get('items'),
             $items = this.ui.items;
@@ -132,7 +133,7 @@ var DataGridView = ListEditorBaseView.extend({
                 model.set('selectedItem', item);
             });
             element.onToggle(function() {
-                model.toggleValue(item);
+                model.toggleValue(valueSelector(undefined, {value:item}));
             });
             this.addChildElement(item, element);
             $items.append(element.render());
