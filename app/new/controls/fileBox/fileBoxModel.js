@@ -18,13 +18,9 @@ var FileBoxModel = ControlModel.extend( _.extend({
         this.set('acceptTypes', new Collection());
         this.on('change:file', this.onChangeFileHandler);
         this.on('change:value', function (model, value) {
-            var fileName = '';
             if (value instanceof File) {
-                fileName = value.name;
-            } else if (value && value.Info) {
-                fileName = value.Info.Name;
+                model.set('fileName', value.name);
             }
-            model.set('fileName', fileName);
         });
 
         this.on("invalid", function(model, error) {
