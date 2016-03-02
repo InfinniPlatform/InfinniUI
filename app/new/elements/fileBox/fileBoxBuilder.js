@@ -81,7 +81,9 @@ _.extend(FileBoxBuilder.prototype, {
             params.element.onPropertyChanged('file', function (context, args) {
                 var file = args.newValue;
 
-                if (file instanceof File) {
+                if (file === null) {
+                    ds.setProperty(binding.getSourceProperty(), null)
+                } else  if (file instanceof File) {
                     ds.setProperty(binding.getSourceProperty(), args.newValue)
                 }
             })
