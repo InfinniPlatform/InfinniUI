@@ -472,6 +472,10 @@ var BaseDataSource = Backbone.Model.extend({
          */
         this._onPropertyChangesList
             .filter(function (name) {
+                if(typeof name != 'string'){
+                    return false;
+                }
+
                 var prop, matched = false;
                 var template = property + '.';
                 if (property === name) {
