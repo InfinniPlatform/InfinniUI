@@ -101,9 +101,9 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             });
         }
 
-        if (parentView && metadata.onPropertyChanged) {
+        if (parentView && metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.onPropertyChanged.Name || metadata.onPropertyChanged, args);
+                new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
             });
         }
 
