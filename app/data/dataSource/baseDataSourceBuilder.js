@@ -101,6 +101,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             });
         }
 
+        if (parentView && metadata.onPropertyChanged) {
+            dataSource.onPropertyChanged(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.onPropertyChanged.Name || metadata.onPropertyChanged, args);
+            });
+        }
+
         if (parentView && metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
