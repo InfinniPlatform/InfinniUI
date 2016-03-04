@@ -63,9 +63,6 @@ function CucumberHTMLListener($root) {
                         var error = stepResult.getFailureException();
                         var errorMessage = error.stack || error;
                         result = { status: 'failed', error_message: errorMessage };
-                        var screenshotName =    window.cucumberCurrentFeature.toString().replace(/[?:"]*/g, "") + '.' +
-                                                window.cucumberCurrentScenario.toString().replace(/[?:"]*/g, "") + '.' +
-                                                window.cucumberCurrentStep.toString().replace(/[?:"]*/g, "");
 
                         errorMessage = errorMessage.toString()
                         .replace(/\n/g, "|n|r")
@@ -77,10 +74,6 @@ function CucumberHTMLListener($root) {
                         tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
 
                         window.cucumberIsFailed = true;
-                        
-                        if(window.callPhantom){
-                            window.callPhantom({command: 'Take screenshot', fileName: screenshotName});
-                        }
                     }
                     formatter.match({ uri: 'report.feature', step: { line: currentStep.getLine() } });
                     formatter.result(result);
@@ -101,10 +94,10 @@ function CucumberHTMLListener($root) {
             formatter.step({
                 keyword: step.getKeyword(),
                 name: step.getName(),
-                line: step.getLine(),
+                line: step.getLine()
             });
             currentStep = step;
         }
     };
     return self;
-};
+}

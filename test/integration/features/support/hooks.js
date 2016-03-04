@@ -23,26 +23,10 @@ this.BeforeScenario( function(scenario, callback) {
         // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
         openHost(callback);
     });
-
-    //var deleteIndiciesPromise = deleteIndicies();
-    //
-    //var createRepositoryPromise = deleteIndiciesPromise.then(createRepository);
-    //
-    //var refreshPromise = createRepositoryPromise.then(refresh);
-    //
-    //var restoreIndiciesPromise = refreshPromise.then(restoreIndicies);
-    //
-    //restoreIndiciesPromise.then(function(){
-    //    openHost(callback);
-    //});
 });
 
 this.AfterFeatures(function(){
     console.log('Test finished!');
-
-    if(window.callPhantom){
-        window.callPhantom({command: 'Tests finished'});
-    }
 
     if(window.startUpParameters && window.startUpParameters.isClosing){
         window.close();
@@ -88,31 +72,4 @@ var deleteIndicies = function(){
         "index": "_all",
         "waitForCompletion": true
     });
-};
-
-var createRepository = function(){
-    var snapshotPath = window.navigator.platform.indexOf('Linux') == -1 ? "C:\\ESbackups" : "/tmp/ESbackups";
-    
-    return client.snapshot.createRepository({
-        "repository": "my_backup",
-        "body":{
-            "type": "fs",
-            "settings": {
-                "compress": "true",
-                "location": snapshotPath
-            }
-        }
-    });
-};
-
-var restoreIndicies = function(){
-    return client.snapshot.restore({
-        "repository": "my_backup",
-        "snapshot": "snapshot1",
-        "waitForCompletion": true
-    });
-};
-
-var refresh = function(){
-    return client.indices.refresh();
 };
