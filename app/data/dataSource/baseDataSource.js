@@ -287,6 +287,14 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    getSorting: function () {
+        return this.get('sorting');
+    },
+
+    setSorting: function (sortingValue) {
+        this.set('sorting', sortingValue);
+    },
+
     isModifiedItems: function () {
         return this.isModified();
     },
