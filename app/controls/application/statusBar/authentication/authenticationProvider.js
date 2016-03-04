@@ -243,6 +243,8 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     sendPostRequest: function (requestUri, requestData, resultCallback, errorCallback) {
+        var that = this;
+
         if (requestData !== null) {
             requestData = JSON.stringify(requestData);
         }
@@ -256,8 +258,12 @@ _.extend(AuthenticationProvider.prototype, {
             beforeSend: this.onBeforeRequest(),
             success: this.onSuccessRequest(resultCallback),
             error: this.onErrorRequest(function (error) {
-                if(errorCallback) {
-                    errorCallback(error.responseJSON);
+                if(error.status != 200) {
+                    if(errorCallback) {
+                        errorCallback(error.responseJSON);
+                    }
+                } else {
+                    that.onSuccessRequest(resultCallback).apply(that, arguments);
                 }
             })
         });
