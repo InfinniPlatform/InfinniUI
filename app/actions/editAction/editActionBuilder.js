@@ -10,7 +10,15 @@ function EditActionBuilder(){
 
         var action = new EditAction(parentView);
 
-        var linkView = builder.build(metadata['LinkView'], {parent: args.parent, parentView: parentView, basePathOfProperty: args.basePathOfProperty});
+        var suspended = {};
+        suspended[metadata.DestinationValue.Source] = 'EditAction';
+
+        var linkView = builder.build(metadata['LinkView'], {
+            parent: args.parent,
+            parentView: parentView,
+            basePathOfProperty: args.basePathOfProperty,
+            suspended: suspended
+        });
         action.setProperty('linkView', linkView);
 
         action.setProperty('sourceSource', metadata.SourceValue.Source);

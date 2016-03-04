@@ -16,6 +16,7 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
         this.initFileProvider(dataSource, args.metadata);
 
+        this.applySuspended(dataSource, args.suspended);
         dataSource.resumeUpdate();
 
         /*if(args.parentView.onLoading){
@@ -31,6 +32,21 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         return dataSource;
     },
 
+    applySuspended: function (dataSource, suspended) {
+        if (!suspended) {
+            return;
+        }
+
+        for (var name in suspended) {
+            if (!suspended.hasOwnProperty(name) || dataSource.getName() !== name) {
+                continue;
+            }
+
+            dataSource.suspendUpdate(suspended[name]);
+        }
+
+    },
+
     applyMetadata: function (builder, parentView, metadata, dataSource) {
         var idProperty = metadata.IdProperty;
         if (idProperty) {
@@ -42,9 +58,13 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.setPageSize(metadata.PageSize || 15);
         dataSource.setPageNumber(metadata.PageNumber || 0);
 
+        if('Sorting' in metadata){
+            dataSource.setSorting(metadata['Sorting']);
+        }
+
         var queryMetadata;
         if('Query' in metadata){
-            dataSource.setFilter(metadata.Query);
+            dataSource.setFilter(metadata['Query']);
         }
 
         if('IsLazy' in metadata){
