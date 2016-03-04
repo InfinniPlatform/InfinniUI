@@ -20,10 +20,16 @@ _.extend(EditAction.prototype, {
         }
     },
 
+    resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('EditAction');
+    },
+
     setDocument: function (editDataSource, selectedItem){
         var selectedItemId = editDataSource.idOfItem( selectedItem );
 
         var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
+        this.resumeUpdateEditDataSource();
         editDataSource.setFilter( criteria );
     },
 
@@ -33,7 +39,7 @@ _.extend(EditAction.prototype, {
         if(item === undefined || item === null){
             item = {};
         }
-
+        this.resumeUpdateEditDataSource();
         editDataSource.setItems( [item] );
         editDataSource.setSelectedItem( item );
     },

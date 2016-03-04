@@ -16,6 +16,7 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
         this.initFileProvider(dataSource, args.metadata);
 
+        this.applySuspended(dataSource, args.suspended);
         dataSource.resumeUpdate();
 
         /*if(args.parentView.onLoading){
@@ -29,6 +30,21 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
          }*/
 
         return dataSource;
+    },
+
+    applySuspended: function (dataSource, suspended) {
+        if (!suspended) {
+            return;
+        }
+
+        for (var name in suspended) {
+            if (!suspended.hasOwnProperty(name) || dataSource.getName() !== name) {
+                continue;
+            }
+
+            dataSource.suspendUpdate(suspended[name]);
+        }
+
     },
 
     applyMetadata: function (builder, parentView, metadata, dataSource) {

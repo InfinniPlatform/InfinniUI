@@ -75,7 +75,7 @@ _.extend(ViewBuilder.prototype, {
         }
 
         if (metadata.DataSources && metadata.DataSources.length) {
-            var dataSources = builder.buildMany(metadata.DataSources, {parentView: element});
+            var dataSources = builder.buildMany(metadata.DataSources, {parentView: element, suspended: params.suspended});
 
             element.getDataSources()
                 .set(dataSources);

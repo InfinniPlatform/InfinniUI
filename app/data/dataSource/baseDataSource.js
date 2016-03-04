@@ -50,7 +50,7 @@ var BaseDataSource = Backbone.Model.extend({
         if (!this.get('view')) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
-
+        this.set('suspended', []);
         this._onPropertyChangesList = [];
     },
 
@@ -72,13 +72,13 @@ var BaseDataSource = Backbone.Model.extend({
 
     onPropertyChanged: function (property, handler) {
         var list = this._onPropertyChangesList;
-        if (list.indexOf(property) === -1) {
-            list.push(property);
-        }
         if (typeof property == 'function') {
             handler = property;
             this.on('onPropertyChanged', handler);
         } else {
+            if (list.indexOf(property) === -1) {
+                list.push(property);
+            }
             this.on('onPropertyChanged:' + property, handler);
         }
 
@@ -248,12 +248,33 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('fillCreatedItem', fillCreatedItem);
     },
 
-    suspendUpdate: function () {
-        this.set('isUpdateSuspended', true);
+    suspendUpdate: function (name) {
+        var reason = name || 'default';
+
+        var suspended = this.get('suspended');
+        if (suspended.indexOf(reason) === -1) {
+            suspended = suspended.slice(0);
+            suspended.push(reason);
+            this.set('suspended', suspended);
+        }
     },
 
-    resumeUpdate: function () {
-        this.set('isUpdateSuspended', false);
+    resumeUpdate: function (name) {
+        var reason = name || 'default';
+
+        var suspended = this.get('suspended');
+        var index = suspended.indexOf(reason);
+
+        if (index !== -1) {
+            suspended = suspended.slice(0);
+            suspended.splice(index, 1);
+            this.set('suspended', suspended);
+        }
+    },
+
+    isUpdateSuspended: function () {
+        var suspended = this.get('suspended');
+        return suspended.length > 0;
     },
 
     getPageNumber: function () {
@@ -438,21 +459,22 @@ var BaseDataSource = Backbone.Model.extend({
         this._notifyAboutPropertyChanged(property, value, oldValue);
     },
 
-    prepareAndGetProperty: function(property, onReady){
-        var that = this;
-
-        if (this.get('isDataReady')){
-            onReady( this.getProperty(property) );
-        }else{
-            if (!this.get('isRequestInProcess')){
-                this.updateItems();
-            }
-
-            this.once('onItemsUpdated', function(){
-                onReady( that.getProperty(property) );
-            });
-        }
-    },
+    // UNUSED?
+    //prepareAndGetProperty: function(property, onReady){
+    //    var that = this;
+    //
+    //    if (this.get('isDataReady')){
+    //        onReady( this.getProperty(property) );
+    //    }else{
+    //        if (!this.get('isRequestInProcess')){
+    //            this.updateItems();
+    //        }
+    //
+    //        this.once('onItemsUpdated', function(){
+    //            onReady( that.getProperty(property) );
+    //        });
+    //    }
+    //},
 
     tryInitData: function(){
         if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
@@ -693,7 +715,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     updateItems: function (onSuccess, onError) {
-        if (!this.get('isUpdateSuspended')) {
+        if (!this.isUpdateSuspended()) {
             var filters = this.getFilter(),
                 pageNumber = this.get('pageNumber'),
                 pageSize = this.get('pageSize'),
@@ -742,7 +764,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     addNextItems: function (success, error) {
-        if (!this.get('isUpdateSuspended')) {
+        if (!this.isUpdateSuspended()) {
             var filters = this.getFilter(),
                 pageNumber = this.get('pageNumber'),
                 pageSize = this.get('pageSize'),

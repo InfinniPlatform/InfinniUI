@@ -36,7 +36,12 @@ function InlineViewBuilder() {
 
         if (viewMetadata !== null) {
 
-            var view = builder.buildType("View", viewMetadata, {parentView: parentView, parent: params.parent, params: parameters});
+            var view = builder.buildType("View", viewMetadata, {
+                parentView: parentView,
+                parent: params.parent,
+                params: parameters,
+                suspended: params.suspended
+            });
 
             onViewReadyHandler(view);
         } else {
@@ -55,7 +60,7 @@ function InlineViewBuilder() {
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView, basePathOfProperty: params.basePathOfProperty})
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView, basePathOfProperty: params.basePathOfProperty});
                     result[parameter.getName()] = parameter;
                 }
             }
