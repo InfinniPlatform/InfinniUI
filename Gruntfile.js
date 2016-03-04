@@ -10,6 +10,8 @@
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-generate');
 
+    require('time-grunt')(grunt);
+
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
@@ -44,7 +46,9 @@
             '!app/controls/dataNavigation/**/*.*',
             '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*'
+            '!app/element/dataElement/dataGrid/**/*.*',
+            '!app/controls/treeView/**/*.*',
+            '!app/element/dataElement/treeView/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',

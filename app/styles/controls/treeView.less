@@ -1,0 +1,53 @@
+.pl-treeview {
+
+  .pl-treeview-node {
+
+    .pl-treeview-node-container {
+      .clearfix();
+    }
+
+    .pl-treeview-node {
+      padding-left: 20px;
+    }
+
+    .pl-treeview-node-item-expand {
+      display: none;
+      float:left;
+    }
+
+    .pl-treeview-node-item-collapse {
+      display: block;
+      float:left;
+    }
+
+    .pl-treeview-node-item {
+      float: left;
+    }
+
+    &.pl-treeview-bode_collapsed {
+
+      .pl-treeview-node-item-expand {
+        display: block;
+      }
+
+      .pl-treeview-node-item-collapse {
+        display: none;
+      }
+
+
+
+      .pl-treeview-node {
+        display: none;
+      }
+    }
+
+  }
+
+
+  .pl-treeview-node-item {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+}

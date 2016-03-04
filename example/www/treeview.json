@@ -1,0 +1,282 @@
+{
+  "OnLoaded": "OL2",
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "Files",
+        "Items": [
+          {
+            "company_profile_data": {
+              "AnnualFinancialStatementFiles": [
+                {
+
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "Geo",
+        "Items": [
+          {"Id": 1, "ParentId": null, "Name": "Челябинск"},
+          {"Id": 2, "ParentId": 1, "Name": "Чичерина"},
+          {"Id": 3, "ParentId": 1, "Name": "Комарова"},
+          {"Id": 4, "ParentId": null, "Name": "Копейск"},
+          {"Id": 5, "ParentId": 4, "Name": "Победы"},
+          {"Id": 6, "ParentId": 5, "Name": "33/1"}
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "Test",
+        "Items": [
+          {"Id": 1, "Name": "One", "Group": "odd"},
+          {"Id": 2, "Name": "Two", "Group": "even"},
+          {"Id": 3, "Name": "Three", "Group": "odd"},
+          {"Id": 4, "Name": "Four", "Group": "even"},
+          {"Id": 5, "Name": "Five", "Group": "odd"},
+          {"Id": 6, "Name": "Six", "Group": "even"},
+          {"Id": 7, "Name": "Seven", "Group": "odd"}
+        ],
+        "~Query": [
+          {
+            "Property": "Group",
+            "Value": "odd",
+            "CriteriaType": 1
+          }
+        ]
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "Name": "Child",
+        "ConfigId": "PTA",
+        "DocumentId": "Child",
+        "Query": [
+          {
+            "Property": "Name",
+            "Value": "е",
+            "CriteriaType": 65536
+          }
+        ]
+      }
+    },
+    {
+      "ObjectDataSource":{
+        "Name": "Clone",
+        "Items":{
+          "Source": "BloodGroupDataSource",
+          "Converter":{
+            "ToElement":"{return [args.value[0]];}"
+          }
+        }
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "Numbers",
+        "Items": [
+          {"value": 0},
+          {"value": 1},
+          {"value": 2},
+          {"value": 3},
+          {"value": 4},
+          {"value": 5},
+          {"value": 6},
+          {"value": 7},
+          {"value": 8},
+          {"value": 9}
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "BloodGroupDataSource",
+        "Items": [
+          {
+            "Id": 1,
+            "DisplayName": "44",
+            "SomeField": "",
+            "Array": [
+              {
+                "Id": 5,
+                "DisplayName": "I-1"
+              },
+              {
+                "Id": 6,
+                "DisplayName": "I-2"
+              },
+              {
+                "Id": 7,
+                "DisplayName": "I-3"
+              }
+            ]
+          },
+          {
+            "Id": 2,
+            "DisplayName": "II",
+            "SomeField": "val",
+            "Array": [
+              {
+                "Id": 8,
+                "DisplayName": "II-1"
+              },
+              {
+                "Id": 9,
+                "DisplayName": "II-2"
+              }
+            ]
+          },
+          {
+            "Id": 3,
+            "DisplayName": "III",
+            "SomeField": 3
+          },
+          {
+            "Id": 4,
+            "DisplayName": "IV",
+            "SomeField": null
+          }
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
+      }
+    }
+  ],
+  "Items": [
+    {
+      "TextBox": {
+        "LabelText": "Text"
+      }
+    },
+    {
+      "Button": {
+        "Text": "Click",
+        "OnClick": "OnBtnLcik"
+      }
+    },
+    {
+      "Panel": {
+        "ItemTemplate": {
+          "FileBox": {
+            "LabelText": "Файл",
+            "Enabled": true,
+            "~MaxSize": 1048576,
+            "AcceptTypes": [".zip"],
+            "Value": {
+              "Source": "Files",
+              "Property": "$.company_profile_data.AnnualFinancialStatementFiles.#.File"
+            }
+          }
+        },
+        "Items": {
+          "Source": "Files",
+          "Property": "$.company_profile_data.AnnualFinancialStatementFiles"
+        }
+      }
+    },
+    {
+      "TreeView": {
+        "KeyProperty": "Id",
+        "ParentProperty": "ParentId",
+        "ItemProperty": "Name",
+        "Items": {
+          "Source": "Geo"
+        }
+      }
+    },
+    {
+      "ListBox": {
+        "ItemProperty": "Name",
+        "Items": {
+          "Source": "Geo"
+        }
+      }
+    },
+    {
+      "FileBox": {
+        "LabelText": "Файл",
+        "Enabled": true,
+        "~MaxSize": 1048576,
+        "Value": {
+          "Source": "Child",
+          "Property": "0.File"
+        }
+      }
+    },
+    {
+      "DataGrid": {
+        "Columns": [
+          {
+            "Header": "Id",
+            "CellProperty": "Id"
+          },
+          {
+            "Header": "Name",
+            "~CellProperty": "Name",
+            "~CellFormat": "{Name} [{Group}]",
+            "CellTemplate": {
+              "Label": {
+                "Value": {
+                  "Source": "Test",
+                  "Property": "#.Name"
+                }
+              }
+            }
+          },
+          {
+            "Header": "Group",
+            "CellProperty": "Group"
+          },
+          {
+            "Header": "Fuck",
+            "CellSelector": "{return JSON.stringify(args.value.Array);}"
+          }
+        ],
+        "~RowBackground": {
+          "Source": "Test",
+          "Property": "#.Id",
+          "Mode": "ToElement",
+          "Converter": {
+            "ToElement": "MyConverterBackground"
+          }
+        },
+        "~RowForeground": "Primary3",
+        "~RowStyle": {
+          "Source": "Test",
+          "Property": "#.Id",
+          "Mode": "ToElement",
+          "Converter": {
+            "ToElement": "MyConverter"
+          }
+        },
+        "Items": {
+          "Source": "Test"
+        }
+      }
+    }],
+  "Scripts": [
+    {
+      "Name": "MyConverter",
+      "Body": "return args.value % 2 ? 'odd' : 'even';"
+    },
+    {
+      "Name": "MyConverterBackground",
+      "Body": "return args.value % 2 ? 'White' : 'White';"
+    },
+    {
+      "Name": "OL2",
+      "Body": "var ds = context.dataSources.Files; items = ds.getItems(); ds.setSelectedItem(items[0]); var annualFiles = ds.getProperty('$.company_profile_data.AnnualFinancialStatementFiles');if (!annualFiles){ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', [{}]);}else{annualFiles.push({});ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', annualFiles.slice(0));}"
+    },
+    {
+      "Name": "OnBtnLcik",
+      "Body": "ds.onPropertyChanged(function (ctx, args) {var ds = ctx.dataSources.Files; var fileArray = ds.getProperty('$.company_profile_data.AnnualFinancialStatementFiles');var filteredArray = _.filter(fileArray, function(f) {return f.File});filteredArray.push({});ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', filteredArray.slice(0))})"
+    }
+  ]
+}
+
