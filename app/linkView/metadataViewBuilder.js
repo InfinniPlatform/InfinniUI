@@ -4,36 +4,36 @@ function MetadataViewBuilder() {
 
 _.extend(MetadataViewBuilder.prototype, {
 
-    build: function (context, args){
+    build: function (context, args) {
         var metadata = args.metadata;
         var viewTemplate = this.buildViewTemplate(args);
         var linkView = new LinkView(args.parent);
 
         linkView.setViewTemplate(viewTemplate);
 
-        if('OpenMode' in metadata){
+        if ('OpenMode' in metadata) {
             linkView.setOpenMode(metadata.OpenMode);
         }
 
-        if('Container' in metadata){
+        if ('Container' in metadata) {
             linkView.setContainer(metadata.Container);
         }
 
-        if('DialogWidth' in metadata){
+        if ('DialogWidth' in metadata) {
             linkView.setDialogWidth(metadata.DialogWidth);
         }
 
         return linkView;
     },
 
-    buildViewTemplate: function(params, cb){
+    buildViewTemplate: function (params, cb) {
         var metadata = params.metadata;
         var that = this;
 
-        return function(onViewReadyHandler){
+        return function (onViewReadyHandler) {
             var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
 
-            metadataProvider.getViewMetadata( function(viewMetadata){
+            metadataProvider.getViewMetadata(function (viewMetadata) {
                 that.buildViewByMetadata(params, viewMetadata, onReady);
                 function onReady() {
                     var args = Array.prototype.slice.call(arguments);
@@ -46,7 +46,7 @@ _.extend(MetadataViewBuilder.prototype, {
         };
     },
 
-    buildViewByMetadata: function(params, viewMetadata, onViewReadyHandler){
+    buildViewByMetadata: function (params, viewMetadata, onViewReadyHandler) {
         var builder = params.builder;
         var parentView = params.parentView;
         var logger = InfinniUI.global.logger;
@@ -54,7 +54,12 @@ _.extend(MetadataViewBuilder.prototype, {
 
         if (viewMetadata !== null) {
 
-            var view = builder.buildType("View", viewMetadata, {parentView: parentView, parent: params.parent, params: parameters});
+            var view = builder.buildType("View", viewMetadata, {
+                parentView: parentView,
+                parent: params.parent,
+                params: parameters,
+                suspended: params.suspended
+            });
 
             onViewReadyHandler(view);
         } else {
@@ -62,7 +67,7 @@ _.extend(MetadataViewBuilder.prototype, {
         }
     },
 
-    buildParameters: function(params){
+    buildParameters: function (params) {
         var parametersMetadata = params.metadata['Parameters'];
         var builder = params.builder;
         var parentView = params.parentView;
@@ -72,7 +77,10 @@ _.extend(MetadataViewBuilder.prototype, {
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView, basePathOfProperty: params.basePathOfProperty})
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {
+                        parentView: parentView,
+                        basePathOfProperty: params.basePathOfProperty
+                    });
                     result[parameter.getName()] = parameter;
                 }
             }
