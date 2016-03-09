@@ -52,7 +52,9 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         var
             $el = this.$el,
             el = this.el,
+            view = this,
             model = this.model;
+
 
         $el
             .on('focusin', onFocusIn)
@@ -63,13 +65,18 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         }
 
         function onFocusOut(event) {
-            if ($.contains(el, event.relatedTarget)) {
+            if (view.isControlElement(event.relatedTarget)) {
                 //focus out to element inside control
+                model.set('focused', true);
             } else {
                 //focus out
                 model.set('focused', false);
             }
         }
+    },
+
+    isControlElement: function (el) {
+        return this.el ===  el || $.contains(this.el, el)
     },
 
     initTooltipHandlers: function () {

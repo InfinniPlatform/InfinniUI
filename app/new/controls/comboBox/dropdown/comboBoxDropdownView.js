@@ -4,7 +4,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
     events: {
         'click .backdrop': 'onClickBackdropHandler',
         //'keypress .pl-combobox-search-text': 'onKeyPressHandler',
-        //'keydown .pl-combobox-search-text': 'onKeyDownHandler',
+        'keydown': 'onKeyDownHandler',
         'keyup .pl-combobox-filter-text': 'onKeyUpHandler'
     },
 
@@ -28,6 +28,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
         this.listenTo(this.model, 'change:search', this.onChangeSearchHandler);
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
+        this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
 
@@ -62,7 +63,8 @@ var ComboBoxDropdownView = Backbone.View.extend({
         var noItems = (items && items.length == 0);
         this.ui.noItems.toggleClass('hidden', !noItems);
 
-        this.markCheckedItems();
+        //this.markCheckedItems();
+        this.markSelectedItems();
     },
 
     setItemsContent: function (content) {
@@ -85,6 +87,21 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     onChangeValueHandler: function () {
         this.markCheckedItems();
+    },
+
+    markSelectedItems: function () {
+        var model = this.model;
+        if (!Array.isArray(this.$items)) {
+            return;
+        }
+
+        var $items = this.$items;
+        var selectedItem = model.getSelectedItem();
+
+        $items.forEach(function ($item) {
+            var selected = selectedItem === $item.data('pl-data-item');
+            $item.toggleClass('pl-combobox-selected', selected);
+        });
     },
 
     markCheckedItems: function () {
@@ -137,8 +154,34 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.trigger('search', text);
     },
 
+    onKeyDownHandler: function (event) {
+        var model = this.model;
+        switch (event.which) {
+            case 36://Home;
+                model.selectFirstItem();
+                break;
+            case 35: //End
+                model.selectLastItem();
+                break;
+            case 38: //Up
+                model.selectPrevItem();
+                break;
+            case 40: //Down
+                model.selectNextItem();
+                break;
+            case 32:
+            case 13:
+                this.onClickItemHandler(model.getSelectedItem());
+                break;
+        }
+    },
+
     onChangeSearchHandler: function (model, value) {
         this.ui.search.text(value);
+    },
+
+    onChangeSelectedItem: function (model, value) {
+        this.markSelectedItems();
     }
 
 });
