@@ -4,35 +4,40 @@ function JsonEditor(context, args) {
 
     this.editor;
 
-    this.templateJSON = {
-        Company: "Infinnity Solutions",
-        Address: {
-            Country: "Russia",
-            City: "Chelyabinsk",
-            Town: "North",
-            House: "52/2"
-        },
-        Departaments: [
-            "Mountain View",
-            "Cupertino"
-        ]
-    };
-
     this.render = function () {
         var $form = $(this.template());
-
-        this.editor = new JSONEditor($form.get(0));
-        this.editor.set(this.templateJSON);
-
-        this.target.append($form);
-
-        var $buttonGet = $('<button>Get json</button>');
         var that = this;
 
-        $buttonGet.click(function () {
-            alert(JSON.stringify(that.editor.get()));
+        this.editor = new JSONEditor($form.get(4));
+        this.target.append($form);
+
+        this.target.find('#btn-set-json').click(function () {
+            var id = that.target.find('input').val();
+
+            $.ajax({
+                url: 'http://localhost:5500/api/metadata/getMetadata?id=' + id,
+                type: 'GET',
+                success: function (data) {
+                    that.editor.set(data);
+                },
+                error: function () {
+                    alert(JSON.stringify(error));
+                }
+            });
         });
 
-        this.target.append($buttonGet);
+        this.target.find('#btn-save-metadata').click(function () {
+            $.ajax({
+                url: 'http://localhost:5500/api/metadata/saveMetadata',
+                type: 'POST',
+                data: that.editor.get(),
+                success: function () {
+                    toastr.success('Metadata saved');
+                },
+                error: function (error) {
+                    alert(JSON.stringify(error));
+                }
+            });
+        });
     };
 }
