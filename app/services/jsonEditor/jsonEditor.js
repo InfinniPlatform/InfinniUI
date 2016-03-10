@@ -1,53 +1,60 @@
 InfinniUI.JsonEditor = (function () {
-    var template = InfinniUI.Template["services/jsonEditor/template/jsonEditor.tpl.html"];
-    var $form = $(template());
-    var editor = new JSONEditor($form.find('#jsonEditor')[0]);
+    var childWindow;
+    var metadataForOpen;
+    var pathForOpen;
 
-    $form.find('#btn-set-json').click(function () {
-        var id = $form.find('input').val();
+    //$form.find('#btn-save-metadata').click(function () {
+    //    $.ajax({
+    //        url: 'http://localhost:5500/api/metadata/saveMetadata',
+    //        type: 'POST',
+    //        data: editor.get(),
+    //        success: function () {
+    //            toastr.success('Metadata saved');
+    //        },
+    //        error: function (error) {
+    //            alert(JSON.stringify(error));
+    //        }
+    //    });
+    //});
 
-        $.ajax({
-            url: 'http://localhost:5500/api/metadata/getMetadata?id=' + id,
-            type: 'GET',
-            success: function (data) {
-                editor.set(data);
-            },
-            error: function () {
-                alert(JSON.stringify(error));
+    function updateContentOfChildWindow(){
+        if(metadataForOpen){
+            childWindow.setMetadata(JSON.stringify(metadataForOpen));
+            metadataForOpen = undefined;
+        }
+
+        if (pathForOpen) {
+            childWindow.setPath(pathForOpen);
+            pathForOpen = undefined;
+        }
+    }
+
+    return {
+        setMetadata: function (metadata) {
+            metadataForOpen = metadata;
+
+            if (!childWindow) {
+
+                var tempChildWindow = window.open('jsonEditor/index.html', 'JSON_Editor', {menubar: 'yes'});
+
+                tempChildWindow.onload = function () {
+                    childWindow = tempChildWindow;
+                    updateContentOfChildWindow();
+                };
+
+                tempChildWindow.addEventListener('unload', function() {
+                    childWindow = undefined;
+                });
+            } else {
+                updateContentOfChildWindow();
             }
-        });
-    });
+        },
+        setPath: function (path) {
+            pathForOpen = path;
 
-    $form.find('#btn-save-metadata').click(function () {
-        $.ajax({
-            url: 'http://localhost:5500/api/metadata/saveMetadata',
-            type: 'POST',
-            data: editor.get(),
-            success: function () {
-                toastr.success('Metadata saved');
-            },
-            error: function (error) {
-                alert(JSON.stringify(error));
+            if(childWindow){
+                updateContentOfChildWindow();
             }
-        });
-    });
-
-    editor.searchByPath = function(path){
-        var selectedNode = editor.node && editor.node.findNode(path);
-
-        if(selectedNode != null){
-            selectedNode.scrollTo();
-            setTimeout(function(){
-                selectedNode.focus();
-            }, 300);
         }
     };
-
-    return function(viewMetadata){
-
-        $('body').append($form);
-        editor.set(viewMetadata);
-
-        return editor;
-    }
 })();

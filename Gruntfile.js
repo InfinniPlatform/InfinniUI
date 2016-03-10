@@ -64,7 +64,6 @@
             'bootstrap-framework/js/tooltip.js',
             'bower_components/jquery.cookie/jquery.cookie.js',
             'bower_components/hammerjs/hammer.js',
-            'bower_components/jsoneditor/dist/jsoneditor.min.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
@@ -73,8 +72,7 @@
         vendorCssFiles = [
             'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
             'bower_components/font-awesome/css/font-awesome.min.css',
-            'bower_components/toastr/toastr.css',
-            'bower_components/jsoneditor/dist/jsoneditor.min.css'
+            'bower_components/toastr/toastr.css'
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
@@ -152,13 +150,29 @@
                 ],
                 dest: 'out/css/'
             },
-            jsonEditor: {
+            jsonEditorJs: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/jsoneditor.min.js'
+                ],
+                dest: 'out/jsonEditor'
+            },
+            jsonEditorCSS: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/jsoneditor.min.css'
+                ],
+                dest: 'out/jsonEditor/css'
+            },
+            jsonEditorSVG: {
                 expand: true,
                 flatten: true,
                 src: [
                     'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
                 ],
-                dest: 'out/css/img'
+                dest: 'out/jsonEditor/css/img'
             },
             favicon:{
                 expand: true,
