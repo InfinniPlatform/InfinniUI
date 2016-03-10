@@ -137,9 +137,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
                 newScrollTop = scrollTop + itemTop;
             }
 
-            console.log("scrollTop: %d, itemTop: %d, itemHeight: %d, viewHeight: %d, newScrollTop: %d",
-                scrollTop, itemTop, itemHeight, viewHeight, newScrollTop
-            );
             if (typeof newScrollTop !== 'undefined') {
                 $container.scrollTop(newScrollTop);
             }
