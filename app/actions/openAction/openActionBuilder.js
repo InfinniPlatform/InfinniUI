@@ -7,13 +7,7 @@ _.extend(OpenActionBuilder.prototype, {
     build: function(context, args){
         var action = new OpenAction(args.parentView);
 
-        var linkView = args.builder.build( args.metadata.LinkView,
-                                            {
-                                                parent: args.parentView,
-                                                parentView: args.parentView,
-                                                basePathOfProperty: args.basePathOfProperty
-                                            });
-
+        var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
         action.setProperty('linkView', linkView);
 
         return action;
