@@ -85,9 +85,12 @@ var ComboBoxView = ListEditorBaseView.extend({
 
                     $dropdown.css(style);
                     $('body').append($dropdown);
-                    if (!model.get('multiSelect')) {
+                    if (model.get('autocomplete')) {
                         dropdownView.setSearchFocus();
+                    } else {
+                        view.ui.control.focus();
                     }
+                    setTimeout(dropdownView.ensureVisibleSelectedItem.bind(dropdownView), 0);
                 } else {
                     view.ui.control.focus();
                 }
@@ -130,6 +133,9 @@ var ComboBoxView = ListEditorBaseView.extend({
             return;
         }
 
+        if (this.isDropdown()) {
+            return this.dropDownView.onKeyDownHandler.call(this.dropDownView, event);
+        }
         switch (event.which) {
             case 40:    //Down Arrow
             case 32:    //Space
@@ -199,6 +205,11 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     updateSelectedItem: function () {
 
+    },
+
+    isDropdown: function () {
+        var model = this.model;
+        return !!model.get('dropdown');
     },
 
     toggleDropdown: function (toggle) {
