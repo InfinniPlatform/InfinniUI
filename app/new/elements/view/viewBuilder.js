@@ -13,6 +13,33 @@ _.extend(ViewBuilder.prototype, {
         return new View(params.parent);
     },
 
+    _getSelectedElementPath: function(metadata) {
+        var result;
+
+        if( _.isArray(metadata) ){
+            for (var i = 0, ii =  metadata.length; i<ii; i++){
+                result = this._getSelectedElementPath(metadata[i]);
+                if(result !== false){
+                    return '['+ i + ']' + result;
+                }
+            }
+        } else if( _.isObject(metadata) ){
+            if('isSelectedElement' in metadata) {
+                delete metadata.isSelectedElement;
+                return '';
+            } else {
+                for (var key in metadata){
+                    result = this._getSelectedElementPath(metadata[key]);
+                    if(result !== false){
+                        return '.' + key + result;
+                    }
+                }
+            }
+        }
+
+        return false;
+    },
+
     applyMetadata: function (params) {
 
         var parentView = params.parentView;
@@ -21,10 +48,18 @@ _.extend(ViewBuilder.prototype, {
         params = _.extend({}, params);
         params.parentView = params.element;
 
-        var
+        var that = this,
             metadata = params.metadata,
             element = params.element,
             builder = params.builder;
+
+        element.onSelectedElementChange(function() {
+            var path = that._getSelectedElementPath(params.metadata);
+
+            var editor = InfinniUI.JsonEditor(params.metadata);
+            editor.searchByPath(path);
+        });
+
 
         var scripts = element.getScripts();
         var parameters = element.getParameters();

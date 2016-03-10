@@ -22,6 +22,14 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             args.parent.addChild(element);
         }
 
+        element.onMouseDown( function(eventData) {
+            if( eventData.ctrlKey ){
+                args.metadata.isSelectedElement = true;
+                args.parentView.showSelectedElementMetadata();
+                eventData.nativeEventData.stopPropagation();
+            }
+        });
+
         return element;
     },
 
