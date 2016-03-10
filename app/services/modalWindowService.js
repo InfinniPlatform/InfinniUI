@@ -22,11 +22,18 @@ InfinniUI.ModalWindowService = (function () {
 
                         previous.modal.show();
                         previous.background.show();
+                        notifyLayoutChange();
                     }
 
                     modalQueue.splice(i, 1);
                 }
             }
+
         }
     };
+
+    function notifyLayoutChange () {
+        var exchange = window.InfinniUI.global.messageBus;
+        exchange.send('OnChangeLayout', {});
+    }
 })();
