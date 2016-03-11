@@ -5,17 +5,27 @@
     <script src="/compiled/platform/jsonEditor/jsoneditor.min.js"></script>
 
     <link rel="stylesheet" href="/compiled/platform/jsonEditor/css/jsoneditor.min.css">
+
+    <style>
+        .button-save {
+            position: absolute;
+            top: 15px;
+            right: 210px;
+        }
+    </style>
 </head>
 <body>
 <div id="jsonEditor"></div>
+<button class="button-save" onclick="saveMetadata()">Save</button>
 <script>
     var editor = new JSONEditor(document.getElementById("jsonEditor"));
+    var onSaveMetadataHandler;
 
     function setMetadata(stringMetadata) {
         editor.set(JSON.parse(stringMetadata));
     }
 
-    function setPath(path){
+    function setPath(path) {
         var selectedNode = editor.node && editor.node.findNode(path);
 
         if (selectedNode != null) {
@@ -23,6 +33,16 @@
             setTimeout(function () {
                 selectedNode.focus();
             }, 300);
+        }
+    }
+
+    function onSaveMetadata(handler) {
+        onSaveMetadataHandler = handler;
+    }
+
+    function saveMetadata() {
+        if (onSaveMetadataHandler) {
+            onSaveMetadataHandler(editor.get());
         }
     }
 </script>
