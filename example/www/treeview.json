@@ -1,5 +1,4 @@
 {
-  "OnLoaded": "OL2",
   "DataSources": [
     {
       "ObjectDataSource": {
@@ -155,111 +154,43 @@
       }
     },
     {
-      "Button": {
-        "Text": "Click",
-        "OnClick": "OnBtnLcik"
+      "Panel": {
+        "Header": "TreeView",
+        "Items": [
+          {
+            "TreeView": {
+              "KeyProperty": "Id",
+              "ParentProperty": "ParentId",
+              "ItemProperty": "Name",
+              "ValueProperty": "Name",
+              "MultiSelect": true,
+              "Items": {
+                "Source": "Geo"
+              },
+              "OnValueChanged": "{console.log('onValueChanged from %s to %s', JSON.stringify(args.oldValue), JSON.stringify(args.newValue));}",
+              "OnSelectedItemChanged": "{console.log('onCslectedItemChanges to %s', JSON.stringify(args.value));}"
+            }
+          }
+        ]
       }
     },
     {
       "Panel": {
-        "ItemTemplate": {
-          "FileBox": {
-            "LabelText": "Файл",
-            "Enabled": true,
-            "~MaxSize": 1048576,
-            "AcceptTypes": [".zip"],
-            "Value": {
-              "Source": "Files",
-              "Property": "$.company_profile_data.AnnualFinancialStatementFiles.#.File"
-            }
-          }
-        },
-        "Items": {
-          "Source": "Files",
-          "Property": "$.company_profile_data.AnnualFinancialStatementFiles"
-        }
-      }
-    },
-    {
-      "TreeView": {
-        "KeyProperty": "Id",
-        "ParentProperty": "ParentId",
-        "ItemProperty": "Name",
-        "Items": {
-          "Source": "Geo"
-        }
-      }
-    },
-    {
-      "ListBox": {
-        "ItemProperty": "Name",
-        "Items": {
-          "Source": "Geo"
-        }
-      }
-    },
-    {
-      "FileBox": {
-        "LabelText": "Файл",
-        "Enabled": true,
-        "~MaxSize": 1048576,
-        "Value": {
-          "Source": "Child",
-          "Property": "0.File"
-        }
-      }
-    },
-    {
-      "DataGrid": {
-        "Columns": [
+        "Header": "ListBox",
+        "Items": [
           {
-            "Header": "Id",
-            "CellProperty": "Id"
-          },
-          {
-            "Header": "Name",
-            "~CellProperty": "Name",
-            "~CellFormat": "{Name} [{Group}]",
-            "CellTemplate": {
-              "Label": {
-                "Value": {
-                  "Source": "Test",
-                  "Property": "#.Name"
-                }
+            "ListBox": {
+              "ItemProperty": "Name",
+              "Items": {
+                "Source": "Geo"
               }
             }
-          },
-          {
-            "Header": "Group",
-            "CellProperty": "Group"
-          },
-          {
-            "Header": "Fuck",
-            "CellSelector": "{return JSON.stringify(args.value.Array);}"
           }
-        ],
-        "~RowBackground": {
-          "Source": "Test",
-          "Property": "#.Id",
-          "Mode": "ToElement",
-          "Converter": {
-            "ToElement": "MyConverterBackground"
-          }
-        },
-        "~RowForeground": "Primary3",
-        "~RowStyle": {
-          "Source": "Test",
-          "Property": "#.Id",
-          "Mode": "ToElement",
-          "Converter": {
-            "ToElement": "MyConverter"
-          }
-        },
-        "Items": {
-          "Source": "Test"
-        }
+        ]
       }
-    }],
+    }
+
+    ],
   "Scripts": [
     {
       "Name": "MyConverter",
@@ -268,14 +199,6 @@
     {
       "Name": "MyConverterBackground",
       "Body": "return args.value % 2 ? 'White' : 'White';"
-    },
-    {
-      "Name": "OL2",
-      "Body": "var ds = context.dataSources.Files; items = ds.getItems(); ds.setSelectedItem(items[0]); var annualFiles = ds.getProperty('$.company_profile_data.AnnualFinancialStatementFiles');if (!annualFiles){ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', [{}]);}else{annualFiles.push({});ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', annualFiles.slice(0));}"
-    },
-    {
-      "Name": "OnBtnLcik",
-      "Body": "ds.onPropertyChanged(function (ctx, args) {var ds = ctx.dataSources.Files; var fileArray = ds.getProperty('$.company_profile_data.AnnualFinancialStatementFiles');var filteredArray = _.filter(fileArray, function(f) {return f.File});filteredArray.push({});ds.setProperty('$.company_profile_data.AnnualFinancialStatementFiles', filteredArray.slice(0))})"
     }
   ]
 }

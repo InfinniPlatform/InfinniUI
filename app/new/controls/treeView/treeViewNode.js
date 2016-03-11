@@ -4,31 +4,72 @@ var TreeViewNode = Backbone.View.extend({
 
     className: 'pl-treeview-node',
 
+    classNameChecked: 'pl-treeview-node_checked',
+
+    classNameSelected: 'pl-treeview-node_selected',
+
+    classNameCollapsed: 'pl-treeview-node_collapsed',
+
     UI: {
-        item: '.pl-treeview-node-item',
+        itemContent: '.pl-treeview-node-item__content',
+        itemCheck: '.pl-treeview-node-item__check',
         container: '.pl-treeview-node-container',
+        button: '.pl-treeview-node-button',
         items: '.pl-treeview-node-items'
     },
 
-    events: {
-        "click .pl-treeview-node-container": 'onClickEventHandler'
+    initialize: function () {
+        var model = new Backbone.Model();
+        this.model = model;
+        this.listenTo(model, 'change:selected', this.updateSelected);
+        this.listenTo(model, 'change:checked', this.updateChecked);
+    },
+
+    updateChecked: function () {
+        var checked = this.model.get('checked');
+        this.$el.toggleClass(this.classNameChecked, checked === true);
+    },
+
+    updateSelected: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass(this.classNameSelected, selected === true);
+    },
+
+    updateState: function () {
+        this.updateSelected();
+        this.updateChecked();
     },
 
     render: function () {
         this.$el.html(this.template);
         this.toggle();
         this.bindUIElements();
-
+        this.updateState();
+        this.initDomEventsHandlers();
         return this;
     },
 
+    initDomEventsHandlers: function () {
+        this.ui.button.on('click', this.onClickEventHandler.bind(this));
+        this.ui.itemContent[0].addEventListener('click', this.onClickItemHandler.bind(this), true);
+        this.ui.itemCheck[0].addEventListener('click', this.onClickCheckHandler.bind(this), true);
+    },
+
+    onClickItemHandler: function (event) {
+        this.trigger('select');
+    },
+
+    onClickCheckHandler: function (event) {
+        this.trigger('check');
+    },
+
     toggle: function () {
-        this.$el.toggleClass('pl-treeview-bode_collapsed');
+        this.$el.toggleClass(this.classNameCollapsed);
     },
 
     setItemContent: function ($itemContent) {
-        this.ui.item.empty();
-        this.ui.item.append($itemContent);
+        this.ui.itemContent.empty();
+        this.ui.itemContent.append($itemContent);
     },
 
     setItemsContent: function ($itemsContent) {
@@ -37,10 +78,15 @@ var TreeViewNode = Backbone.View.extend({
     },
 
     onClickEventHandler: function (event) {
-        if (event.currentTarget !== this.ui.container[0]) {
-            return;
-        }
         this.toggle();
+    },
+
+    setSelected: function (selected) {
+        this.model.set('selected', selected);
+    },
+
+    setChecked: function (checked) {
+        this.model.set('checked', checked);
     }
 });
 

@@ -1,6 +1,8 @@
 var TreeViewView = ListEditorBaseView.extend({
 
     className: 'pl-treeview',
+    classNameMultiSelect: 'pl-treeview_multi-select',
+    classNameSingleSelect: 'pl-treeview_single-select',
 
     template: InfinniUI.Template["new/controls/treeView/template/treeview.tpl.html"],
 
@@ -28,6 +30,7 @@ var TreeViewView = ListEditorBaseView.extend({
 
     renderItems: function (parentId) {
         var
+            view = this,
             $nodes,
             model = this.model,
             collection = model.get('items'),
@@ -45,33 +48,75 @@ var TreeViewView = ListEditorBaseView.extend({
                     return isEmpty(parentId) ? isEmpty(parent) : parent === parentId;
                 })
                 .map(function (item) {
-
                     var node = new TreeViewNode().render();
                     var $node = node.$el;
-
                     var $item = itemTemplate(null, {
                         value: item,
                         index: collection.indexOf(item)
                     }).render();
 
-                    if (typeof item !== 'undefined') {
-                        $item.data('pl-data-item', item);
-                    }
+                    node.listenTo(model, 'change:selectedItem', function (model, selectedItem) {
+                        node.setSelected(selectedItem === item);
+                    });
 
+                    node.listenTo(model, 'change:value', function (model, value) {
+                        var multiSelect = model.get('multiSelect');
+
+                        var checked;
+                        if (!multiSelect) {
+                            checked = isValueForItem(value);
+                        } else if (Array.isArray(value)) {
+                            checked = value.some(isValueForItem)
+                        } else {
+                            checked = false;
+                        }
+                        node.setChecked(checked);
+                    });
+
+                    view.listenTo(node, 'select', view.onSelectNodeHandler.bind(view, item, node));
+                    view.listenTo(node, 'check', view.onCheckNodeHandler.bind(view, item, node));
 
                     node.setItemContent($item);
                     var $subitems = renderNodes(keySelector(null, {value: item}));
                     node.setItemsContent($subitems);
 
-                    //this.addOnClickEventListener($item, item);
                     return $node;
-                }/*, this*/);
+
+                    function isValueForItem(value) {
+                        return model.itemByValue(value) === item;
+                    }
+                });
         }
-
-
 
         function isEmpty(value) {
             return value === null || typeof value === 'undefined';
+        }
+    },
+
+    onSelectNodeHandler: function(item , index) {
+        var model = this.model;
+
+        var multiSelect = model.get('multiSelect');
+
+        model.set('selectedItem', item);
+        if (!multiSelect) {
+            //Клик по элементу одновременно переключает значение и делает элемент выделенным
+            var value = model.valueByItem(item);
+            model.toggleValue(value);
+        }
+    },
+
+    onCheckNodeHandler: function (item, index) {
+        var model = this.model;
+
+        var multiSelect = model.get('multiSelect');
+
+        var value = model.valueByItem(item);
+        model.toggleValue(value);
+
+        if (!multiSelect) {
+            //Клик по элементу одновременно переключает значение и делает элемент выделенным
+            model.set('selectedItem', item);
         }
     },
 
@@ -81,6 +126,13 @@ var TreeViewView = ListEditorBaseView.extend({
 
     updateProperties: function () {
         ListEditorBaseView.prototype.updateProperties.call(this);
+        this.updateMultiSelect();
+    },
+
+    updateMultiSelect: function () {
+        var multiSelect = this.model.get('multiSelect');
+        this.$el.toggleClass(this.classNameMultiSelect, !!multiSelect);
+        this.$el.toggleClass(this.classNameSingleSelect, !multiSelect);
     },
 
     updateEnabled: function () {

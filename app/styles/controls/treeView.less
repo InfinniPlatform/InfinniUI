@@ -1,6 +1,54 @@
 .pl-treeview {
 
+  &.pl-treeview_single-select {
+    .pl-treeview-node-item__check {
+      display: none;
+    }
+  }
+
+  &.pl-treeview_multi-select {
+
+    .pl-treeview-node-item__check {
+      display: block;
+      float: left;
+    }
+
+    .pl-treeview-node {
+
+      &.pl-treeview-node_checked {
+        & > .pl-treeview-node-container {
+          .pl-treeview-node-item__checker {
+            &:before {
+              content: "\f046";
+            }
+          }
+        }
+      }
+
+      & > .pl-treeview-node-container {
+
+        .pl-treeview-node-item__checker {
+          &:before {
+            //@see http://fontawesome.io/icon/square-o/
+            content: "\f096";
+          }
+        }
+      }
+    }
+
+  }
+
   .pl-treeview-node {
+
+    &.pl-treeview-node_selected {
+
+      & > .pl-treeview-node-container {
+        color: @list-group-active-color;
+        background-color: @list-group-active-bg;
+        border-color: @list-group-active-border;
+      }
+
+    }
 
     .pl-treeview-node-container {
       .clearfix();
@@ -10,13 +58,15 @@
       padding-left: 20px;
     }
 
-    .pl-treeview-node-item-expand {
-      display: none;
+    .pl-treeview-node-button {
       float:left;
+      cursor: pointer;
+    }
+    .pl-treeview-node-button-expand {
+      display: none;
     }
 
     .pl-treeview-node-item-collapse {
-      display: block;
       float:left;
     }
 
@@ -24,16 +74,15 @@
       float: left;
     }
 
-    &.pl-treeview-bode_collapsed {
+    &.pl-treeview-node_collapsed {
 
-      .pl-treeview-node-item-expand {
+      .pl-treeview-node-button-expand {
         display: block;
       }
 
-      .pl-treeview-node-item-collapse {
+      .pl-treeview-node-button-collapse {
         display: none;
       }
-
 
 
       .pl-treeview-node {
