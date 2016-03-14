@@ -2,19 +2,22 @@
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     var appFiles = [
             'js/**/*.js'
         ],
         templateFiles = ["js/**/*.tpl.html"];
 
+    var infinniUIpath = '..';
     var platformBuildArgs = JSON.stringify({
         "override": {
             "less": {
                 "pl-override-platform-variables-path": '\"../../example/styles/platform-variables.less\"',
-                "pl-override-bootstrap-variables-path": '\"../../example/styles/platform-variables.less\"',
-                "pl-bootstrap-theme-path": '\"../../example/styles/platform-variables.less\"',
-                "pl-extension-path": '\"../../example/styles/platform-variables.less\"'
+                "pl-override-bootstrap-variables-path": '\"../../example/styles/bootstrap-variables.less\"',
+                "pl-bootstrap-theme-path": '\"../../example/styles/bootstrap-theme.less\"',
+                "pl-extension-path": '\"../../example/styles/extensions.less\"'
             }
         }
     });
@@ -32,6 +35,15 @@
                 },
                 src: appFiles,
                 dest: 'www/compiled/js/app.js'
+            }
+        },
+
+        copy: {
+            infinniUI: {
+                expand: true,
+                cwd: infinniUIpath + '/out/',
+                src: '**/*',
+                dest: 'www/compiled/platform/'
             }
         },
 
@@ -60,7 +72,9 @@
                     keepalive: true
                 }
             }
-        }
+        },
+
+        clean: ["www/compiled/"]
     });
 
     grunt.registerTask('buildPlatform', function () {
@@ -70,10 +84,11 @@
                 grunt: true,
                 args: ['build:' + platformBuildArgs],
                 opts: {
-                    cwd: '..'
+                    cwd: infinniUIpath
                 }
             }, function(error, result, code){
                 console.log(result.stdout);
+                console.log(error);
                 done();
             }
 
@@ -83,6 +98,9 @@
     grunt.task.registerTask('build',
         function () {
             var tasks = [
+                'buildPlatform',
+                'clean',
+                'copy',
                 'concat',
                 'jst'
             ];
