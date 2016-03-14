@@ -30,10 +30,7 @@
             var selectedNode = editor.node && editor.node.findNode(path);
 
             if (selectedNode != null) {
-                selectedNode.scrollTo();
-                setTimeout(function () {
-                    selectedNode.focus();
-                }, 300);
+                _focusTo(selectedNode);
             }
         }
 
@@ -137,10 +134,12 @@
                         var rootParent = _getRootParent(parentValues, childMargin);
 
                         if(rootParent) {
-                            if(
-                                    rootParent.find('.jsoneditor-field').text() == 'OnLoaded' ||
-                                    rootParent.find('.jsoneditor-field').text() == 'OnClick'
-                            ) {
+                            var events = [
+                                'OnLoaded',
+                                'OnClick'
+                            ];
+
+                            if(events.indexOf(rootParent.find('.jsoneditor-field').text()) != -1) {
                                 _focusToScripts(textContent);
                             }
                         }
