@@ -7,7 +7,7 @@ _.extend(MetadataViewBuilder.prototype, {
     build: function (context, args) {
         var metadata = args.metadata;
         var viewTemplate = this.buildViewTemplate(args);
-        var linkView = new LinkView(args.parent);
+        var linkView = new LinkView(args.parentView);
 
         linkView.setViewTemplate(viewTemplate);
 
@@ -56,7 +56,7 @@ _.extend(MetadataViewBuilder.prototype, {
 
             var view = builder.buildType("View", viewMetadata, {
                 parentView: parentView,
-                parent: params.parent,
+                parent: parentView,
                 params: parameters,
                 suspended: params.suspended
             });

@@ -38,7 +38,7 @@ function InlineViewBuilder() {
 
             var view = builder.buildType("View", viewMetadata, {
                 parentView: parentView,
-                parent: params.parent,
+                parent: parentView,
                 params: parameters,
                 suspended: params.suspended
             });
