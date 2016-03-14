@@ -201,12 +201,12 @@ describe('AddAction', function () {
                     saveBtn.click();
 
                     // Then
-                    setTimeout(function(){
+                    view.context.dataSources.DocumentDataSource.updateItems( function() {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
                         done();
-                    }, 250);
+                    });
                 }
             );
         });

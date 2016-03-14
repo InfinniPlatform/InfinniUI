@@ -20,6 +20,13 @@ var displayFormatBuilderMixin = {
                 args = args || {};
                 return formatter.format(args.value);
             }
+        } else if (displayFormat && typeof displayFormat === 'object') {
+            formatter = builder.build(displayFormat);
+
+            format = function (context, args){
+                args = args || {};
+                return formatter.format(args.value);
+            }
         }
 
         return format;

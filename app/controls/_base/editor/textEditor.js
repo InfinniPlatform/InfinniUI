@@ -385,7 +385,12 @@ var TextEditor = Backbone.View.extend({
         }
 
         var text = (event.originalEvent || event).clipboardData.getData('text/plain') || prompt('Paste something..');
-        maskEdit.pasteStringToMask(text, this.getCaretPosition());
+        var chars = text.split('');
+
+        for (var i = 0, position = this.getCaretPosition(); i < chars.length; i = i + 1) {
+            position = maskEdit.setCharAt(chars[i], position);
+        }
+        //maskEdit.pasteStringToMask(text, this.getCaretPosition());
 
         event.preventDefault();
         editor.val(maskEdit.getText());

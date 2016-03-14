@@ -58,9 +58,13 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.setPageSize(metadata.PageSize || 15);
         dataSource.setPageNumber(metadata.PageNumber || 0);
 
+        if('Sorting' in metadata){
+            dataSource.setSorting(metadata['Sorting']);
+        }
+
         var queryMetadata;
         if('Query' in metadata){
-            dataSource.setFilter(metadata.Query);
+            dataSource.setFilter(metadata['Query']);
         }
 
         if('IsLazy' in metadata){

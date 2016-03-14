@@ -308,6 +308,14 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    getSorting: function () {
+        return this.get('sorting');
+    },
+
+    setSorting: function (sortingValue) {
+        this.set('sorting', sortingValue);
+    },
+
     isModifiedItems: function () {
         return this.isModified();
     },
@@ -621,7 +629,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         dataProvider.deleteItem(item, function (data) {
-            if (!('isValid' in data) || data.isValid === true) {
+            if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
             } else {
                 that._notifyAboutFailValidationByDeleting(item, data, error);
@@ -684,9 +692,7 @@ var BaseDataSource = Backbone.Model.extend({
         argument.value = item;
         argument.error = errorData;
 
-        if (errorHandler) {
-            errorHandler(context, argument);
-        }
+        this._notifyAboutValidation(errorData, errorHandler);
     },
 
     isDataReady: function () {

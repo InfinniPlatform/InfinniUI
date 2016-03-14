@@ -7,24 +7,56 @@ var ComboBoxView = ListEditorBaseView.extend({
     events: {
         'click .pl-combobox__grip': 'onClickGripHandler',
         'click .pl-combobox__value': 'onClickValueHandler',
-        'click .pl-combobox__clear': 'onClickClearHandler'
+        'click .pl-combobox__clear': 'onClickClearHandler',
+        'click .pl-control': 'onClickValueHandler',
+        'keydown .pl-control': 'onKeyDownControlHandler'
     },
 
     UI: _.defaults({
+        control: '.pl-control',
         label: '.pl-control-label',
         value: '.pl-combobox__value',
         clear: '.pl-combobox__clear'
     }, ListEditorBaseView.prototype.UI),
 
+    isControlElement: function (el) {
+        var res = ListEditorBaseView.prototype.isControlElement.call(this, el);
+
+        if (res) {
+            return res;
+        }
+
+        if (!this.dropDownView) {
+            return false;
+        }
+
+        return $.contains(this.dropDownView.el, el);
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.ui.control.attr('tabindex', 0);
+        } else {
+            this.ui.control.removeAttr('tabindex');
+        }
+    },
+
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
         var model = this.model,
             view = this;
+
+        //this.on('beforeClick', this.activateControl);
+
         this.on('render', function () {
             view.renderValue();
+
             model.on('change:dropdown', function (model, dropdown) {
                 if (dropdown) {
                     model.set('search', '');//Сброс фильтра
+                    model.set('focused', true);
                     if (view.dropDownView) {
                         view.dropDownView.remove();
                     }
@@ -53,9 +85,14 @@ var ComboBoxView = ListEditorBaseView.extend({
 
                     $dropdown.css(style);
                     $('body').append($dropdown);
-                    if (!model.get('multiSelect')) {
+                    if (model.get('autocomplete')) {
                         dropdownView.setSearchFocus();
+                    } else {
+                        view.ui.control.focus();
                     }
+                    setTimeout(dropdownView.ensureVisibleSelectedItem.bind(dropdownView), 0);
+                } else {
+                    view.ui.control.focus();
                 }
             });
             model.onValueChanged(this.onChangeValueHandler.bind(this));
@@ -91,10 +128,28 @@ var ComboBoxView = ListEditorBaseView.extend({
         return this.template;
     },
 
+    onKeyDownControlHandler: function (event) {
+        if (event.ctrlKey || event.altKey) {
+            return;
+        }
+
+        if (this.isDropdown()) {
+            return this.dropDownView.onKeyDownHandler.call(this.dropDownView, event);
+        }
+        switch (event.which) {
+            case 40:    //Down Arrow
+            case 32:    //Space
+                event.preventDefault();
+                this.toggleDropdown();
+                break;
+        }
+    },
+
     onClickClearHandler: function () {
         var enabled = this.model.get('enabled');
         if (enabled) {
             this.model.set('value', null);
+            this.ui.control.focus();
         }
     },
 
@@ -150,6 +205,11 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     updateSelectedItem: function () {
 
+    },
+
+    isDropdown: function () {
+        var model = this.model;
+        return !!model.get('dropdown');
     },
 
     toggleDropdown: function (toggle) {

@@ -49,6 +49,10 @@ _.extend(OpenModeDialogStrategy.prototype, {
             view.close();
         });
 
+        InfinniUI.ModalWindowService.modalWasOpened({
+            modal: this.$modal,
+            background: $('.modal-backdrop').last()
+        });
     },
 
     _initBehaviorFocusingInModal: function($modal, $modalBody){
@@ -74,6 +78,8 @@ _.extend(OpenModeDialogStrategy.prototype, {
         if (this.$modal) {
             this.$modal.modal('hide');
             this.$modal.remove();
+
+            InfinniUI.ModalWindowService.modalWasClosed(this.$modal);
         }
 
     }
