@@ -1,7 +1,5 @@
 var TreeViewNodeBase = Backbone.View.extend({
 
-    //template: InfinniUI.Template["new/controls/treeView/template/node-radio.tpl.html"],
-
     className: 'pl-treeview-node',
 
     classNameCheckerChecked: 'pl-treeview-item__checker_checked',
@@ -10,20 +8,12 @@ var TreeViewNodeBase = Backbone.View.extend({
     classNameItemsCollapsed: 'pl-treeview-node__items_collapsed',
     classNameButtonCollapse: 'pl-treeview-node__button_collapse',
     classNameButtonExpand: 'pl-treeview-node__button_expand',
-    //
-    //classNameCollapsed: 'pl-treeview-node_collapsed',
 
     UI: {
         checker: '.pl-treeview-item__checker',
         content: '.pl-treeview-item__content',
         items: '.pl-treeview-node__items',
         button: '.pl-treeview-node__button'
-
-        //itemContent: '.pl-treeview-node-item__content',
-        //itemCheck: '.pl-treeview-node-item__check',
-        //container: '.pl-treeview-node-container',
-        //button: '.pl-treeview-node-button',
-        //items: '.pl-treeview-node-items'
     },
 
     initialize: function () {
@@ -60,7 +50,6 @@ var TreeViewNodeBase = Backbone.View.extend({
 
     render: function () {
         this.$el.html(this.template);
-        //this.toggle();
         this.bindUIElements();
         this.updateState();
         this.initDomEventsHandlers();

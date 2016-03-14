@@ -2,204 +2,54 @@
   "DataSources": [
     {
       "ObjectDataSource": {
-        "Name": "Files",
-        "Items": [
-          {
-            "company_profile_data": {
-              "AnnualFinancialStatementFiles": [
-                {
-
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
         "Name": "Geo",
-        "Items": [
-          {"Id": 1, "ParentId": null, "Name": "Челябинск"},
-          {"Id": 2, "ParentId": 1, "Name": "Чичерина"},
-          {"Id": 3, "ParentId": 1, "Name": "Комарова"},
-          {"Id": 4, "ParentId": null, "Name": "Копейск"},
-          {"Id": 5, "ParentId": 4, "Name": "Победы"},
-          {"Id": 6, "ParentId": 5, "Name": "33/1"}
-        ],
-        "OnSelectedItemChanged": "{console.log('Geo.OnSelectedItemChanged', args, context.dataSources.Geo.getSelectedItem());}"
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "Test",
-        "Items": [
-          {"Id": 1, "Name": "One", "Group": "odd"},
-          {"Id": 2, "Name": "Two", "Group": "even"},
-          {"Id": 3, "Name": "Three", "Group": "odd"},
-          {"Id": 4, "Name": "Four", "Group": "even"},
-          {"Id": 5, "Name": "Five", "Group": "odd"},
-          {"Id": 6, "Name": "Six", "Group": "even"},
-          {"Id": 7, "Name": "Seven", "Group": "odd"}
-        ],
-        "~Query": [
-          {
-            "Property": "Group",
-            "Value": "odd",
-            "CriteriaType": 1
-          }
-        ]
-      }
-    },
-    {
-      "DocumentDataSource": {
-        "Name": "Child",
-        "ConfigId": "PTA",
-        "DocumentId": "Child",
-        "Query": [
-          {
-            "Property": "Name",
-            "Value": "е",
-            "CriteriaType": 65536
-          }
-        ]
-      }
-    },
-    {
-      "ObjectDataSource":{
-        "Name": "Clone",
-        "Items":{
-          "Source": "BloodGroupDataSource",
-          "Converter":{
-            "ToElement":"{return [args.value[0]];}"
-          }
-        }
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "Numbers",
-        "Items": [
-          {"value": 0},
-          {"value": 1},
-          {"value": 2},
-          {"value": 3},
-          {"value": 4},
-          {"value": 5},
-          {"value": 6},
-          {"value": 7},
-          {"value": 8},
-          {"value": 9}
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "BloodGroupDataSource",
         "Items": [
           {
             "Id": 1,
-            "DisplayName": "44",
-            "SomeField": "",
-            "Array": [
-              {
-                "Id": 5,
-                "DisplayName": "I-1"
-              },
-              {
-                "Id": 6,
-                "DisplayName": "I-2"
-              },
-              {
-                "Id": 7,
-                "DisplayName": "I-3"
-              }
-            ]
+            "ParentId": null,
+            "Name": "Челябинск"
           },
           {
             "Id": 2,
-            "DisplayName": "II",
-            "SomeField": "val",
-            "Array": [
-              {
-                "Id": 8,
-                "DisplayName": "II-1"
-              },
-              {
-                "Id": 9,
-                "DisplayName": "II-2"
-              }
-            ]
+            "ParentId": 1,
+            "Name": "Чичерина"
           },
           {
             "Id": 3,
-            "DisplayName": "III",
-            "SomeField": 3
+            "ParentId": 1,
+            "Name": "Комарова"
           },
           {
             "Id": 4,
-            "DisplayName": "IV",
-            "SomeField": null
+            "ParentId": null,
+            "Name": "Копейск"
+          },
+          {
+            "Id": 5,
+            "ParentId": 4,
+            "Name": "Победы"
+          },
+          {
+            "Id": 6,
+            "ParentId": 5,
+            "Name": "33/1"
           }
-        ],
-        "OnSelectedItemChanged": {
-          "Name": "OnSelectedItemChanged_1"
-        }
+        ]
       }
     }
   ],
   "Items": [
     {
-      "TextBox": {
-        "LabelText": "Text"
+      "TreeView": {
+        "KeyProperty": "Id",
+        "ParentProperty": "ParentId",
+        "ItemProperty": "Name",
+        "ValueProperty": "Name",
+        "MultiSelect": true,
+        "Items": {
+          "Source": "Geo"
+        }
       }
-    },
-    {
-      "Panel": {
-        "Header": "TreeView",
-        "Items": [
-          {
-            "TreeView": {
-              "KeyProperty": "Id",
-              "ParentProperty": "ParentId",
-              "ItemProperty": "Name",
-              "ValueProperty": "Name",
-              "MultiSelect": false,
-              "Items": {
-                "Source": "Geo"
-              },
-              "OnValueChanged": "{console.log('onValueChanged from %s to %s', JSON.stringify(args.oldValue), JSON.stringify(args.newValue));}",
-              "OnSelectedItemChanged": "{console.log('onSelectedItemChanges to %s', JSON.stringify(args.value));}"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "Panel": {
-        "Header": "ListBox",
-        "Items": [
-          {
-            "ListBox": {
-              "ItemProperty": "Name",
-              "Items": {
-                "Source": "Geo"
-              }
-            }
-          }
-        ]
-      }
-    }
-
-    ],
-  "Scripts": [
-    {
-      "Name": "MyConverter",
-      "Body": "return args.value % 2 ? 'odd' : 'even';"
-    },
-    {
-      "Name": "MyConverterBackground",
-      "Body": "return args.value % 2 ? 'White' : 'White';"
     }
   ]
 }
