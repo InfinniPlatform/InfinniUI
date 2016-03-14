@@ -10,8 +10,6 @@
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-generate');
 
-    require('time-grunt')(grunt);
-
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
