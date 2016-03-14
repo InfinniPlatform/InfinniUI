@@ -3,11 +3,13 @@ function InlineViewBuilder() {
         var that = this,
             metadata = args.metadata;
 
-        var linkView = new LinkView(args.parentView);
+        var parentView = this.getParentViewByOpenMode(args, metadata.OpenMode);
+
+        var linkView = new LinkView(parentView);
 
         linkView.setViewTemplate(function(onViewReadyHandler){
 
-            that.buildViewByMetadata(args, args.metadata['View'], function (view) {
+            that.buildViewByMetadata(args, args.metadata['View'], parentView, function (view) {
                 return onViewReadyHandler.call(null, view);
             });
         });
@@ -29,9 +31,8 @@ function InlineViewBuilder() {
 
 
 
-    this.buildViewByMetadata = function(params, viewMetadata, onViewReadyHandler){
+    this.buildViewByMetadata = function(params, viewMetadata, parentView, onViewReadyHandler){
         var builder = params.builder;
-        var parentView = params.parentView;
         var parameters = this.buildParameters(params);
 
         if (viewMetadata !== null) {
@@ -67,5 +68,23 @@ function InlineViewBuilder() {
         }
         return result;
    };
+
+    this.getParentViewByOpenMode = function(params, mode) {
+        if( mode == null || mode == "Default" ) {
+            return this.getRootView(params.parentView);
+        }
+
+        return params.parentView;
+    };
+
+    this.getRootView = function(view) {
+        var parentView = view.getView();
+
+        if( parentView == null ) {
+            return view;
+        }
+
+        return this.getRootView(parentView);
+    };
 }
 
