@@ -4,5 +4,8 @@ _.defaults( InfinniUI.config, {
     cacheMetadata: false, //boolean - enable/disable cache | milliseconds
     serverUrl: 'http://localhost:9900',//'http://10.0.0.32:9900';
     configId: 'PTA',
-    configName: 'Хабинет'
+    configName: 'Хабинет',
+    editorService: {
+        url: 'http://localhost:5500/api/metadata/saveMetadata'
+    }
 });

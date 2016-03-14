@@ -21,7 +21,7 @@ InfinniUI.JsonEditor = (function () {
 
             if (!childWindow) {
 
-                var tempChildWindow = window.open('jsonEditor/index.html', 'JSON_Editor', 'menubar=yes');
+                var tempChildWindow = window.open('jsonEditor/index.html', 'JSON_Editor', {});
 
                 tempChildWindow.onload = function () {
                     childWindow = tempChildWindow;
@@ -31,7 +31,7 @@ InfinniUI.JsonEditor = (function () {
                         delete metadata.DocumentId;
 
                         $.ajax({
-                            url: 'http://localhost:5500/api/metadata/saveMetadata',
+                            url: InfinniUI.config.editorService.url,
                             type: 'POST',
                             data: {
                                 Id: metadata.Id,
