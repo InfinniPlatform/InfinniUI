@@ -10,6 +10,8 @@
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-generate');
 
+    require('time-grunt')(grunt);
+
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
@@ -44,7 +46,9 @@
             '!app/controls/dataNavigation/**/*.*',
             '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*'
+            '!app/element/dataElement/dataGrid/**/*.*',
+            '!app/controls/treeView/**/*.*',
+            '!app/element/dataElement/treeView/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -53,7 +57,6 @@
             'bower_components/moment/moment.js',
             'bower_components/moment/lang/ru.js',
             'bower_components/signalr/jquery.signalR.js',
-            'bower_components/jstree/dist/jstree.js',
             'bower_components/ulogin/index.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
@@ -71,7 +74,6 @@
             'app/styles/main.less'
         ],
         vendorCssFiles = [
-            'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
             'bower_components/font-awesome/css/font-awesome.min.css',
             'bower_components/toastr/toastr.css',
             'bower_components/jsoneditor/dist/jsoneditor.min.css'
@@ -145,11 +147,7 @@
             resources: {
                 expand: true,
                 flatten: true,
-                src: [
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png'
-                ],
+                src: [],
                 dest: 'out/css/'
             },
             jsonEditor: {
