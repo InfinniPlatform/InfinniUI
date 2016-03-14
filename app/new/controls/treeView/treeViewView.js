@@ -36,6 +36,7 @@ var TreeViewView = ListEditorBaseView.extend({
             collection = model.get('items'),
             parentSelector = model.get('parentSelector'),
             keySelector = model.get('keySelector'),
+            nodeConstructor = this.getNodeConstructor(),
             itemTemplate = model.get('itemTemplate');
 
         $nodes = renderNodes();
@@ -48,7 +49,7 @@ var TreeViewView = ListEditorBaseView.extend({
                     return isEmpty(parentId) ? isEmpty(parent) : parent === parentId;
                 })
                 .map(function (item) {
-                    var node = new TreeViewNode().render();
+                    var node = new nodeConstructor().render();
                     var $node = node.$el;
                     var $item = itemTemplate(null, {
                         value: item,
@@ -91,6 +92,12 @@ var TreeViewView = ListEditorBaseView.extend({
         function isEmpty(value) {
             return value === null || typeof value === 'undefined';
         }
+    },
+
+    getNodeConstructor: function () {
+        var multiSelect = this.model.get('multiSelect');
+
+        return (multiSelect === true) ? TreeViewNodeCheckbox : TreeViewNodeRadio;
     },
 
     onSelectNodeHandler: function(item , index) {

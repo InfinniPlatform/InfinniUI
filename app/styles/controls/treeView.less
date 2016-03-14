@@ -1,102 +1,88 @@
 .pl-treeview {
 
-  &.pl-treeview_single-select {
-    .pl-treeview-node-item__check {
-      display: none;
+  &_multi-select {
+
+  }
+
+  &_single-select {
+
+  }
+
+}
+
+.pl-treeview-node {
+  &__button {
+    display:inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    .user-select(none);
+
+    &_expand {
+      &:before {
+        content: "\f196";
+      }
+    }
+
+    &_collapse {
+      &:before {
+        content: "\f147";
+      }
     }
   }
 
-  &.pl-treeview_multi-select {
+  &__item {
+    display: inline-block;
+  }
 
-    .pl-treeview-node-item__check {
+  &__items {
+    margin-left: 20px;
+
+    &_expanded {
       display: block;
-      float: left;
     }
 
-    .pl-treeview-node {
-
-      &.pl-treeview-node_checked {
-        & > .pl-treeview-node-container {
-          .pl-treeview-node-item__checker {
-            &:before {
-              content: "\f046";
-            }
-          }
-        }
-      }
-
-      & > .pl-treeview-node-container {
-
-        .pl-treeview-node-item__checker {
-          &:before {
-            //@see http://fontawesome.io/icon/square-o/
-            content: "\f096";
-          }
-        }
-      }
-    }
-
-  }
-
-  .pl-treeview-node {
-
-    &.pl-treeview-node_selected {
-
-      & > .pl-treeview-node-container {
-        color: @list-group-active-color;
-        background-color: @list-group-active-bg;
-        border-color: @list-group-active-border;
-      }
-
-    }
-
-    .pl-treeview-node-container {
-      .clearfix();
-    }
-
-    .pl-treeview-node {
-      padding-left: 20px;
-    }
-
-    .pl-treeview-node-button {
-      float:left;
-      cursor: pointer;
-    }
-    .pl-treeview-node-button-expand {
+    &_collapsed {
       display: none;
     }
+  }
 
-    .pl-treeview-node-item-collapse {
-      float:left;
+}
+
+.pl-treeview-item {
+  &__checker {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    .user-select(none);
+
+    &_checkbox {
+      &:before {
+        content: "\f096";
+      }
     }
 
-    .pl-treeview-node-item {
-      float: left;
+    &_checkbox&_checked {
+      &:before{
+        content: "\f14a";
+      }
     }
 
-    &.pl-treeview-node_collapsed {
+    &_radio {
+      display: none;//nothing
+    }
 
-      .pl-treeview-node-button-expand {
-        display: block;
-      }
-
-      .pl-treeview-node-button-collapse {
-        display: none;
-      }
-
-
-      .pl-treeview-node {
-        display: none;
-      }
+    &_radio&_checked {
+      display: none;//nothing
     }
 
   }
 
+  &__content {
+    display: inline-block;
+    cursor: pointer;
 
-  .pl-treeview-node-item {
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    &_selected {
+      color: @list-group-active-color;
+      background-color: @list-group-active-bg;
+      border-color: @list-group-active-border;
+    }
   }
 }

@@ -26,7 +26,8 @@
           {"Id": 4, "ParentId": null, "Name": "Копейск"},
           {"Id": 5, "ParentId": 4, "Name": "Победы"},
           {"Id": 6, "ParentId": 5, "Name": "33/1"}
-        ]
+        ],
+        "OnSelectedItemChanged": "{console.log('Geo.OnSelectedItemChanged', args, context.dataSources.Geo.getSelectedItem());}"
       }
     },
     {
@@ -163,12 +164,12 @@
               "ParentProperty": "ParentId",
               "ItemProperty": "Name",
               "ValueProperty": "Name",
-              "MultiSelect": true,
+              "MultiSelect": false,
               "Items": {
                 "Source": "Geo"
               },
               "OnValueChanged": "{console.log('onValueChanged from %s to %s', JSON.stringify(args.oldValue), JSON.stringify(args.newValue));}",
-              "OnSelectedItemChanged": "{console.log('onCslectedItemChanges to %s', JSON.stringify(args.value));}"
+              "OnSelectedItemChanged": "{console.log('onSelectedItemChanges to %s', JSON.stringify(args.value));}"
             }
           }
         ]
