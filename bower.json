@@ -8,8 +8,6 @@
     "benchmark": "1.x",
     "moment": "latest",
     "signalr": "2.1.1",
-    "jstree": "~3.0.9",
-    "jstree-bootstrap-theme": "~1.0.1",
     "font-awesome": "latest",
     "JavaScript-MD5": "~1.1.0",
     "jquery-bootpag": "1.0.7",
