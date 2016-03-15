@@ -39,43 +39,43 @@ function CucumberHTMLListener($root) {
                     var step = event.getPayloadItem('step');
                     self.handleAnyStep(step);
                     window.cucumberCurrentStep = (step.getKeyword() + step.getName())
-                    .toString()
-                    .replace(/'/g, "|'")
-                    .replace(/\[/g, "|[")
-                    .replace(/\]/g, "|]")
-                    .replace(/:/g, "");
+                        .toString()
+                        .replace(/'/g, "|'")
+                        .replace(/\[/g, "|[")
+                        .replace(/\]/g, "|]")
+                        .replace(/:/g, "");
                     break;
 
                 case 'StepResult':
                     var result;
                     var stepResult = event.getPayloadItem('stepResult');
                     if (stepResult.isSuccessful()) {
-                        result = { status: 'passed' };
+                        result = {status: 'passed'};
                     } else if (stepResult.isPending()) {
-                        result = { status: 'pending' };
+                        result = {status: 'pending'};
                     } else if (stepResult.isUndefined() || stepResult.isSkipped()) {
-                        result = { status: 'skipped' };
-                        if(!window.cucumberIsIgnored && !window.cucumberIsFailed){
+                        result = {status: 'skipped'};
+                        if (!window.cucumberIsIgnored && !window.cucumberIsFailed) {
                             tsm.testIgnored(window.cucumberCurrentScenario);
                             window.cucumberIsIgnored = true;
                         }
                     } else {
                         var error = stepResult.getFailureException();
                         var errorMessage = error.stack || error;
-                        result = { status: 'failed', error_message: errorMessage };
+                        result = {status: 'failed', error_message: errorMessage};
 
                         errorMessage = errorMessage.toString()
-                        .replace(/\n/g, "|n|r")
-                        .replace(/'/g, "|'")
-                        .replace(/\[/g, "|[")
-                        .replace(/\]/g, "|]")
-                        .replace(/:/g, "");
+                            .replace(/\n/g, "|n|r")
+                            .replace(/'/g, "|'")
+                            .replace(/\[/g, "|[")
+                            .replace(/\]/g, "|]")
+                            .replace(/:/g, "");
 
                         tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
 
                         window.cucumberIsFailed = true;
                     }
-                    formatter.match({ uri: 'report.feature', step: { line: currentStep.getLine() } });
+                    formatter.match({uri: 'report.feature', step: {line: currentStep.getLine()}});
                     formatter.result(result);
                     break;
 
