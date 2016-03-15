@@ -15,7 +15,6 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('View', new ViewBuilder());
         builder.register('InlineView', new InlineViewBuilder());
-        builder.register('ChildView', new ChildViewBuilder());
         builder.register('AutoView', new MetadataViewBuilder());
         builder.register('ExistsView', new MetadataViewBuilder());
 
@@ -45,7 +44,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
         builder.register('Icon', new IconBuilder());
-        builder.register('LinkLabel', new LinkLabelBuilder());
         builder.register('DatePicker', new DatePickerBuilder());
         builder.register('ToggleButton', new ToggleButtonBuilder());
         builder.register('NumericBox', new NumericBoxBuilder());

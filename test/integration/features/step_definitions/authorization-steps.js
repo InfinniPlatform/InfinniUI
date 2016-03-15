@@ -13,8 +13,6 @@ this.Given(/^я не авторизован в системе$/, function (next)
     }
 });
 
-
-
 // Then
 
 this.Then(/^система авторизует меня под пользователем "([^"]*)"$/, function (userName, next) {

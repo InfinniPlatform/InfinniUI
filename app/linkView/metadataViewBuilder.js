@@ -6,8 +6,10 @@ _.extend(MetadataViewBuilder.prototype, {
 
     build: function (context, args) {
         var metadata = args.metadata;
-        var viewTemplate = this.buildViewTemplate(args);
-        var linkView = new LinkView(args.parent);
+        var parentView = this.getParentViewByOpenMode(args, metadata.OpenMode);
+
+        var viewTemplate = this.buildViewTemplate(args, parentView);
+        var linkView = new LinkView(parentView);
 
         linkView.setViewTemplate(viewTemplate);
 
@@ -26,7 +28,7 @@ _.extend(MetadataViewBuilder.prototype, {
         return linkView;
     },
 
-    buildViewTemplate: function (params, cb) {
+    buildViewTemplate: function (params, parentView) {
         var metadata = params.metadata;
         var that = this;
 
@@ -34,21 +36,17 @@ _.extend(MetadataViewBuilder.prototype, {
             var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
 
             metadataProvider.getViewMetadata(function (viewMetadata) {
-                that.buildViewByMetadata(params, viewMetadata, onReady);
+                that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
                 function onReady() {
                     var args = Array.prototype.slice.call(arguments);
-                    if (cb) {
-                        cb.apply(null, args);
-                    }
                     onViewReadyHandler.apply(null, args);
                 }
             });
         };
     },
 
-    buildViewByMetadata: function (params, viewMetadata, onViewReadyHandler) {
+    buildViewByMetadata: function (params, viewMetadata, parentView, onViewReadyHandler) {
         var builder = params.builder;
-        var parentView = params.parentView;
         var logger = InfinniUI.global.logger;
         var parameters = this.buildParameters(params);
 
@@ -56,7 +54,7 @@ _.extend(MetadataViewBuilder.prototype, {
 
             var view = builder.buildType("View", viewMetadata, {
                 parentView: parentView,
-                parent: params.parent,
+                parent: parentView,
                 params: parameters,
                 suspended: params.suspended
             });
@@ -86,5 +84,23 @@ _.extend(MetadataViewBuilder.prototype, {
             }
         }
         return result;
+    },
+
+    getParentViewByOpenMode: function(params, mode) {
+        if( mode == null || mode == "Default" ) {
+            return this.getRootView(params.parentView);
+        }
+
+        return params.parentView;
+    },
+
+    getRootView: function(view) {
+        var parentView = view.getView();
+
+        if( parentView == null ) {
+            return view;
+        }
+
+        return this.getRootView(parentView);
     }
 });

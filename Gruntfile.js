@@ -44,7 +44,9 @@
             '!app/controls/dataNavigation/**/*.*',
             '!app/element/dataElement/dataNavigation/**/*.*',
             '!app/controls/dataGrid/**/*.*',
-            '!app/element/dataElement/dataGrid/**/*.*'
+            '!app/element/dataElement/dataGrid/**/*.*',
+            '!app/controls/treeView/**/*.*',
+            '!app/element/dataElement/treeView/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -53,7 +55,6 @@
             'bower_components/moment/moment.js',
             'bower_components/moment/lang/ru.js',
             'bower_components/signalr/jquery.signalR.js',
-            'bower_components/jstree/dist/jstree.js',
             'bower_components/ulogin/index.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
@@ -64,15 +65,16 @@
             'bootstrap-framework/js/tooltip.js',
             'bower_components/jquery.cookie/jquery.cookie.js',
             'bower_components/hammerjs/hammer.js',
+            'bower_components/jsoneditor/dist/jsoneditor.min.js',
             'bootstrap-framework/js/*.js'
         ],
         appStyleFiles = [
             'app/styles/main.less'
         ],
         vendorCssFiles = [
-            'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
             'bower_components/font-awesome/css/font-awesome.min.css',
-            'bower_components/toastr/toastr.css'
+            'bower_components/toastr/toastr.css',
+            'bower_components/jsoneditor/dist/jsoneditor.min.css'
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
@@ -143,12 +145,16 @@
             resources: {
                 expand: true,
                 flatten: true,
-                src: [
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png'
-                ],
+                src: [],
                 dest: 'out/css/'
+            },
+            jsonEditor: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
+                ],
+                dest: 'out/css/img'
             },
             favicon:{
                 expand: true,

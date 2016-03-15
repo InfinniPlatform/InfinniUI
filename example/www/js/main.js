@@ -111,5 +111,9 @@ function SpecialApplicationView() {
 
     this.getContext = function(){
         return null;
-    }
+    };
+
+    this.getView = function() {
+        return null;
+    };
 }
