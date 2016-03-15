@@ -99,8 +99,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('RegexEditMask', new RegexEditMaskBuilder());
 
         builder.register('Comparator', new ComparatorBuilder());
-        builder.register('GlobalNavigationBar', new GlobalNavigationBarBuilder());
-        builder.register('ActionBar', new ActionBarBuilder());
 
         builder.register('Script', new ScriptBuilder());
 
