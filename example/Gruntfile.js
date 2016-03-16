@@ -11,16 +11,18 @@
         templateFiles = ["js/**/*.tpl.html"];
 
     var infinniUIpath = '..';
+    var fromInfinniToConfigPath = 'example/styles';
     var platformBuildArgs = JSON.stringify({
         "override": {
             "less": {
-                "pl-override-platform-variables-path": '\"../../example/styles/platform-variables.less\"',
-                "pl-override-bootstrap-variables-path": '\"../../example/styles/bootstrap-variables.less\"',
-                "pl-bootstrap-theme-path": '\"../../example/styles/bootstrap-theme.less\"',
-                "pl-extension-path": '\"../../example/styles/extensions.less\"'
+                "pl-override-platform-variables-path": '\"../../<%configPath%>/platform-variables.less\"',
+                "pl-override-bootstrap-variables-path": '\"../../<%configPath%>/bootstrap-variables.less\"',
+                "pl-bootstrap-theme-path": '\"../../<%configPath%>/bootstrap-theme.less\"',
+                "pl-extension-path": '\"../../<%configPath%>/extensions.less\"'
             }
         }
-    });
+    })
+    .replace(/<%configPath%>/g, fromInfinniToConfigPath);
 
     platformBuildArgs = platformBuildArgs.replace(/:/g, '=');
 
