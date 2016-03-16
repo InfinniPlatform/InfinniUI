@@ -50,6 +50,8 @@ _.inherit(View, Container);
 _.extend(View.prototype,
     {
 
+        isView: true,
+
         _initDataSourceHandlers: function(){
             var that = this;
             var dataSources = this.getContext().dataSources;

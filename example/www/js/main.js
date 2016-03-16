@@ -91,6 +91,8 @@ moment.locale('ru');
 function SpecialApplicationView() {
     var $container;
 
+    this.isView = true;
+
     this.getContainer = function () {
         return this.$container;
     };

@@ -63,7 +63,7 @@ describe('TreeView', function () {
 
 
             // When
-            var linkView = (new InlineViewBuilder()).build(null, {builder: builder, metadata: {View: metadata}});
+            var linkView = (new InlineViewBuilder()).build(null, {builder: builder, metadata: {View: metadata}, parentView: fakeView()});
 
 
             var view = linkView.createView(function (view) {

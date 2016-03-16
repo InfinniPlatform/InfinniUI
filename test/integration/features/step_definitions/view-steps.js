@@ -3,7 +3,7 @@
 this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewName, next) {
     window.testHelpers.waitView(viewName,
         function () {
-            window.currentView = window.configWindow.contextApp.context.controls[viewName];
+            window.currentView = window.configWindow.contextApp.context.controls[viewName] || window.configWindow.contextApp;
             window.currentViewContext = window.currentView.getContext();
             next();
         },

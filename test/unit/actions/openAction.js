@@ -36,7 +36,8 @@ describe('OpenAction', function () {
                                     "View": {
                                         "Text": "Child View",
                                         "Name": "ChildView"
-                                    }
+                                    },
+                                    "OpenMode": "Dialog"
                                 }
                             }
                         }
@@ -56,6 +57,7 @@ describe('OpenAction', function () {
             var viewIsOpened = childView.isLoaded();
 
             assert.isTrue(viewIsOpened);
+            childView.close();
             done();
         });
     });

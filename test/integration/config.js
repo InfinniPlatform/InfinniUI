@@ -1,5 +1,5 @@
 window.IntegrationTestConfig = {
-	host: 'http://localhost:8181/',
+	host: window.location.origin,
 	featurePath: 'out/feature.feature',
 	stepDefinitionsPath: 'out/step_definitions.js'
 };
