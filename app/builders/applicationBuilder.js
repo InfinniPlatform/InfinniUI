@@ -15,7 +15,6 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('View', new ViewBuilder());
         builder.register('InlineView', new InlineViewBuilder());
-        builder.register('ChildView', new ChildViewBuilder());
         builder.register('AutoView', new MetadataViewBuilder());
         builder.register('ExistsView', new MetadataViewBuilder());
 

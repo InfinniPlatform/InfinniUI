@@ -66,10 +66,3 @@ var openHost = function(callback){
         return window.configWindow.contextApp != null;
     }, signOut, error);
 };
-
-var deleteIndicies = function(){
-    return client.indices.delete({
-        "index": "_all",
-        "waitForCompletion": true
-    });
-};

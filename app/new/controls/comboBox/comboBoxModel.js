@@ -14,16 +14,18 @@ var ComboBoxModel = ListEditorBaseModel.extend({
 
     initialize: function () {
         ListEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+
+        this.on('change:value', this.syncSelectedItem);
+    },
+
+    syncSelectedItem: function (model, value) {
+        //var value = this.getValue();
+        var selectedItem = this.itemByValue(value);
+        this.setSelectedItem(selectedItem);
     },
 
     getSelectedItem: function () {
         var selectedItem = this.get('selectedItem');
-
-        var isMultiSelect = !!this.get('multiSelect');
-        var value = this.getValue();
-        if (!isMultiSelect && !selectedItem) {
-            selectedItem = this.itemByValue(value);
-        }
 
         return selectedItem;
     },

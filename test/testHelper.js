@@ -5,7 +5,7 @@ var testHelper = {
         };
 
         var appBuilder = new ApplicationBuilder();
-        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata});
+        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata, parentView: fakeView() });
 
         var view = linkView.createView(function (view) {
             view.open();

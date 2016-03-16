@@ -1,28 +1,27 @@
 ﻿module.exports = function (grunt) {
-	grunt.initConfig({
+    grunt.initConfig({
         concat: {
             feature: {
                 src: [],
                 dest: 'out/feature.feature'
             },
-			
-			step_definitions: {
+
+            step_definitions: {
                 src: [
-                    "features/support/*.js", 
+                    "features/support/*.js",
                     "features/step_definitions/*.js"
                 ],
                 dest: 'out/step_definitions.js'
             },
 
             app: {
-				src: ["app/*.js"],
+                src: ["app/*.js"],
                 dest: 'out/app.js'
             },
 
             vendor: {
-				src: [
-                    "vendor/*.js", 
-                    "bower_components/elasticsearch/elasticsearch.js", 
+                src: [
+                    "vendor/*.js",
                     "../../bower_components/chai/chai.js"
                 ],
                 dest: 'out/vendor.js'
@@ -49,9 +48,9 @@
             grunt.config.set('concat.app.src', appArray);
         }
 
-         var tasks = [
+        var tasks = [
             'concat'
-         ];
+        ];
 
         grunt.task.run(tasks);
     });
