@@ -45,8 +45,7 @@
             '!app/controls/dataGrid/**/*.*',
             '!app/element/dataElement/dataGrid/**/*.*',
             '!app/controls/treeView/**/*.*',
-            '!app/element/dataElement/treeView/**/*.*',
-            '!app/services/jsonEditor/editorDialog/*'
+            '!app/element/dataElement/treeView/**/*.*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -111,7 +110,7 @@
             	expand: true,
                 flatten: true,
                 src: [
-                    'app/services/jsonEditor/editorDialog/*'
+                    'developer/jsonEditor/editorDialog/*'
                 ],
                 dest: 'out/jsonEditor'
             }
@@ -343,15 +342,16 @@
                     }
                 }
 
-                if( props.isDevelopmentMode === 'true' ) {
+                if( props.mode === 'development' ) {
                 	var merge = require('merge');
 
                 	var tmpCopy = grunt.config.get('copy');
                 	tmpCopy = merge( tmpCopy, developmentModeCopy );
                 	grunt.config.set('copy', tmpCopy);
 
+                	appFiles.push('developer/jsonEditor/*.*');
+
                 } else {
-                	appFiles.push('!app/services/jsonEditor/*');
                 	tasks.push('replace');
                 }
             }

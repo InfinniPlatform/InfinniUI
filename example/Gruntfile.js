@@ -76,10 +76,10 @@
         clean: ["www/compiled/"]
     });
 
-    grunt.registerTask('buildPlatform', function ( isDevelopmentMode ) {
+    grunt.registerTask('buildPlatform', function ( buildMode ) {
         var done = this.async();
 
-        platformBuildArgs.isDevelopmentMode = isDevelopmentMode;
+        platformBuildArgs.mode = buildMode;
 
         var platformBuildArgsStr = JSON.stringify(platformBuildArgs);
         platformBuildArgsStr = platformBuildArgsStr
@@ -103,10 +103,8 @@
 
     grunt.task.registerTask('build',
         function (flag) {
-            var isDevelopmentMode = (flag == 'developmentMode');
-
             var tasks = [
-                'buildPlatform:'+isDevelopmentMode,
+                'buildPlatform:' + flag,
                 'clean',
                 'copy',
                 'concat',

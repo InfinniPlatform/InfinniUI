@@ -1,1 +1,1 @@
-call grunt build:developmentMode
+call grunt build:development
