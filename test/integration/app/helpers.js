@@ -37,9 +37,16 @@ window.testHelpers = {
 
     waitView: function (viewName, success, error, maxTimeout, step) {
         var waitView = function () {
-            if (!window.configWindow.contextApp)
+            if (!window.configWindow.contextApp) {
                 return false;
+            }
+
             var view = window.configWindow.contextApp.context.controls[viewName];
+
+            if(window.configWindow.contextApp.name == viewName) {
+                view = window.configWindow.contextApp;
+            }
+
             return view && view.isLoaded();
         };
 
