@@ -2,13 +2,10 @@
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-create-test-files');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-generate');
     grunt.loadNpmTasks('grunt-text-replace');
 
 
@@ -83,6 +80,7 @@
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
         outerExtensionFavicon = '*.Extensions/*.ico';
+        /* jsoneditor не добавляется в vendor, чтобы можно было его отдельно использовать в editorDialog */
         developmentModeCopy = {
         	jsonEditorJs: {
                 expand: true,
@@ -276,10 +274,6 @@
             }
         },
 
-        generate: {
-
-        },
-
         replace: {
             default: {
                 src: ['out/*.js'],
@@ -313,7 +307,6 @@
                 'less',
                 'force:on',
                 'clean:default',
-                //'jscs',
                 'force:restore',
                 'jst',
                 'concat',
@@ -366,16 +359,6 @@
             var tasks = ['build', 'connect:' + protocol, 'watch'];
             console.log(tasks);
             grunt.task.run(tasks);
-        }
-    );
-
-    grunt.task.registerTask('newElement', function(name){
-            name = name.charAt(0).toLowerCase() + name.slice(1);
-
-            grunt.task.run('generate:element:' +name+"@app/element/"+name);
-            grunt.task.run('generate:builder:' +name+"Builder"+"@app/element/"+name);
-            grunt.task.run('generate:control:' +name+"@app/controls/"+name);
-            grunt.task.run('generate:unittest:' +name+"@test/unit/element/"+name);
         }
     );
 
