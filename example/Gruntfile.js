@@ -12,7 +12,7 @@
 
     var infinniUIpath = '..';
     var fromInfinniToConfigPath = 'example/styles';
-    var platformBuildArgs = JSON.stringify({
+    var platformBuildArgs = {
         "override": {
             "less": {
                 "pl-override-platform-variables-path": '\"../../<%configPath%>/platform-variables.less\"',
@@ -21,10 +21,7 @@
                 "pl-extension-path": '\"../../<%configPath%>/extensions.less\"'
             }
         }
-    })
-    .replace(/<%configPath%>/g, fromInfinniToConfigPath);
-
-    platformBuildArgs = platformBuildArgs.replace(/:/g, '=');
+    };
 
     grunt.initConfig({
         concat: {
@@ -79,12 +76,19 @@
         clean: ["www/compiled/"]
     });
 
-    grunt.registerTask('buildPlatform', function () {
+    grunt.registerTask('buildPlatform', function ( isDevelopmentMode ) {
         var done = this.async();
+
+        platformBuildArgs.isDevelopmentMode = isDevelopmentMode;
+
+        var platformBuildArgsStr = JSON.stringify(platformBuildArgs);
+        platformBuildArgsStr = platformBuildArgsStr
+                                            .replace(/<%configPath%>/g, fromInfinniToConfigPath)
+                                            .replace(/:/g, '=');
 
         grunt.util.spawn({
                 grunt: true,
-                args: ['build:' + platformBuildArgs],
+                args: ['build:' + platformBuildArgsStr ],
                 opts: {
                     cwd: infinniUIpath
                 }
@@ -98,9 +102,11 @@
     });
 
     grunt.task.registerTask('build',
-        function () {
+        function (flag) {
+            var isDevelopmentMode = (flag == 'developmentMode');
+
             var tasks = [
-                'buildPlatform',
+                'buildPlatform:'+isDevelopmentMode,
                 'clean',
                 'copy',
                 'concat',
