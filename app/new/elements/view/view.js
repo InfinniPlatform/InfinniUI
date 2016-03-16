@@ -328,16 +328,18 @@ _.extend(View.prototype,
             }
 
             return this.membersDeferreds[memberName];
-        },
+        }
 
-        showSelectedElementMetadata: function(){
+//devblockstart
+        ,showSelectedElementMetadata: function(){
             if(this.handlers.onSelectedElementChange){
                 this.handlers.onSelectedElementChange();
             }
-        },
+        }
 
-        onSelectedElementChange: function(handler) {
+        ,onSelectedElementChange: function(handler) {
             this.handlers.onSelectedElementChange = handler;
         }
+//devblockstop
     }
 );

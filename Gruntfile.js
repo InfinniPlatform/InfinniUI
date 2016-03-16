@@ -9,6 +9,8 @@
     grunt.loadNpmTasks('grunt-create-test-files');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-generate');
+    grunt.loadNpmTasks('grunt-text-replace');
+
 
     var appFiles = [
             'app/utils/strict.js',
@@ -81,6 +83,32 @@
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
         outerExtensionFavicon = '*.Extensions/*.ico';
+        developmentModeCopy = {
+        	jsonEditorJs: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/jsoneditor.min.js'
+                ],
+                dest: 'out/jsonEditor'
+            },
+            jsonEditorCSS: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/jsoneditor.min.css'
+                ],
+                dest: 'out/jsonEditor/css'
+            },
+            jsonEditorSVG: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
+                ],
+                dest: 'out/jsonEditor/css/img'
+            }
+        };
 
 
     grunt.initConfig({
@@ -145,30 +173,6 @@
                 flatten: true,
                 src: [],
                 dest: 'out/css/'
-            },
-            jsonEditorJs: {
-                expand: true,
-                flatten: true,
-                src: [
-                    'bower_components/jsoneditor/dist/jsoneditor.min.js'
-                ],
-                dest: 'out/jsonEditor'
-            },
-            jsonEditorCSS: {
-                expand: true,
-                flatten: true,
-                src: [
-                    'bower_components/jsoneditor/dist/jsoneditor.min.css'
-                ],
-                dest: 'out/jsonEditor/css'
-            },
-            jsonEditorSVG: {
-                expand: true,
-                flatten: true,
-                src: [
-                    'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
-                ],
-                dest: 'out/jsonEditor/css/img'
             },
             favicon:{
                 expand: true,
@@ -292,7 +296,19 @@
 
         generate: {
 
+        },
+
+        replace: {
+            default: {
+                src: ['out/*.js'],
+                dest: 'out/',
+                replacements: [{
+                    from: /\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig,
+                    to: ''
+                }]
+            }
         }
+
     });
 
     var previous_force_state = grunt.option("force");
@@ -311,6 +327,16 @@
 
     grunt.task.registerTask('build',
         function (props) {
+        	var tasks = [
+                'less',
+                'force:on',
+                'clean:default',
+                //'jscs',
+                'force:restore',
+                'jst',
+                'concat',
+                'copy'               
+            ];
 
             if(typeof props == "string"){
                 props = props.replace(/=/g, ':');
@@ -332,19 +358,20 @@
                         }
                     }
                 }
+
+                if( props.isDev ) {
+                	var merge = require('merge');
+
+                	var tmpCopy = grunt.config.get('copy');
+                	tmpCopy = merge( tmpCopy, developmentModeCopy );
+                	grunt.config.set('copy', tmpCopy);
+
+                } else {
+                	appFiles.push('!app/services/jsonEditor/*.js');
+                	tasks.push('replace');
+                }
             }
 
-
-            var tasks = [
-                'less',
-                'force:on',
-                'clean:default',
-                //'jscs',
-                'force:restore',
-                'jst',
-                'concat',
-                'copy'
-            ];
             grunt.task.run(tasks);
         }
     );

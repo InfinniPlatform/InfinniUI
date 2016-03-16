@@ -13,6 +13,7 @@ _.extend(ViewBuilder.prototype, {
         return new View(params.parent);
     },
 
+//devblockstart
     _getSelectedElementPath: function(metadata) {
         var result;
 
@@ -39,6 +40,7 @@ _.extend(ViewBuilder.prototype, {
 
         return false;
     },
+//devblockstop
 
     applyMetadata: function (params) {
 
@@ -53,13 +55,14 @@ _.extend(ViewBuilder.prototype, {
             element = params.element,
             builder = params.builder;
 
+//devblockstart
         element.onSelectedElementChange(function() {
             var path = that._getSelectedElementPath(params.metadata);
 
             InfinniUI.JsonEditor.setMetadata(params.metadata);
             InfinniUI.JsonEditor.setPath(path);
         });
-
+//devblockstop
 
         var scripts = element.getScripts();
         var parameters = element.getParameters();
