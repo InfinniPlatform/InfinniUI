@@ -21,7 +21,7 @@ InfinniUI.JsonEditor = (function () {
 
             if (!childWindow) {
 
-                var tempChildWindow = window.open('jsonEditor/index.html', 'JSON_Editor', {});
+                var tempChildWindow = window.open('compiled/platform/jsonEditor/index.html', 'JSON_Editor', {});
 
                 tempChildWindow.onload = function () {
                     childWindow = tempChildWindow;

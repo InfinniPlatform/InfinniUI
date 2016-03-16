@@ -45,7 +45,8 @@
             '!app/controls/dataGrid/**/*.*',
             '!app/element/dataElement/dataGrid/**/*.*',
             '!app/controls/treeView/**/*.*',
-            '!app/element/dataElement/treeView/**/*.*'
+            '!app/element/dataElement/treeView/**/*.*',
+            '!app/services/jsonEditor/editorDialog/*'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
@@ -105,6 +106,14 @@
                     'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
                 ],
                 dest: 'out/jsonEditor/css/img'
+            },
+            jsonEditorDialog: {
+            	expand: true,
+                flatten: true,
+                src: [
+                    'app/services/jsonEditor/editorDialog/*'
+                ],
+                dest: 'out/jsonEditor'
             }
         };
 
