@@ -3,6 +3,8 @@ function fakeView(view) {
         view = {};
     }
 
+    view.isView = true;
+
     view.getContext = function () {
         return {};
     };
