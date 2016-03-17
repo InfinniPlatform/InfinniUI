@@ -334,15 +334,15 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
     var success = function () {
         try {
             var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
-            var $rows = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
+            var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
             var expectedCells = rowValue.split('|');
 
-            if ($rows.length == 0) {
+            if ($row.length == 0) {
                 next(new Error("Index out of range"));
                 return;
             }
 
-            var $cells = $rows.find('td');
+            var $cells = $row.find('td');
 
             expectedCells.splice(0, 1);
             expectedCells.pop();
@@ -375,6 +375,34 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
         } catch (err) {
             next(err);
         }
+    };
+
+    var fail = function () {
+        next(new Error(tableName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveTable, success, fail);
+});
+
+this.Then(/^я отмечу в таблице "([^"]*)" строку под номером "([^"]*)"$/, function (tableName, rowIndex, next) {
+    var haveTable = function () {
+        return window.testHelpers.getControlByName(tableName) != undefined;
+    };
+
+    var success = function () {
+        var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
+        var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
+
+        if ($row.length == 0) {
+            next(new Error("Index out of range"));
+            return;
+        }
+
+        var $checkbox = $row.find('.pl-toggle-cell input:checkbox');
+
+        $checkbox.prop('checked', !$checkbox.prop('checked'));
+
+        next();
     };
 
     var fail = function () {
