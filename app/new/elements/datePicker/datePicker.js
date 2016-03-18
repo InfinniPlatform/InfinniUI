@@ -38,6 +38,14 @@ DatePicker.prototype.setMode = function (value) {
     this.control.set('mode', value);
 };
 
+DatePicker.prototype.getTimeZone = function () {
+    return this.control.get('timeZone');
+};
+
+DatePicker.prototype.setTimeZone = function (value) {
+    this.control.set('timeZone', value);
+};
+
 DatePicker.prototype.setDateFormat = function (value) {
     this.control.set('format', value);
 };

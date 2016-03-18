@@ -1,13 +1,42 @@
 window.InfinniUI.DateUtils = (function () {
 
-    var padInt = function (value, size) {
-        var str = '' + value;
-        var pad = '';
-        if (str.length < size) {
-            pad = Array(size - str.length + 1).join('0');
-        }
-        return pad + str;
+
+
+    return {
+        toISO8601: toISO8601,
+        changeTimezoneOffset: changeTimezoneOffset,
+        restoreTimezoneOffset: restoreTimezoneOffset
     };
+
+    function changeTimezoneOffset(date, timezoneOffset) {
+        var newDate = date;
+
+        if (typeof timezoneOffset !== 'undefined' && date instanceof Date) {
+            var currentOffset = date.getTimezoneOffset();
+
+            if (timezoneOffset !== currentOffset) {
+                newDate = new Date(date.getTime() + (currentOffset - timezoneOffset) * 60 * 1000);
+                console.log('timezone changed  [%d to %d] ["%s" to "%s"] [%s to %s] ', currentOffset, timezoneOffset, date.toUTCString(), newDate.toUTCString(), date.toString(), newDate.toString() );
+            }
+        }
+
+        return newDate;
+    }
+
+    function restoreTimezoneOffset(date, timezoneOffset) {
+        var newDate = date;
+
+        if (typeof timezoneOffset !== 'undefined' && date instanceof Date) {
+            var currentOffset = date.getTimezoneOffset();
+
+            if (timezoneOffset !== currentOffset) {
+                newDate = new Date(date.getTime() - (currentOffset - timezoneOffset) * 60 * 1000);
+                console.log('timezone restored  [%d to %d] ["%s" to "%s"] [%s to %s]', timezoneOffset, currentOffset, date.toUTCString(), newDate.toUTCString(), date.toString(), newDate.toString() );
+            }
+        }
+
+        return newDate;
+    }
 
     /**
      * @description Возвращает строковое представление даты в формате YYYY-MM-DDTHH:mm:ss.sss+HH:MM
@@ -16,7 +45,7 @@ window.InfinniUI.DateUtils = (function () {
      * @param {boolean} [options.resetTime = false]
      * @returns {string}
      */
-    var toISO8601 = function (date, options) {
+    function toISO8601(date, options) {
 
         var config = options || {};
 
@@ -42,12 +71,12 @@ window.InfinniUI.DateUtils = (function () {
             padInt(date.getMinutes(), 2),
             padInt(date.getSeconds(), 2)
         ].join(':');
-        
+
         var sssPart = padInt(date.getMilliseconds(), 3) + '0';// '000' + '0'
 
-        if(!Math.sign) { //fix for devices not support ES6
+        if (!Math.sign) { //fix for devices not support ES6
             Math.sign = function (x) {
-                return x?x<0?-1:1:0;
+                return x ? x < 0 ? -1 : 1 : 0;
             };
         }
 
@@ -59,9 +88,15 @@ window.InfinniUI.DateUtils = (function () {
         ].join(':');
 
         return datePart + 'T' + timePart + '.' + sssPart + tzOffsetPart + tzPart;
-    };
+    }
 
-    return {
-        toISO8601: toISO8601
-    };
+    function padInt(value, size) {
+        var str = '' + value;
+        var pad = '';
+        if (str.length < size) {
+            pad = Array(size - str.length + 1).join('0');
+        }
+        return pad + str;
+    }
+
 })();

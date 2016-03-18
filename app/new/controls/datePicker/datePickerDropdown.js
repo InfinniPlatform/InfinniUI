@@ -26,6 +26,7 @@ var DatePickerDropdown = Backbone.View.extend({
     renderComponents: function () {
         var model = this.model;
         var value = model.get('value');
+        var timeZone = model.get('timeZone');
         var m = moment(value);
 
         if (m.isValid()) {
@@ -35,7 +36,7 @@ var DatePickerDropdown = Backbone.View.extend({
         }
 
         var options = {
-            value: value,
+            value: InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone),
             //date: value,
             max: model.get('maxValue'),
             min: model.get('minValue')
@@ -70,7 +71,11 @@ var DatePickerDropdown = Backbone.View.extend({
     },
 
     useValue: function (date) {
-        this.trigger('date', date);
+        var model = this.model;
+        var timeZone = model.get('timeZone');
+
+        console.info('useValue', date);
+        this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
         this.remove();
     },
 

@@ -12,6 +12,7 @@ var displayFormatBuilderMixin = {
      * @returns {Function}
      */
     buildDisplayFormat: function (displayFormat, params) {
+        var formatOptions = params.formatOptions;
         var builder = params.builder;
         var formatter, format = defaultFormat;
         if (typeof displayFormat === 'string') {
@@ -27,6 +28,10 @@ var displayFormatBuilderMixin = {
                 args = args || {};
                 return formatter.format(args.value);
             }
+        }
+
+        if (formatter) {
+            formatter.setOptions(formatOptions);
         }
 
         return format;
