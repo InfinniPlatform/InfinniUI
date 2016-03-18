@@ -35,8 +35,10 @@ var DatePickerDropdown = Backbone.View.extend({
             value = null;
         }
 
+        value = InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone);
+
         var options = {
-            value: InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone),
+            value: value,
             //date: value,
             max: model.get('maxValue'),
             min: model.get('minValue')

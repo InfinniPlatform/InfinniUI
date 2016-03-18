@@ -35,7 +35,7 @@ var datePickerStrategy = (function () {
             },
 
             convertValue: function (value) {
-                return InfinniUI.DateUtils.toISO8601(value, {resetTime: true});
+                return InfinniUI.DateUtils.toISO8601(value);
             }
         },
 
