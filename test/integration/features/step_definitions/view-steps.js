@@ -383,31 +383,3 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
 
     window.testHelpers.waitCondition(haveTable, success, fail);
 });
-
-this.Then(/^я отмечу в таблице "([^"]*)" строку под номером "([^"]*)"$/, function (tableName, rowIndex, next) {
-    var haveTable = function () {
-        return window.testHelpers.getControlByName(tableName) != undefined;
-    };
-
-    var success = function () {
-        var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
-        var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
-
-        if ($row.length == 0) {
-            next(new Error("Index out of range"));
-            return;
-        }
-
-        var $checkbox = $row.find('.pl-toggle-cell input:checkbox');
-
-        $checkbox.prop('checked', !$checkbox.prop('checked'));
-
-        next();
-    };
-
-    var fail = function () {
-        next(new Error(tableName + ' not found!'));
-    };
-
-    window.testHelpers.waitCondition(haveTable, success, fail);
-});
