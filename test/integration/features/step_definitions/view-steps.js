@@ -383,3 +383,19 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
 
     window.testHelpers.waitCondition(haveTable, success, fail);
 });
+
+this.Then(/^экран будет иметь название "([^"]*)"$/, function (viewText, next) {
+    if(window.currentView) {
+        var condition = function () {
+            return window.currentView.getText && window.currentView.getText() === viewText;
+        };
+
+        var fail = function () {
+            next(new Error("'" + viewText + "' not found!"));
+        };
+
+        window.testHelpers.waitCondition(condition, next, fail);
+    } else {
+        next(new Error("View is not initialized"));
+    }
+});
