@@ -62,7 +62,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('change:pageNumber', handler);
     },
 
-    onPageNumberSize: function (handler) {
+    onPageSizeChanged: function (handler) {
         this.on('change:pageSize', handler);
     },
 
