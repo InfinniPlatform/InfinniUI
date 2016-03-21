@@ -164,7 +164,9 @@ var DatePickerDays = DatePickerComponent.extend({
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
 
-        var startDate = new Date(year, month, 1 - weekday + firstDayOfWeek);
+        var weekdays = [0,1,2,3,4,5,6];
+        Array.prototype.push.apply(weekdays, weekdays.splice(0, firstDayOfWeek));
+        var startDate = new Date(year, month, 1 - weekdays.indexOf(weekday));
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
