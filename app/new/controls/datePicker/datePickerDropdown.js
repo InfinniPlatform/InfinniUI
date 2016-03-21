@@ -76,7 +76,6 @@ var DatePickerDropdown = Backbone.View.extend({
         var model = this.model;
         var timeZone = model.get('timeZone');
 
-        console.info('useValue', date);
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
         this.remove();
     },

@@ -25,6 +25,7 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
     renderComponents: function () {
         var model = this.model;
         var value = model.get('value');
+        var timeZone = model.get('timeZone');
         var m = moment(value);
 
         if (m.isValid()) {
@@ -32,6 +33,8 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
         } else {
             value = null;
         }
+
+        value = InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone);
 
         var options = {
             value: value,
@@ -64,7 +67,10 @@ var DateTimePickerDropdown = DatePickerDropdown.extend({
     },
 
     useTime: function (date) {
-        this.trigger('date', date);
+        var model = this.model;
+        var timeZone = model.get('timeZone');
+
+        this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
     },
 
     workflow: function (days, months, years, time, hours, minutes) {

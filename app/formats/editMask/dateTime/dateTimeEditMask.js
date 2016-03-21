@@ -555,7 +555,9 @@ _.extend(DateTimeEditMask.prototype, {
      * @returns {String}
      */
     getData: function () {
-        return InfinniUI.DateUtils.toISO8601(this.getValue());
+        var formatOptions = this.format.getOptions();
+
+        return InfinniUI.DateUtils.toISO8601(this.getValue(), {timezoneOffset: formatOptions.TimeZone});
     },
 
     /**

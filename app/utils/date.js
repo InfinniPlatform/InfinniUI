@@ -1,6 +1,6 @@
 window.InfinniUI.DateUtils = (function () {
 
-
+    init();
 
     return {
         toISO8601: toISO8601,
@@ -16,7 +16,6 @@ window.InfinniUI.DateUtils = (function () {
 
             if (timezoneOffset !== currentOffset) {
                 newDate = new Date(date.getTime() + (currentOffset - timezoneOffset) * 60 * 1000);
-                console.log('timezone changed  [%d to %d] ["%s" to "%s"] [%s to %s] ', currentOffset, timezoneOffset, date.toUTCString(), newDate.toUTCString(), date.toString(), newDate.toString() );
             }
         }
 
@@ -31,7 +30,6 @@ window.InfinniUI.DateUtils = (function () {
 
             if (timezoneOffset !== currentOffset) {
                 newDate = new Date(date.getTime() - (currentOffset - timezoneOffset) * 60 * 1000);
-                console.log('timezone restored  [%d to %d] ["%s" to "%s"] [%s to %s]', timezoneOffset, currentOffset, date.toUTCString(), newDate.toUTCString(), date.toString(), newDate.toString() );
             }
         }
 
@@ -42,7 +40,8 @@ window.InfinniUI.DateUtils = (function () {
      * @description Возвращает строковое представление даты в формате YYYY-MM-DDTHH:mm:ss.sss+HH:MM
      * @param {Date} date
      * @param {Object} options
-     * @returns {string}
+     * @param {Number} options.timezoneOffset Смещение часового пояса относительно часового пояса UTC в минутах
+     * @returns {string|null}
      */
     function toISO8601(date, options) {
 
@@ -56,28 +55,30 @@ window.InfinniUI.DateUtils = (function () {
             return null;
         }
 
+        var _date = changeTimezoneOffset(date, config.timezoneOffset);
+
         var datePart = [
-            padInt(date.getFullYear(), 4),
-            padInt(date.getMonth() + 1, 2),
-            padInt(date.getDate(), 2)
+            padInt(_date.getFullYear(), 4),
+            padInt(_date.getMonth() + 1, 2),
+            padInt(_date.getDate(), 2)
         ].join('-');
 
         var timePart = [
-            padInt(date.getHours(), 2),
-            padInt(date.getMinutes(), 2),
-            padInt(date.getSeconds(), 2)
+            padInt(_date.getHours(), 2),
+            padInt(_date.getMinutes(), 2),
+            padInt(_date.getSeconds(), 2)
         ].join(':');
 
-        var sssPart = padInt(date.getMilliseconds(), 3) + '0';// '000' + '0'
+        var sssPart = padInt(_date.getMilliseconds(), 3) + '0';// '000' + '0'
 
-        if (!Math.sign) { //fix for devices not support ES6
-            Math.sign = function (x) {
-                return x ? x < 0 ? -1 : 1 : 0;
-            };
+
+        var timezoneOffset = config.timezoneOffset;
+        if (typeof timezoneOffset === 'undefined' || timezoneOffset === null) {
+            timezoneOffset = date.getTimezoneOffset();
         }
 
-        var tz = Math.abs(date.getTimezoneOffset());
-        var tzOffsetPart = Math.sign(date.getTimezoneOffset()) > 0 ? '-' : '+';
+        var tz = Math.abs(timezoneOffset);
+        var tzOffsetPart = Math.sign(timezoneOffset) > 0 ? '-' : '+';
         var tzPart = [
             padInt(Math.floor(tz / 60), 2),
             padInt(tz % 60, 2)
@@ -93,6 +94,14 @@ window.InfinniUI.DateUtils = (function () {
             pad = Array(size - str.length + 1).join('0');
         }
         return pad + str;
+    }
+
+    function init() {
+        if (!Math.sign) { //fix for devices not support ES6
+            Math.sign = function (x) {
+                return x ? x < 0 ? -1 : 1 : 0;
+            };
+        }
     }
 
 })();
