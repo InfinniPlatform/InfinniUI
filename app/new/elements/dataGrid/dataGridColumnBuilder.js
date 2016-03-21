@@ -110,7 +110,7 @@ DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function (params, ce
 
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
+            var binding = new DataBinding();
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {
@@ -159,7 +159,7 @@ DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (params, c
 
             var sourceProperty;
             var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
+            var binding = new DataBinding();
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {

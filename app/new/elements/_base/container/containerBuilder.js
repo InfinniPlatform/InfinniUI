@@ -172,7 +172,7 @@ _.extend(ContainerBuilder.prototype, {
             var label = new Label(this);
             var sourceProperty;
             var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
+            var binding = new DataBinding();
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {
@@ -198,7 +198,7 @@ _.extend(ContainerBuilder.prototype, {
 
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
+            var binding = new DataBinding();
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {
@@ -224,7 +224,7 @@ _.extend(ContainerBuilder.prototype, {
 
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
-            var binding = new DataBinding(this);
+            var binding = new DataBinding();
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {
