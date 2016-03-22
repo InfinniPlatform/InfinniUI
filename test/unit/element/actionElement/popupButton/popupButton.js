@@ -1,19 +1,44 @@
-describe('PopupButton', function () {
-    describe('api', function () {
+describe('PopupButtonElement', function () {
+    var builder = new ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('PopupButton', {
+            Items: []
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+
+        describe('Implementing Container Methods', function () {
+            testHelper.checkContainerMethods(element);
+        });
+
+
+    });
+
+    describe('Checking methods', function () {
+        var button;
+
+        beforeEach(function () {
+            button =  builder.buildType('PopupButton', {
+                Items: []
+            });
+        });
+
         it('should create', function () {
             // Given
-            var button = new PopupButton();
+
 
             // When
             var $el = button.render();
 
             // Then
-            assert.equal($el.find('.pl-popup-btn-main').length, 1);
+            assert.equal($el.find('.pl-popup-button__button').length, 1);
         });
 
         it('should set text', function () {
             // Given
-            var button = new PopupButton();
             button.setText('button');
             var $el = button.render();
 
@@ -21,24 +46,10 @@ describe('PopupButton', function () {
             button.setText('other button');
 
             // Then
-            assert.equal($el.find('.pl-popup-btn-main').text(), 'other button');
+            assert.equal($el.find('.pl-popup-button__button').text(), 'other button');
             //window.
         });
 
-
-        it('should set and get action', function () {
-            // Given
-            var button = new PopupButton();
-
-            assert.isTrue(typeof button.getAction() === 'undefined');
-
-            // When
-            button.render();
-            button.setAction(new OpenViewActionBuilder().build());
-
-            // Then
-            assert.isTrue(typeof button.getAction() !== 'undefined' && button.getAction() !== null);
-        });
 
         it('should execute action on click', function (done) {
             // Given
@@ -123,11 +134,12 @@ describe('PopupButton', function () {
 
         it('should add items', function () {
             // Given
-            var button = new PopupButton();
+            //var button = new PopupButton();
 
             // When
-            button.addItem(new Button());
-            button.addItem(new Button());
+            var items = button.getItems();
+            items.add(builder.buildType('Button', {}));
+            items.add(builder.buildType('Button', {}));
 
             // Then
             assert.equal(2,button.getItems().length);
@@ -136,39 +148,19 @@ describe('PopupButton', function () {
         it('should remove item', function () {
             // Given
             var button = new PopupButton();
-            var b1 = new Button();
-            var b2 = new Button();
-            button.addItem(b1);
-            button.addItem(b2);
+            var b1 = builder.buildType('Button', {});
+            var b2 = builder.buildType('Button', {});
+            var items = button.getItems();
+            items.add(b1);
+            items.add(b2);
 
             // When
-            button.removeItem(b1);
+            items.remove(b1);
 
             // Then
             assert.equal(1,button.getItems().length);
         });
 
-        it('should return item by name', function () {
-            // Given
-            var button = new PopupButton();
-            var b1 = new Button();
-            b1.setName("button1");
-            var b2 = new Button();
-            b2.setName("button2");
-            button.addItem(b1);
-            button.addItem(b2);
-
-            // Then
-            assert.equal(b1, button.getItem("button1"));
-        });
-
-        it('should return null item by not existent name', function () {
-            // Given
-            var button = new PopupButton();
-
-            // Then
-            assert.isNull(button.getItem("button1"));
-        });
 
 //        it('should be true if scriptsHandlers call', function () {
 //            //Given

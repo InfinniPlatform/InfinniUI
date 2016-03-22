@@ -1,16 +1,34 @@
-var OpenModeDialogStrategy = function (linkView) {
+var OpenModeDialogStrategy = function () {
+    this.dialogWidth = 'default';
+};
 
-    this.open = function (view, $elView) {
-        var $modal = $(linkView.template.Dialog())
-            .appendTo($('body'));
+_.extend(OpenModeDialogStrategy.prototype, {
+    template: InfinniUI.Template["linkView/template/dialog.tpl.html"],
 
-        $elView.find('.pl-stack-panel-i').css('height', 'auto');
+    setView: function(view){
+        this.view = view;
+    },
+
+    setDialogWidth: function(dialogWidth){
+        this.dialogWidth = dialogWidth;
+    },
+
+    open: function(){
+        var modalParams = {dialogWidth: this.dialogWidth};
+        var $template = $(this.template(modalParams));
+        var $closeButton = $('button', $template);
+        var $header =  $('h4', $template);
+
+        var $modal = $template.appendTo($('body'));
+        this.$modal = $modal;
+
         $modal.on('shown.bs.modal', function (e) {
-            $(e.target).find('.firstfocuselementinmodal').focus();
+            $(e.target).find('.first-focus-element-in-modal').focus();
         });
-        var $container = $modal.find('.modal-body');
+        var $modalBody = $modal.find('.modal-body');
 
-        $container.append($elView);
+        $modalBody.append(this.view.render());
+
         $modal.modal({
             show: true,
             backdrop: 'static',
@@ -18,53 +36,51 @@ var OpenModeDialogStrategy = function (linkView) {
             focus: this
         });
 
-        //FOCUS IN MODAL WITHOUT FALL
-            $container.append('<div class="lastfocuselementinmodal" tabindex="0">');
-            $modal.find('.lastfocuselementinmodal').on('focusin', function(){
+        this._initBehaviorFocusingInModal($modal, $modalBody);
+
+        var view = this.view;
+
+        var
+            headerTemplate = view.getHeaderTemplate();
+        $closeButton.toggleClass('hidden', !view.getCloseButton());
+        $header.append(headerTemplate().render());
+
+        $modal.find('.pl-close-modal').on('click', function(){
+            view.close();
+        });
+
+        InfinniUI.ModalWindowService.modalWasOpened({
+            modal: this.$modal,
+            background: $('.modal-backdrop').last()
+        });
+    },
+
+    _initBehaviorFocusingInModal: function($modal, $modalBody){
+        $modalBody.append('<div class="lastfocuselementinmodal" tabindex="0">');
+        $modal.find('.lastfocuselementinmodal').on('focusin', function(){
+            $modal.find('.firstfocuselementinmodal').focus();
+        });
+        $modal.keydown(function(e){
+            if($(document.activeElement).hasClass('lastfocuselementinmodal') && (e.which || e.keyCode) == 9){
+                e.preventDefault();
                 $modal.find('.firstfocuselementinmodal').focus();
-            });
-            $modal.keydown(function(e){
-                if($(document.activeElement).hasClass('lastfocuselementinmodal') && (e.which || e.keyCode) == 9){
-                    e.preventDefault();
-                    $modal.find('.firstfocuselementinmodal').focus();
-                }
-
-                if($(document.activeElement).hasClass('firstfocuselementinmodal') && (e.which || e.keyCode) == 9 && e.shiftKey){
-                    e.preventDefault();
-                    $modal.find('.lastfocuselementinmodal').focus();
-                }
-            });
-        //
-
-        var preventClosingViewHandler = function(e){
-            /** Плагин DatePicker генерируют события hide в DOM!! **/
-            var $target = $(e.target);
-            if ($target.hasClass('date') || $target.hasClass('datetime')) {
-                return;
             }
 
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            view.close();
-            return false;
-        };
-
-        $modal.on('hide.bs.modal', preventClosingViewHandler);
-
-        $modal.on('hidden', function (obj) {
-            obj.target.remove();
-            $("#select2-drop-mask").click();
+            if($(document.activeElement).hasClass('firstfocuselementinmodal') && (e.which || e.keyCode) == 9 && e.shiftKey){
+                e.preventDefault();
+                $modal.find('.lastfocuselementinmodal').focus();
+            }
         });
+    },
 
-        view.onClosed(function () {
-            $modal.off('hide.bs.modal', preventClosingViewHandler);
-            $modal.modal('hide');
-        });
+    close: function () {
+        this.view.remove();
+        if (this.$modal) {
+            this.$modal.modal('hide');
+            this.$modal.remove();
 
-        $modal.find('h3').html(view.getText());
-        view.onTextChange(function(){
-            $modal.find('h3').html(view.getText());
-        });
+            InfinniUI.ModalWindowService.modalWasClosed(this.$modal);
+        }
+
     }
-};
+});

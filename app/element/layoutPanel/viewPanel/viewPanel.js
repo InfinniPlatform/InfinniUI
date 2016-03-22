@@ -7,6 +7,12 @@ _.inherit(ViewPanel, Element);
 _.extend(ViewPanel.prototype, {
 
     setLayout: function (layout) {
+        var oldLayout = this.getLayout();
+
+        if(oldLayout) {
+            oldLayout.close();
+        }
+
         this.control.set('layout', layout);
     },
 
@@ -19,5 +25,3 @@ _.extend(ViewPanel.prototype, {
     }
 
 });
-
-_.extend(ViewPanel.prototype, layoutPanelMixin);

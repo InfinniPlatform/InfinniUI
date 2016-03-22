@@ -210,7 +210,8 @@ var layoutManager = {
 
             var $el = $(this.getSelector(), $modal);
 
-            $el.parentsUntil('.modal').attr('style', 'height: auto');
+            $el.parentsUntil('.modal').css('height', 'auto');
+            $container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
 
             $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
 
@@ -258,21 +259,19 @@ var layoutManager = {
         $container.css('margin-top', 0);
 
         var el = $(this.getSelector(), $modal);
-        if (el.length === 0) {
-            //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
-            //Выравниваем по вертикали в центр
-            $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
-            return;
+        if (el.length !== 0) {
+            // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
+            // пересчитываем высоту
+
+            //@TODO Зачем задавалась минимальная высота диалогов?
+            //$body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
+            var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
+
+            //Высота для содержимого окна диалога
+            var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+
+            this.resize($body[0], clientHeight);
         }
-
-        $body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
-        var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
-
-        //Высота для содержимого окна диалога
-        var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
-
-        this.resize($body[0], clientHeight);
-        $container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
     },
 
     init: function (container) {
@@ -280,15 +279,9 @@ var layoutManager = {
         this.windowHeight = $(window).height();
         this.onChangeLayout(container);
         if (this.exchange === null) {
-            this.exchange = messageBus.getExchange('global');
+            this.exchange = window.InfinniUI.global.messageBus;
             this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
         }
-
-
-        var exchange = messageBus.getExchange('modal-dialog');
-        exchange.subscribe(messageTypes.onLoading, function () {
-            this.resizeDialog();
-        }.bind(this));
     },
 
     onChangeLayout: function (container) {

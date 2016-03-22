@@ -12,7 +12,7 @@ _.extend(FilterPanelBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         params.element.setDataSource(params.metadata.DataSource);
-        params.element.setView(params.parent);
+        params.element.setView(params.view);
         //params.metadata.Query = [
         //        {
         //            CriteriaType: 1,
@@ -25,7 +25,7 @@ _.extend(FilterPanelBuilder.prototype, {
         var array = [];
         _.each(params.metadata.GeneralProperties, function (metadataProperty) {
             var obj = {};
-            var label = params.builder.build(params.parent, {Label: {}});
+            var label = params.builder.build(params.view, {Label: {}});
             label.setValue(metadataProperty.Text);
 
             obj.text = label;
@@ -35,7 +35,7 @@ _.extend(FilterPanelBuilder.prototype, {
             _.each(metadataProperty.Operators, function (metadataOperator) {
                 var operator = {};
                 operator.operator = metadataOperator.Operator;
-                operator.el = params.builder.build(params.parent, metadataOperator.Editor);
+                operator.el = params.builder.build(params.view, metadataOperator.Editor);
                 obj.operators.push(operator);
             });
 
@@ -47,13 +47,24 @@ _.extend(FilterPanelBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new FilterPanel(params.parent);
+        return new FilterPanel(params.view);
     },
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
+        if (params.view && metadata.OnLoaded){
+            params.element.onLoaded(function() {
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
+            });
+        }
+
+        if (params.view && metadata.OnValueChanged){
+            params.element.onValueChanged(function() {
+                new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name);
+            });
+        }
     },
 
     initDataSource: function (params) {

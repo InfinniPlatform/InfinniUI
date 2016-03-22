@@ -7,18 +7,26 @@ function Builder() {
         objectBuilders[metadataType] = objectBuilder;
     };
 
-    this.buildType = function (parentView, metadataType, metadataValue, collectionProperty, params) {
+    this.buildType = function (metadataType, metadataValue, args) {
+        args = args || {};
         if (objectBuilders[metadataType] === undefined) {
             return null;
         }
 
-        return objectBuilders[metadataType].build(this, parentView, metadataValue, collectionProperty, params);
+        var resultArgs = _.extend({
+                builder: this,
+                metadata: metadataValue
+            }, args);
+        var context = args.parentView ? args.parentView.getContext() : {};
+        return objectBuilders[metadataType].build(context, resultArgs);
     };
 
-    this.build = function (parentView, metadataValue, collectionProperty, params) {
+    this.build = function (metadataValue, args) {
         var key,
             value,
             result = null;
+
+        args = args || {};
 
         for (var p in metadataValue) {
             key = p;
@@ -29,18 +37,18 @@ function Builder() {
             console.error('Builder: Не переданы метаданные');
         } else {
             value = metadataValue[key];
-            result = this.buildType(parentView, key, value, collectionProperty, params);
+            result = this.buildType(key, value, args);
         }
         return result;
     };
 
-    this.buildMany = function (parentView, metadataValue, collectionProperty, params) {
+    this.buildMany = function (metadataValue, args) {
 
         var items = [];
 
         if (metadataValue) {
             for (var i = 0; i < metadataValue.length; i++) {
-                var item = this.build(parentView, metadataValue[i], collectionProperty, params);
+                var item = this.build(metadataValue[i], args);
 
                 if (item !== null) {
                     items.push(item);
@@ -49,5 +57,11 @@ function Builder() {
         }
 
         return items;
-    }
+    };
+
+    this.buildBinding = function(bindingMetadata, args){
+        var dataBinding = this.buildType('PropertyBinding', bindingMetadata, args);
+
+        return dataBinding;
+    };
 }

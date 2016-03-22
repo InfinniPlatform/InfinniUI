@@ -3,12 +3,18 @@ function fakeView(view) {
         view = {};
     }
 
-    view.getExchange = function () {
-        return messageBus.getExchange('test');
-    };
+    view.isView = true;
 
     view.getContext = function () {
         return {};
+    };
+
+    view.getScript = function (name) {
+        return view.scripts[name];
+    };
+
+    view.getView = function (name) {
+        return null;
     };
 
     return view;

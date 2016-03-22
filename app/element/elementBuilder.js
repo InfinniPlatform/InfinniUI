@@ -1,160 +1,206 @@
+/**
+ *
+ * @constructor
+ */
 var ElementBuilder = function () {
 };
 
-//о боги, зачем все это???
-_.extend(ElementBuilder.prototype, {
+_.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
-    build: function (builder, parent, metadata, collectionProperty, params) {
-        var parentElement = params && params.parentElement;
-        var params = {
-                builder: builder,
-                parent: parent,
-                metadata: metadata,
-                collectionProperty: collectionProperty,
-                params: params
-            },
-            element = this.createElement(params);
-
-        if (parentElement) {
-            parentElement.children.add(element);
-        }
-
-        params.element = element;
+    build: function (context, args) {
+        args = args || {};
+        var element = this.createElement(args);
+        var params = _.extend(args, { element: element });
 
         this.applyMetadata(params);
 
-        if (parent && parent.registerElement) {
-            parent.registerElement(element);
+        if (args.parentView && args.parentView.registerElement) {
+            args.parentView.registerElement(element);
+        }
+
+        if (args.parent && args.parent.addChild) {
+            args.parent.addChild(element);
         }
 
         return element;
     },
-    createElement: function () {
+
+    /**
+     *
+     * @param {Object} params
+     * @param {Builder} params.builder
+     * @param {View} params.parent
+     * @param {Object} params.metadata
+     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     */
+    createElement: function (params) {
         throw ('Не перегружен абстрактный метод ElementBuilder.createElement()');
     },
 
+    /**
+     *
+     * @param {Object} params
+     * @param {Builder} params.builder
+     * @param {View} params.parent
+     * @param {Object} params.metadata
+     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     * @param {Element} params.element
+     */
     applyMetadata: function (params) {
         var metadata = params.metadata,
-            element = params.element,
-            parent = params.parent,
-            collectionProperty = params.collectionProperty;
+            element = params.element;
 
-        if(metadata.Text && typeof metadata.Text == 'object'){
-            this.initTextBinding(params, metadata.Text);
-        }else{
-            element.setText(metadata.Text);
+        this.initBindingToProperty(params, 'Text');
+        this.initBindingToProperty(params, 'Visible', true);
+        this.initBindingToProperty(params, 'Enabled', true);
+        this.initBindingToProperty(params, 'HorizontalAlignment');
+        this.initBindingToProperty(params, 'TextHorizontalAlignment');
+        this.initBindingToProperty(params, 'VerticalAlignment');
+        this.initBindingToProperty(params, 'TextStyle');
+        this.initBindingToProperty(params, 'Foreground');
+        this.initBindingToProperty(params, 'Background');
+        this.initBindingToProperty(params, 'Texture');
+        this.initBindingToProperty(params, 'Style');
+        this.initBindingToProperty(params, 'Tag');
+
+        this.initToolTip(params);
+
+        if ('Name' in metadata) {
+            element.setName(metadata.Name);
         }
 
-        //element.setVisible(metadata.Visible);
-        this.initBindingToProperty(params, metadata.Visible, 'Visible', true);
-
-        element.setHorizontalAlignment(metadata.HorizontalAlignment);
-        element.setVerticalAlignment(metadata.VerticalAlignment);
-        element.setName(metadata.Name);
-        element.setEnabled(metadata.Enabled);
-
-        element.setStyle(metadata.Style);
 
         if (metadata.OnLoaded) {
-
             element.onLoaded(function () {
-                var message = this.getBaseMessage(params);
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name, message);
-            }.bind(this));
-        }
-
-        if (metadata.OnGotFocus){
-            params.element.onGotFocus(function() {
-                var message = this.getBaseMessage(params);
-                new ScriptExecutor(params.parent).executeScript(metadata.OnGotFocus.Name, message);
-            }.bind(this));
-        }
-
-        if (metadata.OnLostFocus){
-            params.element.onLostFocus(function() {
-                var message = this.getBaseMessage(params);
-                new ScriptExecutor(params.parent).executeScript(metadata.OnLostFocus.Name, message);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded, { source: element });
             });
         }
 
-        if (metadata.OnClick){
-            params.element.onClick(function() {
-                var message = this.getBaseMessage(params);
-                new ScriptExecutor(params.parent).executeScript(metadata.OnClick.Name, message);
-            }.bind(this));
+        if (metadata.OnGotFocus) {
+            element.onGotFocus(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name || metadata.OnGotFocus, { source: element });
+            });
+        }
+
+        if (metadata.OnLostFocus) {
+            element.onLostFocus(function () {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name || metadata.OnLostFocus, { source: element });
+            });
+        }
+
+        if (metadata.OnDoubleClick) {
+            element.onDoubleClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, args);
+            });
+        }
+
+        if (metadata.OnClick) {
+            element.onClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, args);
+            });
+        }
+
+        if (metadata.OnKeyDown) {
+            element.onKeyDown(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, args);
+            });
         }
     },
 
-    getBaseMessage: function (params) {
-        return params.builder.buildType(params.parent, 'BaseMessage', null, null, {
-            source: params.element
-        });
-    },
-
-    getDataSourceMessage: function (params, dataBinding) {
-        return params.builder.buildType(params.parent, 'DataSourceMessage', null, null, {
-            source: params.element,
-            value: params.element.getValue(),
-            dataSource: dataBinding && dataBinding.getDataSource && dataBinding.getDataSource(),
-            property: dataBinding && dataBinding.getProperty && dataBinding.getProperty()
-        });
-    },
-
-    initTextBinding: function(params, bindingMetadata){
+    initBindingToProperty: function (params, propertyName, isBooleanBinding) {
         var metadata = params.metadata;
+        var propertyMetadata = metadata[propertyName];
+        var element = params.element;
+        var lowerCasePropertyName = this.lowerFirstSymbol(propertyName);
+        var converter;
 
-        var dataBinding = params.builder.build(params.parent, metadata.Text, params.collectionProperty);
-
-        dataBinding.setElement(params.element);
-
-        if (dataBinding != null) {
-            dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                params.element.setText(dataBinding.getPropertyValue());
-            });
-
-            var data = dataBinding.getPropertyValue();
-            if (data) {
-                params.element.setText(data);
+        if (!propertyMetadata || typeof propertyMetadata != 'object') {
+            if (propertyMetadata !== undefined) {
+                params.element['set' + propertyName](propertyMetadata);
             }
-        }
-
-        //dataBinding.refresh();
-        return dataBinding;
-    },
-
-    initBindingToProperty: function(params, bindingMetadata, propertyName, isBooleanBinding){
-        var metadata = params.metadata;
-
-        if(!metadata[propertyName] || typeof metadata[propertyName] != 'object'){
-            params.element['set' + propertyName](metadata[propertyName]);
             return null;
-        }else{
-            var dataBinding = params.builder.build(params.parent, metadata[propertyName], params.collectionProperty);
-            dataBinding.setSetterName('set' + propertyName);
-            dataBinding.setElement(params.element);
 
-            if (dataBinding != null) {
-                dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                    if(isBooleanBinding){
-                        params.element['set' + propertyName](!!dataBinding.getPropertyValue());
-                    }else{
-                        params.element['set' + propertyName](dataBinding.getPropertyValue());
-                    }
-                });
+        } else {
+            var args = {
+                parent: params.parent,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            };
 
-                var data = dataBinding.getPropertyValue();
-                if(isBooleanBinding){
-                    params.element['set' + propertyName](!!data);
+            var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
+            var oldConverter;
+
+            if (isBooleanBinding) {
+                dataBinding.setMode(BindingModes.toElement);
+
+                converter = dataBinding.getConverter();
+                if (!converter) {
+                    converter = {};
+                }
+                
+                if(!converter.toElement){
+                    converter.toElement = function (context, args) {
+                        return !!args.value;
+                    };
                 }else{
-                    if (data) {
-                        params.element['set' + propertyName](data);
-                    }
+                    oldConverter = converter.toElement;
+
+                    converter.toElement = function (context, args) {
+                        var tmp = oldConverter(context, args);
+                        return !!tmp;
+                    };
                 }
 
+
+                dataBinding.setConverter(converter);
             }
+
+            dataBinding.bindElement(element, lowerCasePropertyName);
 
             return dataBinding;
         }
+    },
+
+    initToolTip: function (params) {
+        var
+            exchange = window.InfinniUI.global.messageBus,
+            builder = params.builder,
+            element = params.element,
+            metadata = params.metadata,
+            tooltip;
+
+        if (metadata.ToolTip) {
+            var argumentForBuilder = {
+                parent: element,
+                parentView: params.parentView
+            };
+
+            if (typeof metadata.ToolTip === 'string') {
+                tooltip = builder.buildType("Label", {
+                    "Text": metadata.ToolTip
+                }, argumentForBuilder);
+            } else {
+                tooltip = builder.buildType("ToolTip", metadata.ToolTip, argumentForBuilder);
+            }
+
+            element.setToolTip(tooltip);
+            exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+        }
+
+        element.onShowToolTip && element.onShowToolTip(function () {
+            if (tooltip) {
+                exchange.send(messageTypes.onToolTipShow.name, { source: element, content: tooltip.render() });
+            }
+        });
+
+        element.onHideToolTip && element.onHideToolTip(function () {
+            exchange.send(messageTypes.onToolTipHide.name, { source: element });
+        });
+
+    },
+
+    lowerFirstSymbol: function(s){
+        return s[0].toLowerCase() + s.substr(1);
     }
 
 });

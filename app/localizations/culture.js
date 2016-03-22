@@ -4,3 +4,5 @@ function Culture(name){
     this.dateTimeFormatInfo = InfinniUI.localizations[name].dateTimeFormatInfo;
     this.numberFormatInfo = InfinniUI.localizations[name].numberFormatInfo;
 }
+
+window.InfinniUI.global.culture = new Culture(InfinniUI.config.lang);

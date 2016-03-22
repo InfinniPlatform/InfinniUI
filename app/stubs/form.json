@@ -51,27 +51,6 @@
                 "DataSource": "ds1",
                 "Property": "FName"
               }
-            },
-            "OnKeyDown": {
-              "Name": "OnKeyDown1"
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged1"
-            },
-            "OnLoaded": {
-              "Name": "OnLoaded"
-            },
-            "OnClick": {
-              "Name": "OnClick"
-            }
-          }
-        },
-        {
-          "Button": {
-            "Text": "Clicl",
-            "Enabled": false,
-            "OnClick": {
-              "Name": "OnClick"
             }
           }
         },
@@ -83,73 +62,10 @@
                 "DataSource": "ds1",
                 "Property": "LName"
               }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged1"
-            },
-            "OnClick": {
-              "Name": "OnClick"
-            }
-          }
-        },
-        {
-          "LinkLabel": {
-            "Name": "LABEL",
-            "Text": "My Label",
-            "OnClick": {
-              "Name": "OnClick"
-            }
-          }
-        },
-        {
-          "DatePicker": {
-            "Name": "Birthday",
-            "Mode": "DateTime",
-            "Value": {
-              "PropertyBinding": {
-                "DataSource": "ds1",
-                "Property": "birthday"
-              }
-            },
-            "OnValueChanged": {
-              "Name": "OnValueChanged22"
-            },
-            "OnClick": {
-              "Name": "OnClick"
             }
           }
         }
-      ],
-      "OnClick": {
-        "Name": "OnClick"
-      }
+      ]
     }
-  },
-  "Scripts": [
-    {
-      "Name": "OnValueChanged1",
-      "Body": "console.log(args.source.children.getParent()); console.log(args.source.getName(), args.value);"
-    },
-    {
-      "Name": "OnValueChanged22",
-      "Body": "console.log('OnValueChanged22');console.log(args);"
-    },
-    {
-      "Name": "OnValueChanged2",
-      "Body": "debugger;console.log(args);"
-    },
-    {
-      "Name": "OnLoaded",
-      "Body": "console.log('OnLoaded', arguments);"
-    },
-    {
-      "Name": "OnKeyDown1",
-      "Body": "console.log('OnKeyDown1', arguments);"
-    },
-    {
-      "Name": "OnClick",
-      "Body": "console.log('OnCLick', args.source);"
-    }
-  ]
-
+  }
 }

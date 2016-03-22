@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+test/integration/ErrorLogs/*
 
 # Runtime data
 pids
@@ -38,5 +39,7 @@ bower_components/*
 bower_cache/*
 test/integration/bower_cache/*
 test/integration/bower_components/*
-.packaging/*.nupkg
-.packaging/UI.nuspec
+
+# Example
+example/www/compiled/*
+example/node_modules/*

@@ -1,65 +1,106 @@
 function MetadataViewBuilder() {
 
-    this.build = function (builder, parent, metadata) {
+}
 
-        if (metadata.OpenMode === 'Container' && metadata.Container === 'Content') {
-            metadata.OpenMode = 'Page';
+_.extend(MetadataViewBuilder.prototype, {
+
+    build: function (context, args) {
+        var metadata = args.metadata;
+        var parentView = this.getParentViewByOpenMode(args, metadata.OpenMode);
+
+        var viewTemplate = this.buildViewTemplate(args, parentView);
+        var linkView = new LinkView(parentView);
+
+        linkView.setViewTemplate(viewTemplate);
+
+        if ('OpenMode' in metadata) {
+            linkView.setOpenMode(metadata.OpenMode);
         }
 
-        var linkView = new LinkView(parent, function (resultCallback) {
-            if(parent.handleOnLoaded){
-                parent.handleOnLoaded(function(){
-                    createView(builder, parent, metadata, resultCallback);
-                });
-            }else{
-                createView(builder, parent, metadata, resultCallback);
-            }
-        });
-        linkView.setOpenMode(metadata.OpenMode);
-        linkView.setContainer(metadata.Container);
+        if ('Container' in metadata) {
+            linkView.setContainer(metadata.Container);
+        }
+
+        if ('DialogWidth' in metadata) {
+            linkView.setDialogWidth(metadata.DialogWidth);
+        }
+
         return linkView;
-    };
+    },
 
+    buildViewTemplate: function (params, parentView) {
+        var metadata = params.metadata;
+        var that = this;
 
-    var createView = function (builder, parent, metadata, resultCallback) {
-        var params = buildParameters(parent, metadata.Parameters, builder);
+        return function (onViewReadyHandler) {
+            var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
 
-        window.providerRegister.build('MetadataDataSource', metadata).getViewMetadata(function (viewMetadata) {
-            if (viewMetadata) {
-
-                for (var key in viewMetadata.RequestParameters) {
-                    var param = viewMetadata.RequestParameters[key];
-                    if (metadata.Parameters[param.Name] != param.Value) {
-                        //debugger;
-                        param.Value = metadata.Parameters[param.Name];
-                    }
+            metadataProvider.getViewMetadata(function (viewMetadata) {
+                that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
+                function onReady() {
+                    var args = Array.prototype.slice.call(arguments);
+                    onViewReadyHandler.apply(null, args);
                 }
+            });
+        };
+    },
 
-                var view = builder.buildType(parent, "View", viewMetadata, undefined, params);
+    buildViewByMetadata: function (params, viewMetadata, parentView, onViewReadyHandler) {
+        var builder = params.builder;
+        var logger = InfinniUI.global.logger;
+        var parameters = this.buildParameters(params);
 
-                if (['Application', 'Page', 'Dialog'].indexOf(metadata.OpenMode) > -1) {
-                    InfinniUI.views.appendView(metadata, viewMetadata, view);
-                }
+        if (viewMetadata !== null) {
 
-                resultCallback(view);
-            } else {
-                console.log(stringUtils.format('view metadata for {0} not found.', [metadata]));
-            }
-        });
-    };
+            var view = builder.buildType("View", viewMetadata, {
+                parentView: parentView,
+                parent: parentView,
+                params: parameters,
+                suspended: params.suspended
+            });
 
-    var buildParameters = function(parentView, parametersMetadata, builder){
-        var result = {},
-            param;
+            onViewReadyHandler(view);
+        } else {
+            logger.error('view metadata for ' + metadata + ' not found.');
+        }
+    },
+
+    buildParameters: function (params) {
+        var parametersMetadata = params.metadata['Parameters'];
+        var builder = params.builder;
+        var parentView = params.parentView;
+        var result = {};
+        var parameter;
 
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    param = builder.buildType(parentView, 'Parameter', parametersMetadata[i])
-                    result[param.getName()] = param;
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {
+                        parentView: parentView,
+                        basePathOfProperty: params.basePathOfProperty
+                    });
+                    result[parameter.getName()] = parameter;
                 }
             }
         }
         return result;
-    };
-}
+    },
+
+    getParentViewByOpenMode: function(params, mode) {
+        if( mode == null || mode == "Default" ) {
+            return this.getRootView(params.parentView);
+        }
+
+        return params.parentView;
+    },
+
+    getRootView: function(view) {
+        var parentView = view.getView();
+
+        if( parentView == null ) {
+            return view;
+        }
+
+        return this.getRootView(parentView);
+    }
+});

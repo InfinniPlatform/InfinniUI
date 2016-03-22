@@ -1,42 +1,95 @@
-
-var Element = function (parentView) {
-    //this.parent = null;
-    this.children = new ChildrenElementCollection(this);
-    this.parentView = parentView;
-    this.control = this.createControl();
+var Element = function (parent, viewMode) {
+    this.parent = parent;
+    this.control = this.createControl(viewMode);
     this.state = {
         Enabled: true
     };
 
-    Object.defineProperties(this, {
-        parent: {
-            get:function () {
-                return this.getParent()
-            }
-        }
-    });
+    this.childElements = [];
+
     this.eventStore = new EventStore();
 };
 
+Object.defineProperties(Element.prototype, {
+    name: {
+        get: function () {
+            return this.getName()
+        }
+    }
+});
+
 _.extend(Element.prototype, {
 
-    getParent: function () {
-        return this.children.getParent();
-    },
-
-    getChildElements: function () {
-        return this.children.getList();
-    },
-
-    getChildren: function () {
-        return this.children;
-    },
-
-    createControl: function () {
+    createControl: function (viewMode) {
         throw ('Не перегружен абстрактный метод Element.createControl');
     },
 
+    setParent: function (parentElement) {
+        this.parent = parentElement;
+    },
+
+    getParent: function () {
+        return this.parent;
+    },
+
+    getChildElements: function () {
+        return this.childElements;
+    },
+
+    findAllChildrenByType: function (type) {
+        return this._findAllChildren(predicate, getChildElements);
+
+        function predicate() {
+            return this.constructor.name === type;
+        }
+
+        function getChildElements(element) {
+            return element.findAllChildrenByType(type);
+        }
+    },
+
+    findAllChildrenByName: function (name) {
+        return this._findAllChildren(predicate, getChildElements);
+
+        function predicate () {
+            return this.getName() === name;
+        }
+
+        function getChildElements (element) {
+            return element.findAllChildrenByName(name);
+        }
+
+    },
+
+    _findAllChildren: function (predicate, getChildElements) {
+        var elements = this.getChildElements();
+        var items = [];
+        if (Array.isArray(elements)) {
+            elements.forEach(function (element) {
+                if (predicate.call(element)) {
+                    items.push(element);
+                }
+                Array.prototype.push.apply(items, getChildElements(element));
+            });
+        }
+
+        return items;
+    },
+
     getView: function () {
+        if (!this.parentView) {
+            if (this.parent && this.parent.isView) {
+                this.parentView = this.parent;
+
+            } else {
+                if (this.parent && this.parent.getView) {
+                    this.parentView = this.parent.getView();
+                } else {
+                    this.parentView = null;
+                }
+            }
+        }
+
         return this.parentView;
     },
 
@@ -47,6 +100,54 @@ _.extend(Element.prototype, {
     setName: function (name) {
         if (typeof name == 'string') {
             this.control.set('name', name);
+        }
+    },
+
+    getProperty: function (name) {
+        var getterMethodName = 'get' + this._upperFirstSymbol(name);
+        if (typeof this[getterMethodName] == 'function') {
+            return this[getterMethodName]();
+        } else {
+            throw 'expect that ' + getterMethodName + ' is getter function';
+        }
+    },
+
+    setProperty: function (name, value) {
+        var setterMethodName = 'set' + this._upperFirstSymbol(name),
+            getterMethodName;
+
+        if (typeof this[setterMethodName] == 'function') {
+            this[setterMethodName](value);
+        } else {
+            if (this._isCollectionProperty(name)) {
+                getterMethodName = 'get' + this._upperFirstSymbol(name);
+                this[getterMethodName]().set(value);
+            } else {
+                throw 'expect that ' + setterMethodName + ' is setter function';
+            }
+        }
+    },
+
+    _isCollectionProperty: function (propertyName) {
+        var getterMethodName = 'get' + this._upperFirstSymbol(propertyName);
+        return (typeof this[getterMethodName] == 'function') && this[getterMethodName]() instanceof Collection;
+    },
+
+    onPropertyChanged: function (propertyName, handler) {
+        var subscribingMethodName = 'on' + this._upperFirstSymbol(propertyName) + 'Changed';
+        if (typeof this[subscribingMethodName] == 'function') {
+            this[subscribingMethodName](handler);
+        } else {
+            this.control.on('change:' + propertyName, function (model, value) {
+                var parentView = this.getView(),
+                    context = parentView ? parentView.getContext() : undefined,
+                    args = {
+                        property: propertyName,
+                        oldValue: model.previous(propertyName),
+                        newValue: value
+                    };
+                handler(context, args);
+            }.bind(this));
         }
     },
 
@@ -85,7 +186,7 @@ _.extend(Element.prototype, {
     },
 
     setParentEnabledOnChild: function (value) {
-        var elements = this.getChildElementsOld();
+        var elements = this.getChildElements();
         if (_.isEmpty(elements) === false) {
             for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
                 if (typeof elements[i].setParentEnabled === 'undefined') {
@@ -123,16 +224,25 @@ _.extend(Element.prototype, {
         }
     },
 
-    getStyle: function(){
+    getStyle: function () {
         return this.control.get('style');
     },
 
-    setStyle: function(style){
-        if(typeof style == 'string'){
+    setStyle: function (style) {
+        if (typeof style == 'string') {
             this.control.set('style', style);
         }
     },
 
+    getTextHorizontalAlignment: function () {
+        return this.control.get('textHorizontalAlignment');
+    },
+
+    setTextHorizontalAlignment: function (value) {
+        if (InfinniUI.Metadata.isValidValue(value, InfinniUI.Metadata.TextHorizontalAlignment)) {
+            this.control.set('textHorizontalAlignment', value);
+        }
+    },
 
     getHorizontalAlignment: function () {
         return this.control.get('horizontalAlignment');
@@ -154,24 +264,84 @@ _.extend(Element.prototype, {
         }
     },
 
-    getChildElementsOld: function () {
-        return this.control.getChildElements();
+    getTextStyle: function () {
+        return this.control.get('textStyle');
+    },
+
+    setTextStyle: function (textStyle) {
+        if (typeof textStyle == 'string') {
+            this.control.set('textStyle', textStyle);
+        }
+    },
+
+    getBackground: function () {
+        return this.control.get('background');
+    },
+
+    setBackground: function (background) {
+        if (typeof background == 'string') {
+            this.control.set('background', background);
+        }
+    },
+
+    getForeground: function () {
+        return this.control.get('foreground');
+    },
+
+    setForeground: function (foreground) {
+        if (typeof foreground == 'string') {
+            this.control.set('foreground', foreground);
+        }
+    },
+
+    getTexture: function () {
+        return this.control.get('texture');
+    },
+
+    setTexture: function (texture) {
+        if (typeof texture == 'string') {
+            this.control.set('texture', texture);
+        }
     },
 
     onLoaded: function (handler) {
         this.control.onLoaded(handler);
     },
 
-    onClick: function (handler) {
-        this.control.onClick(handler);
+    isLoaded: function () {
+        return this.control.isLoaded();
+    },
+
+    getFocusable: function () {
+        return this.control.get('focusable')
+    },
+
+    setFocusable: function (value) {
+        this.control.get('focusable', !!value)
+    },
+
+    getFocused: function () {
+        return this.control.get('focused');
+    },
+
+    setFocused: function (value) {
+        return this.control.set('focused', !!value);
     },
 
     onLostFocus: function (handler) {
-        this.control.controlView.addEventHandler('OnLostFocus', handler);
+        this.control.on('OnLostFocus', handler);
     },
 
     onGotFocus: function (handler) {
-        this.control.controlView.addEventHandler('OnGotFocus', handler);
+        this.control.on('OnGotFocus', handler);
+    },
+
+    setToolTip: function (value) {
+        this.control.set('toolTip', value);
+    },
+
+    getToolTip: function () {
+        return this.control.get('toolTip');
     },
 
     getIsLoaded: function () {
@@ -180,6 +350,14 @@ _.extend(Element.prototype, {
 
     setIsLoaded: function () {
         this.control.set('isLoaded', true);
+    },
+
+    setTag: function (value) {
+        this.control.set('tag', value);
+    },
+
+    getTag: function () {
+        return this.control.get('tag');
     },
 
     render: function () {
@@ -193,7 +371,7 @@ _.extend(Element.prototype, {
     },
 
     getScriptsStorage: function () {
-        return this.parentView;
+        return this.getView();
     },
 
     /**
@@ -222,12 +400,209 @@ _.extend(Element.prototype, {
         this.state[name] = value;
     },
 
+    onBeforeClick: function (handler) {
+        return this.control.onBeforeClick(handler);
+    },
+
     onKeyDown: function (handler) {
-        var element = this;
-        var callback = function (data) {
-            data.source = element;
-            handler(data);
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingKeyEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onKeyDown(callback);
+    },
+
+    onKeyUp: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingKeyEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onKeyUp(callback);
+    },
+
+    onClick: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onClick(callback);
+    },
+
+    onDoubleClick: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onDoubleClick(callback);
+    },
+
+    onMouseDown: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseDown(callback);
+    },
+
+    onMouseUp: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseUp(callback);
+    },
+
+    onMouseEnter: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseEnter(callback);
+    },
+
+    onMouseLeave: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseLeave(callback);
+    },
+
+    onMouseMove: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseMove(callback);
+    },
+
+    onShowToolTip: function (handler) {
+        var control = this.control;
+
+        control.on('change:showToolTip', function () {
+            var showToolTip = control.get('showToolTip');
+            if (showToolTip && typeof handler === 'function') {
+                handler();
+            }
+        });
+    },
+
+    onHideToolTip: function (handler) {
+        var control = this.control;
+
+        control.on('change:showToolTip', function () {
+            var showToolTip = control.get('showToolTip');
+            if (!showToolTip && typeof handler === 'function') {
+                handler();
+            }
+        });
+    },
+
+    remove: function (isInitiatedByParent) {
+        var logger = window.InfinniUI.global.logger;
+        if(this.isRemoved){
+            logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
+            return;
+        }
+
+        var children = this.childElements;
+
+        for (var i = 0, ii = children.length; i < ii; i++) {
+            children[i].remove(true);
+        }
+
+        this.control.remove();
+
+        if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
+            if(this.parent.isRemoved){
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+            }else{
+                this.parent.removeChild(this);
+            }
+
+        }
+
+        this.isRemoved = true;
+
+        this.childElements = undefined;
+    },
+
+    removeChild: function (child) {
+        var index = this.childElements.indexOf(child);
+        if (index != -1) {
+            this.childElements.splice(index, 1);
+        }
+    },
+
+    addChild: function (child) {
+        if(!this.isRemoved){
+            this.childElements.push(child);
+
+        }else{
+            var logger = window.InfinniUI.global.logger;
+            logger.warn('Element.addChild: Попытка добавить потомка в удаленный элемент');
+        }
+
+    },
+
+    createControlEventHandler: function(element, handler, additionParams) {
+        var context;
+        var parentView = element.getView();
+        additionParams = additionParams || {};
+
+        if (parentView) {
+            context = parentView.context;
+        }
+
+        return function (message) {
+            _.extend(
+                message,
+                additionParams
+            );
+            message.source = element;
+
+            return handler.call(undefined, context, message);
         };
-        return this.control.onKeyDown(handler);
+    },
+
+    _getHandlingKeyEventData: function (nativeData) {
+        var result = {};
+
+        result = {
+            source: this,
+            key: nativeData.which,
+            altKey: nativeData.altKey,
+            ctrlKey: nativeData.ctrlKey,
+            shiftKey: nativeData.shiftKey,
+            nativeEventData: nativeData
+        };
+        return result;
+    },
+
+    _getHandlingMouseEventData: function (nativeData) {
+        var result = {};
+
+        result = {
+            source: this,
+            button: nativeData.which,
+            altKey: nativeData.altKey,
+            ctrlKey: nativeData.ctrlKey,
+            shiftKey: nativeData.shiftKey,
+            nativeEventData: nativeData
+        };
+        return result;
+    },
+
+    _upperFirstSymbol: function (s) {
+        return s[0].toUpperCase() + s.substr(1);
     }
 });

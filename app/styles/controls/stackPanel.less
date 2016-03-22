@@ -1,0 +1,30 @@
+.pl-stack-panel {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .pl-stack-panel-i{
+    max-width: 100%;
+  }
+
+  &.pl-form-group>.pl-stack-panel-i{
+    margin-bottom: 5px;
+  }
+
+  &.horizontal-orientation{
+    &>.pl-stack-panel-i{
+      float:left;
+    }
+
+    &:after{
+      content: '';
+      clear: both;
+      display: block;
+    }
+
+    &.pl-form-group>.pl-stack-panel-i{
+      display: inline-block;
+      float: none;
+    }
+  }
+}

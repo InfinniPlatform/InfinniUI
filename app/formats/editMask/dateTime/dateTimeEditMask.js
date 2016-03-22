@@ -579,7 +579,7 @@ _.extend(DateTimeEditMask.prototype, {
         this.template = this.buildTemplate(date);
 
         if (this.value === null) {
-            this.value = new Date(0);
+            this.value = new Date(0, 0, 0, 0, 0, 0, 0);
         }
     },
 

@@ -18,72 +18,73 @@ function CucumberHTMLListener($root) {
                         line: feature.getLine(),
                         description: feature.getDescription()
                     });
-                    console.log("##teamcity[testSuiteStarted name='" + window.cucumberCurrentFeature + "']");
+                    tsm.suiteStarted(window.cucumberCurrentFeature);
                     break;
 
                 case 'BeforeScenario':
                     var scenario = event.getPayloadItem('scenario');
                     window.cucumberCurrentScenario = scenario.getName();
+                    window.cucumberIsIgnored = false;
+                    window.cucumberIsFailed = false;
                     formatter.scenario({
                         keyword: scenario.getKeyword(),
                         name: scenario.getName(),
                         line: scenario.getLine(),
                         description: scenario.getDescription()
                     });
-                    console.log("##teamcity[testSuiteStarted name='" + window.cucumberCurrentScenario + "']");
+                    tsm.testStarted(window.cucumberCurrentScenario);
                     break;
 
                 case 'BeforeStep':
                     var step = event.getPayloadItem('step');
                     self.handleAnyStep(step);
                     window.cucumberCurrentStep = (step.getKeyword() + step.getName())
-                    .toString()
-                    .replace(/'/g, "|'")
-                    .replace(/\[/g, "|[")
-                    .replace(/\]/g, "|]")
-                    .replace(/:/g, "");
-                    console.log("##teamcity[testStarted name='" + window.cucumberCurrentStep + "']");
+                        .toString()
+                        .replace(/'/g, "|'")
+                        .replace(/\[/g, "|[")
+                        .replace(/\]/g, "|]")
+                        .replace(/:/g, "");
                     break;
 
                 case 'StepResult':
-                    var teamcityOutput = "##teamcity[";
                     var result;
                     var stepResult = event.getPayloadItem('stepResult');
                     if (stepResult.isSuccessful()) {
-                        result = { status: 'passed' };
+                        result = {status: 'passed'};
                     } else if (stepResult.isPending()) {
-                        result = { status: 'pending' };
+                        result = {status: 'pending'};
                     } else if (stepResult.isUndefined() || stepResult.isSkipped()) {
-                        result = { status: 'skipped' };
-                        teamcityOutput += "testIgnored name='" + window.cucumberCurrentStep + "'";
+                        result = {status: 'skipped'};
+                        if (!window.cucumberIsIgnored && !window.cucumberIsFailed) {
+                            tsm.testIgnored(window.cucumberCurrentScenario);
+                            window.cucumberIsIgnored = true;
+                        }
                     } else {
                         var error = stepResult.getFailureException();
                         var errorMessage = error.stack || error;
-                        result = { status: 'failed', error_message: errorMessage };
-                        teamcityOutput += "testFailed name='" + window.cucumberCurrentStep + "' details='" + errorMessage.toString().replace(/\n/g, "|n|r") + "'";
-                        var screenshotName =    window.cucumberCurrentFeature.toString().replace(/[?:"]*/g, "") + '.' +
-                                                window.cucumberCurrentScenario.toString().replace(/[?:"]*/g, "") + '.' +
-                                                window.cucumberCurrentStep.toString().replace(/[?:"]*/g, "");
-                        console.log('Take screenshot:' + screenshotName);
-                    }
-                    formatter.match({ uri: 'report.feature', step: { line: currentStep.getLine() } });
-                    formatter.result(result);
-                    teamcityOutput += "]";
-                    if (teamcityOutput != "##teamcity[]") {
-                        console.log(teamcityOutput);
-                    }
-                    break;
+                        result = {status: 'failed', error_message: errorMessage};
 
-                case 'AfterStep':
-                    console.log("##teamcity[testFinished name='" + window.cucumberCurrentStep + "']");
+                        errorMessage = errorMessage.toString()
+                            .replace(/\n/g, "|n|r")
+                            .replace(/'/g, "|'")
+                            .replace(/\[/g, "|[")
+                            .replace(/\]/g, "|]")
+                            .replace(/:/g, "");
+
+                        tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
+
+                        window.cucumberIsFailed = true;
+                    }
+                    formatter.match({uri: 'report.feature', step: {line: currentStep.getLine()}});
+                    formatter.result(result);
                     break;
 
                 case 'AfterScenario':
-                    console.log("##teamcity[testSuiteFinished name='" + window.cucumberCurrentScenario + "']");
+                    tsm.testFinished(window.cucumberCurrentScenario);
                     break;
 
                 case 'AfterFeature':
-                    console.log("##teamcity[testSuiteFinished name='" + window.cucumberCurrentFeature + "']");
+                    tsm.suiteFinished(window.cucumberCurrentFeature);
                     break;
             }
             callback();
@@ -93,10 +94,10 @@ function CucumberHTMLListener($root) {
             formatter.step({
                 keyword: step.getKeyword(),
                 name: step.getName(),
-                line: step.getLine(),
+                line: step.getLine()
             });
             currentStep = step;
         }
     };
     return self;
-};
+}

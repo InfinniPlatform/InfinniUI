@@ -1,4 +1,11 @@
 ﻿jQuery(document).ready(function () {
+    InfinniUI.user = {
+        onReadyDeferred: $.Deferred(),
+        onReady: function(handler){
+            this.onReadyDeferred.done(handler);
+        }
+    };
+
     refreshUserInfo();
 });
 
@@ -18,10 +25,10 @@ function refreshUserInfo() {
     var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
     authProvider.getCurrentUser(
         function (result) {
-            setUserInfo(result);
+            InfinniUI.user.onReadyDeferred.resolve(result);
         },
         function (error) {
-            showObject('#getCurrentUserResult', error);
+            InfinniUI.user .onReadyDeferred.resolve(null);
         }
     );
 }

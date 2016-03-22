@@ -1,4 +1,4 @@
-function FakeDataProvider(mode) {
+/*function FakeDataProvider(mode) {
 
     var items = [
         {
@@ -94,4 +94,4 @@ function FakeDataProvider(mode) {
         resultCallback(null);
     };
 
-}
+}*/

@@ -8,7 +8,7 @@ var builderEditMaskPropertyMixin = {
         //data = {NumberEditMask: {Mask: "n3"}}}
 
         if(typeof data !== 'undefined' && data !== null && data !== '' ) {
-            var editMask = builder.build(params.parent, data);
+            var editMask = builder.build(params.view, data);
             params.element.setEditMask(editMask);
         }
     }

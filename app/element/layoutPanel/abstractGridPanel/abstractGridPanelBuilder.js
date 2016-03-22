@@ -21,7 +21,7 @@ _.extend(AbstractGridPanelBuilder.prototype, {
 
                     if (cellMetadata.Items) {
                         _.each(cellMetadata.Items, function (itemMetadata) {
-                            item = params.builder.build(params.parent, itemMetadata, params.collectionProperty, {parentElement: params.element});
+                            item = params.builder.build(params.view, itemMetadata, params.collectionProperty);
                             cell.addItem(item);
                         }, this);
                     }

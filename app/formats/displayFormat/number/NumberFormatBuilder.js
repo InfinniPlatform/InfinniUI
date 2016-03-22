@@ -7,15 +7,14 @@ function NumberFormatBuilder () {
     /**
      * @description Создает и инициализирует экземпляр {@link NumberFormat}
      * @memberOf NumberFormatBuilder
-     * @param builder
-     * @param parent
-     * @param metadata
+     * @param context
+     * @param args
      * @returns {NumberFormat}
      */
-    this.build = function (builder, parent, metadata) {
+    this.build = function (context, args) {
         var format = new NumberFormat();
 
-        format.setFormat(metadata.Format);
+        format.setFormat(args.metadata.Format);
 
         return format;
     }

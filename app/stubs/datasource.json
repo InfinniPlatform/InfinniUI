@@ -30,15 +30,70 @@
       "Name": "MainViewPanel",
       "Items": [
         {
-            "Button": {
-                "Action": {
-                    "CancelAction": {
-                        "View": "View"
+          "RadioGroup": {
+            "Orientation": "Vertical",
+            "Items": {
+              "PropertyBinding": {
+                "DataSource": "BloodGroupDataSource",
+                "Property": ""
+              }
+            },
+            "ItemTemplate": {
+              "StackPanel": {
+                "Orientation": "Vertical",
+                "Items": [
+                  {
+                    "Label": {
+                      "Value": {
+                        "PropertyBinding": {
+                          "DataSource": "BloodGroupDataSource",
+                          "Property": "$.DisplayName"
+                        }
+                      }
                     }
-                }
+                  },
+                  {
+                    "Label": {
+                      "Value": {
+                        "PropertyBinding": {
+                          "DataSource": "ItemsDataSource",
+                          "Property": "$.DisplayName"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "~ItemFormat": {
+              "ObjectFormat": {
+                "Format": "{Code}: {DisplayName}"
+              }
+            },
+            "DisplayProperty": "DisplayName",
+            "~ValueProperty": "Code",
+            "ValueProperty": {
+              "Id": "Code",
+              "DisplayName": "DisplayName"
+            },
+            "Value": {
+              "PropertyBinding": {
+                "DataSource": "MainDataSource",
+                "Property": "Radio"
+              }
             }
+          }
         }
       ]
     }
-  }
+  },
+  "OnLoaded": {
+    "Name": "OnLoaded"
+  },
+  "Scripts": [
+    {
+      "Name": "OnLoaded",
+      "Body": "console.log('OnLoaded'); console.log(arguments); console.log(context.DataSources.BloodGroupDataSource.getDataItems());return false;"
+    }
+  ]
 }

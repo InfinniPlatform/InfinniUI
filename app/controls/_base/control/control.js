@@ -2,9 +2,9 @@
  * @description Базовый класс контролов
  * @class Control
  */
-var Control = function () {
+var Control = function (viewMode) {
     this.controlModel = this.createControlModel();
-    this.controlView = this.createControlView(this.controlModel);
+    this.controlView = this.createControlView(this.controlModel, viewMode);
 
     this.initHandlers();
 
@@ -16,7 +16,7 @@ _.extend(Control.prototype, {
         throw ('Не перегружен абстрактный метод Control.createControlModel()');
     },
 
-    createControlView: function (model) {
+    createControlView: function (model, viewMode) {
         throw ('Не перегружен абстрактный метод Control.createControlView()');
     },
 
@@ -34,21 +34,16 @@ _.extend(Control.prototype, {
         return this.controlModel.get(key);
     },
 
+    on: function (name, handler) {
+        return this.controlModel.on(name, handler);
+    },
+
     render: function () {
         return this.controlView.render().$el;
     },
 
     getChildElements: function () {
         return [];
-    },
-
-    onClick: function (handler) {
-        var model = this.controlModel;
-        this.controlView.on('onClick', function () {
-            if (model.get('enabled')) {
-                handler();
-            }
-        });
     },
 
     onLoaded: function (handler) {
@@ -59,8 +54,52 @@ _.extend(Control.prototype, {
         });
     },
 
+    isLoaded: function () {
+        return this.controlModel.get('isLoaded');
+    },
+
+    onBeforeClick: function (handler) {
+        this.controlView.on('beforeClick', handler);
+    },
+
+    onClick: function (handler) {
+        this.controlView.$el.on('click', handler);
+    },
+
+    onDoubleClick: function (handler) {
+        this.controlView.$el.on('dblclick', handler);
+    },
+
+    onMouseDown: function (handler) {
+        this.controlView.$el.on('mousedown', handler);
+    },
+
+    onMouseUp: function (handler) {
+        this.controlView.$el.on('mouseup', handler);
+    },
+
+    onMouseEnter: function (handler) {
+        this.controlView.$el.on('mouseenter', handler);
+    },
+
+    onMouseLeave: function (handler) {
+        this.controlView.$el.on('mouseleave', handler);
+    },
+
+    onMouseMove: function (handler) {
+        this.controlView.$el.on('mousemove', handler);
+    },
+
     onKeyDown: function (handler) {
-        this.controlView.on('onKeyDown', handler);
+        this.controlView.$el.on('keydown', handler);
+    },
+
+    onKeyUp: function (handler) {
+        this.controlView.$el.on('keyup', handler);
+    },
+
+    remove: function () {
+        this.controlView.remove();
     }
 });
 

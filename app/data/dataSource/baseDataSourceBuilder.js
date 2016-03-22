@@ -1,172 +1,153 @@
+/**
+ * @constructor
+ * @mixes DataSourceValidationNotifierMixin
+ */
 function BaseDataSourceBuilder() {
+}
 
-    this.build = function (metadata, dataSource, parent, builder) {
-
+_.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
+    build: function (context, args) {
+        var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate();
+
+        var filterManager = new FilterManager(this.buildBindingBuilder(args));
+        dataSource.setFilterManager(filterManager);
+
+        this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
+        this.initFileProvider(dataSource, args.metadata);
+
+        this.applySuspended(dataSource, args.suspended);
+        dataSource.resumeUpdate();
+
+        /*if(args.parentView.onLoading){
+         args.parentView.onLoading(function () {
+         //dataSource.resumeUpdate();
+         dataSource.updateItems();
+         });
+         }else{
+         //dataSource.resumeUpdate();
+         dataSource.updateItems();
+         }*/
+
+        return dataSource;
+    },
+
+    applySuspended: function (dataSource, suspended) {
+        if (!suspended) {
+            return;
+        }
+
+        for (var name in suspended) {
+            if (!suspended.hasOwnProperty(name) || dataSource.getName() !== name) {
+                continue;
+            }
+
+            dataSource.suspendUpdate(suspended[name]);
+        }
+
+    },
+
+    applyMetadata: function (builder, parentView, metadata, dataSource) {
+        var idProperty = metadata.IdProperty;
+        if (idProperty) {
+            dataSource.setIdProperty(idProperty);
+        }
+
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
-        dataSource.setSorting(metadata.Sorting);
         dataSource.setPageSize(metadata.PageSize || 15);
-        dataSource.setPageNumber(metadata.PageNumber || null);
+        dataSource.setPageNumber(metadata.PageNumber || 0);
 
-        var criteriaConstructor = function (data) {
-            //Добавлен
-            var criteria;
-
-            if (typeof data === 'undefined' || data === null) {
-                return;
-            }
-
-
-            if (_.isArray(data)) {
-                //Переданы метаданные для создания Criteria
-                criteria = builder.buildType(parent, 'Criteria', data);
-            } else {
-                //Передан созданный экземпляр. Добавлено для совместимости со старой реализацией.
-                criteria = data;
-            }
-            return criteria;
-        };
-
-        dataSource.setCriteriaConstructor(criteriaConstructor);
-
-        var queryFilter = builder.buildType(parent, 'Criteria', metadata.Query);
-
-        queryFilter.onValueChanged(function () {
-            dataSource.updateItems();
-        });
-
-        dataSource.setQueryFilter(queryFilter);
-
-        this.initScriptsHandlers(parent, metadata, dataSource, builder);
-
-        buildValidation.apply(this, arguments);
-
-        var exchange = parent.getExchange();
-        exchange.subscribe(messageTypes.onLoading, function () {
-            if(dataSource.initingDataStrategy == 'previouslyInitingData' || dataSource.initingDataStrategy == 'manualInitingData'){
-                dataSource.resumeUpdate();
-            }else{
-                dataSource.loadingProcessDone();
-            }
-
-        });
-        exchange.subscribe(messageTypes.onSetSelectedItem, function (value) {
-            if (dataSource.getName() === value.dataSource && !value.property) {
-                console.log('BaseDataSourceBuilder.messageTypes.onSetSelectedItem', dataSource.getName());
-                dataSource.setSelectedItem(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetTextFilter, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setTextFilter(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPropertyFilters, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPropertyFilters(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPageNumber, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPageNumber(value.value);
-            }
-        });
-        exchange.subscribe(messageTypes.onSetPageSize, function (value) {
-            if (value.dataSource === dataSource.getName()) {
-                dataSource.setPageSize(value.value);
-            }
-        });
-    };
-
-    this.initScriptsHandlers = function (parent, metadata, dataSource, builder) {
-        //Скриптовые обработчики на события
-        if (parent) {
-            dataSource.onSelectedItemChanged(function () {
-                var exchange = parent.getExchange();
-                var selectedItem = dataSource.getSelectedItem();
-
-                exchange.send(messageTypes.onSelectedItemChanged, {
-                    DataSource: dataSource.getName(),
-                    Value: selectedItem
-                });
-
-                if (metadata.OnSelectedItemChanged) {
-                    var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
-                        source: dataSource,
-                        value: selectedItem,
-                        dataSource: dataSource.getName()
-                    });
-                    new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemChanged.Name, message);
-                }
-            });
+        if('Sorting' in metadata){
+            dataSource.setSorting(metadata['Sorting']);
         }
 
-        if (parent && metadata.OnItemsUpdated) {
-            dataSource.onItemsUpdated(function () {
-                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
-                    source: dataSource,
-                    value: dataSource.getDataItems(),
-                    dataSource: dataSource.getName()
-                });
-
-                new ScriptExecutor(parent).executeScript(metadata.OnItemsUpdated.Name, message);
-            });
+        var queryMetadata;
+        if('Query' in metadata){
+            dataSource.setFilter(metadata['Query']);
         }
 
-        if (parent && metadata.OnSelectedItemModified) {
-            dataSource.onSelectedItemModified(function () {
-                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
-                    source: dataSource,
-                    value: dataSource.getSelectedItem(),
-                    dataSource: dataSource.getName()
-                });
-
-                new ScriptExecutor(parent).executeScript(metadata.OnSelectedItemModified.Name, message);
-            });
+        if('IsLazy' in metadata){
+            dataSource.setIsLazy(metadata['IsLazy']);
         }
 
-        if (parent && metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function (context, args) {
-                var message = builder.buildType(parent, 'DataSourceMessage', null, null, {
-                    source: dataSource,
-                    value: args.value,
-                    dataSource: dataSource.getName()
-                });
+        this.initValidation(parentView, dataSource, metadata);
+        this.initNotifyValidation(dataSource);
+        this.initScriptsHandlers(parentView, metadata, dataSource);
+    },
 
-                new ScriptExecutor(parent).executeScript(metadata.OnItemDeleted.Name, message);
-            });
-        }
-    };
+    createDataSource: function (parent) {
+        throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+    },
 
     /**
-     * Создает компонент для валидации
-     * @param metadata
+     * @protected
+     * @description Инициализация обработчиков для валидации данных
+     * @param parentView
      * @param dataSource
-     * @param parent
-     * @param builder
+     * @param metadata
      */
-    function buildValidation(metadata, dataSource, parent) {
-        var builder = new ValidationBuilder(),
-            validationErrors, validationWarnings;
-
-        if (typeof metadata.ValidationErrors !== 'undefined') {
-            validationErrors = builder.build(undefined, parent, metadata.ValidationErrors);
+    initValidation: function (parentView, dataSource, metadata) {
+        if (metadata.ValidationErrors) {
+            dataSource.setErrorValidator(function (context, args) {
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
+            });
         }
 
-        if (typeof metadata.ValidationWarnings !== 'undefined') {
-            validationWarnings = builder.build(undefined, parent, metadata.ValidationWarnings);
+        if (metadata.ValidationWarnings) {
+            dataSource.setWarningValidator(function (context, args) {
+                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name || metadata.ValidationWarnings, args);
+            });
+        }
+    },
+
+    initScriptsHandlers: function (parentView, metadata, dataSource) {
+        //Скриптовые обработчики на события
+        if (parentView && metadata.OnSelectedItemChanged) {
+            dataSource.onSelectedItemChanged(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged);
+            });
         }
 
-        dataSource.validation = new DataSourceValidator(dataSource, validationWarnings, validationErrors);
+        if (parentView && metadata.OnItemsUpdated) {
+            dataSource.onItemsUpdated(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated);
+            });
+        }
 
-        var exchange = parent.getExchange();
-        exchange.subscribe(messageTypes.onValidate, function (message) {
-            if (message && message.dataSource === dataSource.getName()) {
-                dataSource.validation.validate();
-                dataSource.validation.notifyElements(message.property);
-            }
-        });
+        if (parentView && metadata.OnSelectedItemModified) {
+            dataSource.onSelectedItemModified(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
+            });
+        }
+
+        if (parentView && metadata.OnPropertyChanged) {
+            dataSource.onPropertyChanged(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
+            });
+        }
+
+        if (parentView && metadata.OnItemDeleted) {
+            dataSource.onItemDeleted(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            });
+        }
+    },
+
+    buildBindingBuilder: function(params){
+
+        return function(bindingMetadata){
+            return params.builder.buildBinding(bindingMetadata, {
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+        };
+    },
+
+    initFileProvider: function (dataSource, metadata) {
+
     }
+});
 
-}
+
+_.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);

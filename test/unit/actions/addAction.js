@@ -1,0 +1,214 @@
+describe('AddAction', function () {
+    it('successful build', function () {
+        // Given
+        var view = new View();
+        var builder = new ApplicationBuilder();
+        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+
+        view.getDataSources().push(dataSource);
+
+        var metadata = {
+            AddAction: {
+                LinkView: {
+                    InlineView: {
+
+                    }
+                },
+                DestinationValue: {
+                    Source: 'SomeDS'
+                },
+                SourceValue: {
+                    Source: 'EditDS'
+                }
+            }
+        };
+
+        // When
+        var addAction = builder.build(metadata, {parentView: view});
+
+        // Then
+        assert.isNotNull( addAction );
+        assert.isNotNull( addAction.execute, 'action should have execute' );
+    });
+
+    it('should add item to ObjectDataSource', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": []
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "AddButton",
+                    "Action": {
+                        "AddAction": {
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": ""
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Add",
+                                        "Name": "AddView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var addBtn = view.context.controls['AddButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            assert.equal(destinationDS.getItems().length, 0);
+
+            // When
+            addBtn.click();
+
+            var childView = view.context.controls['AddView'];
+            var sourceDS = childView.context.dataSources['MainDataSource'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            sourceDS.setSelectedItem({name: "New"});
+
+            acceptBtn.click();
+
+            // Then
+            var destinationItems = destinationDS.getItems();
+            assert.equal(destinationItems.length, 1);
+            assert.include(destinationItems, {name: "New"});
+
+            done();
+        });
+    });
+
+    it('should add item to DocumentDataSource', function (done) {
+        // Given
+        window.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "DocumentDataSource": {
+                        "Name": "DocumentDataSource",
+                        "IsLazy": false
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "AddButton",
+                    "Action": {
+                        "AddAction": {
+                            "DestinationValue": {
+                                "Source": "DocumentDataSource"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Add",
+                                        "Name": "AddView",
+                                        "DataSources": [
+                                            {
+                                                "DocumentDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "SaveBtn",
+                                                    "Action": {
+                                                        "SaveAction": {
+                                                            "DestinationValue": {
+                                                                "Source": "MainDataSource"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            view.context.dataSources.DocumentDataSource.updateItems(
+                function(){
+                    var addBtn = view.context.controls['AddButton'];
+                    var destinationDS = view.context.dataSources.DocumentDataSource;
+                    var initCount = destinationDS.getItems().length;
+
+                    // When
+                    addBtn.click();
+
+                    var childView = view.context.controls['AddView'];
+                    var sourceDS = childView.context.dataSources['MainDataSource'];
+                    var saveBtn = childView.context.controls['SaveBtn'];
+
+                    var newItem = sourceDS.getSelectedItem();
+
+                    assert.notInclude(destinationDS.getItems(), newItem);
+
+                    newItem = _.extend( newItem,
+                                        { FirstName: "Test", LastName: "Test" });
+                    sourceDS.setSelectedItem( newItem );
+
+                    saveBtn.click();
+
+                    // Then
+                    view.context.dataSources.DocumentDataSource.updateItems( function() {
+                        var destinationItems = destinationDS.getItems();
+                        assert.equal(destinationItems.length, initCount + 1);
+                        assert.include(destinationItems, newItem);
+                        done();
+                    });
+                }
+            );
+        });
+    });
+});

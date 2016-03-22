@@ -1,23 +1,29 @@
 ﻿module.exports = function (grunt) {
-	grunt.initConfig({
+    grunt.initConfig({
         concat: {
             feature: {
                 src: [],
                 dest: 'out/feature.feature'
             },
-			
-			step_definitions: {
-                src: ["features/support/*.js", "features/step_definitions/*.js"],
+
+            step_definitions: {
+                src: [
+                    "features/support/*.js",
+                    "features/step_definitions/*.js"
+                ],
                 dest: 'out/step_definitions.js'
             },
 
             app: {
-				src: ["app/*.js"],
+                src: ["app/*.js"],
                 dest: 'out/app.js'
             },
 
             vendor: {
-				src: ["vendor/*.js", "bower_components/elasticsearch/elasticsearch.js", "../../bower_components/chai/chai.js"],
+                src: [
+                    "vendor/*.js",
+                    "../../bower_components/chai/chai.js"
+                ],
                 dest: 'out/vendor.js'
             }
         }
@@ -29,7 +35,7 @@
         if (extensionPath) {
             var extFeaturesPath = extensionPath + '*.IntegrationTests/**/*.feature';
             var extStepDefinitionsPath = extensionPath + '*.IntegrationTests/**/step_definitions/*.js';
-            var extTestHelpersPath = extensionPath + '*.IntegrationTests/**/*.js';
+            var extTestHelpersPath = extensionPath + '*.IntegrationTests/*.js';
 
             var stepDefinitionsArray = grunt.config.get('concat.step_definitions.src');
             stepDefinitionsArray.push(extStepDefinitionsPath);
@@ -42,9 +48,9 @@
             grunt.config.set('concat.app.src', appArray);
         }
 
-         var tasks = [
+        var tasks = [
             'concat'
-         ];
+        ];
 
         grunt.task.run(tasks);
     });

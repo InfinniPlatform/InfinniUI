@@ -1,48 +1,79 @@
-function ObjectDataProvider(metadata, items) {
+var ObjectDataProvider = function (items, idProperty) {
+    this.items = items || [];
+    this.idProperty = idProperty || 'Id';
+};
 
-    this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
+_.extend(ObjectDataProvider.prototype, {
 
-        resultCallback(items);
+    setItems: function (items) {
+        this.items = items;
+    },
 
-    };
+    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
+        var filter = new FilterCriteriaType();
+        var callback = filter.getFilterCallback(criteriaList);
+        resultCallback(this.items.filter(callback));
+    },
 
-    this.createItem = function (resultCallback) {
+    createItem: function (resultCallback) {
+        var item = this.createLocalItem(this.idProperty);
+        resultCallback(item);
+    },
 
-        resultCallback({});
-    };
+    saveItem: function (item, resultCallback) {
+        var items = this.items,
+            itemIndex = this._getIndexOfItem(item),
+            result = {
+                isValid: true
+            };
 
-    this.replaceItem = function (value, resultCallback) {
-
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i],metadata.IdProperty) === InfinniUI.ObjectUtils.getPropertyValue(value, metadata.IdProperty) ){
-                items[i] = value;
-                resultCallback(items[i]);
-                break;
-            }
+        if (itemIndex == -1) {
+            items.push(item);
+        } else {
+            items[itemIndex] = item;
         }
 
-    };
+        resultCallback(result);
+    },
 
-    this.deleteItem = function (instanceId, resultCallback) {
+    deleteItem: function (item, resultCallback) {
+        var items = this.items,
+            itemIndex = this._getIndexOfItem(item),
+            result = {
+                isValid: true
+            };
 
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i], metadata.IdProperty) === instanceId ) {
-                items.splice(i,1);
-                resultCallback(items);
-                break;
-            }
-        }
-    };
-
-    this.getItem = function (itemId, resultCallback) {
-        for(var i = 0; i < items.length; i++){
-            if(InfinniUI.ObjectUtils.getPropertyValue(items[i], metadata.IdProperty) === itemId ) {
-
-                resultCallback(items[i]);
-                break;
-            }
+        if (itemIndex == -1) {
+            result.isValid = false;
+            result.message = 'Удаляемый элемент не найден';
+        } else {
+            items.splice(itemIndex, 1);
         }
 
-    };
+        resultCallback(result);
+    },
 
-}
+    createIdFilter: function (id) {
+        return [{
+            "Property": "Id",
+            "Value": id,
+            "CriteriaType": 1
+        }];
+    },
+
+    _getIndexOfItem: function (item) {
+        return  _.indexOf(this.items, item);
+    },
+
+    createLocalItem: function (idProperty) {
+        var result = {};
+
+        result[idProperty] = this._generateLocalId();
+
+        return result;
+    },
+
+    _generateLocalId: function () {
+        return guid();
+    }
+});

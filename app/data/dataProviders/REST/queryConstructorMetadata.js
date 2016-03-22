@@ -2,9 +2,9 @@ function QueryConstructorMetadata(host,metadata){
 
     var viewMetadataUrlTemplate = '{0}/systemconfig/StandardApi/metadata/getmanagedmetadata';
 
-    var metadataUrlTemplate = '{0}/SystemConfig/StandardApi/configuration/getconfigmetadata';
+    var metadataUrlTemplate = '{0}/RestfulApi/StandardApi/configuration/getconfigmetadata';
 
-    var metadataConfigListUrlTemplate = '{0}/SystemConfig/StandardApi/configuration/getconfigmetadatalist';
+    var metadataConfigListUrlTemplate = '{0}/RestfulApi/StandardApi/configuration/getconfigmetadatalist';
 
     var makeGetViewMetadataRequestParams = function() {
         return {

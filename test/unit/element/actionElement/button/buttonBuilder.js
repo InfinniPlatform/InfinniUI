@@ -8,7 +8,7 @@ describe('ButtonBuilder', function () {
                 Visible: false,
                 HorizontalAlignment: 'Right',
                 Action: {
-                    OpenViewAction: {
+                    OpenAction: {
                         View: {
                             InlineView: {
                                 "ConfigId": "Structure",
@@ -22,7 +22,7 @@ describe('ButtonBuilder', function () {
 
             // When
             var builder = new ButtonBuilder();
-            var button = builder.build(new ApplicationBuilder(), null, metadata);
+            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
 
             // Then
             assert.isNotNull(button);
@@ -32,20 +32,5 @@ describe('ButtonBuilder', function () {
             assert.isNotNull(button.getAction());
         });
 
-        it('should pass parentView for builder', function () {
-            //Given
-            var builder = new ButtonBuilder(),
-                applicationBuilder = {
-                    build: function (parentView, metadata) {
-                        //Then
-                        assert.equal(parentView, 42);
-                    }
-                },
-                parentView = 42,
-                metadata = { Action: 23 };
-
-            //When
-            builder.build(applicationBuilder, parentView, metadata);
-        });
     });
 });

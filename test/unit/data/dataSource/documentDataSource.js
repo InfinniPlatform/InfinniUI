@@ -1,554 +1,381 @@
 ﻿describe('DocumentDataSource', function () {
-    var builder = new ApplicationBuilder(),
-        metadata = {
-            Name: 'PatientDataSource',
-            ConfigId: 'Demography',
-            DocumentId: 'Patient',
-            IdProperty: 'Id',
-            CreateAction: 'CreateDocument',
-            GetAction: 'GetDocument',
-            UpdateAction: 'SetDocument',
-            DeleteAction: 'DeleteDocument',
-            FillCreatedItem: true
-            //PageNumber: 10,
-            //PageSize: 50
-        },
-        parentView = fakeView();
 
-    describe('build DocumentDataSource', function () {
-        it('should build documentDataSource', function () {
-            var createdDataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-            assert.equal(createdDataSource.getConfigId(), 'Demography');
-            assert.equal(createdDataSource.getDocumentId(), 'Patient');
-            assert.equal(createdDataSource.getIdProperty(), 'Id');
-            assert.equal(createdDataSource.getCreateAction(), 'CreateDocument');
-            assert.equal(createdDataSource.getGetAction(), 'GetDocument');
-            assert.equal(createdDataSource.getUpdateAction(), 'SetDocument');
-            assert.equal(createdDataSource.getDeleteAction(), 'DeleteDocument');
-            //assert.equal(createdDataSource.getPageSize(), 50);
-            //assert.equal(createdDataSource.getPageNumber(), 10);
-            assert.isTrue(createdDataSource.getFillCreatedItem());
-        });
-    });
+    describe('DocumentDataSource base api', function () {
+        it('should get list of data', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
-    describe('dataSource CRUD operations', function () {
-        it('should get list of data', function () {
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
             });
 
-            var dataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-            dataSource.setListMode();
+            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
+            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
 
-            var invokes = false;
-
-            dataSource.getItems(function (data) {
-                invokes = true;
-                assert.isTrue(data.length > 0, "data provider returns items");
-            });
-
-            assert.isTrue(invokes, "data provider has been invoked");
-        });
-
-        it('should get editing record', function () {
-
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-            dataSource.setEditMode();
-            dataSource.setIdFilter('1');
-
-            var items = dataSource.getItems(
-                function (data) {
-                    assert.equal(data.length, 1);
-                    assert.equal(data[0].Id, '1');
-                });
-        });
-
-        it('should update items', function () {
-
-
-            var mode = 'Created';
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider(function () {
-                    return mode;
-                });
-            });
-
-            //parentView need to specify or handler shouldn't invoked because of empty context. Context needed to run script handler
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-            dataSource.setListMode();
-            dataSource.resumeUpdate();
-            dataSource.getItems(function (items) {
-                assert.equal(items[0].Id, '1');
-                assert.equal(items[1].Id, '2');
-            });
-
-
-            //changes to update mode forces reload updated items to datasource
-            mode = 'Updated';
-
-            var itemsUpdatedInvokes = false;
-
-            dataSource.onItemsUpdated(function (dataSourceName, value) {
-                itemsUpdatedInvokes = true;
-            });
-
-            dataSource.updateItems();
-
-            assert.isTrue(itemsUpdatedInvokes, 'data source items has not been updated');
-
-            dataSource.getItems(function (items) {
-                assert.equal(items[0].Id, '4');
-                assert.equal(items[1].Id, '5');
-            });
-
-
-        });
-
-        it('should save item', function () {
-            //Given
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            //parentView need to specify or handler shouldn't invoked because of empty context. Context needed to run script handler
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-            dataSource.setListMode();
-
-            var item = {
-                "Id": '1',
-                "FirstName": 'Степан',
-                "LastName": 'Степанов'
-            };
-
-            //check onItemSavedHandler invoke
-            /*var onItemSavedHandlerInvokes = false;debugger;
-            dataSource.onItemSaved(function (dataSourceName, value) {
-                onItemSavedHandlerInvokes = true;
-                assert.equal(value.value, item);
-            });*/
-
-            //record with identifier '1' should be replaced
             //When
-            dataSource.saveItem(item);
+            dataSource.updateItems(
+                function(context, args){
+
+                    // Then
+                    assert.isTrue(args.value.length > 0, 'data provider returns items');
+                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
+                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
+                    done();
 
-            //assert.isTrue(onItemSavedHandlerInvokes);
-
-            //Then
-            dataSource.getItems(function (items) {
-                assert.equal(items[0].FirstName, 'Степан');
-                assert.equal(items[0].LastName, 'Степанов');
-            });
-
-        });
-
-        it('should create item', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var item = null;
-
-            var onItemCreatedInvokes = false;
-            dataSource.onItemCreated(function (dataSourceName, value) {
-                onItemCreatedInvokes = true;
-            });
-
-            dataSource.createItem(function (data) {
-                assert.isTrue(dataSource.isModifiedItems());
-            }, function (err) {
-                assert.fail(err);
-            });
-
-        });
-
-        it('should delete item', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            //parentView need to specify or handler shouldn't invoked because of empty context. Context needed to run script handler
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-            dataSource.setListMode();
-
-            var items = null;
-            dataSource.getItems(function (data) {
-                items = data;
-            });
-
-            var onItemDeletedHandlerInvokes = false;
-            dataSource.onItemDeleted(function (dataSourceName, value) {
-                onItemDeletedHandlerInvokes = true;
-                assert.equal(value.value, items[0]);
-            });
-
-            var itemDeletedId = items[0].Id;
-            dataSource.deleteItem(items[0]);
-
-            items = dataSource.getItems(function (items) {
-                for (var i = 0; i < items.length; i++) {
-                    if (items[i].Id === itemDeletedId) {
-                        assert.fail();
-                    }
-                }
-            });
-
-            assert.isTrue(onItemDeletedHandlerInvokes);
-        });
-    });
-
-    describe('dataSource paging operations', function () {
-        it('should change page of data for list mode', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-            dataSource.setListMode();
-
-            dataSource.setPageSize(2);
-            dataSource.setPageNumber(1);
-
-            dataSource.getItems(function (items) {
-                assert.equal(items.length, 1);
-                assert.equal(items[0].Id, '10');
-            }, function (err) {
-                assert.fail(err)
-            });
-        });
-
-
-        it('should not effect pagesize and pagenumber for editdatasource', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(fakeView(), 'DocumentDataSource', metadata);
-
-            dataSource.setIdFilter('1');
-            dataSource.setEditMode();
-            dataSource.setPageSize(2);
-            dataSource.setPageNumber(10);
-
-            dataSource.getItems(function (items) {
-                assert.equal(items.length, 1);
-                assert.equal(items[0].Id, '1');
-            });
-
-        });
-    });
-
-    describe('dataSource events invoking', function () {
-
-        var parentView = fakeView(),
-            view = fakeView({
-                name: 'TestView'
-            });
-
-        it('should set parentview for dataSource', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(view, 'DocumentDataSource', metadata);
-
-            assert.equal(dataSource.getView(), view);
-        });
-
-        it('should invoke onPageNumberChanged and onPageSizeChanged for dataSource in list Mode', function () {
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var pageNumber = -1;
-            var pageSize = 20;
-
-
-            dataSource.onPageNumberChanged(function (dataSourceName, value) {
-                pageNumber = value.value;
-            });
-
-            dataSource.onPageSizeChanged(function (dataSourceName, value) {
-                pageSize = value.value;
-            });
-
-            dataSource.setPageNumber(1);
-
-            assert.equal(pageNumber, 1);
-
-            dataSource.setPageSize(20);
-
-            assert.equal(pageSize, 20);
-        });
-    });
-
-    describe('dataSource and dataBinding interaction', function () {
-
-        var parentView = fakeView(),
-            view = fakeView();
-
-        it('should add and remove data binding', function () {
-
-            var dataBinding = new PropertyBinding(view);
-
-            var wasEvent = false;
-
-            var action = function (dataSourceName, value) {
-                wasEvent = true;
-            };
-            dataBinding.onSetPropertyValue(action);
-
-            dataBinding.setPropertyValue(1);
-
-            assert.equal(wasEvent, true);
-
-            //Отписка от события не реализована
-//            dataBinding.removeOnSetPropertyValue(action);
-//
-//            wasEvent = false;
-//
-//            dataBinding.setPropertyValue(1);
-//
-//            assert.equal(wasEvent, false);
-
-        });
-        it('should track dataBinding property value changed ', function () {
-
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var dataBinding = new PropertyBinding(parentView, dataSource.getName(), '$.LastName');
-
-            var items = null;
-            dataSource.getItems(function (data) {
-                items = data;
-            });
-
-            dataSource.resumeUpdate();
-
-            dataSource.addDataBinding(dataBinding);
-
-            var valueSelected = null;
-            dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                valueSelected = value.value;
-            });
-
-            dataSource.setSelectedItem(items[0]);
-
-            assert.equal(valueSelected, 'Иванов');
-        });
-
-        it('should invoke dataBinding onPropertyValueChanged handler on reload data on dataSource', function () {
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var dataBinding = new PropertyBinding(parentView, dataSource.getName(), null);
-
-            dataSource.addDataBinding(dataBinding);
-
-            var itemsUpdated = false;
-            dataBinding.onPropertyValueChanged(function (dataSourceName, value) {
-                itemsUpdated = true;
-            });
-
-            dataSource.resumeUpdate();
-
-            assert.isTrue(itemsUpdated);
-        });
-
-        it('should invoke dataSource onUpdateItems handler on reload data on dataSource', function () {
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var itemsUpdated = false;
-            dataSource.onItemsUpdated(function (dataSourceName, value) {
-                itemsUpdated = true;
-            });
-
-            dataSource.resumeUpdate();
-            assert.isTrue(itemsUpdated);
-        });
-
-        it('should invoke dataSource onSelectedItem handler on select item in dataSource', function () {
-
-            var provider = new FakeDataProvider();
-
-            var itemToSelect = null;
-            provider.getItems(null, 0, 10, null, function (data) {
-                    itemToSelect = data[0];
                 }
             );
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return provider;
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-
-            var itemSelected = false;
-            dataSource.onSelectedItemChanged(function (dataSourceName, value) {
-                itemSelected = true;
-            });
-
-            dataSource.resumeUpdate();
-            dataSource.setSelectedItem(itemToSelect);
-
-
-            assert.isTrue(itemSelected);
         });
 
-        it('should invoke dataSource specified onSelectedItem handler on select item in dataSource', function () {
 
-            var provider = new FakeDataProvider();
+        it('should get editing record', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
 
-            var itemToSelect = null;
-            provider.getItems(null, 0, 10, null, function (data) {
-                itemToSelect = data[0];
-            });
+            var builder = new ApplicationBuilder();
+            var view = fakeView();
+            var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
-            window.providerRegister.register('DocumentDataSource', function () {
-                return provider;
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            dataSource.setSelectedItem(itemToSelect);
-
-            var selectedItem = dataSource.getSelectedItem();
-
-            assert.equal(JSON.stringify(selectedItem), JSON.stringify(itemToSelect));
-        });
-        it('should dataBinding setPropertyValue invoke dataBinding onSetPropertyValue event', function () {
-
-            var provider = new FakeDataProvider();
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return provider;
-            });
-
-            var propertyValue = null;
-            provider.getItems(null, 0, 10, null, function (data) {
-                propertyValue = data[0];
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var dataBinding = new PropertyBinding(parentView, dataSource.getName(), null);
-
+            //When
+            dataSource.suspendUpdate();
+            dataSource.setIdFilter('1');
             dataSource.resumeUpdate();
 
-            dataSource.addDataBinding(dataBinding);
-
-            var onSetPropertyValueInvokes = false;
-
-            dataBinding.onSetPropertyValue(function (dataSourceName, value) {
-                onSetPropertyValueInvokes = true;
-            });
 
 
-            dataBinding.setPropertyValue(propertyValue);
+            var items = dataSource.updateItems(
+                function (context, args) {
 
-            assert.isTrue(onSetPropertyValueInvokes);
+                    // Then
+                    assert.lengthOf(args.value, 1, 'length of filtered items set');
+                    assert.equal(args.value[0].Id, '1', 'value of filtered items set');
+
+                    done();
+                }
+            );
         });
-        it('should dataBinding setPropertyValue invoke dataSource handler and notify all dataSource related dataBindings', function () {
-            var provider = new FakeDataProvider();
 
-            window.providerRegister.register('DocumentDataSource', function () {
-                return provider;
+
+        it('should update document', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
             });
 
-            var propertyValue = null;
-            provider.getItems(null, 0, 10, null, function (data) {
-                propertyValue = data[1];
-            });
-
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
-
-            var dataBinding = new PropertyBinding(parentView, dataSource.getName(), '$.LastName');
-
-            var dataBindingNotified = new PropertyBinding(parentView, dataSource.getName(), '$.LastName');
-
+            dataSource.suspendUpdate();
+            dataSource.setPageSize(5);
             dataSource.resumeUpdate();
 
-            dataSource.addDataBinding(dataBinding);
+            //When
+            dataSource.updateItems(
+                function(context, args){
 
-            dataSource.addDataBinding(dataBindingNotified);
+                    assert.lengthOf(dataSource.getItems(), 5, 'data provider returns 5 items');
 
-            var wasNotifyDataBinding = false;
+                    dataSource.suspendUpdate();
+                    dataSource.setPageNumber(1);
+                    dataSource.resumeUpdate();
+                    dataSource.updateItems(
+                        function(data){
 
-            dataBinding.setPropertyValue(propertyValue);
+                            // Then
+                            assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
+                            done();
 
-            dataBindingNotified.onPropertyValueChanged(function (dataSourceName, value) {
-                wasNotifyDataBinding = true;
-                assert.equal(JSON.stringify(value.value), JSON.stringify(propertyValue));
-            });
+                        }
+                    );
 
-
-            assert.isTrue(wasNotifyDataBinding);
+                }
+            );
         });
-        /*it('should dataBinding setPropertyValue invoke dataSource handler and set isModified flag and replace selectedItem properties', function () {debugger;
-            var provider = new FakeDataProvider();
 
-            window.providerRegister.register('DocumentDataSource', function () {
-                return provider;
+        it('should restore selected item after updating', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
             });
 
-            var propertyValue = null;
-            provider.getItems(null, 0, 10, null, function (data) {
-                propertyValue = data[0];
+            dataSource.updateItems(
+                function(){
+                    var items = dataSource.getItems();
+                    var selectedItem = items[3];
+                    dataSource.setSelectedItem(selectedItem);
+
+                    //When
+                    dataSource.updateItems(
+                        function(context, args){
+                            //Then
+                            assert.equal(dataSource.getSelectedItem(), selectedItem);
+                            done();
+                        }
+                    );
+                }
+            );
+        });
+
+        it('should create document', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
             });
 
-            //LastName should changed on
-            var propertyValueChanged = 'Сидоров';
+            //When
+            dataSource.createItem(
+                function(context, argument){
 
-            var dataSource = builder.buildType(parentView, 'DocumentDataSource', metadata);
+                    // Then
+                    var newItem = argument.value;
+                    assert.ok(newItem, 'new item is ready');
+                    assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
+                    assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
 
-            var dataBinding = new PropertyBinding(parentView, dataSource.getName(), '$.LastName');
+                    var items = dataSource.getItems();
+                    assert.lengthOf(items, 1, 'one element (when was created) in items');
+                    assert.equal(items[0].prefilledField, 1, 'is right element in items after creating');
+                    done();
+                }
+            );
+        });
 
+        it('should get document property', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            //When
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
+                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
+                done();
+            }
+        });
+
+        it('should select item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                var items = dataSource.getItems();
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+
+                //When
+                dataSource.setSelectedItem(items[1]);
+
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
+                done();
+            }
+        });
+
+        it('should change document property', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
+                done();
+            }
+        });
+
+        it('should change document property (full item change)', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
+
+                //When
+                var newItemData = {
+                    "Id": '1',
+                    "FirstName": "Ивано",
+                    "LastName": "Иванович"
+                };
+                dataSource.setProperty('$', newItemData);
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
+                done();
+            }
+        });
+
+        it('should validate item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.setErrorValidator(validator);
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+
+                //When
+                var items = dataSource.getItems(),
+                    validateResult1 = dataSource.validateOnErrors(items[0]),
+                    validateResult2 = dataSource.validateOnErrors(items[1]),
+                    validateResult3 = dataSource.validateOnErrors();
+
+                // Then
+                assert.isTrue(validateResult1.isValid, 'successfully validation');
+
+                assert.isFalse(validateResult2.isValid, 'fail validation');
+                assert.lengthOf(validateResult2.items, 1, 'fail validation results');
+                assert.equal(validateResult2.items[0].property, 'FirstName', 'fail validation property result');
+
+                assert.isFalse(validateResult3.isValid, 'full validation');
+                assert.lengthOf(validateResult3.items, 6, 'full validation results');
+                assert.equal(validateResult3.items[3].property, '4.FirstName', 'full validation property result');
+                done();
+            }
+
+            function validator(context, argument){
+                var result = {
+                    isValid: true
+                };
+
+                if(argument.FirstName != 'Иван'){
+                    result.isValid = false;
+                    result.items = [{
+                        property: 'FirstName',
+                        message: 'Почему не Иван?!'
+                    }];
+                }
+
+                return result;
+            }
+        });
+
+        it('should save item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var item = dataSource.getSelectedItem();
+
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.saveItem(item);
+
+                dataSource.updateItems(handleItemsReady2);
+            }
+
+            function handleItemsReady2(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
+                done();
+            }
+        });
+
+        it('should delete item', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var items = dataSource.getItems(),
+                    itemsCount = items.length;
+
+                dataSource.deleteItem(items[0], function(context, argument){
+                    // Then
+                    items = dataSource.getItems();
+                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
+                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
+                    done();
+                });
+            }
+        });
+
+        it('should add items', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.suspendUpdate();
+            dataSource.setPageSize(5);
             dataSource.resumeUpdate();
 
-            dataSource.addDataBinding(dataBinding);
 
-            dataSource.setSelectedItem(propertyValue);
+            dataSource.updateItems(
+                function(context, args){
 
-            dataBinding.setPropertyValue(propertyValueChanged);
+                    assert.lengthOf(dataSource.getItems(), 5, 'datasource have 5 items');
+                    assert.equal(dataSource.getPageNumber(), 0, 'datasource at first page');
 
-            assert.isTrue(dataSource.isModified(dataSource.getSelectedItem()));
+                    //When
+                    dataSource.addNextItems(
+                        function(data){
 
-            assert.equal(dataSource.getSelectedItem().LastName, propertyValueChanged);
+                            // Then
+                            assert.lengthOf(dataSource.getItems(), 7, 'after adding datasource have 7 items');
+                            assert.equal(dataSource.getPageSize(), 5, 'after adding datasource still have page size equal 5');
+                            assert.equal(dataSource.getPageNumber(), 1, 'after adding datasource at second page');
+                            done();
 
-            dataSource.getItems(function (data) {
-                assert.isFalse(dataSource.isModified(data[1]));
-            });
+                        }
+                    );
 
-            //check clear isModified for item on saveItem
-            dataSource.saveItem(dataSource.getSelectedItem());
-
-            assert.isFalse(dataSource.isModified(dataSource.getSelectedItem()));
-        });*/
-
+                }
+            );
+        });
     });
 });

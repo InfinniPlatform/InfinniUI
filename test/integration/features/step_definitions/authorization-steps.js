@@ -1,19 +1,16 @@
-
 // Given
 
 this.Given(/^я не авторизован в системе$/, function (next) {
     if (window.configWindow.currentUser) {
-        window.configWindow.contextApp.context.Global.session.signOut(function () {
-            window.configWindow.location.reload();
-            next();
-        },
-		next);
+        window.configWindow.contextApp.context.global.session.signOut(function () {
+                window.configWindow.location.reload();
+                next();
+            },
+            next);
     } else {
         next();
     }
 });
-
-
 
 // Then
 

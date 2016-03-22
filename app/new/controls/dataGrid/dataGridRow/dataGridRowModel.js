@@ -1,0 +1,3 @@
+var DataGridRowModel = ControlModel.extend({
+
+});

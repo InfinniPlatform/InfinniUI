@@ -1,0 +1,23 @@
+var DocumentViewerControl = function () {
+    _.superClass(DocumentViewerControl, this);
+};
+
+_.inherit(DocumentViewerControl, Control);
+
+_.extend(DocumentViewerControl.prototype, {
+    createControlModel: function () {
+        return new DocumentViewerModel();
+    },
+
+    createControlView: function (model) {
+        return new DocumentViewerView({model: model});
+    },
+
+    onValueChanged: function(handler){
+        this.controlModel.on('change:value', handler);
+    },
+
+    renderDocument: function(){
+        this.controlView.renderDocument();
+    }
+});

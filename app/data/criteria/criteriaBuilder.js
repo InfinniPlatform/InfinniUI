@@ -2,16 +2,16 @@ var CriteriaBuilder = function () {
 
 };
 
-CriteriaBuilder.prototype.build = function(builder, parent, metadata){
+CriteriaBuilder.prototype.build = function(context, args){
 
     var criteria = new Criteria();
-
-
     var items = [];
+
+    var metadata = args.metadata;
 
     if (typeof metadata !== 'undefined' && metadata !== null && metadata.length) {
         for (var i = 0, ln = metadata.length; i < ln; i = i + 1) {
-            items.push(this.buildCriteriaItem(builder, parent, metadata[i], criteria));
+            items.push(this.buildCriteriaItem(args.builder, args.view, metadata[i], criteria));
         }
     }
 

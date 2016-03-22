@@ -1,35 +1,83 @@
 describe('TreeView', function () {
-    describe('build', function () {
 
-        it('Build tree', function () {
+    var builder = new ApplicationBuilder();
+
+    describe('render', function () {
+        it('should apply value to control (single selecting mode)', function () {
             // Given
             var metadata = {
-                "KeyProperty": "Id",
-                "ParentProperty": "ParentId",
-                "ItemFormat": {
-                    "ObjectFormat": {
-                        "Format": "{Id:n3}_{DisplayName}"
+                "DataSources": [
+                    {
+                        "ObjectDataSource": {
+                            "Name": "Geo",
+                            "Items": [
+                                {
+                                    "Id": 1,
+                                    "ParentId": null,
+                                    "Name": "Челябинск"
+                                },
+                                {
+                                    "Id": 2,
+                                    "ParentId": 1,
+                                    "Name": "Чичерина"
+                                },
+                                {
+                                    "Id": 3,
+                                    "ParentId": 1,
+                                    "Name": "Комарова"
+                                },
+                                {
+                                    "Id": 4,
+                                    "ParentId": null,
+                                    "Name": "Копейск"
+                                },
+                                {
+                                    "Id": 5,
+                                    "ParentId": 4,
+                                    "Name": "Победы"
+                                },
+                                {
+                                    "Id": 6,
+                                    "ParentId": 5,
+                                    "Name": "33/1"
+                                }
+                            ]
+                        }
                     }
-                },
-                "ValueProperty": "CardNumber",
-                "ReadOnly": false,
-                "MultiSelect": true
+                ],
+                "Items": [
+                    {
+                        "TreeView": {
+                            "KeyProperty": "Id",
+                            "ParentProperty": "ParentId",
+                            "ItemProperty": "Name",
+                            "ValueProperty": "Name",
+                            "MultiSelect": true,
+                            "Items": {
+                                "Source": "Geo"
+                            }
+                        }
+                    }
+                ]
             };
-            var builder = new TreeViewBuilder();
-            var tree = builder.build(new ApplicationBuilder(), null, metadata);
-            tree.render();
 
-            //When
-            var items = [{id:1, text: 2}, {id: 3, text:4}, {id:5, text: 6}];
-            var value = [{Id: 1}, {Id: 5}];
-            tree.setItems(items);
-            tree.setValue(value);
 
-            //Then
-            assert.deepEqual(tree.getItems(), items);
-            assert.deepEqual(tree.getValue(), value);
+            // When
+            var linkView = (new InlineViewBuilder()).build(null, {builder: builder, metadata: {View: metadata}, parentView: fakeView()});
+
+
+            var view = linkView.createView(function (view) {
+                view.open();
+
+                var $view = view.control.controlView.$el;
+                var $treeView = $view.find('.pl-treeview');
+                var $treeViewNodes = $treeView.find('.pl-treeview-node');
+                //Then
+                assert.equal($treeView.length, 1, 'TreeView rendered in View');
+                assert.equal($treeViewNodes.length, 6, 'TreeViewNodes rendered');
+            });
+
         });
-
     });
 
 });

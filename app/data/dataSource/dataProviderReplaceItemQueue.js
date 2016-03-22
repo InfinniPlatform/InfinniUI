@@ -27,8 +27,8 @@ var DataProviderReplaceItemQueue = function (attributes) {
     var updateInstanceId = function (data, response) {
         var items = getQueueItems(data);
         items.forEach(function (item) {
-            item.Id = response.InstanceId || response.Id;
-            item.value.Id = response.InstanceId || response.Id;
+            item.Id = response.Id;
+            item.value.Id = response.Id;
         });
     };
 

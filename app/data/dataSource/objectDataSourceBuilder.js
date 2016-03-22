@@ -1,12 +1,42 @@
 function ObjectDataSourceBuilder() {
-
-    this.build = function (builder, parent, metadata) {
-
-        var dataSource = new ObjectDataSource(parent, metadata);
-        new BaseDataSourceBuilder().build(metadata, dataSource, parent, builder);
-
-        dataSource.setUserStrategy(new ItemsDataSourceStrategy(dataSource, metadata));
-
-        return dataSource;
-    }
 }
+
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(ObjectDataSourceBuilder.prototype, {
+    createDataSource: function(parent){
+        return new ObjectDataSource({
+            view: parent
+        });
+    },
+
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        if(metadata.Items){
+            if($.isArray(metadata.Items)){
+                dataSource.setItems(metadata.Items);
+            }
+
+            if($.isPlainObject(metadata.Items)){
+                var binding = builder.buildBinding(metadata.Items, {
+                    parentView: parent
+                });
+
+                binding.setMode(BindingModes.toElement);
+
+                binding.bindElement(dataSource, '');
+            }
+
+        }
+
+    },
+
+    initFileProvider: function (dataSource) {
+        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+            documentId: "documentId",
+            configId: "configId"
+        });
+
+        dataSource.setFileProvider(fileProvider);
+    }
+});

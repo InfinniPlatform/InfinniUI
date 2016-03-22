@@ -7,7 +7,6 @@ var AbstractGridPanelView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.apply(this);
-        this.initLayoutPanelViewMixin();
         this.listenTo(this.model, 'rowsIsChange', this.rerender);
         this.listenTo(this.model, 'cellsIsChange', this.rerender);
         this.listenTo(this.model, 'itemsIsChange', this.rerender);
@@ -59,5 +58,3 @@ var AbstractGridPanelView = ControlView.extend({
     }
 
 });
-
-_.extend(AbstractGridPanelView.prototype, layoutPanelViewMixin);

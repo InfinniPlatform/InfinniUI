@@ -1,6 +1,6 @@
 describe('MetadataViewBuilder', function () {
 
-    var builder = new ApplicationBuilder();
+    /*var builder = new ApplicationBuilder();
 
     window.providerRegister.register('MetadataDataSource', function (metadataValue) {
         return {
@@ -46,13 +46,13 @@ describe('MetadataViewBuilder', function () {
 
         var applicationBuilder = new ApplicationBuilder();
         var builder = new MetadataViewBuilder();
-        var view = builder.build(applicationBuilder,parent,metadata);
+        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
 
         applicationBuilder.appView = view;
         applicationBuilder.appView.createView(function(view){
             //assert.isNotNull(view.getParameter('Param1'));
             assert.isNotNull(view.getDataSource('PatientDataSource'));
         });
-    });
+    });*/
 });
 

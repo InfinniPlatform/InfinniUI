@@ -1,31 +1,42 @@
 function DocumentDataSourceBuilder() {
-
-    this.build = function (builder, parent, metadata) {
-
-        var idProperty = metadata.IdProperty;
-        if (idProperty == undefined) {
-            idProperty = 'Id';
-        }
-        var dataSource = new DocumentDataSource(parent, metadata);
-        new BaseDataSourceBuilder().build(metadata, dataSource, parent, builder);
-
-        attachEventHandlers(dataSource);
-        return dataSource;
-    };
-
-    /**
-     * Проброс событий от источника данных в глобальную шину событий
-     * @param {BaseDataSource} datasource
-     */
-    function attachEventHandlers(dataSource) {
-        var exchange = messageBus.getExchange('global');
-
-        dataSource
-            .on('OnDeleteItem', function (data) {
-                exchange.send(messageTypes.onDeleteItem, {value: data, source: dataSource});
-            })
-            .on('OnSaveItem', function (data, params) {
-                exchange.send(messageTypes.onSaveItem, {value: data, source: dataSource, isCreated: params.isCreated});
-            });
-    }
 }
+
+_.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(DocumentDataSourceBuilder.prototype, {
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+
+        dataSource.setConfigId(metadata['ConfigId']);
+        dataSource.setDocumentId(metadata['DocumentId']);
+
+        if('CreateAction' in metadata){
+            dataSource.setCreateAction(metadata['CreateAction']);
+        }
+        if('ReadAction' in metadata){
+            dataSource.setReadAction(metadata['ReadAction']);
+        }
+        if('UpdateAction' in metadata){
+            dataSource.setUpdateAction(metadata['UpdateAction']);
+        }
+        if('DeleteAction' in metadata){
+            dataSource.setDeleteAction(metadata['DeleteAction']);
+        }
+
+    },
+
+    createDataSource: function(parent){
+        return new DocumentDataSource({
+            view: parent
+        });
+    },
+
+    initFileProvider: function (dataSource) {
+        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+            documentId: dataSource.getDocumentId(),
+            configId: dataSource.getConfigId()
+        });
+
+        dataSource.setFileProvider(fileProvider);
+    }
+});

@@ -6,7 +6,7 @@ var builderFormatPropertyMixin = {
         var formatField = metadata.DisplayFormat || metadata.ItemFormat;
 
         if(formatField !== undefined){
-            var format = builder.build(params.parent, formatField);
+            var format = builder.build(params.view, formatField);
             params.element.setFormat(format);
         }
     }

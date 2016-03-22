@@ -3,10 +3,9 @@ describe('DateTimeFormat', function () {
     describe('format', function () {
         it('successful build', function () {
             //Given
-            var metadata = {};
             var builder = new DateTimeFormatBuilder();
             //When
-            var format = builder.build(null, null, metadata);
+            var format = builder.build(null, {metadata: {}});
             //Then
             assert.isFunction(format.format);
             assert.equal(format.getFormat(), 'G');

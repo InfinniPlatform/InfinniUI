@@ -33,7 +33,7 @@ var builderPropertyBindingMixin = {
         var metadata = params.metadata;
 
         if (metadata !== undefined && metadata[propertyName]) {
-            var dataBinding = params.builder.build(params.parent, metadata[propertyName], params.collectionProperty);
+            var dataBinding = params.builder.build(params.view, metadata[propertyName], params.collectionProperty);
 
 
             if (dataBinding != null) {

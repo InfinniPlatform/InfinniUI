@@ -8,6 +8,7 @@
  * Для обработки дополнительной логике при показе/скрытии редактора масок
  * можно использовать события editor:show и editor:hide.
  *
+ * @mixin textEditorMixin
  */
 var textEditorMixin = {
 
@@ -49,6 +50,10 @@ var textEditorMixin = {
             this.onEditorHideControl();
             //Проброс события от редактора маски к контролу
             this.trigger('editor:show');
+
+            if(this.ui.editorWrap){
+                this.ui.editorWrap.show();
+            }
         });
 
         this.listenTo(editor, 'editor:hide', function () {
@@ -56,6 +61,10 @@ var textEditorMixin = {
             this.onEditorShowControl();
             //Проброс события от редактора маски к контролу
             this.trigger('editor:hide');
+
+            if(this.ui.editorWrap){
+                this.ui.editorWrap.hide();
+            }
         });
 
         this.listenTo(editor, 'onKeyDown', function (data) {
@@ -92,7 +101,11 @@ var textEditorMixin = {
     onMouseenterControlHandler: function (event) {
         //TODO: при ховере показывается маска (UI-854: убрал) по просьбе TeamLead'a
         //При ховере Editor нужен, чтобы при клике по полю, курсор выставлялся в указаннкю позицию
-        if(this.model.get('enabled')) {
+        var enabled = this.model.get('enabled'),
+            value = this.model.get('value'),
+            isEmpty = value === '' || value === null || typeof value === undefined;
+
+        if(enabled && !isEmpty) {
             this.showEditor(this.model.get('value'), true);
             this.onEditorHideControl();
         }
@@ -103,9 +116,9 @@ var textEditorMixin = {
      * @param value
      * @returns {boolean}
      */
-//    onEditorValidate: function (value) {
-//        return true;
-//    },
+    onEditorValidate: function (value) {
+        return true;
+    },
 
     /**
      * Обработчик применения значения из поля ввода с маской
@@ -113,7 +126,7 @@ var textEditorMixin = {
      */
     onEditorDone: function (value) {
         if(typeof value === 'undefined' || value === null || !value.toString().length) {
-            value = undefined;
+            value = null;
         }
         this.model.set('value', value);
     },
@@ -123,6 +136,10 @@ var textEditorMixin = {
      */
     onEditorShowControl: function () {
         this.ui.control.show();
+
+        if(this.ui.controlWrap){
+            this.ui.controlWrap.show();
+        }
     },
 
     /**
@@ -130,17 +147,21 @@ var textEditorMixin = {
      */
     onEditorHideControl: function () {
         this.ui.control.hide();
-    },
+
+        if(this.ui.controlWrap){
+            this.ui.controlWrap.hide();
+        }
+    }
 
     /**
      * Метод выполняющий синхронизацию значения из эдитора в элемент
      */
-    synchValueHandler: function () {
-        if(this.editor.isInFocus()){
-            var val = this.editor.getValue();
-            this.model.set('value', val);
-        }
-    }
+    //synchValueHandler: function () {
+    //    if(this.editor.isInFocus()){
+    //        var val = this.editor.getValue();
+    //        this.model.set('value', val);
+    //    }
+    //}
 
 
 };

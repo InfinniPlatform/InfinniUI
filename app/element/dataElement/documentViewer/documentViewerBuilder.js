@@ -10,38 +10,25 @@ _.extend(DocumentViewerBuilder.prototype, {
 
         this.initScriptsHandlers(params);
 
-        params.element.setView(params.parent);
+        params.element.setView(params.parentView);
+        params.element.setParent(params.parent);
 
-
-        if(params.metadata.Value){
-            if(typeof params.metadata.Value == 'string'){
-                params.element.setValueExist(true);
-                params.element.setUrl(params.metadata.Value);
-
-            }else{
-                var binding  = this.initValueProperty(params);
-                binding.onPropertyValueChanged(function (dataSourceName, value) {
-                    params.element.setUrl(binding.getFileUrl());
-                });
-
-                params.element.setValueExist(true);
-
-                params.element.setUrl(binding.getFileUrl());
-            }
-
-        }else{
-            params.element.setDataSource(params.metadata.DataSource);
-            params.element.setPrintViewType(params.metadata.PrintViewType);
-            params.element.setPrintViewId(params.metadata.PrintViewId);
-        }
-        //this.initDataSource(params);
+        params.element.setPrintViewId(params.metadata.PrintViewId);
+        params.element.setSource(params.metadata.Source.Source);
     },
 
     createElement: function (params) {
-        return new DocumentViewer(params.parent);
+        return new DocumentViewer(params.view);
     },
 
     initScriptsHandlers: function(params){
+        var metadata = params.metadata;
 
+        //Скриптовые обработчики на события
+        if (params.view && metadata.OnLoaded){
+            params.element.onLoaded(function() {
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
+            });
+        }
     }
 }, builderValuePropertyMixin);

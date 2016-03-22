@@ -23,11 +23,15 @@ window.messageTypes = {
 
     onCreateLayoutPanel: {name: 'onCreateLayoutPanel'},
     onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
-    onDeleteItem: {name: 'onDeleteItem'},
-    onSaveItem: {name: 'onSaveItem'},
+    onNotifyUser: {name: 'onNotifyUser'},
+    onToolTip: {name: 'onToolTip'},
+    onToolTipShow: {name: 'onToolTipShow'},
+    onToolTipHide: {name: 'onToolTipHide'},
+    onDataLoading: {name: 'onDataLoading'},
+    onDataLoaded: {name: 'onDataLoaded'},
 
-    onFilterError: {name: 'onFilterError'},
-    onServiceFail: {name: 'onServiceFail'}
+    onViewCreated: {name: 'onViewCreated'}
+
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 
 };

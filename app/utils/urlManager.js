@@ -65,7 +65,7 @@ var urlManager = {
 
             return _.isEmpty(paramsArray) ?
                 "" :
-                "?" + paramsArray.join("&");
+            "?" + paramsArray.join("&");
         };
     }
 };

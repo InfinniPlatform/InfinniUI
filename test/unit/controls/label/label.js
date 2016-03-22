@@ -32,31 +32,30 @@ describe('Label', function () {
                 //Then
                 assert.isTrue($el.hasClass('hidden'));
             });
-
-            it('Setting property: horizontalAlignment', function () {
-                //Given
-                var $el = label.render();
-                assert.isTrue($el.hasClass('horizontalTextAlignment-Left'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Right'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-
-                //When
-                label.setHorizontalTextAlignment('Right');
-
-                //Then
-                assert.isTrue($el.hasClass('horizontalTextAlignment-Right'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Left'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-                assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-            });
+            //
+            //it('Setting property: horizontalAlignment', function () {
+            //    //Given
+            //    var $el = label.render();
+            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Left'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Right'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
+            //
+            //    //When
+            //    label.setHorizontalTextAlignment('Right');
+            //
+            //    //Then
+            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Right'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Left'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
+            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
+            //});
 
             it('Setting property: text', function () {
                 //Given
                 label.setText('Default Label');
 
-                var $el = label.render(),
-                    $label = $('label', $el);
+                var $label = label.render();
 
                 assert.equal($label.html(), 'Default Label');
 
@@ -66,11 +65,37 @@ describe('Label', function () {
                 //Then
                 assert.equal($label.html(), 'New Label');
             });
+
+            it('Setting property: textWrapping', function () {
+                //Given
+                var $label = label.render();
+
+                assert.isTrue($label.hasClass('pl-text-wrapping'), 'default value must be true');
+
+                //When
+                label.setTextWrapping(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-wrapping'), 'should not wrap if value false');
+            });
+
+            it('Setting property: textTrimming', function () {
+                //Given
+                var $label = label.render();
+
+                assert.isTrue($label.hasClass('pl-text-trimming'), 'default value must be true');
+
+                //When
+                label.setTextTrimming(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-trimming'), 'should not trim if value false');
+            });
         });
 
     });
 
-    describe('Data binding', function () {
+    /*describe('Data binding', function () {
         it('should set Label from property binding', function () {
 
             window.providerRegister.register('DocumentDataSource', function () {
@@ -142,5 +167,5 @@ describe('Label', function () {
                 );
             });
         });
-    });
+    });*/
 });

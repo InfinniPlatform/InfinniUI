@@ -14,39 +14,53 @@ RequestExecutorDataStrategy.prototype.strategies = {
 
     json: function (requestData, onSuccess, onFail) {
         return $.ajax({
-            type: 'post',
+            type: requestData.method || 'post',
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: function(response){
-                if(response.status == 0){
-                    messageBus.getExchange('global').send(messageTypes.onServiceFail);
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: function (err) {
+                if (err.status === 200) {
+                    //@TODO Убрать этот костыль. Нужен т.к. запрос на загрузку файла возвращает 200 и пустой ответ!
+                    this.onSuccessRequest(onSuccess)();
+                } else {
+                    this.onErrorRequest(onFail)(err);
                 }
-                onFail.apply(null, _.toArray(arguments));
-            },
+            }.bind(this),
             data: JSON.stringify(requestData.args),
             contentType: "application/json;charset=UTF-8"
         });
     },
 
     raw: function (requestData, onSuccess, onFail) {
-
+        var method = requestData.method || 'post';
+        var processData = method.toUpperCase() === 'GET';
         return $.ajax({
-            type: 'post',
+            type: method,
             url: requestData.requestUrl,
             xhrFields: {
                 withCredentials: true
             },
-            success: onSuccess,
-            error: onFail,
-            processData: false,
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(onSuccess),
+            error: function (err) {
+                if (err.status === 200) {
+                    //@TODO Убрать этот костыль. Нужен т.к. запрос на загрузку файла возвращает 200 и пустой ответ!
+                    this.onSuccessRequest(onSuccess)();
+                } else {
+                    this.onErrorRequest(onFail)(err);
+                }
+            }.bind(this),
+            processData: processData,
             contentType: false,
             data: requestData.args
         });
     }
 };
+
+_.extend(RequestExecutorDataStrategy.prototype, ajaxRequestMixin);
 
 function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
 
@@ -63,7 +77,7 @@ function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
         if (failCallback) {
             failCallback(err);
         }
-        if (resultCallback && err.status != 0) {
+        if (resultCallback) {
             resultCallback(err.responseJSON);
         }
     };
@@ -98,6 +112,5 @@ function RequestExecutor(resultCallback, successCallback, failCallback, cache) {
     this.makeRequestRaw = function (requestData) {
         return cacheRequest(requestData, request.bind(undefined, 'raw'))
     };
-
 
 }

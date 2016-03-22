@@ -12,9 +12,13 @@ window.InfinniUI.DateUtils = (function () {
     /**
      * @description Возвращает строковое представление даты в формате YYYY-MM-DDTHH:mm:ss.sss+HH:MM
      * @param {Date} date
+     * @param {Object} options
+     * @param {boolean} [options.resetTime = false]
      * @returns {string}
      */
-    var toISO8601 = function (date) {
+    var toISO8601 = function (date, options) {
+
+        var config = options || {};
 
         if (typeof date === 'undefined' || date === null) {
             return null;
@@ -24,6 +28,9 @@ window.InfinniUI.DateUtils = (function () {
             return null;
         }
 
+        if (config.resetTime) {
+            date.setHours(0, 0, 0, 0);
+        }
         var datePart = [
             padInt(date.getFullYear(), 4),
             padInt(date.getMonth() + 1, 2),

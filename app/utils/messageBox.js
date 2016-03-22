@@ -8,6 +8,8 @@ var MessageBox = Backbone.View.extend({
     },
 
     template: _.template(
+            ' <div class="modal-dialog">' +
+            '  <div class="modal-content">' +
             '   <div class="modal-body">' +
             '       <p>' +
             '           <i class="fa-lg fa fa-warning" style="color: <%= color %>"></i>' +
@@ -19,7 +21,9 @@ var MessageBox = Backbone.View.extend({
             '           <% if (i==0){%> <a href="javascript:;" tabindex="0" class="btn firstfocuselementinmodal <%= button.classes %> <%= button.type %>-modal" data-index="<%= i %>"><%= button.name %></a>' +
             '           <% }else{ %> <a href="javascript:;" class="btn <%= button.classes %> <%= button.type %>-modal" data-index="<%= i %>"><%= button.name %></a>'+
             '       <% }}); %>' +
-            '   </div>'
+            '   </div>' +
+            '  </div>' +
+            ' </div>'
     ),
 
     initialize: function (options) {

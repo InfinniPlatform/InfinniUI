@@ -6,7 +6,7 @@ describe('BooleanFormat', function () {
             var metadata = {TrueText: "+", FalseText: "-"};
             var builder = new BooleanFormatBuilder();
             //When
-            var format = builder.build(null, null, metadata);
+            var format = builder.build(null, {metadata: metadata} );
             //Then
             assert.isFunction(format.format);
             assert.isFunction(format.getTrueText);

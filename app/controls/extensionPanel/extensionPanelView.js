@@ -1,9 +1,8 @@
-﻿var ExtensionPanelView = ControlView.extend({
+﻿var ExtensionPanelView = ContainerView.extend({
     className: 'pl-extension-panel',
 
     initialize: function () {
-        ControlView.prototype.initialize.apply(this);
-        this.initLayoutPanelViewMixin();
+        ContainerView.prototype.initialize.apply(this);
         this.extensionObject = null;
     },
 
@@ -11,40 +10,29 @@
         this.prerenderingActions();
 
         if (!this.extensionObject) {
-            this.initAndRenderExtensionObject();
-        } else {
-            this.renderExtensionObject();
+            this.initExtensionObject();
         }
+
+        this.extensionObject.render();
+
+        this.updateProperties();
+        this.trigger('render');
 
         this.postrenderingActions();
         return this;
     },
 
-    initAndRenderExtensionObject: function () {
-        var extensionName = this.model.get('extensionName'),
-            context = this.model.getContext(),
-            parameters = this.model.get('parameters'),
-            items = this.model.get('items');
-
-        this.extensionObject = new window[extensionName]();
-        var self = this;
-        var $render = self.extensionObject.render(self.$el, parameters, context, items);
-        if($render){
-            self.$el
-                .empty()
-                .append($render);
-        }
+    updateGrouping: function(){
 
     },
 
-    renderExtensionObject: function () {
-        var $render = this.extensionObject.render(this.$el, this.model.get('parent'));
-        if($render){
-            self.$el
-                .empty()
-                .append($render);
-        }
+    initExtensionObject: function () {
+        var extensionName = this.model.get('extensionName'),
+            context = this.model.get('context'),
+            itemTemplate = this.model.get('itemTemplate'),
+            parameters = this.model.get('parameters'),
+            items = this.model.get('items');
+
+        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items});
     }
 });
-
-_.extend(ExtensionPanelView.prototype, layoutPanelViewMixin);

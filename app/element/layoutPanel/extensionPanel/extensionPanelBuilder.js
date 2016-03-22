@@ -1,57 +1,32 @@
 ﻿function ExtensionPanelBuilder() {
 }
 
-_.inherit(ExtensionPanelBuilder, ElementBuilder);
+_.inherit(ExtensionPanelBuilder, ContainerBuilder);
 
 _.extend(ExtensionPanelBuilder.prototype, {
 
     applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        this.initScriptsHandlers(params);
-
         var metadata = params.metadata;
-        params.element.setExtensionName(metadata.ExtensionName);
+        var element = params.element;
+        var parentView = params.parentView;
+        var builder = params.builder;
 
-        var parameters = [];
-        var items = [];
-        _.each(metadata.Parameters, function (item) {
+        ContainerBuilder.prototype.applyMetadata.call(this, params);
 
-            var itemToBuild = {
-                "Parameter": item
-            };
+        element.setExtensionName(metadata['ExtensionName']);
 
-            var param = params.builder.build(params.parent, itemToBuild, params.collectionProperty);
+        var parameters = {};
+        _.each(metadata.Parameters, function (parameterMetadata) {
+            var param = builder.buildType('Parameter', parameterMetadata, {parentView: parentView});
             parameters[param.getName()] = param;
         });
 
-        _.each(metadata.Items, function (item) {
-            var itemBuild = params.builder.build(params.parent, item);
-            items.push(itemBuild);
-        });
-
-        params.element.setParameters(parameters);
-        params.element.setItems(items);
-
-
-        //params.element.setContext(params.parent.getContext());
-        params.element.getContext = function () {
-            return params.parent.getContext();
-        }
-    },
-
-    initScriptsHandlers: function(params){
-        var metadata = params.metadata;
-
-        //Скриптовые обработчики на события
+        element.setParameters(parameters);
+        element.setContext(parentView.getContext());
     },
 
     createElement: function (params) {
-        var element = new ExtensionPanel(this.parent);
-
-        element.getContext = function () {
-            return params.parent.getContext();
-        };
+        var element = new ExtensionPanel(params.parent);
 
         return element;
     }

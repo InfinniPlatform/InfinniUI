@@ -1,51 +1,36 @@
 
 this.BeforeScenario( function(scenario, callback) {
-	var snapshotPath = window.navigator.platform.indexOf('Linux') == -1 ? "C:\\ESbackups" : "/tmp/ESbackups"
-	
-	console.log('Before scenario');
-		//delete indices, create repository and restore
-		client.indices.delete({
-			"index": "administrationcustomization,authorization,pta",
-			"waitForCompletion": true
-		}).then(function(){
-			client.snapshot.createRepository({
-				"repository": "my_backup",
-				"body":{
-					"type": "fs",
-					"settings": {
-						"compress": "true",
-						"location": snapshotPath
-					}
-				}
-			}).then(function(){
-				client.snapshot.restore({
-					"repository": "my_backup",
-					"snapshot": "snapshot1",
-					"waitForCompletion": true
-				}).then(function(){
-					window.configWindow = window.open(window.IntegrationTestConfig.host);	
-	
-					var signOut = function(){
-						window.configWindow.contextApp.context.Global.session.signOut(function () {
-							window.configWindow.location.reload();
-							callback();
-						});	
-					};
-					
-					var error = function(){
-						console.log('signOut not called!');
-					}
-				
-					window.testHelpers.waitCondition(function(){
-						return window.configWindow.contextApp != null;
-					}, signOut, error);
-				});	
-			});
-		});
+
+    window.toastrMessageCount = 0;
+
+    var mongoServise = {
+        url: 'http://localhost:60520',
+        body: {
+            commands: [
+                'remove',
+                'restore'
+            ]
+        }
+    };
+
+    var p = $.ajax({
+        url: mongoServise.url,
+        type: 'POST',
+        data: JSON.stringify(mongoServise.body)
+    });
+
+    p.always(function () {
+        // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
+        openHost(callback);
+    });
 });
 
 this.AfterFeatures(function(){
-	console.log("Tests finished!");
+    console.log('Test finished!');
+
+    if(window.startUpParameters && window.startUpParameters.isClosing){
+        window.close();
+    }
 });
 
 this.AfterScenario( function(scenario, callback) {
@@ -54,7 +39,30 @@ this.AfterScenario( function(scenario, callback) {
 });
 
 this.AfterStep(function(step, callback){
-	setTimeout(function() {
-		callback();
-	}, 200);
+    if(!window.configWindow.toastr.options.onShown){
+        window.configWindow.toastr.options.onShown = function(){
+            window.toastrMessageCount++;
+        }
+    }
+	callback();
 });
+
+var openHost = function(callback){
+    window.configWindow = window.open(window.IntegrationTestConfig.host);
+
+    var signOut = function(){
+        window.configWindow.contextApp.context.global.session.signOut(function () {
+            window.configWindow.location.reload();
+            callback();
+        }); 
+    };
+    
+    var error = function(){
+        console.log('signOut not called!');
+        callback();
+    };
+
+    window.testHelpers.waitCondition(function(){
+        return window.configWindow.contextApp != null;
+    }, signOut, error);
+};

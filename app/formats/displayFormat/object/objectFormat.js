@@ -23,10 +23,6 @@ _.extend(ObjectFormat.prototype, {
      */
     formatValue: function (originalValue, culture, format) {
 
-        if (typeof originalValue === 'undefined' || originalValue === null) {
-            return '';
-        }
-
         culture = culture || new Culture(InfinniUI.config.lang);
         format = format || this.getFormat();
 
@@ -34,9 +30,7 @@ _.extend(ObjectFormat.prototype, {
         var trim = /^{|}$/g;
         var value = '';
 
-        if (typeof originalValue !== 'undefined' && originalValue !== null) {
-            value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
-        }
+        value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
         
         return value;
 

@@ -1,49 +1,88 @@
-function LinkView(parentView, viewFactory) {
-    this.openMode = 'Page';
-    this.parentView = parentView;
-    this.viewFactory = viewFactory;
+function LinkView(parent) {
+    this.openMode = 'Default';
+    this.parent = parent;
+
+    this.viewTemplate = function(){return '';};
+
+    this.dialogWidth;
 }
 
-LinkView.prototype.setOpenMode = function (mode) {
-    if (_.isEmpty(mode)) return;
-    this.openMode = mode;
-};
+_.extend(LinkView.prototype, {
 
-LinkView.prototype.getOpenMode = function () {
-    return this.openMode;
-};
+    setOpenMode: function (mode) {
+        if (_.isEmpty(mode)) return;
+        this.openMode = mode;
+    },
 
-LinkView.prototype.getContainer = function () {
-    //return _.isEmpty(this.container) ? 'MainContainer' : this.container;
-    return this.container;
-};
+    getOpenMode: function () {
+        return this.openMode;
+    },
 
-LinkView.prototype.setContainer = function (container) {
-    this.container = container;
-};
+    setContainer: function(containerName){
+        this.containerName = containerName;
+    },
 
-LinkView.prototype.template = {
-    Dialog: InfinniUI.Template["linkView/template/dialog.tpl.html"]
-};
+    setViewTemplate: function(viewTemplate){
+        this.viewTemplate = viewTemplate;
+    },
 
-LinkView.prototype.createView = function (resultCallback) {
+    setDialogWidth: function(dialogWidth){
+        dialogWidth = dialogWidth.toLowerCase();
+        if(dialogWidth == 'extralarge'){
+            dialogWidth = '100%';
+        }
+        this.dialogWidth = dialogWidth;
+    },
 
-    var openMode = InfinniUI.global.openMode;
-    var openModeStrategy = openMode.getStrategy(this);
+    createView: function (resultCallback) {
+        var that = this;
 
-    this.viewFactory(function (view) {
-        view.onOpening(function ($elView) {
-            view.onClosed(function () {
-                $elView.remove();
-                messageBus.getExchange('global')
-                    .send(messageTypes.onViewClosed, {view: view});
-            });
+        this.viewTemplate(onViewReady);
 
-            openModeStrategy.open(view, $elView);
-            view.getExchange().send(messageTypes.onLoading, {});
-        });
+        function onViewReady(createdView){
+            that.view = createdView;
 
-        resultCallback(view);
-    });
+            that._initViewHandler(createdView);
 
-};
+            resultCallback(createdView);
+        }
+
+    },
+
+    _initViewHandler: function(view){
+        var that = this;
+        var openMode = that.openMode;
+        var openStrategy;
+        var container;
+
+        if(view.setParent){
+            view.setParent(this.parent);
+        }
+        if(this.parent && this.parent.addChild){
+            this.parent.addChild(view);
+        }
+
+        window.InfinniUI.global.messageBus.send('onViewCreated', {openMode: openMode, view: view});
+
+        switch(openMode){
+            case 'Container': {
+                container = InfinniUI.global.containers[this.containerName];
+
+                openStrategy = new OpenModeContainerStrategy();
+                openStrategy.setView(view);
+                openStrategy.setContainer(container);
+                view.setOpenStrategy(openStrategy);
+            } break;
+
+            case 'Dialog': {
+                openStrategy = new OpenModeDialogStrategy();
+                openStrategy.setView(view);
+                if(this.dialogWidth){
+                    openStrategy.setDialogWidth(this.dialogWidth);
+                }
+                openStrategy.setView(view);
+                view.setOpenStrategy(openStrategy);
+            } break;
+        }
+    }
+});

@@ -6,7 +6,7 @@ describe('PopupButtonBuilder', function () {
             var metadata = {
                 Text: "Click me",
                 Action: {
-                    OpenViewAction: {
+                    OpenAction: {
                         View: {
                             InlineView: {
                                 "ConfigId": "Structure",
@@ -45,15 +45,13 @@ describe('PopupButtonBuilder', function () {
 
             // When
             var builder = new PopupButtonBuilder();
-            var button = builder.build(new ApplicationBuilder(), null, metadata);
+            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
             // Then
             assert.isNotNull(button);
             assert.equal(button.getText(), 'Click me');
             assert.isNotNull(button.getAction());
             assert.equal(2,button.getItems().length);
 
-            assert.isTrue(button.getItems()[0] instanceof Button)
-            assert.isTrue(button.getItems()[1] instanceof Button)
         });
     });
 });

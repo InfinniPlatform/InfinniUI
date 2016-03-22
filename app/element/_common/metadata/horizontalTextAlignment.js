@@ -1,6 +1,6 @@
-InfinniUI.Metadata.HorizontalTextAlignment = [
-    "Left",
-    "Right",
-    "Center",
-    "Justify"
-];
+//InfinniUI.Metadata.HorizontalTextAlignment = [
+//    "Left",
+//    "Right",
+//    "Center",
+//    "Justify"
+//];

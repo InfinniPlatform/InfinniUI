@@ -1,61 +1,34 @@
 function ParameterBuilder() {
 
-    this.build = function(builder,parent,metadata, collectionProperty){
+    this.build = function (context, args) {
+        var metadata = args.metadata;
+        var builder = args.builder;
+        var parentView = args.parentView;
+        var basePathOfProperty = args.basePathOfProperty;
 
-        if(metadata.Value !== undefined){
-            var parameter = new Parameter();
 
-            parameter.setName(metadata.Name);
 
-            
+        if('Value' in metadata){
+            var parameter = new Parameter({view: parentView});
+            parameter.setName(metadata['Name']);
 
-            //если существует Builder для хранящегося в параметре значения
-            //то создаем этим Builder'ом объект (PropertyBinding, ObjectBinding, ParameterBinding)
-            //иначе устанвливаем в параметре значение из метаданных
-            if(this.isBinding(metadata.Value)) {
-				var dataBinding = builder.build(parent, metadata.Value, collectionProperty);
-                // Установка обработчика изменения значения в источнике данных
-                dataBinding.onPropertyValueChanged(function(dataSourceName,value){
-                    parameter.setValue(dataBinding.getPropertyValue());
-                });
+            if(InfinniUI.Metadata.isBindingMetadata(metadata['Value'])){
+                var dataBinding = builder.buildBinding(metadata['Value'], {parentView: parentView, basePathOfProperty: basePathOfProperty});
+                dataBinding.bindElement(parameter, '');
+            }else{
+                parameter.setValue(metadata['Value']);
+            }
 
-                var data = dataBinding.getPropertyValue();
-                if (data) {
-                    parameter.setValue(data);
-                }
-
-                // При изменении значения параметра, уведомление DataSource ч/з DataBinding
-                parameter.onValueChanged(function (dataSourceName, value) {
-                    dataBinding.setPropertyValue(value);
+            if (metadata.OnPropertyChanged) {
+                parameter.onPropertyChanged('', function (context, args) {
+                    var scriptExecutor = new ScriptExecutor(parentView);
+                    return scriptExecutor.executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
                 });
             }
-            else {
-                parameter.setValue(metadata.Value);
-            }
-        }else{
-
         }
+
 
 
         return parameter;
-    };
-
-    this.isBinding = function(value){
-        if($.isPlainObject(value)){
-            var key = this.getFirstObjectKey(value);
-            if(key && key.indexOf('Binding') > -1){
-                return true;
-            }
-        }
-
-        return false;
-    };
-
-    this.getFirstObjectKey = function(obj){
-        for(var k in obj){
-            return k;
-        }
-
-        return undefined;
     };
 }

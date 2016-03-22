@@ -1,0 +1,274 @@
+{
+  "OnLoaded": "OL2",
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "Test",
+        "Items": [
+          {"Id": 1, "Name": "One", "Group": "odd"},
+          {"Id": 2, "Name": "Two", "Group": "even"},
+          {"Id": 3, "Name": "Three", "Group": "odd"},
+          {"Id": 4, "Name": "Four", "Group": "even"},
+          {"Id": 5, "Name": "Five", "Group": "odd"},
+          {"Id": 6, "Name": "Six", "Group": "even"},
+          {"Id": 7, "Name": "Seven", "Group": "odd"}
+        ],
+        "Query": [
+          {
+            "Property": "Group",
+            "Value": "odd",
+            "CriteriaType": 1
+          }
+        ]
+      }
+    },
+    {
+      "DocumentDataSource": {
+        "Name": "Child",
+        "ConfigId": "PTA",
+        "DocumentId": "Child",
+        "Query": [
+          {
+            "Property": "Name",
+            "Value": "е",
+            "CriteriaType": 65536
+          }
+        ]
+      }
+    },
+    {
+      "ObjectDataSource":{
+        "Name": "Clone",
+        "Items":{
+          "Source": "BloodGroupDataSource",
+          "Converter":{
+            "ToElement":"{return [args.value[0]];}"
+          }
+        }
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "Numbers",
+        "Items": [
+          {"value": 0},
+          {"value": 1},
+          {"value": 2},
+          {"value": 3},
+          {"value": 4},
+          {"value": 5},
+          {"value": 6},
+          {"value": 7},
+          {"value": 8},
+          {"value": 9}
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "BloodGroupDataSource",
+        "Items": [
+          {
+            "Id": 1,
+            "DisplayName": "44",
+            "SomeField": "",
+            "Array": [
+              {
+                "Id": 5,
+                "DisplayName": "I-1"
+              },
+              {
+                "Id": 6,
+                "DisplayName": "I-2"
+              },
+              {
+                "Id": 7,
+                "DisplayName": "I-3"
+              }
+            ]
+          },
+          {
+            "Id": 2,
+            "DisplayName": "II",
+            "SomeField": "val",
+            "Array": [
+              {
+                "Id": 8,
+                "DisplayName": "II-1"
+              },
+              {
+                "Id": 9,
+                "DisplayName": "II-2"
+              }
+            ]
+          },
+          {
+            "Id": 3,
+            "DisplayName": "III",
+            "SomeField": 3
+          },
+          {
+            "Id": 4,
+            "DisplayName": "IV",
+            "SomeField": null
+          }
+        ],
+        "OnSelectedItemChanged": {
+          "Name": "OnSelectedItemChanged_1"
+        }
+      }
+    }
+  ],
+  "Items": [{
+    "GridPanel": {
+      "Items": [
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
+                "ToggleButton": {
+                  "Name": "TB",
+                  "Text": "Subscribe",
+                  "TextOn": "yes",
+                  "TextOff": "no",
+                  "OnValueChanged": {
+                    "Name": "ToggleButtonOnValueChanged"
+                  },
+                  "OnValueChanging": {
+                    "Name": "ToggleButtonOnValueChanging"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
+                "ExtensionPanel": {
+                  "ExtensionName": "TestExtension",
+                  "Parameters": [
+                    {
+                      "Name": "p1",
+                      "Value": {
+                        "Source": "BloodGroupDataSource",
+                        "Property": ""
+                      }
+                    }
+                  ],
+                  "Items": [
+                    {
+                      "NumericBox": {
+                        "Name": "NB",
+                        "Background": "Primary1",
+                        "HintText": "I'm NumericBox hint",
+                        "LabelText": "Numeric label",
+                        "Enabled": true,
+                        "MinValue": 0,
+                        "EditMask": {
+                          "NumberEditMask": {
+                            "Mask": "n3"
+                          }
+                        },
+                        "Value": {
+                          "Source": "BloodGroupDataSource",
+                          "Property": "$.Id"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
+                "TestElement":{
+                  "TestProperty": "Value Of Test Property In TestElement"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Cell": {
+            "ColumnSpan": 4,
+            "Items": [
+              {
+                "StackPanel":{
+                  "Items": {
+                    "Source": "Clone",
+                    "Property": ""
+                  },
+
+                  "ItemTemplate":{
+                    "Label":{
+                      "Value": {
+                        "Source": "Clone",
+                        "Property": "#.DisplayName"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+    {
+      "DataGrid": {
+        "Columns": [
+          {
+            "Header": "Id",
+            "CellProperty": "Id"
+          },
+          {
+            "Header": "Name",
+            "CellProperty": "Name"
+          },
+          {
+            "Header": "Group",
+            "CellProperty": "Group"
+          },
+          {
+            "Header": "Fuck",
+            "CellSelector": "{return JSON.stringify(args.value.Array);}"
+          }
+        ],
+        "Items": {
+          "Source": "Test"
+        }
+      }
+    },
+    {
+      "ComboBox": {
+        "LabelText":{
+          "Source": "NB",
+          "Property": "value"
+        },
+        "ItemTemplate": {
+          "Label": {
+            "Text": {
+              "Source": "Test",
+              "Property": "#.Name"
+            }
+          }
+        },
+        "Autocomplete": true,
+        "OnValueChanged": "{console.log(args);}",
+        "Items": {
+          "Source": "Test"
+        }
+      }
+    }]
+}
+

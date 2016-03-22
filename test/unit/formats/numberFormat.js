@@ -2,10 +2,9 @@ describe('NumberFormatting', function () {
     describe('format', function () {
         it('successful build', function () {
             //Given
-            var metadata = {};
             var builder = new NumberFormatBuilder();
             //When
-            var format = builder.build(null, null, metadata);
+            var format = builder.build(null, { metadata: {} });
             //Then
             assert.isFunction(format.format);
             assert.equal(format.getFormat(), 'n');

@@ -1,45 +1,30 @@
 describe('TextBox', function () {
-    describe('render', function () {
+    var builder = new ApplicationBuilder();
 
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
-            // Given
-            var textBox = new TextBox(),
-                $el, $control;
-            textBox.setValue('test');
-            $el = textBox.render();
-            $control = $el.find('input');
+    describe('API', function () {
+        var element = builder.buildType('TextBox', {});
 
-            assert.equal($control.val(), 'test');
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
+        describe('Implementing TextBox Methods', function () {
+            ['getMultiline', 'setMultiline', 'getLineCount', 'setLineCount']
+                .forEach(function (methodName) {
+                    it(methodName, function() {
+                        testHelper.checkMethod(element, methodName);
+                    });
 
-            // When
-            textBox.setValue('new');
-            textBox.setName('newName');
-            textBox.setEnabled(false);
-            textBox.setVisible(false);
-            textBox.setHorizontalAlignment('Left');
-
-            // Then
-            assert.equal($control.val(), 'new');
-            assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isTrue($el.hasClass('pull-left'));
+                });
         });
-        function testAlignment(element, alignment, cssClass){
-            debugger
-            if(!element.setHorizontalAlignment) return false;
-            //debugger
-            element.setHorizontalAlignment(alignment);
 
-            if(alignment!== element.getHorizontalAlignment()) return false;
-            if(!element.render().hasClass(cssClass)) return false;
+        describe('Implementing TextEditorBase Methods', function () {
+            testHelper.checkTextEditorBaseMethods(element);
+        });
 
-            return true;
-        }
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
 
         it('Events onLoad, onValueChanged', function () {
             // Given
@@ -80,91 +65,49 @@ describe('TextBox', function () {
                     }
                 }
             };
-            window.Test = {textBox:1, textBoxLoaded:false};
-            view.setScripts([{Name:"OnValueChanged", Body:"window.Test.textBox = 5"}, {Name:"OnLoaded", Body:"window.Test.textBoxLoaded = true"}]);
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnValueChanged',
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+            scripts.add({
+                name: 'OnLoaded',
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
 
             //When
-            var build = builder.build(view, metadata);
-            build.setValue(true);
-            $(build.render());
+            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
+            element.setValue(true);
+            element.render();
 
             // Then
-            assert.equal(window.Test.textBox, 5);
-            assert.isTrue(window.Test.textBoxLoaded);
+            assert.equal(events.OnLoaded, 1);
+            assert.equal(events.OnValueChanged, 1);
         });
+        //@TODO Add Checking Events
     });
 
-    describe('TextBox data binding', function () {
-        it('should set TextBox.text from property binding', function () {
+    describe('render', function () {
 
-            //это говнокод
-            $('#page-content').empty();
+        var element = builder.buildType('TextBox', {});
 
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
+        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+            // Given
 
-            //$('body').append($('<div>').attr('id', 'page-content'));
+            // When
+            var $el = element.render();
 
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources: [
-                    {
-                        DocumentDataSource: {
-                            Name : "PatientDataSource",
-                            ConfigId: 'Demography',
-                            DocumentId: 'Patient',
-                            IdProperty: 'Id',
-                            CreateAction: 'CreateDocument',
-                            GetAction: 'GetDocument',
-                            UpdateAction: 'SetDocument',
-                            DeleteAction: 'DeleteDocument',
-                            FillCreatedItem: true
-                        }
-                    }
-                ],
-                LayoutPanel: {
-                    StackPanel: {
-                        Name: 'MainViewPanel',
-                        Items: [
-                            {
-                                TextBox: {
-                                    Name: 'TextBox1',
-                                    Value : {
-                                        PropertyBinding : {
-                                            DataSource : 'PatientDataSource',
-                                            Property : '$.LastName'
-                                        }
-                                    },
-                                    Multiline: false
-                                }
-                            }
-                        ]
-                    }
-                }
-            };
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType(fakeView(), 'View', metadata);
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            linkView.createView(function(view){
-                view.open();
-
-                var itemToSelect = null;
-                view.getDataSource('PatientDataSource').getItems(function(data){
-                    itemToSelect = data[1];
-                });
-
-                view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
-
-                //check text
-                assert.equal($('#sandbox').find('input:text').val(), itemToSelect.LastName);
-                //$('#page-content').remove();
-            });
+            // Then
+            assert.equal($el.length, 1)
         });
+
     });
 });

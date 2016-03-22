@@ -48,7 +48,7 @@ var GlobalNavigationBarView = ControlView.extend({
         window.applications = applications;
 
         this.buttons = {};
-        messageBus.getExchange('global').subscribe(messageTypes.onViewOpened, this.onAddViewEventHandler.bind(this));
+        window.InfinniUI.global.messageBus.subscribe(messageTypes.onViewOpened, this.onAddViewEventHandler.bind(this));
     },
 
     /**
@@ -143,7 +143,7 @@ var GlobalNavigationBarView = ControlView.extend({
     closingApplicationView: function (appId) {
         var application = applications.findWhere({appId: appId});
         var view = application.get('view');
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
 
         var message = {appId: appId, viewId: application.get('viewId')};
         exchange.send(messageTypes.onViewClosing, message);
@@ -197,7 +197,7 @@ var GlobalNavigationBarView = ControlView.extend({
             this.show(message.appId);
         }
 
-        var exchange = messageBus.getExchange('global');
+        var exchange = window.InfinniUI.global.messageBus;
         exchange.subscribe(messageTypes.onViewClosed, this.onViewClosedHandler.bind(this, message.appId));
 
         //exchange.subscribe(messageTypes.onViewClosing, this.closingApplicationView.bind(this, message.appId));

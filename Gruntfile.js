@@ -3,7 +3,6 @@
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-jscs');
-    //grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -14,98 +13,89 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
-            'app/element/**/metadata.js',
+            'app/element/**/metadata.js', // old
+            'app/new/elements/**/metadata/*.js',
+            'app/element/**/metadata/*.js',
             'app/config.js',
-            'app/utils/*.js',
+            'app/utils/**/*.js',
             'app/messaging/**/*.js',
-            'app/controls/_base/**/*.js',
+            'app/controls/_base/**/*.js', // old
+
+            'app/new/controls/_base/**/*.js',
+            'app/new/controls/**/*.js',
+
             'app/element/_mixins/*.js',
-            'app/element/*.js',
+            'app/element/*.js', // old
+            'app/data/_common/**/*.js',
+            'app/new/elements/_base/**/*.js',
+            'app/new/elements/listBox/**/*.js',
+            'app/new/elements/**/*.js',
+
+            'app/actions/*.js',
+            'app/actions/**/*.js',
+
             'app/**/*.js',
+
             'extensions/**/*.js',
+
             '!app/utils/pdf/**/*.js',
             '!app/extensions/**/*.js',
             '!app/utils/exel-builder/*.js',
-            '!app/element/dataElement/listBox/**/*.*'
+            '!app/controls/dataNavigation/**/*.*',
+            '!app/element/dataElement/dataNavigation/**/*.*',
+            '!app/controls/dataGrid/**/*.*',
+            '!app/element/dataElement/dataGrid/**/*.*',
+            '!app/controls/treeView/**/*.*',
+            '!app/element/dataElement/treeView/**/*.*'
         ],
-        extFiles = [],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
             'bower_components/underscore/underscore.js',
             'bower_components/backbone/backbone.js',
-            'bower_components/metronic/assets/global/plugins/select2/select2.js',
             'bower_components/moment/moment.js',
             'bower_components/moment/lang/ru.js',
-            'bower_components/ractive/ractive.js',
             'bower_components/signalr/jquery.signalR.js',
-            'bower_components/jstree/dist/jstree.js',
             'bower_components/ulogin/index.js',
-            'bower_components/blockUI/jquery.blockUI.js',
-            'bower_components/metronic/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.ru.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modalmanager.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/js/bootstrap-modal.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
-            'bower_components/metronic/assets/global/plugins/uniform/jquery.uniform.js',
-            'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.js',
-            'bower_components/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js',
-            'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.js',
-            'bower_components/metronic/assets/global/scripts/metronic.js',
             'bower_components/JavaScript-MD5/js/md5.js',
-            'bower_components/metronic/assets/admin/layout/scripts/layout.js',
-            'app/utils/pdf/build/pdf.js'
+            'bower_components/blockUI/jquery.blockUI.js',
+            'app/utils/exel-builder/excel-builder.dist.js',
+            'app/utils/pdf/build/pdf.js',
+            'bower_components/toastr/toastr.js',
+            'bootstrap-framework/js/tooltip.js',
+            'bower_components/jquery.cookie/jquery.cookie.js',
+            'bower_components/hammerjs/hammer.js',
+            'bower_components/jsoneditor/dist/jsoneditor.min.js',
+            'bootstrap-framework/js/*.js'
         ],
-        appStyleFiles = ['app/styles/main.less'],
+        appStyleFiles = [
+            'app/styles/main.less'
+        ],
         vendorCssFiles = [
-            'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css',
             'bower_components/font-awesome/css/font-awesome.min.css',
-            'bower_components/metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css',
-            'bower_components/metronic/assets/global/plugins/uniform/css/uniform.default.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-select/bootstrap-select.min.css',
-            'bower_components/metronic/assets/global/plugins/select2/select2.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datepicker/css/datepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-datetimepicker/css/datetimepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-modal/css/bootstrap-modal.css',
-            'bower_components/metronic/assets/global/css/components.css',
-            'bower_components/metronic/assets/global/css/plugins.css',
-            'bower_components/metronic/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.css',
-            'bower_components/metronic/assets/global/plugins/bootstrap-toastr/toastr.min.css',
-
-            'bower_components/metronic/assets/admin/layout/css/layout.css',
-            'bower_components/metronic/assets/admin/layout/css/custom.css',
-
-            'bower_components/metronic/assets/admin/layout/css/themes/darkblue.css'
+            'bower_components/toastr/toastr.css',
+            'bower_components/jsoneditor/dist/jsoneditor.min.css'
         ],
         unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
-        templateFiles = ["app/**/*.tpl.html"],
+        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',
-        outerExtensionIntegrationTest = '*.Extensions/**/integrationTests/**/*.js',
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
-        outerExtensionFavicon = '*.Extensions/*.ico',
-        outerExtensionPdf = '*.Extensions/**/*.pdf',
-        outerExtensionPNG = '*.Extensions/*.png';
+        outerExtensionFavicon = '*.Extensions/*.ico';
+
 
     grunt.initConfig({
         concat: {
             app: {
+                options: {
+                    sourceMap: false,
+                    process: function(src, filepath) {
+                        return '//####' + filepath + '\n' + src;
+                    }
+                },
                 src: appFiles,
-                dest: 'out/app.js'
-            },
-            extensions: {
-                src: extFiles,
-                dest: 'out/extension.js'
+                dest: 'out/platform.js'
             },
             vendor: {
                 src: vendorFiles,
@@ -155,33 +145,30 @@
             resources: {
                 expand: true,
                 flatten: true,
-                src: [
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/throbber.gif',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/30px.png',
-                    'bower_components/jstree-bootstrap-theme/src/themes/default/32px.png',
-                    'bower_components/metronic/assets/global/plugins/select2/select2-spinner.gif'
-                ],
+                src: [],
                 dest: 'out/css/'
+            },
+            jsonEditor: {
+                expand: true,
+                flatten: true,
+                src: [
+                    'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg'
+                ],
+                dest: 'out/css/img'
             },
             favicon:{
                 expand: true,
                 flatten: true,
                 src: [],
                 dest: 'out/images/'
-            },
-            pdf:{
-                expand: true,
-                flatten: true,
-                src: [],
-                dest: 'out/docs/'
-            },
-            png:{
-                expand: true,
-                flatten: true,
-                src: [],
-                dest: 'out/images/'
-            },
-            images: {
+            }
+            //media: {
+            //    expand: true,
+            //    flatten: true,
+            //    src: ['app/styles/media/**/*.*'],
+            //    dest: 'out/css/media/'
+            //}
+            /*images: {
                 files: [
                     {
                         cwd: 'bower_components/metronic/assets/global/img/',
@@ -202,16 +189,7 @@
                         expand: true
                     }
                 ]
-            }
-        },
-
-        jscs: {
-            default: {
-                src: ['app/element/dataElement/dataGrid/**/*.js', 'app/controls/dataGrid/**/*.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
+            }*/
         },
 
         watch: {
@@ -241,11 +219,10 @@
         },
 
         less : {
-            extension: {
-                src: [],
-                dest: 'out/css/extension.css'
-            },
             default: {
+                options:{
+                    modifyVars: {}
+                },
                 src: appStyleFiles,
                 dest: 'app/styles/main.css'
             }
@@ -256,9 +233,11 @@
                 options: {
                     open: 'http://localhost:8181/test/unit/',
                     hostname : '*',
-                    port: '8181'
+                    port: '8181',
+                    keepalive: true
                 }
-            },
+            }
+            /*,
             https: {
                 options: {
                     open: 'http://localhost:8181/test/unit/',
@@ -270,6 +249,7 @@
                     ca: grunt.file.read('certificates/ca.crt').toString()
                 }
             }
+            */
         },
 
         clean:{
@@ -316,36 +296,30 @@
     });
 
     grunt.task.registerTask('build',
-        function (extensionPath) {
-            if (extensionPath) {
-                var
-                    path = require('path'),
-                    tmp = [],
-                    less = [],
-                    tmpFavicon = grunt.config.get('copy.favicon.src').slice(0),
-                    tmpPdf = grunt.config.get('copy.pdf.src').slice(0),
-                    tmpPNG = grunt.config.get('copy.png.src').slice(0);
+        function (props) {
 
-                tmp.push(path.join(extensionPath, outerExtensionScript),
-                    '!' + path.join(extensionPath, outerExtensionIntegrationTest));
-                less.push(path.join(extensionPath, outerExtensionStyle),
-                    path.join(extensionPath, outerExtensionLessStyle));
-                tmpFavicon.push(path.join(extensionPath, outerExtensionFavicon));
-                tmpPdf.push(path.join(extensionPath, outerExtensionPdf));
-                tmpPNG.push(path.join(extensionPath, outerExtensionPNG));
-
-                grunt.config.set('copy.png.src', tmpPNG);
-                grunt.config.set('copy.favicon.src', tmpFavicon);
-                grunt.config.set('copy.pdf.src', tmpPdf);
-                grunt.config.set('concat.extensions.src', tmp);
-                grunt.config.set('less.extension.src', less);
-            }else{
-                grunt.config.set('concat.app.src', appFiles);
-                grunt.config.set('less.default.src', appStyleFiles);
+            if(typeof props == "string"){
+                props = props.replace(/=/g, ':');
             }
 
-            //grunt.log.writeln(extensionPath + outerExtensionScript);
-            //grunt.log.writeln(grunt.config().concat.app.src);
+            if(typeof props == "string" && props.indexOf('{') == -1){
+                props = require(props);
+            }
+
+            if(props){
+                eval('props = ' + props);
+
+                if(props.override){
+                    if(props.override.less){
+                        for(var k in props.override.less){
+                            grunt.config.set('less.default.options.modifyVars.' + k, props.override.less[k]);
+                            grunt.log.writeln('path - ' + k);
+                            grunt.log.writeln(grunt.config.get('less.default.options.modifyVars.' + k));
+                        }
+                    }
+                }
+            }
+
 
             var tasks = [
                 'less',

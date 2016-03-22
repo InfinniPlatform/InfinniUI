@@ -24,9 +24,10 @@ var TextEditor = Backbone.View.extend({
         'click .pl-control-editor': 'onClickEditorHandler',
         'focus .pl-control-editor': 'onFocusEditorHandler',
         'paste .pl-control-editor': 'onPasteEditorHandler',
-        'contextmenu .pl-control-editor': 'onContextMenuEditorHandler',
+        //'contextmenu .pl-control-editor': 'onContextMenuEditorHandler',
         'mousewheel .pl-control-editor': 'onMouseWheelEditorHandler',
-        'mouseleave .pl-control-editor': 'onMouseLeaveEditorHandler'
+        'mouseleave .pl-control-editor': 'onMouseLeaveEditorHandler',
+        'input .pl-control-editor': 'onInputHandler'
     },
 
     /**
@@ -50,10 +51,12 @@ var TextEditor = Backbone.View.extend({
     },
 
     render: function () {
+        this.$el.find('.pl-control-editor').remove();
+
         if (this.options.multiline) {
-            this.$el.html(this.templateTextArea({lineCount: this.options.lineCount}));
+            this.$el.prepend(this.templateTextArea({lineCount: this.options.lineCount}));
         } else {
-            this.$el.html(this.templateTextBox({inputType: this.options.inputType}));
+            this.$el.prepend(this.templateTextBox({inputType: this.options.inputType}));
         }
         this.bindUIElements();
 
@@ -82,7 +85,10 @@ var TextEditor = Backbone.View.extend({
             editMask.reset(value);
             displayValue = editMask.getText();
         }
-        this.ui.editor.val(displayValue);
+        if (this.ui.editor.val() !== displayValue) {
+            this.ui.editor.val(displayValue);
+        }
+
         this.setIsValid(true);//По умолчанию считаем переданное значение валидно
     },
 
@@ -379,7 +385,12 @@ var TextEditor = Backbone.View.extend({
         }
 
         var text = (event.originalEvent || event).clipboardData.getData('text/plain') || prompt('Paste something..');
-        maskEdit.pasteStringToMask(text, this.getCaretPosition());
+        var chars = text.split('');
+
+        for (var i = 0, position = this.getCaretPosition(); i < chars.length; i = i + 1) {
+            position = maskEdit.setCharAt(chars[i], position);
+        }
+        //maskEdit.pasteStringToMask(text, this.getCaretPosition());
 
         event.preventDefault();
         editor.val(maskEdit.getText());
@@ -407,6 +418,10 @@ var TextEditor = Backbone.View.extend({
             this.$el.hide();
             this.onBlurEditorHandler();
         }
+    },
+
+    onInputHandler: function(event){
+        this.options.parent.model.set('value', this.ui.editor.val());
     },
 
     /**

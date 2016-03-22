@@ -2,7 +2,7 @@ var LayoutPanelRegistry = function () {
 
     var items = [];
 
-    var exchange = messageBus.getExchange('global');
+    var exchange = window.InfinniUI.global.messageBus;
 
     /**
      *

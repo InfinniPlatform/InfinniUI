@@ -2,7 +2,7 @@ var ExtensionPanelControl = function () {
     _.superClass(ExtensionPanelControl, this);
 };
 
-_.inherit(ExtensionPanelControl, Control);
+_.inherit(ExtensionPanelControl, ContainerControl);
 
 _.extend(ExtensionPanelControl.prototype, {
 

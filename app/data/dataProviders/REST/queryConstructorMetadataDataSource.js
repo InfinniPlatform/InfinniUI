@@ -2,7 +2,7 @@
 
     metadata = metadata || {};
 
-    var urlTemplate = '{0}/SystemConfig/StandardApi/configuration/getConfigMetadata';
+    var urlTemplate = '{0}/RestfulApi/StandardApi/configuration/getConfigMetadata';
     var configId = metadata.ConfigId;
     var documentId = metadata.DocumentId;
     var metadataType = metadata.MetadataType;

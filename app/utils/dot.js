@@ -250,7 +250,21 @@ window.InfinniUI.ObjectUtils = (function () {
         setPropertyValue: function (target, propertyPath, propertyValue) {
             if (target !== null && target !== undefined && !_.isEmpty(propertyPath)) {
                 var propertyPathTerms = splitPropertyPath(propertyPath);
-                setPropertyByPath(target, propertyPathTerms, _.clone(propertyValue));
+
+                if(propertyValue instanceof Date){
+                    setPropertyByPath(target, propertyPathTerms, new Date(propertyValue));
+                } else if(propertyValue instanceof File){
+                    setPropertyByPath(target, propertyPathTerms, propertyValue);
+                } else{
+                    setPropertyByPath(target, propertyPathTerms, _.clone(propertyValue));
+                }
+            }
+        },
+
+        setPropertyValueDirect: function (target, propertyPath, propertyValue) {
+            if (target !== null && target !== undefined && !_.isEmpty(propertyPath)) {
+                var propertyPathTerms = splitPropertyPath(propertyPath);
+                setPropertyByPath(target, propertyPathTerms, propertyValue);
             }
         }
     };

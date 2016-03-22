@@ -14,7 +14,7 @@ _.extend(DataNavigationBuilder.prototype, {
 
         var element = params.element,
             metadata = params.metadata,
-            view = params.parent;
+            view = params.view;
 
         var datasource = view.getDataSource(metadata.DataSource);
 
@@ -32,13 +32,18 @@ _.extend(DataNavigationBuilder.prototype, {
     },
 
     createElement: function (params) {
-        return new DataNavigation(params.parent);
+        return new DataNavigation(params.view);
     },
 
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 
         //Скриптовые обработчики на события
+        if (params.view && metadata.OnLoaded){
+            params.element.onLoaded(function() {
+                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name);
+            });
+        }
 
         //if (params.parent && metadata.OnSetPageNumber){
         //    params.element.onSetPageNumber(function() {

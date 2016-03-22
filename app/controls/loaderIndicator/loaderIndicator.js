@@ -1,6 +1,19 @@
 (function () {
     var template = InfinniUI.Template["controls/loaderIndicator/template.tpl.html"];
 
+    InfinniUI.loaderIndicator = {
+        show: function(){
+            $.blockUI({
+                message: $(template()),
+                ignoreIfBlocked: true,
+                baseZ: 99999
+            });
+        },
+        hide: function(){
+            $.unblockUI();
+        }
+    };
+
     if (!InfinniUI.config.useLoaderIndicator) {
         return;
     }
