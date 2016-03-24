@@ -113,11 +113,11 @@ var DataBinding = Backbone.Model.extend({
         this.set('element', element);
         this.set('elementProperty', property);
 
-        this._initPropertyOnElement();
-
         element.onPropertyChanged(property, function(context, argument){
             that._onElementPropertyChangedHandler(context, argument);
         });
+
+        this._initPropertyOnElement();
     },
 
     _initPropertyOnElement: function(){
