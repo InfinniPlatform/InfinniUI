@@ -360,6 +360,15 @@
         }
     );
 
+    grunt.task.registerTask('runTests', function () {
+            var tasks = [
+                'build',
+                'connect'
+            ];
+            grunt.task.run(tasks);
+        }
+    );
+
     grunt.task.registerTask('default', function (protocol) {
             var protocols = ['http', 'https'];
             if (protocols.indexOf(protocol) === -1) {
