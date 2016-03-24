@@ -62,7 +62,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('change:pageNumber', handler);
     },
 
-    onPageNumberSize: function (handler) {
+    onPageSizeChanged: function (handler) {
         this.on('change:pageSize', handler);
     },
 
@@ -856,6 +856,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     setFilter: function (value, onSuccess, onError) {
         var filterManager = this.getFilterManager();
+        var filter = _.clone(value);
 
         filterManager.clean();
 
@@ -864,8 +865,7 @@ var BaseDataSource = Backbone.Model.extend({
                 this._setCriteriaList(newCriteriaList, onSuccess, onError);
             }
         }.bind(this));
-
-        filterManager.addFilter(value);
+        filterManager.addFilter(filter);
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){

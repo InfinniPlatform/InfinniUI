@@ -62,6 +62,8 @@ _.extend(LinkView.prototype, {
             this.parent.addChild(view);
         }
 
+        window.InfinniUI.global.messageBus.send('onViewCreated', {openMode: openMode, view: view});
+
         switch(openMode){
             case 'Container': {
                 container = InfinniUI.global.containers[this.containerName];

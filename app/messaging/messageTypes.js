@@ -28,7 +28,9 @@ window.messageTypes = {
     onToolTipShow: {name: 'onToolTipShow'},
     onToolTipHide: {name: 'onToolTipHide'},
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'}
+    onDataLoaded: {name: 'onDataLoaded'},
+
+    onViewCreated: {name: 'onViewCreated'}
 
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 

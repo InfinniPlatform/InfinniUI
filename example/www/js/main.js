@@ -46,11 +46,17 @@ moment.locale('ru');
         rootView = new SpecialApplicationView(),
         mainView;
 
+    window.InfinniUI.global.messageBus.subscribe('onViewCreated', function (context, args) {
+        if(args.value.openMode == 'Default') {
+            window.contextApp = args.value.view;
+        }
+    });
+
     rootView.open($target);
     openHomePage()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
-            action.execute(function(){window.contextApp = arguments[0];});
+            action.execute();
         });
 
     function openHomePage() {
@@ -90,6 +96,8 @@ moment.locale('ru');
 
 function SpecialApplicationView() {
     var $container;
+
+    this.isView = true;
 
     this.getContainer = function () {
         return this.$container;

@@ -3,7 +3,7 @@
 this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewName, next) {
     window.testHelpers.waitView(viewName,
         function () {
-            window.currentView = window.configWindow.contextApp.context.controls[viewName];
+            window.currentView = window.configWindow.contextApp.context.controls[viewName] || window.configWindow.contextApp;
             window.currentViewContext = window.currentView.getContext();
             next();
         },
@@ -19,7 +19,7 @@ this.Given(/^я нахожусь на экране "([^"]*)"$/, function (viewNa
 this.Then(/^система отобразит экран "([^"]*)"$/, function (viewName, next) {
     window.testHelpers.waitView(viewName,
         function () {
-            window.currentView = window.configWindow.contextApp.context.controls[viewName];
+            window.currentView = window.configWindow.contextApp.context.controls[viewName] || window.configWindow.contextApp;
             window.currentViewContext = window.currentView.getContext();
             next();
         },
@@ -324,4 +324,78 @@ this.Then(/^я увижу элемент "([^"]*)"$/, function (elementName, nex
     };
 
     window.testHelpers.waitCondition(haveElement, wasFound, wasntFound);
+});
+
+this.Then(/^я увижу в таблице "([^"]*)" строку под номером "([^"]*)" со значением "([^"]*)"$/, function (tableName, rowIndex, rowValue, next) {
+    var haveTable = function () {
+        return window.testHelpers.getControlByName(tableName) != undefined;
+    };
+
+    var success = function () {
+        try {
+            var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
+            var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
+            var expectedCells = rowValue.split('|');
+
+            if ($row.length == 0) {
+                next(new Error("Index out of range"));
+                return;
+            }
+
+            var $cells = $row.find('td');
+
+            expectedCells.splice(0, 1);
+            expectedCells.pop();
+
+            expectedCells = expectedCells.map(function (item) {
+                return item.replace(/'/g, '"');
+            });
+
+            if (expectedCells.length != $cells.length) {
+                next(new Error("expectedRows.length(" + expectedCells.length + ") != $cells.length(" + $cells.length + ")"));
+                return;
+            }
+
+            for (var i = 0, ii = expectedCells.length; i < ii; i++) {
+                if (!!expectedCells[i]) {
+                    var cellText = $cells
+                        .eq(i)
+                        .find('.pl-label:visible')
+                        .text()
+                        .trim();
+
+                    if(cellText != expectedCells[i]) {
+                        next(new Error("Expected : '" + expectedCells[i] + "', Actual: '" + cellText + "'"));
+                        return;
+                    }
+                }
+            }
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+
+    var fail = function () {
+        next(new Error(tableName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveTable, success, fail);
+});
+
+this.Then(/^экран будет иметь название "([^"]*)"$/, function (viewText, next) {
+    if(window.currentView) {
+        var condition = function () {
+            return window.currentView.getText && window.currentView.getText() === viewText;
+        };
+
+        var fail = function () {
+            next(new Error("'" + viewText + "' not found!"));
+        };
+
+        window.testHelpers.waitCondition(condition, next, fail);
+    } else {
+        next(new Error("View is not initialized"));
+    }
 });

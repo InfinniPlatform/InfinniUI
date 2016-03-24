@@ -60,7 +60,7 @@ var DataBinding = Backbone.Model.extend({
         }
 
         source.onPropertyChanged(property, function(context, argument){
-            that.onSourcePropertyChangedHandler(context, argument);
+            that._onSourcePropertyChangedHandler(context, argument);
         });
 
         if( this._isWorkingWithSelectedItems(source) ){
@@ -83,7 +83,7 @@ var DataBinding = Backbone.Model.extend({
                     property: sourceProperty,
                     newValue: source.getProperty(sourceProperty)
                 };
-                that.onSourcePropertyChangedHandler(context, args);
+                that._onSourcePropertyChangedHandler(context, args);
             });
         }
     },
@@ -113,11 +113,11 @@ var DataBinding = Backbone.Model.extend({
         this.set('element', element);
         this.set('elementProperty', property);
 
-        this._initPropertyOnElement();
-
         element.onPropertyChanged(property, function(context, argument){
-            that.onElementPropertyChangedHandler(context, argument);
+            that._onElementPropertyChangedHandler(context, argument);
         });
+
+        this._initPropertyOnElement();
     },
 
     _initPropertyOnElement: function(){
@@ -126,7 +126,7 @@ var DataBinding = Backbone.Model.extend({
         var that = this;
         var value;
 
-        if(this.shouldRefreshElement(this.get('mode')) && source){
+        if(this._shouldRefreshElement(this.get('mode')) && source){
             if(typeof source.isDataReady == 'function' && !source.isDataReady()){
                 if(typeof source.tryInitData == 'function'){
                     if(this.getDefaultValue() !== null){
@@ -154,12 +154,12 @@ var DataBinding = Backbone.Model.extend({
     /**
      * @description Обработчик события изменения значения элемента
      */
-    onElementPropertyChangedHandler: function (context, argument) {
+    _onElementPropertyChangedHandler: function (context, argument) {
         var mode = this.get('mode');
         var element = this.get('element');
         var elementProperty = this.get('elementProperty');
 
-        if(this.shouldRefreshSource(mode) && argument.property == elementProperty){
+        if(this._shouldRefreshSource(mode) && argument.property == elementProperty){
             this._setValueToSource(argument.newValue, context);
         }
     },
@@ -182,11 +182,11 @@ var DataBinding = Backbone.Model.extend({
     /**
      * @description Обработчик события изменения значения источника
      */
-    onSourcePropertyChangedHandler: function (context, argument) {
+    _onSourcePropertyChangedHandler: function (context, argument) {
         var mode = this.get('mode');
         var sourceProperty = this.get('sourceProperty');
 
-        if(this.shouldRefreshElement(mode) && argument.property == sourceProperty){
+        if(this._shouldRefreshElement(mode) && argument.property == sourceProperty){
             this._setValueToElement(argument.newValue);
         }
     },
@@ -215,11 +215,11 @@ var DataBinding = Backbone.Model.extend({
         return context;
     },
 
-    shouldRefreshSource: function(mode){
+    _shouldRefreshSource: function(mode){
         return mode == BindingModes.twoWay || mode == BindingModes.toSource;
     },
 
-    shouldRefreshElement: function(mode){
+    _shouldRefreshElement: function(mode){
         return mode == BindingModes.twoWay || mode == BindingModes.toElement;
     }
 });

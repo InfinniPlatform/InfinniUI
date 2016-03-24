@@ -76,7 +76,7 @@ _.extend(Element.prototype, {
 
     getView: function () {
         if (!this.parentView) {
-            if (this.parent instanceof View) {
+            if (this.parent && this.parent.isView) {
                 this.parentView = this.parent;
 
             } else {
