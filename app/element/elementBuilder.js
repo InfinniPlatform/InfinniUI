@@ -180,7 +180,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                     "Text": metadata.ToolTip
                 }, argumentForBuilder);
             } else {
-                tooltip = builder.buildType("ToolTip", metadata.ToolTip, argumentForBuilder);
+                tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
             }
 
             element.setToolTip(tooltip);
