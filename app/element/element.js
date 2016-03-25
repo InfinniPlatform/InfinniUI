@@ -6,8 +6,6 @@ var Element = function (parent, viewMode) {
     };
 
     this.childElements = [];
-
-    this.eventStore = new EventStore();
 };
 
 Object.defineProperties(Element.prototype, {
