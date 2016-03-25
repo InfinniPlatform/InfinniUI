@@ -80,7 +80,7 @@ describe('DataBindingBuilder', function () {
     it('should toElement converter work in inline style', function () {
         // Given
         var metadata = {
-            Text: 'Пациенты',
+            Text: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -105,7 +105,8 @@ describe('DataBindingBuilder', function () {
                                 "Property": "#.Display",
                                 "Converter": {
                                     "ToElement": "{return args.value + '!';}"
-                                }
+                                },
+                                "Mode": "ToElement"
                             }
                         }
                     },
