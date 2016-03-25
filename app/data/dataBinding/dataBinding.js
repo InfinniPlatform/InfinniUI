@@ -170,7 +170,9 @@ var DataBinding = Backbone.Model.extend({
         var sourceProperty = this.get('sourceProperty');
         var converter = this.get('converter');
 
-        if(converter != null && converter.toSource != null){
+        if(converter != null
+            && converter.hasOwnProperty('toSource') //Mozilla's Object.prototype has method "toSource"!!
+        ){
             value = converter.toSource(context, {value: value, binding: this, source: element});
         }
 
