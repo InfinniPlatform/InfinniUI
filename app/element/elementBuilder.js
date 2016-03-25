@@ -161,6 +161,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
     },
 
+    
     initToolTip: function (params) {
         var
             exchange = window.InfinniUI.global.messageBus,
