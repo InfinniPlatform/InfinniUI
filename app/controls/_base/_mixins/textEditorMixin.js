@@ -136,6 +136,7 @@ var textEditorMixin = {
      */
     onEditorShowControl: function () {
         this.ui.control.show();
+        this.ui.control.scrollTop(0);
 
         if(this.ui.controlWrap){
             this.ui.controlWrap.show();
