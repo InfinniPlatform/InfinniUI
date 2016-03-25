@@ -225,6 +225,7 @@ _.extend(ContainerBuilder.prototype, {
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
             var binding = new DataBinding();
+            binding.setMode(BindingModes.toElement);
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {
