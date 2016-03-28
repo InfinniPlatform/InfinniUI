@@ -18,7 +18,8 @@ function View(parent) {
 
     this.handlers = {
         onBeforeLoaded: $.Deferred(),
-        onLoaded: $.Deferred()
+        onLoaded: $.Deferred(),
+        onSelectedElementChange: null
     };
 
     this._initContext();
@@ -330,5 +331,17 @@ _.extend(View.prototype,
 
             return this.membersDeferreds[memberName];
         }
+
+//devblockstart
+        ,showSelectedElementMetadata: function(){
+            if(this.handlers.onSelectedElementChange){
+                this.handlers.onSelectedElementChange();
+            }
+        }
+
+        ,onSelectedElementChange: function(handler) {
+            this.handlers.onSelectedElementChange = handler;
+        }
+//devblockstop
     }
 );

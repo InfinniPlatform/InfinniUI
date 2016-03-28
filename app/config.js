@@ -5,4 +5,10 @@ _.defaults( InfinniUI.config, {
     serverUrl: 'http://localhost:9900',//'http://10.0.0.32:9900';
     configId: 'PTA',
     configName: 'Хабинет'
+//devblockstart
+    ,editorService: {
+        url: 'http://localhost:5500/api/metadata/saveMetadata'
+    }
+//devblockstop
+
 });
