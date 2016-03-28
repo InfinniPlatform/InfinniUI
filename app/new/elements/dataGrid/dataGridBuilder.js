@@ -43,6 +43,7 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
         return function (context, args) {
             var row = dataGrid.createRow();
+            row.setGrid(dataGrid);
 
             ['RowStyle', 'RowBackground', 'RowForeground', 'RowTextStyle']
                 .forEach(initBindingToRowProperty.bind(null, row, args.index));
