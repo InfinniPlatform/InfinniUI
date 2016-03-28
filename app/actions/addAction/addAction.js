@@ -20,6 +20,8 @@ _.extend(AddAction.prototype, {
                 editDataSource.createItem();
             });
         }
+
+        return true;
     },
 
     save: function(){
