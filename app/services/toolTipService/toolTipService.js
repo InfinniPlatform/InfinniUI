@@ -27,7 +27,9 @@ InfinniUI.ToolTipService = (function () {
         $element
             .tooltip({
                 html: true,
-                title:content
+                title:content,
+                container: 'body'
+
             })
             .tooltip('show');
     }

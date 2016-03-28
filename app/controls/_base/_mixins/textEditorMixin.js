@@ -103,7 +103,7 @@ var textEditorMixin = {
         //При ховере Editor нужен, чтобы при клике по полю, курсор выставлялся в указаннкю позицию
         var enabled = this.model.get('enabled'),
             value = this.model.get('value'),
-            isEmpty = value === '' || value === null || typeof value === undefined;
+            isEmpty = value === '' || value === null || typeof value === 'undefined';
 
         if(enabled && !isEmpty) {
             this.showEditor(this.model.get('value'), true);
@@ -136,6 +136,7 @@ var textEditorMixin = {
      */
     onEditorShowControl: function () {
         this.ui.control.show();
+        this.ui.control.scrollTop(0);
 
         if(this.ui.controlWrap){
             this.ui.controlWrap.show();

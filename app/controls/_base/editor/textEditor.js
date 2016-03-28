@@ -126,6 +126,8 @@ var TextEditor = Backbone.View.extend({
         if (!skipRefocus) {
             this.ui.editor.focus();
         }
+
+        this.ui.editor.scrollTop(0);
         this.checkCurrentPosition();
         this.inFocus = true;
     },

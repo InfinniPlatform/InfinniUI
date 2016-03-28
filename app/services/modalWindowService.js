@@ -26,6 +26,7 @@ InfinniUI.ModalWindowService = (function () {
                     }
 
                     modalQueue.splice(i, 1);
+                    break;
                 }
             }
 
