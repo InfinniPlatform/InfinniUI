@@ -46,7 +46,7 @@ var DataBinding = Backbone.Model.extend({
         var element = this.getElement();
 
         if(this.get('source') != null){
-            var message = stringUtils.format('DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [this.get('source').getName(), source.getName()])
+            var message = stringUtils.format('DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [this.get('source').getName(), source.getName()]);
             logger.warn(message);
         }
 
