@@ -50,12 +50,9 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Button', new ButtonBuilder());
         builder.register('ToolBar', new ToolBarBuilder());
         builder.register('ToolBarButton', new ButtonBuilder());
-        //builder.register('ToolBarSeparator', new ToolBarSeparatorBuilder());
         builder.register('ComboBox', new ComboBoxBuilder());
         builder.register('RadioGroup', new RadioGroupBuilder());
-        builder.register('SearchPanel', new SearchPanelBuilder());
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
-        builder.register('FilterPanel', new FilterPanelBuilder());
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
         builder.register('DocumentViewer', new DocumentViewerBuilder());
@@ -97,8 +94,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('RegexEditMask', new RegexEditMaskBuilder());
 
         builder.register('Comparator', new ComparatorBuilder());
-        builder.register('GlobalNavigationBar', new GlobalNavigationBarBuilder());
-        builder.register('ActionBar', new ActionBarBuilder());
 
         builder.register('Script', new ScriptBuilder());
 
