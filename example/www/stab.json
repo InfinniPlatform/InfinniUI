@@ -7,9 +7,9 @@
         "Items": [
           {"Id": 1, "Name": "One", "Group": "odd"},
           {"Id": 2, "Name": "Two", "Group": "even"},
-          {"Id": 3, "Name": "Three", "Group": "odd"},
+          {"Id": 3, "Name": "ThreeThreeThreeThreeThreeThreeThreeThreeThree", "Group": "odd"},
           {"Id": 4, "Name": "Four", "Group": "even"},
-          {"Id": 5, "Name": "Five", "Group": "odd"},
+          {"Id": 5, "Name": "Five", "Group": "odd", "timestamp": 1458604800000},
           {"Id": 6, "Name": "Six", "Group": "even"},
           {"Id": 7, "Name": "Seven", "Group": "odd"}
         ],
@@ -120,111 +120,6 @@
     }
   ],
   "Items": [{
-    "GridPanel": {
-      "Items": [
-        {
-          "Cell": {
-            "ColumnSpan": 4,
-            "Items": [
-              {
-                "ToggleButton": {
-                  "Name": "TB",
-                  "Text": "Subscribe",
-                  "TextOn": "yes",
-                  "TextOff": "no",
-                  "OnValueChanged": {
-                    "Name": "ToggleButtonOnValueChanged"
-                  },
-                  "OnValueChanging": {
-                    "Name": "ToggleButtonOnValueChanging"
-                  }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "Cell": {
-            "ColumnSpan": 4,
-            "Items": [
-              {
-                "ExtensionPanel": {
-                  "ExtensionName": "TestExtension",
-                  "Parameters": [
-                    {
-                      "Name": "p1",
-                      "Value": {
-                        "Source": "BloodGroupDataSource",
-                        "Property": ""
-                      }
-                    }
-                  ],
-                  "Items": [
-                    {
-                      "NumericBox": {
-                        "Name": "NB",
-                        "Background": "Primary1",
-                        "HintText": "I'm NumericBox hint",
-                        "LabelText": "Numeric label",
-                        "Enabled": true,
-                        "MinValue": 0,
-                        "EditMask": {
-                          "NumberEditMask": {
-                            "Mask": "n3"
-                          }
-                        },
-                        "Value": {
-                          "Source": "BloodGroupDataSource",
-                          "Property": "$.Id"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "Cell": {
-            "ColumnSpan": 4,
-            "Items": [
-              {
-                "TestElement":{
-                  "TestProperty": "Value Of Test Property In TestElement"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "Cell": {
-            "ColumnSpan": 4,
-            "Items": [
-              {
-                "StackPanel":{
-                  "Items": {
-                    "Source": "Clone",
-                    "Property": ""
-                  },
-
-                  "ItemTemplate":{
-                    "Label":{
-                      "Value": {
-                        "Source": "Clone",
-                        "Property": "#.DisplayName"
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-    {
       "DataGrid": {
         "Columns": [
           {
@@ -233,15 +128,26 @@
           },
           {
             "Header": "Name",
-            "CellProperty": "Name"
+            "CellProperty": "Name",
+            "Width": "100px"
           },
           {
-            "Header": "Group",
-            "CellProperty": "Group"
+            "Header": "timestamp",
+            "CellProperty": "timestamp"
           },
           {
             "Header": "Fuck",
-            "CellSelector": "{return JSON.stringify(args.value.Array);}"
+            "CellTemplate": {
+              "DatePicker": {
+                "Mode": "Date2",
+                "OnValueChanged": "{debugger; console.log(args.oldValue, args.newValue);}",
+                "Value": {
+                  "Source": "Test",
+                  "Property": "#.timestamp"
+                }
+              }
+            }
+
           }
         ],
         "Items": {

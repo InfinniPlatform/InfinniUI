@@ -62,6 +62,28 @@ window.InfinniUI.DateUtils = (function () {
     };
 
     return {
+        dateToTimestamp: dateToTimestamp,
         toISO8601: toISO8601
     };
+
+    /**
+     * @description Возвращает заданную дату как количество миллисекунд, прошедших с 01-01-1970T00:00 по UTC
+     * @param {String|Date} date ISO8601
+     */
+    function dateToTimestamp(date) {
+        var time, _date, datetime;
+
+        if (date && date.constructor === String) {
+            _date = new Date(date);
+        } else if (date && date.constructor === Date) {
+            _date = date;
+        }
+
+        if (_date) {
+            _date = new Date(Date.UTC(_date.getFullYear(), _date.getMonth(), _date.getDate()));
+            datetime = _date.getTime();
+        }
+
+        return datetime;
+    }
 })();
