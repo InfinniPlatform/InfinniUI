@@ -42,7 +42,7 @@ var DataGridRowView = ControlView.extend({
     render: function () {
         this.prerenderingActions();
         var $el = this.$el;
-
+        var row = this;
 
         var templateName = this.model.get('multiSelect') ? 'multiSelect' : 'singleSelect';
         var template = this.template[templateName];
@@ -51,8 +51,9 @@ var DataGridRowView = ControlView.extend({
 
         var templates = this.model.get('cellTemplates');
         if (Array.isArray(templates)) {
-            templates.forEach(function (template) {
+            templates.forEach(function (template, index) {
                 var $cell = $('<td></td>');
+                row.setColumnWidth($cell, index);
                 $cell.append(template().render());
                 $el.append($cell);
             });
@@ -63,6 +64,21 @@ var DataGridRowView = ControlView.extend({
 
         this.postrenderingActions();
         return this;
+    },
+
+    setColumnWidth: function ($el, index) {
+        var grid = this.model.get('grid');
+        var columns = grid.getColumns();
+        var column = columns.getByIndex(index);
+        var width = column.getWidth();
+
+        if (width !== null && typeof width !== 'undefined') {
+            $el.css({
+                "width": width,
+                "max-width": width
+            });
+        }
+
     },
 
     updateShowSelectors: function () {
