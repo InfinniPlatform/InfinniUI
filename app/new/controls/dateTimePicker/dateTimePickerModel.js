@@ -2,7 +2,7 @@
  * @class
  * @augments TextEditorBaseModel
  */
-var DatePickerModel = TextEditorBaseModel.extend(/** @lends DatePickerModel.prototype */{
+var DateTimePickerModel = TextEditorBaseModel.extend(/** @lends DateTimePickerModel.prototype */{
     defaults: _.extend(
         {},
         TextEditorBaseModel.prototype.defaults,

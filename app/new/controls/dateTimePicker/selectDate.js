@@ -1,8 +1,8 @@
-var DatePickerDropdown = Backbone.View.extend({
+var SelectDate = Backbone.View.extend({
 
     className: 'pl-datepicker-dropdown pl-dropdown-container',
 
-    template: InfinniUI.Template["new/controls/datePicker/template/datePicker.dropdown.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/select.date.tpl.html"],
 
     UI: {
         days: '.days',
@@ -42,13 +42,13 @@ var DatePickerDropdown = Backbone.View.extend({
         };
 
         options.el = this.ui.months;
-        var months = new DatePickerMonths(options);
+        var months = new SelectMonths(options);
 
         options.el = this.ui.years;
-        var years = new DatePickerYears(options);
+        var years = new SelectYears(options);
 
         options.el = this.ui.days;
-        var days = new DatePickerDays(options);
+        var days = new SelectDays(options);
 
         this.months = months;
         this.years = years;
@@ -136,4 +136,4 @@ var DatePickerDropdown = Backbone.View.extend({
 
 });
 
-_.extend(DatePickerDropdown.prototype, bindUIElementsMixin);
+_.extend(SelectDate.prototype, bindUIElementsMixin);

@@ -3,17 +3,17 @@
  * @constructor
  * @augments TextEditorBaseBuilder
  */
-function DatePickerBuilder() {
-    _.superClass(DatePickerBuilder, this);
+function DateTimePickerBuilder() {
+    _.superClass(DateTimePickerBuilder, this);
 }
 
-_.inherit(DatePickerBuilder, TextEditorBaseBuilder);
+_.inherit(DateTimePickerBuilder, TextEditorBaseBuilder);
 
-DatePickerBuilder.prototype.createElement = function (params) {
-    return new DatePicker(params.parent);
+DateTimePickerBuilder.prototype.createElement = function (params) {
+    return new DateTimePicker(params.parent);
 };
 
-DatePickerBuilder.prototype.applyMetadata = function (params) {
+DateTimePickerBuilder.prototype.applyMetadata = function (params) {
     var element = params.element;
     var metadata = params.metadata;
     this.applyDefaultMetadata(params);
@@ -28,18 +28,18 @@ DatePickerBuilder.prototype.applyMetadata = function (params) {
     //element.setDateFormat(format);
 };
 
-DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
+DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     var metadata = params.metadata;
 
     var defaultFormat = {
             Date: '{:d}',
-            Date2: '{:d}',
+            DatePicker: '{:d}',
             DateTime: '{:g}',
             Time: '{:t}'
         },
         defaultEditMask = {
             Date: {DateTimeEditMask: {Mask: 'd'}},
-            Date2: {DateTimeEditMask: {Mask: 'd'}},
+            DatePicker: {DateTimeEditMask: {Mask: 'd'}},
             DateTime: {DateTimeEditMask: {Mask: 'g'}},
             Time: {DateTimeEditMask: {Mask: 't'}}
         };

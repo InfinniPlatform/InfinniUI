@@ -1,10 +1,10 @@
-describe('DatePicker', function () {
+describe('DateTimePicker', function () {
     var builder = new ApplicationBuilder();
 
     describe('API', function () {
-        var element = builder.buildType('DatePicker', {});
+        var element = builder.buildType('DateTimePicker', {});
 
-        describe('Implementing DatePicker Methods', function () {
+        describe('Implementing DateTimePicker Methods', function () {
             ['getMinValue', 'setMinValue', 'getMaxValue', 'setMaxValue', 'getMode', 'setMode']
                 .forEach(function (methodName) {
                     it(methodName, function() {
@@ -33,7 +33,7 @@ describe('DatePicker', function () {
 
         it('Using default value', function () {
             var metadata = {
-                "DatePicker": {}
+                "DateTimePicker": {}
             };
 
             var element = builder.build(metadata, {});
@@ -51,7 +51,7 @@ describe('DatePicker', function () {
 
         it('Apply metadata', function () {
             var metadata = {
-                "DatePicker": {
+                "DateTimePicker": {
                     "Name": "DatePicker1",
                     "MinValue": "2015-09-01T15:26:42.0060+05:00",
                     "MaxValue": "2015-09-18T15:26:42.0060+05:00",
@@ -106,25 +106,25 @@ describe('DatePicker', function () {
 
         it('correct convert from string to date and from date to string', function () {
             // Given
-            var datePicker = new DatePicker();
+            var dateTimePicker = new DateTimwPicker();
 
-            datePicker.render();
+            dateTimePicker.render();
 
             // When
-            datePicker.setValue('2014-07-29');
+            dateTimePicker.setValue('2014-07-29');
 
             // Then
-            assert.equal(datePicker.getValue().substr(0, 10), '2014-07-29');
+            assert.equal(dateTimePicker.getValue().substr(0, 10), '2014-07-29');
         });
 
         it('event OnValueChanged', function () {
             // Given
-            var datePicker = new DatePicker(),
+            var dateTimePicker = new DateTimePicker(),
                 onValueChangedFlag = 0;
 
-            datePicker.render();
+            dateTimePicker.render();
 
-            datePicker.onValueChanged(function () {
+            dateTimePicker.onValueChanged(function () {
                 console.log(arguments);
                 onValueChangedFlag++;
             });
@@ -132,8 +132,8 @@ describe('DatePicker', function () {
             assert.equal(onValueChangedFlag, 0);
 
             // When
-            datePicker.setValue('2014-07-29');
-            datePicker.setValue('2014-07-30');
+            dateTimePicker.setValue('2014-07-29');
+            dateTimePicker.setValue('2014-07-30');
 
             // Then
             assert.equal(onValueChangedFlag, 2);

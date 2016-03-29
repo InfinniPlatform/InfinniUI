@@ -1,8 +1,8 @@
-var datePickerStrategy = (function () {
+var dateTimePickerStrategy = (function () {
 
-    function updateDropDownCalendarPosition($datePicker, $calendar) {
+    function updateDropDownCalendarPosition($dateTimePicker, $calendar) {
 
-        var rect = $datePicker[0].getBoundingClientRect();
+        var rect = $dateTimePicker[0].getBoundingClientRect();
 
         var style = {
             position: "absolute",
@@ -14,14 +14,14 @@ var datePickerStrategy = (function () {
     }
 
     return {
-        Date2: {
+        DatePicker: {
 
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new DatePickerDropdown({
+                var calendar = new SelectDate({
                     model: this.model
                 });
 
@@ -58,11 +58,11 @@ var datePickerStrategy = (function () {
         },
         Date: {
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new DatePickerDropdown({
+                var calendar = new SelectDate({
                     model: this.model
                 });
 
@@ -83,11 +83,11 @@ var datePickerStrategy = (function () {
 
         DateTime: {
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/dateTimePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/dateTime.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new DateTimePickerDropdown({
+                var calendar = new SelectDateTime({
                     model: this.model
                 });
                 calendar.render();
@@ -108,11 +108,11 @@ var datePickerStrategy = (function () {
 
         Time: {
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/timePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/time.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new TimePickerDropdown({
+                var calendar = new SelectTime({
                     model: this.model
                 });
                 calendar.render();

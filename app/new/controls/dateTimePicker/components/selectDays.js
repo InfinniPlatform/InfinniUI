@@ -1,4 +1,4 @@
-var DatePickerDaysModel = DatePickerComponentModel.extend({
+var SelectDaysModel = SelectComponentModel.extend({
     defaults: function () {
         var today = moment();
 
@@ -11,7 +11,7 @@ var DatePickerDaysModel = DatePickerComponentModel.extend({
     },
 
     initialize: function () {
-        DatePickerComponentModel.prototype.initialize.call(this);
+        SelectComponentModel.prototype.initialize.call(this);
         this.on('change:year', this.updateDatePart.bind(this, 'year'));
         this.on('change:month', this.updateDatePart.bind(this, 'month'));
         this.on('change:day', this.updateDatePart.bind(this, 'day'));
@@ -73,11 +73,11 @@ var DatePickerDaysModel = DatePickerComponentModel.extend({
 
 });
 
-var DatePickerDays = DatePickerComponent.extend({
+var SelectDays = SelectComponent.extend({
 
-    modelClass: DatePickerDaysModel,
+    modelClass: SelectDaysModel,
 
-    template: InfinniUI.Template["new/controls/datePicker/template/date/days.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/days.tpl.html"],
 
     UI: {
         headerDays: '.weekdays-head .day',

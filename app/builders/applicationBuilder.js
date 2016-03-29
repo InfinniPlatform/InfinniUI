@@ -44,7 +44,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
         builder.register('Icon', new IconBuilder());
-        builder.register('DatePicker', new DatePickerBuilder());
+        builder.register('DateTimePicker', new DateTimePickerBuilder());
         builder.register('ToggleButton', new ToggleButtonBuilder());
         builder.register('NumericBox', new NumericBoxBuilder());
         builder.register('Button', new ButtonBuilder());

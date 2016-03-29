@@ -1,4 +1,4 @@
-var DatePickerTimeModel = DatePickerComponentModel.extend({
+var SelectTimesModel = SelectComponentModel.extend({
 
     defaults: {
         today: moment().toDate(),
@@ -9,7 +9,7 @@ var DatePickerTimeModel = DatePickerComponentModel.extend({
     },
 
     initialize: function () {
-        DatePickerComponentModel.prototype.initialize.call(this);
+        SelectComponentModel.prototype.initialize.call(this);
         this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
         this.on('change:second', this.updateDatePart.bind(this, 'second'));
@@ -113,11 +113,11 @@ var DatePickerTimeModel = DatePickerComponentModel.extend({
 
 });
 
-var DatePickerTime = DatePickerComponent.extend({
+var SelectTimes = SelectComponent.extend({
 
-    modelClass: DatePickerTimeModel,
+    modelClass: SelectTimesModel,
 
-    template: InfinniUI.Template["new/controls/datePicker/template/time/time.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/time/time.tpl.html"],
 
     events: {
         "click .time-spin-down.time-spin-hour": "prevHour",

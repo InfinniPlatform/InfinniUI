@@ -1,4 +1,4 @@
-var DatePickerComponentModel = Backbone.Model.extend({
+var SelectComponentModel = Backbone.Model.extend({
 
     initialize: function () {
         this.on('change:date', this.onChangeDateHandler, this);

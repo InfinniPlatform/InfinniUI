@@ -1,7 +1,7 @@
-var DatePickerMinutesModel = DatePickerComponentModel.extend({
+var SelectMinutesModel = SelectComponentModel.extend({
 
     initialize: function () {
-        DatePickerComponentModel.prototype.initialize.call(this);
+        SelectComponentModel.prototype.initialize.call(this);
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
     },
 
@@ -40,11 +40,11 @@ var DatePickerMinutesModel = DatePickerComponentModel.extend({
 
 });
 
-var DatePickerMinutes = DatePickerComponent.extend({
+var SelectMinutes = SelectComponent.extend({
 
-    modelClass: DatePickerMinutesModel,
+    modelClass: SelectMinutesModel,
 
-    template: InfinniUI.Template["new/controls/datePicker/template/time/minutes.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/time/minutes.tpl.html"],
 
     events: {
         "click .minute:not('.minute-unavailable')": "useMinute"
