@@ -1,4 +1,4 @@
-var DatePickerMonthsModel = DatePickerComponentModel.extend({
+var SelectMonthsModel = SelectComponentModel.extend({
 
     defaults: {
         today: moment().toDate(),
@@ -7,7 +7,7 @@ var DatePickerMonthsModel = DatePickerComponentModel.extend({
     },
 
     initialize: function () {
-        DatePickerComponentModel.prototype.initialize.call(this);
+        SelectComponentModel.prototype.initialize.call(this);
         this.on('change:month', this.updateDatePart.bind(this, 'month'));
         this.on('change:year', this.updateDatePart.bind(this, 'year'));
     },
@@ -60,11 +60,11 @@ var DatePickerMonthsModel = DatePickerComponentModel.extend({
 
 });
 
-var DatePickerMonths = DatePickerComponent.extend({
+var SelectMonths = SelectComponent.extend({
 
-    modelClass: DatePickerMonthsModel,
+    modelClass: SelectMonthsModel,
 
-    template: InfinniUI.Template["new/controls/datePicker/template/date/months.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/months.tpl.html"],
 
     events: {
         "click .btn-year-prev": "prevYear",

@@ -205,7 +205,7 @@
                               }
                           },
                         {
-                          "DatePicker": {
+                          "DateTimePicker": {
                             "Visible": true,
                             "Mode": "Date",
                             "~DisplayFormat": "{:t}",

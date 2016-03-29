@@ -2,11 +2,11 @@
  * @class
  * @augments TextEditorBaseView
  */
-var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototype */{
+var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView.prototype */{
 
     className: "pl-datepicker form-group",
 
-    template: InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
         dropdownButton: '.pl-datepicker-calendar',
@@ -39,21 +39,21 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
     updateMode: function(){
         var mode = this.model.get('mode');
-        _.extend(this, datePickerStrategy[mode]);
+        _.extend(this, dateTimePickerStrategy[mode]);
 
         this.rerender();
     },
 
     updateMinValue: function(){
         var mode = this.model.get('mode');
-        _.extend(this, datePickerStrategy[mode]);
+        _.extend(this, dateTimePickerStrategy[mode]);
 
         this.rerender();
     },
 
     updateMaxValue: function(){
         var mode = this.model.get('mode');
-        _.extend(this, datePickerStrategy[mode]);
+        _.extend(this, dateTimePickerStrategy[mode]);
 
         this.rerender();
     },
@@ -70,7 +70,7 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
 
         this.renderTemplate(this.getTemplate());
         this.updateProperties();
-        this.renderDatePickerEditor();
+        this.renderDateTimePickerEditor();
 
         this.trigger('render');
 
@@ -90,7 +90,7 @@ var DatePickerView = TextEditorBaseView.extend(/** @lends DatePickerView.prototy
             });
     },
 
-    renderDatePickerEditor: function () {
+    renderDateTimePickerEditor: function () {
         var model = this.model;
         this.renderControlEditor({
             el: this.ui.editor,

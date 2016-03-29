@@ -1,4 +1,4 @@
-var DatePickerComponent = Backbone.View.extend({
+var SelectComponent = Backbone.View.extend({
 
     modelClass: Backbone.Model,
 
@@ -44,4 +44,4 @@ var DatePickerComponent = Backbone.View.extend({
 });
 
 
-_.extend(DatePickerComponent.prototype, bindUIElementsMixin);
+_.extend(SelectComponent.prototype, bindUIElementsMixin);

@@ -1,4 +1,4 @@
-var DatePickerYearsModel = DatePickerComponentModel.extend({
+var SelectYearsModel = SelectComponentModel.extend({
 
     defaults: {
         pageSize: 20,
@@ -7,7 +7,7 @@ var DatePickerYearsModel = DatePickerComponentModel.extend({
     },
 
     initialize: function () {
-        DatePickerComponentModel.prototype.initialize.call(this);
+        SelectComponentModel.prototype.initialize.call(this);
         this.on('change:year', this.updateDatePart.bind(this, 'year'));
         this.on('change:year', this.onChangeYearHandler);
     },
@@ -56,11 +56,11 @@ var DatePickerYearsModel = DatePickerComponentModel.extend({
     }
 });
 
-var DatePickerYears = DatePickerComponent.extend({
+var SelectYears = SelectComponent.extend({
 
-    modelClass: DatePickerYearsModel,
+    modelClass: SelectYearsModel,
 
-    template: InfinniUI.Template["new/controls/datePicker/template/date/years.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/years.tpl.html"],
 
     events: {
         'click .btn-year-prev': "prevPage",

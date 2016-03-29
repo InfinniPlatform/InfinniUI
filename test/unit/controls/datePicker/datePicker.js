@@ -1,17 +1,17 @@
-describe('DatePickerControl', function () {
+describe('DateTimePickerControl', function () {
     var builder = new ApplicationBuilder();
 
     describe('render', function () {
         it('should update date when change value', function () {
             //Given
-            var datePicker = builder.buildType('DatePicker', {});
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
             var oldDate = new Date(2012, 10, 2);
             var newDate = new Date(2014, 7, 28);
-            var $el = datePicker.render().find('.pl-datepicker-input');
-            datePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
+            var $el = dateTimePicker.render().find('.pl-datepicker-input');
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
 
             //When
-            datePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
 
             //Then
             assert.equal($el.val(), '28.08.2014');
@@ -19,40 +19,40 @@ describe('DatePickerControl', function () {
 
         it('should clear date when value is null', function () {
             //Given
-            var datePicker = new DatePickerControl();
+            var dateTimePicker = new DateTimePickerControl();
             var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
 
-            datePicker.setValue(value);
-            assert.equal( datePicker.getValue(), value);
+            dateTimePicker.setValue(value);
+            assert.equal( dateTimePicker.getValue(), value);
 
             //When
-            datePicker.setValue(null);
+            dateTimePicker.setValue(null);
 
             //Then
-            assert.isNull(datePicker.getValue());
+            assert.isNull(dateTimePicker.getValue());
         });
 
         it('should set minDate and maxDate', function () {
             //Given
-            var datePicker = builder.buildType('DatePicker', {});
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
             var minDate = InfinniUI.DateUtils.toISO8601(new Date(2010, 0, 1));
             var maxDate = InfinniUI.DateUtils.toISO8601(new Date(2014, 11, 31));
 
             //When
-            datePicker.setMinValue(minDate);
-            datePicker.setMaxValue(maxDate);
+            dateTimePicker.setMinValue(minDate);
+            dateTimePicker.setMaxValue(maxDate);
 
             //Then
-            assert.equal(datePicker.getMinValue(), minDate);
-            assert.equal(datePicker.getMaxValue(), maxDate);
+            assert.equal(dateTimePicker.getMinValue(), minDate);
+            assert.equal(dateTimePicker.getMaxValue(), maxDate);
         });
 
         it('should set Enabled', function () {
             //Given
-            var datePicker = builder.buildType('DatePicker', {});
-            datePicker.setEnabled(false);
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            dateTimePicker.setEnabled(false);
 
-            var $el = datePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
+            var $el = dateTimePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
             assert.equal($el.length, 2);
             $el.each(function (i, el) {
                 var $el = $(el);
@@ -60,7 +60,7 @@ describe('DatePickerControl', function () {
             });
 
             //When
-            datePicker.setEnabled(true);
+            dateTimePicker.setEnabled(true);
 
             //Then
             $el.each(function (i, el) {

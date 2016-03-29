@@ -1,8 +1,8 @@
-var TimePickerDropdown = DatePickerDropdown.extend({
+var SelectTime = SelectDate.extend({
 
     className: 'pl-timepicker-dropdown pl-dropdown-container',
 
-    template: InfinniUI.Template["new/controls/datePicker/template/timePicker.dropdown.tpl.html"],
+    template: InfinniUI.Template["new/controls/dateTimePicker/template/select.time.tpl.html"],
 
     UI: {
         times: '.times',
@@ -29,13 +29,13 @@ var TimePickerDropdown = DatePickerDropdown.extend({
         };
 
         options.el = this.ui.times;
-        var time = new DatePickerTime(options);
+        var time = new SelectTimes(options);
 
         options.el = this.ui.hours;
-        var hours = new DatePickerHours(options);
+        var hours = new SelectHours(options);
 
         options.el = this.ui.minutes;
-        var minutes = new DatePickerMinutes(options);
+        var minutes = new SelectMinutes(options);
 
 
         this.workflow(time, hours, minutes)(value);

@@ -1,8 +1,8 @@
-var datePickerStrategy = (function () {
+var dateTimePickerStrategy = (function () {
 
-    function updateDropDownCalendarPosition($datePicker, $calendar) {
+    function updateDropDownCalendarPosition($dateTimePicker, $calendar) {
 
-        var rect = $datePicker[0].getBoundingClientRect();
+        var rect = $dateTimePicker[0].getBoundingClientRect();
 
         var style = {
             position: "absolute",
@@ -14,13 +14,55 @@ var datePickerStrategy = (function () {
     }
 
     return {
-        Date: {
+        DatePicker: {
+
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/datePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new DatePickerDropdown({
+                var calendar = new SelectDate({
+                    model: this.model
+                });
+
+                calendar.render();
+                $('body').append(calendar.$el);
+
+                updateDropDownCalendarPosition(this.$el, calendar.$el);
+
+                this.listenTo(calendar, 'date', function (date) {
+                    this.model.set('value', this.convertValue(date));
+                });
+            },
+
+            onEditorDone: function (value) {
+                if(typeof value === 'undefined' || value === null || !value.toString().length) {
+                    value = null;
+                } else {
+                    //Дата в формате IS) 8601
+                    value = InfinniUI.DateUtils.dateToTimestamp(value);
+                }
+
+                this.model.set('value', value);
+            },
+
+            convertValue: function (value) {
+                var _value;
+                if (value && value.constructor === Date) {
+                    _value = InfinniUI.DateUtils.dateToTimestamp(value);
+                }
+
+                return _value;
+            }
+
+        },
+        Date: {
+            getTemplate: function () {
+                return InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"];
+            },
+
+            onClickDropdownHandler: function (event) {
+                var calendar = new SelectDate({
                     model: this.model
                 });
 
@@ -41,11 +83,11 @@ var datePickerStrategy = (function () {
 
         DateTime: {
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/dateTimePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/dateTime.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new DateTimePickerDropdown({
+                var calendar = new SelectDateTime({
                     model: this.model
                 });
                 calendar.render();
@@ -66,11 +108,11 @@ var datePickerStrategy = (function () {
 
         Time: {
             getTemplate: function () {
-                return InfinniUI.Template["new/controls/datePicker/template/timePicker.tpl.html"];
+                return InfinniUI.Template["new/controls/dateTimePicker/template/time.tpl.html"];
             },
 
             onClickDropdownHandler: function (event) {
-                var calendar = new TimePickerDropdown({
+                var calendar = new SelectTime({
                     model: this.model
                 });
                 calendar.render();
