@@ -139,7 +139,7 @@
             "Header": "Fuck",
             "CellTemplate": {
               "DateTimePicker": {
-                "Mode": "DatePicker",
+                "Mode": "Date",
                 "OnValueChanged": "{debugger; console.log(args.oldValue, args.newValue);}",
                 "Value": {
                   "Source": "Test",

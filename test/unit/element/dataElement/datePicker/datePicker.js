@@ -106,7 +106,7 @@ describe('DateTimePicker', function () {
 
         it('correct convert from string to date and from date to string', function () {
             // Given
-            var dateTimePicker = new DateTimwPicker();
+            var dateTimePicker = new DateTimePicker();
 
             dateTimePicker.render();
 

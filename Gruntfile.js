@@ -28,6 +28,8 @@
             'app/data/_common/**/*.js',
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
+            'app/new/elements/dateTimePicker/**/*.js',
+            'app/new/elements/datePicker/**/*.js',
             'app/new/elements/**/*.js',
 
             'app/actions/*.js',
