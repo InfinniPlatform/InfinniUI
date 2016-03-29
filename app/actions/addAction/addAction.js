@@ -27,7 +27,7 @@ _.extend(AddAction.prototype, {
     save: function(){
         var editDataSource = this.getProperty('editDataSource'),
             destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
+            destinationProperty = this.getProperty('destinationProperty')  || "";
 
         if( this._isObjectDataSource(editDataSource) ) {
             var items = destinationDataSource.getProperty(destinationProperty) || [],
