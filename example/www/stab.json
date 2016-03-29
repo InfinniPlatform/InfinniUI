@@ -138,9 +138,8 @@
           {
             "Header": "Fuck",
             "CellTemplate": {
-              "DateTimePicker": {
-                "Mode": "Date",
-                "OnValueChanged": "{debugger; console.log(args.oldValue, args.newValue);}",
+              "DatePicker": {
+                "OnValueChanged": "{ console.log(args.oldValue, args.newValue);}",
                 "Value": {
                   "Source": "Test",
                   "Property": "#.timestamp"
