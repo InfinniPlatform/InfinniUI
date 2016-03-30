@@ -13,8 +13,8 @@ TimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     metadata.TimeZone = 0;
 
     _.defaults(metadata, {
-        DisplayFormat: '{:t}',
-        EditMask: {DateTimeEditMask: {Mask: 't'}}
+        DisplayFormat: '{:T}',
+        EditMask: {DateTimeEditMask: {Mask: 'T'}}
     });
 
 };

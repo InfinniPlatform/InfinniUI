@@ -63,6 +63,24 @@ var SelectTimesModel = SelectComponentModel.extend({
         }
     },
 
+    nextSecond: function () {
+        var second = this.get('second');
+        second += 1;
+
+        if (second < 60) {
+            this.set('second', second, {validate: true});
+        }
+    },
+
+    prevSecond: function () {
+        var second = this.get('second');
+        second -= 1;
+
+        if (second >= 0) {
+            this.set('second', second, {validate: true});
+        }
+    },
+
     validate: function (attr, options) {
         var value = moment().set({
             hour: attr.hour,
@@ -122,8 +140,13 @@ var SelectTimes = SelectComponent.extend({
     events: {
         "click .time-spin-down.time-spin-hour": "prevHour",
         "click .time-spin-up.time-spin-hour": "nextHour",
+
         "click .time-spin-down.time-spin-minute": "prevMinute",
         "click .time-spin-up.time-spin-minute": "nextMinute",
+
+        "click .time-spin-down.time-spin-second": "prevSecond",
+        "click .time-spin-up.time-spin-second": "nextSecond",
+
         "click .time-segment-hour": "selectHour",
         "click .time-segment-minute": "selectMinute",
         "click .days": "selectDay"
@@ -133,7 +156,8 @@ var SelectTimes = SelectComponent.extend({
         month: '.month',
         year: '.year',
         hour: '.time-segment-hour',
-        minute: '.time-segment-minute'
+        minute: '.time-segment-minute',
+        second: '.time-segment-second'
     },
 
     render: function () {
@@ -172,6 +196,7 @@ var SelectTimes = SelectComponent.extend({
     initOnChangeHandlers: function () {
         this.listenTo(this.model, 'change:hour', this.updateHour);
         this.listenTo(this.model, 'change:minute', this.updateMinute);
+        this.listenTo(this.model, 'change:second', this.updateSecond);
         this.listenTo(this.model, 'change:date', this.useTime);
     },
 
@@ -183,6 +208,11 @@ var SelectTimes = SelectComponent.extend({
     updateMinute: function () {
         var minute = this.model.get('minute');
         this.ui.minute.text(stringUtils.padLeft(minute, 2, '0'));
+    },
+
+    updateSecond: function () {
+        var second = this.model.get('second');
+        this.ui.second.text(stringUtils.padLeft(second, 2, '0'));
     },
 
     prevHour: function () {
@@ -199,6 +229,14 @@ var SelectTimes = SelectComponent.extend({
 
     nextMinute: function () {
         this.model.nextMinute();
+    },
+
+    prevSecond: function () {
+        this.model.prevSecond();
+    },
+
+    nextSecond: function () {
+        this.model.nextSecond();
     },
 
     useTime: function () {
