@@ -13,6 +13,7 @@ var SelectTime = SelectDate.extend({
     renderComponents: function () {
         var model = this.model;
         var value = model.get('value');
+        var timeZone = model.get('timeZone');
         var m = moment(value);
 
         if (m.isValid()) {
@@ -20,6 +21,8 @@ var SelectTime = SelectDate.extend({
         } else {
             value = null;
         }
+
+        value = InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone);
 
         var options = {
             value: value,
@@ -42,7 +45,10 @@ var SelectTime = SelectDate.extend({
     },
 
     useTime: function (date) {
-        this.trigger('date', date);
+        var model = this.model;
+        var timeZone = model.get('timeZone');
+
+        this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
     },
 
     workflow: function (time, hours, minutes) {

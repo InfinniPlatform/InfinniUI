@@ -77,7 +77,7 @@ var dateTimePickerStrategy = (function () {
             },
 
             convertValue: function (value) {
-                return InfinniUI.DateUtils.toISO8601(value, {resetTime: true});
+                return InfinniUI.DateUtils.toISO8601(value, {timezoneOffset: this.model.get('timeZone')});
             }
         },
 
@@ -87,8 +87,9 @@ var dateTimePickerStrategy = (function () {
             },
 
             onClickDropdownHandler: function (event) {
+                var model = this.model;
                 var calendar = new SelectDateTime({
-                    model: this.model
+                    model: model
                 });
                 calendar.render();
                 $('body').append(calendar.$el);
@@ -96,12 +97,12 @@ var dateTimePickerStrategy = (function () {
                 updateDropDownCalendarPosition(this.$el, calendar.$el);
 
                 this.listenTo(calendar, 'date', function (date) {
-                    this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+                    model.set('value', InfinniUI.DateUtils.toISO8601(date, {timezoneOffset: model.get('timeZone')}));
                 });
             },
 
             convertValue: function (value) {
-                return InfinniUI.DateUtils.toISO8601(value);
+                return InfinniUI.DateUtils.toISO8601(value, {timezoneOffset: this.model.get('timeZone')});
             }
 
         },
@@ -112,8 +113,9 @@ var dateTimePickerStrategy = (function () {
             },
 
             onClickDropdownHandler: function (event) {
+                var model = this.model;
                 var calendar = new SelectTime({
-                    model: this.model
+                    model: model
                 });
                 calendar.render();
                 $('body').append(calendar.$el);
@@ -121,12 +123,12 @@ var dateTimePickerStrategy = (function () {
                 updateDropDownCalendarPosition(this.$el, calendar.$el);
                 
                 this.listenTo(calendar, 'date', function (date) {
-                    this.model.set('value', InfinniUI.DateUtils.toISO8601(date));
+                    model.set('value', InfinniUI.DateUtils.toISO8601(date, {timezoneOffset: model.get('timeZone')}));
                 });
             },
 
             convertValue: function (value) {
-                return InfinniUI.DateUtils.toISO8601(value);
+                return InfinniUI.DateUtils.toISO8601(value, {timezoneOffset: model.get('timeZone')});
             }
 
         }

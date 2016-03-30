@@ -4,16 +4,52 @@
     {
       "ObjectDataSource": {
         "Name": "Test",
+        "OnPropertyChanged": "{var d = new Date(args.newValue); console.log(d.toUTCString());}",
         "Items": [
-          {"Id": 1, "Name": "One", "Group": "odd"},
-          {"Id": 2, "Name": "Two", "Group": "even"},
-          {"Id": 3, "Name": "ThreeThreeThreeThreeThreeThreeThreeThreeThree", "Group": "odd"},
-          {"Id": 4, "Name": "Four", "Group": "even"},
-          {"Id": 5, "Name": "Five", "Group": "odd", "timestamp": 1458604800000},
-          {"Id": 6, "Name": "Six", "Group": "even"},
-          {"Id": 7, "Name": "Seven", "Group": "odd"}
+          {
+            "Id": 1,
+            "Name": "One",
+            "Group": "odd",
+            "Date": "2016-02-29T19:00:00.000Z"
+          },
+          {
+            "Id": 2,
+            "Name": "Two",
+            "Group": "even",
+            "Date": "2016-02-29T19:00:00.000Z"
+          },
+          {
+            "Id": 3,
+            "Name": "Three",
+            "Group": "odd",
+            "Date": "2016-02-29T19:00:00.000Z"
+          },
+          {
+            "Id": 4,
+            "Name": "Four",
+            "Group": "even",
+            "Date": "2016-02-29T19:00:00.000Z"
+          },
+          {
+            "Id": 5,
+            "Name": "Five",
+            "Group": "odd",
+            "Date": "2016-03-01T00:00:00.000Z"
+          },
+          {
+            "Id": 6,
+            "Name": "Six",
+            "Group": "even",
+            "Date": "2016-03-01T10:00:00.000Z"
+          },
+          {
+            "Id": 7,
+            "Name": "Seven",
+            "Group": "odd",
+            "Date": "2016-03-01T19:00:00.000Z"
+          }
         ],
-        "Query": [
+        "~Query": [
           {
             "Property": "Group",
             "Value": "odd",
@@ -37,12 +73,12 @@
       }
     },
     {
-      "ObjectDataSource":{
+      "ObjectDataSource": {
         "Name": "Clone",
-        "Items":{
+        "Items": {
           "Source": "BloodGroupDataSource",
-          "Converter":{
-            "ToElement":"{return [args.value[0]];}"
+          "Converter": {
+            "ToElement": "{return [args.value[0]];}"
           }
         }
       }
@@ -50,17 +86,38 @@
     {
       "ObjectDataSource": {
         "Name": "Numbers",
+        "OnValueChanged": "{console.log(args)}",
         "Items": [
-          {"value": 0},
-          {"value": 1},
-          {"value": 2},
-          {"value": 3},
-          {"value": 4},
-          {"value": 5},
-          {"value": 6},
-          {"value": 7},
-          {"value": 8},
-          {"value": 9}
+          {
+            "value": 0
+          },
+          {
+            "value": 1
+          },
+          {
+            "value": 2
+          },
+          {
+            "value": 3
+          },
+          {
+            "value": 4
+          },
+          {
+            "value": 5
+          },
+          {
+            "value": 6
+          },
+          {
+            "value": 7
+          },
+          {
+            "value": 8
+          },
+          {
+            "value": 9
+          }
         ]
       }
     },
@@ -119,7 +176,116 @@
       }
     }
   ],
-  "Items": [{
+  "Items": [
+    {
+      "GridPanel": {
+        "Items": [
+          {
+            "Cell": {
+              "ColumnSpan": 4,
+              "Items": [
+                {
+                  "DatePicker": {
+                    "LabelText": "Birthday",
+                    "Mode": "Date",
+                    "Value": {
+                      "Source": "Numbers",
+                      "Property": "$.Birthday"
+                    }
+                  }
+                },
+                {
+                  "Label": {
+                    "Text": {
+                      "Source": "Numbers",
+                      "Property": "$.Birthday"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Cell": {
+              "ColumnSpan": 4,
+              "Items": [
+                {
+                  "ExtensionPanel": {
+                    "ExtensionName": "TestExtension",
+                    "Parameters": [
+                      {
+                        "Name": "p1",
+                        "Value": {
+                          "Source": "BloodGroupDataSource",
+                          "Property": ""
+                        }
+                      }
+                    ],
+                    "Items": [
+                      {
+                        "NumericBox": {
+                          "Name": "NB",
+                          "Background": "Primary1",
+                          "HintText": "I'm NumericBox hint",
+                          "LabelText": "Numeric label",
+                          "Enabled": true,
+                          "MinValue": 0,
+                          "EditMask": {
+                            "NumberEditMask": {
+                              "Mask": "n3"
+                            }
+                          },
+                          "Value": {
+                            "Source": "BloodGroupDataSource",
+                            "Property": "$.Id"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Cell": {
+              "ColumnSpan": 4,
+              "Items": [
+                {
+                  "TestElement": {
+                    "TestProperty": "Value Of Test Property In TestElement"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Cell": {
+              "ColumnSpan": 4,
+              "Items": [
+                {
+                  "StackPanel": {
+                    "Items": {
+                      "Source": "Clone",
+                      "Property": ""
+                    },
+                    "ItemTemplate": {
+                      "Label": {
+                        "Value": {
+                          "Source": "Clone",
+                          "Property": "#.DisplayName"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
       "DataGrid": {
         "Columns": [
           {
@@ -128,25 +294,24 @@
           },
           {
             "Header": "Name",
-            "CellProperty": "Name",
-            "Width": "100px"
+            "CellProperty": "Name"
           },
           {
-            "Header": "timestamp",
-            "CellProperty": "timestamp"
+            "Header": "Group",
+            "CellProperty": "Group"
           },
           {
-            "Header": "Fuck",
+            "Header": "Date",
             "CellTemplate": {
               "DatePicker": {
-                "OnValueChanged": "{ console.log(args.oldValue, args.newValue);}",
+                "Mode": "DateTime",
+                "TimeZone": -180,
                 "Value": {
                   "Source": "Test",
-                  "Property": "#.timestamp"
+                  "Property": "#.Date"
                 }
               }
             }
-
           }
         ],
         "Items": {
@@ -155,25 +320,30 @@
       }
     },
     {
-      "ComboBox": {
-        "LabelText":{
-          "Source": "NB",
-          "Property": "value"
-        },
-        "ItemTemplate": {
-          "Label": {
-            "Text": {
-              "Source": "Test",
-              "Property": "#.Name"
-            }
+      "DataGrid": {
+        "Columns": [
+          {
+            "Header": "Id",
+            "CellProperty": "Id"
+          },
+          {
+            "Header": "Name",
+            "CellProperty": "Name"
+          },
+          {
+            "Header": "Group",
+            "CellProperty": "Group"
+          },
+          {
+            "Header": "Date",
+            "CellProperty": "Date"
           }
-        },
-        "Autocomplete": true,
-        "OnValueChanged": "{console.log(args);}",
+        ],
         "Items": {
           "Source": "Test"
         }
       }
-    }]
+    }
+  ]
 }
 

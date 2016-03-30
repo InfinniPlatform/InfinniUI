@@ -26,6 +26,7 @@ var SelectDate = Backbone.View.extend({
     renderComponents: function () {
         var model = this.model;
         var value = model.get('value');
+        var timeZone = model.get('timeZone');
         var m = moment(value);
 
         if (m.isValid()) {
@@ -33,6 +34,8 @@ var SelectDate = Backbone.View.extend({
         } else {
             value = null;
         }
+
+        value = InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone);
 
         var options = {
             value: value,
@@ -70,7 +73,10 @@ var SelectDate = Backbone.View.extend({
     },
 
     useValue: function (date) {
-        this.trigger('date', date);
+        var model = this.model;
+        var timeZone = model.get('timeZone');
+
+        this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
         this.remove();
     },
 

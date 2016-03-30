@@ -5,6 +5,8 @@
 function DateTimeEditMaskBuilder () {
     this.build = function (context, args) {
 
+        var formatOptions = args.formatOptions;
+
         var editMask = new DateTimeEditMask();
         var culture = new Culture(InfinniUI.config.lang);
         var mask;
@@ -18,7 +20,7 @@ function DateTimeEditMaskBuilder () {
         editMask.mask = mask;
 
         editMask.format = args.builder.buildType('DateTimeFormat', {Format: args.metadata.Mask}, {parentView: args.parentView});
-
+        editMask.format.setOptions(formatOptions);
         return editMask;
     }
 }

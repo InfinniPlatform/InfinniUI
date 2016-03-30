@@ -522,10 +522,11 @@ _.extend(DateTimeEditMask.prototype, {
      * @returns {*}
      */
     getValue: function () {
+        var formatOptions = this.format.getOptions();
         var template = this.template;
         var item;
         var mask;
-        var value = this.value;
+        var value =  InfinniUI.DateUtils.changeTimezoneOffset(this.value, formatOptions.TimeZone );
         var done = true;
 
         for (var i = 0; i < template.length; i = i + 1) {
@@ -541,6 +542,10 @@ _.extend(DateTimeEditMask.prototype, {
             }
         }
 
+        if (done && value instanceof Date) {
+            //value.setHours(0, 0, 0, 0);
+            value =  InfinniUI.DateUtils.restoreTimezoneOffset(value, formatOptions.TimeZone);
+        }
 
         return done ? value : null;
     },
@@ -550,7 +555,9 @@ _.extend(DateTimeEditMask.prototype, {
      * @returns {String}
      */
     getData: function () {
-        return InfinniUI.DateUtils.toISO8601(this.getValue());
+        var formatOptions = this.format.getOptions();
+
+        return InfinniUI.DateUtils.toISO8601(this.getValue(), {timezoneOffset: formatOptions.TimeZone});
     },
 
     /**
@@ -579,7 +586,7 @@ _.extend(DateTimeEditMask.prototype, {
         this.template = this.buildTemplate(date);
 
         if (this.value === null) {
-            this.value = new Date(0, 0, 0, 0, 0, 0, 0);
+            this.value = new Date(0, 0);
         }
     },
 
