@@ -5,6 +5,7 @@ window.InfinniUI.DateUtils = (function () {
     return {
         toISO8601: toISO8601,
         dateToTimestamp: dateToTimestamp,
+        dateToTimestampTime: dateToTimestampTime,
         changeTimezoneOffset: changeTimezoneOffset,
         restoreTimezoneOffset: restoreTimezoneOffset
     };
@@ -107,6 +108,24 @@ window.InfinniUI.DateUtils = (function () {
         }
 
         return datetime;
+    }
+
+    function dateToTimestampTime(date) {
+        var time, _date, datetime;
+
+        if (date && date.constructor === String) {
+            _date = new Date(date);
+        } else if (date && date.constructor === Date) {
+            _date = date;
+        }
+
+        if (_date) {
+            datetime = new Date(0);
+            datetime.setUTCHours(_date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds());
+            time = datetime.getTime();
+        }
+
+        return time;
     }
 
     function padInt(value, size) {

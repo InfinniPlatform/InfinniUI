@@ -10,6 +10,7 @@ DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
 
     var metadata = params.metadata;
     metadata.Mode = 'DatePicker';
+    metadata.TimeZone = 0;
 
     _.defaults(metadata, {
         DisplayFormat: '{:d}',
