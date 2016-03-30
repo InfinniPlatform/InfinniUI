@@ -103,7 +103,7 @@ window.InfinniUI.DateUtils = (function () {
         }
 
         if (_date) {
-            _date = new Date(Date.UTC(_date.getFullYear(), _date.getMonth(), _date.getDate()));
+            _date.setUTCHours(0, 0, 0, 0);
             datetime = _date.getTime();
         }
 
