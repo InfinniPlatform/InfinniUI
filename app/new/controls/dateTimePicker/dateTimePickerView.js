@@ -115,6 +115,19 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
         throw new Error('Не перекрыт getTemplate');
     },
 
-    onClickDropdownHandler: function (event) {}
+    onClickDropdownHandler: function (event) {},
+
+    updateDropDownCalendarPosition: function ($dateTimePicker, $calendar) {
+
+        var rect = $dateTimePicker[0].getBoundingClientRect();
+
+        var style = {
+            position: "absolute",
+            top: window.pageYOffset + rect.bottom,
+            left: window.pageXOffset + rect.right - $calendar.width()
+        };
+
+        $calendar.css(style);
+    }
 
 });

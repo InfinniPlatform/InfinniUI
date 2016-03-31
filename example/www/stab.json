@@ -303,9 +303,8 @@
           {
             "Header": "Date",
             "CellTemplate": {
-              "DatePicker": {
+              "DateTimePicker": {
                 "Mode": "DateTime",
-                "TimeZone": -180,
                 "Value": {
                   "Source": "Test",
                   "Property": "#.Date"
