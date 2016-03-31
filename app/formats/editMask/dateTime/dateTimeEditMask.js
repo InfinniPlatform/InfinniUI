@@ -3,6 +3,8 @@ function DateTimeEditMask() {
     this.format = null;
 }
 
+_.extend(DateTimeEditMask.prototype, editMaskMixin);
+
 _.extend(DateTimeEditMask.prototype, {
 
     /**
@@ -264,6 +266,10 @@ _.extend(DateTimeEditMask.prototype, {
         var width;
         var index;
         var result = null;
+
+        if (!Array.isArray(template)) {
+            return null;
+        }
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') {
@@ -434,13 +440,17 @@ _.extend(DateTimeEditMask.prototype, {
 
     /**
      * Получить представление значения для MaskedEdit
-     * @returns {string}
+     * @returns {string|*}
      */
     getText: function () {
         var template = this.template;
         var item;
         var result = [];
         var placeholder;
+
+        if (!Array.isArray(template)) {
+            return;
+        }
 
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
@@ -516,7 +526,6 @@ _.extend(DateTimeEditMask.prototype, {
         return template;
     },
 
-
     /**
      * Вернуть введеный результат
      * @returns {*}
@@ -528,6 +537,10 @@ _.extend(DateTimeEditMask.prototype, {
         var mask;
         var value =  InfinniUI.DateUtils.changeTimezoneOffset(this.value, formatOptions.TimeZone );
         var done = true;
+
+        if (!Array.isArray(template)) {
+            return;
+        }
 
         for (var i = 0; i < template.length; i = i + 1) {
             item = template[i];

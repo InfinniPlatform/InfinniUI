@@ -119,6 +119,10 @@ _.extend(NumberEditMask.prototype, {
         var result = [];
         var item;
 
+        if (!Array.isArray(this.template)) {
+            return;
+        }
+
         for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
             item = this.template[i];
             if (typeof item === 'string') {
@@ -470,9 +474,13 @@ _.extend(NumberEditMask.prototype, {
     },
 
     getValue: function () {
+        var value;
         var itemTemplate = this.getItemTemplate();
 
-        return itemTemplate.item.value;
+        if (itemTemplate) {
+            value = itemTemplate.item.value;
+        }
+        return value;
     },
 
     /**
@@ -534,6 +542,10 @@ _.extend(NumberEditMask.prototype, {
         var item;
         var left = 0;
         var result = null;
+
+        if (!Array.isArray(template)) {
+            return null;
+        }
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') {
