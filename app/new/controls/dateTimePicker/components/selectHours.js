@@ -65,8 +65,7 @@ var SelectHours = SelectComponent.extend({
     fillHoursTable: function () {
         //@TODO Заполнять в зависимости от формата 12/24
         var
-            model = this.model,
-            valueDate = model.get('value');
+            model = this.model;
         var now = new Date();
 
         this.ui.hour.each(function (i, el) {

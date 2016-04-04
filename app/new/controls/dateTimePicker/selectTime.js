@@ -7,12 +7,13 @@ var SelectTime = SelectDate.extend({
     UI: {
         times: '.times',
         hours: '.hours',
-        minutes: '.minutes'
+        minutes: '.minutes',
+        seconds: '.seconds'
     },
 
     renderComponents: function () {
         var model = this.model;
-        var value = model.get('value');
+        var value = InfinniUI.DateUtils.createDate(model.get('value'));
         var timeZone = model.get('timeZone');
         var m = moment(value);
 
@@ -40,8 +41,10 @@ var SelectTime = SelectDate.extend({
         options.el = this.ui.minutes;
         var minutes = new SelectMinutes(options);
 
+        options.el = this.ui.seconds;
+        var seconds = new SelectSeconds(options);
 
-        this.workflow(time, hours, minutes)(value);
+        this.workflow(time, hours, minutes, seconds)(value);
     },
 
     useTime: function (date) {
@@ -51,7 +54,7 @@ var SelectTime = SelectDate.extend({
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
     },
 
-    workflow: function (time, hours, minutes) {
+    workflow: function (time, hours, minutes, seconds) {
         var useTime = this.useTime.bind(this);
         var components = Array.prototype.slice.call(arguments);
 
@@ -61,6 +64,9 @@ var SelectTime = SelectDate.extend({
             .listenTo(time, 'minute', function (date) {
                 showMinutes(date);
             })
+            .listenTo(time, 'second', function (date) {
+                showSeconds(date);
+            })
             .listenTo(time, 'date', function (date) {
                 useTime(date);
             })
@@ -69,6 +75,10 @@ var SelectTime = SelectDate.extend({
                 showTime(date);
             })
             .listenTo(minutes, 'minute', function (date) {
+                useTime(date);
+                showTime(date);
+            })
+            .listenTo(seconds, 'second', function (date) {
                 useTime(date);
                 showTime(date);
             });
@@ -92,6 +102,11 @@ var SelectTime = SelectDate.extend({
         function showMinutes(date) {
             minutes.setDate(date);
             switchComponent(minutes);
+        }
+
+        function showSeconds(date) {
+            seconds.setDate(date);
+            switchComponent(seconds);
         }
 
         function showTime(date) {

@@ -1,11 +1,5 @@
 var SelectMonthsModel = SelectComponentModel.extend({
 
-    defaults: {
-        today: moment().toDate(),
-        todayMonth: moment().month(),
-        todayYear: moment().year()
-    },
-
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
         this.on('change:month', this.updateDatePart.bind(this, 'month'));

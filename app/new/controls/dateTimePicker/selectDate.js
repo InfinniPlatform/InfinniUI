@@ -25,7 +25,7 @@ var SelectDate = Backbone.View.extend({
 
     renderComponents: function () {
         var model = this.model;
-        var value = model.get('value');
+        var value = InfinniUI.DateUtils.createDate(model.get('value'));
         var timeZone = model.get('timeZone');
         var m = moment(value);
 
@@ -128,12 +128,7 @@ var SelectDate = Backbone.View.extend({
     onClickTodayHandler: function () {
         var days = this.days,
             months = this.months,
-            years = this.years,
-            today = moment().toDate();
-
-        //days.setDate(today);
-        //months.setDate(today);
-        //years.setDate(today);
+            years = this.years;
 
         days.today();
         months.today();

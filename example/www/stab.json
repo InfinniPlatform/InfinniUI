@@ -185,7 +185,7 @@
               "ColumnSpan": 4,
               "Items": [
                 {
-                  "DatePicker": {
+                  "TimePicker": {
                     "LabelText": "Birthday",
                     "Mode": "Date",
                     "Value": {
@@ -305,6 +305,7 @@
             "CellTemplate": {
               "DateTimePicker": {
                 "Mode": "DateTime",
+                "TimeZone": -180,
                 "Value": {
                   "Source": "Test",
                   "Property": "#.Date"
@@ -313,6 +314,14 @@
             }
           }
         ],
+        "RowBackground": {
+          "Source": "Test",
+          "Mode": "ToElement",
+          "Property": "#",
+          "Converter": {
+            "ToElement": "{return args.value.Id <= 2 ? 'less' : 'more';}"
+          }
+        },
         "Items": {
           "Source": "Test"
         }

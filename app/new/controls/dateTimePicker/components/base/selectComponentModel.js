@@ -1,5 +1,20 @@
 var SelectComponentModel = Backbone.Model.extend({
 
+    defaults: function () {
+        var today = new Date();
+
+        return {
+            today: today,
+            todayMonth: today.getMonth(),
+            todayDay: today.getDate(),
+            todayYear: today.getFullYear(),
+            hour: today.getHours(),
+            minute: today.getMinutes(),
+            second: today.getSeconds(),
+            millisecond: today.getMilliseconds()
+        }
+    },
+
     initialize: function () {
         this.on('change:date', this.onChangeDateHandler, this);
     },
@@ -31,7 +46,7 @@ var SelectComponentModel = Backbone.Model.extend({
     updateDatePart: function (datePart, model, value) {
         var
             d = this.get('date'),
-            date = new Date(d),
+            date = InfinniUI.DateUtils.createDate(d),
             data = this.toJSON();
 
         switch (datePart) {

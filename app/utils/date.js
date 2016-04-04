@@ -7,8 +7,21 @@ window.InfinniUI.DateUtils = (function () {
         dateToTimestamp: dateToTimestamp,
         dateToTimestampTime: dateToTimestampTime,
         changeTimezoneOffset: changeTimezoneOffset,
-        restoreTimezoneOffset: restoreTimezoneOffset
+        restoreTimezoneOffset: restoreTimezoneOffset,
+        toDate: toDate,
+        createDate: createDate
     };
+
+    function toDate(value) {
+        var m = moment(value);
+        var date = null;
+
+        if (m.isValid()) {
+            date = m.toDate();
+        }
+
+        return date;
+    }
 
     function changeTimezoneOffset(date, timezoneOffset) {
         var newDate = date;
@@ -90,11 +103,11 @@ window.InfinniUI.DateUtils = (function () {
     }
 
     /**
-     * @description Возвращает заданную дату как количество миллисекунд, прошедших с 01-01-1970T00:00 по UTC
+     * @description Возвращает заданную дату как количество секунд, прошедших с 01-01-1970T00:00 по UTC
      * @param {String|Date} date ISO8601
      */
     function dateToTimestamp(date) {
-        var time, _date, datetime;
+        var _date, datetime = null;
 
         if (date && date.constructor === String) {
             _date = new Date(date);
@@ -104,14 +117,14 @@ window.InfinniUI.DateUtils = (function () {
 
         if (_date) {
             _date.setUTCHours(0, 0, 0, 0);
-            datetime = _date.getTime();
+            datetime = _date.getTime() / 1000;
         }
 
         return datetime;
     }
 
     function dateToTimestampTime(date) {
-        var time, _date, datetime;
+        var time = null, _date, datetime;
 
         if (date && date.constructor === String) {
             _date = new Date(date);
@@ -122,10 +135,27 @@ window.InfinniUI.DateUtils = (function () {
         if (_date) {
             datetime = new Date(0);
             datetime.setUTCHours(_date.getUTCHours(), _date.getUTCMinutes(), _date.getUTCSeconds(), _date.getUTCMilliseconds());
-            time = datetime.getTime();
+            time = datetime.getTime() / 1000;
         }
 
         return time;
+    }
+
+    function createDate(d) {
+        var date;
+
+        if (typeof d === Date) {
+            date = d;
+        } else if (typeof d === 'number') {
+            //Числовое значение интерпретируем как секунды (as unix-time)!
+            date = new Date(d * 1000);
+        } else if (typeof d === 'undefined' || d === null) {
+            date = null;
+        } else {
+            date = toDate(d);
+        }
+
+        return date;
     }
 
     function padInt(value, size) {

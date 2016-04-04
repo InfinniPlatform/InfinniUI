@@ -1,13 +1,5 @@
 var SelectTimesModel = SelectComponentModel.extend({
 
-    defaults: {
-        today: moment().toDate(),
-        hour: moment().hour(),
-        minute: moment().minute(),
-        second: moment().second(),
-        millisecond: moment().millisecond()
-    },
-
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
         this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
@@ -19,14 +11,6 @@ var SelectTimesModel = SelectComponentModel.extend({
     nextHour: function () {
         var hour = this.get('hour');
         hour += 1;
-
-        var value = moment().set({
-            hour: hour,
-            minute: this.get('minute'),
-            second: this.get('second'),
-            millisecond: this.get('millisecond')
-        });
-
 
         //@TODO Границу использовать в зависимости от 12/24 формата записи даты из настроек локализации
         if (hour < 24) {
@@ -149,6 +133,7 @@ var SelectTimes = SelectComponent.extend({
 
         "click .time-segment-hour": "selectHour",
         "click .time-segment-minute": "selectMinute",
+        "click .time-segment-second": "selectSecond",
         "click .days": "selectDay"
     },
 
@@ -191,6 +176,18 @@ var SelectTimes = SelectComponent.extend({
 
         date.setHours(hour, minute, second);
         this.trigger('minute', date);
+    },
+
+    selectSecond: function () {
+        var
+            model = this.model,
+            date = model.get('date'),
+            hour = model.get('hour'),
+            minute = model.get('minute'),
+            second = model.get('second');
+
+        date.setHours(hour, minute, second);
+        this.trigger('second', date);
     },
 
     initOnChangeHandlers: function () {

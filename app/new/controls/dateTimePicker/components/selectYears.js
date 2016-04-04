@@ -1,9 +1,12 @@
 var SelectYearsModel = SelectComponentModel.extend({
 
-    defaults: {
-        pageSize: 20,
-        page: 0,
-        todayYear: moment().year()
+    defaults: function () {
+        var defaults = SelectComponentModel.prototype.defaults.call(this);
+
+        return _.defaults({
+            pageSize: 20,
+            page: 0
+        }, defaults);
     },
 
     initialize: function () {

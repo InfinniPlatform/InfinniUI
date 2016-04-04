@@ -1,14 +1,4 @@
 var SelectDaysModel = SelectComponentModel.extend({
-    defaults: function () {
-        var today = moment();
-
-        return {
-            today: today.toDate(),
-            todayMonth: today.month(),
-            todayDay: today.date(),
-            todayYear: today.year()
-        }
-    },
 
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
@@ -121,8 +111,6 @@ var SelectDays = SelectComponent.extend({
     },
 
     fillLegend: function () {
-        var date = new Date();
-
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
         var days = dateTimeFormatInfo.abbreviatedDayNames.map(function (day, i) {
@@ -166,13 +154,17 @@ var SelectDays = SelectComponent.extend({
 
         var weekdays = [0,1,2,3,4,5,6];
         Array.prototype.push.apply(weekdays, weekdays.splice(0, firstDayOfWeek));
-        var startDate = new Date(year, month, 1 - weekdays.indexOf(weekday));
+        var start = new Date(year, month, 1 - weekdays.indexOf(weekday));
+
+        var startYear = start.getFullYear(),
+            startMonth = start.getMonth(),
+            startDate = start.getDate();
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
-            var d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+            var d = new Date(startYear, startMonth, startDate + i);
             $el.text(d.getDate());
-            $el.attr('data-date', moment(d).format('YYYY-MM-DD'));
+            $el.attr('data-date', d);
             markActiveMonth($el, d.getMonth() === month);
             markToday($el, d);
             markSelected($el, d);
@@ -235,15 +227,13 @@ var SelectDays = SelectComponent.extend({
 
     useDay: function (event) {
         var $el = $(event.target),
-            value = $el.attr('data-date'),
-            m = moment(value, 'YYYY-MM-DD');
+            date = new Date($el.attr('data-date'));
 
         this.model.set({
-            year: m.year(),
-            month: m.month(),
-            day: m.date()
+            year: date.getFullYear(),
+            month: date.getMonth(),
+            day: date.getDate()
         });
-
 
         this.trigger('date', this.model.get('date'));
     }
