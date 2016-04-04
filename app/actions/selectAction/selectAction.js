@@ -10,11 +10,11 @@ _.extend(SelectAction.prototype, {
         var parentView = this.parentView;
         var linkView = this.getProperty('linkView');
 
-        var srcDataSourceName = this.getProperty('srcDataSourceName');
-        var srcPropertyName = this.getProperty('srcPropertyName');
+        var srcDataSourceName = this.getProperty('sourceSource');
+        var srcPropertyName = this.getProperty('sourceProperty');
 
-        var dstDataSourceName = this.getProperty('dstDataSourceName');
-        var dstPropertyName = this.getProperty('dstPropertyName');
+        var dstDataSourceName = this.getProperty('destinationSource');
+        var dstPropertyName = this.getProperty('destinationProperty');
 
         linkView.createView(function(createdView){
 
