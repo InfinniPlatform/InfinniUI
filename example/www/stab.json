@@ -185,9 +185,18 @@
               "ColumnSpan": 4,
               "Items": [
                 {
+                  "Button": {
+                    "Text": "Test",
+                    "OnClick": "{debugger; console.log(args);)"
+                  }
+                },
+                {
                   "TimePicker": {
                     "LabelText": "Birthday",
+                    "Name": "BirthdayTimePicker",
                     "Mode": "Date",
+                    "MinValue": "12:00",
+                    "MaxValue": "14:00",
                     "Value": {
                       "Source": "Numbers",
                       "Property": "$.Birthday"

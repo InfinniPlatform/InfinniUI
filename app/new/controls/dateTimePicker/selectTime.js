@@ -14,6 +14,7 @@ var SelectTime = SelectDate.extend({
     renderComponents: function () {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate(model.get('value'));
+        var today = InfinniUI.DateUtils.createDate(model.get('today'));
         var timeZone = model.get('timeZone');
         var m = moment(value);
 
@@ -24,10 +25,14 @@ var SelectTime = SelectDate.extend({
         }
 
         value = InfinniUI.DateUtils.changeTimezoneOffset(value, timeZone);
+        //if (value === null || typeof value === 'undefined') {
+        //    value = today;
+        //}
 
         var options = {
             value: value,
-            //date: value,
+            today: today,
+            //date: date,
             max: model.get('maxValue'),
             min: model.get('minValue')
         };
@@ -51,7 +56,15 @@ var SelectTime = SelectDate.extend({
         var model = this.model;
         var timeZone = model.get('timeZone');
 
+        var min = model.get('minValue'),
+            max = model.get('maxValue');
+
+        if (!InfinniUI.DateUtils.checkRangeDate(date, min, max)) {
+            date = InfinniUI.DateUtils.getNearestDate(date, min, max);
+        }
+
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
+        return date;
     },
 
     workflow: function (time, hours, minutes, seconds) {
@@ -71,16 +84,16 @@ var SelectTime = SelectDate.extend({
                 useTime(date);
             })
             .listenTo(hours, 'hour', function (date) {
-                useTime(date);
-                showTime(date);
+                var value = useTime(date);
+                showTime(value);
             })
             .listenTo(minutes, 'minute', function (date) {
-                useTime(date);
-                showTime(date);
+                var value = useTime(date);
+                showTime(value);
             })
             .listenTo(seconds, 'second', function (date) {
-                useTime(date);
-                showTime(date);
+                var value = useTime(date);
+                showTime(value);
             });
 
         return showTime;

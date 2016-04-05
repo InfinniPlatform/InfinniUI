@@ -20,13 +20,21 @@ DateTimePickerBuilder.prototype.applyMetadata = function (params) {
     TextEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
     element.setTimeZone(metadata.TimeZone);
-    element.setMinValue(metadata.MinValue);
-    element.setMaxValue(metadata.MaxValue);
     element.setMode(metadata.Mode);
 
+    this.applyMinValue(element, metadata.MinValue);
+    this.applyMaxValue(element, metadata.MaxValue);
 
     //var format = params.builder.buildType(params.parent, 'DateFormat', {}, null);
     //element.setDateFormat(format);
+};
+
+DateTimePickerBuilder.prototype.applyMinValue = function (element, minValue) {
+    element.setMinValue(minValue);
+};
+
+DateTimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
+    element.setMaxValue(maxValue);
 };
 
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {

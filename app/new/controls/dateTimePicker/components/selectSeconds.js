@@ -3,39 +3,6 @@ var SelectSecondsModel = SelectComponentModel.extend({
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
         this.on('change:second', this.updateDatePart.bind(this, 'second'));
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        [mMin, mMax].forEach(function (val) {
-            val.set({
-                year: mVal.year(),
-                month: mVal.month(),
-                date: mVal.date()
-            });
-        });
-
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'second') || mVal.isSame(mMin, 'second') || mVal.isSame(mMax, 'second');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'second') || mMin.isSame(value, 'second');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'second') || mMax.isSame(value, 'second');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
     }
 
 });
@@ -95,8 +62,10 @@ var SelectSeconds = SelectComponent.extend({
             date = model.get('date'),
             second = parseInt($el.attr('data-second'), 10);
 
-        date.setSeconds(second);
-        this.trigger('second', date);
+        var newDate = InfinniUI.DateUtils.cloneDate(date);
+
+        newDate.setSeconds(second);
+        this.trigger('second', newDate);
     }
 
 });

@@ -13,56 +13,72 @@ var SelectTimesModel = SelectComponentModel.extend({
         hour += 1;
 
         //@TODO Границу использовать в зависимости от 12/24 формата записи даты из настроек локализации
-        if (hour < 24) {
-            this.set('hour', hour, {validate: true});
+        if (hour > 23) {
+            return;
         }
 
+        this.set('hour', hour);
+        this.keepDateInRange();
     },
 
     prevHour: function () {
         var hour = this.get('hour');
         hour -= 1;
 
-        if (hour >= 0) {
-            this.set('hour', hour, {validate: true});
+        if (hour < 0) {
+            return;
         }
+
+        this.set('hour', hour);
+        this.keepDateInRange();
     },
 
     nextMinute: function () {
         var minute = this.get('minute');
         minute += 1;
 
-        if (minute < 60) {
-            this.set('minute', minute, {validate: true});
+        if (minute >= 60) {
+            return;
         }
 
+        this.set('minute', minute);
+        this.keepDateInRange();
     },
 
     prevMinute: function () {
         var minute = this.get('minute');
         minute -= 1;
 
-        if (minute >= 0) {
-            this.set('minute', minute, {validate: true});
+        if (minute < 0) {
+            return;
         }
+
+        this.set('minute', minute);
+        this.keepDateInRange();
     },
 
     nextSecond: function () {
         var second = this.get('second');
         second += 1;
 
-        if (second < 60) {
-            this.set('second', second, {validate: true});
+        if (second >= 60) {
+            return;
         }
+
+        this.set('second', second);
+        this.keepDateInRange();
     },
 
     prevSecond: function () {
         var second = this.get('second');
         second -= 1;
 
-        if (second >= 0) {
-            this.set('second', second, {validate: true});
+        if (second < 0) {
+            return;
         }
+
+        this.set('second', second);
+        this.keepDateInRange();
     },
 
     validate: function (attr, options) {
@@ -76,42 +92,7 @@ var SelectTimesModel = SelectComponentModel.extend({
         if (!this.checkRange(value)) {
             return 'Out of range';
         }
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        [mMin, mMax].forEach(function (val) {
-            val.set({
-                year: mVal.year(),
-                month: mVal.month(),
-                date: mVal.date()
-            });
-        });
-
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'minute') || mVal.isSame(mMin, 'minute') || mVal.isSame(mMax, 'minute');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'minute') || mMin.isSame(value, 'minute');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'minute') || mMax.isSame(value, 'minute');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
     }
-
 
 });
 

@@ -70,6 +70,7 @@ var SelectDateTime = SelectDate.extend({
         var model = this.model;
         var timeZone = model.get('timeZone');
 
+
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
     },
 

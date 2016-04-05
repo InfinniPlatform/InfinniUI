@@ -9,8 +9,83 @@ window.InfinniUI.DateUtils = (function () {
         changeTimezoneOffset: changeTimezoneOffset,
         restoreTimezoneOffset: restoreTimezoneOffset,
         toDate: toDate,
-        createDate: createDate
+        createDate: createDate,
+        parseTimeISO8601toDate: parseTimeISO8601toDate,
+        checkRangeDate: checkRangeDate,
+        getNearestDate: getNearestDate,
+        cloneDate: cloneDate
     };
+
+    function cloneDate(date) {
+        if (date instanceof Date) {
+            return new Date(date.getTime());
+        }
+        return date;
+    }
+
+    /**
+     * @description Возвращает ближаешее к исходному значению из диапазона
+     * @param date
+     * @param min
+     * @param max
+     * @returns {Date}
+     */
+    function getNearestDate(date, min, max) {
+        var nearest;
+
+        var mMin = moment(min),
+            mMax = moment(max),
+            mVal = moment(date);
+
+
+        if (mMin.isValid() && mVal.isBefore(mMin)) {
+            nearest = mMin.toDate();
+        } else if (mMax.isValid() && mVal.isAfter(mMax)) {
+            nearest = mMax.toDate();
+        } else {
+            nearest = date;
+        }
+
+        return nearest;
+    }
+
+    /**
+     * @description Проверяет, что дата находится в заданном диапазоне
+     * @param date
+     * @param minDate
+     * @param maxDate
+     * @param {String} precision
+     * @returns {boolean}
+     */
+    function checkRangeDate(date, minDate, maxDate, precision) {
+        var success = true;
+
+        var mMin = moment(minDate),
+            mMax = moment(maxDate),
+            mVal = moment(date);
+
+
+        if (mMin.isValid() && mMax.isValid()) {
+            success = mVal.isSameOrBefore(mMax, precision) && mVal.isSameOrAfter(mMin, precision);
+        } else if (mMin.isValid()) {
+            success = mVal.isSameOrAfter(mMin, precision);
+        } else if (mMax.isValid()) {
+            success = mVal.isSameOrBefore(mMax, precision);
+        }
+
+        return success;
+    }
+
+    function parseTimeISO8601toDate(value) {
+        var date;
+        var formats = ['HH:mm', 'HH:mm:ss', 'HH:mm:ss.SSS', 'HHmm', 'HHmmss', 'HHmmss.SSS'];
+        var m = moment(value, formats);
+        if (m.isValid()) {
+            date = new Date(0);
+            date.setHours(m.hours(), m.minute(), m.second(), m.millisecond());
+        }
+        return date;
+    }
 
     function toDate(value) {
         var m = moment(value);
@@ -145,7 +220,7 @@ window.InfinniUI.DateUtils = (function () {
         var date;
 
         if (typeof d === Date) {
-            date = d;
+            date = new Date(d.getTime());
         } else if (typeof d === 'number') {
             //Числовое значение интерпретируем как секунды (as unix-time)!
             date = new Date(d * 1000);

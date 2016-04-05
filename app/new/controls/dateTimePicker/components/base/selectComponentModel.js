@@ -46,8 +46,9 @@ var SelectComponentModel = Backbone.Model.extend({
     updateDatePart: function (datePart, model, value) {
         var
             d = this.get('date'),
-            date = InfinniUI.DateUtils.createDate(d),
+            date = InfinniUI.DateUtils.createDate(d) ||  this.get('today'),
             data = this.toJSON();
+
 
         switch (datePart) {
             case 'hour':
@@ -61,11 +62,42 @@ var SelectComponentModel = Backbone.Model.extend({
                 date.setFullYear(data.year, data.month, data.day);
                 break;
         }
+
         this.set('date', date);
     },
 
-    checkRange: function (value) {
-        return true;
+    checkRange: function (date, precision) {
+        var min = this.get('min'),
+            max = this.get('max');
+
+        return InfinniUI.DateUtils.checkRangeDate(date, min, max, precision);
+    },
+
+    keepDateInRange: function () {
+        if (this.isValid()) {
+            return;
+        }
+        var date = InfinniUI.DateUtils.getNearestDate(this.get('date'), this.get('min'), this.get('max'));
+        this.set('date', date);
+    },
+
+    /**
+     * @description Установка текущего положения списка выбора значений
+     * Если устанавливается недействительная дата - используется текущая
+     * @param date
+     */
+    setDate: function (date) {
+        if (typeof date === 'undefined' || date === null){
+            var value = this.get('value'),
+                today = this.get('date');
+
+            date = value || today;
+        }
+
+        if (date instanceof Date) {
+            date = new Date(date.getTime());
+        }
+        this.set('date', date);
     }
 
 
