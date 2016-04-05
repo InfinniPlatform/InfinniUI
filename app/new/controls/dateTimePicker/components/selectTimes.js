@@ -132,6 +132,7 @@ var SelectTimes = SelectComponent.extend({
         this.bindUIElements();
         this.updateHour();
         this.updateMinute();
+        this.updateSecond();
         this.initOnChangeHandlers();
     },
 

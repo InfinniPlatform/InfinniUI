@@ -7,7 +7,8 @@ var DateTimePickerModel = TextEditorBaseModel.extend(/** @lends DateTimePickerMo
         {},
         TextEditorBaseModel.prototype.defaults,
         {
-            mode: "Date"
+            mode: "Date",
+            today: new Date()
         }
     ),
 

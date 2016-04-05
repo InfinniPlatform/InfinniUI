@@ -30,11 +30,11 @@ DateTimePickerBuilder.prototype.applyMetadata = function (params) {
 };
 
 DateTimePickerBuilder.prototype.applyMinValue = function (element, minValue) {
-    element.setMinValue(minValue);
+    element.setMinValue(InfinniUI.DateUtils.parseISO8601toDate(minValue));
 };
 
 DateTimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
-    element.setMaxValue(maxValue);
+    element.setMaxValue(InfinniUI.DateUtils.parseISO8601toDate(maxValue));
 };
 
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {

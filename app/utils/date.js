@@ -11,10 +11,18 @@ window.InfinniUI.DateUtils = (function () {
         toDate: toDate,
         createDate: createDate,
         parseTimeISO8601toDate: parseTimeISO8601toDate,
+        parseISO8601toDate:parseISO8601toDate,
         checkRangeDate: checkRangeDate,
         getNearestDate: getNearestDate,
         cloneDate: cloneDate
     };
+
+    function parseISO8601toDate(value) {
+        if (value === null || typeof value ==='undefined') {
+            return value;
+        }
+        return moment(value).toDate();
+    }
 
     function cloneDate(date) {
         if (date instanceof Date) {
@@ -33,8 +41,8 @@ window.InfinniUI.DateUtils = (function () {
     function getNearestDate(date, min, max) {
         var nearest;
 
-        var mMin = moment(min),
-            mMax = moment(max),
+        var mMin = moment(min || null),
+            mMax = moment(max || null),
             mVal = moment(date);
 
 
@@ -60,8 +68,8 @@ window.InfinniUI.DateUtils = (function () {
     function checkRangeDate(date, minDate, maxDate, precision) {
         var success = true;
 
-        var mMin = moment(minDate),
-            mMax = moment(maxDate),
+        var mMin = moment(minDate || null),
+            mMax = moment(maxDate || null),
             mVal = moment(date);
 
 

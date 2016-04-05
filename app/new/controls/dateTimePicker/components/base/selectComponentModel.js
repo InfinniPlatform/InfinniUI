@@ -16,7 +16,35 @@ var SelectComponentModel = Backbone.Model.extend({
     },
 
     initialize: function () {
+        this.updateDateParts();
         this.on('change:date', this.onChangeDateHandler, this);
+    },
+
+    updateDateParts: function () {
+        var date = this.get('date');
+
+        if (date instanceof Date) {
+            this.set({
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                day: date.getDay(),
+                hour: date.getHours(),
+                minute: date.getMinutes(),
+                second: date.getSeconds(),
+                millisecond: date.getMilliseconds()
+            });
+        } else {
+            this.set({
+                year: null,
+                month: null,
+                day: null,
+                hour: null,
+                minute: null,
+                second: null,
+                millisecond: null
+            });
+        }
+
     },
 
     onChangeDateHandler: function (model, value) {

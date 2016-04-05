@@ -23,6 +23,8 @@ var SelectDaysModel = SelectComponentModel.extend({
             month: month === 11 ? 0 : month + 1,
             year: month === 11 ? year + 1 : year
         });
+
+        this.keepDateInRange();
     },
 
     prevMonth: function () {
@@ -34,31 +36,8 @@ var SelectDaysModel = SelectComponentModel.extend({
             month: month === 0 ? 11 : month - 1,
             year: month === 0 ? year - 1 : year
         });
-    },
 
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'day') || mVal.isSame(mMin, 'day') || mVal.isSame(mMax, 'day');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'day') || mMin.isSame(value, 'day');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'day') || mMax.isSame(value, 'day');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
+        this.keepDateInRange();
     }
 
 });
@@ -91,6 +70,8 @@ var SelectDays = SelectComponent.extend({
         this.bindUIElements();
         this.fillLegend();
         this.fillCalendar();
+        this.renderMonth();
+        this.renderYear();
         this.initOnChangeHandlers();
     },
 
@@ -99,14 +80,24 @@ var SelectDays = SelectComponent.extend({
         this.listenTo(this.model, 'change:year', this.onChangeYearHandler);
     },
 
-    onChangeMonthHandler: function (model, value) {
+    renderMonth: function () {
+        var month = this.model.get('month');
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
-        this.ui.month.text(dateTimeFormatInfo.monthNames[value]);
+        this.ui.month.text(dateTimeFormatInfo.monthNames[month]);
+    },
+
+    renderYear: function () {
+        var year = this.model.get('year');
+        this.ui.year.text(year);
+    },
+
+    onChangeMonthHandler: function (model, value) {
+        this.renderMonth();
         this.fillCalendar();
     },
 
     onChangeYearHandler: function (model, value) {
-        this.ui.year.text(value);
+        this.renderYear();
         this.fillCalendar();
     },
 
@@ -194,7 +185,7 @@ var SelectDays = SelectComponent.extend({
         }
 
         function markAvailable($el, value) {
-            $el.toggleClass('day-unavailable', !model.checkRange(value));
+            $el.toggleClass('day-unavailable', !model.checkRange(value, 'day'));
         }
 
     },

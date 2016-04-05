@@ -26,6 +26,7 @@ var SelectDate = Backbone.View.extend({
     renderComponents: function () {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate(model.get('value'));
+        var today = InfinniUI.DateUtils.createDate(model.get('today'));
         var timeZone = model.get('timeZone');
         var m = moment(value);
 
@@ -39,6 +40,7 @@ var SelectDate = Backbone.View.extend({
 
         var options = {
             value: value,
+            today: today || new Date(),
             //date: value,
             max: model.get('maxValue'),
             min: model.get('minValue')
@@ -75,6 +77,13 @@ var SelectDate = Backbone.View.extend({
     useValue: function (date) {
         var model = this.model;
         var timeZone = model.get('timeZone');
+
+        var min = model.get('minValue'),
+            max = model.get('maxValue');
+
+        if (!InfinniUI.DateUtils.checkRangeDate(date, min, max)) {
+            date = InfinniUI.DateUtils.getNearestDate(date, min, max);
+        }
 
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
         this.remove();

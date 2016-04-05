@@ -11,11 +11,13 @@ var SelectMonthsModel = SelectComponentModel.extend({
     nextYear: function () {
         var year = this.get('year');
         this.set('year', year + 1);
+        this.keepDateInRange();
     },
 
     prevYear: function () {
         var year = this.get('year');
         this.set('year', year - 1);
+        this.keepDateInRange();
     },
 
     today: function () {
@@ -23,35 +25,7 @@ var SelectMonthsModel = SelectComponentModel.extend({
             month: this.get('todayMonth'),
             year: this.get('todayYear')
         });
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'month') || mVal.isSame(mMin, 'month') || mVal.isSame(mMax, 'month');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'month') || mMin.isSame(value, 'month');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'month') || mMax.isSame(value, 'month');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
     }
-
-
-
 });
 
 var SelectMonths = SelectComponent.extend({
@@ -115,7 +89,7 @@ var SelectMonths = SelectComponent.extend({
 
         function markAvailable($el, value) {
             var date = moment([model.get('year'), value]);
-            $el.toggleClass('month-unavailable', !model.checkRange(date));
+            $el.toggleClass('month-unavailable', !model.checkRange(date, 'month'));
         }
     },
 
