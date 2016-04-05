@@ -28,6 +28,11 @@ _.extend(TreeModel.prototype, {
         this._notifyAboutPropertyChanged(propertyName, oldValue, handlers);
     },
 
+    simulateSetProperty: function(propertyName, oldValue){
+        var handlers = this._getHandlersSubTree(propertyName);
+        this._notifyAboutPropertyChanged(propertyName, oldValue, handlers);
+    },
+
     onPropertyChanged: function(propertyName, handler, params){
         var handlersNode;
         var bindId = this.counter;
@@ -146,7 +151,13 @@ _.extend(TreeModel.prototype, {
 
     _isOwnerAlive: function(handler){
         if(handler._owner && 'isRemoved' in handler._owner){
-            return !handler._owner.isRemoved;
+
+            if(typeof handler._owner.isRemoved == 'function'){
+                return handler._owner.isRemoved();
+            }else{
+                return !handler._owner.isRemoved;
+            }
+
         }else{
             return true;
         }
