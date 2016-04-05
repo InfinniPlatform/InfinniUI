@@ -25,6 +25,7 @@ var BaseDataSource = Backbone.Model.extend({
         selectedItem: null,
 
         fillCreatedItem: true,
+        suspended: [],
         isUpdateSuspended: false,
 
         errorValidator: null,

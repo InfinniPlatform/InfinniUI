@@ -67,20 +67,18 @@ window.InfinniUI.ObjectUtils = (function () {
             var nextTerm = propertyPathTerms[i + 1];
             var nextTermCollectionIndex = parseCollectionIndex(nextTerm);
 
-            if (termValue === null || termValue === undefined) {
-                if (nextTermCollectionIndex >= 0) {
-                    termValue = [ ];
-                }
-                else {
-                    termValue = { };
+            if(nextTermCollectionIndex >= 0){
+                if(!$.isArray(termValue)){
+                    termValue = [];
                 }
 
-                if (termCollectionIndex >= 0) {
-                    setCollectionItem(parent, termCollectionIndex, termValue);
+                setCollectionItem(parent, termCollectionIndex, termValue);
+            }else{
+                if(!$.isPlainObject(termValue)){
+                    termValue = {};
                 }
-                else {
-                    setObjectProperty(parent, term, termValue);
-                }
+
+                setObjectProperty(parent, term, termValue);
             }
 
             parent = termValue;
