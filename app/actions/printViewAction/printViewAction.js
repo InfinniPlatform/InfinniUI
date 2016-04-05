@@ -9,8 +9,8 @@ _.extend(PrintViewAction.prototype, {
     execute: function(callback){
         var self = this;
 
-        var printViewBaseFormData = this.get('printViewBaseFormData');
-        var dataSource = this.get('dataSource');
+        var printViewBaseFormData = this.getProperty('printViewBaseFormData');
+        var dataSource = this.getProperty('dataSource');
         var formData = _.extend(printViewBaseFormData,
             {
                 ConfigId : dataSource.getConfigId(),
