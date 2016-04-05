@@ -82,6 +82,7 @@ var SelectTimesModel = SelectComponentModel.extend({
     },
 
     validate: function (attr, options) {
+        //@TODO Переделать. Не работает в DateTimePicker[mode=DateTime]
         var value = moment().set({
             hour: attr.hour,
             minute: attr.minute,

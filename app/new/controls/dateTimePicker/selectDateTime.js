@@ -25,6 +25,7 @@ var SelectDateTime = SelectDate.extend({
     renderComponents: function () {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate(model.get('value'));
+        var today = InfinniUI.DateUtils.createDate(model.get('today'));
         var timeZone = model.get('timeZone');
         var m = moment(value);
 
@@ -38,6 +39,7 @@ var SelectDateTime = SelectDate.extend({
 
         var options = {
             value: value,
+            today: today || new Date(),
             //date: value,
             max: model.get('maxValue'),
             min: model.get('minValue')
@@ -70,8 +72,16 @@ var SelectDateTime = SelectDate.extend({
         var model = this.model;
         var timeZone = model.get('timeZone');
 
+        var min = model.get('minValue'),
+            max = model.get('maxValue');
+
+        if (!InfinniUI.DateUtils.checkRangeDate(date, min, max)) {
+            date = InfinniUI.DateUtils.getNearestDate(date, min, max);
+        }
 
         this.trigger('date', InfinniUI.DateUtils.restoreTimezoneOffset(date, timeZone));
+
+        return date;
     },
 
     workflow: function (days, months, years, time, hours, minutes) {
@@ -109,12 +119,12 @@ var SelectDateTime = SelectDate.extend({
                 useTime(date);
             })
             .listenTo(hours, 'hour', function (date) {
-                useTime(date);
-                showTime(date);
+                var newDate = useTime(date);
+                showTime(newDate);
             })
             .listenTo(minutes, 'minute', function (date) {
-                useTime(date);
-                showTime(date);
+                var newDate = useTime(date);
+                showTime(newDate);
             });
 
         //Переключатель режима Date/Time
