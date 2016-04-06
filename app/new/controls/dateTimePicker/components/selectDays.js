@@ -78,6 +78,7 @@ var SelectDays = SelectComponent.extend({
     initOnChangeHandlers: function () {
         this.listenTo(this.model, 'change:month', this.onChangeMonthHandler);
         this.listenTo(this.model, 'change:year', this.onChangeYearHandler);
+        this.listenTo(this.model, 'change:day', this.onChangeDayHandler);
     },
 
     renderMonth: function () {
@@ -213,7 +214,7 @@ var SelectDays = SelectComponent.extend({
     },
 
     showTime: function () {
-        this.trigger('time', this.model.get('value'));
+        this.trigger('time', this.model.get('date'));
     },
 
     useDay: function (event) {

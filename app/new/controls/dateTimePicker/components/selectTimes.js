@@ -82,13 +82,8 @@ var SelectTimesModel = SelectComponentModel.extend({
     },
 
     validate: function (attr, options) {
-        //@TODO Переделать. Не работает в DateTimePicker[mode=DateTime]
-        var value = moment().set({
-            hour: attr.hour,
-            minute: attr.minute,
-            second: attr.second,
-            millisecond: attr.millisecond
-        });
+        var value = InfinniUI.DateUtils.cloneDate(attr.date);
+        value.setHours(attr.hour, attr.minute, attr.second, attr.millisecond);
 
         if (!this.checkRange(value)) {
             return 'Out of range';
