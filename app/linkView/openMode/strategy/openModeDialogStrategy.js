@@ -42,7 +42,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         var
             headerTemplate = view.getHeaderTemplate();
-        $closeButton.toggleClass('hidden', !view.getCloseButton());
+        $closeButton.toggleClass('hidden', !view.getCloseButtonVisibility());
         $header.append(headerTemplate().render());
 
         $modal.find('.pl-close-modal').on('click', function(){

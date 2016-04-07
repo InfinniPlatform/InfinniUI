@@ -8,10 +8,10 @@ function SelectActionBuilder() {
         var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
 
         action.setProperty('linkView', linkView);
-        action.setProperty('srcDataSourceName', metadata.SourceValue.Source);
-        action.setProperty('srcPropertyName', metadata.SourceValue.Property);
-        action.setProperty('dstDataSourceName', metadata.DestinationValue.Source);
-        action.setProperty('dstPropertyName', metadata.DestinationValue.Property);
+        action.setProperty('sourceSource', metadata.SourceValue.Source);
+        action.setProperty('sourceProperty', metadata.SourceValue.Property);
+        action.setProperty('destinationSource', metadata.DestinationValue.Source);
+        action.setProperty('destinationProperty', metadata.DestinationValue.Property);
 
         return action;
     }
