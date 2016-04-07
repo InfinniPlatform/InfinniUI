@@ -153,8 +153,10 @@ var newBaseDataSource = Backbone.Model.extend({
         var indexOfSelectedItem;
 
         if( this.get('isNumRegEx').test(firstChar) ){
+            property = 'items.' + property;
 
         }else if(firstChar == ''){
+            property = 'items';
 
         }else if(firstChar == '$'){
             indexOfSelectedItem = this._indexOfSelectedItem();
@@ -162,8 +164,9 @@ var newBaseDataSource = Backbone.Model.extend({
                 return undefined;
             }
             property = 'items.' + indexOfSelectedItem + property.substr(1);
-        }else if(firstChar == '.'){
 
+        }else if(firstChar == '.'){
+            property = property.substr(1);
         }else{
             indexOfSelectedItem = this._indexOfSelectedItem();
             if(indexOfSelectedItem == -1){
@@ -172,44 +175,50 @@ var newBaseDataSource = Backbone.Model.extend({
             property = 'items.' + indexOfSelectedItem + '.' + property;
         }
 
-
-        var selectedItem = this.getSelectedItem(),
-            bindingByIndexRegEx = /^\d/,
-            relativeProperty, source;
-
-
-        if(!this.isDataReady()){
-            return undefined;
-        }
-
-        if (property == '') {
-            return this.getItems();
-        } else if (property == '$') {
-            return selectedItem;
-        } else {
-            if (property.substr(0, 2) == '$.') {
-                relativeProperty = property.substr(2);
-                source = selectedItem;
-            } else {
-                relativeProperty = property;
-
-                if (bindingByIndexRegEx.test(property)) {
-                    source = this.getItems();
-                } else {
-                    source = selectedItem;
-                }
-            }
-
-
-            return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-
-
-        }
+        return this.get('model').getProperty(property);
     },
 
     setProperty: function (property, value) {
 
-        this._checkPropertyName(property);
+        var firstChar = property.charAt(0);
+        var indexOfSelectedItem;
+
+
+        // если номер или доллар - _changeItem(index, value) замена содержимого item
+
+        // если пусто - _setItems(value, 'calledFromSetProperty')
+
+        // если . - сеттим в обычное свойство
+
+        // иначе - setSelectedItemValue(value)
+
+        //
+
+        if( this.get('isNumRegEx').test(firstChar) ){
+            property = 'items.' + property;
+
+        }else if(firstChar == ''){
+            property = 'items';
+
+        }else if(firstChar == '$'){
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return undefined;
+            }
+            property = 'items.' + indexOfSelectedItem + property.substr(1);
+
+        }else if(firstChar == '.'){
+            property = property.substr(1);
+        }else{
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return undefined;
+            }
+            property = 'items.' + indexOfSelectedItem + '.' + property;
+        }
+
+        this.get('model').setProperty(property, value);
+        //-----------
 
         var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
@@ -1096,5 +1105,3 @@ var newBaseDataSource = Backbone.Model.extend({
     }
 
 });
-
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin, dataSourceLookupMixin);
