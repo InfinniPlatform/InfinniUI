@@ -294,7 +294,7 @@ this.Then(/^я выберу в выпадающем списке "([^"]*)" зн�
     itemText = itemText.replace(/'/g, '"');
 
     var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
-    var itemSelector = '.pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains("' + itemText + '")';
+    var itemSelector = ".pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains('" + itemText + "')";
 
     var haveCombobox = function () {
         return window.configWindow.$(listSelector).length != 0;
