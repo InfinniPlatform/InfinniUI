@@ -295,7 +295,7 @@ _.extend(View.prototype,
          */
         setCloseButtonVisibility: function (value) {
             if (typeof value === 'boolean') {
-                this.control.set('closeButton', value);
+                this.control.set('closeButtonVisibility', value);
             }
         },
 
@@ -304,7 +304,7 @@ _.extend(View.prototype,
          * @returns {boolean}
          */
         getCloseButtonVisibility: function () {
-            return this.control.get('closeButton');
+            return this.control.get('closeButtonVisibility');
         },
 
         noDataSourceOnView: function(){

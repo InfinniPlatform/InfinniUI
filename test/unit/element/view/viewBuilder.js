@@ -1,6 +1,6 @@
 describe('ViewBuilder', function () {
     var viewMetadata = {
-        Text: '��������',
+        Text: 'TestView',
         Icon: 'Icon',
         DataSources: [
             {
@@ -159,6 +159,9 @@ describe('ViewBuilder', function () {
 
         // Then
         assert.isTrue(window.EventOnOpeningWasCall);
+
+        // cleaning
+        view.close();
     });
 
     it('should build OnOpened', function () {
@@ -182,6 +185,9 @@ describe('ViewBuilder', function () {
 
         // Then
         assert.isTrue(window.EventOnOpenedWasCall);
+
+        // cleaning
+        view.close();
     });
 
     it('should build OnClosing', function () {
@@ -228,5 +234,61 @@ describe('ViewBuilder', function () {
 
         // Then
         assert.isTrue(window.EventOnClosedWasCall);
+    });
+
+    it('should build CloseButtonVisibility', function () {
+        // Given
+        var viewBuilder = new ViewBuilder();
+        var builder = new ApplicationBuilder();
+        var metadata = _.extend({}, viewMetadata, {
+            CloseButtonVisibility: false
+        });
+
+        // When
+        var view = viewBuilder.build(null, {metadata: metadata, builder: builder});
+
+        // Then
+        assert.isFalse(view.getCloseButtonVisibility());
+    });
+
+    it('should build HeaderTemplate', function () {
+        // Given
+        var viewBuilder = new ViewBuilder();
+        var metadata = _.extend({}, viewMetadata, {
+            HeaderTemplate: {
+                Icon: {
+                }
+            }
+        });
+
+        // When
+        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+
+        // Then
+        var headerTemplate = view.getHeaderTemplate();
+        var header = headerTemplate();
+
+        assert.instanceOf(header, Icon);
+    });
+
+    it('should build default value', function () {
+        // Given
+        var viewBuilder = new ViewBuilder();
+        var builder = new ApplicationBuilder();
+        var metadata = viewMetadata;
+
+        // When
+        var view = viewBuilder.build(null, {metadata: metadata, builder: builder});
+
+        // Then
+        var headerTemplate = view.getHeaderTemplate();
+        var header = headerTemplate();
+
+        // Header
+        assert.instanceOf(header, Label);
+        assert.equal(header.getValue(), 'TestView');
+
+        // CloseButtonVisibility
+        assert.isTrue(view.getCloseButtonVisibility());
     });
 });
