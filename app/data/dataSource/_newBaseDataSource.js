@@ -766,15 +766,11 @@ var newBaseDataSource = Backbone.Model.extend({
 
     updateItems: function (onSuccess, onError) {
         if (!this.isUpdateSuspended()) {
-            var filters = this.getFilter(),
-                pageNumber = this.get('pageNumber'),
-                pageSize = this.get('pageSize'),
-                sorting = this.get('sorting'),
-                dataProvider = this.get('dataProvider'),
+            var dataProvider = this.get('dataProvider'),
                 that = this;
 
             this.set('isRequestInProcess', true);
-            dataProvider.getItems(filters, pageNumber, pageSize, sorting, function (data) {
+            dataProvider.getItems(function (data) {
 
                 that.set('isRequestInProcess', false);
                 that._handleUpdatedItemsData(data, onSuccess);
@@ -792,13 +788,13 @@ var newBaseDataSource = Backbone.Model.extend({
     _notifyAboutItemsUpdated: function (itemsData, successHandler) {
         var context = this.getContext(),
             argument = {
-                value: itemsData
+                value: itemsData.data
             };
 
         if (successHandler) {
             successHandler(context, argument);
         }
-        this.trigger('onItemsUpdated', context, argument);
+        //this.trigger('onItemsUpdated', context, argument); сделать в _setItems
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {

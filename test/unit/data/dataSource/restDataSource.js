@@ -135,16 +135,37 @@ describe('ObjectDataSource', function () {
         it('should property changed', function (done) {
             // Given
             var dataSource = createRestDataSource();
-            var item3;
+            var result = '';
 
+
+            dataSource.onPropertyChanged('0.FirstName', function(context, args){
+                result += '1';
+
+                assert.equal(args.oldValue, 'Иван', 'right old value in args');
+                assert.equal(args.newValue, 'Иванидзе', 'right new value in args');
+                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'value in source is new, when onPropertyChanged called');
+            });
+
+            dataSource.onPropertyChanged('0.LastName', function(context, args){
+                result += '2';
+
+                assert.equal(args.oldValue, 'Иванов', 'right old value in args');
+                assert.equal(args.newValue, 'Ивнв', 'right new value in args');
+                assert.equal(dataSource.getProperty('FirstName'), 'Ивнв', 'value in source is new, when onPropertyChanged called');
+            });
+
+            dataSource.onPropertyChanged('.selectedItem', function(context, args){
+                result += '3';
+
+                assert.equal(args.oldValue.FirstName, 'Иванов', 'right old value in args');
+                assert.equal(args.newValue.a, 3, 'right new value in args');
+                assert.equal(dataSource.getSelectedItem().a, 3, 'value in source is new, when onPropertyChanged called');
+            });
 
             dataSource.updateItems(handleItemsReady);
 
 
             function handleItemsReady(){
-                dataSource.onPropertyChanged('FirstName', function(){
-
-                });
 
                 //When
                 dataSource.setProperty('FirstName', 'Иванидзе');
@@ -160,13 +181,7 @@ describe('ObjectDataSource', function () {
                 dataSource.setProperty('.selectedItem', {'a':3});
 
                 // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
-                assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'return property value by property after change property 2');
-                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
-                assert.equal(item3, dataSource.getProperty('3'), 'on set full item, link on item is not changed');
-                assert.equal(item3, dataSource.getProperty('3.FirstName'), 'return property value by property after change property 3');
-                assert.equal(item3, dataSource.getProperty('3.Id'), 'return property value by property after change property 4');
-                assert.equal(dataSource.getProperty('.selectedItem.a'), 3, 'return property value by property after change property 5');
+                assert.equal(result, '123', 'all handlers called in correct order');
                 done();
             }
         });

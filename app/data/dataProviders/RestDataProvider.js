@@ -1,85 +1,91 @@
 var RestDataProvider = function(){
 
-    this.origin = null; // http://abs.com
+    this.requestParams = {
+        'get': {
+            type: 'get',
+            origin: null, // http://abs.com
+            path: '',
+            query: null,
+            data: {}
+        },
 
-    this.type = 'GET';
+        'set':{
+            type: 'post',
+            origin: null,
+            path: '',
+            query: null,
+            data: {}
+        },
 
-    this.params = {
-        path: '',
-        query: null,
-        data: {}
+        'delete':{
+            type: 'delete',
+            origin: null,
+            path: '',
+            query: null,
+            data: {}
+        }
     };
 
 };
 
 _.extend(RestDataProvider.prototype, {
 
-    getOrigin: function(){
-        return this.origin;
+    getOrigin: function(type){
+        return this.requestParams[type].origin;
     },
 
-    setOrigin: function(newOrigin){
-        this.origin = newOrigin;
+    setOrigin: function(type, newOrigin){
+        this.requestParams[type].origin = newOrigin;
     },
 
-    getParams: function(){
-        return this.params;
+    getPath: function(type){
+        return this.requestParams[type].path;
     },
 
-    setParams: function(newParams){
-        this.params = newParams;
+    setPath: function(type, path){
+        this.requestParams[type].path = path;
     },
 
-    mergeParams: function(params){
-        this.params = _.extend(this.params, params);
+    getQuery: function(type){
+        return this.requestParams[type].query;
     },
 
-    getPath: function(){
-        return this.params.path;
+    setQuery: function(type, query){
+        this.requestParams[type].query = query;
     },
 
-    setPath: function(path){
-        this.params.path = path;
+    getData: function(type){
+        return this.requestParams[type].data;
     },
 
-    getQuery: function(){
-        return this.params.query;
+    setData: function(type, data){
+        this.requestParams[type].data = data;
     },
 
-    setQuery: function(query){
-        this.params.query = query;
+    getType: function(type){
+        return this.requestParams[type].type;
     },
 
-    getData: function(){
-        return this.params.data;
+    setType: function(type, queryType){
+        this.requestParams[type].type = queryType;
     },
 
-    setData: function(data){
-        this.params.data = data;
-    },
+    send: function(type, successHandler, errorHandler){
+        var params = this.requestParams[type];
 
-    getType: function(){
-        return this.type;
-    },
-
-    setType: function(type){
-        this.type = type;
-    },
-
-    send: function(successHandler, errorHandler){
-        var urlString = this.origin + this.params.path;
+        var urlString = params.origin + params.path;
         var queryString;
         var requestId = Math.round((Math.random() * 100000));
 
-        if(this.params.query){
-            queryString = $.param(this.params.query);
+        if(params.query){
+            queryString = $.param(params.query);
             urlString = '?' + queryString;
         }
 
         $.ajax({
-            type: this.type,
+            type: params.type,
             url: urlString,
-            data: this.params.data,
+            data: params.data,
             success: function(data){
                 successHandler({
                     requestId: requestId,
@@ -95,6 +101,10 @@ _.extend(RestDataProvider.prototype, {
         });
 
         return requestId;
+    },
+
+    getItems: function(successHandler, errorHandler){
+        return this.send('get', successHandler, errorHandler);
     }
 
 
