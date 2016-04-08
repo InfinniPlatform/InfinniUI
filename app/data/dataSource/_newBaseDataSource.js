@@ -42,7 +42,7 @@ var newBaseDataSource = Backbone.Model.extend({
 
         isLazy: true,
 
-        isNumRegEx: /\d/
+        isNumRegEx: /^\d/
 
     },
 
@@ -181,18 +181,49 @@ var newBaseDataSource = Backbone.Model.extend({
     setProperty: function (property, value) {
 
         var firstChar = property.charAt(0);
+        var propertyPaths = property.split('.');
         var indexOfSelectedItem;
+        var property;
 
+        if(propertyPaths[0] == '$'){
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return;
+            }
 
-        // если номер или доллар - _changeItem(index, value) замена содержимого item
+            property = indexOfSelectedItem + property.substr(1);
+            propertyPaths[0] = indexOfSelectedItem.toString();
+        }
+
+        if(propertyPaths.length == 1){
+
+            if(propertyPaths[0] == ''){
+                this._setItems();
+
+            }else if( this.get('isNumRegEx').test(propertyPaths[0]) ){
+
+            }else{
+                indexOfSelectedItem = this._indexOfSelectedItem();
+                if(indexOfSelectedItem == -1){
+                    return;
+                }
+                property = 
+            }
+
+        }else{
+
+        }
+
+        // если один элемент - и это номер или доллар - _changeItem(index, value) замена содержимого item
 
         // если пусто - _setItems(value, 'calledFromSetProperty')
 
         // если . - сеттим в обычное свойство
 
+        // если номер и точка -
+
         // иначе - setSelectedItemValue(value)
 
-        //
 
         if( this.get('isNumRegEx').test(firstChar) ){
             property = 'items.' + property;
@@ -761,7 +792,7 @@ var newBaseDataSource = Backbone.Model.extend({
             });
         }
 
-        return this.get('items');
+        return this.get('model').getProperty('items');
     },
 
     updateItems: function (onSuccess, onError) {
