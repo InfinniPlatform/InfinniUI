@@ -107,7 +107,9 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
      * @returns {boolean}
      */
     onEditorValidate: function (value) {
-        return true;
+        var model = this.model;
+        
+        return InfinniUI.DateUtils.checkRangeDate(value, model.get('minValue'), model.get('maxValue'));
     },
 
 

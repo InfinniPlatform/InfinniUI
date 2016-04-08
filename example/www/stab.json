@@ -185,9 +185,20 @@
               "ColumnSpan": 4,
               "Items": [
                 {
-                  "DatePicker": {
+                  "Button": {
+                    "Text": "Test",
+                    "OnClick": "{debugger; console.log(args);)"
+                  }
+                },
+                {
+                  "DateTimePicker": {
                     "LabelText": "Birthday",
-                    "Mode": "Date",
+                    "Name": "BirthdayTimePicker",
+                    "Mode": "DateTime",
+                    "~MinValue": "12:00",
+                    "!MinValue": "2016-04-05",
+                    "--MaxValue": "14:00",
+                    "MaxValue": "2016-04-26T18:00",
                     "Value": {
                       "Source": "Numbers",
                       "Property": "$.Birthday"
@@ -208,43 +219,7 @@
           {
             "Cell": {
               "ColumnSpan": 4,
-              "Items": [
-                {
-                  "ExtensionPanel": {
-                    "ExtensionName": "TestExtension",
-                    "Parameters": [
-                      {
-                        "Name": "p1",
-                        "Value": {
-                          "Source": "BloodGroupDataSource",
-                          "Property": ""
-                        }
-                      }
-                    ],
-                    "Items": [
-                      {
-                        "NumericBox": {
-                          "Name": "NB",
-                          "Background": "Primary1",
-                          "HintText": "I'm NumericBox hint",
-                          "LabelText": "Numeric label",
-                          "Enabled": true,
-                          "MinValue": 0,
-                          "EditMask": {
-                            "NumberEditMask": {
-                              "Mask": "n3"
-                            }
-                          },
-                          "Value": {
-                            "Source": "BloodGroupDataSource",
-                            "Property": "$.Id"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
+              "Items": []
             }
           },
           {
@@ -297,14 +272,16 @@
             "CellProperty": "Name"
           },
           {
-            "Header": "Group",
-            "CellProperty": "Group"
+            "Header": "Date",
+            "CellProperty": "Date"
           },
           {
             "Header": "Date",
             "CellTemplate": {
               "DateTimePicker": {
-                "Mode": "DateTime",
+                "Mode": "Time",
+                "TimeZone": 0,
+                "MaxValue": "2016-02-29T21:00",
                 "Value": {
                   "Source": "Test",
                   "Property": "#.Date"
@@ -313,6 +290,14 @@
             }
           }
         ],
+        "RowBackground": {
+          "Source": "Test",
+          "Mode": "ToElement",
+          "Property": "#",
+          "Converter": {
+            "ToElement": "{return args.value.Id <= 2 ? 'less' : 'more';}"
+          }
+        },
         "Items": {
           "Source": "Test"
         }

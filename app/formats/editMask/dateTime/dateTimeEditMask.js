@@ -584,12 +584,7 @@ _.extend(DateTimeEditMask.prototype, {
         if (typeof value !== 'undefined' && value !== null && value !== '') {
             //Если переданное значение является датой - инициалищируем этим значением
             try {
-                if(value instanceof Date){
-                    date = value;
-                }else {
-                    date = new Date(value);
-                }
-
+                date = InfinniUI.DateUtils.createDate(value);
             } catch (e) {
                 date = null;
             }
@@ -599,7 +594,7 @@ _.extend(DateTimeEditMask.prototype, {
         this.template = this.buildTemplate(date);
 
         if (this.value === null) {
-            this.value = new Date(0, 0);
+            this.value = new Date(0);
         }
     },
 

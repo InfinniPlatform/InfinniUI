@@ -88,19 +88,9 @@ _.extend(MetadataViewBuilder.prototype, {
 
     getParentViewByOpenMode: function(params, mode) {
         if( mode == null || mode == "Default" ) {
-            return this.getRootView(params.parentView);
+            return params.parentView.getApplicationView();
         }
 
         return params.parentView;
-    },
-
-    getRootView: function(view) {
-        var parentView = view.getView();
-
-        if( parentView == null ) {
-            return view;
-        }
-
-        return this.getRootView(parentView);
     }
 });

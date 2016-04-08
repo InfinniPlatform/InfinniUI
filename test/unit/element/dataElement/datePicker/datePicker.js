@@ -80,9 +80,8 @@ describe('DateTimePicker', function () {
             };
 
             var element = builder.build(metadata, {});
-
-            assert.equal(element.getMinValue(), "2015-09-01T15:26:42.0060+05:00", 'MinValue');
-            assert.equal(element.getMaxValue(), "2015-09-18T15:26:42.0060+05:00", 'MaxValue');
+            assert.equal(String(element.getMinValue()), String(new Date("2015-09-01T15:26:42.0060+05:00")), 'MinValue');
+            assert.equal(String(element.getMaxValue()), String(new Date("2015-09-18T15:26:42.0060+05:00")), 'MaxValue');
             assert.equal(element.getMode(), 'DateTime', 'DateTime');
 
             assert.equal(element.getLabelText(), "Datepicker's label", 'LabelText');

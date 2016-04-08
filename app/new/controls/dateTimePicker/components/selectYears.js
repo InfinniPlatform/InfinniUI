@@ -1,9 +1,12 @@
 var SelectYearsModel = SelectComponentModel.extend({
 
-    defaults: {
-        pageSize: 20,
-        page: 0,
-        todayYear: moment().year()
+    defaults: function () {
+        var defaults = SelectComponentModel.prototype.defaults.call(this);
+
+        return _.defaults({
+            pageSize: 20,
+            page: 0
+        }, defaults);
     },
 
     initialize: function () {
@@ -27,33 +30,10 @@ var SelectYearsModel = SelectComponentModel.extend({
     },
 
     onChangeYearHandler: function (model, value) {
+        this.keepDateInRange();
         model.set('page', 0);
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'year') || mVal.isSame(mMin, 'year') || mVal.isSame(mMax, 'year');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'year') || mMin.isSame(value, 'year');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'year') || mMax.isSame(value, 'year');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
     }
+
 });
 
 var SelectYears = SelectComponent.extend({
@@ -121,7 +101,7 @@ var SelectYears = SelectComponent.extend({
         }
         function markAvailable($el, value) {
             var date = moment([value]);
-            $el.toggleClass('year-unavailable', !model.checkRange(date));
+            $el.toggleClass('year-unavailable', !model.checkRange(date, 'year'));
         }
 
     },

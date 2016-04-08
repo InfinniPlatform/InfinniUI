@@ -128,7 +128,7 @@ _.extend(ViewBuilder.prototype, {
         }
 
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
-        element.setCloseButtonVisibility(metadata.CloseButton);
+        element.setCloseButtonVisibility(metadata.CloseButtonVisibility);
 
         if(metadata.OnOpening){
             element.onOpening(function() {

@@ -9,7 +9,7 @@ var ViewModel = ContainerModel.extend({
     defaults: _.defaults({
         dialogResult: DialogResult.none,
         isApplication: false,
-        closeButton: true
+        closeButtonVisibility: true
     }, ContainerModel.prototype.defaults),
 
     initialize: function () {
