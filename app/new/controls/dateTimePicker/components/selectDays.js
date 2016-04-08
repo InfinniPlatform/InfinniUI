@@ -1,14 +1,4 @@
 var SelectDaysModel = SelectComponentModel.extend({
-    defaults: function () {
-        var today = moment();
-
-        return {
-            today: today.toDate(),
-            todayMonth: today.month(),
-            todayDay: today.date(),
-            todayYear: today.year()
-        }
-    },
 
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
@@ -33,6 +23,8 @@ var SelectDaysModel = SelectComponentModel.extend({
             month: month === 11 ? 0 : month + 1,
             year: month === 11 ? year + 1 : year
         });
+
+        this.keepDateInRange();
     },
 
     prevMonth: function () {
@@ -44,31 +36,8 @@ var SelectDaysModel = SelectComponentModel.extend({
             month: month === 0 ? 11 : month - 1,
             year: month === 0 ? year - 1 : year
         });
-    },
 
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'day') || mVal.isSame(mMin, 'day') || mVal.isSame(mMax, 'day');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'day') || mMin.isSame(value, 'day');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'day') || mMax.isSame(value, 'day');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
+        this.keepDateInRange();
     }
 
 });
@@ -101,28 +70,39 @@ var SelectDays = SelectComponent.extend({
         this.bindUIElements();
         this.fillLegend();
         this.fillCalendar();
+        this.renderMonth();
+        this.renderYear();
         this.initOnChangeHandlers();
     },
 
     initOnChangeHandlers: function () {
         this.listenTo(this.model, 'change:month', this.onChangeMonthHandler);
         this.listenTo(this.model, 'change:year', this.onChangeYearHandler);
+        this.listenTo(this.model, 'change:day', this.onChangeDayHandler);
+    },
+
+    renderMonth: function () {
+        var month = this.model.get('month');
+        var dateTimeFormatInfo = localized.dateTimeFormatInfo;
+        this.ui.month.text(dateTimeFormatInfo.monthNames[month]);
+    },
+
+    renderYear: function () {
+        var year = this.model.get('year');
+        this.ui.year.text(year);
     },
 
     onChangeMonthHandler: function (model, value) {
-        var dateTimeFormatInfo = localized.dateTimeFormatInfo;
-        this.ui.month.text(dateTimeFormatInfo.monthNames[value]);
+        this.renderMonth();
         this.fillCalendar();
     },
 
     onChangeYearHandler: function (model, value) {
-        this.ui.year.text(value);
+        this.renderYear();
         this.fillCalendar();
     },
 
     fillLegend: function () {
-        var date = new Date();
-
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
         var days = dateTimeFormatInfo.abbreviatedDayNames.map(function (day, i) {
@@ -166,13 +146,17 @@ var SelectDays = SelectComponent.extend({
 
         var weekdays = [0,1,2,3,4,5,6];
         Array.prototype.push.apply(weekdays, weekdays.splice(0, firstDayOfWeek));
-        var startDate = new Date(year, month, 1 - weekdays.indexOf(weekday));
+        var start = new Date(year, month, 1 - weekdays.indexOf(weekday));
+
+        var startYear = start.getFullYear(),
+            startMonth = start.getMonth(),
+            startDate = start.getDate();
 
         this.ui.calendarDays.each(function (i, el) {
             var $el = $(el);
-            var d = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + i);
+            var d = new Date(startYear, startMonth, startDate + i);
             $el.text(d.getDate());
-            $el.attr('data-date', moment(d).format('YYYY-MM-DD'));
+            $el.attr('data-date', d);
             markActiveMonth($el, d.getMonth() === month);
             markToday($el, d);
             markSelected($el, d);
@@ -202,7 +186,7 @@ var SelectDays = SelectComponent.extend({
         }
 
         function markAvailable($el, value) {
-            $el.toggleClass('day-unavailable', !model.checkRange(value));
+            $el.toggleClass('day-unavailable', !model.checkRange(value, 'day'));
         }
 
     },
@@ -230,20 +214,18 @@ var SelectDays = SelectComponent.extend({
     },
 
     showTime: function () {
-        this.trigger('time', this.model.get('value'));
+        this.trigger('time', this.model.get('date'));
     },
 
     useDay: function (event) {
         var $el = $(event.target),
-            value = $el.attr('data-date'),
-            m = moment(value, 'YYYY-MM-DD');
+            date = new Date($el.attr('data-date'));
 
         this.model.set({
-            year: m.year(),
-            month: m.month(),
-            day: m.date()
+            year: date.getFullYear(),
+            month: date.getMonth(),
+            day: date.getDate()
         });
-
 
         this.trigger('date', this.model.get('date'));
     }

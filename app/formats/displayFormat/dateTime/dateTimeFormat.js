@@ -54,8 +54,10 @@ _.extend(DateTimeFormat.prototype, {
     },
 
     createDate: function (originalDate) {
+        var date;
         var options = this.getOptions();
-        var date = new Date(originalDate);
+
+        date = InfinniUI.DateUtils.createDate(originalDate);
 
         return InfinniUI.DateUtils.changeTimezoneOffset(date, options.TimeZone);//apply timezoneOffset
     },

@@ -1,13 +1,5 @@
 var SelectTimesModel = SelectComponentModel.extend({
 
-    defaults: {
-        today: moment().toDate(),
-        hour: moment().hour(),
-        minute: moment().minute(),
-        second: moment().second(),
-        millisecond: moment().millisecond()
-    },
-
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
         this.on('change:hour', this.updateDatePart.bind(this, 'hour'));
@@ -20,114 +12,83 @@ var SelectTimesModel = SelectComponentModel.extend({
         var hour = this.get('hour');
         hour += 1;
 
-        var value = moment().set({
-            hour: hour,
-            minute: this.get('minute'),
-            second: this.get('second'),
-            millisecond: this.get('millisecond')
-        });
-
-
         //@TODO Границу использовать в зависимости от 12/24 формата записи даты из настроек локализации
-        if (hour < 24) {
-            this.set('hour', hour, {validate: true});
+        if (hour > 23) {
+            return;
         }
 
+        this.set('hour', hour);
+        this.keepDateInRange();
     },
 
     prevHour: function () {
         var hour = this.get('hour');
         hour -= 1;
 
-        if (hour >= 0) {
-            this.set('hour', hour, {validate: true});
+        if (hour < 0) {
+            return;
         }
+
+        this.set('hour', hour);
+        this.keepDateInRange();
     },
 
     nextMinute: function () {
         var minute = this.get('minute');
         minute += 1;
 
-        if (minute < 60) {
-            this.set('minute', minute, {validate: true});
+        if (minute >= 60) {
+            return;
         }
 
+        this.set('minute', minute);
+        this.keepDateInRange();
     },
 
     prevMinute: function () {
         var minute = this.get('minute');
         minute -= 1;
 
-        if (minute >= 0) {
-            this.set('minute', minute, {validate: true});
+        if (minute < 0) {
+            return;
         }
+
+        this.set('minute', minute);
+        this.keepDateInRange();
     },
 
     nextSecond: function () {
         var second = this.get('second');
         second += 1;
 
-        if (second < 60) {
-            this.set('second', second, {validate: true});
+        if (second >= 60) {
+            return;
         }
+
+        this.set('second', second);
+        this.keepDateInRange();
     },
 
     prevSecond: function () {
         var second = this.get('second');
         second -= 1;
 
-        if (second >= 0) {
-            this.set('second', second, {validate: true});
+        if (second < 0) {
+            return;
         }
+
+        this.set('second', second);
+        this.keepDateInRange();
     },
 
     validate: function (attr, options) {
-        var value = moment().set({
-            hour: attr.hour,
-            minute: attr.minute,
-            second: attr.second,
-            millisecond: attr.millisecond
-        });
+        var value = InfinniUI.DateUtils.cloneDate(attr.date);
+        value.setHours(attr.hour, attr.minute, attr.second, attr.millisecond);
 
         if (!this.checkRange(value)) {
             return 'Out of range';
         }
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        [mMin, mMax].forEach(function (val) {
-            val.set({
-                year: mVal.year(),
-                month: mVal.month(),
-                date: mVal.date()
-            });
-        });
-
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'minute') || mVal.isSame(mMin, 'minute') || mVal.isSame(mMax, 'minute');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'minute') || mMin.isSame(value, 'minute');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'minute') || mMax.isSame(value, 'minute');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
-
     }
-
 
 });
 
@@ -149,6 +110,7 @@ var SelectTimes = SelectComponent.extend({
 
         "click .time-segment-hour": "selectHour",
         "click .time-segment-minute": "selectMinute",
+        "click .time-segment-second": "selectSecond",
         "click .days": "selectDay"
     },
 
@@ -166,6 +128,7 @@ var SelectTimes = SelectComponent.extend({
         this.bindUIElements();
         this.updateHour();
         this.updateMinute();
+        this.updateSecond();
         this.initOnChangeHandlers();
     },
 
@@ -191,6 +154,18 @@ var SelectTimes = SelectComponent.extend({
 
         date.setHours(hour, minute, second);
         this.trigger('minute', date);
+    },
+
+    selectSecond: function () {
+        var
+            model = this.model,
+            date = model.get('date'),
+            hour = model.get('hour'),
+            minute = model.get('minute'),
+            second = model.get('second');
+
+        date.setHours(hour, minute, second);
+        this.trigger('second', date);
     },
 
     initOnChangeHandlers: function () {

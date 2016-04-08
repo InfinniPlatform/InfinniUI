@@ -6,9 +6,9 @@ var SelectComponent = Backbone.View.extend({
         var modelClass = this.modelClass;
 
         this.model = new modelClass({
-            today: new Date(),
+            today: options.today || new Date(),
             value: options.value,
-            date: options.date,
+            date: options.value || options.today,
             max: options.max,
             min: options.min
         });
@@ -30,15 +30,7 @@ var SelectComponent = Backbone.View.extend({
      * @param date
      */
     setDate: function (date) {
-        if (typeof date == 'undefined' || date === null){
-            var value = this.model.get('value'),
-                today = this.model.get('today');
-
-            date = value || today;
-        } else {
-            date = new Date(date);
-        }
-        this.model.set('date', date);
+        this.model.setDate(date);
     }
 
 });

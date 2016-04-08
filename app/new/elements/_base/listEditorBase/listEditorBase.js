@@ -54,10 +54,11 @@ _.extend(ListEditorBase.prototype, {
 
     onSelectedItemChanged: function (handler) {
         this.control.onSelectedItemChanged(this.createControlEventHandler(this, handler));
-    },
-
-    getValueComparator: function () {
-        return this.control.get('valueComparator');
     }
+
+    // UNUSED ?
+    //getValueComparator: function () {
+    //    return this.control.get('valueComparator');
+    //}
 
 }, editorBaseMixin);

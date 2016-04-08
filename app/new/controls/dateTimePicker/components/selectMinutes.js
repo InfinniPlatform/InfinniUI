@@ -3,39 +3,6 @@ var SelectMinutesModel = SelectComponentModel.extend({
     initialize: function () {
         SelectComponentModel.prototype.initialize.call(this);
         this.on('change:minute', this.updateDatePart.bind(this, 'minute'));
-    },
-
-    checkRange: function (value) {
-        var min = this.get('min'),
-            max = this.get('max'),
-            success = true;
-
-        var mMin = moment(min),
-            mMax = moment(max),
-            mVal = moment(value);
-
-        [mMin, mMax].forEach(function (val) {
-            val.set({
-                year: mVal.year(),
-                month: mVal.month(),
-                date: mVal.date()
-            });
-        });
-
-
-        if (!isEmpty(min) && !isEmpty(max)) {
-            success = mVal.isBetween(min, max, 'minute') || mVal.isSame(mMin, 'minute') || mVal.isSame(mMax, 'minute');
-        } else if (!isEmpty(min) && isEmpty(max)) {
-            success = mMin.isBefore(value, 'minute') || mMin.isSame(value, 'minute');
-        } else if (isEmpty(min) && !isEmpty(max)) {
-            success = mMax.isAfter(value, 'minute') || mMax.isSame(value, 'minute');
-        }
-
-        return success;
-
-        function isEmpty(value) {
-            return typeof value === 'undefined' || _.isEmpty(value);
-        }
     }
 
 });
@@ -80,7 +47,7 @@ var SelectMinutes = SelectComponent.extend({
 
         function markAvailable($el, value) {
             var date = moment(model.get('date')).minute(value);
-            $el.toggleClass('minute-unavailable', !model.checkRange(date));
+            $el.toggleClass('minute-unavailable', !model.checkRange(date, 'minute'));
         }
     },
 
@@ -95,8 +62,9 @@ var SelectMinutes = SelectComponent.extend({
             date = model.get('date'),
             minute = parseInt($el.attr('data-minute'), 10);
 
-        date.setMinutes(minute);
-        this.trigger('minute', date);
+        var newDate = InfinniUI.DateUtils.cloneDate(date);
+        newDate.setMinutes(minute);
+        this.trigger('minute', newDate);
     }
 
 });
