@@ -315,8 +315,7 @@ var newBaseDataSource = Backbone.Model.extend({
             this.setSelectedItem(null);
         }
 
-        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
-        //this.trigger('settingNewItemsComplete');
+        //this._notifyAboutItemsUpdatedAsPropertyChanged(items);
     },
 
     _restoreSelectedItem: function(){
@@ -827,7 +826,6 @@ var newBaseDataSource = Backbone.Model.extend({
         if (successHandler) {
             successHandler(context, argument);
         }
-        //this.trigger('onItemsUpdated', context, argument); сделать в _setItems
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {
