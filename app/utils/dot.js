@@ -254,7 +254,7 @@ window.InfinniUI.ObjectUtils = (function () {
                 } else if(propertyValue instanceof File){
                     setPropertyByPath(target, propertyPathTerms, propertyValue);
                 } else{
-                    setPropertyByPath(target, propertyPathTerms, _.clone(propertyValue));
+                    setPropertyByPath(target, propertyPathTerms, propertyValue);
                 }
             }
         },

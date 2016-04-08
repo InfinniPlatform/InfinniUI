@@ -56,21 +56,21 @@ describe('ObjectDataSource', function () {
         it('should get list of data', function (done) {
             // Given
 
+
             var dataSource = createRestDataSource();
 
             assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
             assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
 
             //When
+
             dataSource.updateItems(
                 function(context, args){
-
                     // Then
                     assert.isTrue(args.value.length > 0, 'data provider returns items');
                     assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
                     assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
                     done();
-
                 }
             );
         });
@@ -118,15 +118,35 @@ describe('ObjectDataSource', function () {
                 });
                 dataSource.setProperty('3.FirstName', 'П22');
 
-                dataSource.setProperty('.selectedItem', {'a':3});
-
                 // Then
                 assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
                 assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'return property value by property after change property 2');
                 assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
-                assert.equal(item3, dataSource.getProperty('3'), 'on set full item, link on item is not changed');
-                assert.equal(item3, dataSource.getProperty('3.FirstName'), 'return property value by property after change property 3');
-                assert.equal(item3, dataSource.getProperty('3.Id'), 'return property value by property after change property 4');
+                assert.equal(dataSource.getProperty('3'), item3, 'on set full item, link on item is not changed');
+                assert.equal(dataSource.getProperty('3.FirstName'), item3.FirstName, 'return property value by property after change property 3');
+                assert.equal(dataSource.getProperty('3.Id'), item3.Id, 'return property value by property after change property 4');
+                done();
+            }
+        });
+
+        it('should change spec value as property', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var item3;
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+                assert.equal(dataSource.getProperty('.selectedItem.Id'), 1, 'return property value by property 2');
+                item3 = dataSource.getProperty('3');
+
+                //When
+                dataSource.setProperty('.selectedItem', {'a':3});
+
+                // Then
                 assert.equal(dataSource.getProperty('.selectedItem.a'), 3, 'return property value by property after change property 5');
                 done();
             }
@@ -138,34 +158,38 @@ describe('ObjectDataSource', function () {
             var result = '';
 
 
-            dataSource.onPropertyChanged('0.FirstName', function(context, args){
-                result += '1';
+            function subscribeOnPropertyChanged(){
+                dataSource.onPropertyChanged('0.FirstName', function(context, args){
+                    result += '1';
 
-                assert.equal(args.oldValue, 'Иван', 'right old value in args');
-                assert.equal(args.newValue, 'Иванидзе', 'right new value in args');
-                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'value in source is new, when onPropertyChanged called');
-            });
+                    assert.equal(args.oldValue, 'Иван', 'right old value in args');
+                    assert.equal(args.newValue, 'Иванидзе', 'right new value in args');
+                    assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'value in source is new, when onPropertyChanged called');
+                });
 
-            dataSource.onPropertyChanged('0.LastName', function(context, args){
-                result += '2';
+                dataSource.onPropertyChanged('0.LastName', function(context, args){
+                    result += '2';
 
-                assert.equal(args.oldValue, 'Иванов', 'right old value in args');
-                assert.equal(args.newValue, 'Ивнв', 'right new value in args');
-                assert.equal(dataSource.getProperty('FirstName'), 'Ивнв', 'value in source is new, when onPropertyChanged called');
-            });
+                    assert.equal(args.oldValue, 'Иванов', 'right old value in args');
+                    assert.equal(args.newValue, 'Ивнв', 'right new value in args');
+                    assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'value in source is new, when onPropertyChanged called');
+                });
 
-            dataSource.onPropertyChanged('.selectedItem', function(context, args){
-                result += '3';
+                dataSource.onPropertyChanged('.selectedItem', function(context, args){
+                    result += '3';
 
-                assert.equal(args.oldValue.FirstName, 'Иванов', 'right old value in args');
-                assert.equal(args.newValue.a, 3, 'right new value in args');
-                assert.equal(dataSource.getSelectedItem().a, 3, 'value in source is new, when onPropertyChanged called');
-            });
+                    assert.equal(args.oldValue.FirstName, 'Иванидзе', 'right old value in args');
+                    assert.equal(args.newValue.a, 3, 'right new value in args');
+                    assert.equal(dataSource.getSelectedItem().a, 3, 'value in source is new, when onPropertyChanged called');
+                });
+            }
+
 
             dataSource.updateItems(handleItemsReady);
 
 
             function handleItemsReady(){
+                subscribeOnPropertyChanged();
 
                 //When
                 dataSource.setProperty('FirstName', 'Иванидзе');

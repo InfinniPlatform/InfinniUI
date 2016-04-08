@@ -179,11 +179,10 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     setProperty: function (property, value) {
-
-        var firstChar = property.charAt(0);
         var propertyPaths = property.split('.');
+        var firstChar;
         var indexOfSelectedItem;
-        var property;
+        var index;
 
         if(propertyPaths[0] == '$'){
             indexOfSelectedItem = this._indexOfSelectedItem();
@@ -195,23 +194,42 @@ var newBaseDataSource = Backbone.Model.extend({
             propertyPaths[0] = indexOfSelectedItem.toString();
         }
 
+        firstChar = property.charAt(0);
+
         if(propertyPaths.length == 1){
 
             if(propertyPaths[0] == ''){
-                this._setItems();
+                this._setItems(value);
 
             }else if( this.get('isNumRegEx').test(propertyPaths[0]) ){
+                this._changeItem(propertyPaths[0], value);
 
             }else{
                 indexOfSelectedItem = this._indexOfSelectedItem();
                 if(indexOfSelectedItem == -1){
                     return;
                 }
-                property = 
+                property = 'items.' + indexOfSelectedItem + '.' + property;
+                this.get('model').setProperty(property, value);
             }
 
         }else{
+            if(firstChar == '.'){
+                property = property.substr(1);
+                this.get('model').setProperty(property, value);
 
+            }else if(this.get('isNumRegEx').test(firstChar)){
+                property = 'items.' + property;
+                this.get('model').setProperty(property, value);
+
+            }else{
+                indexOfSelectedItem = this._indexOfSelectedItem();
+                if(indexOfSelectedItem == -1){
+                    return;
+                }
+                property = 'items.' + indexOfSelectedItem + '.' + property;
+                this.get('model').setProperty(property, value);
+            }
         }
 
         // если один элемент - и это номер или доллар - _changeItem(index, value) замена содержимого item
@@ -225,33 +243,9 @@ var newBaseDataSource = Backbone.Model.extend({
         // иначе - setSelectedItemValue(value)
 
 
-        if( this.get('isNumRegEx').test(firstChar) ){
-            property = 'items.' + property;
-
-        }else if(firstChar == ''){
-            property = 'items';
-
-        }else if(firstChar == '$'){
-            indexOfSelectedItem = this._indexOfSelectedItem();
-            if(indexOfSelectedItem == -1){
-                return undefined;
-            }
-            property = 'items.' + indexOfSelectedItem + property.substr(1);
-
-        }else if(firstChar == '.'){
-            property = property.substr(1);
-        }else{
-            indexOfSelectedItem = this._indexOfSelectedItem();
-            if(indexOfSelectedItem == -1){
-                return undefined;
-            }
-            property = 'items.' + indexOfSelectedItem + '.' + property;
-        }
-
-        this.get('model').setProperty(property, value);
         //-----------
 
-        var selectedItem = this.getSelectedItem(),
+        /*var selectedItem = this.getSelectedItem(),
             bindingByIndexRegEx = /^\d/,
             relativeProperty, oldValue, source;
 
@@ -300,14 +294,14 @@ var newBaseDataSource = Backbone.Model.extend({
         }
 
         this._includeItemToModifiedSet(selectedItem);
-        this._notifyAboutPropertyChanged(property, value, oldValue);
+        this._notifyAboutPropertyChanged(property, value, oldValue);*/
     },
 
     _setItems: function (items) {
         var indexOfItemsById;
 
         this.set('isDataReady', true);
-        this.set('items', items);
+        this.get('model').setProperty('items', items);
         this._clearModifiedSet();
         if (items && items.length > 0) {
             indexOfItemsById = this._indexItemsById(items);
@@ -361,7 +355,7 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     getSelectedItem: function () {
-        return this.get('selectedItem');
+        return this.get('model').getProperty('selectedItem');
     },
 
     setSelectedItem: function (item, success, error) {
@@ -389,7 +383,7 @@ var newBaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this.set('selectedItem', item);
+        this.get('model').setProperty('selectedItem', item);
 
         this._notifyAboutSelectedItem(item, success);
     },
@@ -541,7 +535,15 @@ var newBaseDataSource = Backbone.Model.extend({
         }
     },
 
+    _changeItem: function(index, value){
+        var item = this.get('model').getProperty('items.'+index);
+        var oldValue = {};
 
+        this._replaceAllProperties(oldValue, item);
+        this._replaceAllProperties(item, value);
+
+        this.get('model').simulateSetProperty('items.'+index, oldValue);
+    },
     // UNUSED?
     //prepareAndGetProperty: function(property, onReady){
     //    var that = this;
@@ -812,7 +814,7 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler) {
-        this._setItems(itemsData);
+        this.setProperty('', itemsData.data);
         this._notifyAboutItemsUpdated(itemsData, successHandler);
     },
 

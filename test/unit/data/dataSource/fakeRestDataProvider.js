@@ -13,13 +13,12 @@ _.extend( FakeRestDataProvider.prototype, {
         var params = this.requestParams[type];
         var that = this;
 
-
         setTimeout(function(){
             successHandler({
                 requestId: requestId,
                 data: that.items
             });
-        }, 10);
+        }, 1);
 
         return requestId;
     }
