@@ -24,7 +24,7 @@ TimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
 };
 
 TimePickerBuilder.prototype.applyMinValue = function (element, minValue) {
-    var date = InfinniUI.DateUtils.parseTimeISO8601toDate(minValue);
+    var date = InfinniUI.DateUtils.parseTimeISO8601toDate(minValue, 0);
 
     if (typeof date !== 'undefined') {
         element.setMinValue(date);
@@ -32,7 +32,7 @@ TimePickerBuilder.prototype.applyMinValue = function (element, minValue) {
 };
 
 TimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
-    var date = InfinniUI.DateUtils.parseTimeISO8601toDate(maxValue);
+    var date = InfinniUI.DateUtils.parseTimeISO8601toDate(maxValue, 0);
 
     if (typeof date !== 'undefined') {
         element.setMaxValue(date);
