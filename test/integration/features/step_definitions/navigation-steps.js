@@ -321,3 +321,33 @@ this.Then(/^я выберу в выпадающем списке "([^"]*)" зн�
 
     window.testHelpers.waitCondition(haveCombobox, successCombobox, failCombobox);
 });
+
+this.Then(/^я сверну панель "([^"]*)"$/, function (panelName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }, function () {
+        try{
+            window.testHelpers.getControlByName(panelName).setCollapsed(false);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(panelName + ' not found!'));
+    });
+});
+
+this.Then(/^я разверну панель "([^"]*)"$/, function (panelName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }, function () {
+        try{
+            window.testHelpers.getControlByName(panelName).setCollapsed(true);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(panelName + ' not found!'));
+    });
+});
