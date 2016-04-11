@@ -185,6 +185,15 @@
               "ColumnSpan": 4,
               "Items": [
                 {
+                  "FileBox": {
+                    "AcceptTypes": [".gif",".png"],
+                    "Value": {
+                      "Source": "Child",
+                      "Property": "File"
+                    }
+                  }
+                },
+                {
                   "Button": {
                     "Text": "Test",
                     "OnClick": "{debugger; console.log(args);)"
@@ -262,6 +271,7 @@
     },
     {
       "DataGrid": {
+        "VerticalAlignment": "Center",
         "Columns": [
           {
             "Header": "Id",
@@ -281,7 +291,6 @@
               "DateTimePicker": {
                 "Mode": "Time",
                 "TimeZone": 0,
-                "MaxValue": "2016-02-29T21:00",
                 "Value": {
                   "Source": "Test",
                   "Property": "#.Date"
