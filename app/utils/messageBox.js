@@ -27,6 +27,11 @@ var MessageBox = Backbone.View.extend({
     ),
 
     initialize: function (options) {
+        // чтобы пользователь случайно не обратился к элементу в фокусе,
+        // пока диалоговое окно создается и ещё не перехватило фокус,
+        // необходимо старую фокусировку снять
+        $(document.activeElement).blur();
+
         this.options = options;
 
         this.addButtonClasses();
