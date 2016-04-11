@@ -211,6 +211,8 @@ var newBaseDataSource = Backbone.Model.extend({
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
                 this.get('model').setProperty(property, value);
+
+                this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
             }
 
         }else{
@@ -222,6 +224,7 @@ var newBaseDataSource = Backbone.Model.extend({
                 property = 'items.' + property;
                 this.get('model').setProperty(property, value);
 
+                this._includeItemToModifiedSetByIndex( parseInt(propertyPaths[0]));
             }else{
                 indexOfSelectedItem = this._indexOfSelectedItem();
                 if(indexOfSelectedItem == -1){
@@ -229,72 +232,10 @@ var newBaseDataSource = Backbone.Model.extend({
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
                 this.get('model').setProperty(property, value);
+
+                this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
             }
         }
-
-        // если один элемент - и это номер или доллар - _changeItem(index, value) замена содержимого item
-
-        // если пусто - _setItems(value, 'calledFromSetProperty')
-
-        // если . - сеттим в обычное свойство
-
-        // если номер и точка -
-
-        // иначе - setSelectedItemValue(value)
-
-
-        //-----------
-
-        /*var selectedItem = this.getSelectedItem(),
-            bindingByIndexRegEx = /^\d/,
-            relativeProperty, oldValue, source;
-
-        if (property == '') {
-            oldValue = this.get('items');
-            this._setItems(value);
-
-        } else if (property == '$') {
-
-            if (!selectedItem) {
-                return;
-            }
-
-            if (value != selectedItem) {
-                oldValue = this._copyObject(selectedItem);
-                this._replaceAllProperties(selectedItem, value);
-            } else {
-                return;
-            }
-
-        } else {
-
-            if (!selectedItem) {
-                return;
-            }
-
-            if (property.substr(0, 2) == '$.') {
-                relativeProperty = property.substr(2);
-                source = selectedItem;
-            } else {
-                relativeProperty = property;
-
-                if (bindingByIndexRegEx.test(property)) {
-                    source = this.getItems();
-                } else {
-                    source = selectedItem;
-                }
-            }
-
-            oldValue = InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-            if (value != oldValue) {
-                InfinniUI.ObjectUtils.setPropertyValue(source, relativeProperty, value);
-            } else {
-                return;
-            }
-        }
-
-        this._includeItemToModifiedSet(selectedItem);
-        this._notifyAboutPropertyChanged(property, value, oldValue);*/
     },
 
     _setItems: function (items) {
@@ -501,6 +442,13 @@ var newBaseDataSource = Backbone.Model.extend({
         }
     },
 
+    _includeItemToModifiedSetByIndex: function (index) {
+        var item;
+
+        item = this.getItems()[index];
+        this._includeItemToModifiedSet(item);
+    },
+
     _includeItemToModifiedSet: function (item) {
         var itemId = this.idOfItem(item);
         this.get('modifiedItems')[itemId] = item;
@@ -538,10 +486,14 @@ var newBaseDataSource = Backbone.Model.extend({
         var item = this.get('model').getProperty('items.'+index);
         var oldValue = {};
 
+        this._excludeItemFromModifiedSet(item);
+
         this._replaceAllProperties(oldValue, item);
         this._replaceAllProperties(item, value);
 
         this.get('model').simulateSetProperty('items.'+index, oldValue);
+
+        this._includeItemToModifiedSet(item);
     },
     // UNUSED?
     //prepareAndGetProperty: function(property, onReady){

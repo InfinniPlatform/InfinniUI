@@ -46,6 +46,72 @@ describe('ObjectDataSource', function () {
         var dataSource = new RestDataSource({ view: view }),
             newItems = JSON.parse(JSON.stringify(items));
 
+        dataSource.suspendUpdate('urlTuning');
+
+        /*
+        * кейсы использования фильтров
+        *
+        * удобно ли будет биндить автокомплит комбобокса на ДС вручную?
+        *
+        * DS{
+        *     Autocomplete: true,
+        *     AutocompleteValue: {
+        *         Source: "SomeDocDS",
+        *         Property: ".filter",
+        *         Direction: "ToSource",
+        *         Converters: {
+        *             ToSource: "{return 'eq(' + args.value + ')';}"
+        *         }
+        *     }
+        * }
+        * */
+
+        dataSource.setGettingUrlParams({
+            type: 'get',
+            origin:'http://some.ru',
+            path:'/some/{param1}/{param2}',
+            data: '?a=2&b={param1}&{param2}',
+
+            params: {
+                param1: '',
+                param2: ''
+            }
+        });
+
+        dataSource.setSettingUrlParams({
+            type: 'post',
+            origin:'http://some.ru',
+            path:'/some/{param1}/{param2}',
+            data: {
+                a:2,
+                b: '{param1}',
+                c: '!1{param2}2!'
+            },
+
+            params: {
+                param1: '',
+                param2: ''
+            }
+        });
+
+        dataSource.setDeletingUrlParams({
+            type: 'delete',
+            origin:'http://some.ru',
+            path:'/some/{param1}/{param2}',
+            data: {
+                a:2,
+                b: '{param1}',
+                c: '!1{param2}2!'
+            },
+
+            params: {
+                param1: '',
+                param2: ''
+            }
+        });
+
+        dataSource.suspendUpdate('urlTuning');
+
         FakeRestDataProvider.prototype.items = newItems;
 
         return dataSource;
@@ -129,6 +195,49 @@ describe('ObjectDataSource', function () {
             }
         });
 
+        it('should add changing items in modified set', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var item;
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.isFalse(dataSource.isModified(), 'at first items is not modified');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('$.LastName', 'Ивнв');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+                dataSource.setProperty('3.FirstName', 'Petrov');
+                dataSource.setProperty('3', {
+                    "Id": '55',
+                    "FirstName": "П2",
+                    "LastName": "Пе2"
+                });
+                dataSource.setProperty('4', {
+                    "Id": '5',
+                    "FirstName": "П5",
+                    "LastName": "Пе5"
+                });
+
+                // Then
+                assert.equal(_.size(dataSource.get('modifiedItems')), 4, 'length of modified items');
+                item = dataSource.getProperty('0');
+                assert.isTrue(dataSource.isModified(item), 'is modified 1');
+                item = dataSource.getProperty('2');
+                assert.isTrue(dataSource.isModified(item), 'is modified 2');
+                item = dataSource.getProperty('3');
+                assert.isTrue(dataSource.isModified(item), 'is modified 3');
+                item = dataSource.getProperty('4');
+                assert.isTrue(dataSource.isModified(item), 'is modified 4');
+
+                done();
+            }
+        });
+
         it('should change spec value as property', function (done) {
             // Given
             var dataSource = createRestDataSource();
@@ -152,7 +261,7 @@ describe('ObjectDataSource', function () {
             }
         });
 
-        it('should property changed', function (done) {
+        it('should handle property changed', function (done) {
             // Given
             var dataSource = createRestDataSource();
             var result = '';
@@ -206,6 +315,66 @@ describe('ObjectDataSource', function () {
 
                 // Then
                 assert.equal(result, '123', 'all handlers called in correct order');
+                done();
+            }
+        });
+
+        it('should handle selectedItem changed', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var result = '';
+            var item;
+
+
+            dataSource.onSelectedItemChanged(function(context, args){
+                result += '1';
+
+                assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
+                assert.isTrue(args.newValue.FirstName ==  'Иван' || args.newValue.FirstName == 'Петр', 'right new value in args');
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                item = dataSource.getItems()[1];
+
+                //When
+                dataSource.setSelectedItem(item);
+
+                // Then
+                assert.equal(result, '11', 'all handlers called in correct order');
+                done();
+            }
+        });
+
+        it('should handle url params ', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var result = '';
+            var item;
+
+
+            dataSource.onSelectedItemChanged(function(context, args){
+                result += '1';
+
+                assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
+                assert.isTrue(args.newValue.FirstName ==  'Иван' || args.newValue.FirstName == 'Петр', 'right new value in args');
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                item = dataSource.getItems()[1];
+
+                //When
+                dataSource.setSelectedItem(item);
+
+                // Then
+                assert.equal(result, '11', 'all handlers called in correct order');
                 done();
             }
         });
