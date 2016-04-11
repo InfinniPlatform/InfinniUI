@@ -39,6 +39,10 @@ var DataGridRowView = ControlView.extend({
         this.updateShowSelectors();
     },
 
+    updateVerticalAlignment: function () {
+        //Use Vertical alignment for DataGrid
+    },
+
     render: function () {
         this.prerenderingActions();
         var $el = this.$el;
