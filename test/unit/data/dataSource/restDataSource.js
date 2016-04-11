@@ -69,12 +69,13 @@ describe('ObjectDataSource', function () {
         dataSource.setGettingUrlParams({
             type: 'get',
             origin:'http://some.ru',
-            path:'/some/{param1}/{param2}',
-            data: '?a=2&b={param1}&{param2}',
+            path:'/some/id{param1}{param2}',
+            data: '?a=2&b={param1}{param3}',
 
             params: {
                 param1: '',
-                param2: ''
+                param2: undefined,
+                param3: '&c=4',
             }
         });
 
@@ -113,6 +114,7 @@ describe('ObjectDataSource', function () {
         dataSource.suspendUpdate('urlTuning');
 
         FakeRestDataProvider.prototype.items = newItems;
+        FakeRestDataProvider.prototype.lastSendedUrl = '';
 
         return dataSource;
     }
@@ -352,29 +354,18 @@ describe('ObjectDataSource', function () {
         it('should handle url params ', function (done) {
             // Given
             var dataSource = createRestDataSource();
-            var result = '';
             var item;
 
-
-            dataSource.onSelectedItemChanged(function(context, args){
-                result += '1';
-
-                assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
-                assert.isTrue(args.newValue.FirstName ==  'Иван' || args.newValue.FirstName == 'Петр', 'right new value in args');
-            });
-
+            assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, '', 'request was not sended');
 
             dataSource.updateItems(handleItemsReady);
 
+            dataSource.setGettingUrlParams('params.param2', '/newVal/');
 
             function handleItemsReady(){
-                item = dataSource.getItems()[1];
-
-                //When
-                dataSource.setSelectedItem(item);
-
                 // Then
-                assert.equal(result, '11', 'all handlers called in correct order');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, 'http://some.ru/some/id4/newVal/?a=2&b=4', 'request sended on right url');
+
                 done();
             }
         });

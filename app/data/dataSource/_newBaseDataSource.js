@@ -49,28 +49,6 @@ var newBaseDataSource = Backbone.Model.extend({
     initialize: function () {
         var view = this.get('view');
         var modelStartTree = {
-            urlParams: {
-                get: {
-                    origin: '',
-                    path: '',
-                    query: '',
-                    data: ''
-                },
-
-                post: {
-                    origin: '',
-                    path: '',
-                    query: '',
-                    data: ''
-                },
-
-                delete: {
-                    origin: '',
-                    path: '',
-                    query: '',
-                    data: ''
-                }
-            },
             items: null,
             selectedItem: null
         };
@@ -255,8 +233,6 @@ var newBaseDataSource = Backbone.Model.extend({
         } else {
             this.setSelectedItem(null);
         }
-
-        //this._notifyAboutItemsUpdatedAsPropertyChanged(items);
     },
 
     _restoreSelectedItem: function(){
