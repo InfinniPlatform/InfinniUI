@@ -105,7 +105,7 @@ window.testHelpers = {
                 return undefined;
             }
 
-            var result = window.currentListBox.findAllChildrenByName(itemName)[0];
+            var result = window.currentListBox.findAllChildrenByName(itemName)[itemIndex];
 
             if (window.currentListBox.setSelectedItem) {
                 window.currentListBox.setSelectedItem(window.currentListBox.getItems().getByIndex(itemIndex));
