@@ -69,24 +69,24 @@ describe('ObjectDataSource', function () {
         dataSource.setGettingUrlParams({
             type: 'get',
             origin:'http://some.ru',
-            path:'/some/id{param1}{param2}',
-            data: '?a=2&b={param1}{param3}',
+            path:'/some/id<%param1%><%param2%>',
+            data: '?a=2&b=<%param1%><%param3%>',
 
             params: {
                 param1: '',
                 param2: undefined,
-                param3: '&c=4',
+                param3: '&c=4'
             }
         });
 
         dataSource.setSettingUrlParams({
             type: 'post',
             origin:'http://some.ru',
-            path:'/some/{param1}/{param2}',
+            path:'/some/<%param1%>/<%param2%>',
             data: {
                 a:2,
-                b: '{param1}',
-                c: '!1{param2}2!'
+                b: '<%param1%>',
+                c: '!1<%param2%>2!'
             },
 
             params: {
@@ -98,11 +98,11 @@ describe('ObjectDataSource', function () {
         dataSource.setDeletingUrlParams({
             type: 'delete',
             origin:'http://some.ru',
-            path:'/some/{param1}/{param2}',
+            path:'/some/<%param1%>/<%param2%>',
             data: {
                 a:2,
-                b: '{param1}',
-                c: '!1{param2}2!'
+                b: '<%param1%>',
+                c: '!1<%param2%>2!'
             },
 
             params: {

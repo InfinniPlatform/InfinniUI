@@ -41,18 +41,23 @@ var RestDataSource = newBaseDataSource.extend({
         this.get('model').onPropertyChanged('urlParams.get.*', function(context, args){
             var dataProvider = that.get('dataProvider');
             var urlParams = that.getGettingUrlParams();
+            var templated;
 
-            if( that._checkGettingUrlParamsReady() ){
-                dataProvider.set
+            dataProvider.setOrigin(urlParams.origin);
+            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
+            dataProvider.setPath(templated);
+            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
+            dataProvider.setData(templated);
+
+
+            if( this.get('isDataReady') || this.get('isRequestInProcess') ){ // ds was resolved
+                this.updateItems();
             }
-
-            //порядок действий
-            //1) устанавливается урл часть
-            //1.1) checkReadyUrl - проходим всё в path и все в data, если все параметры есть и ни один не равен undefined - url готов. передаем в провайдеры path и data
-            //1.2) снимаем заморозку по неготовности url параметров. Если DS разрезолвлен, делаем updateItems
-            //1.3) если есть неготовые параметры - замораживаем DS 'urlGettingParamsNotReady'
-
-            dataProvider.set
+            //РїРѕСЂСЏРґРѕРє РґРµР№СЃС‚РІРёР№
+            //1) СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СѓСЂР» С‡Р°СЃС‚СЊ
+            //1.1) checkReadyUrl - РїСЂРѕС…РѕРґРёРј РІСЃС‘ РІ path Рё РІСЃРµ РІ data, РµСЃР»Рё РІСЃРµ РїР°СЂР°РјРµС‚СЂС‹ РµСЃС‚СЊ Рё РЅРё РѕРґРёРЅ РЅРµ СЂР°РІРµРЅ undefined - url РіРѕС‚РѕРІ. РїРµСЂРµРґР°РµРј РІ РїСЂРѕРІР°Р№РґРµСЂС‹ path Рё data
+            //1.2) СЃРЅРёРјР°РµРј Р·Р°РјРѕСЂРѕР·РєСѓ РїРѕ РЅРµРіРѕС‚РѕРІРЅРѕСЃС‚Рё url РїР°СЂР°РјРµС‚СЂРѕРІ. Р•СЃР»Рё DS СЂР°Р·СЂРµР·РѕР»РІР»РµРЅ, РґРµР»Р°РµРј updateItems
+            //1.3) РµСЃР»Рё РµСЃС‚СЊ РЅРµРіРѕС‚РѕРІС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ - Р·Р°РјРѕСЂР°Р¶РёРІР°РµРј DS 'urlGettingParamsNotReady'
         });
     },
 
@@ -159,12 +164,9 @@ var RestDataSource = newBaseDataSource.extend({
         allParams.concat(params);
 
         data = this.getGettingUrlParams('data');
-        for(var k in data){
-            if(typeof data[k] == 'string'){
-                params = this._findSubstitutionParams(data[k]);
-                allParams.concat(params);
-            }
-        }
+        strWithParams = JSON.stringify(data);
+        params = this._findSubstitutionParams(strWithParams);
+        allParams.concat(params);
 
         definedParams = this.getGettingUrlParams('params');
         for(var i = 0, ii = allParams.length; i<ii; i++){
@@ -179,12 +181,24 @@ var RestDataSource = newBaseDataSource.extend({
 
     _findSubstitutionParams: function(str){
         var result = [];
-        str.replace(/\{([^\}]*)\}/g, function(p1, p2){
+        str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
             result.push(p2);
             return p1;
         });
 
         return result;
+    },
+
+    _templateParamsInStr: function(str, params){
+        return str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
+            return params[p2];
+        });
+    },
+
+    _templateParamsInObject: function(obj, params){
+        var str = JSON.stringify(obj);
+        var tmpTemplated = this._templateParamsInStr(str, params);
+        return JSON.parse(tmpTemplated);
     }
 
 });
