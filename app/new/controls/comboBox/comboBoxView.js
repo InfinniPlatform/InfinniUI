@@ -55,7 +55,7 @@ var ComboBoxView = ListEditorBaseView.extend({
 
             model.on('change:dropdown', function (model, dropdown) {
                 if (dropdown) {
-                    model.set('search', '');//Сброс фильтра
+                    model.set('autocompleteValue', '');//Сброс фильтра
                     model.set('focused', true);
                     if (view.dropDownView) {
                         view.dropDownView.remove();
@@ -268,7 +268,7 @@ var ComboBoxView = ListEditorBaseView.extend({
      */
     onSearchValueHandler: function (text) {
         this.toggleDropdown(true);
-        this.model.set('search', text);
+        this.model.set('autocompleteValue', text);
     },
 
     onClickValueHandler: function (event) {

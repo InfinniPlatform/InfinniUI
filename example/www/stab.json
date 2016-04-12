@@ -185,6 +185,26 @@
               "ColumnSpan": 4,
               "Items": [
                 {
+                  "ComboBox": {
+                    "Name": "ComboBox1",
+                    "Items": {
+                      "Source": "BloodGroupDataSource",
+                      "Property": ""
+                    },
+                    "ItemFormat": "{DisplayName}",
+                    "ValueFormat": "{DisplayName}({Id})",
+                    "Autocomplete": true
+                  }
+                },
+                {
+                  "Label": {
+                    "Value": {
+                      "Source": "ComboBox1",
+                      "Property": "autocompleteValue"
+                    }
+                  }
+                },
+                {
                   "FileBox": {
                     "AcceptTypes": [".gif",".png"],
                     "Value": {
@@ -274,8 +294,14 @@
         "VerticalAlignment": "Center",
         "Columns": [
           {
-            "Header": "Id",
-            "CellProperty": "Id"
+            "`Header": "Id",
+            "HeaderTemplate": {
+              "TextBox": {
+                "Value": "Id"
+              }
+            },
+            "CellProperty": "Id",
+            "Width": "50%"
           },
           {
             "Header": "Name",

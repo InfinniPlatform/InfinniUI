@@ -31,58 +31,6 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
                 name = that.generateName();
                 element.setName(name);
             }
-
-
-            if(params.metadata.AutocompleteProperty){
-                (function (binding) {
-
-
-                    var source = binding.getSource();
-                    var fullSearchFilter = {
-                        CriteriaType: criteriaType.IsContains,
-                        Property: params.metadata.AutocompleteProperty,
-                        Value: {
-                            "Source": name,
-                            "Property": "search",
-                            "Converter":{
-                                "ToElement":"{var val = args.value || ''; return val;}"
-                            }
-                        }
-                    };
-
-                    if (!source.getFilterManager) {
-                        return;
-                    }
-
-                    source.addFilter([fullSearchFilter]);
-
-                })(data.itemsBinding);
-
-            }else{
-                (function (binding) {
-
-
-                    var source = binding.getSource();
-                    var fullSearchFilter = {
-                        CriteriaType: criteriaType.FullTextSearch,
-                        Property: "",
-                        Value: {
-                            "Source": name,
-                            "Property": "search",
-                            "Converter":{
-                                "ToElement":"{var val = args.value || ''; return val;}"
-                            }
-                        }
-                    };
-
-                    if (!source.getFilterManager) {
-                        return;
-                    }
-
-                    source.addFilter([fullSearchFilter]);
-
-                })(data.itemsBinding);
-            }
         }
 
     },
@@ -144,33 +92,9 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
             var label = new Label(this);
             label.setHorizontalAlignment('Left');
             label.setDisplayFormat(format);
-            //var labelBinding = new DataBinding(this);
-            //labelBinding.setMode(BindingModes.toElement);
-            //
-            //var source = binding.getSource();
-            //var property = binding.getSourceProperty();
-            //
-            //if (params.element.getMultiSelect()) {
-            //    if (property && property !== '') {
-            //        property = [property, index].join('.');
-            //    } else {
-            //        property = String(index);
-            //    }
-            //}
-            //
-            //labelBinding.bindSource(source, property);
-            //labelBinding.bindElement(label, 'value');
             label.setValue(value);
             return label;
         };
-        //return function(context, args){
-        //    var index = args.index;
-        //    var label = new Label(this);
-        //
-        //    label.setDisplayFormat(format);
-        //    label.setValue(format.call(null, args));
-        //    return label;
-        //};
     },
 
     buildValueTemplateByDefault: function (binding, params) {
@@ -181,28 +105,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
 
             var label = new Label(this);
             label.setHorizontalAlignment('Left');
-
-            //if (binding) {
-                //var labelBinding = new DataBinding(this);
-                //labelBinding.setMode(BindingModes.toElement);
-                //
-                //var source = binding.getSource();
-                //var property = binding.getSourceProperty();
-                //
-                //if (params.element.getMultiSelect()) {
-                //    if (property && property !== '') {
-                //        property = [property, index].join('.');
-                //    } else {
-                //        property = String(index);
-                //    }
-                //}
-                //
-                //labelBinding.bindSource(source, property);
-                //labelBinding.bindElement(label, 'value');
-
-            //} else {
-                label.setValue(value);
-            //}
+            label.setValue(value);
 
             return label;
         };
