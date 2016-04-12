@@ -1,7 +1,7 @@
 function DocumentDataSourceBuilder() {
 }
 
-_.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
+_.inherit(DocumentDataSourceBuilder, newBaseDataSourceBuilder);
 
 _.extend(DocumentDataSourceBuilder.prototype, {
     applyMetadata: function(builder, parent, metadata, dataSource){
@@ -29,14 +29,14 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         return new DocumentDataSource({
             view: parent
         });
-    },
-
-    initFileProvider: function (dataSource) {
-        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
-            documentId: dataSource.getDocumentId(),
-            configId: dataSource.getConfigId()
-        });
-
-        dataSource.setFileProvider(fileProvider);
     }
+
+    //initFileProvider: function (dataSource) {
+    //    var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+    //        documentId: dataSource.getDocumentId(),
+    //        configId: dataSource.getConfigId()
+    //    });
+    //
+    //    dataSource.setFileProvider(fileProvider);
+    //}
 });

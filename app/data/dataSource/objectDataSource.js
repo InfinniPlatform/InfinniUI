@@ -1,4 +1,4 @@
-var ObjectDataSource = BaseDataSource.extend({
+var ObjectDataSource = newBaseDataSource.extend({
 
     initDataProvider: function(){
         var dataProvider = window.providerRegister.build('ObjectDataSource');

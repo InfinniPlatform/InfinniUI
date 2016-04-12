@@ -18,12 +18,12 @@ _.extend( FakeRestDataProvider.prototype, {
         var urlString = params.origin + params.path;
         var queryString;
 
-        if(params.query){
-            queryString = $.param(params.query);
-            urlString = '?' + queryString;
+        if(type == 'get' && _.size(params.data) > 0){
+            queryString = $.param(params.data);
+            urlString = urlString + '?' + queryString;
         }
 
-        this.lastSendedUrl = urlString;
+        FakeRestDataProvider.prototype.lastSendedUrl = urlString;
 
         setTimeout(function(){
             successHandler({

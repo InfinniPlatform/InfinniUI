@@ -9,10 +9,10 @@ _.extend(ObjectDataProvider.prototype, {
         this.items = items;
     },
 
-    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-        var filter = new FilterCriteriaType();
-        var callback = filter.getFilterCallback(criteriaList);
-        resultCallback(this.items.filter(callback));
+    getItems: function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
+        //var filter = new FilterCriteriaType();
+        //var callback = filter.getFilterCallback(criteriaList);
+        resultCallback({data: this.items});
     },
 
     createItem: function (resultCallback) {

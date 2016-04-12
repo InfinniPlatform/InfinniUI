@@ -40,7 +40,7 @@ describe('ObjectDataSource', function () {
         }
     ];
 
-    function createRestDataSource(){
+    function createRestDataSource(missParam){
 
         var view = fakeView();
         var dataSource = new RestDataSource({ view: view }),
@@ -69,12 +69,12 @@ describe('ObjectDataSource', function () {
         dataSource.setGettingUrlParams({
             type: 'get',
             origin:'http://some.ru',
-            path:'/some/id<%param1%><%param2%>',
-            data: '?a=2&b=<%param1%><%param3%>',
+            path:'/some/id<%param1%><%param2%>?a=2&b=<%param1%><%param3%>',
+            data: {},
 
             params: {
-                param1: '',
-                param2: undefined,
+                param1: 4,
+                param2: missParam ? undefined : '/',
                 param3: '&c=4'
             }
         });
@@ -111,7 +111,7 @@ describe('ObjectDataSource', function () {
             }
         });
 
-        dataSource.suspendUpdate('urlTuning');
+        dataSource.resumeUpdate('urlTuning');
 
         FakeRestDataProvider.prototype.items = newItems;
         FakeRestDataProvider.prototype.lastSendedUrl = '';
@@ -351,9 +351,9 @@ describe('ObjectDataSource', function () {
             }
         });
 
-        it('should handle url params ', function (done) {
+        it('should handle url params changing', function (done) {
             // Given
-            var dataSource = createRestDataSource();
+            var dataSource = createRestDataSource(true);
             var item;
 
             assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, '', 'request was not sended');
@@ -364,7 +364,7 @@ describe('ObjectDataSource', function () {
 
             function handleItemsReady(){
                 // Then
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, 'http://some.ru/some/id4/newVal/?a=2&b=4', 'request sended on right url');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, 'http://some.ru/some/id4/newVal/?a=2&b=4&c=4', 'request sended on right url');
 
                 done();
             }

@@ -43,22 +43,35 @@ var RestDataSource = newBaseDataSource.extend({
             var urlParams = that.getGettingUrlParams();
             var templated;
 
-            dataProvider.setOrigin(urlParams.origin);
+            dataProvider.setOrigin('get', urlParams.origin);
             templated = that._templateParamsInStr(urlParams.path, urlParams.params);
-            dataProvider.setPath(templated);
+            dataProvider.setPath('get', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
-            dataProvider.setData(templated);
+            dataProvider.setData('get', templated);
 
 
-            if( this.get('isDataReady') || this.get('isRequestInProcess') ){ // ds was resolved
-                this.updateItems();
+            if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or wait resolving
+                that.updateItems();
             }
-            //РїРѕСЂСЏРґРѕРє РґРµР№СЃС‚РІРёР№
-            //1) СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ СѓСЂР» С‡Р°СЃС‚СЊ
-            //1.1) checkReadyUrl - РїСЂРѕС…РѕРґРёРј РІСЃС‘ РІ path Рё РІСЃРµ РІ data, РµСЃР»Рё РІСЃРµ РїР°СЂР°РјРµС‚СЂС‹ РµСЃС‚СЊ Рё РЅРё РѕРґРёРЅ РЅРµ СЂР°РІРµРЅ undefined - url РіРѕС‚РѕРІ. РїРµСЂРµРґР°РµРј РІ РїСЂРѕРІР°Р№РґРµСЂС‹ path Рё data
-            //1.2) СЃРЅРёРјР°РµРј Р·Р°РјРѕСЂРѕР·РєСѓ РїРѕ РЅРµРіРѕС‚РѕРІРЅРѕСЃС‚Рё url РїР°СЂР°РјРµС‚СЂРѕРІ. Р•СЃР»Рё DS СЂР°Р·СЂРµР·РѕР»РІР»РµРЅ, РґРµР»Р°РµРј updateItems
-            //1.3) РµСЃР»Рё РµСЃС‚СЊ РЅРµРіРѕС‚РѕРІС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ - Р·Р°РјРѕСЂР°Р¶РёРІР°РµРј DS 'urlGettingParamsNotReady'
+            //порядок действий
+            //1) устанавливается урл часть
+            //1.1) checkReadyUrl - проходим всё в path и все в data, если все параметры есть и ни один не равен undefined - url готов. передаем в провайдеры path и data
+            //1.2) снимаем заморозку по неготовности url параметров. Если DS разрезолвлен, делаем updateItems
+            //1.3) если есть неготовые параметры - замораживаем DS 'urlGettingParamsNotReady'
         });
+    },
+
+    updateItems: function(){
+
+        if(this._checkGettingUrlParamsReady()){
+            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+            this.resumeUpdate('urlGettingParamsNotReady');
+
+        }else{
+            this.suspendUpdate('urlGettingParamsNotReady');
+            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+        }
+
     },
 
     getGettingUrlParams: function(propertyName){
@@ -161,12 +174,12 @@ var RestDataSource = newBaseDataSource.extend({
 
         strWithParams = this.getGettingUrlParams('path');
         params = this._findSubstitutionParams(strWithParams);
-        allParams.concat(params);
+        allParams = allParams.concat(params);
 
         data = this.getGettingUrlParams('data');
         strWithParams = JSON.stringify(data);
         params = this._findSubstitutionParams(strWithParams);
-        allParams.concat(params);
+        allParams = allParams.concat(params);
 
         definedParams = this.getGettingUrlParams('params');
         for(var i = 0, ii = allParams.length; i<ii; i++){

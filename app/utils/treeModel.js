@@ -17,7 +17,7 @@ _.extend(TreeModel.prototype, {
     setProperty: function(propertyName, value){
         var oldValue = this.getProperty(propertyName);
         if(value == oldValue){
-            return;
+            return false;
         }
 
         var handlers;
@@ -26,6 +26,8 @@ _.extend(TreeModel.prototype, {
 
         handlers = this._getHandlersSubTree(propertyName);
         this._notifyAboutPropertyChanged(propertyName, oldValue, handlers);
+
+        return true;
     },
 
     simulateSetProperty: function(propertyName, oldValue){

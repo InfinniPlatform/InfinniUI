@@ -15,13 +15,7 @@ var newBaseDataSource = Backbone.Model.extend({
         dataProvider: null,
 
         /*
-        * TreeModel
-        * model.urlParams
-        * model.urlParams.get, post, delete
-        * model.urlParams...origin
-        * model.urlParams...path
-        * model.urlParams...query
-        * model.urlParams...data
+        * TreeModel for handling
         * model.items
         * model.selectedItem
         * */
@@ -33,6 +27,8 @@ var newBaseDataSource = Backbone.Model.extend({
         fillCreatedItem: true,
 
         suspendingList: null, // []
+
+        waitingOnUpdateItemsHandlers: null, //[]
 
         errorValidator: null,
         warningValidator: null,
@@ -57,7 +53,8 @@ var newBaseDataSource = Backbone.Model.extend({
         if (!view) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
-        this.set('suspended', []);
+        this.set('suspendingList', []);
+        this.set('waitingOnUpdateItemsHandlers', []);
         this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
     },
 
@@ -161,6 +158,7 @@ var newBaseDataSource = Backbone.Model.extend({
         var firstChar;
         var indexOfSelectedItem;
         var index;
+        var resultOfSet;
 
         if(propertyPaths[0] == '$'){
             indexOfSelectedItem = this._indexOfSelectedItem();
@@ -188,9 +186,11 @@ var newBaseDataSource = Backbone.Model.extend({
                     return;
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
-                this.get('model').setProperty(property, value);
+                resultOfSet = this.get('model').setProperty(property, value);
 
-                this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                }
             }
 
         }else{
@@ -200,18 +200,22 @@ var newBaseDataSource = Backbone.Model.extend({
 
             }else if(this.get('isNumRegEx').test(firstChar)){
                 property = 'items.' + property;
-                this.get('model').setProperty(property, value);
+                resultOfSet = this.get('model').setProperty(property, value);
 
-                this._includeItemToModifiedSetByIndex( parseInt(propertyPaths[0]));
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex( parseInt(propertyPaths[0]));
+                }
             }else{
                 indexOfSelectedItem = this._indexOfSelectedItem();
                 if(indexOfSelectedItem == -1){
                     return;
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
-                this.get('model').setProperty(property, value);
+                resultOfSet = this.get('model').setProperty(property, value);
 
-                this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                }
             }
         }
     },
@@ -335,69 +339,35 @@ var newBaseDataSource = Backbone.Model.extend({
     suspendUpdate: function (name) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         if (suspended.indexOf(reason) === -1) {
             suspended = suspended.slice(0);
             suspended.push(reason);
-            this.set('suspended', suspended);
+            this.set('suspendingList', suspended);
         }
     },
 
     resumeUpdate: function (name) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         var index = suspended.indexOf(reason);
 
         if (index !== -1) {
             suspended = suspended.slice(0);
             suspended.splice(index, 1);
-            this.set('suspended', suspended);
+            this.set('suspendingList', suspended);
+
+            // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из за заморозки, нужно вызвать updateItems
+            if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
+                this.updateItems();
+            }
         }
     },
 
     isUpdateSuspended: function () {
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         return suspended.length > 0;
-    },
-
-    getPageNumber: function () {
-        return this.get('pageNumber');
-    },
-
-    setPageNumber: function (value) {
-        if (!Number.isInteger(value) || value < 0) {
-            throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
-        }
-
-        if (value != this.get('pageNumber')) {
-            this.set('pageNumber', value);
-            this.updateItems();
-        }
-    },
-
-    getPageSize: function () {
-        return this.get('pageSize');
-    },
-
-    setPageSize: function (value) {
-        var pageSize = parseInt(value, 10);
-        if (!Number.isInteger(pageSize) || pageSize < 0) {
-            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + pageSize + '. Должно быть целое, неотрицательное число.';
-        }
-
-        if (pageSize != this.get('pageSize')) {
-            this.set('pageSize', pageSize);
-            this.updateItems();
-        }
-    },
-
-    getSorting: function () {
-        return this.get('sorting');
-    },
-
-    setSorting: function (sortingValue) {
-        this.set('sorting', sortingValue);
     },
 
     isModifiedItems: function () {
@@ -462,6 +432,10 @@ var newBaseDataSource = Backbone.Model.extend({
         var item = this.get('model').getProperty('items.'+index);
         var oldValue = {};
 
+        if(value == item){
+            return;
+        }
+
         this._excludeItemFromModifiedSet(item);
 
         this._replaceAllProperties(oldValue, item);
@@ -471,118 +445,11 @@ var newBaseDataSource = Backbone.Model.extend({
 
         this._includeItemToModifiedSet(item);
     },
-    // UNUSED?
-    //prepareAndGetProperty: function(property, onReady){
-    //    var that = this;
-    //
-    //    if (this.get('isDataReady')){
-    //        onReady( this.getProperty(property) );
-    //    }else{
-    //        if (!this.get('isRequestInProcess')){
-    //            this.updateItems();
-    //        }
-    //
-    //        this.once('onItemsUpdated', function(){
-    //            onReady( that.getProperty(property) );
-    //        });
-    //    }
-    //},
 
     tryInitData: function(){
         if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
             this.updateItems();
         }
-    },
-
-    _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
-        var
-            ds = this,
-            context = this.getContext(),
-            argument = this._getArgumentTemplate(),
-            selectedItem = ds.getSelectedItem(),
-            items = ds.getItems(),
-            selectedItemIndex = items.indexOf(selectedItem);
-
-        argument.property = property;
-        argument.newValue = newValue;
-        argument.oldValue = oldValue;
-
-        this.trigger('onPropertyChanged', context, argument);
-
-        /**
-         * Генерация событий на обновление связанных полей ($ и Значения вложенных полей)
-         */
-        this._onPropertyChangesList
-            .filter(function (name) {
-                if(typeof name != 'string'){
-                    return false;
-                }
-
-                var prop, matched = false;
-                var template = property + '.';
-                if (property === name) {
-                    matched = false;
-                } else if (property.length && name.length){
-                    if (isBindToSelectedItem(name) && isBindToSelectedItem(property)) {
-                        if (name.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    } else  if (isBindToSelectedItem(name)) {
-                        prop = resolveProperty(name);
-                        if (prop.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    } else if (isBindToSelectedItem(property)) {
-                        prop = resolveProperty(property);
-                        if (name.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    }
-                }
-
-                return matched;
-            })
-            .map(function (name) {
-                var prop,
-                    argument = ds._getArgumentTemplate();
-
-                argument.property = name;
-
-                if(isBindToSelectedItem(name)) {
-                    var prop1 = resolveProperty(name),
-                        prop2 = resolveProperty(property);
-
-                    prop = prop1.substr(prop2.length);
-                } else {
-                    prop = name.substr(property.length);
-                }
-
-                prop = prop.replace(/^\.+/, '');
-
-                argument.newValue = InfinniUI.ObjectUtils.getPropertyValue(newValue, prop);
-                argument.oldValue = InfinniUI.ObjectUtils.getPropertyValue(oldValue, prop);
-
-                return argument
-            })
-            .forEach(function (argument) {
-                ds.trigger('onPropertyChanged:' + argument.property, context, argument);
-            });
-
-        argument.property = property;
-        this.trigger('onPropertyChanged:' + property, context, argument);
-
-        function resolveProperty () {
-
-        }
-        function resolveProperty(property) {
-            return property.replace(/^\$/, selectedItemIndex);
-        }
-
-        function  isBindToSelectedItem(property) {
-            return /^\$/.test(property);
-        }
-
-
     },
 
     saveItem: function (item, success, error) {
@@ -650,7 +517,7 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _handleDeletedItem: function (item, successHandler) {
-        var items = this.get('items'),
+        var items = this.getItems(),
             idProperty = this.get('idProperty'),
             itemId = this.idOfItem(item),
             selectedItem = this.getSelectedItem();
@@ -733,23 +600,39 @@ var newBaseDataSource = Backbone.Model.extend({
             dataProvider.getItems(function (data) {
 
                 that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data, onSuccess);
+                that._handleUpdatedItemsData(data, onSuccess, onError);
 
             }, onError);
+        }else{
+            var handlers = this.get('waitingOnUpdateItemsHandlers');
+            handlers.push({
+                onSuccess: onSuccess,
+                onError: onError
+            });
         }
 
     },
 
-    _handleUpdatedItemsData: function (itemsData, successHandler) {
+    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
         this.setProperty('', itemsData.data);
-        this._notifyAboutItemsUpdated(itemsData, successHandler);
+        this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
 
-    _notifyAboutItemsUpdated: function (itemsData, successHandler) {
-        var context = this.getContext(),
-            argument = {
+    _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
+        var context = this.getContext();
+        var argument = {
                 value: itemsData.data
             };
+
+        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        var handlers = this.get('waitingOnUpdateItemsHandlers');
+        for(var i = 0, ii = handlers.length; i < ii; i++){
+            if(handlers[i].onSuccess){
+                handlers[i].onSuccess(context, argument);
+            }
+        }
+
+        this.set('waitingOnUpdateItemsHandlers', []);
 
         if (successHandler) {
             successHandler(context, argument);

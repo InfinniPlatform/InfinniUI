@@ -52,7 +52,7 @@ function FakeDataProvider(mode) {
         }
     ];
 
-    this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
+    this.getItems = function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
         if (mode === undefined || mode() === 'Created') {
 
             var result = [];
