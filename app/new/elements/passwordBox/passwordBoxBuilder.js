@@ -19,7 +19,7 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
             var metadata = params.metadata,
                 element = params.element;
 
-            element.setLabelText(metadata.LabelText);
+            this.initBindingToProperty(params, 'LabelText');
             element.setPasswordChar(metadata.PasswordChar);
         },
 

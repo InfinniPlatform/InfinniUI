@@ -22,7 +22,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
         var metadata = params.metadata;
         var element = params.element;
 
-        element.setLabelText(metadata.LabelText);
+        this.initBindingToProperty(params, 'LabelText');
 
         this
             .initDisplayFormat(params)
