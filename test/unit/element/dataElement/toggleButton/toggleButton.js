@@ -13,8 +13,8 @@ describe('ToggleButton', function () {
             assert.isUndefined($el.attr('data-pl-name'), 'data-pl-name');
             assert.isFalse($el.hasClass('pl-disabled'));
             assert.isFalse($el.hasClass('hidden'), 'hidden');
-            assert.isTrue($el.hasClass('pull-left'), 'pull-left');
-            assert.isFalse($el.hasClass('center-block'), 'center-block');
+            assert.isTrue($el.hasClass('pl-horizontal-Left'), 'pl-horizontal-Left');
+            assert.isFalse($el.hasClass('pl-horizontal-Center'), 'pl-horizontal-Center');
         });
 
         it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -38,8 +38,8 @@ describe('ToggleButton', function () {
             assert.equal($el.attr('data-pl-name'), 'newName');
             assert.isTrue($el.hasClass('pl-disabled'));
             assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
-            assert.isTrue($el.hasClass('center-block'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isTrue($el.hasClass('pl-horizontal-Center'));
         });
 
         it('Events onLoad, onValueChanged', function () {

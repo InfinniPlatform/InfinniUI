@@ -14,7 +14,7 @@ describe('TextBoxControl', function () {
             assert.isUndefined($el.attr('data-pl-name'));
             assert.isFalse($control.prop('disabled'));
             assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
 
             // When
             element.setValue('new');
@@ -28,7 +28,7 @@ describe('TextBoxControl', function () {
             assert.equal($el.attr('data-pl-name'), 'newName');
             assert.isTrue($control.prop('disabled'));
             assert.isTrue($el.hasClass('hidden'));
-            assert.isTrue($el.hasClass('pull-left'));
+            assert.isTrue($el.hasClass('pl-horizontal-Left'));
         });
 
 
@@ -225,7 +225,7 @@ describe('TextBoxControl', function () {
             assert.equal($el.attr('data-pl-name'), 'TextBox1', 'Name');
             assert.isTrue($el.hasClass('pl-disabled'), 'Enabled');
             assert.isTrue($el.hasClass('hidden'), 'Visible');
-            assert.isTrue($el.hasClass('full-width'), 'HorizontalAlignment');
+            assert.isTrue($el.hasClass('pl-horizontal-Stretch'), 'HorizontalAlignment');
             assert.isTrue($el.hasClass('verticalAlignmentBottom'), 'VerticalAlignment');
         });
 
