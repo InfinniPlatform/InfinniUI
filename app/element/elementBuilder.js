@@ -141,7 +141,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             var oldConverter;
 
             if (isBooleanBinding) {
-                dataBinding.setMode(BindingModes.toElement);
+                dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
                 converter = dataBinding.getConverter();
                 if (!converter) {

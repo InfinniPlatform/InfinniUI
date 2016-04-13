@@ -221,6 +221,39 @@
                       "Property": "$.Birthday"
                     }
                   }
+                },
+                {
+                  "PasswordBox": {
+                    "LabelText": {
+                      "Source": "Test",
+                      "Property": "2.Name"
+                    },
+                    "Value": {
+                      "Source": "Test",
+                      "Property": "1.Name"
+                    }
+                  }
+                },
+                {
+                  "TextBox": {
+                    "LabelText": "qwe",
+                    "Value": {
+                      "Source": "Test",
+                      "Property": "1.Name"
+                    }
+                  }
+                },
+                {
+                  "TextBox": {
+                    "LabelText": {
+                      "Source": "Test",
+                      "Property": "2.Name"
+                    },
+                    "Value": {
+                      "Source": "Test",
+                      "Property": "1.Name"
+                    }
+                  }
                 }
               ]
             }

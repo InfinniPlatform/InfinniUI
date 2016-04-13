@@ -145,7 +145,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
             label.setHorizontalAlignment('Left');
             label.setDisplayFormat(format);
             //var labelBinding = new DataBinding(this);
-            //labelBinding.setMode(BindingModes.toElement);
+            //labelBinding.setMode(InfinniUI.BindingModes.toElement);
             //
             //var source = binding.getSource();
             //var property = binding.getSourceProperty();
@@ -184,7 +184,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
 
             //if (binding) {
                 //var labelBinding = new DataBinding(this);
-                //labelBinding.setMode(BindingModes.toElement);
+                //labelBinding.setMode(InfinniUI.BindingModes.toElement);
                 //
                 //var source = binding.getSource();
                 //var property = binding.getSourceProperty();

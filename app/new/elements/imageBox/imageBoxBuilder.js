@@ -69,7 +69,7 @@ _.extend(ImageBoxBuilder.prototype, {
 
         var binding = data.valueBinding;
         if (binding) {
-            binding.setMode(BindingModes.toElement);
+            binding.setMode(InfinniUI.BindingModes.toElement);
 
             var ds = binding.getSource();
 
