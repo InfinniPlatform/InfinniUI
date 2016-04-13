@@ -1,15 +1,31 @@
 var DocumentDataSource = RestDataSource.extend({
     defaults: _.defaults({
+        documentId: null
 
-        configId:           null,
-        documentId:         null,
-        createActionName:   'CreateDocument',
-        readActionName:     'GetDocument',
-        updateActionName:   'SetDocument',
-        deleteActionName:   'DeleteDocument'
+    }, RestDataSource.prototype.defaults),
 
-    }, newBaseDataSource.prototype.defaults),
+    initialize: function () {
+        newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
 
+
+    },
+
+    updateGettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'get',
+                origin: InfinniUI.config.serverUrl,
+                path: this.get('/documentId'),
+                data: {}
+            },
+            filter = model.getProperty('filter');
+
+        if(filter){
+
+        }
+
+        this.setGettingUrlParams(params);
+    },
 
     initDataProvider: function(){
         var dataProvider = window.providerRegister.build('DocumentDataSource'),
@@ -26,17 +42,6 @@ var DocumentDataSource = RestDataSource.extend({
         this.set('dataProvider', dataProvider);
     },
 
-    getConfigId: function(){
-        return this.get('configId');
-    },
-
-    setConfigId: function(configId){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setConfigId(configId);
-        this.set('configId', configId);
-    },
-
     getDocumentId: function(){
         return this.get('documentId');
     },
@@ -46,50 +51,6 @@ var DocumentDataSource = RestDataSource.extend({
 
         dataProvider.setDocumentId(documentId);
         this.set('documentId', documentId);
-    },
-
-    getCreateAction: function(){
-        return this.get('createActionName');
-    },
-
-    setCreateAction: function(createActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setCreateAction(createActionName);
-        this.set('createActionName', createActionName);
-    },
-
-    getReadAction: function(){
-        return this.get('readActionName');
-    },
-
-    setReadAction: function(readActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setReadAction(readActionName);
-        this.set('readActionName', readActionName);
-    },
-
-    getUpdateAction: function(){
-        return this.get('updateActionName');
-    },
-
-    setUpdateAction: function(updateActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setUpdateAction(updateActionName);
-        this.set('updateActionName', updateActionName);
-    },
-
-    getDeleteAction: function(){
-        return this.get('deleteActionName');
-    },
-
-    setDeleteAction: function(deleteActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setDeleteAction(deleteActionName);
-        this.set('deleteActionName', deleteActionName);
     },
 
     saveItem: function (item, success, error) {

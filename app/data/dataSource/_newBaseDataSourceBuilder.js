@@ -2,7 +2,7 @@
  * @constructor
  * @mixes DataSourceValidationNotifierMixin
  */
-function newBaseDataSourceBuilder() {
+var newBaseDataSourceBuilder = function() {
 }
 
 _.extend(newBaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
@@ -103,11 +103,11 @@ _.extend(newBaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.pr
             });
         }
 
-        if (parentView && metadata.OnSelectedItemModified) {
-            dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
-            });
-        }
+        //if (parentView && metadata.OnSelectedItemModified) {
+        //    dataSource.onSelectedItemModified(function () {
+        //        new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
+        //    });
+        //}
 
         if (parentView && metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {

@@ -172,6 +172,10 @@ var RestDataSource = newBaseDataSource.extend({
         var definedParams;
         var param;
 
+        if(!this._checkUrlParamsReady(this.getGettingUrlParams())){
+            return false;
+        }
+
         strWithParams = this.getGettingUrlParams('path');
         params = this._findSubstitutionParams(strWithParams);
         allParams = allParams.concat(params);
@@ -192,7 +196,18 @@ var RestDataSource = newBaseDataSource.extend({
         return true;
     },
 
+    _checkUrlParamsReady: function(params){
+        return params && typeof params.origin == 'string'// && params.origin.lentgh > 0
+                && typeof params.path == 'string'
+                && typeof params.data == 'object'
+                && typeof params.params == 'object';
+    },
+
     _findSubstitutionParams: function(str){
+        if(!str){
+            return [];
+        }
+
         var result = [];
         str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
             result.push(p2);
@@ -203,12 +218,20 @@ var RestDataSource = newBaseDataSource.extend({
     },
 
     _templateParamsInStr: function(str, params){
+        if(!str || !params){
+            return str;
+        }
+
         return str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
             return params[p2];
         });
     },
 
     _templateParamsInObject: function(obj, params){
+        if(!obj || !params){
+            return obj;
+        }
+
         var str = JSON.stringify(obj);
         var tmpTemplated = this._templateParamsInStr(str, params);
         return JSON.parse(tmpTemplated);

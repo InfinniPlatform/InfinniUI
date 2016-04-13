@@ -25,7 +25,18 @@
 
             'app/element/_mixins/*.js',
             'app/element/*.js', // old
+
             'app/data/_common/**/*.js',
+            'app/data/dataSource/_mixins/*.js',
+            'app/data/dataSource/_newBaseDataSource.js',
+            'app/data/dataSource/restDataSource.js',
+            'app/data/dataSource/documentDataSource.js',
+
+            'app/data/dataSource/_newBaseDataSourceBuilder.js',
+            'app/data/dataSource/restDataSourceBuilder.js',
+            'app/data/dataSource/documentDataSourceBuilder.js',
+
+
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
             'app/new/elements/**/*.js',
