@@ -228,7 +228,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             var actValue = field.getValue();
 
             if (typeof actValue == "number") {
-                value = parseInt(value);
+                value = parseFloat(value.replace(/,/g, '.'));
             }
 
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
@@ -256,9 +256,14 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
             var field = window.testHelpers.getControlByName(fieldName);
             chai.assert.isDefined(field);
 
-            value = parseInt(value);
+            value = parseFloat(value.replace(/,/g, '.'));
 
-            var actValue = field.getDisplayValue();
+            var actValue = field.getValue();
+
+            if(field.getDisplayValue) {
+                actValue = field.getDisplayValue();
+            }
+
             chai.assert.typeOf(actValue, 'number');
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
