@@ -64,25 +64,25 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         if (metadata.OnExpanding) {
             element.onExpanding(function (context, args) {
                 return createScriptExecutor()
-                    .executeScript(metadata.OnExpanding.Name, args);
+                    .executeScript(metadata.OnExpanding.Name || metadata.OnExpanding, args);
             });
         }
         if (metadata.OnExpanded) {
             element.onExpanded(function (context, args) {
                 return createScriptExecutor()
-                    .executeScript(metadata.OnExpanded.Name, args);
+                    .executeScript(metadata.OnExpanded.Name || metadata.OnExpanded, args);
             });
         }
         if (metadata.OnCollapsing) {
             element.onCollapsing(function (context, args) {
                 return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsing.Name, args);
+                    .executeScript(metadata.OnCollapsing.Name || metadata.OnCollapsing, args);
             });
         }
         if (metadata.OnCollapsed) {
             element.onCollapsed(function (context, args) {
                 return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsed.Name, args);
+                    .executeScript(metadata.OnCollapsed.Name || metadata.OnCollapsed, args);
             });
         }
 
