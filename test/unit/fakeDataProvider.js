@@ -75,7 +75,7 @@ function FakeDataProvider(mode) {
             }
 
             setTimeout(function(){
-                resultCallback(result);
+                resultCallback({data:result});
             }, 100);
 
         }

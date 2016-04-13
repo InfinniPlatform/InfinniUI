@@ -41,10 +41,10 @@ _.extend(StaticFakeDataProvider.prototype, {
         }
     ],
 
-    getItems: function(criteriaList, pageNumber, pageSize, sorting, resultCallback){
+    getItems: function(resultCallback, criteriaList, pageNumber, pageSize, sorting){
         var result = _.clone(this.items);
         setTimeout(function(){
-            resultCallback(result);
+            resultCallback({data:result});
         },100);
     },
 

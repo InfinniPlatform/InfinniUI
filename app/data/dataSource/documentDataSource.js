@@ -1,4 +1,4 @@
-var DocumentDataSource = BaseDataSource.extend({
+var DocumentDataSource = RestDataSource.extend({
     defaults: _.defaults({
 
         configId:           null,
@@ -8,7 +8,7 @@ var DocumentDataSource = BaseDataSource.extend({
         updateActionName:   'SetDocument',
         deleteActionName:   'DeleteDocument'
 
-    }, BaseDataSource.prototype.defaults),
+    }, newBaseDataSource.prototype.defaults),
 
 
     initDataProvider: function(){
@@ -97,7 +97,7 @@ var DocumentDataSource = BaseDataSource.extend({
             dataProvider = this.get('dataProvider'),
             ds = this;
 
-        BaseDataSource.prototype.saveItem.call(this, item, function () {
+        RestDataSource.prototype.saveItem.call(this, item, function () {
             uploadFiles(success, error);
         }, error);
 

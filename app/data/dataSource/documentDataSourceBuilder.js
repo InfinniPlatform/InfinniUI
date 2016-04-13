@@ -1,11 +1,11 @@
 function DocumentDataSourceBuilder() {
 }
 
-_.inherit(DocumentDataSourceBuilder, newBaseDataSourceBuilder);
+_.inherit(DocumentDataSourceBuilder, RestDataSourceBuilder);
 
 _.extend(DocumentDataSourceBuilder.prototype, {
     applyMetadata: function(builder, parent, metadata, dataSource){
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        newBaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
 
         dataSource.setConfigId(metadata['ConfigId']);
         dataSource.setDocumentId(metadata['DocumentId']);
