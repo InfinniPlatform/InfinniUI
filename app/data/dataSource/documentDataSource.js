@@ -5,7 +5,29 @@ var DocumentDataSource = RestDataSource.extend({
     }, RestDataSource.prototype.defaults),
 
     initialize: function () {
-        newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        RestDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+
+        var model = this.get('model');
+        model.setProperty('pageNumber', 0);
+        model.setProperty('pageSize', 15);
+
+        this.initHandlers();
+    },
+
+    initHandlers: function(){
+        var model = this.get('model');
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+
+        model.onPropertyChanged('documentId', updateGettingUrlParams);
+        model.onPropertyChanged('filter', updateGettingUrlParams);
+        model.onPropertyChanged('filterParams', updateGettingUrlParams);
+        model.onPropertyChanged('pageNumber', updateGettingUrlParams);
+        model.onPropertyChanged('pageSize', updateGettingUrlParams);
+        model.onPropertyChanged('search', updateGettingUrlParams);
+        model.onPropertyChanged('select', updateGettingUrlParams);
+        model.onPropertyChanged('order', updateGettingUrlParams);
+        model.onPropertyChanged('count', updateGettingUrlParams);
+
         this.updateGettingUrlParams();
     },
 
@@ -14,18 +36,18 @@ var DocumentDataSource = RestDataSource.extend({
             params = {
                 type: 'get',
                 origin: InfinniUI.config.serverUrl,
-                path: '/' + this.get('documentId'),
+                path: '/' + this.get('model').getProperty('documentId'),
                 data: {},
                 params: {}
             },
             filter = model.getProperty('filter'),
             filterParams = model.getProperty('filterParams'),
-            page = model.getProperty('page'),
+            pageNumber = model.getProperty('pageNumber'),
             pageSize = model.getProperty('pageSize'),
             searchStr = model.getProperty('search'),
             select = model.getProperty('select'),
             order = model.getProperty('order'),
-            count = model.getProperty('order');
+            count = model.getProperty('count');
 
         if(filter){
             params.data.filter = filter;
@@ -35,8 +57,8 @@ var DocumentDataSource = RestDataSource.extend({
         }
 
         if(pageSize){
-            page = page || 0;
-            params.data.skip = page*pageSize;
+            pageNumber = pageNumber || 0;
+            params.data.skip = pageNumber*pageSize;
             params.data.take = pageSize;
         }
 
@@ -66,7 +88,11 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     getDocumentId: function(){
-        return this.get('documentId');
+        return this.get('model').getProperty('documentId');
+    },
+
+    setDocumentId: function(documentId){
+        this.get('model').setProperty('documentId', documentId);
     },
 
     getFilter: function(){
@@ -74,7 +100,7 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     setFilter: function(filter){
-        this.get('model').setProperty('filter');
+        this.get('model').setProperty('filter', filter);
     },
 
     getFilterParams: function(){
@@ -82,14 +108,55 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     setFilterParams: function(filterParams){
-        this.get('model').setProperty('filterParams');
+        this.get('model').setProperty('filterParams', filterParams);
     },
 
-    setDocumentId: function(documentId){
-        var dataProvider = this.get('dataProvider');
+    getPageNumber: function(){
+        return this.get('model').getProperty('pageNumber');
+    },
 
-        dataProvider.setDocumentId(documentId);
-        this.set('documentId', documentId);
+    setPageNumber: function(pageNumber){
+        this.get('model').setProperty('pageNumber', pageNumber);
+    },
+
+    getPageSize: function(){
+        return this.get('model').getProperty('pageSize');
+    },
+
+    setPageSize: function(pageSize){
+        this.get('model').setProperty('pageSize', pageSize);
+    },
+
+    getSearch: function(){
+        return this.get('model').getProperty('search');
+    },
+
+    setSearch: function(searchStr){
+        this.get('model').setProperty('search', searchStr);
+    },
+
+    getSelect: function(){
+        return this.get('model').getProperty('select');
+    },
+
+    setSelect: function(selectStr){
+        this.get('model').setProperty('select', selectStr);
+    },
+
+    getOrder: function(){
+        return this.get('model').getProperty('order');
+    },
+
+    setOrder: function(orderConditionStr){
+        this.get('model').setProperty('order', orderConditionStr);
+    },
+
+    getCount: function(){
+        return this.get('model').getProperty('count');
+    },
+
+    setCount: function(isCountNeed){
+        this.get('model').setProperty('count', isCountNeed);
     },
 
     saveItem: function (item, success, error) {

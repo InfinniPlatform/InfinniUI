@@ -71,7 +71,7 @@ describe('DeleteAction', function () {
 
     it('should delete selected item from DocumentDataSource', function (done) {
         // Given
-        window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+        window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
         var view = new View();
         var builder = new ApplicationBuilder();

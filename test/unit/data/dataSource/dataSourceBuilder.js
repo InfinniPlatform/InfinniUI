@@ -1,8 +1,48 @@
 describe('DataSourceBuilder', function () {
 
     var builder = new ApplicationBuilder();
+    var items = [
+        {
+            "Id": '1',
+            "FirstName": "Иван",
+            "LastName": "Иванов"
+        },
+        {
+            "Id": '2',
+            "FirstName": "Петр",
+            "LastName": "Петров"
+        },
+        {
+            "Id": '3',
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "Id": '4',
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "Id": '5',
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "Id": '6',
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
+            "Id": '10',
+            "FirstName": "Анна",
+            "LastName": "Сергеева"
 
-    window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+        }
+    ];
+
+    FakeRestDataProvider.prototype.items = items;
+
+    window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
     describe('build DocumentDataSource', function () {
         it('should build documentDataSource', function () {
@@ -39,7 +79,7 @@ describe('DataSourceBuilder', function () {
                     PageNumber: 1,
                     PageSize: 5,
 
-                    onPropertyChanged: {
+                    OnPropertyChanged: {
                         Name: 'onPropertyChanged'
                     }
                 };
@@ -70,7 +110,7 @@ describe('DataSourceBuilder', function () {
             }, 200);
         });
 
-        it('should create ds from metadata', function () {
+        it('should create ds from metadata', function (done) {
             // Given
             var metadata = {
                 Text: 'Пациенты',
@@ -100,6 +140,62 @@ describe('DataSourceBuilder', function () {
 
             function handleItemsReady(){
                 assert.isTrue(dataSource.getItems().length > 0, 'DS was update items');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?skip=0&take=15', 'requested url is right');
+
+                done();
+            }
+        });
+
+        it('should update items on filter changing', function (done) {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        DocumentDataSource: {
+                            "Name": "DataSource1",
+                            "DocumentId": "Whatever"
+                        }
+                    }
+                ],
+                Items: []
+            };
+            var result = '';
+
+            var dataSource;
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                $layout.detach();
+
+                dataSource = view.getContext().dataSources['DataSource1'];
+
+                dataSource.onItemsUpdated(function(){
+                    result += '1';
+
+                    if(result == '11'){
+                        assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?filter=eq(id,7)&skip=0&take=15', 'requested url is right (second)');
+                        done();
+                    }
+                });
+
+                dataSource.setFilter('eq(id,4)');
+
+                dataSource.updateItems(handleItemsReady1);
+            }
+
+            function handleItemsReady1(){
+                assert.equal(result, '', 'its first updated of item');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
+
+                dataSource.setFilter('eq(id,<%uid%>)');
+                dataSource.setFilterParams({
+                    uid: 7
+                });
             }
         });
 

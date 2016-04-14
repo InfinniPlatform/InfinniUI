@@ -78,10 +78,9 @@ _.extend(StaticFakeDataProvider.prototype, {
         },90);
     },
 
-    setCreateAction: function(){},
-    setUpdateAction: function(){},
-    setReadAction: function(){},
-    setDeleteAction: function(){},
-    setConfigId: function(){},
+    setOrigin: function(){},
+    setPath: function(){},
+    setData : function(){},
+    setFilter: function(){},
     setDocumentId: function(){}
 });

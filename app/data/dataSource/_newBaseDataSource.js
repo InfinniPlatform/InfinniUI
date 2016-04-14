@@ -71,6 +71,7 @@ var newBaseDataSource = Backbone.Model.extend({
         if (typeof property == 'function') {
             owner = handler;
             handler = property;
+            property = '*';
         }
 
         if(property.charAt(0) == '.'){
@@ -637,6 +638,8 @@ var newBaseDataSource = Backbone.Model.extend({
         if (successHandler) {
             successHandler(context, argument);
         }
+
+        this.trigger('onItemsUpdated', context, argument);
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {

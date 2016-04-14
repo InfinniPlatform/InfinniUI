@@ -109,7 +109,7 @@ describe('ListBox', function () {
         it('should render stackPanel', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -192,7 +192,7 @@ describe('ListBox', function () {
         it('should render listBox', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -257,7 +257,7 @@ describe('ListBox', function () {
         it('should render listBox without grouping', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -322,7 +322,7 @@ describe('ListBox', function () {
         it('should render listBox without grouping', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -378,7 +378,7 @@ describe('ListBox', function () {
         it('should render stackPanel with simple items', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -444,7 +444,7 @@ describe('ListBox', function () {
         it('should render stackPanel with property items', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -509,7 +509,7 @@ describe('ListBox', function () {
         it('should render stackPanel with formatting items', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {
@@ -583,7 +583,7 @@ describe('ListBox', function () {
         it('should render stackPanel with formatting items', function () {
             // Given When
             window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
+                return new FakeRestDataProvider();
             });
 
             var linkView = new LinkView(null, function (resultCallback) {

@@ -121,7 +121,7 @@ describe('ViewBuilder', function () {
 
     it('should build DataSources', function () {
         // Given
-        window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+        window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
         window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
         var viewBuilder = new ViewBuilder();

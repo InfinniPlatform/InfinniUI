@@ -78,7 +78,12 @@
             'bower_components/font-awesome/css/font-awesome.min.css',
             'bower_components/toastr/toastr.css'
         ],
-        unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
+        unitTestFiles = [
+            'app/utils/strict.js',
+            'test/unit/setup.js',
+            'test/unit/fakeRestDataProvider.js',
+            'test/unit/**/*.js'
+        ],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
         templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',
