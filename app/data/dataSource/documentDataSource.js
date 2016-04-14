@@ -6,8 +6,7 @@ var DocumentDataSource = RestDataSource.extend({
 
     initialize: function () {
         newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-
-
+        this.updateGettingUrlParams();
     },
 
     updateGettingUrlParams: function(){
@@ -15,35 +14,75 @@ var DocumentDataSource = RestDataSource.extend({
             params = {
                 type: 'get',
                 origin: InfinniUI.config.serverUrl,
-                path: this.get('/documentId'),
-                data: {}
+                path: '/' + this.get('documentId'),
+                data: {},
+                params: {}
             },
-            filter = model.getProperty('filter');
+            filter = model.getProperty('filter'),
+            filterParams = model.getProperty('filterParams'),
+            page = model.getProperty('page'),
+            pageSize = model.getProperty('pageSize'),
+            searchStr = model.getProperty('search'),
+            select = model.getProperty('select'),
+            order = model.getProperty('order'),
+            count = model.getProperty('order');
 
         if(filter){
+            params.data.filter = filter;
+            if(filterParams){
+                _.extend(params.params, filterParams);
+            }
+        }
 
+        if(pageSize){
+            page = page || 0;
+            params.data.skip = page*pageSize;
+            params.data.take = pageSize;
+        }
+
+        if(searchStr){
+            params.data.search = searchStr;
+        }
+
+        if(select){
+            params.data.select = select;
+        }
+
+        if(order){
+            params.data.order = order;
+        }
+
+        if(count){
+            params.data.count = count;
         }
 
         this.setGettingUrlParams(params);
     },
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('DocumentDataSource'),
-            createActionName = this.getCreateAction(),
-            readActionName = this.getReadAction(),
-            updateActionName = this.getUpdateAction(),
-            deleteActionName = this.getDeleteAction();
-
-        dataProvider.setCreateAction(createActionName);
-        dataProvider.setReadAction(readActionName);
-        dataProvider.setUpdateAction(updateActionName);
-        dataProvider.setDeleteAction(deleteActionName);
+        var dataProvider = window.providerRegister.build('DocumentDataSource');
 
         this.set('dataProvider', dataProvider);
     },
 
     getDocumentId: function(){
         return this.get('documentId');
+    },
+
+    getFilter: function(){
+        return this.get('model').getProperty('filter');
+    },
+
+    setFilter: function(filter){
+        this.get('model').setProperty('filter');
+    },
+
+    getFilterParams: function(){
+        return this.get('model').getProperty('filterParams');
+    },
+
+    setFilterParams: function(filterParams){
+        this.get('model').setProperty('filterParams');
     },
 
     setDocumentId: function(documentId){

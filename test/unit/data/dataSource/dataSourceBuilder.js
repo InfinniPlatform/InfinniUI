@@ -94,7 +94,7 @@ describe('DataSourceBuilder', function () {
             function onViewReady(view, $layout){
                 $layout.detach();
 
-                dataSource = view.getContext().dataSources['Whatever'];
+                dataSource = view.getContext().dataSources['DataSource1'];
                 dataSource.updateItems(handleItemsReady);
             }
 

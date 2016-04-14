@@ -55,8 +55,8 @@ function FakeDataProvider(mode) {
     this.getItems = function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
         if (mode === undefined || mode() === 'Created') {
 
-            var result = [];
-            var allItems = items;
+            var result = items;
+            /*var allItems = items;
 
             for (var i = 0; i < pageSize; i++) {
                 var itemIndex = i + (pageNumber * pageSize);
@@ -72,7 +72,7 @@ function FakeDataProvider(mode) {
                 result = _.filter(result, function(item){
                     return item.Id == criteriaList[0].Value;
                 });
-            }
+            }*/
 
             setTimeout(function(){
                 resultCallback({data:result});
