@@ -224,6 +224,8 @@
                 },
                 {
                   "PasswordBox": {
+                    "Name": "Ololo",
+                    "Autocomplete": false,
                     "LabelText": {
                       "Source": "Test",
                       "Property": "2.Name"
