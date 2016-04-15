@@ -50,14 +50,33 @@ var RestDataSource = newBaseDataSource.extend({
             dataProvider.setData('get', templated);
 
 
-            if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or wait resolving
+            if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or waiting resolving
                 that.updateItems();
             }
-            //порядок действий
-            //1) устанавливается урл часть
-            //1.1) checkReadyUrl - проходим всё в path и все в data, если все параметры есть и ни один не равен undefined - url готов. передаем в провайдеры path и data
-            //1.2) снимаем заморозку по неготовности url параметров. Если DS разрезолвлен, делаем updateItems
-            //1.3) если есть неготовые параметры - замораживаем DS 'urlGettingParamsNotReady'
+        });
+
+        this.get('model').onPropertyChanged('urlParams.set.*', function(context, args){
+            var dataProvider = that.get('dataProvider');
+            var urlParams = that.getSettingUrlParams();
+            var templated;
+
+            dataProvider.setOrigin('set', urlParams.origin);
+            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
+            dataProvider.setPath('set', templated);
+            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
+            dataProvider.setData('set', templated);
+        });
+
+        this.get('model').onPropertyChanged('urlParams.delete.*', function(context, args){
+            var dataProvider = that.get('dataProvider');
+            var urlParams = that.getDeletingUrlParams();
+            var templated;
+
+            dataProvider.setOrigin('delete', urlParams.origin);
+            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
+            dataProvider.setPath('delete', templated);
+            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
+            dataProvider.setData('delete', templated);
         });
     },
 

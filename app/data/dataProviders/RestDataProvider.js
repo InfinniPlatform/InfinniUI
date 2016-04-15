@@ -43,14 +43,6 @@ _.extend(RestDataProvider.prototype, {
         this.requestParams[type].path = path;
     },
 
-    getQuery: function(type){
-        return this.requestParams[type].query;
-    },
-
-    setQuery: function(type, query){
-        this.requestParams[type].query = query;
-    },
-
     getData: function(type){
         return this.requestParams[type].data;
     },
@@ -150,6 +142,15 @@ _.extend(RestDataProvider.prototype, {
 
     getItems: function(successHandler, errorHandler){
         return this.send('get', successHandler, errorHandler);
+    },
+
+    saveItem: function(item, successHandler, errorHandler){
+        this.requestParams['set'].data = item;
+        return this.send('set', successHandler, errorHandler);
+    },
+
+    deleteItem: function(item, successHandler, errorHandler){
+        return this.send('delete', successHandler, errorHandler);
     },
 
     joinDataForQuery: function(data){

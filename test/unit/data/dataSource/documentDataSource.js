@@ -1,5 +1,5 @@
 ﻿describe('DocumentDataSource', function () {
-    var items = [
+    var dataItems = [
         {
             "Id": '1',
             "FirstName": "Иван",
@@ -42,7 +42,7 @@
         it('should get list of data', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -69,7 +69,7 @@
         it('should get editing record', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var builder = new ApplicationBuilder();
             var view = fakeView();
@@ -98,7 +98,7 @@
         it('should update document', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -134,7 +134,7 @@
         it('should restore selected item after updating', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -161,7 +161,7 @@
         it('should create document', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -188,7 +188,7 @@
         it('should get document property', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -210,7 +210,7 @@
         it('should select item', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -234,7 +234,7 @@
         it('should change document property', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -261,7 +261,7 @@
         it('should change document property (full item change)', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -289,7 +289,7 @@
         it('should validate item', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -339,7 +339,7 @@
         it('should save item', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -368,7 +368,7 @@
         it('should delete item', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()
@@ -395,7 +395,7 @@
         it('should add items', function (done) {
             // Given
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(items));
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
                 view: fakeView()

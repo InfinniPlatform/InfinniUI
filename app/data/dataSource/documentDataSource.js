@@ -16,9 +16,14 @@ var DocumentDataSource = RestDataSource.extend({
 
     initHandlers: function(){
         var model = this.get('model');
+        var that = this;
         var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
 
-        model.onPropertyChanged('documentId', updateGettingUrlParams);
+        model.onPropertyChanged('documentId', function(){
+            that.updateGettingUrlParams();
+            that.updateSettingUrlParams();
+            that.updateDeletingUrlParams();
+        });
         model.onPropertyChanged('filter', updateGettingUrlParams);
         model.onPropertyChanged('filterParams', updateGettingUrlParams);
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
@@ -29,6 +34,8 @@ var DocumentDataSource = RestDataSource.extend({
         model.onPropertyChanged('count', updateGettingUrlParams);
 
         this.updateGettingUrlParams();
+        this.updateSettingUrlParams();
+        this.updateDeletingUrlParams();
     },
 
     updateGettingUrlParams: function(){
@@ -79,6 +86,32 @@ var DocumentDataSource = RestDataSource.extend({
         }
 
         this.setGettingUrlParams(params);
+    },
+
+    updateSettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'post',
+                origin: InfinniUI.config.serverUrl,
+                path: '/' + this.get('model').getProperty('documentId'),
+                data: {},
+                params: {}
+            };
+
+        this.setSettingUrlParams(params);
+    },
+
+    updateDeletingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'delete',
+                origin: InfinniUI.config.serverUrl,
+                path: '/' + this.get('model').getProperty('documentId') + '/<%id%>',
+                data: {},
+                params: {}
+            };
+
+        this.setDeletingUrlParams(params);
     },
 
     initDataProvider: function(){
@@ -159,35 +192,10 @@ var DocumentDataSource = RestDataSource.extend({
         this.get('model').setProperty('count', isCountNeed);
     },
 
-    saveItem: function (item, success, error) {
-        var
-            dataProvider = this.get('dataProvider'),
-            ds = this;
-
-        RestDataSource.prototype.saveItem.call(this, item, function () {
-            uploadFiles(success, error);
-        }, error);
-
-        function uploadFiles (success, error) {
-            ds.extractFiles(item, function (files, itemWithoutFiles) {
-                dataProvider.saveItem(itemWithoutFiles, function (data) {
-                    if (!('isValid' in data) || data.isValid === true) {
-                        //@TODO Что приходит в ответ на сохранение?????
-                        ds.uploadFiles(data.Id, files)
-                            .then(function () {
-                                ds._excludeItemFromModifiedSet(item);
-                                ds._notifyAboutItemSaved(item, data, success);
-                            }, function (err) {
-                                logger.error(err);
-                                if (error) {
-                                    error(err);
-                                }
-                            });
-                    } else {
-                        ds._notifyAboutFailValidationBySaving(item, data, error);
-                    }
-                });
-            });
+    beforeDeleteItem: function(item){
+        var itemId = this.idOfItem(item);
+        if(itemId !== undefined){
+            this.setDeletingUrlParams('params.id', itemId);
         }
     }
 

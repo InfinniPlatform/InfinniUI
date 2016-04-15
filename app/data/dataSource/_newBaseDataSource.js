@@ -457,6 +457,7 @@ var newBaseDataSource = Backbone.Model.extend({
         var dataProvider = this.get('dataProvider'),
             ds = this,
             logger = window.InfinniUI.global.logger,
+            that = this,
             validateResult;
 
         if (!this.isModified(item)) {
@@ -470,16 +471,14 @@ var newBaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        dataProvider.saveItem(item, function(result){
-
+        dataProvider.saveItem(item, function(data){
+            if( !('isValid' in data) || data.isValid === true ){
+                that._excludeItemFromModifiedSet(item);
+                that._notifyAboutItemSaved(item, success);
+            }else{
+                that._notifyAboutFailValidationBySaving(item, data, error);
+            }
         });
-
-        if (typeof success === 'function') {
-            var context = this.getContext(),
-                argument = this._getArgumentTemplate();
-
-            success.call(null, context, argument);
-        }
     },
 
     _notifyAboutItemSaved: function (item, result, successHandler) {
@@ -510,6 +509,7 @@ var newBaseDataSource = Backbone.Model.extend({
             return;
         }
 
+        this.beforeDeleteItem(item);
         dataProvider.deleteItem(item, function (data) {
             if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
@@ -518,6 +518,8 @@ var newBaseDataSource = Backbone.Model.extend({
             }
         });
     },
+
+    beforeDeleteItem: function(item){},
 
     _handleDeletedItem: function (item, successHandler) {
         var items = this.getItems(),
