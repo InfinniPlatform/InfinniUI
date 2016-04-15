@@ -26,12 +26,12 @@ _.extend( FakeDocumentDataProvider.prototype, {
 
         FakeDocumentDataProvider.prototype.lastSendedUrl = urlString;
 
-        filter = this.splitUrl(urlString);
+        filter = this.splitUrl(urlString).query.filter;
 
         setTimeout(function(){
             successHandler({
                 requestId: requestId,
-                data: that.items
+                data: that.filterItems( that.items, filter )
             });
         }, 1);
 
@@ -70,6 +70,11 @@ _.extend( FakeDocumentDataProvider.prototype, {
     },
 
     filterItems: function(items, filter){
+
+        if(!filter){
+            return items;
+        }
+
         var fu;
         var result = JSON.parse(JSON.stringify(items));
 
