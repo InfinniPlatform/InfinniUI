@@ -470,7 +470,9 @@ var newBaseDataSource = Backbone.Model.extend({
             return;
         }
 
+        dataProvider.saveItem(item, function(result){
 
+        });
 
         if (typeof success === 'function') {
             var context = this.getContext(),

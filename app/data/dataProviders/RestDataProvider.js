@@ -77,7 +77,7 @@ _.extend(RestDataProvider.prototype, {
 
         var filesInData = this.extractFilesFromData(params.data);
 
-        if(filesInData.files.length == 0){
+        if( _.size(filesInData.files) == 0){
 
             requestParams = {
                 type: params.type,
@@ -111,29 +111,23 @@ _.extend(RestDataProvider.prototype, {
         }else{
 
             var formData = new FormData();
-            formData.append('file', $('input[type=file]')[0].files[0]);
+            formData.append('document', JSON.stringify( filesInData.dataWithoutFiles ));
 
-            $.ajax({
-                type:'POST',
-                url: 'imageUploader.php',
+            for(var k in filesInData.files){
+                formData.append(k, filesInData.files[k]);
+            }
+
+
+            requestParams = {
+                type: params.type,
+                url: urlString,
+                xhrFields: {
+                    withCredentials: true
+                },
                 data: formData,
                 cache: false,
                 contentType: false,
                 processData: false,
-                success:function(data) {
-                },
-                error: function(data) {
-                }
-            });
-
-            requestParams = {
-                type: params.type,
-                xhrFields: {
-                    withCredentials: true
-                },
-                contentType: 'application/json',
-                url: urlString,
-                data: params.data,
                 success: function(data){
                     successHandler({
                         requestId: requestId,
