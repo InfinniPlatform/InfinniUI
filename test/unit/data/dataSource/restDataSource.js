@@ -331,8 +331,8 @@ describe('ObjectDataSource', function () {
             dataSource.onSelectedItemChanged(function(context, args){
                 result += '1';
 
-                assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
-                assert.isTrue(args.newValue.FirstName ==  'Иван' || args.newValue.FirstName == 'Петр', 'right new value in args');
+                //assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
+                assert.isTrue(args.value.FirstName ==  'Иван' || args.value.FirstName == 'Петр', 'right new value in args');
             });
 
 

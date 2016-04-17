@@ -84,7 +84,14 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     onSelectedItemChanged: function (handler, owner) {
-        this.get('model').onPropertyChanged('selectedItem', handler, owner);
+        var that = this;
+
+        this.get('model').onPropertyChanged('selectedItem', function(context, args){
+            var argument = that._getArgumentTemplate();
+            argument.value = args.newValue;
+
+            handler(context, argument);
+        }, owner);
     },
 
     onErrorValidator: function (handler) {
@@ -318,7 +325,6 @@ var newBaseDataSource = Backbone.Model.extend({
         if (successHandler) {
             successHandler(context, argument);
         }
-        this.trigger('onSelectedItemChanged', context, argument);
     },
 
     getIdProperty: function () {

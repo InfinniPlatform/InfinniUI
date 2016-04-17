@@ -112,6 +112,8 @@ describe('DataSourceBuilder', function () {
 
         it('should create ds from metadata', function (done) {
             // Given
+            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
             var metadata = {
                 Text: 'Пациенты',
                 DataSources : [

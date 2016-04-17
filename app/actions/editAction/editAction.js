@@ -27,10 +27,8 @@ _.extend(EditAction.prototype, {
 
     setDocument: function (editDataSource, selectedItem){
         var selectedItemId = editDataSource.idOfItem( selectedItem );
-
-        var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
-        this.resumeUpdateEditDataSource();
-        editDataSource.setFilter( criteria );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
     },
 
     setItem: function(editDataSource, selectedItem){

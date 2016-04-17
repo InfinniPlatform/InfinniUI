@@ -153,6 +153,26 @@ _.extend(RestDataProvider.prototype, {
         return this.send('delete', successHandler, errorHandler);
     },
 
+    createItem: function (resultCallback, idProperty) {
+       var that = this;
+        setTimeout( function(){
+            resultCallback(that.createLocalItem(idProperty));
+        }, 10);
+    },
+
+    createLocalItem: function (idProperty) {
+        var result = {};
+
+        result[idProperty] = this._generateLocalId();
+        result['__Id'] = result[idProperty];
+
+        return result;
+    },
+
+    _generateLocalId: function(){
+        return guid();
+    },
+
     joinDataForQuery: function(data){
         var result = [];
 

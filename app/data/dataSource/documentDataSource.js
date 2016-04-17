@@ -145,7 +145,7 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     setIdFilter: function (itemId) {
-        this.setFilter('eq(' + ','+ itemId + ')');
+        this.setFilter('eq(' + this.getIdProperty() + ','+ itemId + ')');
     },
 
     getPageNumber: function(){

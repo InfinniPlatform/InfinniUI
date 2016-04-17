@@ -194,9 +194,12 @@ describe('AddAction', function () {
 
                     assert.notInclude(destinationDS.getItems(), newItem);
 
-                    newItem = _.extend( newItem,
-                                        { FirstName: "Test", LastName: "Test" });
-                    sourceDS.setSelectedItem( newItem );
+//                    newItem = _.extend( newItem,
+//                                        { FirstName: "Test", LastName: "Test" });
+//                    sourceDS.setSelectedItem( newItem );
+
+                    sourceDS.setProperty('FirstName', 'Test');
+                    sourceDS.setProperty('LastName', 'Test');
 
                     saveBtn.click();
 
