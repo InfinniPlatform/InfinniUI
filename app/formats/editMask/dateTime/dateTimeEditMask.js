@@ -3,6 +3,8 @@ function DateTimeEditMask() {
     this.format = null;
 }
 
+_.extend(DateTimeEditMask.prototype, editMaskMixin);
+
 _.extend(DateTimeEditMask.prototype, {
 
     /**
@@ -264,6 +266,10 @@ _.extend(DateTimeEditMask.prototype, {
         var width;
         var index;
         var result = null;
+
+        if (!Array.isArray(template)) {
+            return null;
+        }
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') {
@@ -434,13 +440,17 @@ _.extend(DateTimeEditMask.prototype, {
 
     /**
      * Получить представление значения для MaskedEdit
-     * @returns {string}
+     * @returns {string|*}
      */
     getText: function () {
         var template = this.template;
         var item;
         var result = [];
         var placeholder;
+
+        if (!Array.isArray(template)) {
+            return;
+        }
 
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
@@ -516,17 +526,21 @@ _.extend(DateTimeEditMask.prototype, {
         return template;
     },
 
-
     /**
      * Вернуть введеный результат
      * @returns {*}
      */
     getValue: function () {
+        var formatOptions = this.format.getOptions();
         var template = this.template;
         var item;
         var mask;
-        var value = this.value;
+        var value =  InfinniUI.DateUtils.changeTimezoneOffset(this.value, formatOptions.TimeZone );
         var done = true;
+
+        if (!Array.isArray(template)) {
+            return;
+        }
 
         for (var i = 0; i < template.length; i = i + 1) {
             item = template[i];
@@ -541,6 +555,10 @@ _.extend(DateTimeEditMask.prototype, {
             }
         }
 
+        if (done && value instanceof Date) {
+            //value.setHours(0, 0, 0, 0);
+            value =  InfinniUI.DateUtils.restoreTimezoneOffset(value, formatOptions.TimeZone);
+        }
 
         return done ? value : null;
     },
@@ -550,7 +568,9 @@ _.extend(DateTimeEditMask.prototype, {
      * @returns {String}
      */
     getData: function () {
-        return InfinniUI.DateUtils.toISO8601(this.getValue());
+        var formatOptions = this.format.getOptions();
+
+        return InfinniUI.DateUtils.toISO8601(this.getValue(), {timezoneOffset: formatOptions.TimeZone});
     },
 
     /**
@@ -564,12 +584,7 @@ _.extend(DateTimeEditMask.prototype, {
         if (typeof value !== 'undefined' && value !== null && value !== '') {
             //Если переданное значение является датой - инициалищируем этим значением
             try {
-                if(value instanceof Date){
-                    date = value;
-                }else {
-                    date = new Date(value);
-                }
-
+                date = InfinniUI.DateUtils.createDate(value);
             } catch (e) {
                 date = null;
             }
@@ -579,7 +594,7 @@ _.extend(DateTimeEditMask.prototype, {
         this.template = this.buildTemplate(date);
 
         if (this.value === null) {
-            this.value = new Date(0, 0, 0, 0, 0, 0, 0);
+            this.value = new Date(0);
         }
     },
 

@@ -25,17 +25,22 @@ _.extend(BaseEditAction.prototype, {
 
         this.setProperty('editDataSource', editDataSource);
         this.setProperty('destinationDataSource', destinationDataSource);
-        this.setSelectedItem();
 
-        editView.open();
+        var isSuccessfulPreset = this.setSelectedItem();
 
-        editView.onClosed(function(){
-            var dialogResult = editView.getDialogResult();
+        if( isSuccessfulPreset ) {
+            editView.open();
 
-            if (dialogResult == DialogResult.accepted) {
-                that.handleClosingView();
-            }
-        });
+            editView.onClosed(function(){
+                var dialogResult = editView.getDialogResult();
+
+                if (dialogResult == DialogResult.accepted) {
+                    that.handleClosingView();
+                }
+            });
+        } else {
+            editView.close();
+        }
     },
 
     handleClosingView: function(){

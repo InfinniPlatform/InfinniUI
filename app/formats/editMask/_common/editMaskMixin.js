@@ -133,7 +133,13 @@
      * @returns {string}
      */
     getText: function () {
-        return this.value.toString();
+        var text;
+
+        if (this.value !== null && typeof this.value !== 'undefined') {
+            text = String(this.value);
+        }
+
+        return text;
     },
 
     /**

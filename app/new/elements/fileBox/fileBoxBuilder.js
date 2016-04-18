@@ -75,7 +75,7 @@ _.extend(FileBoxBuilder.prototype, {
         var binding = data.valueBinding;
 
         if (binding) {
-            binding.setMode(BindingModes.toElement);
+            binding.setMode(InfinniUI.BindingModes.toElement);
             var ds = binding.getSource();
 
             params.element.onPropertyChanged('file', function (context, args) {

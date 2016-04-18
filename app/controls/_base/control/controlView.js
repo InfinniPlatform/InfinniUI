@@ -193,37 +193,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     },
 
     updateHorizontalAlignment: function () {
-        var horizontalAlignment = this.model.get('horizontalAlignment');
-        switch (horizontalAlignment) {
-            case 'Left':
-            {
-                this.$el
-                    .removeClass('center-block pull-right')
-                    .addClass('pull-left');
-                break;
-            }
-            case 'Right':
-            {
-                this.$el
-                    .removeClass('pull-left center-block')
-                    .addClass('pull-right');
-                break;
-            }
-            case 'Center':
-            {
-                this.$el
-                    .removeClass('pull-left pull-right')
-                    .addClass('center-block');
-                break;
-            }
-            case 'Stretch':
-            {
-                this.$el
-                    .removeClass('pull-left pull-right center-block')
-                    .addClass('full-width');
-                break;
-            }
-        }
+        this.switchClass('pl-horizontal', this.model.get('horizontalAlignment'));
     },
 
     updateName: function () {

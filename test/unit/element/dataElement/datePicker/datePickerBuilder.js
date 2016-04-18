@@ -1,17 +1,17 @@
-describe('DatePickerBuilder', function () {
+describe('DateTimePickerBuilder', function () {
     describe('build', function () {
-        it('successful build DatePicker', function () {
+        it('successful build DateTimePicker', function () {
             // Given
 
-            var datePickerMetadata = {};
+            var dateTimePickerMetadata = {};
 
             // When
-            var builder = new DatePickerBuilder();
-            var datePicker = builder.build(null, {builder: new ApplicationBuilder(), view: new View(), metadata: datePickerMetadata});
+            var builder = new DateTimePickerBuilder();
+            var dateTimePicker = builder.build(null, {builder: new ApplicationBuilder(), view: new View(), metadata: dateTimePickerMetadata});
 
             // Then
-            assert.isNotNull(datePicker);
-            assert.isObject(datePicker);
+            assert.isNotNull(dateTimePicker);
+            assert.isObject(dateTimePicker);
 
         });
     });

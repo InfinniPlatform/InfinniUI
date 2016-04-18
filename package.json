@@ -32,6 +32,7 @@
     "open": "0.0.5"
   },
   "scripts": {
-    "start": "node httpserver.js"
+    "start": "node httpserver.js",
+    "example": "bower install && grunt build && cd example && build && cd .."
   }
 }

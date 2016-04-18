@@ -46,7 +46,7 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
         if (metadata.OnSelectedItemChanged) {
             element.onSelectedItemChanged(function (context, args) {
                 return new ScriptExecutor(params.parentView)
-                    .executeScript(metadata.OnSelectedItemChanged.Name, args);
+                    .executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
             });
         }
     }

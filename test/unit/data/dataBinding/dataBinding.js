@@ -34,13 +34,13 @@ describe('DataBinding', function () {
         var dataBinding = new DataBinding();
 
         // Then
-        assert.equal(dataBinding.getMode(), BindingModes.twoWay, 'default mode must be twoWay');
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.twoWay, 'default mode must be twoWay');
     });
 
     it('should refresh source on element change if mode is twoWay', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.twoWay);
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -63,7 +63,7 @@ describe('DataBinding', function () {
     it('should refresh element on source change if mode is twoWay', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.twoWay);
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -86,7 +86,7 @@ describe('DataBinding', function () {
     it('should not refresh source on element change if mode is toElement', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.toElement);
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -109,7 +109,7 @@ describe('DataBinding', function () {
     it('should refresh element on source change if mode is toElement', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.toElement);
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -132,7 +132,7 @@ describe('DataBinding', function () {
     it('should refresh source on element change if mode is toSource', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.toSource);
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -155,7 +155,7 @@ describe('DataBinding', function () {
     it('should not refresh element on source change if mode is toSource', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.toSource);
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
 
         var source = new FakeElement();
         var sourceProperty = 'sourceProperty';
@@ -224,7 +224,7 @@ describe('DataBinding', function () {
     it('should convert value if have converter', function () {
         // Given
         var dataBinding = new DataBinding();
-        dataBinding.setMode(BindingModes.twoWay);
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
         dataBinding.setConverter({
             toSource: function(context, argument) {
                 return argument.value ? 5 : 3; // string to integer

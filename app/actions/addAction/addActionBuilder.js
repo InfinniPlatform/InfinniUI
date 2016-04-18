@@ -16,7 +16,7 @@ function AddActionBuilder(){
             args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
             metadata.DestinationValue.Property;
 
-        action.setProperty('destinationProperty', destinationProperty || "");
+        action.setProperty('destinationProperty', destinationProperty);
 
         return action;
     }

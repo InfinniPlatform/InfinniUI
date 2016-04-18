@@ -34,7 +34,7 @@ _.extend(DateTimeFormat.prototype, {
 
         culture = culture || new Culture(InfinniUI.config.lang);
 
-        var date = new Date(originalDate);
+        var date = this.createDate(originalDate);
 
         format = format||this.getFormat();
 
@@ -53,6 +53,14 @@ _.extend(DateTimeFormat.prototype, {
         });
     },
 
+    createDate: function (originalDate) {
+        var date;
+        var options = this.getOptions();
+
+        date = InfinniUI.DateUtils.createDate(originalDate);
+
+        return InfinniUI.DateUtils.changeTimezoneOffset(date, options.TimeZone);//apply timezoneOffset
+    },
 
     rg: new RegExp(
         '"[\\s\\S]*"|' + "'[\\s\\S]*'"+

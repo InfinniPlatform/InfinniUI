@@ -66,6 +66,8 @@ _.extend(ObjectFormat.prototype, {
             for (var i = 0, ln = this.formatters.length; i < ln; i = i + 1) {
                 //Пытаемся по очереди отформатировать значение разными форматами
                 formatter = new this.formatters[i](parts[1]);
+                formatter.setOptions(this.getOptions());
+
                 text = formatter.format(value, culture);
                 if (text !== parts[1]) {
                     //Если формат отформатировал строку - оставляем ее

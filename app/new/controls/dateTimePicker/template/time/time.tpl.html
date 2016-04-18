@@ -1,0 +1,94 @@
+<style>
+    /*.time-segment {*/
+        /*font-size: 36px;*/
+        /*font-weight: bold;*/
+        /*padding: 10px;*/
+    /*}*/
+
+    /*.time-spin {*/
+        /*text-align: center;*/
+        /*font-size: 36px;*/
+        /*font-weight: bold;*/
+    /*}*/
+
+    /*.time-spin-up, .time-spin-down {*/
+        /*width: 100%;*/
+        /*text-decoration: none;*/
+
+        /*user-select: none;*/
+        /*-webkit-user-select: none;*/
+        /*-moz-user-select: none;*/
+        /*-ms-user-select: none;*/
+    /*}*/
+
+    /*.time-spin-up:hover, .time-spin-down:hover {*/
+        /*text-decoration: none;*/
+    /*}*/
+
+    /*.times .days {*/
+        /*width: 100%;*/
+        /*text-align: center;*/
+        /*display: inline-block;*/
+    /*}*/
+</style>
+<div><a class="days btn btn-link">Дата</a></div>
+<table>
+    <tbody>
+    <tr>
+        <td class="time-spin">
+            <a class="time-spin-up time-spin-hour btn btn-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </td>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-up time-spin-minute btn btn-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </td>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-up time-spin-second btn btn-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="time-segment">
+            <span class="time-segment-hour">12</span>
+        </td>
+        <td class="time-segment">:</td>
+        <td class="time-segment">
+            <span class="time-segment-minute">14</span>
+        </td>
+        <td class="time-segment">:</td>
+        <td class="time-segment">
+            <span class="time-segment-second">00</span>
+        </td>
+        <td class="time-segment">
+            <button class="period" style="display: none;">AM/PM</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="time-spin">
+            <a class="time-spin-down time-spin-hour btn btn-link">
+                <i class="fa fa-chevron-down"></i>
+            </a>
+        </td>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-down time-spin-minute btn btn-link">
+                <i class="fa fa-chevron-down"></i>
+            </a>
+        </td>
+        <td></td>
+        <td class="time-spin">
+            <a class="time-spin-down time-spin-second btn btn-link">
+                <i class="fa fa-chevron-down"></i>
+            </a>
+        </td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>

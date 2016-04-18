@@ -19,12 +19,24 @@ _.extend(DataGridColumnBuilder.prototype, displayFormatBuilderMixin);
 DataGridColumnBuilder.prototype.build = function (element, metadata, params) {
     var column = new DataGridColumn();
 
+
     this
         .buildHeader(column, metadata, params)
         .buildHeaderTemplate(column, metadata, params)
-        .buildCellTemplate(column, metadata, params);
+        .buildCellTemplate(column, metadata, params)
+        .buildWidth(column, metadata);
 
     return column;
+};
+
+DataGridColumnBuilder.prototype.buildWidth = function (column, metadata) {
+    var width = metadata.Width;
+
+    if (width !== null && typeof width !== 'undefined') {
+        column.setWidth(width);
+    }
+
+    return this;
 };
 
 /**

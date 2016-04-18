@@ -13,8 +13,14 @@ function fakeView(view) {
         return view.scripts[name];
     };
 
-    view.getView = function (name) {
-        return null;
+    return view;
+}
+
+function fakeApplicationView(){
+    var view = fakeView();
+
+    view.getApplicationView = function () {
+        return this;
     };
 
     return view;

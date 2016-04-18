@@ -137,11 +137,11 @@ this.Then(/^система отобразит список валидацион�
         return window.toastrMessageCount == window.toastrActualMessageCount;
     };
     var success = function () {
-        var actual = window.configWindow.$("#toast-container .toast-message");
+        var actual = window.configWindow.$(".toast-success, .toast-error");
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
-            actualMessages.push(actual[i].innerText);
+            actualMessages.push(actual.eq(i).text());
         }
 
         var messages = getMessages(msgs);

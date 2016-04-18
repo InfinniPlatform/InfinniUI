@@ -216,7 +216,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
             case 40: //Down
                 model.selectNextItem();
                 break;
-            case 32:
             case 13:
                 this.onClickItemHandler(model.getSelectedItem());
                 break;

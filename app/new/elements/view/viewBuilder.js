@@ -82,6 +82,8 @@ _.extend(ViewBuilder.prototype, {
             }
         }
 
+        this.triggerStartCreatingEvent(params);
+
         if (metadata.Parameters) {
             var passedParams = params.params || {};
             var parameterName;
@@ -128,7 +130,7 @@ _.extend(ViewBuilder.prototype, {
         }
 
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
-        element.setCloseButton(metadata.CloseButton);
+        element.setCloseButtonVisibility(metadata.CloseButtonVisibility);
 
         if(metadata.OnOpening){
             element.onOpening(function() {
@@ -155,6 +157,17 @@ _.extend(ViewBuilder.prototype, {
         }
 
         ContainerBuilder.prototype.applyMetadata.call(this, params);
+    },
+
+    triggerStartCreatingEvent: function (params) {
+        var
+            element = params.element,
+            metadata = params.metadata,
+            onStartCreating = metadata.OnStartCreating;
+
+        if (onStartCreating) {
+            new ScriptExecutor(element).executeScript(onStartCreating.Name || onStartCreating, {});
+        }
     }
 },
     viewBuilderHeaderTemplateMixin
