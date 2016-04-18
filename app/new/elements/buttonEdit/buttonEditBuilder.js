@@ -20,9 +20,9 @@ ButtonEditBuilder.prototype.applyMetadata = function (params) {
     var element = params.element;
     var metadata = params.metadata;
 
-    element.setIcon(metadata.Icon);
-    element.setReadOnly(metadata.ReadOnly);
-    element.setShowClear(metadata.ShowClear);
+    this.initBindingToProperty(params, 'Icon');
+    this.initBindingToProperty(params, 'ReadOnly', true);
+    this.initBindingToProperty(params, 'ShowClear', true);
 
     this.buildOnButtonClick(params);
     this.buildButtonAction(params);
