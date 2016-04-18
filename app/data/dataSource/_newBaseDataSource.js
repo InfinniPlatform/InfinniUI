@@ -480,7 +480,7 @@ var newBaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             if( !('isValid' in data) || data.isValid === true ){
                 that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved(item, true, success);
+                that._notifyAboutItemSaved(item, 'modified', success);
             }else{
                 that._notifyAboutFailValidationBySaving(item, data, error);
             }
