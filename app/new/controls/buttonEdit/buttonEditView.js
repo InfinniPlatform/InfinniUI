@@ -21,11 +21,14 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
         TextBoxView.prototype.initHandlersForProperties.call(this);
         this.listenTo(this.model, 'change:icon', this.updateIcon);
         this.listenTo(this.model, 'change:showClear', this.updateShowClear);
+        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
     },
 
     updateProperties: function () {
         TextBoxView.prototype.updateProperties.call(this);
         this.updateIcon();
+        this.updateShowClear();
+        this.updateReadOnly();
     },
 
     updateIcon: function () {
@@ -38,6 +41,18 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
         var value = this.model.get('value');
 
         this.ui.buttonClear.toggleClass('hidden',  !showClear || _.isEmpty(value));
+    },
+
+    updateReadOnly: function () {
+        var readOnly = this.model.get('showClear');
+        var enabled = this.model.get('enabled');
+
+        this.ui.control.prop('disabled', !enabled || readOnly);
+    },
+
+    updateEnabled: function () {
+        TextBoxView.prototype.updateEnabled.call(this);
+        this.updateReadOnly();
     },
 
     updateValue: function () {
