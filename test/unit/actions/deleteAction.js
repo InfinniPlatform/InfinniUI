@@ -32,12 +32,15 @@ describe('DeleteAction', function () {
 
         var items = [
             {
+                Id: 0,
                 Name: 'First'
             },
             {
+                Id: 1,
                 Name: 'Second'
             },
             {
+                Id: 2,
                 Name: 'Third'
             }
         ];
@@ -100,9 +103,12 @@ describe('DeleteAction', function () {
                 deleteAction.execute();
 
                 // Then
-                assert.equal(dataSource.getItems().length, (initCount - 1) );
-                assert.notInclude(dataSource.getItems(), initSelectedItem);
-                done();
+                setTimeout( function(){
+                        assert.equal(dataSource.getItems().length, (initCount - 1) );
+                        assert.notInclude(dataSource.getItems(), initSelectedItem);
+                        done();
+                }, 0);
+
             }
         );
     });
