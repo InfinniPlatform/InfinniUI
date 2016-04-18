@@ -10,7 +10,11 @@ var ButtonEditModel = TextBoxModel.extend({
     },
 
     clearValue: function () {
-        this.set('value', null);
+        var enabled = this.get('enabled');
+
+        if (enabled) {
+            this.set('value', null);
+        }
     }
 
 });

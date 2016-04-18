@@ -9,7 +9,8 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
 
     UI: _.extend({}, TextBoxView.prototype.UI, {
         iconAction: '.pl-button-edit-button__icon_action',
-        buttonClear: '.pl-button-edit-button_clear'
+        buttonClear: '.pl-button-edit-button_clear',
+        buttons: '.pl-button-edit-button'
     }),
 
     events: _.extend({}, TextBoxView.prototype.events, {
@@ -44,15 +45,17 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
     },
 
     updateReadOnly: function () {
-        var readOnly = this.model.get('showClear');
-        var enabled = this.model.get('enabled');
+        var readOnly = this.model.get('readOnly');
 
-        this.ui.control.prop('disabled', !enabled || readOnly);
+        this.ui.control.prop('readonly', readOnly);
     },
 
     updateEnabled: function () {
+        var enabled = this.model.get('enabled');
         TextBoxView.prototype.updateEnabled.call(this);
-        this.updateReadOnly();
+
+        //@TODO Update button states
+        this.ui.buttons.toggleClass('pl-button-edit-button_disabled', !enabled);
     },
 
     updateValue: function () {
@@ -61,11 +64,29 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
     },
 
     onClickButtonHandler: function (event) {
-        this.trigger('buttonClick', event);
+        var enabled = this.model.get('enabled');
+
+        if (enabled) {
+            this.trigger('buttonClick', event);
+        }
     },
 
     onClickClearHandler: function (event) {
         this.model.clearValue();
+    },
+
+    onFocusControlHandler: function (event) {
+        if (this.model.get('readOnly')) {
+            return;
+        }
+        TextBoxView.prototype.onFocusControlHandler.call(this, event);
+    },
+
+    onMouseenterControlHandler: function (event) {
+        if (this.model.get('readOnly')) {
+            return;
+        }
+        TextBoxView.prototype.onMouseenterControlHandler.call(this, event);
     }
 
 });
