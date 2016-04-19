@@ -19,7 +19,7 @@ _.extend( FakeRestDataProvider.prototype, {
         var queryString;
 
         if(type == 'get' && _.size(params.data) > 0){
-            queryString = this.joinDataForQuery(params.data);
+            queryString = stringUtils.joinDataForQuery(params.data);
             urlString = urlString + '?' + queryString;
         }
 

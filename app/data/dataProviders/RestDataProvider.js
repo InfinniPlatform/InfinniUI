@@ -96,7 +96,7 @@ _.extend(RestDataProvider.prototype, {
                 requestParams.data = JSON.stringify( params.data );
             }else{
                 if(_.size(requestParams.data) > 0){
-                    requestParams.url = requestParams.url + '?' + this.joinDataForQuery(requestParams.data);
+                    requestParams.url = requestParams.url + '?' + stringUtils.joinDataForQuery(requestParams.data);
                 }
             }
 
@@ -171,16 +171,6 @@ _.extend(RestDataProvider.prototype, {
 
     _generateLocalId: function(){
         return guid();
-    },
-
-    joinDataForQuery: function(data){
-        var result = [];
-
-        for(var k in data){
-            result.push(k + '=' + data[k]);
-        }
-
-        return result.join('&');
     },
 
     extractFilesFromData: function (data) {
