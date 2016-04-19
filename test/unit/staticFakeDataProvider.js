@@ -41,10 +41,10 @@ _.extend(StaticFakeDataProvider.prototype, {
         }
     ],
 
-    getItems: function(criteriaList, pageNumber, pageSize, sorting, resultCallback){
+    getItems: function(resultCallback, criteriaList, pageNumber, pageSize, sorting){
         var result = _.clone(this.items);
         setTimeout(function(){
-            resultCallback(result);
+            resultCallback({data:result});
         },100);
     },
 
@@ -78,10 +78,9 @@ _.extend(StaticFakeDataProvider.prototype, {
         },90);
     },
 
-    setCreateAction: function(){},
-    setUpdateAction: function(){},
-    setReadAction: function(){},
-    setDeleteAction: function(){},
-    setConfigId: function(){},
+    setOrigin: function(){},
+    setPath: function(){},
+    setData : function(){},
+    setFilter: function(){},
     setDocumentId: function(){}
 });

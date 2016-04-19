@@ -32,7 +32,18 @@
 
             'app/element/_mixins/*.js',
             'app/element/*.js', // old
+
             'app/data/_common/**/*.js',
+            'app/data/dataSource/_mixins/*.js',
+            'app/data/dataSource/_newBaseDataSource.js',
+            'app/data/dataSource/restDataSource.js',
+            'app/data/dataSource/documentDataSource.js',
+
+            'app/data/dataSource/_newBaseDataSourceBuilder.js',
+            'app/data/dataSource/restDataSourceBuilder.js',
+            'app/data/dataSource/documentDataSourceBuilder.js',
+
+
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
             'app/new/elements/textBox/**/*.js',
@@ -80,7 +91,12 @@
             'bower_components/font-awesome/css/font-awesome.min.css',
             'bower_components/toastr/toastr.css'
         ],
-        unitTestFiles = ['app/utils/strict.js', 'test/unit/setup.js', 'test/unit/**/*.js'],
+        unitTestFiles = [
+            'app/utils/strict.js',
+            'test/unit/setup.js',
+            'test/unit/fakeRestDataProvider.js',
+            'test/unit/**/*.js'
+        ],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
         templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',

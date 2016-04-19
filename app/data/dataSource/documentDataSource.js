@@ -1,126 +1,205 @@
-var DocumentDataSource = BaseDataSource.extend({
+var DocumentDataSource = RestDataSource.extend({
     defaults: _.defaults({
+        documentId: null
 
-        configId:           null,
-        documentId:         null,
-        createActionName:   'CreateDocument',
-        readActionName:     'GetDocument',
-        updateActionName:   'SetDocument',
-        deleteActionName:   'DeleteDocument'
+    }, RestDataSource.prototype.defaults),
 
-    }, BaseDataSource.prototype.defaults),
+    initialize: function () {
+        RestDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
 
+        var model = this.get('model');
+        model.setProperty('pageNumber', 0);
+        model.setProperty('pageSize', 15);
+
+        this.initHandlers();
+    },
+
+    initHandlers: function(){
+        var model = this.get('model');
+        var that = this;
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+
+        model.onPropertyChanged('documentId', function(){
+            that.updateGettingUrlParams();
+            that.updateSettingUrlParams();
+            that.updateDeletingUrlParams();
+        });
+        model.onPropertyChanged('filter', updateGettingUrlParams);
+        model.onPropertyChanged('filterParams', updateGettingUrlParams);
+        model.onPropertyChanged('pageNumber', updateGettingUrlParams);
+        model.onPropertyChanged('pageSize', updateGettingUrlParams);
+        model.onPropertyChanged('search', updateGettingUrlParams);
+        model.onPropertyChanged('select', updateGettingUrlParams);
+        model.onPropertyChanged('order', updateGettingUrlParams);
+        model.onPropertyChanged('count', updateGettingUrlParams);
+
+        this.updateGettingUrlParams();
+        this.updateSettingUrlParams();
+        this.updateDeletingUrlParams();
+    },
+
+    updateGettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'get',
+                origin: InfinniUI.config.serverUrl,
+                path: '/' + this.get('model').getProperty('documentId'),
+                data: {},
+                params: {}
+            },
+            filter = model.getProperty('filter'),
+            filterParams = model.getProperty('filterParams'),
+            pageNumber = model.getProperty('pageNumber'),
+            pageSize = model.getProperty('pageSize'),
+            searchStr = model.getProperty('search'),
+            select = model.getProperty('select'),
+            order = model.getProperty('order'),
+            count = model.getProperty('count');
+
+        if(filter){
+            params.data.filter = filter;
+            if(filterParams){
+                _.extend(params.params, filterParams);
+            }
+        }
+
+        if(pageSize){
+            pageNumber = pageNumber || 0;
+            params.data.skip = pageNumber*pageSize;
+            params.data.take = pageSize;
+        }
+
+        if(searchStr){
+            params.data.search = searchStr;
+        }
+
+        if(select){
+            params.data.select = select;
+        }
+
+        if(order){
+            params.data.order = order;
+        }
+
+        if(count){
+            params.data.count = count;
+        }
+
+        this.setGettingUrlParams(params);
+    },
+
+    updateSettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'post',
+                origin: InfinniUI.config.serverUrl,
+                path: '/' + this.get('model').getProperty('documentId'),
+                data: {},
+                params: {}
+            };
+
+        this.setSettingUrlParams(params);
+    },
+
+    updateDeletingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                type: 'delete',
+                origin: InfinniUI.config.serverUrl,
+                path: '/' + this.get('model').getProperty('documentId') + '/<%id%>',
+                data: {},
+                params: {}
+            };
+
+        this.setDeletingUrlParams(params);
+    },
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('DocumentDataSource'),
-            createActionName = this.getCreateAction(),
-            readActionName = this.getReadAction(),
-            updateActionName = this.getUpdateAction(),
-            deleteActionName = this.getDeleteAction();
-
-        dataProvider.setCreateAction(createActionName);
-        dataProvider.setReadAction(readActionName);
-        dataProvider.setUpdateAction(updateActionName);
-        dataProvider.setDeleteAction(deleteActionName);
+        var dataProvider = window.providerRegister.build('DocumentDataSource');
 
         this.set('dataProvider', dataProvider);
     },
 
-    getConfigId: function(){
-        return this.get('configId');
-    },
-
-    setConfigId: function(configId){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setConfigId(configId);
-        this.set('configId', configId);
-    },
-
     getDocumentId: function(){
-        return this.get('documentId');
+        return this.get('model').getProperty('documentId');
     },
 
     setDocumentId: function(documentId){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setDocumentId(documentId);
-        this.set('documentId', documentId);
+        this.get('model').setProperty('documentId', documentId);
     },
 
-    getCreateAction: function(){
-        return this.get('createActionName');
+    getFilter: function(){
+        return this.get('model').getProperty('filter');
     },
 
-    setCreateAction: function(createActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setCreateAction(createActionName);
-        this.set('createActionName', createActionName);
+    setFilter: function(filter){
+        this.get('model').setProperty('filter', filter);
     },
 
-    getReadAction: function(){
-        return this.get('readActionName');
+    getFilterParams: function(){
+        return this.get('model').getProperty('filterParams');
     },
 
-    setReadAction: function(readActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setReadAction(readActionName);
-        this.set('readActionName', readActionName);
+    setFilterParams: function(filterParams){
+        this.get('model').setProperty('filterParams', filterParams);
     },
 
-    getUpdateAction: function(){
-        return this.get('updateActionName');
+    setIdFilter: function (itemId) {
+        this.setFilter('eq(' + this.getIdProperty() + ','+ itemId + ')');
     },
 
-    setUpdateAction: function(updateActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setUpdateAction(updateActionName);
-        this.set('updateActionName', updateActionName);
+    getPageNumber: function(){
+        return this.get('model').getProperty('pageNumber');
     },
 
-    getDeleteAction: function(){
-        return this.get('deleteActionName');
+    setPageNumber: function(pageNumber){
+        this.get('model').setProperty('pageNumber', pageNumber);
     },
 
-    setDeleteAction: function(deleteActionName){
-        var dataProvider = this.get('dataProvider');
-
-        dataProvider.setDeleteAction(deleteActionName);
-        this.set('deleteActionName', deleteActionName);
+    getPageSize: function(){
+        return this.get('model').getProperty('pageSize');
     },
 
-    saveItem: function (item, success, error) {
-        var
-            dataProvider = this.get('dataProvider'),
-            ds = this;
+    setPageSize: function(pageSize){
+        this.get('model').setProperty('pageSize', pageSize);
+    },
 
-        BaseDataSource.prototype.saveItem.call(this, item, function () {
-            uploadFiles(success, error);
-        }, error);
+    getSearch: function(){
+        return this.get('model').getProperty('search');
+    },
 
-        function uploadFiles (success, error) {
-            ds.extractFiles(item, function (files, itemWithoutFiles) {
-                dataProvider.saveItem(itemWithoutFiles, function (data) {
-                    if (!('isValid' in data) || data.isValid === true) {
-                        //@TODO Что приходит в ответ на сохранение?????
-                        ds.uploadFiles(data.Id, files)
-                            .then(function () {
-                                ds._excludeItemFromModifiedSet(item);
-                                ds._notifyAboutItemSaved(item, data, success);
-                            }, function (err) {
-                                logger.error(err);
-                                if (error) {
-                                    error(err);
-                                }
-                            });
-                    } else {
-                        ds._notifyAboutFailValidationBySaving(item, data, error);
-                    }
-                });
-            });
+    setSearch: function(searchStr){
+        this.get('model').setProperty('search', searchStr);
+    },
+
+    getSelect: function(){
+        return this.get('model').getProperty('select');
+    },
+
+    setSelect: function(selectStr){
+        this.get('model').setProperty('select', selectStr);
+    },
+
+    getOrder: function(){
+        return this.get('model').getProperty('order');
+    },
+
+    setOrder: function(orderConditionStr){
+        this.get('model').setProperty('order', orderConditionStr);
+    },
+
+    getCount: function(){
+        return this.get('model').getProperty('count');
+    },
+
+    setCount: function(isCountNeed){
+        this.get('model').setProperty('count', isCountNeed);
+    },
+
+    beforeDeleteItem: function(item){
+        var itemId = this.idOfItem(item);
+        if(itemId !== undefined){
+            this.setDeletingUrlParams('params.id', itemId);
         }
     }
 

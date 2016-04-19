@@ -78,13 +78,11 @@ describe('FileProvider', function () {
                             resultCallback(response);
                         }, delay());
                     },
-                    setCreateAction: function () {},
-                    setReadAction: function () {},
-                    setUpdateAction: function () {},
-                    setDeleteAction: function () {},
-                    setConfigId: function () {},
-                    getConfigId: function () {},
-                    setDocumentId: function () {},
+                    setOrigin: function(){},
+                    setPath: function(){},
+                    setData : function(){},
+                    setFilter: function(){},
+                    setDocumentId: function(){},
                     getDocumentId: function () {},
                     createLocalItem: function (idProperty) {
                         var result = {};
