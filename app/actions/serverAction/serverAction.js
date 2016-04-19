@@ -1,5 +1,8 @@
 function ServerAction(parentView) {
     _.superClass(ServerAction, this, parentView);
+
+    this.provider = window.providerRegister.build('ServerActionProvider');
+
     this.updateContentTypeStrategy();
     this.on('change:contentType', this.updateContentTypeStrategy);
 }
@@ -25,7 +28,7 @@ _.extend(ServerAction.prototype, {
     },
 
     execute: function (callback) {
-        this.contentTypeStrategy.run(this.getProperty('provider'), this._getRequestData(), callback);
+        this.contentTypeStrategy.run(this.provider, this._getRequestData(), callback);
     },
 
     setParam: function(name, value) {

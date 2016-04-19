@@ -5,9 +5,6 @@ function ServerActionBuilder() {
             parentView = args.parentView;
 
         var action = new ServerAction(parentView);
-        var provider = window.providerRegister.build('ServerActionProvider');
-
-        action.setProperty('provider', provider);
 
         action.setProperty('origin', metadata.Origin);
         action.setProperty('path', metadata.Path);
