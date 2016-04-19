@@ -25,11 +25,14 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
     };
     var success = function () {
         try {
-            var numValue = parseInt(value);
-            chai.assert.isNumber(numValue);
+            var numValue = parseFloat(value.replace(/,/g, '.'));
+
+            if(isNaN(numValue)) {
+                next(new Error(value + ' is not number'));
+                return;
+            }
 
             window.testHelpers.getControlByName(fieldName).setValue(numValue);
-
             next();
         } catch (err) {
             next(err);
