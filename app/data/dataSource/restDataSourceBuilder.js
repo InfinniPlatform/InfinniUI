@@ -50,6 +50,12 @@ _.extend(RestDataSourceBuilder.prototype, {
         if('Data' in urlParamsMetadata){
             result.data = urlParamsMetadata['Data'];
         }
+
+        if('Method' in urlParamsMetadata){
+            result.method = urlParamsMetadata['Method'];
+        }
+
+        return result;
     },
 
     bindParams: function(methodMetadata, dataSource, parentView, pathForBinding, builder){

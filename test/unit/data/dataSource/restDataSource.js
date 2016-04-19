@@ -1,4 +1,4 @@
-describe('ObjectDataSource', function () {
+describe('RestDataSource', function () {
     window.providerRegister.register('RestDataSource', FakeRestDataProvider);
 
     var items = [
@@ -118,6 +118,41 @@ describe('ObjectDataSource', function () {
 
         return dataSource;
     }
+
+    describe('RestDataSourceBuilder', function () {
+
+        it('successful build', function () {
+            // Given
+            var builder = new ApplicationBuilder();
+            var metadata = {
+                GettingParams: {
+                    Method: 'get',
+                    Origin: 'http://some.ru',
+                    Path: '/some/id<%param1%>',
+                    Data: {
+                        a: 'param1=<%param1%>'
+                    },
+
+                    Params: {
+                        param1: 4
+                    }
+                }
+            };
+
+            // When
+            var restDataSource = builder.buildType('RestDataSource', metadata, {parentView: fakeView()});
+
+            // Then
+            var gettingParams = restDataSource.getGettingUrlParams();
+
+            assert.equal(gettingParams.method, 'get');
+            assert.equal(gettingParams.origin, 'http://some.ru');
+            assert.equal(gettingParams.path, '/some/id<%param1%>');
+            assert.deepEqual(gettingParams.data, {a: 'param1=<%param1%>'});
+            assert.deepEqual(gettingParams.params, {param1: 4});
+        });
+
+    });
 
     describe('RestDataSource base api', function () {
 

@@ -64,6 +64,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ButtonEdit', new ButtonEditBuilder());
 
 
+        builder.register('RestDataSource', new RestDataSourceBuilder());
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
         builder.register('DataBinding', new DataBindingBuilder());
         builder.register('PropertyBinding', new DataBindingBuilder());
