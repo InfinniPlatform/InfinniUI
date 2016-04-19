@@ -42,56 +42,83 @@
     }
   }],
   "Items": [{
-    "StackPanel": {
-      "Items": {
-        "Source": "ds1",
-        "Property": ""
-      },
-      "Orientation": "Vertical",
-      "GroupValueProperty": "Volume",
-      "GroupItemTemplate": {
-        "Label": {
-          "Value": {
-            "Source": "ds1",
-            "Property": "#.Volume"
-          }
-        }
-      },
-      "!GroupItemFormat": "{Volume} {Title}",
-      "!GroupItemProperty": "Volume",
-      "!GroupItemTemplate": {
-        "Label": {
-          "Text": "Заголовок группы"
-        }
-      },
-      "ItemTemplate": {
-        "StackPanel": {
-          "Orientation": "Horizontal",
-          "Items": [
-            {
-              "ButtonEdit": {
-                "LabelText": "Title",
-                "Icon": "ellipsis-h",
-                "OnButtonClick": "{alert('Fuck off'); console.log(args);}",
-                "Value": {
-                  "Source": "ds1",
-                  "Property": "#.Title"
+    "ScrollPanel": {
+      "Items": [
+        {
+          "Button": {
+            "Text": "ServerAction",
+            "Action": {
+              "ServerAction": {
+                "Method": "Get",
+                "Origin": "http://<%ip%>:<%port%>",
+                "Path": "/documents/<%document%>",
+                "Data": {
+                  "filter": "eq(_id,'<%_id%>')"
+                },
+                "Params": {
+                  "ip": "10.0.0.34",
+                  "port": "9900",
+                  "document": "GetCompanyProfile988Response",
+                  "_id": "73eba46a-0c6f-42d3-8a7b-2962f0fbf06d"
                 }
               }
+            }
+          }
+        },
+        {
+          "StackPanel": {
+            "Items": {
+              "Source": "ds1",
+              "Property": ""
             },
-            {
-              "TextBox": {
-                "LabelText": "Volume",
+            "Orientation": "Vertical",
+            "GroupValueProperty": "Volume",
+            "GroupItemTemplate": {
+              "Label": {
                 "Value": {
                   "Source": "ds1",
                   "Property": "#.Volume"
                 }
               }
-            }
-          ]
-        }
+            },
+            "!GroupItemFormat": "{Volume} {Title}",
+            "!GroupItemProperty": "Volume",
+            "!GroupItemTemplate": {
+              "Label": {
+                "Text": "Заголовок группы"
+              }
+            },
+            "ItemTemplate": {
+              "StackPanel": {
+                "Orientation": "Horizontal",
+                "Items": [
+                  {
+                    "ButtonEdit": {
+                      "LabelText": "Title",
+                      "Icon": "ellipsis-h",
+                      "OnButtonClick": "{alert('Fuck off'); console.log(args);}",
+                      "Value": {
+                        "Source": "ds1",
+                        "Property": "#.Title"
+                      }
+                    }
+                  },
+                  {
+                    "TextBox": {
+                      "LabelText": "Volume",
+                      "Value": {
+                        "Source": "ds1",
+                        "Property": "#.Volume"
+                      }
+                    }
+                  }
+                ]
+              }
 
-      }
+            }
+          }
+        }
+      ]
     }
   }]
 }

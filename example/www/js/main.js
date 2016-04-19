@@ -42,6 +42,11 @@ moment.locale('ru');
         return new MetadataDataSourceProvider(new QueryConstructorMetadataDataSource(host, metadataValue));
     });
 
+     window.providerRegister.register('ServerActionProvider', function () {
+             return new ServerActionProvider();
+     });
+
+
     var builder = new ApplicationBuilder(),
         rootView = new SpecialApplicationView(),
         mainView;
