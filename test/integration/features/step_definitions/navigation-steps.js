@@ -327,7 +327,7 @@ this.Then(/^я сверну панель "([^"]*)"$/, function (panelName, next)
         return window.testHelpers.getControlByName(panelName) != undefined;
     }, function () {
         try{
-            window.testHelpers.getControlByName(panelName).setCollapsed(false);
+            window.testHelpers.getControlByName(panelName).setCollapsed(true);
             next();
         }catch (err){
             next(err);
@@ -342,7 +342,7 @@ this.Then(/^я разверну панель "([^"]*)"$/, function (panelName, n
         return window.testHelpers.getControlByName(panelName) != undefined;
     }, function () {
         try{
-            window.testHelpers.getControlByName(panelName).setCollapsed(true);
+            window.testHelpers.getControlByName(panelName).setCollapsed(false);
             next();
         }catch (err){
             next(err);
