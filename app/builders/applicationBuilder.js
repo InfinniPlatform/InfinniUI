@@ -61,6 +61,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
+        builder.register('ButtonEdit', new ButtonEditBuilder());
+
 
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
         builder.register('DataBinding', new DataBindingBuilder());

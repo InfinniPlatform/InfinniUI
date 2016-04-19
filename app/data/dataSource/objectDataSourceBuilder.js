@@ -22,7 +22,7 @@ _.extend(ObjectDataSourceBuilder.prototype, {
                     parentView: parent
                 });
 
-                binding.setMode(BindingModes.toElement);
+                binding.setMode(InfinniUI.BindingModes.toElement);
 
                 binding.bindElement(dataSource, '');
             }

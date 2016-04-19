@@ -1,4 +1,4 @@
-var BindingModes = {
+InfinniUI.BindingModes = {
     twoWay: 'TwoWay',
     toSource: 'ToSource',
     toElement: 'ToElement'
@@ -7,7 +7,7 @@ var BindingModes = {
 
 var DataBinding = Backbone.Model.extend({
     defaults: {
-        mode: BindingModes.twoWay,
+        mode: InfinniUI.BindingModes.twoWay,
         converter: null,
         source: null,
         sourceProperty: null,
@@ -218,10 +218,10 @@ var DataBinding = Backbone.Model.extend({
     },
 
     _shouldRefreshSource: function(mode){
-        return mode == BindingModes.twoWay || mode == BindingModes.toSource;
+        return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toSource;
     },
 
     _shouldRefreshElement: function(mode){
-        return mode == BindingModes.twoWay || mode == BindingModes.toElement;
+        return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;
     }
 });

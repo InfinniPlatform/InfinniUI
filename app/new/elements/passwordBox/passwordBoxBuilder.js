@@ -21,6 +21,7 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
 
             this.initBindingToProperty(params, 'LabelText');
             element.setPasswordChar(metadata.PasswordChar);
+            element.setAutocomplete(metadata.Autocomplete);
         },
 
         createElement: function (params) {

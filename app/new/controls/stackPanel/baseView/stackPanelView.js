@@ -55,22 +55,6 @@ var StackPanelView = ContainerView.extend(
             return this;
         },
 
-        //renderItemsContents: function(){
-        //    var $items = this.$el.find('.pl-stack-panel-i'),
-        //        items = this.model.get('items'),
-        //        itemTemplate = this.model.get('itemTemplate'),
-        //        that = this,
-        //        element, item;
-        //
-        //    $items.each(function(i, el){
-        //        item = items.getByIndex(i);
-        //        element = itemTemplate(undefined, {item: item, index: i});
-        //        that.addChildElement(element);
-        //        $(el)
-        //            .append(element.render());
-        //    });
-        //},
-
         initOrientation: function () {
             this.listenTo(this.model, 'change:orientation', this.updateOrientation);
             this.updateOrientation();
@@ -79,6 +63,7 @@ var StackPanelView = ContainerView.extend(
         updateOrientation: function () {
             var orientation = this.model.get('orientation');
             this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
+            this.$el.toggleClass('pl-stack-panel_horizontal', orientation == 'Horizontal');
         },
 
         getItems: function(){

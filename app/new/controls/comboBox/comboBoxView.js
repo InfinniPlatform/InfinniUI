@@ -35,8 +35,9 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     updateFocusable: function () {
         var focusable = this.model.get('focusable');
+        var enabled = this.model.get('enabled');
 
-        if (focusable) {
+        if (focusable && enabled) {
             this.ui.control.attr('tabindex', 0);
         } else {
             this.ui.control.removeAttr('tabindex');
@@ -129,6 +130,13 @@ var ComboBoxView = ListEditorBaseView.extend({
     },
 
     onKeyDownControlHandler: function (event) {
+        var enabled = this.model.get('enabled');
+
+        if (!enabled) {
+            event.preventDefault();
+            return;
+        }
+
         if (event.ctrlKey || event.altKey) {
             return;
         }
@@ -186,6 +194,13 @@ var ComboBoxView = ListEditorBaseView.extend({
         ListEditorBaseView.prototype.updateEnabled.call(this);
 
         var enabled = this.model.get('enabled');
+
+        if (!enabled) {
+            //Prevent got focus
+            this.ui.control.removeAttr('tabindex');
+        } else {
+            this.updateFocusable();
+        }
 
     },
 

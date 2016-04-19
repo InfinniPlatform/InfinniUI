@@ -1,342 +1,98 @@
 {
-  "OnLoaded": "OL2",
-  "DataSources": [
-    {
-      "ObjectDataSource": {
-        "Name": "Test",
-        "OnPropertyChanged": "{var d = new Date(args.newValue); console.log(d.toUTCString());}",
-        "Items": [
-          {
-            "Id": 1,
-            "Name": "One",
-            "Group": "odd",
-            "Date": "2016-02-29T19:00:00.000Z"
-          },
-          {
-            "Id": 2,
-            "Name": "Two",
-            "Group": "even",
-            "Date": "2016-02-29T19:00:00.000Z"
-          },
-          {
-            "Id": 3,
-            "Name": "Three",
-            "Group": "odd",
-            "Date": "2016-02-29T19:00:00.000Z"
-          },
-          {
-            "Id": 4,
-            "Name": "Four",
-            "Group": "even",
-            "Date": "2016-02-29T19:00:00.000Z"
-          },
-          {
-            "Id": 5,
-            "Name": "Five",
-            "Group": "odd",
-            "Date": "2016-03-01T00:00:00.000Z"
-          },
-          {
-            "Id": 6,
-            "Name": "Six",
-            "Group": "even",
-            "Date": "2016-03-01T10:00:00.000Z"
-          },
-          {
-            "Id": 7,
-            "Name": "Seven",
-            "Group": "odd",
-            "Date": "2016-03-01T19:00:00.000Z"
-          }
-        ],
-        "~Query": [
-          {
-            "Property": "Group",
-            "Value": "odd",
-            "CriteriaType": 1
-          }
-        ]
-      }
-    },
-    {
-      "DocumentDataSource": {
-        "Name": "Child",
-        "ConfigId": "PTA",
-        "DocumentId": "Child",
-        "Query": [
-          {
-            "Property": "Name",
-            "Value": "е",
-            "CriteriaType": 65536
-          }
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "Clone",
-        "Items": {
-          "Source": "BloodGroupDataSource",
-          "Converter": {
-            "ToElement": "{return [args.value[0]];}"
-          }
-        }
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "Numbers",
-        "OnValueChanged": "{console.log(args)}",
-        "Items": [
-          {
-            "value": 0
-          },
-          {
-            "value": 1
-          },
-          {
-            "value": 2
-          },
-          {
-            "value": 3
-          },
-          {
-            "value": 4
-          },
-          {
-            "value": 5
-          },
-          {
-            "value": 6
-          },
-          {
-            "value": 7
-          },
-          {
-            "value": 8
-          },
-          {
-            "value": 9
-          }
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "BloodGroupDataSource",
-        "Items": [
-          {
-            "Id": 1,
-            "DisplayName": "44",
-            "SomeField": "",
-            "Array": [
-              {
-                "Id": 5,
-                "DisplayName": "I-1"
-              },
-              {
-                "Id": 6,
-                "DisplayName": "I-2"
-              },
-              {
-                "Id": 7,
-                "DisplayName": "I-3"
-              }
-            ]
-          },
-          {
-            "Id": 2,
-            "DisplayName": "II",
-            "SomeField": "val",
-            "Array": [
-              {
-                "Id": 8,
-                "DisplayName": "II-1"
-              },
-              {
-                "Id": 9,
-                "DisplayName": "II-2"
-              }
-            ]
-          },
-          {
-            "Id": 3,
-            "DisplayName": "III",
-            "SomeField": 3
-          },
-          {
-            "Id": 4,
-            "DisplayName": "IV",
-            "SomeField": null
-          }
-        ],
-        "OnSelectedItemChanged": {
-          "Name": "OnSelectedItemChanged_1"
-        }
-      }
-    }
-  ],
-  "Items": [
-    {
-      "GridPanel": {
-        "Items": [
-          {
-            "Cell": {
-              "ColumnSpan": 4,
-              "Items": [
-                {
-                  "FileBox": {
-                    "AcceptTypes": [".gif",".png"],
-                    "Value": {
-                      "Source": "Child",
-                      "Property": "File"
-                    }
-                  }
-                },
-                {
-                  "Button": {
-                    "Text": "Test",
-                    "OnClick": "{debugger; console.log(args);)"
-                  }
-                },
-                {
-                  "DateTimePicker": {
-                    "LabelText": "Birthday",
-                    "Name": "BirthdayTimePicker",
-                    "Mode": "DateTime",
-                    "~MinValue": "12:00",
-                    "!MinValue": "2016-04-05",
-                    "--MaxValue": "14:00",
-                    "MaxValue": "2016-04-26T18:00",
-                    "Value": {
-                      "Source": "Numbers",
-                      "Property": "$.Birthday"
-                    }
-                  }
-                },
-                {
-                  "Label": {
-                    "Text": {
-                      "Source": "Numbers",
-                      "Property": "$.Birthday"
-                    }
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "Cell": {
-              "ColumnSpan": 4,
-              "Items": []
-            }
-          },
-          {
-            "Cell": {
-              "ColumnSpan": 4,
-              "Items": [
-                {
-                  "TestElement": {
-                    "TestProperty": "Value Of Test Property In TestElement"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "Cell": {
-              "ColumnSpan": 4,
-              "Items": [
-                {
-                  "StackPanel": {
-                    "Items": {
-                      "Source": "Clone",
-                      "Property": ""
-                    },
-                    "ItemTemplate": {
-                      "Label": {
-                        "Value": {
-                          "Source": "Clone",
-                          "Property": "#.DisplayName"
-                        }
-                      }
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "DataGrid": {
-        "VerticalAlignment": "Center",
-        "Columns": [
-          {
-            "Header": "Id",
-            "CellProperty": "Id"
-          },
-          {
-            "Header": "Name",
-            "CellProperty": "Name"
-          },
-          {
-            "Header": "Date",
-            "CellProperty": "Date"
-          },
-          {
-            "Header": "Date",
-            "CellTemplate": {
-              "DateTimePicker": {
-                "Mode": "Time",
-                "TimeZone": 0,
-                "Value": {
-                  "Source": "Test",
-                  "Property": "#.Date"
-                }
-              }
-            }
-          }
-        ],
-        "RowBackground": {
-          "Source": "Test",
-          "Mode": "ToElement",
-          "Property": "#",
-          "Converter": {
-            "ToElement": "{return args.value.Id <= 2 ? 'less' : 'more';}"
-          }
+  "DataSources": [{
+    "ObjectDataSource": {
+      "Name": "ds1",
+      "Items": [
+        {
+          "Id": 1,
+          "Title": "1",
+          "Volume": "I"
         },
-        "Items": {
-          "Source": "Test"
+        {
+          "Id": 2,
+          "Title": "2",
+          "Volume": "I"
+        },
+        {
+          "Id": 3,
+          "Title": "3",
+          "Volume": "I"
+        },
+        {
+          "Id": 4,
+          "Title": "4",
+          "Volume": "I"
+        },
+        {
+          "Id": 5,
+          "Title": "5",
+          "Volume": "I"
+        },
+        {
+          "Id": 6,
+          "Title": "6",
+          "Volume": "II"
+        },
+        {
+          "Id": 7,
+          "Title": "7",
+          "Volume": "II"
         }
-      }
-    },
-    {
-      "DataGrid": {
-        "Columns": [
-          {
-            "Header": "Id",
-            "CellProperty": "Id"
-          },
-          {
-            "Header": "Name",
-            "CellProperty": "Name"
-          },
-          {
-            "Header": "Group",
-            "CellProperty": "Group"
-          },
-          {
-            "Header": "Date",
-            "CellProperty": "Date"
+      ]
+    }
+  }],
+  "Items": [{
+    "StackPanel": {
+      "Items": {
+        "Source": "ds1",
+        "Property": ""
+      },
+      "Orientation": "Vertical",
+      "GroupValueProperty": "Volume",
+      "GroupItemTemplate": {
+        "Label": {
+          "Value": {
+            "Source": "ds1",
+            "Property": "#.Volume"
           }
-        ],
-        "Items": {
-          "Source": "Test"
         }
+      },
+      "!GroupItemFormat": "{Volume} {Title}",
+      "!GroupItemProperty": "Volume",
+      "!GroupItemTemplate": {
+        "Label": {
+          "Text": "Заголовок группы"
+        }
+      },
+      "ItemTemplate": {
+        "StackPanel": {
+          "Orientation": "Horizontal",
+          "Items": [
+            {
+              "ButtonEdit": {
+                "LabelText": "Title",
+                "Icon": "ellipsis-h",
+                "OnButtonClick": "{alert('Fuck off'); console.log(args);}",
+                "Value": {
+                  "Source": "ds1",
+                  "Property": "#.Title"
+                }
+              }
+            },
+            {
+              "TextBox": {
+                "LabelText": "Volume",
+                "Value": {
+                  "Source": "ds1",
+                  "Property": "#.Volume"
+                }
+              }
+            }
+          ]
+        }
+
       }
     }
-  ]
+  }]
 }
 

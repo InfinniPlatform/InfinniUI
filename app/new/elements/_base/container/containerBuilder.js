@@ -54,7 +54,7 @@ _.extend(ContainerBuilder.prototype, {
             basePathOfProperty: params.basePathOfProperty
         });
 
-        binding.setMode(BindingModes.toElement);
+        binding.setMode(InfinniUI.BindingModes.toElement);
 
         //if ('ItemComparator' in metadata) {
         this.bindElementItemsWithSorting(binding, params);
@@ -225,7 +225,7 @@ _.extend(ContainerBuilder.prototype, {
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
             var binding = new DataBinding();
-            binding.setMode(BindingModes.toElement);
+            binding.setMode(InfinniUI.BindingModes.toElement);
 
             sourceProperty = index.toString();
             if (itemsBinding.getSourceProperty() != '') {

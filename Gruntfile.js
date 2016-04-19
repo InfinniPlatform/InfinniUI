@@ -22,6 +22,8 @@
 
             'app/new/controls/_base/**/*.js',
 
+            'app/new/controls/textBox/**/*.js',
+
             'app/new/controls/dateTimePicker/**/*.js',
             'app/new/controls/datePicker/**/*.js',
             'app/new/controls/timePicker/**/*.js',
@@ -33,6 +35,7 @@
             'app/data/_common/**/*.js',
             'app/new/elements/_base/**/*.js',
             'app/new/elements/listBox/**/*.js',
+            'app/new/elements/textBox/**/*.js',
 
             'app/new/elements/dateTimePicker/**/*.js',
             'app/new/elements/datePicker/**/*.js',

@@ -7,7 +7,10 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
 
     className: 'pl-password-box form-group',
 
-    template: InfinniUI.Template["new/controls/passwordBox/template/passwordBox.tpl.html"],
+    template: {
+        "autocomplete": InfinniUI.Template["new/controls/passwordBox/template/passwordBox.on.tpl.html"],
+        "noautocomplete": InfinniUI.Template["new/controls/passwordBox/template/passwordBox.off.tpl.html"]
+    },
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         label: '.pl-control-label',
@@ -29,6 +32,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.listenTo(this.model, 'change:labelText', this.updateLabelText);
         this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
         this.listenTo(this.model, 'change:passwordChar', this.updatePasswordChar);
+        this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
+
     },
 
     updateProperties: function(){
@@ -41,6 +46,10 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     updateLabelText: function () {
         var labelText = this.model.get('labelText');
         this.ui.label.text(labelText);
+    },
+
+    updateAutocomplete: function () {
+        this.rerender();
     },
 
     updatePasswordChar: function () {
@@ -73,13 +82,19 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         var model = this.model;
 
         this.prerenderingActions();
-        this.renderTemplate(this.template);
+        this.renderTemplate(this.getTemplate());
 
         this.updateProperties();
 
         this.trigger('render');
         this.postrenderingActions();
         return this;
+    },
+
+    getTemplate: function () {
+        var model = this.model;
+
+        return model.get('autocomplete') ? this.template.autocomplete : this.template.noautocomplete;
     },
 
     onBlurHandler: function () {
