@@ -92,6 +92,47 @@ var filterItems = function(items, filter) {
 		}
 		return tmpResult;
 	};
+
+	filtersObj.in = function(param, values) { // values is array
+		var tmpResult = [];
+		for( var i = 0, ii = result.length; i < ii; i += 1 ) {
+			if( _.indexOf(values, result[i][param]) !== -1 ) {
+				tmpResult.push( result[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	filtersObj.notIn = function(param, values) { // values is array
+		var tmpResult = [];
+		for( var i = 0, ii = result.length; i < ii; i += 1 ) {
+			if( _.indexOf(values, result[i][param]) === -1 ) {
+				tmpResult.push( result[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	filtersObj.exist = function(param, boolean) { // boolean is string after "filter.replace"
+		var tmpResult = [],
+				tmpValue;
+		if( boolean === undefined ) {
+			boolean = 'true';
+		}
+		for( var i = 0, ii = result.length; i < ii; i += 1 ) {
+			tmpValue = result[i][param];
+			if( boolean === 'true' ) {
+				if( !_.isUndefined(tmpValue) && !_.isNull(tmpValue) ) {
+					tmpResult.push( result[i] );
+				}
+			} else {
+				if( _.isUndefined(tmpValue) || _.isNull(tmpValue) ) {
+					tmpResult.push( result[i] );
+				}
+			}
+		}
+		return tmpResult;
+	};
 	
 	fu = new Function(
 		'resultItems',
