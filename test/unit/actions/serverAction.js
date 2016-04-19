@@ -4,7 +4,7 @@ describe('ServerAction', function () {
         var builder = new ApplicationBuilder();
         var metadata = {
             ServerAction: {
-                ContentType: 'File',
+                ContentType: 'application/json',
                 Method: 'post',
                 Origin: 'http://some.ru',
                 Path: '/some/<%param1%>/',
@@ -23,7 +23,7 @@ describe('ServerAction', function () {
         var serverAction = builder.build(metadata, {parentView: fakeView()});
 
         // Then
-        assert.equal(serverAction.getProperty('contentType'), 'File');
+        assert.equal(serverAction.getProperty('contentType'), 'application/json');
         assert.equal(serverAction.getProperty('method'), 'post');
         assert.equal(serverAction.getProperty('origin'), 'http://some.ru');
         assert.equal(serverAction.getProperty('path'), '/some/<%param1%>/');
@@ -101,6 +101,7 @@ describe('ServerAction', function () {
             // Then
             assert.equal(window.serverActionTest_urlParams.method, 'GET');
             assert.equal(window.serverActionTest_urlParams.requestUrl, 'http://some.ru/some/4?a=2&b=6');
+            assert.equal(window.serverActionTest_urlParams.contentType, 'application/x-www-form-urlencoded; charset=utf-8');
         });
 
         it('post', function () {
@@ -117,6 +118,7 @@ describe('ServerAction', function () {
             var metadata = {
                 ServerAction: {
                     Method: 'Post',
+                    ContentType: 'application/pdf',
                     Origin: 'http://some.ru',
                     Path: '/some/<%param1%>',
                     Data: {
@@ -138,7 +140,41 @@ describe('ServerAction', function () {
             // Then
             assert.equal(window.serverActionTest_urlParams.method, 'POST');
             assert.equal(window.serverActionTest_urlParams.requestUrl, 'http://some.ru/some/4');
+            assert.equal(window.serverActionTest_urlParams.contentType, 'application/pdf');
             assert.deepEqual(window.serverActionTest_urlParams.args, {a: 2, b: "user#6"});
+        });
+
+        it('should convert data to string JSON if contentType is application/json', function () {
+            // Given
+            window.providerRegister.register('ServerActionProvider', function () {
+                return {
+                    request: function (requestData) {
+                        window.serverActionTest_urlParams = requestData;
+                    }
+                };
+            });
+
+            var builder = new ApplicationBuilder();
+            var metadata = {
+                ServerAction: {
+                    Method: 'Post',
+                    ContentType: 'application/json; charset=utf-8',
+                    Origin: 'http://some.ru',
+                    Path: '',
+                    Data: {
+                        a: 2,
+                        b: 'abc'
+                    }
+                }
+            };
+
+            var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+            // When
+            serverAction.execute();
+
+            // Then
+            assert.equal(window.serverActionTest_urlParams.args, '{"a":2,"b":"abc"}');
         });
     });
 });

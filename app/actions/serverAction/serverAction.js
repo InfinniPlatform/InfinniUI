@@ -9,14 +9,19 @@ _.inherit(ServerAction, BaseAction);
 _.extend(ServerAction.prototype, {
 
     defaults: {
-        contentType: 'Object',
+        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
         method: 'GET',
         data: {}
     },
 
     updateContentTypeStrategy: function () {
         var contentType = this.getProperty('contentType');
-        this.contentTypeStrategy = serverActionContentTypeStrategy[contentType];
+
+        if( contentType.includes('multipart') ){
+            this.contentTypeStrategy = serverActionContentTypeStrategy['File'];
+        } else {
+            this.contentTypeStrategy = serverActionContentTypeStrategy['Object'];
+        }
     },
 
     execute: function (callback) {
@@ -35,17 +40,19 @@ _.extend(ServerAction.prototype, {
         var origin = this._replaceParamsInStr( this.getProperty('origin') );
         var path = this._replaceParamsInStr( this.getProperty('path') );
         var method = this.getProperty('method').toUpperCase();
+        var contentType = this.getProperty('contentType');
         var data = this._replaceParamsInObject( this.getProperty('data') );
 
         var result = {};
         result.requestUrl = origin + path;
         result.method = method;
+        result.contentType = contentType;
 
         if( !_.isEmpty(data) ){
             if( method == 'GET') {
                 result.requestUrl = result.requestUrl + '?' + stringUtils.joinDataForQuery(data);
             } else {
-                result.args = data;
+                result.args = (contentType.includes('application/json')) ? JSON.stringify(data) : data;
             }
         }
 

@@ -12,6 +12,7 @@ ServerActionProvider.prototype.request = function (requestData, resultCallback) 
             withCredentials: true
         },
         data: requestData.args,
+        contentType: requestData.contentType,
         success: function(data){
             if( _.isFunction(resultCallback) ){
                 resultCallback({
