@@ -2,21 +2,21 @@ var RestDataProvider = function(){
 
     this.requestParams = {
         'get': {
-            type: 'get',
+            method: 'get',
             origin: null, // http://abs.com
             path: '',
             data: {}
         },
 
         'set':{
-            type: 'post',
+            method: 'post',
             origin: null,
             path: '',
             data: {}
         },
 
         'delete':{
-            type: 'delete',
+            method: 'delete',
             origin: null,
             path: '',
             data: {}
@@ -51,12 +51,12 @@ _.extend(RestDataProvider.prototype, {
         this.requestParams[type].data = data;
     },
 
-    getType: function(type){
-        return this.requestParams[type].type;
+    getMethod: function(type){
+        return this.requestParams[type].method;
     },
 
-    setType: function(type, queryType){
-        this.requestParams[type].type = queryType;
+    setMethod: function(type, queryMethod){
+        this.requestParams[type].method = queryMethod;
     },
 
     send: function(type, successHandler, errorHandler){
@@ -72,7 +72,7 @@ _.extend(RestDataProvider.prototype, {
         if( _.size(filesInData.files) == 0){
 
             requestParams = {
-                type: params.type,
+                type: params.method,
                 xhrFields: {
                     withCredentials: true
                 },
@@ -91,7 +91,7 @@ _.extend(RestDataProvider.prototype, {
                 }
             };
 
-            if(params.type.toLowerCase() != 'get'){
+            if(params.method.toLowerCase() != 'get'){
                 requestParams.contentType = 'application/json';
                 requestParams.data = JSON.stringify( params.data );
             }else{
@@ -111,7 +111,7 @@ _.extend(RestDataProvider.prototype, {
 
 
             requestParams = {
-                type: params.type,
+                type: params.method,
                 url: urlString,
                 xhrFields: {
                     withCredentials: true
