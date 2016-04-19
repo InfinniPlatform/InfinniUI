@@ -105,7 +105,7 @@
 
     InfoElement.prototype.copyInfo = function (viewName, name) {
         if (viewName || name) {
-            window.prompt("Copy to clipboard: Ctrl+C", viewName + ':' + name);
+            window.prompt("Copy to clipboard: Ctrl+C", formatInfo(viewName, name));
         }
     };
 
@@ -119,7 +119,7 @@
         this.clickManager.append($control[0], this.copyInfo.bind(this, viewName, name));
 
         $control.tooltip({
-                title: viewName + ':' + name,
+                title: formatInfo(viewName, name),
                 placement: "auto"
             })
             .tooltip('show');
@@ -172,6 +172,16 @@
             }
         }
         return this;
+    };
+
+
+    /********************/
+
+    function formatInfo(viewName, name) {
+        var info = viewName ? [viewName] : [];
+        info.push(name);
+
+        return info.join(':');
     };
 
 
