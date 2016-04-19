@@ -222,6 +222,10 @@ var ComboBoxDropdownView = Backbone.View.extend({
             case 9:
                 this.close();
                 break;
+            case 27://Escape
+                this.close();
+                event.stopPropagation();
+                break;
         }
     },
 
