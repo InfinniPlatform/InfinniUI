@@ -8,7 +8,10 @@ function ServerActionBuilder() {
 
         action.setProperty('origin', metadata.Origin);
         action.setProperty('path', metadata.Path);
-        action.setProperty('data', metadata.Data);
+
+        if (metadata.Data) {
+            action.setProperty('data', metadata.Data);
+        }
 
         if (metadata.Method) {
             action.setProperty('method', metadata.Method);
