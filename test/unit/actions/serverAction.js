@@ -118,7 +118,7 @@ describe('ServerAction', function () {
             var metadata = {
                 ServerAction: {
                     Method: 'Post',
-                    ContentType: 'application/pdf',
+                    ContentType: false,
                     Origin: 'http://some.ru',
                     Path: '/some/<%param1%>',
                     Data: {
@@ -140,7 +140,7 @@ describe('ServerAction', function () {
             // Then
             assert.equal(window.serverActionTest_urlParams.method, 'POST');
             assert.equal(window.serverActionTest_urlParams.requestUrl, 'http://some.ru/some/4');
-            assert.equal(window.serverActionTest_urlParams.contentType, 'application/pdf');
+            assert.equal(window.serverActionTest_urlParams.contentType, false);
             assert.deepEqual(window.serverActionTest_urlParams.args, {a: 2, b: "user#6"});
         });
 

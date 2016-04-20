@@ -20,7 +20,7 @@ _.extend(ServerAction.prototype, {
     updateContentTypeStrategy: function () {
         var contentType = this.getProperty('contentType');
 
-        if( contentType.includes('multipart') ){
+        if( _.isString(contentType) && contentType.includes('multipart') ){
             this.contentTypeStrategy = serverActionContentTypeStrategy['File'];
         } else {
             this.contentTypeStrategy = serverActionContentTypeStrategy['Object'];
@@ -55,7 +55,7 @@ _.extend(ServerAction.prototype, {
             if( method == 'GET') {
                 result.requestUrl = result.requestUrl + '?' + stringUtils.joinDataForQuery(data);
             } else {
-                result.args = (contentType.includes('application/json')) ? JSON.stringify(data) : data;
+                result.args = ( _.isString(contentType) && contentType.includes('application/json')) ? JSON.stringify(data) : data;
             }
         }
 

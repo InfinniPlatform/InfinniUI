@@ -17,7 +17,7 @@ function ServerActionBuilder() {
             action.setProperty('method', metadata.Method);
         }
 
-        if (metadata.ContentType) {
+        if (metadata.ContentType || metadata.ContentType === false) {
             action.setProperty('contentType', metadata.ContentType);
         }
 
