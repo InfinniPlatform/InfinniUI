@@ -27,7 +27,7 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
         try {
             var numValue = parseFloat(value.replace(/,/g, '.'));
 
-            if(isNaN(numValue)) {
+            if (isNaN(numValue)) {
                 next(new Error(value + ' is not number'));
                 return;
             }
@@ -263,7 +263,7 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
 
             var actValue = field.getValue();
 
-            if(field.getDisplayValue) {
+            if (field.getDisplayValue) {
                 actValue = field.getDisplayValue();
             }
 
@@ -303,4 +303,60 @@ this.Then(/^элемент "([^"]*)" будет недоступным$/, functi
     };
 
     window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
+this.Then(/^я увеличу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
+    var haveBox = function () {
+        return window.testHelpers.getControlByName(boxName) != undefined;
+    };
+    var success = function () {
+        try {
+            var numBox = window.testHelpers.getControlByName(boxName);
+
+            if (!numBox.getEnabled()) {
+                next(new Error("Элемент " + boxName + " недоступен!"));
+                return;
+            }
+
+            var incr = numBox.getIncrement();
+            var oldValue = numBox.getValue();
+
+            numBox.setValue(oldValue + incr);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(boxName + ' не найден!'));
+    };
+    window.testHelpers.waitCondition(haveBox, success, fail);
+});
+
+this.Then(/^я уменьшу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
+    var haveBox = function () {
+        return window.testHelpers.getControlByName(boxName) != undefined;
+    };
+    var success = function () {
+        try {
+            var numBox = window.testHelpers.getControlByName(boxName);
+
+            if (!numBox.getEnabled()) {
+                next(new Error("Элемент " + boxName + " недоступен!"));
+                return;
+            }
+
+            var incr = numBox.getIncrement();
+            var oldValue = numBox.getValue();
+
+            numBox.setValue(oldValue - incr);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(boxName + ' не найден!'));
+    };
+    window.testHelpers.waitCondition(haveBox, success, fail);
 });
