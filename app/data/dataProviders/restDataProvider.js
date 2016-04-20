@@ -95,8 +95,8 @@ _.extend(RestDataProvider.prototype, {
                 requestParams.contentType = 'application/json';
                 requestParams.data = JSON.stringify( params.data );
             }else{
-                if(_.size(requestParams.data) > 0){
-                    requestParams.url = requestParams.url + '?' + stringUtils.joinDataForQuery(requestParams.data);
+                if(_.size(params.data) > 0){
+                    requestParams.url = requestParams.url + '?' + stringUtils.joinDataForQuery(params.data);
                 }
             }
 

@@ -43,7 +43,7 @@ var DocumentDataSource = RestDataSource.extend({
             params = {
                 type: 'get',
                 origin: InfinniUI.config.serverUrl,
-                path: '/' + this.get('model').getProperty('documentId'),
+                path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
                 params: {}
             },
@@ -93,7 +93,7 @@ var DocumentDataSource = RestDataSource.extend({
             params = {
                 type: 'post',
                 origin: InfinniUI.config.serverUrl,
-                path: '/' + this.get('model').getProperty('documentId'),
+                path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
                 params: {}
             };
@@ -106,7 +106,7 @@ var DocumentDataSource = RestDataSource.extend({
             params = {
                 type: 'delete',
                 origin: InfinniUI.config.serverUrl,
-                path: '/' + this.get('model').getProperty('documentId') + '/<%id%>',
+                path: '/documents/' + this.get('model').getProperty('documentId') + '/<%id%>',
                 data: {},
                 params: {}
             };
@@ -201,6 +201,11 @@ var DocumentDataSource = RestDataSource.extend({
         if(itemId !== undefined){
             this.setDeletingUrlParams('params.id', itemId);
         }
-    }
+    },
+
+    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+        var items = itemsData['Result']['Items'];
+        RestDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+    },
 
 });

@@ -77,10 +77,29 @@ var newBaseDataSource = Backbone.Model.extend({
         if(property.charAt(0) == '.'){
             property = property.substr(1);
         }else{
-            property = 'items.' + property;
+            if(property == ''){
+                property = 'items';
+            }else{
+                property = 'items.' + property;
+            }
+
         }
 
-        this.get('model').onPropertyChanged(property, handler, owner);
+        this.get('model').onPropertyChanged(property, function(context, args){
+            var property = args.property;
+
+            if(property.substr(0,6) == 'items.'){
+                property = property.substr(6);
+            }else if(property == 'items'){
+                property = '';
+            } else{
+                property = '.' + property;
+            }
+
+            args.property = property;
+
+            handler(context, args);
+        }, owner);
     },
 
     onSelectedItemChanged: function (handler, owner) {
@@ -611,7 +630,7 @@ var newBaseDataSource = Backbone.Model.extend({
             dataProvider.getItems(function (data) {
 
                 that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data, onSuccess, onError);
+                that._handleUpdatedItemsData(data.data, onSuccess, onError);
 
             }, onError);
         }else{
@@ -625,14 +644,14 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
-        this.setProperty('', itemsData.data);
+        this.setProperty('', itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
 
     _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
         var context = this.getContext();
         var argument = {
-                value: itemsData.data
+                value: itemsData
             };
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
