@@ -44,7 +44,13 @@ _.extend(StaticFakeDataProvider.prototype, {
     getItems: function(resultCallback, criteriaList, pageNumber, pageSize, sorting){
         var result = _.clone(this.items);
         setTimeout(function(){
-            resultCallback({data:result});
+            resultCallback({
+                data: {
+                    Result: {
+                        Items:result
+                    }
+                }
+            });
         },100);
     },
 

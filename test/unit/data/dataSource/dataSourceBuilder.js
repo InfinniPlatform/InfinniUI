@@ -142,7 +142,7 @@ describe('DataSourceBuilder', function () {
 
             function handleItemsReady(){
                 assert.isTrue(dataSource.getItems().length > 0, 'DS was update items');
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?skip=0&take=15', 'requested url is right');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?skip=0&take=15', 'requested url is right');
 
                 done();
             }
@@ -180,7 +180,7 @@ describe('DataSourceBuilder', function () {
                     result += '1';
 
                     if(result == '11'){
-                        assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?filter=eq(id,7)&skip=0&take=15', 'requested url is right (second)');
+                        assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,7)&skip=0&take=15', 'requested url is right (second)');
                         done();
                     }
                 });
@@ -192,7 +192,7 @@ describe('DataSourceBuilder', function () {
 
             function handleItemsReady1(){
                 assert.equal(result, '', 'its first updated of item');
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
 
                 dataSource.setFilter('eq(id,<%uid%>)');
                 dataSource.setFilterParams({

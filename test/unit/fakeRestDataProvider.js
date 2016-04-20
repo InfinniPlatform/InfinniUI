@@ -28,7 +28,11 @@ _.extend( FakeRestDataProvider.prototype, {
         setTimeout(function(){
             successHandler({
                 requestId: requestId,
-                data: that.items
+                data: {
+                    Result: {
+                        Items:that.items
+                    }
+                }
             });
         }, 1);
 
