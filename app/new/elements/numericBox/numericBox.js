@@ -37,3 +37,21 @@ NumericBox.prototype.getIncrement = function () {
 NumericBox.prototype.setIncrement = function (value) {
     this.control.set('increment', value);
 };
+
+/**
+ * @public
+ * @description Устанваливает начальное значение
+ * @param {Number} value
+ */
+NumericBox.prototype.setStartValue = function (value) {
+    this.control.set('startValue', value);
+};
+
+/**
+ * @public
+ * @description Возвращает начальное значение
+ * @returns {Number}
+ */
+NumericBox.prototype.getStartValue = function () {
+    return this.control.get('startValue');
+};

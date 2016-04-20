@@ -79,6 +79,10 @@ var editorBaseModelMixin = {
         return this.get('value');
     },
 
+    isSetValue: function (value) {
+        return value !== null && typeof value !== 'undefined' && value !== '';
+    },
+
     onValueChanging: function (handler) {
         this.eventManager.on('onValueChanging', handler);
     },
