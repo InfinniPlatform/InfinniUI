@@ -469,9 +469,12 @@ filterItems.filterMethods = (function() {
 	};
 
 	that.match = function(values, items, context) {
-		var tmpResult = [];
+		var tmpResult = [],
+				globalUI = InfinniUI.ObjectUtils;
 		for( var i = 0, ii = values[1].length; i < ii; i += 1 ) {
-			tmpResult.push( values[1][i] );
+			if( globalUI.getPropertyValue( values[1][i], values[0] !== undefined ) ) {
+				tmpResult.push( values[1][i] );
+			}
 		}
 		return tmpResult;
 	};

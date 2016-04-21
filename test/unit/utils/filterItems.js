@@ -372,37 +372,5 @@ describe("Filter items", function () {
 			assert.equal(result1[1].Id, 3, 'filtered item is correct');
 		});
 
-		it("FilterItems should return all items that suit to filter param", function () {
-			// Given
-			var filter = "match(props,or(match(props2,eq(name,'fontCommon')),and(eq(name,'font'),eq(size,20))))";
-			var items = [
-				{
-					Id: 1,
-					props: [ {name: 'font', size: 20}, {name: 'font', size: 20}, {name: 'font', size: 20} ]
-				},
-				{
-					Id: 2,
-					props2: [ {name: 'fontCommon', size: 24}, {name: 'fontCommon', size: 20}, {name: 'fontCommon', size: 20} ]
-				},
-				{
-					Id: 3,
-					props: [ {name: 'font', size: 20}, {name: 'font', size: 20}, {name: 'font', size: 20} ],
-					props2: [ {name: 'font', size: 20}, {name: 'font', size: 20}, {name: 'font', size: 20} ]
-				},
-				{
-					Id: 4,
-					props: [ {name: 'font', size: 20}, {name: 'textIndent', size: 10}, {name: 'font', weight: 'bold'} ]
-				}
-			];
-			// When
-			var result1 = filterItems(items, filter);
-			console.log( result1 );
-			// Then
-			assert.lengthOf(result1, 3, 'length of filtered items is right');
-			assert.equal(result1[0].Id, 2, 'filtered item is correct');
-			assert.equal(result1[1].Id, 1, 'filtered item is correct');
-			assert.equal(result1[2].Id, 3, 'filtered item is correct');
-		});
-
 	});
 });
