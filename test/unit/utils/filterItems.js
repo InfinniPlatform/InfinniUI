@@ -15,7 +15,7 @@ describe("Filter items", function () {
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
 		});
 
-		it("FilterItems should return items that have all given params", function () {
+		it("FilterItems should return all items that have all given params", function () {
 			// Given
 			var filter = 'and(eq(Id,1),eq(index,2))';
 			var items = [
@@ -50,6 +50,7 @@ describe("Filter items", function () {
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
 			var filter = 'not(eq(Id,3))';
+			// var filter = 'not(or(eq(Id,3),eq(Id,1)))';
 			var items = [
 				{Id: 1},
 				{Id: 2},
@@ -63,7 +64,7 @@ describe("Filter items", function () {
 			assert.equal(result1[1].Id, 2, 'filtered item is correct');
 		});
 
-		it("FilterItems should return all items accept given item(s)", function () {
+		it("FilterItems should return all items accept given item with given param", function () {
 			// Given
 			var filter = 'notEq(Id,2)';
 			var items = [
@@ -245,6 +246,24 @@ describe("Filter items", function () {
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
 			assert.equal(result1[1].Id, 5, 'filtered item is correct');
 		});
+
+		// it("FilterItems should return all items ", function () {
+		// 	// Given
+		// 	var filter = 'match()';
+		// 	var items = [
+		// 		{Id: 1},
+		// 		{Id: 2, index: 3},
+		// 		{Id: 3, index: 5},
+		// 		{Id: 4, index: 4},
+		// 		{Id: 5, index: null}
+		// 	];
+		// 	// When
+		// 	var result1 = filterItems(items, filter);
+		// 	// Then
+		// 	assert.lengthOf(result1, 2, 'length of filtered items is right');
+		// 	assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		// 	assert.equal(result1[1].Id, 5, 'filtered item is correct');
+		// });
 
 	});
 });
