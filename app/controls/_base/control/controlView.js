@@ -178,14 +178,16 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     },
 
     updateVerticalAlignment: function () {
-        var verticalAlignment = this.model.get('verticalAlignment');
-        var prefix = 'verticalAlignment';
-        var regexp = new RegExp('(^|\\s)' + prefix + '\\S+', 'ig');
+        //var verticalAlignment = this.model.get('verticalAlignment');
+        this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.$el, false);
 
-        this.$el.removeClass(function (i, name) {
-                return (name.match(regexp) || []).join(' ');
-            })
-            .addClass(prefix + verticalAlignment);
+        //var prefix = 'verticalAlignment';
+        //var regexp = new RegExp('(^|\\s)' + prefix + '\\S+', 'ig');
+        //
+        //this.$el.removeClass(function (i, name) {
+        //        return (name.match(regexp) || []).join(' ');
+        //    })
+        //    .addClass(prefix + verticalAlignment);
     },
 
     updateTextHorizontalAlignment: function () {
@@ -368,9 +370,14 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         }
     },
 
-    switchClass: function (name, value, $el) {
+    switchClass: function (name, value, $el, separator) {
+        if (typeof separator === 'undefined') {
+            separator = '-';
+        } else if (separator === false) {
+            separator = '';
+        }
 
-        var startWith = name + '-';
+        var startWith = name + separator;
         var regexp = new RegExp('(^|\\s)' + startWith + '\\S+', 'ig');
         var $element = $el || this.$el;
         $element.removeClass(function (i, name) {
