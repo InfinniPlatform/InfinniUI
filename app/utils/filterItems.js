@@ -9,25 +9,33 @@ var filterItems = (function() {
 		var filterMethods = filterItems.filterMethods;
 		
 		var itemsForFilter = JSON.parse(JSON.stringify(items)),
-				re = /[a-zA-Z]+[(]|[a-zA-Z0-9_\.]+[,)$]|\[[0-9,]+\]/g,
+				re = /date\(\'[0-9a-zA-Z\:\-\.\s]+\'\)/g,
+				re1 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
 				re2 = /[)]/g,
-				one,
-				two,
+				tmpObj,
 				arr = [],
 				tmpArr = [], 
 				filterTree = [],
 				values = [],
 				counter = 0;
 
-		while( one = re.exec(filter) ) { // search all functions and values with their index
-			// value can has only ',' or ')' at the end of string
-			if( one[0].length > 1 && (one[0].slice(-1) === ',' || one[0].slice(-1) === ')')  ) { 
-				one[0] = one[0].slice(0, -1);
-			}
-			arr.push(one);
+		while( tmpObj = re.exec(filter) ) { // search all dates and convert it to number of ms
+			var tmpDate = Date.parse( tmpObj[0].slice(6, -2) ) / 1000 + '';
+			filter = filter.replace(re, tmpDate);
+			tmpObj[0] = tmpDate;
 		}
-		while( two = re2.exec(filter) ) { // search all closing brackets with their index
-			arr.push(two);
+		while( tmpObj = re1.exec(filter) ) { // search all functions and values with their index
+			// value can has only ',' or ')' at the end of string
+			if( tmpObj[0].length > 1 && (tmpObj[0].slice(-1) === ',' || tmpObj[0].slice(-1) === ')')  ) { 
+				tmpObj[0] = tmpObj[0].slice(0, -1);
+			}
+			if( tmpObj[0].length > 1 && tmpObj[0].slice(0, 1) === "'" ) {
+				tmpObj[0] = tmpObj[0].slice(1, -1);
+			}
+			arr.push(tmpObj);
+		}
+		while( tmpObj = re2.exec(filter) ) { // search all closing brackets with their index
+			arr.push(tmpObj);
 		}
 
 		arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
@@ -82,8 +90,11 @@ var filterItems = (function() {
 		for( var k = 0; k < filterTree.length; k += 1 ) {
 			for( var l = 0; l < filterTree.length; l += 1 ) {
 				if( filterTree[l] !== null || filterTree[k] !== null ) {
+					//search for first result[l] where we can put result[k] as his child 
+					//if find, put it and remove result[k] 
 					if( filterTree[k].range[0] > filterTree[l].range[0] && filterTree[k].range[1] < filterTree[l].range[1] ) {
-						if( filterTree[l].children[0] !== undefined && filterTree[l].children[0].range[0] > filterTree[k].range[0] ) {
+						//if result[l] already have any children, check their indexes to define where put new child
+						if( filterTree[l].children[0] !== undefined && filterTree[l].children[0].index > filterTree[k].range[0] ) {
 							filterTree[l].children.unshift( filterTree[k] );
 							filterTree.splice(k, 1);
 							k -= 1;
@@ -99,9 +110,23 @@ var filterItems = (function() {
 			}
 		}
 
+		filterTree = filterTree[0];
+		console.log( filterTree );
+
 		function toNum(value) {
-			if( !isNaN(value) ) {
+			if( typeof value === 'string' && !isNaN(value) ) {
 				value = +value;
+			}
+			return value;
+		}
+
+		function toBoolean(value) {
+			if( value === 'true' ) {
+				value = true;
+			} else if( value === 'false' ) {
+				value = false;
+			} else if( value === 'null' ) {
+				value = null;
 			}
 			return value;
 		}
@@ -115,34 +140,39 @@ var filterItems = (function() {
 			}
 			return value;
 		}
-		
-		function filterExec(filterTree, items) { // filterTree is array, items is array
-			var tmpChild = [], tmpChild1, tmpChild2 = [];
-			if( filterTree.length !== undefined && filterTree.length > 0 ) {
-				for( var i = 0, ii = filterTree.length; i < ii; i += 1 ) {
-					if( ii > 1 ) {
-						tmpChild.push( filterExec(filterTree[i], items) ); // filterTree is object
-					} else if( ii === 1 ) {
-						return filterExec(filterTree[i], items); // filterTree is object
-					}
-				}
-				return tmpChild;
+
+		function findContext(currentContext, currentFunc) {
+			if( currentFunc.functionName === 'match' ) {
+				currentContext = currentFunc.children[0].valueName;
 			}
+			return currentContext;
+		}
+		
+		function filterExec(filterTree, items, context) { // filterTree is array, items is array
+			var tmpChild1, tmpChild2 = [];
+
+			// find context
+			context = findContext( context, filterTree );
+			
 			for( var j = 0, jj = filterTree.children.length; j < jj; j += 1 ) {
+				// if any child is function
+				// call filterExec with children of this child
 				if( filterTree.children[j].type === 'function' ) {
-					tmpChild1 = filterTree.children[j];
-					filterTree.children[j].valueName = filterExec(tmpChild1, items); // tmpChild1 is object
+					tmpChild1 = filterTree.children[j];					
+
+					filterTree.children[j].valueName = filterExec(tmpChild1, items, context); // tmpChild1 is object
 					filterTree.children[j].newType = 'value';
 				}
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
 					if( filterTree.children[j].type === 'value' ) {
 						filterTree.children[j].valueName = toNum( filterTree.children[j].valueName ); // check on Number
+						filterTree.children[j].valueName = toBoolean( filterTree.children[j].valueName ); // check on Boolean
 						filterTree.children[j].valueName = toArr( filterTree.children[j].valueName ); // check on Array
 					}
 					tmpChild2.push( filterTree.children[j].valueName );
 				}
 			}
-			return filterMethods[filterTree.functionName](tmpChild2, items); // tmpChild2 is array
+			return filterMethods[filterTree.functionName](tmpChild2, items, context); // tmpChild2 is array
 		}
 
 		return filterExec(filterTree, itemsForFilter); // filterTree is array, items is array
@@ -154,108 +184,278 @@ var filterItems = (function() {
 filterItems.filterMethods = (function() {
 	var that = {};
 
-	that.eq = function(value, items) { // values is array
-		var tmpResult = [];
+	that.eq = function(value, items, context) { // value is array: value[0] - param, value[1] - value
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
 		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] === value[1] ) {
-				tmpResult.push( items[i] );
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) === value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) === value[1] ) {
+					tmpResult.push( items[i] );
+				}
 			}
 		}		
 		return tmpResult;
 	};
 
-	that.and = function(values) {
+	that.and = function(values, items, context) {
 		return _.intersection.apply(_, values);
 	};
 	
-	that.or = function(values) {
+	that.or = function(values, items, context) {
 		return _.union.apply(_, values);
 	};
 	
-	that.not = function(values, items) { // values[1] is array
+	that.not = function(values, items, context) { // values[0] is array
 		var tmpResult = items.slice();	
 		return _.difference(tmpResult, values[0]);
 	};
 	
-	that.notEq = function(value, items) {
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] !== value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-	
-	that.gt = function(value, items) { // compare for numbers and dates
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] > value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-	
-	that.gte = function(value, items) { // compare for numbers and dates
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] >= value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-	
-	that.lt = function(value, items) { // compare for numbers and dates
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] < value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-	
-	that.lte = function(value, items) { // compare for numbers and dates
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( items[i][value[0]] <= value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-
-	that.in = function(values, items) { // values[1] is array
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( _.indexOf(values[1], items[i][values[0]]) !== -1 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-
-	that.notIn = function(values, items) { // values[1] is array
-		var tmpResult = [];
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( _.indexOf(values[1], items[i][values[0]]) === -1 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
-
-	that.exist = function(value, items) { // value[1] is string
+	that.notEq = function(value, items, context) {
 		var tmpResult = [],
-				tmpValue;
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) !== value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) !== value[1] ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+	// compare for numbers and dates
+	that.gt = function(value, items, context) { // value is array: value[0] - param, value[1] - value
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) > value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) > value[1] ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+	// compare for numbers and dates
+	that.gte = function(value, items, context) { // value is array: value[0] - param, value[1] - value
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) >= value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) >= value[1] ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+	// compare for numbers and dates
+	that.lt = function(value, items, context) { // value is array: value[0] - param, value[1] - value
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) < value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) < value[1] ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+	// compare for numbers and dates
+	that.lte = function(value, items, context) { // value is array: value[0] - param, value[1] - value
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) <= value[1] ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( globalUI.getPropertyValue( items[i], value[0] ) <= value[1] ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+
+	that.in = function(values, items, context) { // values[1] is array
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) !== -1 ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) !== -1 ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+
+	that.notIn = function(values, items, context) { // values[1] is array
+		var tmpResult = [],
+				tmpResult2,
+				length,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			if( context ) {
+				tmpResult2 = [];
+				if( items[i][context] === undefined ) {
+					length = -1;
+				} else {
+					length = items[i][context].length;
+				}
+				for( var j = 0, jj = length; j < jj; j += 1 ) {
+					if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) === -1 ) {
+						tmpResult2.push( items[i] );
+					}
+				}
+				if( length === tmpResult2.length ) {
+					tmpResult.push( items[i] );
+				}
+			} else {
+				if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) === -1 ) {
+					tmpResult.push( items[i] );
+				}
+			}
+		}		
+		return tmpResult;
+	};
+
+	that.exist = function(value, items, context) { // value[1] is string
+		var tmpResult = [],
+				tmpValue,
+				globalUI = InfinniUI.ObjectUtils;
+
 		if( value[1] === undefined ) {
-			value[1] = 'true';
+			value[1] = true;
 		}
 		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpValue = items[i][value[0]];
-			if( value[1] === 'true' ) {
+			tmpValue = globalUI.getPropertyValue( items[i], value[0] );
+			if( value[1] === true ) {
 				if( !_.isUndefined(tmpValue) && !_.isNull(tmpValue) ) {
 					tmpResult.push( items[i] );
 				}
@@ -268,37 +468,39 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
-	that.match = function(arrProp, expression) {
+	that.match = function(values, items, context) {
+		var tmpResult = [];
+		for( var i = 0, ii = values[1].length; i < ii; i += 1 ) {
+			tmpResult.push( values[1][i] );
+		}
+		return tmpResult;
+	};
+
+	that.all = function(values, items, context) {
 		var tmpResult = [];
 
 		return tmpResult;
 	};
 
-	that.all = function(arrProp, values) {
+	that.anyIn = function(values, items, context) {
 		var tmpResult = [];
 
 		return tmpResult;
 	};
 
-	that.anyIn = function(arrProp, values) {
+	that.anyNotIn = function(values, items, context) {
 		var tmpResult = [];
 
 		return tmpResult;
 	};
 
-	that.anyNotIn = function(arrProp, values) {
+	that.anyEq = function(values, items, context) {
 		var tmpResult = [];
 
 		return tmpResult;
 	};
 
-	that.anyEq = function(arrProp, value) {
-		var tmpResult = [];
-
-		return tmpResult;
-	};
-
-	that.anyNotEq = function(arrProp, value) {
+	that.anyNotEq = function(values, items, context) {
 		var tmpResult = [];
 
 		return tmpResult;
@@ -306,68 +508,3 @@ filterItems.filterMethods = (function() {
 
 	return that;
 })();
-
-
-
-// var resultOfFiltering = handleFunction(tree, {items: []});
-
-// function handleFunction(node, context){
-// 	return filtersObj[node.functionName](node, context);
-// }
-
-// function handleValue(value, context){
-	
-// }
-
-// filtersObj.match = function(node, context){
-// 	var newContext = {
-// 		items: context.items,
-// 		outerProperty: node.children[0].valueName
-// 	},
-// 	functionName = node.children[1].functionName;
-
-// 	return filtersObj[functionName](node, newContext);
-// }
-
-
-// filter = filter.replace(/([a-zA-Z_][A-Za-z0-9_\.]*)\s*[,)$]/g, function(a, b){
-		// 	var last = a[a.length - 1];
-		// 	if(last != ',' && last != ')'){
-		// 		last = '';
-		// 	}
-		// 	return '"' + b + '"' + last;
-		// });
-
-		// add 'filtersObj.' to all functions in filter string for creation one obj with all methods
-		// filter = filter.replace(/([a-zA-z]*[(])/g, function(a, b) {
-		// 	return 'filterMethods.' + b;
-		// });
-
-		// filterTree = {
-		// 	type: 'function',
-		// 	functionName: 'match',
-
-		// 	children: [
-		// 		{
-		// 			type: 'value',
-		// 			valueName: 'addresses'
-		// 		}, 
-		// 		{
-		// 			type: 'function',
-		// 			functionName: 'eq',
-		// 			children: [
-		// 					{
-		// 						type: 'value',
-		// 						valueName: 'street'
-		// 					},
-		// 					{
-		// 						type: 'value',
-		// 						valueName: 'Ленина'
-		// 					}
-		// 			]
-		// 		}
-		// 	]
-		// };
-
-		// 'match(addresses,eq(street,Lenina))'.match(/[a-zA-Z_][A-Za-z0-9_\.]*\s*[,)$]|[a-zA-Z]+[(]/g)
-		// 'and(eq(Id,1),eq(Id,2))'.slice(3).search(/[a-zA-Z]+[(]/)
