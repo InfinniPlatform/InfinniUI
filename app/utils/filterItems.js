@@ -76,6 +76,7 @@ filterItems.filterTreeBuilder = (function() {
 	var that = {},
 			splitStringToArray = function(filter) { //filter is string
 				var tmpArr,
+						tmpNum,
 						re1 = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
 						re2 = /([0-9]+[,]{0,1}[\s]{0,1}){2,}\)/g,
 						re3 = /\[[0-9]+\]/g,
@@ -84,16 +85,21 @@ filterItems.filterTreeBuilder = (function() {
 						arr = [];
 
 				while( tmpArr = re1.exec(filter) ) { // search all dates and convert it to number of s [0.000]
-					var tmpDate = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
-					filter = filter.replace(re1, tmpDate);
+					tmpNum = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
+					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
+					re1.lastIndex = tmpArr.index + tmpNum.length;
 				}
+				console.log( filter );
 				while( tmpArr = re2.exec(filter) ) { // search range of numbers and convert it to array
-					var tmpArray = tmpArr[0].slice(0, -1);
-					tmpArray = '[' + tmpArray + '])'; 
-					filter = filter.replace(/([0-9]+[,]{0,1}[\s]{0,1}){2,}\)/, tmpArray);					
+					tmpNum = '[' + tmpArr[0].slice(0, -1) + '])';
+					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
+					re2.lastIndex = tmpArr.index + tmpNum.length;
 				}
+				console.log( filter );
 				while( tmpArr = re3.exec(filter) ) { // convert array from 1 element to number
-					filter = filter.replace(/\[[0-9]+\]/, tmpArr[0].slice(1, -1));
+					tmpNum = tmpArr[0].slice(1, -1);
+					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
+					re3.lastIndex = tmpArr.index + tmpNum.length;
 				}
 				while( tmpArr = re4.exec(filter) ) { // search all functions and values with their index
 					// value can has only ',' or ')' at the end of string
