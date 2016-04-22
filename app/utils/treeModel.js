@@ -4,6 +4,9 @@ var TreeModel = function(context, source, startTree){
     this.dataTree = startTree || {};
 
     this.handlersTree = {};
+
+    this.mirroringFrom = null;
+    this.mirroringTo = null;
 };
 
 _.extend(TreeModel.prototype, {
@@ -81,8 +84,18 @@ _.extend(TreeModel.prototype, {
     },
 
     _notifyAboutPropertyChanged: function(propertyName, oldValue, handlersSubTree){
+        var needMirroring = this.mirroringFrom && propertyName.indexOf(this.mirroringFrom) == 0;
+        var mirroringPath = propertyName.replace(this.mirroringFrom, this.mirroringTo);
+
         this._notifyAboutPropertyChanged_bubblingAction(propertyName, oldValue, handlersSubTree);
+        /*if(needMirroring){
+            this._notifyAboutPropertyChanged_bubblingAction(mirroringPath, oldValue, handlersSubTree);
+        }*/
+
         this._notifyAboutPropertyChanged_capturingAction(propertyName, oldValue, handlersSubTree);
+        /*if(needMirroring){
+            this._notifyAboutPropertyChanged_capturingAction(mirroringPath, oldValue, handlersSubTree);
+        }*/
     },
 
     _notifyAboutPropertyChanged_capturingAction: function(propertyName, oldValue, handlersSubTree){
@@ -174,6 +187,11 @@ _.extend(TreeModel.prototype, {
         };
 
         handler(this.context, args);
+    },
+
+    mirroringNotifingOfChanges: function(mirroringFrom, mirroringTo){
+        this.mirroringFrom = mirroringFrom;
+        this.mirroringTo = mirroringTo;
     }
 
 });

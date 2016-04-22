@@ -38,6 +38,8 @@ var newBaseDataSource = Backbone.Model.extend({
 
         isLazy: true,
 
+        newItemsHandler: null,
+
         isNumRegEx: /^\d/
 
     },
@@ -644,6 +646,10 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+        if(this.get('newItemsHandler')){
+            itemsData = this.get('newItemsHandler')(itemsData);
+        }
+
         this.setProperty('', itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
@@ -800,6 +806,10 @@ var newBaseDataSource = Backbone.Model.extend({
             idFilter = dataProvider.createIdFilter(itemId);
 
         this.setFilter(idFilter);
+    },
+
+    setNewItemsHandler: function(handler){
+        this.set('newItemsHandler', handler);
     },
 
     getErrorValidator: function () {

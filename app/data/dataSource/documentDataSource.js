@@ -10,6 +10,7 @@ var DocumentDataSource = RestDataSource.extend({
         var model = this.get('model');
         model.setProperty('pageNumber', 0);
         model.setProperty('pageSize', 15);
+        model.setProperty('filterParams', {});
 
         this.initHandlers();
     },
@@ -25,7 +26,7 @@ var DocumentDataSource = RestDataSource.extend({
             that.updateDeletingUrlParams();
         });
         model.onPropertyChanged('filter', updateGettingUrlParams);
-        model.onPropertyChanged('filterParams', updateGettingUrlParams);
+        model.onPropertyChanged('filterParams.*', updateGettingUrlParams);
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
         model.onPropertyChanged('pageSize', updateGettingUrlParams);
         model.onPropertyChanged('search', updateGettingUrlParams);
@@ -136,12 +137,35 @@ var DocumentDataSource = RestDataSource.extend({
         this.get('model').setProperty('filter', filter);
     },
 
-    getFilterParams: function(){
-        return this.get('model').getProperty('filterParams');
+    getFilterParams: function(propertyName){
+        if(arguments.length == 0){
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        return this.get('model').getProperty(propertyName);
     },
 
-    setFilterParams: function(filterParams){
-        this.get('model').setProperty('filterParams', filterParams);
+    setFilterParams: function(propertyName, value){
+        if(arguments.length == 1){
+            value = propertyName;
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        this.get('model').setProperty(propertyName, value);
     },
 
     setIdFilter: function (itemId) {

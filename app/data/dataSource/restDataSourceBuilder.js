@@ -81,7 +81,7 @@ _.extend(RestDataSourceBuilder.prototype, {
 
             var dataBinding = builder.buildBinding(valueMetadata, args);
 
-            dataBinding.setMode(BindingModes.toElement);
+            dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
             dataBinding.bindElement(dataSource, pathForBinding);
         }

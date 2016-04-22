@@ -40,7 +40,7 @@ describe('DataSourceBuilder', function () {
         }
     ];
 
-    FakeRestDataProvider.prototype.items = items;
+    FakeRestDataProvider.prototype.items = _.clone(items);
 
     window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
@@ -150,6 +150,8 @@ describe('DataSourceBuilder', function () {
 
         it('should update items on filter changing', function (done) {
             // Given
+            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
             var metadata = {
                 Text: 'Пациенты',
                 DataSources : [
@@ -195,10 +197,74 @@ describe('DataSourceBuilder', function () {
                 assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
 
                 dataSource.setFilter('eq(id,<%uid%>)');
-                dataSource.setFilterParams({
-                    uid: 7
-                });
+                dataSource.setFilterParams('uid', 7);
             }
+        });
+
+
+        it('should bind filter', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = _.clone(items);
+            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        DocumentDataSource: {
+                            "Name": "DataSource1",
+                            "DocumentId": "Whatever",
+                            "Filter": "eq(Id,<%param%>)",
+                            "FilterParams": {
+                                "param": {
+                                    "Source": "DataSource2",
+                                    "Property": "0.Id"
+                                }
+                            }
+                        }
+                    },{
+
+                        DocumentDataSource: {
+                            "Name": "DataSource2",
+                            "DocumentId": "Whatever"
+                        }
+                    }
+                ],
+                Items: []
+            };
+            var result = '';
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                $layout.detach();
+
+                var dataSource1 = view.getContext().dataSources['DataSource1'];
+                var dataSource2 = view.getContext().dataSources['DataSource2'];
+
+                dataSource1.onItemsUpdated(function(){
+                    assert.equal(result, '2', 'second updated ds1');
+
+                    result += '1';
+                    dataSource2;
+                    assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(Id,1)&skip=0&take=15', 'requested url is right (ds1)');
+                    done();
+                });
+
+                dataSource2.onItemsUpdated(function(){
+
+                    assert.equal(result, '', 'first updated ds2');
+
+                    result += '2';
+
+                    dataSource1.updateItems();
+                });
+
+            }
+
         });
 
     });

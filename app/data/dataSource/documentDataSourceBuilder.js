@@ -14,14 +14,17 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
 
         if('Filter' in metadata){ dataSource.setFilter(metadata['Filter']); }
-        if('FilterParams' in metadata){ dataSource.setFilterParams(metadata['FilterParams']); }
+        if('FilterParams' in metadata){
+            var params = metadata['FilterParams'];
+            for(var k in params){
+                this.initBindingToProperty(params[k], dataSource, parent, '.filterParams.' + k, builder);
+            }
+        }
 
         if('Search' in metadata){ dataSource.setSearch(metadata['Search']); }
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('Count' in metadata){ dataSource.setOrder(metadata['Count']); }
-
-
 
     },
 
@@ -29,7 +32,9 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         return new DocumentDataSource({
             view: parent
         });
-    }
+    },
+
+    initBindingToProperty: RestDataSourceBuilder.prototype.initBindingToProperty
 
     //initFileProvider: function (dataSource) {
     //    var fileProvider = window.providerRegister.build('DocumentFileProvider', {

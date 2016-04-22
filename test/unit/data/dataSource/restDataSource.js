@@ -47,6 +47,15 @@ describe('RestDataSource', function () {
             newItems = JSON.parse(JSON.stringify(items));
 
         dataSource.suspendUpdate('urlTuning');
+        dataSource.setNewItemsHandler(function(newItemsData){
+            if(newItemsData){
+                return newItemsData['Result']['Items'];
+
+            }else{
+                return newItemsData;
+
+            }
+        });
 
         /*
         * кейсы использования фильтров
