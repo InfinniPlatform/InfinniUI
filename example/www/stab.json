@@ -42,56 +42,26 @@
     }
   }],
   "Items": [{
-    "StackPanel": {
+    "DataGrid": {
+      "VerticalAlignment": "Stretch",
+      "MultiSelect": true,
       "Items": {
         "Source": "ds1",
         "Property": ""
       },
-      "Orientation": "Vertical",
-      "GroupValueProperty": "Volume",
-      "GroupItemTemplate": {
-        "Label": {
-          "Value": {
-            "Source": "ds1",
-            "Property": "#.Volume"
-          }
-        }
-      },
-      "!GroupItemFormat": "{Volume} {Title}",
-      "!GroupItemProperty": "Volume",
-      "!GroupItemTemplate": {
-        "Label": {
-          "Text": "Заголовок группы"
-        }
-      },
-      "ItemTemplate": {
-        "StackPanel": {
-          "Orientation": "Horizontal",
-          "Items": [
-            {
-              "ButtonEdit": {
-                "LabelText": "Title",
-                "Icon": "ellipsis-h",
-                "OnButtonClick": "{alert('Fuck off'); console.log(args);}",
-                "Value": {
-                  "Source": "ds1",
-                  "Property": "#.Title"
-                }
-              }
-            },
-            {
-              "TextBox": {
-                "LabelText": "Volume",
-                "Value": {
-                  "Source": "ds1",
-                  "Property": "#.Volume"
-                }
-              }
-            }
-          ]
-        }
-
-      }
+      "Columns": [{
+        "Header": "Id",
+        "CellProperty": "Id",
+        "Width": "500px"
+      }, {
+        "Header": "Title",
+        "CellProperty": "Title",
+        "Width": "500px"
+      }, {
+        "Header": "Volume",
+        "CellProperty": "Volume",
+        "Width": "1500px"
+      }]
     }
   }]
 }
