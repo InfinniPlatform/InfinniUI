@@ -28,9 +28,13 @@ var filterItems = (function() {
 		}
 
 		function stringToArr(value) {
-			if( typeof value === 'string' && value.search(/\[[0-9,]+\]/) !== -1 ) {
+			if( typeof value === 'string' && value.search(/\[[\'a-zA-Z0-9,]+\]/) !== -1 ) {
 				value = value.slice(1, -1).split(',');
 				for( var i = 0, ii = value.length; i < ii; i += 1 ) {
+					if( value[i].slice(-1) === "'" ) {
+						value[i] = value[i].slice(1, -1);
+					}
+					value[i] = stringToBoolean( value[i] );
 					value[i] = stringToNum( value[i] );
 				}
 			}
@@ -78,25 +82,23 @@ filterItems.filterTreeBuilder = (function() {
 				var tmpArr,
 						tmpNum,
 						re1 = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
-						re2 = /([0-9]+[,]{0,1}[\s]{0,1}){2,}\)/g,
-						re3 = /\[[0-9]+\]/g,
-						re4 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
+						re2 = /\,[a-zA-Z0-9\',\.]+\)/g,
+						re3 = /\[[a-zA-Z0-9\'\.]+\]/g,
+						re4 = /[a-zA-Z]+[(]|\[[a-zA-Z\'0-9,]+\]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]/g,
 						re5 = /[)]/g,
 						arr = [];
-
+				filter = filter.replace(/\s+/g, '');
 				while( tmpArr = re1.exec(filter) ) { // search all dates and convert it to number of s [0.000]
 					tmpNum = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
 					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
 					re1.lastIndex = tmpArr.index + tmpNum.length;
 				}
-				console.log( filter );
-				while( tmpArr = re2.exec(filter) ) { // search range of numbers and convert it to array
-					tmpNum = '[' + tmpArr[0].slice(0, -1) + '])';
-					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
+				while( tmpArr = re2.exec(filter) ) { // search second param
+					tmpNum = '[' + tmpArr[0].slice(1, -1) + '])';
+					filter = filter.slice(0, tmpArr.index + 1) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
 					re2.lastIndex = tmpArr.index + tmpNum.length;
 				}
-				console.log( filter );
-				while( tmpArr = re3.exec(filter) ) { // convert array from 1 element to number
+				while( tmpArr = re3.exec(filter) ) { // convert array from 1 element to number or string or boolean
 					tmpNum = tmpArr[0].slice(1, -1);
 					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
 					re3.lastIndex = tmpArr.index + tmpNum.length;
@@ -502,42 +504,265 @@ filterItems.filterMethods = (function() {
 		var tmpResult = [],
 				globalUI = InfinniUI.ObjectUtils;
 		for( var i = 0, ii = values[1].length; i < ii; i += 1 ) {
-			if( globalUI.getPropertyValue( values[1][i], values[0] !== undefined ) ) {
+			if( globalUI.getPropertyValue( values[1][i], values[0] ) !== undefined ) {
 				tmpResult.push( values[1][i] );
 			}
 		}
-		console.log( values );
 		return tmpResult;
 	};
 
-	that.all = function(values, items, context) {
-		var tmpResult = [];
+	that.all = function(values, items, context) { // value[1] is array
+		var tmpResult = [],
+				counter,
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
 
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+			counter = 0;
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+					counter += 1;
+				}
+			}
+			if( jj === counter ) {
+				tmpResult.push( items[i] );
+			}
+		}
 		return tmpResult;
 	};
 
 	that.anyIn = function(values, items, context) {
-		var tmpResult = [];
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
 
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
 		return tmpResult;
 	};
 
 	that.anyNotIn = function(values, items, context) {
-		var tmpResult = [];
+		var tmpResult = [],
+				counter,
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
 
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+			counter = 0;
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+					counter += 1;
+				}
+			}
+			if( counter === 0 ) {
+				tmpResult.push( items[i] );
+			}
+		}
 		return tmpResult;
 	};
 
-	that.anyEq = function(values, items, context) {
-		var tmpResult = [];
+	that.anyEq = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
 
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( _.indexOf(tmpArr, value[1]) !== -1 ) {
+				tmpResult.push( items[i] );
+			}
+		}
 		return tmpResult;
 	};
 
-	that.anyNotEq = function(values, items, context) {
-		var tmpResult = [];
+	that.anyNotEq = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
 
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( tmpArr[j] !== value[1] ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
 		return tmpResult;
+	};
+
+	that.anyGt = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( tmpArr[j] > value[1] ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
+		return tmpResult;
+	};
+
+	that.anyGte = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( tmpArr[j] >= value[1] ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
+		return tmpResult;
+	};
+
+	that.anyLt = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( tmpArr[j] < value[1] ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
+		return tmpResult;
+	};
+
+	that.anyLte = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+				if( tmpArr[j] <= value[1] ) {
+					tmpResult.push( items[i] );
+					break;
+				}
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeEq = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length === value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeNotEq = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length !== value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeGt = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length > value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeGte = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length >= value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeLt = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length < value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.sizeLte = function(value, items, context) {
+		var tmpResult = [],
+				tmpArr,
+				globalUI = InfinniUI.ObjectUtils;
+
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+			if( tmpArr.length <= value[1] ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
+	};
+
+	that.regexp = function(value, items, context) {
+		
+	};
+
+	that.type = function(value, items, context) {
+		
+	};
+
+	that.text = function(value, items, context) {
+		
 	};
 
 	return that;

@@ -10,7 +10,6 @@ describe("Filter items", function () {
 			];
 			// When
 			var result1 = filterItems(items, filter);
-			console.log( result1 );
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].index, -1.9, 'filtered item is correct');
@@ -375,19 +374,67 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items where all elements in array from first param suit to a bunch of second param", function () {
 			// Given
-			var filter = "all(props,not(notEq(name,'font')))";
+			var filter = "all(items, 1, 2, 3, 4)";
 			var items = [
 				{
 					Id: 1,
-					props: [ {name: 'font', size: 20}, {name: 'font', family: 'Arial'}, {name: 'font', weight: 'bold'} ]
+					items: [ 1, 2, 3, 4 ]
 				},
 				{
 					Id: 2,
-					props: [ {name: 'fontCommon', size: 24}, {name: 'fontCommon', family: 'Tahoma'}, {name: 'fontCommon', weight: 'bold'} ]
+					items: [ 2, 3, 4, 5 ]
 				},
 				{
 					Id: 3,
-					props: [ {name: 'font', size: 22}, {name: 'font', family: 'Arial'}, {name: 'font', weight: 'bold'} ]
+					items: [ 4, 6, 7, 8 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where all elements in array from first param suit to a bunch of second param", function () {
+			// Given
+			var filter = "all(items, 'hello', 'world')";
+			var items = [
+				{
+					Id: 1,
+					items: [ 'hello', 'world', 'from', 'russia' ]
+				},
+				{
+					Id: 2,
+					items: [ 'hello', 'world' ]
+				},
+				{
+					Id: 3,
+					items: [ 'hello', 'world', 'from', 'russia' ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param suit to a bunch of second param", function () {
+			// Given
+			var filter = "anyIn(items, 1, 2, 3, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 1, 2, 3, 4 ]
+				},
+				{
+					Id: 2,
+					items: [ 5, 6, 7, 8 ]
+				},
+				{
+					Id: 3,
+					items: [ 4, 6, 7, 8 ]
 				}
 			];
 			// When
@@ -397,6 +444,325 @@ describe("Filter items", function () {
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
 			assert.equal(result1[1].Id, 3, 'filtered item is correct');
 		});
+
+		it("FilterItems should return all items where all elements in array from first param NOT suit to a bunch of second param", function () {
+			// Given
+			var filter = "anyNotIn(items, 1, 2, 3, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 1, 2, 3, 4 ]
+				},
+				{
+					Id: 2,
+					items: [ 5, 6, 7, 8 ]
+				},
+				{
+					Id: 3,
+					items: [ 4, 6, 7, 8 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param suit to second param", function () {
+			// Given
+			var filter = "anyEq(items, 144)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 1, 2, 3, 4 ]
+				},
+				{
+					Id: 2,
+					items: [ 5, 144, 7, 8 ]
+				},
+				{
+					Id: 3,
+					items: [ 4, 6, 7, 8 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param NOT suit to second param", function () {
+			// Given
+			var filter = "anyNotEq(items, 144)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param greater then second param", function () {
+			// Given
+			var filter = "anyGt(items, 144)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 333, 144, 144 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param greater or equal then second param", function () {
+			// Given
+			var filter = "anyGte(items, 145)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 333, 144, 144 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 145, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+			assert.equal(result1[1].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param lower then second param", function () {
+			// Given
+			var filter = "anyLt(items, 144)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where at least one element in array from first param lower or equal then second param", function () {
+			// Given
+			var filter = "anyLte(items, 140)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+			assert.equal(result1[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param equal to second param", function () {
+			// Given
+			var filter = "sizeEq(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+			assert.equal(result1[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param NOT equal to second param", function () {
+			// Given
+			var filter = "sizeNotEq(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param greater then second param", function () {
+			// Given
+			var filter = "sizeGt(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param greater or equal then second param", function () {
+			// Given
+			var filter = "sizeGte(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+			assert.equal(result1[1].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param lower then second param", function () {
+			// Given
+			var filter = "sizeLt(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where length of array form first param lower or equal then second param", function () {
+			// Given
+			var filter = "sizeLte(items, 4)";
+			var items = [
+				{
+					Id: 1,
+					items: [ 144, 144, 144, 144, 544 ]
+				},
+				{
+					Id: 2,
+					items: [ 144, 140, 144, 144 ]
+				},
+				{
+					Id: 3,
+					items: [ 144, 8, 144 ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 2, 'filtered item is correct');
+			assert.equal(result1[1].Id, 3, 'filtered item is correct');
+		});
+
+
 
 	});
 });
