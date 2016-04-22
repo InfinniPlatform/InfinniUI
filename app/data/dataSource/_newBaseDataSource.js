@@ -310,7 +310,8 @@ var newBaseDataSource = Backbone.Model.extend({
     setSelectedItem: function (item, success, error) {
         var currentSelectedItem = this.getSelectedItem(),
             items = this.get('itemsById'),
-            itemId = this.idOfItem(item);
+            itemId = this.idOfItem(item),
+            index;
 
 
         if (typeof item == 'undefined') {
@@ -334,6 +335,9 @@ var newBaseDataSource = Backbone.Model.extend({
 
         this.get('model').setProperty('selectedItem', item);
 
+        index = this._indexOfItem(items[itemId]);
+        this._tuneMirroringOfModel(index);
+
         this._notifyAboutSelectedItem(item, success);
     },
 
@@ -345,6 +349,14 @@ var newBaseDataSource = Backbone.Model.extend({
 
         if (successHandler) {
             successHandler(context, argument);
+        }
+    },
+
+    _tuneMirroringOfModel: function(index){
+        if(index != -1){
+            this.get('model').setMirroring('items.$', 'items.'+index);
+        }else{
+            this.get('model').setMirroring(null, null);
         }
     },
 

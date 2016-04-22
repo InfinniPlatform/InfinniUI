@@ -14,6 +14,9 @@ _.extend(TreeModel.prototype, {
     counter: 1,
 
     getProperty: function(propertyName){
+        if(this.mirroringFrom){
+            propertyName = propertyName.replace(this.mirroringFrom, this.mirroringTo);
+        }
         return InfinniUI.ObjectUtils.getPropertyValue(this.dataTree, propertyName)
     },
 
@@ -23,19 +26,15 @@ _.extend(TreeModel.prototype, {
             return false;
         }
 
-        var handlers;
-
         InfinniUI.ObjectUtils.setPropertyValue(this.dataTree, propertyName, value);
 
-        handlers = this._getHandlersSubTree(propertyName);
-        this._notifyAboutPropertyChanged(propertyName, oldValue, handlers);
+        this._notifyAboutPropertyChanged(propertyName, oldValue);
 
         return true;
     },
 
     simulateSetProperty: function(propertyName, oldValue){
-        var handlers = this._getHandlersSubTree(propertyName);
-        this._notifyAboutPropertyChanged(propertyName, oldValue, handlers);
+        this._notifyAboutPropertyChanged(propertyName, oldValue);
     },
 
     onPropertyChanged: function(propertyName, handler, params){
@@ -83,19 +82,19 @@ _.extend(TreeModel.prototype, {
         return tmpResult;
     },
 
-    _notifyAboutPropertyChanged: function(propertyName, oldValue, handlersSubTree){
-        var needMirroring = this.mirroringFrom && propertyName.indexOf(this.mirroringFrom) == 0;
-        var mirroringPath = propertyName.replace(this.mirroringFrom, this.mirroringTo);
+    _notifyAboutPropertyChanged: function(propertyName, oldValue){
+        var handlers = this._getHandlersSubTree(propertyName);
 
-        this._notifyAboutPropertyChanged_bubblingAction(propertyName, oldValue, handlersSubTree);
-        /*if(needMirroring){
-            this._notifyAboutPropertyChanged_bubblingAction(mirroringPath, oldValue, handlersSubTree);
-        }*/
+        var needMirroring = this.mirroringTo != null && this.mirroringFrom != null && propertyName.indexOf(this.mirroringTo) == 0;
+        var mirroringPath = propertyName.replace(this.mirroringTo, this.mirroringFrom);
 
-        this._notifyAboutPropertyChanged_capturingAction(propertyName, oldValue, handlersSubTree);
-        /*if(needMirroring){
-            this._notifyAboutPropertyChanged_capturingAction(mirroringPath, oldValue, handlersSubTree);
-        }*/
+        this._notifyAboutPropertyChanged_bubblingAction(propertyName, oldValue, handlers);
+
+        this._notifyAboutPropertyChanged_capturingAction(propertyName, oldValue, handlers);
+        if(needMirroring){
+            handlers = this._getHandlersSubTree(mirroringPath);
+            this._notifyAboutPropertyChanged_capturingAction(mirroringPath, oldValue, handlers);
+        }
     },
 
     _notifyAboutPropertyChanged_capturingAction: function(propertyName, oldValue, handlersSubTree){
@@ -189,7 +188,7 @@ _.extend(TreeModel.prototype, {
         handler(this.context, args);
     },
 
-    mirroringNotifingOfChanges: function(mirroringFrom, mirroringTo){
+    setMirroring: function(mirroringFrom, mirroringTo){
         this.mirroringFrom = mirroringFrom;
         this.mirroringTo = mirroringTo;
     }

@@ -65,6 +65,40 @@
             );
         });
 
+        it('should subscribe to property of selectedItem', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var result = '';
+
+            var dataSource = new DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.onPropertyChanged('$.FirstName', function(context, args){
+                result += ', ' + args.newValue;
+            });
+
+            dataSource.updateItems(
+                function(context, args){
+
+                    //When
+                    dataSource.setProperty('$.FirstName', 'Иванов 2');
+                    dataSource.setProperty('0.FirstName', 'Иванов 3');
+                    dataSource.setProperty('3.FirstName', 'Иванов 4');
+                    dataSource.setSelectedItem(dataSource.getItems()[1]);
+                    dataSource.setProperty('0.FirstName', 'Иванов 5');
+                    dataSource.setProperty('1.FirstName', 'Иванов 6');
+
+                    // Then
+                    assert.equal(result, ', Иван, Иванов 2, Иванов 3, Иванов 6', 'onPropertyChanged called in right order');
+                    done();
+
+                }
+            );
+        });
+
 /* TODO раскомментировать после фильтрации фейковых провайдеров
         it('should get editing record', function (done) {
             // Given
