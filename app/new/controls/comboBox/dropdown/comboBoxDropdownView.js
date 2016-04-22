@@ -235,6 +235,30 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     onChangeSelectedItem: function (model, value) {
         this.markSelectedItems();
+    },
+
+    setPositionFor: function (parentDOMElement) {
+        clearInterval(this._intervalId);
+        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement), 100);
+    },
+
+    remove: function () {
+        clearInterval(this._intervalId);
+        return Backbone.View.prototype.remove.apply(this, arguments);
+    },
+
+    applyStyle: function (parentDOMElement) {
+
+        var rect = parentDOMElement.getBoundingClientRect();
+        //@TODO Вынести общие стили в css
+        var style = {
+            position: "absolute",
+            top: window.pageYOffset + rect.bottom/* + parseInt(view.$el.css('margin-bottom'))*/,
+            left: window.pageXOffset + rect.left,
+            width: Math.round(rect.width) - 1
+        };
+
+        this.$el.css(style);
     }
 
 });
