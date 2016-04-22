@@ -11,12 +11,16 @@
   overflow-x: hidden;
 
 
-  .pl-datagrid-row__cell_checker {
+  .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle {
     width: 0; //Don't show column with Radio when MultiSelect=false
+    display: none;
   }
 
-  &_multiselect .pl-datagrid-row__cell_checker {
-    width: 40px;  //Show column with Checkbox when MultiSelect=true
+  &_multiselect {
+    .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle  {
+      width: 40px;  //Show column with Checkbox when MultiSelect=true
+      display: table-cell;
+    }
   }
 
   &__body {
@@ -59,7 +63,8 @@
 
 }
 
-.pl-datagrid_multiselect {
+.pl-datagrid.verticalAlignmentStretch {
+  //При вытягивании по вертикали заголовки колонок становятся фикированными - для этого table-layout = fixed
 
   .pl-datagrid-table {
     table-layout: fixed;

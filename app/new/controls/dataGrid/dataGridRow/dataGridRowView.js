@@ -15,9 +15,9 @@ var DataGridRowView = ControlView.extend({
     },
 
     UI: {
-        toggleCell: '.pl-toggle-cell',
-        toggle: '.toggle',
-        toggleControl: '.toggle input'
+        toggleCell: '.pl-datagrid-row__cell_toggle',
+        toggle: '.pl-datagrid-toggle',
+        toggleControl: '.pl-datagrid-toggle input'
     },
 
     initialize: function () {
