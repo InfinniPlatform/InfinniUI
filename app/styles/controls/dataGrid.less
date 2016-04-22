@@ -10,17 +10,30 @@
 
   overflow-x: hidden;
 
-
-  .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle {
-    width: 0; //Don't show column with Radio when MultiSelect=false
-    display: none;
+  &_select {
+    &_single {
+      .pl-datagrid-toggle_all {
+        display: none;
+      }
+    }
   }
 
-  &_multiselect {
-    .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle  {
-      width: 40px;  //Show column with Checkbox when MultiSelect=true
-      display: table-cell;
+  &_selectors {
+
+    &_show {
+      .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle  {
+        width: 40px;
+        display: table-cell;
+      }
     }
+
+    &_hide {
+      .pl-datagrid-row__cell_checker, .pl-datagrid-row__cell_toggle  {
+        width: 0;
+        display: none;
+      }
+    }
+
   }
 
   &__body {
@@ -57,9 +70,9 @@
     /*table-layout: fixed;*/
   }
 
-  .pl-toggle-cell{
-    width: 30px;
-  }
+  //.pl-toggle-cell{
+  //  width: 30px;
+  //}
 
 }
 

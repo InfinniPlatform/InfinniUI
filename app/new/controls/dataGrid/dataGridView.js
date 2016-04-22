@@ -13,6 +13,13 @@ var DataGridView = ListEditorBaseView.extend({
 
     className: 'pl-datagrid',
 
+    events: _.extend({},
+        ListEditorBaseView.prototype.events,
+        {
+            "click .pl-datagrid-toggle_all": "onClickCheckAllHandler"
+        }
+    ),
+
     UI: _.defaults({
         body: ".pl-datagrid__body",
         head: ".pl-datagrid__head",
@@ -21,6 +28,7 @@ var DataGridView = ListEditorBaseView.extend({
         header: '.pl-datagrid-row_header',
         firstRows: '.pl-datagrid-row_first',
         toggleCell: ".pl-toggle-cell",
+        checkAll: ".pl-datagrid-toggle__button",
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI),
 
@@ -29,14 +37,25 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements = new HashMap();
     },
 
+    initHandlersForProperties: function(){
+        ListEditorBaseView.prototype.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
+        this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
+        this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+    },
+
     updateProperties: function () {
         ListEditorBaseView.prototype.updateProperties.call(this);
         this.updateShowSelectors();
+        this.updateCheckAllVisible();
+        this.updateCheckAll();
     },
 
     updateShowSelectors: function () {
         var showSelectors = this.model.get('showSelectors');
-        this.ui.toggleCell.toggleClass('hidden', !showSelectors);
+        this.$el.toggleClass('pl-datagrid_selectors_show', showSelectors);
+        this.$el.toggleClass('pl-datagrid_selectors_hide', !showSelectors);
     },
 
     updateGrouping: function () {
@@ -48,11 +67,22 @@ var DataGridView = ListEditorBaseView.extend({
         this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.ui.body, false);
     },
 
+    updateCheckAll: function () {
+        var checkAll = this.model.get('checkAll');
+        this.ui.checkAll.prop('checked', checkAll);
+    },
+
+    updateCheckAllVisible: function () {
+        var checkAllVisible = this.model.get('checkAllVisible');
+        this.ui.checkAll.toggleClass('hidden', !checkAllVisible);
+    },
+
     updateMultiSelect: function () {
         ListEditorBaseView.prototype.updateMultiSelect.call(this);
 
         var multiSelect = this.model.get('multiSelect');
-        this.$el.toggleClass('pl-datagrid_multiselect', multiSelect === true);
+        this.$el.toggleClass('pl-datagrid_select_multi', multiSelect === true);
+        this.$el.toggleClass('pl-datagrid_select_single', multiSelect !== true);
     },
 
     updateValue: function () {
@@ -91,7 +121,6 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements.forEach(function (rowElement, item) {
             rowElement.setSelected(item === selectedItem);
         });
-
     },
 
     render: function () {
@@ -218,6 +247,10 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements.clear(function (element) {
             element.remove();
         });
+    },
+
+    onClickCheckAllHandler: function () {
+        this.model.toggleCheckAll();
     }
 
 

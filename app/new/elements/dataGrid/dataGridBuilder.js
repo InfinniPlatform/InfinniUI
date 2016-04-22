@@ -14,7 +14,17 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
     applyMetadata: function (params) {
         ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
-        params.element.setShowSelectors(params.metadata.ShowSelectors);
+        var metadata = params.metadata;
+        /** @type DataGrid **/
+        var element = params.element;
+        element.setShowSelectors(metadata.ShowSelectors);
+        element.setCheckAllVisible(metadata.CheckAllVisible);
+
+        if(metadata.OnCheckAllChanged){
+            element.onCheckAllChanged(function(context, args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
+            });
+        }
         this.applyColumnsMetadata(params);
     },
 
