@@ -10,6 +10,7 @@ describe("Filter items", function () {
 			];
 			// When
 			var result1 = filterItems(items, filter);
+			console.log( result1 );
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].index, -1.9, 'filtered item is correct');
@@ -156,7 +157,7 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have in the given param value that match to one of given in values", function () {
 			// Given
-			var filter = 'in(index,[1,3,4])';
+			var filter = 'in(index,1,3,4)';
 			var items = [
 				{Id: 1, index: 2},
 				{Id: 2, index: 3},
@@ -175,7 +176,7 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have NOT in the given param value that match to one of given in values", function () {
 			// Given
-			var filter = 'notIn(index,[1,3,4])';
+			var filter = 'notIn(index,1,3,4)';
 			var items = [
 				{Id: 1, index: 2},
 				{Id: 2, index: 3},
@@ -350,6 +351,31 @@ describe("Filter items", function () {
 		it("FilterItems should return all items that suit to filter param", function () {
 			// Given
 			var filter = "match(props,not(notEq(name,'font')))";
+			var items = [
+				{
+					Id: 1,
+					props: [ {name: 'font', size: 20}, {name: 'font', family: 'Arial'}, {name: 'font', weight: 'bold'} ]
+				},
+				{
+					Id: 2,
+					props: [ {name: 'fontCommon', size: 24}, {name: 'fontCommon', family: 'Tahoma'}, {name: 'fontCommon', weight: 'bold'} ]
+				},
+				{
+					Id: 3,
+					props: [ {name: 'font', size: 22}, {name: 'font', family: 'Arial'}, {name: 'font', weight: 'bold'} ]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+			assert.equal(result1[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items where all elements in array from first param suit to a bunch of second param", function () {
+			// Given
+			var filter = "all(props,not(notEq(name,'font')))";
 			var items = [
 				{
 					Id: 1,

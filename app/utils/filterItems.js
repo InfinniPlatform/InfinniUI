@@ -6,12 +6,8 @@ var filterItems = (function() {
 		}
 		
 		var itemsForFilter = JSON.parse(JSON.stringify(items)),				
-				filterMethods = filterItems.filterMethods, //all filter methods pick up from filterItems extention
-				filterTreeBuilder = filterItems.filterTreeBuilder, //method to biuld filter tree pick up from filterItems extention
-				tmpArr,
-				filterTree;
-
-		filterTree = filterTreeBuilder.buildUpFilterTree(filter);
+				filterMethods = filterItems.filterMethods,
+				filterTree = filterItems.filterTreeBuilder.buildUpFilterTree(filter);
 
 		function stringToNum(value) {
 			if( typeof value === 'string' && !isNaN(value) ) {
@@ -47,20 +43,17 @@ var filterItems = (function() {
 			}
 			return currentContext;
 		}
-		
-		function filterExec(filterTree, items, context) { // filterTree is array, items is array
+		function filterExec(filterTree, items, context) { // filterTree is object, items is array
 			var tmpChild1, tmpChild2 = [];
-
 			// find context
-			context = findContext( context, filterTree );
-			
+			context = findContext( context, filterTree );			
 			for( var j = 0, jj = filterTree.children.length; j < jj; j += 1 ) {
 				// if any child is function
 				// call filterExec with children of this child
 				if( filterTree.children[j].type === 'function' ) {
 					tmpChild1 = filterTree.children[j];					
 
-					filterTree.children[j].valueName = filterExec(tmpChild1, items, context); // tmpChild1 is object
+					filterTree.children[j].valueName = filterExec(tmpChild1, items, context);
 					filterTree.children[j].newType = 'value';
 				}
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
@@ -74,127 +67,132 @@ var filterItems = (function() {
 			}
 			return filterMethods[filterTree.functionName](tmpChild2, items, context); // tmpChild2 is array
 		}
-
-		return filterExec(filterTree, itemsForFilter); // filterTree is array, items is array
+		return filterExec(filterTree, itemsForFilter);
 	};
 })(filterItems);
 
 
 filterItems.filterTreeBuilder = (function() {
-	var that = {};
+	var that = {},
+			splitStringToArray = function(filter) { //filter is string
+				var tmpArr,
+						re1 = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
+						re2 = /([0-9]+[,]{0,1}[\s]{0,1}){2,}\)/g,
+						re3 = /\[[0-9]+\]/g,
+						re4 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
+						re5 = /[)]/g,
+						arr = [];
 
-	var splitStringToArray = function(filter) { //filter is string
-		var tmpObj,
-				re = /date\(\'[0-9a-zA-Z\:\-\.\s]+\'\)/g,
-				re1 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
-				re2 = /[)]/g,
-				arr = [];
-
-		while( tmpObj = re.exec(filter) ) { // search all dates and convert it to number of s [0.000]
-			var tmpDate = Date.parse( tmpObj[0].slice(6, -2) ) / 1000 + '';
-			filter = filter.replace(re, tmpDate);
-			tmpObj[0] = tmpDate;
-		}
-		while( tmpObj = re1.exec(filter) ) { // search all functions and values with their index
-			// value can has only ',' or ')' at the end of string
-			if( tmpObj[0].length > 1 && (tmpObj[0].slice(-1) === ',' || tmpObj[0].slice(-1) === ')')  ) { 
-				tmpObj[0] = tmpObj[0].slice(0, -1);
-			}
-			if( tmpObj[0].length > 1 && tmpObj[0].slice(0, 1) === "'" ) {
-				tmpObj[0] = tmpObj[0].slice(1, -1);
-			}
-			arr.push(tmpObj);
-		}
-		while( tmpObj = re2.exec(filter) ) { // search all closing brackets with their index
-			arr.push(tmpObj);
-		}
-		arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
-			return a.index - b.index;
-		});
-		return arr;
-	};
-
-	var divideToFunctionsAndValues = function(arrayToDivide) { //arrayToDivide is array
-		var tmpArr = [],
-				values = [],
-				filterArr = [],
-				counter = 0,
-				that,
-				tmpSymbol,
-				thatValue,
-				firstPart;
-		// split all data to different functions
-		for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
-			tmpSymbol = arrayToDivide[i][0].slice(-1);
-			if( tmpSymbol === '(' ) { // define functions from string
-				that = {};	
-				that.type = 'function';
-				that.functionName = arrayToDivide[i][0].slice(0, -1);
-				that.index = arrayToDivide[i].index;
-				tmpArr.push( that );
-			} else if( tmpSymbol === ')' ) { // define where end of function
-				filterArr[counter] = [];
-				firstPart = tmpArr.pop();
-				firstPart.range = [];
-				firstPart.range.push( firstPart.index );
-				firstPart.children = [];
-				firstPart.range.push( arrayToDivide[i].index );
-				filterArr[counter] = firstPart;
-				counter += 1;
-			} else { // define params that are values
-				thatValue = {};
-				thatValue.type = 'value';
-				thatValue.valueName = arrayToDivide[i][0];
-				thatValue.index = arrayToDivide[i].index;
-				values.push( thatValue );
-			}
-		}
-		return [filterArr, values];
-	};
-
-	var addValuesAsChildren = function(filterArr, values) { // filterArr, values are arrays
-		//add values to right place as children for functions 
-		//define right place by range of index property
-		for( var a = 0, aa = values.length; a < aa; a += 1 ) {
-			for( var b = 0, bb = filterArr.length; b < bb; b += 1 ) {
-				if( values[a] !== null ) {
-					if( values[a].index > filterArr[b].range[0] && values[a].index < filterArr[b].range[1] ) {
-						filterArr[b].children.push( values[a] );
-						values[a] = null;
+				while( tmpArr = re1.exec(filter) ) { // search all dates and convert it to number of s [0.000]
+					var tmpDate = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
+					filter = filter.replace(re1, tmpDate);
+				}
+				while( tmpArr = re2.exec(filter) ) { // search range of numbers and convert it to array
+					var tmpArray = tmpArr[0].slice(0, -1);
+					tmpArray = '[' + tmpArray + '])'; 
+					filter = filter.replace(/([0-9]+[,]{0,1}[\s]{0,1}){2,}\)/, tmpArray);					
+				}
+				while( tmpArr = re3.exec(filter) ) { // convert array from 1 element to number
+					filter = filter.replace(/\[[0-9]+\]/, tmpArr[0].slice(1, -1));
+				}
+				while( tmpArr = re4.exec(filter) ) { // search all functions and values with their index
+					// value can has only ',' or ')' at the end of string
+					if( tmpArr[0].length > 1 && (tmpArr[0].slice(-1) === ',' || tmpArr[0].slice(-1) === ')')  ) { 
+						tmpArr[0] = tmpArr[0].slice(0, -1);
+					}
+					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
+						tmpArr[0] = tmpArr[0].slice(1, -1);
+					}
+					arr.push(tmpArr);
+				}
+				while( tmpArr = re5.exec(filter) ) { // search all closing brackets with their index
+					arr.push(tmpArr);
+				}
+				arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
+					return a.index - b.index;
+				});
+				return arr;
+			},
+			divideToFunctionsAndValues = function(arrayToDivide) { //arrayToDivide is array
+				var tmpArr = [],
+						values = [],
+						filterArr = [],
+						counter = 0,
+						that,
+						tmpSymbol,
+						thatValue,
+						firstPart;
+				// split all data to different functions
+				for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
+					tmpSymbol = arrayToDivide[i][0].slice(-1);
+					if( tmpSymbol === '(' ) { // define functions from string
+						that = {};	
+						that.type = 'function';
+						that.functionName = arrayToDivide[i][0].slice(0, -1);
+						that.index = arrayToDivide[i].index;
+						tmpArr.push( that );
+					} else if( tmpSymbol === ')' ) { // define where end of function
+						filterArr[counter] = [];
+						firstPart = tmpArr.pop();
+						firstPart.range = [];
+						firstPart.range.push( firstPart.index );
+						firstPart.children = [];
+						firstPart.range.push( arrayToDivide[i].index );
+						filterArr[counter] = firstPart;
+						counter += 1;
+					} else { // define params that are values
+						thatValue = {};
+						thatValue.type = 'value';
+						thatValue.valueName = arrayToDivide[i][0];
+						thatValue.index = arrayToDivide[i].index;
+						values.push( thatValue );
 					}
 				}
-			}
-		}
-		return filterArr;
-	};
-
-	var filterArrToTree = function(filterArr) { // filterArr is array
-		// build up a filter tree
-		// by putting some functions as children for other
-		for( var k = 0; k < filterArr.length; k += 1 ) {
-			for( var l = 0; l < filterArr.length; l += 1 ) {
-				if( filterArr[l] !== null || filterArr[k] !== null ) {
-					//search for first result[l] where we can put result[k] as his child 
-					//if find, put it and remove result[k] 
-					if( filterArr[k].range[0] > filterArr[l].range[0] && filterArr[k].range[1] < filterArr[l].range[1] ) {
-						//if result[l] already have any children, check their indexes to define where put new child
-						if( filterArr[l].children[0] !== undefined && filterArr[l].children[0].index > filterArr[k].range[0] ) {
-							filterArr[l].children.unshift( filterArr[k] );
-							filterArr.splice(k, 1);
-							k -= 1;
-							break;
-						} else {
-							filterArr[l].children.push( filterArr[k] );
-							filterArr.splice(k, 1);
-							k -= 1;
-							break;
+				return [filterArr, values];
+			},
+			addValuesAsChildren = function(filterArr, values) { // filterArr, values are arrays
+				//add values to right place as children for functions 
+				//define right place by range of index property
+				for( var a = 0, aa = values.length; a < aa; a += 1 ) {
+					for( var b = 0, bb = filterArr.length; b < bb; b += 1 ) {
+						if( values[a] !== null ) {
+							if( values[a].index > filterArr[b].range[0] && values[a].index < filterArr[b].range[1] ) {
+								filterArr[b].children.push( values[a] );
+								values[a] = null;
+							}
 						}
 					}
 				}
-			}
-		}
-		return filterArr[0];
-	};
+				return filterArr;
+			},
+			filterArrToTree = function(filterArr) { // filterArr is array
+				// build up a filter tree
+				// by putting some functions as children for other
+				for( var k = 0; k < filterArr.length; k += 1 ) {
+					for( var l = 0; l < filterArr.length; l += 1 ) {
+						if( filterArr[l] !== null || filterArr[k] !== null ) {
+							//search for first result[l] where we can put result[k] as his child 
+							//if find, put it and remove result[k] 
+							if( filterArr[k].range[0] > filterArr[l].range[0] && filterArr[k].range[1] < filterArr[l].range[1] ) {
+								//if result[l] already have any children, check their indexes to define where put new child
+								if( filterArr[l].children[0] !== undefined && filterArr[l].children[0].index > filterArr[k].range[0] ) {
+									filterArr[l].children.unshift( filterArr[k] );
+									filterArr.splice(k, 1);
+									k -= 1;
+									break;
+								} else {
+									filterArr[l].children.push( filterArr[k] );
+									filterArr.splice(k, 1);
+									k -= 1;
+									break;
+								}
+							}
+						}
+					}
+				}
+				return filterArr[0];
+			};
+
 	that.buildUpFilterTree = function(filter) { // filter is string
 		var tmpArr;
 
@@ -216,7 +214,6 @@ filterItems.filterMethods = (function() {
 				tmpResult2,
 				length,
 				globalUI = InfinniUI.ObjectUtils;
-
 		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
 			if( context ) {
 				tmpResult2 = [];
@@ -503,6 +500,7 @@ filterItems.filterMethods = (function() {
 				tmpResult.push( values[1][i] );
 			}
 		}
+		console.log( values );
 		return tmpResult;
 	};
 
