@@ -1,126 +1,26 @@
 var filterItems = (function() {
 	
-
 	return function(items, filter) {
 		if( !filter ){
 			return items;
 		}
-		//all filter methods pick up from filterItems extention
-		var filterMethods = filterItems.filterMethods;
 		
-		var itemsForFilter = JSON.parse(JSON.stringify(items)),
-				re = /date\(\'[0-9a-zA-Z\:\-\.\s]+\'\)/g,
-				re1 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
-				re2 = /[)]/g,
-				tmpObj,
-				arr = [],
-				tmpArr = [], 
-				filterTree = [],
-				values = [],
-				counter = 0;
+		var itemsForFilter = JSON.parse(JSON.stringify(items)),				
+				filterMethods = filterItems.filterMethods, //all filter methods pick up from filterItems extention
+				filterTreeBuilder = filterItems.filterTreeBuilder, //method to biuld filter tree pick up from filterItems extention
+				tmpArr,
+				filterTree;
 
-		while( tmpObj = re.exec(filter) ) { // search all dates and convert it to number of ms
-			var tmpDate = Date.parse( tmpObj[0].slice(6, -2) ) / 1000 + '';
-			filter = filter.replace(re, tmpDate);
-			tmpObj[0] = tmpDate;
-		}
-		while( tmpObj = re1.exec(filter) ) { // search all functions and values with their index
-			// value can has only ',' or ')' at the end of string
-			if( tmpObj[0].length > 1 && (tmpObj[0].slice(-1) === ',' || tmpObj[0].slice(-1) === ')')  ) { 
-				tmpObj[0] = tmpObj[0].slice(0, -1);
-			}
-			if( tmpObj[0].length > 1 && tmpObj[0].slice(0, 1) === "'" ) {
-				tmpObj[0] = tmpObj[0].slice(1, -1);
-			}
-			arr.push(tmpObj);
-		}
-		while( tmpObj = re2.exec(filter) ) { // search all closing brackets with their index
-			arr.push(tmpObj);
-		}
+		filterTree = filterTreeBuilder.buildUpFilterTree(filter);
 
-		arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
-			return a.index - b.index;
-		});
-
-		// split all data to different functions
-		for( var i = 0, ii = arr.length; i < ii; i += 1 ) {
-			var tmpSymbol = arr[i][0].slice(-1);
-			if( tmpSymbol === '(' ) { // define functions from string
-				var that = {};	
-				that.type = 'function';
-				that.functionName = arr[i][0].slice(0, -1);
-				that.index = arr[i].index;
-				tmpArr.push( that );
-			} else if( tmpSymbol === ')' ) { // define where end of function
-				filterTree[counter] = [];
-				var min = tmpArr.pop();
-				min.range = [];
-				min.range.push( min.index );
-				min.children = [];
-				min.range.push( arr[i].index );
-				filterTree[counter] = min;
-				counter += 1;
-			} else { // define params that are values
-				var thatValue = {};
-				thatValue.type = 'value';
-				thatValue.valueName = arr[i][0];
-				thatValue.index = arr[i].index;
-				values.push( thatValue );
-			}
-		}
-
-		// remove all elements from arr
-		arr.splice(0, arr.length);
-
-		//add values to right place as children for functions 
-		//define right place by range of index property
-		for( var a = 0, aa = values.length; a < aa; a += 1 ) {
-			for( var b = 0, bb = filterTree.length; b < bb; b += 1 ) {
-				if( values[a] !== null ) {
-					if( values[a].index > filterTree[b].range[0] && values[a].index < filterTree[b].range[1] ) {
-						filterTree[b].children.push( values[a] );
-						values[a] = null;
-					}
-				}
-			}
-		}
-
-		// build up a filter tree
-		// by putting some functions as children for other
-		for( var k = 0; k < filterTree.length; k += 1 ) {
-			for( var l = 0; l < filterTree.length; l += 1 ) {
-				if( filterTree[l] !== null || filterTree[k] !== null ) {
-					//search for first result[l] where we can put result[k] as his child 
-					//if find, put it and remove result[k] 
-					if( filterTree[k].range[0] > filterTree[l].range[0] && filterTree[k].range[1] < filterTree[l].range[1] ) {
-						//if result[l] already have any children, check their indexes to define where put new child
-						if( filterTree[l].children[0] !== undefined && filterTree[l].children[0].index > filterTree[k].range[0] ) {
-							filterTree[l].children.unshift( filterTree[k] );
-							filterTree.splice(k, 1);
-							k -= 1;
-							break;
-						} else {
-							filterTree[l].children.push( filterTree[k] );
-							filterTree.splice(k, 1);
-							k -= 1;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		filterTree = filterTree[0];
-		console.log( filterTree );
-
-		function toNum(value) {
+		function stringToNum(value) {
 			if( typeof value === 'string' && !isNaN(value) ) {
 				value = +value;
 			}
 			return value;
 		}
 
-		function toBoolean(value) {
+		function stringToBoolean(value) {
 			if( value === 'true' ) {
 				value = true;
 			} else if( value === 'false' ) {
@@ -131,11 +31,11 @@ var filterItems = (function() {
 			return value;
 		}
 
-		function toArr(value) {
+		function stringToArr(value) {
 			if( typeof value === 'string' && value.search(/\[[0-9,]+\]/) !== -1 ) {
 				value = value.slice(1, -1).split(',');
 				for( var i = 0, ii = value.length; i < ii; i += 1 ) {
-					value[i] = toNum( value[i] );
+					value[i] = stringToNum( value[i] );
 				}
 			}
 			return value;
@@ -165,9 +65,9 @@ var filterItems = (function() {
 				}
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
 					if( filterTree.children[j].type === 'value' ) {
-						filterTree.children[j].valueName = toNum( filterTree.children[j].valueName ); // check on Number
-						filterTree.children[j].valueName = toBoolean( filterTree.children[j].valueName ); // check on Boolean
-						filterTree.children[j].valueName = toArr( filterTree.children[j].valueName ); // check on Array
+						filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
+						filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
+						filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
 					}
 					tmpChild2.push( filterTree.children[j].valueName );
 				}
@@ -178,6 +78,133 @@ var filterItems = (function() {
 		return filterExec(filterTree, itemsForFilter); // filterTree is array, items is array
 	};
 })(filterItems);
+
+
+filterItems.filterTreeBuilder = (function() {
+	var that = {};
+
+	var splitStringToArray = function(filter) { //filter is string
+		var tmpObj,
+				re = /date\(\'[0-9a-zA-Z\:\-\.\s]+\'\)/g,
+				re1 = /[a-zA-Z]+[(]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]|\[[0-9,]+\]/g,
+				re2 = /[)]/g,
+				arr = [];
+
+		while( tmpObj = re.exec(filter) ) { // search all dates and convert it to number of s [0.000]
+			var tmpDate = Date.parse( tmpObj[0].slice(6, -2) ) / 1000 + '';
+			filter = filter.replace(re, tmpDate);
+			tmpObj[0] = tmpDate;
+		}
+		while( tmpObj = re1.exec(filter) ) { // search all functions and values with their index
+			// value can has only ',' or ')' at the end of string
+			if( tmpObj[0].length > 1 && (tmpObj[0].slice(-1) === ',' || tmpObj[0].slice(-1) === ')')  ) { 
+				tmpObj[0] = tmpObj[0].slice(0, -1);
+			}
+			if( tmpObj[0].length > 1 && tmpObj[0].slice(0, 1) === "'" ) {
+				tmpObj[0] = tmpObj[0].slice(1, -1);
+			}
+			arr.push(tmpObj);
+		}
+		while( tmpObj = re2.exec(filter) ) { // search all closing brackets with their index
+			arr.push(tmpObj);
+		}
+		arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
+			return a.index - b.index;
+		});
+		return arr;
+	};
+
+	var divideToFunctionsAndValues = function(arrayToDivide) { //arrayToDivide is array
+		var tmpArr = [],
+				values = [],
+				filterArr = [],
+				counter = 0,
+				that,
+				tmpSymbol,
+				thatValue,
+				firstPart;
+		// split all data to different functions
+		for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
+			tmpSymbol = arrayToDivide[i][0].slice(-1);
+			if( tmpSymbol === '(' ) { // define functions from string
+				that = {};	
+				that.type = 'function';
+				that.functionName = arrayToDivide[i][0].slice(0, -1);
+				that.index = arrayToDivide[i].index;
+				tmpArr.push( that );
+			} else if( tmpSymbol === ')' ) { // define where end of function
+				filterArr[counter] = [];
+				firstPart = tmpArr.pop();
+				firstPart.range = [];
+				firstPart.range.push( firstPart.index );
+				firstPart.children = [];
+				firstPart.range.push( arrayToDivide[i].index );
+				filterArr[counter] = firstPart;
+				counter += 1;
+			} else { // define params that are values
+				thatValue = {};
+				thatValue.type = 'value';
+				thatValue.valueName = arrayToDivide[i][0];
+				thatValue.index = arrayToDivide[i].index;
+				values.push( thatValue );
+			}
+		}
+		return [filterArr, values];
+	};
+
+	var addValuesAsChildren = function(filterArr, values) { // filterArr, values are arrays
+		//add values to right place as children for functions 
+		//define right place by range of index property
+		for( var a = 0, aa = values.length; a < aa; a += 1 ) {
+			for( var b = 0, bb = filterArr.length; b < bb; b += 1 ) {
+				if( values[a] !== null ) {
+					if( values[a].index > filterArr[b].range[0] && values[a].index < filterArr[b].range[1] ) {
+						filterArr[b].children.push( values[a] );
+						values[a] = null;
+					}
+				}
+			}
+		}
+		return filterArr;
+	};
+
+	var filterArrToTree = function(filterArr) { // filterArr is array
+		// build up a filter tree
+		// by putting some functions as children for other
+		for( var k = 0; k < filterArr.length; k += 1 ) {
+			for( var l = 0; l < filterArr.length; l += 1 ) {
+				if( filterArr[l] !== null || filterArr[k] !== null ) {
+					//search for first result[l] where we can put result[k] as his child 
+					//if find, put it and remove result[k] 
+					if( filterArr[k].range[0] > filterArr[l].range[0] && filterArr[k].range[1] < filterArr[l].range[1] ) {
+						//if result[l] already have any children, check their indexes to define where put new child
+						if( filterArr[l].children[0] !== undefined && filterArr[l].children[0].index > filterArr[k].range[0] ) {
+							filterArr[l].children.unshift( filterArr[k] );
+							filterArr.splice(k, 1);
+							k -= 1;
+							break;
+						} else {
+							filterArr[l].children.push( filterArr[k] );
+							filterArr.splice(k, 1);
+							k -= 1;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return filterArr[0];
+	};
+	that.buildUpFilterTree = function(filter) { // filter is string
+		var tmpArr;
+
+		tmpArr = splitStringToArray(filter);
+		tmpArr = divideToFunctionsAndValues(tmpArr);
+		tmpArr = addValuesAsChildren(tmpArr[0], tmpArr[1]);
+		return filterArrToTree(tmpArr);
+	};
+	return that;
+})();
 
 
 //sub method for filterItems with filter methods
