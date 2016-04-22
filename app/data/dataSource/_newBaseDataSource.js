@@ -7,6 +7,7 @@ var newBaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
         idProperty: 'Id',
+        identifyingMode: 'byId', // byId, byLink. detect automatically
 
         view: null,
 
@@ -269,20 +270,12 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _restoreSelectedItem: function(){
-        var selectedItem = this.getSelectedItem(),
-            selectedItemId = this.idOfItem(selectedItem);
-
-        if( selectedItemId != null ){
-            var items = this.get('itemsById');
-            var newSelectedItem = items[selectedItemId];
-
-            if( newSelectedItem != null ){
-                this.setSelectedItem(newSelectedItem);
-                return true;
-            }
-        }
-
-        return false;
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
+            source: this
+        });
     },
 
     _addItems: function (newItems) {
@@ -308,37 +301,12 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     setSelectedItem: function (item, success, error) {
-        var currentSelectedItem = this.getSelectedItem(),
-            items = this.get('itemsById'),
-            itemId = this.idOfItem(item),
-            index;
-
-
-        if (typeof item == 'undefined') {
-            item = null;
-        }
-
-        if (item == currentSelectedItem) {
-            return;
-        }
-
-        if (item !== null) {
-            if (!items[itemId]) {
-                if (!error) {
-                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
-                } else {
-                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
-                    return;
-                }
-            }
-        }
-
-        this.get('model').setProperty('selectedItem', item);
-
-        index = this._indexOfItem(items[itemId]);
-        this._tuneMirroringOfModel(index);
-
-        this._notifyAboutSelectedItem(item, success);
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource.setSelectedItem: not overrided by strategy',
+            source: this
+        });
     },
 
     _notifyAboutSelectedItem: function (item, successHandler) {
@@ -436,13 +404,21 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _includeItemToModifiedSet: function (item) {
-        var itemId = this.idOfItem(item);
-        this.get('modifiedItems')[itemId] = item;
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._includeItemToModifiedSet: not overrided by strategy',
+            source: this
+        });
     },
 
     _excludeItemFromModifiedSet: function (item) {
-        var itemId = this.idOfItem(item);
-        delete this.get('modifiedItems')[itemId];
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._excludeItemFromModifiedSet: not overrided by strategy',
+            source: this
+        });
     },
 
     _clearModifiedSet: function () {
@@ -661,6 +637,8 @@ var newBaseDataSource = Backbone.Model.extend({
         if(this.get('newItemsHandler')){
             itemsData = this.get('newItemsHandler')(itemsData);
         }
+
+        this._detectIdentifyingMode(itemsData);
 
         this.setProperty('', itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
@@ -994,6 +972,144 @@ var newBaseDataSource = Backbone.Model.extend({
         return {
             source: this
         };
+    },
+
+    _detectIdentifyingMode: function(items){
+        if( $.isArray(items) && items.length > 0){
+            if( this.getIdProperty() in items[0] ){
+                this.set('identifyingMode', 'byId');
+                _.extend( this, newBaseDataSource.identifyingStrategy.byId);
+            }else{
+                this.set('identifyingMode', 'byLink');
+                _.extend( this, newBaseDataSource.identifyingStrategy.byLink);
+            }
+        }
+    },
+
+    _getIdentifyingMode: function(){
+        return this.get('identifyingMode');
     }
 
 });
+
+
+newBaseDataSource.identifyingStrategy = {
+
+    byId: {
+        _restoreSelectedItem: function(){
+
+            var selectedItem = this.getSelectedItem(),
+                selectedItemId = this.idOfItem(selectedItem);
+
+            if( selectedItemId != null ){
+                var items = this.get('itemsById');
+                var newSelectedItem = items[selectedItemId];
+
+                if( newSelectedItem != null ){
+                    this.setSelectedItem(newSelectedItem);
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        setSelectedItem: function (item, success, error) {
+            var currentSelectedItem = this.getSelectedItem(),
+                items = this.get('itemsById'),
+                itemId = this.idOfItem(item),
+                index;
+
+
+            if (typeof item == 'undefined') {
+                item = null;
+            }
+
+            if (item == currentSelectedItem) {
+                return;
+            }
+
+            if (item !== null) {
+                if (!items[itemId]) {
+                    if (!error) {
+                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                    } else {
+                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        return;
+                    }
+                }
+            }
+
+            this.get('model').setProperty('selectedItem', item);
+
+            index = this._indexOfItem(items[itemId]);
+            this._tuneMirroringOfModel(index);
+
+            this._notifyAboutSelectedItem(item, success);
+        },
+
+        _includeItemToModifiedSet: function (item) {
+            var itemId = this.idOfItem(item);
+            this.get('modifiedItems')[itemId] = item;
+        },
+
+        _excludeItemFromModifiedSet: function (item) {
+            var itemId = this.idOfItem(item);
+            delete this.get('modifiedItems')[itemId];
+        },
+    },
+
+    byLink: {
+        _restoreSelectedItem: function(){
+
+            var selectedItem = this.getSelectedItem();
+            var items = this.getItems();
+
+            if( items.indexOf(selectedItem) == -1 ){
+                return false;
+            }else{
+                return true;
+            }
+        },
+
+        setSelectedItem: function (item, success, error) {
+            var currentSelectedItem = this.getSelectedItem(),
+                items = this.getItems(),
+                index = this._indexOfItem(item);
+
+
+            if (typeof item == 'undefined') {
+                item = null;
+            }
+
+            if (item == currentSelectedItem) {
+                return;
+            }
+
+            if (item !== null) {
+                if (index == -1) {
+                    if (!error) {
+                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                    } else {
+                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        return;
+                    }
+                }
+            }
+
+            this.get('model').setProperty('selectedItem', item);
+
+            this._tuneMirroringOfModel(index);
+
+            this._notifyAboutSelectedItem(item, success);
+        },
+
+        _includeItemToModifiedSet: function (item) {
+            this.get('modifiedItems')['-'] = item;
+        },
+
+        _excludeItemFromModifiedSet: function (item) {
+            delete this.get('modifiedItems')['-'];
+        },
+    }
+};
