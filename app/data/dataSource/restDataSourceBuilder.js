@@ -55,6 +55,8 @@ _.extend(RestDataSourceBuilder.prototype, {
             result.method = urlParamsMetadata['Method'];
         }
 
+        result.params = {};
+
         return result;
     },
 
