@@ -426,6 +426,10 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             background: model.get('background'),
             texture: model.get('texture')
         }
+    },
+
+    setFocus: function () {
+        this.$el.focus();
     }
 
 });

@@ -18,9 +18,12 @@ _.extend(OpenModeDefaultStrategy.prototype, {
         $container
             .append(this.view.render())
             .data('view', this.view);
+
+        this.applyAutoFocus();
     },
 
     close: function () {
         this.view.remove();
     }
-});
+
+}, openModeAutoFocusMixin);

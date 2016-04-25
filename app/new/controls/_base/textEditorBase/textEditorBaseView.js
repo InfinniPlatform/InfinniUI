@@ -11,7 +11,8 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
         editor: '.pl-control-editor',
-        label: '.pl-control-label'
+        label: '.pl-control-label',
+        textbox: '.pl-text-box-input'
     }),
 
     events: {

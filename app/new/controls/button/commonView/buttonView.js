@@ -88,7 +88,13 @@ var CommonButtonView = ControlView.extend({
 
     getButtonElement: function(){
         return this.ui.button;
+    },
+
+    setFocus: function () {
+        this.ui.button.focus();
     }
+
+
 
 });
 
