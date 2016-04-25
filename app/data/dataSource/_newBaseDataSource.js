@@ -251,6 +251,8 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _setItems: function (items) {
+        this._detectIdentifyingMode(items);
+
         var indexOfItemsById;
 
         this.set('isDataReady', true);
@@ -638,8 +640,6 @@ var newBaseDataSource = Backbone.Model.extend({
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
-        this._detectIdentifyingMode(itemsData);
-
         this.setProperty('', itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
@@ -983,6 +983,9 @@ var newBaseDataSource = Backbone.Model.extend({
                 this.set('identifyingMode', 'byLink');
                 _.extend( this, newBaseDataSource.identifyingStrategy.byLink);
             }
+        }else{
+            this.set('identifyingMode', 'byId');
+            _.extend( this, newBaseDataSource.identifyingStrategy.byId);
         }
     },
 
