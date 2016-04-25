@@ -84,6 +84,11 @@ _.extend(RestDataProvider.prototype, {
                     });
                 },
                 error: function(data){
+                    if (typeof errorHandler !== 'function') {
+                        //Unhandled error
+                        InfinniUI.global.logger.error(data);
+                        return;
+                    }
                     errorHandler({
                         requestId: requestId,
                         data: data

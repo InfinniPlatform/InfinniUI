@@ -71,7 +71,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
         builder.register('Validation', new ValidationBuilder());
-        builder.register('Criteria', new CriteriaBuilder());
 
 
         builder.register('AcceptAction', new AcceptActionBuilder());

@@ -102,7 +102,9 @@ describe('AddAction', function () {
             var sourceDS = childView.context.dataSources['MainDataSource'];
             var acceptBtn = childView.context.controls['AcceptBtn'];
 
-            sourceDS.setSelectedItem({name: "New"});
+            var newItem = sourceDS.getSelectedItem();
+            newItem.name = "New";
+            sourceDS.setSelectedItem(newItem);
 
             acceptBtn.click();
 
