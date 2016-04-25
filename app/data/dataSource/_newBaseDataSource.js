@@ -925,7 +925,7 @@ var newBaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('onPropertyChanged:', function(){
+            this.once('onItemsUpdated', function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
