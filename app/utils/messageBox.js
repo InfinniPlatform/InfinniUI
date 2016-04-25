@@ -87,6 +87,8 @@ var MessageBox = Backbone.View.extend({
     },
 
     addColor: function(){
+        this.options.color = '#2ECC71;';
+
         if(this.options.type){
             if(this.options.type == 'error'){
                 this.options.color = '#E74C3C;';
@@ -94,8 +96,6 @@ var MessageBox = Backbone.View.extend({
             if(this.options.type == 'warning'){
                 this.options.color = '#F1C40F;';
             }
-        }else{
-            this.options.color = '#2ECC71;';
         }
     },
 
