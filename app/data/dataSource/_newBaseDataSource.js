@@ -65,10 +65,6 @@ var newBaseDataSource = Backbone.Model.extend({
         throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
     },
 
-    onError: function (handler) {
-        this.on('error', handler);
-    },
-
     onPropertyChanged: function (property, handler, owner) {
 
         if (typeof property == 'function') {
@@ -368,7 +364,7 @@ var newBaseDataSource = Backbone.Model.extend({
             suspended.splice(index, 1);
             this.set('suspendingList', suspended);
 
-            // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из за заморозки, нужно вызвать updateItems
+            // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из-за заморозки, нужно вызвать updateItems
             if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
                 this.updateItems();
             }
@@ -679,26 +675,6 @@ var newBaseDataSource = Backbone.Model.extend({
         this.trigger('onPropertyChanged:', context, argument);
     },
 
-    addNextItems: function (success, error) {
-        if (!this.isUpdateSuspended()) {
-            var filters = this.getFilter(),
-                pageNumber = this.get('pageNumber'),
-                pageSize = this.get('pageSize'),
-                sorting = this.get('sorting'),
-                dataProvider = this.get('dataProvider'),
-                that = this;
-
-            this.set('isRequestInProcess', true);
-            this.set('pageNumber', pageNumber + 1);
-            dataProvider.getItems(filters, pageNumber + 1, pageSize, sorting, function (data) {
-
-                that.set('isRequestInProcess', false);
-                that._handleAddedItems(data, success);
-
-            }, error);
-        }
-    },
-
     _handleAddedItems: function (itemsData, successHandler) {
         this._addItems(itemsData);
         this._notifyAboutItemsAdded(itemsData, successHandler);
@@ -764,26 +740,9 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     getFilter: function () {
-        return this.get('criteriaList');
-    },
-
-    addFilter: function (value) {
-        var filterManager = this.getFilterManager();
-        filterManager.addFilter(value);
     },
 
     setFilter: function (value, onSuccess, onError) {
-        var filterManager = this.getFilterManager();
-        var filter = _.clone(value);
-
-        filterManager.clean();
-
-        filterManager.onChange(function(newCriteriaList){
-            if(filterManager.isReady()){
-                this._setCriteriaList(newCriteriaList, onSuccess, onError);
-            }
-        }.bind(this));
-        filterManager.addFilter(filter);
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){
