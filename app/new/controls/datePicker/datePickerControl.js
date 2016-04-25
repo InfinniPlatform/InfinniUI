@@ -1,14 +1,8 @@
-/**
- *
- * @param parent
- * @constructor
- * @augments TextEditorBaseControl
- */
 function DatePickerControl(parent) {
     _.superClass(DatePickerControl, this, parent);
 }
 
-_.inherit(DatePickerControl, TextEditorBaseControl);
+_.inherit(DatePickerControl, DateTimePickerControl);
 
 _.extend(DatePickerControl.prototype, {
 

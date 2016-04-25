@@ -22,6 +22,17 @@ _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
             this.control.set('passwordChar', value);
         },
 
+        setAutocomplete: function (value) {
+            if (typeof value === 'undefined' || value === null) {
+                return;
+            }
+            this.control.set('autocomplete', !!value);
+        },
+
+        getAutocomplete: function () {
+            return this.control.get('autocomplete');
+        },
+
         createControl: function () {
             return new PasswordBoxControl();
         }

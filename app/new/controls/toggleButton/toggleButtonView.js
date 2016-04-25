@@ -14,7 +14,7 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     }),
 
     events: {
-        'click': 'onClickHandler'
+        'click .togglebutton-box': 'onClickHandler'
     },
 
     initHandlersForProperties: function(){

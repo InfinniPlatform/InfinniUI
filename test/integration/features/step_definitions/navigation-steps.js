@@ -289,3 +289,65 @@ this.Then(/^я отмечу в таблице "([^"]*)" строку под но
 
     window.testHelpers.waitCondition(haveTable, success, fail);
 });
+
+this.Then(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (listName, itemText, next) {
+    itemText = itemText.replace(/'/g, '"');
+
+    var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
+    var itemSelector = ".pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains('" + itemText + "')";
+
+    var haveCombobox = function () {
+        return window.configWindow.$(listSelector).length != 0;
+    };
+    var haveItem = function () {
+        return window.configWindow.$(itemSelector).length != 0;
+    };
+
+    var successCombobox = function () {
+        window.configWindow.$(listSelector + ' .pl-combobox__grip').click();
+        window.testHelpers.waitCondition(haveItem, successItem, failItem);
+    };
+    var successItem = function () {
+        window.configWindow.$(itemSelector).click();
+        next();
+    };
+
+    var failCombobox = function () {
+        next(new Error(listName + ' not found!'));
+    };
+    var failItem = function () {
+        next(new Error('"' + itemText + '" not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveCombobox, successCombobox, failCombobox);
+});
+
+this.Then(/^я сверну панель "([^"]*)"$/, function (panelName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }, function () {
+        try{
+            window.testHelpers.getControlByName(panelName).setCollapsed(false);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(panelName + ' not found!'));
+    });
+});
+
+this.Then(/^я разверну панель "([^"]*)"$/, function (panelName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(panelName) != undefined;
+    }, function () {
+        try{
+            window.testHelpers.getControlByName(panelName).setCollapsed(true);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(panelName + ' not found!'));
+    });
+});

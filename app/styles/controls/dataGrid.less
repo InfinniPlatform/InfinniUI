@@ -1,9 +1,44 @@
+.clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
 .pl-datagrid {
+  &.verticalAlignment {
+    &Top {
+      table > tbody > tr > td {
+        vertical-align: top;
+      }
+    }
+
+    &Center {
+      table > tbody > tr > td {
+        vertical-align: middle;
+      }
+    }
+
+    &Bottom {
+      table > tbody > tr > td {
+        vertical-align: bottom;
+      }
+    }
+
+    &Stretch {
+      table > tbody > tr > td {
+        vertical-align: middle;
+      }
+    }
+  }
   table {
-    table-layout: fixed;
+    /*table-layout: fixed;*/
   }
 
   .pl-toggle-cell{
     width: 30px;
   }
+
+
 }

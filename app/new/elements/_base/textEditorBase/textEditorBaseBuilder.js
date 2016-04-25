@@ -22,7 +22,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
         var metadata = params.metadata;
         var element = params.element;
 
-        element.setLabelText(metadata.LabelText);
+        this.initBindingToProperty(params, 'LabelText');
 
         this
             .initDisplayFormat(params)
@@ -47,7 +47,10 @@ _.extend(TextEditorBaseBuilder.prototype, {
             editMask;
 
         if (metadata.EditMask) {
-            editMask = builder.build(metadata.EditMask, {parentView: params.parentView});
+            editMask = builder.build(metadata.EditMask, {
+                parentView: params.parentView,
+                formatOptions: params.formatOptions
+            });
         }
         params.element.setEditMask(editMask);
         return this;

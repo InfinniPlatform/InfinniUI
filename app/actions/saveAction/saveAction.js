@@ -12,7 +12,7 @@ _.extend(SaveAction.prototype, {
         var canClose = this.getProperty('canClose');
 
         var onSuccessSave = function(context, args){
-            if(canClose){
+            if(canClose !== false){
                 parentView.setDialogResult(DialogResult.accepted);
                 parentView.close();
             }

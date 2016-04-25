@@ -125,12 +125,16 @@ _.extend(TemplateEditMask.prototype, {
 
     /**
      * Получение введенного значения
-     * @returns {string}
+     * @returns {string|*}
      */
     getValue: function () {
         var template = this.template;
         var result = [];
         var text;
+
+        if (!Array.isArray(template)) {
+            return;
+        }
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             if (typeof template[i] === 'string' && this.maskSaveLiteral) {
                 result.push(template[i]);
@@ -220,6 +224,11 @@ _.extend(TemplateEditMask.prototype, {
         var width;
         var index;
         var result = null;
+
+        if (!Array.isArray(template)) {
+            return null;
+        }
+
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') {

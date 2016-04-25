@@ -480,7 +480,7 @@ var newBaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             if( !('isValid' in data) || data.isValid === true ){
                 that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved(item, success);
+                that._notifyAboutItemSaved(item, 'modified', success);
             }else{
                 that._notifyAboutFailValidationBySaving(item, data, error);
             }
@@ -722,7 +722,7 @@ var newBaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function (itemData, successHandler) {
-        var items = this.get('items');
+        var items = this.getItems();
 
         if(items) {
             items = items.slice();
@@ -731,7 +731,7 @@ var newBaseDataSource = Backbone.Model.extend({
             items = [itemData];
         }
 
-        this._setItems(items);
+        this.setProperty('', items);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },

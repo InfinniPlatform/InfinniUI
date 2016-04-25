@@ -14,7 +14,7 @@ describe('NumericBox', function () {
             assert.isUndefined($el.attr('data-pl-name'));
             assert.isFalse($control.prop('disabled'));
             assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
             assert.isFalse($el.hasClass('center-block'));
         });
 
@@ -58,8 +58,8 @@ describe('NumericBox', function () {
             assert.equal($el.attr('data-pl-name'), 'newName');
             assert.isTrue($control.prop('disabled'));
             assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
-            assert.isTrue($el.hasClass('center-block'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isTrue($el.hasClass('pl-horizontal-Center'));
         });
 
         it('Events onLoad, onValueChanged', function () {

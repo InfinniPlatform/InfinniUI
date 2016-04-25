@@ -14,6 +14,11 @@ _.extend(OpenModeDialogStrategy.prototype, {
     },
 
     open: function(){
+        // чтобы пользователь случайно не обратился к элементу в фокусе,
+        // пока диалоговое окно создается и ещё не перехватило фокус,
+        // необходимо старую фокусировку снять
+        $(document.activeElement).blur();
+
         var modalParams = {dialogWidth: this.dialogWidth};
         var $template = $(this.template(modalParams));
         var $closeButton = $('button', $template);
@@ -42,7 +47,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         var
             headerTemplate = view.getHeaderTemplate();
-        $closeButton.toggleClass('hidden', !view.getCloseButton());
+        $closeButton.toggleClass('hidden', !view.getCloseButtonVisibility());
         $header.append(headerTemplate().render());
 
         $modal.find('.pl-close-modal').on('click', function(){

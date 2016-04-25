@@ -9,6 +9,14 @@ var formatMixin = {
      */
     separator: ", ",
 
+    setOptions: function (options) {
+        this.options = _.defaults({}, options);
+    },
+
+    getOptions: function () {
+        return this.options || {};
+    },
+
     /**
      * Форматирование объекта или коллекции объектов.
      * Для форматирования объекта вызывается метод formatValue

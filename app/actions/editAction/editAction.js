@@ -13,11 +13,22 @@ _.extend(EditAction.prototype, {
 
         var selectedItem = destinationDataSource.getProperty(destinationProperty);
 
+        if( selectedItem == null ){
+
+            var logger = window.InfinniUI.global.logger;
+            var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+            logger.error(message);
+
+            return false;
+        }
+
         if( this._isObjectDataSource(editDataSource) ) {
             this.setItem(editDataSource, selectedItem);
         } else {
             this.setDocument(editDataSource, selectedItem);
         }
+
+        return true;
     },
 
     resumeUpdateEditDataSource: function () {

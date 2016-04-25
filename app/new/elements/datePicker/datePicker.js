@@ -1,45 +1,16 @@
-/**
- *
- * @param parent
- * @constructor
- * @augments TextEditorBase
- */
 function DatePicker(parent) {
     _.superClass(DatePicker, this, parent);
+
+    this.setMode('DatePicker');
+    this.setTimeZone();
 }
 
-_.inherit(DatePicker, TextEditorBase);
+_.inherit(DatePicker, DateTimePicker);
+
+DatePicker.prototype.setTimeZone = function () {
+    DateTimePicker.prototype.setTimeZone.call(this, 0);
+};
 
 DatePicker.prototype.createControl = function (parent) {
     return new DatePickerControl(parent);
 };
-
-DatePicker.prototype.getMinValue = function () {
-    return this.control.get('minValue');
-};
-
-DatePicker.prototype.setMinValue = function (value) {
-    this.control.set('minValue', value);
-};
-
-DatePicker.prototype.getMaxValue = function () {
-    return this.control.get('maxValue');
-};
-
-DatePicker.prototype.setMaxValue = function (value) {
-    this.control.set('maxValue', value);
-};
-
-DatePicker.prototype.getMode = function () {
-    return this.control.get('mode');
-};
-
-DatePicker.prototype.setMode = function (value) {
-    this.control.set('mode', value);
-};
-
-DatePicker.prototype.setDateFormat = function (value) {
-    this.control.set('format', value);
-};
-
-

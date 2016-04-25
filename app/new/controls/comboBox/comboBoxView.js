@@ -138,7 +138,7 @@ var ComboBoxView = ListEditorBaseView.extend({
         }
         switch (event.which) {
             case 40:    //Down Arrow
-            case 32:    //Space
+            case 13:    //Ennter
                 event.preventDefault();
                 this.toggleDropdown();
                 break;

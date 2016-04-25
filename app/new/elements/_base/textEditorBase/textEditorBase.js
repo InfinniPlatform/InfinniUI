@@ -29,5 +29,32 @@ _.extend(TextEditorBase.prototype, {
 
     getEditMask: function () {
         return this.control.get('editMask');
+    },
+
+    /**
+     * @description Возвращает значение, которое введено в поле редактирования в данный момент
+     * @returns {*}
+     */
+    getRawValue: function () {
+        var value = this.getValue(),
+            editMask = this.getEditMask();
+
+        if (editMask) {
+            var val = editMask.getValue();
+            var txt = editMask.getText();
+
+            if (isNotEmpty(val)) {
+                value = val;
+            } else if (isNotEmpty(txt)) {
+                value = txt;
+            }
+        }
+
+        return value;
+
+        function isNotEmpty(val) {
+            return val !== null && typeof val !== 'undefined';
+        }
     }
+
 }, editorBaseMixin, labelTextElementMixin);

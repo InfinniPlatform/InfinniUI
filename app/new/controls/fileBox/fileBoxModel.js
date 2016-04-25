@@ -39,9 +39,23 @@ var FileBoxModel = ControlModel.extend( _.extend({
                 }
             }
 
-            if (acceptTypes.length && !acceptTypes.contains(file.type)) {
-                return 'Загрузка данного типа файла не разрешена';
+            if (acceptTypes.length) {
+                var acceptType = acceptTypes.contains(file.type);
+                var fileName = file.name.toLowerCase();
+                if (!acceptType) {
+                    var len = fileName.length;
+                    var acceptType = acceptTypes.some(function(name) {
+                        return fileName.lastIndexOf(name.toLowerCase()) === len - name.length;
+                    });
+                }
+
+                if (!acceptType) {
+                    return 'Загрузка данного типа файла не разрешена';
+                }
+
             }
+
+
         }
     },
 

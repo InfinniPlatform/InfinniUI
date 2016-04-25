@@ -78,6 +78,10 @@ _.extend(DataGridRow.prototype, {
         return this.control.get('rowStyle');
     },
 
+    setGrid: function (grid) {
+        this.control.set('grid', grid);
+    },
+
     _transformRowProperties: function (properties) {
 
         for(var name in properties) {

@@ -25,8 +25,10 @@ _.extend(StackPanelBuilder.prototype,
                 metadata = params.metadata,
                 element = params.element;
 
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
+            var result = ContainerBuilder.prototype.applyMetadata.call(this, params);
             element.setOrientation(metadata.Orientation);
+
+            return result;
         }
 
     });

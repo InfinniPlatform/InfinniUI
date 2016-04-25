@@ -1,5 +1,4 @@
-
-this.BeforeScenario( function(scenario, callback) {
+this.BeforeScenario(function (scenario, callback) {
 
     window.toastrMessageCount = 0;
 
@@ -25,44 +24,47 @@ this.BeforeScenario( function(scenario, callback) {
     });
 });
 
-this.AfterFeatures(function(){
+this.AfterFeatures(function () {
     console.log('Test finished!');
 
-    if(window.startUpParameters && window.startUpParameters.isClosing){
+    if (window.startUpParameters && window.startUpParameters.isClosing) {
         window.close();
     }
 });
 
-this.AfterScenario( function(scenario, callback) {
-	window.configWindow.close();
-	callback();
+this.AfterScenario(function (scenario, callback) {
+    window.configWindow.close();
+    callback();
 });
 
-this.AfterStep(function(step, callback){
-    if(!window.configWindow.toastr.options.onShown){
-        window.configWindow.toastr.options.onShown = function(){
-            window.toastrMessageCount++;
+this.AfterStep(function (step, callback) {
+    if (!window.configWindow.toastr.options.onShown) {
+        window.configWindow.toastr.options.onShown = function () {
+            var toastClass = window.configWindow.$(this).attr('class');
+            if (toastClass.indexOf('toast-error') != -1 || toastClass.indexOf('toast-success') != -1) {
+                window.toastrMessageCount++;
+            }
         }
     }
-	callback();
+    callback();
 });
 
-var openHost = function(callback){
+var openHost = function (callback) {
     window.configWindow = window.open(window.IntegrationTestConfig.host);
 
-    var signOut = function(){
+    var signOut = function () {
         window.configWindow.contextApp.context.global.session.signOut(function () {
             window.configWindow.location.reload();
             callback();
-        }); 
+        });
     };
-    
-    var error = function(){
+
+    var error = function () {
         console.log('signOut not called!');
         callback();
     };
 
-    window.testHelpers.waitCondition(function(){
+    window.testHelpers.waitCondition(function () {
         return window.configWindow.contextApp != null;
     }, signOut, error);
 };

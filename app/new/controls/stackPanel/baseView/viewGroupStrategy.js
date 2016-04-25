@@ -1,14 +1,15 @@
 function StackPanelViewGroupStrategy(stackPanel) {
     this.stackPanel = stackPanel;
-};
+}
 
 _.extend(StackPanelViewGroupStrategy.prototype, {
+
+    groupTemplate: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanelGroup.tpl.html"],
 
     prepareItemsForRendering: function(){
         var items = this.stackPanel.getItems(),
             inputName = 'listbox-' + guid(),
             result = {
-                isMultiselect: this.stackPanel.isMultiselect(),
                 inputName: inputName,
                 groups: []
             },
@@ -26,9 +27,15 @@ _.extend(StackPanelViewGroupStrategy.prototype, {
         });
 
         for(var k in groups){
+            if (!groups.hasOwnProperty(k)) {
+                continue;
+            }
             result.groups.push({
-                items: groups[k]
-            })
+                items: groups[k],
+                indices: groups[k].map(function (item) {
+                    return items.indexOf(item);
+                })
+            });
         }
 
         return result;
@@ -38,32 +45,50 @@ _.extend(StackPanelViewGroupStrategy.prototype, {
         return this.stackPanel.template.grouped;
     },
 
-    appendItemsContent: function(preparedItems){
-        var $stackPanel = this.stackPanel.$el,
-            $stackPanelItems = $stackPanel.find('.pl-stack-panel-i'),
-            itemTemplate = this.stackPanel.getItemTemplate(),
-            groupTitleTemplate = this.stackPanel.getGroupItemTemplate(),
-            index = 0,
-            groups = preparedItems.groups,
+    /**
+     *
+     * @param {Object} preparedItems
+     * @param {Array} preparedItems.groups
+     */
+    appendItemsContent: function (preparedItems) {
+        var
             stackPanel = this.stackPanel,
-            itemEl, titleEl;
+            $stackPanel = stackPanel.$el,
+            groupTemplate = this.groupTemplate,
+            groupHeaderTemplate = this.stackPanel.getGroupItemTemplate(),
+            itemTemplate = this.stackPanel.getItemTemplate(),
+            $groups,
+            groups = preparedItems.groups;
 
-        $stackPanel.find('.pl-stack-panel-group-title').each(function(i, el){
-            titleEl = groupTitleTemplate(undefined, {index: index, item: groups[i]});
-            stackPanel.addChildElement(titleEl);
-            $(el).append(titleEl.render());
+        $groups = groups.map(function (group, groupIndex) {
 
-            _.forEach( groups[i].items, function(item){
-                itemEl = itemTemplate(undefined, {index: i, item: item});
-                stackPanel.addChildElement(itemEl);
-                $stackPanelItems.eq(index).append(itemEl.render());
+            var $items,
+                items = group.items || [],
+                indices = group.indices || [],
+                $group = $(groupTemplate({items: items})),
+                groupHeader = groupHeaderTemplate(null, {
+                    index: indices[0],  //Индекс любого элемента в этой группе
+                    item: group
+                });
 
-                $stackPanelItems.eq(index).parent()
-                    .data('pl-data-item', item);
+            stackPanel.addChildElement(groupHeader);
 
-                index++;
+            $items = items.map(function (item, itemIndex) {
+                var element = itemTemplate(null, {index: indices[itemIndex], item: item});
+                stackPanel.addChildElement(element);
+                return element.render();
             });
 
+            $('.pl-stack-panel-group__header', $group).append(groupHeader.render());
+
+            $('.pl-stack-panel-list__item', $group).each(function (i, el) {
+                $(el).append($items[i]);
+            });
+
+            return $group;
+
         });
+
+        $stackPanel.append($groups);
     }
 });

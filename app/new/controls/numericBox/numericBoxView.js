@@ -108,7 +108,8 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     addToValue: function (delta) {
-        var value = this.model.get('value');
+        var model = this.model;
+        var value = model.get('value');
 
         value = (value === null || typeof value === 'undefined') ? 0 : parseInt(value, 10);
 
@@ -117,7 +118,9 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
         }
 
         value = value + delta;
-        this.model.set('value', value, {validate: true});
+        if(model.validateValue(value)) {
+            model.set('value', value);
+        };
     },
 
     /**
@@ -126,7 +129,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
      * @returns {boolean}
      */
     onEditorValidate: function (value) {
-        return true;
+        return this.model.validateValue(value);
     }
 
 });

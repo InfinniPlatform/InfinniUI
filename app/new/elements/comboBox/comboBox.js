@@ -24,14 +24,6 @@ ComboBox.prototype.getValueTemplate = function () {
     return this.control.get('valueTemplate');
 };
 
-ComboBox.prototype.setValueFormat = function (value) {
-    this.control.set('valueFormat', value);
-};
-
-ComboBox.prototype.getValueFormat = function () {
-    return this.control.get('valueFormat');
-};
-
 ComboBox.prototype.getAutocomplete = function () {
     return this.control.get('autocomplete');
 };

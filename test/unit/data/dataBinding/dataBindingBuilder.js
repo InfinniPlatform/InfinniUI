@@ -40,7 +40,7 @@ describe('DataBindingBuilder', function () {
         var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
 
         // Then
-        assert.equal(dataBinding.getMode(), BindingModes.toSource);
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
         assert.isNotNull(dataBinding.getConverter());
         assert.isNotNull(dataBinding.getSource());
         assert.isNotNull(dataBinding.getSourceProperty());

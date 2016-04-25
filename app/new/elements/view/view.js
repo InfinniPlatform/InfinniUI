@@ -293,9 +293,9 @@ _.extend(View.prototype,
          * @description Устанавливает флаг видитмости кнопки закрытия
          * @param {boolean} value
          */
-        setCloseButton: function (value) {
+        setCloseButtonVisibility: function (value) {
             if (typeof value === 'boolean') {
-                this.control.set('closeButton', value);
+                this.control.set('closeButtonVisibility', value);
             }
         },
 
@@ -303,8 +303,8 @@ _.extend(View.prototype,
          * @description Возвращает флаг видимости кнопки закрытия
          * @returns {boolean}
          */
-        getCloseButton: function () {
-            return this.control.get('closeButton');
+        getCloseButtonVisibility: function () {
+            return this.control.get('closeButtonVisibility');
         },
 
         noDataSourceOnView: function(){

@@ -1,4 +1,4 @@
-var BindingModes = {
+InfinniUI.BindingModes = {
     twoWay: 'TwoWay',
     toSource: 'ToSource',
     toElement: 'ToElement'
@@ -7,7 +7,7 @@ var BindingModes = {
 
 var DataBinding = Backbone.Model.extend({
     defaults: {
-        mode: BindingModes.twoWay,
+        mode: InfinniUI.BindingModes.twoWay,
         converter: null,
         source: null,
         sourceProperty: null,
@@ -46,7 +46,7 @@ var DataBinding = Backbone.Model.extend({
         var element = this.getElement();
 
         if(this.get('source') != null){
-            var message = stringUtils.format('DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [this.get('source').getName(), source.getName()])
+            var message = stringUtils.format('DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [this.get('source').getName(), source.getName()]);
             logger.warn(message);
         }
 
@@ -218,10 +218,10 @@ var DataBinding = Backbone.Model.extend({
     },
 
     _shouldRefreshSource: function(mode){
-        return mode == BindingModes.twoWay || mode == BindingModes.toSource;
+        return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toSource;
     },
 
     _shouldRefreshElement: function(mode){
-        return mode == BindingModes.twoWay || mode == BindingModes.toElement;
+        return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;
     }
 });

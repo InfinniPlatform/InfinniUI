@@ -34,6 +34,14 @@ DataGridColumn.prototype.getHeaderTemplate = function () {
     return this.getProperty('cellHeaderTemplate');
 };
 
+DataGridColumn.prototype.setWidth = function (value) {
+    this.setProperty('width', value);
+};
+
+DataGridColumn.prototype.getWidth = function (value) {
+    return this.getProperty('width');
+};
+
 
 /**
  * @description Для взаимодействие с DataBinding
