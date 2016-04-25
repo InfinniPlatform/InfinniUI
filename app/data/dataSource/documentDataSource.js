@@ -169,7 +169,7 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     setIdFilter: function (itemId) {
-        this.setFilter('eq(' + this.getIdProperty() + ','+ itemId + ')');
+        this.setFilter('eq(' + this.getIdProperty() + ','+ this.quoteValue(itemId) + ')');
     },
 
     getPageNumber: function(){
@@ -231,5 +231,15 @@ var DocumentDataSource = RestDataSource.extend({
         var items = itemsData['Result']['Items'];
         RestDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
     },
+
+    quoteValue: function (value) {
+        var VALUE_QUOTE_CHAR = '\'';
+
+        if (_.isString(value)) {
+            return VALUE_QUOTE_CHAR + value + VALUE_QUOTE_CHAR;
+        } else {
+            return value
+        }
+    }
 
 });

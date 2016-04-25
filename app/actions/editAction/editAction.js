@@ -40,6 +40,7 @@ _.extend(EditAction.prototype, {
         var selectedItemId = editDataSource.idOfItem( selectedItem );
         editDataSource.setIdFilter(selectedItemId);
         editDataSource.tryInitData();
+        this.resumeUpdateEditDataSource();
     },
 
     setItem: function(editDataSource, selectedItem){
