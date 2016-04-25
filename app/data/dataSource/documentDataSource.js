@@ -229,7 +229,7 @@ var DocumentDataSource = RestDataSource.extend({
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
         var items = itemsData['Result']['Items'];
-        RestDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
-    },
+        newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+    }
 
 });

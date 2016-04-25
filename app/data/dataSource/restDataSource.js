@@ -254,6 +254,11 @@ var RestDataSource = newBaseDataSource.extend({
         var str = JSON.stringify(obj);
         var tmpTemplated = this._templateParamsInStr(str, params);
         return JSON.parse(tmpTemplated);
-    }
+    }//,
+    //
+    //_handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+    //    var items = itemsData['Result']['Items'];
+    //    newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+    //}
 
 });
