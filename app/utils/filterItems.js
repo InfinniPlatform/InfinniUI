@@ -1,11 +1,11 @@
 var filterItems = (function() {
-	
+
 	return function(items, filter) {
 		if( !filter ){
 			return items;
 		}
-		
-		var itemsForFilter = JSON.parse(JSON.stringify(items)),				
+
+		var itemsForFilter = JSON.parse(JSON.stringify(items)),
 				filterMethods = filterItems.filterMethods,
 				filterTree = filterItems.filterTreeBuilder.buildUpFilterTree(filter);
 
@@ -15,7 +15,6 @@ var filterItems = (function() {
 			}
 			return value;
 		}
-
 		function stringToBoolean(value) {
 			if( value === 'true' ) {
 				value = true;
@@ -26,7 +25,6 @@ var filterItems = (function() {
 			}
 			return value;
 		}
-
 		function stringToArr(value) {
 			if( typeof value === 'string' && value.search(/\[[\'a-zA-Z0-9,]+\]/) !== -1 ) {
 				value = value.slice(1, -1).split(',');
@@ -40,7 +38,6 @@ var filterItems = (function() {
 			}
 			return value;
 		}
-
 		function findContext(currentContext, currentFunc) {
 			if( currentFunc.functionName === 'match' ) {
 				currentContext = currentFunc.children[0].valueName;
@@ -50,12 +47,12 @@ var filterItems = (function() {
 		function filterExec(filterTree, items, context) { // filterTree is object, items is array
 			var tmpChild1, tmpChild2 = [];
 			// find context
-			context = findContext( context, filterTree );			
+			context = findContext( context, filterTree );
 			for( var j = 0, jj = filterTree.children.length; j < jj; j += 1 ) {
 				// if any child is function
 				// call filterExec with children of this child
 				if( filterTree.children[j].type === 'function' ) {
-					tmpChild1 = filterTree.children[j];					
+					tmpChild1 = filterTree.children[j];
 
 					filterTree.children[j].valueName = filterExec(tmpChild1, items, context);
 					filterTree.children[j].newType = 'value';
@@ -81,39 +78,62 @@ filterItems.filterTreeBuilder = (function() {
 			splitStringToArray = function(filter) { //filter is string
 				var tmpArr,
 						tmpNum,
-						re1 = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
-						re2 = /\,[a-zA-Z0-9\',\.]+\)/g,
-						re3 = /\[[a-zA-Z0-9\'\.]+\]/g,
-						re4 = /[a-zA-Z]+[(]|\[[a-zA-Z\'0-9,]+\]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]/g,
-						re5 = /[)]/g,
+						tmpString,
+						tmpString2,
+						tmpRE,
+						reForDates = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
+						reForParamAsArray = /\,[a-zA-Z0-9\'\,\_\.]+\)/g,
+						reForArrayFromOneElem = /\[[a-zA-Z0-9\'\_\.]+\]/g,
+						reForElemsOfTree = /[a-zA-Z]+[(]|\[[a-zA-Z0-9\S]+\]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]/g,
+						reForClosingBrackets = /[)]/g,
+						reForRegExp = /\'([a-zA-Z0-9\S\W\D]+\s*)+\'/g,
+						reForSpaces = /\s+/g,
+						reForFewWordsInQuotes = /\'([a-zA-Z0-9\s]+\s*)+\'/g,
 						arr = [];
-				filter = filter.replace(/\s+/g, '');
-				while( tmpArr = re1.exec(filter) ) { // search all dates and convert it to number of s [0.000]
+				while( tmpArr = reForDates.exec(filter) ) { // search all dates and convert it to number of s [0.000]
 					tmpNum = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
 					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					re1.lastIndex = tmpArr.index + tmpNum.length;
+					reForDates.lastIndex = tmpArr.index + tmpNum.length;
 				}
-				while( tmpArr = re2.exec(filter) ) { // search second param
+				while( tmpArr = reForRegExp.exec(filter) ) { // search for regexp
+					tmpNum = tmpArr[0];
+					if( tmpNum.search(reForSpaces) !== -1 || tmpNum.search(reForFewWordsInQuotes) !== -1 ) {
+						while( tmpString = reForFewWordsInQuotes.exec(tmpNum) ) {
+							tmpString2 = tmpString[0].replace(reForSpaces, '_');
+							tmpNum = tmpNum.slice(0, tmpString.index) + tmpString2 + tmpNum.slice(tmpString.index + tmpString[0].length);
+						}
+					} else {
+						tmpRE = tmpNum.slice(1, -1);
+						tmpNum = 'tmpRE';
+					}
+					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
+					reForRegExp.lastIndex = tmpArr.index + tmpNum.length;
+				}
+				filter = filter.replace(/\s+/g, '');
+				while( tmpArr = reForParamAsArray.exec(filter) ) { // search second param
 					tmpNum = '[' + tmpArr[0].slice(1, -1) + '])';
 					filter = filter.slice(0, tmpArr.index + 1) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					re2.lastIndex = tmpArr.index + tmpNum.length;
+					reForParamAsArray.lastIndex = tmpArr.index + tmpNum.length;
 				}
-				while( tmpArr = re3.exec(filter) ) { // convert array from 1 element to number or string or boolean
+				while( tmpArr = reForArrayFromOneElem.exec(filter) ) { // convert array from 1 element to number or string or boolean
 					tmpNum = tmpArr[0].slice(1, -1);
 					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					re3.lastIndex = tmpArr.index + tmpNum.length;
+					reForArrayFromOneElem.lastIndex = tmpArr.index + tmpNum.length;
 				}
-				while( tmpArr = re4.exec(filter) ) { // search all functions and values with their index
-					// value can has only ',' or ')' at the end of string
-					if( tmpArr[0].length > 1 && (tmpArr[0].slice(-1) === ',' || tmpArr[0].slice(-1) === ')')  ) { 
+				while( tmpArr = reForElemsOfTree.exec(filter) ) { // search all functions and values with their index
+					if( tmpArr[0].length > 1 && (tmpArr[0].slice(-1) === ',' || tmpArr[0].slice(-1) === ')')  ) {
 						tmpArr[0] = tmpArr[0].slice(0, -1);
 					}
 					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
 						tmpArr[0] = tmpArr[0].slice(1, -1);
 					}
+					if( tmpArr[0].search(/tmpRE/) !== -1 ) {
+						tmpArr[0] = tmpArr[0].slice(1, -1).split(',');
+						tmpArr[0][0] = tmpRE;
+					}
 					arr.push(tmpArr);
 				}
-				while( tmpArr = re5.exec(filter) ) { // search all closing brackets with their index
+				while( tmpArr = reForClosingBrackets.exec(filter) ) { // search all closing brackets with their index
 					arr.push(tmpArr);
 				}
 				arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
@@ -132,9 +152,13 @@ filterItems.filterTreeBuilder = (function() {
 						firstPart;
 				// split all data to different functions
 				for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
-					tmpSymbol = arrayToDivide[i][0].slice(-1);
+					if( typeof arrayToDivide[i][0] === 'string' ) {
+						tmpSymbol = arrayToDivide[i][0].slice(-1);
+					} else {
+						tmpSymbol = ']';
+					}
 					if( tmpSymbol === '(' ) { // define functions from string
-						that = {};	
+						that = {};
 						that.type = 'function';
 						that.functionName = arrayToDivide[i][0].slice(0, -1);
 						that.index = arrayToDivide[i].index;
@@ -159,14 +183,14 @@ filterItems.filterTreeBuilder = (function() {
 				return [filterArr, values];
 			},
 			addValuesAsChildren = function(filterArr, values) { // filterArr, values are arrays
-				//add values to right place as children for functions 
+				//add values to right place as children for functions
 				//define right place by range of index property
-				for( var a = 0, aa = values.length; a < aa; a += 1 ) {
-					for( var b = 0, bb = filterArr.length; b < bb; b += 1 ) {
-						if( values[a] !== null ) {
-							if( values[a].index > filterArr[b].range[0] && values[a].index < filterArr[b].range[1] ) {
-								filterArr[b].children.push( values[a] );
-								values[a] = null;
+				for( var i = 0, ii = values.length; i < ii; i += 1 ) {
+					for( var j = 0, jj = filterArr.length; j < jj; j += 1 ) {
+						if( values[i] !== null ) {
+							if( values[i].index > filterArr[j].range[0] && values[i].index < filterArr[j].range[1] ) {
+								filterArr[j].children.push( values[i] );
+								values[i] = null;
 							}
 						}
 					}
@@ -176,22 +200,22 @@ filterItems.filterTreeBuilder = (function() {
 			filterArrToTree = function(filterArr) { // filterArr is array
 				// build up a filter tree
 				// by putting some functions as children for other
-				for( var k = 0; k < filterArr.length; k += 1 ) {
-					for( var l = 0; l < filterArr.length; l += 1 ) {
-						if( filterArr[l] !== null || filterArr[k] !== null ) {
-							//search for first result[l] where we can put result[k] as his child 
-							//if find, put it and remove result[k] 
-							if( filterArr[k].range[0] > filterArr[l].range[0] && filterArr[k].range[1] < filterArr[l].range[1] ) {
-								//if result[l] already have any children, check their indexes to define where put new child
-								if( filterArr[l].children[0] !== undefined && filterArr[l].children[0].index > filterArr[k].range[0] ) {
-									filterArr[l].children.unshift( filterArr[k] );
-									filterArr.splice(k, 1);
-									k -= 1;
+				for( var i = 0; i < filterArr.length; i += 1 ) {
+					for( var j = 0; j < filterArr.length; j += 1 ) {
+						if( filterArr[j] !== null || filterArr[i] !== null ) {
+							//search for first result[j] where we can put result[i] as his child
+							//if find, put it and remove result[i]
+							if( filterArr[i].range[0] > filterArr[j].range[0] && filterArr[i].range[1] < filterArr[j].range[1] ) {
+								//if result[j] already have any children, check their indexes to define where put new child
+								if( filterArr[j].children[0] !== undefined && filterArr[j].children[0].index > filterArr[i].range[0] ) {
+									filterArr[j].children.unshift( filterArr[i] );
+									filterArr.splice(i, 1);
+									i -= 1;
 									break;
 								} else {
-									filterArr[l].children.push( filterArr[k] );
-									filterArr.splice(k, 1);
-									k -= 1;
+									filterArr[j].children.push( filterArr[i] );
+									filterArr.splice(i, 1);
+									i -= 1;
 									break;
 								}
 							}
@@ -200,10 +224,8 @@ filterItems.filterTreeBuilder = (function() {
 				}
 				return filterArr[0];
 			};
-
 	that.buildUpFilterTree = function(filter) { // filter is string
 		var tmpArr;
-
 		tmpArr = splitStringToArray(filter);
 		tmpArr = divideToFunctionsAndValues(tmpArr);
 		tmpArr = addValuesAsChildren(tmpArr[0], tmpArr[1]);
@@ -211,7 +233,6 @@ filterItems.filterTreeBuilder = (function() {
 	};
 	return that;
 })();
-
 
 //sub method for filterItems with filter methods
 filterItems.filterMethods = (function() {
@@ -243,23 +264,23 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 
 	that.and = function(values, items, context) {
 		return _.intersection.apply(_, values);
 	};
-	
+
 	that.or = function(values, items, context) {
 		return _.union.apply(_, values);
 	};
-	
+
 	that.not = function(values, items, context) { // values[0] is array
-		var tmpResult = items.slice();	
+		var tmpResult = items.slice();
 		return _.difference(tmpResult, values[0]);
 	};
-	
+
 	that.notEq = function(value, items, context) {
 		var tmpResult = [],
 				tmpResult2,
@@ -287,7 +308,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 	// compare for numbers and dates
@@ -318,7 +339,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 	// compare for numbers and dates
@@ -349,7 +370,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 	// compare for numbers and dates
@@ -380,7 +401,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 	// compare for numbers and dates
@@ -411,7 +432,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 
@@ -442,7 +463,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 
@@ -473,7 +494,7 @@ filterItems.filterMethods = (function() {
 					tmpResult.push( items[i] );
 				}
 			}
-		}		
+		}
 		return tmpResult;
 	};
 
@@ -532,7 +553,7 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
-	that.anyIn = function(values, items, context) {
+	that.anyIn = function(values, items, context) { // value[1] is array
 		var tmpResult = [],
 				tmpArr,
 				globalUI = InfinniUI.ObjectUtils;
@@ -549,7 +570,7 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
-	that.anyNotIn = function(values, items, context) {
+	that.anyNotIn = function(values, items, context) { // value[1] is array
 		var tmpResult = [],
 				counter,
 				tmpArr,
@@ -753,17 +774,36 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
-	that.regexp = function(value, items, context) {
-		
-	};
-
-	that.type = function(value, items, context) {
-		
+	that.regexp = function(values, items, context) { // value[1] is array
+		var tmpResult = [],
+				tmpObjValue,
+				globalUI = InfinniUI.ObjectUtils,
+				flags = '',
+				regexp;
+		for( var j = 1, jj = values[1].length; j < jj; j += 1 ) {
+			flags += values[1][j];
+		}
+		regexp = new RegExp(values[1][0], flags);
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpObjValue = globalUI.getPropertyValue( items[i], values[0] );
+			if( tmpObjValue.search(regexp) !== -1 ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
 	};
 
 	that.text = function(value, items, context) {
-		
+		var tmpResult = [],
+				tmpString,
+				subString = value[0].replace('_', ' ').toLowerCase();
+		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+			tmpString = JSON.stringify(items[i]).toLowerCase();
+			if( tmpString.indexOf( subString ) !== -1 ) {
+				tmpResult.push( items[i] );
+			}
+		}
+		return tmpResult;
 	};
-
 	return that;
 })();

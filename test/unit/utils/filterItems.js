@@ -762,6 +762,83 @@ describe("Filter items", function () {
 			assert.equal(result1[1].Id, 3, 'filtered item is correct');
 		});
 
+		it("FilterItems should return all items which suit to regexp expression", function () {
+			// Given
+			var filter = "regexp(propName, '[0-9]+', g, i)";
+			var items = [
+				{
+					Id: 1,
+					propName: 'font123'
+				},
+				{
+					Id: 2,
+					propName: 'borderWidth'
+				},
+				{
+					Id: 3,
+					propName: 'backgroundSize'
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 1, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items which suit to regexp expression", function () {
+			// Given
+			var filter = "regexp(firstName, '^И(ван|рина)$', g, i)";
+			var items = [
+				{
+					Id: 1,
+					firstName: 'Иван'
+				},
+				{
+					Id: 2,
+					firstName: 'Ирина'
+				},
+				{
+					Id: 3,
+					firstName: 'Вася'
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+			assert.equal(result1[1].Id, 2, 'filtered item is correct');
+		});
+
+		it("FilterItems should return all items have a text inner", function () {
+			// Given
+			var filter = "text('hello world')";
+			var items = [
+				{
+					Id: 1,
+					phrase: 'Hello world'
+				},
+				{
+					Id: 2,
+					friendPhrase: 'hello Ivan!'
+				},
+				{
+					Id: 3,
+					welcomePhrase: 'hello bro!',
+					friendList: [
+						{name: 'Vasya', welcomePhrase: 'hello world'},
+						{name: 'Ivan', welcomePhrase: 'hello there!'}
+					]
+				}
+			];
+			// When
+			var result1 = filterItems(items, filter);
+			// Then
+			assert.lengthOf(result1, 2, 'length of filtered items is right');
+			assert.equal(result1[0].Id, 1, 'filtered item is correct');
+			assert.equal(result1[1].Id, 3, 'filtered item is correct');
+		});
 
 
 	});
