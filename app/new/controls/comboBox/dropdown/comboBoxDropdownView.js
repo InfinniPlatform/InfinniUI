@@ -25,7 +25,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
 
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
-        this.listenTo(this.model, 'change:search', this.onChangeSearchHandler);
+        this.listenTo(this.model, 'change:autocompleteValue', this.onChangeSearchHandler);
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
         this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);

@@ -44,11 +44,11 @@ ComboBox.prototype.getShowClear = function () {
     return this.control.get('showClear');
 };
 
-ComboBox.prototype.setSearch = function (value) {
-    this.control.set('search', value);
+ComboBox.prototype.getAutocompleteValue = function () {
+    return this.control.get('autocompleteValue');
 };
 
-ComboBox.prototype.getSearch = function () {
-    return this.control.get('search');
+ComboBox.prototype.setAutocompleteValue = function (value) {
+    this.control.set('autocompleteValue', value);
 };
 
