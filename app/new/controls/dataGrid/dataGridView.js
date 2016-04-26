@@ -4,15 +4,31 @@
  */
 var DataGridView = ListEditorBaseView.extend({
 
-    template: InfinniUI.Template["new/controls/dataGrid/template/dataGrid.tpl.html"],
+    template: {
+        "grid": InfinniUI.Template["new/controls/dataGrid/template/dataGrid.tpl.html"],
+        "gridStretched": InfinniUI.Template["new/controls/dataGrid/template/dataGridStretched.tpl.html"],
+        "headerCell": InfinniUI.Template["new/controls/dataGrid/template/headerCell.tpl.html"],
+        "sizeCell": InfinniUI.Template["new/controls/dataGrid/template/sizeCell.tpl.html"]
+    },
 
     className: 'pl-datagrid',
 
-    events: {},
+    events: _.extend({},
+        ListEditorBaseView.prototype.events,
+        {
+            "click .pl-datagrid-toggle_all": "onClickCheckAllHandler"
+        }
+    ),
 
     UI: _.defaults({
-        header: 'tr',
+        body: ".pl-datagrid__body",
+        head: ".pl-datagrid__head",
+        headContainer: ".pl-datagrid-container_head",
+
+        header: '.pl-datagrid-row_header',
+        firstRows: '.pl-datagrid-row_first',
         toggleCell: ".pl-toggle-cell",
+        checkAll: ".pl-datagrid-toggle__button",
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI),
 
@@ -21,18 +37,52 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements = new HashMap();
     },
 
+    initHandlersForProperties: function(){
+        ListEditorBaseView.prototype.initHandlersForProperties.call(this);
+
+        this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
+        this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
+        this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+    },
+
     updateProperties: function () {
         ListEditorBaseView.prototype.updateProperties.call(this);
         this.updateShowSelectors();
+        this.updateCheckAllVisible();
+        this.updateCheckAll();
     },
 
     updateShowSelectors: function () {
         var showSelectors = this.model.get('showSelectors');
-        this.ui.toggleCell.toggleClass('hidden', !showSelectors);
+        this.$el.toggleClass('pl-datagrid_selectors_show', showSelectors);
+        this.$el.toggleClass('pl-datagrid_selectors_hide', !showSelectors);
     },
 
     updateGrouping: function () {
 
+    },
+
+    updateVerticalAlignment: function () {
+        ListEditorBaseView.prototype.updateVerticalAlignment.call(this);
+        this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.ui.body, false);
+    },
+
+    updateCheckAll: function () {
+        var checkAll = this.model.get('checkAll');
+        this.ui.checkAll.prop('checked', checkAll);
+    },
+
+    updateCheckAllVisible: function () {
+        var checkAllVisible = this.model.get('checkAllVisible');
+        this.ui.checkAll.toggleClass('hidden', !checkAllVisible);
+    },
+
+    updateMultiSelect: function () {
+        ListEditorBaseView.prototype.updateMultiSelect.call(this);
+
+        var multiSelect = this.model.get('multiSelect');
+        this.$el.toggleClass('pl-datagrid_select_multi', multiSelect === true);
+        this.$el.toggleClass('pl-datagrid_select_single', multiSelect !== true);
     },
 
     updateValue: function () {
@@ -71,13 +121,14 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements.forEach(function (rowElement, item) {
             rowElement.setSelected(item === selectedItem);
         });
-
     },
 
     render: function () {
         this.prerenderingActions();
 
-        this.$el.html(this.template());
+        var verticalAlignment = this.model.get('verticalAlignment');
+        var template = (verticalAlignment === 'Stretch') ? this.template.gridStretched : this.template.grid;
+        this.$el.html(template());
 
         this.bindUIElements();
 
@@ -87,17 +138,63 @@ var DataGridView = ListEditorBaseView.extend({
 
         this.trigger('render');
 
+        this.applyColumnWidth();
+        this.syncBodyAndHead();
         this.postrenderingActions();
         return this;
+    },
 
+    applyColumnWidth: function () {
+        var columns = this.model.get('columns');
 
+        this.ui.firstRows.children().each(function (i, el) {
+            var columnIndex = i % (columns.length + 1);
+
+            if (columnIndex === 0) {
+                //skip columns with checkbox/radiobutton
+                return;
+            }
+
+            var column = columns.getByIndex(columnIndex - 1);
+            var width = column && column.getWidth();
+
+            if (width) {
+                $(el).css('width', width);
+            }
+        });
+
+    },
+
+    syncBodyAndHead: function () {
+        var $body = this.ui.body;
+        var $head = this.ui.head;
+
+        setTimeout(function () {
+            //Need update after element added to DOM
+            var scrollWidth = $body[0].offsetWidth - $body[0].clientWidth;
+            $head.css('padding-right', scrollWidth + "px");
+        }, 0);
+
+        this.ui.body
+            .off('scroll')
+            .on('scroll', this.onScrollBodyHandler.bind(this));
+
+    },
+
+    onScrollBodyHandler: function () {
+        this.ui.headContainer.scrollLeft(this.ui.body.scrollLeft());
     },
 
     renderHeaders: function () {
         var columns = this.model.get('columns');
+        var templateHeaderCell = this.template.headerCell;
+        var sizeCells = [];
+        var templateSizeCells = this.template.sizeCell;
 
         var $headers = columns.toArray().map(function (column) {
-            var $th = $('<th></th>');
+
+            sizeCells.push(templateSizeCells());
+            var $th = $(templateHeaderCell());
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
@@ -115,6 +212,7 @@ var DataGridView = ListEditorBaseView.extend({
         });
 
         this.ui.header.append($headers);
+        this.ui.firstRows.append(sizeCells);
     },
 
     renderItems: function () {
@@ -149,6 +247,10 @@ var DataGridView = ListEditorBaseView.extend({
         this.childElements.clear(function (element) {
             element.remove();
         });
+    },
+
+    onClickCheckAllHandler: function () {
+        this.model.toggleCheckAll();
     }
 
 

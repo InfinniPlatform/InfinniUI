@@ -17,6 +17,10 @@ _.extend(DataGridControl.prototype, {
 
     createControlView: function (model) {
         return new DataGridView({model: model});
+    },
+
+    onCheckAllChanged: function (handler) {
+        this.controlModel.onCheckAllChanged(handler);
     }
 });
 

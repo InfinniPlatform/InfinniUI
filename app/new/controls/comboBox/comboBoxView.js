@@ -69,22 +69,7 @@ var ComboBoxView = ListEditorBaseView.extend({
                     this.listenTo(dropdownView, 'search', _.debounce(view.onSearchValueHandler.bind(view), 300));
 
                     var $dropdown = dropdownView.render();
-
-                    var rect = view.$el[0].getBoundingClientRect();
-                    //@TODO Вынести общие стили в css
-                    var style = {
-                        position: "absolute",
-                        top: window.pageYOffset + rect.bottom/* + parseInt(view.$el.css('margin-bottom'))*/,
-                        left: window.pageXOffset + rect.left,
-                        width: Math.round(rect.width) - 1
-                    };
-                    //@TODO Добавить алгоритм определения куда расхлапывать список вверх/вниз
-                    //Для расхлопывания вверх:
-                    //bottom: pageYOffset - rect.height
-                    //Для расхлопывания вниз:
-                    //top: window.pageYOffset + rect.bottom
-
-                    $dropdown.css(style);
+                    dropdownView.setPositionFor(view.$el[0]);
                     $('body').append($dropdown);
                     if (model.get('autocomplete')) {
                         dropdownView.setSearchFocus();

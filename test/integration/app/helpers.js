@@ -113,5 +113,15 @@ window.testHelpers = {
 
             return result;
         }
+    },
+
+    parseTableRow: function ($cells) {
+        var result = '';
+
+        $cells.each(function (i, item) {
+            result += '|' + window.configWindow.$(item).find('.pl-label:visible').text().trim().replace(/"/g, '\'');
+        });
+
+        return result + '|';
     }
 };

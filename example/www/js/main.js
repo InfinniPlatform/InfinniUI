@@ -1,4 +1,6 @@
-﻿document.title = InfinniUI.config.configName;
+﻿if(InfinniUI.config.configName != null) {
+    document.title = InfinniUI.config.configName;
+}
 
 moment.locale('ru');
 
