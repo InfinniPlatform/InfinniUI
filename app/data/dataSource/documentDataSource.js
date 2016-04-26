@@ -230,7 +230,7 @@ var DocumentDataSource = RestDataSource.extend({
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
         var items = itemsData['Result']['Items'];
         newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
-    }
+    },
 
     quoteValue: function (value) {
         var VALUE_QUOTE_CHAR = '\'';

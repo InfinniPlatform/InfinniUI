@@ -88,7 +88,6 @@ describe('FileProvider', function () {
                         var result = {};
 
                         result[idProperty] = guid();
-                        result['__Id'] = result[idProperty];
 
                         return result;
                     }

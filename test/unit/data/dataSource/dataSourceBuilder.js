@@ -3,37 +3,37 @@ describe('DataSourceBuilder', function () {
     var builder = new ApplicationBuilder();
     var items = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -64,7 +64,7 @@ describe('DataSourceBuilder', function () {
 
             // Then
             assert.equal(createdDataSource.getDocumentId(), 'Patient');
-            assert.equal(createdDataSource.getIdProperty(), 'Id');
+            assert.equal(createdDataSource.getIdProperty(), '_id');
             assert.equal(createdDataSource.getPageSize(), 5, 'PageSize');
             assert.equal(createdDataSource.getPageNumber(), 1, 'PageNumber');
             assert.isTrue(createdDataSource.getFillCreatedItem(), 'Value of FillCreatedItem');
@@ -214,11 +214,11 @@ describe('DataSourceBuilder', function () {
                         DocumentDataSource: {
                             "Name": "DataSource1",
                             "DocumentId": "Whatever",
-                            "Filter": "eq(Id,<%param%>)",
+                            "Filter": "eq(_id,<%param%>)",
                             "FilterParams": {
                                 "param": {
                                     "Source": "DataSource2",
-                                    "Property": "0.Id"
+                                    "Property": "0._id"
                                 }
                             }
                         }
@@ -250,7 +250,7 @@ describe('DataSourceBuilder', function () {
 
                     result += '1';
                     dataSource2;
-                    assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(Id,1)&skip=0&take=15', 'requested url is right (ds1)');
+                    assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(_id,1)&skip=0&take=15', 'requested url is right (ds1)');
                     done();
                 });
 

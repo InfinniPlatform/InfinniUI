@@ -1,37 +1,37 @@
 ﻿describe('DocumentDataSource', function () {
     var dataItems = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -208,8 +208,6 @@
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    //assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
-                    assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
 
                     var items = dataSource.getItems();
                     assert.lengthOf(items, 1, 'one element (when was created) in items');
@@ -308,7 +306,7 @@
 
                 //When
                 var newItemData = {
-                    "Id": '1',
+                    "_id": '1',
                     "FirstName": "Ивано",
                     "LastName": "Иванович"
                 };

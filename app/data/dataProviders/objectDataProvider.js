@@ -1,6 +1,6 @@
 var ObjectDataProvider = function (items, idProperty) {
     this.items = items || [];
-    this.idProperty = idProperty || 'Id';
+    this.idProperty = idProperty || '_id';
 };
 
 _.extend(ObjectDataProvider.prototype, {
@@ -55,7 +55,7 @@ _.extend(ObjectDataProvider.prototype, {
 
     createIdFilter: function (id) {
         return [{
-            "Property": "Id",
+            "Property": "_id",
             "Value": id,
             "CriteriaType": 1
         }];

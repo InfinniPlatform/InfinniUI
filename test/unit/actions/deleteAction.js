@@ -32,15 +32,15 @@ describe('DeleteAction', function () {
 
         var items = [
             {
-                Id: 0,
+                _id: 0,
                 Name: 'First'
             },
             {
-                Id: 1,
+                _id: 1,
                 Name: 'Second'
             },
             {
-                Id: 2,
+                _id: 2,
                 Name: 'Third'
             }
         ];

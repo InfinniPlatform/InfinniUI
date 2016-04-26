@@ -169,7 +169,6 @@ _.extend(RestDataProvider.prototype, {
         var result = {};
 
         result[idProperty] = this._generateLocalId();
-        result['__Id'] = result[idProperty];
 
         return result;
     },

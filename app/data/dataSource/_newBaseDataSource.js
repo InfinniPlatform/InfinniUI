@@ -6,7 +6,7 @@
 var newBaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
-        idProperty: 'Id',
+        idProperty: '_id',
         identifyingMode: 'byId', // byId, byLink. detect automatically
 
         view: null,
@@ -936,7 +936,7 @@ var newBaseDataSource = Backbone.Model.extend({
 
     _detectIdentifyingMode: function(items){
         if( $.isArray(items) && items.length > 0){
-            if( this.getIdProperty() in items[0] ){
+            if( !$.isPlainObject(items[0]) || this.getIdProperty() in items[0] ){
                 this.set('identifyingMode', 'byId');
                 _.extend( this, newBaseDataSource.identifyingStrategy.byId);
             }else{

@@ -1,37 +1,37 @@
 describe('ObjectDataSource', function () {
     var items = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -74,7 +74,7 @@ describe('ObjectDataSource', function () {
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    assert.ok(newItem.Id, 'new item has Id');
+                    assert.ok(newItem._id, 'new item has _id');
                     done();
                 }
             );
@@ -144,7 +144,7 @@ describe('ObjectDataSource', function () {
 
                 //When
                 var newItemData = {
-                    "Id": '1',
+                    "_id": '1',
                     "FirstName": "Ивано",
                     "LastName": "Иванович"
                 };
