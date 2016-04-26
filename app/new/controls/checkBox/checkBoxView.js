@@ -70,5 +70,9 @@ var CheckBoxView = ControlView.extend(/** @lends CheckBoxView.prototype */ _.ext
     updateValue: function () {
         var value = this.model.get('value');
         this.ui.input.prop('checked', !!value);
+    },
+
+    setFocus: function () {
+        this.ui.input.focus();
     }
 }));

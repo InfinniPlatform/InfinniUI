@@ -330,6 +330,22 @@ _.extend(View.prototype,
             }
 
             return this.membersDeferreds[memberName];
+        },
+
+        /**
+         *
+         * @param {string} value
+         */
+        setFocusOnControl: function (value) {
+            this.control.set('focusOnControl', value);
+        },
+
+        /**
+         *
+         * @returns {string}
+         */
+        getFocusOnControl: function () {
+            return this.control.get('focusOnControl');
         }
 
 //devblockstart

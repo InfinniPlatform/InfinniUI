@@ -31,6 +31,14 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
 
         this.trigger('render');
         this.updateProperties();
+
+        (function ($el) {
+            //Firefox сохраняет позицию прокрутки. Принудительно крутим в начало.
+            setTimeout(function () {
+                $el.scrollTop(0);
+            }, 0);
+        })(this.$el);
+
         return this;
     },
 

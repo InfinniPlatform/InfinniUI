@@ -16,6 +16,11 @@ var CommonButtonView = ControlView.extend({
         'click button': 'onClickHandler'
     },
 
+    initialize: function () {
+        ControlView.prototype.initialize.apply(this, arguments);
+        this.initHighlightMixin();
+    },
+
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
@@ -83,9 +88,17 @@ var CommonButtonView = ControlView.extend({
 
     getButtonElement: function(){
         return this.ui.button;
+    },
+
+    setFocus: function () {
+        this.ui.button.focus();
     }
 
+
+
 });
+
+_.extend(CommonButtonView.prototype, highlightMixin.controlView);
 
 
 InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.common', CommonButtonView);

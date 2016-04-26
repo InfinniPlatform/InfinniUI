@@ -157,6 +157,8 @@ _.extend(ViewBuilder.prototype, {
         }
 
         ContainerBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setFocusOnControl(metadata.FocusOnControl);
     },
 
     triggerStartCreatingEvent: function (params) {

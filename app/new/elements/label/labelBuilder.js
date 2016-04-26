@@ -13,6 +13,7 @@ function LabelBuilder() {
 _.inherit(LabelBuilder, ElementBuilder);
 _.extend(LabelBuilder.prototype, {
     applyMetadata: function(params){
+        /** @type Label **/
         var element = params.element;
         ElementBuilder.prototype.applyMetadata.call(this, params);
         this.applyMetadata_editorBaseBuilder(params);
@@ -20,6 +21,7 @@ _.extend(LabelBuilder.prototype, {
         element.setLineCount(params.metadata.LineCount);
         element.setTextWrapping(params.metadata.TextWrapping);
         element.setTextTrimming(params.metadata.TextTrimming);
+        element.setEscapeHtml(params.metadata.EscapeHtml);
         
         this.initDisplayFormat(params);
         this.initScriptsHandlers(params);

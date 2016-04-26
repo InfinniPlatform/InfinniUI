@@ -64,39 +64,27 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     onClickMinControlHandler: function () {
-        var increment = this.model.get('increment');
-        this.addToValue(increment * -1);
+        this.model.decValue();
     },
 
     onClickMaxControlHandler: function () {
-        var increment = this.model.get('increment');
-        this.addToValue(increment);
+        this.model.incValue();
     },
 
     onMousedownMinControlHandler: function (event) {
-        var el = event.target,
-            increment = this.model.get('increment');
-
-        this.repeatAddToValue(el, increment * -1);
+        this.repeatUpdateValue(this.model.decValue.bind(this.model));
     },
 
     onMousedownMaxControlHandler: function (event) {
-        var el = event.target,
-            increment = this.model.get('increment');
-
-        this.repeatAddToValue(el, increment);
+        this.repeatUpdateValue(this.model.incValue.bind(this.model));
     },
 
-    repeatAddToValue: function (el, delta) {
-        var
-            numericBox = this,
-            intervalId;
+    repeatUpdateValue: function (cb) {
+        var intervalId;
 
         window.document.addEventListener('mouseup', stopRepeat);
 
-        intervalId = setInterval(function () {
-            numericBox.addToValue(delta);
-        }, 200);
+        intervalId = setInterval(cb, 200);
 
         function stopRepeat() {
             if (intervalId) {
@@ -105,22 +93,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
             }
             window.document.removeEventListener('mouseup', stopRepeat);
         }
-    },
 
-    addToValue: function (delta) {
-        var model = this.model;
-        var value = model.get('value');
-
-        value = (value === null || typeof value === 'undefined') ? 0 : parseInt(value, 10);
-
-        if (!isFinite(value)) {
-            return;
-        }
-
-        value = value + delta;
-        if(model.validateValue(value)) {
-            model.set('value', value);
-        };
     },
 
     /**

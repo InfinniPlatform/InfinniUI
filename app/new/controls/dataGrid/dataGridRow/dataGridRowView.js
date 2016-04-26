@@ -1,6 +1,6 @@
 var DataGridRowView = ControlView.extend({
 
-    className: 'pl-datagrid-row',
+    className: 'pl-datagrid-row pl-datagrid-row_data',
 
     classNameSelected: 'info',
 
@@ -10,19 +10,20 @@ var DataGridRowView = ControlView.extend({
 
     template: {
         singleSelect: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/singleSelect.tpl.html"],
-        multiSelect: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/multiSelect.tpl.html"]
+        multiSelect: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/multiSelect.tpl.html"],
+        dataCell: InfinniUI.Template["new/controls/dataGrid/dataGridRow/template/dataCell.tpl.html"]
     },
 
     UI: {
-        toggleCell: '.pl-toggle-cell',
-        toggle: '.toggle',
-        toggleControl: '.toggle input'
+        toggleCell: '.pl-datagrid-row__cell_toggle',
+        toggle: '.pl-datagrid-toggle',
+        toggleControl: '.pl-datagrid-toggle input'
     },
 
     initialize: function () {
         ControlView.prototype.initialize.call(this);
         this.on('render', function () {
-            this.ui.toggle.on('click', this.onToggleHandler.bind(this));
+            this.ui.toggleCell.on('click', this.onToggleHandler.bind(this));
         }, this);
     },
 
@@ -54,10 +55,10 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var templates = this.model.get('cellTemplates');
+        var templateDataCell = this.template.dataCell;
         if (Array.isArray(templates)) {
             templates.forEach(function (template, index) {
-                var $cell = $('<td></td>');
-                row.setColumnWidth($cell, index);
+                var $cell = $(templateDataCell());
                 $cell.append(template().render());
                 $el.append($cell);
             });
@@ -68,21 +69,6 @@ var DataGridRowView = ControlView.extend({
 
         this.postrenderingActions();
         return this;
-    },
-
-    setColumnWidth: function ($el, index) {
-        var grid = this.model.get('grid');
-        var columns = grid.getColumns();
-        var column = columns.getByIndex(index);
-        var width = column.getWidth();
-
-        if (width !== null && typeof width !== 'undefined') {
-            $el.css({
-                "width": width,
-                "max-width": width
-            });
-        }
-
     },
 
     updateShowSelectors: function () {

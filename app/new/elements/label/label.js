@@ -50,9 +50,28 @@ _.extend(Label.prototype, {
         
         getDisplayValue: function () {
             return this.control.getDisplayValue();
-        }
+        },
 
-    },
+        /**
+         * @description Возвращает режим отображения HTML разметки
+         * @returns {Boolean}
+         */
+        getEscapeHtml: function () {
+            return this.control.get('escapeHtml');
+        },
+
+        /**
+         * @description Устанавливает режим отображения HTML разметки
+         * @param {Boolean} value
+         */
+        setEscapeHtml: function (value) {
+            if (_.isBoolean(value)) {
+                this.control.set('escapeHtml', value);
+            }
+        }
+    }
+
+    ,
     editorBaseMixin
     //formatPropertyMixin,
     //elementHorizontalTextAlignmentMixin,

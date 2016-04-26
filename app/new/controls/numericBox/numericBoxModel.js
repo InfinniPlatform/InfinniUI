@@ -12,38 +12,54 @@ var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototy
     ),
 
     transformValue: function (value) {
+        var result = value;
+
         if (typeof value !== 'undefined' && value !== null) {
-            var value = +value;
-            if (isNaN(value) || !isFinite(value)) {
-                value = null;
+            var result = +value;
+            if (isNaN(result) || !isFinite(result)) {
+                result = null;
             }
         }
-        return value;
+        return result;
+    },
+
+    incValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(delta);
+    },
+
+    decValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(-delta);
+    },
+
+    addToValue: function (delta) {
+
+        var value = this.get('value');
+        var startValue = this.get('startValue');
+        var minValue = this.get('minValue');
+        var maxValue = this.get('maxValue');
+
+        var newValue = _.isNumber(value) ? value : +value;
+
+        if (this.isSetValue(value) && _.isNumber(value)) {
+            newValue += delta;
+        } else {
+            newValue = (_.isNumber(startValue)) ? startValue : 0;
+        }
+
+        if (_.isNumber(minValue) && newValue < minValue) {
+            newValue = minValue;
+        } else if (_.isNumber(maxValue) && newValue > maxValue) {
+            newValue = maxValue;
+        }
+
+        this.set('value', newValue);
     },
 
     initialize: function () {
         TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     },
-
-    //validate: function (attributes, options) {
-    //    var
-    //        min = attributes.minValue,
-    //        max = attributes.maxValue;
-    //
-    //    if (isSet(min) && isSet(max)) {
-    //        if (attributes.value < min || attributes.value > max) {
-    //            return 'Invalid value';
-    //        }
-    //    } else if (isSet(min) && attributes.value < min) {
-    //            return 'Invalid value';
-    //    } else if (isSet(max) && attributes.value > max) {
-    //        return 'invalid value';
-    //    }
-    //
-    //    function isSet(value) {
-    //        return value !== null && typeof value !== 'undefined';
-    //    }
-    //},
 
     validateValue: function (value, callback) {
 
@@ -52,22 +68,21 @@ var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototy
             min = this.get('minValue'),
             max = this.get('maxValue');
 
-        if (isSet(min) && isSet(max)) {
+        if (!this.isSetValue(value)) {
+            return true;
+        }
+
+        if (_.isNumber(min) && _.isNumber(max)) {
             if (value < min || value > max) {
                 isValid = false
             }
-        } else if (isSet(min) && value < min) {
+        } else if (_.isNumber(min) && value < min) {
             isValid = false;
-        } else if (isSet(max) && value > max) {
+        } else if (_.isNumber(max) && value > max) {
             isValid = false;
         }
 
         return isValid;
-
-        function isSet(value) {
-            return value !== null && typeof value !== 'undefined' && value !== '';
-        }
-
     }
 
 
