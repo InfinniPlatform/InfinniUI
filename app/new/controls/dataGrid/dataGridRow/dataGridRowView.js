@@ -23,7 +23,7 @@ var DataGridRowView = ControlView.extend({
     initialize: function () {
         ControlView.prototype.initialize.call(this);
         this.on('render', function () {
-            this.ui.toggle.on('click', this.onToggleHandler.bind(this));
+            this.ui.toggleCell.on('click', this.onToggleHandler.bind(this));
         }, this);
     },
 
