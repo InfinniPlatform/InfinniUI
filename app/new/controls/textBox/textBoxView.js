@@ -82,6 +82,10 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         });
 
         return this;
+    },
+
+    setFocus: function () {
+        this.ui.textbox.focus();
     }
 
 });

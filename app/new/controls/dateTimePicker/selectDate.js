@@ -135,13 +135,7 @@ var SelectDate = Backbone.View.extend({
     },
 
     onClickTodayHandler: function () {
-        var days = this.days,
-            months = this.months,
-            years = this.years;
-
-        days.today();
-        months.today();
-        years.today();
+        this.useValue(new Date());
     }
 
 });

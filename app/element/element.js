@@ -325,7 +325,6 @@ _.extend(Element.prototype, {
     setFocused: function (value) {
         return this.control.set('focused', !!value);
     },
-
     onLostFocus: function (handler) {
         this.control.on('OnLostFocus', handler);
     },
@@ -602,5 +601,9 @@ _.extend(Element.prototype, {
 
     _upperFirstSymbol: function (s) {
         return s[0].toUpperCase() + s.substr(1);
+    },
+
+    setFocus: function () {
+        this.control.setFocus();
     }
 });
