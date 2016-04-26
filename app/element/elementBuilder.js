@@ -182,7 +182,8 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         if (metadata.ToolTip) {
             var argumentForBuilder = {
                 parent: element,
-                parentView: params.parentView
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
             };
 
             if (typeof metadata.ToolTip === 'string') {
