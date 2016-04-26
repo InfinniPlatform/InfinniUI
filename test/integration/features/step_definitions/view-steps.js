@@ -334,7 +334,7 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
     var success = function () {
         try {
             var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
-            var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
+            var $row = $table.find('.pl-datagrid-row.pl-datagrid-row_data').eq(parseInt(rowIndex));
             var expectedCells = rowValue.split('|');
 
             if ($row.length == 0) {
