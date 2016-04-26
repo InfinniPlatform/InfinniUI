@@ -6,13 +6,15 @@ var RestDataSource = newBaseDataSource.extend({
         var model = this.get('model');
         model.urlParams = {
             get: {
+                method: 'get',
                 origin: null,
                 path: '',
                 data: {},
                 params: {}
             },
 
-            post: {
+            set: {
+                method: 'post',
                 origin: null,
                 path: '',
                 data: {},
@@ -20,6 +22,7 @@ var RestDataSource = newBaseDataSource.extend({
             },
 
             delete: {
+                method: 'delete',
                 origin: null,
                 path: '',
                 data: {},
