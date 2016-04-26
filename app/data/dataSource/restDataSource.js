@@ -1,5 +1,10 @@
 var RestDataSource = newBaseDataSource.extend({
 
+    defaults: _.defaults({
+        updatingItemsConverter: null
+
+    }, newBaseDataSource.prototype.defaults),
+
     initialize: function(){
         newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
 
@@ -257,11 +262,27 @@ var RestDataSource = newBaseDataSource.extend({
         var str = JSON.stringify(obj);
         var tmpTemplated = this._templateParamsInStr(str, params);
         return JSON.parse(tmpTemplated);
-    }//,
-    //
-    //_handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
-    //    var items = itemsData['Result']['Items'];
-    //    newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
-    //}
+    },
+
+    getUpdatingItemsConverter: function(){
+        return this.get('updatingItemsConverter');
+    },
+
+    setUpdatingItemsConverter: function(converter){
+        this.set('updatingItemsConverter', converter);
+    },
+
+    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+        var converter = this.getUpdatingItemsConverter();
+        var items;
+
+        if(converter){
+            items = converter(itemsData);
+        }else{
+            items = itemsData;
+        }
+
+        newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+    }
 
 });

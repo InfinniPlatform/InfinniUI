@@ -34,6 +34,12 @@ _.extend(RestDataSourceBuilder.prototype, {
             this.bindParams(metadata['DeletingParams'], dataSource, parent, '.urlParams.delet.params', builder);
         }
 
+        if('UpdatingItemsConverter' in metadata){
+            dataSource.setUpdatingItemsConverter(function (items) {
+                new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items });
+            });
+        }
+
     },
 
     extractUrlParams: function(urlParamsMetadata, pathForBinding){

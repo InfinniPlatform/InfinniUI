@@ -11,6 +11,9 @@ var DocumentDataSource = RestDataSource.extend({
         model.setProperty('pageNumber', 0);
         model.setProperty('pageSize', 15);
         model.setProperty('filterParams', {});
+        this.setUpdatingItemsConverter(function(items){
+            return items['Result']['Items'];
+        });
 
         this.initHandlers();
     },
@@ -225,11 +228,6 @@ var DocumentDataSource = RestDataSource.extend({
         if(itemId !== undefined){
             this.setDeletingUrlParams('params.id', itemId);
         }
-    },
-
-    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
-        var items = itemsData['Result']['Items'];
-        newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
     },
 
     quoteValue: function (value) {
