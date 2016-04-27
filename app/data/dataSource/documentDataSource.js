@@ -11,8 +11,9 @@ var DocumentDataSource = RestDataSource.extend({
         model.setProperty('pageNumber', 0);
         model.setProperty('pageSize', 15);
         model.setProperty('filterParams', {});
-        this.setUpdatingItemsConverter(function(items){
-            return items['Result']['Items'];
+        this.setUpdatingItemsConverter(function(data){
+            model.setProperty('totalCount', data['Result']['Count']);
+            return data['Result']['Items'];
         });
 
         this.initHandlers();
@@ -35,7 +36,7 @@ var DocumentDataSource = RestDataSource.extend({
         model.onPropertyChanged('search', updateGettingUrlParams);
         model.onPropertyChanged('select', updateGettingUrlParams);
         model.onPropertyChanged('order', updateGettingUrlParams);
-        model.onPropertyChanged('count', updateGettingUrlParams);
+        model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
 
         this.updateGettingUrlParams();
         this.updateSettingUrlParams();
@@ -58,7 +59,7 @@ var DocumentDataSource = RestDataSource.extend({
             searchStr = model.getProperty('search'),
             select = model.getProperty('select'),
             order = model.getProperty('order'),
-            count = model.getProperty('count');
+            needTotalCount = model.getProperty('needTotalCount');
 
         if(filter){
             params.data.filter = filter;
@@ -85,8 +86,8 @@ var DocumentDataSource = RestDataSource.extend({
             params.data.order = order;
         }
 
-        if(count){
-            params.data.count = count;
+        if(needTotalCount){
+            params.data.count = needTotalCount;
         }
 
         this.setGettingUrlParams(params);
@@ -215,12 +216,16 @@ var DocumentDataSource = RestDataSource.extend({
         this.get('model').setProperty('order', orderConditionStr);
     },
 
-    getCount: function(){
-        return this.get('model').getProperty('count');
+    getTotalCount: function(){
+        return this.get('model').getProperty('totalCount');
     },
 
-    setCount: function(isCountNeed){
-        this.get('model').setProperty('count', isCountNeed);
+    getNeedTotalCount: function(){
+        return this.get('model').getProperty('needTotalCount');
+    },
+
+    setNeedTotalCount: function(needTotalCount){
+        this.get('model').setProperty('needTotalCount', needTotalCount);
     },
 
     beforeDeleteItem: function(item){

@@ -24,7 +24,7 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('Search' in metadata){ dataSource.setSearch(metadata['Search']); }
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
-        if('Count' in metadata){ dataSource.setOrder(metadata['Count']); }
+        if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
 
     },
 
