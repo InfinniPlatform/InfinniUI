@@ -124,7 +124,7 @@
 									"Items": [
 										{
 											"Label": {
-												"Value": "Простой Label",
+												"Value": "Простой ComboBox",
 												"HorizontalAlignment": "Right"
 											}
 										}
@@ -136,8 +136,12 @@
 									"ColumnSpan": 4,
 									"Items": [
 										{
-											"Label": {
-												"Value": "FirstName"
+											"ComboBox": {
+												"Value": "ComboBoxName",
+												"Items": {
+													"Source": "Names",
+													"Property": "Name"
+												}
 											}
 										}
 									]
