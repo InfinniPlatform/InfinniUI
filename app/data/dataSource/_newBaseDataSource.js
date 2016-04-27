@@ -16,10 +16,10 @@ var newBaseDataSource = Backbone.Model.extend({
         dataProvider: null,
 
         /*
-        * TreeModel for handling
-        * model.items
-        * model.selectedItem
-        * */
+         * TreeModel for handling
+         * model.items
+         * model.selectedItem
+         * */
         model: null,
 
         modifiedItems: {},
@@ -474,7 +474,7 @@ var newBaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved(item, 'notModified', success);
+            this._notifyAboutItemSaved({item: item, result: null}, 'notModified', success);
             return;
         }
 
@@ -487,18 +487,18 @@ var newBaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             if( !('isValid' in data) || data.isValid === true ){
                 that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved(item, 'modified', success);
+                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
             }else{
                 that._notifyAboutFailValidationBySaving(item, data, error);
             }
         });
     },
 
-    _notifyAboutItemSaved: function (item, result, successHandler) {
+    _notifyAboutItemSaved: function (data, result, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
-        argument.value = item;
+        argument.value = data;
         argument.result = result;
 
         if (successHandler) {
@@ -643,8 +643,8 @@ var newBaseDataSource = Backbone.Model.extend({
     _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
         var context = this.getContext();
         var argument = {
-                value: itemsData
-            };
+            value: itemsData
+        };
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
         var handlers = this.get('waitingOnUpdateItemsHandlers');
