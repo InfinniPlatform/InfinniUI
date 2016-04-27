@@ -34,7 +34,7 @@ var DataGridView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
-        this.childElements = new HashMap();
+        this.rowElements = new HashMap();
     },
 
     initHandlersForProperties: function(){
@@ -105,7 +105,7 @@ var DataGridView = ListEditorBaseView.extend({
                 });
         }
 
-        this.childElements.forEach(function (rowElement, item) {
+        this.rowElements.forEach(function (rowElement, item) {
             var index = items.indexOf(item);
             var toggle = indices.indexOf(index) !== -1;
             rowElement.toggle(toggle);
@@ -118,7 +118,7 @@ var DataGridView = ListEditorBaseView.extend({
             model = this.model,
             selectedItem = model.get('selectedItem');
 
-        this.childElements.forEach(function (rowElement, item) {
+        this.rowElements.forEach(function (rowElement, item) {
             rowElement.setSelected(item === selectedItem);
         });
     },
@@ -223,7 +223,7 @@ var DataGridView = ListEditorBaseView.extend({
             items = model.get('items'),
             $items = this.ui.items;
 
-        this.removeChildElements();
+        this.removeRowElements();
         items.forEach(function (item, index) {
             var element = itemTemplate(undefined, {index: index, item: item});
 
@@ -233,20 +233,20 @@ var DataGridView = ListEditorBaseView.extend({
             element.onToggle(function() {
                 model.toggleValue(valueSelector(undefined, {value:item}));
             });
-            this.addChildElement(item, element);
+            this.addRowElement(item, element);
             $items.append(element.render());
         }, this);
 
     },
 
-    addChildElement: function(item, element){
-        this.childElements.add(item, element);
+    addRowElement: function(item, element){
+        this.addChildElement(element);
+        this.rowElements.add(item, element);
     },
 
-    removeChildElements: function () {
-        this.childElements.clear(function (element) {
-            element.remove();
-        });
+    removeRowElements: function () {
+        this.removeChildElements();
+        this.rowElements.clear();
     },
 
     onClickCheckAllHandler: function () {
