@@ -193,7 +193,7 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items where exist the given param and it NOT equal to null or undefined", function () {
 			// Given
-			var filter = 'exist(index)';
+			var filter = 'exists(index)';
 			var items = [
 				{Id: 1, index: 2},
 				{Id: 2, index: 3},
@@ -212,7 +212,7 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items where exist the given param and it NOT equal to null or undefined", function () {
 			// Given
-			var filter = 'exist(index,true)';
+			var filter = 'exists(index,true)';
 			var items = [
 				{Id: 1, index: null},
 				{Id: 2, index: 3},
@@ -231,7 +231,7 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items where doesn't exist the given param or it equal to null or undefined", function () {
 			// Given
-			var filter = 'exist(index,false)';
+			var filter = 'exists(index,false)';
 			var items = [
 				{Id: 1},
 				{Id: 2, index: 3},
