@@ -93,7 +93,7 @@ var layoutManager = {
 
         var manager = this;
         (function h(node, height) {
-            var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop)');
+            var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)');
             /**
              * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
              */
