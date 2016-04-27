@@ -36,7 +36,7 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         if('UpdatingItemsConverter' in metadata){
             dataSource.setUpdatingItemsConverter(function (items) {
-                new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items });
+                return new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items });
             });
         }
 
