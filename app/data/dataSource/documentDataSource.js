@@ -125,6 +125,14 @@ var DocumentDataSource = RestDataSource.extend({
         this.set('dataProvider', dataProvider);
     },
 
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
+    },
+
     getDocumentId: function(){
         return this.get('model').getProperty('documentId');
     },
