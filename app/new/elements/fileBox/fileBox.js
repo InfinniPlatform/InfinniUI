@@ -65,6 +65,10 @@ _.extend(FileBox.prototype, {
     },
 
     // НЕдокументированные методы
+    setFile: function (value) {
+        this.control.set('file', value);
+    },
+
     setFileName: function (value) {
         this.control.set('fileName', value);
         return this;
