@@ -47,6 +47,8 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         if('Origin' in urlParamsMetadata){
             result.origin = urlParamsMetadata['Origin'];
+        }else{
+            result.origin = InfinniUI.config.serverUrl;
         }
 
         if('Path' in urlParamsMetadata){
