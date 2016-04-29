@@ -111,19 +111,19 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
 
         if (metadata.OnMouseEnter) {
-            element.OnMouseEnter(function (args) {
+            element.onMouseEnter(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseEnter.Name || metadata.OnMouseEnter, args);
             });
         }
 
         if (metadata.OnMouseLeave) {
-            element.OnMouseLeave(function (args) {
+            element.onMouseLeave(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseLeave.Name || metadata.OnMouseLeave, args);
             });
         }
 
         if (metadata.OnMouseMove) {
-            element.OnMouseMove(function (args) {
+            element.onMouseMove(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseMove.Name || metadata.OnMouseMove, args);
             });
         }
@@ -141,19 +141,19 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         }
 
         if (metadata.OnMouseDown) {
-            element.OnMouseDown(function (args) {
+            element.onMouseDown(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDown.Name || metadata.OnMouseDown, args);
             });
         }
 
         if (metadata.OnMouseUp) {
-            element.OnMouseUp(function (args) {
+            element.onMouseUp(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseUp.Name || metadata.OnMouseUp, args);
             });
         }
 
         if (metadata.OnMouseWheel) {
-            element.OnMouseWheel(function (args) {
+            element.onMouseWheel(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseWheel.Name || metadata.OnMouseWheel, args);
             });
         }

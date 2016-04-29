@@ -443,14 +443,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseEnter doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -482,14 +475,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseLeave doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -553,14 +539,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseMove doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -624,14 +603,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnKeyUp doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -734,14 +706,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseDown doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -773,14 +738,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseUp doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -812,14 +770,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnMouseWheel doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -1123,14 +1074,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "LabelText doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{

@@ -483,6 +483,15 @@ _.extend(Element.prototype, {
         return this.control.onMouseMove(callback);
     },
 
+    onMouseWheel: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseWheel(callback);
+    },
+
     onShowToolTip: function (handler) {
         var control = this.control;
 
