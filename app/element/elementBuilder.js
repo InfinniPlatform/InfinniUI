@@ -110,9 +110,51 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
             });
         }
 
+        if (metadata.OnMouseEnter) {
+            element.OnMouseEnter(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseEnter.Name || metadata.OnMouseEnter, args);
+            });
+        }
+
+        if (metadata.OnMouseLeave) {
+            element.OnMouseLeave(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseLeave.Name || metadata.OnMouseLeave, args);
+            });
+        }
+
+        if (metadata.OnMouseMove) {
+            element.OnMouseMove(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseMove.Name || metadata.OnMouseMove, args);
+            });
+        }
+
         if (metadata.OnKeyDown) {
             element.onKeyDown(function (args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, args);
+            });
+        }
+
+        if (metadata.OnKeyUp) {
+            element.onKeyUp(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyUp.Name || metadata.OnKeyUp, args);
+            });
+        }
+
+        if (metadata.OnMouseDown) {
+            element.OnMouseDown(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDown.Name || metadata.OnMouseDown, args);
+            });
+        }
+
+        if (metadata.OnMouseUp) {
+            element.OnMouseUp(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseUp.Name || metadata.OnMouseUp, args);
+            });
+        }
+
+        if (metadata.OnMouseWheel) {
+            element.OnMouseWheel(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseWheel.Name || metadata.OnMouseWheel, args);
             });
         }
     },
@@ -147,7 +189,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 if (!converter) {
                     converter = {};
                 }
-                
+
                 if(!converter.toElement){
                     converter.toElement = function (context, args) {
                         return !!args.value;
