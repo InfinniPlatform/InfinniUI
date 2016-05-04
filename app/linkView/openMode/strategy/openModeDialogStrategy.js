@@ -23,13 +23,18 @@ _.extend(OpenModeDialogStrategy.prototype, {
         var $template = $(this.template(modalParams));
         var $closeButton = $('button', $template);
         var $header =  $('h4', $template);
+        var view = this.view;
 
         var $modal = $template.appendTo($('body'));
+
         this.$modal = $modal;
 
         $modal.on('shown.bs.modal', function (e) {
             $(e.target).find('.first-focus-element-in-modal').focus();
         });
+
+        $modal.on('hidden.bs.modal', this.cleanup.bind(this));
+
         var $modalBody = $modal.find('.modal-body');
 
         $modalBody.append(this.view.render());
@@ -43,7 +48,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         this._initBehaviorFocusingInModal($modal, $modalBody);
 
-        var view = this.view;
+
 
         var
             headerTemplate = view.getHeaderTemplate();
@@ -79,13 +84,14 @@ _.extend(OpenModeDialogStrategy.prototype, {
     },
 
     close: function () {
-        this.view.remove();
         if (this.$modal) {
             this.$modal.modal('hide');
-            this.$modal.remove();
-
-            InfinniUI.ModalWindowService.modalWasClosed(this.$modal);
         }
+    },
 
+    cleanup: function () {
+        this.view.remove();
+        this.$modal.remove();
+        InfinniUI.ModalWindowService.modalWasClosed(this.$modal);
     }
 });

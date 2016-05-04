@@ -144,7 +144,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
 
-
     markCheckedItems: function () {
         var model = this.model;
         var value = model.getValue();
@@ -237,9 +236,16 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.markSelectedItems();
     },
 
-    setPositionFor: function (parentDOMElement) {
+    updatePosition: function (parentDOMElement) {
+        var direction = this.getDropdownDirection(parentDOMElement);
+        this.setPositionFor(parentDOMElement, direction );
+    },
+
+    setPositionFor: function (parentDOMElement, direction) {
         clearInterval(this._intervalId);
-        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement), 100);
+
+        this.applyStyle(parentDOMElement, direction);
+        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement, direction), 100);
     },
 
     remove: function () {
@@ -247,16 +253,35 @@ var ComboBoxDropdownView = Backbone.View.extend({
         return Backbone.View.prototype.remove.apply(this, arguments);
     },
 
-    applyStyle: function (parentDOMElement) {
+    getDropdownDirection: function (parentDOMElement) {
 
+        var windowHeight = $(window).height();
         var rect = parentDOMElement.getBoundingClientRect();
+        var height = this.$el.height();
+
+        var direction = 'bottom';
+        if (rect.bottom + height + 30 > windowHeight && rect.bottom > windowHeight / 2) {
+            direction = 'top';
+        }
+
+        return direction;
+    },
+
+    applyStyle: function (parentDOMElement, direction) {
+        var rect = parentDOMElement.getBoundingClientRect();
+
         //@TODO Вынести общие стили в css
         var style = {
             position: "absolute",
-            top: window.pageYOffset + rect.bottom/* + parseInt(view.$el.css('margin-bottom'))*/,
             left: window.pageXOffset + rect.left,
             width: Math.round(rect.width) - 1
         };
+
+        if (direction === 'bottom') {
+            style.top = window.pageYOffset + rect.bottom;
+        } else {
+            style.top = rect.top - this.$el.height();
+        }
 
         this.$el.css(style);
     }
