@@ -2,7 +2,7 @@ var RestDataSourceBuilder = function() {
     _.superClass(RestDataSourceBuilder, this);
 }
 
-_.inherit(RestDataSourceBuilder, newBaseDataSourceBuilder);
+_.inherit(RestDataSourceBuilder, BaseDataSourceBuilder);
 
 _.extend(RestDataSourceBuilder.prototype, {
     createDataSource: function(parent){
@@ -12,7 +12,7 @@ _.extend(RestDataSourceBuilder.prototype, {
     },
 
     applyMetadata: function(builder, parent, metadata, dataSource){
-        newBaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
 
         var tmpParams;
 

@@ -2,10 +2,10 @@
  * @constructor
  * @mixes DataSourceValidationNotifierMixin
  */
-var newBaseDataSourceBuilder = function() {
+var BaseDataSourceBuilder = function() {
 }
 
-_.extend(newBaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
+_.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
     build: function (context, args) {
         var dataSource = this.createDataSource(args.parentView);
         dataSource.suspendUpdate('tuningInSourceBuilder');
@@ -138,4 +138,4 @@ _.extend(newBaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.pr
 });
 
 
-_.extend(newBaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
+_.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);

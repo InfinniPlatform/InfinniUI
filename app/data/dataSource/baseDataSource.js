@@ -3,7 +3,7 @@
  * @augments Backbone.Model
  * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
  */
-var newBaseDataSource = Backbone.Model.extend({
+var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
         idProperty: '_id',
@@ -938,14 +938,14 @@ var newBaseDataSource = Backbone.Model.extend({
         if( $.isArray(items) && items.length > 0){
             if( !$.isPlainObject(items[0]) || this.getIdProperty() in items[0] ){
                 this.set('identifyingMode', 'byId');
-                _.extend( this, newBaseDataSource.identifyingStrategy.byId);
+                _.extend( this, BaseDataSource.identifyingStrategy.byId);
             }else{
                 this.set('identifyingMode', 'byLink');
-                _.extend( this, newBaseDataSource.identifyingStrategy.byLink);
+                _.extend( this, BaseDataSource.identifyingStrategy.byLink);
             }
         }else{
             this.set('identifyingMode', 'byId');
-            _.extend( this, newBaseDataSource.identifyingStrategy.byId);
+            _.extend( this, BaseDataSource.identifyingStrategy.byId);
         }
     },
 
@@ -956,7 +956,7 @@ var newBaseDataSource = Backbone.Model.extend({
 });
 
 
-newBaseDataSource.identifyingStrategy = {
+BaseDataSource.identifyingStrategy = {
 
     byId: {
         _restoreSelectedItem: function(){

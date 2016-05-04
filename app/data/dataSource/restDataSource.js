@@ -1,12 +1,12 @@
-var RestDataSource = newBaseDataSource.extend({
+var RestDataSource = BaseDataSource.extend({
 
     defaults: _.defaults({
         updatingItemsConverter: null
 
-    }, newBaseDataSource.prototype.defaults),
+    }, BaseDataSource.prototype.defaults),
 
     initialize: function(){
-        newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        BaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
 
         var model = this.get('model');
         model.urlParams = {
@@ -91,12 +91,12 @@ var RestDataSource = newBaseDataSource.extend({
     updateItems: function(){
 
         if(this._checkGettingUrlParamsReady()){
-            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
             this.resumeUpdate('urlGettingParamsNotReady');
 
         }else{
             this.suspendUpdate('urlGettingParamsNotReady');
-            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
         }
 
     },
@@ -282,7 +282,7 @@ var RestDataSource = newBaseDataSource.extend({
             items = itemsData;
         }
 
-        newBaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+        BaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
     }
 
 });
