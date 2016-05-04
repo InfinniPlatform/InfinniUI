@@ -215,7 +215,7 @@ describe('EditAction', function () {
         });
     });
 
-    it('should not open edit view if edit item is null', function (done) {
+    it('should not open edit view when edit item is null if edit item is document', function (done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -284,6 +284,90 @@ describe('EditAction', function () {
 
             // Then
             assert.isTrue( childView.isClosing );
+
+            done();
+        });
+    });
+
+    it('should open edit view when edit item is null if edit item is property', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                "Id": "1",
+                                "Address": null
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "EditButton",
+                    "Action": {
+                        "EditAction": {
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "$.Address"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Edit",
+                                        "Name": "EditView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var edtBtn = view.context.controls['EditButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            assert.isNull(destinationDS.getProperty("$.Address"));
+
+            // When
+            edtBtn.click();
+
+            var childView = view.context.controls['EditView'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            acceptBtn.click();
+
+            // Then
+            assert.isNotNull(destinationDS.getProperty("$.Address"));
 
             done();
         });
