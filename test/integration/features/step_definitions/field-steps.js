@@ -360,3 +360,31 @@ this.Then(/^я уменьшу значение в числовом поле "([^
     };
     window.testHelpers.waitCondition(haveBox, success, fail);
 });
+
+this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileName, fileBoxName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(fileBoxName) != undefined;
+    }, function () {
+        try {
+            var fileBox = window.testHelpers.getControlByName(fileBoxName);
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', '/test/integration/' + fileName, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                try {
+                    var file = new File([xhr.response], fileName);
+                    fileBox.setFile(file);
+                    next();
+                } catch (err) {
+                    next(err);
+                }
+            };
+            xhr.send();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(fileBoxName + ' не найден!'));
+    });
+});

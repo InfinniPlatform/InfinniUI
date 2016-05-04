@@ -57,13 +57,12 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
         }
 
         this.addOnClickEventListener($item, item);
+        this.addOnHoverEventListener($item, item);
         return $item;
     }, this);
 
     return $items;
 };
-
-ComboBoxBaseViewStrategy.prototype.toggle
 
 /**
  *
@@ -74,6 +73,16 @@ ComboBoxBaseViewStrategy.prototype.addOnClickEventListener = function ($el) {
     var params = Array.prototype.slice.call(arguments, 1);
     var handler = this.trigger.bind(this, 'click');
     el.addEventListener('click', function () {
+        handler.apply(this, params);
+    });
+};
+
+
+ComboBoxBaseViewStrategy.prototype.addOnHoverEventListener = function ($el) {
+    var el = $el[0];
+    var params = Array.prototype.slice.call(arguments, 1);
+    var handler = this.trigger.bind(this, 'mouseenter');
+    $el.on('mouseenter', function () {
         handler.apply(this, params);
     });
 };

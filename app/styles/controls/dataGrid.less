@@ -8,8 +8,6 @@
 
 .pl-datagrid {
 
-  overflow-x: hidden;
-
   &_select {
     &_single {
       .pl-datagrid-toggle_all {
@@ -77,6 +75,9 @@
 }
 
 .pl-datagrid.verticalAlignmentStretch {
+
+  overflow-x: hidden;
+
   //При вытягивании по вертикали заголовки колонок становятся фикированными - для этого table-layout = fixed
 
   .pl-datagrid-table {

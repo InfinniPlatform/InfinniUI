@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd ../..
+
+INFINNI_UI_ZIP="InfinniUI.zip"
+PACKAGING=".packaging/7z"
+FILES="@$PACKAGING/files"
+EXCLUDE="@$PACKAGING/exclude"
+GRUNTFILE="`pwd`/$PACKAGING/Gruntfile.js"
+
+rm -rf $INFINNI_UI_ZIP
+7z a -tzip $INFINNI_UI_ZIP $FILES -x$EXCLUDE
+7z a -tzip $INFINNI_UI_ZIP $GRUNTFILE
