@@ -283,7 +283,7 @@ describe('EditAction', function () {
             var childView = view.context.controls['EditView'];
 
             // Then
-            assert.isTrue( childView.isRemoved );
+            assert.isTrue( childView.isClosing );
 
             done();
         });
