@@ -1,125 +1,127 @@
 {
-  "DataSources": [{
-    "ObjectDataSource": {
-      "Name": "ds1",
-      "Items": [
-        {
-          "Id": 1,
-          "Title": "1",
-          "Volume": "I"
-        },
-        {
-          "Id": 2,
-          "Title": "2",
-          "Volume": "I"
-        },
-        {
-          "Id": 3,
-          "Title": "3",
-          "Volume": "I"
-        },
-        {
-          "Id": 4,
-          "Title": "4",
-          "Volume": "I"
-        },
-        {
-          "Id": 5,
-          "Title": "5",
-          "Volume": "I"
-        },
-        {
-          "Id": 6,
-          "Title": "6",
-          "Volume": "II"
-        },
-        {
-          "Id": 7,
-          "Title": "7",
-          "Volume": "II"
-        }
-      ]
-    }
-  }],
-  "Items": [{
-    "ScrollPanel": {
-      "Items": [
-        {
-          "Button": {
-            "Text": "ServerAction",
-            "Action": {
-              "ServerAction": {
-                "Method": "Get",
-                "Origin": "http://<%ip%>:<%port%>",
-                "Path": "/documents/<%document%>",
-                "Data": {
-                  "filter": "eq(_id,'<%_id%>')"
-                },
-                "Params": {
-                  "ip": "10.0.0.34",
-                  "port": "9900",
-                  "document": "GetCompanyProfile988Response",
-                  "_id": "73eba46a-0c6f-42d3-8a7b-2962f0fbf06d"
-                }
-              }
-            }
+  "DataSources": [
+    {
+      "ObjectDataSource": {
+        "Name": "ds2",
+        "Items": [
+          {
           }
-        },
-        {
+        ]
+      }
+    },
+    {
+      "ObjectDataSource": {
+        "Name": "ds1",
+        "Items": [
+          {
+            "Id": 1,
+            "Title": "1",
+            "Volume": "I"
+          },
+          {
+            "Id": 2,
+            "Title": "2",
+            "Volume": "I"
+          },
+          {
+            "Id": 3,
+            "Title": "3",
+            "Volume": "I"
+          },
+          {
+            "Id": 4,
+            "Title": "4",
+            "Volume": "I"
+          },
+          {
+            "Id": 5,
+            "Title": "5",
+            "Volume": "I"
+          },
+          {
+            "Id": 6,
+            "Title": "6",
+            "Volume": "II"
+          },
+          {
+            "Id": 7,
+            "Title": "7",
+            "Volume": "II"
+          }
+        ]
+      }
+    }
+  ],
+  "Items": [
+    {
+      "ListBox": {
+        "ItemTemplate": {
           "StackPanel": {
-            "Items": {
-              "Source": "ds1",
-              "Property": ""
-            },
-            "Orientation": "Vertical",
-            "GroupValueProperty": "Volume",
-            "GroupItemTemplate": {
-              "Label": {
-                "Value": {
-                  "Source": "ds1",
-                  "Property": "#.Volume"
+            "Items": [
+              {
+                "Label": {
+                  "Value": {
+                    "Source": "ds1",
+                    "Property": "#.Id"
+                  }
                 }
               }
-            },
-            "!GroupItemFormat": "{Volume} {Title}",
-            "!GroupItemProperty": "Volume",
-            "!GroupItemTemplate": {
-              "Label": {
-                "Text": "Заголовок группы"
-              }
-            },
-            "ItemTemplate": {
-              "StackPanel": {
-                "Orientation": "Horizontal",
-                "Items": [
-                  {
-                    "ButtonEdit": {
-                      "LabelText": "Title",
-                      "Icon": "ellipsis-h",
-                      "OnButtonClick": "{alert('Fuck off'); console.log(args);}",
-                      "Value": {
-                        "Source": "ds1",
-                        "Property": "#.Title"
-                      }
-                    }
-                  },
-                  {
-                    "TextBox": {
-                      "LabelText": "Volume",
-                      "Value": {
-                        "Source": "ds1",
-                        "Property": "#.Volume"
-                      }
-                    }
-                  }
-                ]
-              }
-
-            }
+            ]
           }
+        },
+        "Items": {
+          "Source": "ds1",
+          "Property": ""
         }
-      ]
+      }
+    },
+    {
+      "ComboBox": {
+        "Items": {
+          "Source": "ds1",
+          "Property": ""
+        },
+        "Value": {
+          "Source": "ds2",
+          "Property": "$.uid"
+        },
+        "Autocomplete": true,
+        "ItemProperty": "Title",
+        "ValueFormat": "{Id}: {Title}"
+      }
+    },
+    {
+      "Label": {
+        "Value": {
+          "Source": "ds2",
+          "Property": "$.uid"
+        }
+      }
+    },
+    {
+      "DataGrid": {
+        "MultiSelect": true,
+        "Items": {
+          "Source": "ds1",
+          "Property": ""
+        },
+        "Columns": [
+          {
+            "Header": "Id",
+            "CellProperty": "Id"
+          },
+          {
+            "Header": "Title",
+            "CellProperty": "Title"
+          },
+          {
+            "Header": "Volume",
+            "CellProperty": "Volume"
+          }
+        ]
+      }
     }
-  }]
+
+  ]
 }
 
