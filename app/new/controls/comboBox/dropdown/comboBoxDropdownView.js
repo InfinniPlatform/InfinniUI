@@ -29,6 +29,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
         this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
+        this.listenTo(this.strategy, 'mouseenter', this.onMouseEnterItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
 
         var items = this.model.get('items');
@@ -63,6 +64,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.ui.noItems.toggleClass('hidden', !noItems);
 
         this.markSelectedItems();
+        this.markCheckedItems()
     },
 
     setItemsContent: function (content) {
@@ -166,7 +168,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
         $items.forEach(function ($item) {
             var selected = items.indexOf($item.data('pl-data-item')) !== -1;
-            $item.toggleClass('pl-combobox-selected', selected);
+            $item.toggleClass('pl-combobox-checked', selected);
         });
     },
 
@@ -179,6 +181,10 @@ var ComboBoxDropdownView = Backbone.View.extend({
     updateAutocomplete: function () {
         var autocomplete = this.model.get('autocomplete');
         this.ui.filter.toggleClass('hidden', !autocomplete);
+    },
+
+    onMouseEnterItemHandler: function (item) {
+        this.model.setSelectedItem(item);
     },
 
     onClickItemHandler: function (item) {
