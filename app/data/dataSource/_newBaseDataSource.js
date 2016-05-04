@@ -479,13 +479,13 @@ var newBaseDataSource = Backbone.Model.extend({
         }
 
         validateResult = this.validateOnErrors(item);
-        if (!validateResult.isValid) {
+        if (!validateResult.IsValid) {
             this._notifyAboutFailValidationBySaving(item, validateResult, error);
             return;
         }
 
         dataProvider.saveItem(item, function(data){
-            if( !('isValid' in data) || data.isValid === true ){
+            if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
                 that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
             }else{
@@ -791,8 +791,8 @@ var newBaseDataSource = Backbone.Model.extend({
     _validatingActions: function (item, callback, validationType) {
         var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
             result = {
-                isValid: true,
-                items: []
+                IsValid: true,
+                Items: []
             },
             isCheckingOneItem = !!item,
             context = this.getContext(),
@@ -809,10 +809,10 @@ var newBaseDataSource = Backbone.Model.extend({
                 for (var i = 0, ii = items.length; i < ii; i++) {
 
                     subResult = validatingFunction(context, items[i]);
-                    if (!subResult.isValid) {
-                        this._addIndexToPropertiesOfValidationMessage(subResult.items, i);
-                        result.isValid = false;
-                        result.items = _.union(result.items, subResult.items);
+                    if (!subResult.IsValid) {
+                        this._addIndexToPropertiesOfValidationMessage(subResult.Items, i);
+                        result.IsValid = false;
+                        result.Items = _.union(result.Items, subResult.Items);
                     }
 
                 }

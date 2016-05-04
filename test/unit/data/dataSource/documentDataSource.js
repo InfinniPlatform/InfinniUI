@@ -339,26 +339,26 @@
                     validateResult3 = dataSource.validateOnErrors();
 
                 // Then
-                assert.isTrue(validateResult1.isValid, 'successfully validation');
+                assert.isTrue(validateResult1.IsValid, 'successfully validation');
 
-                assert.isFalse(validateResult2.isValid, 'fail validation');
-                assert.lengthOf(validateResult2.items, 1, 'fail validation results');
-                assert.equal(validateResult2.items[0].property, 'FirstName', 'fail validation property result');
+                assert.isFalse(validateResult2.IsValid, 'fail validation');
+                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
+                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
 
-                assert.isFalse(validateResult3.isValid, 'full validation');
-                assert.lengthOf(validateResult3.items, 6, 'full validation results');
-                assert.equal(validateResult3.items[3].property, '4.FirstName', 'full validation property result');
+                assert.isFalse(validateResult3.IsValid, 'full validation');
+                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
+                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
                 done();
             }
 
             function validator(context, argument){
                 var result = {
-                    isValid: true
+                    IsValid: true
                 };
 
                 if(argument.FirstName != 'Иван'){
-                    result.isValid = false;
-                    result.items = [{
+                    result.IsValid = false;
+                    result.Items = [{
                         property: 'FirstName',
                         message: 'Почему не Иван?!'
                     }];
