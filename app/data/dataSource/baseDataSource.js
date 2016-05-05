@@ -491,6 +491,9 @@ var BaseDataSource = Backbone.Model.extend({
             }else{
                 that._notifyAboutFailValidationBySaving(item, data, error);
             }
+        }, function(data) {
+            var result = data.data.responseJSON['Result']['ValidationResult'];
+            that._notifyAboutFailValidationBySaving(item, result, error);
         });
     },
 
