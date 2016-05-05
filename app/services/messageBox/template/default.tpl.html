@@ -1,0 +1,27 @@
+<div class="modal-dialog">
+    <div class="modal-content pl-messagebox pl-messagebox_<%=type%>">
+        <div class="modal-body pl-messagebox__body">
+            <p class="pl-messagebox-content">
+                <i class="fa-lg fa fa-warning pl-messagebox-content__icon pl-messagebox-content__icon_<%=type%>"></i>
+                <%= text %>
+            </p>
+        </div>
+
+        <div class="modal-footer pl-messagebox__footer">
+            <% _.each( buttons, function(button, i){ %>
+
+            <% if (i === 0){ %>
+            <a href tabindex="0"
+               class="btn firstfocuselementinmodal pl-messagebox-button pl-messagebox-button_<%= button.type %>"
+               data-index="<%= i %>"><%= button.name %></a>
+            <% }else{ %>
+            <a href class="btn pl-messagebox-button pl-messagebox-button_<%= button.type %>"
+               data-index="<%= i %>"><%= button.name %></a>
+            <% }}); %>
+
+            <div class="lastfocuselementinmodal" tabindex="0">
+        </div>
+
+    </div>
+
+</div>
