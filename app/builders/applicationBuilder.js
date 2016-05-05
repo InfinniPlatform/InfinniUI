@@ -70,7 +70,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('PropertyBinding', new DataBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
-        builder.register('Validation', new ValidationBuilder());
 
 
         builder.register('AcceptAction', new AcceptActionBuilder());

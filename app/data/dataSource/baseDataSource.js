@@ -726,6 +726,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         this.setProperty('', items);
+        this._includeItemToModifiedSet(itemData);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
