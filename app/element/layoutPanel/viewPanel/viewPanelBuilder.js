@@ -39,9 +39,13 @@ _.extend(ViewPanelBuilder.prototype, {
 
     createElement: function (params) {
         return new ViewPanel(params.parent);
+    },
+
+    registerLayoutPanel: function (params) {
+        var exchange = window.InfinniUI.global.messageBus;
+        exchange.send(messageTypes.onCreateLayoutPanel, {source: params.view, value: params.element});
     }
-},
-    builderLayoutPanelMixin
+}
 );
 
 
