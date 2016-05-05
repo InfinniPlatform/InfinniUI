@@ -96,8 +96,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TemplateEditMask', new TemplateEditMaskBuilder());
         builder.register('RegexEditMask', new RegexEditMaskBuilder());
 
-        builder.register('Comparator', new ComparatorBuilder());
-
         builder.register('Script', new ScriptBuilder());
 
 
