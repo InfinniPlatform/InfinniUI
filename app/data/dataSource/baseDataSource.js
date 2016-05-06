@@ -532,6 +532,9 @@ var BaseDataSource = Backbone.Model.extend({
             } else {
                 that._notifyAboutFailValidationByDeleting(item, data, error);
             }
+        }, function(data) {
+            var result = data.data.responseJSON['Result']['ValidationResult'];
+            that._notifyAboutFailValidationByDeleting(item, result, error);
         });
     },
 
