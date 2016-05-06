@@ -1107,14 +1107,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "LabelFloating doesn't work",
-												"Foreground": "primary1"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
