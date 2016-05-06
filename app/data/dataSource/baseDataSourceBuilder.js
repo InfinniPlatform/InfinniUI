@@ -92,14 +92,14 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
     initScriptsHandlers: function (parentView, metadata, dataSource) {
         //Скриптовые обработчики на события
         if (parentView && metadata.OnSelectedItemChanged) {
-            dataSource.onSelectedItemChanged(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged);
+            dataSource.onSelectedItemChanged(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
             });
         }
 
         if (parentView && metadata.OnItemsUpdated) {
-            dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated);
+            dataSource.onItemsUpdated(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
             });
         }
 

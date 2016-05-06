@@ -646,7 +646,8 @@ var BaseDataSource = Backbone.Model.extend({
     _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
         var context = this.getContext();
         var argument = {
-            value: itemsData
+            value: itemsData,
+            source: this
         };
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
