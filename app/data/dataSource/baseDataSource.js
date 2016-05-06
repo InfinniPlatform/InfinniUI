@@ -789,6 +789,14 @@ var BaseDataSource = Backbone.Model.extend({
         return this._validatingActions(item, callback, 'warning');
     },
 
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
+    },
+
     _validatingActions: function (item, callback, validationType) {
         var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
             result = {
@@ -1080,3 +1088,5 @@ BaseDataSource.identifyingStrategy = {
         },
     }
 };
+
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
