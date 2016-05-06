@@ -43,7 +43,9 @@ DateTimePicker.prototype.getTimeZone = function () {
 };
 
 DateTimePicker.prototype.setTimeZone = function (value) {
-    this.control.set('timeZone', value);
+    if (_.isNumber(value)) {
+        this.control.set('timeZone', value);
+    }
 };
 
 DateTimePicker.prototype.setDateFormat = function (value) {
