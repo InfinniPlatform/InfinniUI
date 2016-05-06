@@ -141,7 +141,7 @@ this.Then(/^система отобразит список валидацион�
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
-            actualMessages.push(actual.eq(i).text());
+            actualMessages.push(actual.eq(i).text().replace(/'/g, '"'));
         }
 
         var messages = getMessages(msgs);
