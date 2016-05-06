@@ -150,7 +150,7 @@ _.extend(TreeModel.prototype, {
         function checkAndCallAnyHandlers(_handlersNode){
             var handler;
 
-            if('*', _handlersNode){
+            if('*' in _handlersNode){
                 for( var k in _handlersNode['*'] ){
                     handler = _handlersNode['*'][k];
                     if(that._isOwnerAlive(handler)){
