@@ -25,24 +25,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
-
-        this.initFileProvider(metadata, dataSource);
-    },
-
-    initFileProvider: function (metadata, dataSource) {
-
-        var host = InfinniUI.config.serverUrl,
-            configId = metadata.ConfigId,
-            documentId = metadata.DocumentId;
-
-        var fileUrlConstructor = new DocumentUploadQueryConstructor(host, {
-            configId: configId,
-            documentId: documentId
-        });
-
-        var fileProvider = new DocumentFileProvider(fileUrlConstructor);
-
-        dataSource.setFileProvider(fileProvider);
     },
 
     createDataSource: function(parent){

@@ -83,9 +83,10 @@ window.testHelpers = {
 
     convertDate: function (date) {
         // TODO: Только если формат даты "DD.MM.YYYY"
-        if (date.indexOf('.') != -1) {
-            var items = date.split('.');
+        var reg = date.match(/^\d{2}.\d{2}.\d{4}$/);
 
+        if (reg && reg.length != 0) {
+            var items = date.split('.');
             return this.getFormattedDate(items[2] + '-' + items[1] + '-' + items[0]);
         }
 

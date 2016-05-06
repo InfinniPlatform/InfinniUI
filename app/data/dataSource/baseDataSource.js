@@ -646,7 +646,8 @@ var BaseDataSource = Backbone.Model.extend({
     _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
         var context = this.getContext();
         var argument = {
-            value: itemsData
+            value: itemsData,
+            source: this
         };
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
@@ -787,6 +788,14 @@ var BaseDataSource = Backbone.Model.extend({
 
     validateOnWarnings: function (item, callback) {
         return this._validatingActions(item, callback, 'warning');
+    },
+
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
     },
 
     _validatingActions: function (item, callback, validationType) {
@@ -1080,3 +1089,5 @@ BaseDataSource.identifyingStrategy = {
         },
     }
 };
+
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);

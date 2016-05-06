@@ -234,6 +234,10 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
                 value = parseFloat(value.replace(/,/g, '.'));
             }
 
+            if (typeof actValue == "string") {
+                value = value.replace(/'/g, '"');
+            }
+
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();

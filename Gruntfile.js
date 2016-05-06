@@ -98,7 +98,7 @@
             'test/unit/**/*.js'
         ],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
-        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
+        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html", "app/utils/messageBox/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',
