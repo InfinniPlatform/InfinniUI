@@ -146,6 +146,7 @@ var DataGridView = ListEditorBaseView.extend({
 
     applyColumnWidth: function () {
         var columns = this.model.get('columns');
+        var fixedTableLayout = false;
 
         this.ui.firstRows.children().each(function (i, el) {
             var columnIndex = i % (columns.length + 1);
@@ -160,9 +161,11 @@ var DataGridView = ListEditorBaseView.extend({
 
             if (width) {
                 $(el).css('width', width);
+                fixedTableLayout = true;
             }
         });
 
+        this.$el.toggleClass('pl-datagrid_layout_fixed', fixedTableLayout);
     },
 
     syncBodyAndHead: function () {
