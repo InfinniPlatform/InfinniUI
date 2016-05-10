@@ -43,12 +43,12 @@ DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     var defaultFormat = {
             Date: '{:d}',
             DateTime: '{:g}',
-            Time: '{:t}'
+            Time: '{:T}'
         },
         defaultEditMask = {
             Date: {DateTimeEditMask: {Mask: 'd'}},
             DateTime: {DateTimeEditMask: {Mask: 'g'}},
-            Time: {DateTimeEditMask: {Mask: 't'}}
+            Time: {DateTimeEditMask: {Mask: 'T'}}
         };
 
     _.defaults(metadata, {Mode: 'Date'});
