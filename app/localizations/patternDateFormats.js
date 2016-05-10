@@ -9,7 +9,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     D: 'dd MMMM yyyy г.',
 
     t: 'H:mm',
-    T: 'H:%m:%s',
+    T: 'HH:mm:ss',
 
     y: 'MMMM yyyy', Y: 'MMMM yyyy',
     m: 'MMMM yy', M: 'MMMM yy',

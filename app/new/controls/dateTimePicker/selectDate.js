@@ -136,7 +136,59 @@ var SelectDate = Backbone.View.extend({
 
     onClickTodayHandler: function () {
         this.useValue(new Date());
+    },
+
+    updatePosition: function (parentDOMElement) {
+        var direction = this.getDropdownDirection(parentDOMElement);
+        this.setPositionFor(parentDOMElement, direction );
+    },
+
+    setPositionFor: function (parentDOMElement, direction) {
+        clearInterval(this._intervalId);
+
+        this.applyStyle(parentDOMElement, direction);
+        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement, direction), 100);
+    },
+
+    remove: function () {
+        clearInterval(this._intervalId);
+        return Backbone.View.prototype.remove.apply(this, arguments);
+    },
+
+    getDropdownDirection: function (parentDOMElement) {
+
+        var windowHeight = $(window).height();
+        var rect = parentDOMElement.getBoundingClientRect();
+        var height = this.$el.height();
+
+        var direction = 'bottom';
+        if (rect.bottom + height + 30 > windowHeight && rect.bottom > windowHeight / 2) {
+            direction = 'top';
+        }
+
+        return direction;
+    },
+
+    applyStyle: function (parentDOMElement, direction) {
+        var rect = parentDOMElement.getBoundingClientRect();
+
+        var rectDropdown = this.el.getBoundingClientRect();
+
+        //@TODO Вынести общие стили в css
+        var style = {
+            position: "absolute",
+            left: window.pageXOffset + rect.right - Math.round(rectDropdown.width)
+        };
+
+        if (direction === 'bottom') {
+            style.top = window.pageYOffset + rect.bottom;
+        } else {
+            style.top = rect.top - this.$el.height();
+        }
+
+        this.$el.css(style);
     }
+
 
 });
 

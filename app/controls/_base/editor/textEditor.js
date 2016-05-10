@@ -417,7 +417,7 @@ var TextEditor = Backbone.View.extend({
     onMouseLeaveEditorHandler: function (event) {
         var inFocus = event.currentTarget == document.activeElement;
         if (!inFocus && this.isValid) {
-            this.$el.hide();
+            //this.$el.hide();
             this.onBlurEditorHandler();
         }
     },
