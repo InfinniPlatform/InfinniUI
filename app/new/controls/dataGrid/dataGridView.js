@@ -72,6 +72,33 @@ var DataGridView = ListEditorBaseView.extend({
         this.ui.checkAll.prop('checked', checkAll);
     },
 
+    getHorizontalScrollBarWidth: function () {
+
+        if (typeof DataGridView.scrollbarWidth === 'undefined') {
+            var scrollDiv = document.createElement('div');
+            var body = document.body;
+
+            scrollDiv.className = 'modal-scrollbar-measure';
+            var style = {
+                position: "absolute",
+                top: "-9999px",
+                width: "50px",
+                height: "50px",
+                overflow: "scroll"
+            };
+
+            for(var name in style) {
+                scrollDiv.style[name] = style[name]
+            }
+
+            body.appendChild(scrollDiv);
+            DataGridView.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+            body.removeChild(scrollDiv);
+        }
+
+        return DataGridView.scrollbarWidth;
+    },
+
     updateCheckAllVisible: function () {
         var checkAllVisible = this.model.get('checkAllVisible');
         this.ui.checkAll.toggleClass('hidden', !checkAllVisible);
@@ -169,14 +196,10 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     syncBodyAndHead: function () {
-        var $body = this.ui.body;
+        //var $body = this.ui.body;
         var $head = this.ui.head;
 
-        setTimeout(function () {
-            //Need update after element added to DOM
-            var scrollWidth = $body[0].offsetWidth - $body[0].clientWidth;
-            $head.css('padding-right', scrollWidth + "px");
-        }, 0);
+        $head.css('padding-right', this.getHorizontalScrollBarWidth() + "px");
 
         this.ui.body
             .off('scroll')
