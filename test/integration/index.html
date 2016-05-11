@@ -34,7 +34,7 @@
             return;
         }
 
-        eval('supportCode   = function() {' + xhr.responseText + '};');
+        eval('supportCode = function() {' + xhr.responseText + '};');
 
         var listener = CucumberHTMLListener($('#test-result'));
 

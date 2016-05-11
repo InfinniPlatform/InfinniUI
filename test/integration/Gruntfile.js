@@ -20,10 +20,7 @@
             },
 
             vendor: {
-                src: [
-                    "vendor/*.js",
-                    "../../bower_components/chai/chai.js"
-                ],
+                src: ["vendor/*.js"],
                 dest: 'out/vendor.js'
             }
         }
@@ -48,10 +45,6 @@
             grunt.config.set('concat.app.src', appArray);
         }
 
-        var tasks = [
-            'concat'
-        ];
-
-        grunt.task.run(tasks);
+        grunt.task.run(['concat']);
     });
 };
