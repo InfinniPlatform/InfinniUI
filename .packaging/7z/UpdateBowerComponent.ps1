@@ -1,6 +1,6 @@
 param (
     [string]$UserName,
-    [string]$UserPassword,
+    [string]$Password,
     [string]$BuildNumber,
     [string]$ReleaseNumber,
     [string]$ComponentPath
@@ -9,7 +9,7 @@ param (
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 if (!$UserName)         {throw "Invalid UserName"}
-if (!$UserPassword)     {throw "Invalid UserPassword"}
+if (!$Password)         {throw "Invalid Password"}
 if (!$BuildNumber)      {throw "Invalid BuildNumber"}
 if (!$ReleaseNumber)    {throw "Invalid ReleaseNumber"}
 
@@ -26,7 +26,7 @@ if($ComponentPath.Substring($ComponentPath.Length - 1) -ne "\")
 $InfinniUI = "InfinniUI"
 $TS_URL = "http://teamcity/httpAuth/app/rest/builds/project:" + $InfinniUI + ",number:" + $BuildNumber + ",branch:" + $ReleaseNumber + "/artifacts/children/"
 
-$secpasswd = ConvertTo-SecureString $UserPassword -AsPlainText -Force
+$secpasswd = ConvertTo-SecureString $Password -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ($UserName, $secpasswd)
 $data = Invoke-RestMethod -Uri $TS_URL -Credential $cred
 $downloadLink = "http://teamcity" + $data.files.file.content.href
