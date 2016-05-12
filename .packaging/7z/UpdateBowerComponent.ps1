@@ -2,13 +2,26 @@ param (
     [string]$UserName,
     [string]$UserPassword,
     [string]$BuildNumber,
-    [string]$ReleaseNumber
+    [string]$ReleaseNumber,
+    [string]$ComponentPath
 )
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 if (!$UserName)         {throw "Invalid UserName"}
 if (!$UserPassword)     {throw "Invalid UserPassword"}
 if (!$BuildNumber)      {throw "Invalid BuildNumber"}
 if (!$ReleaseNumber)    {throw "Invalid ReleaseNumber"}
+
+if(!$ComponentPath) 
+{
+    $ComponentPath = "C:\Projects\InfinniUI-dist\"
+}
+
+if($ComponentPath.Substring($ComponentPath.Length - 1) -ne "\")
+{
+    $ComponentPath = $ComponentPath + "\"
+}
 
 $InfinniUI = "InfinniUI"
 $TS_URL = "http://teamcity/httpAuth/app/rest/builds/project:" + $InfinniUI + ",number:" + $BuildNumber + ",branch:" + $ReleaseNumber + "/artifacts/children/"
@@ -20,3 +33,6 @@ $downloadLink = "http://teamcity" + $data.files.file.content.href
 $InfinniUI_ZIP = $data.files.file.name
 
 Invoke-WebRequest $downloadLink -Credential $cred -OutFile $InfinniUI_ZIP
+Remove-Item ($ComponentPath + "*") -Include "*" -Exclude (".git", "LICENSE", "bower.json") -Recurse -Force
+[System.IO.Compression.ZipFile]::ExtractToDirectory($InfinniUI_ZIP, $ComponentPath)
+Remove-Item $InfinniUI_ZIP
