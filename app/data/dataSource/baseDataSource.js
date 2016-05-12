@@ -917,6 +917,23 @@ var BaseDataSource = Backbone.Model.extend({
         return promise;
     },
 
+    getNearestRequestPromise: function(){
+        var promise = $.Deferred();
+
+        this.once('onItemsUpdated', function(){
+            if(this.isDataReady()){
+                promise.resolve();
+            }else{
+                logger.warn({
+                    message: 'BaseDataSource: strange, expected other dataReady status',
+                    source: this
+                });
+            }
+        });
+
+        return promise;
+    },
+
     //setBindingBuilder: function(bindingBuilder){
     //    this.set('bindingBuilder', bindingBuilder);
     //},

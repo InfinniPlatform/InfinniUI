@@ -44,6 +44,22 @@ _.extend(DataNavigation.prototype, {
 
     onPageSizeChanged: function (handler) {
         this.control.onPageSizeChanged(this.createControlEventHandler(this, handler));
+    },
+
+    getPageCount: function () {
+        return this.control.get('pageCount');
+    },
+
+    setPageCount: function (value) {
+        this.control.set('pageCount', value)
+    },
+
+    getIsDataReady: function () {
+        return this.control.get('isDataReady');
+    },
+
+    setIsDataReady: function (value) {
+        this.control.set('isDataReady', value)
     }
 
 });

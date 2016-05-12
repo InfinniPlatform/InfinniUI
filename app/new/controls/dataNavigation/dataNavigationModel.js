@@ -4,7 +4,9 @@ var DataNavigationModel = ControlModel.extend({
             pageNumber: 0,
             pageStart: 0,
             _buttonsCount: 5,
-            _buttonsTemplate: ['prev', 'page', 'next']
+            _buttonsTemplate: ['prev', 'page', 'next'],
+            pageCount: null,
+            isDataReady: false
         },
         ControlModel.prototype.defaults
     ),
