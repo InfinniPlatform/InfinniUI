@@ -2,7 +2,7 @@
 
 cd ../..
 
-INFINNI_UI_ZIP="InfinniUI.zip"
+INFINNI_UI_ZIP="InfinniUI.$1.zip"
 PACKAGING=".packaging/7z"
 FILES="@$PACKAGING/files"
 EXCLUDE="@$PACKAGING/exclude"
@@ -11,7 +11,7 @@ PACKAGE="`pwd`/$PACKAGING/package.json"
 
 grunt build:{}
 
-rm -rf $INFINNI_UI_ZIP
+rm -rf InfinniUI.*.zip
 7z a -tzip $INFINNI_UI_ZIP $FILES -x$EXCLUDE
 7z a -tzip $INFINNI_UI_ZIP $GRUNTFILE
 7z a -tzip $INFINNI_UI_ZIP $PACKAGE
