@@ -32,12 +32,15 @@ describe('DeleteAction', function () {
 
         var items = [
             {
+                _id: 0,
                 Name: 'First'
             },
             {
+                _id: 1,
                 Name: 'Second'
             },
             {
+                _id: 2,
                 Name: 'Third'
             }
         ];
@@ -71,7 +74,7 @@ describe('DeleteAction', function () {
 
     it('should delete selected item from DocumentDataSource', function (done) {
         // Given
-        window.providerRegister.register('DocumentDataSource', FakeDataProvider);
+        window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
         var view = new View();
         var builder = new ApplicationBuilder();
@@ -100,9 +103,12 @@ describe('DeleteAction', function () {
                 deleteAction.execute();
 
                 // Then
-                assert.equal(dataSource.getItems().length, (initCount - 1) );
-                assert.notInclude(dataSource.getItems(), initSelectedItem);
-                done();
+                setTimeout( function(){
+                        assert.equal(dataSource.getItems().length, (initCount - 1) );
+                        assert.notInclude(dataSource.getItems(), initSelectedItem);
+                        done();
+                }, 0);
+
             }
         );
     });

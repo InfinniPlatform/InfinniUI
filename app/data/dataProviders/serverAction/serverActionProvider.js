@@ -1,19 +1,41 @@
-var ServerActionProvider = function (urlConstructor, successCallback, failCallback) {
-    this.urlConstructor = urlConstructor;
-    this.successCallback = successCallback;
-    this.failCallback = failCallback;
+var ServerActionProvider = function () {
 };
 
-ServerActionProvider.prototype.request = function (params, resultCallback) {
-    var requestData = this.urlConstructor.constructUrlRequest(params);
-    new RequestExecutor(resultCallback, this.successCallback, this.failCallback)
-        .makeRequestRaw(requestData);
+ServerActionProvider.prototype.request = function (requestData, resultCallback) {
+    var that = this;
+    var requestId = Math.round((Math.random() * 100000));
 
+    $.ajax({
+        type: requestData.method,
+        url: requestData.requestUrl,
+        xhrFields: {
+            withCredentials: true
+        },
+        data: requestData.args,
+        contentType: requestData.contentType,
+        success: function(data){
+            if( _.isFunction(resultCallback) ){
+                resultCallback({
+                    requestId: requestId,
+                    data: data
+                });
+            }
+        },
+        error: function (data) {
+            if( _.isFunction(resultCallback) ){
+                resultCallback({
+                    requestId: requestId,
+                    data: data
+                });
+            }
+        }
+    });
+
+    return requestId;
 };
 
-ServerActionProvider.prototype.download = function (params, resultCallback) {
-    var requestData = this.urlConstructor.constructUrlRequest(params);
-    new DownloadExecutor(resultCallback, this.successCallback, this.failCallback)
+ServerActionProvider.prototype.download = function (requestData, resultCallback) {
+    new DownloadExecutor(resultCallback)
         .run(requestData);
 };
 

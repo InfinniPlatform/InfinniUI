@@ -1,6 +1,6 @@
 var ObjectDataProvider = function (items, idProperty) {
     this.items = items || [];
-    this.idProperty = idProperty || 'Id';
+    this.idProperty = idProperty || '_id';
 };
 
 _.extend(ObjectDataProvider.prototype, {
@@ -9,10 +9,10 @@ _.extend(ObjectDataProvider.prototype, {
         this.items = items;
     },
 
-    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-        var filter = new FilterCriteriaType();
-        var callback = filter.getFilterCallback(criteriaList);
-        resultCallback(this.items.filter(callback));
+    getItems: function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
+        //var filter = new FilterCriteriaType();
+        //var callback = filter.getFilterCallback(criteriaList);
+        resultCallback({data: this.items});
     },
 
     createItem: function (resultCallback) {
@@ -55,7 +55,7 @@ _.extend(ObjectDataProvider.prototype, {
 
     createIdFilter: function (id) {
         return [{
-            "Property": "Id",
+            "Property": "_id",
             "Value": id,
             "CriteriaType": 1
         }];

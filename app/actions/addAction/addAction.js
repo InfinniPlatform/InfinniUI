@@ -8,11 +8,12 @@ _.inherit(AddAction, BaseEditAction);
 _.extend(AddAction.prototype, {
     setSelectedItem: function(){
         var editDataSource = this.getProperty('editDataSource'),
-            editView = editDataSource.getView();
+            editView = editDataSource.getView(),
+            item = {};
 
         if( this._isObjectDataSource(editDataSource) ) {
-            editDataSource.setItems([{}]);
-            editDataSource.setSelectedItem({});
+            editDataSource.setItems([item]);
+            editDataSource.setSelectedItem(item);
         } else {
             editDataSource.suspendUpdate();
 
