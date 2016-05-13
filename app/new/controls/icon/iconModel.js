@@ -5,7 +5,8 @@
 var IconModel = ControlModel.extend({
 
     defaults: _.defaults({
-        value: null
+        value: null,
+        focusable: false
 
     }, ControlModel.prototype.defaults),
 
