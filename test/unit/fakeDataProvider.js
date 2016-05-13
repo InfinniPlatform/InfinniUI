@@ -52,11 +52,11 @@ function FakeDataProvider(mode) {
         }
     ];
 
-    this.getItems = function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
+    this.getItems = function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
         if (mode === undefined || mode() === 'Created') {
 
-            var result = [];
-            var allItems = items;
+            var result = items;
+            /*var allItems = items;
 
             for (var i = 0; i < pageSize; i++) {
                 var itemIndex = i + (pageNumber * pageSize);
@@ -72,10 +72,10 @@ function FakeDataProvider(mode) {
                 result = _.filter(result, function(item){
                     return item.Id == criteriaList[0].Value;
                 });
-            }
+            }*/
 
             setTimeout(function(){
-                resultCallback(result);
+                resultCallback({data:result});
             }, 100);
 
         }
@@ -97,12 +97,8 @@ function FakeDataProvider(mode) {
 
         var itemIndex = -1;
 
-        if(value['__Id']){
-            delete value['__Id'];
-        }
-
         for (var i = 0; i < items.length; i++) {
-            if (items[i].Id === value.Id) {
+            if (items[i]._id === value._id) {
                 itemIndex = i;
                 break;
             }

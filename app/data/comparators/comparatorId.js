@@ -1,6 +1,6 @@
 var ComparatorId = function () {
 
-    this.propertyName = 'Id';
+    this.propertyName = '_id';
 };
 
 ComparatorId.prototype.isEqual = function (a, b) {

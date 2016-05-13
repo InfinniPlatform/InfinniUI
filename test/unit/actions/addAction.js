@@ -102,7 +102,9 @@ describe('AddAction', function () {
             var sourceDS = childView.context.dataSources['MainDataSource'];
             var acceptBtn = childView.context.controls['AcceptBtn'];
 
-            sourceDS.setSelectedItem({name: "New"});
+            var newItem = sourceDS.getSelectedItem();
+            newItem.name = "New";
+            sourceDS.setSelectedItem(newItem);
 
             acceptBtn.click();
 
@@ -194,9 +196,12 @@ describe('AddAction', function () {
 
                     assert.notInclude(destinationDS.getItems(), newItem);
 
-                    newItem = _.extend( newItem,
-                                        { FirstName: "Test", LastName: "Test" });
-                    sourceDS.setSelectedItem( newItem );
+//                    newItem = _.extend( newItem,
+//                                        { FirstName: "Test", LastName: "Test" });
+//                    sourceDS.setSelectedItem( newItem );
+
+                    sourceDS.setProperty('FirstName', 'Test');
+                    sourceDS.setProperty('LastName', 'Test');
 
                     saveBtn.click();
 

@@ -12,6 +12,11 @@ _.extend(ObjectDataSourceBuilder.prototype, {
 
     applyMetadata: function(builder, parent, metadata, dataSource){
         BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+
+        if(!'IsLazy' in metadata){
+            dataSource.setIsLazy(false);
+        }
+
         if(metadata.Items){
             if($.isArray(metadata.Items)){
                 dataSource.setItems(metadata.Items);
@@ -29,14 +34,14 @@ _.extend(ObjectDataSourceBuilder.prototype, {
 
         }
 
-    },
-
-    initFileProvider: function (dataSource) {
-        var fileProvider = window.providerRegister.build('DocumentFileProvider', {
-            documentId: "documentId",
-            configId: "configId"
-        });
-
-        dataSource.setFileProvider(fileProvider);
     }
+
+    //initFileProvider: function (dataSource) {
+    //    var fileProvider = window.providerRegister.build('DocumentFileProvider', {
+    //        documentId: "documentId",
+    //        configId: "configId"
+    //    });
+    //
+    //    dataSource.setFileProvider(fileProvider);
+    //}
 });
