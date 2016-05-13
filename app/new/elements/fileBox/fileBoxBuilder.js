@@ -69,13 +69,13 @@ _.extend(FileBoxBuilder.prototype, {
         };
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
+            mode: InfinniUI.BindingModes.toElement,
             converter: converter
         });
 
         var binding = data.valueBinding;
 
         if (binding) {
-            binding.setMode(InfinniUI.BindingModes.toElement);
             var ds = binding.getSource();
 
             params.element.onPropertyChanged('file', function (context, args) {
