@@ -37,36 +37,7 @@ _.extend(FileBoxBuilder.prototype, {
         // 1. по значению из источника данных - сформировать URL изображения.
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
 
-        var converter = {
-            toElement: function (context, args) {
-                var value = args.value;
-                var binding = args.binding;
-                var ds = binding.getSource();
-                var sourceProperty = binding.getSourceProperty();
-                var fileProvider = ds.getFileProvider();
-                var url = null;
-                var info = {};
-                //Формируем ссылку для получения файла
-                if (value) {
-                    if (value.Info && value.Info.ContentId && fileProvider) {
-                        url = fileProvider.getFileUrl(null, null, value.Info.ContentId);
-                        element.setFileName(value.Info.Name)
-                            .setFileSize(value.Info.Size)
-                            .setFileTime(value.Info.Time)
-                            .setFileType(value.Info.Type);
-
-                    } else if (typeof value === 'string') {
-                        //@TODO Добавить проверку на валидность URI
-                        url = value;
-                    } else {
-                        //Native File instance from FileAPI
-                        url = value;
-                    }
-                }
-
-                return url;
-            }
-        };
+        var converter = new FileBoxValueConverter(element);
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
             mode: InfinniUI.BindingModes.toElement,
@@ -83,7 +54,7 @@ _.extend(FileBoxBuilder.prototype, {
 
                 if (file === null) {
                     ds.setProperty(binding.getSourceProperty(), null)
-                } else  if (file instanceof File) {
+                } else if (file instanceof File) {
                     ds.setProperty(binding.getSourceProperty(), args.newValue)
                 }
             })
@@ -91,4 +62,4 @@ _.extend(FileBoxBuilder.prototype, {
 
     }
 
-}, editorBaseBuilderMixin);
+    }, editorBaseBuilderMixin);

@@ -37,31 +37,7 @@ _.extend(ImageBoxBuilder.prototype, {
         // 1. по значению из источника данных - сформировать URL изображения.
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
 
-        var converter = {
-            toElement: function (context, args) {
-                var value = args.value;
-                var binding = args.binding;
-                var ds = binding.getSource();
-                var sourceProperty = binding.getSourceProperty();
-                var fileProvider = ds.getFileProvider();
-                var url = null;
-                //Формируем URL изображения
-
-                if (value) {
-                    if (value.Info && value.Info.ContentId && fileProvider) {
-                        url = fileProvider.getFileUrl(null, null, value.Info.ContentId);
-                    } else if (typeof value === 'string') {
-                        //@TODO Добавить проверку на валидность URI
-                        url = value;
-                    } else {
-                        //Native File instance from FileAPI
-                        url = value;
-                    }
-                }
-                return url;
-            }
-
-        };
+        var converter = new ImageBoxValueConverter(element);
 
         var data = this.applyMetadata_editorBaseBuilder(params, {
             mode: InfinniUI.BindingModes.toElement,
