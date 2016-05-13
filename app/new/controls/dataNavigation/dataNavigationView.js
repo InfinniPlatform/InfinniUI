@@ -20,6 +20,8 @@ var DataNavigationView = ControlView.extend({
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call(this);
         this.listenTo(this.model, 'change:pageStart', this.updateButtons);
+        this.listenTo(this.model, 'change:pageCount', this.updateButtons);
+        this.listenTo(this.model, 'change:isDataReady', this.updateButtons);
     },
 
     updateProperties: function() {
@@ -46,9 +48,18 @@ var DataNavigationView = ControlView.extend({
         var
             template = this.model.get('_buttonsTemplate'),
             buttonsCount = this.model.get('_buttonsCount'),
-            buttons;
+            pageCount = this.model.get('pageCount'),
+            pageNumber = this.model.get('pageNumber'),
+            pageStart = this.model.get('pageStart'),
+            isDataReady = this.model.get('isDataReady'),
+            buttons,
+            nowManyElementsRemove;
 
         this._removeChildViews();
+
+        if(!isDataReady){
+            return;
+        }
 
         var
             buttonsFactory = this.buttonsFactory,
@@ -56,8 +67,6 @@ var DataNavigationView = ControlView.extend({
 
         buttons = template.reduce(function (buttons, buttonType) {
             if (buttonType === 'page') {
-                var pageNumber = model.get('pageNumber');
-                var pageStart = model.get('pageStart');
                 for (var i = 0; i < buttonsCount; i = i + 1) {
                     var button = buttonsFactory.createButton(buttonType, {pageNumber: pageStart + i});
                     buttons.push(button)
@@ -69,6 +78,16 @@ var DataNavigationView = ControlView.extend({
 
             return buttons;
         }, []);
+
+        if(typeof pageCount == 'number' && pageStart + buttonsCount >= pageCount){
+            nowManyElementsRemove = pageStart + buttonsCount - pageCount + 1;
+
+            if(pageCount == 0){
+                nowManyElementsRemove += 1;
+            }
+
+            buttons.splice(buttons.length - nowManyElementsRemove, 100);
+        }
 
         var $buttons = buttons.map(function (button) {
             this.listenTo(button, 'command', this.onCommandHandler);

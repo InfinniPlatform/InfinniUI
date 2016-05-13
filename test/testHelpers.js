@@ -18,6 +18,8 @@ function fakeView(view) {
 
 function fakeApplicationView(){
     var view = fakeView();
+    var $container = InfinniUI.config.$rootContainer || $('body');
+    $container.data('view', null);
 
     view.getApplicationView = function () {
         return this;

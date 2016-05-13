@@ -44,6 +44,16 @@ var stringUtils = {
 
     isNumeric: function(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
+    },
+
+    joinDataForQuery: function(data){
+        var result = [];
+
+        for(var k in data){
+            result.push(k + '=' + data[k]);
+        }
+
+        return result.join('&');
     }
 };
 

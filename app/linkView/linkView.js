@@ -58,9 +58,6 @@ _.extend(LinkView.prototype, {
         if(view.setParent){
             view.setParent(this.parent);
         }
-        if(this.parent && this.parent.addChild){
-            this.parent.addChild(view);
-        }
 
         window.InfinniUI.global.messageBus.send('onViewCreated', {openMode: openMode, view: view});
 

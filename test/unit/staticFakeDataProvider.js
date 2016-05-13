@@ -4,65 +4,71 @@ function StaticFakeDataProvider() {}
 _.extend(StaticFakeDataProvider.prototype, {
     items: [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
         }
     ],
 
-    getItems: function(criteriaList, pageNumber, pageSize, sorting, resultCallback){
+    getItems: function(resultCallback, criteriaList, pageNumber, pageSize, sorting){
         var result = _.clone(this.items);
         setTimeout(function(){
-            resultCallback(result);
+            resultCallback({
+                data: {
+                    Result: {
+                        Items:result
+                    }
+                }
+            });
         },100);
     },
 
     createLocalItem: function () {
         var maxId = _.chain(this.items)
-            .map(function(item){ return parseInt(item.Id); })
+            .map(function(item){ return parseInt(item._id); })
             .max()
             .value();
 
         return {
-            "Id": maxId + 1
+            "_id": maxId + 1
         };
     },
 
     saveItem: function (value, resultCallback, warnings) {
 
         var itemIndex = _.findIndex(this.items, function(item) {
-            return item.Id === value.Id;
+            return item._id === value._id;
         });
 
         if (itemIndex !== -1) {
@@ -78,10 +84,9 @@ _.extend(StaticFakeDataProvider.prototype, {
         },90);
     },
 
-    setCreateAction: function(){},
-    setUpdateAction: function(){},
-    setReadAction: function(){},
-    setDeleteAction: function(){},
-    setConfigId: function(){},
+    setOrigin: function(){},
+    setPath: function(){},
+    setData : function(){},
+    setFilter: function(){},
     setDocumentId: function(){}
 });

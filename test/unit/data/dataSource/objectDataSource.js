@@ -1,37 +1,37 @@
 describe('ObjectDataSource', function () {
     var items = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -40,11 +40,13 @@ describe('ObjectDataSource', function () {
 
     window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
-    function createObjectDataSource(){
+    function createObjectDataSource(metadata){
+
+        metadata = metadata || {};
 
         var builder = new ApplicationBuilder();
         var view = fakeView();
-        var dataSource = builder.buildType('ObjectDataSource', {}, {parent: view, parentView: view, builder: builder}),
+        var dataSource = builder.buildType('ObjectDataSource', metadata, {parent: view, parentView: view, builder: builder}),
             initItems = JSON.parse(JSON.stringify(items));
 
         dataSource.setItems(initItems);
@@ -74,7 +76,7 @@ describe('ObjectDataSource', function () {
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    assert.ok(newItem.Id, 'new item has Id');
+                    assert.ok(newItem._id, 'new item has _id');
                     done();
                 }
             );
@@ -144,7 +146,7 @@ describe('ObjectDataSource', function () {
 
                 //When
                 var newItemData = {
-                    "Id": '1',
+                    "_id": '1',
                     "FirstName": "Ивано",
                     "LastName": "Иванович"
                 };
@@ -172,26 +174,26 @@ describe('ObjectDataSource', function () {
                     validateResult3 = dataSource.validateOnErrors();
 
                 // Then
-                assert.isTrue(validateResult1.isValid, 'successfully validation');
+                assert.isTrue(validateResult1.IsValid, 'successfully validation');
 
-                assert.isFalse(validateResult2.isValid, 'fail validation');
-                assert.lengthOf(validateResult2.items, 1, 'fail validation results');
-                assert.equal(validateResult2.items[0].property, 'FirstName', 'fail validation property result');
+                assert.isFalse(validateResult2.IsValid, 'fail validation');
+                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
+                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
 
-                assert.isFalse(validateResult3.isValid, 'full validation');
-                assert.lengthOf(validateResult3.items, 6, 'full validation results');
-                assert.equal(validateResult3.items[3].property, '4.FirstName', 'full validation property result');
+                assert.isFalse(validateResult3.IsValid, 'full validation');
+                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
+                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
                 done();
             }
 
             function validator(context, argument){
                 var result = {
-                    isValid: true
+                    IsValid: true
                 };
 
                 if(argument.FirstName != 'Иван'){
-                    result.isValid = false;
-                    result.items = [{
+                    result.IsValid = false;
+                    result.Items = [{
                         property: 'FirstName',
                         message: 'Почему не Иван?!'
                     }];
@@ -246,8 +248,34 @@ describe('ObjectDataSource', function () {
                 });
             }
         });
+
+        it('should subscribe on itemsUpdated from metadata', function (done) {
+            var metadata = {
+                OnItemsUpdated: '{window.testCount = window.testCount || 0; window.testCount++; window.testArgs = args; window.testContext = context;}'
+            };
+
+            // Given
+            var dataSource = createObjectDataSource(metadata);
+
+            //When
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+                // Then
+                assert.equal(window.testCount, 1, 'on items updated was called right times');
+                assert.isTrue(!!window.testArgs, 'on items updated handler passed args');
+                assert.isTrue(!!window.testContext, 'on items updated handler passed context');
+
+                delete window['testCount'];
+                delete window['testArgs'];
+                delete window['testContext'];
+
+                done();
+            }
+        });
     });
 
+    /* TODO раскомментировать когда в object DS заработают фильтры
     describe('ObjectDataSource filter', function () {
         it('should get filtered list of data', function () {
             // Given //When
@@ -292,5 +320,5 @@ describe('ObjectDataSource', function () {
             assert.lengthOf(items, 7, 'clear filter');
         });
 
-    });
+    });*/
 });

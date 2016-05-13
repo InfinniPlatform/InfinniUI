@@ -15,42 +15,49 @@ _.extend(EditAction.prototype, {
 
         if( selectedItem == null ){
 
-            var logger = window.InfinniUI.global.logger;
-            var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-            logger.error(message);
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isDocumentPath(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
 
-            return false;
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
         }
 
         if( this._isObjectDataSource(editDataSource) ) {
-            this.setItem(editDataSource, selectedItem);
+            this._setItem(editDataSource, selectedItem);
         } else {
-            this.setDocument(editDataSource, selectedItem);
+            this._setDocument(editDataSource, selectedItem);
         }
 
         return true;
     },
 
-    resumeUpdateEditDataSource: function () {
+    _resumeUpdateEditDataSource: function () {
         var editDataSource = this.getProperty('editDataSource');
         editDataSource.resumeUpdate('EditAction');
     },
 
-    setDocument: function (editDataSource, selectedItem){
+    _setDocument: function (editDataSource, selectedItem){
         var selectedItemId = editDataSource.idOfItem( selectedItem );
-
-        var criteria = [ { CriteriaType:1, Property: "Id", Value:  selectedItemId  } ];
-        this.resumeUpdateEditDataSource();
-        editDataSource.setFilter( criteria );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
     },
 
-    setItem: function(editDataSource, selectedItem){
+    _setItem: function(editDataSource, selectedItem){
         var item = _.clone( selectedItem );
 
         if(item === undefined || item === null){
             item = {};
         }
-        this.resumeUpdateEditDataSource();
+        this._resumeUpdateEditDataSource();
         editDataSource.setItems( [item] );
         editDataSource.setSelectedItem( item );
     },
@@ -66,5 +73,9 @@ _.extend(EditAction.prototype, {
         } else {
             destinationDataSource.updateItems();
         }
+    },
+
+    _isDocumentPath: function(path){
+        return !path.includes('.');
     }
 });

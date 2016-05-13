@@ -34,13 +34,13 @@ var DataSourceValidationNotifierMixin = {
      * @param {string} validationType Тип сообщения "error" или "warning"
      */
     notifyOnValidationResult: function (result, validationType) {
-        if (typeof result === 'undefined' || result === null || result.isValid || !Array.isArray(result.ValidationMessage)) {
+        if (typeof result === 'undefined' || result === null || result['IsValid'] || !Array.isArray(result['Items'])) {
             return;
         }
 
-        result.ValidationMessage.forEach(function (item) {
+        result['Items'].forEach(function (item) {
             var exchange = window.InfinniUI.global.messageBus;
-            exchange.send(messageTypes.onNotifyUser, {messageText: item.Message, messageType: "error"});
+            exchange.send(messageTypes.onNotifyUser, {item: item, messageText: item.Message, messageType: "error"});
         });
     }
 };

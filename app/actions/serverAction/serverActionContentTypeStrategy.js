@@ -6,7 +6,6 @@ var serverActionContentTypeStrategy = {
     },
     "Object": {
         run: function (provider, params, callback) {
-
             provider.request(params, callback);
         }
     }
