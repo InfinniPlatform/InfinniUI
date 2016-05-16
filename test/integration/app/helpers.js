@@ -126,3 +126,24 @@ window.testHelpers = {
         return result + '|';
     }
 };
+
+function TestInfoHelper($info) {
+    var passed = $info.find('#passed-count');
+    var failed = $info.find('#failed-count');
+    var ignored = $info.find('#ignored-count');
+
+    this.incrementPassed = function () {
+        var oldValue = parseInt(passed.text());
+        passed.text(++oldValue);
+    };
+
+    this.incrementFailed = function () {
+        var oldValue = parseInt(failed.text());
+        failed.text(++oldValue);
+    };
+
+    this.incrementIgnored = function () {
+        var oldValue = parseInt(ignored.text());
+        ignored.text(++oldValue);
+    };
+}
