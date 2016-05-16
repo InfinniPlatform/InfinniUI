@@ -25,8 +25,17 @@ $InfinniUI = "InfinniUI"
 $TS_URL = "http://teamcity/httpAuth/app/rest/builds/project:" + $InfinniUI + ",number:" + $BuildNumber + ",branch:" + $ReleaseNumber + "/artifacts/children/"
 
 $data = Invoke-RestMethod -Uri $TS_URL -Credential $cred
-$downloadLink = "http://teamcity" + $data.files.file.content.href
-$InfinniUI_ZIP = $data.files.file.name
+
+foreach ($file in $data.files.file) 
+{
+    if($file.name.IndexOf($InfinniUI) -ne -1)
+    {
+        $InfinniUI_File = $file
+    }
+}
+
+$downloadLink = "http://teamcity" + $InfinniUI_File.content.href
+$InfinniUI_ZIP = $InfinniUI_File.name
 
 Invoke-WebRequest $downloadLink -Credential $cred -OutFile $InfinniUI_ZIP
 Remove-Item ($ComponentPath + "*") -Include "*" -Exclude (".git", "LICENSE", "bower.json") -Recurse -Force

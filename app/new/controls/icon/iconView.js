@@ -4,6 +4,8 @@
  */
 var IconView = ControlView.extend({
 
+    className: 'pl-icon fa',
+
     tagName: 'i',
 
     render: function(){
@@ -16,7 +18,7 @@ var IconView = ControlView.extend({
 
     renderIcon: function () {
         var value = this.model.get('value');
-        this.$el.attr('class', 'pl-icon fa fa-' + value);
+        this.switchClass('fa', value);
     },
 
     initHandlersForProperties: function () {
