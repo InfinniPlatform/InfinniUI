@@ -315,7 +315,9 @@ _.extend(Element.prototype, {
     },
 
     setFocusable: function (value) {
-        this.control.get('focusable', !!value)
+        if (_.isBoolean(value)) {
+            this.control.set('focusable', value);
+        }
     },
 
     getFocused: function () {

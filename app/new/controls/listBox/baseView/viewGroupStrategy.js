@@ -9,6 +9,7 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
             inputName = 'listbox-' + guid(),
             result = {
                 isMultiselect: this.listbox.isMultiselect(),
+                focusable: this.listbox.isFocusable(),
                 inputName: inputName,
                 groups: []
             },

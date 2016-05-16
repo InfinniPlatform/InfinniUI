@@ -9,6 +9,7 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
             inputName = 'listbox-' + guid(),
             result = {
                 isMultiselect: this.listbox.isMultiselect(),
+                focusable: this.listbox.isFocusable(),
                 inputName: inputName,
                 items: items.toArray()
             };

@@ -5,7 +5,8 @@ var LabelModel = ControlModel.extend(_.extend({
         verticalAlignment: 'Top',
         textWrapping: true,
         textTrimming: true,
-        escapeHtml: true
+        escapeHtml: true,
+        focusable: false
     }, ControlModel.prototype.defaults),
 
     initialize: function(){
