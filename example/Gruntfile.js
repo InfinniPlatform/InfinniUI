@@ -89,7 +89,7 @@
 				options: {
 					livereload: true
 				},
-				files: ['www/testConfigurations/*']
+				files: ['www/testConfigurations/*', 'www/config.js']
 			}
 		},
 

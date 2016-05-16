@@ -91,7 +91,7 @@ _.extend(Control.prototype, {
     },
 
     onMouseWheel: function (handler) {
-        this.controlView.$el.on('mousewheel', handler);
+        this.controlView.$el.on('mousewheel DOMMouseScroll', handler);
     },
 
     onKeyDown: function (handler) {

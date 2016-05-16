@@ -10,8 +10,8 @@
 					{"Id": 3, "rub": 222, "Display": "3G"},
 					{"Id": 4, "rub": 333, "Display": "EDGE"},
 					{"Id": 5, "rub": 444, "Display": "GPRS"},
-					{"Id": 6, "rub": 777, "Display": "GSM"},
-					{"Id": 7, "rub": 666, "Display": "WAP"}
+					{"Id": 6, "rub": 777, "Display": "LTE"},
+					{"Id": 7, "rub": 666, "Display": "2G"}
 				]
 			}
 		},{
@@ -311,14 +311,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "CheckAllVisible doesn't work",
-												"Foreground": "primary2"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -355,7 +348,8 @@
 													}
 												],
 												"MultiSelect": true,
-												"OnCheckAllChanged": "{ args.setForeground( 'primary2' ) }",
+												"CheckAllVisible": true,
+												"OnCheckAllChanged": "{ args.source.setForeground( 'primary2' ) }",
 												"Items": {
 													"Source": "ObjectDataSource1"
 												}
@@ -367,14 +361,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "OnCheckAllChanged doesn't work",
-												"Foreground": "primary2"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -470,7 +457,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "ValueProperty doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -929,7 +923,9 @@
 												],
 												"Items": {
 													"Source": "ObjectDataSource1"
-												}
+												},
+												"GroupItemFormat": "Connect: {Id}",
+												"GroupValueProperty": "Display"
 											}
 										}
 									]
@@ -938,7 +934,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "GroupItemFormat doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -976,7 +979,8 @@
 												],
 												"Items": {
 													"Source": "ObjectDataSource1"
-												}
+												},
+												"GroupItemProperty": "Display"
 											}
 										}
 									]
@@ -985,7 +989,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "GroupItemProperty doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -1018,7 +1029,14 @@
 													},
 													{
 														"Header": "Internet",
-														"CellProperty": "Display"
+														"CellTemplate": {
+															"Label": {
+																"Value": {
+																	"Source": "ObjectDataSource1",
+																	"Property": "#.Display"
+																}
+															}
+														}
 													}
 												],
 												"Items": {
@@ -1032,7 +1050,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "ItemFormat doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -1233,7 +1258,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "Enabled doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -1432,14 +1464,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "Foreground doesn't color text",
-												"Foreground": "primary2"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -1487,14 +1512,7 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": [
-										{
-											"Label": {
-												"Value": "Background doesn't work correctly",
-												"Foreground": "primary2"
-											}
-										}
-									]
+									"Items": []
 								}
 							},
 							{
@@ -2269,7 +2287,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "ValueTemplate doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -2316,7 +2341,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "ValueSelector doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 							{
@@ -2525,7 +2557,14 @@
 							{
 								"Cell": {
 									"ColumnSpan": 3,
-									"Items": []
+									"Items": [
+										{
+											"Label": {
+												"Value": "ItemTemplate doesn't work",
+												"Foreground": "primary2"
+											}
+										}
+									]
 								}
 							},
 														{
