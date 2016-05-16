@@ -6,7 +6,8 @@ var DataGridModel = ListEditorBaseModel.extend({
     defaults: _.defaults({
         showSelectors: true,
         checkAllVisible: false,
-        checkAll: false
+        checkAll: false,
+        focusable: false
     }, ListEditorBaseModel.prototype.defaults),
 
     initialize: function () {
