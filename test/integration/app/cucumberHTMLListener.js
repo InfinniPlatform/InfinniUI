@@ -1,5 +1,6 @@
-function CucumberHTMLListener($root) {
+function CucumberHTMLListener($root, $info) {
     var formatter = new CucumberHTML.DOMFormatter($root);
+    var testInfoHelper = new TestInfoHelper($info);
 
     formatter.uri('report.feature');
 
@@ -57,6 +58,7 @@ function CucumberHTMLListener($root) {
                         result = {status: 'skipped'};
                         if (!window.cucumberIsIgnored && !window.cucumberIsFailed) {
                             tsm.testIgnored(window.cucumberCurrentScenario);
+                            testInfoHelper.incrementIgnored();
                             window.cucumberIsIgnored = true;
                         }
                     } else {
@@ -72,6 +74,7 @@ function CucumberHTMLListener($root) {
                             .replace(/:/g, "");
 
                         tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
+                        testInfoHelper.incrementFailed();
 
                         window.cucumberIsFailed = true;
                     }
@@ -81,6 +84,9 @@ function CucumberHTMLListener($root) {
 
                 case 'AfterScenario':
                     tsm.testFinished(window.cucumberCurrentScenario);
+                    if(!window.cucumberIsFailed) {
+                        testInfoHelper.incrementPassed();
+                    }
                     break;
 
                 case 'AfterFeature':

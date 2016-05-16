@@ -36,7 +36,7 @@
 
         eval('supportCode = function() {' + xhr.responseText + '};');
 
-        var listener = CucumberHTMLListener($('#test-result'));
+        var listener = CucumberHTMLListener($('#test-result'), $('#test-info'));
 
         var options = {
             tags: [
@@ -67,6 +67,20 @@
   </head>
 
   <body onload="runIntegrationTests()">
-	 <div id="test-result"></div>
+    <div id="test-info">
+       <span>
+        <span>Passed: </span>
+        <span id="passed-count">0</span>
+      </span>
+      <span>
+        <span>Failed: </span>
+        <span id="failed-count">0</span>
+      </span>
+      <span>
+        <span>Ignored: </span>
+        <span id="ignored-count">0</span>
+      </span>
+    </div>
+    <div id="test-result"></div>
   </body>
 </html>
