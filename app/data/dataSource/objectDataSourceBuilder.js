@@ -1,7 +1,7 @@
 function ObjectDataSourceBuilder() {
 }
 
-_.inherit(ObjectDataSourceBuilder, newBaseDataSourceBuilder);
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
 
 _.extend(ObjectDataSourceBuilder.prototype, {
     createDataSource: function(parent){
@@ -11,7 +11,7 @@ _.extend(ObjectDataSourceBuilder.prototype, {
     },
 
     applyMetadata: function(builder, parent, metadata, dataSource){
-        newBaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
 
         if(!'IsLazy' in metadata){
             dataSource.setIsLazy(false);

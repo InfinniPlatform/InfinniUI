@@ -498,7 +498,7 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
-	that.exist = function(value, items, context) { // value[1] is string
+	that.exists = function(value, items, context) { // value[1] is string
 		var tmpResult = [],
 				tmpValue,
 				globalUI = InfinniUI.ObjectUtils;

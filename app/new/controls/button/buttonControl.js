@@ -10,21 +10,23 @@ function ButtonControl(viewMode) {
 
 _.inherit(ButtonControl, Control);
 
-_.extend(ButtonControl.prototype, {
+_.extend(
+    ButtonControl.prototype,
+    highlightMixin.control, {
 
-    createControlModel: function () {
-        return new ButtonModel();
-    },
+        createControlModel: function () {
+            return new ButtonModel();
+        },
 
-    createControlView: function (model, viewMode) {
-        if(!viewMode || ! viewMode in window.InfinniUI.Button){
-            viewMode = 'common';
+        createControlView: function (model, viewMode) {
+            if (!viewMode || !viewMode in window.InfinniUI.Button) {
+                viewMode = 'common';
+            }
+
+            var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
+
+            return new ViewClass({model: model});
         }
 
-        var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
-
-        return new ViewClass({model: model});
-    }
-
-}, buttonControlMixin);
+    }, buttonControlMixin);
 

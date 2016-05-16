@@ -83,8 +83,6 @@ var BaseListBoxView = ListEditorBaseView.extend({
 
         this.strategy.appendItemsContent(preparedItems);
 
-        this.bindUIElements();
-
         this.updateProperties();
 
         this.trigger('render');
@@ -107,6 +105,10 @@ var BaseListBoxView = ListEditorBaseView.extend({
 
     isMultiselect: function(){
         return this.model.get('multiSelect');
+    },
+
+    isFocusable: function () {
+        return this.model.get('focusable');
     },
 
     getGroupItemTemplate: function(){

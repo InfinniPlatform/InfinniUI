@@ -35,11 +35,11 @@
 
             'app/data/_common/**/*.js',
             'app/data/dataSource/_mixins/*.js',
-            'app/data/dataSource/_newBaseDataSource.js',
+            'app/data/dataSource/baseDataSource.js',
             'app/data/dataSource/restDataSource.js',
             'app/data/dataSource/documentDataSource.js',
 
-            'app/data/dataSource/_newBaseDataSourceBuilder.js',
+            'app/data/dataSource/baseDataSourceBuilder.js',
             'app/data/dataSource/restDataSourceBuilder.js',
             'app/data/dataSource/documentDataSourceBuilder.js',
 
@@ -98,7 +98,7 @@
             'test/unit/**/*.js'
         ],
         e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
-        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
+        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html", "app/utils/messageBox/**/*.tpl.html"],
         outerExtensionScript = '*.Extensions/**/*.js',
         outerExtensionStyle = '*.Extensions/**/*.css',
         outerExtensionLessStyle = '*.Extensions/**/*.less',

@@ -1,4 +1,6 @@
-﻿document.title = InfinniUI.config.configName;
+﻿if(InfinniUI.config.configName != null) {
+    document.title = InfinniUI.config.configName;
+}
 
 moment.locale('ru');
 
@@ -34,13 +36,12 @@ moment.locale('ru');
         return new MetadataProviderREST(new QueryConstructorMetadata(host, metadataValue));
     });
 
-    window.providerRegister.register('DocumentDataSource', function (metadataValue) {
-        return new DataProviderREST(new QueryConstructorStandard(host, metadataValue));
-    });
-
     window.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
         return new MetadataDataSourceProvider(new QueryConstructorMetadataDataSource(host, metadataValue));
     });
+
+    window.providerRegister.register('DocumentDataSource', RestDataProvider);
+    window.providerRegister.register('RestDataSource', RestDataProvider);
 
      window.providerRegister.register('ServerActionProvider', function () {
              return new ServerActionProvider();

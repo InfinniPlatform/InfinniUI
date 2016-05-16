@@ -36,12 +36,25 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
         this.updateLineCount();
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.ui.control.attr('tabindex', 0);
+        } else {
+            this.ui.control.removeAttr('tabindex');
+        }
+    },
+
     updateValue: function(){
+        var escapeHtml = this.model.get('escapeHtml');
+        var setContent = escapeHtml ? 'text' : 'html';
         var textForLabel = this.getLabelText();
         var $label = this.getLabelElement();
-        $label
-            .text(textForLabel)
-            .attr('title', textForLabel);
+
+        $label[setContent](textForLabel);
+        var title = String(textForLabel);
+        $label.attr('title', title.replace(/<\/?[^>]+>/g, '')); //strip html tags
     },
 
     updateDisplayFormat: function(){
@@ -78,8 +91,6 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
     },
 
     render: function () {
-        var model = this.model;
-
         this.prerenderingActions();
         this.renderTemplate(this.template);
 

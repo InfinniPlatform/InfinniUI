@@ -19,7 +19,6 @@ var dateTimePickerModeTimePicker = _.extend({}, dateTimePickerModeTime, {
         var minValue = InfinniUI.DateUtils.restoreTimezoneOffset(model.get('minValue'), model.get('timeZone'));
         var maxValue = InfinniUI.DateUtils.restoreTimezoneOffset(model.get('maxValue'), model.get('timeZone'));
 
-        console.info(value, minValue, maxValue);
         return InfinniUI.DateUtils.checkRangeDate(value, minValue, maxValue);
     },
 

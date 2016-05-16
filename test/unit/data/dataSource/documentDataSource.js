@@ -1,37 +1,37 @@
 ﻿describe('DocumentDataSource', function () {
     var dataItems = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -63,6 +63,24 @@
 
                 }
             );
+        });
+
+        it('should return default list of data', function (done) {
+            // Given
+            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            var builder = new ApplicationBuilder();
+            var defaultItems = [{"Id": "0000"}];
+            var metadata = {
+                "DefaultItems": defaultItems
+            };
+
+            // When
+            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
+
+            // Then
+            var items = documentDataSource.getItems();
+            assert.equal(items, defaultItems);
+            done();
         });
 
         it('should subscribe to property of selectedItem', function (done) {
@@ -208,8 +226,6 @@
                     // Then
                     var newItem = argument.value;
                     assert.ok(newItem, 'new item is ready');
-                    //assert.equal(newItem.prefilledField, 1, 'prefilled field is right');
-                    assert.equal(newItem.__Id, newItem.Id, 'special Id is right');
 
                     var items = dataSource.getItems();
                     assert.lengthOf(items, 1, 'one element (when was created) in items');
@@ -308,7 +324,7 @@
 
                 //When
                 var newItemData = {
-                    "Id": '1',
+                    "_id": '1',
                     "FirstName": "Ивано",
                     "LastName": "Иванович"
                 };
@@ -341,26 +357,26 @@
                     validateResult3 = dataSource.validateOnErrors();
 
                 // Then
-                assert.isTrue(validateResult1.isValid, 'successfully validation');
+                assert.isTrue(validateResult1.IsValid, 'successfully validation');
 
-                assert.isFalse(validateResult2.isValid, 'fail validation');
-                assert.lengthOf(validateResult2.items, 1, 'fail validation results');
-                assert.equal(validateResult2.items[0].property, 'FirstName', 'fail validation property result');
+                assert.isFalse(validateResult2.IsValid, 'fail validation');
+                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
+                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
 
-                assert.isFalse(validateResult3.isValid, 'full validation');
-                assert.lengthOf(validateResult3.items, 6, 'full validation results');
-                assert.equal(validateResult3.items[3].property, '4.FirstName', 'full validation property result');
+                assert.isFalse(validateResult3.IsValid, 'full validation');
+                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
+                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
                 done();
             }
 
             function validator(context, argument){
                 var result = {
-                    isValid: true
+                    IsValid: true
                 };
 
                 if(argument.FirstName != 'Иван'){
-                    result.isValid = false;
-                    result.items = [{
+                    result.IsValid = false;
+                    result.Items = [{
                         property: 'FirstName',
                         message: 'Почему не Иван?!'
                     }];

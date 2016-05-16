@@ -97,12 +97,8 @@ function FakeDataProvider(mode) {
 
         var itemIndex = -1;
 
-        if(value['__Id']){
-            delete value['__Id'];
-        }
-
         for (var i = 0; i < items.length; i++) {
-            if (items[i].Id === value.Id) {
+            if (items[i]._id === value._id) {
                 itemIndex = i;
                 break;
             }

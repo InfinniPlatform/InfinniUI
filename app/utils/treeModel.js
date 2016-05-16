@@ -39,7 +39,7 @@ _.extend(TreeModel.prototype, {
 
     onPropertyChanged: function(propertyName, handler, params){
         var handlersNode;
-        var bindId = this.counter;
+        var bindId = this.counter + '-bindId';
         this.counter ++;
 
         if(_.isFunction(propertyName)){
@@ -112,7 +112,11 @@ _.extend(TreeModel.prototype, {
                     delete handlersSubTree[k];
                 }
 
-            } else if($.isPlainObject(handlersSubTree[k]) && k != '*'){
+            }
+        }
+
+        for( var k in handlersSubTree ){
+            if($.isPlainObject(handlersSubTree[k]) && k != '*'){
 
                 tmpValue = $.isPlainObject(oldValue) ? oldValue[k] : undefined;
                 tmpProperty = propertyName == '' ? k :propertyName + '.' + k;
@@ -150,7 +154,7 @@ _.extend(TreeModel.prototype, {
         function checkAndCallAnyHandlers(_handlersNode){
             var handler;
 
-            if('*', _handlersNode){
+            if('*' in _handlersNode){
                 for( var k in _handlersNode['*'] ){
                     handler = _handlersNode['*'][k];
                     if(that._isOwnerAlive(handler)){

@@ -315,7 +315,9 @@ _.extend(Element.prototype, {
     },
 
     setFocusable: function (value) {
-        this.control.get('focusable', !!value)
+        if (_.isBoolean(value)) {
+            this.control.set('focusable', value);
+        }
     },
 
     getFocused: function () {
@@ -325,7 +327,6 @@ _.extend(Element.prototype, {
     setFocused: function (value) {
         return this.control.set('focused', !!value);
     },
-
     onLostFocus: function (handler) {
         this.control.on('OnLostFocus', handler);
     },
@@ -611,5 +612,32 @@ _.extend(Element.prototype, {
 
     _upperFirstSymbol: function (s) {
         return s[0].toUpperCase() + s.substr(1);
+    },
+
+    setFocus: function () {
+        this.control.setFocus();
+    },
+
+    renderTree: function(textIndent) {
+        var textIndent = textIndent || '';
+        console.log( textIndent + 'Name: ' + this.getName(), this );
+        if( this.childElements !== undefined ) {
+            if( textIndent !== '' ) {
+                textIndent += '_____';
+            } else {
+                textIndent += '_____';
+            }
+            for( var i = 0, ii = this.childElements.length; i < ii; i += 1 ) {
+                this.renderTree.call(this.childElements[i], textIndent);
+            }
+        }
+    },
+
+    renderFullTree: function() {
+        var parent = this.parent;
+        while( parent.parent && parent.parent.parent !== undefined ) {
+            parent = parent.parent;
+        }
+        this.renderTree.call(parent);
     }
 });

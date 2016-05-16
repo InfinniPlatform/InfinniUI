@@ -14,6 +14,7 @@ var DateTimePickerModel = TextEditorBaseModel.extend(/** @lends DateTimePickerMo
 
     initialize: function () {
         TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        this.set('timeZone', InfinniUI.DateUtils.getDefaultTimeZone());
     },
 
     validate: function (attributes, options) {

@@ -2,11 +2,11 @@ var DocumentDataSourceBuilder = function() {
     _.superClass(DocumentDataSourceBuilder, this);
 }
 
-_.inherit(DocumentDataSourceBuilder, newBaseDataSourceBuilder);
+_.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
 _.extend(DocumentDataSourceBuilder.prototype, {
     applyMetadata: function(builder, parent, metadata, dataSource){
-        newBaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
 
         dataSource.setDocumentId(metadata['DocumentId']);
 
@@ -24,8 +24,11 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('Search' in metadata){ dataSource.setSearch(metadata['Search']); }
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
-        if('Count' in metadata){ dataSource.setOrder(metadata['Count']); }
+        if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
 
+        if (Array.isArray(metadata.DefaultItems)) {
+            dataSource.setProperty('', metadata.DefaultItems);
+        }
     },
 
     createDataSource: function(parent){

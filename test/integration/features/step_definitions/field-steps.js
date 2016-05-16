@@ -25,11 +25,14 @@ this.When(/^я введу в числовое поле "([^"]*)" значени�
     };
     var success = function () {
         try {
-            var numValue = parseInt(value);
-            chai.assert.isNumber(numValue);
+            var numValue = parseFloat(value.replace(/,/g, '.'));
+
+            if (isNaN(numValue)) {
+                next(new Error(value + ' is not number'));
+                return;
+            }
 
             window.testHelpers.getControlByName(fieldName).setValue(numValue);
-
             next();
         } catch (err) {
             next(err);
@@ -231,6 +234,10 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
                 value = parseFloat(value.replace(/,/g, '.'));
             }
 
+            if (typeof actValue == "string") {
+                value = value.replace(/'/g, '"');
+            }
+
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
 
             next();
@@ -260,7 +267,7 @@ this.Then(/^значение в числовом поле "([^"]*)" равно "
 
             var actValue = field.getValue();
 
-            if(field.getDisplayValue) {
+            if (field.getDisplayValue) {
                 actValue = field.getDisplayValue();
             }
 
@@ -300,4 +307,88 @@ this.Then(/^элемент "([^"]*)" будет недоступным$/, functi
     };
 
     window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
+this.Then(/^я увеличу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
+    var haveBox = function () {
+        return window.testHelpers.getControlByName(boxName) != undefined;
+    };
+    var success = function () {
+        try {
+            var numBox = window.testHelpers.getControlByName(boxName);
+
+            if (!numBox.getEnabled()) {
+                next(new Error("Элемент " + boxName + " недоступен!"));
+                return;
+            }
+
+            var incr = numBox.getIncrement();
+            var oldValue = numBox.getValue();
+
+            numBox.setValue(oldValue + incr);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(boxName + ' не найден!'));
+    };
+    window.testHelpers.waitCondition(haveBox, success, fail);
+});
+
+this.Then(/^я уменьшу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
+    var haveBox = function () {
+        return window.testHelpers.getControlByName(boxName) != undefined;
+    };
+    var success = function () {
+        try {
+            var numBox = window.testHelpers.getControlByName(boxName);
+
+            if (!numBox.getEnabled()) {
+                next(new Error("Элемент " + boxName + " недоступен!"));
+                return;
+            }
+
+            var incr = numBox.getIncrement();
+            var oldValue = numBox.getValue();
+
+            numBox.setValue(oldValue - incr);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(boxName + ' не найден!'));
+    };
+    window.testHelpers.waitCondition(haveBox, success, fail);
+});
+
+this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileName, fileBoxName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(fileBoxName) != undefined;
+    }, function () {
+        try {
+            var fileBox = window.testHelpers.getControlByName(fileBoxName);
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', '/test/integration/' + fileName, true);
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                try {
+                    var file = new File([xhr.response], fileName);
+                    fileBox.setFile(file);
+                    next();
+                } catch (err) {
+                    next(err);
+                }
+            };
+            xhr.send();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(fileBoxName + ' не найден!'));
+    });
 });

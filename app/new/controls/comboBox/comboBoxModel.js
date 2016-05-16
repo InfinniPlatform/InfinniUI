@@ -14,8 +14,21 @@ var ComboBoxModel = ListEditorBaseModel.extend({
 
     initialize: function () {
         ListEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-
         this.on('change:value', this.syncSelectedItem);
+    },
+
+    setSelectedItemToValue: function () {
+        var autocomplete = this.get('autocomplete');
+        var multiSelect = this.get('multiSelect');
+
+        if (autocomplete || multiSelect) {
+            return;
+        }
+
+        var selectedItem = this.getSelectedItem();
+        var value = this.valueByItem(selectedItem);
+        this.set('value', value);
+
     },
 
     syncSelectedItem: function (model, value) {
@@ -53,6 +66,7 @@ var ComboBoxModel = ListEditorBaseModel.extend({
             selectedItem = null;
         }
         this.setSelectedItem(selectedItem);
+        this.setSelectedItemToValue();
     },
 
     selectPrevItem: function () {
@@ -72,6 +86,7 @@ var ComboBoxModel = ListEditorBaseModel.extend({
             selectedItem = items.getByIndex(itemIndex);
         }
         this.setSelectedItem(selectedItem);
+        this.setSelectedItemToValue();
     },
 
     selectFirstItem: function () {
@@ -82,6 +97,7 @@ var ComboBoxModel = ListEditorBaseModel.extend({
             selectedItem = items.getByIndex(0);
         }
         this.setSelectedItem(selectedItem);
+        this.setSelectedItemToValue();
     },
 
     selectLastItem: function () {
@@ -92,6 +108,7 @@ var ComboBoxModel = ListEditorBaseModel.extend({
             selectedItem = items.getByIndex(items.length - 1);
         }
         this.setSelectedItem(selectedItem);
+        this.setSelectedItemToValue();
     },
 
     toggleItem: function (item, toggle) {

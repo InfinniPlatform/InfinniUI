@@ -1,33 +1,21 @@
 /**
  * @constructor
- * @mixes DataSourceValidationNotifierMixin
+ * @mixes DataSourceValidationNotifierMixin, DataSourceBuilderFileProviderMixin
  */
-function BaseDataSourceBuilder() {
+var BaseDataSourceBuilder = function() {
 }
 
 _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
     build: function (context, args) {
         var dataSource = this.createDataSource(args.parentView);
-        dataSource.suspendUpdate();
-
-        var filterManager = new FilterManager(this.buildBindingBuilder(args));
-        dataSource.setFilterManager(filterManager);
+        dataSource.suspendUpdate('tuningInSourceBuilder');
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
-        this.initFileProvider(dataSource, args.metadata);
+        //this.initFileProvider(dataSource, args.metadata);
 
         this.applySuspended(dataSource, args.suspended);
-        dataSource.resumeUpdate();
 
-        /*if(args.parentView.onLoading){
-         args.parentView.onLoading(function () {
-         //dataSource.resumeUpdate();
-         dataSource.updateItems();
-         });
-         }else{
-         //dataSource.resumeUpdate();
-         dataSource.updateItems();
-         }*/
+        dataSource.resumeUpdate('tuningInSourceBuilder');
 
         return dataSource;
     },
@@ -55,17 +43,17 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
 
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
-        dataSource.setPageSize(metadata.PageSize || 15);
-        dataSource.setPageNumber(metadata.PageNumber || 0);
-
-        if('Sorting' in metadata){
-            dataSource.setSorting(metadata['Sorting']);
-        }
-
-        var queryMetadata;
-        if('Query' in metadata){
-            dataSource.setFilter(metadata['Query']);
-        }
+        //dataSource.setPageSize(metadata.PageSize || 15);
+        //dataSource.setPageNumber(metadata.PageNumber || 0);
+        //
+        //if('Sorting' in metadata){
+        //    dataSource.setSorting(metadata['Sorting']);
+        //}
+        //
+        //var queryMetadata;
+        //if('Query' in metadata){
+        //    dataSource.setFilter(metadata['Query']);
+        //}
 
         if('IsLazy' in metadata){
             dataSource.setIsLazy(metadata['IsLazy']);
@@ -74,6 +62,8 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
+
+        this.initFileProvider(metadata, dataSource);
     },
 
     createDataSource: function (parent) {
@@ -104,22 +94,22 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
     initScriptsHandlers: function (parentView, metadata, dataSource) {
         //Скриптовые обработчики на события
         if (parentView && metadata.OnSelectedItemChanged) {
-            dataSource.onSelectedItemChanged(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged);
+            dataSource.onSelectedItemChanged(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
             });
         }
 
         if (parentView && metadata.OnItemsUpdated) {
-            dataSource.onItemsUpdated(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated);
+            dataSource.onItemsUpdated(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
             });
         }
 
-        if (parentView && metadata.OnSelectedItemModified) {
-            dataSource.onSelectedItemModified(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
-            });
-        }
+        //if (parentView && metadata.OnSelectedItemModified) {
+        //    dataSource.onSelectedItemModified(function () {
+        //        new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
+        //    });
+        //}
 
         if (parentView && metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {
@@ -142,12 +132,11 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 basePathOfProperty: params.basePathOfProperty
             });
         };
-    },
-
-    initFileProvider: function (dataSource, metadata) {
-
     }
+
 });
 
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
+
+_.extend(BaseDataSourceBuilder.prototype, DataSourceBuilderFileProviderMixin);

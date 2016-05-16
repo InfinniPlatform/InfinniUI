@@ -2,6 +2,8 @@ window.InfinniUI.DateUtils = (function () {
 
     init();
 
+    var _defaultTimeZone;
+
     return {
         toISO8601: toISO8601,
         dateToTimestamp: dateToTimestamp,
@@ -14,7 +16,8 @@ window.InfinniUI.DateUtils = (function () {
         parseISO8601toDate:parseISO8601toDate,
         checkRangeDate: checkRangeDate,
         getNearestDate: getNearestDate,
-        cloneDate: cloneDate
+        cloneDate: cloneDate,
+        getDefaultTimeZone: getDefaultTimezone
     };
 
     function parseISO8601toDate(value) {
@@ -241,6 +244,10 @@ window.InfinniUI.DateUtils = (function () {
         return date;
     }
 
+    function getDefaultTimezone() {
+        return _defaultTimeZone;
+    }
+
     function padInt(value, size) {
         var str = '' + value;
         var pad = '';
@@ -251,6 +258,10 @@ window.InfinniUI.DateUtils = (function () {
     }
 
     function init() {
+
+        var date = new Date();
+        _defaultTimeZone = date.getTimezoneOffset();
+
         if (!Math.sign) { //fix for devices not support ES6
             Math.sign = function (x) {
                 return x ? x < 0 ? -1 : 1 : 0;

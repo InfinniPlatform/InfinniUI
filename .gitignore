@@ -33,6 +33,7 @@ node_modules
 
 # Idea
 .idea/*
+test/integration/.idea
 
 # Bower
 bower_components/*

@@ -104,6 +104,10 @@ _.extend(Control.prototype, {
 
     remove: function () {
         this.controlView.remove();
+    },
+
+    setFocus: function () {
+        this.controlView.setFocus();
     }
 });
 

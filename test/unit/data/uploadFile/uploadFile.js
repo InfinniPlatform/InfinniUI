@@ -88,7 +88,6 @@ describe('FileProvider', function () {
                         var result = {};
 
                         result[idProperty] = guid();
-                        result['__Id'] = result[idProperty];
 
                         return result;
                     }
@@ -107,7 +106,7 @@ describe('FileProvider', function () {
                 var item = args.value;
                 ds.setProperty('title', 'some title');
                 ds.saveItem(item, function (context, args) {
-                    var value = args.value;
+                    var value = args.value.item;
                     assert.equal(item, value);
                     done();
                 }, function (args) {

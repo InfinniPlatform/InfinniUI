@@ -1,18 +1,25 @@
-var RestDataSource = newBaseDataSource.extend({
+var RestDataSource = BaseDataSource.extend({
+
+    defaults: _.defaults({
+        updatingItemsConverter: null
+
+    }, BaseDataSource.prototype.defaults),
 
     initialize: function(){
-        newBaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        BaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
 
         var model = this.get('model');
         model.urlParams = {
             get: {
+                method: 'get',
                 origin: null,
                 path: '',
                 data: {},
                 params: {}
             },
 
-            post: {
+            set: {
+                method: 'post',
                 origin: null,
                 path: '',
                 data: {},
@@ -20,6 +27,7 @@ var RestDataSource = newBaseDataSource.extend({
             },
 
             delete: {
+                method: 'delete',
                 origin: null,
                 path: '',
                 data: {},
@@ -83,12 +91,12 @@ var RestDataSource = newBaseDataSource.extend({
     updateItems: function(){
 
         if(this._checkGettingUrlParamsReady()){
-            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
             this.resumeUpdate('urlGettingParamsNotReady');
 
         }else{
             this.suspendUpdate('urlGettingParamsNotReady');
-            newBaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
         }
 
     },
@@ -254,6 +262,27 @@ var RestDataSource = newBaseDataSource.extend({
         var str = JSON.stringify(obj);
         var tmpTemplated = this._templateParamsInStr(str, params);
         return JSON.parse(tmpTemplated);
+    },
+
+    getUpdatingItemsConverter: function(){
+        return this.get('updatingItemsConverter');
+    },
+
+    setUpdatingItemsConverter: function(converter){
+        this.set('updatingItemsConverter', converter);
+    },
+
+    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+        var converter = this.getUpdatingItemsConverter();
+        var items;
+
+        if(converter){
+            items = converter(itemsData);
+        }else{
+            items = itemsData;
+        }
+
+        BaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
     }
 
 });

@@ -327,7 +327,7 @@ this.Then(/^я сверну панель "([^"]*)"$/, function (panelName, next)
         return window.testHelpers.getControlByName(panelName) != undefined;
     }, function () {
         try{
-            window.testHelpers.getControlByName(panelName).setCollapsed(false);
+            window.testHelpers.getControlByName(panelName).setCollapsed(true);
             next();
         }catch (err){
             next(err);
@@ -342,7 +342,7 @@ this.Then(/^я разверну панель "([^"]*)"$/, function (panelName, n
         return window.testHelpers.getControlByName(panelName) != undefined;
     }, function () {
         try{
-            window.testHelpers.getControlByName(panelName).setCollapsed(true);
+            window.testHelpers.getControlByName(panelName).setCollapsed(false);
             next();
         }catch (err){
             next(err);
@@ -350,4 +350,59 @@ this.Then(/^я разверну панель "([^"]*)"$/, function (panelName, n
     }, function () {
         next(new Error(panelName + ' not found!'));
     });
+});
+
+this.Then(/^я перейду на страницу "([^"]*)" по кнопке "([^"]*)"$/, function(buttonPage, navigatorName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(navigatorName) != undefined;
+    }, function () {
+        try{
+            var pageNavigator = window.testHelpers.getControlByName(navigatorName);
+            var pageNumber = parseInt(buttonPage);
+            pageNavigator.setPageNumber(pageNumber);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(navigatorName + ' not found!'));
+    });
+});
+
+this.Then(/^я перейду на следующую страницу по кнопке "([^"]*)"$/, function(navigatorName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(navigatorName) != undefined;
+    }, function () {
+        try{
+            var pageNavigator = window.testHelpers.getControlByName(navigatorName);
+            var oldPageNumber = pageNavigator.getPageNumber();
+            pageNavigator.setPageNumber(oldPageNumber + 1);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(navigatorName + ' not found!'));
+    });
+
+});
+
+this.Then(/^я перейду на предыдущую страницу по кнопке "([^"]*)"$/, function(navigatorName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(navigatorName) != undefined;
+    }, function () {
+        try{
+            var pageNavigator = window.testHelpers.getControlByName(navigatorName);
+            var oldPageNumber = pageNavigator.getPageNumber();
+            var newPageNumber = oldPageNumber - 1;
+            if (newPageNumber >= 0)
+               pageNavigator.setPageNumber(newPageNumber);
+            next();
+        }catch (err){
+            next(err);
+        }
+    }, function () {
+        next(new Error(navigatorName + ' not found!'));
+    });
+
 });

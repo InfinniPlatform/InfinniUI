@@ -6,12 +6,8 @@
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
         name: null,
-        idProperty: 'Id',
-        pageNumber: 0,
-        pageSize: 15,
-        sorting: null,
-        criteriaList: [],
-        filterManager: null,
+        idProperty: '_id',
+        identifyingMode: 'byId', // byId, byLink. detect automatically
 
         view: null,
 
@@ -19,14 +15,21 @@ var BaseDataSource = Backbone.Model.extend({
 
         dataProvider: null,
 
+        /*
+         * TreeModel for handling
+         * model.items
+         * model.selectedItem
+         * */
+        model: null,
+
         modifiedItems: {},
-        items: null,
         itemsById: {},
-        selectedItem: null,
 
         fillCreatedItem: true,
-        suspended: [],
-        isUpdateSuspended: false,
+
+        suspendingList: null, // []
+
+        waitingOnUpdateItemsHandlers: null, //[]
 
         errorValidator: null,
         warningValidator: null,
@@ -34,63 +37,79 @@ var BaseDataSource = Backbone.Model.extend({
 
         isRequestInProcess: false,
 
-        isLazy: true
+        isLazy: true,
 
-    },
+        newItemsHandler: null,
 
-    setFilterManager: function (filterManager) {
-        this.set('filterManager', filterManager);
-    },
+        isNumRegEx: /^\d/
 
-    getFilterManager: function () {
-        return this.get('filterManager');
     },
 
     initialize: function () {
+        var view = this.get('view');
+        var modelStartTree = {
+            items: null,
+            selectedItem: null
+        };
+
         this.initDataProvider();
-        if (!this.get('view')) {
+        if (!view) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
-        this.set('suspended', []);
-        this._onPropertyChangesList = [];
+        this.set('suspendingList', []);
+        this.set('waitingOnUpdateItemsHandlers', []);
+        this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
     },
 
     initDataProvider: function () {
         throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
     },
 
-    onPageNumberChanged: function (handler) {
-        this.on('change:pageNumber', handler);
-    },
+    onPropertyChanged: function (property, handler, owner) {
 
-    onPageSizeChanged: function (handler) {
-        this.on('change:pageSize', handler);
-    },
-
-    onError: function (handler) {
-        this.on('error', handler);
-    },
-
-    onPropertyChanged: function (property, handler) {
-        var list = this._onPropertyChangesList;
         if (typeof property == 'function') {
+            owner = handler;
             handler = property;
-            this.on('onPropertyChanged', handler);
-        } else {
-            if (list.indexOf(property) === -1) {
-                list.push(property);
-            }
-            this.on('onPropertyChanged:' + property, handler);
+            property = '*';
         }
 
+        if(property.charAt(0) == '.'){
+            property = property.substr(1);
+        }else{
+            if(property == ''){
+                property = 'items';
+            }else{
+                property = 'items.' + property;
+            }
+
+        }
+
+        this.get('model').onPropertyChanged(property, function(context, args){
+            var property = args.property;
+
+            if(property.substr(0,6) == 'items.'){
+                property = property.substr(6);
+            }else if(property == 'items'){
+                property = '';
+            } else{
+                property = '.' + property;
+            }
+
+            args.property = property;
+
+            handler(context, args);
+        }, owner);
     },
 
-    onSelectedItemChanged: function (handler) {
-        this.on('onSelectedItemChanged', handler);
-    },
+    onSelectedItemChanged: function (handler, owner) {
+        var that = this;
 
-    onSelectedItemModified: function (handler) {
-        this.on('onPropertyChanged', handler);
+        this.get('model').onPropertyChanged('selectedItem', function(context, args){
+            var argument = that._getArgumentTemplate();
+            argument.value = args.newValue;
+
+            handler(context, argument);
+        }, owner);
     },
 
     onErrorValidator: function (handler) {
@@ -130,11 +149,110 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('view');
     },
 
+    getProperty: function (property) {
+        var firstChar = property.charAt(0);
+        var indexOfSelectedItem;
+
+        if( this.get('isNumRegEx').test(firstChar) ){
+            property = 'items.' + property;
+
+        }else if(firstChar == ''){
+            property = 'items';
+
+        }else if(firstChar == '$'){
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return undefined;
+            }
+            property = 'items.' + indexOfSelectedItem + property.substr(1);
+
+        }else if(firstChar == '.'){
+            property = property.substr(1);
+        }else{
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return undefined;
+            }
+            property = 'items.' + indexOfSelectedItem + '.' + property;
+        }
+
+        return this.get('model').getProperty(property);
+    },
+
+    setProperty: function (property, value) {
+        var propertyPaths = property.split('.');
+        var firstChar;
+        var indexOfSelectedItem;
+        var index;
+        var resultOfSet;
+
+        if(propertyPaths[0] == '$'){
+            indexOfSelectedItem = this._indexOfSelectedItem();
+            if(indexOfSelectedItem == -1){
+                return;
+            }
+
+            property = indexOfSelectedItem + property.substr(1);
+            propertyPaths[0] = indexOfSelectedItem.toString();
+        }
+
+        firstChar = property.charAt(0);
+
+        if(propertyPaths.length == 1){
+
+            if(propertyPaths[0] == ''){
+                this._setItems(value);
+
+            }else if( this.get('isNumRegEx').test(propertyPaths[0]) ){
+                this._changeItem(propertyPaths[0], value);
+
+            }else{
+                indexOfSelectedItem = this._indexOfSelectedItem();
+                if(indexOfSelectedItem == -1){
+                    return;
+                }
+                property = 'items.' + indexOfSelectedItem + '.' + property;
+                resultOfSet = this.get('model').setProperty(property, value);
+
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                }
+            }
+
+        }else{
+            if(firstChar == '.'){
+                property = property.substr(1);
+                this.get('model').setProperty(property, value);
+
+            }else if(this.get('isNumRegEx').test(firstChar)){
+                property = 'items.' + property;
+                resultOfSet = this.get('model').setProperty(property, value);
+
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex( parseInt(propertyPaths[0]));
+                }
+            }else{
+                indexOfSelectedItem = this._indexOfSelectedItem();
+                if(indexOfSelectedItem == -1){
+                    return;
+                }
+                property = 'items.' + indexOfSelectedItem + '.' + property;
+                resultOfSet = this.get('model').setProperty(property, value);
+
+                if(resultOfSet){
+                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                }
+            }
+        }
+    },
+
     _setItems: function (items) {
+        this._detectIdentifyingMode(items);
+
         var indexOfItemsById;
 
         this.set('isDataReady', true);
-        this.set('items', items);
+        this.get('model').setProperty('items', items);
         this._clearModifiedSet();
         if (items && items.length > 0) {
             indexOfItemsById = this._indexItemsById(items);
@@ -147,26 +265,15 @@ var BaseDataSource = Backbone.Model.extend({
         } else {
             this.setSelectedItem(null);
         }
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
-        //this.trigger('settingNewItemsComplete');
     },
 
     _restoreSelectedItem: function(){
-        var selectedItem = this.getSelectedItem(),
-            selectedItemId = this.idOfItem(selectedItem);
-
-        if( selectedItemId != null ){
-            var items = this.get('itemsById');
-            var newSelectedItem = items[selectedItemId];
-
-            if( newSelectedItem != null ){
-                this.setSelectedItem(newSelectedItem);
-                return true;
-            }
-        }
-
-        return false;
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
+            source: this
+        });
     },
 
     _addItems: function (newItems) {
@@ -188,37 +295,16 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getSelectedItem: function () {
-        return this.get('selectedItem');
+        return this.get('model').getProperty('selectedItem');
     },
 
     setSelectedItem: function (item, success, error) {
-        var currentSelectedItem = this.getSelectedItem(),
-            items = this.get('itemsById'),
-            itemId = this.idOfItem(item);
-
-
-        if (typeof item == 'undefined') {
-            item = null;
-        }
-
-        if (item == currentSelectedItem) {
-            return;
-        }
-
-        if (item !== null) {
-            if (!items[itemId]) {
-                if (!error) {
-                    throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
-                } else {
-                    error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
-                    return;
-                }
-            }
-        }
-
-        this.set('selectedItem', item);
-
-        this._notifyAboutSelectedItem(item, success);
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource.setSelectedItem: not overrided by strategy',
+            source: this
+        });
     },
 
     _notifyAboutSelectedItem: function (item, successHandler) {
@@ -230,7 +316,14 @@ var BaseDataSource = Backbone.Model.extend({
         if (successHandler) {
             successHandler(context, argument);
         }
-        this.trigger('onSelectedItemChanged', context, argument);
+    },
+
+    _tuneMirroringOfModel: function(index){
+        if(index != -1){
+            this.get('model').setMirroring('items.$', 'items.'+index);
+        }else{
+            this.get('model').setMirroring(null, null);
+        }
     },
 
     getIdProperty: function () {
@@ -252,69 +345,35 @@ var BaseDataSource = Backbone.Model.extend({
     suspendUpdate: function (name) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         if (suspended.indexOf(reason) === -1) {
             suspended = suspended.slice(0);
             suspended.push(reason);
-            this.set('suspended', suspended);
+            this.set('suspendingList', suspended);
         }
     },
 
     resumeUpdate: function (name) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         var index = suspended.indexOf(reason);
 
         if (index !== -1) {
             suspended = suspended.slice(0);
             suspended.splice(index, 1);
-            this.set('suspended', suspended);
+            this.set('suspendingList', suspended);
+
+            // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из-за заморозки, нужно вызвать updateItems
+            if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
+                this.updateItems();
+            }
         }
     },
 
     isUpdateSuspended: function () {
-        var suspended = this.get('suspended');
+        var suspended = this.get('suspendingList');
         return suspended.length > 0;
-    },
-
-    getPageNumber: function () {
-        return this.get('pageNumber');
-    },
-
-    setPageNumber: function (value) {
-        if (!Number.isInteger(value) || value < 0) {
-            throw 'BaseDataSource.setPageNumber() Заданно недопустимое значение: ' + value + '. Должно быть целое, неотрицательное число.';
-        }
-
-        if (value != this.get('pageNumber')) {
-            this.set('pageNumber', value);
-            this.updateItems();
-        }
-    },
-
-    getPageSize: function () {
-        return this.get('pageSize');
-    },
-
-    setPageSize: function (value) {
-        var pageSize = parseInt(value, 10);
-        if (!Number.isInteger(pageSize) || pageSize < 0) {
-            throw 'BaseDataSource.setPageSize() Заданно недопустимое значение: ' + pageSize + '. Должно быть целое, неотрицательное число.';
-        }
-
-        if (pageSize != this.get('pageSize')) {
-            this.set('pageSize', pageSize);
-            this.updateItems();
-        }
-    },
-
-    getSorting: function () {
-        return this.get('sorting');
-    },
-
-    setSorting: function (sortingValue) {
-        this.set('sorting', sortingValue);
     },
 
     isModifiedItems: function () {
@@ -335,14 +394,29 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
+    _includeItemToModifiedSetByIndex: function (index) {
+        var item;
+
+        item = this.getItems()[index];
+        this._includeItemToModifiedSet(item);
+    },
+
     _includeItemToModifiedSet: function (item) {
-        var itemId = this.idOfItem(item);
-        this.get('modifiedItems')[itemId] = item;
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._includeItemToModifiedSet: not overrided by strategy',
+            source: this
+        });
     },
 
     _excludeItemFromModifiedSet: function (item) {
-        var itemId = this.idOfItem(item);
-        delete this.get('modifiedItems')[itemId];
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._excludeItemFromModifiedSet: not overrided by strategy',
+            source: this
+        });
     },
 
     _clearModifiedSet: function () {
@@ -368,114 +442,23 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    getProperty: function (property) {
-        var selectedItem = this.getSelectedItem(),
-            bindingByIndexRegEx = /^\d/,
-            relativeProperty, source;
+    _changeItem: function(index, value){
+        var item = this.get('model').getProperty('items.'+index);
+        var oldValue = {};
 
-        this._checkPropertyName(property);
-
-        if(!this.isDataReady()){
-            return undefined;
+        if(value == item){
+            return;
         }
 
-        if (property == '') {
-            return this.getItems();
-        } else if (property == '$') {
-            return selectedItem;
-        } else {
-            if (property.substr(0, 2) == '$.') {
-                relativeProperty = property.substr(2);
-                source = selectedItem;
-            } else {
-                relativeProperty = property;
+        this._excludeItemFromModifiedSet(item);
 
-                if (bindingByIndexRegEx.test(property)) {
-                    source = this.getItems();
-                } else {
-                    source = selectedItem;
-                }
-            }
+        this._replaceAllProperties(oldValue, item);
+        this._replaceAllProperties(item, value);
 
+        this.get('model').simulateSetProperty('items.'+index, oldValue);
 
-            return InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-
-
-        }
+        this._includeItemToModifiedSet(item);
     },
-
-    setProperty: function (property, value) {
-
-        this._checkPropertyName(property);
-
-        var selectedItem = this.getSelectedItem(),
-            bindingByIndexRegEx = /^\d/,
-            relativeProperty, oldValue, source;
-
-        if (property == '') {
-            oldValue = this.get('items');
-            this._setItems(value);
-
-        } else if (property == '$') {
-
-            if (!selectedItem) {
-                return;
-            }
-
-            if (value != selectedItem) {
-                oldValue = this._copyObject(selectedItem);
-                this._replaceAllProperties(selectedItem, value);
-            } else {
-                return;
-            }
-
-        } else {
-
-            if (!selectedItem) {
-                return;
-            }
-
-            if (property.substr(0, 2) == '$.') {
-                relativeProperty = property.substr(2);
-                source = selectedItem;
-            } else {
-                relativeProperty = property;
-
-                if (bindingByIndexRegEx.test(property)) {
-                    source = this.getItems();
-                } else {
-                    source = selectedItem;
-                }
-            }
-
-            oldValue = InfinniUI.ObjectUtils.getPropertyValue(source, relativeProperty);
-            if (value != oldValue) {
-                InfinniUI.ObjectUtils.setPropertyValue(source, relativeProperty, value);
-            } else {
-                return;
-            }
-        }
-
-        this._includeItemToModifiedSet(selectedItem);
-        this._notifyAboutPropertyChanged(property, value, oldValue);
-    },
-
-    // UNUSED?
-    //prepareAndGetProperty: function(property, onReady){
-    //    var that = this;
-    //
-    //    if (this.get('isDataReady')){
-    //        onReady( this.getProperty(property) );
-    //    }else{
-    //        if (!this.get('isRequestInProcess')){
-    //            this.updateItems();
-    //        }
-    //
-    //        this.once('onItemsUpdated', function(){
-    //            onReady( that.getProperty(property) );
-    //        });
-    //    }
-    //},
 
     tryInitData: function(){
         if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
@@ -483,129 +466,42 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutPropertyChanged: function (property, newValue, oldValue) {
-        var
-            ds = this,
-            context = this.getContext(),
-            argument = this._getArgumentTemplate(),
-            selectedItem = ds.getSelectedItem(),
-            items = ds.getItems(),
-            selectedItemIndex = items.indexOf(selectedItem);
-
-        argument.property = property;
-        argument.newValue = newValue;
-        argument.oldValue = oldValue;
-
-        this.trigger('onPropertyChanged', context, argument);
-
-        /**
-         * Генерация событий на обновление связанных полей ($ и Значения вложенных полей)
-         */
-        this._onPropertyChangesList
-            .filter(function (name) {
-                if(typeof name != 'string'){
-                    return false;
-                }
-
-                var prop, matched = false;
-                var template = property + '.';
-                if (property === name) {
-                    matched = false;
-                } else if (property.length && name.length){
-                    if (isBindToSelectedItem(name) && isBindToSelectedItem(property)) {
-                        if (name.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    } else  if (isBindToSelectedItem(name)) {
-                        prop = resolveProperty(name);
-                        if (prop.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    } else if (isBindToSelectedItem(property)) {
-                        prop = resolveProperty(property);
-                        if (name.indexOf(template) === 0) {
-                            matched = true;
-                        }
-                    }
-                }
-
-                return matched;
-            })
-            .map(function (name) {
-                var prop,
-                    argument = ds._getArgumentTemplate();
-
-                argument.property = name;
-
-                if(isBindToSelectedItem(name)) {
-                    var prop1 = resolveProperty(name),
-                        prop2 = resolveProperty(property);
-
-                    prop = prop1.substr(prop2.length);
-                } else {
-                    prop = name.substr(property.length);
-                }
-
-                prop = prop.replace(/^\.+/, '');
-
-                argument.newValue = InfinniUI.ObjectUtils.getPropertyValue(newValue, prop);
-                argument.oldValue = InfinniUI.ObjectUtils.getPropertyValue(oldValue, prop);
-
-                return argument
-            })
-            .forEach(function (argument) {
-                ds.trigger('onPropertyChanged:' + argument.property, context, argument);
-            });
-
-        argument.property = property;
-        this.trigger('onPropertyChanged:' + property, context, argument);
-
-        function resolveProperty () {
-
-        }
-        function resolveProperty(property) {
-            return property.replace(/^\$/, selectedItemIndex);
-        }
-
-        function  isBindToSelectedItem(property) {
-            return /^\$/.test(property);
-        }
-
-
-    },
-
     saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
             ds = this,
             logger = window.InfinniUI.global.logger,
+            that = this,
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved(item, 'notModified', success);
+            this._notifyAboutItemSaved({item: item, result: null}, 'notModified', success);
             return;
         }
 
         validateResult = this.validateOnErrors(item);
-        if (!validateResult.isValid) {
+        if (!validateResult.IsValid) {
             this._notifyAboutFailValidationBySaving(item, validateResult, error);
             return;
         }
 
-
-
-        if (typeof success === 'function') {
-            var context = this.getContext(),
-                argument = this._getArgumentTemplate();
-
-            success.call(null, context, argument);
-        }
+        dataProvider.saveItem(item, function(data){
+            if( !('IsValid' in data) || data.IsValid === true ){
+                that._excludeItemFromModifiedSet(item);
+                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
+            }else{
+                that._notifyAboutFailValidationBySaving(item, data, error);
+            }
+        }, function(data) {
+            var result = data.data.responseJSON['Result']['ValidationResult'];
+            that._notifyAboutFailValidationBySaving(item, result, error);
+        });
     },
 
-    _notifyAboutItemSaved: function (item, result, successHandler) {
+    _notifyAboutItemSaved: function (data, result, successHandler) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
-        argument.value = item;
+        argument.value = data;
         argument.result = result;
 
         if (successHandler) {
@@ -629,17 +525,23 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
+        this.beforeDeleteItem(item);
         dataProvider.deleteItem(item, function (data) {
             if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
             } else {
                 that._notifyAboutFailValidationByDeleting(item, data, error);
             }
+        }, function(data) {
+            var result = data.data.responseJSON['Result']['ValidationResult'];
+            that._notifyAboutFailValidationByDeleting(item, result, error);
         });
     },
 
+    beforeDeleteItem: function(item){},
+
     _handleDeletedItem: function (item, successHandler) {
-        var items = this.get('items'),
+        var items = this.getItems(),
             idProperty = this.get('idProperty'),
             itemId = this.idOfItem(item),
             selectedItem = this.getSelectedItem();
@@ -710,43 +612,61 @@ var BaseDataSource = Backbone.Model.extend({
             });
         }
 
-        return this.get('items');
+        return this.get('model').getProperty('items');
     },
 
     updateItems: function (onSuccess, onError) {
         if (!this.isUpdateSuspended()) {
-            var filters = this.getFilter(),
-                pageNumber = this.get('pageNumber'),
-                pageSize = this.get('pageSize'),
-                sorting = this.get('sorting'),
-                dataProvider = this.get('dataProvider'),
+            var dataProvider = this.get('dataProvider'),
                 that = this;
 
             this.set('isRequestInProcess', true);
-            dataProvider.getItems(filters, pageNumber, pageSize, sorting, function (data) {
+            dataProvider.getItems(function (data) {
 
                 that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data, onSuccess);
+                that._handleUpdatedItemsData(data.data, onSuccess, onError);
 
             }, onError);
+        }else{
+            var handlers = this.get('waitingOnUpdateItemsHandlers');
+            handlers.push({
+                onSuccess: onSuccess,
+                onError: onError
+            });
         }
 
     },
 
-    _handleUpdatedItemsData: function (itemsData, successHandler) {
-        this._setItems(itemsData);
-        this._notifyAboutItemsUpdated(itemsData, successHandler);
+    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+        if(this.get('newItemsHandler')){
+            itemsData = this.get('newItemsHandler')(itemsData);
+        }
+
+        this.setProperty('', itemsData);
+        this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
 
-    _notifyAboutItemsUpdated: function (itemsData, successHandler) {
-        var context = this.getContext(),
-            argument = {
-                value: itemsData
-            };
+    _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
+        var context = this.getContext();
+        var argument = {
+            value: itemsData,
+            source: this
+        };
+
+        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        var handlers = this.get('waitingOnUpdateItemsHandlers');
+        for(var i = 0, ii = handlers.length; i < ii; i++){
+            if(handlers[i].onSuccess){
+                handlers[i].onSuccess(context, argument);
+            }
+        }
+
+        this.set('waitingOnUpdateItemsHandlers', []);
 
         if (successHandler) {
             successHandler(context, argument);
         }
+
         this.trigger('onItemsUpdated', context, argument);
     },
 
@@ -760,26 +680,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.trigger('onPropertyChanged', context, argument);
         this.trigger('onPropertyChanged:', context, argument);
-    },
-
-    addNextItems: function (success, error) {
-        if (!this.isUpdateSuspended()) {
-            var filters = this.getFilter(),
-                pageNumber = this.get('pageNumber'),
-                pageSize = this.get('pageSize'),
-                sorting = this.get('sorting'),
-                dataProvider = this.get('dataProvider'),
-                that = this;
-
-            this.set('isRequestInProcess', true);
-            this.set('pageNumber', pageNumber + 1);
-            dataProvider.getItems(filters, pageNumber + 1, pageSize, sorting, function (data) {
-
-                that.set('isRequestInProcess', false);
-                that._handleAddedItems(data, success);
-
-            }, error);
-        }
     },
 
     _handleAddedItems: function (itemsData, successHandler) {
@@ -820,7 +720,7 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _handleDataForCreatingItem: function (itemData, successHandler) {
-        var items = this.get('items');
+        var items = this.getItems();
 
         if(items) {
             items = items.slice();
@@ -829,7 +729,7 @@ var BaseDataSource = Backbone.Model.extend({
             items = [itemData];
         }
 
-        this._setItems(items);
+        this.setProperty('', items);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
@@ -847,26 +747,9 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     getFilter: function () {
-        return this.get('criteriaList');
-    },
-
-    addFilter: function (value) {
-        var filterManager = this.getFilterManager();
-        filterManager.addFilter(value);
     },
 
     setFilter: function (value, onSuccess, onError) {
-        var filterManager = this.getFilterManager();
-        var filter = _.clone(value);
-
-        filterManager.clean();
-
-        filterManager.onChange(function(newCriteriaList){
-            if(filterManager.isReady()){
-                this._setCriteriaList(newCriteriaList, onSuccess, onError);
-            }
-        }.bind(this));
-        filterManager.addFilter(filter);
     },
 
     _setCriteriaList: function(criteriaList, onSuccess, onError){
@@ -879,6 +762,10 @@ var BaseDataSource = Backbone.Model.extend({
             idFilter = dataProvider.createIdFilter(itemId);
 
         this.setFilter(idFilter);
+    },
+
+    setNewItemsHandler: function(handler){
+        this.set('newItemsHandler', handler);
     },
 
     getErrorValidator: function () {
@@ -905,11 +792,19 @@ var BaseDataSource = Backbone.Model.extend({
         return this._validatingActions(item, callback, 'warning');
     },
 
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
+    },
+
     _validatingActions: function (item, callback, validationType) {
         var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
             result = {
-                isValid: true,
-                items: []
+                IsValid: true,
+                Items: []
             },
             isCheckingOneItem = !!item,
             context = this.getContext(),
@@ -926,10 +821,10 @@ var BaseDataSource = Backbone.Model.extend({
                 for (var i = 0, ii = items.length; i < ii; i++) {
 
                     subResult = validatingFunction(context, items[i]);
-                    if (!subResult.isValid) {
-                        this._addIndexToPropertiesOfValidationMessage(subResult.items, i);
-                        result.isValid = false;
-                        result.items = _.union(result.items, subResult.items);
+                    if (!subResult.IsValid) {
+                        this._addIndexToPropertiesOfValidationMessage(subResult.Items, i);
+                        result.IsValid = false;
+                        result.Items = _.union(result.Items, subResult.Items);
                     }
 
                 }
@@ -948,7 +843,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationHandler) {
+    _notifyAboutValidation: function (validationResult, validationHandler, validationType) {
         var context = this.getContext(),
             argument = {
                 value: validationResult
@@ -957,8 +852,9 @@ var BaseDataSource = Backbone.Model.extend({
         if (validationHandler) {
             validationHandler(context, argument);
         }
-        this.trigger('onErrorValidator', context, argument);
 
+        var eventType = (validationType == 'warning') ? 'onWarningValidator' : 'onErrorValidator';
+        this.trigger(eventType, context, argument);
     },
 
     getContext: function () {
@@ -977,6 +873,20 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
+    _indexOfItem: function(item){
+        var items = this.getItems();
+        if(!items){
+            return -1;
+        }
+        return items.indexOf(item);
+    },
+
+    _indexOfSelectedItem: function(){
+        var selectedItem = this.getSelectedItem();
+
+        return this._indexOfItem(selectedItem);
+    },
+
     idOfItem: function (item) {
         var idProperty = this.get('idProperty');
         if (!item) {
@@ -990,7 +900,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('onPropertyChanged:', function(){
+            this.once('onItemsUpdated', function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
@@ -1003,6 +913,23 @@ var BaseDataSource = Backbone.Model.extend({
         }else{
             promise.resolve();
         }
+
+        return promise;
+    },
+
+    getNearestRequestPromise: function(){
+        var promise = $.Deferred();
+
+        this.once('onItemsUpdated', function(){
+            if(this.isDataReady()){
+                promise.resolve();
+            }else{
+                logger.warn({
+                    message: 'BaseDataSource: strange, expected other dataReady status',
+                    source: this
+                });
+            }
+        });
 
         return promise;
     },
@@ -1037,8 +964,149 @@ var BaseDataSource = Backbone.Model.extend({
         return {
             source: this
         };
+    },
+
+    _detectIdentifyingMode: function(items){
+        if( $.isArray(items) && items.length > 0){
+            if( !$.isPlainObject(items[0]) || this.getIdProperty() in items[0] ){
+                this.set('identifyingMode', 'byId');
+                _.extend( this, BaseDataSource.identifyingStrategy.byId);
+            }else{
+                this.set('identifyingMode', 'byLink');
+                _.extend( this, BaseDataSource.identifyingStrategy.byLink);
+            }
+        }else{
+            this.set('identifyingMode', 'byId');
+            _.extend( this, BaseDataSource.identifyingStrategy.byId);
+        }
+    },
+
+    _getIdentifyingMode: function(){
+        return this.get('identifyingMode');
     }
 
 });
 
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin, dataSourceLookupMixin);
+
+BaseDataSource.identifyingStrategy = {
+
+    byId: {
+        _restoreSelectedItem: function(){
+
+            var selectedItem = this.getSelectedItem(),
+                selectedItemId = this.idOfItem(selectedItem);
+
+            if( selectedItemId != null ){
+                var items = this.get('itemsById');
+                var newSelectedItem = items[selectedItemId];
+
+                if( newSelectedItem != null ){
+                    this.setSelectedItem(newSelectedItem);
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        setSelectedItem: function (item, success, error) {
+            var currentSelectedItem = this.getSelectedItem(),
+                items = this.get('itemsById'),
+                itemId = this.idOfItem(item),
+                index;
+
+
+            if (typeof item == 'undefined') {
+                item = null;
+            }
+
+            if (item == currentSelectedItem) {
+                return;
+            }
+
+            if (item !== null) {
+                if (!items[itemId]) {
+                    if (!error) {
+                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                    } else {
+                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        return;
+                    }
+                }
+            }
+
+            this.get('model').setProperty('selectedItem', item);
+
+            index = this._indexOfItem(items[itemId]);
+            this._tuneMirroringOfModel(index);
+
+            this._notifyAboutSelectedItem(item, success);
+        },
+
+        _includeItemToModifiedSet: function (item) {
+            var itemId = this.idOfItem(item);
+            this.get('modifiedItems')[itemId] = item;
+        },
+
+        _excludeItemFromModifiedSet: function (item) {
+            var itemId = this.idOfItem(item);
+            delete this.get('modifiedItems')[itemId];
+        },
+    },
+
+    byLink: {
+        _restoreSelectedItem: function(){
+
+            var selectedItem = this.getSelectedItem();
+            var items = this.getItems();
+
+            if( items.indexOf(selectedItem) == -1 ){
+                return false;
+            }else{
+                return true;
+            }
+        },
+
+        setSelectedItem: function (item, success, error) {
+            var currentSelectedItem = this.getSelectedItem(),
+                items = this.getItems(),
+                index = this._indexOfItem(item);
+
+
+            if (typeof item == 'undefined') {
+                item = null;
+            }
+
+            if (item == currentSelectedItem) {
+                return;
+            }
+
+            if (item !== null) {
+                if (index == -1) {
+                    if (!error) {
+                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                    } else {
+                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        return;
+                    }
+                }
+            }
+
+            this.get('model').setProperty('selectedItem', item);
+
+            this._tuneMirroringOfModel(index);
+
+            this._notifyAboutSelectedItem(item, success);
+        },
+
+        _includeItemToModifiedSet: function (item) {
+            this.get('modifiedItems')['-'] = item;
+        },
+
+        _excludeItemFromModifiedSet: function (item) {
+            delete this.get('modifiedItems')['-'];
+        },
+    }
+};
+
+_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);

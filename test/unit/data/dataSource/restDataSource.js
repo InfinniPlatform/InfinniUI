@@ -3,37 +3,37 @@ describe('RestDataSource', function () {
 
     var items = [
         {
-            "Id": '1',
+            "_id": '1',
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "Id": '2',
+            "_id": '2',
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "Id": '3',
+            "_id": '3',
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "Id": '4',
+            "_id": '4',
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "Id": '5',
+            "_id": '5',
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "Id": '6',
+            "_id": '6',
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "Id": '10',
+            "_id": '10',
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -200,7 +200,7 @@ describe('RestDataSource', function () {
                 assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
                 assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
                 assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
-                assert.equal(dataSource.getProperty('.selectedItem.Id'), 1, 'return right spec property');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return right spec property');
                 done();
             }
         });
@@ -216,7 +216,7 @@ describe('RestDataSource', function () {
 
             function handleItemsReady(){
                 assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-                assert.equal(dataSource.getProperty('.selectedItem.Id'), 1, 'return property value by property 2');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
                 item3 = dataSource.getProperty('3');
 
                 //When
@@ -224,7 +224,7 @@ describe('RestDataSource', function () {
                 dataSource.setProperty('$.LastName', 'Ивнв');
                 dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
                 dataSource.setProperty('3', {
-                    "Id": '55',
+                    "_id": '55',
                     "FirstName": "П2",
                     "LastName": "Пе2"
                 });
@@ -236,7 +236,7 @@ describe('RestDataSource', function () {
                 assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
                 assert.equal(dataSource.getProperty('3'), item3, 'on set full item, link on item is not changed');
                 assert.equal(dataSource.getProperty('3.FirstName'), item3.FirstName, 'return property value by property after change property 3');
-                assert.equal(dataSource.getProperty('3.Id'), item3.Id, 'return property value by property after change property 4');
+                assert.equal(dataSource.getProperty('3._id'), item3._id, 'return property value by property after change property 4');
                 done();
             }
         });
@@ -259,12 +259,12 @@ describe('RestDataSource', function () {
                 dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
                 dataSource.setProperty('3.FirstName', 'Petrov');
                 dataSource.setProperty('3', {
-                    "Id": '55',
+                    "_id": '55',
                     "FirstName": "П2",
                     "LastName": "Пе2"
                 });
                 dataSource.setProperty('4', {
-                    "Id": '5',
+                    "_id": '5',
                     "FirstName": "П5",
                     "LastName": "Пе5"
                 });
@@ -295,7 +295,7 @@ describe('RestDataSource', function () {
 
             function handleItemsReady(){
                 assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-                assert.equal(dataSource.getProperty('.selectedItem.Id'), 1, 'return property value by property 2');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
                 item3 = dataSource.getProperty('3');
 
                 //When
@@ -351,7 +351,7 @@ describe('RestDataSource', function () {
                 dataSource.setProperty('$.LastName', 'Ивнв');
                 dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
                 dataSource.setProperty('3', {
-                    "Id": '55',
+                    "_id": '55',
                     "FirstName": "П2",
                     "LastName": "Пе2"
                 });

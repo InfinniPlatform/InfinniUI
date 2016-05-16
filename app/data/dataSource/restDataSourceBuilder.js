@@ -2,7 +2,7 @@ var RestDataSourceBuilder = function() {
     _.superClass(RestDataSourceBuilder, this);
 }
 
-_.inherit(RestDataSourceBuilder, newBaseDataSourceBuilder);
+_.inherit(RestDataSourceBuilder, BaseDataSourceBuilder);
 
 _.extend(RestDataSourceBuilder.prototype, {
     createDataSource: function(parent){
@@ -12,7 +12,7 @@ _.extend(RestDataSourceBuilder.prototype, {
     },
 
     applyMetadata: function(builder, parent, metadata, dataSource){
-        newBaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
 
         var tmpParams;
 
@@ -34,6 +34,12 @@ _.extend(RestDataSourceBuilder.prototype, {
             this.bindParams(metadata['DeletingParams'], dataSource, parent, '.urlParams.delet.params', builder);
         }
 
+        if('UpdatingItemsConverter' in metadata){
+            dataSource.setUpdatingItemsConverter(function (items) {
+                return new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items });
+            });
+        }
+
     },
 
     extractUrlParams: function(urlParamsMetadata, pathForBinding){
@@ -41,6 +47,8 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         if('Origin' in urlParamsMetadata){
             result.origin = urlParamsMetadata['Origin'];
+        }else{
+            result.origin = InfinniUI.config.serverUrl;
         }
 
         if('Path' in urlParamsMetadata){

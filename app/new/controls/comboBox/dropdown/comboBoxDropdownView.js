@@ -25,10 +25,11 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
 
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
-        this.listenTo(this.model, 'change:search', this.onChangeSearchHandler);
+        this.listenTo(this.model, 'change:autocompleteValue', this.onChangeSearchHandler);
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
         this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem);
         this.listenTo(this.strategy, 'click', this.onClickItemHandler);
+        this.listenTo(this.strategy, 'mouseenter', this.onMouseEnterItemHandler);
         this.model.onValueChanged(this.onChangeValueHandler.bind(this));
 
         var items = this.model.get('items');
@@ -63,6 +64,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.ui.noItems.toggleClass('hidden', !noItems);
 
         this.markSelectedItems();
+        this.markCheckedItems()
     },
 
     setItemsContent: function (content) {
@@ -144,7 +146,6 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
 
-
     markCheckedItems: function () {
         var model = this.model;
         var value = model.getValue();
@@ -167,7 +168,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
         $items.forEach(function ($item) {
             var selected = items.indexOf($item.data('pl-data-item')) !== -1;
-            $item.toggleClass('pl-combobox-selected', selected);
+            $item.toggleClass('pl-combobox-checked', selected);
         });
     },
 
@@ -180,6 +181,10 @@ var ComboBoxDropdownView = Backbone.View.extend({
     updateAutocomplete: function () {
         var autocomplete = this.model.get('autocomplete');
         this.ui.filter.toggleClass('hidden', !autocomplete);
+    },
+
+    onMouseEnterItemHandler: function (item) {
+        this.model.setSelectedItem(item);
     },
 
     onClickItemHandler: function (item) {
@@ -235,6 +240,56 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     onChangeSelectedItem: function (model, value) {
         this.markSelectedItems();
+    },
+
+    updatePosition: function (parentDOMElement) {
+        var direction = this.getDropdownDirection(parentDOMElement);
+        this.setPositionFor(parentDOMElement, direction );
+    },
+
+    setPositionFor: function (parentDOMElement, direction) {
+        clearInterval(this._intervalId);
+
+        this.applyStyle(parentDOMElement, direction);
+        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement, direction), 100);
+    },
+
+    remove: function () {
+        clearInterval(this._intervalId);
+        return Backbone.View.prototype.remove.apply(this, arguments);
+    },
+
+    getDropdownDirection: function (parentDOMElement) {
+
+        var windowHeight = $(window).height();
+        var rect = parentDOMElement.getBoundingClientRect();
+        var height = this.$el.height();
+
+        var direction = 'bottom';
+        if (rect.bottom + height + 30 > windowHeight && rect.bottom > windowHeight / 2) {
+            direction = 'top';
+        }
+
+        return direction;
+    },
+
+    applyStyle: function (parentDOMElement, direction) {
+        var rect = parentDOMElement.getBoundingClientRect();
+
+        //@TODO Вынести общие стили в css
+        var style = {
+            position: "absolute",
+            left: window.pageXOffset + rect.left,
+            width: Math.round(rect.width) - 1
+        };
+
+        if (direction === 'bottom') {
+            style.top = window.pageYOffset + rect.bottom;
+        } else {
+            style.top = rect.top - this.$el.height();
+        }
+
+        this.$el.css(style);
     }
 
 });

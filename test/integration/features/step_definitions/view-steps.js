@@ -141,7 +141,7 @@ this.Then(/^система отобразит список валидацион�
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
-            actualMessages.push(actual.eq(i).text());
+            actualMessages.push(actual.eq(i).text().replace(/'/g, '"'));
         }
 
         var messages = getMessages(msgs);
@@ -334,7 +334,7 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
     var success = function () {
         try {
             var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
-            var $row = $table.find('.pl-datagrid-row').eq(parseInt(rowIndex));
+            var $row = $table.find('.pl-datagrid-row.pl-datagrid-row_data').eq(parseInt(rowIndex));
             var expectedCells = rowValue.split('|');
 
             if ($row.length == 0) {
@@ -344,6 +344,10 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
 
             var $cells = $row.find('td');
 
+            if($cells.eq(0).hasClass('hidden')) {
+                $cells.splice(0, 1);
+            }
+
             expectedCells.splice(0, 1);
             expectedCells.pop();
 
@@ -352,7 +356,9 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
             });
 
             if (expectedCells.length != $cells.length) {
-                next(new Error("expectedRows.length(" + expectedCells.length + ") != $cells.length(" + $cells.length + ")"));
+                var err = "expectedRows.length(" + expectedCells.length + ") != $cells.length(" + $cells.length + ")\n" +
+                    'Row: ' + window.testHelpers.parseTableRow($cells);
+                next(new Error(err));
                 return;
             }
 
@@ -365,7 +371,10 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
                         .trim();
 
                     if(cellText != expectedCells[i]) {
-                        next(new Error("Expected : '" + expectedCells[i] + "', Actual: '" + cellText + "'"));
+                        var err = "Expected: '" + expectedCells[i] + "', Actual: '" + cellText + "'\n" +
+                            'Expected row:  ' + rowValue + '\n' +
+                            'Actual row:    ' + window.testHelpers.parseTableRow($cells);
+                        next(new Error(err));
                         return;
                     }
                 }

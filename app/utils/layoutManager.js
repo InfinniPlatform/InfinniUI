@@ -37,6 +37,12 @@ var layoutManager = {
         var contentHeight = this.setOuterHeight($el, pageHeight);
         var elements = $el.find(this.getSelector());
 
+        //var elements = Array.prototype.filter.call($el.find(this.getSelector()), function (element) {
+        //    //Исключаем элементы которые долдны занитмать всю доступную высоту,
+        //    // которые по какой-то причине оказались внутри ScrollPanel
+        //    return $(element).parents('.pl-scrollpanel').length === 0;
+        //});
+
         if (elements.length === 0) {
             return;
         }
@@ -93,7 +99,7 @@ var layoutManager = {
 
         var manager = this;
         (function h(node, height) {
-            var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop)');
+            var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)');
             /**
              * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
              */

@@ -56,7 +56,7 @@ var ComboBoxView = ListEditorBaseView.extend({
 
             model.on('change:dropdown', function (model, dropdown) {
                 if (dropdown) {
-                    model.set('search', '');//Сброс фильтра
+                    model.set('autocompleteValue', '');//Сброс фильтра
                     model.set('focused', true);
                     if (view.dropDownView) {
                         view.dropDownView.remove();
@@ -69,23 +69,9 @@ var ComboBoxView = ListEditorBaseView.extend({
                     this.listenTo(dropdownView, 'search', _.debounce(view.onSearchValueHandler.bind(view), 300));
 
                     var $dropdown = dropdownView.render();
-
-                    var rect = view.$el[0].getBoundingClientRect();
-                    //@TODO Вынести общие стили в css
-                    var style = {
-                        position: "absolute",
-                        top: window.pageYOffset + rect.bottom/* + parseInt(view.$el.css('margin-bottom'))*/,
-                        left: window.pageXOffset + rect.left,
-                        width: Math.round(rect.width) - 1
-                    };
-                    //@TODO Добавить алгоритм определения куда расхлапывать список вверх/вниз
-                    //Для расхлопывания вверх:
-                    //bottom: pageYOffset - rect.height
-                    //Для расхлопывания вниз:
-                    //top: window.pageYOffset + rect.bottom
-
-                    $dropdown.css(style);
                     $('body').append($dropdown);
+                    setTimeout(dropdownView.updatePosition(view.el));
+
                     if (model.get('autocomplete')) {
                         dropdownView.setSearchFocus();
                     } else {
@@ -283,7 +269,7 @@ var ComboBoxView = ListEditorBaseView.extend({
      */
     onSearchValueHandler: function (text) {
         this.toggleDropdown(true);
-        this.model.set('search', text);
+        this.model.set('autocompleteValue', text);
     },
 
     onClickValueHandler: function (event) {

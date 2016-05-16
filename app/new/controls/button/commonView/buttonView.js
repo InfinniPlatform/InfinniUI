@@ -16,6 +16,11 @@ var CommonButtonView = ControlView.extend({
         'click button': 'onClickHandler'
     },
 
+    initialize: function () {
+        ControlView.prototype.initialize.apply(this, arguments);
+        this.initHighlightMixin();
+    },
+
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
@@ -44,6 +49,16 @@ var CommonButtonView = ControlView.extend({
         var textForButton = this.model.get('text');
         if (typeof textForButton == 'string'){
             this.getButtonElement().html(textForButton);
+        }
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.ui.button.attr('tabindex', -1);
+        } else {
+            this.ui.button.removeAttr('tabindex');
         }
     },
 
@@ -83,9 +98,17 @@ var CommonButtonView = ControlView.extend({
 
     getButtonElement: function(){
         return this.ui.button;
+    },
+
+    setFocus: function () {
+        this.ui.button.focus();
     }
 
+
+
 });
+
+_.extend(CommonButtonView.prototype, highlightMixin.controlView);
 
 
 InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.common', CommonButtonView);
