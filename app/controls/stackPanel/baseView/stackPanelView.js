@@ -9,8 +9,8 @@ var StackPanelView = ContainerView.extend(
         className: 'pl-stack-panel pl-clearfix',
 
         template: {
-            plain: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanel.tpl.html"],
-            grouped: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanelGrouped.tpl.html"]
+            plain: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanel.tpl.html"],
+            grouped: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanelGrouped.tpl.html"]
         },
 
         UI: {

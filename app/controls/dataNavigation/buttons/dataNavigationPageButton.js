@@ -1,5 +1,5 @@
 var DataNavigationPageButton = DataNavigationBaseButton.extend({
-    template: InfinniUI.Template["new/controls/dataNavigation/buttons/template/page.tpl.html"],
+    template: InfinniUI.Template["controls/dataNavigation/buttons/template/page.tpl.html"],
 
     events: {
         "click": "onClickHandler"

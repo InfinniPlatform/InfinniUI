@@ -96,7 +96,7 @@ var SelectTimes = SelectComponent.extend({
 
     modelClass: SelectTimesModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/time/time.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/time/time.tpl.html"],
 
     events: {
         "click .time-spin-down.time-spin-hour": "prevHour",

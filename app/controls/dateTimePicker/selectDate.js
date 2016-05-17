@@ -2,7 +2,7 @@ var SelectDate = Backbone.View.extend({
 
     className: 'pl-datepicker-dropdown pl-dropdown-container',
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/select.date.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/select.date.tpl.html"],
 
     UI: {
         days: '.days',

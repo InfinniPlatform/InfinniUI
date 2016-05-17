@@ -7,11 +7,11 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
     className: 'pl-tabpanel',
 
     template: {
-        top: InfinniUI.Template["new/controls/tabPanel/template/tabPanel.top.tpl.html"],
-        right: InfinniUI.Template["new/controls/tabPanel/template/tabPanel.right.tpl.html"],
-        bottom: InfinniUI.Template["new/controls/tabPanel/template/tabPanel.bottom.tpl.html"],
-        left: InfinniUI.Template["new/controls/tabPanel/template/tabPanel.left.tpl.html"],
-        none: InfinniUI.Template["new/controls/tabPanel/template/tabPanel.none.tpl.html"]
+        top: InfinniUI.Template["controls/tabPanel/template/tabPanel.top.tpl.html"],
+        right: InfinniUI.Template["controls/tabPanel/template/tabPanel.right.tpl.html"],
+        bottom: InfinniUI.Template["controls/tabPanel/template/tabPanel.bottom.tpl.html"],
+        left: InfinniUI.Template["controls/tabPanel/template/tabPanel.left.tpl.html"],
+        none: InfinniUI.Template["controls/tabPanel/template/tabPanel.none.tpl.html"]
     },
 
     UI: {

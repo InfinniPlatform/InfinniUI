@@ -2,7 +2,7 @@ var DataNavigationPageSizes = Backbone.View.extend({
 
     className: "btn-group",
 
-    template: InfinniUI.Template["new/controls/dataNavigation/pageSizes/template/pageSizes.tpl.html"],
+    template: InfinniUI.Template["controls/dataNavigation/pageSizes/template/pageSizes.tpl.html"],
 
     events: {
         "click button": "onClickButtonHandler"

@@ -1,8 +1,8 @@
 var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
 
     template: {
-        oneline: InfinniUI.Template["new/controls/buttonEdit/template/textBoxInput.tpl.html"],
-        multiline: InfinniUI.Template["new/controls/buttonEdit/template/textBoxArea.tpl.html"]
+        oneline: InfinniUI.Template["controls/buttonEdit/template/textBoxInput.tpl.html"],
+        multiline: InfinniUI.Template["controls/buttonEdit/template/textBoxArea.tpl.html"]
     },
 
     className: 'pl-button-edit form-group',

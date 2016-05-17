@@ -5,8 +5,8 @@
 var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     template: {
-        oneline: InfinniUI.Template["new/controls/textBox/template/textBoxInput.tpl.html"],
-        multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
+        oneline: InfinniUI.Template["controls/textBox/template/textBoxInput.tpl.html"],
+        multiline: InfinniUI.Template["controls/textBox/template/textBoxArea.tpl.html"]
     },
 
     className: 'pl-textbox form-group',

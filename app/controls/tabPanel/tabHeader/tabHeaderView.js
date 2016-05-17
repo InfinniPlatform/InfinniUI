@@ -12,7 +12,7 @@ var TabHeaderView = Backbone.View.extend({
 
     tagName: "li",
 
-    template: InfinniUI.Template["new/controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
 
     events: {
         "click": "onClickHandler",

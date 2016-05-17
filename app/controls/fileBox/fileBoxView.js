@@ -5,7 +5,7 @@
  */
 var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.extend({}, editorBaseViewMixin, {
 
-    template: InfinniUI.Template["new/controls/fileBox/template/template.tpl.html"],
+    template: InfinniUI.Template["controls/fileBox/template/template.tpl.html"],
 
     className: 'pl-file-box',
 

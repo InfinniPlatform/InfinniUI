@@ -6,7 +6,7 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
 
     className: "pl-datepicker form-group",
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/date.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
         dropdownButton: '.pl-datepicker-calendar',

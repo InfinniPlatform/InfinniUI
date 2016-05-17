@@ -5,10 +5,10 @@
 var DataGridView = ListEditorBaseView.extend({
 
     template: {
-        "grid": InfinniUI.Template["new/controls/dataGrid/template/dataGrid.tpl.html"],
-        "gridStretched": InfinniUI.Template["new/controls/dataGrid/template/dataGridStretched.tpl.html"],
-        "headerCell": InfinniUI.Template["new/controls/dataGrid/template/headerCell.tpl.html"],
-        "sizeCell": InfinniUI.Template["new/controls/dataGrid/template/sizeCell.tpl.html"]
+        "grid": InfinniUI.Template["controls/dataGrid/template/dataGrid.tpl.html"],
+        "gridStretched": InfinniUI.Template["controls/dataGrid/template/dataGridStretched.tpl.html"],
+        "headerCell": InfinniUI.Template["controls/dataGrid/template/headerCell.tpl.html"],
+        "sizeCell": InfinniUI.Template["controls/dataGrid/template/sizeCell.tpl.html"]
     },
 
     className: 'pl-datagrid',

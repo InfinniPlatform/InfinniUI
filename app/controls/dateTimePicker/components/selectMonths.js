@@ -32,7 +32,7 @@ var SelectMonths = SelectComponent.extend({
 
     modelClass: SelectMonthsModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/months.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/date/months.tpl.html"],
 
     events: {
         "click .btn-year-prev": "prevYear",

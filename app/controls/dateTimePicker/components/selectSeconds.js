@@ -11,7 +11,7 @@ var SelectSeconds = SelectComponent.extend({
 
     modelClass: SelectSecondsModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/time/seconds.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/time/seconds.tpl.html"],
 
     events: {
         "click .second:not('.second-unavailable')": "useSecond"

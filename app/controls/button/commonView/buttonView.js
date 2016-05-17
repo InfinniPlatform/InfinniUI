@@ -6,7 +6,7 @@ var CommonButtonView = ControlView.extend({
 
     className: 'pl-button',
 
-    template: InfinniUI.Template["new/controls/button/commonView/template/button.tpl.html"],
+    template: InfinniUI.Template["controls/button/commonView/template/button.tpl.html"],
 
     UI: {
         button: 'button'

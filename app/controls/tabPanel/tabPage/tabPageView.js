@@ -6,7 +6,7 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
 
     className: 'pl-tabpage hidden',
 
-    template: InfinniUI.Template["new/controls/tabPanel/tabPage/template/tabPage.tpl.html"],
+    template: InfinniUI.Template["controls/tabPanel/tabPage/template/tabPage.tpl.html"],
 
     UI: {
 

@@ -14,7 +14,7 @@ var ComboBoxValues = Backbone.View.extend({
 
     className: 'pl-combobox-values',
 
-    template: InfinniUI.Template["new/controls/comboBox/values/template/values.tpl.html"],
+    template: InfinniUI.Template["controls/comboBox/values/template/values.tpl.html"],
 
     events: {
         'keypress .pl-combobox-search-text': 'onKeyPressHandler',

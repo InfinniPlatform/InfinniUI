@@ -1,8 +1,8 @@
 var BaseListBoxView = ListEditorBaseView.extend({
 
     template: {
-        plain: InfinniUI.Template["new/controls/listBox/baseView/template/listBox.tpl.html"],
-        grouped: InfinniUI.Template["new/controls/listBox/baseView/template/listBoxGrouped.tpl.html"]
+        plain: InfinniUI.Template["controls/listBox/baseView/template/listBox.tpl.html"],
+        grouped: InfinniUI.Template["controls/listBox/baseView/template/listBoxGrouped.tpl.html"]
     },
 
 

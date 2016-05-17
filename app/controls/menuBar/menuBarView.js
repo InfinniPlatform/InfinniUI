@@ -8,7 +8,7 @@ var MenuBarView = ContainerView.extend(
         tagName: 'nav',
         className: 'pl-menu-bar navbar navbar-default',
 
-        template: InfinniUI.Template["new/controls/menuBar/template/menuBar.tpl.html"],
+        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
 
         UI: {
 

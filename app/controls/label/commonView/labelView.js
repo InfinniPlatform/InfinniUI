@@ -6,7 +6,7 @@
 var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends LabelView.prototype */{
     className: 'pl-label',
 
-    template: InfinniUI.Template["new/controls/label/commonView/template/label.tpl.html"],
+    template: InfinniUI.Template["controls/label/commonView/template/label.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.label-control'

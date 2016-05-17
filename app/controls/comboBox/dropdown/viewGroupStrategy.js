@@ -11,7 +11,7 @@ function ComboBoxGroupViewStrategy(dropdownView) {
 ComboBoxGroupViewStrategy.prototype = Object.create(ComboBoxBaseViewStrategy.prototype);
 ComboBoxGroupViewStrategy.prototype.constructor = ComboBoxGroupViewStrategy;
 
-ComboBoxGroupViewStrategy.prototype.template = InfinniUI.Template["new/controls/comboBox/dropdown/template/group/template.tpl.html"];
+ComboBoxGroupViewStrategy.prototype.template = InfinniUI.Template["controls/comboBox/dropdown/template/group/template.tpl.html"];
 
 ComboBoxGroupViewStrategy.prototype.renderItems = function () {
     var

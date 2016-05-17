@@ -6,7 +6,7 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
 
     className: 'pl-panel panel panel-default',
 
-    template: InfinniUI.Template["new/controls/panel/template/panel.tpl.html"],
+    template: InfinniUI.Template["controls/panel/template/panel.tpl.html"],
 
     UI: {
         header: '.pl-panel-header',

@@ -1,6 +1,6 @@
 var ComboBoxGroupView = Backbone.View.extend({
 
-    template: InfinniUI.Template["new/controls/comboBox/dropdown/group/template/template.tpl.html"],
+    template: InfinniUI.Template["controls/comboBox/dropdown/group/template/template.tpl.html"],
 
     UI: {
         header: '.pl-combobox-group__header',

@@ -7,7 +7,7 @@ var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
     className: 'pl-frame',
 
-    template: InfinniUI.Template["new/controls/frame/template/frame.tpl.html"],
+    template: InfinniUI.Template["controls/frame/template/frame.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         iframe: 'iframe'

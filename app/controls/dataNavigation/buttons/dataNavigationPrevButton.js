@@ -1,6 +1,6 @@
 var DataNavigationPrevButton = DataNavigationBaseButton.extend({
 
-    template: InfinniUI.Template["new/controls/dataNavigation/buttons/template/prev.tpl.html"],
+    template: InfinniUI.Template["controls/dataNavigation/buttons/template/prev.tpl.html"],
 
     events: {
         "click": "onClickHandler"

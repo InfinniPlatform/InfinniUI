@@ -46,7 +46,7 @@ var SelectDays = SelectComponent.extend({
 
     modelClass: SelectDaysModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/days.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/date/days.tpl.html"],
 
     UI: {
         headerDays: '.weekdays-head .day',

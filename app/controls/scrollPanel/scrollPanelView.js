@@ -6,7 +6,7 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
 
     className: 'pl-scrollpanel panel panel-default',
 
-    template: InfinniUI.Template["new/controls/scrollPanel/template/scrollPanel.tpl.html"],
+    template: InfinniUI.Template["controls/scrollPanel/template/scrollPanel.tpl.html"],
 
     UI: {
 

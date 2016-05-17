@@ -1,6 +1,6 @@
 var dateTimePickerModeDateTime = {
     getTemplate: function () {
-        return InfinniUI.Template["new/controls/dateTimePicker/template/dateTime.tpl.html"];
+        return InfinniUI.Template["controls/dateTimePicker/template/dateTime.tpl.html"];
     },
 
     onClickDropdownHandler: function (event) {

@@ -2,7 +2,7 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     className: 'pl-combobox form-group',
 
-    template: InfinniUI.Template["new/controls/comboBox/template/combobox.tpl.html"],
+    template: InfinniUI.Template["controls/comboBox/template/combobox.tpl.html"],
 
     events: {
         'click .pl-combobox__grip': 'onClickGripHandler',

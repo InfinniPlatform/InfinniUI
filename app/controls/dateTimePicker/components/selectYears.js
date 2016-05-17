@@ -40,7 +40,7 @@ var SelectYears = SelectComponent.extend({
 
     modelClass: SelectYearsModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/date/years.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/date/years.tpl.html"],
 
     events: {
         'click .btn-year-prev': "prevPage",

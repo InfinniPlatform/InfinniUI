@@ -8,8 +8,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     className: 'pl-password-box form-group',
 
     template: {
-        "autocomplete": InfinniUI.Template["new/controls/passwordBox/template/passwordBox.on.tpl.html"],
-        "noautocomplete": InfinniUI.Template["new/controls/passwordBox/template/passwordBox.off.tpl.html"]
+        "autocomplete": InfinniUI.Template["controls/passwordBox/template/passwordBox.on.tpl.html"],
+        "noautocomplete": InfinniUI.Template["controls/passwordBox/template/passwordBox.off.tpl.html"]
     },
 
     UI: _.extend({}, editorBaseViewMixin.UI, {

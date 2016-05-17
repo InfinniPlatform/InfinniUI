@@ -6,9 +6,9 @@ var ToolBarView = ContainerView.extend({
 
     className: 'pl-tool-bar',
 
-    template: InfinniUI.Template["new/controls/toolBar/template/toolBar.tpl.html"],
+    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
 
-    itemTemplate: InfinniUI.Template["new/controls/toolBar/template/toolBarItem.tpl.html"],
+    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
 
     UI: {
         container: '.pl-tool-bar__container'

@@ -4,7 +4,7 @@ function StackPanelViewGroupStrategy(stackPanel) {
 
 _.extend(StackPanelViewGroupStrategy.prototype, {
 
-    groupTemplate: InfinniUI.Template["new/controls/stackPanel/baseView/template/stackPanelGroup.tpl.html"],
+    groupTemplate: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanelGroup.tpl.html"],
 
     prepareItemsForRendering: function(){
         var items = this.stackPanel.getItems(),

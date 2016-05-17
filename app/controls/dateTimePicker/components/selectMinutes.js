@@ -11,7 +11,7 @@ var SelectMinutes = SelectComponent.extend({
 
     modelClass: SelectMinutesModel,
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/time/minutes.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/time/minutes.tpl.html"],
 
     events: {
         "click .minute:not('.minute-unavailable')": "useMinute"

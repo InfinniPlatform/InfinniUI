@@ -6,7 +6,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
 
     className: "pl-numericbox form-group",
 
-    template: InfinniUI.Template["new/controls/numericBox/template/numericBox.tpl.html"],
+    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
 
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
         min: '.pl-numeric-box-min',

@@ -7,7 +7,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
 
     className: 'pl-imagebox',
 
-    template: InfinniUI.Template["new/controls/imageBox/template/imageBox.tpl.html"],
+    template: InfinniUI.Template["controls/imageBox/template/imageBox.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         input: 'input',

@@ -4,7 +4,7 @@ var TreeViewView = ListEditorBaseView.extend({
     classNameMultiSelect: 'pl-treeview_multi-select',
     classNameSingleSelect: 'pl-treeview_single-select',
 
-    template: InfinniUI.Template["new/controls/treeView/template/treeview.tpl.html"],
+    template: InfinniUI.Template["controls/treeView/template/treeview.tpl.html"],
 
     events: {},
 

@@ -25,7 +25,7 @@ ComboBoxPlainViewStrategy.prototype.renderItems = function () {
     return $items;
 };
 
-ComboBoxPlainViewStrategy.prototype.template = InfinniUI.Template["new/controls/comboBox/dropdown/template/plain/template.tpl.html"];
+ComboBoxPlainViewStrategy.prototype.template = InfinniUI.Template["controls/comboBox/dropdown/template/plain/template.tpl.html"];
 
 ComboBoxPlainViewStrategy.prototype.getTemplate = function () {
     return this.template;

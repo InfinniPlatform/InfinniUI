@@ -2,8 +2,8 @@ var CheckingListBoxView = BaseListBoxView.extend({
     className: 'pl-listbox',
 
     template: {
-        plain: InfinniUI.Template["new/controls/listBox/checkingView/template/listBox.tpl.html"],
-        grouped: InfinniUI.Template["new/controls/listBox/checkingView/template/listBoxGrouped.tpl.html"]
+        plain: InfinniUI.Template["controls/listBox/checkingView/template/listBox.tpl.html"],
+        grouped: InfinniUI.Template["controls/listBox/checkingView/template/listBoxGrouped.tpl.html"]
     },
 
     events: _.extend( {

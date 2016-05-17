@@ -2,7 +2,7 @@ var SelectDateTime = SelectDate.extend({
 
     className: 'pl-datepicker-dropdown pl-dropdown-container',
 
-    template: InfinniUI.Template["new/controls/dateTimePicker/template/select.dateTime.tpl.html"],
+    template: InfinniUI.Template["controls/dateTimePicker/template/select.dateTime.tpl.html"],
 
     UI: {
         days: '.days',

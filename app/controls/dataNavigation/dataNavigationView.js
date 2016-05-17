@@ -1,6 +1,6 @@
 var DataNavigationView = ControlView.extend({
 
-    template: InfinniUI.Template["new/controls/dataNavigation/template/dataNavigation.tpl.html"],
+    template: InfinniUI.Template["controls/dataNavigation/template/dataNavigation.tpl.html"],
 
     className: 'pl-data-navigation',
 

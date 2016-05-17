@@ -2,8 +2,8 @@ var CommonPopupButtonView = ContainerView.extend({
 
     className: 'pl-popup-button',
 
-    template: InfinniUI.Template["new/controls/popupButton/commonView/template/popupButton.tpl.html"],
-    dropdownTemplate: InfinniUI.Template["new/controls/popupButton/commonView/template/popupButton.dropdown.tpl.html"],
+    template: InfinniUI.Template["controls/popupButton/commonView/template/popupButton.tpl.html"],
+    dropdownTemplate: InfinniUI.Template["controls/popupButton/commonView/template/popupButton.dropdown.tpl.html"],
 
     events: {
         'click .pl-popup-button__grip': 'onClickGripHandler',

@@ -6,8 +6,8 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
         href: 'javascript:;'
     },
 
-    template: InfinniUI.Template["new/controls/popupButton/forMenuView/template/popupButton.tpl.html"],
-    dropdownTemplate: InfinniUI.Template["new/controls/popupButton/commonView/template/popupButton.dropdown.tpl.html"],
+    template: InfinniUI.Template["controls/popupButton/forMenuView/template/popupButton.tpl.html"],
+    dropdownTemplate: InfinniUI.Template["controls/popupButton/commonView/template/popupButton.dropdown.tpl.html"],
 
     events: {
         'click': 'onClickGripHandler'

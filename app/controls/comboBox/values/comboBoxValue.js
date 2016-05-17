@@ -4,7 +4,7 @@ var ComboBoxValueModel = Backbone.Model.extend({
 
 var ComboBoxValue = Backbone.View.extend({
 
-    template: InfinniUI.Template["new/controls/comboBox/values/template/value.tpl.html"],
+    template: InfinniUI.Template["controls/comboBox/values/template/value.tpl.html"],
 
     tagName: 'li',
 

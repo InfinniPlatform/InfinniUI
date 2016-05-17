@@ -5,7 +5,7 @@
  */
 var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype */ _.extend({}, editorBaseViewMixin, {
 
-    template: InfinniUI.Template["new/controls/toggleButton/template/toggleButton.tpl.html"],
+    template: InfinniUI.Template["controls/toggleButton/template/toggleButton.tpl.html"],
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         textOn: '.togglebutton-handle-on',
