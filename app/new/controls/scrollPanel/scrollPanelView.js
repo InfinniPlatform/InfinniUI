@@ -61,13 +61,13 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
     updateHorizontalScroll: function () {
         var name = '';
         switch (this.model.get('horizontalScroll')) {
-            case ScrollVisibility.visible:
+            case InfinniUI.ScrollVisibility.visible:
                 name = 'visible';
                 break;
-            case ScrollVisibility.hidden:
+            case InfinniUI.ScrollVisibility.hidden:
                 name = 'hidden';
                 break;
-            case ScrollVisibility.auto:
+            case InfinniUI.ScrollVisibility.auto:
             default:
                 name = 'auto';
                 break;
@@ -82,13 +82,13 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
     updateVerticalScroll: function (model, value) {
         var name = '';
         switch (this.model.get('verticalScroll')) {
-            case ScrollVisibility.visible:
+            case InfinniUI.ScrollVisibility.visible:
                 name = 'visible';
                 break;
-            case ScrollVisibility.hidden:
+            case InfinniUI.ScrollVisibility.hidden:
                 name = 'hidden';
                 break;
-            case ScrollVisibility.auto:
+            case InfinniUI.ScrollVisibility.auto:
             default:
                 name = 'auto';
                 break;

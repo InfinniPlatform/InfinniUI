@@ -11,8 +11,8 @@ var ScrollPanelModel = ContainerModel.extend(/** @lends ScrollPanelModel.prototy
     defaults: _.defaults(
         {
             verticalAlignment: 'Stretch',
-            horizontalScroll: ScrollVisibility.auto,
-            verticalScroll: ScrollVisibility.auto
+            horizontalScroll: InfinniUI.ScrollVisibility.auto,
+            verticalScroll: InfinniUI.ScrollVisibility.auto
         },
         ContainerModel.prototype.defaults
     )

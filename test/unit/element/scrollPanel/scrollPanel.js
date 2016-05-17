@@ -16,8 +16,8 @@ describe('ScrollPanelElement', function () {
         it('Default values', function () {
             var element = builder.buildType('ScrollPanel', {});
 
-            assert.equal(element.getHorizontalScroll(), ScrollVisibility.auto, 'getHorizontalScroll');
-            assert.equal(element.getVerticalScroll(), ScrollVisibility.auto, 'getVerticalScroll');
+            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
+            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
         });
 
 

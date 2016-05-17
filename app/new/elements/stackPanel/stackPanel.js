@@ -14,7 +14,7 @@ StackPanel.prototype.getOrientation = function () {
 };
 
 StackPanel.prototype.setOrientation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, StackPanelOrientation)) {
+    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.StackPanelOrientation)) {
         this.control.set('orientation', value)
     }
 };

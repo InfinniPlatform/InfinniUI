@@ -22,7 +22,7 @@ ScrollPanel.prototype.getHorizontalScroll = function () {
  * @param value
  */
 ScrollPanel.prototype.setHorizontalScroll = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, ScrollVisibility)) {
+    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.ScrollVisibility)) {
         this.control.set('horizontalScroll', value);
     }
 };
@@ -40,7 +40,7 @@ ScrollPanel.prototype.getVerticalScroll = function () {
  * @param value
  */
 ScrollPanel.prototype.setVerticalScroll = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, ScrollVisibility)) {
+    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.ScrollVisibility)) {
         this.control.set('verticalScroll', value);
     }
 };

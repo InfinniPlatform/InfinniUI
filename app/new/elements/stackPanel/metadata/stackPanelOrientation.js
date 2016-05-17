@@ -1,4 +1,4 @@
-var StackPanelOrientation = {
+InfinniUI.StackPanelOrientation = {
     horizontal: 'Horizontal',
     vertical: 'Vertical'
 };
