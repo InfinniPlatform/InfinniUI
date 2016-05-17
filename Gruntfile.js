@@ -11,8 +11,8 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
-            'app/new/elements/**/metadata/*.js',
-            'app/element/**/metadata/*.js',
+            'app/new/elements/**/enums/*.js',
+            'app/element/**/enums/*.js',
             'app/config.js',
             'app/utils/**/*.js',
             'app/messaging/**/*.js',
