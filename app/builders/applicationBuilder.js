@@ -32,7 +32,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Row', new RowBuilder());
 
         builder.register('MenuBar', new MenuBarBuilder());
-        
+
         builder.register('DataGrid', new DataGridBuilder());
         builder.register('DataGridColumn', new DataGridColumnBuilder());
         builder.register('ListBox', new ListBoxBuilder());
@@ -100,6 +100,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Comparator', new ComparatorBuilder());
 
         builder.register('Script', new ScriptBuilder());
+
+        builder.register('Divider', new DividerBuilder());
 
 
         var registerQueue = ApplicationBuilder.registerQueue;
