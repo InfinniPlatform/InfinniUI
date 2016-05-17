@@ -3,6 +3,7 @@ var TextEditorView = Backbone.View.extend({
     /**
      * @member {TextEditorModel} model
      */
+
     events: {
         'focusin': 'onFocusinHandler',
         'focusout': 'onFocusoutHandler',
@@ -14,10 +15,6 @@ var TextEditorView = Backbone.View.extend({
         'paste': 'onPasteHandler'
     },
 
-    /**
-     *
-     * @param {jQuery.Event} event
-     */
     onKeydownHandler: function (event) {
         if (event.ctrlKey || event.altKey) {
             return;
@@ -56,7 +53,7 @@ var TextEditorView = Backbone.View.extend({
             case InfinniUI.Keyboard.KeyCode.LEFT_ARROW:
                 if(event.shiftKey) {
                     //@TODO WTF?
-                    input.selectionEnd = parseInt(input.selectionEnd, 10);
+                    //input.selectionEnd = parseInt(input.selectionEnd, 10);
                 }else {
                     if (this.getSelectionLength() > 0){
                         event.preventDefault();
@@ -190,13 +187,13 @@ var TextEditorView = Backbone.View.extend({
                 //TODO: не работает для DateTimeFormat
                 //замена выделенного текста, по нажатию
 
-                var inp = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
+                var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
 
                 //@TODO Зачем проверка "instanceof Date"??
                 if (this.getSelectionLength() > 0 && !(editMask.value instanceof Date)) {
                     event.preventDefault();
                     //Data
-                    this.removeSelection(editMask, String.fromCharCode(event.keyCode));
+                    this.removeSelection(editMask, char);
                 }
 
                 break;
@@ -205,10 +202,6 @@ var TextEditorView = Backbone.View.extend({
 
     },
 
-    /**
-     *
-     * @param {jQuery.Event} event
-     */
     onKeyupHandler: function (event) {
         //@TODO this.parseInputValue()
 
@@ -218,10 +211,6 @@ var TextEditorView = Backbone.View.extend({
         //});
     },
 
-    /**
-     *
-     * @param {jQuery.Event} event
-     */
     onKeypressHandler: function (event) {
         if (event.altKey || event.ctrlKey) {
             return;
@@ -232,7 +221,7 @@ var TextEditorView = Backbone.View.extend({
             return;
         }
 
-        var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
+        var char = InfinniUI.Keyboard.getCharByKeyCode(event.which);
 
         var position;
         var $input = this.ui.input;
@@ -250,19 +239,11 @@ var TextEditorView = Backbone.View.extend({
         }
     },
 
-    /**
-     *
-     * @param {jQuery.Event} event
-     */
     onClickHandler: function (event) {
         this.checkCurrentPosition();
         event.preventDefault();
     },
 
-    /**
-     *
-     * @param {jQuery.Event} event
-     */
     onPasteHandler: function (event) {
         var editMask = this.model.getEditMask();
         var $input = this.ui.input;
@@ -272,7 +253,6 @@ var TextEditorView = Backbone.View.extend({
             return;
         }
 
-        /** @var {ClipboardEvent} **/
         var originalEvent = event.originalEvent;
 
         var text = originalEvent.clipboardData.getData('text/plain') || prompt('Введите текст для вставки');
@@ -318,7 +298,7 @@ var TextEditorView = Backbone.View.extend({
     /**
      * @private
      * Установка позиции курсора в поле редактирования
-     * @param {Integer} [position=0]
+     * @param {Number} [position=0]
      */
     setCaretPosition: function (position) {
         /** @var HTMLInputElement **/
@@ -370,11 +350,11 @@ var TextEditorView = Backbone.View.extend({
         return this.$el;
     },
 
-    onFocusinHandler: function (event) {
+    onFocusinHandler: function (/* event */) {
         this.model.setEditMode();
     },
 
-    onFocusoutHandler: function (event) {
+    onFocusoutHandler: function (/* event */) {
         this.model.setDisplayMode();
     },
 
@@ -412,7 +392,7 @@ function EditorDisplayModeStrategy() {
 EditorDisplayModeStrategy.prototype = Object.create(EditorModeStrategy.prototype);
 EditorDisplayModeStrategy.prototype.constructor = EditorDisplayModeStrategy;
 EditorDisplayModeStrategy.prototype.updateText = function (model) {
-    var displayFormat = model.get('displayFormat');
+    var displayFormat = model.getDisplayFormat();
     var value = model.get('value');
 
     var text;
@@ -437,7 +417,7 @@ function EditorEditModeStrategy() {
 EditorEditModeStrategy.prototype = Object.create(EditorModeStrategy.prototype);
 EditorEditModeStrategy.prototype.constructor = EditorEditModeStrategy;
 EditorEditModeStrategy.prototype.updateText = function (model) {
-    var editMask = model.get('editMask');
+    var editMask = model.getEditMask();
     var value = model.get('value');
     var text;
 
@@ -508,6 +488,10 @@ var TextEditorModel = Backbone.Model.extend({
         return this.get('editMask');
     },
 
+    getDisplayFormat: function () {
+        return this.get('displayFormat');
+    },
+
     setEditMode: function () {
         this.set('mode', this.Mode.Edit);
     },
@@ -528,12 +512,12 @@ var TextEditorModel = Backbone.Model.extend({
         modeStrategy.updateText(this);
     },
 
-    onChangeValueHandler: function (model, value) {
+    onChangeValueHandler: function (/* model, value */) {
         this.updateText();
     },
 
     onChangeOriginalValueHandler: function (model, originalValue) {
-        model.set('value', originalValue);
+        model.set('value', originalValue, {originalValue: true});
     }
 
 });
@@ -591,4 +575,14 @@ TextEditor2.prototype.render = function (inputTemplate) {
 
 TextEditor2.prototype.setValue = function (value) {
     this._model.set('originalValue', value);
+};
+
+TextEditor2.prototype.onChangeValue = function (handler) {
+    this._model.on('change:value', function (model, value, options) {
+        if (options.originalValue === true) {
+            return;
+        }
+
+        handler.call(null, value);
+    });
 };

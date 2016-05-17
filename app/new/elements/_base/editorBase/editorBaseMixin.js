@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin editorBaseMixin
+ */
 var editorBaseMixin = {
     initialize_editorBase: function(){
 
