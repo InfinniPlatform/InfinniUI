@@ -37,6 +37,14 @@ var LinkButtonView = CommonButtonView.extend({
         this.currentBackground = customStyle;
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.$el.attr('tabindex', -1);
+        }
+    },
+
     //updateForeground: function () {
     //    var customStyle = this.model.get('foreground');
     //

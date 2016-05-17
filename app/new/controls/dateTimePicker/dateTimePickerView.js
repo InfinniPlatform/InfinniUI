@@ -101,6 +101,16 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
         return this;
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.ui.control.attr('tabindex', -1);
+        } else {
+            this.ui.control.removeAttr('tabindex');
+        }
+    },
+
     /**
      * Используется миксином textEditorMixin
      * @param value

@@ -265,6 +265,18 @@ var DataGridView = ListEditorBaseView.extend({
 
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        this.rowElements.values.forEach(function (element) {
+            if (focusable) {
+                element.control.controlView.$el.attr('tabindex', 0);
+            } else {
+                element.control.controlView.$el.removeAttr('tabindex');
+            }
+        })
+    },
+
     addRowElement: function(item, element){
         this.addChildElement(element);
         this.rowElements.add(item, element);

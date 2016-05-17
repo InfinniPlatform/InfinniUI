@@ -41,6 +41,16 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.updateWarningText();
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.ui.file.attr('tabindex', 0);
+        } else {
+            this.ui.file.removeAttr('tabindex');
+        }
+    },
+
     updateText: function () {
         var text = this.model.get('text');
         this.ui.uploadButton.text(text);

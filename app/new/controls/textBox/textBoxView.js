@@ -46,6 +46,16 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         this.ui.editor.attr('rows', lineCount);
     },
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.ui.control.attr('tabindex', -1);
+        } else {
+            this.ui.control.removeAttr('tabindex');
+        }
+    },
+
     render: function () {
         var model = this.model;
         var template = model.get('multiline') ? this.template.multiline : this.template.oneline;

@@ -19,7 +19,7 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         fileDownloadUrl: '.pl-filebox-file-download-url',
         edit: '.pl-filebox-edit',
         readonly: '.pl-filebox-readonly',
-
+        control: '.form-control',
 
         input: 'input'
     }),
@@ -83,6 +83,16 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         } else {
             var accept = acceptTypes.toArray().join(',');
             this.ui.input.attr('accept', accept);
+        }
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.ui.control.attr('tabindex', 0);
+        } else {
+            this.ui.control.removeAttr('tabindex');
         }
     },
 
