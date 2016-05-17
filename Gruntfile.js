@@ -11,25 +11,22 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
-            'app/new/elements/**/enums/*.js',
-            'app/element/**/enums/*.js',
+            'app/elements/**/enums/*.js',
             'app/config.js',
             'app/utils/**/*.js',
             'app/messaging/**/*.js',
-            'app/controls/_base/**/*.js', // old
 
-            'app/new/controls/_base/**/*.js',
+            'app/controls/_base/_mixins/*.js',
+            'app/controls/_base/control/*.js',
+            'app/controls/_base/**/*.js',
 
-            'app/new/controls/textBox/**/*.js',
+            'app/controls/textBox/**/*.js',
 
-            'app/new/controls/dateTimePicker/**/*.js',
-            'app/new/controls/datePicker/**/*.js',
-            'app/new/controls/timePicker/**/*.js',
+            'app/controls/dateTimePicker/**/*.js',
+            'app/controls/datePicker/**/*.js',
+            'app/controls/timePicker/**/*.js',
 
-            'app/new/controls/**/*.js',
-
-            'app/element/_mixins/*.js',
-            'app/element/*.js', // old
+            'app/controls/**/*.js',
 
             'app/data/_common/**/*.js',
             'app/data/dataSource/_mixins/*.js',
@@ -42,15 +39,16 @@
             'app/data/dataSource/documentDataSourceBuilder.js',
 
 
-            'app/new/elements/_base/**/*.js',
-            'app/new/elements/listBox/**/*.js',
-            'app/new/elements/textBox/**/*.js',
+            'app/elements/_base/element/*.js',
+            'app/elements/_base/**/*.js',
+            'app/elements/listBox/**/*.js',
+            'app/elements/textBox/**/*.js',
 
-            'app/new/elements/dateTimePicker/**/*.js',
-            'app/new/elements/datePicker/**/*.js',
-            'app/new/elements/timePicker/**/*.js',
+            'app/elements/dateTimePicker/**/*.js',
+            'app/elements/datePicker/**/*.js',
+            'app/elements/timePicker/**/*.js',
 
-            'app/new/elements/**/*.js',
+            'app/elements/**/*.js',
 
             'app/actions/*.js',
             'app/actions/**/*.js',
