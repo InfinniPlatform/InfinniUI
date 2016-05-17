@@ -23,7 +23,7 @@ TabPanel.prototype.getHeaderLocation = function () {
  * @param value
  */
 TabPanel.prototype.setHeaderLocation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, TabHeaderLocation)) {
+    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.TabHeaderLocation)) {
         this.control.set('headerLocation', value);
     }
 };
@@ -41,7 +41,7 @@ TabPanel.prototype.getHeaderOrientation = function () {
  * @param value
  */
 TabPanel.prototype.setHeaderOrientation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, TabHeaderOrientation)) {
+    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.TabHeaderOrientation)) {
         this.control.set('headerOrientation', value);
     }
 };

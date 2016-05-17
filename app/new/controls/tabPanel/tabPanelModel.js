@@ -10,8 +10,8 @@ var TabPanelModel = ContainerModel.extend(/** @lends TabPanelModel.prototype */ 
 
     defaults: _.defaults(
         {
-            headerLocation: TabHeaderLocation.top,
-            headerOrientation: TabHeaderOrientation.horizontal
+            headerLocation: InfinniUI.TabHeaderLocation.top,
+            headerOrientation: InfinniUI.TabHeaderOrientation.horizontal
         },
         ContainerModel.prototype.defaults
     )

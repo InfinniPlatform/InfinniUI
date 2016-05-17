@@ -1,4 +1,4 @@
-InfinniUI.Metadata.TextHorizontalAlignment = {
+InfinniUI.TextHorizontalAlignment = {
     left: 'Left',
     right: 'Right',
     center: 'Center',

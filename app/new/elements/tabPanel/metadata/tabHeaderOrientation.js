@@ -1,4 +1,4 @@
-var TabHeaderOrientation = {
+InfinniUI.TabHeaderOrientation = {
     horizontal: 'Horizontal',
     vertical: 'Vertical'
 };

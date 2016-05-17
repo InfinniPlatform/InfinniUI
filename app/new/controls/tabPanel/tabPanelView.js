@@ -142,19 +142,19 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             headerLocation = this.model.get('headerLocation');
 
         switch (headerLocation) {
-            case TabHeaderLocation.top:
+            case InfinniUI.TabHeaderLocation.top:
                 template = this.template.top;
                 break;
-            case TabHeaderLocation.right:
+            case InfinniUI.TabHeaderLocation.right:
                 template = this.template.right;
                 break;
-            case TabHeaderLocation.bottom:
+            case InfinniUI.TabHeaderLocation.bottom:
                 template = this.template.bottom;
                 break;
-            case TabHeaderLocation.left:
+            case InfinniUI.TabHeaderLocation.left:
                 template = this.template.left;
                 break;
-            case TabHeaderLocation.none:
+            case InfinniUI.TabHeaderLocation.none:
             default:
                 template = this.template.none;
                 break;

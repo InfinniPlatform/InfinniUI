@@ -237,7 +237,7 @@ _.extend(Element.prototype, {
     },
 
     setTextHorizontalAlignment: function (value) {
-        if (InfinniUI.Metadata.isValidValue(value, InfinniUI.Metadata.TextHorizontalAlignment)) {
+        if (InfinniUI.Metadata.isValidValue(value, InfinniUI.TextHorizontalAlignment)) {
             this.control.set('textHorizontalAlignment', value);
         }
     },
