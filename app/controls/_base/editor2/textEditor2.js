@@ -25,7 +25,7 @@ var TextEditorView = Backbone.View.extend({
             return;
         }
 
-
+        var model = this.model;
         var $input = this.ui.input;
         /** @var {HTMLInputElement} */
         var input = this.ui.input.get(0);
@@ -38,77 +38,53 @@ var TextEditorView = Backbone.View.extend({
                 break;
 
             case InfinniUI.Keyboard.KeyCode.HOME:
-                if(event.shiftKey) {
-                    //@TODO WTF?
-                    input.selectionEnd = parseInt(input.selectionEnd, 10);
-                } else {
+                if(!event.shiftKey) {
                     position = editMask.moveToPrevChar(0);
                     if (position !== false) {
-                        this.setCaretPosition(position);
                         event.preventDefault();
+                        model.setCaretPosition(position);
                     }
                 }
+
                 break;
 
             case InfinniUI.Keyboard.KeyCode.LEFT_ARROW:
-                if(event.shiftKey) {
-                    //@TODO WTF?
-                    //input.selectionEnd = parseInt(input.selectionEnd, 10);
-                }else {
-                    if (this.getSelectionLength() > 0){
+                if(!event.shiftKey) {
+                    position = editMask.moveToPrevChar(this.getCaretPosition());
+                    if (position !== false) {
                         event.preventDefault();
-                        this.setCaretPosition(parseInt(input.selectionStart, 10));
-                    }else {
-                        position = editMask.moveToPrevChar(this.getCaretPosition());
-                        if (position !== false) {
-                            this.setCaretPosition(position);
-                            event.preventDefault();
-                        }
+                        model.setCaretPosition(position);
                     }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.RIGHT_ARROW:
-                if (event.shiftKey) {
-                    //@TODO WTF?
-                    input.selectionEnd = parseInt(input.selectionEnd, 10);
-                } else {
-                    if (this.getSelectionLength() > 0){
+                if (!event.shiftKey) {
+                    position = editMask.moveToNextChar(this.getCaretPosition());
+                    if (position !== false) {
                         event.preventDefault();
-                        this.setCaretPosition(parseInt(input.selectionEnd, 10));
-                    }else {
-                        position = editMask.moveToNextChar(this.getCaretPosition());
-                        if (position !== false) {
-                            this.setCaretPosition(position);
-                            event.preventDefault();
-                        }
+                        model.setCaretPosition(position);
                     }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.END:
-                position = editMask.moveToNextChar($input.val().length);
-                if (position !== false) {
-                    this.setCaretPosition(position);
-                    event.preventDefault();
+                if (!event.shiftKey) {
+                    position = editMask.moveToNextChar($input.val().length);
+                    if (position !== false) {
+                        event.preventDefault();
+                        model.setCaretPosition(position);
+                    }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.UP_ARROW:
-                if(event.shiftKey) {
-                    //@TODO WTF?
-                    input.selectionEnd = parseInt(input.selectionEnd, 10);
-                }else {
-                    if (this.getSelectionLength() > 0){
+                if(!event.shiftKey) {
+                    position = editMask.setNextValue(this.getCaretPosition());
+                    if (position !== false) {
                         event.preventDefault();
-                        this.setCaretPosition(parseInt(input.selectionStart, 10));
-                    }else {
-                        position = editMask.setNextValue(this.getCaretPosition());
-                        if (position !== false) {
-                            event.preventDefault();
-                            $input.val(editMask.getText());
-                            this.setCaretPosition(position);
-                        }
+                        model.setText(editMask.getText());
+                        model.setCaretPosition(position);
                     }
                 }
                 break;
@@ -333,6 +309,17 @@ var TextEditorView = Backbone.View.extend({
     initialize: function () {
         this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
         this.listenTo(this.model, 'change:text', this.onChangeTextHandler);
+        this.listenTo(this.model, 'change:caretPosition', this.onChangeCaretPosition);
+    },
+
+    onChangeCaretPosition: function (model, value) {
+        /** @var HTMLInputElement **/
+        var elem = this.ui.input.get(0);
+
+        //IE9+
+        if (typeof elem.selectionStart !== 'undefined') {
+            elem.setSelectionRange(value, value);
+        }
     },
 
     render: function () {
@@ -457,6 +444,7 @@ var TextEditorModel = Backbone.Model.extend({
 
     defaults: function () {
         return {
+            caretPosition: 0,
             mode: this.Mode.Display
         };
     },
@@ -482,6 +470,14 @@ var TextEditorModel = Backbone.Model.extend({
             validate: !cancel
         });
 
+    },
+
+    setCaretPosition: function (position) {
+        this.set('caretPosition', position);
+    },
+
+    setText: function (text) {
+        this.set('text', text);
     },
 
     getEditMask: function () {
