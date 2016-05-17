@@ -137,7 +137,7 @@ this.Then(/^система отобразит список валидацион�
         return window.toastrMessageCount == window.toastrActualMessageCount;
     };
     var success = function () {
-        var actual = window.configWindow.$(".toast-success, .toast-error");
+        var actual = window.configWindow.$(".toast-success .toast-message, .toast-error .toast-message");
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
@@ -145,9 +145,14 @@ this.Then(/^система отобразит список валидацион�
         }
 
         var messages = getMessages(msgs);
+        var errorString = "\n" +
+            "Expected\n" +
+            messages.join('\n') +
+            "\nActual\n" +
+            actualMessages.join('\n') + '\n';
 
         try {
-            chai.assert.deepEqual(actualMessages, messages);
+            chai.assert.deepEqual(actualMessages, messages, errorString);
             window.toastrMessageCount = 0;
             next();
         } catch (err) {
