@@ -84,15 +84,14 @@ _.extend(DateTimeEditMask.prototype, {
     /**
      * Удалить символ слева от курсора
      * @param position
+     * @param {Number|undefined} selectionLength
      */
-    deleteCharLeft: function (position) {
+    deleteCharLeft: function (position, selectionLength) {
         var data = this.getItemTemplate(position);
         var item, text;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
+        if (selectionLength) {
+            this.selectRemove(this.template, position, selectionLength);
         } else {
             if (data !== null) {
                 if (data.index > 0) {
@@ -114,15 +113,14 @@ _.extend(DateTimeEditMask.prototype, {
     /**
      * Удалить символ справа от курсора
      * @param position
+     * @param {Number|undefined} selectionLength
      */
-    deleteCharRight: function (position) {
+    deleteCharRight: function (position, selectionLength) {
         var data = this.getItemTemplate(position);
         var item, text;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
+        if (selectionLength) {
+            this.selectRemove(this.template, position, selectionLength);
         } else {
             if (data !== null) {
                 item = data.item;
@@ -142,11 +140,11 @@ _.extend(DateTimeEditMask.prototype, {
      * Удаление выделенного текста
      * @param template
      * @param position
-     * @param selection
+     * @param {Number} selectionLength
      */
-    selectRemove: function(template, position, selection){
+    selectRemove: function(template, position, selectionLength){
         var firstItem = this.getItemTemplate(position);
-        var lastItem = this.getItemTemplate(position + selection.length);
+        var lastItem = this.getItemTemplate(position + selectionLength);
 
         var firstIndexItem = template.indexOf(firstItem.item);
         var lastIndexItem = template.indexOf(lastItem.item);
@@ -154,21 +152,21 @@ _.extend(DateTimeEditMask.prototype, {
         for (var i = firstIndexItem; i < lastIndexItem + 1; i++) {
             if (typeof template[i] == "object") {
                 if (firstIndexItem == lastIndexItem) {
-                    build(template[i], position, selection);
+                    build(template[i], position);
                 } else if (i == firstIndexItem) {
-                    build(template[i], position, selection);
+                    build(template[i], position);
                 } else if (i == lastIndexItem) {
-                    build(template[i], position, selection);
+                    build(template[i], position);
                 } else {
                     template[i].text = '';
                 }
             }
         }
 
-        function build(templateText, position, selection) {
+        function build(templateText, position) {
             var arraySymbols = templateText.text.split('');
             var start = position - templateText.position;
-            var end = (position + selection.length) - templateText.position;
+            var end = (position + selectionLength) - templateText.position;
 
             if (start < 0) start = 0;
             arraySymbols.splice(start, end - start);
