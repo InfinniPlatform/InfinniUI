@@ -11,6 +11,16 @@ var SimpleLabelView = CommonLabelView.extend({
 
     }),
 
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
     getLabelElement: function(){
         return this.$el;
     }

@@ -1,13 +1,25 @@
+<%function buildGroupedListboxInput(i, isMultiselect, inputName){
+    if(isMultiselect){
+        %>
+            <input type = "checkbox" name="<%= inputName + '-' + i %>" />
+        <%
+    }else{
+        %>
+            <input type = "radio" name="<%= inputName %>" />
+        <%
+    }
+}%>
+
 <ul class="pl-listbox-control pl-listbox-grouped">
     <%
         var i = 0;
         groups.forEach(function(group, gIndex){
     %>
-        <li class="pl-listbox-group-i">
+        <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-group-i">
             <div class="pl-listbox-group-title"></div>
             <ul class="pl-listbox-group-body">
                 <% group.items.forEach(function(item, index){%>
-                    <li class="pl-listbox-i">
+                    <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-i">
                         <div class="pl-listbox-input">
                             <%
                                 buildGroupedListboxInput(i, isMultiselect, inputName);
@@ -22,15 +34,3 @@
         </li>
     <%});%>
 </ul>
-
-<%function buildGroupedListboxInput(i, isMultiselect, inputName){
-    if(isMultiselect){
-        %>
-            <input type = "checkbox" name="<%= inputName + '-' + i %>" />
-        <%
-    }else{
-        %>
-            <input type = "radio" name="<%= inputName %>" />
-        <%
-    }
-}%>

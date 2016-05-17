@@ -54,6 +54,9 @@ var editorBaseBuilderMixin = {
                 if (bindingOptions.converter) {
                     dataBinding.setConverter(bindingOptions.converter);
                 }
+                if (bindingOptions.mode) {
+                    dataBinding.setMode(bindingOptions.mode);
+                }
                 dataBinding.bindElement(params.element, bindingOptions.valueProperty);
 
                 this.initValidationResultText(element, dataBinding);

@@ -315,7 +315,9 @@ _.extend(Element.prototype, {
     },
 
     setFocusable: function (value) {
-        this.control.get('focusable', !!value)
+        if (_.isBoolean(value)) {
+            this.control.set('focusable', value);
+        }
     },
 
     getFocused: function () {
@@ -482,6 +484,15 @@ _.extend(Element.prototype, {
         return this.control.onMouseMove(callback);
     },
 
+    onMouseWheel: function (handler) {
+        var that = this,
+            callback = function (nativeEventData) {
+                var eventData = that._getHandlingMouseEventData(nativeEventData);
+                handler(eventData);
+            };
+        return this.control.onMouseWheel(callback);
+    },
+
     onShowToolTip: function (handler) {
         var control = this.control;
 
@@ -605,5 +616,28 @@ _.extend(Element.prototype, {
 
     setFocus: function () {
         this.control.setFocus();
+    },
+
+    renderTree: function(textIndent) {
+        var textIndent = textIndent || '';
+        console.log( textIndent + 'Name: ' + this.getName(), this );
+        if( this.childElements !== undefined ) {
+            if( textIndent !== '' ) {
+                textIndent += '_____';
+            } else {
+                textIndent += '_____';
+            }
+            for( var i = 0, ii = this.childElements.length; i < ii; i += 1 ) {
+                this.renderTree.call(this.childElements[i], textIndent);
+            }
+        }
+    },
+
+    renderFullTree: function() {
+        var parent = this.parent;
+        while( parent.parent && parent.parent.parent !== undefined ) {
+            parent = parent.parent;
+        }
+        this.renderTree.call(parent);
     }
 });

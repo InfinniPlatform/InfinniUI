@@ -11,7 +11,7 @@ var dateTimePickerModeTime = {
         calendar.render();
         $('body').append(calendar.$el);
 
-        this.updateDropDownCalendarPosition(this.$el, calendar.$el);
+        calendar.updatePosition(this.el);
 
         this.listenTo(calendar, 'date', function (date) {
             model.set('value', this.convertValue(date));

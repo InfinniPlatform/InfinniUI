@@ -72,6 +72,33 @@ var DataGridView = ListEditorBaseView.extend({
         this.ui.checkAll.prop('checked', checkAll);
     },
 
+    getHorizontalScrollBarWidth: function () {
+
+        if (typeof DataGridView.scrollbarWidth === 'undefined') {
+            var scrollDiv = document.createElement('div');
+            var body = document.body;
+
+            scrollDiv.className = 'modal-scrollbar-measure';
+            var style = {
+                position: "absolute",
+                top: "-9999px",
+                width: "50px",
+                height: "50px",
+                overflow: "scroll"
+            };
+
+            for(var name in style) {
+                scrollDiv.style[name] = style[name]
+            }
+
+            body.appendChild(scrollDiv);
+            DataGridView.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+            body.removeChild(scrollDiv);
+        }
+
+        return DataGridView.scrollbarWidth;
+    },
+
     updateCheckAllVisible: function () {
         var checkAllVisible = this.model.get('checkAllVisible');
         this.ui.checkAll.toggleClass('hidden', !checkAllVisible);
@@ -146,6 +173,7 @@ var DataGridView = ListEditorBaseView.extend({
 
     applyColumnWidth: function () {
         var columns = this.model.get('columns');
+        var fixedTableLayout = false;
 
         this.ui.firstRows.children().each(function (i, el) {
             var columnIndex = i % (columns.length + 1);
@@ -160,20 +188,18 @@ var DataGridView = ListEditorBaseView.extend({
 
             if (width) {
                 $(el).css('width', width);
+                fixedTableLayout = true;
             }
         });
 
+        this.$el.toggleClass('pl-datagrid_layout_fixed', fixedTableLayout);
     },
 
     syncBodyAndHead: function () {
-        var $body = this.ui.body;
+        //var $body = this.ui.body;
         var $head = this.ui.head;
 
-        setTimeout(function () {
-            //Need update after element added to DOM
-            var scrollWidth = $body[0].offsetWidth - $body[0].clientWidth;
-            $head.css('padding-right', scrollWidth + "px");
-        }, 0);
+        $head.css('padding-right', this.getHorizontalScrollBarWidth() + "px");
 
         this.ui.body
             .off('scroll')
@@ -237,6 +263,18 @@ var DataGridView = ListEditorBaseView.extend({
             $items.append(element.render());
         }, this);
 
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        this.rowElements.values.forEach(function (element) {
+            if (focusable) {
+                element.control.controlView.$el.attr('tabindex', 0);
+            } else {
+                element.control.controlView.$el.removeAttr('tabindex');
+            }
+        })
     },
 
     addRowElement: function(item, element){

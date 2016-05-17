@@ -532,6 +532,9 @@ var BaseDataSource = Backbone.Model.extend({
             } else {
                 that._notifyAboutFailValidationByDeleting(item, data, error);
             }
+        }, function(data) {
+            var result = data.data.responseJSON['Result']['ValidationResult'];
+            that._notifyAboutFailValidationByDeleting(item, result, error);
         });
     },
 
@@ -911,6 +914,23 @@ var BaseDataSource = Backbone.Model.extend({
         }else{
             promise.resolve();
         }
+
+        return promise;
+    },
+
+    getNearestRequestPromise: function(){
+        var promise = $.Deferred();
+
+        this.once('onItemsUpdated', function(){
+            if(this.isDataReady()){
+                promise.resolve();
+            }else{
+                logger.warn({
+                    message: 'BaseDataSource: strange, expected other dataReady status',
+                    source: this
+                });
+            }
+        });
 
         return promise;
     },

@@ -34,7 +34,6 @@ InfinniUI.JsonEditor = (function () {
                             url: InfinniUI.config.editorService.url,
                             type: 'POST',
                             data: {
-                                Id: metadata.Id,
                                 Json: JSON.stringify(metadata)
                             },
                             success: function () {
