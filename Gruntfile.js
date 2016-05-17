@@ -1,6 +1,5 @@
 ﻿module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -12,7 +11,6 @@
     var appFiles = [
             'app/utils/strict.js',
             'app/utils/namespace.js',
-            'app/element/**/metadata.js', // old
             'app/new/elements/**/metadata/*.js',
             'app/element/**/metadata/*.js',
             'app/config.js',
@@ -61,22 +59,16 @@
 
             'extensions/**/*.js',
 
-            '!app/utils/pdf/**/*.js',
-            '!app/extensions/**/*.js',
-            '!app/utils/exel-builder/*.js'
+            '!app/utils/pdf/**/*.js'
         ],
         vendorFiles = [
             'bower_components/jquery/dist/jquery.js',
             'bower_components/underscore/underscore.js',
             'bower_components/backbone/backbone.js',
             'bower_components/moment/moment.js',
-            'bower_components/moment/lang/ru.js',
-            'bower_components/signalr/jquery.signalR.js',
-            'bower_components/ulogin/index.js',
             'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
             'bower_components/JavaScript-MD5/js/md5.js',
             'bower_components/blockUI/jquery.blockUI.js',
-            'app/utils/exel-builder/excel-builder.dist.js',
             'app/utils/pdf/build/pdf.js',
             'bower_components/toastr/toastr.js',
             'bootstrap-framework/js/tooltip.js',
@@ -93,16 +85,11 @@
         ],
         unitTestFiles = [
             'app/utils/strict.js',
-            'test/unit/setup.js',
             'test/unit/fakeRestDataProvider.js',
             'test/unit/**/*.js'
         ],
-        e2eTestFiles = ['test/e2e/setup.js', 'test/e2e/**/*.js'],
-        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html", "app/utils/messageBox/**/*.tpl.html"],
-        outerExtensionScript = '*.Extensions/**/*.js',
-        outerExtensionStyle = '*.Extensions/**/*.css',
-        outerExtensionLessStyle = '*.Extensions/**/*.less',
-        outerExtensionFavicon = '*.Extensions/*.ico';
+        templateFiles = ["app/**/*.tpl.html", "extensions/**/*.tpl.html"],
+
         /* jsoneditor не добавляется в vendor, чтобы можно было его отдельно использовать в editorDialog */
         developmentModeCopy = {
         	jsonEditorJs: {
@@ -171,10 +158,6 @@
             unit_test: {
                 src: unitTestFiles,
                 dest: 'out/unitTest.js'
-            },
-            e2e_test: {
-                src: e2eTestFiles,
-                dest: 'out/e2eTest.js'
             }
         },
 
@@ -208,45 +191,6 @@
                 flatten: true,
                 src: [],
                 dest: 'out/images/'
-            }
-            //media: {
-            //    expand: true,
-            //    flatten: true,
-            //    src: ['app/styles/media/**/*.*'],
-            //    dest: 'out/css/media/'
-            //}
-            /*images: {
-                files: [
-                    {
-                        cwd: 'bower_components/metronic/assets/global/img/',
-                        src: '*',
-                        dest: 'out/img/',
-                        expand: true
-                    },
-                    {
-                        cwd: 'bower_components/metronic/assets/global/plugins/select2/',
-                        src: 'select2.png',
-                        dest: 'out/css/',
-                        expand: true
-                    },
-                    {
-                        cwd: 'bower_components/metronic/assets/global/plugins/uniform/images',
-                        src: '*',
-                        dest: 'out/images/',
-                        expand: true
-                    }
-                ]
-            }*/
-        },
-
-        watch: {
-            scripts: {
-                files: appFiles.concat(unitTestFiles,e2eTestFiles),
-                tasks: ['concat:app', 'concat:unit_test', 'concat:e2e_test']
-            },
-            templates: {
-                files: templateFiles,
-                tasks: ['jst']
             }
         },
 
@@ -397,17 +341,9 @@
             if (protocols.indexOf(protocol) === -1) {
                 protocol = protocols[0];
             }
-            var tasks = ['build', 'connect:' + protocol, 'watch'];
+            var tasks = ['build', 'connect:' + protocol];
             console.log(tasks);
             grunt.task.run(tasks);
-        }
-    );
-
-    grunt.task.registerTask('removeElement', function(name){
-            name = name.charAt(0).toLowerCase() + name.slice(1);
-
-            grunt.config('clean.element', ['app/element/'+name,'app/controls/'+name,'test/unit/element/'+name]);
-            grunt.task.run('clean:element');
         }
     );
 

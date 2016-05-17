@@ -16,7 +16,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('View', new ViewBuilder());
         builder.register('InlineView', new InlineViewBuilder());
         builder.register('AutoView', new MetadataViewBuilder());
-        builder.register('ExistsView', new MetadataViewBuilder());
 
         builder.register('StackPanel', new StackPanelBuilder());
         builder.register('GridPanel', new GridPanelBuilder());
@@ -66,7 +65,6 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('RestDataSource', new RestDataSourceBuilder());
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
-        builder.register('DataBinding', new DataBindingBuilder());
         builder.register('PropertyBinding', new DataBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
