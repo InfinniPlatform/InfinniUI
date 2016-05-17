@@ -32,6 +32,7 @@ _.extend(DataNavigationBuilder.prototype, {
                     pageSize = ds.getPageSize();
                     pageCount = Math.ceil(dsTotalCount/pageSize);
                     element.setPageCount(pageCount);
+                    element.setPageNumber(ds.getPageNumber());
                 }
                 element.setIsDataReady(true);
             });
