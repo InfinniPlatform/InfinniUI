@@ -16,7 +16,8 @@
           {
             "Id": 1,
             "Title": "1",
-            "Volume": "I"
+            "Volume": "I",
+            "Date": "2016-05-16T12:32:00Z"
           },
           {
             "Id": 2,
@@ -54,19 +55,21 @@
   ],
   "Items": [
     {
-      "DatePicker": {
-        "Name": "MyDatePicker"
-      }
-    },
-    {
-      "Label": {
+      "TextBox": {
+        "LabelText": "One line input[type=text]",
+        "Multiline": false,
+        "DisplayFormat": "{:d}",
+        "EditMask": {
+          "DateTimeEditMask": {
+            "Mask": "dd----MM----yyyy"
+          }
+        },
         "Value": {
-          "Source": "MyDatePicker",
-          "Property": "value"
+          "Source": "ds1",
+          "Property": "0.Date"
         }
       }
     }
-
   ]
 }
 

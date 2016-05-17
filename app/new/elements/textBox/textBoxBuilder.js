@@ -25,4 +25,3 @@ TextBoxBuilder.prototype.applyMetadata = function (params) {
     }
     element.setLineCount(lineCount);
 };
-

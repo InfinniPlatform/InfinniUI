@@ -43,6 +43,11 @@ var editorBaseMixin = {
         this.control.set('warningText', value);
     },
 
+
+    validateValue: function (value) {
+
+    },
+
     onValueChanging:  function (handler) {
         this.control.onValueChanging(
             this.createControlEventHandler(this, handler, {property: 'value'})

@@ -5,8 +5,9 @@
 var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     template: {
-        oneline: InfinniUI.Template["new/controls/textBox/template/textBoxInput.tpl.html"],
-        multiline: InfinniUI.Template["new/controls/textBox/template/textBoxArea.tpl.html"]
+        control: InfinniUI.Template["new/controls/textBox/template/template.tpl.html"],
+        oneline: InfinniUI.Template["new/controls/textBox/template/oneline.tpl.html"],
+        multiline: InfinniUI.Template["new/controls/textBox/template/multiline.tpl.html"]
     },
 
     className: 'pl-textbox form-group',
@@ -14,13 +15,13 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     UI: _.extend({}, TextEditorBaseView.prototype.UI),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        //Отображение поля редактирования для INPUT[TEXT]
-        'focus .pl-text-box-input': 'onFocusControlHandler',
-        'mouseenter .pl-text-box-input': 'onMouseenterControlHandler',
-
-        //Отображение поля редактирования для TEXTAREA
-        'focus .pl-text-area-input': 'onFocusControlHandler',
-        'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
+        ////Отображение поля редактирования для INPUT[TEXT]
+        //'focus .pl-text-box-input': 'onFocusControlHandler',
+        //'mouseenter .pl-text-box-input': 'onMouseenterControlHandler',
+        //
+        ////Отображение поля редактирования для TEXTAREA
+        //'focus .pl-text-area-input': 'onFocusControlHandler',
+        //'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
     }),
 
     initHandlersForProperties: function(){
@@ -41,18 +42,41 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     },
 
     updateLineCount: function(){
-        var lineCount = this.model.get('lineCount');
-        this.ui.control.attr('rows', lineCount);
-        this.ui.editor.attr('rows', lineCount);
+        //var lineCount = this.model.get('lineCount');
+        //this.ui.control.attr('rows', lineCount);
+        //this.ui.editor.attr('rows', lineCount);
+    },
+
+    updateFocusable: function () {
+        //var focusable = this.model.get('focusable');
+        //
+        //if (!focusable) {
+        //    this.ui.control.attr('tabindex', -1);
+        //} else {
+        //    this.ui.control.removeAttr('tabindex');
+        //}
     },
 
     render: function () {
-        var model = this.model;
-        var template = model.get('multiline') ? this.template.multiline : this.template.oneline;
-
         this.prerenderingActions();
-        this.renderTemplate(template);
-        this.renderTextBoxEditor();
+        this.renderTemplate(this.template.control);
+
+        /*********** Editor.Render *******/
+        var model = this.model;
+        var templateEditorMethod = model.get('multiline') ? this.template.multiline : this.template.oneline;
+        var editorTemplate = templateEditorMethod.call(null, this.getData());
+        var editor = this.model.get('editor');
+        var $editor = editor.render(editorTemplate);
+        this.ui.editor.replaceWith($editor);
+
+        this.model.on('change:value', function (model, value) {
+            editor.setValue(value);
+        });
+        editor.setValue(model.get('value'));
+
+        /*********** /Editor.Render *******/
+
+        // this.renderTextBoxEditor();
         this.updateProperties();
 
         this.trigger('render');
@@ -72,17 +96,17 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         );
     },
 
-    renderTextBoxEditor: function () {
-        var model = this.model;
-        this.renderControlEditor({
-            el: this.ui.editor,
-            multiline: model.get('multiline'),
-            lineCount: model.get('lineCount'),
-            inputType: model.get('inputType')
-        });
-
-        return this;
-    },
+    //renderTextBoxEditor: function () {
+    //    var model = this.model;
+    //    this.renderControlEditor({
+    //        el: this.ui.editor,
+    //        multiline: model.get('multiline'),
+    //        lineCount: model.get('lineCount'),
+    //        inputType: model.get('inputType')
+    //    });
+    //
+    //    return this;
+    //},
 
     setFocus: function () {
         this.ui.textbox.focus();

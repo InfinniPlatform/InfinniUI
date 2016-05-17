@@ -10,7 +10,8 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
-        editor: '.pl-control-editor',
+        //editor: '.pl-control-editor',
+        editor: '.pl-editor',
         label: '.pl-control-label',
         textbox: '.pl-text-box-input'
     }),
@@ -121,4 +122,4 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
 }));
 
-_.extend(TextEditorBaseView.prototype, textEditorMixin); //Работа с масками ввода
+//_.extend(TextEditorBaseView.prototype, textEditorMixin); //Работа с масками ввода

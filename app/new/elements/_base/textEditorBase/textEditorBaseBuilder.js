@@ -26,11 +26,18 @@ _.extend(TextEditorBaseBuilder.prototype, {
 
         this
             .initDisplayFormat(params)
-            .initEditMask(params);
+            .initEditMask(params)
+            .initEditor(params);
+    },
+
+    initEditor: function (params) {
+        var editor = new TextEditor2(params.element);
+        params.element.setEditor(editor);
+
+        return this;
     },
 
     initDisplayFormat: function (params) {
-
 
         var
             metadata = params.metadata,
