@@ -13,11 +13,18 @@ function CucumberHTMLListener($root, $info) {
                 case 'BeforeFeature':
                     var feature = event.getPayloadItem('feature');
                     window.cucumberCurrentFeature = feature.getName();
+                    var tag = feature.getTags()[0];
+                    if(tag && tag.getName){
+                        tag = tag.getName();
+                    } else {
+                        tag = undefined;
+                    }
                     formatter.feature({
                         keyword: feature.getKeyword(),
                         name: feature.getName(),
                         line: feature.getLine(),
-                        description: feature.getDescription()
+                        description: feature.getDescription(),
+                        tag: tag
                     });
                     tsm.suiteStarted(window.cucumberCurrentFeature);
                     break;
@@ -27,11 +34,18 @@ function CucumberHTMLListener($root, $info) {
                     window.cucumberCurrentScenario = scenario.getName();
                     window.cucumberIsIgnored = false;
                     window.cucumberIsFailed = false;
+                    var tag = scenario.getTags()[0];
+                    if(tag && tag.getName){
+                        tag = tag.getName();
+                    } else {
+                        tag = undefined;
+                    }
                     formatter.scenario({
                         keyword: scenario.getKeyword(),
                         name: scenario.getName(),
                         line: scenario.getLine(),
-                        description: scenario.getDescription()
+                        description: scenario.getDescription(),
+                        tag: tag
                     });
                     tsm.testStarted(window.cucumberCurrentScenario);
                     break;
