@@ -35,6 +35,10 @@ _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
 
         createControl: function () {
             return new PasswordBoxControl();
+        },
+
+        getRawValue: function () {
+            return this.control.get('rawValue');
         }
 
     },
