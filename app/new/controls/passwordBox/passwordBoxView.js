@@ -18,7 +18,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     }),
 
     events: {
-        'blur .pl-control': 'onBlurHandler'
+        'blur .pl-control': 'onBlurHandler',
+        'input .pl-control': 'onInputHandler'
     },
 
     initialize: function () {
@@ -113,6 +114,14 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         var value = this.ui.input.val();
 
         model.set('value', value);
+    },
+
+    onInputHandler: function () {
+        var model = this.model;
+
+        var value = this.ui.input.val();
+
+        model.set('rawValue', value);
     }
 
 }));
