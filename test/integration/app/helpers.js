@@ -93,6 +93,25 @@ window.testHelpers = {
         return this.getFormattedDate(date);
     },
 
+    convertToUnixTime: function (date, element) {
+        if(!element) {
+            return date;
+        }
+
+        if(element.getMode) {
+            switch (element.getMode()) {
+                case 'Date':
+                case 'Time':
+                case 'DateTime':
+                    return date;
+                default:
+                    return new Date(date).getTime() / 1000;
+            }
+        }
+
+        return date;
+    },
+
     getControlByName: function (controlName) {
         var indexInfo = /\[(\d+)\]/.exec(controlName);
 
