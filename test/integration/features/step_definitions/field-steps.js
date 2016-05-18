@@ -52,14 +52,17 @@ this.When(/^я введу в поле типа дата "([^"]*)" значени
         try {
             var date = dateString.match(/[а-я]*/i)[0];
             var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+            var element = window.testHelpers.getControlByName(fieldName);
+            var value;
 
             if (date === "Сегодня" && !isNaN(iterator)) {
-                var value = window.testHelpers.getDate(iterator);
-                window.testHelpers.getControlByName(fieldName).setValue(value);
+                value = window.testHelpers.getDate(iterator);
             } else {
-                date = window.testHelpers.getFormattedDate(dateString);
-                window.testHelpers.getControlByName(fieldName).setValue(date);
+                value = window.testHelpers.getFormattedDate(dateString);
             }
+
+            value = window.testHelpers.convertToUnixTime(value, element);
+            element.setValue(value);
 
             next();
         } catch (err) {

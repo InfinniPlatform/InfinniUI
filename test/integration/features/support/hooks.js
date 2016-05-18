@@ -27,8 +27,31 @@ this.BeforeScenario(function (scenario, callback) {
 this.AfterFeatures(function () {
     console.log('Test finished!');
 
+    var p;
+
+    if (window.startUpParameters && window.startUpParameters.saveContent) {
+        var mongoServise = {
+            url: 'http://localhost:60520',
+            body: {
+                save: window
+                    .document
+                    .documentElement
+                    .innerHTML
+                    .replace('onload="runIntegrationTests()"', '')
+                    .replace(/<script[\s\S]*<\/script>/g, '')
+            }
+        };
+        p = $.post(mongoServise.url, JSON.stringify(mongoServise.body));
+    }
+
     if (window.startUpParameters && window.startUpParameters.isClosing) {
-        window.close();
+        if(p) {
+            p.always(function () {
+                window.close();
+            });
+        } else {
+            window.close();
+        }
     }
 });
 
