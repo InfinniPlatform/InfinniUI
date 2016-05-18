@@ -1,7 +1,6 @@
 describe('DataGrid', function () {
 
     var metadata = {
-        Text: 'Пациенты',
         DataSources : [
             {
                 ObjectDataSource: {
@@ -16,26 +15,21 @@ describe('DataGrid', function () {
         ],
         Items: [{
 
-            StackPanel: {
-                Name: 'MainViewPanel',
-                "Items" : [
+            "DataGrid": {
+                "Name": "DataGrid1",
+                "Items": {
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
+                },
+                "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                "Columns": [
                     {
-                        "DataGrid": {
-                            "Items": {
-                                "Source": "ObjectDataSource1",
-                                "Property": ""
-                            },
-                            "Columns": [
-                                {
-                                    "Header": "Id",
-                                    "CellProperty": "Id"
-                                },
-                                {
-                                    "Header": "Display",
-                                    "CellProperty": "Display"
-                                }
-                            ]
-                        }
+                        "Header": "Id",
+                        "CellProperty": "Id"
+                    },
+                    {
+                        "Header": "Display",
+                        "CellProperty": "Display"
                     }
                 ]
             }
@@ -43,29 +37,40 @@ describe('DataGrid', function () {
     };
 
     describe('render', function () {
-        it('should render DataGrid', function () {
+        it('should render DataGrid', function (done) {
             // Given When
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType('View', metadata, {parentView: fakeView()});
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
+            testHelper.applyViewMetadata(metadata, function (view) {
+                var grid = view.context.controls["DataGrid1"];
+                var $grid = grid.control.controlView.$el;
 
-            var view = linkView.createView(function (view) {
-                view.open();
+                onDataGridReady($grid);
 
-                var $stackPanel = $('#sandbox').children();
-                $stackPanel.detach();
-
-                onListboxReady($stackPanel);
+                view.close();
             });
 
             // Then
-            function onListboxReady($grid){
-                console.log($grid);
+            function onDataGridReady($grid){
                 assert.isObject($grid);
+                done();
+            }
+        });
 
+        it('should render DisabledItemCondition', function (done) {
+            // Given When
+            testHelper.applyViewMetadata(metadata, function (view) {
+                var grid = view.context.controls["DataGrid1"];
+                var $grid = grid.control.controlView.$el;
+
+                onDataGridReady($grid);
+
+                //view.close();
+            });
+
+            // Then
+            function onDataGridReady($grid){
+                var disabled = $grid.find("tbody .pl-datagrid-row:nth-child(2) .pl-datagrid-toggle .pl-datagrid-toggle__button").attr('disabled');
+                assert.equal(disabled, "disabled");
+                done();
             }
         });
     });

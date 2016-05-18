@@ -245,11 +245,13 @@ var DataGridView = ListEditorBaseView.extend({
         var
             model = this.model,
             valueSelector = model.get('valueSelector'),
+            disabledItemCondition = model.get('disabledItemCondition'),
             itemTemplate = model.get('itemTemplate'),
             items = model.get('items'),
             $items = this.ui.items;
 
         this.removeRowElements();
+
         items.forEach(function (item, index) {
             var element = itemTemplate(undefined, {index: index, item: item});
 
@@ -260,7 +262,17 @@ var DataGridView = ListEditorBaseView.extend({
                 model.toggleValue(valueSelector(undefined, {value:item}));
             });
             this.addRowElement(item, element);
-            $items.append(element.render());
+
+            var $element = element.render();
+
+            if(disabledItemCondition != null && disabledItemCondition(undefined, {value: item})){
+                $element.addClass('disabled-row');
+
+                var $toggle_button = $element.children(".pl-datagrid-row__cell_toggle").find(".pl-datagrid-toggle__button");
+                $toggle_button.attr('disabled','disabled');
+            }
+
+            $items.append($element);
         }, this);
 
     },
