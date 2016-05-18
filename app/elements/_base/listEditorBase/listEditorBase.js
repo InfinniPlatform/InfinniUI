@@ -25,6 +25,14 @@ _.extend(ListEditorBase.prototype, {
         this.control.set('valueSelector', value);
     },
 
+    getDisabledItemCondition: function () {
+        return this.control.get('disabledItemCondition');
+    },
+
+    setDisabledItemCondition: function (value) {
+        this.control.set('disabledItemCondition', value);
+    },
+
     setValueItem: function(item){
         var result;
         var isMultiSelect = this.getMultiSelect();

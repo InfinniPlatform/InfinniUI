@@ -17,6 +17,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
             applyingMetadataResult2;
 
         this.initSelecting(params, itemsBinding);
+        this.initDisabledItemCondition(params);
 
         this.initValueFeatures(params);
 
@@ -31,7 +32,6 @@ _.extend(ListEditorBaseBuilder.prototype, {
         var dataSource = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
         var isBindingOnWholeDS = sourceProperty == '';
-        var that = this;
 
         if(isBindingOnWholeDS){
             dataSource.setSelectedItem(null);
@@ -91,5 +91,20 @@ _.extend(ListEditorBaseBuilder.prototype, {
             }
         }
         element.setValueSelector(valueSelector);
+    },
+
+    initDisabledItemCondition: function (params) {
+        var metadata = params.metadata,
+            element = params.element,
+            disabledItemCondition;
+
+        if (metadata.DisabledItemCondition) {
+            disabledItemCondition = function (context, args) {
+                var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
+                return scriptExecutor.executeScript(metadata.DisabledItemCondition.Name || metadata.DisabledItemCondition, args)
+            };
+        }
+
+        element.setDisabledItemCondition(disabledItemCondition);
     }
 }, editorBaseBuilderMixin);
