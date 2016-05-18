@@ -77,6 +77,9 @@ window.testHelpers = {
     },
 
     getStandartDate: function (date) {
+        if(typeof date === 'number') {
+            return this.getStandartDate(new Date(date * 1000));
+        }
         // YYYY-MM-DD
         return String.prototype.concat(date.getFullYear(), '-', date.getMonth() + 1, '-', date.getDate()); //+1 - January-0
     },
