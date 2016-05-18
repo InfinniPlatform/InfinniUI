@@ -343,6 +343,14 @@ _.extend(Element.prototype, {
         return this.control.get('toolTip');
     },
 
+    setContextMenu: function(items) {
+        this.control.set('contextMenu', items);
+    },
+
+    getContextMenu: function(items) {
+        return this.control.get('contextMenu');
+    },
+
     getIsLoaded: function () {
         return this.control.get('isLoaded');
     },
@@ -491,28 +499,6 @@ _.extend(Element.prototype, {
                 handler(eventData);
             };
         return this.control.onMouseWheel(callback);
-    },
-
-    onShowToolTip: function (handler) {
-        var control = this.control;
-
-        control.on('change:showToolTip', function () {
-            var showToolTip = control.get('showToolTip');
-            if (showToolTip && typeof handler === 'function') {
-                handler();
-            }
-        });
-    },
-
-    onHideToolTip: function (handler) {
-        var control = this.control;
-
-        control.on('change:showToolTip', function () {
-            var showToolTip = control.get('showToolTip');
-            if (!showToolTip && typeof handler === 'function') {
-                handler();
-            }
-        });
     },
 
     remove: function (isInitiatedByParent) {
