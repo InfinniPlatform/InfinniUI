@@ -7,14 +7,12 @@ PACKAGING=".packaging/7z"
 FILES="@$PACKAGING/files"
 EXCLUDE="@$PACKAGING/exclude"
 GRUNTFILE="`pwd`/$PACKAGING/Gruntfile.js"
-PACKAGE="`pwd`/$PACKAGING/package.json"
 
 grunt build:{}
 
 rm -rf InfinniUI.*.zip
 7z a -tzip $INFINNI_UI_ZIP $FILES -x$EXCLUDE
 7z a -tzip $INFINNI_UI_ZIP $GRUNTFILE
-7z a -tzip $INFINNI_UI_ZIP $PACKAGE
 
 mkdir -p out/platform
 cp -f out/platform.js out/platform/platform.js
