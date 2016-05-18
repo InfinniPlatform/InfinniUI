@@ -312,6 +312,28 @@ this.Then(/^элемент "([^"]*)" будет недоступным$/, functi
     window.testHelpers.waitCondition(haveElement, success, fail);
 });
 
+this.Then(/^элемент "([^"]*)" будет доступным$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    };
+    var success = function () {
+        try {
+            if (window.testHelpers.getControlByName(elementName).getEnabled()) {
+                next();
+            } else {
+                next(new Error(elementName + ' is disabled!'));
+            }
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(elementName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
 this.Then(/^я увеличу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
     var haveBox = function () {
         return window.testHelpers.getControlByName(boxName) != undefined;
