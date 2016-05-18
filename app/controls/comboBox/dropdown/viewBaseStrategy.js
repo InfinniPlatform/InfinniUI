@@ -44,7 +44,8 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
     var
         $items,
         collection = this.getModelAttribute('items'),
-        itemTemplate = this.getModelAttribute('itemTemplate');
+        itemTemplate = this.getModelAttribute('itemTemplate'),
+        disabledItemCondition = this.getModelAttribute('disabledItemCondition');
 
     $items = items.map(function (item) {
         var $item = itemTemplate(undefined, {
@@ -58,6 +59,12 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
 
         this.addOnClickEventListener($item, item);
         this.addOnHoverEventListener($item, item);
+
+        if( disabledItemCondition != null && disabledItemCondition(undefined, {value: item} ) ) {
+            $item.addClass('disabled-list-item');
+            $item.css('pointer-events', 'none');
+        }
+
         return $item;
     }, this);
 

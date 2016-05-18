@@ -63,13 +63,17 @@ describe('DataGrid', function () {
 
                 onDataGridReady($grid);
 
-                //view.close();
+                view.close();
             });
 
             // Then
             function onDataGridReady($grid){
-                var disabled = $grid.find("tbody .pl-datagrid-row:nth-child(2) .pl-datagrid-toggle .pl-datagrid-toggle__button").attr('disabled');
+                var $secondItem = $grid.find("tbody .pl-datagrid-row:nth-child(2)");
+                var disabled = $secondItem.find(".pl-datagrid-toggle .pl-datagrid-toggle__button").attr('disabled');
+
+                assert.isTrue($secondItem.hasClass('disabled-list-item'));
                 assert.equal(disabled, "disabled");
+
                 done();
             }
         });

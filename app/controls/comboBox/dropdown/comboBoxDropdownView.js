@@ -64,7 +64,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.ui.noItems.toggleClass('hidden', !noItems);
 
         this.markSelectedItems();
-        this.markCheckedItems()
+        this.markCheckedItems();
     },
 
     setItemsContent: function (content) {

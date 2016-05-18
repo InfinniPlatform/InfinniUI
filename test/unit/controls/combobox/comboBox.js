@@ -334,6 +334,82 @@ describe('ComboBox', function () {
             }
         });
 
+        it('DisabledItemCondition', function () {
+            // Given
+            var metadata = {
+                "Text": 'Пациенты',
+                "Scripts": [
+                    {
+                        "Name": "ValueSelector1",
+                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                    }
+                ],
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    }, {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource2",
+                            "Items": [
+                                {"Value": {"Id": 2, "DisplayName": "2G"}}
+                            ]
+                        }
+                    }
+                ],
+                "Items": [{
+
+                    ComboBox: {
+                        "LabelText": "Combobox Label",
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "ValueProperty": "Display",
+                        "Items": {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        },
+                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                        "Value": {
+                            "Source": "ObjectDataSource2",
+                            "Property": "Value"
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                //$layout.detach();
+                var $value = $layout.find('.pl-combobox__value');
+
+                $value.click();
+
+                var secondItem = $('.pl-dropdown-container .pl-combobox-items span:nth-child(2)');
+
+                assert.equal(secondItem.css('pointer-events'), 'none');
+                assert.isTrue(secondItem.hasClass('disabled-list-item'));
+
+                view.close();
+            }
+        });
+
         //it('debug', function () {
         //    // Given
         //    var metadata = {

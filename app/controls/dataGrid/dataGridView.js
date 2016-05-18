@@ -266,7 +266,7 @@ var DataGridView = ListEditorBaseView.extend({
             var $element = element.render();
 
             if(disabledItemCondition != null && disabledItemCondition(undefined, {value: item})){
-                $element.addClass('disabled-row');
+                $element.addClass('disabled-list-item');
 
                 var $toggle_button = $element.children(".pl-datagrid-row__cell_toggle").find(".pl-datagrid-toggle__button");
                 $toggle_button.attr('disabled','disabled');
