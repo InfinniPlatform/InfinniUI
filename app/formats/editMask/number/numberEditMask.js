@@ -358,7 +358,10 @@ _.extend(NumberEditMask.prototype, {
             res = null;
         }
 
-        return {result: res, position: position};
+        this.reset(res);
+
+        //return {result: res, position: position};
+        return res ? position : 0;
     },
 
     /**
@@ -368,6 +371,10 @@ _.extend(NumberEditMask.prototype, {
      * @returns {*}
      */
     deleteCharRight: function (position, len) {
+
+        if (len > 0) {
+            return this.deleteSelectedText(position, len);
+        }
         var itemTemplate = this.getItemTemplate();
         var left = itemTemplate.left;
         var item = itemTemplate.item;

@@ -26,9 +26,6 @@ var TextEditorView = Backbone.View.extend({
         }
 
         var model = this.model;
-        var $input = this.ui.input;
-        /** @var {HTMLInputElement} */
-        var input = this.ui.input.get(0);
         var position;
 
         switch (event.which) {
@@ -42,7 +39,7 @@ var TextEditorView = Backbone.View.extend({
                     position = editMask.moveToPrevChar(0);
                     if (position !== false) {
                         event.preventDefault();
-                        model.setCaretPosition(position);
+                        this.setCaretPosition(position);
                     }
                 }
 
@@ -53,7 +50,7 @@ var TextEditorView = Backbone.View.extend({
                     position = editMask.moveToPrevChar(this.getCaretPosition());
                     if (position !== false) {
                         event.preventDefault();
-                        model.setCaretPosition(position);
+                        this.setCaretPosition(position);
                     }
                 }
                 break;
@@ -63,17 +60,17 @@ var TextEditorView = Backbone.View.extend({
                     position = editMask.moveToNextChar(this.getCaretPosition());
                     if (position !== false) {
                         event.preventDefault();
-                        model.setCaretPosition(position);
+                        this.setCaretPosition(position);
                     }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.END:
                 if (!event.shiftKey) {
-                    position = editMask.moveToNextChar($input.val().length);
+                    position = editMask.moveToNextChar(this.getInput().val().length);
                     if (position !== false) {
                         event.preventDefault();
-                        model.setCaretPosition(position);
+                        this.setCaretPosition(position);
                     }
                 }
                 break;
@@ -84,73 +81,47 @@ var TextEditorView = Backbone.View.extend({
                     if (position !== false) {
                         event.preventDefault();
                         model.setText(editMask.getText());
-                        model.setCaretPosition(position);
+                        this.setCaretPosition(position);
                     }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.DOWN_ARROW:
-                if(event.shiftKey) {
-                    //@TODO WTF?
-                    input.selectionEnd = parseInt(input.selectionEnd, 10);
-                }else {
-                    if (this.getSelectionLength() > 0){
+                if(!event.shiftKey) {
+                    position = editMask.setPrevValue(this.getCaretPosition());
+                    if (position !== false) {
                         event.preventDefault();
-                        this.setCaretPosition(parseInt(input.selectionEnd, 10));
-                    }else {
-                        position = editMask.setPrevValue(this.getCaretPosition());
-                        if (position !== false) {
-                            event.preventDefault();
-                            $input.val(editMask.getText());
-                            this.setCaretPosition(position);
-                        }
+                        this.model.setText(editMask.getText());
+                        this.setCaretPosition(position);
                     }
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.DELETE:
-                // @TODO Если выделена вся строка - очистить поле редактирования
-                //TODO: доделать SelectionLength
-                //@TODO Зачем проверка "instanceof Date"??
-                if (this.getSelectionLength() > 0 && !(editMask.value instanceof Date)) {
-                    event.preventDefault();
-                    this.removeSelection(editMask);
-                } else {
-                    position = editMask.deleteCharRight(this.getCaretPosition(), this.getSelectionLength());
-                    if (position !== false) {
-                        event.preventDefault();
-                        $input.val(editMask.getText());
-                        this.setCaretPosition(position);
-                    }
+                event.preventDefault();
+                position = editMask.deleteCharRight(this.getCaretPosition(), this.getSelectionLength());
+
+                this.model.setText(editMask.getText());
+                if (position !== false) {
+                    this.setCaretPosition(position);
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.BACKSPACE:
-                // @TODO Если выделена вся строка - очистить поле редактирования
-                //TODO: доделать SelectionLength
-                //@TODO Зачем проверка "instanceof Date"??
-                if (this.getSelectionLength() > 0 && !(editMask.value instanceof Date)) {
-                    event.preventDefault();
-                    this.removeSelection(editMask);
-                } else {
-                    position = editMask.deleteCharLeft(this.getCaretPosition(), this.getSelectionLength());
-                    if (position !== false) {
-                        event.preventDefault();
-                        $input.val(editMask.getText());
-                        this.setCaretPosition(position);
-                    }
+                event.preventDefault();
+                position = editMask.deleteCharLeft(this.getCaretPosition(), this.getSelectionLength());
+
+                this.model.setText(editMask.getText());
+                if (position !== false) {
+                    this.setCaretPosition(position);
                 }
                 break;
 
             case InfinniUI.Keyboard.KeyCode.SPACE:
-                //@TODO Зачем проверка "instanceof Date"??
-                if (this.getSelectionLength() > 0 && !(editMask.value instanceof Date)) {
+                if (editMask.value instanceof Date) {
                     event.preventDefault();
-                    this.removeSelection(editMask);
-                }else {
                     position = editMask.getNextItemMask(this.getCaretPosition());
                     if (position !== false) {
-                        event.preventDefault();
                         this.setCaretPosition(position);
                     }
                 }
@@ -166,10 +137,13 @@ var TextEditorView = Backbone.View.extend({
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
 
                 //@TODO Зачем проверка "instanceof Date"??
-                if (this.getSelectionLength() > 0 && !(editMask.value instanceof Date)) {
+                if (this.getSelectionLength() > 0) {
                     event.preventDefault();
-                    //Data
-                    this.removeSelection(editMask, char);
+                    position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
+                    this.model.setText(editMask.getText());
+                    if (position !== false) {
+                        this.setCaretPosition(position);
+                    }
                 }
 
                 break;
@@ -200,17 +174,16 @@ var TextEditorView = Backbone.View.extend({
         var char = InfinniUI.Keyboard.getCharByKeyCode(event.which);
 
         var position;
-        var $input = this.ui.input;
 
         if (char === null) {
             return;
         }
 
-
         position = editMask.setCharAt(char, this.getCaretPosition(), this.getSelectionLength());
+        event.preventDefault();
+        this.model.setText(editMask.getText());
+
         if (position !== false) {
-            event.preventDefault();
-            $input.val(editMask.getText());
             this.setCaretPosition(position);
         }
     },
@@ -222,7 +195,6 @@ var TextEditorView = Backbone.View.extend({
 
     onPasteHandler: function (event) {
         var editMask = this.model.getEditMask();
-        var $input = this.ui.input;
 
         if (!editMask) {
             //Use default behavior
@@ -240,7 +212,7 @@ var TextEditorView = Backbone.View.extend({
             }
 
             event.preventDefault();
-            $input.val(editMask.getText());
+            this.model.setText(editMask.getText());
         }
     },
 
@@ -259,7 +231,7 @@ var TextEditorView = Backbone.View.extend({
 
     getSelectionLength: function () {
         /** @var HTMLInputElement **/
-        var elem = this.ui.input.get(0);
+        var elem = this.getInputEl();
         var len = 0;
         var startPos = parseInt(elem.selectionStart, 10);
         var endPos = parseInt(elem.selectionEnd, 10);
@@ -271,18 +243,15 @@ var TextEditorView = Backbone.View.extend({
         return len;
     },
 
-    /**
-     * @private
-     * Установка позиции курсора в поле редактирования
-     * @param {Number} [position=0]
-     */
-    setCaretPosition: function (position) {
-        /** @var HTMLInputElement **/
-        var elem = this.ui.input.get(0);
+    setCaretPosition: function (caretPosition) {
 
-        //IE9+
-        if (typeof elem.selectionStart !== 'undefined') {
-            elem.setSelectionRange(position, position);
+        if (_.isNumber(caretPosition)) {
+            var elem = this.getInputEl();
+
+            //IE9+
+            if (typeof elem.selectionStart !== 'undefined') {
+                elem.setSelectionRange(caretPosition, caretPosition);
+            }
         }
 
     },
@@ -294,7 +263,7 @@ var TextEditorView = Backbone.View.extend({
      */
     getCaretPosition: function () {
         /** @var {HTMLInputElement} **/
-        var elem = this.ui.input.get(0);
+        var elem = this.getInputEl();
 
         var position = 0;
 
@@ -309,17 +278,6 @@ var TextEditorView = Backbone.View.extend({
     initialize: function () {
         this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
         this.listenTo(this.model, 'change:text', this.onChangeTextHandler);
-        this.listenTo(this.model, 'change:caretPosition', this.onChangeCaretPosition);
-    },
-
-    onChangeCaretPosition: function (model, value) {
-        /** @var HTMLInputElement **/
-        var elem = this.ui.input.get(0);
-
-        //IE9+
-        if (typeof elem.selectionStart !== 'undefined') {
-            elem.setSelectionRange(value, value);
-        }
     },
 
     render: function () {
@@ -346,11 +304,34 @@ var TextEditorView = Backbone.View.extend({
     },
 
     onChangeModeHandler: function (model, mode) {
+        this.checkCurrentPosition();
         console.log(mode);
     },
 
     onChangeTextHandler: function (model, text) {
-        this.ui.input.val(text);
+        var $input = this.getInput();
+
+        $input.val(text);
+        if ($input.is(':focus')) {
+            this.checkCurrentPosition();
+        }
+    },
+
+
+    /**
+     *
+     * @returns {*|jQuery|HTMLElement}
+     */
+    getInput: function () {
+        return this.ui.input;
+    },
+
+    /**
+     *
+     * @returns {HTMLInputElement}
+     */
+    getInputEl:  function () {
+        return this.ui.input.get(0);
     }
 
 });
@@ -444,7 +425,6 @@ var TextEditorModel = Backbone.Model.extend({
 
     defaults: function () {
         return {
-            caretPosition: 0,
             mode: this.Mode.Display
         };
     },
@@ -470,10 +450,6 @@ var TextEditorModel = Backbone.Model.extend({
             validate: !cancel
         });
 
-    },
-
-    setCaretPosition: function (position) {
-        this.set('caretPosition', position);
     },
 
     setText: function (text) {

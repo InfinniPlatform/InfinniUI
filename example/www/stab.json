@@ -69,6 +69,38 @@
           "Property": "0.Date"
         }
       }
+    },
+    {
+      "Label": {
+        "Text": {
+          "Source": "ds1",
+          "Property": "0.Date"
+        }
+      }
+    },
+    {
+      "TextBox": {
+        "LabelText": "One line input[type=text]",
+        "Multiline": false,
+        "DisplayFormat": "{:d}",
+        "EditMask": {
+          "NumberEditMask": {
+            "Mask": "n3"
+          }
+        },
+        "Value": {
+          "Source": "ds1",
+          "Property": "0.num"
+        }
+      }
+    },
+    {
+      "Label": {
+        "Text": {
+          "Source": "ds1",
+          "Property": "0.num"
+        }
+      }
     }
   ]
 }

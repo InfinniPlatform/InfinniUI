@@ -82,6 +82,43 @@ _.extend(DateTimeEditMask.prototype, {
     },
 
     /**
+     * @param {Number} position
+     * @param {Number} selectionLength
+     * @param {String} char
+     * @returns {Number}
+     */
+    deleteSelectedText: function (position, selectionLength, char) {
+
+        var data;
+        var from;
+        var text;
+        var mask;
+        var prevPos, pos = position, len = selectionLength;
+
+        char = char || '';
+        while(data = this.getItemTemplate(pos)) {
+            prevPos = pos;
+            from = pos - data.left;
+            text = data.item.text;
+            mask = this.masks[data.item.mask];
+
+            text = text.substring(0, from) + char + text.substring(from + len);
+            if (!text.length || mask.match(text)) {
+                data.item.text = text;
+            }
+
+            pos = this.getNextItemMask(pos);
+            if (prevPos === pos) {
+                break;
+            }
+            len = selectionLength - (pos - position);
+            char = '';
+        }
+
+        return position;
+    },
+
+    /**
      * Удалить символ слева от курсора
      * @param position
      * @param {Number|undefined} selectionLength
@@ -91,7 +128,7 @@ _.extend(DateTimeEditMask.prototype, {
         var item, text;
 
         if (selectionLength) {
-            this.selectRemove(this.template, position, selectionLength);
+            position = this.deleteSelectedText(position, selectionLength);
         } else {
             if (data !== null) {
                 if (data.index > 0) {
@@ -120,7 +157,7 @@ _.extend(DateTimeEditMask.prototype, {
         var item, text;
 
         if (selectionLength) {
-            this.selectRemove(this.template, position, selectionLength);
+            position = this.deleteSelectedText(position, selectionLength);
         } else {
             if (data !== null) {
                 item = data.item;
@@ -134,46 +171,6 @@ _.extend(DateTimeEditMask.prototype, {
             }
         }
         return position;
-    },
-
-    /**
-     * Удаление выделенного текста
-     * @param template
-     * @param position
-     * @param {Number} selectionLength
-     */
-    selectRemove: function(template, position, selectionLength){
-        var firstItem = this.getItemTemplate(position);
-        var lastItem = this.getItemTemplate(position + selectionLength);
-
-        var firstIndexItem = template.indexOf(firstItem.item);
-        var lastIndexItem = template.indexOf(lastItem.item);
-
-        for (var i = firstIndexItem; i < lastIndexItem + 1; i++) {
-            if (typeof template[i] == "object") {
-                if (firstIndexItem == lastIndexItem) {
-                    build(template[i], position);
-                } else if (i == firstIndexItem) {
-                    build(template[i], position);
-                } else if (i == lastIndexItem) {
-                    build(template[i], position);
-                } else {
-                    template[i].text = '';
-                }
-            }
-        }
-
-        function build(templateText, position) {
-            var arraySymbols = templateText.text.split('');
-            var start = position - templateText.position;
-            var end = (position + selectionLength) - templateText.position;
-
-            if (start < 0) start = 0;
-            arraySymbols.splice(start, end - start);
-
-            templateText.text = arraySymbols.join('');
-            return templateText;
-        }
     },
 
     /**
@@ -370,7 +367,8 @@ _.extend(DateTimeEditMask.prototype, {
         var mask;
         var width;
         var left = 0;
-        var last;
+        var last = left;
+
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') { //Простой символ
