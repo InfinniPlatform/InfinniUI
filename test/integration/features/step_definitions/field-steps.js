@@ -6,7 +6,7 @@ this.When(/^я введу в текстовое поле "([^"]*)" значен�
     };
     var success = function () {
         try {
-            window.testHelpers.getControlByName(fieldName).setValue(value);
+            window.testHelpers.getControlByName(fieldName).setValue(value.replace(/'/g, '"'));
             next();
         } catch (err) {
             next(err);
@@ -300,6 +300,28 @@ this.Then(/^элемент "([^"]*)" будет недоступным$/, functi
                 next();
             } else {
                 next(new Error(elementName + ' is enabled!'));
+            }
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(elementName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
+this.Then(/^элемент "([^"]*)" будет доступным$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    };
+    var success = function () {
+        try {
+            if (window.testHelpers.getControlByName(elementName).getEnabled()) {
+                next();
+            } else {
+                next(new Error(elementName + ' is disabled!'));
             }
         } catch (err) {
             next(err);
