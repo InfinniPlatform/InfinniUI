@@ -115,7 +115,7 @@ _.extend(DateTimeEditMask.prototype, {
             char = '';
         }
 
-        return position;
+        return this.moveToNextChar(position + char.length - 1);
     },
 
     /**
@@ -262,6 +262,11 @@ _.extend(DateTimeEditMask.prototype, {
         var index;
         var result = null;
 
+        if (typeof  template === 'undefined') {
+            this.reset();
+            template = this.template;
+        }
+
         if (!Array.isArray(template)) {
             return null;
         }
@@ -289,27 +294,6 @@ _.extend(DateTimeEditMask.prototype, {
     },
 
     setCharAt: function (char, position) {
-//        var template;
-//
-//        for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
-//            template = this.template[i];
-//            if (typeof template === 'string') { //Статический текст
-//                continue;
-//            }
-//            if (template.position === position) {    //Маска ввода
-//                mask = this.masks[template.mask];
-//                console.log(mask);
-//                text = char.substr(0,1);
-//                if (mask.validator(text)) {
-//                    template.text = text;
-//                    position = this.getNextItemMask(position);
-//                }
-//                break;
-//            }
-//            if (template.position > position) {
-//                break;
-//            }
-//        }
         var data = this.getItemTemplate(position);
         var text;
         var item;
@@ -519,7 +503,7 @@ _.extend(DateTimeEditMask.prototype, {
             template.push(mask.substring(lastPosition));
         }
 
-        return template;
+        return this.template = template;
     },
 
     /**

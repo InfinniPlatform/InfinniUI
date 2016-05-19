@@ -58,7 +58,7 @@
       "TextBox": {
         "LabelText": "One line input[type=text]",
         "Multiline": false,
-        "DisplayFormat": "{:d}",
+        "DisplayFormat": "{:F}",
         "EditMask": {
           "DateTimeEditMask": {
             "Mask": "dd----MM----yyyy"
@@ -82,7 +82,7 @@
       "TextBox": {
         "LabelText": "One line input[type=text]",
         "Multiline": false,
-        "DisplayFormat": "{:d}",
+        "DisplayFormat": "{:n4}",
         "EditMask": {
           "NumberEditMask": {
             "Mask": "n3"

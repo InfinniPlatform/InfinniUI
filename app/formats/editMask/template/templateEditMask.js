@@ -225,6 +225,11 @@ _.extend(TemplateEditMask.prototype, {
         var index;
         var result = null;
 
+        if (typeof  template === 'undefined') {
+            this.reset();
+            template = this.template;
+        }
+
         if (!Array.isArray(template)) {
             return null;
         }
@@ -401,7 +406,7 @@ _.extend(TemplateEditMask.prototype, {
      * @param position
      */
     setCharAt: function (char, position, len) {
-        var template;
+        var itemTemplate = this.getItemTemplate();
         var mask;
         var text;
 
@@ -413,8 +418,8 @@ _.extend(TemplateEditMask.prototype, {
             this.clearText(position, len);
         }
 
-        for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
-            template = this.template[i];
+        for (var i = 0, ln = itemTemplate.length; i < ln; i = i + 1) {
+            var template = itemTemplate[i];
             if (typeof template === 'string') { //Статический текст
                 continue;
             }

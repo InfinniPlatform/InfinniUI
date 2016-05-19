@@ -11,7 +11,11 @@ var TextEditorView = Backbone.View.extend({
         'keyup': 'onKeyupHandler',
         'keypress': 'onKeypressHandler',
         'click': 'onClickHandler',
-        //'mousewheel': 'onMousewheelHandler',
+        'drop': 'onDropHandler',
+        'dragstart': 'OnDragstartHandler',
+        'dragend': 'OnDragendHandler',
+        'dragover': 'OnDragoverHandler',
+        'dragleave': 'OnDragleaveHandler',
         'paste': 'onPasteHandler'
     },
 
@@ -31,11 +35,11 @@ var TextEditorView = Backbone.View.extend({
         switch (event.which) {
             case InfinniUI.Keyboard.KeyCode.ESCAPE:
                 //Отменить изменения и выйти из режима редактирования
-                this.setDisplayMode(true);
+                this.model.setDisplayMode(true);
                 break;
 
             case InfinniUI.Keyboard.KeyCode.HOME:
-                if(!event.shiftKey) {
+                if (!event.shiftKey) {
                     position = editMask.moveToPrevChar(0);
                     if (position !== false) {
                         event.preventDefault();
@@ -46,7 +50,7 @@ var TextEditorView = Backbone.View.extend({
                 break;
 
             case InfinniUI.Keyboard.KeyCode.LEFT_ARROW:
-                if(!event.shiftKey) {
+                if (!event.shiftKey) {
                     position = editMask.moveToPrevChar(this.getCaretPosition());
                     if (position !== false) {
                         event.preventDefault();
@@ -76,7 +80,7 @@ var TextEditorView = Backbone.View.extend({
                 break;
 
             case InfinniUI.Keyboard.KeyCode.UP_ARROW:
-                if(!event.shiftKey) {
+                if (!event.shiftKey) {
                     position = editMask.setNextValue(this.getCaretPosition());
                     if (position !== false) {
                         event.preventDefault();
@@ -87,7 +91,7 @@ var TextEditorView = Backbone.View.extend({
                 break;
 
             case InfinniUI.Keyboard.KeyCode.DOWN_ARROW:
-                if(!event.shiftKey) {
+                if (!event.shiftKey) {
                     position = editMask.setPrevValue(this.getCaretPosition());
                     if (position !== false) {
                         event.preventDefault();
@@ -128,15 +132,9 @@ var TextEditorView = Backbone.View.extend({
                 break;
 
             default:
-
-                //@TODO Зачем это все
-
-                //TODO: не работает для DateTimeFormat
                 //замена выделенного текста, по нажатию
-
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
 
-                //@TODO Зачем проверка "instanceof Date"??
                 if (this.getSelectionLength() > 0) {
                     event.preventDefault();
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
@@ -153,12 +151,11 @@ var TextEditorView = Backbone.View.extend({
     },
 
     onKeyupHandler: function (event) {
-        //@TODO this.parseInputValue()
 
-        //this.trigger('onKeyDown', {
-        //    keyCode: event.which,
-        //    value: this.parseInputValue()
-        //});
+        this.trigger('onKeyDown', {
+            keyCode: event.which,
+            value: this.model.getValue()
+        });
     },
 
     onKeypressHandler: function (event) {
@@ -194,26 +191,74 @@ var TextEditorView = Backbone.View.extend({
     },
 
     onPasteHandler: function (event) {
+        var originalEvent = event.originalEvent;
+        var text = originalEvent.clipboardData.getData('text/plain');
         var editMask = this.model.getEditMask();
 
-        if (!editMask) {
-            //Use default behavior
+        event.preventDefault();
+
+        if (editMask) {
+            this.textTyping(text);
+        } else {
+            this.model.setText(text);
+        }
+
+    },
+
+    OnDragstartHandler: function (event) {
+        this.$el.attr('data-dragged', true);
+    },
+
+    OnDragendHandler: function (event) {
+        this.$el.removeAttr('data-dragged', false);
+    },
+
+    OnDragoverHandler: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var originalEvent = event.originalEvent;
+        this.model.setEditMode();
+    },
+
+    OnDragleaveHandler: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.model.setDisplayMode();
+    },
+
+    onDropHandler: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var dragged = this.$el.attr('data-dragged');
+
+        if (dragged) {  //prevent drop on self
             return;
         }
 
         var originalEvent = event.originalEvent;
+        var text = originalEvent.dataTransfer.getData('text/plain');
 
-        var text = originalEvent.clipboardData.getData('text/plain') || prompt('Введите текст для вставки');
-        if (text) {
-            var chars = text.split('');
+        this.textTyping(text, 0);
+    },
 
-            for (var i = 0, position = this.getCaretPosition(); i < chars.length; i = i + 1) {
-                position = editMask.setCharAt(chars[i], position);
-            }
+    /**
+     * @description Заполняет поле ввода строкой text начиная с позиции position
+     * @protected
+     *
+     * @param {string} text
+     * @param {number} [position]
+     */
+    textTyping: function (text, position) {
+        var editMask = this.model.getEditMask();
 
-            event.preventDefault();
-            this.model.setText(editMask.getText());
-        }
+        text.split('')
+            .reduce(function (pos, char) {
+                return editMask.setCharAt(char, pos);
+            }, _.isNumber(position) ? position : this.getCaretPosition());
+
+        this.model.setText(editMask.getText());
     },
 
     checkCurrentPosition: function () {
@@ -315,8 +360,8 @@ var TextEditorView = Backbone.View.extend({
         if ($input.is(':focus')) {
             this.checkCurrentPosition();
         }
+        
     },
-
 
     /**
      *
@@ -330,7 +375,7 @@ var TextEditorView = Backbone.View.extend({
      *
      * @returns {HTMLInputElement}
      */
-    getInputEl:  function () {
+    getInputEl: function () {
         return this.ui.input.get(0);
     }
 
@@ -341,13 +386,15 @@ var TextEditorView = Backbone.View.extend({
  *
  * @constructor
  */
-function EditorModeStrategy() {}
+function EditorModeStrategy() {
+}
 
 /**
  * @abstract
  * @param {TextEditorModel} model
  */
-EditorModeStrategy.prototype.updateText = function (model) {};
+EditorModeStrategy.prototype.updateText = function (model) {
+};
 
 /**
  * @augments EditorModeStrategy
@@ -413,6 +460,16 @@ var TextEditorModel = Backbone.Model.extend({
         this.on('change:originalValue', this.onChangeOriginalValueHandler);
         this.on('change:value', this.onChangeValueHandler);
         this.on('change:mode', this.onChangeModeHandler);
+        this.on('change:text', function (model, text) {
+            var mode = model.get('mode');
+            if (mode === this.Mode.Edit) {
+                var editMask = model.getEditMask();
+
+                var value = editMask ?  editMask.getData() : text;
+
+                model.set('value', value);
+            }
+        });
     },
 
     initEditMode: function () {
@@ -434,9 +491,18 @@ var TextEditorModel = Backbone.Model.extend({
         this.set('modeStrategy', this.modeStrategies[mode]);
     },
 
-    onChangeModeHandler: function () {
+    onChangeModeHandler: function (model, mode, options) {
         this.updateEditModeStrategy();
         this.updateText();
+
+        var prevMode = this.previous('mode');
+
+        if (options.cancel) {
+            this.cancelChanges();
+        } else if (mode === this.Mode.Display && prevMode === this.Mode.Edit) {
+            //При успешном переходе из режима редактирования в режим отображения - обновляем исходное значение
+            this.applyChanges();
+        }
     },
 
     /**
@@ -447,9 +513,20 @@ var TextEditorModel = Backbone.Model.extend({
         cancel = !!cancel;
 
         this.set('mode', this.Mode.Display, {
+            cancel: cancel,
             validate: !cancel
         });
 
+    },
+
+    applyChanges: function () {
+        var value = this.get('value');
+        this.set('originalValue', value);
+    },
+
+    cancelChanges: function () {
+        var value = this.get('originalValue');
+        this.set('value', value);
     },
 
     setText: function (text) {
@@ -458,6 +535,10 @@ var TextEditorModel = Backbone.Model.extend({
 
     getEditMask: function () {
         return this.get('editMask');
+    },
+
+    getValue: function () {
+        return this.get('value');
     },
 
     getDisplayFormat: function () {
@@ -510,10 +591,6 @@ var TextEditor2 = function (element) {
         validateValue: element.validateValue.bind(element)
     });
 
-    model.on('change:value', function (model, value) {
-        element.setValue(value);
-    });
-
     var view = new TextEditorView({
         model: model
     });
@@ -550,7 +627,7 @@ TextEditor2.prototype.setValue = function (value) {
 };
 
 TextEditor2.prototype.onChangeValue = function (handler) {
-    this._model.on('change:value', function (model, value, options) {
+    this._model.on('change:originalValue', function (model, value, options) {
         if (options.originalValue === true) {
             return;
         }
