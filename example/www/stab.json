@@ -101,7 +101,18 @@
           "Property": "0.num"
         }
       }
+    },
+    {
+      "TextBox": {
+        "LabelText": "One line area",
+        "Multiline": true,
+        "Value": {
+          "Source": "ds1",
+          "Property": "0.text"
+        }
+      }
     }
+
   ]
 }
 

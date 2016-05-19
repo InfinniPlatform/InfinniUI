@@ -60,23 +60,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     render: function () {
         this.prerenderingActions();
         this.renderTemplate(this.template.control);
-
-        /*********** Editor.Render *******/
-        var model = this.model;
-        var templateEditorMethod = model.get('multiline') ? this.template.multiline : this.template.oneline;
-        var editorTemplate = templateEditorMethod.call(null, this.getData());
-        var editor = this.model.get('editor');
-        var $editor = editor.render(editorTemplate);
-        this.ui.editor.replaceWith($editor);
-
-        this.model.on('change:value', function (model, value) {
-            editor.setValue(value);
-        });
-        editor.setValue(model.get('value'));
-
-        /*********** /Editor.Render *******/
-
-        // this.renderTextBoxEditor();
+        this.renderTextBoxEditor();
         this.updateProperties();
 
         this.trigger('render');
@@ -96,17 +80,14 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         );
     },
 
-    //renderTextBoxEditor: function () {
-    //    var model = this.model;
-    //    this.renderControlEditor({
-    //        el: this.ui.editor,
-    //        multiline: model.get('multiline'),
-    //        lineCount: model.get('lineCount'),
-    //        inputType: model.get('inputType')
-    //    });
-    //
-    //    return this;
-    //},
+    renderTextBoxEditor: function () {
+
+        var model = this.model;
+        var templateEditorMethod = model.get('multiline') ? this.template.multiline : this.template.oneline;
+        var editorTemplate = templateEditorMethod.call(null, this.getData());
+
+        this.renderControlEditor(editorTemplate);
+    },
 
     setFocus: function () {
         this.ui.textbox.focus();

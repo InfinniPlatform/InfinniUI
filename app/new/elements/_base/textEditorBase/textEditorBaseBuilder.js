@@ -32,8 +32,14 @@ _.extend(TextEditorBaseBuilder.prototype, {
 
     initEditor: function (params) {
         var element = params.element;
-        var editor = new TextEditor2(element);
+        var editor = new TextEditor();
+        editor
+            .setDisplayFormat(element.getDisplayFormat())
+            .setEditMask(element.getEditMask())
+            .setValidatorValue(element.validateValue.bind(element));
+
         element.setEditor(editor);
+
         editor.onChangeValue(function (value) {
             element.setValue(value);
         });

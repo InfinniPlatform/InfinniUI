@@ -75,24 +75,19 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     /**
      * Рендеринг редактора значений
-     * @params {Object} options
-     * @params {jQuery} options.el
-     * @params {Number} options.multiline
-     * @params {Number} options.lineCount
-     * @params {String} options.inputType
      *
      */
-    renderControlEditor: function (options) {
+    renderControlEditor: function (editorTemplate) {
+        var model = this.model;
+        var editor = model.get('editor');
+        var $editor = editor.render(editorTemplate);
+        this.ui.editor.replaceWith($editor);
 
-        options = _.defaults(options, {
-            el: this.ui.editor,
-            multiline: false,
-            lineCount: 2,
-            inputType: 'text'
+        model.on('change:value', function (model, value) {
+            editor.setValue(value);
         });
 
-        //@TODO Возможно при отсутвии maskEdit поле редактирования использовать не надо?
-        this.renderEditor(options);
+        editor.setValue(model.get('value'));
     },
 
     getData: function () {
