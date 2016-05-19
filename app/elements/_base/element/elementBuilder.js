@@ -74,8 +74,12 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 		this.initBindingToProperty(params, 'Tag');
 		this.initBindingToProperty(params, 'Focusable', true);
 
-		this.initToolTip(params);
-		this.initContextMenu(params);
+		if( metadata.ToolTip ) {
+			this.initToolTip(params);
+		}
+		if( metadata.ContextMenu ) {
+			this.initContextMenu(params);
+		}
 
 		if ('Name' in metadata) {
 			element.setName(metadata.Name);
@@ -222,24 +226,22 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 				metadata = params.metadata,
 				tooltip;
 
-		if (metadata.ToolTip) {
-			var argumentForBuilder = {
-				parent: element,
-				parentView: params.parentView,
-				basePathOfProperty: params.basePathOfProperty
-			};
+		var argumentForBuilder = {
+			parent: element,
+			parentView: params.parentView,
+			basePathOfProperty: params.basePathOfProperty
+		};
 
-			if (typeof metadata.ToolTip === 'string') {
-				tooltip = builder.buildType("Label", {
-					"Text": metadata.ToolTip
-				}, argumentForBuilder);
-			} else {
-				tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
-			}
-
-			element.setToolTip(tooltip);
-			exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+		if (typeof metadata.ToolTip === 'string') {
+			tooltip = builder.buildType("Label", {
+				"Text": metadata.ToolTip
+			}, argumentForBuilder);
+		} else {
+			tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
 		}
+
+		element.setToolTip(tooltip);
+		exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
 	},
 
 	initContextMenu: function(params) {
@@ -249,21 +251,18 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 				metadata = params.metadata,
 				contextMenu;
 
-		if( metadata.ContextMenu ) {
+		var argumentForBuilder = {
+			parent: element,
+			parentView: params.parentView,
+			basePathOfProperty: params.basePathOfProperty
+		};
 
-			var argumentForBuilder = {
-				parent: element,
-				parentView: params.parentView,
-				basePathOfProperty: params.basePathOfProperty
-			};
+		contextMenu = builder.buildType('ContextMenu', {
+			"Items": metadata.ContextMenu.Items
+		}, argumentForBuilder);
 
-			contextMenu = builder.buildType('ContextMenu', {
-				"Items": metadata.ContextMenu.Items
-			}, argumentForBuilder);
-
-			element.setContextMenu(contextMenu);
-			exchange.send(messageTypes.onContextMenu.name, { source: element, content: contextMenu.render() });
-		}
+		element.setContextMenu(contextMenu);
+		exchange.send(messageTypes.onContextMenu.name, { source: element, content: contextMenu.render() });
 	},
 
 	lowerFirstSymbol: function(s){
