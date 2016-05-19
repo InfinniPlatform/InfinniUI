@@ -163,6 +163,9 @@
 															}
 														},
 														{
+															"Divider": {}
+														},
+														{
 															"Button": {
 																"ViewMode": "link",
 																"Text": "contextMenuLink3",
@@ -194,7 +197,8 @@
 															}
 														}
 													]
-												}
+												},
+												"ToolTip": "this is bottom toolTip"
 											}
 										}
 									]

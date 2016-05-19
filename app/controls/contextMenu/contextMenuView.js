@@ -93,9 +93,10 @@ var ContextMenuView = ContainerView.extend({
 
 	open: function(rightclickCoords){
 		var that = this;
-		var $parent = this.$el.parent();
 
 		$('body').append(this.$el);
+
+		var $parent = this.$el.parent();
 
 		this.$el.addClass('open');
 		$parent.addClass('open');
