@@ -146,6 +146,14 @@
 												"Items": {
 													"Source": "ObjectDataSource1"
 												},
+												"ItemTemplate":{
+													"Label": {
+														"Value": {
+															"Source": "ObjectDataSource1",
+															"Property": "#.Display"
+														}
+													}
+												},
 												"ContextMenu": {
 													"Items": [
 														{
