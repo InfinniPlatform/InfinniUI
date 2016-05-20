@@ -8,6 +8,8 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
 
     template: InfinniUI.Template["new/controls/dateTimePicker/template/date.tpl.html"],
 
+    templateEditor: InfinniUI.Template["new/controls/dateTimePicker/template/date.editor.tpl.html"],
+
     UI: _.extend({}, TextEditorBaseView.prototype.UI, {
         dropdownButton: '.pl-datepicker-calendar',
         controlWrap: '.control-wrap',
@@ -92,11 +94,7 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
 
     renderDateTimePickerEditor: function () {
         var model = this.model;
-        this.renderControlEditor({
-            el: this.ui.editor,
-            multiline: false,
-            convert: this.convertValue
-        });
+        this.renderControlEditor(this.templateEditor.call(null, this.getData()));
 
         return this;
     },

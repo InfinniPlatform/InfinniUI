@@ -55,6 +55,11 @@
   ],
   "Items": [
     {
+      "DateTimePicker": {
+        "Mode": "DateTime"
+      }
+    },
+    {
       "TextBox": {
         "LabelText": "One line input[type=text]",
         "Multiline": false,
