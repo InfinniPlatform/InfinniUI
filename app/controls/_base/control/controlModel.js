@@ -16,8 +16,7 @@ var ControlModel = Backbone.Model.extend({
         validationState: 'success',
         validationMessage: '',
         focusable: true,
-        focused: false,
-        showToolTip: false//Тоолтип не показывается
+        focused: false
     },
 
     initialize: function(){
@@ -26,7 +25,7 @@ var ControlModel = Backbone.Model.extend({
             this.trigger(value ? 'OnGotFocus' : 'OnLostFocus');
         });
     },
-    
+
     set: function (key, val, options) {
         var
             defaults = this.defaults,

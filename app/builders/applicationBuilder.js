@@ -97,6 +97,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Script', new ScriptBuilder());
 
         builder.register('Divider', new DividerBuilder());
+        builder.register('ContextMenu', new ContextMenuBuilder());
 
 
         var registerQueue = ApplicationBuilder.registerQueue;
