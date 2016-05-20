@@ -25,8 +25,10 @@ window.messageTypes = {
     onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
     onNotifyUser: {name: 'onNotifyUser'},
     onToolTip: {name: 'onToolTip'},
-    onToolTipShow: {name: 'onToolTipShow'},
-    onToolTipHide: {name: 'onToolTipHide'},
+
+    onContextMenu: {name: 'onContextMenu'},
+    onOpenContextMenu: {name: 'onOpenContextMenu'},
+
     onDataLoading: {name: 'onDataLoading'},
     onDataLoaded: {name: 'onDataLoaded'},
 

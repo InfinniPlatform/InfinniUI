@@ -541,25 +541,12 @@ var BaseDataSource = Backbone.Model.extend({
     beforeDeleteItem: function(item){},
 
     _handleDeletedItem: function (item, successHandler) {
-        var items = this.getItems(),
-            idProperty = this.get('idProperty'),
-            itemId = this.idOfItem(item),
-            selectedItem = this.getSelectedItem();
-
-        for (var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++) {
-            if (items[i][idProperty] == itemId) {
-                items.splice(i, 1);
-                needExit = true;
-            }
-        }
-        delete this.get('itemsById')[itemId];
-        this._excludeItemFromModifiedSet(item);
-
-        if (selectedItem && selectedItem[idProperty] == itemId) {
-            this.setSelectedItem(null);
-        }
-
-        this._notifyAboutItemDeleted(item, successHandler);
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn({
+            message: 'BaseDataSource._handleDeletedItem: not overrided by strategy',
+            source: this
+        });
     },
 
     _notifyAboutItemDeleted: function (item, successHandler) {
@@ -730,6 +717,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         this.setProperty('', items);
+        this._includeItemToModifiedSet(itemData);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
     },
@@ -1052,6 +1040,28 @@ BaseDataSource.identifyingStrategy = {
             var itemId = this.idOfItem(item);
             delete this.get('modifiedItems')[itemId];
         },
+
+        _handleDeletedItem: function (item, successHandler) {
+            var items = this.getItems(),
+                idProperty = this.get('idProperty'),
+                itemId = this.idOfItem(item),
+                selectedItem = this.getSelectedItem();
+
+            for (var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++) {
+                if (items[i][idProperty] == itemId) {
+                    items.splice(i, 1);
+                    needExit = true;
+                }
+            }
+            delete this.get('itemsById')[itemId];
+            this._excludeItemFromModifiedSet(item);
+
+            if (selectedItem && selectedItem[idProperty] == itemId) {
+                this.setSelectedItem(null);
+            }
+
+            this._notifyAboutItemDeleted(item, successHandler);
+        }
     },
 
     byLink: {
@@ -1106,6 +1116,23 @@ BaseDataSource.identifyingStrategy = {
         _excludeItemFromModifiedSet: function (item) {
             delete this.get('modifiedItems')['-'];
         },
+
+        _handleDeletedItem: function (item, successHandler) {
+            var items = this.getItems(),
+                selectedItem = this.getSelectedItem(),
+                index = items.indexOf(item);
+
+            if(index >= 0){
+                items.splice(index, 1);
+                this._excludeItemFromModifiedSet(item);
+
+                if (selectedItem && selectedItem == item) {
+                    this.setSelectedItem(null);
+                }
+            }
+
+            this._notifyAboutItemDeleted(item, successHandler);
+        }
     }
 };
 

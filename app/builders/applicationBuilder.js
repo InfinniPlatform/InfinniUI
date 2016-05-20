@@ -16,7 +16,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('View', new ViewBuilder());
         builder.register('InlineView', new InlineViewBuilder());
         builder.register('AutoView', new MetadataViewBuilder());
-        builder.register('ExistsView', new MetadataViewBuilder());
 
         builder.register('StackPanel', new StackPanelBuilder());
         builder.register('GridPanel', new GridPanelBuilder());
@@ -66,11 +65,9 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('RestDataSource', new RestDataSourceBuilder());
         builder.register('DocumentDataSource', new DocumentDataSourceBuilder());
-        builder.register('DataBinding', new DataBindingBuilder());
         builder.register('PropertyBinding', new DataBindingBuilder());
         builder.register('ObjectDataSource', new ObjectDataSourceBuilder());
         builder.register('Parameter', new ParameterBuilder());
-        builder.register('Validation', new ValidationBuilder());
 
 
         builder.register('AcceptAction', new AcceptActionBuilder());
@@ -97,11 +94,10 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TemplateEditMask', new TemplateEditMaskBuilder());
         builder.register('RegexEditMask', new RegexEditMaskBuilder());
 
-        builder.register('Comparator', new ComparatorBuilder());
-
         builder.register('Script', new ScriptBuilder());
 
         builder.register('Divider', new DividerBuilder());
+        builder.register('ContextMenu', new ContextMenuBuilder());
 
 
         var registerQueue = ApplicationBuilder.registerQueue;
