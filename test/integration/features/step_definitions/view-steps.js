@@ -126,8 +126,10 @@ this.Then(/^система отобразит значения выпадающ�
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function (msgs, next) {
     var getMessages = function (arrayString) {
         return arrayString.split('", ').map(function (item) {
-            var result = item.trim();
-            return result.replace(/"/g, "").replace(/'/g, '"');
+            return item
+                .trim()
+                .replace(/"/g, "")
+                .replace(/'/g, '"');
         });
     };
 
@@ -154,6 +156,7 @@ this.Then(/^система отобразит список валидацион�
         try {
             chai.assert.deepEqual(actualMessages, messages, errorString);
             window.toastrMessageCount = 0;
+            window.configWindow.$('#toast-container').remove();
             next();
         } catch (err) {
             next(err);
