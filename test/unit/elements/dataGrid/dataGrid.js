@@ -39,10 +39,7 @@ describe('DataGrid', function () {
     describe('render', function () {
         it('should render DataGrid', function (done) {
             // Given When
-            testHelper.applyViewMetadata(metadata, function (view) {
-                var grid = view.context.controls["DataGrid1"];
-                var $grid = grid.control.controlView.$el;
-
+            testHelper.applyViewMetadata(metadata, function (view, $grid) {
                 onDataGridReady($grid);
 
                 view.close();
@@ -51,16 +48,21 @@ describe('DataGrid', function () {
             // Then
             function onDataGridReady($grid){
                 assert.isObject($grid);
+
+                var headers = $grid.find(".pl-datagrid-row_header .pl-label");
+                assert.equal(headers.first().text(), "Id");
+                assert.equal(headers.last().text(), "Display");
+
+                var $body = $grid.find(".pl-datagrid-row_data");
+                assert.equal($body.length, 3);
+
                 done();
             }
         });
 
         it('should render DisabledItemCondition', function (done) {
             // Given When
-            testHelper.applyViewMetadata(metadata, function (view) {
-                var grid = view.context.controls["DataGrid1"];
-                var $grid = grid.control.controlView.$el;
-
+            testHelper.applyViewMetadata(metadata, function (view, $grid) {
                 onDataGridReady($grid);
 
                 view.close();
