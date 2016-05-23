@@ -39,6 +39,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TextBox', new TextBoxBuilder());
         builder.register('PasswordBox', new PasswordBoxBuilder());
         builder.register('CheckBox', new CheckBoxBuilder());
+        builder.register('IndeterminateCheckbox', new IndeterminateCheckboxBuilder());
         builder.register('ImageBox', new ImageBoxBuilder());
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
@@ -97,6 +98,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Script', new ScriptBuilder());
 
         builder.register('Divider', new DividerBuilder());
+        builder.register('ContextMenu', new ContextMenuBuilder());
 
 
         var registerQueue = ApplicationBuilder.registerQueue;

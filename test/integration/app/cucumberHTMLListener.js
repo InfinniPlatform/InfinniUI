@@ -19,6 +19,7 @@ function CucumberHTMLListener($root, $info) {
                     } else {
                         tag = undefined;
                     }
+                    window.cucumberCurrentFeature = (tag ? tag + ' ' : '') + window.cucumberCurrentFeature;
                     formatter.feature({
                         keyword: feature.getKeyword(),
                         name: feature.getName(),
@@ -40,6 +41,7 @@ function CucumberHTMLListener($root, $info) {
                     } else {
                         tag = undefined;
                     }
+                    window.cucumberCurrentScenario = (tag ? tag + ' ' : '') + window.cucumberCurrentScenario;
                     formatter.scenario({
                         keyword: scenario.getKeyword(),
                         name: scenario.getName(),

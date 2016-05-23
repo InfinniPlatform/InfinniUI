@@ -413,3 +413,19 @@ this.Then(/^экран будет иметь название "([^"]*)"$/, funct
         next(new Error("View is not initialized"));
     }
 });
+
+this.Then(/^таблица "([^"]*)" будет пустой$/, function (tableName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(tableName) != undefined;
+    }, function () {
+        try {
+            var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
+            var $row = $table.find('.pl-datagrid-row.pl-datagrid-row_data');
+            $row.length == 0 ? next() : next(new Error('Количество записей: ' + $row.length));
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(tableName + ' not found'));
+    });
+});
