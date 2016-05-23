@@ -62,7 +62,6 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
 
         if( disabledItemCondition != null && disabledItemCondition(undefined, {value: item} ) ) {
             $item.addClass('disabled-list-item');
-            $item.css('pointer-events', 'none');
         }
 
         return $item;

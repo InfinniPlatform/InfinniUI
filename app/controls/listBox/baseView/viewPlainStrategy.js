@@ -6,11 +6,13 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
 
     prepareItemsForRendering: function(){
         var items = this.listbox.getItems(),
+            disabledItemCondition = this.listbox.model.get('disabledItemCondition'),
             inputName = 'listbox-' + guid(),
             result = {
                 isMultiselect: this.listbox.isMultiselect(),
                 focusable: this.listbox.isFocusable(),
                 inputName: inputName,
+                disabledItemCondition: disabledItemCondition,
                 items: items.toArray()
             };
 

@@ -69,10 +69,8 @@ describe('DataGrid', function () {
             // Then
             function onDataGridReady($grid){
                 var $secondItem = $grid.find("tbody .pl-datagrid-row:nth-child(2)");
-                var disabled = $secondItem.find(".pl-datagrid-toggle .pl-datagrid-toggle__button").attr('disabled');
 
                 assert.isTrue($secondItem.hasClass('disabled-list-item'));
-                assert.equal(disabled, "disabled");
 
                 done();
             }
