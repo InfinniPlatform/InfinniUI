@@ -1,4 +1,4 @@
-describe('ListEditorBase (Control)', function () {
+describe('ListEditorBase', function () {
 
     describe('ListBox as exemplar of ListEditorBase', function (){
 
