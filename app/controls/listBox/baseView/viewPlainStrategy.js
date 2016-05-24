@@ -6,13 +6,11 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
 
     prepareItemsForRendering: function(){
         var items = this.listbox.getItems(),
-            disabledItemCondition = this.listbox.model.get('disabledItemCondition'),
             inputName = 'listbox-' + guid(),
             result = {
                 isMultiselect: this.listbox.isMultiselect(),
                 focusable: this.listbox.isFocusable(),
                 inputName: inputName,
-                disabledItemCondition: disabledItemCondition,
                 items: items.toArray()
             };
 
@@ -34,6 +32,7 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
             $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
             listbox.addChildElement(itemEl);
+            listbox.ChildElementsMap.add(items[i], itemEl);
             $el.append(itemEl.render());
 
             $el.parent().data('pl-data-item', items[i]);

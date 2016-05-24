@@ -108,7 +108,10 @@ describe('ListBox', function () {
             }
         });
 
-        it('DisabledItemCondition', function () {
+    });
+
+    describe('api', function () {
+        it('should update DisabledItemCondition', function () {
             // Given
             var metadata = {
                 DataSources : [
@@ -125,6 +128,7 @@ describe('ListBox', function () {
                 ],
                 Items: [{
                     ListBox: {
+                        "Name": "ListBox1",
                         "DisabledItemCondition": "{ return (args.value.Id == 2); }",
                         "ItemTemplate": {
                             "Label": {
@@ -143,15 +147,27 @@ describe('ListBox', function () {
                 }]
             };
 
-            // When
+
             testHelper.applyViewMetadata(metadata, onViewReady);
 
-            // Then
-            function onViewReady(view, $listbox) {
-                var secondItem = $listbox.find('.pl-listbox-i:nth-child(2)');
 
-                assert.isTrue(secondItem.hasClass('disabled-list-item'));
+            function onViewReady(view, $view) {
+                var listbox = view.context.controls['ListBox1'];
+                var items = $view.find('.pl-listbox-i');
 
+                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
+                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
+
+                // When
+                listbox.setDisabledItemCondition( function (context, args) {
+                    return args.value.Id == 1;
+                });
+
+                // Then
+                items = $view.find('.pl-listbox-i');
+
+                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
                 view.close();
             }
         });

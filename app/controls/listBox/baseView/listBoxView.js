@@ -20,7 +20,7 @@ var BaseListBoxView = ListEditorBaseView.extend({
     initialize: function (options) {
         //@TODO Реализовать обработку значений по умолчанию!
         ListEditorBaseView.prototype.initialize.call(this, options);
-
+        this.ChildElementsMap = new HashMap();
     },
 
     updateGrouping: function(){
@@ -77,6 +77,7 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var template = this.strategy.getTemplate();
 
         this.removeChildElements();
+        this.ChildElementsMap.clear();
 
         this.$el.html(template(preparedItems));
         this.bindUIElements();
@@ -136,6 +137,20 @@ var BaseListBoxView = ListEditorBaseView.extend({
         }
 
         this.model.set('value', valueForModel);
+    },
+
+    updateDisabledItem: function(){
+        var model = this.model,
+            disabledItemCondition = model.get('disabledItemCondition');
+
+        if( disabledItemCondition != null ){
+            this.ChildElementsMap.forEach(function (element, item) {
+                var isDisabled = disabledItemCondition( undefined, {value: item}),
+                    $item = element.control.controlView.$el;
+
+                $item.closest('.pl-listbox-i').toggleClass('pl-disabled-list-item', isDisabled);
+            })
+        }
     }
 });
 

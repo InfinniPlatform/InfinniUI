@@ -6,13 +6,11 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
 
     prepareItemsForRendering: function(){
         var items = this.listbox.getItems(),
-            disabledItemCondition = this.listbox.model.get('disabledItemCondition'),
             inputName = 'listbox-' + guid(),
             result = {
                 isMultiselect: this.listbox.isMultiselect(),
                 focusable: this.listbox.isFocusable(),
                 inputName: inputName,
-                disabledItemCondition: disabledItemCondition,
                 groups: []
             },
             groups = {},
@@ -59,6 +57,7 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
             _.forEach( groups[i].items, function(item){
                 itemEl = itemTemplate(undefined, {index: i, item: item});
                 listbox.addChildElement(itemEl);
+                listbox.ChildElementsMap.add(item, itemEl);
                 $listboxItems.eq(index).append(itemEl.render());
 
                 $listboxItems.eq(index).parent()

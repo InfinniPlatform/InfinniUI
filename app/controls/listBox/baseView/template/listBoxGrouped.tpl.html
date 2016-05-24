@@ -19,7 +19,7 @@
             <div class="pl-listbox-group-title"></div>
             <ul class="pl-listbox-group-body">
                 <% group.items.forEach(function(item, index){%>
-                    <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-i <% if(disabledItemCondition!=null && disabledItemCondition(undefined, {value: item})) {%>pl-disabled-list-item<%}%>">
+                    <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-i">
                         <div class="pl-listbox-input">
                             <%
                                 buildGroupedListboxInput(i, isMultiselect, inputName);

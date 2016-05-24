@@ -12,7 +12,7 @@
 
 <ul class="pl-listbox-control">
     <% items.forEach(function(item, index){%>
-    <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-i <% print( isMultiselect ? 'checkbox' : 'radio' ); %> <% if(disabledItemCondition!=null && disabledItemCondition(undefined, {value: item})) {%>pl-disabled-list-item<%}%>">
+    <li <% if(focusable) {%>tabindex="0"<%}%> class="pl-listbox-i <% print( isMultiselect ? 'checkbox' : 'radio' ); %>">
         <div class="pl-listbox-input">
             <% buildListboxInput(index, isMultiselect, inputName); %>
             <span></span>
