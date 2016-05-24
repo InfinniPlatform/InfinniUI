@@ -381,7 +381,10 @@ describe('ComboBox', function () {
             }
         });
 
-        it('DisabledItemCondition', function () {
+    });
+
+    describe('api', function () {
+        it('should update DisabledItemCondition', function (done) {
             // Given
             var metadata = {
                 "Text": 'Пациенты',
@@ -396,9 +399,9 @@ describe('ComboBox', function () {
                         ObjectDataSource: {
                             "Name": "ObjectDataSource1",
                             "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                                {"Id": 1, "Display": "LTE", "Type": 1},
+                                {"Id": 2, "Display": "2G", "Type": 2},
+                                {"Id": 3, "Display": "3G", "Type": 2}
                             ]
                         }
                     }, {
@@ -413,6 +416,7 @@ describe('ComboBox', function () {
                 "Items": [{
 
                     ComboBox: {
+                        "Name": "ComboBox1",
                         "LabelText": "Combobox Label",
                         "ItemTemplate": {
                             "Label": {
@@ -428,6 +432,16 @@ describe('ComboBox', function () {
                             "Source": "ObjectDataSource1",
                             "Property": ""
                         },
+                        "GroupItemTemplate": {
+                            "Label": {
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Type"
+                                },
+                                "TextHorizontalAlignment": "Center"
+                            }
+                        },
+                        "GroupValueProperty": "Type",
                         "DisabledItemCondition": "{ return (args.value.Id == 2); }",
                         "Value": {
                             "Source": "ObjectDataSource2",
@@ -443,20 +457,30 @@ describe('ComboBox', function () {
 
             // Then
             function onViewReady(view, $layout) {
-
+                var combobox = view.context.controls['ComboBox1'];
                 var $value = $layout.find('.pl-combobox__value');
 
                 $value.click();
 
-                var secondItem = $('.pl-dropdown-container .pl-combobox-items span:nth-child(2)');
+                var items = $('.pl-combobox-group__items .pl-label');
+                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
+                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
 
-                assert.equal(secondItem.css('pointer-events'), 'none');
-                assert.isTrue(secondItem.hasClass('disabled-list-item'));
+                // When
+                combobox.setDisabledItemCondition(function (context, args) {
+                        return args.value.Id == 1;
+                });
+                $value.click();
 
+                // Then
+                var items = $('.pl-combobox-group__items .pl-label');
+                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
+
+                done();
                 view.close();
             }
         });
-
     });
 
 
