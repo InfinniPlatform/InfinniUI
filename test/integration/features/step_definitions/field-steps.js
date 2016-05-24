@@ -404,9 +404,13 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
             xhr.responseType = 'blob';
             xhr.onload = function () {
                 try {
-                    var file = new File([xhr.response], fileName);
-                    fileBox.setFile(file);
-                    next();
+                    if(xhr.status == 200) {
+                        var file = new File([xhr.response], fileName, { type: xhr.response.type });
+                        fileBox.setFile(file);
+                        next();
+                    } else {
+                        next(new Error(xhr.status == 404 ? 'File ' + fileName + ' not found' : 'XMLHttpRequest status == ' + xhr.status));
+                    }
                 } catch (err) {
                     next(err);
                 }
