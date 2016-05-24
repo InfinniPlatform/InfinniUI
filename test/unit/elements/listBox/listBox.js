@@ -101,8 +101,8 @@ describe('ListBox', function () {
             testHelper.applyViewMetadata(metadata, onListboxReady);
 
             // Then
-            function onListboxReady(view, $listbox){
-                assert.lengthOf($listbox.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+            function onListboxReady(view, $view){
+                assert.lengthOf($view.find('.pl-listbox-body'), 3, 'length of rendered listbox');
 
                 view.close();
             }

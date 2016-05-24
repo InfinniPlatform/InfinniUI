@@ -64,9 +64,6 @@ describe('DataGrid', function () {
             testHelper.applyViewMetadata(metadata, function (view, $grid) {
                 var grid = view.context.controls['DataGrid1'];
                 //var $grid = grid.control.controlView.$el;
-                var newCondition = function (context, args) {
-                    return args.value.Id == 1;
-                };
 
                 var $rows = $grid.find("tbody .pl-datagrid-row");
 
@@ -74,7 +71,9 @@ describe('DataGrid', function () {
                 assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
 
                 // When
-                grid.setDisabledItemCondition(newCondition);
+                grid.setDisabledItemCondition( function (context, args) {
+                    return args.value.Id == 1;
+                });
 
                 $rows = $grid.find("tbody .pl-datagrid-row");
 
