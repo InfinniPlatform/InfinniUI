@@ -39,14 +39,10 @@ describe('DataGrid', function () {
     describe('render', function () {
         it('should render DataGrid', function (done) {
             // Given When
-            testHelper.applyViewMetadata(metadata, function (view, $grid) {
-                onDataGridReady($grid);
-
-                view.close();
-            });
+            testHelper.applyViewMetadata(metadata, onDataGridReady);
 
             // Then
-            function onDataGridReady($grid){
+            function onDataGridReady(view, $grid){
                 assert.isObject($grid);
 
                 var headers = $grid.find(".pl-datagrid-row_header .pl-label");
@@ -57,29 +53,40 @@ describe('DataGrid', function () {
                 assert.equal($body.length, 3);
 
                 done();
-            }
-        });
-
-        it('should render DisabledItemCondition', function (done) {
-            // Given When
-            testHelper.applyViewMetadata(metadata, function (view, $grid) {
-                onDataGridReady($grid);
-
                 view.close();
-            });
-
-            // Then
-            function onDataGridReady($grid){
-                var $secondItem = $grid.find("tbody .pl-datagrid-row:nth-child(2)");
-
-                assert.isTrue($secondItem.hasClass('disabled-list-item'));
-
-                done();
             }
         });
     });
 
+    describe('API', function () {
+        it('should update DisabledItemCondition', function (done) {
+            // Given
+            testHelper.applyViewMetadata(metadata, function (view, $grid) {
+                var grid = view.context.controls['DataGrid1'];
+                //var $grid = grid.control.controlView.$el;
+                var newCondition = function (context, args) {
+                    return args.value.Id == 1;
+                };
+
+                var $rows = $grid.find("tbody .pl-datagrid-row");
+
+                assert.isFalse($rows.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
+                assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
+
+                // When
+                grid.setDisabledItemCondition(newCondition);
+
+                $rows = $grid.find("tbody .pl-datagrid-row");
+
+                // Then
+                assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
+                assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
+
+                done();
+                view.close();
+            });
 
 
-
+        });
+    });
 });
