@@ -159,11 +159,13 @@ this.Then(/^значение в выпадающем списке "([^"]*)" ра
 
     var checkValue = function () {
         try {
-            var field = window.testHelpers.getControlByName(fieldName);
-            chai.assert.isDefined(field);
+            var actValue = window.configWindow
+                .$('.pl-combobox[data-pl-name="' + fieldName + '"]')
+                .find('.pl-combobox__value')
+                .text()
+                .trim();
 
-            var actValue = field.getValue().DisplayName;
-            chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
+            chai.assert.equal(value, actValue);
 
             next();
         } catch (err) {
