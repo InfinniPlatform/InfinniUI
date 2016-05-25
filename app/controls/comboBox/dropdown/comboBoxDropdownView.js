@@ -188,10 +188,18 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     onClickItemHandler: function (item) {
-        var model = this.model;
+        var isEnabled = this.isEnabledItem(item);
+        if(isEnabled) {
+            this.model.toggleItem(item);
+            this.close();
+        }
+    },
 
-        model.toggleItem(item);
-        this.close();
+    isEnabledItem: function (item) {
+        var model = this.model,
+            disabledItemCondition = model.get('disabledItemCondition');
+
+        return (disabledItemCondition == null) || !disabledItemCondition(undefined, {value: item});
     },
 
     onKeyUpHandler: function (event) {

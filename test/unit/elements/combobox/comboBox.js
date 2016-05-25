@@ -463,8 +463,8 @@ describe('ComboBox', function () {
                 $value.click();
 
                 var items = $('.pl-combobox-group__items .pl-label');
-                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
-                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
+                assert.isFalse(items.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
+                assert.isTrue(items.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
 
                 // When
                 combobox.setDisabledItemCondition(function (context, args) {
@@ -474,8 +474,8 @@ describe('ComboBox', function () {
 
                 // Then
                 var items = $('.pl-combobox-group__items .pl-label');
-                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
-                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isTrue(items.eq(0).hasClass('pl-disabled'), 'items not updated');
+                assert.isFalse(items.eq(1).hasClass('pl-disabled'), 'items not updated');
 
                 done();
                 view.close();
