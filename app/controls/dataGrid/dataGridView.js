@@ -272,7 +272,11 @@ var DataGridView = ListEditorBaseView.extend({
                 model.set('selectedItem', item);
             });
             element.onToggle(function() {
-                model.toggleValue(valueSelector(undefined, {value:item}));
+                var enabled = this.model.get('enabled');
+
+                if(enabled){
+                    model.toggleValue(valueSelector(undefined, {value:item}));
+                }
             });
             this.addRowElement(item, element);
 
