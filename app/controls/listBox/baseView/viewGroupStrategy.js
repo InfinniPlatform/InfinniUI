@@ -23,7 +23,7 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
                 groups[groupKey] = [];
             }
 
-            groups[groupKey].push(item);
+            groups[groupKey].push({index: index, item: item});
         });
 
         for(var k in groups){
@@ -41,28 +41,30 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
 
     appendItemsContent: function(preparedItems){
         var $listbox = this.listbox.$el,
-            $listboxItems = $listbox.find('.pl-listbox-body'),
             itemTemplate = this.listbox.getItemTemplate(),
             groupTitleTemplate = this.listbox.getGroupItemTemplate(),
-            index = 0,
             groups = preparedItems.groups,
             listbox = this.listbox,
-            itemEl, titleEl;
+            item, itemEl, titleEl, $el, group;
 
-        $listbox.find('.pl-listbox-group-title').each(function(i, el){
-            titleEl = groupTitleTemplate(undefined, {index: index, item: groups[i]});
+        $listbox.find('.pl-listbox-group-i').each(function(i, el){
+
+            group = groups[i];
+            titleEl = groupTitleTemplate(undefined, {index: group.items[0].index, item: group});
             listbox.addChildElement(titleEl);
-            $(el).append(titleEl.render());
 
-            _.forEach( groups[i].items, function(item){
-                itemEl = itemTemplate(undefined, {index: i, item: item});
+            $el = $(el);
+            $el.find(".pl-listbox-group-title").append(titleEl.render());
+
+            $el.find(".pl-listbox-body").each(function(j, bodyEl){
+                item = group.items[j].item;
+                itemEl = itemTemplate(undefined, {index: group.items[j].index, item: item});
+
                 listbox.addChildElement(itemEl);
-                $listboxItems.eq(index).append(itemEl.render());
 
-                $listboxItems.eq(index).parent()
+                $(bodyEl).append(itemEl.render());
+                $(bodyEl).parent()
                     .data('pl-data-item', item);
-
-                index++;
             });
 
         });

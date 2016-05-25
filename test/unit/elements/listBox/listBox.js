@@ -13,8 +13,13 @@ describe('ListBox', function () {
                             "Name": "ObjectDataSource1",
                             "Items": [
                                 { "Id": 1, "Display": "LTE", "Type": 1 },
-                                { "Id": 2, "Display": "3G", "Type": 2 },
-                                { "Id": 3, "Display": "2G", "Type": 2 }
+                                { "Id": 2, "Display": "A", "Type": 2 },
+                                { "Id": 3, "Display": "3G", "Type": 1 },
+                                { "Id": 4, "Display": "01", "Type": 3 },
+                                { "Id": 5, "Display": "2G", "Type": 1 },
+                                { "Id": 6, "Display": "02", "Type": 3 },
+                                { "Id": 7, "Display": "03", "Type": 3 },
+                                { "Id": 8, "Display": "B", "Type": 2 }
                             ]
                         }
                     }
@@ -22,23 +27,8 @@ describe('ListBox', function () {
                 Items: [{
 
                     ListBox: {
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
-                                }
-                            }
-                        },
-                        "GroupItemTemplate": {
-                            "Label": {
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Type"
-                                }
-                            }
-                        },
+                        "ItemProperty": "Display",
+                        "GroupItemProperty": "Type",
                         "GroupValueProperty": "Type",
                         "Items" : {
                             "Source": "ObjectDataSource1",
@@ -52,8 +42,30 @@ describe('ListBox', function () {
             testHelper.applyViewMetadata(metadata, onListboxReady);
 
             // Then
-            function onListboxReady(view, $listbox){
-                assert.lengthOf($listbox.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+            function onListboxReady(view, $view){
+                var titles = $view.find('.pl-listbox-group-title .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(titles, ['1', '2', '3'], 'incorrect titles');
+
+                var firstGroup = $view.find('.pl-listbox-group-i:nth-child(1) .pl-listbox-group-body .pl-label')
+                                    .map(function(i, item){return $(item).text()})
+                                    .toArray();
+
+                assert.sameMembers(firstGroup, ['LTE', '2G', '3G'], 'incorrect first group');
+
+                var secondGroup = $view.find('.pl-listbox-group-i:nth-child(2) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(secondGroup, ['A', 'B'], 'incorrect second group');
+
+                var thirdGroup = $view.find('.pl-listbox-group-i:nth-child(3) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(thirdGroup, ['01', '02', '03'], 'incorrect third group');
 
                 view.close();
             }
@@ -102,7 +114,11 @@ describe('ListBox', function () {
 
             // Then
             function onListboxReady(view, $view){
-                assert.lengthOf($view.find('.pl-listbox-body'), 3, 'length of rendered listbox');
+                var items = $view.find('.pl-listbox-body .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(items, ['LTE', '3G', '2G']);
 
                 view.close();
             }
