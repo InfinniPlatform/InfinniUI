@@ -75,8 +75,6 @@ describe('DataGrid', function () {
                     return args.value.Id == 1;
                 });
 
-                $rows = $grid.find("tbody .pl-datagrid-row");
-
                 // Then
                 assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
                 assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
