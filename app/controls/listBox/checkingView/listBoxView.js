@@ -30,7 +30,7 @@ var CheckingListBoxView = BaseListBoxView.extend({
         $listBox.get(0).addEventListener('click', function(e){
             e = $.event.fix(e);
             var $el = $(e.target),
-                $currentListItem, item;
+                $currentListItem, item, isDisabledItem;
 
             if (!that.model.get('enabled')) {
                 return;
@@ -46,7 +46,11 @@ var CheckingListBoxView = BaseListBoxView.extend({
 
             if($currentListItem && $currentListItem.length > 0){
                 item = $currentListItem.data('pl-data-item');
-                that.model.toggleValue(item);
+                isDisabledItem = that.model.isDisabledItem(item);
+
+                if(!isDisabledItem) {
+                    that.model.toggleValue(item);
+                }
 
                 that.model.set('selectedItem', item);
             }

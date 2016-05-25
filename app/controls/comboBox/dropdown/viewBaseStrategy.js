@@ -18,6 +18,10 @@ ComboBoxBaseViewStrategy.prototype.getModelAttribute = function (attributeName) 
     return model.get(attributeName);
 };
 
+ComboBoxBaseViewStrategy.prototype.isEnabledItem = function (item) {
+    return !this.dropdownView.model.isDisabledItem(item);
+};
+
 /**
  * @description Рендеринг элементов списка
  * @abstract
@@ -47,10 +51,11 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
         itemTemplate = this.getModelAttribute('itemTemplate');
 
     $items = items.map(function (item) {
-        var $item = itemTemplate(undefined, {
+        var itemEl = itemTemplate(undefined, {
             value: item,
             index: collection.indexOf(item)
-        }).render();
+        });
+        var $item = itemEl.render();
 
         if (typeof item !== 'undefined') {
             $item.data('pl-data-item', item);
@@ -58,6 +63,9 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
 
         this.addOnClickEventListener($item, item);
         this.addOnHoverEventListener($item, item);
+
+        itemEl.setEnabled( this.isEnabledItem(item) );
+
         return $item;
     }, this);
 

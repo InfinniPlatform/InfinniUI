@@ -20,7 +20,6 @@ var BaseListBoxView = ListEditorBaseView.extend({
     initialize: function (options) {
         //@TODO Реализовать обработку значений по умолчанию!
         ListEditorBaseView.prototype.initialize.call(this, options);
-
     },
 
     updateGrouping: function(){
@@ -38,7 +37,7 @@ var BaseListBoxView = ListEditorBaseView.extend({
         this.ui.checkingInputs.prop('checked', false);
 
         var value = this.model.get('value'),
-            indexOfChoosingItem;
+            choosingItem, $choosingItem;
 
         if(!this.isMultiselect() && value !== undefined && value !== null){
             value = [value];
@@ -46,10 +45,12 @@ var BaseListBoxView = ListEditorBaseView.extend({
 
         if($.isArray(value)){
             for(var i= 0, ii=value.length; i < ii; i++){
-                indexOfChoosingItem = this.model.itemIndexByValue(value[i]);
-                if(indexOfChoosingItem != -1){
-                    this.ui.items.eq(indexOfChoosingItem).addClass('pl-listbox-i-chosen');
-                    this.ui.checkingInputs.eq(indexOfChoosingItem).prop('checked', true);
+                choosingItem = this.model.itemByValue(value[i]);
+                $choosingItem = this._getElementByItem(choosingItem);
+
+                if($choosingItem){
+                    $choosingItem.addClass('pl-listbox-i-chosen');
+                    $choosingItem.find('.pl-listbox-input input').prop('checked', true);
                 }
             }
         }
@@ -63,10 +64,10 @@ var BaseListBoxView = ListEditorBaseView.extend({
         this.ui.items.removeClass('pl-listbox-i-selected');
 
         var selectedItem = this.model.get('selectedItem'),
-            indexOfItem = this.model.itemIndexByItem(selectedItem);
+            $selectedItem = this._getElementByItem(selectedItem);
 
-        if(indexOfItem >= 0){
-            this.ui.items.eq(indexOfItem).addClass('pl-listbox-i-selected');
+        if($selectedItem){
+            $selectedItem.addClass('pl-listbox-i-selected');
         }
     },
 
@@ -136,6 +137,35 @@ var BaseListBoxView = ListEditorBaseView.extend({
         }
 
         this.model.set('value', valueForModel);
+    },
+
+    updateDisabledItem: function(){
+        var model = this.model,
+            disabledItemCondition = model.get('disabledItemCondition');
+
+        this.ui.items.removeClass('pl-disabled-list-item');
+        this.ui.checkingInputs.attr('disabled', null);
+
+        if( disabledItemCondition != null ){
+            this.ui.items.each(function (i, el) {
+                var $el = $(el),
+                    item = $el.data('pl-data-item'),
+                    isDisabled = disabledItemCondition( undefined, {value: item});
+
+                if(isDisabled){
+                    $el.toggleClass('pl-disabled-list-item', true);
+                    $el.find('.pl-listbox-input input').attr('disabled', 'disabled');
+                }
+            })
+        }
+    },
+
+    _getElementByItem: function(item){
+        var element = _.find(this.ui.items, function(listboxItem){
+            return $(listboxItem).data('pl-data-item') == item;
+        });
+
+        return $(element);
     }
 });
 

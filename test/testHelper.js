@@ -9,7 +9,7 @@ var testHelper = {
 
         linkView.createView(function (view) {
             view.open();
-            onViewReady(view, $('#sandbox').children());
+            onViewReady(view, view.control.controlView.$el);
         });
     },
 

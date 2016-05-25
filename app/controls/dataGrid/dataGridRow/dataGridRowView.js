@@ -89,6 +89,13 @@ var DataGridRowView = ControlView.extend({
         this.$el.toggleClass(this.classNameSelected, !!selected);
     },
 
+    updateEnabled: function () {
+        ControlView.prototype.updateEnabled.call(this);
+
+        var enabled = this.model.get('enabled');
+        this.ui.toggleControl.attr('disabled', enabled ? null : 'disabled');
+    },
+
     onToggleHandler: function (event) {
         this.trigger('toggle');
     },

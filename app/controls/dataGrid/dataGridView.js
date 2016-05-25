@@ -150,6 +150,20 @@ var DataGridView = ListEditorBaseView.extend({
         });
     },
 
+    updateDisabledItem: function () {
+        var
+            model = this.model,
+            disabledItemCondition = model.get('disabledItemCondition'),
+            isEnabled;
+
+        if(disabledItemCondition != null) {
+            this.rowElements.forEach(function (rowElement, item) {
+                isEnabled = !disabledItemCondition( undefined, {value: item} );
+                rowElement.setEnabled(isEnabled);
+            });
+        }
+    },
+
     render: function () {
         this.prerenderingActions();
 
@@ -250,6 +264,7 @@ var DataGridView = ListEditorBaseView.extend({
             $items = this.ui.items;
 
         this.removeRowElements();
+
         items.forEach(function (item, index) {
             var element = itemTemplate(undefined, {index: index, item: item});
 
@@ -257,10 +272,16 @@ var DataGridView = ListEditorBaseView.extend({
                 model.set('selectedItem', item);
             });
             element.onToggle(function() {
-                model.toggleValue(valueSelector(undefined, {value:item}));
+                var enabled = this.model.get('enabled');
+
+                if(enabled){
+                    model.toggleValue(valueSelector(undefined, {value:item}));
+                }
             });
             this.addRowElement(item, element);
-            $items.append(element.render());
+
+            var $element = element.render();
+            $items.append($element);
         }, this);
 
     },

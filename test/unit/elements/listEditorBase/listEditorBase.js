@@ -1,4 +1,4 @@
-describe('ListEditorBase (Control)', function () {
+describe('ListEditorBase', function () {
 
     describe('ListBox as exemplar of ListEditorBase', function (){
 
@@ -62,6 +62,8 @@ describe('ListEditorBase (Control)', function () {
 
                 assert.lengthOf($chosen, 1, 'length of chosen item is right');
                 assert.equal($items.index($chosen), 1, 'index of chosen item is right');
+
+                view.close();
             }
         });
 
@@ -131,6 +133,8 @@ describe('ListEditorBase (Control)', function () {
                 assert.lengthOf($chosen, 2, 'length of chosen item is right');
                 assert.equal($items.index($chosen.eq(0)), 1, 'index of first chosen item is right');
                 assert.equal($items.index($chosen.eq(1)), 2, 'index of second chosen item is right');
+
+                view.close();
             }
         });
 
@@ -203,6 +207,8 @@ describe('ListEditorBase (Control)', function () {
                 // Then
                 assert.lengthOf($chosen, 1, 'length of chosen item is right');
                 assert.equal($items.index($chosen.eq(0)), 0, 'index of first chosen item is right');
+
+                view.close();
             }
         });
 
@@ -284,6 +290,8 @@ describe('ListEditorBase (Control)', function () {
                 assert.lengthOf(value, 2, 'length value in DS is right');
                 assert.equal(value[0].Id, 1, 'first value in DS is right');
                 assert.equal(value[1].Id, 2, 'second value in DS is right');
+
+                view.close();
             }
         });
 
@@ -378,6 +386,8 @@ describe('ListEditorBase (Control)', function () {
                 assert.lengthOf($selected, 1, 'length of selected item is right (after 2 changing)');
                 assert.equal(selectedItem.Id, 1, 'value in DS is right (after 2 changing)');
                 assert.equal(ds2.getProperty('Value.Id'), 3, 'selected item in DS is right (after 2 changing)');
+
+                view.close();
             }
         });
 
@@ -448,6 +458,8 @@ describe('ListEditorBase (Control)', function () {
                 // Then
                 var value = listBox.getValue();
                 assert.equal(value, 1, 'setValueItem set value right');
+
+                view.close();
             }
         });
     });

@@ -208,6 +208,10 @@ var ComboBoxView = ListEditorBaseView.extend({
 
     },
 
+    updateDisabledItem: function () {
+        this.toggleDropdown(false);
+    },
+
     isDropdown: function () {
         var model = this.model;
         return !!model.get('dropdown');

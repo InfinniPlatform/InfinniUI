@@ -6,6 +6,7 @@ var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin
 
         this.listenTo(this.model, 'change:selectedItem', this.updateSelectedItem);
         this.listenTo(this.model, 'change:multiSelect', this.updateMultiSelect);
+        this.listenTo(this.model, 'change:disabledItemCondition', this.updateDisabledItem);
     },
 
     updateProperties: function(){
@@ -14,6 +15,7 @@ var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin
 
         this.updateSelectedItem();
         this.updateMultiSelect();
+        this.updateDisabledItem();
     },
 
     updateMultiSelect: function () {

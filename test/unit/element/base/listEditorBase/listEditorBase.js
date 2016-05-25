@@ -1,4 +1,0 @@
-describe('ListEditorBase (Control)', function () {
-
-
-});

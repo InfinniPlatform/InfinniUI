@@ -64,7 +64,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.ui.noItems.toggleClass('hidden', !noItems);
 
         this.markSelectedItems();
-        this.markCheckedItems()
+        this.markCheckedItems();
     },
 
     setItemsContent: function (content) {
@@ -188,10 +188,11 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     onClickItemHandler: function (item) {
-        var model = this.model;
-
-        model.toggleItem(item);
-        this.close();
+        var isEnabled = !this.model.isDisabledItem(item);
+        if(isEnabled) {
+            this.model.toggleItem(item);
+            this.close();
+        }
     },
 
     onKeyUpHandler: function (event) {

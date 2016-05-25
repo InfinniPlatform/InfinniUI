@@ -160,9 +160,12 @@ var TreeViewView = ListEditorBaseView.extend({
     updateGrouping: function () {
     },
 
+    updateDisabledItem: function(){
+
+    },
+
     rerender: function () {
 
     }
-
 
 });
