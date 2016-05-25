@@ -19,7 +19,7 @@ ComboBoxBaseViewStrategy.prototype.getModelAttribute = function (attributeName) 
 };
 
 ComboBoxBaseViewStrategy.prototype.isEnabledItem = function (item) {
-    return this.dropdownView.isEnabledItem(item);
+    return !this.dropdownView.model.isDisabledItem(item);
 };
 
 /**

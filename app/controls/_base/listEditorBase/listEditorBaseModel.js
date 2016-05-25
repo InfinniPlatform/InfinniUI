@@ -138,6 +138,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend({
         return this.itemIndexByValue(value);
     },
 
+    isDisabledItem: function(item){
+        var disabledItemCondition = this.get('disabledItemCondition');
+        return (disabledItemCondition != null) && disabledItemCondition(undefined, {value: item});
+    },
+
     updateHashValueByItem: function () {
         var items = this.get('items'),
             value;
