@@ -57,7 +57,6 @@ _.extend(ListBoxViewGroupStrategy.prototype, {
             _.forEach( groups[i].items, function(item){
                 itemEl = itemTemplate(undefined, {index: i, item: item});
                 listbox.addChildElement(itemEl);
-                listbox.ChildElementsMap.add(item, itemEl);
                 $listboxItems.eq(index).append(itemEl.render());
 
                 $listboxItems.eq(index).parent()

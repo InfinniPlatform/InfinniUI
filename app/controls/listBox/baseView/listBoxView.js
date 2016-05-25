@@ -20,7 +20,6 @@ var BaseListBoxView = ListEditorBaseView.extend({
     initialize: function (options) {
         //@TODO Реализовать обработку значений по умолчанию!
         ListEditorBaseView.prototype.initialize.call(this, options);
-        this.ChildElementsMap = new HashMap();
     },
 
     updateGrouping: function(){
@@ -77,7 +76,6 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var template = this.strategy.getTemplate();
 
         this.removeChildElements();
-        this.ChildElementsMap.clear();
 
         this.$el.html(template(preparedItems));
         this.bindUIElements();
@@ -143,12 +141,19 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var model = this.model,
             disabledItemCondition = model.get('disabledItemCondition');
 
-        if( disabledItemCondition != null ){
-            this.ChildElementsMap.forEach(function (element, item) {
-                var isDisabled = disabledItemCondition( undefined, {value: item}),
-                    $item = element.control.controlView.$el;
+        this.ui.items.removeClass('pl-disabled-list-item');
+        this.ui.checkingInputs.attr('disabled', null);
 
-                $item.closest('.pl-listbox-i').toggleClass('pl-disabled-list-item', isDisabled);
+        if( disabledItemCondition != null ){
+            this.ui.items.each(function (i, el) {
+                var $el = $(el),
+                    item = $el.data('pl-data-item'),
+                    isDisabled = disabledItemCondition( undefined, {value: item});
+
+                if(isDisabled){
+                    $el.toggleClass('pl-disabled-list-item', true);
+                    $el.find('.pl-listbox-input input').attr('disabled', 'disabled');
+                }
             })
         }
     }

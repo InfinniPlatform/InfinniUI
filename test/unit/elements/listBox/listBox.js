@@ -130,6 +130,8 @@ describe('ListBox', function () {
                     ListBox: {
                         "Name": "ListBox1",
                         "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                        "ViewMode": "base",
+                        "MultiSelect": true,
                         "ItemTemplate": {
                             "Label": {
                                 "Name": "TextBox1",

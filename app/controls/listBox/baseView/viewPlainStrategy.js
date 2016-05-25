@@ -32,7 +32,6 @@ _.extend(ListBoxViewPlainStrategy.prototype, {
             $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
             listbox.addChildElement(itemEl);
-            listbox.ChildElementsMap.add(items[i], itemEl);
             $el.append(itemEl.render());
 
             $el.parent().data('pl-data-item', items[i]);
