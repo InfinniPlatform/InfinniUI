@@ -1,1 +1,1 @@
-call grunt build
+call gulp build
