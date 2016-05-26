@@ -59,8 +59,9 @@ _.extend(ViewBuilder.prototype, {
         element.onSelectedElementChange(function() {
             var path = that._getSelectedElementPath(params.metadata);
 
-            InfinniUI.JsonEditor.setMetadata(params.metadata);
-            InfinniUI.JsonEditor.setPath(path);
+            InfinniUI.JsonEditor.setMetadata(params.metadata).always(function () {
+                InfinniUI.JsonEditor.setPath(path);
+            });
         });
 //devblockstop
 
