@@ -16,7 +16,7 @@ module.exports = function(options) {
 			$.templateCompile({
 				namespace: "InfinniUI.Template",
 				name: function(file) {
-					return file.relative.replace(/^app\\/, '');
+					return file.relative.replace(/^app[\\\/]/, '');
 				}
 			}),
 			through2(function(file, enc, callback) {
