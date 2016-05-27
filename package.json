@@ -4,6 +4,7 @@
     "browser-sync": "^2.12.x",
     "del": "^2.2.0",
     "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-cli": "^1.2.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-concat": "^2.6.0",
     "gulp-csso": "^2.0.0",
@@ -39,6 +40,7 @@
   },
   "scripts": {
     "start": "node httpserver.js",
+    "build": "npm i && bower i && gulp build",
     "example": "bower install && gulp build && cd example && build && cd .."
   }
 }
