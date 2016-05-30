@@ -112,7 +112,7 @@ describe('AddAction', function () {
             var destinationItems = destinationDS.getItems();
             assert.equal(destinationItems.length, 1);
             assert.include(destinationItems, {name: "New"});
-
+            view.control.controlView.$el.detach();
             done();
             view.close();
         });
@@ -211,6 +211,7 @@ describe('AddAction', function () {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
+                        view.control.controlView.$el.detach();
                         done();
 
                         view.close();
