@@ -499,7 +499,7 @@ describe('Container (Control)', function () {
 
             // Then
             function onViewReady(view, $layout){
-                //$layout.detach();
+                $layout.detach();
 
                 assert.lengthOf($layout.find('.pl-text-box-input'), 6, 'count of textboxes is right');
                 assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE', 'value in first textbox is right');

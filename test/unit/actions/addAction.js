@@ -114,6 +114,7 @@ describe('AddAction', function () {
             assert.include(destinationItems, {name: "New"});
 
             done();
+            view.close();
         });
     });
 
@@ -211,6 +212,8 @@ describe('AddAction', function () {
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
                         done();
+
+                        view.close();
                     });
                 }
             );

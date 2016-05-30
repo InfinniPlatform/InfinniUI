@@ -1,7 +1,5 @@
 describe('TreeView', function () {
 
-    var builder = new ApplicationBuilder();
-
     describe('render', function () {
         it('should apply value to control (single selecting mode)', function () {
             // Given
@@ -63,18 +61,102 @@ describe('TreeView', function () {
 
 
             // When
-            var linkView = (new InlineViewBuilder()).build(null, {builder: builder, metadata: {View: metadata}, parentView: fakeApplicationView()});
+            testHelper.applyViewMetadata(metadata, function (view, $view) {
 
-
-            var view = linkView.createView(function (view) {
-                view.open();
-
-                var $view = view.control.controlView.$el;
                 var $treeView = $view.find('.pl-treeview');
                 var $treeViewNodes = $treeView.find('.pl-treeview-node');
+
                 //Then
                 assert.equal($treeView.length, 1, 'TreeView rendered in View');
                 assert.equal($treeViewNodes.length, 6, 'TreeViewNodes rendered');
+
+                view.close();
+            });
+
+        });
+    });
+
+    describe('api', function () {
+        it('should update DisabledItemCondition', function () {
+            // Given
+            var metadata = {
+                "DataSources": [
+                    {
+                        "ObjectDataSource": {
+                            "Name": "Geo",
+                            "Items": [
+                                {
+                                    "Id": 1,
+                                    "ParentId": null,
+                                    "Name": "Челябинск"
+                                },
+                                {
+                                    "Id": 2,
+                                    "ParentId": 1,
+                                    "Name": "Чичерина"
+                                },
+                                {
+                                    "Id": 3,
+                                    "ParentId": 1,
+                                    "Name": "Комарова"
+                                },
+                                {
+                                    "Id": 4,
+                                    "ParentId": null,
+                                    "Name": "Копейск"
+                                },
+                                {
+                                    "Id": 5,
+                                    "ParentId": 4,
+                                    "Name": "Победы"
+                                },
+                                {
+                                    "Id": 6,
+                                    "ParentId": 5,
+                                    "Name": "33/1"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Items": [
+                    {
+                        "TreeView": {
+                            "Name": "TreeView1",
+                            "DisabledItemCondition": "{ return (args.value.Id == 3); }",
+                            "KeyProperty": "Id",
+                            "ParentProperty": "ParentId",
+                            "ItemProperty": "Name",
+                            "ValueProperty": "Name",
+                            "MultiSelect": true,
+                            "Items": {
+                                "Source": "Geo"
+                            }
+                        }
+                    }
+                ]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata(metadata, function (view, $view) {
+
+                var treeView = view.context.controls['TreeView1'];
+                var nodes = $view.find('.pl-treeview-node');
+
+                assert.isFalse(nodes.eq(1).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
+                assert.isTrue(nodes.eq(2).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
+
+                // When
+                treeView.setDisabledItemCondition( function (context, args) {
+                    return args.value.Id == 2;
+                });
+
+                // Then
+                assert.isTrue(nodes.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isFalse(nodes.eq(2).hasClass('pl-disabled-list-item'), 'items not updated');
+
+                view.close();
             });
 
         });
