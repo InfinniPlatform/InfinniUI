@@ -12,6 +12,8 @@ var TreeViewView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
+        this.ItemsMap = new HashMap();
+
     },
 
     render: function () {
@@ -37,7 +39,10 @@ var TreeViewView = ListEditorBaseView.extend({
             parentSelector = model.get('parentSelector'),
             keySelector = model.get('keySelector'),
             nodeConstructor = this.getNodeConstructor(),
-            itemTemplate = model.get('itemTemplate');
+            itemTemplate = model.get('itemTemplate'),
+            itemsMap = this.ItemsMap;
+
+        itemsMap.clear();
 
         $nodes = renderNodes();
         this.$el.append($nodes);
@@ -80,8 +85,11 @@ var TreeViewView = ListEditorBaseView.extend({
                     view.listenTo(node, 'check', view.onCheckNodeHandler.bind(view, item, node));
 
                     node.setItemContent($item);
-                    var $subitems = renderNodes(keySelector(null, {value: item}));
+                    var key = keySelector(null, {value: item}),
+                        $subitems = renderNodes(key);
                     node.setItemsContent($subitems);
+
+                    itemsMap.add(key, item);
 
                     return $node;
 
@@ -129,7 +137,7 @@ var TreeViewView = ListEditorBaseView.extend({
 
     tryToggleValue: function(item){
         var model = this.model;
-        var isDisabledItem = model.isDisabledItem(item);
+        var isDisabledItem = this.isDisabledItem(item);
 
         if(!isDisabledItem){
             var value = model.valueByItem(item);
@@ -137,6 +145,20 @@ var TreeViewView = ListEditorBaseView.extend({
         }
     },
 
+    isDisabledItem: function(item){
+        if(item == null){
+            return false;
+        }
+
+       return this.model.isDisabledItem(item) || this.isDisabledItem(this.getParent(item));
+    },
+
+    getParent: function(item){
+        var parentSelector = this.model.get('parentSelector'),
+            parentId = parentSelector(null, {value: item});
+
+        return parentId && this.ItemsMap.get(parentId);
+    },
 
     getTemplate: function () {
         return this.template;
