@@ -16,6 +16,7 @@ describe('UploadFileBox', function () {
 
             var $el = element.render();
             $('body').append($el);
+            $el.detach();
         });
 
 
