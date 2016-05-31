@@ -1,3 +1,9 @@
+if (!String.prototype.includes) {
+    String.prototype.includes = function() {
+        return String.prototype.indexOf.apply(this, arguments) !== -1;
+    };
+}
+
 var stringUtils = {
     format: function(value,args){
         return value.replace(/{(\d+)}/g, function (match, number) {

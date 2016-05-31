@@ -107,7 +107,7 @@ describe('DeleteAction', function () {
                         assert.equal(dataSource.getItems().length, (initCount - 1) );
                         assert.notInclude(dataSource.getItems(), initSelectedItem);
                         done();
-                }, 0);
+                }, 50);
 
             }
         );

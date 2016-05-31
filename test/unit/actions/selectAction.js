@@ -122,6 +122,7 @@ describe('SelectAction', function () {
             assert.deepEqual(destinationDS.getSelectedItem().SelectedObject, selectedValue);
 
             done();
+            view.close();
         });
     });
 
@@ -219,6 +220,7 @@ describe('SelectAction', function () {
             assert.equal(destinationDS.getSelectedItem().SelectedObject, "empty");
 
             done();
+            view.close();
         });
     });
 });

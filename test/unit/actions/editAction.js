@@ -116,6 +116,7 @@ describe('EditAction', function () {
             assert.equal(destinationDS.getItems()[0].Name, "NewValue");
 
             done();
+            view.close();
         });
     });
 
@@ -208,6 +209,7 @@ describe('EditAction', function () {
                         setTimeout(function(){
                             assert.isTrue(destinationDS.getSelectedItem().isNewValueForTest);
                             done();
+                            view.close();
                         }, 250);
                     });
                 }
@@ -286,6 +288,7 @@ describe('EditAction', function () {
             assert.isTrue( childView.isClosing );
 
             done();
+            view.close();
         });
     });
 
@@ -370,6 +373,7 @@ describe('EditAction', function () {
             assert.isNotNull(destinationDS.getProperty("$.Address"));
 
             done();
+            view.close();
         });
     });
 

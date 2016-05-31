@@ -473,7 +473,7 @@ describe('ComboBox', function () {
                 $value.click();
 
                 // Then
-                var items = $('.pl-combobox-group__items .pl-label');
+                items = $('.pl-combobox-group__items .pl-label');
                 assert.isTrue(items.eq(0).hasClass('pl-disabled'), 'items not updated');
                 assert.isFalse(items.eq(1).hasClass('pl-disabled'), 'items not updated');
 
