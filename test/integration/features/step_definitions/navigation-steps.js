@@ -322,6 +322,45 @@ this.Then(/^я выберу в выпадающем списке "([^"]*)" зн�
     window.testHelpers.waitCondition(haveCombobox, successCombobox, failCombobox);
 });
 
+this.Then(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (listName, filterText, itemText, next) {
+    itemText = itemText.replace(/'/g, '"');
+    filterText = filterText.replace(/'/g, '"');
+
+    var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
+    var itemSelector = ".pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains('" + itemText + "')";
+
+    var haveCombobox = function () {
+        return window.configWindow.$(listSelector).length != 0;
+    };
+    var haveItem = function () {
+        return window.configWindow.$(itemSelector).length != 0;
+    };
+
+    var successCombobox = function () {
+        window.configWindow.$(listSelector + ' .pl-combobox__grip').click();
+        try {
+            window.testHelpers.getControlByName(listName).setAutocompleteValue(filterText);
+        } catch (err) {
+            next(err);
+            return;
+        }
+        window.testHelpers.waitCondition(haveItem, successItem, failItem);
+    };
+    var successItem = function () {
+        window.configWindow.$(itemSelector).click();
+        next();
+    };
+
+    var failCombobox = function () {
+        next(new Error(listName + ' not found!'));
+    };
+    var failItem = function () {
+        next(new Error('"' + itemText + '" not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveCombobox, successCombobox, failCombobox);
+});
+
 this.Then(/^я сверну панель "([^"]*)"$/, function (panelName, next) {
     window.testHelpers.waitCondition(function () {
         return window.testHelpers.getControlByName(panelName) != undefined;
