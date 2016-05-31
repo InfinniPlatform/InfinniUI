@@ -475,14 +475,14 @@ var BaseDataSource = Backbone.Model.extend({
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
-            that._executeCallback(success, {IsValid: true});
+            that._executeCallback(success, {item: item, result: {IsValid: true}});
             return;
         }
 
         validateResult = this.validateOnErrors(item);
         if (!validateResult.IsValid) {
             that._notifyAboutValidation(validateResult, 'error');
-            this._executeCallback(error, validateResult);
+            this._executeCallback(error, {item: item, result: validateResult});
             return;
         }
 
@@ -490,35 +490,30 @@ var BaseDataSource = Backbone.Model.extend({
             if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
                 that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
-                that._executeCallback(success, that._getValidationResult(data));
+                that._executeCallback(success, {item: item, result: that._getValidationResult(data)});
             }else{
                 var result = that._getValidationResult(data);
                 that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, result);
+                that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, result);
+            that._executeCallback(error, {item: item, result: result});
         });
     },
 
     _getValidationResult: function(data){
-        if(data.data.responseJSON){
+        if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
             return data.data.responseJSON['Result']['ValidationResult'];
         }
         
-        return data.data['Result']['ValidationResult'];
+        return data.data && data.data['Result'] && data.data['Result']['ValidationResult'];
     },
 
-    _executeCallback: function(callback, value){
+    _executeCallback: function(callback, args){
         if(callback){
-            var context = this.getContext(),
-                args = {
-                    value: value
-                };
-
-            callback(context, args);
+            callback(this.getContext(), args);
         }
     },
 
@@ -550,12 +545,12 @@ var BaseDataSource = Backbone.Model.extend({
             } else {
                 var result = that._getValidationResult(data);
                 that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, result);
+                that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, result);
+            that._executeCallback(error, {item: item, result: result});
         });
     },
 
@@ -832,7 +827,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         this._notifyAboutValidation(result, validationType);
-        this._executeCallback(callback, result);
+        this._executeCallback(callback, {item: item, result: result});
 
         return result;
     },
