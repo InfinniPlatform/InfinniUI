@@ -480,7 +480,8 @@ var BaseDataSource = Backbone.Model.extend({
 
         validateResult = this.validateOnErrors(item);
         if (!validateResult.IsValid) {
-            this._notifyAboutFailValidationBySaving(item, validateResult, error);
+            that._notifyAboutValidation(validateResult, 'error');
+            this._executeCallback(error, validateResult);
             return;
         }
 
@@ -489,12 +490,30 @@ var BaseDataSource = Backbone.Model.extend({
                 that._excludeItemFromModifiedSet(item);
                 that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
             }else{
-                that._notifyAboutFailValidationBySaving(item, data, error);
+                var result = that._getValidationResult(data);
+                that._notifyAboutValidation(result, 'error');
+                that._executeCallback(error, result);
             }
         }, function(data) {
-            var result = data.data.responseJSON['Result']['ValidationResult'];
-            that._notifyAboutFailValidationBySaving(item, result, error);
+            var result = that._getValidationResult(data);
+            that._notifyAboutValidation(result, 'error');
+            that._executeCallback(error, result);
         });
+    },
+
+    _getValidationResult: function(data){
+        return data.data.responseJSON['Result']['ValidationResult'];
+    },
+
+    _executeCallback: function(callback, value){
+        if(callback){
+            var context = this.getContext(),
+                args = {
+                    value: value
+                };
+
+            callback(context, args);
+        }
     },
 
     _notifyAboutItemSaved: function (data, result, successHandler) {
@@ -508,10 +527,6 @@ var BaseDataSource = Backbone.Model.extend({
             successHandler(context, argument);
         }
         this.trigger('onItemSaved', context, argument);
-    },
-
-    _notifyAboutFailValidationBySaving: function (item, validationResult, errorHandler) {
-        this._notifyAboutValidation(validationResult, errorHandler, 'error');
     },
 
     deleteItem: function (item, success, error) {
@@ -530,11 +545,14 @@ var BaseDataSource = Backbone.Model.extend({
             if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
             } else {
-                that._notifyAboutFailValidationByDeleting(item, data, error);
+                var result = that._getValidationResult(data);
+                that._notifyAboutValidation(result, 'error');
+                that._executeCallback(error, result);
             }
         }, function(data) {
-            var result = data.data.responseJSON['Result']['ValidationResult'];
-            that._notifyAboutFailValidationByDeleting(item, result, error);
+            var result = that._getValidationResult(data);
+            that._notifyAboutValidation(result, 'error');
+            that._executeCallback(error, result);
         });
     },
 
@@ -573,16 +591,6 @@ var BaseDataSource = Backbone.Model.extend({
         if (errorHandler) {
             errorHandler(context, argument);
         }
-    },
-
-    _notifyAboutFailValidationByDeleting: function (item, errorData, errorHandler) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
-
-        argument.value = item;
-        argument.error = errorData;
-
-        this._notifyAboutValidation(errorData, errorHandler);
     },
 
     isDataReady: function () {
@@ -820,7 +828,8 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._notifyAboutValidation(result, callback, validationType);
+        this._notifyAboutValidation(result, validationType);
+        this._executeCallback(callback, result);
 
         return result;
     },
@@ -831,15 +840,11 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationHandler, validationType) {
+    _notifyAboutValidation: function (validationResult, validationType) {
         var context = this.getContext(),
             argument = {
                 value: validationResult
             };
-
-        if (validationHandler) {
-            validationHandler(context, argument);
-        }
 
         var eventType = (validationType == 'warning') ? 'onWarningValidator' : 'onErrorValidator';
         this.trigger(eventType, context, argument);
