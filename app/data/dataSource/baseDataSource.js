@@ -474,7 +474,8 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved({item: item, result: null}, 'notModified', success);
+            this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
+            that._executeCallback(success, {IsValid: true});
             return;
         }
 
@@ -488,7 +489,8 @@ var BaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
+                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
+                that._executeCallback(success, that._getValidationResult(data));
             }else{
                 var result = that._getValidationResult(data);
                 that._notifyAboutValidation(result, 'error');
@@ -502,7 +504,11 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _getValidationResult: function(data){
-        return data.data.responseJSON['Result']['ValidationResult'];
+        if(data.data.responseJSON){
+            return data.data.responseJSON['Result']['ValidationResult'];
+        }
+        
+        return data.data['Result']['ValidationResult'];
     },
 
     _executeCallback: function(callback, value){
@@ -516,16 +522,13 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutItemSaved: function (data, result, successHandler) {
+    _notifyAboutItemSaved: function (data, result) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = data;
         argument.result = result;
 
-        if (successHandler) {
-            successHandler(context, argument);
-        }
         this.trigger('onItemSaved', context, argument);
     },
 
