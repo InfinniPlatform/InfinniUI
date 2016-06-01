@@ -77,6 +77,9 @@ window.testHelpers = {
     },
 
     getStandartDate: function (date) {
+        if(typeof date === 'number') {
+            return this.getStandartDate(new Date(date * 1000));
+        }
         // YYYY-MM-DD
         return String.prototype.concat(date.getFullYear(), '-', date.getMonth() + 1, '-', date.getDate()); //+1 - January-0
     },
@@ -91,6 +94,25 @@ window.testHelpers = {
         }
 
         return this.getFormattedDate(date);
+    },
+
+    convertToUnixTime: function (date, element) {
+        if(!element) {
+            return date;
+        }
+
+        if(element.getMode) {
+            switch (element.getMode()) {
+                case 'Date':
+                case 'Time':
+                case 'DateTime':
+                    return date;
+                default:
+                    return new Date(date).getTime() / 1000;
+            }
+        }
+
+        return date;
     },
 
     getControlByName: function (controlName) {
@@ -126,3 +148,24 @@ window.testHelpers = {
         return result + '|';
     }
 };
+
+function TestInfoHelper($info) {
+    var passed = $info.find('#passed-count');
+    var failed = $info.find('#failed-count');
+    var ignored = $info.find('#ignored-count');
+
+    this.incrementPassed = function () {
+        var oldValue = parseInt(passed.text());
+        passed.text(++oldValue);
+    };
+
+    this.incrementFailed = function () {
+        var oldValue = parseInt(failed.text());
+        failed.text(++oldValue);
+    };
+
+    this.incrementIgnored = function () {
+        var oldValue = parseInt(ignored.text());
+        ignored.text(++oldValue);
+    };
+}

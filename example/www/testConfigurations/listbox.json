@@ -153,8 +153,16 @@
 							},
 							{
 								"Cell": {
-									"ColumnSpan": 3,
-									"Items": []
+									"ColumnSpan": 4,
+									"Items": [
+										{
+											"Divider": {
+												"Name": "nameDivider",
+												"Background": "primary2",
+												"OnLoaded": "{ console.log( 'divider is loaded!' ) }"
+											}
+										}
+									]
 								}
 							},
 							{

@@ -13386,6 +13386,32 @@ CucumberHTML.DOMFormatter = function(rootNode) {
     e.find('.description').text(statement.description);
     e.attr('itemtype', 'http://cukes.info/microformat/' + itemtype);
     e.addClass(itemtype);
+
+    if(itemtype === 'scenario') {
+      var text = e.find('.name').text();
+      var link = window.location.origin + '/test/integration/#{\'tags\':\'%tag%\'}';
+      e.find('.name')
+          .text('')
+          .append('<span>%text% </span>'.replace('%text%', text))
+          .append('<a href="%link%" target="_blank">(%tag%)</a>'
+              .replace('%link%', link)
+              .replace(/%tag%/g, statement.tag));
+    }
+
+    if(itemtype === 'feature') {
+      var text = e.find('.name').text();
+      var link = $('<a href="javascript:;">Открыть</a>').click(function(){
+        $.post('http://localhost:60520', JSON.stringify({
+          open: statement.tag
+        }));
+      });
+      e.find('.name')
+          .text('')
+          .append('<span>%text% (</span>'.replace('%text%', text))
+          .append(link)
+          .append('<span>)</span>');
+    }
+
     return e;
   }
 

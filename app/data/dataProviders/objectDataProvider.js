@@ -12,7 +12,7 @@ _.extend(ObjectDataProvider.prototype, {
     getItems: function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
         //var filter = new FilterCriteriaType();
         //var callback = filter.getFilterCallback(criteriaList);
-        resultCallback({data: this.items});
+        resultCallback({data: this.items.slice()});
     },
 
     createItem: function (resultCallback) {

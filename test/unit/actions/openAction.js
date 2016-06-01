@@ -58,7 +58,9 @@ describe('OpenAction', function () {
 
             assert.isTrue(viewIsOpened);
             childView.close();
+
             done();
+            view.close();
         });
     });
 

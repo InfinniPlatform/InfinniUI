@@ -7,7 +7,7 @@ _.defaults( InfinniUI.config, {
     configName: 'Хабинет'
 //devblockstart
     ,editorService: {
-        url: 'http://localhost:5500/api/metadata/saveMetadata'
+        url: 'http://localhost:5500/api/metadata'
     }
 //devblockstop
 

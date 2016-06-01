@@ -10,7 +10,7 @@ var formatMixin = {
     separator: ", ",
 
     setOptions: function (options) {
-        this.options = _.defaults({}, options);
+        this.options = _.extend({}, this.options || {}, options);
     },
 
     getOptions: function () {

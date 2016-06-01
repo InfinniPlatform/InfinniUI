@@ -126,8 +126,10 @@ this.Then(/^система отобразит значения выпадающ�
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function (msgs, next) {
     var getMessages = function (arrayString) {
         return arrayString.split('", ').map(function (item) {
-            var result = item.trim();
-            return result.replace(/"/g, "").replace(/'/g, '"');
+            return item
+                .trim()
+                .replace(/"/g, "")
+                .replace(/'/g, '"');
         });
     };
 
@@ -137,7 +139,7 @@ this.Then(/^система отобразит список валидацион�
         return window.toastrMessageCount == window.toastrActualMessageCount;
     };
     var success = function () {
-        var actual = window.configWindow.$(".toast-success, .toast-error");
+        var actual = window.configWindow.$(".toast-success .toast-message, .toast-error .toast-message");
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
@@ -145,10 +147,16 @@ this.Then(/^система отобразит список валидацион�
         }
 
         var messages = getMessages(msgs);
+        var errorString = "\n" +
+            "Expected\n" +
+            messages.join('\n') +
+            "\nActual\n" +
+            actualMessages.join('\n') + '\n';
 
         try {
-            chai.assert.deepEqual(actualMessages, messages);
+            chai.assert.deepEqual(actualMessages, messages, errorString);
             window.toastrMessageCount = 0;
+            window.configWindow.$('#toast-container').remove();
             next();
         } catch (err) {
             next(err);
@@ -407,4 +415,20 @@ this.Then(/^экран будет иметь название "([^"]*)"$/, funct
     } else {
         next(new Error("View is not initialized"));
     }
+});
+
+this.Then(/^таблица "([^"]*)" будет пустой$/, function (tableName, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(tableName) != undefined;
+    }, function () {
+        try {
+            var $table = window.configWindow.$('.pl-datagrid[data-pl-name="' + tableName + '"] .table');
+            var $row = $table.find('.pl-datagrid-row.pl-datagrid-row_data');
+            $row.length == 0 ? next() : next(new Error('Количество записей: ' + $row.length));
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(tableName + ' not found'));
+    });
 });
