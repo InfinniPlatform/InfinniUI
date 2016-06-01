@@ -1,0 +1,228 @@
+{
+	"OnLoaded": "OL2",
+	"DataSources": [
+		{
+			"ObjectDataSource": {
+				"Name": "ObjectDataSource1",
+				"Items": [
+					{"Id": 1, "rub": 555, "Display": "LTE"},
+					{"Id": 2, "rub": 111, "Display": "2G"},
+					{"Id": 3, "rub": 222, "Display": "3G"},
+					{"Id": 4, "rub": 333, "Display": "2G"},
+					{"Id": 5, "rub": 444, "Display": "GPRS"},
+					{"Id": 6, "rub": 777, "Display": "GPRS"},
+					{"Id": 7, "rub": 666, "Display": "LTE"}
+				]
+			}
+		},{
+			"ObjectDataSource": {
+				"Name": "ObjectDataSource2",
+				"Items": [
+					{"Id": 1, "rub": 11, "Display": "320x480"},
+					{"Id": 2, "rub": 12, "Display": "360x540"},
+					{"Id": 3, "rub": 13, "Display": "375x700"},
+					{"Id": 4, "rub": 14, "Display": "480x960"},
+					{"Id": 5, "rub": 15, "Display": "768x1024"},
+					{"Id": 6, "rub": 16, "Display": "780x1200"},
+					{"Id": 7, "rub": 17, "Display": "900x1600"}
+				]
+			}
+		}
+	],
+	"Items": [{
+		"StackPanel": {
+			"Items": [
+				{
+					"MenuBar": {
+						"Items": [
+							{
+								"Button": {
+									"Name": "View1",
+									"Text": "To View 1",
+									"Action": {
+										"OpenAction": {
+											"LinkView": {
+												"AutoView": {
+													"DocumentId": "ObjectDataSource1",
+													"MetadataName": "ListView",
+													"OpenMode": "Container",
+													"Container": "Content"
+												}
+											}
+										}
+									}
+								}
+							},
+							{
+								"Button": {
+									"Name": "View2",
+									"Text": "To View 2",
+									"Action": {
+										"OpenAction": {
+											"LinkView": {
+												"AutoView": {
+													"DocumentId": "ObjectDataSource2",
+													"MetadataName": "ListView",
+													"OpenMode": "Container",
+													"Container": "Content"
+												}
+											}
+										}
+									}
+								}
+							}
+						]
+					}
+				},
+				{
+					"GridPanel": {
+						"Items": [
+							{
+								"Cell": {
+									"ColumnSpan": 12,
+									"Items": [
+										{
+											"Label": {
+												"Value": "Different Filters"
+											}
+										}
+									]
+								}
+							},
+							{
+								"Cell": {
+									"ColumnSpan": 3,
+									"Items": [
+										{
+											"TextBox": {
+												"LabelText": "FilterParam1"
+											}
+										}
+									]
+								}
+							},
+							{
+								"Cell": {
+									"ColumnSpan": 3,
+									"Items": [
+										{
+											"TextBox": {
+												"LabelText": "FilterParam2"
+											}
+										}
+									]
+								}
+							},
+							{
+								"Cell": {
+									"ColumnSpan": 3,
+									"Items": [
+										{
+											"TextBox": {
+												"LabelText": "FilterParam3"
+											}
+										}
+									]
+								}
+							},
+							{
+								"Cell": {
+									"ColumnSpan": 3,
+									"Items": [
+										{
+											"TextBox": {
+												"LabelText": "FilterParam4"
+											}
+										}
+									]
+								}
+							},
+							{
+								"Cell": {
+									"ColumnSpan": 12,
+									"Items": [
+										{
+											"ScrollPanel": {
+												"Items": [
+													{
+														"DataGrid": {
+															"Name": "ItemsPanel",
+															"Columns": [
+																{
+																	"Header": "Id",
+																	"CellProperty": "Id"
+																},
+																{
+																	"Header": "Price, rub",
+																	"CellProperty": "rub"
+																},
+																{
+																	"Header": "Display",
+																	"CellProperty": "Display"
+																},
+																{
+																	"Header": "Status",
+																	"CellTemplate": {
+																		"StackPanel": {
+																			"Orientation": "Horizontal",
+																			"ViewMode": "FormGroup",
+																			"Items": [
+																				{
+																					"Label": {
+																						"Value": "Not checked"
+																					}
+																				},
+																				{
+																					"Label": {
+																						"Value": "Not Send"
+																					}
+																				}
+																			]
+																		}
+																	}
+																},
+																{
+																	"HeaderTemplate": {
+																		"Label": {
+																			"Value": "Actions",
+																			"TextHorizontalAlignment": "Right"
+																		}
+																	},
+																	"CellTemplate": {
+																		"StackPanel": {
+																			"Orientation": "Horizontal",
+																			"ViewMode": "FormGroup",
+																			"Items": [
+																				{
+																					"Label": {
+																						"Value": "Edit"
+																					}
+																				},
+																				{
+																					"Label": {
+																						"Value": "Delete"
+																					}
+																				}
+																			]
+																		}
+																	}
+																}
+															],
+															"Items": {
+																"Source": "MainDataSource"
+															}
+														}
+													}
+												]
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	}]
+}
