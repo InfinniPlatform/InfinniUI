@@ -338,13 +338,15 @@ this.Then(/^я выберу в выпадающем списке "([^"]*)" с ф
 
     var successCombobox = function () {
         window.configWindow.$(listSelector + ' .pl-combobox__grip').click();
-        try {
-            window.testHelpers.getControlByName(listName).setAutocompleteValue(filterText);
-        } catch (err) {
-            next(err);
-            return;
-        }
-        window.testHelpers.waitCondition(haveItem, successItem, failItem);
+        setTimeout(function () {
+            try {
+                window.testHelpers.getControlByName(listName).setAutocompleteValue(filterText);
+            } catch (err) {
+                next(err);
+                return;
+            }
+            window.testHelpers.waitCondition(haveItem, successItem, failItem);
+        }, 300);
     };
     var successItem = function () {
         window.configWindow.$(itemSelector).click();
