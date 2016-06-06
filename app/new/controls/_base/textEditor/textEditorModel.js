@@ -1,4 +1,6 @@
-
+/**
+ * @TODO Если маска заполнена не полностью - не выходить из режима редактирования
+ */
 var TextEditorModel = Backbone.Model.extend({
 
     Mode: {
@@ -107,6 +109,11 @@ var TextEditorModel = Backbone.Model.extend({
         //@TODO Если меняется Mode Edit => Display, проверить введенное значение!!!
         var validateValue = this.get('validateValue');
         var value = this.get('value');
+        var editMask = this.getEditMask();
+
+        if (!editMask.getIsComplete()) {
+            return "Значение не заполнено";
+        }
 
         if (_.isFunction(validateValue)) {
             return validateValue.call(null, value);

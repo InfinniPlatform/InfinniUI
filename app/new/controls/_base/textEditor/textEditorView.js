@@ -241,6 +241,8 @@ var TextEditorView = Backbone.View.extend({
         var text = originalEvent.dataTransfer.getData('text/plain');
 
         this.textTyping(text, 0);
+
+        this.model.setDisplayMode();
     },
 
     /**
@@ -252,13 +254,18 @@ var TextEditorView = Backbone.View.extend({
      */
     textTyping: function (text, position) {
         var editMask = this.model.getEditMask();
+        var newText = text;
 
-        text.split('')
-            .reduce(function (pos, char) {
-                return editMask.setCharAt(char, pos);
-            }, _.isNumber(position) ? position : this.getCaretPosition());
+        if (editMask) {
+            text.split('')
+                .reduce(function (pos, char) {
+                    return editMask.setCharAt(char, pos);
+                }, _.isNumber(position) ? position : this.getCaretPosition());
 
-        this.model.setText(editMask.getText());
+            newText = editMask.getText();
+        }
+
+        this.model.setText(newText);
     },
 
     checkCurrentPosition: function () {
