@@ -73,7 +73,7 @@ window.testHelpers = {
     },
 
     getFormattedDate: function (date) {
-        return window.configWindow.moment(date).format("YYYY-MM-DDTHH:mm:ss.SSS");
+        return window.configWindow.moment(date.replace(/\./g, '/')).format("YYYY-MM-DDTHH:mm:ss.SSS");
     },
 
     getStandartDate: function (date) {
