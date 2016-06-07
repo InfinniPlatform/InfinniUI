@@ -6,7 +6,15 @@ function AddActionBuilder(){
 
         var action = new AddAction(parentView);
 
-        var linkView = builder.build(metadata['LinkView'], {parent: args.parent, parentView: parentView, basePathOfProperty: args.basePathOfProperty});
+        var suspended = {};
+        suspended[metadata.DestinationValue.Source] = 'AddAction';
+
+        var linkView = builder.build(metadata['LinkView'], {
+            parent: args.parent,
+            parentView: parentView,
+            basePathOfProperty: args.basePathOfProperty,
+            suspended: suspended
+        });
 
         action.setProperty('linkView', linkView);
 		action.setProperty('sourceSource', metadata.SourceValue.Source);

@@ -15,8 +15,6 @@ _.extend(AddAction.prototype, {
             editDataSource.setItems([item]);
             editDataSource.setSelectedItem(item);
         } else {
-            editDataSource.suspendUpdate();
-
             editView.onBeforeLoaded(function() {
                 editDataSource.createItem();
             });
