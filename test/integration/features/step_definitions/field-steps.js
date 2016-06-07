@@ -400,7 +400,7 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
             var fileBox = window.testHelpers.getControlByName(fileBoxName);
             var xhr = new XMLHttpRequest();
 
-            xhr.open('GET', '/test/integration/' + fileName, true);
+            xhr.open('GET', '/test/integration/files/' + fileName, true);
             xhr.responseType = 'blob';
             xhr.onload = function () {
                 try {
@@ -421,5 +421,21 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
         }
     }, function () {
         next(new Error(fileBoxName + ' не найден!'));
+    });
+});
+
+this.Then(/^значение в файловом поле "([^"]*)" равно "([^"]*)"$/, function (fileBoxName, value, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(fileBoxName) != undefined;
+    }, function () {
+        try {
+            var text = window.testHelpers.getControlByName(fileBoxName).control.controlModel.get('fileName');
+            chai.assert.equal(value, text);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(fileBoxName + ' not found!'));
     });
 });
