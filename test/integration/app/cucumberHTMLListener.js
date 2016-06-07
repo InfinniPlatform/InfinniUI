@@ -1,5 +1,6 @@
-function CucumberHTMLListener($root) {
+function CucumberHTMLListener($root, $info) {
     var formatter = new CucumberHTML.DOMFormatter($root);
+    var testInfoHelper = new TestInfoHelper($info);
 
     formatter.uri('report.feature');
 
@@ -12,11 +13,19 @@ function CucumberHTMLListener($root) {
                 case 'BeforeFeature':
                     var feature = event.getPayloadItem('feature');
                     window.cucumberCurrentFeature = feature.getName();
+                    var tag = feature.getTags()[0];
+                    if(tag && tag.getName){
+                        tag = tag.getName();
+                    } else {
+                        tag = undefined;
+                    }
+                    window.cucumberCurrentFeature = (tag ? tag + ' ' : '') + window.cucumberCurrentFeature;
                     formatter.feature({
                         keyword: feature.getKeyword(),
                         name: feature.getName(),
                         line: feature.getLine(),
-                        description: feature.getDescription()
+                        description: feature.getDescription(),
+                        tag: tag
                     });
                     tsm.suiteStarted(window.cucumberCurrentFeature);
                     break;
@@ -26,11 +35,19 @@ function CucumberHTMLListener($root) {
                     window.cucumberCurrentScenario = scenario.getName();
                     window.cucumberIsIgnored = false;
                     window.cucumberIsFailed = false;
+                    var tag = scenario.getTags()[0];
+                    if(tag && tag.getName){
+                        tag = tag.getName();
+                    } else {
+                        tag = undefined;
+                    }
+                    window.cucumberCurrentScenario = (tag ? tag + ' ' : '') + window.cucumberCurrentScenario;
                     formatter.scenario({
                         keyword: scenario.getKeyword(),
                         name: scenario.getName(),
                         line: scenario.getLine(),
-                        description: scenario.getDescription()
+                        description: scenario.getDescription(),
+                        tag: tag
                     });
                     tsm.testStarted(window.cucumberCurrentScenario);
                     break;
@@ -57,6 +74,7 @@ function CucumberHTMLListener($root) {
                         result = {status: 'skipped'};
                         if (!window.cucumberIsIgnored && !window.cucumberIsFailed) {
                             tsm.testIgnored(window.cucumberCurrentScenario);
+                            testInfoHelper.incrementIgnored();
                             window.cucumberIsIgnored = true;
                         }
                     } else {
@@ -72,6 +90,7 @@ function CucumberHTMLListener($root) {
                             .replace(/:/g, "");
 
                         tsm.testFailed(window.cucumberCurrentScenario, window.cucumberCurrentStep, errorMessage);
+                        testInfoHelper.incrementFailed();
 
                         window.cucumberIsFailed = true;
                     }
@@ -81,6 +100,9 @@ function CucumberHTMLListener($root) {
 
                 case 'AfterScenario':
                     tsm.testFinished(window.cucumberCurrentScenario);
+                    if(!window.cucumberIsFailed) {
+                        testInfoHelper.incrementPassed();
+                    }
                     break;
 
                 case 'AfterFeature':

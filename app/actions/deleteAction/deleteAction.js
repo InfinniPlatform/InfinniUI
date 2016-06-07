@@ -7,27 +7,40 @@ _.inherit(DeleteAction, BaseAction);
 
 _.extend(DeleteAction.prototype, {
     execute: function(callback){
-        var accept = this.getProperty('accept');
-        var that = this;
+        var accept = this.getProperty('accept'),
+            that = this,
+            dataSource = this.getProperty('destinationSource'),
+            property = this.getProperty('destinationProperty');
 
-        if(accept){
+        if( dataSource.getProperty(property) ) {
+            if(accept){
+                new MessageBox({
+                    text: 'Вы уверены, что хотите удалить?',
+                    buttons: [
+                        {
+                            name: 'Да',
+                            type: 'action',
+                            onClick: function() {
+                                that.remove(callback);
+                            }
+                        },
+                        {
+                            name: 'Нет'
+                        }
+                    ]
+                });
+            } else {
+                this.remove(callback);
+            }
+        } else {
             new MessageBox({
-                text: 'Вы уверены, что хотите удалить?',
+                text: 'Вы не выбрали элемент который необходимо удалить',
                 buttons: [
                     {
-                        name: 'Да',
-                        type: 'action',
-                        onClick: function() {
-                            that.remove(callback);
-                        }
-                    },
-                    {
-                        name: 'Нет'
+                        name: 'Закрыть'
                     }
                 ]
             });
-        } else {
-            this.remove(callback);
         }
     },
 

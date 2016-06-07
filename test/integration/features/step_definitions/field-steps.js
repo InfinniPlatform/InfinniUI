@@ -6,7 +6,7 @@ this.When(/^я введу в текстовое поле "([^"]*)" значен�
     };
     var success = function () {
         try {
-            window.testHelpers.getControlByName(fieldName).setValue(value);
+            window.testHelpers.getControlByName(fieldName).setValue(value.replace(/'/g, '"'));
             next();
         } catch (err) {
             next(err);
@@ -52,14 +52,17 @@ this.When(/^я введу в поле типа дата "([^"]*)" значени
         try {
             var date = dateString.match(/[а-я]*/i)[0];
             var iterator = dateString.match(/\w+/g) != null ? parseInt(dateString.match(/\w+/g)[0]) : 0;
+            var element = window.testHelpers.getControlByName(fieldName);
+            var value;
 
             if (date === "Сегодня" && !isNaN(iterator)) {
-                var value = window.testHelpers.getDate(iterator);
-                window.testHelpers.getControlByName(fieldName).setValue(value);
+                value = window.testHelpers.getDate(iterator);
             } else {
-                date = window.testHelpers.getFormattedDate(dateString);
-                window.testHelpers.getControlByName(fieldName).setValue(date);
+                value = window.testHelpers.getFormattedDate(dateString);
             }
+
+            value = window.testHelpers.convertToUnixTime(value, element);
+            element.setValue(value);
 
             next();
         } catch (err) {
@@ -156,11 +159,13 @@ this.Then(/^значение в выпадающем списке "([^"]*)" ра
 
     var checkValue = function () {
         try {
-            var field = window.testHelpers.getControlByName(fieldName);
-            chai.assert.isDefined(field);
+            var actValue = window.configWindow
+                .$('.pl-combobox[data-pl-name="' + fieldName + '"]')
+                .find('.pl-combobox__value')
+                .text()
+                .trim();
 
-            var actValue = field.getValue().DisplayName;
-            chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
+            chai.assert.equal(value, actValue);
 
             next();
         } catch (err) {
@@ -309,6 +314,28 @@ this.Then(/^элемент "([^"]*)" будет недоступным$/, functi
     window.testHelpers.waitCondition(haveElement, success, fail);
 });
 
+this.Then(/^элемент "([^"]*)" будет доступным$/, function (elementName, next) {
+    var haveElement = function () {
+        return window.testHelpers.getControlByName(elementName) != undefined;
+    };
+    var success = function () {
+        try {
+            if (window.testHelpers.getControlByName(elementName).getEnabled()) {
+                next();
+            } else {
+                next(new Error(elementName + ' is disabled!'));
+            }
+        } catch (err) {
+            next(err);
+        }
+    };
+    var fail = function () {
+        next(new Error(elementName + ' not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveElement, success, fail);
+});
+
 this.Then(/^я увеличу значение в числовом поле "([^"]*)"$/, function (boxName, next) {
     var haveBox = function () {
         return window.testHelpers.getControlByName(boxName) != undefined;
@@ -377,9 +404,13 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
             xhr.responseType = 'blob';
             xhr.onload = function () {
                 try {
-                    var file = new File([xhr.response], fileName);
-                    fileBox.setFile(file);
-                    next();
+                    if(xhr.status == 200) {
+                        var file = new File([xhr.response], fileName, { type: xhr.response.type });
+                        fileBox.setFile(file);
+                        next();
+                    } else {
+                        next(new Error(xhr.status == 404 ? 'File ' + fileName + ' not found' : 'XMLHttpRequest status == ' + xhr.status));
+                    }
                 } catch (err) {
                     next(err);
                 }
