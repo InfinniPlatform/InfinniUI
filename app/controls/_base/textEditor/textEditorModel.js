@@ -111,7 +111,7 @@ var TextEditorModel = Backbone.Model.extend({
         var value = this.get('value');
         var editMask = this.getEditMask();
 
-        if (!editMask.getIsComplete()) {
+        if (editMask && !editMask.getIsComplete()) {
             return "Значение не заполнено";
         }
 
