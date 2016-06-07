@@ -10,7 +10,6 @@ _.inherit(ListEditorBaseBuilder, ContainerBuilder);
 _.extend(ListEditorBaseBuilder.prototype, {
 
     applyMetadata: function (params) {
-        var itemsBinding;
 
         var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call(this, params),
             itemsBinding = applyingMetadataResult.itemsBinding,
