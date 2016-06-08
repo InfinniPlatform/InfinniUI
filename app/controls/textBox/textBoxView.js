@@ -5,7 +5,6 @@
 var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     template: {
-        control: InfinniUI.Template["controls/textBox/template/template.tpl.html"],
         oneline: InfinniUI.Template["controls/textBox/template/oneline.tpl.html"],
         multiline: InfinniUI.Template["controls/textBox/template/multiline.tpl.html"]
     },
@@ -59,8 +58,13 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     render: function () {
         this.prerenderingActions();
-        this.renderTemplate(this.template.control);
+
+        var model = this.model;
+        var template = model.get('multiline') ? this.template.multiline : this.template.oneline;
+
+        this.renderTemplate(template);
         this.renderTextBoxEditor();
+
         this.updateProperties();
 
         this.trigger('render');
@@ -81,12 +85,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     },
 
     renderTextBoxEditor: function () {
-
-        var model = this.model;
-        var templateEditorMethod = model.get('multiline') ? this.template.multiline : this.template.oneline;
-        var editorTemplate = templateEditorMethod.call(null, this.getData());
-
-        this.renderControlEditor(editorTemplate);
+        this.renderControlEditor();
     },
 
     setFocus: function () {

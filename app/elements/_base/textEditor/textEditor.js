@@ -5,9 +5,7 @@
 var TextEditor = function () {
     var model = new TextEditorModel();
 
-    var view = new TextEditorView({
-        model: model
-    });
+
 
     model.on('invalid', function (model, error) {
         console.log('error', error);
@@ -16,7 +14,6 @@ var TextEditor = function () {
     //@TODO Handle ReadOnly & Enabled state
 
     this._model = model;
-    this._view = view;
 
 };
 
@@ -35,20 +32,19 @@ TextEditor.prototype.setValidatorValue = function (validatorValue) {
     return this;
 };
 
-TextEditor.prototype.setInputTemplate = function (inputTemplate) {
-    this._model.set('inputTemplate', inputTemplate);
-    return this;
-};
-
 /**
  *
- * @param {function|string} inputTemplate
+ * @param {HTMLInputElement} inputElement
  * @returns {*}
  */
-TextEditor.prototype.render = function (inputTemplate) {
-    this.setInputTemplate(inputTemplate);
+TextEditor.prototype.render = function (inputElement) {
 
-    return this._view.render();
+    this._view = new TextEditorView({
+        model: this._model,
+        el: inputElement
+    });
+
+    //return this._view.render();
 };
 
 TextEditor.prototype.setValue = function (value) {

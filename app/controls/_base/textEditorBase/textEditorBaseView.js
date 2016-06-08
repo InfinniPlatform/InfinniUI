@@ -77,11 +77,12 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
      * Рендеринг редактора значений
      *
      */
-    renderControlEditor: function (editorTemplate) {
+    renderControlEditor: function () {
         var model = this.model;
         var editor = model.get('editor');
-        var $editor = editor.render(editorTemplate);
-        this.ui.editor.replaceWith($editor);
+        editor.render(this.ui.editor);
+        //var $editor = editor.render(editorTemplate);
+        //this.ui.editor.replaceWith($editor);
 
         model.on('change:value', function (model, value) {
             editor.setValue(value);

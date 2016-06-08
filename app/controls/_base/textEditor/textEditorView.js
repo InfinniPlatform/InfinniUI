@@ -35,7 +35,7 @@ var TextEditorView = Backbone.View.extend({
         switch (event.which) {
             case InfinniUI.Keyboard.KeyCode.ESCAPE:
                 //Отменить изменения и выйти из режима редактирования
-                this.model.setDisplayMode(true);
+                this.model.setDisplayMode(true, false);
                 break;
 
             case InfinniUI.Keyboard.KeyCode.HOME:
@@ -205,11 +205,11 @@ var TextEditorView = Backbone.View.extend({
 
     },
 
-    OnDragstartHandler: function (event) {
+    OnDragstartHandler: function (/*event*/) {
         this.$el.attr('data-dragged', true);
     },
 
-    OnDragendHandler: function (event) {
+    OnDragendHandler: function (/*event*/) {
         this.$el.removeAttr('data-dragged', false);
     },
 
@@ -217,7 +217,7 @@ var TextEditorView = Backbone.View.extend({
         event.preventDefault();
         event.stopPropagation();
 
-        var originalEvent = event.originalEvent;
+        //var originalEvent = event.originalEvent;
         this.model.setEditMode();
     },
 
@@ -283,10 +283,10 @@ var TextEditorView = Backbone.View.extend({
 
     getSelectionLength: function () {
         /** @var HTMLInputElement **/
-        var elem = this.getInputEl();
-        var len = 0;
-        var startPos = parseInt(elem.selectionStart, 10);
-        var endPos = parseInt(elem.selectionEnd, 10);
+        var el = this.el;
+        var len = 0,
+            startPos = parseInt(el.selectionStart, 10),
+            endPos = parseInt(el.selectionEnd, 10);
 
         if (!isNaN(startPos) && !isNaN(endPos)) {
             len = endPos - startPos;
@@ -298,11 +298,11 @@ var TextEditorView = Backbone.View.extend({
     setCaretPosition: function (caretPosition) {
 
         if (_.isNumber(caretPosition)) {
-            var elem = this.getInputEl();
+            var el = this.el;
 
             //IE9+
-            if (typeof elem.selectionStart !== 'undefined') {
-                elem.setSelectionRange(caretPosition, caretPosition);
+            if (typeof el.selectionStart !== 'undefined') {
+                el.setSelectionRange(caretPosition, caretPosition);
             }
         }
 
@@ -315,13 +315,13 @@ var TextEditorView = Backbone.View.extend({
      */
     getCaretPosition: function () {
         /** @var {HTMLInputElement} **/
-        var elem = this.getInputEl();
+        var el = this.el;
 
         var position = 0;
 
         //IE9+
-        if (elem.selectionStart || elem.selectionStart == '0') {
-            position = elem.selectionStart;
+        if (el.selectionStart || el.selectionStart == '0') {
+            position = el.selectionStart;
         }
 
         return position;
@@ -330,21 +330,6 @@ var TextEditorView = Backbone.View.extend({
     initialize: function () {
         this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
         this.listenTo(this.model, 'change:text', this.onChangeTextHandler);
-    },
-
-    render: function () {
-
-        var inputTemplate = this.model.get('inputTemplate');
-
-        var $input = _.isString(inputTemplate) ? $(inputTemplate) : $(inputTemplate.call(null));
-
-        this.ui = {
-            input: $input
-        };
-
-        this.$el.append($input);
-
-        return this.$el;
     },
 
     onFocusinHandler: function (/* event */) {
@@ -361,29 +346,13 @@ var TextEditorView = Backbone.View.extend({
     },
 
     onChangeTextHandler: function (model, text) {
-        var $input = this.getInput();
+        var $input = this.$el;
 
         $input.val(text);
         if ($input.is(':focus')) {
             this.checkCurrentPosition();
         }
 
-    },
-
-    /**
-     *
-     * @returns {*|jQuery|HTMLElement}
-     */
-    getInput: function () {
-        return this.ui.input;
-    },
-
-    /**
-     *
-     * @returns {HTMLInputElement}
-     */
-    getInputEl: function () {
-        return this.ui.input.get(0);
     }
 
 });

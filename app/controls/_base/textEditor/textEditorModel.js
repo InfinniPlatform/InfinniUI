@@ -20,9 +20,10 @@ var TextEditorModel = Backbone.Model.extend({
             if (mode === this.Mode.Edit) {
                 var editMask = model.getEditMask();
 
-                var value = editMask ?  editMask.getData() : text;
-
-                model.set('value', value);
+                if (editMask.getIsComplete()) {
+                    var value = editMask ?  editMask.getData() : text;
+                    model.set('value', value);
+                }
             }
         });
     },
@@ -63,13 +64,15 @@ var TextEditorModel = Backbone.Model.extend({
     /**
      *
      * @param {boolean} [cancel = false]
+     * @param {boolean} [validate = true]
      */
-    setDisplayMode: function (cancel) {
+    setDisplayMode: function (cancel, validate) {
         cancel = !!cancel;
+        validate = (typeof validate === 'undefined') ? true : !!validate;
 
         this.set('mode', this.Mode.Display, {
             cancel: cancel,
-            validate: !cancel
+            validate: validate
         });
 
     },

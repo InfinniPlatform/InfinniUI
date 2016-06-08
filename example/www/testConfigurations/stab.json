@@ -121,10 +121,18 @@
           "Source": "ds1",
           "Property": "0.text"
         }
-
+      }
+    },
+    {
+      "TextBox": {
+        "LabelText": "User Name"
+      }
+    },
+    {
+      "PasswordBox": {
+        "LabelText": "Password"
       }
     }
-
   ]
 }
 
