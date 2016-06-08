@@ -121,6 +121,8 @@ _.extend(ViewBuilder.prototype, {
             element.getDataSources()
                 .set(dataSources);
 
+            this.changeDataSourcesReadinessByPriority(dataSources);
+
             for(var i = 0, ii = dataSources.length; i < ii; i++){
                 if(!dataSources[i].isLazy()){
                     dataSources[i].tryInitData();
@@ -170,6 +172,40 @@ _.extend(ViewBuilder.prototype, {
 
         if (onStartCreating) {
             new ScriptExecutor(element).executeScript(onStartCreating.Name || onStartCreating, {});
+        }
+    },
+
+    changeDataSourcesReadinessByPriority: function(dataSources) {
+        var dataSourcesByPriority = _.groupBy(dataSources, function(ds) {return ds.getResolvePriority();});
+
+        var updateTopPriorityDataSources = function(priorityGroups){
+            if(_.keys(priorityGroups).length){
+                var maxPriority = _.chain(priorityGroups).keys().last().value(),
+                    topPriorityDataSources = priorityGroups[maxPriority],
+                    topPriorityDataSourcesCount = topPriorityDataSources.length,
+                    nonPriorityDataSourceGroups = _.omit(priorityGroups, maxPriority),
+                    count = 0;
+
+                _.each(topPriorityDataSources, function(ds){
+                    ds.onItemsUpdatedOnce(function(context, args){
+                        if(++count == topPriorityDataSourcesCount){
+                            setTimeout( function() {
+                                updateTopPriorityDataSources(nonPriorityDataSourceGroups)
+                            }, 0);
+                        }
+                    });
+
+                    ds.setIsWaiting(false);
+                });
+            }
+        };
+
+        if(_.keys(dataSourcesByPriority).length > 1) {
+            _.each(dataSources, function(ds){
+                ds.setIsWaiting(true);
+            });
+
+            updateTopPriorityDataSources(dataSourcesByPriority);
         }
     }
 },

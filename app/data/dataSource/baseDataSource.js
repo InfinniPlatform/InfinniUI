@@ -39,6 +39,10 @@ var BaseDataSource = Backbone.Model.extend({
 
         isLazy: true,
 
+        isWaiting: false,
+
+        resolvePriority: 0,
+
         newItemsHandler: null,
 
         isNumRegEx: /^\d/
@@ -130,6 +134,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     onItemsUpdated: function (handler) {
         this.on('onItemsUpdated', handler);
+    },
+
+    onItemsUpdatedOnce: function (handler) {
+        this.once('onItemsUpdated', handler);
     },
 
     onItemDeleted: function (handler) {
@@ -616,10 +624,22 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('isRequestInProcess', true);
             dataProvider.getItems(function (data) {
 
-                that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                var isWaiting =  that.get('isWaiting'),
+                    finishUpdating = function(){
+                        that.set('isRequestInProcess', false);
+                        that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                    };
+
+                if(isWaiting){
+                    that.once('change:isWaiting', function () {
+                        finishUpdating();
+                    });
+                } else {
+                    finishUpdating();
+                }
 
             }, onError);
+
         }else{
             var handlers = this.get('waitingOnUpdateItemsHandlers');
             handlers.push({
@@ -628,6 +648,10 @@ var BaseDataSource = Backbone.Model.extend({
             });
         }
 
+    },
+
+    setIsWaiting: function(value){
+        this.set('isWaiting', value);
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
@@ -895,7 +919,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('onItemsUpdated', function(){
+            this.onItemsUpdatedOnce(function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
@@ -915,7 +939,7 @@ var BaseDataSource = Backbone.Model.extend({
     getNearestRequestPromise: function(){
         var promise = $.Deferred();
 
-        this.once('onItemsUpdated', function(){
+        this.onItemsUpdatedOnce( function(){
             if(this.isDataReady()){
                 promise.resolve();
             }else{
@@ -939,6 +963,14 @@ var BaseDataSource = Backbone.Model.extend({
 
     isLazy: function(){
         return this.get('isLazy');
+    },
+
+    setResolvePriority: function(priority){
+        this.set('resolvePriority', priority);
+    },
+
+    getResolvePriority: function(){
+        return this.get('resolvePriority');
     },
 
     _replaceAllProperties: function (currentObject, newPropertiesSet) {
