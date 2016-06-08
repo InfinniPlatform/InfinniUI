@@ -180,7 +180,7 @@ _.extend(ViewBuilder.prototype, {
 
         var updateTopPriorityDataSources = function(priorityGroups){
             if(_.keys(priorityGroups).length){
-                var maxPriority = _.chain(priorityGroups).keys().last().value(),
+                var maxPriority = _.chain(priorityGroups).keys().max().value(),
                     topPriorityDataSources = priorityGroups[maxPriority],
                     topPriorityDataSourcesCount = topPriorityDataSources.length,
                     nonPriorityDataSourceGroups = _.omit(priorityGroups, maxPriority),
