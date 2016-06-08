@@ -171,7 +171,8 @@ describe('ViewBuilder', function () {
                     DocumentDataSource: {
                         Name: 'ds4',
                         ConfigId: 'configuration',
-                        DocumentId: 'document'
+                        DocumentId: 'document',
+                        ResolvePriority: -11
                     }
                 },
                 {
