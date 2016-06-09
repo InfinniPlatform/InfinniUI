@@ -1,1 +1,1 @@
-call gulp build
+call npm run-script build-example
