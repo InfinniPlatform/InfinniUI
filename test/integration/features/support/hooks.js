@@ -3,7 +3,7 @@ this.BeforeScenario(function (scenario, callback) {
     window.toastrMessageCount = 0;
 
     var mongoServise = {
-        url: 'http://localhost:60520',
+        url: window.IntegrationTestConfig.mongoDbService.url,
         body: {
             commands: [
                 'remove',
@@ -12,16 +12,11 @@ this.BeforeScenario(function (scenario, callback) {
         }
     };
 
-    var p = $.ajax({
-        url: mongoServise.url,
-        type: 'POST',
-        data: JSON.stringify(mongoServise.body)
-    });
-
-    p.always(function () {
-        // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
-        openHost(callback);
-    });
+    $.post(mongoServise.url, JSON.stringify(mongoServise.body))
+        .always(function () {
+            // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
+            openHost(callback);
+        });
 });
 
 this.AfterFeatures(function () {
@@ -31,7 +26,7 @@ this.AfterFeatures(function () {
 
     if (window.startUpParameters && window.startUpParameters.saveContent) {
         var mongoServise = {
-            url: 'http://localhost:60520',
+            url: window.IntegrationTestConfig.mongoDbService.url,
             body: {
                 save: window
                     .document

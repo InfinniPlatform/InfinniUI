@@ -12,6 +12,8 @@ var TreeViewView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
+        this.ItemsMap = new HashMap();
+
     },
 
     render: function () {
@@ -37,7 +39,10 @@ var TreeViewView = ListEditorBaseView.extend({
             parentSelector = model.get('parentSelector'),
             keySelector = model.get('keySelector'),
             nodeConstructor = this.getNodeConstructor(),
-            itemTemplate = model.get('itemTemplate');
+            itemTemplate = model.get('itemTemplate'),
+            itemsMap = this.ItemsMap;
+
+        itemsMap.clear();
 
         $nodes = renderNodes();
         this.$el.append($nodes);
@@ -55,6 +60,8 @@ var TreeViewView = ListEditorBaseView.extend({
                         value: item,
                         index: collection.indexOf(item)
                     }).render();
+
+                    $node.data('pl-data-item', item);
 
                     node.listenTo(model, 'change:selectedItem', function (model, selectedItem) {
                         node.setSelected(selectedItem === item);
@@ -78,8 +85,11 @@ var TreeViewView = ListEditorBaseView.extend({
                     view.listenTo(node, 'check', view.onCheckNodeHandler.bind(view, item, node));
 
                     node.setItemContent($item);
-                    var $subitems = renderNodes(keySelector(null, {value: item}));
+                    var key = keySelector(null, {value: item}),
+                        $subitems = renderNodes(key);
                     node.setItemsContent($subitems);
+
+                    itemsMap.add(key, item);
 
                     return $node;
 
@@ -108,8 +118,7 @@ var TreeViewView = ListEditorBaseView.extend({
         model.set('selectedItem', item);
         if (!multiSelect) {
             //Клик по элементу одновременно переключает значение и делает элемент выделенным
-            var value = model.valueByItem(item);
-            model.toggleValue(value);
+            this.tryToggleValue(item);
         }
     },
 
@@ -118,13 +127,37 @@ var TreeViewView = ListEditorBaseView.extend({
 
         var multiSelect = model.get('multiSelect');
 
-        var value = model.valueByItem(item);
-        model.toggleValue(value);
+        this.tryToggleValue(item);
 
         if (!multiSelect) {
             //Клик по элементу одновременно переключает значение и делает элемент выделенным
             model.set('selectedItem', item);
         }
+    },
+
+    tryToggleValue: function(item){
+        var model = this.model;
+        var isDisabledItem = this.isDisabledItem(item);
+
+        if(!isDisabledItem){
+            var value = model.valueByItem(item);
+            model.toggleValue(value);
+        }
+    },
+
+    isDisabledItem: function(item){
+        if(item == null){
+            return false;
+        }
+
+       return this.model.isDisabledItem(item) || this.isDisabledItem(this.getParent(item));
+    },
+
+    getParent: function(item){
+        var parentSelector = this.model.get('parentSelector'),
+            parentId = parentSelector(null, {value: item});
+
+        return parentId && this.ItemsMap.get(parentId);
     },
 
     getTemplate: function () {
@@ -160,12 +193,28 @@ var TreeViewView = ListEditorBaseView.extend({
     updateGrouping: function () {
     },
 
-    updateDisabledItem: function(){
+    updateDisabledItem: function() {
+        var model = this.model;
+        var disabledItemCondition = model.get('disabledItemCondition');
+        var nodes = this.$el.find('.pl-treeview-node');
 
+        nodes.removeClass('pl-disabled-list-item');
+
+        if( disabledItemCondition != null){
+            nodes.each(function(i, el){
+                var $el = $(el),
+                    item = $el.data('pl-data-item');
+
+                if(model.isDisabledItem(item)){
+                    $el.addClass('pl-disabled-list-item');
+                }
+            });
+        }
     },
 
     rerender: function () {
 
     }
+
 
 });

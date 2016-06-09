@@ -106,7 +106,7 @@ describe('FileProvider', function () {
                 var item = args.value;
                 ds.setProperty('title', 'some title');
                 ds.saveItem(item, function (context, args) {
-                    var value = args.value.item;
+                    var value = args.item;
                     assert.equal(item, value);
                     done();
                 }, function (args) {

@@ -39,6 +39,10 @@ var BaseDataSource = Backbone.Model.extend({
 
         isLazy: true,
 
+        isWaiting: false,
+
+        resolvePriority: 0,
+
         newItemsHandler: null,
 
         isNumRegEx: /^\d/
@@ -59,6 +63,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('suspendingList', []);
         this.set('waitingOnUpdateItemsHandlers', []);
         this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
+
+        _.extend( this, BaseDataSource.identifyingStrategy.byId);
     },
 
     initDataProvider: function () {
@@ -130,6 +136,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     onItemsUpdated: function (handler) {
         this.on('onItemsUpdated', handler);
+    },
+
+    onItemsUpdatedOnce: function (handler) {
+        this.once('onItemsUpdated', handler);
     },
 
     onItemDeleted: function (handler) {
@@ -474,44 +484,57 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved({item: item, result: null}, 'notModified', success);
+            this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
+            that._executeCallback(success, {item: item, result: {IsValid: true}});
             return;
         }
 
         validateResult = this.validateOnErrors(item);
         if (!validateResult.IsValid) {
-            this._notifyAboutFailValidationBySaving(item, validateResult, error);
+            that._notifyAboutValidation(validateResult, 'error');
+            this._executeCallback(error, {item: item, result: validateResult});
             return;
         }
 
         dataProvider.saveItem(item, function(data){
             if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified', success);
+                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
+                that._executeCallback(success, {item: item, result: that._getValidationResult(data)});
             }else{
-                that._notifyAboutFailValidationBySaving(item, data, error);
+                var result = that._getValidationResult(data);
+                that._notifyAboutValidation(result, 'error');
+                that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = data.data.responseJSON['Result']['ValidationResult'];
-            that._notifyAboutFailValidationBySaving(item, result, error);
+            var result = that._getValidationResult(data);
+            that._notifyAboutValidation(result, 'error');
+            that._executeCallback(error, {item: item, result: result});
         });
     },
 
-    _notifyAboutItemSaved: function (data, result, successHandler) {
+    _getValidationResult: function(data){
+        if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
+            return data.data.responseJSON['Result']['ValidationResult'];
+        }
+        
+        return data.data && data.data['Result'] && data.data['Result']['ValidationResult'];
+    },
+
+    _executeCallback: function(callback, args){
+        if(callback){
+            callback(this.getContext(), args);
+        }
+    },
+
+    _notifyAboutItemSaved: function (data, result) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = data;
         argument.result = result;
 
-        if (successHandler) {
-            successHandler(context, argument);
-        }
         this.trigger('onItemSaved', context, argument);
-    },
-
-    _notifyAboutFailValidationBySaving: function (item, validationResult, errorHandler) {
-        this._notifyAboutValidation(validationResult, errorHandler, 'error');
     },
 
     deleteItem: function (item, success, error) {
@@ -530,11 +553,14 @@ var BaseDataSource = Backbone.Model.extend({
             if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
             } else {
-                that._notifyAboutFailValidationByDeleting(item, data, error);
+                var result = that._getValidationResult(data);
+                that._notifyAboutValidation(result, 'error');
+                that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = data.data.responseJSON['Result']['ValidationResult'];
-            that._notifyAboutFailValidationByDeleting(item, result, error);
+            var result = that._getValidationResult(data);
+            that._notifyAboutValidation(result, 'error');
+            that._executeCallback(error, {item: item, result: result});
         });
     },
 
@@ -575,16 +601,6 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutFailValidationByDeleting: function (item, errorData, errorHandler) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
-
-        argument.value = item;
-        argument.error = errorData;
-
-        this._notifyAboutValidation(errorData, errorHandler);
-    },
-
     isDataReady: function () {
         return this.get('isDataReady');
     },
@@ -610,10 +626,22 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('isRequestInProcess', true);
             dataProvider.getItems(function (data) {
 
-                that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                var isWaiting =  that.get('isWaiting'),
+                    finishUpdating = function(){
+                        that.set('isRequestInProcess', false);
+                        that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                    };
+
+                if(isWaiting){
+                    that.once('change:isWaiting', function () {
+                        finishUpdating();
+                    });
+                } else {
+                    finishUpdating();
+                }
 
             }, onError);
+
         }else{
             var handlers = this.get('waitingOnUpdateItemsHandlers');
             handlers.push({
@@ -622,6 +650,10 @@ var BaseDataSource = Backbone.Model.extend({
             });
         }
 
+    },
+
+    setIsWaiting: function(value){
+        this.set('isWaiting', value);
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
@@ -820,7 +852,8 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._notifyAboutValidation(result, callback, validationType);
+        this._notifyAboutValidation(result, validationType);
+        this._executeCallback(callback, {item: item, result: result});
 
         return result;
     },
@@ -831,15 +864,15 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationHandler, validationType) {
+    _notifyAboutValidation: function (validationResult, validationType) {
+        if(!validationResult) {
+            return;
+        }
+
         var context = this.getContext(),
             argument = {
                 value: validationResult
             };
-
-        if (validationHandler) {
-            validationHandler(context, argument);
-        }
 
         var eventType = (validationType == 'warning') ? 'onWarningValidator' : 'onErrorValidator';
         this.trigger(eventType, context, argument);
@@ -888,7 +921,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('onItemsUpdated', function(){
+            this.onItemsUpdatedOnce(function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
@@ -908,7 +941,7 @@ var BaseDataSource = Backbone.Model.extend({
     getNearestRequestPromise: function(){
         var promise = $.Deferred();
 
-        this.once('onItemsUpdated', function(){
+        this.onItemsUpdatedOnce( function(){
             if(this.isDataReady()){
                 promise.resolve();
             }else{
@@ -932,6 +965,14 @@ var BaseDataSource = Backbone.Model.extend({
 
     isLazy: function(){
         return this.get('isLazy');
+    },
+
+    setResolvePriority: function(priority){
+        this.set('resolvePriority', priority);
+    },
+
+    getResolvePriority: function(){
+        return this.get('resolvePriority');
     },
 
     _replaceAllProperties: function (currentObject, newPropertiesSet) {

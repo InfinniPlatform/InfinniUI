@@ -182,8 +182,6 @@ describe('ListBox', function () {
                 });
 
                 // Then
-                items = $view.find('.pl-listbox-i');
-
                 assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
                 assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
                 view.close();

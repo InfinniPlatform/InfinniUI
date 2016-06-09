@@ -97,7 +97,6 @@ describe('Label', function () {
             label.render();
 
             label.onValueChanged(function () {
-                console.log(arguments);
                 onValueChangedFlag++;
             });
 

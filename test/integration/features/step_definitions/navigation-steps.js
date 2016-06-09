@@ -291,7 +291,7 @@ this.Then(/^я отмечу в таблице "([^"]*)" строку под но
 });
 
 this.Then(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (listName, itemText, next) {
-    itemText = itemText.replace(/'/g, '"');
+    itemText = itemText.replace(/''/g, '"');
 
     var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
     var itemSelector = ".pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains('" + itemText + "')";
@@ -306,6 +306,47 @@ this.Then(/^я выберу в выпадающем списке "([^"]*)" зн�
     var successCombobox = function () {
         window.configWindow.$(listSelector + ' .pl-combobox__grip').click();
         window.testHelpers.waitCondition(haveItem, successItem, failItem);
+    };
+    var successItem = function () {
+        window.configWindow.$(itemSelector).click();
+        next();
+    };
+
+    var failCombobox = function () {
+        next(new Error(listName + ' not found!'));
+    };
+    var failItem = function () {
+        next(new Error('"' + itemText + '" not found!'));
+    };
+
+    window.testHelpers.waitCondition(haveCombobox, successCombobox, failCombobox);
+});
+
+this.Then(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (listName, filterText, itemText, next) {
+    itemText = itemText.replace(/''/g, '"');
+    filterText = filterText.replace(/''/g, '"');
+
+    var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
+    var itemSelector = ".pl-dropdown-container .pl-combobox-dropdown .pl-combobox-items .pl-label:contains('" + itemText + "')";
+
+    var haveCombobox = function () {
+        return window.configWindow.$(listSelector).length != 0;
+    };
+    var haveItem = function () {
+        return window.configWindow.$(itemSelector).length != 0;
+    };
+
+    var successCombobox = function () {
+        window.configWindow.$(listSelector + ' .pl-combobox__grip').click();
+        setTimeout(function () {
+            try {
+                window.testHelpers.getControlByName(listName).setAutocompleteValue(filterText);
+            } catch (err) {
+                next(err);
+                return;
+            }
+            window.testHelpers.waitCondition(haveItem, successItem, failItem);
+        }, 300);
     };
     var successItem = function () {
         window.configWindow.$(itemSelector).click();
@@ -405,4 +446,21 @@ this.Then(/^я перейду на предыдущую страницу по к
         next(new Error(navigatorName + ' not found!'));
     });
 
+});
+
+this.Then(/^я очищу выпадающий список "([^"]*)"$/, function (listName, next) {
+    var listSelector = '.pl-combobox[data-pl-name="' + listName + '"]';
+
+    window.testHelpers.waitCondition(function () {
+        return window.configWindow.$(listSelector).length != 0;
+    }, function () {
+        try {
+            window.configWindow.$(listSelector + ' .pl-combobox__clear').click();
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(listName + ' not found!'));
+    });
 });

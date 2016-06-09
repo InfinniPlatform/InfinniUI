@@ -114,6 +114,7 @@ describe('AddAction', function () {
             assert.include(destinationItems, {name: "New"});
 
             done();
+            view.close();
         });
     });
 
@@ -210,7 +211,10 @@ describe('AddAction', function () {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
+
                         done();
+
+                        view.close();
                     });
                 }
             );

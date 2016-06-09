@@ -137,6 +137,74 @@ describe('ViewBuilder', function () {
         assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'objectDataSource1'; }), ObjectDataSource, 'wrong build for ObjectDataSource');
     });
 
+    it('should sort DataSources by priority', function (done) {
+        // Given
+        window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+        var viewBuilder = new ViewBuilder();
+        var metadata = {
+            DataSources: [
+                {
+                    DocumentDataSource: {
+                        Name: 'ds1',
+                        ConfigId: 'configuration',
+                        DocumentId: 'document'
+                    }
+                },
+                {
+                    DocumentDataSource: {
+                        Name: 'ds2',
+                        ConfigId: 'configuration',
+                        DocumentId: 'document',
+                        ResolvePriority: 1
+                    }
+                },
+                {
+                    DocumentDataSource: {
+                        Name: 'ds3',
+                        ConfigId: 'configuration',
+                        DocumentId: 'document',
+                        ResolvePriority: 2
+                    }
+                },
+                {
+                    DocumentDataSource: {
+                        Name: 'ds4',
+                        ConfigId: 'configuration',
+                        DocumentId: 'document',
+                        ResolvePriority: -11
+                    }
+                },
+                {
+                    DocumentDataSource: {
+                        Name: 'ds5',
+                        ConfigId: 'configuration',
+                        DocumentId: 'document',
+                        ResolvePriority: 1
+                    }
+                }
+            ]
+        };
+
+        // When
+        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+
+        var dataSources = view.getDataSources()._items.map(function(obj){return obj.__value;}),
+            ds4 = dataSources.find(function(item){ return item.name == 'ds4'; }),
+            updatedDataSources = [];
+
+        dataSources.forEach(function(ds){
+            ds.onItemsUpdated(function(context, args){ updatedDataSources.push(args.source.name); });
+            ds.updateItems();
+        });
+
+        // Then
+        ds4.onItemsUpdated(function(){
+            assert.deepEqual(updatedDataSources, ['ds3', 'ds2', 'ds5', 'ds1', 'ds4'], 'priority ds must be resolved before nonpriority');
+            done();
+        });
+    });
+
 
     it('should build OnOpening', function () {
         // Given

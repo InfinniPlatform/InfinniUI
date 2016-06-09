@@ -126,8 +126,10 @@ this.Then(/^система отобразит значения выпадающ�
 this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function (msgs, next) {
     var getMessages = function (arrayString) {
         return arrayString.split('", ').map(function (item) {
-            var result = item.trim();
-            return result.replace(/"/g, "").replace(/'/g, '"');
+            return item
+                .trim()
+                .replace(/"/g, "")
+                .replace(/''/g, '"');
         });
     };
 
@@ -141,7 +143,7 @@ this.Then(/^система отобразит список валидацион�
         var actualMessages = [];
 
         for (var i = 0; i < actual.length; i++) {
-            actualMessages.push(actual.eq(i).text().replace(/'/g, '"'));
+            actualMessages.push(actual.eq(i).text().replace(/''/g, '"'));
         }
 
         var messages = getMessages(msgs);
@@ -154,6 +156,7 @@ this.Then(/^система отобразит список валидацион�
         try {
             chai.assert.deepEqual(actualMessages, messages, errorString);
             window.toastrMessageCount = 0;
+            window.configWindow.$('#toast-container').remove();
             next();
         } catch (err) {
             next(err);
@@ -357,7 +360,7 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
             expectedCells.pop();
 
             expectedCells = expectedCells.map(function (item) {
-                return item.replace(/'/g, '"');
+                return item.replace(/''/g, '"');
             });
 
             if (expectedCells.length != $cells.length) {
@@ -368,20 +371,22 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
             }
 
             for (var i = 0, ii = expectedCells.length; i < ii; i++) {
-                if (!!expectedCells[i]) {
-                    var cellText = $cells
-                        .eq(i)
-                        .find('.pl-label:visible')
-                        .text()
-                        .trim();
+                if(expectedCells[i] === '***') {
+                    continue;
+                }
 
-                    if(cellText != expectedCells[i]) {
-                        var err = "Expected: '" + expectedCells[i] + "', Actual: '" + cellText + "'\n" +
-                            'Expected row:  ' + rowValue + '\n' +
-                            'Actual row:    ' + window.testHelpers.parseTableRow($cells);
-                        next(new Error(err));
-                        return;
-                    }
+                var cellText = $cells
+                    .eq(i)
+                    .find('.pl-label:visible')
+                    .text()
+                    .trim();
+
+                if(cellText != expectedCells[i]) {
+                    var err = "Expected: '" + expectedCells[i] + "', Actual: '" + cellText + "'\n" +
+                        'Expected row:  ' + rowValue + '\n' +
+                        'Actual row:    ' + window.testHelpers.parseTableRow($cells);
+                    next(new Error(err));
+                    return;
                 }
             }
 

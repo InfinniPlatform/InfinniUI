@@ -7,7 +7,7 @@ describe('PopupButtonBuilder', function () {
                 Text: "Click me",
                 Action: {
                     OpenAction: {
-                        View: {
+                        LinkView: {
                             InlineView: {
                                 "ConfigId": "Structure",
                                 "DocumentId": "Department",
@@ -45,11 +45,10 @@ describe('PopupButtonBuilder', function () {
 
             // When
             var builder = new PopupButtonBuilder();
-            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
             // Then
             assert.isNotNull(button);
             assert.equal(button.getText(), 'Click me');
-            assert.isNotNull(button.getAction());
             assert.equal(2,button.getItems().length);
 
         });

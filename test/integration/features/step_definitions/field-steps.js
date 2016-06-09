@@ -159,11 +159,14 @@ this.Then(/^значение в выпадающем списке "([^"]*)" ра
 
     var checkValue = function () {
         try {
-            var field = window.testHelpers.getControlByName(fieldName);
-            chai.assert.isDefined(field);
+            var actValue = window.configWindow
+                .$('.pl-combobox[data-pl-name="' + fieldName + '"]')
+                .find('.pl-combobox__value')
+                .text()
+                .trim()
+                .replace(/''/g, '"');
 
-            var actValue = field.getValue().DisplayName;
-            chai.assert.isTrue((actValue == value), actValue + ' != ' + value);
+            chai.assert.equal(value, actValue);
 
             next();
         } catch (err) {
@@ -238,7 +241,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             }
 
             if (typeof actValue == "string") {
-                value = value.replace(/'/g, '"');
+                value = value.replace(/''/g, '"');
             }
 
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
@@ -398,13 +401,17 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
             var fileBox = window.testHelpers.getControlByName(fileBoxName);
             var xhr = new XMLHttpRequest();
 
-            xhr.open('GET', '/test/integration/' + fileName, true);
+            xhr.open('GET', '/test/integration/files/' + fileName, true);
             xhr.responseType = 'blob';
             xhr.onload = function () {
                 try {
-                    var file = new File([xhr.response], fileName);
-                    fileBox.setFile(file);
-                    next();
+                    if(xhr.status == 200) {
+                        var file = new File([xhr.response], fileName, { type: xhr.response.type });
+                        fileBox.setFile(file);
+                        next();
+                    } else {
+                        next(new Error(xhr.status == 404 ? 'File ' + fileName + ' not found' : 'XMLHttpRequest status == ' + xhr.status));
+                    }
                 } catch (err) {
                     next(err);
                 }
@@ -415,5 +422,21 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
         }
     }, function () {
         next(new Error(fileBoxName + ' не найден!'));
+    });
+});
+
+this.Then(/^значение в файловом поле "([^"]*)" равно "([^"]*)"$/, function (fileBoxName, value, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(fileBoxName) != undefined;
+    }, function () {
+        try {
+            var text = window.testHelpers.getControlByName(fileBoxName).control.controlModel.get('fileName');
+            chai.assert.equal(value, text);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(fileBoxName + ' not found!'));
     });
 });

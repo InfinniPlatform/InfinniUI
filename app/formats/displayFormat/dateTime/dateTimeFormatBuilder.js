@@ -16,6 +16,10 @@ function DateTimeFormatBuilder () {
 
         format.setFormat(args.metadata.Format);
 
+        if (_.isNumber(args.metadata.TimeZone)) {
+            format.setOptions({ TimeZone: args.metadata.TimeZone });
+        }
+
         return format;
     }
 

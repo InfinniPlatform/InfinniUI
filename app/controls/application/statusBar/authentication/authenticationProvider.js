@@ -21,7 +21,7 @@ _.extend(AuthenticationProvider.prototype, {
           * @public
           */
     getCurrentUser: function(resultCallback, errorCallback) {
-        this.sendPostRequest('/Auth/GetCurrentUser', {}, resultCallback, errorCallback);
+        this.sendPostRequestForServiceResult('/Auth/GetCurrentUser', {}, resultCallback, errorCallback);
     },
 
     /**
@@ -35,7 +35,7 @@ _.extend(AuthenticationProvider.prototype, {
             NewPassword: newPassword
         };
 
-        this.sendPostRequest('/Auth/ChangePassword', changePasswordForm, resultCallback, errorCallback);
+        this.sendPostRequestForServiceResult('/Auth/ChangePassword', changePasswordForm, resultCallback, errorCallback);
     },
 
     /**
@@ -49,7 +49,7 @@ _.extend(AuthenticationProvider.prototype, {
             Description: description
         };
 
-        this.sendPostRequest('/Auth/ChangeProfile', changeProfileForm, resultCallback, errorCallback);
+        this.sendPostRequestForServiceResult('/Auth/ChangeProfile', changeProfileForm, resultCallback, errorCallback);
     },
 
     /**
@@ -62,7 +62,7 @@ _.extend(AuthenticationProvider.prototype, {
             ActiveRole: activeRole
         };
 
-        this.sendPostRequest('/Auth/ChangeActiveRole', changeActiveRoleForm, function(){
+        this.sendPostRequestForServiceResult('/Auth/ChangeActiveRole', changeActiveRoleForm, function(){
             var args = _.toArray(arguments);
             args.push(activeRole);
             if(resultCallback){
@@ -85,7 +85,7 @@ _.extend(AuthenticationProvider.prototype, {
             Remember: remember
         };
 
-        this.sendPostRequest('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
+        this.sendPostRequestForServiceResult('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
     },
 
     /**
@@ -120,45 +120,6 @@ _.extend(AuthenticationProvider.prototype, {
         this.sendPostRequest('/Auth/UnlinkExternalLogin', unlinkExternalLoginForm, resultCallback, errorCallback);
     },
 
-    addClaim: function(userName, claimName, claimValue, resultCallback, errorCallback) {
-        var claim = {
-            "id" : null,
-            "changesObject" : {
-                "UserName" : userName,
-                "ClaimType": claimName,
-                "ClaimValue": claimValue
-            },
-            "replace" : false
-        };
-
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
-    },
-
-    setSessionData: function(claimType, claimValue, resultCallback, errorCallback) {
-        var claim = {
-            "id" : null,
-            "changesObject" : {
-                "ClaimType": claimType,
-                "ClaimValue": claimValue
-            },
-            "replace" : false
-        };
-
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/setsessiondata', claim, resultCallback, errorCallback);
-    },
-
-    getSessionData: function(claimType, resultCallback, errorCallback) {
-        var claim = {
-            "id" : null,
-            "changesObject" : {
-                "ClaimType": claimType,
-            },
-            "replace" : false
-        };
-
-        this.sendPostRequest('/RestfulApi/StandardApi/authorization/getsessiondata', claim, resultCallback, errorCallback);
-    },
-
     /**
           * Выход пользователя из системы.
           *
@@ -171,7 +132,7 @@ _.extend(AuthenticationProvider.prototype, {
             "replace" : false
         };
 
-        this.sendPostRequest('/Auth/SignOut', null, function(){
+        this.sendPostRequestForServiceResult('/Auth/SignOut', null, function(){
             InfinniUI.user.onReadyDeferred = $.Deferred();
             InfinniUI.user.onReadyDeferred.resolve(null);
 
@@ -267,6 +228,29 @@ _.extend(AuthenticationProvider.prototype, {
                 }
             })
         });
+    },
+
+    sendPostRequestForServiceResult: function (requestUri, requestData, successCallback, errorCallback) {
+        var resultCallback = function(){
+            var args = _.toArray(arguments),
+                serviceResult = args[0];
+
+            if(serviceResult['Success']){
+                args[0] = serviceResult['Result'];
+
+                if( _.isFunction(successCallback) ){
+                    successCallback.apply(this, args);
+                }
+            } else {
+                args[0] = serviceResult['Error'];
+
+                if( _.isFunction(errorCallback) ){
+                    errorCallback.apply(this, args);
+                }
+            }
+        };
+
+        this.sendPostRequest(requestUri, requestData, resultCallback, errorCallback);
     },
 
     onActiveRoleChanged: function(handler){
