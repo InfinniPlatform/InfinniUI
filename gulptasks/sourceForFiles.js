@@ -40,6 +40,7 @@ const sourceForFiles = {
 		'app/controls/comboBox/dropdown/**/*.js',
 		'app/controls/comboBox/values/**/*.js',
 		'app/controls/dataGrid/**/*.js',
+		'app/controls/dataNavigation/buttons/*.js',
 		'app/controls/dataNavigation/**/*.js',
 		'app/controls/label/commonView/*.js',
 		'app/controls/label/**/*.js',
