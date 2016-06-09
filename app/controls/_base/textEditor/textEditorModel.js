@@ -20,12 +20,19 @@ var TextEditorModel = Backbone.Model.extend({
             if (mode === this.Mode.Edit) {
                 var editMask = model.getEditMask();
 
-                if (editMask.getIsComplete()) {
+                //if (editMask.getIsComplete()) {
                     var value = editMask ?  editMask.getData() : text;
-                    model.set('value', value);
-                }
+
+                    model.set('value', model.convertValue(value));
+                //}
             }
         });
+    },
+
+    convertValue: function (value) {
+        var converter = this.get('valueConverter');
+
+        return (typeof converter === 'function') ? converter.call(this, value) : value;
     },
 
     initEditMode: function () {
@@ -97,6 +104,18 @@ var TextEditorModel = Backbone.Model.extend({
 
     getValue: function () {
         return this.get('value');
+        //
+        //
+        //var editMask = this.getEditMask();
+        //var value;
+        //
+        //if (editMask) {
+        //    value = editMask.getValue()
+        //} else {
+        //    value = this.$el.val();
+        //}
+
+        //return value;
     },
 
     getDisplayFormat: function () {
@@ -110,13 +129,8 @@ var TextEditorModel = Backbone.Model.extend({
     validate: function (attrs, options) {
 
         //@TODO Если меняется Mode Edit => Display, проверить введенное значение!!!
-        var validateValue = this.get('validateValue');
-        var value = this.get('value');
-        var editMask = this.getEditMask();
-
-        if (editMask && !editMask.getIsComplete()) {
-            return "Значение не заполнено";
-        }
+        var validateValue = this.get('validateValue'),
+            value = this.getValue();
 
         if (_.isFunction(validateValue)) {
             return validateValue.call(null, value);
@@ -134,6 +148,7 @@ var TextEditorModel = Backbone.Model.extend({
 
     onChangeOriginalValueHandler: function (model, originalValue) {
         model.set('value', originalValue, {originalValue: true});
+        this.updateText();
     }
 
 });

@@ -106,18 +106,6 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
         }
     },
 
-    /**
-     * Используется миксином textEditorMixin
-     * @param value
-     * @returns {boolean}
-     */
-    onEditorValidate: function (value) {
-        var model = this.model;
-        
-        return InfinniUI.DateUtils.checkRangeDate(value, model.get('minValue'), model.get('maxValue'));
-    },
-
-
     getTemplate: function () {
         throw new Error('Не перекрыт getTemplate');
     },

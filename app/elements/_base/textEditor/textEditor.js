@@ -32,6 +32,11 @@ TextEditor.prototype.setValidatorValue = function (validatorValue) {
     return this;
 };
 
+TextEditor.prototype.setValueConverter = function (converter) {
+    this._model.set('valueConverter', converter);
+    return this;
+};
+
 /**
  *
  * @param {HTMLInputElement} inputElement
@@ -52,7 +57,7 @@ TextEditor.prototype.setValue = function (value) {
     return this;
 };
 
-TextEditor.prototype.onChangeValue = function (handler) {
+TextEditor.prototype.onValueChanged = function (handler) {
     this._model.on('change:originalValue', function (model, value, options) {
         if (options.originalValue === true) {
             return;

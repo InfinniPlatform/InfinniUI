@@ -1,7 +1,6 @@
 /**
  * @class TextEditorBaseView
  * @augments ControlView
- * @mixes textEditorMixin
  * @mixed editorBaseViewMixin
  */
 
@@ -81,14 +80,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         var model = this.model;
         var editor = model.get('editor');
         editor.render(this.ui.editor);
-        //var $editor = editor.render(editorTemplate);
-        //this.ui.editor.replaceWith($editor);
-
-        model.on('change:value', function (model, value) {
-            editor.setValue(value);
-        });
-
-        editor.setValue(model.get('value'));
     },
 
     getData: function () {
@@ -101,10 +92,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
                 labelFloating: model.get('labelFloating'),
                 value: this.getDisplayValue()
             });
-    },
-
-    onEditorValidate: function (value) {
-        return true;
     },
 
     getDisplayValue: function () {

@@ -4,6 +4,8 @@ var TextEditorView = Backbone.View.extend({
      * @member {TextEditorModel} model
      */
 
+    classNameError: 'has-error',
+
     events: {
         'focusin': 'onFocusinHandler',
         'focusout': 'onFocusoutHandler',
@@ -16,11 +18,28 @@ var TextEditorView = Backbone.View.extend({
         'dragend': 'OnDragendHandler',
         'dragover': 'OnDragoverHandler',
         'dragleave': 'OnDragleaveHandler',
-        'paste': 'onPasteHandler'
+        'paste': 'onPasteHandler',
+        'input': 'onInputHandler'
+    },
+
+    onInputHandler: function () {
+        var editMask = this.model.getEditMask();
+        if (editMask) {
+            return;
+        }
+
+        this.model.setText(this.$el.val());
     },
 
     onKeydownHandler: function (event) {
         if (event.ctrlKey || event.altKey) {
+            return;
+        }
+
+
+        if (event.which === InfinniUI.Keyboard.KeyCode.ESCAPE) {
+            //Отменить изменения и выйти из режима редактирования
+            this.model.setDisplayMode(true, false);
             return;
         }
 
@@ -33,11 +52,6 @@ var TextEditorView = Backbone.View.extend({
         var position;
 
         switch (event.which) {
-            case InfinniUI.Keyboard.KeyCode.ESCAPE:
-                //Отменить изменения и выйти из режима редактирования
-                this.model.setDisplayMode(true, false);
-                break;
-
             case InfinniUI.Keyboard.KeyCode.HOME:
                 if (!event.shiftKey) {
                     position = editMask.moveToPrevChar(0);
@@ -71,7 +85,7 @@ var TextEditorView = Backbone.View.extend({
 
             case InfinniUI.Keyboard.KeyCode.END:
                 if (!event.shiftKey) {
-                    position = editMask.moveToNextChar(this.getInput().val().length);
+                    position = editMask.moveToNextChar(this.$el.val().length);
                     if (position !== false) {
                         event.preventDefault();
                         this.setCaretPosition(position);
@@ -330,6 +344,11 @@ var TextEditorView = Backbone.View.extend({
     initialize: function () {
         this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
         this.listenTo(this.model, 'change:text', this.onChangeTextHandler);
+        this.listenTo(this.model, 'invalid', this.onInvalidHandler);
+    },
+
+    onInvalidHandler: function (model, error) {
+        this.$el.toggleClass(this.classNameError, true);
     },
 
     onFocusinHandler: function (/* event */) {
@@ -348,6 +367,7 @@ var TextEditorView = Backbone.View.extend({
     onChangeTextHandler: function (model, text) {
         var $input = this.$el;
 
+        $input.toggleClass(this.classNameError, false);
         $input.val(text);
         if ($input.is(':focus')) {
             this.checkCurrentPosition();

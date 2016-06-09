@@ -36,19 +36,24 @@ _.extend(TextEditorBaseBuilder.prototype, {
         editor
             .setDisplayFormat(element.getDisplayFormat())
             .setEditMask(element.getEditMask())
+            .setValueConverter(element.convertValue.bind(element))
             .setValidatorValue(element.validateValue.bind(element));
 
         element.setEditor(editor);
 
-        editor.onChangeValue(function (value) {
+        editor.onValueChanged(function (value) {
+            //element.setValue(element.convertValue(value));
             element.setValue(value);
+        });
+
+        element.onValueChanged(function (context, args) {
+            editor.setValue(args.newValue);
         });
 
         return this;
     },
 
     initDisplayFormat: function (params) {
-
         var
             metadata = params.metadata,
             format = this.buildDisplayFormat(metadata.DisplayFormat, params);

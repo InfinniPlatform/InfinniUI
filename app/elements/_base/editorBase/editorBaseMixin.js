@@ -52,6 +52,10 @@ var editorBaseMixin = {
 
     },
 
+    convertValue: function (value) {
+        return value;
+    },
+
     onValueChanging:  function (handler) {
         this.control.onValueChanging(
             this.createControlEventHandler(this, handler, {property: 'value'})

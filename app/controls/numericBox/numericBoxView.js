@@ -14,8 +14,8 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'focus .pl-numeric-box-input': 'onFocusControlHandler',
-        'mouseenter .pl-numeric-box-input': 'onMouseenterControlHandler',
+        //'focus .pl-numeric-box-input': 'onFocusControlHandler',
+        //'mouseenter .pl-numeric-box-input': 'onMouseenterControlHandler',
         'click .pl-numeric-box-min': 'onClickMinControlHandler',
         'click .pl-numeric-box-max': 'onClickMaxControlHandler',
         'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
@@ -45,16 +45,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     renderNumericBoxEditor: function () {
-        var model = this.model;
-
-        this.renderControlEditor({
-            el: this.ui.editor,
-            multiline: false,
-            lineCount: 1,
-            inputType: model.get('inputType')
-        });
-
-        return this;
+        this.renderControlEditor();
     },
 
     onChangeEnabledHandler: function (model, value) {
@@ -97,22 +88,13 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.ui.control.attr('tabindex', -1);
-        } else {
-            this.ui.control.removeAttr('tabindex');
-        }
-    },
-
-    /**
-     * Используется миксином textEditorMixin
-     * @param value
-     * @returns {boolean}
-     */
-    onEditorValidate: function (value) {
-        return this.model.validateValue(value);
+        //var focusable = this.model.get('focusable');
+        //
+        //if (!focusable) {
+        //    this.ui.control.attr('tabindex', -1);
+        //} else {
+        //    this.ui.control.removeAttr('tabindex');
+        //}
     }
 
 });
