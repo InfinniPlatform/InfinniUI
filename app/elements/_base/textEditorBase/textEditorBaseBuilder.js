@@ -50,6 +50,8 @@ _.extend(TextEditorBaseBuilder.prototype, {
             editor.setValue(args.newValue);
         });
 
+        editor.setValue(element.getValue());
+
         return this;
     },
 

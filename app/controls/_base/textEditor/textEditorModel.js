@@ -19,12 +19,8 @@ var TextEditorModel = Backbone.Model.extend({
             var mode = model.get('mode');
             if (mode === this.Mode.Edit) {
                 var editMask = model.getEditMask();
-
-                //if (editMask.getIsComplete()) {
-                    var value = editMask ?  editMask.getData() : text;
-
-                    model.set('value', model.convertValue(value));
-                //}
+                var value = editMask ?  editMask.getData() : text;
+                model.set('value', model.convertValue(value), {silent: true});
             }
         });
     },

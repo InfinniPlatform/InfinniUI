@@ -41,9 +41,8 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     },
 
     updateLineCount: function(){
-        //var lineCount = this.model.get('lineCount');
-        //this.ui.control.attr('rows', lineCount);
-        //this.ui.editor.attr('rows', lineCount);
+        var lineCount = this.model.get('lineCount');
+        this.ui.editor.attr('rows', lineCount);
     },
 
     updateFocusable: function () {

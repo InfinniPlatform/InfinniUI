@@ -65,6 +65,42 @@
                     "ColumnSpan": 6,
                     "Items": [
                       {
+                        "DatePicker": {
+                          "Value": {
+                            "Source": "ds1",
+                            "Property": "0.date2"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Cell": {
+                    "ColumnSpan": 6,
+                    "Items": [
+                      {
+                        "Label": {
+                          "Value": {
+                            "Source": "ds1",
+                            "Property": "0.date2"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Row": {
+              "Items": [
+                {
+                  "Cell": {
+                    "ColumnSpan": 6,
+                    "Items": [
+                      {
                         "DateTimePicker": {
                           "Mode": "DateTime",
                           "DisplayFormat": "{:g}",

@@ -406,7 +406,8 @@ _.extend(TemplateEditMask.prototype, {
      * @param position
      */
     setCharAt: function (char, position, len) {
-        var itemTemplate = this.getItemTemplate();
+        var itemTemplate = this.template;
+        //var itemTemplate = this.getItemTemplate(position);
         var mask;
         var text;
 

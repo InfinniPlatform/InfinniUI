@@ -79,7 +79,9 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     renderControlEditor: function () {
         var model = this.model;
         var editor = model.get('editor');
-        editor.render(this.ui.editor);
+        if (editor) {
+            editor.render(this.ui.editor);
+        }
     },
 
     getData: function () {
