@@ -63,6 +63,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('suspendingList', []);
         this.set('waitingOnUpdateItemsHandlers', []);
         this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
+
+        _.extend( this, BaseDataSource.identifyingStrategy.byId);
     },
 
     initDataProvider: function () {
