@@ -377,7 +377,6 @@ this.Then(/^я увижу в таблице "([^"]*)" строку под ном
 
                 var cellText = $cells
                     .eq(i)
-                    .find('.pl-label:visible')
                     .text()
                     .trim();
 
