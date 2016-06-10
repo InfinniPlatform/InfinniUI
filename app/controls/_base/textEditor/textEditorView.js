@@ -18,6 +18,7 @@ var TextEditorView = Backbone.View.extend({
         'dragend': 'OnDragendHandler',
         'dragover': 'OnDragoverHandler',
         'dragleave': 'OnDragleaveHandler',
+        'dragenter': 'OnDragenterHandler',
         'paste': 'onPasteHandler',
         'input': 'onInputHandler'
     },
@@ -219,7 +220,9 @@ var TextEditorView = Backbone.View.extend({
 
     },
 
-    OnDragstartHandler: function (/*event*/) {
+    OnDragstartHandler: function (event) {
+        var originalEvent = event.originalEvent;
+        originalEvent.dataTransfer.effectAllowed = 'copy';
         this.$el.attr('data-dragged', true);
     },
 
@@ -229,22 +232,27 @@ var TextEditorView = Backbone.View.extend({
 
     OnDragoverHandler: function (event) {
         event.preventDefault();
-        event.stopPropagation();
+    },
 
-        //var originalEvent = event.originalEvent;
-        this.model.setEditMode();
+    OnDragenterHandler: function (event) {
+        var dragged = this.$el.attr('data-dragged');
+
+        if (!dragged) {
+            this.model.setEditMode();
+        }
     },
 
     OnDragleaveHandler: function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.model.setDisplayMode();
+        var dragged = this.$el.attr('data-dragged');
+
+        if (!dragged) {
+            this.model.setDisplayMode();
+        }
     },
 
     onDropHandler: function (event) {
         event.preventDefault();
         event.stopPropagation();
-
         var dragged = this.$el.attr('data-dragged');
 
         if (dragged) {  //prevent drop on self
@@ -254,9 +262,10 @@ var TextEditorView = Backbone.View.extend({
         var originalEvent = event.originalEvent;
         var text = originalEvent.dataTransfer.getData('text/plain');
 
-        this.textTyping(text, 0);
 
-        this.model.setDisplayMode();
+        //@TODO disabled = "disabled"
+        this.textTyping(text, 0);
+        this.$el.focus();
     },
 
     /**
@@ -369,8 +378,14 @@ var TextEditorView = Backbone.View.extend({
 
         $input.toggleClass(this.classNameError, false);
         $input.val(text);
-        if ($input.is(':focus')) {
-            this.checkCurrentPosition();
+
+        var editMask = this.model.getEditMask();
+
+        if (editMask) {
+            //$input.val(text);
+            if ($input.is(':focus')) {
+                this.checkCurrentPosition();
+            }
         }
 
     }
