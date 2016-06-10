@@ -16,11 +16,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     }),
 
     events: {
-        //Обработчик для показа поля редактирования с использованием маски ввода
-        'focus .pl-text-box-input': 'onFocusControlHandler',
-        'mouseenter .pl-text-box-input': 'onMouseenterControlHandler'
 
-        //@TODO Генерация событий GotFocus/LostFocus должна происходить с учетом что происходит подмена контролов
     },
 
     initialize: function () {
@@ -42,6 +38,20 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         editorBaseViewMixin.updateProperties.call(this);
 
         this.updateLabelText();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.ui.editor.attr('tabindex', -1);
+        } else {
+            this.ui.editor.removeAttr('tabindex');
+        }
+    },
+
+    setFocus: function () {
+        this.ui.editor.focus();
     },
 
     updateValue: function(){

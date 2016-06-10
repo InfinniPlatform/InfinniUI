@@ -64,16 +64,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.ui.input.val(value);
     },
 
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.ui.input.attr('tabindex', -1);
-        } else {
-            this.ui.input.removeAttr('tabindex');
-        }
-    },
-
     updateEnabled: function () {
         ControlView.prototype.updateEnabled.call(this);
 

@@ -14,13 +14,7 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     UI: _.extend({}, TextEditorBaseView.prototype.UI),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        ////Отображение поля редактирования для INPUT[TEXT]
-        //'focus .pl-text-box-input': 'onFocusControlHandler',
-        //'mouseenter .pl-text-box-input': 'onMouseenterControlHandler',
-        //
-        ////Отображение поля редактирования для TEXTAREA
-        //'focus .pl-text-area-input': 'onFocusControlHandler',
-        //'mouseenter .pl-text-area-input': 'onMouseenterControlHandler'
+
     }),
 
     initHandlersForProperties: function(){
@@ -43,16 +37,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
     updateLineCount: function(){
         var lineCount = this.model.get('lineCount');
         this.ui.editor.attr('rows', lineCount);
-    },
-
-    updateFocusable: function () {
-        //var focusable = this.model.get('focusable');
-        //
-        //if (!focusable) {
-        //    this.ui.control.attr('tabindex', -1);
-        //} else {
-        //    this.ui.control.removeAttr('tabindex');
-        //}
     },
 
     render: function () {
@@ -85,10 +69,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
     renderTextBoxEditor: function () {
         this.renderControlEditor();
-    },
-
-    setFocus: function () {
-        this.ui.textbox.focus();
     }
 
 });

@@ -237,7 +237,7 @@ var TextEditorView = Backbone.View.extend({
     OnDragenterHandler: function (event) {
         var dragged = this.$el.attr('data-dragged');
 
-        if (!dragged) {
+        if (!dragged && this.getCanChange()) {
             this.model.setEditMode();
         }
     },
@@ -259,13 +259,25 @@ var TextEditorView = Backbone.View.extend({
             return;
         }
 
+        if (!this.getCanChange()) {
+            return;
+        }
+
         var originalEvent = event.originalEvent;
         var text = originalEvent.dataTransfer.getData('text/plain');
 
 
-        //@TODO disabled = "disabled"
+
         this.textTyping(text, 0);
         this.$el.focus();
+    },
+
+    getCanChange: function () {
+        var
+            disabled = this.$el.prop('disabled'),
+            readonly = this.$el.prop('readonly');
+
+        return disabled === false && readonly === false;
     },
 
     /**
@@ -370,7 +382,6 @@ var TextEditorView = Backbone.View.extend({
 
     onChangeModeHandler: function (model, mode) {
         this.checkCurrentPosition();
-        console.log(mode);
     },
 
     onChangeTextHandler: function (model, text) {

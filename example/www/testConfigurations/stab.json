@@ -66,6 +66,8 @@
                     "Items": [
                       {
                         "DatePicker": {
+                          "Enabled": false,
+
                           "Value": {
                             "Source": "ds1",
                             "Property": "0.date2"
@@ -185,6 +187,7 @@
                           "LabelText": "One line input[type=text]",
                           "Multiline": false,
                           "DisplayFormat": "{:F}",
+                          "Focusable": false,
                           "EditMask": {
                             "DateTimeEditMask": {
                               "Mask": "dd----MM----yyyy"
@@ -272,6 +275,7 @@
                         "NumericBox": {
                           "MinValue": 0,
                           "MaxValue": 10,
+                          "Enabled": false,
                           "EditMask": {
                             "NumberEditMask": {
                               "Mask": "n0"

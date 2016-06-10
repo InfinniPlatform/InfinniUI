@@ -15,8 +15,6 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'focus .pl-datepicker-input': 'onFocusControlHandler',
-        'mouseenter .pl-datepicker-input': 'onMouseenterControlHandler',
         'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     }),
 
@@ -94,16 +92,6 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
         var model = this.model;
         this.renderControlEditor();
         return this;
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.ui.control.attr('tabindex', -1);
-        } else {
-            this.ui.control.removeAttr('tabindex');
-        }
     },
 
     getTemplate: function () {

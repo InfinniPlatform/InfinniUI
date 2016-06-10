@@ -14,8 +14,6 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        //'focus .pl-numeric-box-input': 'onFocusControlHandler',
-        //'mouseenter .pl-numeric-box-input': 'onMouseenterControlHandler',
         'click .pl-numeric-box-min': 'onClickMinControlHandler',
         'click .pl-numeric-box-max': 'onClickMaxControlHandler',
         'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
@@ -55,19 +53,27 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     onClickMinControlHandler: function () {
-        this.model.decValue();
+        if (this.canChangeValue()) {
+            this.model.decValue();
+        }
     },
 
     onClickMaxControlHandler: function () {
-        this.model.incValue();
+        if (this.canChangeValue()) {
+            this.model.incValue();
+        }
     },
 
     onMousedownMinControlHandler: function (event) {
-        this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        }
     },
 
     onMousedownMaxControlHandler: function (event) {
-        this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        }
     },
 
     repeatUpdateValue: function (cb) {
@@ -87,14 +93,12 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
 
     },
 
-    updateFocusable: function () {
-        //var focusable = this.model.get('focusable');
-        //
-        //if (!focusable) {
-        //    this.ui.control.attr('tabindex', -1);
-        //} else {
-        //    this.ui.control.removeAttr('tabindex');
-        //}
+    canChangeValue: function () {
+        var model = this.model,
+            readonly = model.get('readOnly'),
+            enabled = model.get('enabled');
+
+        return readonly === false && enabled === false;
     }
 
 });
