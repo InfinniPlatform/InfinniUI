@@ -52,3 +52,5 @@ var ControlModel = Backbone.Model.extend({
     }
 
 });
+
+InfinniUI.ControlModel = ControlModel;

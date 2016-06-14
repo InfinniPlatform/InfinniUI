@@ -37,3 +37,5 @@ function MetadataDataSourceProvider(urlConstructor, successCallback, failCallbac
         new RequestExecutor(resultCallback, successCallback, failCallback).makeRequest(urlConstructor.constructMetadataRequest());
     };
 }
+
+window.InfinniUI.Providers.MetadataDataSourceProvider = MetadataDataSourceProvider;

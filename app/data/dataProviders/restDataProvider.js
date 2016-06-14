@@ -221,3 +221,5 @@ _.extend(RestDataProvider.prototype, {
 
 
 });
+
+window.InfinniUI.Providers.RestDataProvider = RestDataProvider;

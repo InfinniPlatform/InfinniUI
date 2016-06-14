@@ -1178,3 +1178,5 @@ BaseDataSource.identifyingStrategy = {
 };
 
 _.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
+
+InfinniUI.BaseDataSource = BaseDataSource;

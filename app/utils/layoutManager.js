@@ -303,3 +303,5 @@ var layoutManager = {
         this.resizeDialog();
     }
 };
+
+window.InfinniUI.LayoutManager = layoutManager;

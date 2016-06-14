@@ -11,3 +11,5 @@ var ObjectDataSource = BaseDataSource.extend({
     }
 
 });
+
+InfinniUI.ObjectDataSource = ObjectDataSource;

@@ -45,3 +45,5 @@ _.extend(ObjectDataSourceBuilder.prototype, {
     //    dataSource.setFileProvider(fileProvider);
     //}
 });
+
+InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;

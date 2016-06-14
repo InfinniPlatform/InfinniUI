@@ -286,3 +286,5 @@ var RestDataSource = BaseDataSource.extend({
     }
 
 });
+
+InfinniUI.RestDataSource = RestDataSource;

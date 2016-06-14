@@ -61,3 +61,5 @@ function QueryConstructorMetadata(host,metadata){
     };
 
 }
+
+window.InfinniUI.Providers.QueryConstructorMetadata = QueryConstructorMetadata;

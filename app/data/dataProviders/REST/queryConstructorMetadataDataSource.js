@@ -45,3 +45,5 @@
 
 
 }
+
+window.InfinniUI.Providers.QueryConstructorMetadataDataSource = QueryConstructorMetadataDataSource;

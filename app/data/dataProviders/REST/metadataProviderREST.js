@@ -30,3 +30,5 @@ function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallb
         this.cache = cache;
     }
 }
+
+window.InfinniUI.Providers.MetadataProviderREST = MetadataProviderREST;

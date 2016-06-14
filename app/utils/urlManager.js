@@ -69,3 +69,5 @@ var urlManager = {
         };
     }
 };
+
+window.InfinniUI.UrlManager = urlManager;

@@ -111,3 +111,4 @@ _.extend(Control.prototype, {
     }
 });
 
+InfinniUI.Control = Control;

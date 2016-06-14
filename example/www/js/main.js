@@ -9,7 +9,7 @@ moment.locale('ru');
     var host = InfinniUI.config.serverUrl;
 
     //Регистрация провайдера для работы с прикрепленными к документам файлами
-    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+    InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
         var params = {
             documentId: metadata.documentId,
             configId: metadata.configId
@@ -18,14 +18,14 @@ moment.locale('ru');
         return new DocumentFileProvider(urlConstructor);
     });
 
-    window.InfinniUI.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
+    InfinniUI.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
-    window.InfinniUI.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+    InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
-    setTimeout(layoutManager.init.bind(layoutManager), 1000);
-    window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
+    setTimeout(InfinniUI.LayoutManager.init.bind(InfinniUI.LayoutManager), 1000);
+    InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
             setTimeout(function () {
@@ -33,26 +33,26 @@ moment.locale('ru');
             }, 500 + i * 300);
         }
 
-        return new MetadataProviderREST(new QueryConstructorMetadata(host, metadataValue));
+        return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(host, metadataValue));
     });
 
-    window.InfinniUI.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
-        return new MetadataDataSourceProvider(new QueryConstructorMetadataDataSource(host, metadataValue));
+    InfinniUI.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
+        return new InfinniUI.Providers.MetadataDataSourceProvider(new InfinniUI.Providers.QueryConstructorMetadataDataSource(host, metadataValue));
     });
 
-    window.InfinniUI.providerRegister.register('DocumentDataSource', RestDataProvider);
-    window.InfinniUI.providerRegister.register('RestDataSource', RestDataProvider);
+    InfinniUI.providerRegister.register('DocumentDataSource', InfinniUI.Providers.RestDataProvider);
+    InfinniUI.providerRegister.register('RestDataSource', InfinniUI.Providers.RestDataProvider);
 
-     window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
-             return new ServerActionProvider();
+     InfinniUI.providerRegister.register('ServerActionProvider', function () {
+             return new InfinniUI.Providers.ServerActionProvider();
      });
 
 
-    var builder = new ApplicationBuilder(),
+    var builder = new InfinniUI.ApplicationBuilder(),
         rootView = new SpecialApplicationView(),
         mainView;
 
-    window.InfinniUI.global.messageBus.subscribe('onViewCreated', function (context, args) {
+    InfinniUI.global.messageBus.subscribe('onViewCreated', function (context, args) {
         if(args.value.openMode == 'Default') {
             window.contextApp = args.value.view;
         }

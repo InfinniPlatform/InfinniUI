@@ -77,3 +77,5 @@ _.extend(ObjectDataProvider.prototype, {
         return guid();
     }
 });
+
+window.InfinniUI.Providers.ObjectDataProvider = ObjectDataProvider;
