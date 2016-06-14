@@ -38,7 +38,7 @@ describe('ObjectDataSource', function () {
         }
     ];
 
-    window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+    window.InfinniUI.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
     function createObjectDataSource(metadata){
 

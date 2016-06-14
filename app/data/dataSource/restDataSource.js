@@ -39,7 +39,7 @@ var RestDataSource = BaseDataSource.extend({
     },
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('RestDataSource');
+        var dataProvider = window.InfinniUI.providerRegister.build('RestDataSource');
         this.set('dataProvider', dataProvider);
     },
 

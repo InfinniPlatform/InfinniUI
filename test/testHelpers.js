@@ -29,10 +29,10 @@ function fakeApplicationView(){
 }
 
 //Эта хрень по идее из платформы должна приходить, а она в лаунчере
-window.providerRegister.register('MetadataDataSource', function (metadataValue) {
+window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
     return new MetadataProviderREST(new QueryConstructorMetadata('', metadataValue));
 });
 
-window.providerRegister.register('DocumentDataSource', function (metadataValue) {
+window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
     return new DataProviderREST(metadataValue, new QueryConstructorStandard('', metadataValue));
 });

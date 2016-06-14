@@ -9,7 +9,7 @@ moment.locale('ru');
     var host = InfinniUI.config.serverUrl;
 
     //Регистрация провайдера для работы с прикрепленными к документам файлами
-    window.providerRegister.register('DocumentFileProvider', function (metadata) {
+    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
         var params = {
             documentId: metadata.documentId,
             configId: metadata.configId
@@ -18,14 +18,14 @@ moment.locale('ru');
         return new DocumentFileProvider(urlConstructor);
     });
 
-    window.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
+    window.InfinniUI.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
         return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
     });
 
-    window.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+    window.InfinniUI.providerRegister.register('ObjectDataSource', ObjectDataProvider);
 
     setTimeout(layoutManager.init.bind(layoutManager), 1000);
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
+    window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
             setTimeout(function () {
@@ -36,14 +36,14 @@ moment.locale('ru');
         return new MetadataProviderREST(new QueryConstructorMetadata(host, metadataValue));
     });
 
-    window.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
+    window.InfinniUI.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
         return new MetadataDataSourceProvider(new QueryConstructorMetadataDataSource(host, metadataValue));
     });
 
-    window.providerRegister.register('DocumentDataSource', RestDataProvider);
-    window.providerRegister.register('RestDataSource', RestDataProvider);
+    window.InfinniUI.providerRegister.register('DocumentDataSource', RestDataProvider);
+    window.InfinniUI.providerRegister.register('RestDataSource', RestDataProvider);
 
-     window.providerRegister.register('ServerActionProvider', function () {
+     window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
              return new ServerActionProvider();
      });
 

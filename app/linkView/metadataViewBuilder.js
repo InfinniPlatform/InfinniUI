@@ -33,7 +33,7 @@ _.extend(MetadataViewBuilder.prototype, {
         var that = this;
 
         return function (onViewReadyHandler) {
-            var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
+            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
 
             metadataProvider.getViewMetadata(function (viewMetadata) {
                 that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
