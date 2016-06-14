@@ -29,7 +29,7 @@ moment.locale('ru');
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
             setTimeout(function () {
-                layoutManager.init();
+                InfinniUI.LayoutManager.init();
             }, 500 + i * 300);
         }
 
