@@ -195,14 +195,19 @@ describe('ViewBuilder', function () {
 
         dataSources.forEach(function(ds){
             ds.onItemsUpdated(function(context, args){ updatedDataSources.push(args.source.name); });
+        });
+
+        ds4.onItemsUpdated(onDataSourcesReady);
+
+        dataSources.forEach(function(ds){
             ds.updateItems();
         });
 
         // Then
-        ds4.onItemsUpdated(function(){
+        function onDataSourcesReady(){
             assert.deepEqual(updatedDataSources, ['ds3', 'ds2', 'ds5', 'ds1', 'ds4'], 'priority ds must be resolved before nonpriority');
             done();
-        });
+        }
     });
 
 
