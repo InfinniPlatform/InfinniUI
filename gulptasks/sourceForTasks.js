@@ -28,7 +28,7 @@ const sourceForTasks = {
 	},
 	concatJsProd: {
 		src: sourceForFiles.jsFiles,
-		finalName: "prodApp.js",
+		finalName: "platform.min.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatJsProd"
 	},
