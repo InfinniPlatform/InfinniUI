@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "node httpserver.js",
-    "example": "bower install && grunt build && cd example && build && cd .."
+    "example": "bower install && grunt build && cd example && build && cd ..",
+    "build": "npm i && bower i && grunt build"
   }
 }
