@@ -33,10 +33,6 @@ _.extend(TreeModel.prototype, {
         return true;
     },
 
-    simulateSetProperty: function(propertyName, oldValue){
-        this._notifyAboutPropertyChanged(propertyName, oldValue);
-    },
-
     onPropertyChanged: function(propertyName, handler, params){
         var handlersNode;
         var bindId = this.counter + '-bindId';
