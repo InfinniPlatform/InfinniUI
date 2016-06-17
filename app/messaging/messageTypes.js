@@ -1,4 +1,7 @@
 window.messageTypes = {
+
+    onViewBuildError: {name: 'onViewBuildError'},
+    onViewCreated: {name: 'onViewCreated'},
     onViewOpened: { name: 'onViewOpened' },
     onViewClosed: { name: 'onViewClosed' },
     onViewClosing: {name: 'onViewClosing'},
@@ -30,9 +33,7 @@ window.messageTypes = {
     onOpenContextMenu: {name: 'onOpenContextMenu'},
 
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'},
-
-    onViewCreated: {name: 'onViewCreated'}
+    onDataLoaded: {name: 'onDataLoaded'}
 
     //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
 
