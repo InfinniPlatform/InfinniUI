@@ -41,6 +41,7 @@
   "scripts": {
     "start": "node httpserver.js",
     "build": "npm i && bower i && gulp build",
-    "example": "bower install && gulp build && cd example && build && cd .."
+    "example": "bower install && gulp build && cd example && build && cd ..",
+    "run-tests": "gulp runTests"
   }
 }
