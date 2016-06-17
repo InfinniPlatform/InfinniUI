@@ -3,7 +3,7 @@ function IndeterminateCheckboxControl(parent) {
 	this.initialize_editorBaseControl();
 }
 
-_.inherit(IndeterminateCheckboxControl, Control);
+_.inherit(IndeterminateCheckboxControl, CheckBoxControl);
 
 _.extend(IndeterminateCheckboxControl.prototype, {
 
