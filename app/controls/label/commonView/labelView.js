@@ -125,4 +125,4 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
 }));
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Label.viewModes.common', CommonLabelView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Label.common', CommonLabelView);

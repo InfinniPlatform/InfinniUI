@@ -48,4 +48,4 @@ var MenuItemButtonView = LinkButtonView.extend({
 
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.menuItem', MenuItemButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.menuItem', MenuItemButtonView);

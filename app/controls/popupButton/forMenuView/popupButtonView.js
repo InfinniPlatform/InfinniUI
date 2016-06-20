@@ -176,4 +176,4 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
 
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'PopupButton.viewModes.forMenu', ForMenuPopupButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.PopupButton.forMenu', ForMenuPopupButtonView);

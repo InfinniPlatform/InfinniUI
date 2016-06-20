@@ -27,4 +27,4 @@ var SimpleLabelView = CommonLabelView.extend({
 
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Label.viewModes.simple', SimpleLabelView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Label.simple', SimpleLabelView);

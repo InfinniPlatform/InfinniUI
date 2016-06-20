@@ -67,4 +67,4 @@ var LinkButtonView = CommonButtonView.extend({
 
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.link', LinkButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.link', LinkButtonView);

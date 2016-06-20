@@ -24,5 +24,9 @@ _.extend(ExtensionPanel.prototype, {
 
     setContext: function (context) {
         this.control.set('context', context);
+    },
+
+    setBuilder: function (builder) {
+        this.control.set('builder', builder);
     }
 });
