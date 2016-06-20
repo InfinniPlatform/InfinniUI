@@ -7,7 +7,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     hiddenClassName: 'hidden',
 
     initialize: function () {
-        var exchange = window.InfinniUI.global.messageBus;
         this.listenTo(this.model, 'change:progress', this.updateProgress);
     },
 
