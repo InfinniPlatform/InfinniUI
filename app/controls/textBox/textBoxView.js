@@ -28,12 +28,14 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
 
         this.listenTo(this.model, 'change:multiline', this.updateMultiline);
         this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
+        this.listenTo(this.model, 'change:type', this.updateType);
     },
 
     updateProperties: function(){
         TextEditorBaseView.prototype.updateProperties.call(this);
 
         this.updateLineCount();
+        this.updateType();
     },
 
     updateMultiline: function(){
@@ -44,6 +46,12 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         var lineCount = this.model.get('lineCount');
         this.ui.control.attr('rows', lineCount);
         this.ui.editor.attr('rows', lineCount);
+    },
+
+    updateType: function () {
+        var type = this.model.get('type');
+        this.ui.control.attr('type', type);
+        this.ui.editor.find('.pl-control-editor').attr('type', type);
     },
 
     updateFocusable: function () {

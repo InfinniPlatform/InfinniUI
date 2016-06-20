@@ -10,24 +10,34 @@ function TextBox(parent) {
 
 _.inherit(TextBox, TextEditorBase);
 
-TextBox.prototype.createControl = function (parent) {
-    return new TextBoxControl(parent);
-};
+_.extend(TextBox.prototype, {
+    createControl: function (parent) {
+        return new TextBoxControl(parent);
+    },
 
-TextBox.prototype.getMultiline = function () {
-    return this.control.get('multiline');
-};
+    getMultiline: function () {
+        return this.control.get('multiline');
+    },
 
-TextBox.prototype.setMultiline = function (value) {
-    this.control.set('multiline', value);
-};
+    setMultiline: function (value) {
+        this.control.set('multiline', value);
+    },
 
-TextBox.prototype.getLineCount = function () {
-    return this.control.get('lineCount');
-};
+    getLineCount: function () {
+        return this.control.get('lineCount');
+    },
 
-TextBox.prototype.setLineCount = function (value) {
-    this.control.set('lineCount', value);
-};
+    setLineCount: function (value) {
+        this.control.set('lineCount', value);
+    },
+
+    getType: function () {
+        return this.control.get('type');
+    },
+
+    setType: function (type) {
+        this.control.set('type', type);
+    }
+});
 
 
