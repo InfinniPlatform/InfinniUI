@@ -8,6 +8,7 @@ function TextEditorModelDisplayModeStrategy() {
 
 TextEditorModelDisplayModeStrategy.prototype = Object.create(TextEditorModelBaseModeStrategy.prototype);
 TextEditorModelDisplayModeStrategy.prototype.constructor = TextEditorModelDisplayModeStrategy;
+
 TextEditorModelDisplayModeStrategy.prototype.updateText = function (model) {
     var displayFormat = model.getDisplayFormat();
     var value = model.get('value');
@@ -21,4 +22,19 @@ TextEditorModelDisplayModeStrategy.prototype.updateText = function (model) {
     }
 
     model.set('text', text);
+};
+
+TextEditorModelDisplayModeStrategy.prototype.setText = function (model, text, ui) {
+    if (ui) {
+        //Изменение значения в поле ввода для режима просмотра - результат срабатывания автозаполнения браузера
+        console.log('autocomplete', text);
+        model.set('text', text, {ui: ui});
+    }
+};
+
+TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function (model, text, options) {
+    if (options.ui) {
+        model.set('value', model.convertValue(text));
+    }
+    model.applyChanges();
 };

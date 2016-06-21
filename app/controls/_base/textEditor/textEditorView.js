@@ -25,11 +25,10 @@ var TextEditorView = Backbone.View.extend({
 
     onInputHandler: function () {
         var editMask = this.model.getEditMask();
-        if (editMask) {
-            return;
-        }
 
-        this.model.setText(this.$el.val());
+        if (!editMask) {
+            this.model.setText(this.$el.val(), true);
+        }
     },
 
     onKeydownHandler: function (event) {
@@ -41,6 +40,7 @@ var TextEditorView = Backbone.View.extend({
         if (event.which === InfinniUI.Keyboard.KeyCode.ESCAPE) {
             //Отменить изменения и выйти из режима редактирования
             this.model.setDisplayMode(true, false);
+            this.$el.blur();
             return;
         }
 
@@ -363,9 +363,20 @@ var TextEditorView = Backbone.View.extend({
     },
 
     initialize: function () {
+        this.applyAutocomplete();
         this.listenTo(this.model, 'change:mode', this.onChangeModeHandler);
         this.listenTo(this.model, 'change:text', this.onChangeTextHandler);
         this.listenTo(this.model, 'invalid', this.onInvalidHandler);
+    },
+
+    /**
+     * @description Для элементов с маской ввода отключаем поддержку автозаполнения
+     */
+    applyAutocomplete: function () {
+        var editMask = this.model.getEditMask();
+        if (editMask) {
+            this.$el.attr('autocomplete', 'off');
+        }
     },
 
     onInvalidHandler: function (model, error) {

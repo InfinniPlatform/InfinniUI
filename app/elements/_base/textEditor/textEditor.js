@@ -53,7 +53,7 @@ TextEditor.prototype.render = function (inputElement) {
 };
 
 TextEditor.prototype.setValue = function (value) {
-    this._model.set('originalValue', value);
+    this._model.set('originalValue', value, {originalValue: true});
     return this;
 };
 

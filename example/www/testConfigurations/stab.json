@@ -17,6 +17,7 @@
             "Id": 1,
             "Title": "1",
             "Volume": "I",
+            "Email": "mail@mail.mail",
             "Date": "2016-05-16T12:32:00Z"
           },
           {
@@ -275,7 +276,7 @@
                         "NumericBox": {
                           "MinValue": 0,
                           "MaxValue": 10,
-                          "Enabled": false,
+                          "Enabled": true,
                           "EditMask": {
                             "NumberEditMask": {
                               "Mask": "n0"
@@ -374,6 +375,25 @@
                             "Source": "ds1",
                             "Property": "0.password"
                           }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Row": {
+              "Items": [
+                {
+                  "Cell": {
+                    "ColumnSpan": 12,
+                    "Items": [
+                      {
+                        "Button": {
+                          "Text": "submit",
+                          "OnClick": "{debugger; console.log(context);}"
                         }
                       }
                     ]

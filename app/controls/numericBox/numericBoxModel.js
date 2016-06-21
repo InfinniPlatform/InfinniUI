@@ -4,7 +4,9 @@
  */
 var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
     defaults: _.extend(
-        {},
+        {
+            readOnly: false
+        },
         TextEditorBaseModel.prototype.defaults,
         {
             increment: 1

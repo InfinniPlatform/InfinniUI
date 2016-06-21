@@ -23,3 +23,14 @@ TextEditorModelEditModeStrategy.prototype.updateText = function (model) {
 
     model.set('text', text);
 };
+
+TextEditorModelEditModeStrategy.prototype.setText = function (model, text, ui) {
+    model.set('text', text);
+};
+
+TextEditorModelEditModeStrategy.prototype.onChangeTextHandler = function (model, newValue, options) {
+    var editMask = model.getEditMask();
+    var value = editMask ?  editMask.getData() : newValue;
+    model.set('value', model.convertValue(value), {silent: !!editMask});
+};
+

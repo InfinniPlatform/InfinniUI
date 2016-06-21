@@ -43,6 +43,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
 
         editor.onValueChanged(function (value) {
             //element.setValue(element.convertValue(value));
+            console.log('editor.onValueChanged', value);
             element.setValue(value);
         });
 
