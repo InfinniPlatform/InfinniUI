@@ -11,8 +11,6 @@ DatePickerBuilder.prototype.createElement = function (params) {
 
 DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
 
-    DateTimePickerBuilder.prototype.applyDefaultMetadata.call(this, params);
-
     params.metadata = _.extend({}, params.metadata, {
         Mode: 'DatePicker',
         TimeZone: 0
