@@ -86,48 +86,14 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.prerenderingActions();
         this.renderTemplate(this.getTemplate());
 
-        //this.registerAutofillDetect();
-
         this.updateProperties();
 
         this.trigger('render');
         this.postrenderingActions();
         return this;
     },
-    //
-    //registerAutofillDetect: function () {
-    //    var $el = this.ui.input,
-    //        view = this,
-    //        model = this.model;
-    //
-    //    var value ;
-    //    var sec = 100;
-    //
-    //    listen();
-    //
-    //    function listen() {
-    //        view.autofillDetectTimeout = setTimeout(check, sec);
-    //    }
-    //
-    //    function check() {
-    //        var newValue = $el.val();
-    //        console.log($el[0], 'old:' + value + ', new: ' + newValue);
-    //        if(value !== newValue) {
-    //            value = newValue;
-    //            model.set('value', newValue);
-    //            console.log('check', value);
-    //        } else {
-    //            listen();
-    //        }
-    //    }
-    //},
-    //
-    //unregisterAutofillDetect: function () {
-    //    clearTimeout(this.autofillDetectTimeout);
-    //},
 
     remove: function () {
-        //this.unregisterAutofillDetect();
         ControlView.prototype.remove.call(this);
     },
 
@@ -153,7 +119,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     },
 
     onInputHandler: function () {
-        //this.unregisterAutofillDetect();
         this.updateModelValue();
     }
 
