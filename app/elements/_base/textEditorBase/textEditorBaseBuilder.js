@@ -36,14 +36,15 @@ _.extend(TextEditorBaseBuilder.prototype, {
         editor
             .setDisplayFormat(element.getDisplayFormat())
             .setEditMask(element.getEditMask())
-            .setValueConverter(element.convertValue.bind(element))
+            .setValueConverter(function () {
+                return element.convertValue.bind(element)
+            })
             .setValidatorValue(element.validateValue.bind(element));
 
         element.setEditor(editor);
 
         editor.onValueChanged(function (value) {
             //element.setValue(element.convertValue(value));
-            console.log('editor.onValueChanged', value);
             element.setValue(value);
         });
 

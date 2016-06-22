@@ -140,7 +140,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
     updateModelValue: function () {
         var value = this.ui.input.val();
         var model = this.model;
-        console.log('updateModelValue', value);
         model.set('value', value);
         model.set('rawValue', value);
     },

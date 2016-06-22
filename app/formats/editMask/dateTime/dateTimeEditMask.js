@@ -94,8 +94,10 @@ _.extend(DateTimeEditMask.prototype, {
         var text;
         var mask;
         var prevPos, pos = position, len = selectionLength;
-
         char = char || '';
+        var newPos = position + char.length - 1;
+
+
         while(data = this.getItemTemplate(pos)) {
             prevPos = pos;
             from = pos - data.left;
@@ -115,7 +117,7 @@ _.extend(DateTimeEditMask.prototype, {
             char = '';
         }
 
-        return this.moveToNextChar(position + char.length - 1);
+        return this.moveToNextChar(newPos);
     },
 
     /**

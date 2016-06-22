@@ -15,8 +15,10 @@ DateTimePickerBuilder.prototype.createElement = function (params) {
 
 DateTimePickerBuilder.prototype.applyMetadata = function (params) {
     var element = params.element;
-    var metadata = params.metadata;
+
     this.applyDefaultMetadata(params);
+    var metadata = params.metadata;
+
     TextEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
     element.setTimeZone(metadata.TimeZone);

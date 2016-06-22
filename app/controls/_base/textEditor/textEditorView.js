@@ -10,8 +10,8 @@ var TextEditorView = Backbone.View.extend({
         'focusin': 'onFocusinHandler',
         'focusout': 'onFocusoutHandler',
         'keydown': 'onKeydownHandler',
-        'keyup': 'onKeyupHandler',
-        'keypress': 'onKeypressHandler',
+        'change': 'onChangeHandler',
+        'keyup': 'onKeyupHandler',  //trigger OnKeyDown Event
         'click': 'onClickHandler',
         'drop': 'onDropHandler',
         'dragstart': 'OnDragstartHandler',
@@ -19,23 +19,27 @@ var TextEditorView = Backbone.View.extend({
         'dragover': 'OnDragoverHandler',
         'dragleave': 'OnDragleaveHandler',
         'dragenter': 'OnDragenterHandler',
-        'paste': 'onPasteHandler',
-        'input': 'onInputHandler'
+        'paste': 'onPasteHandler'
     },
 
-    onInputHandler: function () {
-        var editMask = this.model.getEditMask();
+    updateModelTextFromEditor: function () {
+        var model = this.model,
+            editMask = model.getEditMask();
 
         if (!editMask) {
-            this.model.setText(this.$el.val(), true);
+            model.setText(this.$el.val(), true);
         }
+    },
+
+    onChangeHandler: function () {
+        //Обработка для корректной обработки автозаполняемых полей
+        this.updateModelTextFromEditor();
     },
 
     onKeydownHandler: function (event) {
         if (event.ctrlKey || event.altKey) {
             return;
         }
-
 
         if (event.which === InfinniUI.Keyboard.KeyCode.ESCAPE) {
             //Отменить изменения и выйти из режима редактирования
@@ -46,6 +50,7 @@ var TextEditorView = Backbone.View.extend({
 
         var editMask = this.model.getEditMask();
         if (!editMask) {
+            setTimeout(this.updateModelTextFromEditor.bind(this), 0);
             return;
         }
 
@@ -53,6 +58,8 @@ var TextEditorView = Backbone.View.extend({
         var position;
 
         switch (event.which) {
+            case InfinniUI.Keyboard.KeyCode.TAB:
+                break;
             case InfinniUI.Keyboard.KeyCode.HOME:
                 if (!event.shiftKey) {
                     position = editMask.moveToPrevChar(0);
@@ -148,17 +155,19 @@ var TextEditorView = Backbone.View.extend({
 
             default:
                 //замена выделенного текста, по нажатию
-                var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
-
+                var char = event.key;
+                event.preventDefault();
                 if (this.getSelectionLength() > 0) {
-                    event.preventDefault();
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
-                    this.model.setText(editMask.getText());
-                    if (position !== false) {
-                        this.setCaretPosition(position);
-                    }
+                } else {
+                    //Ввод символа
+                    position = editMask.setCharAt(char, this.getCaretPosition(), this.getSelectionLength());
                 }
 
+                this.model.setText(editMask.getText());
+                if (position !== false) {
+                    this.setCaretPosition(position);
+                }
                 break;
         }
 
@@ -171,33 +180,6 @@ var TextEditorView = Backbone.View.extend({
             keyCode: event.which,
             value: this.model.getValue()
         });
-    },
-
-    onKeypressHandler: function (event) {
-        if (event.altKey || event.ctrlKey) {
-            return;
-        }
-
-        var editMask = this.model.getEditMask();
-        if (!editMask) {
-            return;
-        }
-
-        var char = InfinniUI.Keyboard.getCharByKeyCode(event.which);
-
-        var position;
-
-        if (char === null) {
-            return;
-        }
-
-        position = editMask.setCharAt(char, this.getCaretPosition(), this.getSelectionLength());
-        event.preventDefault();
-        this.model.setText(editMask.getText());
-
-        if (position !== false) {
-            this.setCaretPosition(position);
-        }
     },
 
     onClickHandler: function (event) {

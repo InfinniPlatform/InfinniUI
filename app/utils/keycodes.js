@@ -9,6 +9,7 @@ window.InfinniUI.Keyboard = {
         DOWN_ARROW: 40,
         DELETE: 46,
         BACKSPACE: 8,
+        TAB: 9,
         SPACE: 32,
         NUMPAD_0: 96,
         NUMPAD_1: 97,

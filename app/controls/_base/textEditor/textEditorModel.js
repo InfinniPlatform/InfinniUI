@@ -24,8 +24,8 @@ var TextEditorModel = Backbone.Model.extend({
     },
 
     convertValue: function (value) {
-        var converter = this.get('valueConverter');
-
+        var getConverter = this.get('valueConverter');
+        var converter = getConverter.call(null);
         return (typeof converter === 'function') ? converter.call(this, value) : value;
     },
 
