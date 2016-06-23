@@ -95,10 +95,9 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
 
     canChangeValue: function () {
         var model = this.model,
-            readonly = model.get('readOnly'),
             enabled = model.get('enabled');
 
-        return readonly === false && enabled === true;
+        return enabled === true;
     }
 
 });

@@ -34,7 +34,7 @@ TextEditorModelDisplayModeStrategy.prototype.setText = function (model, text, ui
 TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function (model, text, options) {
     if (options.ui) {
         var value = model.convertValue(text);
-        model.set('value', value);
+        model.set('value', value, {ui: options.ui});
     }
     model.applyChanges();
 };

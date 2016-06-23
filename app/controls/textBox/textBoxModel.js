@@ -8,7 +8,7 @@ var TextBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype 
         TextEditorBaseModel.prototype.defaults,
         {
             multiline: false,
-            type: 'text'
+            inputType: 'text'
         }
     ),
 

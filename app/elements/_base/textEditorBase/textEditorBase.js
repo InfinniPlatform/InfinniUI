@@ -59,6 +59,16 @@ _.extend(TextEditorBase.prototype, {
         function isNotEmpty(val) {
             return val !== null && typeof val !== 'undefined';
         }
+    },
+
+    getInputType: function () {
+        return this.control.get('inputType');
+    },
+
+    setInputType: function (inputType) {
+        if (inputType) {
+            this.control.set('inputType', inputType);
+        }
     }
 
 }, editorBaseMixin, labelTextElementMixin);

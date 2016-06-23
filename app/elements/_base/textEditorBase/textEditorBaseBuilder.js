@@ -24,10 +24,26 @@ _.extend(TextEditorBaseBuilder.prototype, {
 
         this.initBindingToProperty(params, 'LabelText');
 
+        element.setInputType(this.getCompatibleInputType(params));
         this
             .initDisplayFormat(params)
             .initEditMask(params)
             .initEditor(params);
+    },
+
+    getCompatibleInputType: function (params) {
+        var inputType = params.metadata.Type,
+            editMask = params.metadata.EditMask;
+
+        if (typeof inputType === 'undefined') {
+            inputType = params.element.getInputType();
+        }
+
+        if (editMask) {
+            //Маска редактирования задается только для input[type=text]
+            inputType = 'text'
+        }
+        return inputType;
     },
 
     initEditor: function (params) {

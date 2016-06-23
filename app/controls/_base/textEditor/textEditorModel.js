@@ -139,8 +139,11 @@ var TextEditorModel = Backbone.Model.extend({
         modeStrategy.updateText(this);
     },
 
-    onChangeValueHandler: function (/* model, value */) {
-        this.updateText();
+    onChangeValueHandler: function (model, value, options) {
+        if (!options.ui) {
+            this.updateText();
+        }
+
     },
 
     onChangeOriginalValueHandler: function (model, value) {

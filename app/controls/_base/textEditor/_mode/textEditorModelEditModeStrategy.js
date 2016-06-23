@@ -21,16 +21,21 @@ TextEditorModelEditModeStrategy.prototype.updateText = function (model) {
         text = editMask.getText();
     }
 
-    model.set('text', text);
+    if (typeof text === 'undefined' || text === null) {
+        model.set('text', '');
+    } else {
+        model.set('text', text.toString());
+    }
+
 };
 
 TextEditorModelEditModeStrategy.prototype.setText = function (model, text, ui) {
-    model.set('text', text);
+    model.set('text', text, {ui: ui});
 };
 
 TextEditorModelEditModeStrategy.prototype.onChangeTextHandler = function (model, newValue, options) {
     var editMask = model.getEditMask();
     var value = editMask ?  editMask.getData() : newValue;
-    model.set('value', model.convertValue(value), {silent: !!editMask});
+    model.set('value', model.convertValue(value), {silent: !!editMask, ui: options.ui});
 };
 

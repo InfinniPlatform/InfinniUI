@@ -11,6 +11,7 @@ var TextEditorView = Backbone.View.extend({
         'focusout': 'onFocusoutHandler',
         'keydown': 'onKeydownHandler',
         'change': 'onChangeHandler',
+        'input': 'onInputHandler',
         'keyup': 'onKeyupHandler',  //trigger OnKeyDown Event
         'click': 'onClickHandler',
         'drop': 'onDropHandler',
@@ -36,6 +37,13 @@ var TextEditorView = Backbone.View.extend({
         this.updateModelTextFromEditor();
     },
 
+    onInputHandler: function () {
+        var editMask = this.model.getEditMask();
+        if (!editMask) {
+            this.updateModelTextFromEditor();
+        }
+    },
+
     onKeydownHandler: function (event) {
         if (event.ctrlKey || event.altKey) {
             return;
@@ -50,7 +58,7 @@ var TextEditorView = Backbone.View.extend({
 
         var editMask = this.model.getEditMask();
         if (!editMask) {
-            setTimeout(this.updateModelTextFromEditor.bind(this), 0);
+            //model.text будет изменено в обработчике onInputHandler
             return;
         }
 
@@ -285,12 +293,20 @@ var TextEditorView = Backbone.View.extend({
         this.model.setText(newText);
     },
 
-    checkCurrentPosition: function () {
+    checkCurrentPosition: function (currentPosition) {
+
+        if (!this.canCaretPosition()) {
+            return;
+        }
         var editMask = this.model.getEditMask();
         if (!editMask) {
             return;
         }
-        var currentPosition = this.getCaretPosition();
+
+        if (typeof currentPosition === 'undefined') {
+            currentPosition = this.getCaretPosition();
+        }
+
         var position = currentPosition === 0 ? editMask.moveToPrevChar(0) : editMask.moveToNextChar(currentPosition - 1);
         if (position !== currentPosition) {
             this.setCaretPosition(position);
@@ -299,22 +315,28 @@ var TextEditorView = Backbone.View.extend({
     },
 
     getSelectionLength: function () {
-        /** @var HTMLInputElement **/
-        var el = this.el;
-        var len = 0,
-            startPos = parseInt(el.selectionStart, 10),
-            endPos = parseInt(el.selectionEnd, 10);
+        var el = this.el,
+            len = 0;
 
-        if (!isNaN(startPos) && !isNaN(endPos)) {
-            len = endPos - startPos;
+        if (this.canCaretPosition()) {
+            var startPos = parseInt(el.selectionStart, 10),
+                endPos = parseInt(el.selectionEnd, 10);
+
+            if (!isNaN(startPos) && !isNaN(endPos)) {
+                len = endPos - startPos;
+            }
         }
 
         return len;
     },
 
+    canCaretPosition: function () {
+        return (/text|password|search|tel|url/).test(this.el.type);
+    },
+
     setCaretPosition: function (caretPosition) {
 
-        if (_.isNumber(caretPosition)) {
+        if (_.isNumber(caretPosition) && this.canCaretPosition()) {
             var el = this.el;
 
             //IE9+
@@ -336,8 +358,7 @@ var TextEditorView = Backbone.View.extend({
 
         var position = 0;
 
-        //IE9+
-        if (el.selectionStart || el.selectionStart == '0') {
+        if (this.canCaretPosition()) {
             position = el.selectionStart;
         }
 
@@ -379,16 +400,19 @@ var TextEditorView = Backbone.View.extend({
 
     onChangeTextHandler: function (model, text) {
         var $input = this.$el;
+        var position = this.getCaretPosition();
 
         $input.toggleClass(this.classNameError, false);
-        $input.val(text);
+
+        if($input.val() !== text) {
+            $input.val(text);
+        }
 
         var editMask = this.model.getEditMask();
 
         if (editMask) {
-            //$input.val(text);
             if ($input.is(':focus')) {
-                this.checkCurrentPosition();
+                this.checkCurrentPosition(position);
             }
         }
 

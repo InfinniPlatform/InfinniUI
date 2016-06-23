@@ -31,6 +31,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
         this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
         this.listenTo(this.model, 'change:editMask', this.updateEditMask);
+        this.listenTo(this.model, 'change:inputType', this.updateInputType);
     },
 
     updateProperties: function(){
@@ -38,6 +39,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         editorBaseViewMixin.updateProperties.call(this);
 
         this.updateLabelText();
+        this.updateInputType();
     },
 
     updateFocusable: function () {
@@ -48,6 +50,19 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         } else {
             this.ui.editor.removeAttr('tabindex');
         }
+    },
+
+    updateInputType: function () {
+        var inputType = this.model.get('inputType');
+        var $editor = this.ui.editor;
+        var tagName = $editor.prop('tagName');
+        if (inputType && tagName.toLowerCase() === 'input') {
+            $editor.attr('type', inputType);
+        }
+    },
+
+    updateEditMask: function(){
+        this.updateValue();
     },
 
     setFocus: function () {
@@ -76,11 +91,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     updateDisplayFormat: function(){
         this.updateValue();
     },
-
-    updateEditMask: function(){
-        this.updateValue();
-    },
-
 
     /**
      * Рендеринг редактора значений
@@ -116,5 +126,3 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     }
 
 }));
-
-//_.extend(TextEditorBaseView.prototype, textEditorMixin); //Работа с масками ввода
