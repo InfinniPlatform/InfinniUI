@@ -6,7 +6,7 @@ this.When(/^я введу в текстовое поле "([^"]*)" значен�
     };
     var success = function () {
         try {
-            window.testHelpers.getControlByName(fieldName).setValue(value.replace(/'/g, '"'));
+            window.testHelpers.getControlByName(fieldName).setValue(value.replace(/''/g, '"'));
             next();
         } catch (err) {
             next(err);
@@ -163,7 +163,8 @@ this.Then(/^значение в выпадающем списке "([^"]*)" ра
                 .$('.pl-combobox[data-pl-name="' + fieldName + '"]')
                 .find('.pl-combobox__value')
                 .text()
-                .trim();
+                .trim()
+                .replace(/''/g, '"');
 
             chai.assert.equal(value, actValue);
 
@@ -240,7 +241,7 @@ this.Then(/^значение в текстовом поле "([^"]*)" равно
             }
 
             if (typeof actValue == "string") {
-                value = value.replace(/'/g, '"');
+                value = value.replace(/''/g, '"');
             }
 
             chai.assert.isTrue((actValue === value), actValue + ' != ' + value);
@@ -400,7 +401,7 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
             var fileBox = window.testHelpers.getControlByName(fileBoxName);
             var xhr = new XMLHttpRequest();
 
-            xhr.open('GET', '/test/integration/' + fileName, true);
+            xhr.open('GET', '/test/integration/files/' + fileName, true);
             xhr.responseType = 'blob';
             xhr.onload = function () {
                 try {
@@ -421,5 +422,21 @@ this.Then(/^я загружу файл "([^"]*)" в "([^"]*)"$/, function (fileN
         }
     }, function () {
         next(new Error(fileBoxName + ' не найден!'));
+    });
+});
+
+this.Then(/^значение в файловом поле "([^"]*)" равно "([^"]*)"$/, function (fileBoxName, value, next) {
+    window.testHelpers.waitCondition(function () {
+        return window.testHelpers.getControlByName(fileBoxName) != undefined;
+    }, function () {
+        try {
+            var text = window.testHelpers.getControlByName(fileBoxName).control.controlModel.get('fileName');
+            chai.assert.equal(value, text);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }, function () {
+        next(new Error(fileBoxName + ' not found!'));
     });
 });

@@ -9,7 +9,7 @@ function IndeterminateCheckbox(parent) {
 	this.initialize_editorBase();
 }
 
-_.inherit(IndeterminateCheckbox, Element);
+_.inherit(IndeterminateCheckbox, CheckBox);
 
 
 _.extend(IndeterminateCheckbox.prototype, {

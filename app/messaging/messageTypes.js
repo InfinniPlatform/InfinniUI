@@ -1,28 +1,9 @@
 window.messageTypes = {
-    onViewOpened: { name: 'onViewOpened' },
-    onViewClosed: { name: 'onViewClosed' },
-    onViewClosing: {name: 'onViewClosing'},
-    onViewTextChange: {name: 'onViewTextChange'},
 
-    onLoaded: { name: 'onLoaded' },
-    onLoading: { name: 'onLoading' },   //Вызывается, когда выполнен рендеринг формы
-    onSetSelectedItem: { name: 'onSetSelectedItem' },
-    onSetTextFilter: { name: 'onSetTextFilter' },
-    onSetPropertyFilters: { name: 'onSetPropertyFilters' },
-    onSetPageSize: { name: 'onSetPageSize' },
-    onSetPageNumber: { name: 'onSetPageNumber' },
+    onViewBuildError: {name: 'onViewBuildError'},
+    onViewCreated: {name: 'onViewCreated'},
 
-    onShowView: {name: 'onShowView'},
-    onRequestSwitchView: {name: 'onRequestSwitchView'},
-
-    onSelectedItemChanged: {name: 'onSelectedItemChanged'},
-
-    onValidate: {name: 'onValidate'},
-
-    onKeyDown: {name: 'onKeyDown'},
-
-    onCreateLayoutPanel: {name: 'onCreateLayoutPanel'},
-    onRemoveLayoutPanel: {name: 'onRemoveLayoutPanel'},
+    onChangeLayout: {name: 'OnChangeLayout'},
     onNotifyUser: {name: 'onNotifyUser'},
     onToolTip: {name: 'onToolTip'},
 
@@ -30,11 +11,7 @@ window.messageTypes = {
     onOpenContextMenu: {name: 'onOpenContextMenu'},
 
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'},
-
-    onViewCreated: {name: 'onViewCreated'}
-
-    //onOpenViewInContainer: {name: 'onOpenViewInContainer'}
+    onDataLoaded: {name: 'onDataLoaded'}
 
 };
 

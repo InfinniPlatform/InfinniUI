@@ -409,3 +409,5 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 });
 
 _.extend(ControlView.prototype, bindUIElementsMixin, eventHandlerMixin);
+
+InfinniUI.ControlView = ControlView;

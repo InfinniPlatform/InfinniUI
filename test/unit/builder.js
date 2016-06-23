@@ -21,7 +21,7 @@ describe('Builder', function () {
             assert.equal(builder.build({ TextBox: {} }), 42);
         });
 
-        it('should pick concrete value from metadata if no metadataType passed', function () {
+        it('should pick concrete value from metadata if no metadataType passed', function (done) {
             var viewBuilder = {
                 build: function (context, args) {
                     assert.isNotNull(args.metadata.Name);
@@ -29,11 +29,12 @@ describe('Builder', function () {
 
                     assert.equal(args.metadata.Name, 'TextBox');
                     assert.isTrue(args.metadata.Multiline);
+                    done();
                 }
             };
 
             builder.register('TextBox', viewBuilder);
-            builder.build(null, { metadata: { TextBox: { Name: 'TextBox', Multiline: true } } });
+            builder.build({ TextBox: { Name: 'TextBox', Multiline: true } });
         });
     });
 

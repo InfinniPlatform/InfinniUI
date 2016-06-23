@@ -627,3 +627,5 @@ _.extend(Element.prototype, {
         this.renderTree.call(parent);
     }
 });
+
+InfinniUI.Element = Element;

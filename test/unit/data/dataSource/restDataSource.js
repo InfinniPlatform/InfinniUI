@@ -1,5 +1,5 @@
 describe('RestDataSource', function () {
-    window.providerRegister.register('RestDataSource', FakeRestDataProvider);
+    window.InfinniUI.providerRegister.register('RestDataSource', FakeRestDataProvider);
 
     var items = [
         {
@@ -234,9 +234,9 @@ describe('RestDataSource', function () {
                 assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
                 assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'return property value by property after change property 2');
                 assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
-                assert.equal(dataSource.getProperty('3'), item3, 'on set full item, link on item is not changed');
-                assert.equal(dataSource.getProperty('3.FirstName'), item3.FirstName, 'return property value by property after change property 3');
-                assert.equal(dataSource.getProperty('3._id'), item3._id, 'return property value by property after change property 4');
+                assert.equal(dataSource.getProperty('3.LastName'), "Пе2");
+                assert.equal(dataSource.getProperty('3.FirstName'), "П22");
+                assert.equal(dataSource.getProperty('3._id'), '55');
                 done();
             }
         });

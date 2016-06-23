@@ -128,3 +128,5 @@ ApplicationBuilder.addToRegisterQueue = function(name, builder){
         builder: builder
     });
 };
+
+window.InfinniUI.ApplicationBuilder = ApplicationBuilder;

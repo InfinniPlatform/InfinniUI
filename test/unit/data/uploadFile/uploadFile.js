@@ -38,7 +38,7 @@ describe('FileProvider', function () {
 
         beforeEach(function () {
             //register fake upload provider
-            window.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
+            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
                 return {
                     uploadFile: function () {
                         var deferred = $.Deferred();
@@ -55,7 +55,7 @@ describe('FileProvider', function () {
             });
 
             //register fake DocumentDataSource provider
-            window.providerRegister.register('DocumentDataSource', function (metadataValue) {
+            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
                 return {
                     getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
                         resultCallback();

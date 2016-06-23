@@ -69,7 +69,7 @@ describe('ServerAction', function () {
     describe('should constract correct url', function () {
         it('get', function () {
             // Given
-            window.providerRegister.register('ServerActionProvider', function () {
+            window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
                 return {
                     request: function (requestData) {
                         window.serverActionTest_urlParams = requestData;
@@ -106,7 +106,7 @@ describe('ServerAction', function () {
 
         it('post', function () {
             // Given
-            window.providerRegister.register('ServerActionProvider', function () {
+            window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
                 return {
                     request: function (requestData) {
                         window.serverActionTest_urlParams = requestData;
@@ -146,7 +146,7 @@ describe('ServerAction', function () {
 
         it('should convert data to string JSON if contentType is application/json', function () {
             // Given
-            window.providerRegister.register('ServerActionProvider', function () {
+            window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
                 return {
                     request: function (requestData) {
                         window.serverActionTest_urlParams = requestData;

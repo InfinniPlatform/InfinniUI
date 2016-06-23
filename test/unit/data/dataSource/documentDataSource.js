@@ -1,4 +1,6 @@
 ﻿describe('DocumentDataSource', function () {
+    window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
     var dataItems = [
         {
             "_id": '1',
@@ -41,7 +43,6 @@
     describe('DocumentDataSource base api', function () {
         it('should get list of data', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -67,7 +68,6 @@
 
         it('should return default list of data', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             var builder = new ApplicationBuilder();
             var defaultItems = [{"Id": "0000"}];
             var metadata = {
@@ -85,7 +85,6 @@
 
         it('should subscribe to property of selectedItem', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var result = '';
@@ -185,7 +184,6 @@
 
         it('should restore selected item after updating', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -212,7 +210,6 @@
 
         it('should create document', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -237,7 +234,6 @@
 
         it('should get document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -259,7 +255,6 @@
 
         it('should select item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -283,7 +278,6 @@
 
         it('should change document property', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -310,7 +304,6 @@
 
         it('should change document property (full item change)', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -338,7 +331,6 @@
 
         it('should validate item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -388,7 +380,6 @@
 
         it('should save item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({
@@ -417,7 +408,6 @@
 
         it('should delete item', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new DocumentDataSource({

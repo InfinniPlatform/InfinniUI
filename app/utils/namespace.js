@@ -19,3 +19,5 @@ window.InfinniUI.localizations = window.InfinniUI.localizations || {
         caption: 'English'
     }
 };
+
+window.InfinniUI.Providers = {};

@@ -39,3 +39,4 @@ ServerActionProvider.prototype.download = function (requestData, resultCallback)
         .run(requestData);
 };
 
+window.InfinniUI.Providers.ServerActionProvider = ServerActionProvider;

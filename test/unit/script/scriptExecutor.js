@@ -2,7 +2,7 @@ describe('ScriptExecutor', function () {
 
     var builder = new ApplicationBuilder();
 
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
+    window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         return {
             "getViewMetadata": function () {
                 return metadata;

@@ -270,3 +270,5 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	}
 
 });
+
+InfinniUI.ElementBuilder = ElementBuilder;

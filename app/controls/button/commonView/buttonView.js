@@ -111,4 +111,4 @@ var CommonButtonView = ControlView.extend({
 _.extend(CommonButtonView.prototype, highlightMixin.controlView);
 
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.common', CommonButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.common', CommonButtonView);

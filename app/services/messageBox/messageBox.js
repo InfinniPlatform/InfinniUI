@@ -125,6 +125,8 @@ var MessageBox = Backbone.View.extend({
 
 _.extend(MessageBox.prototype, bindUIElementsMixin);
 
+InfinniUI.MessageBox = MessageBox;
+
 /*new MessageBox({
     type: 'error',
     text:'asdasd',

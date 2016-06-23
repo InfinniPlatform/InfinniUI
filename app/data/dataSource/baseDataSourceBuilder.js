@@ -59,6 +59,10 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             dataSource.setIsLazy(metadata['IsLazy']);
         }
 
+        if('ResolvePriority' in metadata){
+            dataSource.setResolvePriority(metadata['ResolvePriority']);
+        }
+
         this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
@@ -140,3 +144,5 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceBuilderFileProviderMixin);
+
+InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;
