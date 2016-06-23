@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin editorBaseMixin
+ */
 var editorBaseMixin = {
     initialize_editorBase: function(){
 
@@ -41,6 +45,15 @@ var editorBaseMixin = {
 
     setWarningText: function (value) {
         this.control.set('warningText', value);
+    },
+
+
+    validateValue: function (value) {
+
+    },
+
+    convertValue: function (value) {
+        return value;
     },
 
     onValueChanging:  function (handler) {

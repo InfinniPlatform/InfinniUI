@@ -15,8 +15,6 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'focus .pl-datepicker-input': 'onFocusControlHandler',
-        'mouseenter .pl-datepicker-input': 'onMouseenterControlHandler',
         'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     }),
 
@@ -92,36 +90,9 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
 
     renderDateTimePickerEditor: function () {
         var model = this.model;
-        this.renderControlEditor({
-            el: this.ui.editor,
-            multiline: false,
-            convert: this.convertValue
-        });
-
+        this.renderControlEditor();
         return this;
     },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.ui.control.attr('tabindex', -1);
-        } else {
-            this.ui.control.removeAttr('tabindex');
-        }
-    },
-
-    /**
-     * Используется миксином textEditorMixin
-     * @param value
-     * @returns {boolean}
-     */
-    onEditorValidate: function (value) {
-        var model = this.model;
-        
-        return InfinniUI.DateUtils.checkRangeDate(value, model.get('minValue'), model.get('maxValue'));
-    },
-
 
     getTemplate: function () {
         throw new Error('Не перекрыт getTemplate');

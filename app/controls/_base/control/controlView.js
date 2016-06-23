@@ -128,7 +128,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
 
     onFocusHandler: function (event) {
-        console.log('onFocus');
+        //console.log('onFocus');
     },
 
 

@@ -29,15 +29,8 @@ _.extend(TextBox.prototype, {
 
     setLineCount: function (value) {
         this.control.set('lineCount', value);
-    },
-
-    getType: function () {
-        return this.control.get('type');
-    },
-
-    setType: function (type) {
-        this.control.set('type', type);
     }
+
 });
 
 

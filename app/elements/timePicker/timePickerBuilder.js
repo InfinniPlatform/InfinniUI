@@ -10,15 +10,18 @@ TimePickerBuilder.prototype.createElement = function (params) {
 
 TimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
 
-    DateTimePickerBuilder.call(this, params);
+    params.metadata = _.extend({}, params.metadata, {
+        Mode: 'TimePicker',
+        TimeZone: 0
+    });
 
-    var metadata = params.metadata;
-    metadata.Mode = 'TimePicker';
-    metadata.TimeZone = 0;
-
-    _.defaults(metadata, {
+    _.defaults(params.metadata, {
         DisplayFormat: '{:T}',
-        EditMask: {DateTimeEditMask: {Mask: 'T'}}
+        EditMask: {
+            DateTimeEditMask: {
+                Mask: 'T'
+            }
+        }
     });
 
 };
