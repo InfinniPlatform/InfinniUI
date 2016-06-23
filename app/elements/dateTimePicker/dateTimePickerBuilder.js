@@ -15,8 +15,10 @@ DateTimePickerBuilder.prototype.createElement = function (params) {
 
 DateTimePickerBuilder.prototype.applyMetadata = function (params) {
     var element = params.element;
-    var metadata = params.metadata;
+
     this.applyDefaultMetadata(params);
+    var metadata = params.metadata;
+
     TextEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
     element.setTimeZone(metadata.TimeZone);
@@ -39,7 +41,6 @@ DateTimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
 
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     var metadata = params.metadata;
-
     var defaultFormat = {
             Date: '{:d}',
             DateTime: '{:g}',
@@ -51,8 +52,13 @@ DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
             Time: {DateTimeEditMask: {Mask: 'T'}}
         };
 
-    _.defaults(metadata, {Mode: 'Date'});
-    _.defaults(metadata, {DisplayFormat: defaultFormat[metadata.Mode], EditMask: defaultEditMask[metadata.Mode]});
+    params.metadata = _.extend({}, metadata);
+
+    _.defaults(params.metadata, {Mode: 'Date'});
+    _.defaults(params.metadata, {
+        DisplayFormat: defaultFormat[params.metadata.Mode],
+        EditMask: defaultEditMask[params.metadata.Mode]
+    });
 };
 
 DateTimePickerBuilder.prototype.initDisplayFormat = function (params) {

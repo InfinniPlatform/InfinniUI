@@ -225,6 +225,11 @@ _.extend(TemplateEditMask.prototype, {
         var index;
         var result = null;
 
+        if (typeof  template === 'undefined') {
+            this.reset();
+            template = this.template;
+        }
+
         if (!Array.isArray(template)) {
             return null;
         }
@@ -251,92 +256,50 @@ _.extend(TemplateEditMask.prototype, {
         return result;
     },
 
-    deleteCharRight: function (position) {
+    deleteCharRight: function (position, len) {
         var template;
         var i, ln;
         var left;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
-        }else{
-            for (i = 0, ln = this.template.length; i < ln; i = i + 1) {
-                template = this.template[i];
-
-                if (typeof template === 'string' || template.position < position) {
-                    continue;
-                }
-                position = template.position + 1; // Перенос каретки на 1 символ вправо для корректной работы DEL
-                template.text = '';
-                break;
-            }
+        if (len > 0) {
+            return this.deleteSelectedText(position, len);
         }
+
+        for (i = 0, ln = this.template.length; i < ln; i = i + 1) {
+            template = this.template[i];
+
+            if (typeof template === 'string' || template.position < position) {
+                continue;
+            }
+            position = template.position + 1; // Перенос каретки на 1 символ вправо для корректной работы DEL
+            template.text = '';
+            break;
+        }
+
         return position;
     },
 
-    deleteCharLeft: function (position) {
+    deleteCharLeft: function (position, len) {
         var template;
         var i, ln;
         var left;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
-        }else {
-            for (i = this.template.length - 1; i >= 0; i = i - 1) {
-                template = this.template[i];
-
-                if (typeof template === 'string' || template.position >= position) {
-                    continue;
-                }
-                position = template.position;
-                template.text = '';
-                break;
-            }
+        if (len > 0) {
+            return this.deleteSelectedText(position, len);
         }
+
+        for (i = this.template.length - 1; i >= 0; i = i - 1) {
+            template = this.template[i];
+
+            if (typeof template === 'string' || template.position >= position) {
+                continue;
+            }
+            position = template.position;
+            template.text = '';
+            break;
+        }
+
         return position;
-    },
-
-    /**
-     * Удаление выделенного текста
-     * @param template
-     * @param position
-     * @param selection
-     */
-    selectRemove: function(template, position, selection){
-        var firstItem = this.getItemTemplate(position);
-        var lastItem = this.getItemTemplate(position + selection.length);
-
-        var firstIndexItem = template.indexOf(firstItem.item);
-        var lastIndexItem = template.indexOf(lastItem.item);
-
-        for (var i = firstIndexItem; i < lastIndexItem + 1; i++) {
-            if (typeof template[i] == "object") {
-                if (firstIndexItem == lastIndexItem) {
-                    build(template[i], position, selection);
-                } else if (i == firstIndexItem) {
-                    build(template[i], position, selection);
-                } else if (i == lastIndexItem) {
-                    build(template[i], position, selection);
-                } else {
-                    template[i].text = '';
-                }
-            }
-        }
-
-        function build(templateText, position, selection) {
-            var arraySymbols = templateText.text.split('');
-            var start = position - templateText.position;
-            var end = (position + selection.length) - templateText.position;
-
-            if (start < 0) start = 0;
-            arraySymbols.splice(start, end - start);
-
-            templateText.text = arraySymbols.join('');
-            return templateText;
-        }
     },
 
     /**
@@ -443,7 +406,8 @@ _.extend(TemplateEditMask.prototype, {
      * @param position
      */
     setCharAt: function (char, position, len) {
-        var template;
+        var itemTemplate = this.template;
+        //var itemTemplate = this.getItemTemplate(position);
         var mask;
         var text;
 
@@ -455,8 +419,8 @@ _.extend(TemplateEditMask.prototype, {
             this.clearText(position, len);
         }
 
-        for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
-            template = this.template[i];
+        for (var i = 0, ln = itemTemplate.length; i < ln; i = i + 1) {
+            var template = itemTemplate[i];
             if (typeof template === 'string') { //Статический текст
                 continue;
             }
@@ -483,10 +447,7 @@ _.extend(TemplateEditMask.prototype, {
             startFrom = this.setCharAt(char, position);
         }
 
-        return {
-            position: startFrom,
-            result: this.getText()
-        };
+        return startFrom;
     },
 
     getNextItemMask: function (position) {

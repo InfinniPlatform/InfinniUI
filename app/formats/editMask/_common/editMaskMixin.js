@@ -70,10 +70,10 @@
     /**
      * Удалить выделенный текст
      * @param position
+     * @oaram {Number} len
      * @returns {boolean|number}
      */
-    deleteSelectedText: function(position){
-
+    deleteSelectedText: function(position, len){
         return false;
     },
 

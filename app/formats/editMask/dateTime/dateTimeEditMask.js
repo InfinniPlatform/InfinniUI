@@ -82,17 +82,55 @@ _.extend(DateTimeEditMask.prototype, {
     },
 
     /**
+     * @param {Number} position
+     * @param {Number} selectionLength
+     * @param {String} char
+     * @returns {Number}
+     */
+    deleteSelectedText: function (position, selectionLength, char) {
+
+        var data;
+        var from;
+        var text;
+        var mask;
+        var prevPos, pos = position, len = selectionLength;
+        char = char || '';
+        var newPos = position + char.length - 1;
+
+
+        while(data = this.getItemTemplate(pos)) {
+            prevPos = pos;
+            from = pos - data.left;
+            text = data.item.text;
+            mask = this.masks[data.item.mask];
+
+            text = text.substring(0, from) + char + text.substring(from + len);
+            if (!text.length || mask.match(text)) {
+                data.item.text = text;
+            }
+
+            pos = this.getNextItemMask(pos);
+            if (prevPos === pos) {
+                break;
+            }
+            len = selectionLength - (pos - position);
+            char = '';
+        }
+
+        return this.moveToNextChar(newPos);
+    },
+
+    /**
      * Удалить символ слева от курсора
      * @param position
+     * @param {Number|undefined} selectionLength
      */
-    deleteCharLeft: function (position) {
+    deleteCharLeft: function (position, selectionLength) {
         var data = this.getItemTemplate(position);
         var item, text;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
+        if (selectionLength) {
+            position = this.deleteSelectedText(position, selectionLength);
         } else {
             if (data !== null) {
                 if (data.index > 0) {
@@ -114,15 +152,14 @@ _.extend(DateTimeEditMask.prototype, {
     /**
      * Удалить символ справа от курсора
      * @param position
+     * @param {Number|undefined} selectionLength
      */
-    deleteCharRight: function (position) {
+    deleteCharRight: function (position, selectionLength) {
         var data = this.getItemTemplate(position);
         var item, text;
 
-        var selection = window.getSelection().toString();
-
-        if (selection) {
-            this.selectRemove(this.template, position, selection);
+        if (selectionLength) {
+            position = this.deleteSelectedText(position, selectionLength);
         } else {
             if (data !== null) {
                 item = data.item;
@@ -136,46 +173,6 @@ _.extend(DateTimeEditMask.prototype, {
             }
         }
         return position;
-    },
-
-    /**
-     * Удаление выделенного текста
-     * @param template
-     * @param position
-     * @param selection
-     */
-    selectRemove: function(template, position, selection){
-        var firstItem = this.getItemTemplate(position);
-        var lastItem = this.getItemTemplate(position + selection.length);
-
-        var firstIndexItem = template.indexOf(firstItem.item);
-        var lastIndexItem = template.indexOf(lastItem.item);
-
-        for (var i = firstIndexItem; i < lastIndexItem + 1; i++) {
-            if (typeof template[i] == "object") {
-                if (firstIndexItem == lastIndexItem) {
-                    build(template[i], position, selection);
-                } else if (i == firstIndexItem) {
-                    build(template[i], position, selection);
-                } else if (i == lastIndexItem) {
-                    build(template[i], position, selection);
-                } else {
-                    template[i].text = '';
-                }
-            }
-        }
-
-        function build(templateText, position, selection) {
-            var arraySymbols = templateText.text.split('');
-            var start = position - templateText.position;
-            var end = (position + selection.length) - templateText.position;
-
-            if (start < 0) start = 0;
-            arraySymbols.splice(start, end - start);
-
-            templateText.text = arraySymbols.join('');
-            return templateText;
-        }
     },
 
     /**
@@ -267,6 +264,11 @@ _.extend(DateTimeEditMask.prototype, {
         var index;
         var result = null;
 
+        if (typeof  template === 'undefined') {
+            this.reset();
+            template = this.template;
+        }
+
         if (!Array.isArray(template)) {
             return null;
         }
@@ -294,27 +296,6 @@ _.extend(DateTimeEditMask.prototype, {
     },
 
     setCharAt: function (char, position) {
-//        var template;
-//
-//        for (var i = 0, ln = this.template.length; i < ln; i = i + 1) {
-//            template = this.template[i];
-//            if (typeof template === 'string') { //Статический текст
-//                continue;
-//            }
-//            if (template.position === position) {    //Маска ввода
-//                mask = this.masks[template.mask];
-//                console.log(mask);
-//                text = char.substr(0,1);
-//                if (mask.validator(text)) {
-//                    template.text = text;
-//                    position = this.getNextItemMask(position);
-//                }
-//                break;
-//            }
-//            if (template.position > position) {
-//                break;
-//            }
-//        }
         var data = this.getItemTemplate(position);
         var text;
         var item;
@@ -372,7 +353,8 @@ _.extend(DateTimeEditMask.prototype, {
         var mask;
         var width;
         var left = 0;
-        var last;
+        var last = left;
+
         for (var i = 0, ln = template.length; i < ln; i = i + 1) {
             item = template[i];
             if (typeof item === 'string') { //Простой символ
@@ -523,7 +505,7 @@ _.extend(DateTimeEditMask.prototype, {
             template.push(mask.substring(lastPosition));
         }
 
-        return template;
+        return this.template = template;
     },
 
     /**

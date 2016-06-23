@@ -73,20 +73,6 @@ var ButtonEditView = TextBoxView.extend(/** @lends ButtonEditView.prototype */{
 
     onClickClearHandler: function (event) {
         this.model.clearValue();
-    },
-
-    onFocusControlHandler: function (event) {
-        if (this.model.get('readOnly')) {
-            return;
-        }
-        TextBoxView.prototype.onFocusControlHandler.call(this, event);
-    },
-
-    onMouseenterControlHandler: function (event) {
-        if (this.model.get('readOnly')) {
-            return;
-        }
-        TextBoxView.prototype.onMouseenterControlHandler.call(this, event);
     }
 
 });

@@ -14,8 +14,6 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'focus .pl-numeric-box-input': 'onFocusControlHandler',
-        'mouseenter .pl-numeric-box-input': 'onMouseenterControlHandler',
         'click .pl-numeric-box-min': 'onClickMinControlHandler',
         'click .pl-numeric-box-max': 'onClickMaxControlHandler',
         'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
@@ -45,16 +43,7 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     renderNumericBoxEditor: function () {
-        var model = this.model;
-
-        this.renderControlEditor({
-            el: this.ui.editor,
-            multiline: false,
-            lineCount: 1,
-            inputType: model.get('inputType')
-        });
-
-        return this;
+        this.renderControlEditor();
     },
 
     onChangeEnabledHandler: function (model, value) {
@@ -64,19 +53,27 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     },
 
     onClickMinControlHandler: function () {
-        this.model.decValue();
+        if (this.canChangeValue()) {
+            this.model.decValue();
+        }
     },
 
     onClickMaxControlHandler: function () {
-        this.model.incValue();
+        if (this.canChangeValue()) {
+            this.model.incValue();
+        }
     },
 
     onMousedownMinControlHandler: function (event) {
-        this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        }
     },
 
     onMousedownMaxControlHandler: function (event) {
-        this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        }
     },
 
     repeatUpdateValue: function (cb) {
@@ -96,23 +93,11 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
 
     },
 
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
+    canChangeValue: function () {
+        var model = this.model,
+            enabled = model.get('enabled');
 
-        if (!focusable) {
-            this.ui.control.attr('tabindex', -1);
-        } else {
-            this.ui.control.removeAttr('tabindex');
-        }
-    },
-
-    /**
-     * Используется миксином textEditorMixin
-     * @param value
-     * @returns {boolean}
-     */
-    onEditorValidate: function (value) {
-        return this.model.validateValue(value);
+        return enabled === true;
     }
 
 });

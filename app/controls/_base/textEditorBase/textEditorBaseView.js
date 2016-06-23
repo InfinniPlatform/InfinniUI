@@ -1,7 +1,6 @@
 /**
  * @class TextEditorBaseView
  * @augments ControlView
- * @mixes textEditorMixin
  * @mixed editorBaseViewMixin
  */
 
@@ -10,17 +9,14 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
 
     UI: _.extend({}, editorBaseViewMixin.UI, {
         control: '.pl-control',
-        editor: '.pl-control-editor',
+        //editor: '.pl-control-editor',
+        editor: '.pl-editor',
         label: '.pl-control-label',
         textbox: '.pl-text-box-input'
     }),
 
     events: {
-        //Обработчик для показа поля редактирования с использованием маски ввода
-        'focus .pl-text-box-input': 'onFocusControlHandler',
-        'mouseenter .pl-text-box-input': 'onMouseenterControlHandler'
 
-        //@TODO Генерация событий GotFocus/LostFocus должна происходить с учетом что происходит подмена контролов
     },
 
     initialize: function () {
@@ -35,6 +31,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
         this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
         this.listenTo(this.model, 'change:editMask', this.updateEditMask);
+        this.listenTo(this.model, 'change:inputType', this.updateInputType);
     },
 
     updateProperties: function(){
@@ -42,6 +39,34 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         editorBaseViewMixin.updateProperties.call(this);
 
         this.updateLabelText();
+        this.updateInputType();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (!focusable) {
+            this.ui.editor.attr('tabindex', -1);
+        } else {
+            this.ui.editor.removeAttr('tabindex');
+        }
+    },
+
+    updateInputType: function () {
+        var inputType = this.model.get('inputType');
+        var $editor = this.ui.editor;
+        var tagName = $editor.prop('tagName');
+        if (inputType && tagName.toLowerCase() === 'input') {
+            $editor.attr('type', inputType);
+        }
+    },
+
+    updateEditMask: function(){
+        this.updateValue();
+    },
+
+    setFocus: function () {
+        this.ui.editor.focus();
     },
 
     updateValue: function(){
@@ -67,31 +92,16 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
         this.updateValue();
     },
 
-    updateEditMask: function(){
-        this.updateValue();
-    },
-
-
     /**
      * Рендеринг редактора значений
-     * @params {Object} options
-     * @params {jQuery} options.el
-     * @params {Number} options.multiline
-     * @params {Number} options.lineCount
-     * @params {String} options.inputType
      *
      */
-    renderControlEditor: function (options) {
-
-        options = _.defaults(options, {
-            el: this.ui.editor,
-            multiline: false,
-            lineCount: 2,
-            inputType: 'text'
-        });
-
-        //@TODO Возможно при отсутвии maskEdit поле редактирования использовать не надо?
-        this.renderEditor(options);
+    renderControlEditor: function () {
+        var model = this.model;
+        var editor = model.get('editor');
+        if (editor) {
+            editor.render(this.ui.editor);
+        }
     },
 
     getData: function () {
@@ -106,10 +116,6 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
             });
     },
 
-    onEditorValidate: function (value) {
-        return true;
-    },
-
     getDisplayValue: function () {
         var
             model = this.model,
@@ -120,5 +126,3 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     }
 
 }));
-
-_.extend(TextEditorBaseView.prototype, textEditorMixin); //Работа с масками ввода
