@@ -23,8 +23,6 @@ _.extend(ImageBoxBuilder.prototype, {
         var element = params.element;
         var metadata = params.metadata;
 
-        element.setReadOnly(metadata.ReadOnly);
-
         if (Array.isArray(metadata.AcceptTypes)) {
             element.setAcceptTypes(metadata.AcceptTypes);
         }

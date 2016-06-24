@@ -11,7 +11,7 @@ var TextEditor = function () {
         console.log('error', error);
     });
 
-    //@TODO Handle ReadOnly & Enabled state
+    //@TODO Handle Enabled state
 
     this._model = model;
 

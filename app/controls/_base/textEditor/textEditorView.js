@@ -263,11 +263,9 @@ var TextEditorView = Backbone.View.extend({
     },
 
     getCanChange: function () {
-        var
-            disabled = this.$el.prop('disabled'),
-            readonly = this.$el.prop('readonly');
+        var disabled = this.$el.prop('disabled');
 
-        return disabled === false && readonly === false;
+        return disabled === false;
     },
 
     /**

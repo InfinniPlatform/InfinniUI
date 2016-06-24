@@ -18,7 +18,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         fileDownload: '.pl-filebox-file-download',
         fileDownloadUrl: '.pl-filebox-file-download-url',
         edit: '.pl-filebox-edit',
-        readonly: '.pl-filebox-readonly',
         control: '.form-control',
 
         input: 'input'
@@ -32,7 +31,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     initHandlersForProperties: function(){
         ControlView.prototype.initHandlersForProperties.call(this);
         this.listenTo(this.model, 'change:labelText', this.updateLabelText);
-        this.listenTo(this.model, 'change:readOnly', this.updateReadOnly);
         this.listenTo(this.model, 'change:fileName', this.updateFileName);
         this.listenTo(this.model, 'change:fileSize', this.updateFileSize);
         this.listenTo(this.model, 'change:fileTime', this.updateFileTime);
@@ -50,7 +48,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     updateProperties: function(){
         ControlView.prototype.updateProperties.call(this);
 
-        this.updateReadOnly();
         this.updateLabelText();
         this.updateFileName();
         this.updateFileSize();
@@ -67,13 +64,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
     updateLabelText: function () {
         var labelText = this.model.get('labelText');
         this.ui.label.text(labelText);
-    },
-
-    updateReadOnly: function () {
-        var model = this.model;
-        var readOnly = model.get('readOnly');
-        this.ui.edit.toggleClass('hidden', readOnly === true);
-        this.ui.readonly.toggleClass('hidden', readOnly !== true);
     },
 
     updateAcceptTypes: function () {
