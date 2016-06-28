@@ -1,11 +1,18 @@
 {
-  "name": "infinniUIIntegationTest",
+  "name": "my-test-cucumber-selenium",
+  "version": "1.0.0",
   "dependencies": {
+    "cucumber": "^1.1.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-concat": "^0.5.1"
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "sanitize-filename": "^1.6.0",
+    "selenium-webdriver": "^2.53.2"
   },
   "scripts": {
-    "build-integration-tests": "grunt build:%EXT_PATH%"
+    "build": "npm i && grunt build",
+    "test": "cd out && node ../node_modules/cucumber/bin/cucumber.js -t ~@ignore"
   }
 }

@@ -1,50 +1,45 @@
-﻿module.exports = function (grunt) {
+module.exports = function (grunt) {
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+
     grunt.initConfig({
+        clean: {
+            main: ['out']
+        },
         concat: {
-            feature: {
-                src: [],
-                dest: 'out/feature.feature'
-            },
-
-            step_definitions: {
-                src: [
-                    "features/support/*.js",
-                    "features/step_definitions/*.js"
-                ],
-                dest: 'out/step_definitions.js'
-            },
-
-            app: {
-                src: ["app/*.js"],
-                dest: 'out/app.js'
-            },
-
-            vendor: {
-                src: ["vendor/*.js"],
-                dest: 'out/vendor.js'
+            features: {
+                src: 'src/features/**/*.feature',
+                dest: 'out/features/feature.feature'
+            }
+        },
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/support/',
+                        src: '*.js',
+                        dest: 'out/features/support'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'src/step_definitions/',
+                        src: '*.js',
+                        dest: 'out/features/step_definitions'
+                    }
+                ]
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.registerTask('build', function (prop) {
+        var tasks = [
+            'clean',
+            'concat',
+            'copy'
+        ];
 
-    grunt.registerTask('build', function (extensionPath) {
-        if (extensionPath) {
-            var extFeaturesPath = extensionPath + '*.IntegrationTests/**/*.feature';
-            var extStepDefinitionsPath = extensionPath + '*.IntegrationTests/**/step_definitions/*.js';
-            var extTestHelpersPath = extensionPath + '*.IntegrationTests/*.js';
-
-            var stepDefinitionsArray = grunt.config.get('concat.step_definitions.src');
-            stepDefinitionsArray.push(extStepDefinitionsPath);
-
-            var appArray = grunt.config.get('concat.app.src');
-            appArray.push(extTestHelpersPath);
-
-            grunt.config.set('concat.feature.src', [extFeaturesPath]);
-            grunt.config.set('concat.step_definitions.src', stepDefinitionsArray);
-            grunt.config.set('concat.app.src', appArray);
-        }
-
-        grunt.task.run(['concat']);
+        grunt.task.run(tasks);
     });
 };
