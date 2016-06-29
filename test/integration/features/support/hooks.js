@@ -4,6 +4,7 @@ var driver = require('./world.js').getDriver();
 var fs = require('fs');
 var path = require('path');
 var sanitize = require("sanitize-filename");
+var extensions = require('./extensions.js');
 
 var myHooks = function () {
   
@@ -25,7 +26,9 @@ var myHooks = function () {
 
   this.registerHandler('BeforeFeature', function () {
     return driver.get('http://localhost:8080');
-  })
+  });
+
+  extensions.call(this);
 };
 
 module.exports = myHooks;
