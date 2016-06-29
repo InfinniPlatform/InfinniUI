@@ -1,18 +1,11 @@
 {
-  "name": "my-test-cucumber-selenium",
-  "version": "1.0.0",
+  "name": "infinni-ui-integration-tests",
   "dependencies": {
     "cucumber": "^1.1.0",
-    "grunt": "^1.0.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
     "sanitize-filename": "^1.6.0",
     "selenium-webdriver": "^2.53.2"
   },
   "scripts": {
-    "build": "npm i && grunt build",
-    "test": "cd out && node ../node_modules/cucumber/bin/cucumber.js -t ~@ignore"
+    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore"
   }
 }
