@@ -41,6 +41,8 @@ var CommonPopupButtonView = ContainerView.extend({
 
         this.$dropdown = this.renderDropdown();
 
+        this.$dropdown.on('click', this.close.bind(this));
+
         this.updateProperties();
 
         this.trigger('render');
@@ -82,9 +84,7 @@ var CommonPopupButtonView = ContainerView.extend({
         this.alignDropdown();
 
         var $ignoredElements = this.$dropdown.add (this.ui.grip);
-        this.$dropdown.on('click', function () {
-            that.close();
-        });
+
         //new ActionOnLoseFocus($ignoredElements, function(){
         //    that.close();
         //});
