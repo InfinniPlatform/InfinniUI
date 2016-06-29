@@ -49,7 +49,7 @@ _.extend(ImageBoxBuilder.prototype, {
             params.element.onPropertyChanged('file', function (context, args) {
                 var file = args.newValue;
 
-                if (file instanceof File) {
+                if (file instanceof File || file === null) {
                     ds.setProperty(binding.getSourceProperty(), args.newValue)
                 }
             });
