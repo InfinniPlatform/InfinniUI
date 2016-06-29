@@ -17,12 +17,20 @@ module.exports = {
             caption: function (text) {
                 return this.self() + '/button[text() = "' + text + '"]';
             }
+        },
+        ModalView: {
+            self: function () {
+                return '//h4[@class="modal-title"]'
+            },
+            header: function (text) {
+                return this.self() + '/span[contains(@class, "pl-label") and text() = "' + text + '"]/../../..';
+            }
         }
     },
     CSS: {
         View: {
             self: function (name) {
-                return '#page-content > .pl-view[data-pl-name="' + name + '"]';
+                return '.pl-view[data-pl-name="' + name + '"]';
             }
         }
     }

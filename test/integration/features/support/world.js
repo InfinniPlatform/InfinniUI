@@ -50,6 +50,8 @@ var World = function World() {
     this.by = webdriver.By;
     this.selectors = selectors;
 
+    this.currentView = null;
+
     this.driver.manage().timeouts().implicitlyWait(10000);
 
     if (!fs.existsSync(screenshotPath)) {
