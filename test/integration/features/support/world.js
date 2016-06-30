@@ -2,9 +2,8 @@
 
 var fs = require('fs');
 var webdriver = require('selenium-webdriver');
-var platform = process.env.PLATFORM || "CHROME";
 var selectors = require('./helpers/selectors.js');
-var args = require('./helpers/arguments.js').parse(process.argv.slice(2));
+var args = require('../../config.json');
 
 var buildChromeDriver = function () {
     return new webdriver.Builder()
@@ -24,7 +23,7 @@ var buildPhantomDriver = function () {
         .build();
 };
 
-switch (args.platform || 'firefox') {
+switch (args.platform) {
     case 'chrome':
         var driver = buildChromeDriver();
         break;

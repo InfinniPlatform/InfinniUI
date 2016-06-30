@@ -21,7 +21,7 @@ module.exports = function () {
     // <editor-fold desc="Button">
 
     this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonText) {
-        return that.currentView.findElement(that.by.xpath(that.selectors.XPATH.Button.caption(buttonText))).then(function (element) {
+        return this.currentView.findElement(this.by.xpath(this.selectors.XPATH.Button.caption(buttonText))).then(function (element) {
             element.click();
         });
     });

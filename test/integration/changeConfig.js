@@ -1,0 +1,1 @@
+require('fs').writeFileSync('config.json', JSON.stringify(require('./features/support/helpers/arguments.js').parse(process.argv.slice(2))));
