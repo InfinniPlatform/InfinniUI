@@ -27,8 +27,6 @@ var myHooks = function () {
   this.registerHandler('BeforeFeature', function () {
     return driver.get('http://localhost:8080');
   });
-
-  extensions.call(this);
 };
 
 module.exports = myHooks;
