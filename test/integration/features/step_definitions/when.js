@@ -26,5 +26,11 @@ module.exports = function () {
         });
     });
 
+    this.When(/^я нажму на кнопку с подсказкой "([^"]*)"$/, function (buttonToolTip) {
+        return this.currentView.findElements(this.by.xpath(this.selectors.XPATH.Button.caption(''))).then(function (elements) {
+            console.log(elements.length);
+        });
+    });
+
     // </editor-fold>
 };

@@ -3,7 +3,7 @@
 var driver = require('./world.js').getDriver();
 var fs = require('fs');
 var path = require('path');
-var sanitize = require("sanitize-filename");
+var sanitize = require('sanitize-filename');
 
 var myHooks = function () {
   
@@ -24,7 +24,7 @@ var myHooks = function () {
   });
 
   try {
-    require('../../extensions.js').call(this, driver);
+    require('../../helpers/extensions.js').call(this, driver);
   } catch (err) {
     console.log('Extensions not found');
   }

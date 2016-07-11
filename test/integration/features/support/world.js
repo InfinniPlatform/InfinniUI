@@ -2,8 +2,8 @@
 
 var fs = require('fs');
 var webdriver = require('selenium-webdriver');
-var selectors = require('./helpers/selectors.js');
-var args = require('../../config.json');
+var selectors = require('../../helpers/selectors.js');
+var args = require('../../helpers/config.json');
 
 var buildChromeDriver = function () {
     return new webdriver.Builder()
