@@ -93,6 +93,17 @@ _.extend(MetadataViewBuilder.prototype, {
             return params.parentView.getApplicationView();
         }
 
+        if( mode == "Container" ) {
+            var containerName = params.metadata.Container;
+            var container = InfinniUI.global.containers[containerName];
+
+            if(container){
+                return container.getView();
+            }else{
+                return params.parentView;
+            }
+        }
+
         return params.parentView;
     }
 });
