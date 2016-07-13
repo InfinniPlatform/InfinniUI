@@ -1,6 +1,6 @@
 'use strict';
 
-const browserSync = require('browser-sync').create('server:tests');
+var browserSync = require('browser-sync').create('server:tests');
 
 module.exports = function(options) {
 	return function(callback) {
