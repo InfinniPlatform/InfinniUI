@@ -11,7 +11,6 @@ var ControlModel = Backbone.Model.extend({
         textStyle: null,
         background: null,
         foreground: null,
-        texture: null,
         isLoaded: false,
         validationState: 'success',
         validationMessage: '',

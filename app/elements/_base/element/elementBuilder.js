@@ -69,7 +69,6 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 		this.initBindingToProperty(params, 'TextStyle');
 		this.initBindingToProperty(params, 'Foreground');
 		this.initBindingToProperty(params, 'Background');
-		this.initBindingToProperty(params, 'Texture');
 		this.initBindingToProperty(params, 'Style');
 		this.initBindingToProperty(params, 'Tag');
 		this.initBindingToProperty(params, 'Focusable', true);

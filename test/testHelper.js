@@ -48,7 +48,7 @@ var testHelper = {
             'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
             'setVerticalAlignment', 'getTextHorizontalAlignment', 'setTextHorizontalAlignment',
             '!getTextVerticalAlignment', '!setTextVerticalAlignment', 'getTextStyle', 'setTextStyle', 'getForeground',
-            'setForeground', 'getBackground', 'setBackground', 'getTexture', 'setTexture', 'getChildElements',
+            'setForeground', 'getBackground', 'setBackground', 'getChildElements',
             'getProperty', 'setProperty']
             .forEach(function (methodName) {
                 it(methodName, function () {
