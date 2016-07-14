@@ -10,11 +10,7 @@ describe('ButtonBuilder', function () {
                 Action: {
                     OpenAction: {
                         LinkView: {
-                            InlineView: {
-                                "ConfigId": "Structure",
-                                "DocumentId": "Department",
-                                "ViewType": "EditView"
-                            }
+                            AutoView: {}
                         }
                     }
                 }

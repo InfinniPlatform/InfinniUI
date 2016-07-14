@@ -18,10 +18,6 @@ moment.locale('ru');
         return new DocumentFileProvider(urlConstructor);
     });
 
-    InfinniUI.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
-        return new DataProviderUpload(new QueryConstructorUpload(host, metadataValue));
-    });
-
     InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
     setTimeout(InfinniUI.LayoutManager.init.bind(InfinniUI.LayoutManager), 1000);
@@ -36,17 +32,12 @@ moment.locale('ru');
         return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(host, metadataValue));
     });
 
-    InfinniUI.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
-        return new InfinniUI.Providers.MetadataDataSourceProvider(new InfinniUI.Providers.QueryConstructorMetadataDataSource(host, metadataValue));
-    });
-
     InfinniUI.providerRegister.register('DocumentDataSource', InfinniUI.Providers.RestDataProvider);
     InfinniUI.providerRegister.register('RestDataSource', InfinniUI.Providers.RestDataProvider);
 
      InfinniUI.providerRegister.register('ServerActionProvider', function () {
              return new InfinniUI.Providers.ServerActionProvider();
      });
-
 
     var builder = new InfinniUI.ApplicationBuilder(),
         rootView = new SpecialApplicationView(),
