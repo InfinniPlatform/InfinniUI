@@ -1,14 +1,14 @@
 'use strict';
 
-const sourceForFiles = require('./sourceForFiles');
+var sourceForFiles = require('./sourceForFiles');
 
-const jsFilesForDevMode = sourceForFiles.jsFiles
+var jsFilesForDevMode = sourceForFiles.jsFiles
 	.slice()
 	.join()
 	.replace('!', sourceForFiles.devModeFiles.concatToPlatform.src + ',!')
 	.split(',');
 
-const sourceForTasks = {
+var sourceForTasks = {
 	cleanFolder: {
 		src: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/cleanFolder"
