@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @mixes DataSourceValidationNotifierMixin, DataSourceBuilderFileProviderMixin
+ * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
 }
@@ -136,13 +136,28 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 basePathOfProperty: params.basePathOfProperty
             });
         };
-    }
+    },
+
+     initFileProvider: function (metadata, dataSource) {
+
+             var host = InfinniUI.config.serverUrl,
+                 configId = metadata.ConfigId,
+                 documentId = metadata.DocumentId;
+
+             var fileUrlConstructor = new DocumentUploadQueryConstructor(host, {
+                 configId: configId,
+                 documentId: documentId
+         });
+
+             var fileProvider = new DocumentFileProvider(fileUrlConstructor);
+
+             dataSource.setFileProvider(fileProvider);
+     }
+
 
 });
 
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
-
-_.extend(BaseDataSourceBuilder.prototype, DataSourceBuilderFileProviderMixin);
 
 InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

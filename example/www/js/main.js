@@ -8,16 +8,6 @@ moment.locale('ru');
 
     var host = InfinniUI.config.serverUrl;
 
-    //Регистрация провайдера для работы с прикрепленными к документам файлами
-    InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
-        var params = {
-            documentId: metadata.documentId,
-            configId: metadata.configId
-        };
-        var urlConstructor = new DocumentUploadQueryConstructor(host, params);
-        return new DocumentFileProvider(urlConstructor);
-    });
-
     InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
     setTimeout(InfinniUI.LayoutManager.init.bind(InfinniUI.LayoutManager), 1000);
