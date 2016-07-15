@@ -67,7 +67,7 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
 
-        this.initFileProvider(metadata, dataSource);
+        this.initFileProvider(dataSource);
     },
 
     createDataSource: function (parent) {
@@ -138,16 +138,11 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         };
     },
 
-     initFileProvider: function (metadata, dataSource) {
+     initFileProvider: function (dataSource) {
 
-             var host = InfinniUI.config.serverUrl,
-                 configId = metadata.ConfigId,
-                 documentId = metadata.DocumentId;
+             var host = InfinniUI.config.serverUrl;
 
-             var fileUrlConstructor = new DocumentUploadQueryConstructor(host, {
-                 configId: configId,
-                 documentId: documentId
-         });
+             var fileUrlConstructor = new DocumentUploadQueryConstructor(host);
 
              var fileProvider = new DocumentFileProvider(fileUrlConstructor);
 
