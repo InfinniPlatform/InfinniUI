@@ -35,13 +35,6 @@ _.extend(ObjectDataSourceBuilder.prototype, {
         }
 
     }
-
-    //initFileProvider: function (dataSource) {
-    //    var fileProvider = window.providerRegister.build('DocumentFileProvider', {
-    //        documentId: "documentId",
-    //        configId: "configId"
-    //    });
-    //
-    //    dataSource.setFileProvider(fileProvider);
-    //}
 });
+
+InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;

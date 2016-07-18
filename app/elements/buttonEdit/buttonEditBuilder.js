@@ -16,10 +16,6 @@ ButtonEditBuilder.prototype.createElement = function (params) {
 ButtonEditBuilder.prototype.applyMetadata = function (params) {
     TextBoxBuilder.prototype.applyMetadata.call(this, params);
 
-    /** @type {ButtonEdit} **/
-    var element = params.element;
-    var metadata = params.metadata;
-
     this.initBindingToProperty(params, 'Icon');
     this.initBindingToProperty(params, 'ReadOnly', true);
     this.initBindingToProperty(params, 'ShowClear', true);

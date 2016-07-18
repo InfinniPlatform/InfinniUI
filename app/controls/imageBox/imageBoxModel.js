@@ -6,7 +6,6 @@
 var ImageBoxModel = ControlModel.extend( _.extend({
 
     defaults: _.defaults({
-            readOnly: true,
             text: 'Выбрать изображение'
         },
         editorBaseModelMixin.defaults_editorBaseModel,

@@ -46,18 +46,6 @@ _.extend(ImageBox.prototype, {
         return this.control.get('acceptTypes');
     },
 
-
-    /**
-     *  Методы, не описанные в документации
-     */
-    setReadOnly: function (value) {
-        this.control.set('readOnly', value);
-    },
-
-    getReadOnly: function () {
-        return this.control.get('readOnly');
-    },
-
     /**
      * @description Недокументированный!
      * @param {Array} types

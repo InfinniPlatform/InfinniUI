@@ -1,12 +1,7 @@
-var IndeterminateCheckboxModel = ControlModel.extend( _.extend({
+var IndeterminateCheckboxModel = CheckBoxModel.extend({
 
 	defaults: _.defaults({
 		value: 'unchecked'
-	}, ControlModel.prototype.defaults),
+	}, CheckBoxModel.prototype.defaults)
 
-	initialize: function () {
-		ControlModel.prototype.initialize.apply(this, arguments);
-		this.initialize_editorBaseModel();
-	}
-
-}, editorBaseModelMixin));
+});

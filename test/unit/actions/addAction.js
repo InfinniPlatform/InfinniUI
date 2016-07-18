@@ -111,8 +111,8 @@ describe('AddAction', function () {
             // Then
             var destinationItems = destinationDS.getItems();
             assert.equal(destinationItems.length, 1);
-            assert.include(destinationItems, {name: "New"});
-            view.control.controlView.$el.detach();
+            assert.equal(destinationItems[0].name, "New");
+
             done();
             view.close();
         });
@@ -120,7 +120,7 @@ describe('AddAction', function () {
 
     it('should add item to DocumentDataSource', function (done) {
         // Given
-        window.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
         var metadata = {
             "Text": 'Parent View',
@@ -211,7 +211,7 @@ describe('AddAction', function () {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
-                        view.control.controlView.$el.detach();
+
                         done();
 
                         view.close();

@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
+ * @mixes dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -39,6 +39,10 @@ var BaseDataSource = Backbone.Model.extend({
 
         isLazy: true,
 
+        isWaiting: false,
+
+        resolvePriority: 0,
+
         newItemsHandler: null,
 
         isNumRegEx: /^\d/
@@ -59,6 +63,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('suspendingList', []);
         this.set('waitingOnUpdateItemsHandlers', []);
         this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
+
+        _.extend( this, BaseDataSource.identifyingStrategy.byId);
     },
 
     initDataProvider: function () {
@@ -130,6 +136,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     onItemsUpdated: function (handler) {
         this.on('onItemsUpdated', handler);
+    },
+
+    onItemsUpdatedOnce: function (handler) {
+        this.once('onItemsUpdated', handler);
     },
 
     onItemDeleted: function (handler) {
@@ -443,21 +453,27 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _changeItem: function(index, value){
-        var item = this.get('model').getProperty('items.'+index);
-        var oldValue = {};
+        var item = this.get('model').getProperty('items.'+index),
+            isSelectedItem = (item == this.getSelectedItem()),
+            idProperty = this.get('idProperty'),
+            indexedItemsById = this.get('itemsById');
 
         if(value == item){
             return;
         }
 
         this._excludeItemFromModifiedSet(item);
+        delete indexedItemsById[item[idProperty]];
 
-        this._replaceAllProperties(oldValue, item);
-        this._replaceAllProperties(item, value);
+        this.get('model').setProperty('items.'+index, value);
 
-        this.get('model').simulateSetProperty('items.'+index, oldValue);
+        this._includeItemToModifiedSet(value);
+        indexedItemsById[value[idProperty]] = value;
+        this.set('itemsById', indexedItemsById);
 
-        this._includeItemToModifiedSet(item);
+        if(isSelectedItem) {
+            this.get('model').setProperty('selectedItem', value);
+        }
     },
 
     tryInitData: function(){
@@ -616,10 +632,22 @@ var BaseDataSource = Backbone.Model.extend({
             this.set('isRequestInProcess', true);
             dataProvider.getItems(function (data) {
 
-                that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                var isWaiting =  that.get('isWaiting'),
+                    finishUpdating = function(){
+                        that.set('isRequestInProcess', false);
+                        that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                    };
+
+                if(isWaiting){
+                    that.once('change:isWaiting', function () {
+                        finishUpdating();
+                    });
+                } else {
+                    finishUpdating();
+                }
 
             }, onError);
+
         }else{
             var handlers = this.get('waitingOnUpdateItemsHandlers');
             handlers.push({
@@ -628,6 +656,10 @@ var BaseDataSource = Backbone.Model.extend({
             });
         }
 
+    },
+
+    setIsWaiting: function(value){
+        this.set('isWaiting', value);
     },
 
     _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
@@ -839,6 +871,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     _notifyAboutValidation: function (validationResult, validationType) {
+        if(!validationResult) {
+            return;
+        }
+
         var context = this.getContext(),
             argument = {
                 value: validationResult
@@ -891,7 +927,7 @@ var BaseDataSource = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('isRequestInProcess')){
-            this.once('onItemsUpdated', function(){
+            this.onItemsUpdatedOnce(function(){
                 if(this.isDataReady()){
                     promise.resolve();
                 }else{
@@ -911,7 +947,7 @@ var BaseDataSource = Backbone.Model.extend({
     getNearestRequestPromise: function(){
         var promise = $.Deferred();
 
-        this.once('onItemsUpdated', function(){
+        this.onItemsUpdatedOnce( function(){
             if(this.isDataReady()){
                 promise.resolve();
             }else{
@@ -937,14 +973,12 @@ var BaseDataSource = Backbone.Model.extend({
         return this.get('isLazy');
     },
 
-    _replaceAllProperties: function (currentObject, newPropertiesSet) {
-        for (var property in currentObject) {
-            delete(currentObject[property]);
-        }
+    setResolvePriority: function(priority){
+        this.set('resolvePriority', priority);
+    },
 
-        for (var property in newPropertiesSet) {
-            currentObject[property] = newPropertiesSet[property];
-        }
+    getResolvePriority: function(){
+        return this.get('resolvePriority');
     },
 
     _copyObject: function (currentObject) {
@@ -1139,4 +1173,4 @@ BaseDataSource.identifyingStrategy = {
     }
 };
 
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
+InfinniUI.BaseDataSource = BaseDataSource;

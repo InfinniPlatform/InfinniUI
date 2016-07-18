@@ -9,7 +9,7 @@ var MenuItemButtonView = LinkButtonView.extend({
         var that = this;
         var $el;
 
-        this.whenReady(
+        domHelper.whenReady(
             function(){
                 $el = that.$el.parent().parent();
                 return $el.length > 0;
@@ -26,26 +26,8 @@ var MenuItemButtonView = LinkButtonView.extend({
             }
         );
 
-    },
-
-    whenReady: function(conditionFunction, onConditionFunction, n){
-        var that = this;
-
-        if(n === undefined){
-            n = 100;
-        }
-
-        if(!conditionFunction()){
-            if(n>0){
-                setTimeout( function(){
-                    that.whenReady(conditionFunction, onConditionFunction, n-1);
-                }, 10);
-            }
-        }else{
-            onConditionFunction();
-        }
     }
 
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Button.viewModes.menuItem', MenuItemButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.menuItem', MenuItemButtonView);

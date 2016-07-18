@@ -15,4 +15,4 @@ function DataProviderRegister() {
 }
 
 
-window.providerRegister = new DataProviderRegister();
+window.InfinniUI.providerRegister = new DataProviderRegister();

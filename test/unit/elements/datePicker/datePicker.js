@@ -124,7 +124,6 @@ describe('DateTimePicker', function () {
             dateTimePicker.render();
 
             dateTimePicker.onValueChanged(function () {
-                console.log(arguments);
                 onValueChangedFlag++;
             });
 

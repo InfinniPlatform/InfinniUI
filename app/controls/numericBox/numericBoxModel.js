@@ -3,25 +3,13 @@
  * @augments TextEditorBaseModel
  */
 var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
-    defaults: _.extend(
-        {},
-        TextEditorBaseModel.prototype.defaults,
+    defaults: _.defaults(
         {
-            increment: 1
-        }
+            increment: 1,
+            inputType: 'number'
+        },
+        TextEditorBaseModel.prototype.defaults
     ),
-
-    transformValue: function (value) {
-        var result = value;
-
-        if (typeof value !== 'undefined' && value !== null) {
-            var result = +value;
-            if (isNaN(result) || !isFinite(result)) {
-                result = null;
-            }
-        }
-        return result;
-    },
 
     incValue: function () {
         var delta = this.get('increment');

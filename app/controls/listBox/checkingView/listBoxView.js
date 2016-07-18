@@ -59,4 +59,4 @@ var CheckingListBoxView = BaseListBoxView.extend({
     }
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Listbox.viewModes.checking', CheckingListBoxView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.checking', CheckingListBoxView);

@@ -206,6 +206,7 @@ _.extend(RestDataProvider.prototype, {
                         result[i] = extractFilesFromNode(value, currentPath);
                     } else {
                         //Object instance
+                        result[i] = null;
                         files[currentPath.join('.')] = value;
                         continue;
                     }
@@ -221,3 +222,5 @@ _.extend(RestDataProvider.prototype, {
 
 
 });
+
+window.InfinniUI.Providers.RestDataProvider = RestDataProvider;

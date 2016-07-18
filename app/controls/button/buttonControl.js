@@ -19,11 +19,11 @@ _.extend(
         },
 
         createControlView: function (model, viewMode) {
-            if (!viewMode || !viewMode in window.InfinniUI.Button) {
+            if (!viewMode || !viewMode in window.InfinniUI.viewModes.Button) {
                 viewMode = 'common';
             }
 
-            var ViewClass = window.InfinniUI.Button.viewModes[viewMode];
+            var ViewClass = window.InfinniUI.viewModes.Button[viewMode];
 
             return new ViewClass({model: model});
         }

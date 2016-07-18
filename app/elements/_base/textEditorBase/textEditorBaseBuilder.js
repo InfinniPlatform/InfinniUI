@@ -24,14 +24,56 @@ _.extend(TextEditorBaseBuilder.prototype, {
 
         this.initBindingToProperty(params, 'LabelText');
 
+        element.setInputType(this.getCompatibleInputType(params));
         this
             .initDisplayFormat(params)
-            .initEditMask(params);
+            .initEditMask(params)
+            .initEditor(params);
+    },
+
+    getCompatibleInputType: function (params) {
+        var inputType = params.metadata.Type,
+            editMask = params.metadata.EditMask;
+
+        if (typeof inputType === 'undefined') {
+            inputType = params.element.getInputType();
+        }
+
+        if (editMask) {
+            //Маска редактирования задается только для input[type=text]
+            inputType = 'text'
+        }
+        return inputType;
+    },
+
+    initEditor: function (params) {
+        var element = params.element;
+        var editor = new TextEditor();
+        editor
+            .setDisplayFormat(element.getDisplayFormat())
+            .setEditMask(element.getEditMask())
+            .setValueConverter(function () {
+                return element.convertValue.bind(element)
+            })
+            .setValidatorValue(element.validateValue.bind(element));
+
+        element.setEditor(editor);
+
+        editor.onValueChanged(function (value) {
+            //element.setValue(element.convertValue(value));
+            element.setValue(value);
+        });
+
+        element.onValueChanged(function (context, args) {
+            editor.setValue(args.newValue);
+        });
+
+        editor.setValue(element.getValue());
+
+        return this;
     },
 
     initDisplayFormat: function (params) {
-
-
         var
             metadata = params.metadata,
             format = this.buildDisplayFormat(metadata.DisplayFormat, params);

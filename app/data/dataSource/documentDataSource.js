@@ -120,7 +120,7 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('DocumentDataSource');
+        var dataProvider = window.InfinniUI.providerRegister.build('DocumentDataSource');
 
         this.set('dataProvider', dataProvider);
     },

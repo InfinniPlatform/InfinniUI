@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @mixes DataSourceValidationNotifierMixin, DataSourceBuilderFileProviderMixin
+ * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
 }
@@ -59,11 +59,15 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             dataSource.setIsLazy(metadata['IsLazy']);
         }
 
+        if('ResolvePriority' in metadata){
+            dataSource.setResolvePriority(metadata['ResolvePriority']);
+        }
+
         this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
 
-        this.initFileProvider(metadata, dataSource);
+        this.initFileProvider(dataSource);
     },
 
     createDataSource: function (parent) {
@@ -132,11 +136,23 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 basePathOfProperty: params.basePathOfProperty
             });
         };
-    }
+    },
+
+     initFileProvider: function (dataSource) {
+
+             var host = InfinniUI.config.serverUrl;
+
+             var fileUrlConstructor = new DocumentUploadQueryConstructor(host);
+
+             var fileProvider = new DocumentFileProvider(fileUrlConstructor);
+
+             dataSource.setFileProvider(fileProvider);
+     }
+
 
 });
 
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
 
-_.extend(BaseDataSourceBuilder.prototype, DataSourceBuilderFileProviderMixin);
+InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

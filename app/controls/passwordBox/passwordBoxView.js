@@ -19,7 +19,8 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
 
     events: {
         'blur .pl-control': 'onBlurHandler',
-        'input .pl-control': 'onInputHandler'
+        'input .pl-control': 'onInputHandler',
+        'change .pl-control': 'onChangeHandler'
     },
 
     initialize: function () {
@@ -64,16 +65,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         this.ui.input.val(value);
     },
 
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.ui.input.attr('tabindex', -1);
-        } else {
-            this.ui.input.removeAttr('tabindex');
-        }
-    },
-
     updateEnabled: function () {
         ControlView.prototype.updateEnabled.call(this);
 
@@ -102,26 +93,33 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         return this;
     },
 
+    remove: function () {
+        ControlView.prototype.remove.call(this);
+    },
+
     getTemplate: function () {
         var model = this.model;
 
         return model.get('autocomplete') ? this.template.autocomplete : this.template.noautocomplete;
     },
 
-    onBlurHandler: function () {
-        var model = this.model;
-
+    updateModelValue: function () {
         var value = this.ui.input.val();
-
+        var model = this.model;
         model.set('value', value);
+        model.set('rawValue', value);
+    },
+
+    onBlurHandler: function () {
+        this.updateModelValue();
+    },
+
+    onChangeHandler: function () {
+        this.updateModelValue();
     },
 
     onInputHandler: function () {
-        var model = this.model;
-
-        var value = this.ui.input.val();
-
-        model.set('rawValue', value);
+        this.updateModelValue();
     }
 
 }));

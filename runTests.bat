@@ -1,1 +1,1 @@
-call grunt runTests
+call gulp runTests

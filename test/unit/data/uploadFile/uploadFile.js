@@ -11,34 +11,11 @@ describe('FileProvider', function () {
         return Math.ceil(Math.random() * (max - min) + min);
     }
 
-    describe('DocumentUploadQueryConstructor', function () {
-        var urlConstructor = new DocumentUploadQueryConstructor('http://127.0.0.1', {configId: 'config', documentId: 'document'});
-
-        it('construct upload url', function () {
-            var url = urlConstructor.getUploadUrl('photo', '11');
-
-            assert.equal(url,
-                'http://127.0.0.1/'
-                + 'RestfulApi/Upload/configuration/uploadbinarycontent/?linkedData='
-                +  '{"Configuration":"config","Metadata":"document","DocumentId":"11","FieldName":"photo"}');
-        });
-
-        it('construct download url', function () {
-            var url = urlConstructor.getFileUrl('photo', '11');
-
-            assert.equal(url,
-                'http://127.0.0.1/'
-                + 'RestfulApi/UrlEncodedData/configuration/downloadbinarycontent/?Form='
-                +  '{"Configuration":"config","Metadata":"document","DocumentId":"11","FieldName":"photo"}');
-        });
-
-    });
-
     describe('DocumentFileProvider', function () {
 
         beforeEach(function () {
             //register fake upload provider
-            window.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
+            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
                 return {
                     uploadFile: function () {
                         var deferred = $.Deferred();
@@ -55,7 +32,7 @@ describe('FileProvider', function () {
             });
 
             //register fake DocumentDataSource provider
-            window.providerRegister.register('DocumentDataSource', function (metadataValue) {
+            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
                 return {
                     getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
                         resultCallback();

@@ -169,4 +169,4 @@ var BaseListBoxView = ListEditorBaseView.extend({
     }
 });
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'Listbox.viewModes.base', BaseListBoxView);
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.base', BaseListBoxView);

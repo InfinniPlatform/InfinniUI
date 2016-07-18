@@ -11,11 +11,11 @@ _.extend(PopupButtonControl.prototype, /** @lends PopupButtonControl.prototype *
     },
 
     createControlView: function (model, viewMode) {
-        if(!viewMode || ! viewMode in window.InfinniUI.PopupButton){
+        if(!viewMode || ! viewMode in window.InfinniUI.viewModes.PopupButton){
             viewMode = 'common';
         }
 
-        var ViewClass = window.InfinniUI.PopupButton.viewModes[viewMode];
+        var ViewClass = window.InfinniUI.viewModes.PopupButton[viewMode];
 
         return new ViewClass({model: model});
     }

@@ -73,7 +73,7 @@ window.testHelpers = {
     },
 
     getFormattedDate: function (date) {
-        return window.configWindow.moment(date).format("YYYY-MM-DDTHH:mm:ss.SSS");
+        return window.configWindow.moment(date.replace(/\./g, '/')).format("YYYY-MM-DDTHH:mm:ss.SSS");
     },
 
     getStandartDate: function (date) {
@@ -142,7 +142,7 @@ window.testHelpers = {
         var result = '';
 
         $cells.each(function (i, item) {
-            result += '|' + window.configWindow.$(item).find('.pl-label:visible').text().trim().replace(/"/g, '\'');
+            result += '|' + window.configWindow.$(item).text().trim();
         });
 
         return result + '|';

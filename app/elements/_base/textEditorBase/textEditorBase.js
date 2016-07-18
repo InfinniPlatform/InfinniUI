@@ -15,6 +15,10 @@ _.inherit(TextEditorBase, Element);
 
 _.extend(TextEditorBase.prototype, {
 
+    setEditor: function (editor) {
+        this.control.set('editor', editor);
+    },
+
     setDisplayFormat: function (value) {
         this.control.set('displayFormat', value);
     },
@@ -54,6 +58,16 @@ _.extend(TextEditorBase.prototype, {
 
         function isNotEmpty(val) {
             return val !== null && typeof val !== 'undefined';
+        }
+    },
+
+    getInputType: function () {
+        return this.control.get('inputType');
+    },
+
+    setInputType: function (inputType) {
+        if (inputType) {
+            this.control.set('inputType', inputType);
         }
     }
 

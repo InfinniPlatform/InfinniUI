@@ -8,7 +8,7 @@ var DataSourceValidationNotifierMixin = {
      */
     initNotifyValidation: function (dataSource) {
         dataSource.onErrorValidator(this.notifyOnValidationError.bind(this));
-        dataSource.onWarningValidator(this.notifyOnValidationError.bind(this));
+        dataSource.onWarningValidator(this.notifyOnValidationWarning.bind(this));
     },
 
     /**

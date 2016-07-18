@@ -26,7 +26,7 @@ describe('IndeterminateCheckbox', function () {
 				indeterminateCheckbox.setText('Text 1');
 
 				var $el = indeterminateCheckbox.render(),
-					$label = $('.indeterminateCheckbox-label', $el);
+					$label = $('.checkbox-label', $el);
 
 				assert.equal($label.html(), 'Text 1');
 

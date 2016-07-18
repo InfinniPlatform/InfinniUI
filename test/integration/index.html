@@ -45,7 +45,13 @@
         };
 
         if(window.location.hash != ""){
-            window.startUpParameters = JSON.parse(window.location.hash.substring(1).replace(/'/g,'"'));
+            var hash = window.location.hash.substring(1).replace(/'/g,'"');
+            
+            if (hash.indexOf('{') === -1 && hash.indexOf('}') === -1) {
+                hash = '{' + hash + '}';
+            }
+            
+            window.startUpParameters = JSON.parse(hash);
         }
 
         if(window.startUpParameters && window.startUpParameters.tags){

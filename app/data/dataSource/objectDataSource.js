@@ -1,7 +1,7 @@
 var ObjectDataSource = BaseDataSource.extend({
 
     initDataProvider: function(){
-        var dataProvider = window.providerRegister.build('ObjectDataSource');
+        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
         this.set('dataProvider', dataProvider);
     },
 
@@ -11,3 +11,5 @@ var ObjectDataSource = BaseDataSource.extend({
     }
 
 });
+
+InfinniUI.ObjectDataSource = ObjectDataSource;

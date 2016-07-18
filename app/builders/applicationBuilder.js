@@ -57,7 +57,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
-        builder.register('DocumentViewer', new DocumentViewerBuilder());
         builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
@@ -77,8 +76,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('DeleteAction', new DeleteActionBuilder());
         builder.register('EditAction', new EditActionBuilder());
         builder.register('OpenAction', new OpenActionBuilder());
-        builder.register('PrintReportAction', new PrintReportActionBuilder());
-        builder.register('PrintViewAction', new PrintViewActionBuilder());
         builder.register('SaveAction', new SaveActionBuilder());
         builder.register('SelectAction', new SelectActionBuilder());
         builder.register('UpdateAction', new UpdateActionBuilder());
@@ -128,3 +125,5 @@ ApplicationBuilder.addToRegisterQueue = function(name, builder){
         builder: builder
     });
 };
+
+window.InfinniUI.ApplicationBuilder = ApplicationBuilder;

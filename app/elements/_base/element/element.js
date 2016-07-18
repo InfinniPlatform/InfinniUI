@@ -292,16 +292,6 @@ _.extend(Element.prototype, {
         }
     },
 
-    getTexture: function () {
-        return this.control.get('texture');
-    },
-
-    setTexture: function (texture) {
-        if (typeof texture == 'string') {
-            this.control.set('texture', texture);
-        }
-    },
-
     onLoaded: function (handler) {
         this.control.onLoaded(handler);
     },
@@ -627,3 +617,5 @@ _.extend(Element.prototype, {
         this.renderTree.call(parent);
     }
 });
+
+InfinniUI.Element = Element;

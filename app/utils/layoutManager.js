@@ -281,7 +281,11 @@ var layoutManager = {
     },
 
     init: function (container) {
+        if( window.InfinniUI.config.disableLayoutManager === true ) {
+            return false;
+        }
         container = container || document;
+        $('#page-content').addClass('page-content-overflow-hidden');
         this.windowHeight = $(window).height();
         this.onChangeLayout(container);
         if (this.exchange === null) {
@@ -303,3 +307,5 @@ var layoutManager = {
         this.resizeDialog();
     }
 };
+
+window.InfinniUI.LayoutManager = layoutManager;

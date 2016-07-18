@@ -31,8 +31,9 @@
             context = this.model.get('context'),
             itemTemplate = this.model.get('itemTemplate'),
             parameters = this.model.get('parameters'),
-            items = this.model.get('items');
+            items = this.model.get('items'),
+            builder = this.model.get('builder');
 
-        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items});
+        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder});
     }
 });

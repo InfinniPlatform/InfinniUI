@@ -36,7 +36,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.listenTo(this.model, 'change:textStyle', this.updateTextStyle);
         this.listenTo(this.model, 'change:background', this.updateBackground);
         this.listenTo(this.model, 'change:foreground', this.updateForeground);
-        this.listenTo(this.model, 'change:texture', this.updateTexture);
 
         this.listenTo(this.model, 'change:validationState', this.updateValidationState);
 
@@ -90,7 +89,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.updateTextStyle();
         this.updateBackground();
         this.updateForeground();
-        this.updateTexture();
 
         this.updateValidationState();
 
@@ -128,7 +126,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
 
     onFocusHandler: function (event) {
-        console.log('onFocus');
+        //console.log('onFocus');
     },
 
 
@@ -230,22 +228,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         }
 
         this.currentForeground = customStyle;
-    },
-
-    updateTexture: function () {
-        var customStyle = this.model.get('texture');
-
-        if (this.currentTexture) {
-            this.$el
-                .removeClass(this.valueToTextureClassName(this.currentTexture));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToTextureClassName(customStyle));
-        }
-
-        this.currentTexture = customStyle;
     },
 
     updateStyle: function () {
@@ -372,10 +354,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         return 'pl-' + value.toLowerCase();
     },
 
-    valueToTextureClassName: function (value) {
-        return 'pl-' + value.toLowerCase();
-    },
-
     renderTemplate: function (template) {
         var data = this.getData();
         this.$el.html(template(data));
@@ -397,8 +375,7 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             textVerticalAlignment: model.get('textVerticalAlignment'),
             textStyle: model.get('textStyle'),
             foreground: model.get('foreground'),
-            background: model.get('background'),
-            texture: model.get('texture')
+            background: model.get('background')
         }
     },
 
@@ -409,3 +386,5 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 });
 
 _.extend(ControlView.prototype, bindUIElementsMixin, eventHandlerMixin);
+
+InfinniUI.ControlView = ControlView;

@@ -9,12 +9,8 @@ describe('ButtonBuilder', function () {
                 HorizontalAlignment: 'Right',
                 Action: {
                     OpenAction: {
-                        View: {
-                            InlineView: {
-                                "ConfigId": "Structure",
-                                "DocumentId": "Department",
-                                "ViewType": "EditView"
-                            }
+                        LinkView: {
+                            AutoView: {}
                         }
                     }
                 }
@@ -22,14 +18,13 @@ describe('ButtonBuilder', function () {
 
             // When
             var builder = new ButtonBuilder();
-            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
 
             // Then
             assert.isNotNull(button);
             assert.equal(button.getText(), 'Click me');
             assert.isFalse(button.getVisible());
             assert.equal(button.getHorizontalAlignment(), 'Right');
-            assert.isNotNull(button.getAction());
         });
 
     });

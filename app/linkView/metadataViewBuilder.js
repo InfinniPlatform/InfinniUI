@@ -33,36 +33,38 @@ _.extend(MetadataViewBuilder.prototype, {
         var that = this;
 
         return function (onViewReadyHandler) {
-            var metadataProvider = window.providerRegister.build('MetadataDataSource', metadata);
+            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
 
-            metadataProvider.getViewMetadata(function (viewMetadata) {
-                that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
-                function onReady() {
+            metadataProvider.getMetadata(function (viewMetadata) {
+
+                if (viewMetadata == null) {
+                    InfinniUI.global.logger.error('view metadata not found');
+                    InfinniUI.global.messageBus.send(messageTypes.onViewBuildError, {error: 'metadata not found', metadata: metadata});
+                    return;
+                }
+
+                var onReady = function() {
                     var args = Array.prototype.slice.call(arguments);
                     onViewReadyHandler.apply(null, args);
-                }
+                };
+
+                that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
             });
         };
     },
 
     buildViewByMetadata: function (params, viewMetadata, parentView, onViewReadyHandler) {
         var builder = params.builder;
-        var logger = InfinniUI.global.logger;
         var parameters = this.buildParameters(params);
 
-        if (viewMetadata !== null) {
+        var view = builder.buildType("View", viewMetadata, {
+            parentView: parentView,
+            parent: parentView,
+            params: parameters,
+            suspended: params.suspended
+        });
 
-            var view = builder.buildType("View", viewMetadata, {
-                parentView: parentView,
-                parent: parentView,
-                params: parameters,
-                suspended: params.suspended
-            });
-
-            onViewReadyHandler(view);
-        } else {
-            logger.error('view metadata for ' + metadata + ' not found.');
-        }
+        onViewReadyHandler(view);
     },
 
     buildParameters: function (params) {
@@ -89,6 +91,17 @@ _.extend(MetadataViewBuilder.prototype, {
     getParentViewByOpenMode: function(params, mode) {
         if( mode == null || mode == "Default" ) {
             return params.parentView.getApplicationView();
+        }
+
+        if( mode == "Container" ) {
+            var containerName = params.metadata.Container;
+            var container = InfinniUI.global.containers[containerName];
+
+            if(container){
+                return container.getView();
+            }else{
+                return params.parentView;
+            }
         }
 
         return params.parentView;

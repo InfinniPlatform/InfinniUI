@@ -122,7 +122,7 @@ describe('EditAction', function () {
 
     it('should edit item from DocumentDataSource', function (done) {
         // Given
-        window.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
         var metadata = {
             "Text": 'Parent View',

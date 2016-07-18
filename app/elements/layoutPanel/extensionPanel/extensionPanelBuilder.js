@@ -23,6 +23,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
 
         element.setParameters(parameters);
         element.setContext(parentView.getContext());
+        element.setBuilder(builder);
     },
 
     createElement: function (params) {
@@ -30,5 +31,4 @@ _.extend(ExtensionPanelBuilder.prototype, {
 
         return element;
     }
-
 });

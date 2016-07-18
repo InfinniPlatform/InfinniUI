@@ -112,7 +112,7 @@ _.extend(NumberEditMask.prototype, {
             template.push(text.substring(position + mask.length));
         });
 
-        return template;
+        return this.template = template;
     },
 
     getText: function () {
@@ -358,7 +358,9 @@ _.extend(NumberEditMask.prototype, {
             res = null;
         }
 
-        return {result: res, position: position};
+        this.reset(res);
+
+        return res ? position : 0;
     },
 
     /**
@@ -368,6 +370,10 @@ _.extend(NumberEditMask.prototype, {
      * @returns {*}
      */
     deleteCharRight: function (position, len) {
+
+        if (len > 0) {
+            return this.deleteSelectedText(position, len);
+        }
         var itemTemplate = this.getItemTemplate();
         var left = itemTemplate.left;
         var item = itemTemplate.item;
@@ -542,6 +548,11 @@ _.extend(NumberEditMask.prototype, {
         var item;
         var left = 0;
         var result = null;
+
+        if (typeof  template === 'undefined') {
+            this.reset();
+            template = this.template;
+        }
 
         if (!Array.isArray(template)) {
             return null;

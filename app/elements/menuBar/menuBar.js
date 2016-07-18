@@ -11,7 +11,6 @@ _.inherit(MenuBar, Container);
 
 _.extend(MenuBar.prototype, {
     createControl: function (viewMode) {
-        window.ololo = this;
         return new MenuBarControl(viewMode);
     },
 
