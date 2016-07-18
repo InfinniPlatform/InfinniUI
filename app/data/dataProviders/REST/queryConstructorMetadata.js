@@ -1,10 +1,8 @@
 function QueryConstructorMetadata(host, metadata) {
 
-    var viewMetadataUrlTemplate = '{0}/content/metadata/Views/{1}/{2}.json';
-
-    this.constructViewMetadataRequest = function () {
+    this.constructMetadataRequest = function () {
         return {
-            "requestUrl": stringUtils.format(viewMetadataUrlTemplate, [host, metadata.DocumentId, metadata.MetadataName]),
+            "requestUrl": host + '/' + metadata.Path,
             "method": "GET"
         };
     };

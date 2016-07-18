@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
+ * @mixes dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -1172,7 +1172,5 @@ BaseDataSource.identifyingStrategy = {
         }
     }
 };
-
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
 
 InfinniUI.BaseDataSource = BaseDataSource;

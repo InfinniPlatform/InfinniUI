@@ -38,13 +38,4 @@ _.extend(DocumentDataSourceBuilder.prototype, {
     },
 
     initBindingToProperty: RestDataSourceBuilder.prototype.initBindingToProperty
-
-    //initFileProvider: function (dataSource) {
-    //    var fileProvider = window.providerRegister.build('DocumentFileProvider', {
-    //        documentId: dataSource.getDocumentId(),
-    //        configId: dataSource.getConfigId()
-    //    });
-    //
-    //    dataSource.setFileProvider(fileProvider);
-    //}
 });

@@ -35,7 +35,7 @@ _.extend(MetadataViewBuilder.prototype, {
         return function (onViewReadyHandler) {
             var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
 
-            metadataProvider.getViewMetadata(function (viewMetadata) {
+            metadataProvider.getMetadata(function (viewMetadata) {
 
                 if (viewMetadata == null) {
                     InfinniUI.global.logger.error('view metadata not found');
