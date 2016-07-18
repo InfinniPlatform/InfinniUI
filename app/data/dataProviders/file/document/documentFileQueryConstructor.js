@@ -6,14 +6,6 @@ var DocumentUploadQueryConstructor = function (host) {
     this.host = host;
 };
 
-DocumentUploadQueryConstructor.prototype.template = {
-    download: _.template('<%= host %>/RestfulApi/UrlEncodedData/configuration/downloadbinarycontent/?Form=<%= form %>')
-};
-
-DocumentUploadQueryConstructor.prototype.normalizeFieldName = function (fieldName) {
-    return String(fieldName).replace(/^[\d\$]+\./, '');
-};
-
 /**
  * @public
  * @description Возвращает ссылку на загруженный ранее файл
@@ -23,17 +15,6 @@ DocumentUploadQueryConstructor.prototype.normalizeFieldName = function (fieldNam
  * @returns {String}
  */
 DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, instanceId, contentId) {
-
-    var data = {
-        DocumentId: instanceId,
-        ContentId: contentId,
-        FieldName: this.normalizeFieldName(fieldName)
-    };
-    var template = this.template.download;
-
-    return template({
-        host: this.host,
-        form: JSON.stringify((data))
-    });
+    return stringUtils.format('{0}/blob/{1}', [this.host, contentId]);
 };
 
