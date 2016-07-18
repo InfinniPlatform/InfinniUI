@@ -25,6 +25,8 @@ moment.locale('ru');
     InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
     setTimeout(InfinniUI.LayoutManager.init.bind(InfinniUI.LayoutManager), 1000);
+
+
     InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
@@ -35,6 +37,25 @@ moment.locale('ru');
 
         return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(host, metadataValue));
     });
+
+    /**
+     * @description При изменении размеров окна пересчитывает высоту элементов представления
+     */
+    InfinniUI.AutoHeightService = (function () {
+        var TIMEOUT = 40;
+        var WAIT = 50;
+        var resizeTimeout;
+
+        $(window).resize(function () {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(_.debounce(onWindowResize, WAIT), TIMEOUT);
+        });
+
+        function onWindowResize() {
+            layoutManager.init();
+        }
+
+    })();
 
     InfinniUI.providerRegister.register('MetadataInfoDataSource', function (metadataValue) {
         return new InfinniUI.Providers.MetadataDataSourceProvider(new InfinniUI.Providers.QueryConstructorMetadataDataSource(host, metadataValue));
