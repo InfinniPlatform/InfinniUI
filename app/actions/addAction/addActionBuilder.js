@@ -7,7 +7,7 @@ function AddActionBuilder(){
         var action = new AddAction(parentView);
 
         var suspended = {};
-        suspended[metadata.DestinationValue.Source] = 'AddAction';
+        suspended[metadata.SourceValue.Source] = 'AddAction';
 
         var linkView = builder.build(metadata['LinkView'], {
             parent: args.parent,

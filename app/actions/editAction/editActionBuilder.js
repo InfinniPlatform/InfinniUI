@@ -11,7 +11,7 @@ function EditActionBuilder(){
         var action = new EditAction(parentView);
 
         var suspended = {};
-        suspended[metadata.DestinationValue.Source] = 'EditAction';
+        suspended[metadata.SourceValue.Source] = 'EditAction';
 
         var linkView = builder.build(metadata['LinkView'], {
             parent: args.parent,
