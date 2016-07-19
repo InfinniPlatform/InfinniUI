@@ -11,7 +11,6 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.suspendUpdate('tuningInSourceBuilder');
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
-        //this.initFileProvider(dataSource, args.metadata);
 
         this.applySuspended(dataSource, args.suspended);
 
@@ -85,12 +84,6 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         if (metadata.ValidationErrors) {
             dataSource.setErrorValidator(function (context, args) {
                 return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
-            });
-        }
-
-        if (metadata.ValidationWarnings) {
-            dataSource.setWarningValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name || metadata.ValidationWarnings, args);
             });
         }
     },
