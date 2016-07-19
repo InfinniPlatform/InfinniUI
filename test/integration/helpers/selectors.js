@@ -15,13 +15,27 @@ module.exports = {
                 return this.default() + '|' + this.link();
             },
             caption: function (text) {
-                return this.self().replace(/\{caption\}/g, 'node() = "' + text + '"');
+                return this.self()
+                    .replace(/\{caption\}/g, 'node() = "' + text + '"')
+                    .replace(/\{pl-name\}/g, '@data-pl-name="' + text + '"');
             },
-            default: function () {
+            default_text: function () {
                 return './/div[contains(@class, "pl-button")]/button[{caption}]';
             },
-            link: function () {
+            default_name: function () {
+                return './/div[contains(@class, "pl-button") and {pl-name}]/button';
+            },
+            default: function () {
+                return this.default_text() + '|' + this.default_name();
+            },
+            link_text: function () {
                 return './/a[contains(@class, "pl-button") and {caption}]';
+            },
+            link_name: function () {
+                return './/a[contains(@class, "pl-button") and {pl-name}]';
+            },
+            link: function () {
+                return this.link_text() + '|' + this.link_name();
             }
         },
         ModalView: {
@@ -31,6 +45,9 @@ module.exports = {
             header: function (text) {
                 return this.self() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]/../../..';
             }
+        },
+        DatePicker: {
+
         }
     },
     CSS: {

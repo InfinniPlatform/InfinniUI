@@ -4,6 +4,7 @@ var fs = require('fs');
 var webdriver = require('selenium-webdriver');
 var selectors = require('../../helpers/selectors.js');
 var args = require('../../helpers/config.json');
+var helpers = require('../../helpers/helpers.js');
 
 var buildChromeDriver = function () {
     return new webdriver.Builder()
@@ -48,6 +49,7 @@ var World = function World() {
     this.driver = driver;
     this.by = webdriver.By;
     this.selectors = selectors;
+    this.helpers = helpers;
 
     this.currentView = null;
 

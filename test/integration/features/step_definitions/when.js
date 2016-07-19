@@ -7,7 +7,10 @@ module.exports = function () {
 
     this.When(/^я введу в текстовое поле "([^"]*)" значение "([^"]*)"$/, function (fieldName, value) {
         var that = this;
-        return this.currentView.findElement(this.by.xpath(this.selectors.XPATH.TextBox.caption(fieldName))).then(function (element) {
+        var selector = this.selectors.XPATH.TextBox.caption(fieldName);
+        var xpath = this.by.xpath(selector);
+
+        return this.currentView.findElement(xpath).then(function (element) {
             return element.getAttribute('for').then(function (tag) {
                 return that.currentView.findElement(that.by.id(tag)).then(function (textbox) {
                     return textbox.sendKeys(value);
@@ -21,15 +24,21 @@ module.exports = function () {
     // <editor-fold desc="Button">
 
     this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonText) {
-        return this.currentView.findElement(this.by.xpath(this.selectors.XPATH.Button.caption(buttonText))).then(function (element) {
-            element.click();
+        var button = this.helpers.parseElement(buttonText);
+        var selector = this.selectors.XPATH.Button.caption(button.name);
+        var xpath = this.by.xpath(selector);
+
+        return this.currentView.findElements(xpath).then(function (elements) {
+            elements[button.index].click();
         });
     });
 
-    this.When(/^я нажму на кнопку с подсказкой "([^"]*)"$/, function (buttonToolTip) {
-        return this.currentView.findElements(this.by.xpath(this.selectors.XPATH.Button.caption(''))).then(function (elements) {
-            console.log(elements.length);
-        });
+    // </editor-fold>
+
+    // <editor-fold desc="DatePicker">
+
+    this.When(/^я введу в поле типа дата "([^"]*)" значение "([^"]*)"$/, function (pickerName, date) {
+
     });
 
     // </editor-fold>
