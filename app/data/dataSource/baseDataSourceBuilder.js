@@ -102,12 +102,6 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             });
         }
 
-        //if (parentView && metadata.OnSelectedItemModified) {
-        //    dataSource.onSelectedItemModified(function () {
-        //        new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
-        //    });
-        //}
-
         if (parentView && metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
@@ -117,6 +111,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         if (parentView && metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            });
+        }
+
+        if (parentView && metadata.OnErrorValidator) {
+            dataSource.onErrorValidator(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
         }
     },

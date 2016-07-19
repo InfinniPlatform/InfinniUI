@@ -280,24 +280,6 @@ var BaseDataSource = Backbone.Model.extend({
         });
     },
 
-    _addItems: function (newItems) {
-        var indexedItemsById = this.get('itemsById'),
-            items = this.getItems(),
-            newIndexedItemsById;
-
-        this.set('isDataReady', true);
-        items = _.union(items, newItems);
-        this.set('items', items);
-        if (newItems && newItems.length > 0) {
-            newIndexedItemsById = this._indexItemsById(newItems);
-            _.extend(indexedItemsById, newIndexedItemsById);
-            this.set('itemsById', indexedItemsById);
-        }
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
-        //this.trigger('settingNewItemsComplete');
-    },
-
     getSelectedItem: function () {
         return this.get('model').getProperty('selectedItem');
     },
@@ -698,24 +680,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.trigger('onPropertyChanged', context, argument);
         this.trigger('onPropertyChanged:', context, argument);
-    },
-
-    _handleAddedItems: function (itemsData, successHandler) {
-        this._addItems(itemsData);
-        this._notifyAboutItemsAdded(itemsData, successHandler);
-
-    },
-
-    _notifyAboutItemsAdded: function (itemsData, successHandler) {
-        var context = this.getContext(),
-            argument = {
-                value: itemsData
-            };
-
-        if (successHandler) {
-            successHandler(context, argument);
-        }
-        this.trigger('onItemsAdded', context, argument);
     },
 
     createItem: function (success, error) {
