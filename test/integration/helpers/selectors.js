@@ -47,7 +47,15 @@ module.exports = {
             }
         },
         DatePicker: {
-
+            self: function () {
+                return './/div[contains(@class, "pl-datepicker")]';
+            },
+            caption: function (text) {
+                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
+            },
+            editor: function (text) {
+                return this.caption(text) + '/..//input[contains(@class, "pl-control-editor")]';
+            }
         }
     },
     CSS: {

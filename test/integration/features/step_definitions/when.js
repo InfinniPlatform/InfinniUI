@@ -37,8 +37,29 @@ module.exports = function () {
 
     // <editor-fold desc="DatePicker">
 
-    this.When(/^я введу в поле типа дата "([^"]*)" значение "([^"]*)"$/, function (pickerName, date) {
+    this.When(/^я введу в поле типа дата "([^"]*)" значение "([^"]*)"$/, function (pickerText, date) {
+        var selectorLabel = this.selectors.XPATH.DatePicker.caption(pickerText);
+        var selectorEditor = this.selectors.XPATH.DatePicker.editor(pickerText);
+        var xpathLabel = this.by.xpath(selectorLabel);
+        var xpathEditor = this.by.xpath(selectorEditor);
+        var that = this;
 
+        date = this.helpers.parseDate(date);
+        console.log(date);
+
+        // TODO: Сделать метод более уникальным, чем три отправки
+        return this.currentView.findElement(xpathLabel).then(function (element) {
+            return element.sendKeys('').then(function () {
+                return that.currentView.findElement(xpathEditor).then(function (editor) {
+                    date = date.split('.');
+                    return editor.sendKeys(date[0]).then(function () {
+                        return editor.sendKeys(date[1]).then(function () {
+                            return editor.sendKeys(date[2]);
+                        });
+                    });
+                });
+            });
+        });
     });
 
     // </editor-fold>
