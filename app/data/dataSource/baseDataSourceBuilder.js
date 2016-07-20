@@ -88,33 +88,38 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         }
     },
 
+    //Скриптовые обработчики на события
     initScriptsHandlers: function (parentView, metadata, dataSource) {
-        //Скриптовые обработчики на события
-        if (parentView && metadata.OnSelectedItemChanged) {
+
+        if( !parentView ){
+            return;
+        }
+
+        if (metadata.OnSelectedItemChanged) {
             dataSource.onSelectedItemChanged(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
             });
         }
 
-        if (parentView && metadata.OnItemsUpdated) {
+        if (metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
             });
         }
 
-        if (parentView && metadata.OnPropertyChanged) {
+        if (metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
             });
         }
 
-        if (parentView && metadata.OnItemDeleted) {
+        if (metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
             });
         }
 
-        if (parentView && metadata.OnErrorValidator) {
+        if (metadata.OnErrorValidator) {
             dataSource.onErrorValidator(function () {
                 new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
