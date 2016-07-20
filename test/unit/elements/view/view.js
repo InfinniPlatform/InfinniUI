@@ -55,19 +55,6 @@ describe('View', function () {
         assert.equal(view.getDataSources().length, 1, 'getDataSources should not override dataSource');
     });
 
-    it('should set icon', function () {
-        //Given
-        var view = new View();
-
-        assert.isUndefined(view.getIcon());
-
-        //When
-        view.setIcon('icon1');
-
-        //Then
-        assert.equal(view.getIcon(), 'icon1');
-    });
-
     it('should set dialogResult', function () {
         //Given
         var view = new View();
