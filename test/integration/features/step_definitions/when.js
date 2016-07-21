@@ -63,4 +63,49 @@ module.exports = function () {
     });
 
     // </editor-fold>
+
+    // <editor-fold desc="ComboBox">
+
+    this.When(/^я выберу в выпадающем списке "([^"]*)" пункт "([^"]*)"$/, function (comboboxLabel, value) {
+        var selector = this.selectors.XPATH.ComboBox.caption(comboboxLabel);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElement(xpath).then(function (element) {
+            return element.click().then(function () {
+                selector = that.selectors.XPATH.ComboBox.dropDown(value);
+                xpath = that.by.xpath(selector);
+
+                return that.driver.findElement(xpath).then(function (dropDownItem) {
+                    return dropDownItem.click();
+                })
+            });
+        });
+    });
+
+    this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" пункт "([^"]*)"$/, function (comboboxLabel, filter, value) {
+        var selector = this.selectors.XPATH.ComboBox.caption(comboboxLabel);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElement(xpath).then(function (element) {
+            return element.click().then(function () {
+                selector = that.selectors.XPATH.ComboBox.filter();
+                xpath = that.by.xpath(selector);
+
+                return that.driver.findElement(xpath).then(function (filteredField) {
+                    return filteredField.sendKeys(filter).then(function () {
+                        selector = that.selectors.XPATH.ComboBox.dropDown(value);
+                        xpath = that.by.xpath(selector);
+
+                        return that.driver.findElement(xpath).then(function (dropDownItem) {
+                            return dropDownItem.click();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    // </editor-fold>
 };
