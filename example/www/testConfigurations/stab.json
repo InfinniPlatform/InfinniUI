@@ -71,7 +71,7 @@
 
                           "Value": {
                             "Source": "ds1",
-                            "Property": "0.date2"
+                            "Property": "0.Date"
                           }
                         }
                       }

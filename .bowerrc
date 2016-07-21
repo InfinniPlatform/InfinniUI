@@ -1,5 +1,9 @@
 {
 	"storage": {
 	    "packages":"bower_cache/"
-    }
+    },
+	"resolvers": [
+		"bower-npm-resolver"
+	]
+
 }
