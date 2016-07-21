@@ -62,6 +62,10 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             dataSource.setResolvePriority(metadata['ResolvePriority']);
         }
 
+        if( _.isObject(metadata.CustomProperties) ) {
+            this.initCustomProperties(dataSource, metadata.CustomProperties);
+        }
+
         this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
@@ -71,6 +75,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
 
     createDataSource: function (parent) {
         throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+    },
+
+    initCustomProperties: function(dataSource, customProperties){
+        _.each(customProperties, function(value, key){
+            dataSource.setProperty('.' + key, value);
+        });
     },
 
     /**
