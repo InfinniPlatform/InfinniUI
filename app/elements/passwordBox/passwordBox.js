@@ -14,14 +14,6 @@ _.inherit(PasswordBox, Element);
 
 _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
 
-        getPasswordChar: function () {
-            return this.control.get('passwordChar');
-        },
-
-        setPasswordChar: function (value) {
-            this.control.set('passwordChar', value);
-        },
-
         setAutocomplete: function (value) {
             if (typeof value === 'undefined' || value === null) {
                 return;

@@ -1,7 +1,6 @@
 describe('ViewBuilder', function () {
     var viewMetadata = {
         Text: 'TestView',
-        Icon: 'Icon',
         DataSources: [
             {
                 DocumentDataSource: {
@@ -73,20 +72,6 @@ describe('ViewBuilder', function () {
         assert.equal(view.getName(), 'my_view');
         assert.instanceOf(view.getItems(), Collection);
     });
-
-    it('should build Icon', function () {
-        // Given
-        var viewBuilder = new ViewBuilder();
-        var builder = new ApplicationBuilder();
-        var metadata = viewMetadata;
-
-        // When
-        var view = viewBuilder.build(null, {metadata: metadata, builder: builder});
-
-        // Then
-        assert.equal(view.getIcon(), 'Icon');
-    });
-
 
     it('should build Scripts', function () {
         // Given

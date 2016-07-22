@@ -7,8 +7,11 @@ InfinniUI.TextStyle = {
     headline: "Headline",
     title: "Title",
     subhead: "Subhead",
-    body: "Body",
     caption: "Caption",
+
+    body1: "Body1",
+    body2: "Body2",
+
     menu: "Menu",
     button: "Button"
 };

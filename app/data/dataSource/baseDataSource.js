@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
+ * @mixes dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -32,8 +32,6 @@ var BaseDataSource = Backbone.Model.extend({
         waitingOnUpdateItemsHandlers: null, //[]
 
         errorValidator: null,
-        warningValidator: null,
-        showingWarnings: false,
 
         isRequestInProcess: false,
 
@@ -120,10 +118,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     onErrorValidator: function (handler) {
         this.on('onErrorValidator', handler);
-    },
-
-    onWarningValidator: function (handler) {
-        this.on('onWarningValidator', handler);
     },
 
     onItemSaved: function (handler) {
@@ -284,24 +278,6 @@ var BaseDataSource = Backbone.Model.extend({
             message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
             source: this
         });
-    },
-
-    _addItems: function (newItems) {
-        var indexedItemsById = this.get('itemsById'),
-            items = this.getItems(),
-            newIndexedItemsById;
-
-        this.set('isDataReady', true);
-        items = _.union(items, newItems);
-        this.set('items', items);
-        if (newItems && newItems.length > 0) {
-            newIndexedItemsById = this._indexItemsById(newItems);
-            _.extend(indexedItemsById, newIndexedItemsById);
-            this.set('itemsById', indexedItemsById);
-        }
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
-        //this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -497,7 +473,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         validateResult = this.validateOnErrors(item);
         if (!validateResult.IsValid) {
-            that._notifyAboutValidation(validateResult, 'error');
             this._executeCallback(error, {item: item, result: validateResult});
             return;
         }
@@ -707,24 +682,6 @@ var BaseDataSource = Backbone.Model.extend({
         this.trigger('onPropertyChanged:', context, argument);
     },
 
-    _handleAddedItems: function (itemsData, successHandler) {
-        this._addItems(itemsData);
-        this._notifyAboutItemsAdded(itemsData, successHandler);
-
-    },
-
-    _notifyAboutItemsAdded: function (itemsData, successHandler) {
-        var context = this.getContext(),
-            argument = {
-                value: itemsData
-            };
-
-        if (successHandler) {
-            successHandler(context, argument);
-        }
-        this.trigger('onItemsAdded', context, argument);
-    },
-
     createItem: function (success, error) {
         var dataProvider = this.get('dataProvider'),
             idProperty = this.get('idProperty'),
@@ -802,32 +759,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('errorValidator', validatingFunction);
     },
 
-    getWarningValidator: function () {
-        return this.get('warningValidator');
-    },
-
-    setWarningValidator: function (validatingFunction) {
-        this.set('warningValidator', validatingFunction);
-    },
-
     validateOnErrors: function (item, callback) {
-        return this._validatingActions(item, callback, 'error');
-    },
-
-    validateOnWarnings: function (item, callback) {
-        return this._validatingActions(item, callback, 'warning');
-    },
-
-    setFileProvider: function (fileProvider) {
-        this.set('fileProvider', fileProvider);
-    },
-
-    getFileProvider: function () {
-        return this.get('fileProvider');
-    },
-
-    _validatingActions: function (item, callback, validationType) {
-        var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
+        var validatingFunction = this.get('errorValidator'),
             result = {
                 IsValid: true,
                 Items: []
@@ -858,10 +791,18 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._notifyAboutValidation(result, validationType);
+        this._notifyAboutValidation(result, 'error');
         this._executeCallback(callback, {item: item, result: result});
 
         return result;
+    },
+
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
     },
 
     _addIndexToPropertiesOfValidationMessage: function (validationMessages, index) {
@@ -880,8 +821,7 @@ var BaseDataSource = Backbone.Model.extend({
                 value: validationResult
             };
 
-        var eventType = (validationType == 'warning') ? 'onWarningValidator' : 'onErrorValidator';
-        this.trigger(eventType, context, argument);
+        this.trigger('onErrorValidator', context, argument);
     },
 
     getContext: function () {
@@ -1172,7 +1112,5 @@ BaseDataSource.identifyingStrategy = {
         }
     }
 };
-
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
 
 InfinniUI.BaseDataSource = BaseDataSource;

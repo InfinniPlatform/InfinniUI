@@ -23,7 +23,6 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
         this.listenTo(this.model, 'change:displayFormat', this.updateDisplayFormat);
         this.listenTo(this.model, 'change:textWrapping', this.updateTextWrapping);
         this.listenTo(this.model, 'change:textTrimming', this.updateTextTrimming);
-        this.listenTo(this.model, 'change:lineCount', this.updateLineCount);
     },
 
     updateProperties: function(){
@@ -33,7 +32,6 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
         this.updateDisplayFormat();
         this.updateTextWrapping();
         this.updateTextTrimming();
-        this.updateLineCount();
     },
 
     updateFocusable: function () {
@@ -73,10 +71,6 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
     updateText: function () {
         this.updateValue();
-    },
-
-    updateLineCount: function(){
-
     },
 
     getData: function () {

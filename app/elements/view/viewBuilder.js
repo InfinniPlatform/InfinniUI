@@ -68,8 +68,6 @@ _.extend(ViewBuilder.prototype, {
         var scripts = element.getScripts();
         var parameters = element.getParameters();
 
-        element.setIcon(metadata.Icon);
-
         if (metadata.Scripts) {
             for (var i = 0, len = metadata.Scripts.length; i < len; ++i) {
                 var scriptMetadata = metadata.Scripts[i];

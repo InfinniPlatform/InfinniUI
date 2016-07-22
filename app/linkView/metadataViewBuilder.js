@@ -35,7 +35,7 @@ _.extend(MetadataViewBuilder.prototype, {
         return function (onViewReadyHandler) {
             var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
 
-            metadataProvider.getViewMetadata(function (viewMetadata) {
+            metadataProvider.getMetadata(function (viewMetadata) {
 
                 if (viewMetadata == null) {
                     InfinniUI.global.logger.error('view metadata not found');
@@ -91,6 +91,17 @@ _.extend(MetadataViewBuilder.prototype, {
     getParentViewByOpenMode: function(params, mode) {
         if( mode == null || mode == "Default" ) {
             return params.parentView.getApplicationView();
+        }
+
+        if( mode == "Container" ) {
+            var containerName = params.metadata.Container;
+            var container = InfinniUI.global.containers[containerName];
+
+            if(container){
+                return container.getView();
+            }else{
+                return params.parentView;
+            }
         }
 
         return params.parentView;

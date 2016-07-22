@@ -1,5 +1,5 @@
 'use strict';
-const sourceForFiles = {
+var sourceForFiles = {
 	platformOutputFolder: "./out/",
 	stylesFiles: ['app/styles/main.less'],
 	stylesFilesForWatch: ["./app/styles/**/*.less"],

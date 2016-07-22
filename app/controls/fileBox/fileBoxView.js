@@ -63,7 +63,14 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
     updateLabelText: function () {
         var labelText = this.model.get('labelText');
-        this.ui.label.text(labelText);
+
+        if(labelText != '') {
+            this.ui.label
+                .css({display: 'inline-block'})
+                .text(labelText);
+        } else {
+            this.ui.label.css({display: 'none'});
+        }
     },
 
     updateAcceptTypes: function () {

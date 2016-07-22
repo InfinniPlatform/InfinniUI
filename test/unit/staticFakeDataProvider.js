@@ -86,7 +86,5 @@ _.extend(StaticFakeDataProvider.prototype, {
 
     setOrigin: function(){},
     setPath: function(){},
-    setData : function(){},
-    setFilter: function(){},
-    setDocumentId: function(){}
+    setData : function(){}
 });

@@ -123,10 +123,9 @@ var DataBinding = Backbone.Model.extend({
     _initPropertyOnElement: function(){
         var sourceProperty = this.get('sourceProperty');
         var source = this.get('source');
-        var that = this;
         var value;
 
-        if(this._shouldRefreshElement(this.get('mode')) && source){
+        if(this._shouldRefreshElement() && source){
             if(typeof source.isDataReady == 'function' && !source.isDataReady()){
                 if(typeof source.tryInitData == 'function'){
                     if(this.getDefaultValue() !== null){
@@ -155,11 +154,7 @@ var DataBinding = Backbone.Model.extend({
      * @description Обработчик события изменения значения элемента
      */
     _onElementPropertyChangedHandler: function (context, argument) {
-        var mode = this.get('mode');
-        var element = this.get('element');
-        var elementProperty = this.get('elementProperty');
-
-        if(this._shouldRefreshSource(mode) && argument.property == elementProperty){
+        if(this._shouldRefreshSource()){
             this._setValueToSource(argument.newValue, context);
         }
     },
@@ -185,10 +180,7 @@ var DataBinding = Backbone.Model.extend({
      * @description Обработчик события изменения значения источника
      */
     _onSourcePropertyChangedHandler: function (context, argument) {
-        var mode = this.get('mode');
-        var sourceProperty = this.get('sourceProperty');
-
-        if(this._shouldRefreshElement(mode) && argument.property == sourceProperty){
+        if(this._shouldRefreshElement()){
             this._setValueToElement(argument.newValue);
         }
     },
@@ -217,11 +209,13 @@ var DataBinding = Backbone.Model.extend({
         return context;
     },
 
-    _shouldRefreshSource: function(mode){
+    _shouldRefreshSource: function(){
+        var mode = this.get('mode');
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toSource;
     },
 
-    _shouldRefreshElement: function(mode){
+    _shouldRefreshElement: function(){
+        var mode = this.get('mode');
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;
     }
 });
