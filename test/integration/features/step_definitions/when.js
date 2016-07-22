@@ -100,7 +100,7 @@ module.exports = function () {
     // <editor-fold desc="ComboBox">
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" пункт "([^"]*)"$/, function (comboboxLabel, value) {
-        var selector = this.selectors.XPATH.ComboBox.caption(comboboxLabel);
+        var selector = this.selectors.XPATH.ComboBox.button(comboboxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
 
@@ -116,8 +116,8 @@ module.exports = function () {
         });
     });
 
-    this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" пункт "([^"]*)"$/, function (comboboxLabel, filter, value) {
-        var selector = this.selectors.XPATH.ComboBox.caption(comboboxLabel);
+    this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" пункт "([^"]*)"$/, function (comboBoxLabel, filter, value) {
+        var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
 
@@ -133,6 +133,27 @@ module.exports = function () {
 
                         return that.driver.findElement(xpath).then(function (dropDownItem) {
                             return dropDownItem.click();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    this.When(/^значение в выпадающем списке "([^"]*)" равно "([^"]*)"$/, function (comboBoxLabel, value) {
+        var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+        
+        return this.currentView.findElement(xpath).then(function (label) {
+            return label.getAttribute('for').then(function (id) {
+                return that.currentView.findElement(that.by.id(id)).then(function (control) {
+                    selector = that.selectors.XPATH.ComboBox.value();
+                    xpath = that.by.xpath(selector);
+
+                    return control.findElement(xpath).then(function (comboBoxValue) {
+                        return comboBoxValue.getText().then(function (text) {
+                            that.assert.equal(text, value);
                         });
                     });
                 });

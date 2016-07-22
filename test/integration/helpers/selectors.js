@@ -65,16 +65,19 @@ module.exports = {
                 return './/div[contains(@class, "pl-combobox")]'
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]' + this.button();
+                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
             },
-            button: function () {
-                return '/..//span[contains(@class, "pl-combobox__grip")]';
+            button: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
             },
             dropDown: function (text) {
                 return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and node()= "' + text + '"]';
             },
             filter: function () {
                 return '//div[contains(@class, "pl-dropdown-container")]//input[contains(@class, "pl-combobox-filter-text")]';
+            },
+            value: function () {
+                return './/span[contains(@class, "pl-label")]';
             }
         }
     },
