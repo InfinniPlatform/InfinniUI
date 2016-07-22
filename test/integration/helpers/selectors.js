@@ -44,6 +44,9 @@ module.exports = {
             },
             header: function (text) {
                 return this.self() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]/../../..';
+            },
+            message: function () {
+                return '//div[@class="modal-dialog"]//p[@class="pl-messagebox-content"]';
             }
         },
         DatePicker: {

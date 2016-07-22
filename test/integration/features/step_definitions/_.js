@@ -10,7 +10,7 @@ module.exports = function () {
         });
     });
 
-    this.When(/^система отобразит список валидационных сообщений: (.*?)$/, function (messages) {
+    this.Then(/^система отобразит список валидационных сообщений: (.*?)$/, function (messages) {
         var selector = this.selectors.XPATH.Toastr.messages();
         var xpath = this.by.xpath(selector);
         var that = this;
@@ -29,6 +29,31 @@ module.exports = function () {
                         that.driver.executeScript('$("#toast-container").remove();');
                     }
                 });
+            });
+        });
+    });
+
+    this.Then(/^система отобразит окно-сообщение "([^"]*)"$/, function (message) {
+        var selector = this.selectors.XPATH.ModalView.message();
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        message = message.replace(/''/g, '"');
+
+        // TODO: Выполнять без setTimeout
+        return this.driver.findElement(xpath).then(function (messageBox) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    messageBox.getText().then(function (text) {
+                        text = text.trim();
+                        try {
+                            that.assert.equal(text, message);
+                            resolve();
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+                }, 500);
             });
         });
     });
