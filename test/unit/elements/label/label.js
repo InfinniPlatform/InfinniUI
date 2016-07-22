@@ -6,7 +6,7 @@ describe('Label', function () {
 
         describe('Implementing Label Methods', function () {
             ['getDisplayFormat', 'setDisplayFormat', 'getTextTrimming', 'setTextTrimming',
-                'getTextWrapping', 'setTextWrapping', 'getLineCount', 'setLineCount']
+                'getTextWrapping', 'setTextWrapping']
                 .forEach(function (methodName) {
                     it(methodName, function () {
                         testHelper.checkMethod(element, methodName);
@@ -48,7 +48,6 @@ describe('Label', function () {
             var metadata = {
                 "Label": {
                     "TextWrapping": false,
-                    "LineCount": 3,
 
                     "Text": "Label",
                     "LabelFloating": true,
@@ -71,7 +70,6 @@ describe('Label', function () {
             var element = builder.build(metadata, {});
 
             assert.equal(element.getTextWrapping(), false, 'TextWrapping');
-            assert.equal(element.getLineCount(), 3, 'LineCount');
             assert.isFunction(element.getDisplayFormat(), 'DisplayFormat');
 
             assert.equal(element.getHintText(), "Hint", 'HintText');
