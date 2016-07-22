@@ -6,6 +6,7 @@ var selectors = require('../../helpers/selectors.js');
 var args = require('../../helpers/config.json');
 var helpers = require('../../helpers/helpers.js');
 var chai = require('chai');
+var underscore = require('underscore');
 
 var buildChromeDriver = function () {
     return new webdriver.Builder()
@@ -52,6 +53,7 @@ var World = function World() {
     this.selectors = selectors;
     this.helpers = helpers;
     this.assert = chai.assert;
+    this._ = underscore;
 
     this.currentView = null;
 

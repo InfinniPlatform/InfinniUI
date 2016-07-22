@@ -93,6 +93,14 @@ module.exports = {
             cells: function () {
                 return './/td[@class="pl-datagrid-row__cell"]'
             }
+        },
+        Toastr: {
+            container: function () {
+                return '//div[@id="toast-container"]';
+            },
+            messages: function () {
+                return this.container() + '/div[contains(@class, "toast")]/div[@class="toast-message"]';
+            }
         }
     },
     CSS: {

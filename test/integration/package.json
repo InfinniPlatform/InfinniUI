@@ -4,7 +4,8 @@
     "chai": "^3.5.0",
     "cucumber": "^1.1.0",
     "sanitize-filename": "^1.6.0",
-    "selenium-webdriver": "^2.53.2"
+    "selenium-webdriver": "^2.53.2",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore"
