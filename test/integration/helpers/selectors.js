@@ -101,12 +101,10 @@ module.exports = {
             messages: function () {
                 return this.container() + '/div[contains(@class, "toast")]/div[@class="toast-message"]';
             }
-        }
-    },
-    CSS: {
+        },
         View: {
             self: function (name) {
-                return '.pl-view[data-pl-name="' + name + '"]';
+                return '//div[contains(@class, "pl-view") and @data-pl-name="' + name + '"]';
             }
         }
     }
