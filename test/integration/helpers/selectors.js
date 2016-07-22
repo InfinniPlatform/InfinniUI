@@ -109,6 +109,17 @@ module.exports = {
             self: function (name) {
                 return '//div[contains(@class, "pl-view") and @data-pl-name="' + name + '"]';
             }
+        },
+        Panel: {
+            self: function () {
+                return './/div[contains(@class, "pl-panel")]';
+            },
+            header: function () {
+                return '/div[contains(@class, "pl-panel-header")]';
+            },
+            caption: function (text) {
+                return this.self() + this.header() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]';
+            }
         }
     }
 };
