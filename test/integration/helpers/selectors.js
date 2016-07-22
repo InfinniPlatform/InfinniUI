@@ -55,6 +55,9 @@ module.exports = {
             },
             editor: function (text) {
                 return this.caption(text) + '/..//input[contains(@class, "pl-control-editor")]';
+            },
+            control: function (text) {
+                return this.caption(text) + '/..//input[contains(@class, "pl-control")]';
             }
         },
         ComboBox: {

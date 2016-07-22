@@ -65,7 +65,6 @@ module.exports = function () {
         var that = this;
 
         date = this.helpers.parseDate(date);
-        console.log(date);
 
         // TODO: Сделать метод более уникальным, чем три отправки
         return this.currentView.findElement(xpathLabel).then(function (element) {
@@ -78,6 +77,20 @@ module.exports = function () {
                         });
                     });
                 });
+            });
+        });
+    });
+
+    this.When(/^значение в поле типа дата "([^"]*)" равно "([^"]*)"$/, function (pickerText, date) {
+        var selector = this.selectors.XPATH.DatePicker.control(pickerText);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        date = this.helpers.parseDate(date);
+
+        return this.currentView.findElement(xpath).then(function (datePicker) {
+            return datePicker.getAttribute('value').then(function (value) {
+                that.assert.equal(value, date);
             });
         });
     });
