@@ -62,7 +62,7 @@ module.exports = {
         },
         ComboBox: {
             self: function () {
-                return './/div[contains(@class, "pl-combobox")]'
+                return './/div[contains(@class, "pl-combobox")]';
             },
             caption: function (text) {
                 return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
@@ -78,6 +78,20 @@ module.exports = {
             },
             value: function () {
                 return './/span[contains(@class, "pl-label")]';
+            }
+        },
+        DataGrid: {
+            self: function (name) {
+                return './/div[contains(@class, "pl-datagrid") and @data-pl-name="' + name + '"]';
+            },
+            body: function (name) {
+                return this.self(name) + '/div[contains(@class, "pl-datagrid__body")]';
+            },
+            rows: function () {
+                return './/tr[contains(@class, "pl-datagrid-row_data")]';
+            },
+            cells: function () {
+                return './/td[@class="pl-datagrid-row__cell"]'
             }
         }
     },
