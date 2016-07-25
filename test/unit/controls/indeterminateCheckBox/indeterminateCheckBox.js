@@ -1,8 +1,8 @@
-describe('IndeterminateCheckbox', function () {
-	var indeterminateCheckbox;
+describe('IndeterminateCheckBox', function () {
+	var indeterminateCheckBox;
 
 	beforeEach(function () {
-		indeterminateCheckbox = new IndeterminateCheckbox();
+		indeterminateCheckBox = new IndeterminateCheckBox();
 	});
 
 	describe('Render', function () {
@@ -11,11 +11,11 @@ describe('IndeterminateCheckbox', function () {
 
 			it('Setting property: visible', function () {
 				//Given
-				var $el = indeterminateCheckbox.render();
+				var $el = indeterminateCheckBox.render();
 				assert.isFalse($el.hasClass('hidden'));
 
 				//When
-				indeterminateCheckbox.setVisible(false);
+				indeterminateCheckBox.setVisible(false);
 
 				//Then
 				assert.isTrue($el.hasClass('hidden'));
@@ -23,15 +23,15 @@ describe('IndeterminateCheckbox', function () {
 
 			it('Setting property: text', function () {
 				//Given
-				indeterminateCheckbox.setText('Text 1');
+				indeterminateCheckBox.setText('Text 1');
 
-				var $el = indeterminateCheckbox.render(),
+				var $el = indeterminateCheckBox.render(),
 					$label = $('.checkbox-label', $el);
 
 				assert.equal($label.html(), 'Text 1');
 
 				//When
-				indeterminateCheckbox.setText('Text 2');
+				indeterminateCheckBox.setText('Text 2');
 
 				//Then
 				assert.equal($label.html(), 'Text 2');
@@ -39,13 +39,13 @@ describe('IndeterminateCheckbox', function () {
 
 			it('Setting property: Enabled', function () {
 				//Given
-				var $el = indeterminateCheckbox.render(),
+				var $el = indeterminateCheckBox.render(),
 					$input = $('input', $el);
 
 				assert.equal($input.prop('disabled'), false, 'Enabled by default');
 
 				//When
-				indeterminateCheckbox.setEnabled(false);
+				indeterminateCheckBox.setEnabled(false);
 
 				//Then
 				assert.equal($input.prop('disabled'), true, 'Disable element');
@@ -53,16 +53,16 @@ describe('IndeterminateCheckbox', function () {
 
 			it('Setting property: indeterminate', function () {
 				//Given
-				var $el = indeterminateCheckbox.render(),
+				var $el = indeterminateCheckBox.render(),
 					$input = $('input', $el);
 
 				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
 
 				//When
-				indeterminateCheckbox.setValue('indeterminate');
+				indeterminateCheckBox.setValue('indeterminate');
 
 				//Then
-				assert.equal($input.prop('indeterminate'), true, 'Indeterminate state for indeterminateCheckbox');
+				assert.equal($input.prop('indeterminate'), true, 'Indeterminate state for indeterminateCheckBox');
 			});
 
 		});
@@ -70,33 +70,33 @@ describe('IndeterminateCheckbox', function () {
 		describe('events', function () {
 			it('Change value on click', function () {
 				//Given
-				var $el = indeterminateCheckbox.render(),
+				var $el = indeterminateCheckBox.render(),
 					$input = $('input', $el);
 
-				indeterminateCheckbox.setValue('unchecked');
+				indeterminateCheckBox.setValue('unchecked');
 
 				//When
 				$input.click();
 
 				//Then
-				assert.equal(indeterminateCheckbox.getValue(), 'checked', 'value changed');
-				assert.equal($input.prop('checked'), true, 'indeterminateCheckbox checked');
+				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
+				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
 				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
 
 				//When
 				$input.click();
 
 				//Then
-				assert.equal(indeterminateCheckbox.getValue(), 'unchecked', 'value changed');
-				assert.equal($input.prop('checked'), false, 'indeterminateCheckbox checked');
+				assert.equal(indeterminateCheckBox.getValue(), 'unchecked', 'value changed');
+				assert.equal($input.prop('checked'), false, 'indeterminateCheckBox checked');
 				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
 
 				//When
 				$input.click();
 
 				//Then
-				assert.equal(indeterminateCheckbox.getValue(), 'checked', 'value changed');
-				assert.equal($input.prop('checked'), true, 'indeterminateCheckbox checked');
+				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
+				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
 				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
 			});
 		});

@@ -39,7 +39,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TextBox', new TextBoxBuilder());
         builder.register('PasswordBox', new PasswordBoxBuilder());
         builder.register('CheckBox', new CheckBoxBuilder());
-        builder.register('IndeterminateCheckbox', new IndeterminateCheckboxBuilder());
+        builder.register('IndeterminateCheckBox', new IndeterminateCheckBoxBuilder());
         builder.register('ImageBox', new ImageBoxBuilder());
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
