@@ -3,7 +3,7 @@
 module.exports = function () {
     this.World = require('../support/world.js').World;
 
-    this.When(/^я выберу в выпадающем списке "([^"]*)" пункт "([^"]*)"$/, function (comboboxLabel, value) {
+    this.When(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (comboboxLabel, value) {
         var selector = this.selectors.XPATH.ComboBox.button(comboboxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
@@ -20,7 +20,7 @@ module.exports = function () {
         });
     });
 
-    this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" пункт "([^"]*)"$/, function (comboBoxLabel, filter, value) {
+    this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (comboBoxLabel, filter, value) {
         var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
