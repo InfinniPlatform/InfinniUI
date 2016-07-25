@@ -54,6 +54,8 @@ var World = function World() {
     this.helpers = helpers;
     this.assert = chai.assert;
     this._ = underscore;
+    this.keys = webdriver.Key;
+    this.selectAll = this.keys.chord(this.keys.CONTROL, 'a');
 
     this.currentView = null;
 

@@ -120,6 +120,20 @@ module.exports = {
             caption: function (text) {
                 return this.self() + this.header() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]';
             }
+        },
+        NumericBox: {
+            self: function () {
+                return './/div[contains(@class, "pl-numericbox")]';
+            },
+            caption: function (text) {
+                return this.self() + '/label[@class="pl-control-label" and node() = "' + text + '"]';
+            },
+            minButton: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-numeric-box-min")]';
+            },
+            maxButton: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-numeric-box-max")]';
+            }
         }
     }
 };
