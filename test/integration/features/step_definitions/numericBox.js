@@ -40,7 +40,7 @@ module.exports = function () {
             });
     });
 
-    this.When(/^я увеличу значение в поле "([^"]*)"$/, function (fieldLabel) {
+    this.When(/^я увеличу значение в числовом поле "([^"]*)"$/, function (fieldLabel) {
         var selector = this.selectors.XPATH.NumericBox.maxButton(fieldLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
@@ -51,7 +51,7 @@ module.exports = function () {
             });
     });
 
-    this.When(/^я уменьшу значение в поле "([^"]*)"$/, function (fieldLabel) {
+    this.When(/^я уменьшу значение в числовом поле "([^"]*)"$/, function (fieldLabel) {
         var selector = this.selectors.XPATH.NumericBox.minButton(fieldLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
