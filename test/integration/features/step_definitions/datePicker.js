@@ -17,7 +17,7 @@ module.exports = function () {
             return element.sendKeys('').then(function () {
                 return that.currentView.findElement(xpathEditor).then(function (editor) {
                     date = date.split('.');
-                    return editor.sendKeys(date[0]).then(function () {
+                    return editor.sendKeys(that.selectAll, date[0]).then(function () {
                         return editor.sendKeys(date[1]).then(function () {
                             return editor.sendKeys(date[2]);
                         });
