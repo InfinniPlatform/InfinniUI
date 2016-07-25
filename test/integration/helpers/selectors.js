@@ -145,6 +145,17 @@ module.exports = {
             page: function (name, text) {
                 return this.list(name) + '/li[@class="pl-tabheader" and normalize-space(node()) = "' + text + '"]';
             }
+        },
+        CheckBox: {
+            name: function (name) {
+                return './/div[@data-pl-name="' + name + '"]//input';
+            },
+            label: function (text) {
+                return './/div[@class="checkbox"]//span[@class="checkbox-label" and normalize-space(node()) = "' + text + '"]/../input';
+            },
+            self: function (text) {
+                return this.name(text) + '|' + this.label(text);
+            }
         }
     }
 };
