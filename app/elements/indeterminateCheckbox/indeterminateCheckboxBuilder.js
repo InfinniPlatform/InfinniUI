@@ -3,17 +3,17 @@
  * @constructor
  * @augments ElementBuilder
  */
-function IndeterminateCheckboxBuilder() {
-	_.superClass(IndeterminateCheckboxBuilder, this);
+function IndeterminateCheckBoxBuilder() {
+	_.superClass(IndeterminateCheckBoxBuilder, this);
 	this.initialize_editorBaseBuilder();
 }
 
-_.inherit(IndeterminateCheckboxBuilder, CheckBoxBuilder);
+_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
 
 
-_.extend(IndeterminateCheckboxBuilder.prototype, {
+_.extend(IndeterminateCheckBoxBuilder.prototype, {
 	createElement: function (params) {
-		return new IndeterminateCheckbox(params.parent);
+		return new IndeterminateCheckBox(params.parent);
 	}
 });
 

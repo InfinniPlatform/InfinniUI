@@ -1,18 +1,18 @@
-function IndeterminateCheckboxControl(parent) {
-	_.superClass(IndeterminateCheckboxControl, this, parent);
+function IndeterminateCheckBoxControl(parent) {
+	_.superClass(IndeterminateCheckBoxControl, this, parent);
 	this.initialize_editorBaseControl();
 }
 
-_.inherit(IndeterminateCheckboxControl, CheckBoxControl);
+_.inherit(IndeterminateCheckBoxControl, CheckBoxControl);
 
-_.extend(IndeterminateCheckboxControl.prototype, {
+_.extend(IndeterminateCheckBoxControl.prototype, {
 
 	createControlModel: function () {
-		return new IndeterminateCheckboxModel();
+		return new IndeterminateCheckBoxModel();
 	},
 
 	createControlView: function (model) {
-		return new IndeterminateCheckboxView({model: model});
+		return new IndeterminateCheckBoxView({model: model});
 	}
 
 }, editorBaseControlMixin);
