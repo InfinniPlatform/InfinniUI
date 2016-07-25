@@ -1,88 +1,33 @@
-this.BeforeScenario(function (scenario, callback) {
+'use strict';
 
-    window.toastrMessageCount = 0;
+var driver = require('./world.js').getDriver();
+var fs = require('fs');
+var path = require('path');
+var sanitize = require('sanitize-filename');
 
-    var mongoServise = {
-        url: window.IntegrationTestConfig.mongoDbService.url,
-        body: {
-            commands: [
-                'remove',
-                'restore'
-            ]
-        }
-    };
-
-    $.post(mongoServise.url, JSON.stringify(mongoServise.body))
-        .always(function () {
-            // TODO: При появлении непонятных ошибок взглянуть на лог mongoDB сервиса
-            openHost(callback);
+var myHooks = function () {
+  
+  this.After(function(scenario) {
+    if(scenario.isFailed()) {
+      this.driver.takeScreenshot().then(function(data){
+        var base64Data = data.replace(/^data:image\/png;base64,/,"");
+        fs.writeFile(path.join('screenshots', sanitize(scenario.getName() + ".png").replace(/ /g,"_")), base64Data, 'base64', function(err) {
+            if(err) console.log(err);
         });
-});
-
-this.AfterFeatures(function () {
-    console.log('Test finished!');
-
-    var p;
-
-    if (window.startUpParameters && window.startUpParameters.saveContent) {
-        var mongoServise = {
-            url: window.IntegrationTestConfig.mongoDbService.url,
-            body: {
-                save: window
-                    .document
-                    .documentElement
-                    .innerHTML
-                    .replace('onload="runIntegrationTests()"', '')
-                    .replace(/<script[\s\S]*<\/script>/g, '')
-            }
-        };
-        p = $.post(mongoServise.url, JSON.stringify(mongoServise.body));
+      });
     }
+    return this.driver.manage().deleteAllCookies();
+  });
 
-    if (window.startUpParameters && window.startUpParameters.isClosing) {
-        if(p) {
-            p.always(function () {
-                window.close();
-            });
-        } else {
-            window.close();
-        }
-    }
-});
+  this.registerHandler('AfterFeatures', function (event) {
+    return driver.quit();
+  });
 
-this.AfterScenario(function (scenario, callback) {
-    window.configWindow.close();
-    callback();
-});
-
-this.AfterStep(function (step, callback) {
-    if (!window.configWindow.toastr.options.onShown) {
-        window.configWindow.toastr.options.onShown = function () {
-            var toastClass = window.configWindow.$(this).attr('class');
-            if (toastClass.indexOf('toast-error') != -1 || toastClass.indexOf('toast-success') != -1) {
-                window.toastrMessageCount++;
-            }
-        }
-    }
-    callback();
-});
-
-var openHost = function (callback) {
-    window.configWindow = window.open(window.IntegrationTestConfig.host);
-
-    var signOut = function () {
-        window.configWindow.contextApp.context.global.session.signOut(function () {
-            window.configWindow.location.reload();
-            callback();
-        });
-    };
-
-    var error = function () {
-        console.log('signOut not called!');
-        callback();
-    };
-
-    window.testHelpers.waitCondition(function () {
-        return window.configWindow.contextApp != null;
-    }, signOut, error);
+  try {
+    require('../../helpers/extensions.js').call(this, driver);
+  } catch (err) {
+    console.log('Extensions not found');
+  }
 };
+
+module.exports = myHooks;

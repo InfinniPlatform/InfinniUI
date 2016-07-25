@@ -1,11 +1,13 @@
 {
-  "name": "infinniUIIntegationTest",
+  "name": "infinni-ui-integration-tests",
   "dependencies": {
-    "grunt": "^1.0.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-concat": "^0.5.1"
+    "chai": "^3.5.0",
+    "cucumber": "0.8.1",
+    "sanitize-filename": "^1.6.0",
+    "selenium-webdriver": "^2.53.2",
+    "underscore": "^1.8.3"
   },
   "scripts": {
-    "build-integration-tests": "grunt build:%EXT_PATH%"
+    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore"
   }
 }
