@@ -102,7 +102,7 @@ module.exports = {
                 return '//div[@id="toast-container"]';
             },
             messages: function () {
-                return this.container() + '/div[contains(@class, "toast")]/div[@class="toast-message"]';
+                return this.container() + '/div[contains(@class, "toast-success") or contains(@class, "toast-error")]/div[@class="toast-message"]';
             }
         },
         View: {
@@ -133,6 +133,17 @@ module.exports = {
             },
             maxButton: function (text) {
                 return this.caption(text) + '/..//span[contains(@class, "pl-numeric-box-max")]';
+            }
+        },
+        TabPanel: {
+            self: function (name) {
+                return './/div[contains(@class, "pl-tabpanel") and @data-pl-name="' + name + '"]';
+            },
+            list: function (name) {
+                return this.self(name) + '//ul[contains(@class, "pl-tabpanel-header")]';
+            },
+            page: function (name, text) {
+                return this.list(name) + '/li[@class="pl-tabheader" and normalize-space(node()) = "' + text + '"]';
             }
         }
     }
