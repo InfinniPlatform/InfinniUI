@@ -18,7 +18,7 @@ module.exports = function () {
             msgs.forEach(function (msg, i) {
                 msg.getText().then(function (text) {
                     that.assert.equal(text, messages[i]);
-                    if(i == msgs.length - 1) {
+                    if (i == msgs.length - 1) {
                         that.driver.executeScript('$("#toast-container").remove();');
                     }
                 });
@@ -49,5 +49,17 @@ module.exports = function () {
                 }, 500);
             });
         });
+    });
+
+    this.Then(/^система не отобразит валидационных сообщений$/, function () {
+        var selector = this.selectors.XPATH.Toastr.messages();
+        var xpath = this.by.xpath(selector);
+
+        return this.driver.findElements(xpath)
+            .then(function (msgs) {
+                if (msgs.length != 0) {
+                    throw new Error('Найдено ' + msgs.length + ' сообщений');
+                }
+            });
     });
 };

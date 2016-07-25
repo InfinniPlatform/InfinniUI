@@ -13,7 +13,7 @@ module.exports = function () {
         return this.currentView.findElement(xpath).then(function (element) {
             return element.getAttribute('for').then(function (tag) {
                 return that.currentView.findElement(that.by.id(tag)).then(function (textbox) {
-                    return textbox.sendKeys(value);
+                    return textbox.sendKeys(that.selectAll, value);
                 });
             });
         });

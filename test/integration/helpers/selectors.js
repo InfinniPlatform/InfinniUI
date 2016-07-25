@@ -7,7 +7,7 @@ module.exports = {
                 return './/div[contains(@class, "pl-textbox") or contains(@class, "pl-password-box")]';
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
+                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
             }
         },
         Button: {
@@ -16,7 +16,7 @@ module.exports = {
             },
             caption: function (text) {
                 return this.self()
-                    .replace(/\{caption\}/g, 'node() = "' + text + '"')
+                    .replace(/\{caption\}/g, 'normalize-space(node()) = "' + text + '"')
                     .replace(/\{pl-name\}/g, '@data-pl-name="' + text + '"');
             },
             default_text: function () {
@@ -43,7 +43,7 @@ module.exports = {
                 return './/h4[@class="modal-title"]'
             },
             header: function (text) {
-                return this.self() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]/../../..';
+                return this.self() + '/span[contains(@class, "pl-label") and normalize-space(node()) = "' + text + '"]/../../..';
             },
             message: function () {
                 return '//div[@class="modal-dialog"]//p[@class="pl-messagebox-content"]';
@@ -54,7 +54,7 @@ module.exports = {
                 return './/div[contains(@class, "pl-datepicker")]';
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
+                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
             },
             editor: function (text) {
                 return this.caption(text) + '/..//input[contains(@class, "pl-control-editor")]';
@@ -68,13 +68,13 @@ module.exports = {
                 return './/div[contains(@class, "pl-combobox")]';
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and node() = "' + text + '"]';
+                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
             },
             button: function (text) {
                 return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
             },
             dropDown: function (text) {
-                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and node()= "' + text + '"]';
+                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = "' + text + '"]';
             },
             filter: function () {
                 return '//div[contains(@class, "pl-dropdown-container")]//input[contains(@class, "pl-combobox-filter-text")]';
@@ -102,7 +102,7 @@ module.exports = {
                 return '//div[@id="toast-container"]';
             },
             messages: function () {
-                return this.container() + '/div[contains(@class, "toast")]/div[@class="toast-message"]';
+                return this.container() + '/div[contains(@class, "toast-success") or contains(@class, "toast-error")]/div[@class="toast-message"]';
             }
         },
         View: {
@@ -118,7 +118,32 @@ module.exports = {
                 return '/div[contains(@class, "pl-panel-header")]';
             },
             caption: function (text) {
-                return this.self() + this.header() + '/span[contains(@class, "pl-label") and node() = "' + text + '"]';
+                return this.self() + this.header() + '/span[contains(@class, "pl-label") and normalize-space(node()) = "' + text + '"]';
+            }
+        },
+        NumericBox: {
+            self: function () {
+                return './/div[contains(@class, "pl-numericbox")]';
+            },
+            caption: function (text) {
+                return this.self() + '/label[@class="pl-control-label" and normalize-space(node()) = "' + text + '"]';
+            },
+            minButton: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-numeric-box-min")]';
+            },
+            maxButton: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-numeric-box-max")]';
+            }
+        },
+        TabPanel: {
+            self: function (name) {
+                return './/div[contains(@class, "pl-tabpanel") and @data-pl-name="' + name + '"]';
+            },
+            list: function (name) {
+                return this.self(name) + '//ul[contains(@class, "pl-tabpanel-header")]';
+            },
+            page: function (name, text) {
+                return this.list(name) + '/li[@class="pl-tabheader" and normalize-space(node()) = "' + text + '"]';
             }
         }
     }
