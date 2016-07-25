@@ -54,5 +54,13 @@ module.exports = {
         }
 
         throw new Error('Некорректная дата');
+    },
+
+    fixQuotes: function (text) {
+        if(text.indexOf('"') != -1){
+            return 'concat("' + text.replace(/"/g, '",\'"\',"') + '")';
+        } else {
+            return '"' + text + '"';
+        }
     }
 };
