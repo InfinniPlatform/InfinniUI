@@ -4,6 +4,8 @@ module.exports = function () {
     this.World = require('../support/world.js').World;
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (comboboxLabel, value) {
+        comboboxLabel = this.helpers.fixQuotes(comboboxLabel);
+
         var selector = this.selectors.XPATH.ComboBox.button(comboboxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
@@ -21,6 +23,8 @@ module.exports = function () {
     });
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (comboBoxLabel, filter, value) {
+        comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+
         var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;
@@ -45,6 +49,8 @@ module.exports = function () {
     });
 
     this.When(/^значение в выпадающем списке "([^"]*)" равно "([^"]*)"$/, function (comboBoxLabel, value) {
+        comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+
         var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel);
         var xpath = this.by.xpath(selector);
         var that = this;

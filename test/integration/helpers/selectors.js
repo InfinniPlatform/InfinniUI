@@ -68,7 +68,7 @@ module.exports = {
                 return './/div[contains(@class, "pl-combobox")]';
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
+                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = ' + text + ']';
             },
             button: function (text) {
                 return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
