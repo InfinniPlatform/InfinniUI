@@ -156,6 +156,22 @@ module.exports = {
             self: function (text) {
                 return this.name(text) + '|' + this.label(text);
             }
+        },
+        Element: {
+            byName: function (name) {
+                var result = [];
+                var that = this;
+
+                this.tags.forEach(function (tag) {
+                    result.push(that.element(tag, name));
+                });
+
+                return result.join('|');
+            },
+            element: function (tag, name) {
+                return './/' + tag + '[@data-pl-name="' + name + '"]';
+            },
+            tags: [ 'div', 'a', 'i', 'p', 'span']
         }
     }
 };
