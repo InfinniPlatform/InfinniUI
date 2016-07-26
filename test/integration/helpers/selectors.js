@@ -74,7 +74,7 @@ module.exports = {
                 return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
             },
             dropDown: function (text) {
-                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = "' + text + '"]';
+                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = ' + text + ']';
             },
             filter: function () {
                 return '//div[contains(@class, "pl-dropdown-container")]//input[contains(@class, "pl-combobox-filter-text")]';
