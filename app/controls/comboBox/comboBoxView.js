@@ -70,7 +70,11 @@ var ComboBoxView = ListEditorBaseView.extend({
 
                     var $dropdown = dropdownView.render();
                     $('body').append($dropdown);
-                    setTimeout(dropdownView.updatePosition(view.el));
+                    
+                    dropdownView.updatePosition(view.el);
+                    view.dropDownView.on('itemsRendered2', function(){
+                        dropdownView.updatePosition(view.el);
+                    });
 
                     if (model.get('autocomplete')) {
                         dropdownView.setSearchFocus();

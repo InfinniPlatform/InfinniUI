@@ -56,6 +56,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
     },
 
     renderItems: function () {
+        this.$el.hide();
         var $items = this.strategy.renderItems();
         this.$items = $items;
         var items = this.model.get('items');
@@ -65,6 +66,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
         this.markSelectedItems();
         this.markCheckedItems();
+
+        this.trigger('itemsRendered2');
+        this.$el.show();
     },
 
     setItemsContent: function (content) {
@@ -277,9 +281,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
     applyStyle: function (parentDOMElement, direction) {
         var rect = parentDOMElement.getBoundingClientRect();
 
-        //@TODO Вынести общие стили в css
         var style = {
-            position: "absolute",
             left: window.pageXOffset + rect.left,
             width: Math.round(rect.width) - 1
         };
