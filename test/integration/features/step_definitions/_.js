@@ -62,4 +62,36 @@ module.exports = function () {
                 }
             });
     });
+
+    this.When(/^я увижу элемент "([^"]*)"$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                return elements[elementName.index].isDisplayed();
+            })
+            .then(function (value) {
+                that.assert.equal(value, true);
+            });
+    });
+
+    this.When(/^я не увижу элемент "([^"]*)"$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                return elements[elementName.index].isDisplayed();
+            })
+            .then(function (value) {
+                that.assert.equal(value, false);
+            });
+    });
 };

@@ -23,4 +23,16 @@ module.exports = function () {
             that.currentView = element;
         });
     });
+
+    this.When(/^я закрою текущее модальное окно$/, function () {
+        var selector = this.selectors.XPATH.ModalView.closeButton();
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.driver.findElements(xpath)
+            .then(function (elements) {
+                var lastModalViewCloseButton = that._.last(elements);
+                return lastModalViewCloseButton.click();
+            });
+    });
 };
