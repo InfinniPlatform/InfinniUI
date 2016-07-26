@@ -47,6 +47,9 @@ module.exports = {
             },
             message: function () {
                 return '//div[@class="modal-dialog"]//p[@class="pl-messagebox-content"]';
+            },
+            closeButton: function () {
+                return './/div[contains(@class, "modal-dialog")]//div[@class="modal-header"]/button[contains(@class, "pl-close-modal")]';
             }
         },
         DatePicker: {
