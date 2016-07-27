@@ -35,4 +35,39 @@ module.exports = function () {
                 return lastModalViewCloseButton.click();
             });
     });
+
+    this.Then(/^система отобразит окно-сообщение "([^"]*)"$/, function (message) {
+        var selector = this.selectors.XPATH.ModalView.message();
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        message = message.replace(/''/g, '"');
+
+        // TODO: Выполнять без setTimeout
+        return this.driver.findElement(xpath).then(function (messageBox) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    messageBox.getText().then(function (text) {
+                        text = text.trim();
+                        try {
+                            that.assert.equal(text, message);
+                            resolve();
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+                }, 500);
+            });
+        });
+    });
+
+    this.When(/^я нажму в окне-сообщении на кнопку "([^"]*)"$/, function (buttonText) {
+        var selector = this.selectors.XPATH.ModalView.messageBoxButton(buttonText);
+        var xpath = this.by.xpath(selector);
+
+        return this.driver.findElement(xpath)
+            .then(function (button) {
+                return button.click();
+            });
+    });
 };

@@ -50,6 +50,9 @@ module.exports = {
             },
             closeButton: function () {
                 return './/div[contains(@class, "modal-dialog")]//div[@class="modal-header"]/button[contains(@class, "pl-close-modal")]';
+            },
+            messageBoxButton: function (text) {
+                return '//div[@class="modal-dialog"]//a[contains(@class, "pl-messagebox-button") and normalize-space(node()) = "' + text + '"]';
             }
         },
         DatePicker: {
