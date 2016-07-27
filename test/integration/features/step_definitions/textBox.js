@@ -14,7 +14,9 @@ module.exports = function () {
         return this.currentView.findElements(xpath).then(function (elements) {
             return elements[fieldName.index].getAttribute('for').then(function (tag) {
                 return that.currentView.findElement(that.by.id(tag)).then(function (textbox) {
-                    return textbox.sendKeys(that.selectAll, value);
+                    // TODO: Вернуть после исправления UI-2203
+                    //return textbox.sendKeys(that.selectAll, value);
+                    return textbox.sendKeys(that.selectAll, that.keys.BACK_SPACE, that.keys.ARROW_LEFT, value);
                 });
             });
         });
