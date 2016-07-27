@@ -16,8 +16,8 @@ module.exports = {
             },
             caption: function (text) {
                 return this.self()
-                    .replace(/\{caption\}/g, 'normalize-space(node()) = "' + text + '"')
-                    .replace(/\{pl-name\}/g, '@data-pl-name="' + text + '"');
+                    .replace(/\{caption\}/g, 'normalize-space(node()) = ' + text)
+                    .replace(/\{pl-name\}/g, '@data-pl-name=' + text);
             },
             default_text: function () {
                 return './/div[contains(@class, "pl-button")]/button[{caption}]';
