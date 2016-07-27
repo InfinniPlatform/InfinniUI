@@ -15,7 +15,7 @@ _.extend(DataNavigationBuilder.prototype, {
 
         var element = params.element;
         var metadata = params.metadata;
-        var pageSize, pageNumber;
+        var pageSize;
         var that = this;
 
         if (Array.isArray(metadata.AvailablePageSizes)) {
