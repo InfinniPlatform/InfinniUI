@@ -26,31 +26,6 @@ module.exports = function () {
         });
     });
 
-    this.Then(/^система отобразит окно-сообщение "([^"]*)"$/, function (message) {
-        var selector = this.selectors.XPATH.ModalView.message();
-        var xpath = this.by.xpath(selector);
-        var that = this;
-
-        message = message.replace(/''/g, '"');
-
-        // TODO: Выполнять без setTimeout
-        return this.driver.findElement(xpath).then(function (messageBox) {
-            return new Promise(function (resolve, reject) {
-                setTimeout(function () {
-                    messageBox.getText().then(function (text) {
-                        text = text.trim();
-                        try {
-                            that.assert.equal(text, message);
-                            resolve();
-                        } catch (err) {
-                            reject(err);
-                        }
-                    });
-                }, 500);
-            });
-        });
-    });
-
     this.Then(/^система не отобразит валидационных сообщений$/, function () {
         var selector = this.selectors.XPATH.Toastr.messages();
         var xpath = this.by.xpath(selector);
@@ -60,6 +35,38 @@ module.exports = function () {
                 if (msgs.length != 0) {
                     throw new Error('Найдено ' + msgs.length + ' сообщений');
                 }
+            });
+    });
+
+    this.When(/^я увижу элемент "([^"]*)"$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                return elements[elementName.index].isDisplayed();
+            })
+            .then(function (value) {
+                that.assert.equal(value, true);
+            });
+    });
+
+    this.When(/^я не увижу элемент "([^"]*)"$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                return elements[elementName.index].isDisplayed();
+            })
+            .then(function (value) {
+                that.assert.equal(value, false);
             });
     });
 };

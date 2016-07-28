@@ -5,6 +5,7 @@ module.exports = function () {
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (comboboxLabel, value) {
         comboboxLabel = this.helpers.fixQuotes(comboboxLabel);
+        value = this.helpers.fixQuotes(value);
 
         var selector = this.selectors.XPATH.ComboBox.button(comboboxLabel);
         var xpath = this.by.xpath(selector);
@@ -24,6 +25,7 @@ module.exports = function () {
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (comboBoxLabel, filter, value) {
         comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+        value = this.helpers.fixQuotes(value);
 
         var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel);
         var xpath = this.by.xpath(selector);
@@ -50,6 +52,7 @@ module.exports = function () {
 
     this.When(/^значение в выпадающем списке "([^"]*)" равно "([^"]*)"$/, function (comboBoxLabel, value) {
         comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+        value = value.replace(/''/g, '"');
 
         var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel);
         var xpath = this.by.xpath(selector);

@@ -1,9 +1,9 @@
 /**
- * @class IndeterminateCheckboxView
+ * @class IndeterminateCheckBoxView
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var IndeterminateCheckboxView = CheckBoxView.extend({
+var IndeterminateCheckBoxView = CheckBoxView.extend({
 
 	className: 'pl-indeterminate-checkbox',
 

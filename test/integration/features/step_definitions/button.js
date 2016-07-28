@@ -5,6 +5,9 @@ module.exports = function () {
 
     this.When(/^я нажму на кнопку "([^"]*)"$/, function (buttonText) {
         var button = this.helpers.parseElement(buttonText);
+
+        button.name = this.helpers.fixQuotes(button.name);
+
         var selector = this.selectors.XPATH.Button.caption(button.name);
         var xpath = this.by.xpath(selector);
 

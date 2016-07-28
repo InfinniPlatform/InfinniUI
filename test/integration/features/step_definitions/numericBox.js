@@ -4,13 +4,15 @@ module.exports = function () {
     this.World = require('../support/world.js').World;
 
     this.When(/^значение в числовом поле "([^"]*)" равно "([^"]*)"$/, function (fieldLabel, value) {
-        var selector = this.selectors.XPATH.NumericBox.caption(fieldLabel);
+        fieldLabel = this.helpers.parseElement(fieldLabel);
+
+        var selector = this.selectors.XPATH.NumericBox.caption(fieldLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath)
-            .then(function (label) {
-                return label.getAttribute('for');
+        return this.currentView.findElements(xpath)
+            .then(function (labels) {
+                return labels[fieldLabel.index].getAttribute('for');
             })
             .then(function (id) {
                 return that.currentView.findElement(that.by.id(id));
@@ -24,13 +26,15 @@ module.exports = function () {
     });
 
     this.When(/^я введу в числовое поле "([^"]*)" значение "([^"]*)"$/, function (fieldLabel, value) {
-        var selector = this.selectors.XPATH.NumericBox.caption(fieldLabel);
+        fieldLabel = this.helpers.parseElement(fieldLabel);
+
+        var selector = this.selectors.XPATH.NumericBox.caption(fieldLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath)
-            .then(function (label) {
-                return label.getAttribute('for');
+        return this.currentView.findElements(xpath)
+            .then(function (labels) {
+                return labels[fieldLabel.index].getAttribute('for');
             })
             .then(function (id) {
                 return that.currentView.findElement(that.by.id(id));
@@ -41,24 +45,28 @@ module.exports = function () {
     });
 
     this.When(/^я увеличу значение в числовом поле "([^"]*)"$/, function (fieldLabel) {
-        var selector = this.selectors.XPATH.NumericBox.maxButton(fieldLabel);
+        fieldLabel = this.helpers.parseElement(fieldLabel);
+
+        var selector = this.selectors.XPATH.NumericBox.maxButton(fieldLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath)
-            .then(function (maxButton) {
-                return maxButton.click();
+        return this.currentView.findElements(xpath)
+            .then(function (maxButtons) {
+                return maxButtons[fieldLabel.index].click();
             });
     });
 
     this.When(/^я уменьшу значение в числовом поле "([^"]*)"$/, function (fieldLabel) {
-        var selector = this.selectors.XPATH.NumericBox.minButton(fieldLabel);
+        fieldLabel = this.helpers.parseElement(fieldLabel);
+
+        var selector = this.selectors.XPATH.NumericBox.minButton(fieldLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath)
-            .then(function (minButton) {
-                return minButton.click();
+        return this.currentView.findElements(xpath)
+            .then(function (minButtons) {
+                return minButtons[fieldLabel.index].click();
             });
     });
 };

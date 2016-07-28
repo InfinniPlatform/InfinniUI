@@ -16,8 +16,8 @@ module.exports = {
             },
             caption: function (text) {
                 return this.self()
-                    .replace(/\{caption\}/g, 'normalize-space(node()) = "' + text + '"')
-                    .replace(/\{pl-name\}/g, '@data-pl-name="' + text + '"');
+                    .replace(/\{caption\}/g, 'normalize-space(node()) = ' + text)
+                    .replace(/\{pl-name\}/g, '@data-pl-name=' + text);
             },
             default_text: function () {
                 return './/div[contains(@class, "pl-button")]/button[{caption}]';
@@ -47,6 +47,12 @@ module.exports = {
             },
             message: function () {
                 return '//div[@class="modal-dialog"]//p[@class="pl-messagebox-content"]';
+            },
+            closeButton: function () {
+                return './/div[contains(@class, "modal-dialog")]//div[@class="modal-header"]/button[contains(@class, "pl-close-modal")]';
+            },
+            messageBoxButton: function (text) {
+                return '//div[@class="modal-dialog"]//a[contains(@class, "pl-messagebox-button") and normalize-space(node()) = "' + text + '"]';
             }
         },
         DatePicker: {
@@ -74,7 +80,7 @@ module.exports = {
                 return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
             },
             dropDown: function (text) {
-                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = "' + text + '"]';
+                return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = ' + text + ']';
             },
             filter: function () {
                 return '//div[contains(@class, "pl-dropdown-container")]//input[contains(@class, "pl-combobox-filter-text")]';
@@ -156,6 +162,22 @@ module.exports = {
             self: function (text) {
                 return this.name(text) + '|' + this.label(text);
             }
+        },
+        Element: {
+            byName: function (name) {
+                var result = [];
+                var that = this;
+
+                this.tags.forEach(function (tag) {
+                    result.push(that.element(tag, name));
+                });
+
+                return result.join('|');
+            },
+            element: function (tag, name) {
+                return './/' + tag + '[@data-pl-name="' + name + '"]';
+            },
+            tags: [ 'div', 'a', 'i', 'p', 'span']
         }
     }
 };

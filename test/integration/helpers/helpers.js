@@ -57,6 +57,8 @@ module.exports = {
     },
 
     fixQuotes: function (text) {
+        text = text.replace(/''/g, '"');
+        
         if(text.indexOf('"') != -1){
             return 'concat("' + text.replace(/"/g, '",\'"\',"') + '")';
         } else {
