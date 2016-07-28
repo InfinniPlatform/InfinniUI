@@ -23,7 +23,7 @@ module.exports = function () {
                 selector = that.selectors.XPATH.DataGrid.cells();
                 xpath = that.by.xpath(selector);
 
-                if(rows.length < rowIndex + 1) {
+                if (rows.length < rowIndex + 1) {
                     throw new Error('Требуется ' + (rowIndex + 1) + ' строка, всего строк - ' + rows.length);
                 }
 
@@ -62,7 +62,7 @@ module.exports = function () {
                 selector = that.selectors.XPATH.DataGrid.toggle();
                 xpath = that.by.xpath(selector);
 
-                if(rows.length < rowIndex + 1) {
+                if (rows.length < rowIndex + 1) {
                     throw new Error('Требуется ' + (rowIndex + 1) + ' строка, всего строк - ' + rows.length);
                 }
 
@@ -70,6 +70,23 @@ module.exports = function () {
             })
             .then(function (toggleCell) {
                 return toggleCell.click();
+            });
+    });
+
+    this.When(/^я увижу пустую таблицу "([^"]*)"$/, function (tableName) {
+        var selector = this.selectors.XPATH.DataGrid.body(tableName);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElement(xpath)
+            .then(function (table) {
+                selector = that.selectors.XPATH.DataGrid.rows();
+                xpath = that.by.xpath(selector);
+
+                return table.findElements(xpath);
+            })
+            .then(function (rows) {
+                that.assert.equal(rows.length, 0);
             });
     });
 };
