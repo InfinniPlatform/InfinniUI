@@ -7,7 +7,8 @@ var DataGridModel = ListEditorBaseModel.extend({
         showSelectors: true,
         checkAllVisible: false,
         checkAll: false,
-        focusable: false
+        focusable: false,
+        sortedColumn: null
     }, ListEditorBaseModel.prototype.defaults),
 
     initialize: function () {

@@ -16,7 +16,8 @@ var DataGridView = ListEditorBaseView.extend({
     events: _.extend({},
         ListEditorBaseView.prototype.events,
         {
-            "click .pl-datagrid-toggle_all": "onClickCheckAllHandler"
+            "click .pl-datagrid-toggle_all": "onClickCheckAllHandler",
+            'click .pl-datagrid-row__cell': 'onClickToHeaderCellHandler'
         }
     ),
 
@@ -43,6 +44,7 @@ var DataGridView = ListEditorBaseView.extend({
         this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
         this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
         this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+        this.listenTo(this.model, 'resetSort', this.resetSort);
     },
 
     updateProperties: function () {
@@ -226,6 +228,7 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     renderHeaders: function () {
+        var that = this;
         var columns = this.model.get('columns');
         var templateHeaderCell = this.template.headerCell;
         var sizeCells = [];
@@ -238,6 +241,18 @@ var DataGridView = ListEditorBaseView.extend({
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
+
+            $th.data('pl-column', column);
+
+            if( column.getSortable() ) {
+                $th.addClass('sortable');
+
+                if( column.getSortDirection()  ) {
+                    setTimeout(function() {
+                        that.setUpColumnSort(column, $th, column.getSortDirection(), false);
+                    }, 0);
+                }
+            }
 
             var headerElement;
 
@@ -310,6 +325,49 @@ var DataGridView = ListEditorBaseView.extend({
 
     onClickCheckAllHandler: function () {
         this.model.toggleCheckAll();
+    },
+
+    onClickToHeaderCellHandler: function (e) {
+        var $th = $(e.currentTarget);
+        var column = $th.data('pl-column');
+
+        if( column.isSortable() ){
+            if(column.getSortDirection() === null) {
+                this.resetSort();
+                this.setUpColumnSort(column, $th, 'asc');
+            } else if( column.getSortDirection() === 'asc' ) {
+                this.resetSort('asc');
+                this.setUpColumnSort(column, $th, 'desc');
+            } else if( column.getSortDirection() === 'desc' ) {
+                this.resetSort('desc');
+                this.setUpColumnSort(column, $th, 'asc');
+            }
+        }
+    },
+
+    setUpColumnSort: function(column, $th, direction, triggerEvent) {
+        column.setSortDirection(direction);
+        this.model.set('sortedColumn', column);
+        if( !column.getIsHeaderTemplateEmpty() ) {
+            $th.addClass('sorted headerTemplate-sorted-' + direction);
+        } else {
+            $th.addClass('sorted sorted-' + direction);
+        }
+        if( triggerEvent !== false ) {
+            column.trigger('onSort', {sortDirection: direction});
+        }
+    },
+
+    resetSort: function(direction) {
+        if( !direction ) {
+            var $sortableCell = this.$el.find('.sorted');
+            $sortableCell.removeClass('sorted headerTemplate-sorted-asc headerTemplate-sorted-desc sorted-asc sorted-desc');
+            var  sortedCell = this.model.get('sortedColumn');
+            sortedCell.setSortDirection(null);
+        } else {
+            var $sortableCell = this.$el.find('.sorted');
+            $sortableCell.removeClass('headerTemplate-sorted-' + direction + ' sorted-' + direction);
+        }
     }
 
 
