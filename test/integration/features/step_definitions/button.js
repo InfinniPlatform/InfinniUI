@@ -12,6 +12,9 @@ module.exports = function () {
         var xpath = this.by.xpath(selector);
 
         return this.currentView.findElements(xpath).then(function (elements) {
+            if(elements.length < button.index + 1) {
+                throw new Error('Элемент не найден');
+            }
             elements[button.index].click();
         });
     });

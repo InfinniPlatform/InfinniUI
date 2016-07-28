@@ -47,6 +47,9 @@ module.exports = function () {
 
         return this.currentView.findElements(xpath)
             .then(function (elements) {
+                if(elements.length < elementName.index + 1) {
+                    throw new Error('Элемент не найден');
+                }
                 return elements[elementName.index].isDisplayed();
             })
             .then(function (value) {
@@ -63,6 +66,9 @@ module.exports = function () {
 
         return this.currentView.findElements(xpath)
             .then(function (elements) {
+                if(elements.length < elementName.index + 1) {
+                    throw new Error('Элемент не найден');
+                }
                 return elements[elementName.index].isDisplayed();
             })
             .then(function (value) {
