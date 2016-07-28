@@ -1,36 +1,20 @@
 'use strict';
 
-module.exports = {
-    args: {
-        '--platform': [
-            'chrome',
-            'firefox',
-            'phantomjs'
-        ]
-    },
+module.exports = function (argv) {
+    var result = {};
 
-    parse: function (argv) {
-        var result = {};
+    for (var i = 0, ii = argv.length; i < ii; i++) {
+        var regex = argv[i].replace(/"/g, '').match(/^--(\w+):(\w+)$/);
 
-        for (var i = 0, ii = argv.length; i < ii; i++) {
-            var argument = argv[i];
-            var value = argv[i + 1];
-
-            if (this.contains(argument) && this.args[argument].indexOf(value) != -1) {
-                result[argument.replace(/-/g, '')] = value;
-            }
+        if(!regex || regex.length != 3) {
+            continue;
         }
 
-        return result;
-    },
+        var argument = regex[1];
+        var value = regex[2];
 
-    contains: function (value) {
-        for (var k in this.args) {
-            if (k == value) {
-                return true;
-            }
-        }
-
-        return false;
+        result[argument] = value;
     }
+
+    return result;
 };

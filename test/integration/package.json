@@ -8,6 +8,6 @@
     "underscore": "^1.8.3"
   },
   "scripts": {
-    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore"
+    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore --platform:firefox"
   }
 }

@@ -3,7 +3,7 @@
 var fs = require('fs');
 var webdriver = require('selenium-webdriver');
 var selectors = require('../../helpers/selectors.js');
-var args = require('../../helpers/config.json');
+var args = require('../../helpers/arguments.js')(process.argv.slice(2));
 var helpers = require('../../helpers/helpers.js');
 var chai = require('chai');
 var underscore = require('underscore');
@@ -37,7 +37,7 @@ switch (args.platform) {
         var driver = buildPhantomDriver();
         break;
     default:
-        throw new Error('Invalid driver');
+        throw new Error('Invalid driver "' + (args.platform || '') + '"');
 }
 
 var getDriver = function () {
@@ -60,6 +60,7 @@ var World = function World() {
     this.currentView = null;
 
     this.driver.manage().timeouts().implicitlyWait(10000);
+    this.driver.manage().window().setSize(1366, 768);
 
     if (!fs.existsSync(screenshotPath)) {
         fs.mkdirSync(screenshotPath);
