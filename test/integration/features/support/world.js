@@ -78,7 +78,7 @@ var World = function World() {
     this.currentView = null;
 
     this.driver.manage().timeouts().implicitlyWait(10000);
-    this.driver.manage().window().setSize(1366, 768);
+    this.driver.manage().window().setSize(1600, 900);
 
     if (!fs.existsSync(screenshotPath)) {
         fs.mkdirSync(screenshotPath);
