@@ -8,21 +8,39 @@ var helpers = require('../../helpers/helpers.js');
 var chai = require('chai');
 var underscore = require('underscore');
 
+var capabilities = {
+    chrome: function () {
+        return webdriver.Capabilities.chrome();
+    },
+    firefox: function () {
+        return webdriver.Capabilities.firefox();
+    },
+    phantomjs: function () {
+        var caps = webdriver.Capabilities.phantomjs();
+
+        if(args.phantomjs) {
+            caps.set('phantomjs.binary.path', args.phantomjs);
+        }
+
+        return caps;
+    }
+};
+
 var buildChromeDriver = function () {
     return new webdriver.Builder()
-        .withCapabilities(webdriver.Capabilities.chrome())
+        .withCapabilities(capabilities.chrome())
         .build();
 };
 
 var buildFirefoxDriver = function () {
     return new webdriver.Builder()
-        .withCapabilities(webdriver.Capabilities.firefox())
+        .withCapabilities(capabilities.firefox())
         .build();
 };
 
 var buildPhantomDriver = function () {
     return new webdriver.Builder()
-        .withCapabilities(webdriver.Capabilities.phantomjs())
+        .withCapabilities(capabilities.phantomjs())
         .build();
 };
 
