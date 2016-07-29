@@ -11,7 +11,7 @@ var domHelper = {
             if(n>0){
                 setTimeout( function(){
                     that.whenReady(conditionFunction, onConditionFunction, n-1);
-                }, 10);
+                }, 510);
             }
         }else{
             onConditionFunction();
