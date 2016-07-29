@@ -3,16 +3,17 @@
 module.exports = function () {
     this.World = require('../support/world.js').World;
 
-    this.When(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (comboboxLabel, value) {
-        comboboxLabel = this.helpers.fixQuotes(comboboxLabel);
+    this.When(/^я выберу в выпадающем списке "([^"]*)" значение "([^"]*)"$/, function (comboBoxLabel, value) {
+        comboBoxLabel = this.helpers.parseElement(comboBoxLabel);
+        comboBoxLabel.name = this.helpers.fixQuotes(comboBoxLabel.name);
         value = this.helpers.fixQuotes(value);
 
-        var selector = this.selectors.XPATH.ComboBox.button(comboboxLabel);
+        var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath).then(function (element) {
-            return element.click().then(function () {
+        return this.currentView.findElements(xpath).then(function (elements) {
+            return elements[comboBoxLabel.index].click().then(function () {
                 selector = that.selectors.XPATH.ComboBox.dropDown(value);
                 xpath = that.by.xpath(selector);
 
@@ -24,15 +25,16 @@ module.exports = function () {
     });
 
     this.When(/^я выберу в выпадающем списке "([^"]*)" с фильтром "([^"]*)" значение "([^"]*)"$/, function (comboBoxLabel, filter, value) {
-        comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+        comboBoxLabel = this.helpers.parseElement(comboBoxLabel);
+        comboBoxLabel.name = this.helpers.fixQuotes(comboBoxLabel.name);
         value = this.helpers.fixQuotes(value);
 
-        var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel);
+        var selector = this.selectors.XPATH.ComboBox.button(comboBoxLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath).then(function (element) {
-            return element.click().then(function () {
+        return this.currentView.findElements(xpath).then(function (elements) {
+            return elements[comboBoxLabel.index].click().then(function () {
                 selector = that.selectors.XPATH.ComboBox.filter();
                 xpath = that.by.xpath(selector);
 
@@ -51,15 +53,16 @@ module.exports = function () {
     });
 
     this.When(/^значение в выпадающем списке "([^"]*)" равно "([^"]*)"$/, function (comboBoxLabel, value) {
-        comboBoxLabel = this.helpers.fixQuotes(comboBoxLabel);
+        comboBoxLabel = this.helpers.parseElement(comboBoxLabel);
+        comboBoxLabel.name = this.helpers.fixQuotes(comboBoxLabel.name);
         value = value.replace(/''/g, '"');
 
-        var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel);
+        var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
         
-        return this.currentView.findElement(xpath).then(function (label) {
-            return label.getAttribute('for').then(function (id) {
+        return this.currentView.findElements(xpath).then(function (labels) {
+            return labels[comboBoxLabel.index].getAttribute('for').then(function (id) {
                 return that.currentView.findElement(that.by.id(id)).then(function (control) {
                     selector = that.selectors.XPATH.ComboBox.value();
                     xpath = that.by.xpath(selector);

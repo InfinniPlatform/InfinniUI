@@ -67,7 +67,10 @@ module.exports = function () {
 
         return this.driver.findElement(xpath)
             .then(function (button) {
-                return button.click();
+                button.click();
+                return new Promise(function (resolve) {
+                    setTimeout(resolve, 1000);
+                });
             });
     });
 };

@@ -101,6 +101,9 @@ module.exports = {
             },
             cells: function () {
                 return './/td[@class="pl-datagrid-row__cell"]'
+            },
+            toggle: function () {
+                return './/td[contains(@class, "pl-datagrid-row__cell_toggle")]';
             }
         },
         Toastr: {

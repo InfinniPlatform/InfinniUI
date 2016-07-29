@@ -176,16 +176,16 @@ function JetBrainsSMListener() {
     function fixStepResult(step) {
         step.isPending = function () {
             return this.getStatus() == 'pending';
-        }
+        };
         step.isSkipped = function () {
             return this.getStatus() == 'skipped';
-        }
+        };
         step.isUndefined = function () {
             return this.getStatus() == 'undefined';
-        }
+        };
         step.isFailed = function () {
             return this.getStatus() == 'failed';
-        }
+        };
     }
 }
 

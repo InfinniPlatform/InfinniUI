@@ -4,6 +4,7 @@ var driver = require('./world.js').getDriver();
 var fs = require('fs');
 var path = require('path');
 var sanitize = require('sanitize-filename');
+var args = require('../../helpers/arguments.js')(process.argv.slice(2));
 
 var myHooks = function () {
   
@@ -24,7 +25,7 @@ var myHooks = function () {
   });
 
   try {
-    require('../../helpers/extensions.js').call(this, driver);
+    require('../../helpers/extensions.js').call(this, driver, args);
   } catch (err) {
     console.log('Extensions not found');
   }

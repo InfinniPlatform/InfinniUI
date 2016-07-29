@@ -11,6 +11,9 @@ module.exports = function () {
 
         return this.currentView.findElements(xpath)
             .then(function (elements) {
+                if(elements.length < checkBoxName.index + 1) {
+                    throw new Error('Элемент не найден');
+                }
                 return elements[checkBoxName.index].click();
             });
     });
@@ -25,6 +28,9 @@ module.exports = function () {
 
         return this.currentView.findElements(xpath)
             .then(function (elements) {
+                if(elements.length < checkBoxName.index + 1) {
+                    throw new Error('Элемент не найден');
+                }
                 return elements[checkBoxName.index].isSelected();
             })
             .then(function (actualValue) {
