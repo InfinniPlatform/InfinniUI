@@ -87,6 +87,9 @@ module.exports = {
             },
             value: function () {
                 return './/span[contains(@class, "pl-label")]';
+            },
+            clear: function (text) {
+                return this.caption(text) + '/..//span[contains(@class, "pl-combobox__clear")]';
             }
         },
         DataGrid: {
