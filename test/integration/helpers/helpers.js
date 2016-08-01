@@ -64,5 +64,21 @@ module.exports = {
         } else {
             return '"' + text + '"';
         }
+    },
+
+    ignoreNumbers: function (text, textWithIgnore) {
+        var ignore = textWithIgnore.match(/{\d+}/g);
+        var numbers = text.match(/\d+/g);
+
+        if (!ignore) {
+            return text;
+        }
+
+        ignore.forEach(function (item) {
+            var i = parseInt(item.replace(/[{,}]/g, ''));
+            text = text.replace(numbers[i], item);
+        });
+
+        return text;
     }
 };
