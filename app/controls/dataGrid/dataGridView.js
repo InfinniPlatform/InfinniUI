@@ -17,7 +17,7 @@ var DataGridView = ListEditorBaseView.extend({
         ListEditorBaseView.prototype.events,
         {
             "click .pl-datagrid-toggle_all": "onClickCheckAllHandler",
-            'click .pl-datagrid-row__cell': 'onClickToHeaderCellHandler'
+            'click thead .pl-datagrid-row__cell': 'onClickToHeaderCellHandler'
         }
     ),
 
