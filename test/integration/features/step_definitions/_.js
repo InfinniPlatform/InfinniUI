@@ -15,12 +15,31 @@ module.exports = function () {
         });
 
         return this.driver.findElements(xpath).then(function (msgs) {
-            msgs.forEach(function (msg, i) {
-                msg.getText().then(function (text) {
-                    that.assert.equal(text, messages[i]);
-                    if (i == msgs.length - 1) {
-                        that.driver.executeScript('$("#toast-container").remove();');
-                    }
+            that.assert.equal(msgs.length, messages.length, 'Количество сообщений не совпадает');
+
+            return new Promise(function (resolve, reject) {
+                msgs.forEach(function (msg, i) {
+                    msg.getText().then(function (text) {
+                        var linesActual = text.split('\n');
+                        var linesExpected = messages[i].split('\\n');
+
+                        try {
+                            var diff = that._.difference(linesActual, linesExpected);
+
+                            if(!that._.isArray(diff)) {
+                                diff = [diff];
+                            }
+
+                            that.assert.deepEqual(linesActual, linesExpected, 'Не совпали:\n' + diff.join('\n') + '\n');
+                        } catch (err) {
+                            reject(err);
+                        }
+
+                        if (i == msgs.length - 1) {
+                            that.driver.executeScript('$("#toast-container").remove();');
+                            resolve();
+                        }
+                    });
                 });
             });
         });
