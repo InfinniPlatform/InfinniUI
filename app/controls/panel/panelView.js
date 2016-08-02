@@ -111,6 +111,7 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         if (collapsible) {
             var collapsed = this.model.get('collapsed');
             this.model.set('collapsed', !collapsed);
+            this.updateLayout();
         }
     },
 
