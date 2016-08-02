@@ -111,4 +111,24 @@ module.exports = function () {
                 return element.sendKeys(key);
             });
     });
+
+    this.When(/^я увижу элемент "([^"]*)" с текстом "([^"]*)"$/, function (elementName, text) {
+        elementName = this.helpers.parseElement(elementName);
+        text = text.replace(/''/g, '"');
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                if (elements.length < elementName.index + 1) {
+                    throw new Error('Элемент не найден');
+                }
+                return elements[elementName.index].getText();
+            })
+            .then(function (elementText) {
+                that.assert.equal(elementText, text);
+            });
+    });
 };
