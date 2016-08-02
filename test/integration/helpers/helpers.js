@@ -67,18 +67,22 @@ module.exports = {
     },
 
     ignoreNumbers: function (text, textWithIgnore) {
-        var ignore = textWithIgnore.match(/{\d+}/g);
         var numbers = text.match(/\d+/g);
 
-        if (!ignore) {
-            return text;
-        }
+        return this.format(textWithIgnore, numbers);
+    },
 
-        ignore.forEach(function (item) {
-            var i = parseInt(item.replace(/[{,}]/g, ''));
-            text = text.replace(numbers[i], item);
+    format: function (text, args) {
+        return text.replace(/\{\{|\}\}|\{(\d+)\}/g, function (m, n) {
+            if (m == "{{") {
+                return "{";
+            }
+
+            if (m == "}}") {
+                return "}";
+            }
+
+            return args[n];
         });
-
-        return text;
     }
 };
