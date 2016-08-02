@@ -60,7 +60,7 @@ module.exports = function () {
         var selector = this.selectors.XPATH.ComboBox.caption(comboBoxLabel.name);
         var xpath = this.by.xpath(selector);
         var that = this;
-        
+
         return this.currentView.findElements(xpath).then(function (labels) {
             return labels[comboBoxLabel.index].getAttribute('for').then(function (id) {
                 return that.currentView.findElement(that.by.id(id)).then(function (control) {
@@ -75,5 +75,22 @@ module.exports = function () {
                 });
             });
         });
+    });
+
+    this.When(/^я очищу выпадающий список "([^"]*)"$/, function (comboBoxLabel) {
+        comboBoxLabel = this.helpers.parseElement(comboBoxLabel);
+        comboBoxLabel.name = this.helpers.fixQuotes(comboBoxLabel.name);
+
+        var selector = this.selectors.XPATH.ComboBox.clear(comboBoxLabel.name);
+        var xpath = this.by.xpath(selector);
+
+        return this.currentView.findElements(xpath)
+            .then(function (buttons) {
+                if (buttons[comboBoxLabel.index]) {
+                    return buttons[comboBoxLabel.index].click();
+                }
+
+                throw new Error('Элемент не найден');
+            });
     });
 };

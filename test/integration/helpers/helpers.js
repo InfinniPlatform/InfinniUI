@@ -64,5 +64,25 @@ module.exports = {
         } else {
             return '"' + text + '"';
         }
+    },
+
+    ignoreNumbers: function (text, textWithIgnore) {
+        var numbers = text.match(/\d+/g);
+
+        return this.format(textWithIgnore, numbers);
+    },
+
+    format: function (text, args) {
+        return text.replace(/\{\{|\}\}|\{(\d+)\}/g, function (m, n) {
+            if (m == "{{") {
+                return "{";
+            }
+
+            if (m == "}}") {
+                return "}";
+            }
+
+            return args[n];
+        });
     }
 };
