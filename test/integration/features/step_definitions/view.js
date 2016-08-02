@@ -48,7 +48,7 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     messageBox.getText().then(function (text) {
-                        text = that.helpers.ignoreNumbers(text.trim(), message);
+                        message = that.helpers.ignoreNumbers(text.trim(), message);
                         try {
                             that.assert.equal(text, message);
                             resolve();
