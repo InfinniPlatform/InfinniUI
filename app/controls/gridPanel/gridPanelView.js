@@ -38,6 +38,7 @@ var GridPanelView = ContainerView.extend(
                 rowSize = 0,
                 element, item;
 
+            //this.$el.hide();
             items.forEach(function(item, i){
                 element = itemTemplate(undefined, {item: item, index: i});
                 var span = element.getColumnSpan();
@@ -54,6 +55,7 @@ var GridPanelView = ContainerView.extend(
             if (row.length) {
                 view.renderRow(row);
             }
+            //this.$el.show();
         },
 
         renderRow: function (row) {
