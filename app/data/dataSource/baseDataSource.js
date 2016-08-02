@@ -468,7 +468,7 @@ var BaseDataSource = Backbone.Model.extend({
             logger = window.InfinniUI.global.logger,
             that = this,
             validateResult,
-            errorInProvider = this._extendOnErrorOfProvider(error);
+            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -528,7 +528,7 @@ var BaseDataSource = Backbone.Model.extend({
             that = this,
             itemId = this.idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined,
-            errorInProvider = this._extendOnErrorOfProvider(error);
+            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
@@ -612,7 +612,7 @@ var BaseDataSource = Backbone.Model.extend({
                 that = this;
 
 
-            onError = this._extendOnErrorOfProvider(onError);
+            onError = this._compensateOnErrorOfProviderHandler(onError);
 
 
             this.set('isRequestInProcess', true);
@@ -634,14 +634,15 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
 
-    _extendOnErrorOfProvider: function(onError){
+    _compensateOnErrorOfProviderHandler: function(onError){
         var that = this;
 
         return function(){
             if(typeof onError == 'function'){
                 onError.apply(undefined, arguments);
+            }else{
+                that.trigger('onProviderError', arguments);
             }
-            that.trigger('onProviderError', arguments);
         };
 
     },
