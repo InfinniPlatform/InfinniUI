@@ -611,7 +611,9 @@ var BaseDataSource = Backbone.Model.extend({
             var dataProvider = this.get('dataProvider'),
                 that = this;
 
+
             onError = this._extendOnErrorOfProvider(onError);
+
 
             this.set('isRequestInProcess', true);
             dataProvider.getItems(
@@ -631,6 +633,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
+
     _extendOnErrorOfProvider: function(onError){
         var that = this;
 
@@ -640,6 +643,7 @@ var BaseDataSource = Backbone.Model.extend({
             }
             that.trigger('onProviderError', arguments);
         };
+
     },
 
     _handleSuccessUpdateItemsInProvider: function(data, onSuccess, onError){

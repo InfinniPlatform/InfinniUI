@@ -102,7 +102,8 @@ _.extend(RestDataSourceBuilder.prototype, {
     initProviderErrorHandling: function(dataSource){
         dataSource.onProviderError(function(){
             var exchange = window.InfinniUI.global.messageBus;
-            exchange.send(messageTypes.onNotifyUser, {messageText: 'РћС€РёР±РєР° РЅР° СЃРµСЂРІРµСЂРµ', messageType: "error"});
+            exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
+
         });
     }
 });
