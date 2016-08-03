@@ -96,6 +96,10 @@ _.extend(Element.prototype, {
     },
 
     setName: function (name) {
+        if(this.getName()){
+            throw 'name already exists';
+        }
+
         if (typeof name == 'string') {
             this.control.set('name', name);
         }
