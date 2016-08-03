@@ -1,5 +1,5 @@
-function ExtensionPanel(parentView) {
-    _.superClass(ExtensionPanel, this, parentView);
+function ExtensionPanel(parent) {
+    _.superClass(ExtensionPanel, this, parent);
 }
 
 _.inherit(ExtensionPanel, Container);

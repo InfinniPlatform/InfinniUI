@@ -1,5 +1,5 @@
-function ViewPanel(parentView) {
-    _.superClass(ViewPanel, this, parentView);
+function ViewPanel(parent) {
+    _.superClass(ViewPanel, this, parent);
 }
 
 _.inherit(ViewPanel, Element);

@@ -21,7 +21,6 @@ _.extend(ViewPanelBuilder.prototype, {
         InfinniUI.global.containers[metadata.Name] = panel;
 
         if ('LinkView' in metadata) {
-            //var linkView = builder.build(params.view, metadata.View);
             var linkView = builder.build(metadata['LinkView'], {
                 parentView: params.parentView,
                 parent: params.element
