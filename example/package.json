@@ -26,7 +26,7 @@
     "through2": "2.x"
   },
   "scripts": {
-    "start": "node httpserver.js",
-    "build-example": "gulp build"
+    "start": "gulp example",
+    "build": "bower i && npm i && gulp cleanFolder"
   }
 }

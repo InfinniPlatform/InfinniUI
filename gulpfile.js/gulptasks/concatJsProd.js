@@ -6,7 +6,6 @@ var gulp = require('gulp'),
 module.exports = function(options) {
 	return function() {
 		return gulp.src(options.src)
-			// .pipe($.newer(options.dest + options.finalName))
 			.pipe($.replace(/\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig, ''))
 			.pipe($.concat(options.finalName))
 			.pipe($.uglify())
