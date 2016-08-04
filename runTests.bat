@@ -1,1 +1,1 @@
-call gulp runTests
+call npm run build && npm run run-tests

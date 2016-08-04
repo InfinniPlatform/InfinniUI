@@ -44,7 +44,6 @@ var DataGridView = ListEditorBaseView.extend({
         this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
         this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
         this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
-        this.listenTo(this.model, 'resetSort', this.resetSort);
     },
 
     updateProperties: function () {
@@ -167,6 +166,7 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     render: function () {
+        var that = this;
         this.prerenderingActions();
 
         var verticalAlignment = this.model.get('verticalAlignment');
@@ -177,13 +177,15 @@ var DataGridView = ListEditorBaseView.extend({
 
         this.renderHeaders();
         this.renderItems();
-        this.updateProperties();
 
         this.trigger('render');
 
         this.applyColumnWidth();
         this.syncBodyAndHead();
         this.postrenderingActions();
+        setTimeout(function() {
+            that.updateProperties();
+        }, 0);
         return this;
     },
 
@@ -276,27 +278,30 @@ var DataGridView = ListEditorBaseView.extend({
             valueSelector = model.get('valueSelector'),
             itemTemplate = model.get('itemTemplate'),
             items = model.get('items'),
-            $items = this.ui.items;
+            $items = this.ui.items,
+            that = this;
 
         this.removeRowElements();
 
         items.forEach(function (item, index) {
-            var element = itemTemplate(undefined, {index: index, item: item});
+            setTimeout(function() {
+                var element = itemTemplate(undefined, {index: index, item: item});
 
-            element.onBeforeClick(function() {
-                model.set('selectedItem', item);
-            });
-            element.onToggle(function() {
-                var enabled = this.model.get('enabled');
+                element.onBeforeClick(function() {
+                    model.set('selectedItem', item);
+                });
+                element.onToggle(function() {
+                    var enabled = this.model.get('enabled');
 
-                if(enabled){
-                    model.toggleValue(valueSelector(undefined, {value:item}));
-                }
-            });
-            this.addRowElement(item, element);
+                    if(enabled){
+                        model.toggleValue(valueSelector(undefined, {value:item}));
+                    }
+                });
+                that.addRowElement(item, element);
 
-            var $element = element.render();
-            $items.append($element);
+                var $element = element.render();
+                $items.append($element);
+            }, 0);
         }, this);
 
     },
