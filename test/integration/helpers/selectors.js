@@ -7,7 +7,7 @@ module.exports = {
                 return './/div[contains(@class, "pl-textbox") or contains(@class, "pl-password-box")]';
             },
             caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
+                return this.self() + '//label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
             }
         },
         Button: {
