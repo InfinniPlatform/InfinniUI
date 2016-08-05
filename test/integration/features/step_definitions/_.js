@@ -131,4 +131,28 @@ module.exports = function () {
                 that.assert.equal(elementText, text);
             });
     });
+
+    this.When(/^элемент "([^"]*)" будет недоступным$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+
+        return this.driver.findElements(xpath)
+            .then(function (elements) {
+                if (elements.length <= elementName.index) {
+                    throw new Error('Элемент не найден');
+                }
+                return elements[elementName.index].getAttribute('class');
+            })
+            .then(function (classes) {
+                return new Promise(function (resolve, reject) {
+                    if (classes.indexOf('pl-disabled') != -1) {
+                        resolve();
+                    } else {
+                        reject(new Error('Элемент доступен'));
+                    }
+                });
+            });
+    });
 };
