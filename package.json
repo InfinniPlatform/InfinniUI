@@ -27,7 +27,7 @@
     "through2": "2.x"
   },
   "scripts": {
-    "build": "npm i && bower i && gulp cleanFolder",
+    "build": "npm i && bower i && gulp cleanAndBuild",
     "run-tests": "gulp runTests"
   }
 }

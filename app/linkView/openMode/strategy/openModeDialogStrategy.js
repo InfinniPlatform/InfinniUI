@@ -43,6 +43,7 @@ _.extend(OpenModeDialogStrategy.prototype, {
             show: true,
             backdrop: 'static',
             modalOverflow: true,
+            keyboard: view.getCloseButtonVisibility(),
             focus: this
         });
 
