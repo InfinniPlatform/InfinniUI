@@ -1,13 +1,20 @@
-function SaveActionBuilder() {
-    this.build = function (context, args) {
-        var parentView = args.parentView;
-        var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+function SaveActionBuilder() {}
 
-        var action = new SaveAction(parentView);
+_.extend(SaveActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var parentView = args.parentView;
+            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
 
-        action.setProperty('dataSource', dataSource);
-        action.setProperty('canClose', args.metadata.CanClose);
+            var action = new SaveAction(parentView);
 
-        return action;
+            this.applyBaseActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+            action.setProperty('canClose', args.metadata.CanClose);
+
+            return action;
+        }
     }
-}
+);

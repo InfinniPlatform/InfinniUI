@@ -1,5 +1,15 @@
 function AcceptActionBuilder() {
-    this.build = function (context, args) {
-        return new AcceptAction(args.parentView);
-    }
 }
+
+_.extend(AcceptActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var action = new AcceptAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);

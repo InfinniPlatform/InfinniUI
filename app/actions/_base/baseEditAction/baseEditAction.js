@@ -48,6 +48,8 @@ _.extend(BaseEditAction.prototype, {
 
         this.save();
 
+        this.onExecutedHandler();
+
         if (_.isFunction(callback)) {
             callback();
         }

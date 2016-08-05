@@ -1,22 +1,29 @@
-function DeleteActionBuilder(){
-    this.build = function(context, args){
-        var metadata = args.metadata,
-            parentView = args.parentView,
-            sourceName = metadata.DestinationValue.Source,
-            propertyName = metadata.DestinationValue.Property || '$';
+function DeleteActionBuilder(){}
 
-        var action = new DeleteAction(parentView);
+_.extend(DeleteActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function(context, args){
+            var metadata = args.metadata,
+                parentView = args.parentView,
+                sourceName = metadata.DestinationValue.Source,
+                propertyName = metadata.DestinationValue.Property || '$';
 
-        var accept = (metadata['Accept'] !== false),
-            dataSource = parentView.getContext().dataSources[sourceName],
-            destinationProperty = (args.basePathOfProperty != null) ?
-                                    args.basePathOfProperty.resolveProperty( propertyName ) :
-                                    propertyName;
+            var action = new DeleteAction(parentView);
 
-        action.setProperty('accept', accept);
-        action.setProperty('destinationSource', dataSource);
-        action.setProperty('destinationProperty', destinationProperty);
+            this.applyBaseActionMetadata(action, args);
 
-        return action;
+            var accept = (metadata['Accept'] !== false),
+                dataSource = parentView.getContext().dataSources[sourceName],
+                destinationProperty = (args.basePathOfProperty != null) ?
+                                        args.basePathOfProperty.resolveProperty( propertyName ) :
+                                        propertyName;
+
+            action.setProperty('accept', accept);
+            action.setProperty('destinationSource', dataSource);
+            action.setProperty('destinationProperty', destinationProperty);
+
+            return action;
+        }
     }
-}
+);

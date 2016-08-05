@@ -56,16 +56,26 @@ _.extend(DeleteAction.prototype, {
     },
 
     _deleteDocument: function(dataSource, property, callback){
-        var onSuccessDelete = function () {
-            dataSource.updateItems();
+        var that = this,
+            onSuccessDelete = function (context, args) {
+                dataSource.updateItems();
 
-            if (_.isFunction(callback)) {
-                callback();
-            }
-        };
+                that.onExecutedHandler(args);
+
+                if (_.isFunction(callback)) {
+                    callback();
+                }
+            },
+            onErrorDelete = function(context, args){
+                that.onExecutedHandler(args);
+
+                if (_.isFunction(callback)) {
+                    callback();
+                }
+            };
 
         var selectedItem = dataSource.getProperty(property);
-        dataSource.deleteItem(selectedItem, onSuccessDelete);
+        dataSource.deleteItem(selectedItem, onSuccessDelete, onErrorDelete);
     },
 
     _deleteItem: function(dataSource, property, callback){
@@ -77,6 +87,8 @@ _.extend(DeleteAction.prototype, {
         items = _.clone( items );
         items.splice(index, 1);
         dataSource.setProperty(parentProperty, items);
+
+        this.onExecutedHandler();
 
         if (_.isFunction(callback)) {
             callback();

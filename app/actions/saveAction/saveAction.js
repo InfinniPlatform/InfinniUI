@@ -7,22 +7,32 @@ _.inherit(SaveAction, BaseAction);
 
 _.extend(SaveAction.prototype, {
     execute: function(callback){
-        var parentView = this.parentView;
-        var dataSource = this.getProperty('dataSource');
-        var canClose = this.getProperty('canClose');
+        var parentView = this.parentView,
+            dataSource = this.getProperty('dataSource'),
+            canClose = this.getProperty('canClose'),
+            that = this;
 
         var onSuccessSave = function(context, args){
-            if(canClose !== false){
-                parentView.setDialogResult(DialogResult.accepted);
-                parentView.close();
-            }
+                if(canClose !== false){
+                    parentView.setDialogResult(DialogResult.accepted);
+                    parentView.close();
+                }
 
-            if(_.isFunction(callback)){
-                callback(context, args);
-            }
-        };
+                that.onExecutedHandler(args);
+
+                if(_.isFunction(callback)){
+                    callback(context, args);
+                }
+            },
+            onErrorSave = function(context, args){
+                that.onExecutedHandler(args);
+
+                if (_.isFunction(callback)) {
+                    callback();
+                }
+            };
 
         var selectedItem = dataSource.getSelectedItem();
-        dataSource.saveItem(selectedItem, onSuccessSave, callback);
+        dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
     }
 });

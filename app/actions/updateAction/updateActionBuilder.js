@@ -1,12 +1,19 @@
-function UpdateActionBuilder() {
-    this.build = function (context, args) {
+function UpdateActionBuilder() {}
 
-        var dataSource = args.parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+_.extend(UpdateActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
 
-        var action = new UpdateAction(args.parentView);
+            var dataSource = args.parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
 
-        action.setProperty('dataSource', dataSource);
+            var action = new UpdateAction(args.parentView);
 
-        return action;
+            this.applyBaseActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+
+            return action;
+        }
     }
-}
+);

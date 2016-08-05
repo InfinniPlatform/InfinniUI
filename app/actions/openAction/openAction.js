@@ -7,14 +7,18 @@ _.inherit(OpenAction, BaseAction);
 
 _.extend(OpenAction.prototype, {
     execute: function(callback){
-        var linkView = this.getProperty('linkView');
+        var linkView = this.getProperty('linkView'),
+            that = this;
 
         linkView.createView(function (view) {
-            if (callback) {
-                view.onLoaded(function () {
+
+            view.onLoaded(function () {
+                that.onExecutedHandler();
+
+                if (callback) {
                     callback(view);
-                });
-            }
+                }
+            });
 
             view.open();
         });

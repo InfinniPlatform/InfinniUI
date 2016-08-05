@@ -28,7 +28,13 @@ _.extend(ServerAction.prototype, {
     },
 
     execute: function (callback) {
-        this.contentTypeStrategy.run(this.provider, this._getRequestData(), callback);
+        this.contentTypeStrategy.run(this.provider, this._getRequestData(), function(args){
+            that.onExecutedHandler(args);
+
+            if (_.isFunction(callback)) {
+                callback(args);
+            }
+        });
     },
 
     setParam: function(name, value) {

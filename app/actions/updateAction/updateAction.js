@@ -10,6 +10,15 @@ _.extend(UpdateAction.prototype, {
 
         var dataSource = this.getProperty('dataSource');
 
-        dataSource.updateItems(callback, callback);
+        var that = this,
+            onUpdate = function (context, args) {
+                that.onExecutedHandler(args);
+
+                if (_.isFunction(callback)) {
+                    callback();
+                }
+            };
+
+        dataSource.updateItems(onUpdate, onUpdate);
     }
 });
