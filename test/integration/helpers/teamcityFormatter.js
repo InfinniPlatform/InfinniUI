@@ -9,6 +9,7 @@ function teamCityFormatter() {
 module.exports = teamCityFormatter;
 
 var currentScenario;
+var translit = require('translitit-cyrillic-russian-to-latin');
 
 function handleStepResult(event, callback) {
     var stepResult = event.getPayloadItem("stepResult");
@@ -32,38 +33,40 @@ function handleStepResult(event, callback) {
 
 function handleBeforeFeature(event, callback) {
     var feature = event.getPayloadItem("feature");
-    process.stderr.write("##teamcity[testSuiteStarted name='" + escape(feature.getName()) + "']\n");
+    process.stderr.write("##teamcity[testSuiteStarted name='" + escape(getTag(feature) + feature.getName()) + "']\n");
     callback();
 }
 
 function handleAfterFeature(event, callback) {
     var feature = event.getPayloadItem("feature");
-    process.stdout.write("##teamcity[testSuiteFinished name='" + escape(feature.getName()) + "']\n");
+    process.stdout.write("##teamcity[testSuiteFinished name='" + escape(getTag(feature) + feature.getName()) + "']\n");
     callback();
 }
 
 function handleBeforeScenario(event, callback) {
     var scenario = event.getPayloadItem("scenario");
-    process.stderr.write("##teamcity[testStarted name='" + escape(scenario.getName()) + "' captureStandardOutput='true']\n");
-    currentScenario = escape(scenario.getName());
+    process.stderr.write("##teamcity[testStarted name='" + escape(getTag(scenario) + scenario.getName()) + "' captureStandardOutput='true']\n");
+    currentScenario = escape(getTag(scenario) + scenario.getName());
     callback();
 }
 
 function handleAfterScenario(event, callback) {
     var scenario = event.getPayloadItem("scenario");
-    process.stderr.write("##teamcity[testFinished name='" + escape(scenario.getName()) + "']\n");
+    process.stderr.write("##teamcity[testFinished name='" + escape(getTag(scenario) + scenario.getName()) + "']\n");
     callback();
 }
 
 //according to: https://confluence.jetbrains.com/display/TCD7/Build+Script+Interaction+with+TeamCity
 function escape(string) {
-    return string
+    string = string
         .replace(/\|/g, '||')
         .replace(/'/g, "|'")
         .replace(/\n/g, '|n')
         .replace(/\r/g, '|r')
         .replace(/\[/g, '|[')
         .replace(/\]/g, '|]');
+
+    return translit(string);
 }
 
 function fixStepResult(step) {
@@ -82,4 +85,14 @@ function fixStepResult(step) {
     step.isSuccessful = function () {
         return this.getStatus() == 'successful';
     };
+}
+
+function getTag(item) {
+    var tags = item.getTags();
+
+    if (tags.length == 0) {
+        return '';
+    }
+
+    return tags[0].getName() + ' ';
 }
