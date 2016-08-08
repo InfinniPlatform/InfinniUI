@@ -28,32 +28,42 @@ function handleStepResult(event, callback) {
         return callback();
     }
 
-    callback();
+    setTimeout(function () {
+        callback();
+    }, 0);
 }
 
 function handleBeforeFeature(event, callback) {
     var feature = event.getPayloadItem("feature");
     process.stderr.write("##teamcity[testSuiteStarted name='" + escape(getTag(feature) + feature.getName()) + "']\n");
-    callback();
+    setTimeout(function () {
+        callback();
+    }, 0);
 }
 
 function handleAfterFeature(event, callback) {
     var feature = event.getPayloadItem("feature");
     process.stdout.write("##teamcity[testSuiteFinished name='" + escape(getTag(feature) + feature.getName()) + "']\n");
-    callback();
+    setTimeout(function () {
+        callback();
+    }, 0);
 }
 
 function handleBeforeScenario(event, callback) {
     var scenario = event.getPayloadItem("scenario");
     process.stderr.write("##teamcity[testStarted name='" + escape(getTag(scenario) + scenario.getName()) + "' captureStandardOutput='true']\n");
     currentScenario = escape(getTag(scenario) + scenario.getName());
-    callback();
+    setTimeout(function () {
+        callback();
+    }, 0);
 }
 
 function handleAfterScenario(event, callback) {
     var scenario = event.getPayloadItem("scenario");
     process.stderr.write("##teamcity[testFinished name='" + escape(getTag(scenario) + scenario.getName()) + "']\n");
-    callback();
+    setTimeout(function () {
+        callback();
+    }, 0);
 }
 
 //according to: https://confluence.jetbrains.com/display/TCD7/Build+Script+Interaction+with+TeamCity
