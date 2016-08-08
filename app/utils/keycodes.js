@@ -65,6 +65,34 @@ window.InfinniUI.Keyboard = {
                     case 111:
                         code = this.KeyCode.SLASH;  // /
                         break;
+                    //Symbol Keys
+                    case 188:
+                        code = 44;
+                        break;
+                    case 173:
+                        code = 45;
+                        break;
+                    case 190:
+                        code = 46;
+                        break;
+                    case 191:
+                        code = 47;
+                        break;
+                    case 192:
+                        code = 96;
+                        break;
+                    case 219:
+                        code = 91;
+                        break;
+                    case 220:
+                        code = 92;
+                        break;
+                    case 221:
+                        code = 93;
+                        break;
+                    case 222:
+                        code = 39;
+                        break;
                     default:
                         code = keyCode;
                 }
