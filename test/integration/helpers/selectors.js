@@ -61,12 +61,6 @@ module.exports = {
             },
             caption: function (text) {
                 return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
-            },
-            editor: function (text) {
-                return this.caption(text) + '/..//input[contains(@class, "pl-control-editor")]';
-            },
-            control: function (text) {
-                return this.caption(text) + '/..//input[contains(@class, "pl-control")]';
             }
         },
         ComboBox: {

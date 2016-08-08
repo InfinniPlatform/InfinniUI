@@ -37,6 +37,10 @@ TextEditor.prototype.setValueConverter = function (converter) {
     return this;
 };
 
+TextEditor.prototype.getValue = function() {
+    return this._model.getValue();
+};
+
 /**
  *
  * @param {HTMLInputElement} inputElement

@@ -138,7 +138,7 @@ module.exports = function () {
         var selector = this.selectors.XPATH.Element.byName(elementName.name);
         var xpath = this.by.xpath(selector);
 
-        return this.driver.findElements(xpath)
+        return this.currentView.findElements(xpath)
             .then(function (elements) {
                 if (elements.length <= elementName.index) {
                     throw new Error('Элемент не найден');
