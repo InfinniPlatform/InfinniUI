@@ -164,7 +164,6 @@ var TextEditorView = Backbone.View.extend({
             default:
                 //замена выделенного текста, по нажатию
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
-console.log(char);
                 event.preventDefault();
                 if (this.getSelectionLength() > 0) {
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
