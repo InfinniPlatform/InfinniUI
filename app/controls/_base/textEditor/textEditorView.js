@@ -386,6 +386,7 @@ var TextEditorView = Backbone.View.extend({
 
     onFocusinHandler: function (/* event */) {
         this.model.setEditMode();
+        setTimeout(this.setCaretPosition.bind(this, 0), 4);
     },
 
     onFocusoutHandler: function (/* event */) {
