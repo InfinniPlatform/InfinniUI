@@ -11,18 +11,19 @@ module.exports = function () {
         var selector = this.selectors.XPATH.TextBox.caption(fieldName.name);
         var xpath = this.by.xpath(selector);
 
-        return this.currentView.findElements(xpath).then(function (elements) {
-            if(elements.length < fieldName.index + 1) {
-                throw new Error('Элемент не найден');
-            }
-            return elements[fieldName.index].getAttribute('for').then(function (tag) {
-                return that.currentView.findElement(that.by.id(tag)).then(function (textbox) {
-                    // TODO: Вернуть после исправления UI-2203
-                    //return textbox.sendKeys(that.selectAll, value);
-                    return textbox.sendKeys(that.selectAll, that.keys.BACK_SPACE, that.keys.ARROW_LEFT, value);
-                });
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                if (elements.length <= fieldName.index) {
+                    throw new Error('Элемент не найден');
+                }
+                return elements[fieldName.index].getAttribute('for');
+            })
+            .then(function (tag) {
+                return that.currentView.findElement(that.by.id(tag));
+            })
+            .then(function (textbox) {
+                return textbox.sendKeys(that.selectAll, that.keys.BACK_SPACE, value);
             });
-        });
     });
 
     this.When(/^значение в текстовом поле "([^"]*)" равно "([^"]*)"$/, function (textBoxLabel, value) {

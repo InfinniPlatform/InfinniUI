@@ -58,15 +58,13 @@ function handleAfterScenario(event, callback) {
 
 //according to: https://confluence.jetbrains.com/display/TCD7/Build+Script+Interaction+with+TeamCity
 function escape(string) {
-    string = string
+    return translit(string)
         .replace(/\|/g, '||')
         .replace(/'/g, "|'")
         .replace(/\n/g, '|n')
         .replace(/\r/g, '|r')
         .replace(/\[/g, '|[')
         .replace(/\]/g, '|]');
-
-    return translit(string);
 }
 
 function fixStepResult(step) {
