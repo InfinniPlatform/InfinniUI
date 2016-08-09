@@ -2,6 +2,7 @@ function ServerActionBuilder() {}
 
 _.extend(ServerActionBuilder.prototype,
     BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
     {
         build: function (context, args) {
             var builder = args.builder,
@@ -11,6 +12,7 @@ _.extend(ServerActionBuilder.prototype,
             var action = new ServerAction(parentView);
 
             this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
 
             action.setProperty('origin', metadata.Origin);
             action.setProperty('path', metadata.Path);

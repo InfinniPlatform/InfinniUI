@@ -1,7 +1,7 @@
 var ServerActionProvider = function () {
 };
 
-ServerActionProvider.prototype.request = function (requestData, resultCallback) {
+ServerActionProvider.prototype.request = function (requestData, resultCallback, onSuccess, onError) {
     var that = this;
     var requestId = Math.round((Math.random() * 100000));
 
@@ -14,19 +14,31 @@ ServerActionProvider.prototype.request = function (requestData, resultCallback) 
         data: requestData.args,
         contentType: requestData.contentType,
         success: function(data){
+            var args = {
+                requestId: requestId,
+                data: data
+            };
+
             if( _.isFunction(resultCallback) ){
-                resultCallback({
-                    requestId: requestId,
-                    data: data
-                });
+                resultCallback(args);
+            }
+
+            if( _.isFunction(onSuccess) ){
+                onSuccess(args);
             }
         },
         error: function (data) {
+            var args = {
+                requestId: requestId,
+                data: data
+            };
+
             if( _.isFunction(resultCallback) ){
-                resultCallback({
-                    requestId: requestId,
-                    data: data
-                });
+                resultCallback(args);
+            }
+
+            if( _.isFunction(onError) ){
+                onError(args);
             }
         }
     });
@@ -34,8 +46,8 @@ ServerActionProvider.prototype.request = function (requestData, resultCallback) 
     return requestId;
 };
 
-ServerActionProvider.prototype.download = function (requestData, resultCallback) {
-    new DownloadExecutor(resultCallback)
+ServerActionProvider.prototype.download = function (requestData, resultCallback, onSuccess, onError) {
+    new DownloadExecutor(resultCallback, onSuccess, onError)
         .run(requestData);
 };
 

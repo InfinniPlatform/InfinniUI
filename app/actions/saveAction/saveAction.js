@@ -5,7 +5,9 @@ function SaveAction(parentView){
 _.inherit(SaveAction, BaseAction);
 
 
-_.extend(SaveAction.prototype, {
+_.extend(SaveAction.prototype,
+    BaseFallibleActionMixin,
+    {
     execute: function(callback){
         var parentView = this.parentView,
             dataSource = this.getProperty('dataSource'),
@@ -19,6 +21,7 @@ _.extend(SaveAction.prototype, {
                 }
 
                 that.onExecutedHandler(args);
+                that.onSuccessHandler(args);
 
                 if(_.isFunction(callback)){
                     callback(context, args);
@@ -26,6 +29,7 @@ _.extend(SaveAction.prototype, {
             },
             onErrorSave = function(context, args){
                 that.onExecutedHandler(args);
+                that.onErrorHandler(args);
 
                 if (_.isFunction(callback)) {
                     callback();
@@ -35,4 +39,5 @@ _.extend(SaveAction.prototype, {
         var selectedItem = dataSource.getSelectedItem();
         dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
     }
-});
+}
+);

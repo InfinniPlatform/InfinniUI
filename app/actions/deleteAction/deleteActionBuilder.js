@@ -2,6 +2,7 @@ function DeleteActionBuilder(){}
 
 _.extend(DeleteActionBuilder.prototype,
     BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
     {
         build: function(context, args){
             var metadata = args.metadata,
@@ -12,6 +13,7 @@ _.extend(DeleteActionBuilder.prototype,
             var action = new DeleteAction(parentView);
 
             this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
 
             var accept = (metadata['Accept'] !== false),
                 dataSource = parentView.getContext().dataSources[sourceName],

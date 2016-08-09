@@ -9,8 +9,9 @@ function ServerAction(parentView) {
 
 _.inherit(ServerAction, BaseAction);
 
-_.extend(ServerAction.prototype, {
-
+_.extend(ServerAction.prototype,
+    BaseFallibleActionMixin,
+    {
     defaults: {
         contentType: 'application/x-www-form-urlencoded; charset=utf-8',
         method: 'GET',
@@ -28,13 +29,22 @@ _.extend(ServerAction.prototype, {
     },
 
     execute: function (callback) {
-        this.contentTypeStrategy.run(this.provider, this._getRequestData(), function(args){
-            that.onExecutedHandler(args);
+        var that = this,
+            onExecuted = function(args){
+                that.onExecutedHandler(args);
 
-            if (_.isFunction(callback)) {
-                callback(args);
-            }
-        });
+                if (_.isFunction(callback)) {
+                    callback(args);
+                }
+            },
+            onSuccess = function(args) {
+                that.onSuccessHandler(args);
+            },
+            onError = function(args) {
+                that.onErrorHandler(args);
+            };
+
+        this.contentTypeStrategy.run(this.provider, this._getRequestData(), onExecuted, onSuccess, onError);
     },
 
     setParam: function(name, value) {
@@ -89,4 +99,5 @@ _.extend(ServerAction.prototype, {
         var replacedStr = this._replaceParamsInStr(str);
         return JSON.parse(replacedStr);
     }
-});
+}
+);

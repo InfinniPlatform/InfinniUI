@@ -5,7 +5,9 @@ function DeleteAction(parentView){
 _.inherit(DeleteAction, BaseAction);
 
 
-_.extend(DeleteAction.prototype, {
+_.extend(DeleteAction.prototype,
+    BaseFallibleActionMixin,
+    {
     execute: function(callback){
         var accept = this.getProperty('accept'),
             that = this,
@@ -61,6 +63,7 @@ _.extend(DeleteAction.prototype, {
                 dataSource.updateItems();
 
                 that.onExecutedHandler(args);
+                that.onSuccessHandler(args);
 
                 if (_.isFunction(callback)) {
                     callback();
@@ -68,6 +71,7 @@ _.extend(DeleteAction.prototype, {
             },
             onErrorDelete = function(context, args){
                 that.onExecutedHandler(args);
+                that.onErrorHandler(args);
 
                 if (_.isFunction(callback)) {
                     callback();
@@ -89,6 +93,7 @@ _.extend(DeleteAction.prototype, {
         dataSource.setProperty(parentProperty, items);
 
         this.onExecutedHandler();
+        that.onSuccessHandler();
 
         if (_.isFunction(callback)) {
             callback();
@@ -98,4 +103,5 @@ _.extend(DeleteAction.prototype, {
     _isDocument: function(propertyName){
         return propertyName == '$' || _.isFinite(propertyName);
     }
-});
+}
+);
