@@ -21,7 +21,7 @@ describe('OpenAction', function () {
         assert.isNotNull( openAction.execute, 'action should have execute' );
     });
 
-    it('open view', function (done) {
+    it('should open view', function (done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -64,4 +64,48 @@ describe('OpenAction', function () {
         });
     });
 
+    it('should call onExecuted', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "Items": [{
+
+                "Button": {
+                    "Name": "OpenViewButton",
+                    "Action": {
+                        "OpenAction": {
+                            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+                            "LinkView": {
+                                "InlineView": {
+                                    "View": {
+                                        "Text": "Child View",
+                                        "Name": "ChildView"
+                                    },
+                                    "OpenMode": "Dialog"
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var btn = view.context.controls['OpenViewButton'];
+
+            assert.isUndefined(window.onExecutedWasCalled);
+
+            // When
+            btn.click();
+
+            // Then
+            assert.isTrue(window.onExecutedWasCalled);
+
+            done();
+
+            // cleanup
+            window.onExecutedWasCalled = undefined;
+            view.close();
+        });
+    });
 });

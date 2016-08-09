@@ -77,6 +77,7 @@ var sourceForFiles = {
 		'app/elements/dataElement/**/*.js',
 		'app/elements/**/*.js',
 
+		'app/actions/_base/**/*.js',
 		'app/actions/**/*.js',
 
 		'app/builders/**/*.js',

@@ -7,11 +7,15 @@ _.inherit(AcceptAction, BaseAction);
 
 _.extend(AcceptAction.prototype, {
     execute: function(callback){
-        if (callback) {
-            this.parentView.onClosed(function () {
+        var that = this;
+
+        this.parentView.onClosed(function () {
+            that.onExecutedHandler();
+
+            if (callback) {
                 callback();
-            });
-        }
+            }
+        });
 
         this.parentView.setDialogResult(DialogResult.accepted);
         this.parentView.close();
