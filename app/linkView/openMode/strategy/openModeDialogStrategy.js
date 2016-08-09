@@ -49,11 +49,17 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
         this._initBehaviorFocusingInModal($modal, $modalBody);
 
+        var updateCloseButtonVisibility = function() {
+            $closeButton.toggleClass('hidden', !view.getCloseButtonVisibility());
+        };
+
+        updateCloseButtonVisibility();
+
+        view.control.controlView.listenTo(view.control.controlModel, 'change:closeButtonVisibility', updateCloseButtonVisibility);
 
 
-        var
-            headerTemplate = view.getHeaderTemplate();
-        $closeButton.toggleClass('hidden', !view.getCloseButtonVisibility());
+        var headerTemplate = view.getHeaderTemplate();
+
         $header.append(headerTemplate().render());
 
         $modal.find('.pl-close-modal').on('click', function(){
