@@ -13,7 +13,11 @@ var capabilities = {
         return webdriver.Capabilities.chrome();
     },
     firefox: function () {
-        return webdriver.Capabilities.firefox();
+        var firefox = require('selenium-webdriver/firefox');
+        var profile = new firefox.Profile('C:\\firefoxProfile');
+        var options = new firefox.Options().setProfile(profile);
+
+        return new firefox.Driver(options);
     },
     phantomjs: function () {
         var caps = webdriver.Capabilities.phantomjs();
@@ -33,9 +37,8 @@ var buildChromeDriver = function () {
 };
 
 var buildFirefoxDriver = function () {
-    return new webdriver.Builder()
-        .withCapabilities(capabilities.firefox())
-        .build();
+    // TODO: Fix
+    return capabilities.firefox();
 };
 
 var buildPhantomDriver = function () {

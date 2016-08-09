@@ -21,6 +21,10 @@ window.InfinniUI.Keyboard = {
         NUMPAD_7: 103,
         NUMPAD_8: 104,
         NUMPAD_9: 105,
+        PLUS: 43,
+        MINUS: 45,
+        ASTERISK: 42,
+        SLASH: 47,
         0: 48,
         1: 49,
         2: 50,
@@ -34,15 +38,66 @@ window.InfinniUI.Keyboard = {
     },
 
     getCharByKeyCode: function (keyCode) {
-        var char;
+        var char, code;
 
         if (keyCode < 32) {
             //Спецсимвол
             char = null;
         } else {
-            char = String.fromCharCode(
-                (this.KeyCode.NUMPAD_0 <= keyCode && keyCode <= this.KeyCode.NUMPAD_9) ? keyCode-this.KeyCode['0'] : keyCode
-            );
+            //@see http://unixpapa.com/js/key.html
+            if (keyCode >= this.KeyCode.NUMPAD_0 && keyCode <= this.KeyCode.NUMPAD_9) {
+                code = keyCode - 48;
+            } else {
+                switch (keyCode) {
+                    //convert numpad key codes
+                    case 110:
+                        code = this.KeyCode.DELETE;  //.Del
+                        break;
+                    case 107:
+                        code = this.KeyCode.PLUS;  //+
+                        break;
+                    case 109:
+                        code = this.KeyCode.MINUS;  //-
+                        break;
+                    case 106:
+                        code = this.KeyCode.ASTERISK;  //*
+                        break;
+                    case 111:
+                        code = this.KeyCode.SLASH;  // /
+                        break;
+                    //Symbol Keys
+                    case 188:
+                        code = 44;
+                        break;
+                    case 173:
+                        code = 45;
+                        break;
+                    case 190:
+                        code = 46;
+                        break;
+                    case 191:
+                        code = 47;
+                        break;
+                    case 192:
+                        code = 96;
+                        break;
+                    case 219:
+                        code = 91;
+                        break;
+                    case 220:
+                        code = 92;
+                        break;
+                    case 221:
+                        code = 93;
+                        break;
+                    case 222:
+                        code = 39;
+                        break;
+                    default:
+                        code = keyCode;
+                }
+            }
+            char = String.fromCharCode(code);
         }
         return char;
     }
