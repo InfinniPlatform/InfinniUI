@@ -79,6 +79,8 @@ var MessageBox = Backbone.View.extend({
     },
 
     onClickButtonHandler: function (event) {
+        event.preventDefault();
+
         var $el = $(event.target),
             i = parseInt( $el.data('index'), 10),
             handler = this.options.buttons[i].onClick;
