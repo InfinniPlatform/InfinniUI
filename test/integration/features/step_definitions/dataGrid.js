@@ -73,6 +73,21 @@ module.exports = function () {
             });
     });
 
+    this.When(/^я нажму в заголовке таблицы "([^"]*)" на ячейку под номером "([^"]*)"$/, function (tableName, cellIndex) {
+        var selector = this.selectors.XPATH.DataGrid.headerCells(tableName);
+        var xpath = this.by.xpath(selector);
+
+        cellIndex = parseInt(cellIndex);
+
+        return this.currentView.findElements(xpath)
+            .then(function (cells) {
+                if (cells.length <= cellIndex) {
+                    throw new Error('Ячейка не найдена');
+                }
+                return cells[cellIndex].click();
+            });
+    });
+
     this.When(/^я увижу пустую таблицу "([^"]*)"$/, function (tableName) {
         var selector = this.selectors.XPATH.DataGrid.body(tableName);
         var xpath = this.by.xpath(selector);
