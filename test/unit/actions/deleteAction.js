@@ -112,4 +112,44 @@ describe('DeleteAction', function () {
             }
         );
     });
+
+    it('should call onExecuted', function () {
+        // Given
+        var view = new View();
+        var builder = new ApplicationBuilder();
+        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+
+        dataSource.setItems([
+                                {
+                                    _id: 0,
+                                    Name: 'First'
+                                }
+                            ]);
+
+        view.getDataSources().push(dataSource);
+
+        var metadata = {
+            DeleteAction: {
+                OnExecuted: "{ window.onExecutedWasCalled = true; }",
+                Accept: false,
+                DestinationValue: {
+                    Source: 'SomeDS',
+                    Property: '0'
+                }
+            }
+        };
+
+        var deleteAction = builder.build(metadata, {parentView: view});
+
+        assert.isUndefined(window.onExecutedWasCalled);
+
+        // When
+        deleteAction.execute();
+
+        // Then
+        assert.isTrue(window.onExecutedWasCalled);
+
+        // cleanup
+        window.onExecutedWasCalled = undefined;
+    });
 });
