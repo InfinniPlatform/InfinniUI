@@ -33,6 +33,8 @@ var DataGridView = ListEditorBaseView.extend({
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI),
 
+    isHeaderRendered: false,
+
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
         this.rowElements = new HashMap();
@@ -246,7 +248,7 @@ var DataGridView = ListEditorBaseView.extend({
 
             $th.data('pl-column', column);
 
-            if( column.getSortable() ) {
+            if( column.getSortable() && !that.isHeaderRendered ) {
                 $th.addClass('sortable');
 
                 if( column.getSortDirection()  ) {
@@ -267,6 +269,8 @@ var DataGridView = ListEditorBaseView.extend({
             }
             return $th;
         });
+
+        this.isHeaderRendered = true;
 
         this.ui.header.append($headers);
         this.ui.firstRows.append(sizeCells);
@@ -368,7 +372,9 @@ var DataGridView = ListEditorBaseView.extend({
             var $sortableCell = this.$el.find('.sorted');
             $sortableCell.removeClass('sorted headerTemplate-sorted-asc headerTemplate-sorted-desc sorted-asc sorted-desc');
             var  sortedCell = this.model.get('sortedColumn');
-            sortedCell.setSortDirection(null);
+            if( sortedCell ) {
+                sortedCell.setSortDirection(null);
+            }
         } else {
             var $sortableCell = this.$el.find('.sorted');
             $sortableCell.removeClass('headerTemplate-sorted-' + direction + ' sorted-' + direction);
