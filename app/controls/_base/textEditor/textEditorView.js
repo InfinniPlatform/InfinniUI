@@ -200,14 +200,10 @@ var TextEditorView = Backbone.View.extend({
         var text = originalEvent.clipboardData.getData('text/plain');
         var editMask = this.model.getEditMask();
 
-        event.preventDefault();
-
         if (editMask) {
+            event.preventDefault();
             this.textTyping(text);
-        } else {
-            this.model.setText(text);
         }
-
     },
 
     OnDragstartHandler: function (event) {
