@@ -7,29 +7,29 @@ _.inherit(UpdateAction, BaseAction);
 _.extend(UpdateAction.prototype,
     BaseFallibleActionMixin,
     {
-    execute: function(callback){
+        execute: function(callback){
 
-        var dataSource = this.getProperty('dataSource');
+            var dataSource = this.getProperty('dataSource');
 
-        var that = this,
-            onSuccessUpdate = function (context, args) {
-                that.onExecutedHandler(args);
-                that.onSuccessHandler(args);
+            var that = this,
+                onSuccessUpdate = function (context, args) {
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
 
-                if (_.isFunction(callback)) {
-                    callback();
-                }
-            },
-            onErrorUpdate = function (context, args) {
-                that.onExecutedHandler(args);
-                that.onErrorHandler(args);
+                    if (_.isFunction(callback)) {
+                        callback();
+                    }
+                },
+                onErrorUpdate = function (context, args) {
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
 
-                if (_.isFunction(callback)) {
-                    callback();
-                }
-            };
+                    if (_.isFunction(callback)) {
+                        callback();
+                    }
+                };
 
-        dataSource.updateItems(onSuccessUpdate, onErrorUpdate);
+            dataSource.updateItems(onSuccessUpdate, onErrorUpdate);
+        }
     }
-}
 );
