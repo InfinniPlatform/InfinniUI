@@ -16,7 +16,9 @@ function JetBrainsSMListener() {
         var message;
 
         if (lastFailedTestName != null && lastFailedTestName == escapeForTeamCity(step.getName())) {
-            callback();
+            setTimeout(function () {
+                callback();
+            }, 0);
             return;
         }
         lastFailedTestName = null;
@@ -59,7 +61,9 @@ function JetBrainsSMListener() {
         message = message.replace('%s', escapeForTeamCity(step.getName()));
         log(message);
 
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.BeforeFeatures(function handleBeforeFeaturesEvent(event, callback) {
@@ -70,7 +74,9 @@ function JetBrainsSMListener() {
         message = "##teamcity[customProgressStatus testsCategory = 'Scenarios' count = '0' timestamp = '%s']\n";
         message = message.replace('%s', getCurrentDate());
         log(message);
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.BeforeFeature(function (event, callback) {
@@ -82,7 +88,9 @@ function JetBrainsSMListener() {
         message = message.replace('%s', feature.getName());
         log(message);
 
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.AfterFeature(function handleAfterFeatureEvent(event, callback) {
@@ -92,14 +100,18 @@ function JetBrainsSMListener() {
         message = message.replace('%s', feature.getName());
         log(message);
 
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.BeforeStep(function handleBeforeScenarioEvent(event, callback) {
         var step = event.getPayloadItem('step');
         testStarted(step);
 
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.BeforeScenario(function handleBeforeScenario(event, callback) {
@@ -114,7 +126,9 @@ function JetBrainsSMListener() {
         message = message.replace('%s', scenario.getUri() + ':' + scenario.getLine());
         message = message.replace('%s', scenario.getName());
         log(message);
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     this.AfterScenario(function handleAfterScenario(event, callback) {
@@ -124,7 +138,9 @@ function JetBrainsSMListener() {
         message = message.replace('%s', getCurrentDate());
         message = message.replace('%s', scenario.getName());
         log(message);
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
 
@@ -132,7 +148,9 @@ function JetBrainsSMListener() {
         var message = "##teamcity[customProgressStatus testsCategory = '' count = '0' timestamp = '%s']\n";
         message = message.replace('%s', getCurrentDate());
         log(message);
-        callback();
+        setTimeout(function () {
+            callback();
+        }, 0);
     });
 
     function adjustToLength(number, length) {
