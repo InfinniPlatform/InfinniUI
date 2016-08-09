@@ -93,6 +93,12 @@ module.exports = {
             body: function (name) {
                 return this.self(name) + '/div[contains(@class, "pl-datagrid__body")]';
             },
+            head: function (name) {
+                return this.self(name) + '/div[contains(@class, "pl-datagrid__head")]//tr[contains(@class, "pl-datagrid-row_header")]';
+            },
+            headerCells: function (name) {
+                return this.head(name) + '/th[contains(@class, "pl-datagrid-row__cell")]';
+            },
             rows: function () {
                 return './/tr[contains(@class, "pl-datagrid-row_data")]';
             },
