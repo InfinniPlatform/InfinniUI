@@ -52,4 +52,33 @@ describe('UpdateAction', function () {
         // Then
         assert.isTrue(window.dsWasUpdated, 'ds should be update');
     });
+
+    it('should call onExecuted', function () {
+        // Given
+        var view = new View();
+        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
+        var builder = new UpdateActionBuilder();
+
+        view.getDataSources().push(dataSource);
+
+        var metadata = {
+            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+            DestinationValue: {
+                Source: 'MainDS'
+            }
+        };
+
+        var updateAction = builder.build(null, {parentView: view, metadata: metadata});
+
+        assert.isUndefined(window.onExecutedWasCalled);
+
+        // When
+        updateAction.execute();
+
+        // Then
+        assert.isTrue(window.onExecutedWasCalled);
+
+        // cleanup
+        window.onExecutedWasCalled = undefined;
+    });
 });

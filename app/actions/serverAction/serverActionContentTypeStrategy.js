@@ -1,12 +1,12 @@
 var serverActionContentTypeStrategy = {
     "File": {
-        run: function (provider, params, callback) {
-            provider.download(params, callback);
+        run: function (provider, params, callback, onSuccess, onError) {
+            provider.download(params, callback, onSuccess, onError);
         }
     },
     "Object": {
-        run: function (provider, params, callback) {
-            provider.request(params, callback);
+        run: function (provider, params, callback, onSuccess, onError) {
+            provider.request(params, callback, onSuccess, onError);
         }
     }
 };

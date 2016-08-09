@@ -7,18 +7,19 @@ _.inherit(SelectAction, BaseAction);
 
 _.extend(SelectAction.prototype, {
     execute: function(callback){
-        var parentView = this.parentView;
-        var linkView = this.getProperty('linkView');
+        var parentView = this.parentView,
+            linkView = this.getProperty('linkView'),
+            that = this;
 
-        var srcDataSourceName = this.getProperty('sourceSource');
-        var srcPropertyName = this.getProperty('sourceProperty');
+        var srcDataSourceName = this.getProperty('sourceSource'),
+            srcPropertyName = this.getProperty('sourceProperty');
 
-        var dstDataSourceName = this.getProperty('destinationSource');
-        var dstPropertyName = this.getProperty('destinationProperty');
+        var dstDataSourceName = this.getProperty('destinationSource'),
+            dstPropertyName = this.getProperty('destinationProperty');
 
         linkView.createView(function(createdView){
 
-            createdView.onClosed(function () {
+            createdView.onClosed(function (context, args) {
                 var dialogResult = createdView.getDialogResult();
 
                 if (dialogResult == DialogResult.accepted) {
@@ -27,10 +28,12 @@ _.extend(SelectAction.prototype, {
 
                     var value = srcDataSource.getProperty(srcPropertyName);
                     dstDataSource.setProperty(dstPropertyName, value);
+                }
 
-                    if (callback) {
-                        callback(value);
-                    }
+                that.onExecutedHandler(args);
+
+                if (callback) {
+                    callback(context, args);
                 }
             });
 
