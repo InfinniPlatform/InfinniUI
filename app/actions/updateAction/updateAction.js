@@ -4,12 +4,32 @@ function UpdateAction(parentView){
 
 _.inherit(UpdateAction, BaseAction);
 
+_.extend(UpdateAction.prototype,
+    BaseFallibleActionMixin,
+    {
+        execute: function(callback){
 
-_.extend(UpdateAction.prototype, {
-    execute: function(callback){
+            var dataSource = this.getProperty('dataSource');
 
-        var dataSource = this.getProperty('dataSource');
+            var that = this,
+                onSuccessUpdate = function (context, args) {
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
 
-        dataSource.updateItems(callback, callback);
+                    if (_.isFunction(callback)) {
+                        callback();
+                    }
+                },
+                onErrorUpdate = function (context, args) {
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
+
+                    if (_.isFunction(callback)) {
+                        callback();
+                    }
+                };
+
+            dataSource.updateItems(onSuccessUpdate, onErrorUpdate);
+        }
     }
-});
+);

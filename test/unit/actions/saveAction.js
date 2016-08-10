@@ -75,4 +75,30 @@ describe('SaveAction', function () {
         // Then
         assert.equal(view.getDialogResult(), DialogResult.none, 'should not set DialogResult');
     });
+
+    it('should call onExecuted', function () {
+        // Given
+        var view = createViewWithDataSource('MainDS');
+        var builder = new SaveActionBuilder();
+
+        var metadata = {
+            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+            DestinationValue: {
+                Source: 'MainDS'
+            }
+        };
+
+        var saveAction = builder.build(null, {parentView: view, metadata: metadata});
+
+        assert.isUndefined(window.onExecutedWasCalled);
+
+        // When
+        saveAction.execute();
+
+        // Then
+        assert.isTrue(window.onExecutedWasCalled);
+
+        // cleanup
+        window.onExecutedWasCalled = undefined;
+    });
 });

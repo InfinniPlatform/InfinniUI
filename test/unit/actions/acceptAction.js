@@ -26,4 +26,27 @@ describe('AcceptAction', function () {
         // Then
         assert.equal(view.getDialogResult(), DialogResult.accepted, 'DialogResult should be accepted');
     });
+
+    it('should call onExecuted', function () {
+        // Given
+        var view = new View();
+        var builder = new AcceptActionBuilder();
+        var acceptAction = builder.build(null, {
+                                                parentView: view,
+                                                metadata: {
+                                                    OnExecuted: "{ window.onExecutedWasCalled = true; }"
+                                                }
+                                            });
+
+        assert.isUndefined(window.onExecutedWasCalled);
+
+        // When
+        acceptAction.execute();
+
+        // Then
+        assert.isTrue(window.onExecutedWasCalled);
+
+        // cleanup
+        window.onExecutedWasCalled = undefined;
+    });
 });

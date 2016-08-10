@@ -24,6 +24,14 @@ _.extend(BaseAction.prototype, {
 
     initDefaultValues: function () {
 
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
     }
 
 }, Backbone.Events);
