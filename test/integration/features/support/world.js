@@ -7,22 +7,16 @@ var args = require('../../helpers/arguments.js')(process.argv.slice(2));
 var helpers = require('../../helpers/helpers.js');
 var chai = require('chai');
 var underscore = require('underscore');
+var config = require('./config.json');
 
 var capabilities = {
     chrome: function () {
         return webdriver.Capabilities.chrome();
     },
-    firefox: function () {
-        var firefox = require('selenium-webdriver/firefox');
-        var profile = new firefox.Profile('C:\\firefoxProfile');
-        var options = new firefox.Options().setProfile(profile);
-
-        return new firefox.Driver(options);
-    },
     phantomjs: function () {
         var caps = webdriver.Capabilities.phantomjs();
 
-        if(args.phantomjs) {
+        if (args.phantomjs) {
             caps.set('phantomjs.binary.path', args.phantomjs);
         }
 
@@ -37,8 +31,11 @@ var buildChromeDriver = function () {
 };
 
 var buildFirefoxDriver = function () {
-    // TODO: Fix
-    return capabilities.firefox();
+    var firefox = require('selenium-webdriver/firefox');
+    var profile = new firefox.Profile('C:\\firefoxProfile');
+    var options = new firefox.Options().setProfile(profile);
+
+    return new firefox.Driver(options);
 };
 
 var buildPhantomDriver = function () {
@@ -47,19 +44,27 @@ var buildPhantomDriver = function () {
         .build();
 };
 
-switch (args.platform) {
-    case 'chrome':
-        var driver = buildChromeDriver();
-        break;
-    case 'firefox':
-        var driver = buildFirefoxDriver();
-        break;
-    case 'phantomjs':
-        var driver = buildPhantomDriver();
-        break;
-    default:
-        throw new Error('Invalid driver "' + (args.platform || '') + '"');
-}
+var driver;
+
+(function buildDriver(platform) {
+    switch (platform) {
+        case 'chrome':
+            driver = buildChromeDriver();
+            break;
+        case 'firefox':
+            driver = buildFirefoxDriver();
+            break;
+        case 'phantomjs':
+            driver = buildPhantomDriver();
+            break;
+        default:
+            if (args.platform) {
+                throw new Error('Invalid platform "' + (args.platform || '') + '"');
+            } else {
+                buildDriver(config.browser.platform);
+            }
+    }
+})(args.platform);
 
 var getDriver = function () {
     return driver;
@@ -80,8 +85,8 @@ var World = function World() {
 
     this.currentView = null;
 
-    this.driver.manage().timeouts().implicitlyWait(10000);
-    this.driver.manage().window().setSize(1600, 900);
+    this.driver.manage().timeouts().implicitlyWait(config.timeouts.main);
+    this.driver.manage().window().setSize(config.screen.width, config.screen.height);
 
     if (!fs.existsSync(screenshotPath)) {
         fs.mkdirSync(screenshotPath);
@@ -90,3 +95,4 @@ var World = function World() {
 
 module.exports.World = World;
 module.exports.getDriver = getDriver;
+module.exports.By = webdriver.By;

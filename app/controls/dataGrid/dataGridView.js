@@ -33,8 +33,6 @@ var DataGridView = ListEditorBaseView.extend({
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI),
 
-    isHeaderRendered: false,
-
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
         this.rowElements = new HashMap();
@@ -248,7 +246,7 @@ var DataGridView = ListEditorBaseView.extend({
 
             $th.data('pl-column', column);
 
-            if( column.getSortable() && !that.isHeaderRendered ) {
+            if( column.getSortable() ) {
                 $th.addClass('sortable');
 
                 if( column.getSortDirection()  ) {
@@ -269,8 +267,6 @@ var DataGridView = ListEditorBaseView.extend({
             }
             return $th;
         });
-
-        this.isHeaderRendered = true;
 
         this.ui.header.append($headers);
         this.ui.firstRows.append(sizeCells);
