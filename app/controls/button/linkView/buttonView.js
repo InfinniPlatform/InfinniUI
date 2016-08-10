@@ -21,46 +21,6 @@ var LinkButtonView = CommonButtonView.extend({
     UI: {
     },
 
-    updateBackground: function () {
-        var customStyle = this.model.get('background');
-
-        if (this.currentBackground) {
-            this.$el
-                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToBackgroundClassName(customStyle));
-        }
-
-        this.currentBackground = customStyle;
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (!focusable) {
-            this.$el.attr('tabindex', -1);
-        }
-    },
-
-    //updateForeground: function () {
-    //    var customStyle = this.model.get('foreground');
-    //
-    //    if (this.currentBackground) {
-    //        this.ui.button
-    //            .removeClass(this.valueToBackgroundClassName(this.currentBackground));
-    //    }
-    //
-    //    if (customStyle) {
-    //        this.ui.button
-    //            .addClass(this.valueToBackgroundClassName(customStyle));
-    //    }
-    //
-    //    this.currentBackground = customStyle;
-    //},
-
     getButtonElement: function(){
         return this.$el;
     }

@@ -56,9 +56,9 @@ var CommonButtonView = ControlView.extend({
         var focusable = this.model.get('focusable');
 
         if (!focusable) {
-            this.ui.button.attr('tabindex', -1);
+            this.getButtonElement().attr('tabindex', -1);
         } else {
-            this.ui.button.removeAttr('tabindex');
+            this.getButtonElement().removeAttr('tabindex');
         }
     },
 
@@ -73,12 +73,12 @@ var CommonButtonView = ControlView.extend({
         var customStyle = this.model.get('background');
 
         if (this.currentBackground) {
-            this.ui.button
+            this.getButtonElement()
                 .removeClass(this.valueToBackgroundClassName(this.currentBackground));
         }
 
         if (customStyle) {
-            this.ui.button
+            this.getButtonElement()
                 .addClass(this.valueToBackgroundClassName(customStyle));
         }
 
@@ -101,7 +101,7 @@ var CommonButtonView = ControlView.extend({
     },
 
     setFocus: function () {
-        this.ui.button.focus();
+        this.getButtonElement().focus();
     }
 
 
