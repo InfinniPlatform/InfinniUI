@@ -11,6 +11,6 @@
     "unzip": "^0.1.11"
   },
   "scripts": {
-    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore --format summary --platform:firefox"
+    "test": "node node_modules/cucumber/bin/cucumber.js --tags ~@ignore --format summary"
   }
 }
