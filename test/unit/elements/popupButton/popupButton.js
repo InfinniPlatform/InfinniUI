@@ -160,26 +160,5 @@ describe('PopupButtonElement', function () {
             // Then
             assert.equal(1,button.getItems().length);
         });
-
-
-//        it('should be true if scriptsHandlers call', function () {
-//            //Given
-//            var popupButton = new PopupButtonBuilder();
-//            var view = new View();
-//            var metadata = {
-//                OnClick:{
-//                    Name: 'OnClick'
-//                }
-//            };
-//            window.Test = {popupButton:1};
-//            view.setScripts([{Name:"OnClick", Body:"window.Test.popupButton = 5"}]);
-//
-//            //When
-//            var build = popupButton.build(popupButton, view, metadata);
-//            $(build.render()).find('.pl-popup-btn-main').trigger('click');
-//
-//            // Then
-//            assert.equal(window.Test.popupButton, 5);
-//        });
     });
 });
