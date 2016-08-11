@@ -1,95 +1,70 @@
-/*describe('DataNavigation', function () {
+describe('DataNavigation', function () {
     it('should pass test default property', function () {
         // Given
-        var dataNavigationBuilder = new DataNavigationBuilder();
-        var view = new View();
-        view.setGuid(guid());
         var metadata = {
-            Enabled: true,
-            PageNumber: 5,
-            PageSize: 10,
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "PatientDataSource",
+                        "Items": [
+                            {"Id": 1, "Display": "LTE", "State": "New"},
+                            {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                            {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                        ]
+                    }
+                }
+            ],
+            Items: [{
 
-            Name: "DataNavigation1",
-            AvailablePageSizes: [ 20, 50, 100 ],
-            DataSource: "PatientDataSource"
+                DataNavigation: {
+                    Enabled: true,
+                    Name: "DataNavigation1",
+                    AvailablePageSizes: [ 20, 50, 100 ],
+                    DataSource: "PatientDataSource"
+                }
+            }]
         };
-        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
 
-        //When
-        dataNavigation.setName('NewDataNavigation');
+        // When
+        testHelper.applyViewMetadata(metadata, onDataNavigationReady);
 
-        //Then
-        assert.equal(dataNavigation.getName(), 'NewDataNavigation');
-        assert.isTrue(dataNavigation.getEnabled());
-        assert.isTrue(dataNavigation.getVisible());
-        assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
-        assert.equal(dataNavigation.getPageNumber(), metadata.PageNumber);
-        assert.equal(dataNavigation.getPageSize(), metadata.PageSize);
-        assert.equal(dataNavigation.getDataSource(), metadata.DataSource);
+        // Then
+        function onDataNavigationReady(view, $view){
+            var dataNavigation = view.context.controls['DataNavigation1'];
+
+            assert.isDefined(dataNavigation);
+            assert.isTrue(dataNavigation.getEnabled());
+            assert.isTrue(dataNavigation.getVisible());
+            assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
+            assert.equal(dataNavigation.getDataSource().name, "PatientDataSource");
+
+            view.close();
+        }
     });
 
-    it('should handlers messageBus, onSetPageSize, onSetPageNumber', function () {
+    it('should call onPageNumberChanged', function (done) {
         // Given
-        var dataNavigationBuilder = new DataNavigationBuilder();
-        var view = new View();
-        view.setGuid(guid());
-        var metadata = {
-            PageNumber: 5,
-            PageSize: 10,
+        var dataNavigation = new DataNavigation();
 
-            Name: "DataNavigation1",
-            //AvailablePageSizes: [ 20, 50, 100 ],
-            DataSource: "PatientDataSource"
-        };
-
-
-        var exchange = view.getExchange();
-        var dataNavigation = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
-
-        //Then
-        exchange.subscribe(messageTypes.onSetPageSize, function (messageBody) {
-            assert.equal(messageBody.value, 123);
-            assert.equal(messageBody.dataSource, metadata.DataSource);
-        });
-
-        exchange.subscribe(messageTypes.onSetPageNumber, function (messageBody) {
-            assert.equal(messageBody.value, 10);
-            assert.equal(messageBody.dataSource, metadata.DataSource);
+        dataNavigation.onPageNumberChanged(function(){
+            // Then
+            done();
         });
 
         // When
-        dataNavigation.setPageSize(123);
-        dataNavigation.setPageNumber(10);
+        dataNavigation.setPageNumber(1);
     });
 
-    it('should be true if scriptsHandlers call', function () {
-        //Given
-        var dataNavigationBuilder = new DataNavigationBuilder();
-        var view = new View();
-        view.setGuid(guid());
-        var metadata = {
-            OnSetPageSize:{
-                Name: 'OnSetPageSize'
-            },
-            OnSetPageNumber:{
-                Name: 'OnSetPageNumber'
-            },
-            OnLoaded:{
-                Name: 'OnLoaded'
-            }
-        };
-        window.Test = {dataNavigation:{ps: 1, pn: 1, loaded: false}};
-        view.setScripts([{Name:"OnSetPageSize", Body:"window.Test.dataNavigation.ps = 50"},{Name:"OnSetPageNumber", Body:"window.Test.dataNavigation.pn = 3"}, {Name:"OnLoaded", Body:"window.Test.dataNavigation.loaded = true"}]);
+    it('should call onPageSizeChanged', function (done) {
+        // Given
+        var dataNavigation = new DataNavigation();
 
-        //When
-        var build = dataNavigationBuilder.build(null, {builder: dataNavigationBuilder, view: view, metadata: metadata});
-        build.setPageSize(1);
-        build.setPageNumber(1);
-        $(build.render());
+        dataNavigation.onPageSizeChanged(function(){
+            // Then
+            done();
+        });
 
-        // Then
-        assert.equal(window.Test.dataNavigation.ps, 50);
-        assert.equal(window.Test.dataNavigation.pn, 3);
-        assert.isTrue(window.Test.dataNavigation.loaded);
+        // When
+        dataNavigation.setPageSize(1);
     });
-});*/
+});
