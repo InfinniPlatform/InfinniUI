@@ -25,6 +25,19 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
             });
         }
+
+        if( metadata.OnRowClick ) {
+            element.onRowClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowClick.Name || metadata.OnRowClick, args);
+            });
+        }
+
+        if( metadata.OnRowDoubleClick ) {
+            element.onRowDoubleClick(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowDoubleClick.Name || metadata.OnRowDoubleClick, args);
+            });
+        }
+
         this.applyColumnsMetadata(params);
     },
 
