@@ -1,13 +1,13 @@
-function LinkElementBuilder() {
-    _.superClass(LinkElementBuilder, this);
+function LinkBuilder() {
+    _.superClass(LinkBuilder, this);
 }
 
-_.inherit(LinkElementBuilder, ButtonBuilder);
+_.inherit(LinkBuilder, ButtonBuilder);
 
-_.extend(LinkElementBuilder.prototype, {
+_.extend(LinkBuilder.prototype, {
 
     createElement: function (params) {
-        return new LinkElement(params.parent);
+        return new Link(params.parent);
     },
 
     applyMetadata: function (params) {
