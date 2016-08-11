@@ -21,7 +21,7 @@ describe('Link (Control)', function () {
 			function onViewReady(view, $layout){
 				$layout.detach();
 
-				assert.equal($layout.find('.pl-link').attr('href'), 'javascript;', 'attribute href is right');
+				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
 
 				view.childElements[0].setHref('common.ru');
 				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
