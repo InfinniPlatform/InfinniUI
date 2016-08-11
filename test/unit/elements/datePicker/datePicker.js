@@ -39,14 +39,13 @@ describe('DateTimePicker', function () {
             var element = builder.build(metadata, {});
 
             assert.equal(element.getMode(), 'Date', 'Mode');
-            //assert.equal(element.getFocusable(), true, 'Focusable');
+            assert.equal(element.getFocusable(), true, 'Focusable');
             assert.equal(element.getEnabled(), true, 'Enabled');
             assert.equal(element.getVisible(), true, 'Visible');
             assert.equal(element.getLabelFloating(), false, 'LabelFloating');
             assert.equal(element.getVerticalAlignment(), 'Top', 'VerticalAlignment');
             assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
-            //assert.equal(element.getTextHorizontalAlignment(), 'Left', 'TextHorizontalAlignment');
-            //assert.equal(element.getTextVerticalAlignment(), 'Center', 'TextVerticalAlignment');
+            assert.equal(element.getTextHorizontalAlignment(), 'Left', 'TextHorizontalAlignment');
         });
 
         it('Apply metadata', function () {
@@ -97,9 +96,9 @@ describe('DateTimePicker', function () {
             assert.equal(element.getEnabled(), false, 'Enabled');
             assert.equal(element.getVisible(), false, 'Visible');
             assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
-            //assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
-            //assert.equal(element.getForeground(), 'Primary1', 'Foreground');
-            //assert.equal(element.getBackground(), 'Accent1', 'Background');
+            assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
+            assert.equal(element.getForeground(), 'Primary1', 'Foreground');
+            assert.equal(element.getBackground(), 'Accent1', 'Background');
 
         });
 
