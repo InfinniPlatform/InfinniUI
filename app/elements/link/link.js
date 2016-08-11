@@ -3,28 +3,28 @@
  * @augments Button
  * @constructor
  */
-function LinkElement(parent) {
-    _.superClass(LinkElement, this, parent);
+function Link(parent) {
+    _.superClass(Link, this, parent);
 }
 
-_.inherit(LinkElement, Button);
+_.inherit(Link, Button);
 
-LinkElement.prototype.createControl = function () {
+Link.prototype.createControl = function () {
     return new LinkElementControl();
 };
 
-LinkElement.prototype.setHref = function (value) {
+Link.prototype.setHref = function (value) {
     this.control.set('href', value);
 };
 
-LinkElement.prototype.getHref = function () {
+Link.prototype.getHref = function () {
     return this.control.get('href');
 };
 
-LinkElement.prototype.setTarget = function (value) {
+Link.prototype.setTarget = function (value) {
     this.control.set('target', value);
 };
 
-LinkElement.prototype.getTarget = function () {
+Link.prototype.getTarget = function () {
     return this.control.get('target');
 };
