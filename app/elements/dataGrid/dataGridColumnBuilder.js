@@ -26,6 +26,20 @@ DataGridColumnBuilder.prototype.build = function (element, metadata, params) {
         .buildCellTemplate(column, metadata, params)
         .buildWidth(column, metadata);
 
+    if( metadata.Sortable ) {
+        column.setSortable(true);
+        column.setSortDirection( null );
+        if( metadata.SortedDefault && ( metadata.SortedDefault === 'asc' || metadata.SortedDefault === 'desc' ) ) {
+            column.setSortDirection( metadata.SortedDefault );
+        }
+
+        if (metadata.SortFunction) {
+            column.onSort(function (args) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.SortFunction.Name || metadata.SortFunction, args);
+            });
+        }
+    }
+
     return column;
 };
 
@@ -236,8 +250,10 @@ DataGridColumnBuilder.prototype.buildHeaderTemplate = function (column, metadata
 
     if (typeof headerTemplateMetadata === 'undefined' || _.isEmpty(headerTemplateMetadata)) {
         headerTemplate = this.buildHeaderTemplateByDefault(params);
+        column.setIsHeaderTemplateEmpty(true);
     } else {
         headerTemplate = this.buildHeaderTemplateByMetadata(headerTemplateMetadata, params);
+        column.setIsHeaderTemplateEmpty(false);
     }
 
     column.setHeaderTemplate(headerTemplate);

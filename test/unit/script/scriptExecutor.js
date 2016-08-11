@@ -4,7 +4,7 @@ describe('ScriptExecutor', function () {
 
     window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         return {
-            "getViewMetadata": function () {
+            "getMetadata": function () {
                 return metadata;
             }
         };
@@ -39,10 +39,7 @@ describe('ScriptExecutor', function () {
             }
         ],
         "OpenMode": "Application",
-        "ConfigId": 'ReceivingRoom',
-        "DocumentId": 'HospitalizationRefusal',
         "ViewType": 'ListView',
-        "MetadataName": 'HospitalizationRefusalListView',
         //"Parameters": [
         //    {
         //        "Name" : 'Param1'

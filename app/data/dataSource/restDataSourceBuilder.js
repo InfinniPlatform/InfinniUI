@@ -16,6 +16,8 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         var tmpParams;
 
+        this.initProviderErrorHandling(dataSource);
+
         if('GettingParams' in metadata){
             tmpParams = this.extractUrlParams(metadata['GettingParams'], '.urlParams.get.params');
             dataSource.setGettingUrlParams(tmpParams);
@@ -36,7 +38,7 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         if('UpdatingItemsConverter' in metadata){
             dataSource.setUpdatingItemsConverter(function (items) {
-                return new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items });
+                return new ScriptExecutor(parent).executeScript(metadata['UpdatingItemsConverter'].Name || metadata['UpdatingItemsConverter'], { value: items,  source: dataSource });
             });
         }
 
@@ -95,6 +97,14 @@ _.extend(RestDataSourceBuilder.prototype, {
 
             dataBinding.bindElement(dataSource, pathForBinding);
         }
+    },
+
+    initProviderErrorHandling: function(dataSource){
+        dataSource.onProviderError(function(){
+            var exchange = window.InfinniUI.global.messageBus;
+            exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
+
+        });
     }
 });
 

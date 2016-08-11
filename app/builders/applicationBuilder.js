@@ -39,10 +39,11 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('TextBox', new TextBoxBuilder());
         builder.register('PasswordBox', new PasswordBoxBuilder());
         builder.register('CheckBox', new CheckBoxBuilder());
-        builder.register('IndeterminateCheckbox', new IndeterminateCheckboxBuilder());
+        builder.register('IndeterminateCheckBox', new IndeterminateCheckBoxBuilder());
         builder.register('ImageBox', new ImageBoxBuilder());
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
+        builder.register('Link', new LinkElementBuilder());
         builder.register('Icon', new IconBuilder());
         builder.register('DateTimePicker', new DateTimePickerBuilder());
         builder.register('DatePicker', new DatePickerBuilder());
@@ -57,7 +58,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
-        builder.register('DocumentViewer', new DocumentViewerBuilder());
         builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
@@ -77,8 +77,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('DeleteAction', new DeleteActionBuilder());
         builder.register('EditAction', new EditActionBuilder());
         builder.register('OpenAction', new OpenActionBuilder());
-        builder.register('PrintReportAction', new PrintReportActionBuilder());
-        builder.register('PrintViewAction', new PrintViewActionBuilder());
         builder.register('SaveAction', new SaveActionBuilder());
         builder.register('SelectAction', new SelectActionBuilder());
         builder.register('UpdateAction', new UpdateActionBuilder());

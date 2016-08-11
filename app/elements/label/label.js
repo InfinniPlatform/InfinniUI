@@ -12,14 +12,6 @@ _.extend(Label.prototype, {
             return new LabelControl();
         },
 
-        getLineCount: function () {
-            return this.control.get('lineCount');
-        },
-
-        setLineCount: function (value) {
-            this.control.set('lineCount', value);
-        },
-
         setTextWrapping: function (value) {
             if (typeof value === 'boolean') {
                 this.control.set('textWrapping', value);

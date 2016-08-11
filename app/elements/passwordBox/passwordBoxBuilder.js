@@ -20,7 +20,6 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
                 element = params.element;
 
             this.initBindingToProperty(params, 'LabelText');
-            element.setPasswordChar(metadata.PasswordChar);
             element.setAutocomplete(metadata.Autocomplete);
         },
 

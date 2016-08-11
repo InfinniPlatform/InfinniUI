@@ -14,9 +14,9 @@ _.extend(PdfViewerBuilder.prototype, {
     },
 
     createElement: function (params) {
+        return new PdfViewer(params.parentView);
+    },
 
-    return new PdfViewer(params.parentView);
-},
     initScriptsHandlers: function(params){
         var metadata = params.metadata;
 

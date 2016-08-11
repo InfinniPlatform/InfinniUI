@@ -41,7 +41,7 @@ _.extend(EditAction.prototype, {
 
     _resumeUpdateEditDataSource: function () {
         var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('EditAction');
+        editDataSource.resumeUpdate('BaseEditAction');
     },
 
     _setDocument: function (editDataSource, selectedItem){

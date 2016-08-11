@@ -158,14 +158,6 @@ _.extend(View.prototype,
             this.registerMember(element.name, element);
         },
 
-        getIcon: function(){
-            return this.control.get('icon');
-        },
-
-        setIcon: function(value){
-            return this.control.set('icon', value);
-        },
-
         getContext: function(){
             return this.context;
         },

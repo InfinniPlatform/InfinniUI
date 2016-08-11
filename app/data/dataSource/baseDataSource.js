@@ -1,7 +1,7 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFileProviderMixin, dataSourceFindItemMixin
+ * @mixes dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend({
     defaults: {
@@ -32,8 +32,6 @@ var BaseDataSource = Backbone.Model.extend({
         waitingOnUpdateItemsHandlers: null, //[]
 
         errorValidator: null,
-        warningValidator: null,
-        showingWarnings: false,
 
         isRequestInProcess: false,
 
@@ -122,10 +120,6 @@ var BaseDataSource = Backbone.Model.extend({
         this.on('onErrorValidator', handler);
     },
 
-    onWarningValidator: function (handler) {
-        this.on('onWarningValidator', handler);
-    },
-
     onItemSaved: function (handler) {
         this.on('onItemSaved', handler);
     },
@@ -144,6 +138,10 @@ var BaseDataSource = Backbone.Model.extend({
 
     onItemDeleted: function (handler) {
         this.on('onItemDeleted', handler);
+    },
+
+    onProviderError: function (handler) {
+        this.on('onProviderError', handler);
     },
 
     getName: function () {
@@ -284,24 +282,6 @@ var BaseDataSource = Backbone.Model.extend({
             message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
             source: this
         });
-    },
-
-    _addItems: function (newItems) {
-        var indexedItemsById = this.get('itemsById'),
-            items = this.getItems(),
-            newIndexedItemsById;
-
-        this.set('isDataReady', true);
-        items = _.union(items, newItems);
-        this.set('items', items);
-        if (newItems && newItems.length > 0) {
-            newIndexedItemsById = this._indexItemsById(newItems);
-            _.extend(indexedItemsById, newIndexedItemsById);
-            this.set('itemsById', indexedItemsById);
-        }
-
-        this._notifyAboutItemsUpdatedAsPropertyChanged(items);
-        //this.trigger('settingNewItemsComplete');
     },
 
     getSelectedItem: function () {
@@ -487,7 +467,8 @@ var BaseDataSource = Backbone.Model.extend({
             ds = this,
             logger = window.InfinniUI.global.logger,
             that = this,
-            validateResult;
+            validateResult,
+            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -497,7 +478,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         validateResult = this.validateOnErrors(item);
         if (!validateResult.IsValid) {
-            that._notifyAboutValidation(validateResult, 'error');
             this._executeCallback(error, {item: item, result: validateResult});
             return;
         }
@@ -515,7 +495,7 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result});
+            that._executeCallback(errorInProvider, {item: item, result: result});
         });
     },
 
@@ -547,7 +527,8 @@ var BaseDataSource = Backbone.Model.extend({
         var dataProvider = this.get('dataProvider'),
             that = this,
             itemId = this.idOfItem(item),
-            isItemInSet = this.get('itemsById')[itemId] !== undefined;
+            isItemInSet = this.get('itemsById')[itemId] !== undefined,
+            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
@@ -555,6 +536,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
 
         this.beforeDeleteItem(item);
+
         dataProvider.deleteItem(item, function (data) {
             if (!('IsValid' in data) || data['IsValid'] === true) {
                 that._handleDeletedItem(item, success);
@@ -566,7 +548,7 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result});
+            that._executeCallback(errorInProvider, {item: item, result: result});
         });
     },
 
@@ -629,24 +611,17 @@ var BaseDataSource = Backbone.Model.extend({
             var dataProvider = this.get('dataProvider'),
                 that = this;
 
+
+            onError = this._compensateOnErrorOfProviderHandler(onError);
+
+
             this.set('isRequestInProcess', true);
-            dataProvider.getItems(function (data) {
-
-                var isWaiting =  that.get('isWaiting'),
-                    finishUpdating = function(){
-                        that.set('isRequestInProcess', false);
-                        that._handleUpdatedItemsData(data.data, onSuccess, onError);
-                    };
-
-                if(isWaiting){
-                    that.once('change:isWaiting', function () {
-                        finishUpdating();
-                    });
-                } else {
-                    finishUpdating();
-                }
-
-            }, onError);
+            dataProvider.getItems(
+                function (data) {
+                    that._handleSuccessUpdateItemsInProvider(data, onSuccess, onError);
+                },
+                onError
+            );
 
         }else{
             var handlers = this.get('waitingOnUpdateItemsHandlers');
@@ -655,6 +630,41 @@ var BaseDataSource = Backbone.Model.extend({
                 onError: onError
             });
         }
+
+    },
+
+
+    _compensateOnErrorOfProviderHandler: function(onError){
+        var that = this;
+
+        return function(){
+            if(typeof onError == 'function'){
+                onError.apply(undefined, arguments);
+            }else{
+                that.trigger('onProviderError', arguments);
+            }
+        };
+
+    },
+
+    _handleSuccessUpdateItemsInProvider: function(data, onSuccess, onError){
+        var that = this,
+            isWaiting =  that.get('isWaiting'),
+            finishUpdating = function(){
+                that.set('isRequestInProcess', false);
+                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+            };
+
+        if(isWaiting){
+            that.once('change:isWaiting', function () {
+                finishUpdating();
+            });
+        } else {
+            finishUpdating();
+        }
+    },
+
+    _onErrorProviderUpdateItemsHandle: function(){
 
     },
 
@@ -705,24 +715,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.trigger('onPropertyChanged', context, argument);
         this.trigger('onPropertyChanged:', context, argument);
-    },
-
-    _handleAddedItems: function (itemsData, successHandler) {
-        this._addItems(itemsData);
-        this._notifyAboutItemsAdded(itemsData, successHandler);
-
-    },
-
-    _notifyAboutItemsAdded: function (itemsData, successHandler) {
-        var context = this.getContext(),
-            argument = {
-                value: itemsData
-            };
-
-        if (successHandler) {
-            successHandler(context, argument);
-        }
-        this.trigger('onItemsAdded', context, argument);
     },
 
     createItem: function (success, error) {
@@ -802,32 +794,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('errorValidator', validatingFunction);
     },
 
-    getWarningValidator: function () {
-        return this.get('warningValidator');
-    },
-
-    setWarningValidator: function (validatingFunction) {
-        this.set('warningValidator', validatingFunction);
-    },
-
     validateOnErrors: function (item, callback) {
-        return this._validatingActions(item, callback, 'error');
-    },
-
-    validateOnWarnings: function (item, callback) {
-        return this._validatingActions(item, callback, 'warning');
-    },
-
-    setFileProvider: function (fileProvider) {
-        this.set('fileProvider', fileProvider);
-    },
-
-    getFileProvider: function () {
-        return this.get('fileProvider');
-    },
-
-    _validatingActions: function (item, callback, validationType) {
-        var validatingFunction = validationType == 'error' ? this.get('errorValidator') : this.get('warningValidator'),
+        var validatingFunction = this.get('errorValidator'),
             result = {
                 IsValid: true,
                 Items: []
@@ -858,10 +826,18 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._notifyAboutValidation(result, validationType);
+        this._notifyAboutValidation(result, 'error');
         this._executeCallback(callback, {item: item, result: result});
 
         return result;
+    },
+
+    setFileProvider: function (fileProvider) {
+        this.set('fileProvider', fileProvider);
+    },
+
+    getFileProvider: function () {
+        return this.get('fileProvider');
     },
 
     _addIndexToPropertiesOfValidationMessage: function (validationMessages, index) {
@@ -880,8 +856,7 @@ var BaseDataSource = Backbone.Model.extend({
                 value: validationResult
             };
 
-        var eventType = (validationType == 'warning') ? 'onWarningValidator' : 'onErrorValidator';
-        this.trigger(eventType, context, argument);
+        this.trigger('onErrorValidator', context, argument);
     },
 
     getContext: function () {
@@ -1172,7 +1147,5 @@ BaseDataSource.identifyingStrategy = {
         }
     }
 };
-
-_.extend(BaseDataSource.prototype, dataSourceFileProviderMixin);
 
 InfinniUI.BaseDataSource = BaseDataSource;

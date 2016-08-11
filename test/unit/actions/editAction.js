@@ -377,4 +377,91 @@ describe('EditAction', function () {
         });
     });
 
+    it('should call onExecuted', function(done){
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                "Name": "OldValue"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "EditButton",
+                    "Action": {
+                        "EditAction": {
+                            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "0"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Edit",
+                                        "Name": "EditView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var edtBtn = view.context.controls['EditButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            // When
+            edtBtn.click();
+
+            var childView = view.context.controls['EditView'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            assert.isUndefined(window.onExecutedWasCalled);
+
+            acceptBtn.click();
+
+            // Then
+            assert.isTrue(window.onExecutedWasCalled);
+
+            done();
+
+            // cleanup
+            window.onExecutedWasCalled = undefined;
+            view.close();
+        });
+    });
 });

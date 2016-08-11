@@ -35,7 +35,7 @@ function InlineViewBuilder() {
         var builder = params.builder;
         var parameters = this.buildParameters(params);
 
-        if (viewMetadata !== null) {
+        if (viewMetadata != null) {
 
             var view = builder.buildType("View", viewMetadata, {
                 parentView: parentView,

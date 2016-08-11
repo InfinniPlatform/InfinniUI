@@ -9,9 +9,7 @@ describe('PasswordBox', function () {
                 'getLabelText',
                 'setLabelText',
                 'getLabelFloating',
-                'setLabelFloating',
-                'getPasswordChar',
-                'setPasswordChar'
+                'setLabelFloating'
             ].forEach(function (methodName) {
                 it(methodName, function () {
                     testHelper.checkMethod(element, methodName);
@@ -44,8 +42,7 @@ describe('PasswordBox', function () {
             var metadata = {
                 "PasswordBox": {
                     "LabelText": "Label",
-                    "LabelFloating": true,
-                    "PasswordChar": "?"
+                    "LabelFloating": true
                 }
             };
 
@@ -53,7 +50,6 @@ describe('PasswordBox', function () {
 
             assert.equal(element.getLabelText(), "Label", 'LabelText');
             assert.equal(element.getLabelFloating(), true, 'LabelFloating');
-            assert.equal(element.getPasswordChar(), "?", 'PasswordChar');
         });
 
         it('event OnValueChanged', function () {

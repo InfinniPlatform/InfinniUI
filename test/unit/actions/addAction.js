@@ -114,6 +114,8 @@ describe('AddAction', function () {
             assert.equal(destinationItems[0].name, "New");
 
             done();
+
+            // cleanup
             view.close();
         });
     });
@@ -197,10 +199,6 @@ describe('AddAction', function () {
 
                     assert.notInclude(destinationDS.getItems(), newItem);
 
-//                    newItem = _.extend( newItem,
-//                                        { FirstName: "Test", LastName: "Test" });
-//                    sourceDS.setSelectedItem( newItem );
-
                     sourceDS.setProperty('FirstName', 'Test');
                     sourceDS.setProperty('LastName', 'Test');
 
@@ -214,8 +212,164 @@ describe('AddAction', function () {
 
                         done();
 
+                        // cleanup
                         view.close();
                     });
+                }
+            );
+        });
+    });
+
+    it('should suspend SourceValue', function(done){
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "DocumentDataSource": {
+                        "Name": "DocumentDataSource",
+                        "IsLazy": false
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "AddButton",
+                    "Action": {
+                        "AddAction": {
+                            "DestinationValue": {
+                                "Source": "DocumentDataSource"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Name": "AddView",
+                                        "DataSources": [
+                                            {
+                                                "DocumentDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            view.context.dataSources.DocumentDataSource.updateItems(
+                function(){
+                    var addBtn = view.context.controls['AddButton'];
+
+                    // When
+                    addBtn.click();
+
+                    var childView = view.context.controls['AddView'];
+                    var sourceDS = childView.context.dataSources['MainDataSource'];
+
+                    // Then
+                    assert.isTrue(sourceDS.isUpdateSuspended());
+
+                    done();
+
+                    // cleanup
+                    view.close();
+                }
+            );
+        });
+    });
+
+    it('should call onExecuted', function(done){
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "DocumentDataSource": {
+                        "Name": "DocumentDataSource",
+                        "IsLazy": false
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "AddButton",
+                    "Action": {
+                        "AddAction": {
+                            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+                            "DestinationValue": {
+                                "Source": "DocumentDataSource"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Name": "AddView",
+                                        "DataSources": [
+                                            {
+                                                "DocumentDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            view.context.dataSources.DocumentDataSource.updateItems(
+                function(){
+                    var addBtn = view.context.controls['AddButton'];
+
+                    // When
+                    addBtn.click();
+
+                    var childView = view.context.controls['AddView'];
+                    var acceptBtn = childView.context.controls['AcceptBtn'];
+
+                    assert.isUndefined(window.onExecutedWasCalled);
+
+                    acceptBtn.click();
+
+                    // Then
+                    assert.isTrue(window.onExecutedWasCalled);
+
+                    done();
+
+                    // cleanup
+                    window.onExecutedWasCalled = undefined;
+                    view.close();
                 }
             );
         });

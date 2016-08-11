@@ -63,3 +63,22 @@ DataGrid.prototype.onCheckAllChanged = function (handler) {
 DataGrid.prototype.createControl = function () {
     return new DataGridControl();
 };
+
+
+DataGrid.prototype.onRowClick = function (handler) {
+    var that = this,
+    callback = function (nativeEventData) {
+        var eventData = that._getHandlingMouseEventData(nativeEventData);
+        handler(eventData);
+    };
+    return this.control.onRowClick(callback);
+};
+
+DataGrid.prototype.onRowDoubleClick = function (handler) {
+    var that = this,
+        callback = function (nativeEventData) {
+            var eventData = that._getHandlingMouseEventData(nativeEventData);
+            handler(eventData);
+        };
+    return this.control.onRowDoubleClick(callback);
+};

@@ -68,8 +68,6 @@ _.extend(ViewBuilder.prototype, {
         var scripts = element.getScripts();
         var parameters = element.getParameters();
 
-        element.setIcon(metadata.Icon);
-
         if (metadata.Scripts) {
             for (var i = 0, len = metadata.Scripts.length; i < len; ++i) {
                 var scriptMetadata = metadata.Scripts[i];
@@ -132,12 +130,31 @@ _.extend(ViewBuilder.prototype, {
             element.noDataSourceOnView();
         }
 
+        if( metadata.NotificationSubsriptions ) {
+            var subscriptor = InfinniUI.global.notificationSubsription;
+            for( var key in metadata.NotificationSubsriptions ) {
+                (function() {
+                    var script = metadata.NotificationSubsriptions[key];
+                    subscriptor.subscribe(key, function(context, args) {
+                        new ScriptExecutor(element).executeScript(script, {context: context, message: args.message});
+                    }, this);
+                })();
+            }
+
+            element.onClosing(function() {
+                for( var key2 in metadata.NotificationSubsriptions ) {
+                    subscriptor.unsubscribe(key2, this);
+                }
+            });
+        }
+
+        this.initBindingToProperty(params, 'CloseButtonVisibility', true);
+
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
-        element.setCloseButtonVisibility(metadata.CloseButtonVisibility);
 
         if(metadata.OnOpening){
             element.onOpening(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
+                return new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
             });
         }
 

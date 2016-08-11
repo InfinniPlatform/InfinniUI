@@ -223,4 +223,93 @@ describe('SelectAction', function () {
             view.close();
         });
     });
+
+    it('should call onExecuted', function (done) {
+        // Given
+        var viewMetadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                SelectedObject: "empty"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "SelectButton",
+                    "Action": {
+                        "SelectAction": {
+                            "OnExecuted": "{ window.onExecutedWasCalled = true; }",
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "$.SelectedObject"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource",
+                                "Property": "$"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Name": "SelectView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource",
+                                                    "IsLazy": false,
+                                                    "Items": [ {} ]
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {}
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(viewMetadata, function(view){
+            var selectBtn = view.context.controls['SelectButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            // When
+            selectBtn.click();
+
+            var childView = view.context.controls['SelectView'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            assert.isUndefined(window.onExecutedWasCalled);
+
+            acceptBtn.click();
+
+            // Then
+            assert.isTrue(window.onExecutedWasCalled);
+
+            done();
+
+            // cleanup
+            window.onExecutedWasCalled = undefined;
+            view.close();
+        });
+    });
 });

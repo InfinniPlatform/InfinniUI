@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @mixes DataSourceValidationNotifierMixin, DataSourceBuilderFileProviderMixin
+ * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
 }
@@ -11,7 +11,6 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         dataSource.suspendUpdate('tuningInSourceBuilder');
 
         this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
-        //this.initFileProvider(dataSource, args.metadata);
 
         this.applySuspended(dataSource, args.suspended);
 
@@ -63,15 +62,25 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             dataSource.setResolvePriority(metadata['ResolvePriority']);
         }
 
+        if( _.isObject(metadata.CustomProperties) ) {
+            this.initCustomProperties(dataSource, metadata.CustomProperties);
+        }
+
         this.initValidation(parentView, dataSource, metadata);
         this.initNotifyValidation(dataSource);
         this.initScriptsHandlers(parentView, metadata, dataSource);
 
-        this.initFileProvider(metadata, dataSource);
+        this.initFileProvider(dataSource);
     },
 
     createDataSource: function (parent) {
         throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+    },
+
+    initCustomProperties: function(dataSource, customProperties){
+        _.each(customProperties, function(value, key){
+            dataSource.setProperty('.' + key, value);
+        });
     },
 
     /**
@@ -87,43 +96,42 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
             });
         }
-
-        if (metadata.ValidationWarnings) {
-            dataSource.setWarningValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationWarnings.Name || metadata.ValidationWarnings, args);
-            });
-        }
     },
 
+    //Скриптовые обработчики на события
     initScriptsHandlers: function (parentView, metadata, dataSource) {
-        //Скриптовые обработчики на события
-        if (parentView && metadata.OnSelectedItemChanged) {
+
+        if( !parentView ){
+            return;
+        }
+
+        if (metadata.OnSelectedItemChanged) {
             dataSource.onSelectedItemChanged(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
             });
         }
 
-        if (parentView && metadata.OnItemsUpdated) {
+        if (metadata.OnItemsUpdated) {
             dataSource.onItemsUpdated(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
             });
         }
 
-        //if (parentView && metadata.OnSelectedItemModified) {
-        //    dataSource.onSelectedItemModified(function () {
-        //        new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemModified.Name || metadata.OnSelectedItemModified);
-        //    });
-        //}
-
-        if (parentView && metadata.OnPropertyChanged) {
+        if (metadata.OnPropertyChanged) {
             dataSource.onPropertyChanged(function (context, args) {
                 new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
             });
         }
 
-        if (parentView && metadata.OnItemDeleted) {
+        if (metadata.OnItemDeleted) {
             dataSource.onItemDeleted(function () {
                 new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            });
+        }
+
+        if (metadata.OnErrorValidator) {
+            dataSource.onErrorValidator(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
         }
     },
@@ -136,13 +144,23 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 basePathOfProperty: params.basePathOfProperty
             });
         };
-    }
+    },
+
+     initFileProvider: function (dataSource) {
+
+             var host = InfinniUI.config.serverUrl;
+
+             var fileUrlConstructor = new DocumentUploadQueryConstructor(host);
+
+             var fileProvider = new DocumentFileProvider(fileUrlConstructor);
+
+             dataSource.setFileProvider(fileProvider);
+     }
+
 
 });
 
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
-
-_.extend(BaseDataSourceBuilder.prototype, DataSourceBuilderFileProviderMixin);
 
 InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

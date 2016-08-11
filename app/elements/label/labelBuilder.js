@@ -18,17 +18,12 @@ _.extend(LabelBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
         this.applyMetadata_editorBaseBuilder(params);
 
-        element.setLineCount(params.metadata.LineCount);
         element.setTextWrapping(params.metadata.TextWrapping);
         element.setTextTrimming(params.metadata.TextTrimming);
         element.setEscapeHtml(params.metadata.EscapeHtml);
         
         this.initDisplayFormat(params);
         this.initScriptsHandlers(params);
-        //this.initHorizontalTextAlignmentProperty(params);
-        //this.initForeground(params);
-        //this.initBackground(params);
-        //this.initTextStyle(params);
 
     },
 
@@ -66,8 +61,4 @@ _.extend(LabelBuilder.prototype, {
 },
     editorBaseBuilderMixin,
     displayFormatBuilderMixin
-    //builderHorizontalTextAlignmentPropertyMixin,
-    //builderBackgroundMixin,
-    //builderForegroundMixin,
-    //builderTextStyleMixin
 );

@@ -263,19 +263,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
         var that = this;
 
-        domHelper.whenReady(
-            function(){
-                return that.$el.closest('.pl-view').length > 0;
-            },
-
-            function(){
-                var width = that.$el.width(),
-                    buttonWidth = that.$el.find('.input-group-btn').width();
-
-                that.$el.find('.form-control').css('width', (width - buttonWidth) );
-            }
-        );
-
         return this;
     }
 

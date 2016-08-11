@@ -106,11 +106,24 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
 
     },
 
-    onClickHeaderHandler: function (event) {
+    onEventCallback: function () {
         var collapsible = this.model.get('collapsible');
         if (collapsible) {
             var collapsed = this.model.get('collapsed');
             this.model.set('collapsed', !collapsed);
+            this.updateLayout();
+        }
+    },
+
+    onClickHeaderHandler: function (event) {
+        var collapsibleArea = this.model.get('collapsibleArea');
+        if( collapsibleArea !== '' ) {
+            if( $(event.target).closest('[data-pl-name=' + collapsibleArea + ']').length ) {
+                this.onEventCallback();
+            }
+        } else {
+            this.onEventCallback();
         }
     }
+
 });

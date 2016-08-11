@@ -33,7 +33,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
 
         this.listenTo(this.model, 'change:labelText', this.updateLabelText);
         this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
-        this.listenTo(this.model, 'change:passwordChar', this.updatePasswordChar);
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
 
     },
@@ -42,7 +41,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         ControlView.prototype.updateProperties.call(this);
         editorBaseViewMixin.updateProperties.call(this);
         this.updateLabelText();
-        this.updatePasswordChar();
     },
 
     updateLabelText: function () {
@@ -52,10 +50,6 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
 
     updateAutocomplete: function () {
         this.rerender();
-    },
-
-    updatePasswordChar: function () {
-        //Can't use on native input[type=password]
     },
 
     updateValue: function(){

@@ -42,6 +42,49 @@ DataGridColumn.prototype.getWidth = function (value) {
     return this.getProperty('width');
 };
 
+DataGridColumn.prototype.setSortable = function (value) {
+    this.setProperty('sortable', value);
+};
+
+DataGridColumn.prototype.getSortable = function () {
+    return this.getProperty('sortable');
+};
+
+DataGridColumn.prototype.isSortable = function () {
+    return this.getSortable();
+};
+
+DataGridColumn.prototype.setSortDirection = function (value) {
+    this.setProperty('sortDirection', value);
+};
+
+DataGridColumn.prototype.getSortDirection = function () {
+    return this.getProperty('sortDirection');
+};
+
+DataGridColumn.prototype.setSortFunction = function (handler) {
+    this.setProperty('sortFunction', handler);
+};
+
+DataGridColumn.prototype.getSortFunction = function () {
+    return this.getProperty('sortFunction');
+};
+
+DataGridColumn.prototype.setIsHeaderTemplateEmpty = function (value) {
+    this.setProperty('isHeaderTemplateEmpty', value);
+};
+
+DataGridColumn.prototype.getIsHeaderTemplateEmpty = function () {
+    return this.getProperty('isHeaderTemplateEmpty');
+};
+
+DataGridColumn.prototype.onSort = function (handler) {
+    var that = this,
+        callback = function (nativeEventData) {
+            handler(nativeEventData);
+        };
+    this.on('onSort', callback);
+};
 
 /**
  * @description Для взаимодействие с DataBinding
