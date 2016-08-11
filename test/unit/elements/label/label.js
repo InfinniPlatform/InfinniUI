@@ -81,9 +81,9 @@ describe('Label', function () {
             assert.equal(element.getEnabled(), false, 'Enabled');
             assert.equal(element.getVisible(), false, 'Visible');
             assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
-            //assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
-            //assert.equal(element.getForeground(), 'Primary1', 'Foreground');
-            //assert.equal(element.getBackground(), 'Accent1', 'Background');
+            assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
+            assert.equal(element.getForeground(), 'Primary1', 'Foreground');
+            assert.equal(element.getBackground(), 'Accent1', 'Background');
 
         });
 

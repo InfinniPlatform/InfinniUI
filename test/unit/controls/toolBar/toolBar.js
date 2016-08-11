@@ -26,10 +26,9 @@ describe('ToolBarControl', function () {
 
             //When
             var $el = toolbar.render();
-            $('#sandbox').append($el);
+
             //Then
             assert.isTrue($el.hasClass('pl-tool-bar'));
-            $el.detach();
         });
     });
 });
