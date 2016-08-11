@@ -33,23 +33,38 @@ module.exports = function () {
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElements(xpath).then(function (elements) {
-            return elements[comboBoxLabel.index].click().then(function () {
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                return elements[comboBoxLabel.index].click();
+            })
+            .then(function () {
                 selector = that.selectors.XPATH.ComboBox.filter();
                 xpath = that.by.xpath(selector);
 
-                return that.driver.findElement(xpath).then(function (filteredField) {
-                    return filteredField.sendKeys(filter).then(function () {
-                        selector = that.selectors.XPATH.ComboBox.dropDown(value);
-                        xpath = that.by.xpath(selector);
+                return that.driver.findElement(xpath);
+            })
+            .then(function (filteredField) {
+                return filteredField.sendKeys(filter);
+            })
+            .then(function () {
+                selector = that.selectors.XPATH.ComboBox.dropDown(value);
+                xpath = that.by.xpath(selector);
 
-                        return that.driver.findElement(xpath).then(function (dropDownItem) {
-                            return dropDownItem.click();
-                        });
-                    });
+                return that.driver.findElement(xpath);
+            })
+            .then(function (dropDownItem) {
+                // TODO: Индиктор загрузки может блокировать элемент
+                return new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        try {
+                            dropDownItem.click();
+                            resolve();
+                        } catch (err) {
+                            reject(err);
+                        }
+                    }, 1000);
                 });
             });
-        });
     });
 
     this.When(/^значение в выпадающем списке "([^"]*)" равно "([^"]*)"$/, function (comboBoxLabel, value) {

@@ -1,5 +1,7 @@
 'use strict';
 
+var config = require('../support/config.json');
+
 module.exports = function () {
     this.World = require('../support/world.js').World;
 
@@ -48,9 +50,13 @@ module.exports = function () {
     this.Then(/^система не отобразит валидационных сообщений$/, function () {
         var selector = this.selectors.XPATH.Toastr.messages();
         var xpath = this.by.xpath(selector);
+        var that = this;
+
+        this.driver.manage().timeouts().implicitlyWait(4500);
 
         return this.driver.findElements(xpath)
             .then(function (msgs) {
+                that.driver.manage().timeouts().implicitlyWait(config.timeouts.main);
                 if (msgs.length != 0) {
                     throw new Error('Найдено ' + msgs.length + ' сообщений');
                 }
