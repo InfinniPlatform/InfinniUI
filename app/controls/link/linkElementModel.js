@@ -5,7 +5,7 @@
 var LinkElementModel = ButtonModel.extend({
 
     defaults: _.defaults({
-        href: "javascript;",
+        href: "javascript:;",
         target: "self"
     }, ButtonModel.prototype.defaults),
 
