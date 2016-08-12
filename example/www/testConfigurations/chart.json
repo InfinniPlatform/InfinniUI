@@ -1,108 +1,96 @@
 {
-  "DataSources": [
-    {
-      "ObjectDataSource": {
-        "Name": "ds2",
-        "Items": [
-          {
-          }
-        ]
-      }
-    },
-    {
-      "ObjectDataSource": {
-        "Name": "ds1",
-        "Items": [
-          {
-            "Id": 1,
-            "Title": "1",
-            "Volume": "I",
-            "Email": "mail@mail.mail",
-            "Date": "2016-05-16T12:32:00Z",
-            "chartParams": {
-              "type":"line",
-              "data": {
-                "labels": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                "datasets": [{
-                  "label": "",
-                  "data": [12, 19, 3, 5, 15, 3],
-                  "borderWidth": 3
-                }]
-              },
-              "options": {
-                "scales": {
-                  "yAxes": [{
-                    "ticks": {
-                      "beginAtZero": true
-                    }}]}}
-            }
-          },
-          {
-            "Id": 2,
-            "Title": "2",
-            "Volume": "I"
-          },
-          {
-            "Id": 3,
-            "Title": "3",
-            "Volume": "I"
-          },
-          {
-            "Id": 4,
-            "Title": "4",
-            "Volume": "I"
-          },
-          {
-            "Id": 5,
-            "Title": "5",
-            "Volume": "I"
-          },
-          {
-            "Id": 6,
-            "Title": "6",
-            "Volume": "II"
-          },
-          {
-            "Id": 7,
-            "Title": "7",
-            "Volume": "II"
-          }
-        ]
-      }
-    }
-  ],
-  "Items": [
-    {
-      "TablePanel": {
-        "Items": [
-          {
-            "Row": {
-              "Items": [
-                {
-                  "Cell": {
-                    "ColumnSpan": 6,
-                    "Items": [
-                      {
-                        "ExtensionPanel": {
-                            "ExtensionName": "ChartExtension",
-                            "Parameters": [{
-                              "Name": "chartParams",
-                              "Value": {
-                                "Source": "ds1",
-                                "Property": "0.chartParams"
-                              }}
-                            ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
+	"DataSources": [
+		{
+			"ObjectDataSource": {
+				"Name": "ds1",
+				"Items": [
+					{
+						"chartParams": {
+							"dimentions": {
+								"width": "800px",
+								"height": "500px"
+							},
+							"type":"line",
+							"data": {
+								"labels": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+								"datasets": [
+									{
+										"label": "",
+										"data": [12, 19, 3, 5, 15, 3],
+										"borderWidth": 3,
+										"backgroundColor": [
+											"rgba(255, 99, 132, 0.2)",
+											"rgba(54, 162, 235, 0.2)",
+											"rgba(255, 206, 86, 0.2)",
+											"rgba(75, 192, 192, 0.2)",
+											"rgba(153, 102, 255, 0.2)",
+											"rgba(255, 159, 64, 0.2)",
+											"rgba(75, 192, 192, 0.2)",
+											"rgba(153, 102, 255, 0.2)",
+											"rgba(255, 159, 64, 0.2)"
+										]
+									}
+								]
+							},
+							"options": {
+								"maintainAspectRatio": false,
+								"scales": {
+									"yAxes": [
+										{
+											"ticks": {
+												"beginAtZero": true
+											}
+										}
+									],
+									"xAxes": [
+										{
+											"ticks": {
+												"beginAtZero": true
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	],
+	"Items": [
+		{
+			"TablePanel": {
+				"Items": [
+					{
+						"Row": {
+							"Items": [
+								{
+									"Cell": {
+										"ColumnSpan": 6,
+										"Items": [
+											{
+												"ExtensionPanel": {
+													"ExtensionName": "ChartExtension",
+													"Parameters": [
+														{
+															"Name": "chartParams",
+															"Value": {
+																"Source": "ds1",
+																"Property": "$.chartParams"
+															}
+														}
+													]
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	]
 }
 
