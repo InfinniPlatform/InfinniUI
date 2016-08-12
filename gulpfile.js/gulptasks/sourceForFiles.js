@@ -124,7 +124,8 @@ var sourceForFiles = {
 		'bootstrap-framework/js/tooltip.js',
 		'bower_components/jquery.cookie/jquery.cookie.js',
 		'bower_components/hammerjs/hammer.js',
-		'bootstrap-framework/js/*.js'
+		'bootstrap-framework/js/*.js',
+		'bower_components/signalr/jquery.signalR.js'
 	],
 	templateFiles: [
 		"app/**/*.tpl.html",
