@@ -1,100 +1,104 @@
 function MapExtension(context, args) {
-    this.context = context;
+	this.context = context;
 
-    this.$el = args.$el;
-    this.parameters = args.parameters;
-    this.itemTemplate = args.itemTemplate;
+	this.$el = args.$el;
+	this.parameters = args.parameters;
+	this.itemTemplate = args.itemTemplate;
 
-    this.coordinate = args.parameters.coordinate.getValue();
-    this.points = args.parameters.points.getValue();
+	this.coordinate = args.parameters.coordinate.getValue();
+	this.points = args.parameters.points.getValue();
 
 }
 
 MapExtension.isGoogleMapsReady = false;
 
-MapExtension.googleReady = function(){
-    MapExtension.isGoogleMapsReady = true;
+MapExtension.googleReady = function() {
+	MapExtension.isGoogleMapsReady = true;
 
-    if(typeof MapExtension.onGoogleReadyHandler == 'function'){
-        MapExtension.onGoogleReadyHandler();
-    }
+	if( typeof MapExtension.onGoogleReadyHandler == 'function' ) {
+		MapExtension.onGoogleReadyHandler();
+	}
 };
 
 MapExtension.onGoogleReady = function(handler){
-    MapExtension.onGoogleReadyHandler = handler;
+	MapExtension.onGoogleReadyHandler = handler;
 };
 
 _.extend( MapExtension.prototype, {
 
-    render: function(){
+	render: function() {
+		var that = this;
+		if( MapExtension.isGoogleMapsReady ) {
+			that.renderMaps();
+		} else {
+			MapExtension.onGoogleReady(function() {
+				that.renderMaps();
+			});
+		}
+	},
 
-        var that = this;
+	renderMaps: function () {
+		var ctx = this.$el.get(0),
+				dimentions = this.coordinate.Dimentions || {},
+				that = this,
+				geocoder = new google.maps.Geocoder(),
+				address = this.coordinate.address,
+				myMap;
 
-        that.$el.height(300);
+		this.$el.height(dimentions.Height || '100%');
+		this.$el.width(dimentions.Width || '100%');
 
-        if(MapExtension.isGoogleMapsReady){
-            that.renderMaps();
-        }else{
-            MapExtension.onGoogleReady(function(){
-                that.renderMaps();
-            });
-        }
+		geocoder.geocode({'address': address}, function (res) {
+			if( address.length !== 0 ) {
+				var latitude = res[0].geometry.location.lat(),
+						longitude = res[0].geometry.location.lng();
+				that.coordinate.center.lat = latitude;
+				that.coordinate.center.lng = longitude;
+			} 
+			myMap = new google.maps.Map(ctx, that.coordinate);
+			that.setMarkers(myMap, geocoder);
+		});
+	},
 
-    },
+	setMarkers: function(myMap, geocoder) {
+		var that = this,
+				callback = function(item, i, arr) {
+					geocoder.geocode({'address': item.address}, function(res){
+						var latitude = res[0].geometry.location.lat(),
+								longitude = res[0].geometry.location.lng(),
+								myCenter ={"lat": latitude, "lng": longitude},
+								marker = new google.maps.Marker({
+									map: myMap,
+									position: myCenter,
+									title:item.address
+								});
+						
+						if( item.infoWindow ) {
+							var infoWindow = new google.maps.InfoWindow({
+									content: item.infoWindow.content
+							});
+							marker.addListener(item.infoWindow.event, function() {
+								infoWindow.open(myMap, marker);
+							});
+						}
 
-    renderMaps: function () {
-        var el = this.$el.get(0);
-        var map;
-        var that = this;
-        var geocoder = new google.maps.Geocoder();
+						if( item.Events ) {
+							for( var key in item.Events ) {
+								(function() {
+										var script = item.Events[key];
+										marker.addListener(key, function() {
+											new ScriptExecutor(that.context.view).executeScript(script, {source: that});
+										});
+								})();
+							}
+						}
+					});
+				};
+		this.points.forEach(callback);
+	}
 
-        var address = this.coordinate.address;
-
-        geocoder.geocode({'address':address},function (results) {
-            if(address.length!==0){
-                var latitude = results[0].geometry.location.lat();
-                var longitude = results[0].geometry.location.lng();
-                that.coordinate.center.lat = latitude;
-                that.coordinate.center.lng = longitude;
-                map = new google.maps.Map(el, that.coordinate);
-                that.setMarkers(map,that.points,geocoder);
-            }
-            else {
-                map = new ymaps.Map(el, that.coordinate);
-                that.setMarkers(map,that.points,geocoder);
-            }
-
-        });
-    },
-
-    setMarkers: function(map,points,geocoder){
-        for(var i = 0;i < points.length;  i++) {
-            var that = this;
-            geocoder.geocode({'address':points[i].address}, (function(index){
-                return function (results) {
-                    var latitude = results[0].geometry.location.lat();
-                    var longitude = results[0].geometry.location.lng();
-
-                    var myCenter ={"lat": latitude, "lng": longitude};
-
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: myCenter,
-                        title:points[index].address
-                    });
-                    if('onChoose' in points[index]){
-                        marker.addListener('click', function() {
-                            new ScriptExecutor(that.context.view).executeScript(points[index].onChoose, {});
-                        });
-                    }
-
-                }
-
-            })(i));
-        }
-    }
 });
 
 function initMap(){
-    MapExtension.googleReady();
+	MapExtension.googleReady();
 }
