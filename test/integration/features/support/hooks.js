@@ -28,7 +28,7 @@ var myHooks = function () {
 
   this.registerHandler('BeforeStep', function (step, callback) {
     var attempt = 0;
-    var totalAttempts = 5;
+    var totalAttempts = 10;
 
     driver.manage().timeouts().implicitlyWait(config.timeouts.wait);
 
@@ -44,7 +44,7 @@ var myHooks = function () {
                   tryContinue(++i);
                 }, 1000);
               } else {
-                throw new Error('Try again');
+                throw new Error('Блокирование страницы индикатором загрузки более чем на ' + totalAttempts + ' сек.');
               }
             }
           });

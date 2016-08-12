@@ -17,7 +17,7 @@ _.extend(UpdateAction.prototype,
                     that.onSuccessHandler(args);
 
                     if (_.isFunction(callback)) {
-                        callback();
+                        callback(context, args);
                     }
                 },
                 onErrorUpdate = function (context, args) {
@@ -25,7 +25,7 @@ _.extend(UpdateAction.prototype,
                     that.onErrorHandler(args);
 
                     if (_.isFunction(callback)) {
-                        callback();
+                        callback(context, args);
                     }
                 };
 
