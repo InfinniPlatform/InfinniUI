@@ -93,7 +93,7 @@ _.extend(DeleteAction.prototype,
             dataSource.setProperty(parentProperty, items);
 
             this.onExecutedHandler();
-            that.onSuccessHandler();
+            this.onSuccessHandler();
 
             if (_.isFunction(callback)) {
                 callback();

@@ -32,7 +32,7 @@ _.extend(SaveAction.prototype,
                     that.onErrorHandler(args);
 
                     if (_.isFunction(callback)) {
-                        callback();
+                        callback(context, args);
                     }
                 };
 

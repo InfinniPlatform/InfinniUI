@@ -1,18 +1,23 @@
 'use strict';
 
 var gulp = require('gulp'),
-			$ = require('gulp-load-plugins')();
+		combiner = require('stream-combiner2').obj,
+		$ = require('gulp-load-plugins')();
 
 module.exports = function(options) {
 	return function() {
-		return gulp.src(options.src)
-			.pipe($.replace(/\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig, ''))
-			.pipe($.concat(options.finalName))
-			.pipe($.uglify())
-			.pipe($.wrapper({
+		return combiner(
+			gulp.src(options.src),
+			$.replace(/\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig, ''),
+			$.concat(options.finalName),
+			$.uglify(),
+			$.wrapper({
 				header: ';(function(){',
 				footer: '})();'
-			}))
-			.pipe(gulp.dest(options.dest))
+			}),
+			gulp.dest(options.dest)
+		).on('error', $.notify.onError({
+			title: options.taskName
+		}));
 	};
 };
