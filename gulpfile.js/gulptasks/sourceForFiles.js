@@ -101,11 +101,7 @@ var sourceForFiles = {
 		'app/linkView/openMode/strategy/_mixins/*.js',
 		'app/linkView/**/*.js',
 
-		'app/**/*.js',
-
-		'extensions/**/*.js',
-
-		'!app/utils/pdf/**/*.js'
+		'app/**/*.js'
 	],
 	vendorStylesFiles: [
 		'bower_components/font-awesome/css/font-awesome.min.css',
@@ -119,7 +115,6 @@ var sourceForFiles = {
 		'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
 		'bower_components/JavaScript-MD5/js/md5.js',
 		'bower_components/blockUI/jquery.blockUI.js',
-		'app/utils/pdf/build/pdf.js',
 		'bower_components/toastr/toastr.js',
 		'bootstrap-framework/js/tooltip.js',
 		'bower_components/jquery.cookie/jquery.cookie.js',

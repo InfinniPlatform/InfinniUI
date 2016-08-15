@@ -11,6 +11,14 @@ _.extend(PdfViewerBuilder.prototype, {
         this.initScriptsHandlers(params);
 
         params.element.setUrl(params.metadata.Value);
+
+        if( params.metadata.Width ) {
+            params.element.setWidth(params.metadata.Width);
+        }
+
+        if( params.metadata.Height ) {
+            params.element.setHeight(params.metadata.Height);
+        }
     },
 
     createElement: function (params) {
@@ -28,3 +36,5 @@ _.extend(PdfViewerBuilder.prototype, {
         }
     }
 }, builderValuePropertyMixin);
+
+InfinniUI.ApplicationBuilder.addToRegisterQueue('PdfViewer', new PdfViewerBuilder());

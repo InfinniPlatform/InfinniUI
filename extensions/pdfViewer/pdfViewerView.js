@@ -1,10 +1,7 @@
-var PdfViewerViewBase = ControlView.extend({
+var PdfViewerView = ControlView.extend({
     className: 'pl-document-viewer',
 
-    template: _.template(
-        '<div class="pl-documentViewer">' +
-        '   <iframe id="documentViewer" name="documentViewer" style="width:100%;" src="/app/utils/pdf/web/viewer.html#<%= frameId %>"></iframe>' +
-        '</div>'),
+    template: _.template('<iframe id="documentViewer" name="documentViewer" style="width:100%;height:100%;" src="./pdf/web/viewer.html#<%= frameId %>"></iframe>'),
 
     events: {
         'click .print': 'onButtonPrintClickHandler'
@@ -37,7 +34,33 @@ var PdfViewerViewBase = ControlView.extend({
         var frameId = this.genId();
         window.pdfDocs[frameId] = data;
         var template = this.template({frameId: frameId});
+        this.updateWidth();
+        this.updateHeight();
         this.$el.html(template);
+    },
+
+    updateWidth: function() {
+        this.$el.width(this.model.getWidth());
+    },
+
+    updateHeight: function() {
+        this.$el.height(this.model.getHeight());
+    },
+
+    renderDocument: function () {
+        var that = this,
+            renderFrame = function(){
+                if(this.model.get('url')){
+                    var url = encodeURI(this.model.get('url'));
+                    this.sendRequest(url, function(data){
+                        that.renderPdf(data);
+                    });
+                }
+            }.bind(this);
+
+        renderFrame();
+
+        this.listenTo(this.model, 'change:url', renderFrame);
     },
 
     onButtonPrintClickHandler: function () {
