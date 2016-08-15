@@ -101,11 +101,7 @@ var sourceForFiles = {
 		'app/linkView/openMode/strategy/_mixins/*.js',
 		'app/linkView/**/*.js',
 
-		'app/**/*.js',
-
-		'extensions/**/*.js',
-
-		'!app/utils/pdf/**/*.js'
+		'app/**/*.js'
 	],
 	vendorStylesFiles: [
 		'bower_components/font-awesome/css/font-awesome.min.css',
