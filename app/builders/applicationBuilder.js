@@ -58,7 +58,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
-        builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
         builder.register('ButtonEdit', new ButtonEditBuilder());
