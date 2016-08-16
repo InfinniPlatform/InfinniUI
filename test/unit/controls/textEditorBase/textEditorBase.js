@@ -1,7 +1,6 @@
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
-            Text: '��������',
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -22,8 +21,11 @@ describe('TextEditorBase (Control)', function () {
                         "Source": "ObjectDataSource1",
                         "Property": "$.Display"
                     },
-                    "DisplayFormat": "{:n2}",
-
+                    "DisplayFormat": {
+                        "NumberFormat": {
+                            "Format": "n2"
+                        }
+                    },
                     "EditMask": {
                         "NumberEditMask": {
                             "Mask": "n3"
@@ -43,13 +45,12 @@ describe('TextEditorBase (Control)', function () {
             // Then
             function onViewReady(view, $layout){
 
-                var $input = $layout.find('.pl-text-box-input'),
-                    $inputMask = $layout.find('input.pl-control-editor');
+                var $input = $layout.find('.pl-text-box-input');
 
                 assert.equal($input.val(), '2,22', 'binding and formatting is right');
 
-                $input.focus(); // ��� ���������� �������� � �����
-                assert.equal($inputMask.val(), '2,222', 'mask is right');
+                $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
+                assert.equal($input.val(), '2,222', 'mask is right');
 
                 $layout.detach();
             }

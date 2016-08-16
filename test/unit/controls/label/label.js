@@ -32,24 +32,24 @@ describe('Label', function () {
                 //Then
                 assert.isTrue($el.hasClass('hidden'));
             });
-            //
-            //it('Setting property: horizontalAlignment', function () {
-            //    //Given
-            //    var $el = label.render();
-            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Left'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Right'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-            //
-            //    //When
-            //    label.setHorizontalTextAlignment('Right');
-            //
-            //    //Then
-            //    assert.isTrue($el.hasClass('horizontalTextAlignment-Right'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Left'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Center'));
-            //    assert.isFalse($el.hasClass('horizontalTextAlignment-Justify'));
-            //});
+
+            it('Setting property: horizontalAlignment', function () {
+                //Given
+                var $el = label.render();
+                assert.isTrue($el.hasClass('pl-text-horizontal-Left'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Right'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
+
+                //When
+                label.setTextHorizontalAlignment('Right');
+
+                //Then
+                assert.isTrue($el.hasClass('pl-text-horizontal-Right'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Left'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
+            });
 
             it('Setting property: text', function () {
                 //Given
@@ -94,78 +94,4 @@ describe('Label', function () {
         });
 
     });
-
-    /*describe('Data binding', function () {
-        it('should set Label from property binding', function () {
-
-            window.providerRegister.register('DocumentDataSource', function () {
-                return new FakeDataProvider();
-            });
-
-            //$('body').append($('<div>').attr('id', 'page-content'));
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources: [
-                    {
-                        DocumentDataSource: {
-                            Name : "PatientDataSource",
-                            ConfigId: 'Demography',
-                            DocumentId: 'Patient',
-                            IdProperty: 'Id',
-                            CreateAction: 'CreateDocument',
-                            GetAction: 'GetDocument',
-                            UpdateAction: 'SetDocument',
-                            DeleteAction: 'DeleteDocument',
-                            FillCreatedItem: true
-                        }
-                    }
-                ],
-                LayoutPanel: {
-                    StackPanel: {
-                        Name: 'MainViewPanel',
-                        Items: [
-                            {
-                                Label: {
-                                    Name: 'Label1',
-                                    Value : {
-                                        PropertyBinding : {
-                                            DataSource : 'PatientDataSource',
-                                            Property : '$.LastName'
-                                        }
-                                    },
-                                    Text: 'Text Label'
-                                }
-                            }
-                        ]
-                    }
-                }
-            };
-
-            var linkView = new LinkView(null, function (resultCallback) {
-                var builder = new ApplicationBuilder();
-                var view = builder.buildType(fakeView(), 'View', metadata);
-                resultCallback(view);
-            });
-            linkView.setOpenMode('Application');
-
-            var view = linkView.createView(function(view){
-                view.open();
-
-                var itemToSelect = null;
-
-                view.getDataSource('PatientDataSource').getItems(
-                    function(data){
-                        itemToSelect = data[0];
-                        view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
-//                        console.log(itemToSelect);
-//                        console.log($('#page-content').find('label').html());
-                        assert.equal($('#sandbox').find('label').html(), itemToSelect.LastName);
-
-                        //$('#page-content').remove();
-                    }
-                );
-            });
-        });
-    });*/
 });
