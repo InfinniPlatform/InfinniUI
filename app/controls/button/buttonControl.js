@@ -26,6 +26,14 @@ _.extend(
             var ViewClass = window.InfinniUI.viewModes.Button[viewMode];
 
             return new ViewClass({model: model});
+        },
+
+        setType: function(type) {
+            this.controlModel.set('type', type);
+        },
+
+        getType: function() {
+            return this.controlModel.get('type');
         }
 
     }, buttonControlMixin);

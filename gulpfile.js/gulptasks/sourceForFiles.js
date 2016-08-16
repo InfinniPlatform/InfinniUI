@@ -52,6 +52,7 @@ var sourceForFiles = {
 		'app/controls/tablePanel/**/*.js',
 		'app/controls/tabPanel/**/*.js',
 		'app/controls/treeView/**/*.js',
+		'app/controls/stackPanel/**/*.js',
 		'app/controls/**/*.js',
 
 		'app/data/dataSource/_mixins/*.js',
@@ -75,6 +76,7 @@ var sourceForFiles = {
 		'app/elements/datePicker/**/*.js',
 		'app/elements/timePicker/**/*.js',
 		'app/elements/dataElement/**/*.js',
+		'app/elements/stackPanel/**/*.js',
 		'app/elements/**/*.js',
 
 		'app/actions/_base/**/*.js',

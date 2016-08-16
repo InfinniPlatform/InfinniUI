@@ -48,6 +48,10 @@ _.extend(ButtonBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.applyButtonMetadata(params);
+
+        if( params.metadata.Type ) {
+            params.element.setType(params.metadata.Type);
+        }
     }
 
 }, buttonBuilderMixin);
