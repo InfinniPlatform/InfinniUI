@@ -17,14 +17,16 @@ _.extend(StackPanelViewPlainStrategy.prototype, {
         return this.stackPanel.template.plain;
     },
 
-    appendItemsContent: function(preparedItems){
+    appendItemsContent: function(preparedItems, childElementsClass){
         var $stackPanel = this.stackPanel.$el,
             itemTemplate = this.stackPanel.getItemTemplate(),
             items = preparedItems.items,
             stackPanel = this.stackPanel,
             itemEl, $el;
 
-        $stackPanel.find('.pl-stack-panel-i').each(function(i, el){
+        childElementsClass = childElementsClass || '.pl-stack-panel-i';
+
+        $stackPanel.find(childElementsClass).each(function(i, el){
             $el = $(el);
             itemEl = itemTemplate(undefined, {index: i, item: items[i]});
             stackPanel.addChildElement(itemEl);

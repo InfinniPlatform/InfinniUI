@@ -43,7 +43,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ImageBox', new ImageBoxBuilder());
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
-        builder.register('Link', new LinkBuilder());
+        builder.register('Link', new LinkElementBuilder());
+        builder.register('Form', new FormBuilder());
         builder.register('Icon', new IconBuilder());
         builder.register('DateTimePicker', new DateTimePickerBuilder());
         builder.register('DatePicker', new DatePickerBuilder());
