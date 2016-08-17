@@ -19,7 +19,7 @@ module.exports = function () {
         });
     });
 
-    his.When(/^я нажму на кнопку "([^"]*)" в выпадающем списке кнопок "([^"]*)"$/, function (buttonText, popupListText) {
+    this.When(/^я нажму на кнопку "([^"]*)" в выпадающем списке кнопок "([^"]*)"$/, function (buttonText, popupListText) {
         var selector = this.selectors.XPATH.Button.popupCaption(popupListText);
         var xpath = this.by.xpath(selector);
         var that = this;
