@@ -36,6 +36,20 @@ module.exports = {
             },
             link: function () {
                 return this.link_text() + '|' + this.link_name();
+            },
+            popupCaptions: function (text) {
+                return [
+                    /* By text */
+                    './/a[contains(@class, "pl-popup-button")]/span[contains(@class, "pl-popup-button__button") and normalize-space(node()) = "' + text + '"]',
+                    /* By name */
+                    './/a[contains(@class, "pl-popup-button") and @data-pl-name="' + text + '"]'
+                ];
+            },
+            popupCaption: function (text) {
+                return this.popupCaptions(text).join('|');
+            },
+            popupItem: function (text) {
+                return '//div[contains(@class, "pl-popup-button__dropdown")]//a[contains(@class, "pl-button") and normalize-space(node()) = "' + text + '"]';
             }
         },
         ModalView: {
