@@ -37,6 +37,15 @@ HashMap.prototype.add = function (key, value) {
     }
 };
 
+HashMap.prototype.remove = function (key) {
+    var i = this._getIndexOfKey(key);
+
+    if (i !== -1) {
+        this._keys.splice(i, 1);
+        this._values.splice(i, 1);
+    }
+};
+
 HashMap.prototype.getKeyByValue = function (value) {
     var key,
         i = this._getIndexOfValue(value);
