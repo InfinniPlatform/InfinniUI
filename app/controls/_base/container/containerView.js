@@ -15,15 +15,20 @@ var ContainerView = ControlView.extend(
         },
 
         updateGrouping: function(){
-            throw 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.';
+            throw 'ContainerView.updateGrouping Р’ РїРѕС‚РѕРјРєРµ ContainerView РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅРѕ РѕР±РЅРѕРІР»РµРЅРёРµ РіСЂСѓРїРїРёСЂРѕРІРѕРє.';
         },
 
         initHandlersForProperties: function(){
             ControlView.prototype.initHandlersForProperties.call(this);
 
             var that = this;
-            this.model.get('items').onChange(function(){
-                that.rerender();
+            this.model.get('items').onChange(function(event){
+                switch (event.action) {
+                    case 'replace':
+                        break;
+                    default:
+                        that.rerender();
+                }
             });
         },
 

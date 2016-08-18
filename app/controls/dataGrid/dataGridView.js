@@ -44,6 +44,21 @@ var DataGridView = ListEditorBaseView.extend({
         this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
         this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
         this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+
+        /** Update hash item => element when item changed **/
+        var rowElements = this.rowElements;
+        var model = this.model;
+        this.model.get('items').onChange(function(event){
+            if (event.action === 'replace') {
+                event.oldItems.forEach(function (oldItem, index) {
+                    rowElements.add(event.newItems[index], rowElements.get(oldItem));
+                    rowElements.remove(oldItem);
+                    if (model.get('selectedItem') === oldItem) {
+                        model.set('selectedItem', event.newItems[index]);
+                    }
+                });
+            }
+        });
     },
 
     updateProperties: function () {
@@ -288,15 +303,19 @@ var DataGridView = ListEditorBaseView.extend({
                 var element = itemTemplate(undefined, {index: index, item: item});
 
                 element.onBeforeClick(function() {
-                    model.set('selectedItem', item);
+                    var items = model.get('items');
+                    model.set('selectedItem', items.getByIndex(index));
                 });
+
                 element.onToggle(function() {
                     var enabled = this.model.get('enabled');
+                    var items = model.get('items');
 
                     if(enabled){
-                        model.toggleValue(valueSelector(undefined, {value:item}));
+                        model.toggleValue(valueSelector(undefined, {value:items.getByIndex(index)}));
                     }
                 });
+
                 that.addRowElement(item, element);
 
                 var $element = element.render();
