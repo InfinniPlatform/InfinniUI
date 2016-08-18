@@ -47,23 +47,19 @@ module.exports = function () {
                 return filteredField.sendKeys(filter);
             })
             .then(function () {
+                // TODO: Индиктор загрузки может блокировать элемент
+                return new Promise(function (resolve) {
+                    setTimeout(resolve, 1000);
+                });
+            })
+            .then(function () {
                 selector = that.selectors.XPATH.ComboBox.dropDown(value);
                 xpath = that.by.xpath(selector);
 
                 return that.driver.findElement(xpath);
             })
             .then(function (dropDownItem) {
-                // TODO: Индиктор загрузки может блокировать элемент
-                return new Promise(function (resolve, reject) {
-                    setTimeout(function () {
-                        try {
-                            dropDownItem.click();
-                            resolve();
-                        } catch (err) {
-                            reject(err);
-                        }
-                    }, 1000);
-                });
+                return dropDownItem.click();
             });
     });
 
