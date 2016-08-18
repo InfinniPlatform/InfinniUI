@@ -39,10 +39,14 @@ module.exports = {
             },
             popupCaptions: function (text) {
                 return [
-                    /* By text */
+                    /* By text (link) */
                     './/a[contains(@class, "pl-popup-button")]/span[contains(@class, "pl-popup-button__button") and normalize-space(node()) = "' + text + '"]',
-                    /* By name */
-                    './/a[contains(@class, "pl-popup-button") and @data-pl-name="' + text + '"]'
+                    /* By text (button) */
+                    './/div[contains(@class, "pl-popup-button")]//button[contains(@class, "pl-popup-button__button") and normalize-space(node()) = "' + text + '"]',
+                    /* By name (link) */
+                    './/a[contains(@class, "pl-popup-button") and @data-pl-name="' + text + '"]',
+                    /* By name (button) */
+                    './/div[contains(@class, "pl-popup-button") and @data-pl-name="' + text + '"]'
                 ];
             },
             popupCaption: function (text) {
