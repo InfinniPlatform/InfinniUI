@@ -322,6 +322,15 @@ _.extend(ContainerBuilder.prototype, {
             };
         }
 
+        var source = binding.getSource();
+        source.onPropertyChanged('*', function (context, args) {
+            var items = element.getItems();
+            //При замене целого элемента списка, заменить элемент в коллекции
+            if (args.property && args.property.match(/^\d+$/)) {
+                items.replace(args.oldValue, args.newValue);
+            }
+        });
+
         binding.bindElement({
             setProperty: function (name, value) {
                 var items = element.getItems(),
