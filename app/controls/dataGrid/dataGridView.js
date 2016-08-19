@@ -53,9 +53,6 @@ var DataGridView = ListEditorBaseView.extend({
                 event.oldItems.forEach(function (oldItem, index) {
                     rowElements.add(event.newItems[index], rowElements.get(oldItem));
                     rowElements.remove(oldItem);
-                    if (model.get('selectedItem') === oldItem) {
-                        model.set('selectedItem', event.newItems[index]);
-                    }
                 });
             }
         });
