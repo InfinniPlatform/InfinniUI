@@ -2,7 +2,7 @@ describe('MessageBus', function () {
     var messageBus;
 
     beforeEach(function () {
-        messageBus = new MessageBus();
+        messageBus = window.InfinniUI.global.messageBus;
     });
 
     describe('send', function () {

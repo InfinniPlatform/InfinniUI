@@ -72,3 +72,6 @@ var DataProviderReplaceItemQueue = function (attributes) {
     };
 
 };
+
+
+window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;

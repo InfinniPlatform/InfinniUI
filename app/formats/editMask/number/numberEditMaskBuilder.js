@@ -14,3 +14,5 @@ function NumberEditMaskBuilder () {
         return editMask;
     }
 }
+
+window.InfinniUI.NumberEditMaskBuilder = NumberEditMaskBuilder;

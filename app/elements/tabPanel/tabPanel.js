@@ -7,6 +7,8 @@ function TabPanel(parent) {
     _.superClass(TabPanel, this, parent);
 }
 
+window.InfinniUI.TabPanel = TabPanel;
+
 _.inherit(TabPanel, Container);
 
 

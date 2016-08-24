@@ -17,8 +17,8 @@ describe('ButtonBuilder', function () {
             };
 
             // When
-            var builder = new ButtonBuilder();
-            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
+            var builder = new InfinniUI.ButtonBuilder();
+            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
 
             // Then
             assert.isNotNull(button);

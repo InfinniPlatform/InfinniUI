@@ -26,6 +26,10 @@ _.extend(DataGridRow.prototype, {
         this.control.set('toggle', toggle);
     },
 
+    getSelected: function () {
+        this.control.get('selected');
+    },
+
     setSelected: function (selected) {
         this.control.set('selected', selected);
     },

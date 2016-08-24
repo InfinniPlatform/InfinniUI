@@ -19,3 +19,5 @@ _.extend(UpdateActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.UpdateActionBuilder = UpdateActionBuilder;

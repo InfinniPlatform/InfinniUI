@@ -1,11 +1,11 @@
 describe('Extension Panel (build)', function () {
     it('successful build', function () {
         // Given
-        var builder = new ExtensionPanelBuilder();
+        var builder = new InfinniUI.ExtensionPanelBuilder();
         var metadata = {};
 
         // When
-        var extensionPanel = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
+        var extensionPanel = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
 
         // Then
         assert.isNotNull(extensionPanel);
@@ -13,7 +13,7 @@ describe('Extension Panel (build)', function () {
 
     it('should find extensionPanel in global namespace', function (done) {
         // Given
-        var builder = new ExtensionPanelBuilder();
+        var builder = new InfinniUI.ExtensionPanelBuilder();
         var metadata = {
             "ExtensionName": "myExtensionPanel",
             "Parameters": [
@@ -23,7 +23,7 @@ describe('Extension Panel (build)', function () {
                 }
             ]
         };
-        var extensionPanel = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
+        var extensionPanel = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
 
         window.myExtensionPanel = function(context, args){
             // Then

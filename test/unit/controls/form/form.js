@@ -79,7 +79,7 @@ describe('Form (Control)', function () {
 					{
 						Form: {
 							"Method": "get",
-							"OnSubmit": "{ debugger; context.view.childElements[0].setMethod('post') }",
+							"OnSubmit": "{ context.view.childElements[0].setMethod('post') }",
 							"Items": [
 								{
 									"Button": {

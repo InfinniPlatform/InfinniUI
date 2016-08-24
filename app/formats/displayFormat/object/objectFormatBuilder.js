@@ -19,3 +19,5 @@ function ObjectFormatBuilder () {
         return format;
     }
 }
+
+window.InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;

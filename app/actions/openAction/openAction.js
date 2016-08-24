@@ -24,3 +24,5 @@ _.extend(OpenAction.prototype, {
         });
     }
 });
+
+window.InfinniUI.OpenAction = OpenAction;

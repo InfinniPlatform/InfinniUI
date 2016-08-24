@@ -9,6 +9,8 @@ function ImageBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.ImageBoxBuilder = ImageBoxBuilder;
+
 _.inherit(ImageBoxBuilder, ElementBuilder);
 
 _.extend(ImageBoxBuilder.prototype, {

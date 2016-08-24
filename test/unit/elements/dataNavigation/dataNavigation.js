@@ -44,7 +44,7 @@ describe('DataNavigation', function () {
 
     it('should call onPageNumberChanged', function (done) {
         // Given
-        var dataNavigation = new DataNavigation();
+        var dataNavigation = new InfinniUI.DataNavigation();
 
         dataNavigation.onPageNumberChanged(function(){
             // Then
@@ -57,7 +57,7 @@ describe('DataNavigation', function () {
 
     it('should call onPageSizeChanged', function (done) {
         // Given
-        var dataNavigation = new DataNavigation();
+        var dataNavigation = new InfinniUI.DataNavigation();
 
         dataNavigation.onPageSizeChanged(function(){
             // Then

@@ -66,7 +66,7 @@ var BaseListBoxView = ListEditorBaseView.extend({
         var selectedItem = this.model.get('selectedItem'),
             $selectedItem = this._getElementByItem(selectedItem);
 
-        if($selectedItem){
+        if( $selectedItem && !$selectedItem.hasClass('pl-disabled-list-item') ) {
             $selectedItem.addClass('pl-listbox-i-selected');
         }
     },
@@ -153,11 +153,19 @@ var BaseListBoxView = ListEditorBaseView.extend({
                     isDisabled = disabledItemCondition( undefined, {value: item});
 
                 if(isDisabled){
+                    if( $el.hasClass('pl-listbox-i-selected') ) {
+                        this.model.set('selectedItem', null);
+                    }
                     $el.toggleClass('pl-disabled-list-item', true);
-                    $el.find('.pl-listbox-input input').attr('disabled', 'disabled');
+                    $el.find('input').attr('disabled', 'disabled');
+                    $el.find('button').attr('disabled', 'disabled');
                 }
             })
         }
+    },
+
+    disableAll: function() {
+        this.ui.items.addClass('pl-disabled-list-item');
     },
 
     _getElementByItem: function(item){

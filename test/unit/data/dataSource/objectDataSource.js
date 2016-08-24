@@ -38,13 +38,13 @@ describe('ObjectDataSource', function () {
         }
     ];
 
-    window.InfinniUI.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+    window.InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
     function createObjectDataSource(metadata){
 
         metadata = metadata || {};
 
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var view = fakeView();
         var dataSource = builder.buildType('ObjectDataSource', metadata, {parent: view, parentView: view, builder: builder}),
             initItems = JSON.parse(JSON.stringify(items));

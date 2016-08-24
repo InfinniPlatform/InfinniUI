@@ -622,4 +622,4 @@ _.extend(Element.prototype, {
     }
 });
 
-InfinniUI.Element = Element;
+window.InfinniUI.Element = Element;

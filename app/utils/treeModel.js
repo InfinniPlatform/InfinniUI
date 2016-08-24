@@ -9,6 +9,8 @@ var TreeModel = function(context, source, startTree){
     this.mirroringTo = null;
 };
 
+window.InfinniUI.TreeModel = TreeModel;
+
 _.extend(TreeModel.prototype, {
 
     counter: 1,

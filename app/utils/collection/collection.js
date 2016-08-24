@@ -46,6 +46,9 @@ function Collection (items, idProperty, comparator) {
     this.events = new CollectionEventManager();
 }
 
+window.InfinniUI.Collection = Collection;
+
+
 Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
     /**
      * @type {string|null}

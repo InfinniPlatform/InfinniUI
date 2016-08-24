@@ -23,6 +23,10 @@ _.extend(DataGridControl.prototype, {
         this.controlModel.onCheckAllChanged(handler);
     },
 
+    setEnabled: function(value) {
+        this.controlModel.set('enabled', value);
+    },
+
     onRowClick: function(callback) {
         this.controlView.$el.on('click', '.pl-datagrid__body .pl-datagrid-row', callback);
     },

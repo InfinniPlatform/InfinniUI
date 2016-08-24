@@ -7,6 +7,8 @@ function Link(parent) {
     _.superClass(Link, this, parent);
 }
 
+window.InfinniUI.Link = Link;
+
 _.inherit(Link, Button);
 
 Link.prototype.createControl = function () {

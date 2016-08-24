@@ -8,7 +8,7 @@ describe('ScrollPanelBuilder', function () {
             }
         };
 
-        var applicationBuilder = new ApplicationBuilder();
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
 
         //When
         var scrollPanel = applicationBuilder.build(metadata, {});

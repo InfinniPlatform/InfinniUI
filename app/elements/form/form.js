@@ -8,6 +8,8 @@ function Form(parent) {
 	_.superClass(Form, this, parent);
 }
 
+window.InfinniUI.Form = Form;
+
 _.inherit(Form, StackPanel);
 
 Form.prototype.createControl = function (parent) {

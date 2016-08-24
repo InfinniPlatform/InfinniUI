@@ -1,7 +1,7 @@
 describe('ScriptExecutor', function () {
     var builder;
     beforeEach(function () {
-        builder = new ScriptBuilder();
+        builder = new InfinniUI.ScriptBuilder();
     });
 
     it('should build script handler', function () {

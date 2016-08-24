@@ -12,6 +12,8 @@ function FileBox(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.FileBox = FileBox;
+
 _.inherit(FileBox, Element);
 
 _.extend(FileBox.prototype, {

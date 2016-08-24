@@ -6,6 +6,8 @@ function TreeView(parent) {
     _.superClass(TreeView, this, parent);
 }
 
+window.InfinniUI.TreeView = TreeView;
+
 _.inherit(TreeView, ListEditorBase);
 
 TreeView.prototype.createControl = function () {

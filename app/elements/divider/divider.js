@@ -8,6 +8,8 @@ function Divider(parent) {
 	_.superClass(Divider, this, parent);
 }
 
+window.InfinniUI.Divider = Divider;
+
 _.inherit(Divider, Element);
 
 Divider.prototype.createControl = function (parent) {

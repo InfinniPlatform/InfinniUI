@@ -1,5 +1,5 @@
 describe('Button', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('Button', {});
@@ -10,7 +10,7 @@ describe('Button', function () {
 
         it('should set getContent', function () {
 
-            var element = new Button();
+            var element = new InfinniUI.Button();
             assert.isNull(element.getContent());
 
             // when
@@ -36,7 +36,7 @@ describe('Button', function () {
 
         it('should create', function () {
             // Given
-            //var button = new Button();
+            //var button = new InfinniUI.Button();
 
             // When
             var $el = button.render();
@@ -47,7 +47,7 @@ describe('Button', function () {
 
         it('should set enabled', function () {
             // Given
-            //var button = new Button();
+            //var button = new InfinniUI.Button();
             button.setText('button');
             var $el = button.render();
 
@@ -61,7 +61,7 @@ describe('Button', function () {
 
         it('should set text', function () {
             // Given
-            //var button = new Button();
+            //var button = new InfinniUI.Button();
             button.setText('button');
             var $el = button.render();
 
@@ -76,7 +76,7 @@ describe('Button', function () {
         it('should execute action on click', function () {
             // Given
             var
-                //button = new Button(),
+                //button = new InfinniUI.Button(),
                 onLastActionExecute = 0,
                 onNewActionExecute = 0;
 
@@ -107,7 +107,7 @@ describe('Button', function () {
         it('event onClick', function () {
             // Given
             var
-                //button = new Button(),
+                //button = new InfinniUI.Button(),
                 onClickFlag = 0;
 
             button.onClick(function(){
@@ -126,7 +126,7 @@ describe('Button', function () {
 
         it('should be true if scriptsHandlers call', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var scripts = view.getScripts();
             scripts.add({
                 name: 'OnClick',
@@ -142,7 +142,7 @@ describe('Button', function () {
                 }
             });
 
-            var buttonBuilder = new ButtonBuilder();
+            var buttonBuilder = new InfinniUI.ButtonBuilder();
             var metadata = {
                 OnClick:{
                     Name: 'OnClick'

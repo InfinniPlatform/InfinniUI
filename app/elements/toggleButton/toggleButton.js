@@ -9,6 +9,8 @@ function ToggleButton(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.ToggleButton = ToggleButton;
+
 _.inherit(ToggleButton, Element);
 
 

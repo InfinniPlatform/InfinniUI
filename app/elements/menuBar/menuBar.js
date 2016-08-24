@@ -7,6 +7,8 @@ function MenuBar(parent) {
     _.superClass(MenuBar, this, parent);
 }
 
+window.InfinniUI.MenuBar = MenuBar;
+
 _.inherit(MenuBar, Container);
 
 _.extend(MenuBar.prototype, {

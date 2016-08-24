@@ -2,6 +2,8 @@ function DataGrid(parent) {
     _.superClass(DataGrid, this, parent);
 }
 
+window.InfinniUI.DataGrid = DataGrid;
+
 _.inherit(DataGrid, ListEditorBase);
 
 /**
@@ -24,6 +26,12 @@ DataGrid.prototype.getShowSelectors = function () {
 
 DataGrid.prototype.createRow = function () {
     return new DataGridRow(this);
+};
+
+DataGrid.prototype.setEnabled = function (value) {
+    if( _.isBoolean(value) ) {
+        this.control.setEnabled(value);
+    }
 };
 
 /**

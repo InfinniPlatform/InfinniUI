@@ -4,7 +4,7 @@ describe('BooleanFormat', function () {
         it('successful build', function () {
             //Given
             var metadata = {TrueText: "+", FalseText: "-"};
-            var builder = new BooleanFormatBuilder();
+            var builder = new InfinniUI.BooleanFormatBuilder();
             //When
             var format = builder.build(null, {metadata: metadata} );
             //Then
@@ -19,7 +19,7 @@ describe('BooleanFormat', function () {
 
         it('should have default value', function () {
             //Given
-            var format = new BooleanFormat();
+            var format = new InfinniUI.BooleanFormat();
             //When
             var value = true;
             //Then
@@ -30,7 +30,7 @@ describe('BooleanFormat', function () {
 
         it('should format boolean', function () {
             //Given
-            var format = new BooleanFormat();
+            var format = new InfinniUI.BooleanFormat();
             //When
             var value_1 = false;
             var value_2 = true;
@@ -43,7 +43,7 @@ describe('BooleanFormat', function () {
 
         it('should format collection', function () {
             //Given
-            var format = new BooleanFormat();
+            var format = new InfinniUI.BooleanFormat();
             //When
             var value = [true, true, false, true];
             format.setFalseText('Нет');

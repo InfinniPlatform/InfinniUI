@@ -15,7 +15,7 @@ describe('PanelBuilder', function () {
             }
         };
 
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var panel = builder.build(metadata, {parentView: fakeView()});
 
         //When

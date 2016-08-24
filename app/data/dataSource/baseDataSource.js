@@ -1148,4 +1148,4 @@ BaseDataSource.identifyingStrategy = {
     }
 };
 
-InfinniUI.BaseDataSource = BaseDataSource;
+window.InfinniUI.BaseDataSource = BaseDataSource;

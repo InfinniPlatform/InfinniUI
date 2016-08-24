@@ -1,5 +1,5 @@
 describe('TextBox', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('TextBox', {});
@@ -28,7 +28,7 @@ describe('TextBox', function () {
 
         it('Events onLoad, onValueChanged', function () {
             // Given
-            var textBox = new TextBox(),
+            var textBox = new InfinniUI.TextBox(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
@@ -53,8 +53,8 @@ describe('TextBox', function () {
 
         it('should be true if scriptsHandlers call', function () {
             //Given
-            var builder = new ApplicationBuilder();
-            var view = new View();
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
             var metadata = {
                 "TextBox": {
                     OnValueChanged:{

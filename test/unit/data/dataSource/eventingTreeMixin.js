@@ -3,7 +3,7 @@ describe('TreeModel', function () {
     describe('TreeModel', function () {
         it('Simple handling', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = '';
 
             treeModel.onPropertyChanged('p1', function(context, args){
@@ -27,7 +27,7 @@ describe('TreeModel', function () {
 
         it('Handling many handlers', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = '';
 
             treeModel.onPropertyChanged('p1', function(context, args){
@@ -56,7 +56,7 @@ describe('TreeModel', function () {
 
         it('Handling deep sets', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = '';
             var jsonOfVal;
 
@@ -98,7 +98,7 @@ describe('TreeModel', function () {
 
         it('Handling onChange, on all properties', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = [];
             var jsonOfVal;
 
@@ -119,7 +119,7 @@ describe('TreeModel', function () {
 
         it('Handling onChange of subtree', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = [];
             var jsonOfVal;
 
@@ -144,7 +144,7 @@ describe('TreeModel', function () {
 
         it('Auto unsubscribing if owner is checked as removed', function () {
             // Given
-            var treeModel = new TreeModel('context');
+            var treeModel = new InfinniUI.TreeModel('context');
             var result = '';
             var jsonOfVal;
             var owner1 = {

@@ -8,6 +8,8 @@ function CheckBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.CheckBoxBuilder = CheckBoxBuilder;
+
 _.inherit(CheckBoxBuilder, ElementBuilder);
 
 

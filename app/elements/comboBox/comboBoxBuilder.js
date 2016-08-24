@@ -6,6 +6,8 @@ function ComboBoxBuilder() {
     _.superClass(ComboBoxBuilder, this);
 }
 
+window.InfinniUI.ComboBoxBuilder = ComboBoxBuilder;
+
 _.inherit(ComboBoxBuilder, ListEditorBaseBuilder);
 
 _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{

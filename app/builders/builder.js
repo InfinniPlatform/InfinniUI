@@ -65,3 +65,5 @@ function Builder() {
         return dataBinding;
     };
 }
+
+window.InfinniUI.Builder = Builder;

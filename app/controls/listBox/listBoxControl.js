@@ -18,6 +18,15 @@ _.extend(ListBoxControl.prototype, {
         var ViewClass = window.InfinniUI.viewModes.ListBox[viewMode];
 
         return new ViewClass({model: model});
+    },
+
+    updateDisabledItem: function() {
+        this.controlView.updateDisabledItem();
+    },
+
+    disableAll: function() {
+        this.controlView.disableAll();
     }
+
 });
 

@@ -10,3 +10,5 @@ hiddenScreen.prototype = {
         this.middleElement.append(element);
     }
 };
+
+window.InfinniUI.hiddenScreen = hiddenScreen;

@@ -9,6 +9,8 @@ function Frame() {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.Frame = Frame;
+
 _.inherit(Frame, Element);
 
 _.extend(Frame.prototype, {
