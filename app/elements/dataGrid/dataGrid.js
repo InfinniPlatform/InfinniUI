@@ -26,6 +26,12 @@ DataGrid.prototype.createRow = function () {
     return new DataGridRow(this);
 };
 
+DataGrid.prototype.setEnabled = function (value) {
+    if( _.isBoolean(value) ) {
+        this.control.setEnabled(value);
+    }
+};
+
 /**
  * @description Устанавливает значение, определяющее виден ли элемент "Выбрать все" в шапке таблицы.
  * @param {boolean} value
