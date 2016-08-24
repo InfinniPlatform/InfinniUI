@@ -9,6 +9,9 @@ function DateTimeFormat(format){
     this.setFormat(format);
 }
 
+window.InfinniUI.DateTimeFormat = DateTimeFormat;
+
+
 _.extend(DateTimeFormat.prototype, {
 
     /**

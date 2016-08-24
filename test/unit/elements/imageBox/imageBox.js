@@ -12,7 +12,7 @@ describe('ImageBox', function () {
     }
 
     describe('API', function () {
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var element = builder.buildType('ImageBox', {});
 
         describe('Implementing ImageBox Methods', function () {
@@ -37,8 +37,8 @@ describe('ImageBox', function () {
     describe('debug', function () {
 
         it('render', function () {
-            var builder = new ApplicationBuilder();
-            var view = new View();
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
             var metadata = {
                 MaxSize: 0,
                 AcceptTypes: [
@@ -130,10 +130,10 @@ describe('ImageBox', function () {
 
         //
         //it('Should set image url', function (done) {
-        //    var builder = new ApplicationBuilder();
+        //    var builder = new InfinniUI.ApplicationBuilder();
         //
         //    //Build view
-        //    var view = new View();
+        //    var view = new InfinniUI.View();
         //
         //    //Build DataSource
         //    var dataSources = view.getDataSources();
@@ -182,7 +182,7 @@ describe('ImageBox', function () {
         var element;
 
         beforeEach(function () {
-            element = new ImageBox();
+            element = new InfinniUI.ImageBox();
         });
 
         it('Setting properties', function () {
@@ -255,8 +255,8 @@ describe('ImageBox', function () {
 //                }
 //            };
 //
-//            var linkView = new LinkView(null, function (resultCallback) {
-//                var builder = new ApplicationBuilder();
+//            var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
+//                var builder = new InfinniUI.ApplicationBuilder();
 //                var view = builder.buildType(fakeView(), 'View', metadata);
 //                resultCallback(view);
 //            });

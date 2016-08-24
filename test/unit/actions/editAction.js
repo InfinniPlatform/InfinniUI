@@ -1,9 +1,9 @@
 describe('EditAction', function () {
     it('successful build', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
 
         view.getDataSources().push(dataSource);
 

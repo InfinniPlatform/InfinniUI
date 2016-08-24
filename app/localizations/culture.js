@@ -6,3 +6,4 @@ function Culture(name){
 }
 
 window.InfinniUI.global.culture = new Culture(InfinniUI.config.lang);
+window.InfinniUI.Culture = Culture;

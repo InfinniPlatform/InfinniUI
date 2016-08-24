@@ -2,14 +2,14 @@ describe('View', function () {
 
     it('should get scripts', function () {
         //Given
-        var view = new View();
+        var view = new InfinniUI.View();
 
         //When
         var scripts = view.getScripts();
 
         //Then
         assert.isDefined(scripts);
-        assert.instanceOf(scripts, Collection);
+        assert.instanceOf(scripts, InfinniUI.Collection);
 
         //When
         scripts.add('script');
@@ -20,14 +20,14 @@ describe('View', function () {
 
     it('should get parameters', function () {
         //Given
-        var view = new View();
+        var view = new InfinniUI.View();
 
         //When
         var parameters = view.getParameters();
 
         //Then
         assert.isDefined(parameters);
-        assert.instanceOf(parameters, Collection);
+        assert.instanceOf(parameters, InfinniUI.Collection);
 
         //When
         parameters.add('parameter');
@@ -38,15 +38,15 @@ describe('View', function () {
 
     it('should get dataSources', function () {
         //Given
-        var view = new View(),
-            dataSource = new DocumentDataSource({view: view});
+        var view = new InfinniUI.View(),
+            dataSource = new InfinniUI.DocumentDataSource({view: view});
 
         //When
         var dataSources = view.getDataSources();
 
         //Then
         assert.isDefined(dataSources);
-        assert.instanceOf(dataSources, Collection);
+        assert.instanceOf(dataSources, InfinniUI.Collection);
 
         //When
         dataSources.add(dataSource);
@@ -57,21 +57,21 @@ describe('View', function () {
 
     it('should set dialogResult', function () {
         //Given
-        var view = new View();
+        var view = new InfinniUI.View();
 
-        assert.equal(view.getDialogResult(), DialogResult.none);
+        assert.equal(view.getDialogResult(),InfinniUI.DialogResult.none);
 
         //When
-        view.setDialogResult(DialogResult.accepted);
+        view.setDialogResult(InfinniUI.DialogResult.accepted);
 
         //Then
-        assert.equal(view.getDialogResult(), DialogResult.accepted);
+        assert.equal(view.getDialogResult(),InfinniUI.DialogResult.accepted);
     });
 
     describe('Context', function () {
         it('should get context', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
 
             //When
             var context = view.getContext();
@@ -83,7 +83,7 @@ describe('View', function () {
 
         it('should refresh context on registerElement', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
 
             //When
             view.registerElement({name: 'element'});
@@ -96,7 +96,7 @@ describe('View', function () {
 
         it('should refresh context on add script', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var scripts = view.getScripts();
 
             //When
@@ -109,7 +109,7 @@ describe('View', function () {
 
         it('should refresh context on replace script', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var scripts = view.getScripts();
             var oldScript = { name: 'oldScript', func: {} };
             var newScript = { name: 'newScript', func: {} };
@@ -127,7 +127,7 @@ describe('View', function () {
 
         it('should refresh context on remove script', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var scripts = view.getScripts();
             var removedScript = { name: 'removedScript', func: {} };
 
@@ -144,7 +144,7 @@ describe('View', function () {
 
         it('should refresh context on reset script', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var scripts = view.getScripts();
             var oldScript = { name: 'oldScript', func: {} };
             var newScript = { name: 'newScript', func: {} };
@@ -163,7 +163,7 @@ describe('View', function () {
 
         it('should refresh context on add parameter', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var parameters = view.getParameters();
 
             //When
@@ -176,7 +176,7 @@ describe('View', function () {
 
         it('should refresh context on replace parameter', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var parameters = view.getParameters();
             var oldParameter = { name: 'oldParameter' };
             var newParameter = { name: 'newParameter' };
@@ -194,7 +194,7 @@ describe('View', function () {
 
         it('should refresh context on remove parameter', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var parameters = view.getParameters();
             var removedParameter = { name: 'removedParameter' };
 
@@ -211,7 +211,7 @@ describe('View', function () {
 
         it('should refresh context on reset parameter', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var parameters = view.getParameters();
             var oldParameter = { name: 'oldParameter' };
             var newParameter = { name: 'newParameter' };
@@ -230,8 +230,8 @@ describe('View', function () {
 
         it('should refresh context on add dataSource', function () {
             //Given
-            var view = new View();
-            var dataSource = new DocumentDataSource({view: view, name: 'dataSource'});
+            var view = new InfinniUI.View();
+            var dataSource = new InfinniUI.DocumentDataSource({view: view, name: 'dataSource'});
             var dataSources = view.getDataSources();
 
             //When
@@ -244,10 +244,10 @@ describe('View', function () {
 
         it('should refresh context on replace dataSource', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var dataSources = view.getDataSources();
-            var oldDataSource = new DocumentDataSource({view: view, name: 'oldDataSource'});
-            var newDataSource = new DocumentDataSource({view: view, name: 'newDataSource'});
+            var oldDataSource = new InfinniUI.DocumentDataSource({view: view, name: 'oldDataSource'});
+            var newDataSource = new InfinniUI.DocumentDataSource({view: view, name: 'newDataSource'});
 
             dataSources.add(oldDataSource);
 
@@ -262,9 +262,9 @@ describe('View', function () {
 
         it('should refresh context on remove dataSource', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var dataSources = view.getDataSources();
-            var removedDataSource = new DocumentDataSource({view: view, name: 'removedDataSource'});
+            var removedDataSource = new InfinniUI.DocumentDataSource({view: view, name: 'removedDataSource'});
 
             dataSources.add(removedDataSource);
             assert.isDefined(view.getContext().dataSources['removedDataSource']);
@@ -279,10 +279,10 @@ describe('View', function () {
 
         it('should refresh context on reset dataSource', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             var dataSources = view.getDataSources();
-            var oldDataSource = new DocumentDataSource({view: view});
-            var newDataSource = new DocumentDataSource({view: view});
+            var oldDataSource = new InfinniUI.DocumentDataSource({view: view});
+            var newDataSource = new InfinniUI.DocumentDataSource({view: view});
             oldDataSource.setName('oldDataSource');
             newDataSource.setName('newDataSource');
 
@@ -301,7 +301,7 @@ describe('View', function () {
     describe('Open', function () {
         it('should call event onOpening', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnOpeningWasCall = false;
 
             view.onOpening(function () {
@@ -317,7 +317,7 @@ describe('View', function () {
 
         it('should call event onOpened when onOpening passed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnOpenedWasCall = false;
 
             view.onOpened(function () {
@@ -333,7 +333,7 @@ describe('View', function () {
 
         it('should not call event onOpened when onOpening failed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnOpenedWasCall = false;
 
             view.onOpening(
@@ -354,7 +354,7 @@ describe('View', function () {
 
         it('should select correct callback when onOpening passed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -375,7 +375,7 @@ describe('View', function () {
 
         it('should select correct callback when onOpening failed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -403,7 +403,7 @@ describe('View', function () {
     describe('Close', function () {
         it('should call event onClosing', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnClosingWasCall = false;
 
             view.onClosing(function () {
@@ -419,7 +419,7 @@ describe('View', function () {
 
         it('should call event onClosed when onClosing passed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnClosedWasCall = false;
 
             view.onClosed(function () {
@@ -435,7 +435,7 @@ describe('View', function () {
 
         it('should not call event onClosed when onClosing failed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.EventOnClosedWasCall = false;
 
             view.onClosing(
@@ -456,7 +456,7 @@ describe('View', function () {
 
         it('should select correct callback when onClosing passed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 
@@ -477,7 +477,7 @@ describe('View', function () {
 
         it('should select correct callback when onClosing failed', function () {
             //Given
-            var view = new View();
+            var view = new InfinniUI.View();
             window.SuccessWasCall = false;
             window.ErrorWasCall = false;
 

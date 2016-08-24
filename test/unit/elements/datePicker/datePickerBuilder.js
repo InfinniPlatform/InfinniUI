@@ -6,8 +6,8 @@ describe('DateTimePickerBuilder', function () {
             var dateTimePickerMetadata = {};
 
             // When
-            var builder = new DateTimePickerBuilder();
-            var dateTimePicker = builder.build(null, {builder: new ApplicationBuilder(), view: new View(), metadata: dateTimePickerMetadata});
+            var builder = new InfinniUI.DateTimePickerBuilder();
+            var dateTimePicker = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: dateTimePickerMetadata});
 
             // Then
             assert.isNotNull(dateTimePicker);

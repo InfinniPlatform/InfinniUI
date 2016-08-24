@@ -43,7 +43,7 @@ describe('RestDataSource', function () {
     function createRestDataSource(missParam){
 
         var view = fakeView();
-        var dataSource = new RestDataSource({ view: view }),
+        var dataSource = new InfinniUI.RestDataSource({ view: view }),
             newItems = JSON.parse(JSON.stringify(items));
 
         dataSource.suspendUpdate('urlTuning');
@@ -132,7 +132,7 @@ describe('RestDataSource', function () {
 
         it('successful build', function () {
             // Given
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var metadata = {
                 GettingParams: {
                     Method: 'get',

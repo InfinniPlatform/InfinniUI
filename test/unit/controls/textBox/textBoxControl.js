@@ -1,5 +1,5 @@
 describe('TextBoxControl', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
 
     describe('render', function () {

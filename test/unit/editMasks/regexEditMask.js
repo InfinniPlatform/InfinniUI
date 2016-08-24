@@ -3,7 +3,7 @@ describe('RegexEditMask', function () {
 
         it('successful test mask', function () {
             //Given
-            var editMask = new RegexEditMask();
+            var editMask = new InfinniUI.RegexEditMask();
             editMask.mask = '^[0-9]{4}$';
 
             //When

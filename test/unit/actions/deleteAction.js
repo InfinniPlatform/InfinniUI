@@ -1,9 +1,9 @@
 describe('DeleteAction', function () {
     it('successful build', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
 
         view.getDataSources().push(dataSource);
 
@@ -26,9 +26,9 @@ describe('DeleteAction', function () {
 
     it('should delete selected item from ObjectDataSource', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
 
         var items = [
             {
@@ -76,8 +76,8 @@ describe('DeleteAction', function () {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
-        var view = new View();
-        var builder = new ApplicationBuilder();
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
         var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
         view.getContext().dataSources['DocumentDataSource'] = dataSource;
@@ -115,9 +115,9 @@ describe('DeleteAction', function () {
 
     it('should call onExecuted', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
-        var dataSource = new ObjectDataSource({ name: 'SomeDS', view: view });
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
 
         dataSource.setItems([
                                 {

@@ -9,6 +9,8 @@ function CheckBox(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.CheckBox = CheckBox;
+
 _.inherit(CheckBox, Element);
 
 

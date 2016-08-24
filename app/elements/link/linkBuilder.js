@@ -2,6 +2,8 @@ function LinkBuilder() {
     _.superClass(LinkBuilder, this);
 }
 
+window.InfinniUI.LinkBuilder = LinkBuilder;
+
 _.inherit(LinkBuilder, ButtonBuilder);
 
 _.extend(LinkBuilder.prototype, {

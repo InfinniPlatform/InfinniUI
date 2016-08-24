@@ -2,6 +2,8 @@ function TreeViewBuilder() {
     _.superClass(TreeViewBuilder, this);
 }
 
+window.InfinniUI.TreeViewBuilder = TreeViewBuilder;
+
 _.inherit(TreeViewBuilder, ListEditorBaseBuilder);
 
 _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{

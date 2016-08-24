@@ -2,7 +2,7 @@ var FakeRestDataProvider = function(){
     _.superClass(FakeRestDataProvider, this);
 };
 
-_.inherit(FakeRestDataProvider, RestDataProvider);
+_.inherit(FakeRestDataProvider, InfinniUI.Providers.RestDataProvider);
 
 _.extend( FakeRestDataProvider.prototype, {
 
@@ -19,7 +19,7 @@ _.extend( FakeRestDataProvider.prototype, {
         var queryString;
 
         if(type == 'get' && _.size(params.data) > 0){
-            queryString = stringUtils.joinDataForQuery(params.data);
+            queryString = InfinniUI.StringUtils.joinDataForQuery(params.data);
             urlString = urlString + '?' + queryString;
         }
 

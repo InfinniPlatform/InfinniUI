@@ -8,7 +8,7 @@ describe('TabPanelBuilder', function () {
             }
         };
 
-        var applicationBuilder = new ApplicationBuilder();
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
 
         //When
         var element = applicationBuilder.build(metadata, {});

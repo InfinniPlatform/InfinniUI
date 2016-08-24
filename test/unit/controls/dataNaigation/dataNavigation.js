@@ -1,6 +1,6 @@
 describe('DataNavigationControl', function () {
     describe('render', function () {
-        var builder = new ApplicationBuilder()
+        var builder = new InfinniUI.ApplicationBuilder()
             , button;
 
         beforeEach(function () {

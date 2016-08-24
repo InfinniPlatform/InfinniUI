@@ -21,3 +21,5 @@ _.extend(CancelAction.prototype, {
         this.parentView.close();
     }
 });
+
+window.InfinniUI.CancelAction = CancelAction;

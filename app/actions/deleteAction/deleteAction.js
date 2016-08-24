@@ -105,3 +105,5 @@ _.extend(DeleteAction.prototype,
         }
     }
 );
+
+window.InfinniUI.DeleteAction = DeleteAction;

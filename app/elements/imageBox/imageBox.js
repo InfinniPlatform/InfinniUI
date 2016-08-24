@@ -11,6 +11,8 @@ function ImageBox(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.ImageBox = ImageBox;
+
 _.inherit(ImageBox, Element);
 
 _.extend(ImageBox.prototype, {

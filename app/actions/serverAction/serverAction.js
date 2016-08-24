@@ -101,3 +101,5 @@ _.extend(ServerAction.prototype,
         }
     }
 );
+
+window.InfinniUI.ServerAction = ServerAction;

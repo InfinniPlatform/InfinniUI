@@ -3,7 +3,7 @@ describe('LinkView', function () {
     describe('setOpenMode', function () {
         it('should set openMode', function () {
             //Given
-            var view = new LinkView();
+            var view = new InfinniUI.LinkView();
 
             //When
             view.setOpenMode('Dialog');
@@ -14,7 +14,7 @@ describe('LinkView', function () {
 
         it('should set openMode Default by default', function () {
             //Given
-            var view = new LinkView();
+            var view = new InfinniUI.LinkView();
 
             //Then
             assert.equal(view.getOpenMode(), 'Default');
@@ -22,7 +22,7 @@ describe('LinkView', function () {
 
         it('should set openMode Default if no mode passed', function () {
             //Given
-            var view = new LinkView();
+            var view = new InfinniUI.LinkView();
 
             //When
             view.setOpenMode(null);

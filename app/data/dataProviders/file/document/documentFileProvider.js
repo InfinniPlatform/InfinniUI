@@ -11,6 +11,8 @@ var DocumentFileProvider = function (urlConstructor, successCallback, failCallba
     this.failCallback = failCallback;
 };
 
+window.InfinniUI.Providers.DocumentFileProvider = DocumentFileProvider;
+
 /**
  * Возвращает URL ранее загруженного файла
  * @param {string} fieldName

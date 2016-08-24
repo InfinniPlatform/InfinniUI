@@ -25,3 +25,4 @@ _.extend(SelectActionBuilder.prototype,
     }
 );
 
+window.InfinniUI.SelectActionBuilder = SelectActionBuilder;

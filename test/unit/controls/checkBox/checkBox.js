@@ -2,7 +2,7 @@ describe('CheckBox', function () {
     var checkbox;
 
     beforeEach(function () {
-        checkbox = new CheckBox();
+        checkbox = new InfinniUI.CheckBox();
     });
 
     describe('Render', function () {

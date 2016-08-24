@@ -1,5 +1,6 @@
-﻿function ExtensionPanelBuilder() {
-}
+﻿function ExtensionPanelBuilder() {}
+
+window.InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
 
 _.inherit(ExtensionPanelBuilder, ContainerBuilder);
 

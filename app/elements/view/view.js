@@ -45,6 +45,8 @@ function View(parent) {
     });
 }
 
+window.InfinniUI.View = View;
+
 _.inherit(View, Container);
 
 _.extend(View.prototype,

@@ -6,6 +6,8 @@ function GridPanelBuilder() {
     _.superClass(GridPanelBuilder, this);
 }
 
+window.InfinniUI.GridPanelBuilder = GridPanelBuilder;
+
 _.inherit(GridPanelBuilder, ContainerBuilder);
 
 _.extend(GridPanelBuilder.prototype,

@@ -3,6 +3,8 @@ function DataGridBuilder() {
     this.columnBuilder = new DataGridColumnBuilder();
 }
 
+window.InfinniUI.DataGridBuilder = DataGridBuilder;
+
 _.inherit(DataGridBuilder, ListEditorBaseBuilder);
 
 _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{

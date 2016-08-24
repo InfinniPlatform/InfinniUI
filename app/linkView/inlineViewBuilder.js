@@ -78,3 +78,4 @@ function InlineViewBuilder() {
     };
 }
 
+window.InfinniUI.InlineViewBuilder = InlineViewBuilder;

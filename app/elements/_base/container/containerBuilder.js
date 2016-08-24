@@ -2,6 +2,8 @@ function ContainerBuilder() {
     _.superClass(ContainerBuilder, this);
 }
 
+window.InfinniUI.ContainerBuilder = ContainerBuilder;
+
 _.inherit(ContainerBuilder, ElementBuilder);
 
 /**

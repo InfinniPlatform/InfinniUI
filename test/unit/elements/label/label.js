@@ -1,5 +1,5 @@
 describe('Label', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('Label', {});
@@ -89,7 +89,7 @@ describe('Label', function () {
 
         it('event OnValueChanged', function () {
             // Given
-            var label = new Label(),
+            var label = new InfinniUI.Label(),
                 onValueChangedFlag = 0;
 
             label.render();

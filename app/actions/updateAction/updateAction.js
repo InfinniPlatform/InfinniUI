@@ -33,3 +33,5 @@ _.extend(UpdateAction.prototype,
         }
     }
 );
+
+window.InfinniUI.UpdateAction = UpdateAction;

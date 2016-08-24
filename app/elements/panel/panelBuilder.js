@@ -6,6 +6,8 @@ function PanelBuilder() {
     _.superClass(PanelBuilder, this);
 }
 
+window.InfinniUI.PanelBuilder = PanelBuilder;
+
 _.inherit(PanelBuilder, ContainerBuilder);
 
 _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {

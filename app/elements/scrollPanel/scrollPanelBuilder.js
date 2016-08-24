@@ -6,6 +6,8 @@ function ScrollPanelBuilder() {
     _.superClass(ScrollPanelBuilder, this);
 }
 
+window.InfinniUI.ScrollPanelBuilder = ScrollPanelBuilder;
+
 _.inherit(ScrollPanelBuilder, ContainerBuilder);
 
 _.extend(ScrollPanelBuilder.prototype, /** @lends ScrollPanelBuilder.prototype*/ {

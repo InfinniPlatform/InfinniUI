@@ -2,7 +2,7 @@ describe('baseDataSource', function () {
 
     it('should check ErrorValidator before save', function (done) {
         // Given
-        var dataSource = new ObjectDataSource( {view: fakeView()} );
+        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
 
         dataSource.setErrorValidator(function(context, args) {
             return {
@@ -23,7 +23,7 @@ describe('baseDataSource', function () {
 
     it('should call onErrorValidator handlers after validateOnErrors', function (done) {
         // Given
-        var dataSource = new ObjectDataSource( {view: fakeView()} );
+        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
 
         dataSource.onErrorValidator(function(){
             //Then

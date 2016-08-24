@@ -1,6 +1,6 @@
 describe('MetadataViewBuilder', function () {
 
-    /*var builder = new ApplicationBuilder();
+    /*var builder = new InfinniUI.ApplicationBuilder();
 
     window.providerRegister.register('MetadataDataSource', function (metadataValue) {
         return {
@@ -44,7 +44,7 @@ describe('MetadataViewBuilder', function () {
 
     it('should build exists view', function () {
 
-        var applicationBuilder = new ApplicationBuilder();
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
         var builder = new MetadataViewBuilder();
         var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
 

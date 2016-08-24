@@ -2,6 +2,8 @@ function DataGrid(parent) {
     _.superClass(DataGrid, this, parent);
 }
 
+window.InfinniUI.DataGrid = DataGrid;
+
 _.inherit(DataGrid, ListEditorBase);
 
 /**

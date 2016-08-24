@@ -41,3 +41,5 @@ _.extend(SelectAction.prototype, {
         });
     }
 });
+
+window.InfinniUI.SelectAction = SelectAction;

@@ -69,3 +69,5 @@ _.extend(ServerActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.ServerActionBuilder = ServerActionBuilder;

@@ -1,6 +1,6 @@
 describe('ScriptExecutor', function () {
 
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
         return {
@@ -80,8 +80,8 @@ describe('ScriptExecutor', function () {
 
 //    it('should create script context for opened view', function (done) {
 //
-//        var linkView = new LinkView(null, function (resultCallback) {
-//            var builder = new ApplicationBuilder();
+//        var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
+//            var builder = new InfinniUI.ApplicationBuilder();
 //            var view = builder.buildType(fakeView(), 'View', metadata);
 //            resultCallback(view);
 //        });
@@ -112,8 +112,8 @@ describe('ScriptExecutor', function () {
 //
 //    it('should invoke script from ScriptExecutor', function(done){
 //
-//        var linkView = new LinkView(null, function (resultCallback) {
-//            var builder = new ApplicationBuilder();
+//        var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
+//            var builder = new InfinniUI.ApplicationBuilder();
 //            var view = builder.buildType(fakeView(), 'View', metadata);
 //            resultCallback(view);
 //        });

@@ -20,3 +20,5 @@ _.extend(SaveActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.SaveActionBuilder = SaveActionBuilder;

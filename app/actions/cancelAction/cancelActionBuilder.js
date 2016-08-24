@@ -12,3 +12,5 @@ _.extend(CancelActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.CancelActionBuilder = CancelActionBuilder;

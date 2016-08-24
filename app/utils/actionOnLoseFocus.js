@@ -13,3 +13,5 @@ ActionOnLoseFocus.prototype.checkNeedToAction = function (e) {
         $(document).off('mousedown', this.checkNeedToAction_binded)
     }
 };
+
+window.InfinniUI.ActionOnLoseFocus = ActionOnLoseFocus;

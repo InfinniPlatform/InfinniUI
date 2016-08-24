@@ -2,7 +2,7 @@ describe('Builder', function () {
     var builder;
 
     beforeEach(function () {
-        builder = new Builder();
+        builder = new InfinniUI.Builder();
     });
 
     describe('build', function () {

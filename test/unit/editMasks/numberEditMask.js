@@ -3,7 +3,7 @@ describe('NumberEditMask', function () {
 
         it('successful build template', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "%d MM yyyy г.";
             //When
             var template = editMask.buildTemplate();
@@ -14,9 +14,9 @@ describe('NumberEditMask', function () {
 
         it('successful format value', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена n3 руб. за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
             //When
             editMask.reset('50');
@@ -27,9 +27,9 @@ describe('NumberEditMask', function () {
 
         it('successful setCharAt', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена n3 руб. за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -51,9 +51,9 @@ describe('NumberEditMask', function () {
 
         it('successful setNextValue/setPrevValue', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена n3 руб. за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -74,9 +74,9 @@ describe('NumberEditMask', function () {
 
         it('successful delete chars', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена n3 руб. за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -105,9 +105,9 @@ describe('NumberEditMask', function () {
 
         it('successful movePrevChar', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена n3 руб. за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -124,9 +124,9 @@ describe('NumberEditMask', function () {
 
         it('successful decimalSeparator for currency', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена c3 за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -142,9 +142,9 @@ describe('NumberEditMask', function () {
 
         it('successful decimal part for currency', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена c2 за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When
@@ -164,9 +164,9 @@ describe('NumberEditMask', function () {
 
         it('successful move to start', function () {
             //Given
-            var editMask = new NumberEditMask();
+            var editMask = new InfinniUI.NumberEditMask();
             editMask.mask = "Цена c2 за 1 кг";
-            editMask.format = new NumberFormat();
+            editMask.format = new InfinniUI.NumberFormat();
             editMask.format.setFormat(editMask.mask);
 
             //When

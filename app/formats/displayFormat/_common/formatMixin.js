@@ -64,3 +64,5 @@ var formatMixin = {
     }
 
 };
+
+window.InfinniUI.FormatMixin = formatMixin;

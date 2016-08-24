@@ -4,6 +4,8 @@ var DialogResult = {
     canceled: 2
 };
 
+window.InfinniUI.DialogResult = DialogResult;
+
 var ViewModel = ContainerModel.extend({
 
     defaults: _.defaults({

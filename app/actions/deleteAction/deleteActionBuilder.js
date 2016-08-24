@@ -29,3 +29,5 @@ _.extend(DeleteActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;

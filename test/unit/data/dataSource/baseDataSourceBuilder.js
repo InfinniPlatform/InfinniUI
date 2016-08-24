@@ -2,7 +2,7 @@ describe('baseDataSourceBuilder', function () {
 
     it('should init CustomProperties', function () {
         // Given
-        var builder = new ApplicationBuilder(),
+        var builder = new InfinniUI.ApplicationBuilder(),
             metadata = {
                 CustomProperties: {
                     pageNumber: 0,

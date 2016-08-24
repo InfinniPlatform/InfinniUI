@@ -3,8 +3,9 @@
  * @class BooleanFormat
  * @mixes formatMixin
  */
-var BooleanFormat = function () {
-};
+var BooleanFormat = function () {};
+
+window.InfinniUI.BooleanFormat = BooleanFormat;
 
 _.extend(BooleanFormat.prototype, {
 

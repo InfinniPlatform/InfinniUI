@@ -2,7 +2,7 @@ describe('NumberFormatting', function () {
     describe('format', function () {
         it('successful build', function () {
             //Given
-            var builder = new NumberFormatBuilder();
+            var builder = new InfinniUI.NumberFormatBuilder();
             //When
             var format = builder.build(null, { metadata: {} });
             //Then
@@ -12,10 +12,10 @@ describe('NumberFormatting', function () {
 
         it('should format percent', function () {
             //Given
-            var formatting_p = new NumberFormat('p');
-            var formatting_p0 = new NumberFormat('p0');
-            var formatting_p1 = new NumberFormat('p1');
-            var enCulture = new Culture('en-US');
+            var formatting_p = new InfinniUI.NumberFormat('p');
+            var formatting_p0 = new InfinniUI.NumberFormat('p0');
+            var formatting_p1 = new InfinniUI.NumberFormat('p1');
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var val = 123.4567;
@@ -30,10 +30,10 @@ describe('NumberFormatting', function () {
 
         it('should format number', function () {
             //Given
-            var formatting_n = new NumberFormat('n');
-            var formatting_n0 = new NumberFormat('n0');
-            var formatting_n1 = new NumberFormat('n1');
-            var enCulture = new Culture('en-US');
+            var formatting_n = new InfinniUI.NumberFormat('n');
+            var formatting_n0 = new InfinniUI.NumberFormat('n0');
+            var formatting_n1 = new InfinniUI.NumberFormat('n1');
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var val = 1234.5678;
@@ -48,10 +48,10 @@ describe('NumberFormatting', function () {
 
         it('should format currency', function () {
             //Given
-            var formatting_c = new NumberFormat('c');
-            var formatting_c0 = new NumberFormat('c0');
-            var formatting_c1 = new NumberFormat('c1');
-            var enCulture = new Culture('en-US');
+            var formatting_c = new InfinniUI.NumberFormat('c');
+            var formatting_c0 = new InfinniUI.NumberFormat('c0');
+            var formatting_c1 = new InfinniUI.NumberFormat('c1');
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var val = 1234.5678;
@@ -66,10 +66,10 @@ describe('NumberFormatting', function () {
 
         it('should format collections', function () {
             //Given
-            var formatting_c = new NumberFormat('c');
-            var formatting_c0 = new NumberFormat('c0');
-            var formatting_c1 = new NumberFormat('c1');
-            var enCulture = new Culture('en-US');
+            var formatting_c = new InfinniUI.NumberFormat('c');
+            var formatting_c0 = new InfinniUI.NumberFormat('c0');
+            var formatting_c1 = new InfinniUI.NumberFormat('c1');
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var val = [1234.5678, 2901.2345, 2678.9012];

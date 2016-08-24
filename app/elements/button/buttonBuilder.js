@@ -2,6 +2,8 @@ function ButtonBuilder() {
     _.superClass(ButtonBuilder, this);
 }
 
+window.InfinniUI.ButtonBuilder = ButtonBuilder;
+
 _.inherit(ButtonBuilder, ElementBuilder);
 
 _.extend(ButtonBuilder.prototype, {

@@ -39,3 +39,5 @@ _.extend(DocumentDataSourceBuilder.prototype, {
 
     initBindingToProperty: RestDataSourceBuilder.prototype.initBindingToProperty
 });
+
+window.InfinniUI.DocumentDataSourceBuilder = DocumentDataSourceBuilder;

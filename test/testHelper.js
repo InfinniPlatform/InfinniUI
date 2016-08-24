@@ -4,8 +4,8 @@ var testHelper = {
             View: metadata
         };
 
-        var appBuilder = new ApplicationBuilder();
-        var linkView = (new InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata, parentView: fakeApplicationView() });
+        var appBuilder = new InfinniUI.ApplicationBuilder();
+        var linkView = (new InfinniUI.InlineViewBuilder()).build(null, {builder: appBuilder, metadata: metadata, parentView: fakeApplicationView() });
 
         linkView.createView(function (view) {
             view.open();

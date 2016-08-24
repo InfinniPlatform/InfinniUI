@@ -14,3 +14,5 @@ function RegexEditMaskBuilder () {
     }
 
 }
+
+window.InfinniUI.RegexEditMaskBuilder = RegexEditMaskBuilder;

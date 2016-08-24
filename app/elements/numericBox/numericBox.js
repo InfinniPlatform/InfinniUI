@@ -8,6 +8,8 @@ function NumericBox(parent) {
     _.superClass(NumericBox, this, parent);
 }
 
+window.InfinniUI.NumericBox = NumericBox;
+
 _.inherit(NumericBox, TextEditorBase);
 
 NumericBox.prototype.createControl = function (parent) {

@@ -2,6 +2,8 @@ function ExtensionPanel(parent) {
     _.superClass(ExtensionPanel, this, parent);
 }
 
+window.InfinniUI.ExtensionPanel = ExtensionPanel;
+
 _.inherit(ExtensionPanel, Container);
 
 _.extend(ExtensionPanel.prototype, {

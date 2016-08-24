@@ -356,7 +356,7 @@ describe('Container (Control)', function () {
 
                 var stackPanel = view.getContext().controls['MainViewPanel'];
 
-                assert.instanceOf(stackPanel.getParent(), View, 'stackPanel parent is View');
+                assert.instanceOf(stackPanel.getParent(), InfinniUI.View, 'stackPanel parent is View');
                 assert.lengthOf(stackPanel.getChildElements(), 3, 'length of stackPanel children is right');
                 assert.equal(stackPanel.getChildElements()[0].getParent(), stackPanel, 'child of stackPanel has parent - stackPanel');
 

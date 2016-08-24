@@ -41,3 +41,5 @@ _.extend(SaveAction.prototype,
         }
     }
 );
+
+window.InfinniUI.SaveAction = SaveAction;

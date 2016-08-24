@@ -64,7 +64,7 @@ describe('FileProvider', function () {
                     createLocalItem: function (idProperty) {
                         var result = {};
 
-                        result[idProperty] = guid();
+                        result[idProperty] = window.InfinniUI.guid();
 
                         return result;
                     }
@@ -75,8 +75,8 @@ describe('FileProvider', function () {
 
 
         it('DocumentDataSource.saveItem without files', function (done) {
-            var builder = new ApplicationBuilder();
-            var view = new View;
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View;
             var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
             ds.createItem(function (context, args) {
@@ -94,8 +94,8 @@ describe('FileProvider', function () {
         });
 /*
         it('DocumentDataSource.saveItem with 1 file', function (done) {
-            var builder = new ApplicationBuilder();
-            var view = new View;
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View;
             var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
             var uploadedFiles = [];
 
@@ -121,8 +121,8 @@ describe('FileProvider', function () {
         });
 
         it('DocumentDataSource.saveItem with files', function (done) {
-            var builder = new ApplicationBuilder();
-            var view = new View;
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View;
             var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
             var uploadedFiles = [];
             var files = '1234567890'.split('')

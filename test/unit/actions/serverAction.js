@@ -1,7 +1,7 @@
 describe('ServerAction', function () {
     it('successful build', function () {
         // Given
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var metadata = {
             ServerAction: {
                 ContentType: 'application/json',
@@ -34,13 +34,13 @@ describe('ServerAction', function () {
 
     it('should update param from binding', function () {
         // Given
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
 
-        var label = new Label();
+        var label = new InfinniUI.Label();
         label.setName('Label_1');
         label.setValue('oldValue');
 
-        var view = new View();
+        var view = new InfinniUI.View();
         view.registerElement(label);
 
         var metadata = {
@@ -77,7 +77,7 @@ describe('ServerAction', function () {
                 };
             });
 
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var metadata = {
                 ServerAction: {
                     Origin: 'http://some.ru',
@@ -114,7 +114,7 @@ describe('ServerAction', function () {
                 };
             });
 
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var metadata = {
                 ServerAction: {
                     Method: 'Post',
@@ -154,7 +154,7 @@ describe('ServerAction', function () {
                 };
             });
 
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var metadata = {
                 ServerAction: {
                     Method: 'Post',

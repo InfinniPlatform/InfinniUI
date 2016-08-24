@@ -72,6 +72,8 @@ var filterItems = (function() {
 	};
 })(filterItems);
 
+window.InfinniUI.FilterItems = filterItems;
+
 
 filterItems.filterTreeBuilder = (function() {
 	var that = {},
