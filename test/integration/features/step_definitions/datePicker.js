@@ -43,4 +43,21 @@ module.exports = function () {
                 that.assert.equal(value, date);
             });
     });
+
+    this.When(/^я очищу поле типа дата "([^"]*)"$/, function (datePickerLabel) {
+        var selector = this.selectors.XPATH.DatePicker.caption(datePickerLabel);
+        var xpath = this.by.xpath(selector);
+        var that = this;
+
+        return this.currentView.findElement(xpath)
+            .then(function (label) {
+                return label.getAttribute('for');
+            })
+            .then(function (id) {
+                return that.currentView.findElement(that.by.id(id));
+            })
+            .then(function (input) {
+                return input.sendKeys(that.selectAll, that.keys.BACK_SPACE);
+            });
+    });
 };
