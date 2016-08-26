@@ -2,9 +2,10 @@
  *
  * @constructor
  */
-function CollectionEventManager () {
+function CollectionEventManager () {}
 
-}
+window.InfinniUI.CollectionEventManager = CollectionEventManager;
+
 
 _.extend(CollectionEventManager.prototype, Backbone.Events);
 

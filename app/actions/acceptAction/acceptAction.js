@@ -21,3 +21,5 @@ _.extend(AcceptAction.prototype, {
         this.parentView.close();
     }
 });
+
+window.InfinniUI.AcceptAction = AcceptAction;

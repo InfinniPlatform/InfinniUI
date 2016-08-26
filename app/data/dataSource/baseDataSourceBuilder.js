@@ -163,4 +163,4 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
 
 _.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
 
-InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;
+window.InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

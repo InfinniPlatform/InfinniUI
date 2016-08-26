@@ -1,12 +1,14 @@
 ﻿jQuery(document).ready(function () {
-    InfinniUI.user = {
-        onReadyDeferred: $.Deferred(),
-        onReady: function(handler){
-            this.onReadyDeferred.done(handler);
-        }
-    };
+    if( InfinniUI.config.disableGetCurrentUser !== false ) {
+            InfinniUI.user = {
+            onReadyDeferred: $.Deferred(),
+            onReady: function(handler){
+                this.onReadyDeferred.done(handler);
+            }
+        };
 
-    refreshUserInfo();
+        refreshUserInfo();
+    }
 });
 
 function getUserInfo(self){

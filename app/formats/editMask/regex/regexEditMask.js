@@ -2,6 +2,9 @@ function RegexEditMask () {
     this.mask = null;
 }
 
+window.InfinniUI.RegexEditMask = RegexEditMask;
+
+
 _.extend(RegexEditMask.prototype, editMaskMixin);
 
 _.extend(RegexEditMask.prototype, {

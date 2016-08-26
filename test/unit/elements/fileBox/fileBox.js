@@ -3,8 +3,8 @@ describe('UploadFileBox', function () {
     describe('debug', function () {
 
         it('render', function () {
-            var builder = new ApplicationBuilder();
-            var view = new View();
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
             var metadata = {
                 MaxSize: 0,
                 AcceptTypes: [
@@ -111,8 +111,8 @@ describe('UploadFileBox', function () {
 //                }
 //            };
 //
-//            var linkView = new LinkView(null, function (resultCallback) {
-//                var builder = new ApplicationBuilder();
+//            var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
+//                var builder = new InfinniUI.ApplicationBuilder();
 //                var view = builder.buildType(fakeView(), 'View', metadata);
 //                resultCallback(view);
 //            });

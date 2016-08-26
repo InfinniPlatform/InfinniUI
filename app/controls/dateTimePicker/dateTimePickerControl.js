@@ -8,6 +8,8 @@ function DateTimePickerControl(parent) {
     _.superClass(DateTimePickerControl, this, parent);
 }
 
+window.InfinniUI.DateTimePickerControl = DateTimePickerControl;
+
 _.inherit(DateTimePickerControl, TextEditorBaseControl);
 
 _.extend(DateTimePickerControl.prototype, {

@@ -45,7 +45,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -68,7 +68,7 @@
 
         it('should return default list of data', function (done) {
             // Given
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var defaultItems = [{"Id": "0000"}];
             var metadata = {
                 "DefaultItems": defaultItems
@@ -89,7 +89,7 @@
 
             var result = '';
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -122,7 +122,7 @@
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var builder = new ApplicationBuilder();
+            var builder = new InfinniUI.ApplicationBuilder();
             var view = fakeView();
             var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
 
@@ -151,7 +151,7 @@
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -186,7 +186,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -212,7 +212,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -236,7 +236,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -257,7 +257,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -280,7 +280,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -306,7 +306,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -333,7 +333,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -382,7 +382,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -410,7 +410,7 @@
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 
@@ -439,7 +439,7 @@
             window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
-            var dataSource = new DocumentDataSource({
+            var dataSource = new InfinniUI.DocumentDataSource({
                 view: fakeView()
             });
 

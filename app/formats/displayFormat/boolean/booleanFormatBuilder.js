@@ -22,3 +22,5 @@ function BooleanFormatBuilder () {
         return format;
     }
 }
+
+window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;

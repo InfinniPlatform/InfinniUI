@@ -7,6 +7,8 @@ function ButtonEditBuilder() {
     _.superClass(ButtonEditBuilder, this);
 }
 
+window.InfinniUI.ButtonEditBuilder = ButtonEditBuilder;
+
 _.inherit(ButtonEditBuilder, TextBoxBuilder);
 
 ButtonEditBuilder.prototype.createElement = function (params) {

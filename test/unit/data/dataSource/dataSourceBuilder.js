@@ -1,6 +1,6 @@
 describe('DataSourceBuilder', function () {
 
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
     var items = [
         {
             "_id": '1',
@@ -59,7 +59,7 @@ describe('DataSourceBuilder', function () {
                     }
                 };
 
-            var view = new View(),
+            var view = new InfinniUI.View(),
                 createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view});
 
             // Then
@@ -84,7 +84,7 @@ describe('DataSourceBuilder', function () {
                     }
                 };
 
-            var view = new View(),
+            var view = new InfinniUI.View(),
                 createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view}),
                 scriptMetadata = {
                     Name:"onPropertyChanged",

@@ -14,3 +14,5 @@ _.extend(AddActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.AddActionBuilder = AddActionBuilder;

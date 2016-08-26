@@ -22,8 +22,10 @@ function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
 
 }
 
+window.InfinniUI.BasePathOfProperty = BasePathOfProperty;
+
 _.extend(BasePathOfProperty.prototype, {
-    /*возвращает полный путь к свойству элемента в коллекции*/
+    /*РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СЃРІРѕР№СЃС‚РІСѓ СЌР»РµРјРµРЅС‚Р° РІ РєРѕР»Р»РµРєС†РёРё*/
     resolveProperty: function(property) {
         if(property === undefined || property === null){
             property = '';
@@ -38,7 +40,7 @@ _.extend(BasePathOfProperty.prototype, {
 
     },
 
-    /*возвращает полный путь к свойству элемента в коллекции по заданному относительному пути*/
+    /*РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ Рє СЃРІРѕР№СЃС‚РІСѓ СЌР»РµРјРµРЅС‚Р° РІ РєРѕР»Р»РµРєС†РёРё РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРјСѓ РїСѓС‚Рё*/
     resolveRelativeProperty: function(relativeProperty) {
         var property;
         if(this.basePathOfProperty != ''){
@@ -49,12 +51,12 @@ _.extend(BasePathOfProperty.prototype, {
         return this.resolveProperty(property);
     },
 
-    /*создает BasePathOfProperty следующего уровня*/
+    /*СЃРѕР·РґР°РµС‚ BasePathOfProperty СЃР»РµРґСѓСЋС‰РµРіРѕ СѓСЂРѕРІРЅСЏ*/
     buildChild: function(basePathOfProperty, baseIndex){
         return new BasePathOfProperty(basePathOfProperty, baseIndex, this);
     },
 
-    /*создает BasePathOfProperty следующего уровня с относительным путем*/
+    /*СЃРѕР·РґР°РµС‚ BasePathOfProperty СЃР»РµРґСѓСЋС‰РµРіРѕ СѓСЂРѕРІРЅСЏ СЃ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рј РїСѓС‚РµРј*/
     buildRelativeChild: function(basePathOfProperty, baseIndex){
         return new BasePathOfProperty(basePathOfProperty, baseIndex, this);
     },

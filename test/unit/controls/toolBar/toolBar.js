@@ -1,6 +1,6 @@
 describe('ToolBarControl', function () {
     describe('render', function () {
-        var builder = new ApplicationBuilder()
+        var builder = new InfinniUI.ApplicationBuilder()
             , toolbar;
 
         beforeEach(function () {

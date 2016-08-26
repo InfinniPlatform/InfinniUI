@@ -10,6 +10,9 @@ function ObjectFormat(format) {
     this.formatters = [DateTimeFormat, NumberFormat];
 }
 
+window.InfinniUI.ObjectFormat = ObjectFormat;
+
+
 _.extend(ObjectFormat.prototype, {
 
     /**

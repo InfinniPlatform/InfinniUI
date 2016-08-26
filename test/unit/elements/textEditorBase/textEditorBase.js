@@ -35,12 +35,12 @@ describe('TextEditorBase (Element)', function () {
 
         it('Base functional', function () {
             // Given
-            var textBox = new TextBox();
+            var textBox = new InfinniUI.TextBox();
             var format = function (context, args) {
-                var format = new ObjectFormat();
+                var format = new InfinniUI.ObjectFormat();
                 return format.format(args.value);
             };
-            var mask = new DateTimeEditMask();
+            var mask = new InfinniUI.DateTimeEditMask();
 
             assert.isNull(textBox.getLabelText(), 'default label text is null');
             assert.isFalse(textBox.getLabelFloating(), 'default label floating is false');

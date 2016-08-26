@@ -9,6 +9,8 @@ function PopupButton(parent, viewMode) {
     this.buttonInit();
 }
 
+window.InfinniUI.PopupButton = PopupButton;
+
 _.inherit(PopupButton, Container);
 
 _.extend(PopupButton.prototype, {

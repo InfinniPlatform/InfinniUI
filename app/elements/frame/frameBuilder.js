@@ -10,6 +10,8 @@ function FrameBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.FrameBuilder = FrameBuilder;
+
 _.inherit(FrameBuilder, TextEditorBaseBuilder);
 
 _.extend(FrameBuilder.prototype, {

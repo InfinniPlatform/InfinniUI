@@ -6,6 +6,8 @@ function TablePanelBuilder() {
     _.superClass(TablePanelBuilder, this);
 }
 
+window.InfinniUI.TablePanelBuilder = TablePanelBuilder;
+
 _.inherit(TablePanelBuilder, ContainerBuilder);
 
 _.extend(TablePanelBuilder.prototype,

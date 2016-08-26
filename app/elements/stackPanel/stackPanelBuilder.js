@@ -6,6 +6,8 @@ function StackPanelBuilder() {
     _.superClass(StackPanelBuilder, this);
 }
 
+window.InfinniUI.StackPanelBuilder = StackPanelBuilder;
+
 _.inherit(StackPanelBuilder, ContainerBuilder);
 
 _.extend(StackPanelBuilder.prototype,

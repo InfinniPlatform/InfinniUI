@@ -7,6 +7,8 @@ function HashMap() {
     this._values = [];
 }
 
+window.InfinniUI.HashMap = HashMap;
+
 Object.defineProperties(HashMap.prototype, /** @lends HashMap.prototype **/{
     length: {
         get: function () {

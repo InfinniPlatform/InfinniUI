@@ -7,6 +7,8 @@ function ScrollPanel(parent) {
     _.superClass(ScrollPanel, this, parent);
 }
 
+window.InfinniUI.ScrollPanel = ScrollPanel;
+
 _.inherit(ScrollPanel, Container);
 
 /**

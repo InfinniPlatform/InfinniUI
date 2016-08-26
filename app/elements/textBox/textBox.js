@@ -8,6 +8,8 @@ function TextBox(parent) {
     _.superClass(TextBox, this, parent);
 }
 
+window.InfinniUI.TextBox = TextBox;
+
 _.inherit(TextBox, TextEditorBase);
 
 _.extend(TextBox.prototype, {

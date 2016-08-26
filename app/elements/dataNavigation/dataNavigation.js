@@ -2,6 +2,8 @@ function DataNavigation (parent) {
     _.superClass(DataNavigation, this, parent);
 }
 
+window.InfinniUI.DataNavigation = DataNavigation;
+
 _.inherit(DataNavigation, Element);
 
 _.extend(DataNavigation.prototype, {

@@ -17,3 +17,5 @@ _.extend(OpenActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.OpenActionBuilder = OpenActionBuilder;

@@ -3,7 +3,7 @@ describe('DateTimeEditMask', function () {
 
         it('successful build template', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "%dd MM yyyy г.";
             //When
             var template = editMask.buildTemplate();
@@ -14,9 +14,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful format value', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "%dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
             //When
             editMask.reset('2014-09-26T15:15');
@@ -27,9 +27,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful input value', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
             //var template = editMask.buildTemplate();
             editMask.reset(null);
@@ -51,9 +51,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful navigation', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
             var date = new Date();
             editMask.reset(date);
@@ -71,9 +71,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful delete char (right)', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
 
             var date = new Date(2014, 9, 6, 9, 30, 50, 0);  //06-10-2014 09:30:50
@@ -93,9 +93,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful delete char (left)', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
 
             var date = new Date(2014, 9, 6, 9, 30, 50, 0);  //06-10-2014 09:30:50
@@ -115,9 +115,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful set char', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
 
             editMask.reset(null);
@@ -140,9 +140,9 @@ describe('DateTimeEditMask', function () {
 
         it('successful delete value', function () {
             //Given
-            var editMask = new DateTimeEditMask();
+            var editMask = new InfinniUI.DateTimeEditMask();
             editMask.mask = "dd MM yyyy г.";
-            editMask.format = new DateTimeFormat();
+            editMask.format = new InfinniUI.DateTimeFormat();
             editMask.format.setFormat(editMask.mask);
             //var template = editMask.buildTemplate();
             editMask.reset(null);

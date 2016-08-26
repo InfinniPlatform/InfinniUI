@@ -4,7 +4,7 @@ describe('Parameters', function () {
 
         // Given When
         var view = fakeView();
-        var parameter = new Parameter({view: view, name: 'name'});
+        var parameter = new InfinniUI.Parameter({view: view, name: 'name'});
 
         // Then
         assert.equal(parameter.getView(), view, 'view is right');
@@ -14,7 +14,7 @@ describe('Parameters', function () {
     it('Parameter value and property', function () {
 
         // Given
-        var parameter = new Parameter({view: fakeView(), name: 'name'}),
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
             val = {
                 f1:{
                     value: 5
@@ -40,7 +40,7 @@ describe('Parameters', function () {
     it('Parameter handling property changed', function () {
 
         // Given
-        var parameter = new Parameter({view: fakeView(), name: 'name'}),
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
             handlerWasCalled = false,
             val = {
                 f1:{

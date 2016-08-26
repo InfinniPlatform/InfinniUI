@@ -3,6 +3,8 @@ function Label(parent, viewMode) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.Label = Label;
+
 _.inherit(Label, Element);
 
 

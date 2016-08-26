@@ -9,7 +9,7 @@ describe("Filter items", function () {
 				{Id: 3}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].index, -1.9, 'filtered item is correct');
@@ -24,7 +24,7 @@ describe("Filter items", function () {
 				{Id: 3}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -40,7 +40,7 @@ describe("Filter items", function () {
 				{Id: 4, props: {fontSize: 30}}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -57,7 +57,7 @@ describe("Filter items", function () {
 				{Id: 3}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -73,7 +73,7 @@ describe("Filter items", function () {
 				{Id: 3}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -91,7 +91,7 @@ describe("Filter items", function () {
 				{Id: 5}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 3, 'filtered item is correct');
@@ -110,7 +110,7 @@ describe("Filter items", function () {
 				{Id: 5, birthday: 1327597910.417}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 3, 'filtered item is correct');
@@ -129,7 +129,7 @@ describe("Filter items", function () {
 				{Id: 5}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -146,7 +146,7 @@ describe("Filter items", function () {
 				{Id: 5}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -165,7 +165,7 @@ describe("Filter items", function () {
 				{Id: 5, index: 1}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -184,7 +184,7 @@ describe("Filter items", function () {
 				{Id: 5, index: 1}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -202,7 +202,7 @@ describe("Filter items", function () {
 				{Id: 5}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -221,7 +221,7 @@ describe("Filter items", function () {
 				{Id: 5}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 3, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -240,7 +240,7 @@ describe("Filter items", function () {
 				{Id: 5, index: null}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -273,7 +273,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -314,7 +314,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 4, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -341,7 +341,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -365,7 +365,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -390,7 +390,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -414,7 +414,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -438,7 +438,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -463,7 +463,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -487,7 +487,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -511,7 +511,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 3, 'filtered item is correct');
@@ -535,7 +535,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -559,7 +559,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -584,7 +584,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 3, 'filtered item is correct');
@@ -608,7 +608,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -633,7 +633,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -658,7 +658,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -682,7 +682,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -706,7 +706,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -731,7 +731,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 3, 'filtered item is correct');
@@ -755,7 +755,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 2, 'filtered item is correct');
@@ -780,7 +780,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 1, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -804,7 +804,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');
@@ -833,7 +833,7 @@ describe("Filter items", function () {
 				}
 			];
 			// When
-			var result1 = filterItems(items, filter);
+			var result1 = InfinniUI.FilterItems(items, filter);
 			// Then
 			assert.lengthOf(result1, 2, 'length of filtered items is right');
 			assert.equal(result1[0].Id, 1, 'filtered item is correct');

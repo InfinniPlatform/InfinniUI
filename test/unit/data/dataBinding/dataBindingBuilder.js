@@ -2,7 +2,7 @@ describe('DataBindingBuilder', function () {
 
 /*    it('should build DataBinding', function () {
         // Given
-        var dataBindingBuilder = new DataBindingBuilder();
+        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
         var view = {
             getContext: function(){
                 return {
@@ -48,7 +48,7 @@ describe('DataBindingBuilder', function () {
 
     it('should bind all type of source', function () {
         // Given
-        var dataBindingBuilder = new DataBindingBuilder();
+        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
         var view = {
             getContext: function(){
                 return {

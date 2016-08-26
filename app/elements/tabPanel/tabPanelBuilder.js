@@ -6,6 +6,8 @@ function TabPanelBuilder() {
     _.superClass(TabPanelBuilder, this);
 }
 
+window.InfinniUI.TabPanelBuilder = TabPanelBuilder;
+
 _.inherit(TabPanelBuilder, ContainerBuilder);
 
 _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {

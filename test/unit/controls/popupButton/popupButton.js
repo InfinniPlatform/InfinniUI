@@ -1,7 +1,7 @@
 describe('PopupButtonControl', function () {
     describe('render', function () {
-        var builder = new ApplicationBuilder()
-            , button;
+        var builder = new InfinniUI.ApplicationBuilder(),
+            button;
 
         beforeEach(function () {
             button = builder.buildType('PopupButton', {
@@ -39,6 +39,7 @@ describe('PopupButtonControl', function () {
             assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
             assert.equal($button.length, 1, 'button render');
             assert.equal($button.text(), 'Click me!', 'button text');
+            $('body').find('.pl-popup-button__dropdown').detach();
         });
 
         it('should handle onClick', function () {
@@ -53,6 +54,7 @@ describe('PopupButtonControl', function () {
             button.click();
             //Then
             assert.isTrue(click === 1);
+            $('body').find('.pl-popup-button__dropdown').detach();
         });
 
     });

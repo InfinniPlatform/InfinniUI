@@ -8,6 +8,8 @@ function ComboBox(parent) {
     _.superClass(ComboBox, this, parent);
 }
 
+window.InfinniUI.ComboBox = ComboBox;
+
 _.inherit(ComboBox, ListEditorBase);
 
 _.extend(ComboBox.prototype, labelTextElementMixin);

@@ -1,5 +1,6 @@
-function ViewPanelBuilder() {
-}
+function ViewPanelBuilder() {}
+
+window.InfinniUI.ViewPanelBuilder = ViewPanelBuilder;
 
 _.inherit(ViewPanelBuilder, ElementBuilder);
 

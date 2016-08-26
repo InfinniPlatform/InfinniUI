@@ -3,8 +3,8 @@ describe('Element', function () {
 
         it('Setting and getting the properties', function () {
             // Given
-            var textBox = new TextBox(),
-                textBox2 = new TextBox();
+            var textBox = new InfinniUI.TextBox(),
+                textBox2 = new InfinniUI.TextBox();
 
             // When
             textBox.setValue('test');
@@ -17,7 +17,7 @@ describe('Element', function () {
 
         it('Handling change properties', function (done) {
             // Given
-            var textBox = new TextBox(),
+            var textBox = new InfinniUI.TextBox(),
                 step = 1;
             textBox.onPropertyChanged('value', onValueChanged);
             textBox.onPropertyChanged('visible', onVisibleChanged);
@@ -43,7 +43,7 @@ describe('Element', function () {
 
         it('Handling DOM event', function (done) {
             // Given
-            var textBox = new TextBox();
+            var textBox = new InfinniUI.TextBox();
             textBox.onDoubleClick(onMouseDoubleClickHandler);
 
             // When
@@ -60,7 +60,7 @@ describe('Element', function () {
 
         it('Click event', function (done) {
             // Given
-            var textBox = new TextBox();
+            var textBox = new InfinniUI.TextBox();
             textBox.onClick(onMouseClickHandler);
             
             // When

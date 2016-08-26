@@ -32,3 +32,5 @@ function ParameterBuilder() {
         return parameter;
     };
 }
+
+window.InfinniUI.ParameterBuilder = ParameterBuilder;

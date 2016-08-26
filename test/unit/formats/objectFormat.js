@@ -4,7 +4,7 @@ describe('ObjectFormat', function () {
         it('successful build', function () {
             //Given
             var metadata = {Format: '{}'};
-            var builder = new ObjectFormatBuilder();
+            var builder = new InfinniUI.ObjectFormatBuilder();
             //When
             var format = builder.build(null, { metadata: metadata } );
             //Then
@@ -14,11 +14,11 @@ describe('ObjectFormat', function () {
 
         it('should format simple data type ', function () {
             //Given
-            var formatter_1 = new ObjectFormat("Hello, {}!");
-            var formatter_2 = new ObjectFormat("Birth date: {:d}");
-            var formatter_3 = new ObjectFormat("Birth time: {:T}");
-            var formatter_4 = new ObjectFormat("Weight: {:n2} kg");
-            var enCulture = new Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {:n2} kg");
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var value_1 = 'Ivan';
@@ -36,11 +36,11 @@ describe('ObjectFormat', function () {
 
         it('should format complex data type ', function () {
             //Given
-            var formatter_1 = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new ObjectFormat("Weight: {Weight:n2} kg");
-            var enCulture = new Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var value_1 = { FirstName: "Ivan", MiddleName: "Ivanovich" };
@@ -57,11 +57,11 @@ describe('ObjectFormat', function () {
 
         it('should format collection ', function () {
             //Given
-            var formatter_1 = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new ObjectFormat("Weight: {Weight:n2} kg");
-            var enCulture = new Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
+            var enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var value_1 = [{ FirstName: "Ivan", MiddleName: "Ivanovich" }, { FirstName: "Petr", MiddleName: "Petrov" }];
@@ -78,7 +78,7 @@ describe('ObjectFormat', function () {
 
         it('should format when value is undefined', function () {
             //Given
-            var formatter = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(), "Hello,  !");
@@ -86,7 +86,7 @@ describe('ObjectFormat', function () {
 
         it('should format when value is null', function () {
             //Given
-            var formatter = new ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(null), "Hello,  !");

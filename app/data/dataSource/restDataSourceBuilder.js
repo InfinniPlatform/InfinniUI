@@ -108,4 +108,4 @@ _.extend(RestDataSourceBuilder.prototype, {
     }
 });
 
-InfinniUI.RestDataSourceBuilder = RestDataSourceBuilder;
+window.InfinniUI.RestDataSourceBuilder = RestDataSourceBuilder;

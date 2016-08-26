@@ -7,6 +7,9 @@ function ScriptExecutor(parent) {
     this.parent = parent;
 }
 
+window.InfinniUI.ScriptExecutor = ScriptExecutor;
+
+
 /**
  *
  * @param {string} scriptName

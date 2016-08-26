@@ -11,6 +11,8 @@ function TextEditorBaseBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.TextEditorBaseBuilder = TextEditorBaseBuilder;
+
 _.inherit(TextEditorBaseBuilder, ElementBuilder);
 
 _.extend(TextEditorBaseBuilder.prototype, {

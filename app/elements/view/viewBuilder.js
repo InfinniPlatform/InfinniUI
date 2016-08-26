@@ -6,6 +6,8 @@ function ViewBuilder() {
     _.superClass(ViewBuilder, this);
 }
 
+window.InfinniUI.ViewBuilder = ViewBuilder;
+
 _.inherit(ViewBuilder, ContainerBuilder);
 
 _.extend(ViewBuilder.prototype, {

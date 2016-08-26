@@ -8,6 +8,8 @@ function Button(parent, viewMode) {
 	this.buttonInit();
 }
 
+window.InfinniUI.Button = Button;
+
 _.inherit(Button, Element);
 
 _.extend(Button.prototype, {

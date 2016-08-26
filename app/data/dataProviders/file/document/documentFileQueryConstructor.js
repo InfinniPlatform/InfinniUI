@@ -6,6 +6,8 @@ var DocumentUploadQueryConstructor = function (host) {
     this.host = host;
 };
 
+window.InfinniUI.DocumentUploadQueryConstructor = DocumentUploadQueryConstructor;
+
 /**
  * @public
  * @description Возвращает ссылку на загруженный ранее файл

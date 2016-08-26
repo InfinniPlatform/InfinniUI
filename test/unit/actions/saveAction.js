@@ -1,7 +1,7 @@
 describe('SaveAction', function () {
     function createViewWithDataSource(dataSourceName){
-        var view = new View();
-        var dataSource = new ObjectDataSource({ name: dataSourceName, view: view });
+        var view = new InfinniUI.View();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: dataSourceName, view: view });
 
         view.getDataSources().push(dataSource);
 
@@ -11,7 +11,7 @@ describe('SaveAction', function () {
     it('successful build', function () {
         // Given
         var view = createViewWithDataSource('MainDS');
-        var builder = new ApplicationBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var metadata = {
             SaveAction: {
                 DestinationValue: {
@@ -31,11 +31,11 @@ describe('SaveAction', function () {
     it('should close view and set DialogResult', function (done) {
         // Given
         var view = createViewWithDataSource('MainDS');
-        var builder = new SaveActionBuilder();
+        var builder = new InfinniUI.SaveActionBuilder();
 
         view.onClosed(function(){
             //Then
-            assert.equal(view.getDialogResult(), DialogResult.accepted, 'should set DialogResult');
+            assert.equal(view.getDialogResult(),InfinniUI.DialogResult.accepted, 'should set DialogResult');
             done();
         });
 
@@ -54,7 +54,7 @@ describe('SaveAction', function () {
     it('should not close view when CanClose is false', function () {
         // Given
         var view = createViewWithDataSource('MainDS');
-        var builder = new SaveActionBuilder();
+        var builder = new InfinniUI.SaveActionBuilder();
 
         view.onClosed(function(){
             assert.notOk('view was close');
@@ -73,13 +73,13 @@ describe('SaveAction', function () {
         saveAction.execute();
 
         // Then
-        assert.equal(view.getDialogResult(), DialogResult.none, 'should not set DialogResult');
+        assert.equal(view.getDialogResult(),InfinniUI.DialogResult.none, 'should not set DialogResult');
     });
 
     it('should call onExecuted', function () {
         // Given
         var view = createViewWithDataSource('MainDS');
-        var builder = new SaveActionBuilder();
+        var builder = new InfinniUI.SaveActionBuilder();
 
         var metadata = {
             "OnExecuted": "{ window.onExecutedWasCalled = true; }",

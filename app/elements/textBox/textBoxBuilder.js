@@ -7,6 +7,8 @@ function TextBoxBuilder() {
     _.superClass(TextBoxBuilder, this);
 }
 
+window.InfinniUI.TextBoxBuilder = TextBoxBuilder;
+
 _.inherit(TextBoxBuilder, TextEditorBaseBuilder);
 
 TextBoxBuilder.prototype.createElement = function (params) {

@@ -4,6 +4,9 @@ function TemplateEditMask () {
     this.maskPlaceHolder = '_';
 }
 
+window.InfinniUI.TemplateEditMask = TemplateEditMask;
+
+
 _.extend(TemplateEditMask.prototype, editMaskMixin);
 
 _.extend(TemplateEditMask.prototype, {

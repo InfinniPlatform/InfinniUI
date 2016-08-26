@@ -6,8 +6,8 @@ describe('FrameBuilder', function () {
             var metadata = {};
 
             // When
-            var builder = new FrameBuilder();
-            var element = builder.build(null, {builder: new ApplicationBuilder(), view: new View(), metadata: metadata});
+            var builder = new InfinniUI.FrameBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
 
             // Then
             assert.isNotNull(element);

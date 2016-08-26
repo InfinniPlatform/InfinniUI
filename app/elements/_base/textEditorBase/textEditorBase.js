@@ -11,6 +11,8 @@ function TextEditorBase(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.TextEditorBase = TextEditorBase;
+
 _.inherit(TextEditorBase, Element);
 
 _.extend(TextEditorBase.prototype, {
