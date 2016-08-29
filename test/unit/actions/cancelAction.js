@@ -1,8 +1,8 @@
 describe('CancelAction', function () {
     it('successful build', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
 
         // When
         var cancelAction = builder.build({ CancelAction: {} }, {parentView: view});
@@ -14,23 +14,23 @@ describe('CancelAction', function () {
 
     it('set cancel as DialogResult for parentView', function () {
         // Given
-        var view = new View();
-        var builder = new CancelActionBuilder();
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.CancelActionBuilder();
         var cancelAction = builder.build(null, {parentView: view, metadata: {}});
 
-        assert.equal(view.getDialogResult(), DialogResult.none);
+        assert.equal(view.getDialogResult(), InfinniUI.DialogResult.none);
 
         // When
         cancelAction.execute();
 
         // Then
-        assert.equal(view.getDialogResult(), DialogResult.canceled, 'DialogResult should be canceled');
+        assert.equal(view.getDialogResult(), InfinniUI.DialogResult.canceled, 'DialogResult should be canceled');
     });
 
     it('should call onExecuted', function () {
         // Given
-        var view = new View();
-        var builder = new CancelActionBuilder();
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.CancelActionBuilder();
         var cancelAction = builder.build(null, {
             parentView: view,
             metadata: {

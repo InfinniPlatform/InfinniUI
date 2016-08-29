@@ -2,7 +2,7 @@ describe('Label', function () {
     var label;
 
     beforeEach(function () {
-        label = new Label();
+        label = new InfinniUI.Label();
     });
 
     describe('Render', function () {

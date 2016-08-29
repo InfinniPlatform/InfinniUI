@@ -2,6 +2,8 @@ function ContainerBuilder() {
     _.superClass(ContainerBuilder, this);
 }
 
+window.InfinniUI.ContainerBuilder = ContainerBuilder;
+
 _.inherit(ContainerBuilder, ElementBuilder);
 
 /**
@@ -321,6 +323,15 @@ _.extend(ContainerBuilder.prototype, {
                 return scriptExecutor.executeScript(metadata.ItemComparator.Name || metadata.ItemComparator, {item1: item1, item2: item2});
             };
         }
+
+        var source = binding.getSource();
+        source.onPropertyChanged('*', function (context, args) {
+            var items = element.getItems();
+            //При замене целого элемента списка, заменить элемент в коллекции
+            if (args.property && args.property.match(/^\d+$/)) {
+                items.replace(args.oldValue, args.newValue);
+            }
+        });
 
         binding.bindElement({
             setProperty: function (name, value) {

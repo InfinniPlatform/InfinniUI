@@ -5,6 +5,9 @@ function NumberEditMask () {
     this.culture = new Culture(InfinniUI.config.lang);
 }
 
+window.InfinniUI.NumberEditMask = NumberEditMask;
+
+
 _.extend(NumberEditMask.prototype, editMaskMixin);
 
 

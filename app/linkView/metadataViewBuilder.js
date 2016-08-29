@@ -1,6 +1,6 @@
-function MetadataViewBuilder() {
+function MetadataViewBuilder() {}
 
-}
+window.InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 
 _.extend(MetadataViewBuilder.prototype, {
 

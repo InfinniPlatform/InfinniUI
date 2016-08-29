@@ -2,7 +2,7 @@ var FakeDocumentDataProvider = function(){
 	_.superClass(FakeDocumentDataProvider, this);
 };
 
-_.inherit(FakeDocumentDataProvider, RestDataProvider);
+_.inherit(FakeDocumentDataProvider, InfinniUI.Providers.RestDataProvider);
 
 _.extend( FakeDocumentDataProvider.prototype, {
 
@@ -31,7 +31,7 @@ _.extend( FakeDocumentDataProvider.prototype, {
 		setTimeout(function(){
 			successHandler({
 				requestId: requestId,
-				data: that.filterItems( that.items, filter )
+				data: that.InfinniUI.FilterItems( that.items, filter )
 			});
 		}, 1);
 

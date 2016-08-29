@@ -1,4 +1,4 @@
-    var editMaskMixin = {
+var editMaskMixin = {
     /**
      * Установка начального значения
      * @param value
@@ -221,3 +221,5 @@
     }
 
 };
+
+window.InfinniUI.EditMaskMixin = editMaskMixin;

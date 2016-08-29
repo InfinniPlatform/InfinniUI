@@ -3,7 +3,7 @@ describe('ComboBox', function () {
 
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
-            var comboBox = new ComboBox(), $el, $control;
+            var comboBox = new InfinniUI.ComboBox(), $el, $control;
 
             $el = comboBox.render();
 
@@ -26,7 +26,7 @@ describe('ComboBox', function () {
 
         it('Events onLoad, onValueChanged', function () {
             // Given
-            var comboBox = new ComboBox(),
+            var comboBox = new InfinniUI.ComboBox(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
@@ -479,6 +479,8 @@ describe('ComboBox', function () {
 
                 done();
                 view.close();
+                
+                $('body').find('.pl-dropdown-container').detach();
             }
         });
     });

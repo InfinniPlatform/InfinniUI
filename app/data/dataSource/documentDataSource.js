@@ -246,3 +246,5 @@ var DocumentDataSource = RestDataSource.extend({
     }
 
 });
+
+window.InfinniUI.DocumentDataSource = DocumentDataSource;

@@ -44,6 +44,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('FileBox', new FileBoxBuilder());
         builder.register('Label', new LabelBuilder());
         builder.register('Link', new LinkBuilder());
+        builder.register('Form', new FormBuilder());
         builder.register('Icon', new IconBuilder());
         builder.register('DateTimePicker', new DateTimePickerBuilder());
         builder.register('DatePicker', new DatePickerBuilder());
@@ -58,7 +59,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('ExtensionPanel', new ExtensionPanelBuilder());
         builder.register('PopupButton', new PopupButtonBuilder());
         builder.register('DataNavigation', new DataNavigationBuilder());
-        builder.register('PdfViewer', new PdfViewerBuilder());
         builder.register('TreeView', new TreeViewBuilder());
         builder.register('Frame', new FrameBuilder());
         builder.register('ButtonEdit', new ButtonEditBuilder());

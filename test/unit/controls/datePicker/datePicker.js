@@ -1,5 +1,5 @@
 describe('DateTimePickerControl', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('render', function () {
         it('should update date when change value', function () {
@@ -19,7 +19,7 @@ describe('DateTimePickerControl', function () {
 
         it('should clear date when value is null', function () {
             //Given
-            var dateTimePicker = new DateTimePickerControl();
+            var dateTimePicker = new InfinniUI.DateTimePickerControl();
             var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
 
             dateTimePicker.setValue(value);

@@ -46,6 +46,9 @@ function Collection (items, idProperty, comparator) {
     this.events = new CollectionEventManager();
 }
 
+window.InfinniUI.Collection = Collection;
+
+
 Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
     /**
      * @type {string|null}
@@ -292,7 +295,7 @@ Collection.prototype.set = function (newItems, silent) {
  */
 Collection.prototype.replace = function (oldItem, newItem) {
     var itemValue;
-    var changed = true;
+    var changed = false;
     for (var i = 0; i < this._items.length; i = i + 1) {
         itemValue = this.getCollectionItemValue(i);
         if (this.isEqual(oldItem, itemValue)) {

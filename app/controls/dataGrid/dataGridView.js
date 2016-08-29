@@ -44,6 +44,18 @@ var DataGridView = ListEditorBaseView.extend({
         this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
         this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
         this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+
+        /** Update hash item => element when item changed **/
+        var rowElements = this.rowElements;
+        var model = this.model;
+        this.model.get('items').onChange(function(event){
+            if (event.action === 'replace') {
+                event.oldItems.forEach(function (oldItem, index) {
+                    rowElements.add(event.newItems[index], rowElements.get(oldItem));
+                    rowElements.remove(oldItem);
+                });
+            }
+        });
     },
 
     updateProperties: function () {
@@ -51,6 +63,7 @@ var DataGridView = ListEditorBaseView.extend({
         this.updateShowSelectors();
         this.updateCheckAllVisible();
         this.updateCheckAll();
+        this.updateDisabledItem();
     },
 
     updateShowSelectors: function () {
@@ -142,8 +155,7 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateSelectedItem: function () {
-        var
-            model = this.model,
+        var model = this.model,
             selectedItem = model.get('selectedItem');
 
         this.rowElements.forEach(function (rowElement, item) {
@@ -152,17 +164,39 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateDisabledItem: function () {
-        var
-            model = this.model,
+        var model = this.model,
             disabledItemCondition = model.get('disabledItemCondition'),
             isEnabled;
 
-        if(disabledItemCondition != null) {
+        if( disabledItemCondition != null ) {
             this.rowElements.forEach(function (rowElement, item) {
                 isEnabled = !disabledItemCondition( undefined, {value: item} );
+                if( rowElement.getSelected() === item && isEnabled === false ) {
+                    model.set('selectedItem', null);
+                }
                 rowElement.setEnabled(isEnabled);
             });
+        } else {
+            this.rowElements.forEach(function (rowElement, item) {
+                rowElement.setEnabled(true);
+            });
         }
+    },
+
+    updateEnabled: function() {
+        var isEnabled = this.model.get('enabled');
+        if( isEnabled ) {
+            this.updateDisabledItem();
+        } else {
+            this.disableDataGridItems();
+        }
+    },
+
+    disableDataGridItems: function() {
+        this.model.set('selectedItem', null);
+        this.rowElements.forEach(function (rowElement, item) {
+            rowElement.setEnabled(false);
+        });
     },
 
     render: function () {
@@ -288,15 +322,23 @@ var DataGridView = ListEditorBaseView.extend({
                 var element = itemTemplate(undefined, {index: index, item: item});
 
                 element.onBeforeClick(function() {
-                    model.set('selectedItem', item);
-                });
-                element.onToggle(function() {
-                    var enabled = this.model.get('enabled');
-
-                    if(enabled){
-                        model.toggleValue(valueSelector(undefined, {value:item}));
+                    var items = model.get('items'),
+                        item = items.getByIndex(index),
+                        rowItem = that.rowElements.get(item);
+                    if( rowItem.getEnabled() !== false ) {
+                        model.set('selectedItem', item);
                     }
                 });
+
+                element.onToggle(function() {
+                    var enabled = this.model.get('enabled');
+                    var items = model.get('items');
+
+                    if(enabled){
+                        model.toggleValue(valueSelector(undefined, {value:items.getByIndex(index)}));
+                    }
+                });
+                element.childElements = element.control.controlView.childElements;
                 that.addRowElement(item, element);
 
                 var $element = element.render();

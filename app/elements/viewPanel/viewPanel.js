@@ -2,6 +2,8 @@ function ViewPanel(parent) {
     _.superClass(ViewPanel, this, parent);
 }
 
+window.InfinniUI.ViewPanel = ViewPanel;
+
 _.inherit(ViewPanel, Element);
 
 _.extend(ViewPanel.prototype, {

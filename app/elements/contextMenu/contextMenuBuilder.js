@@ -6,6 +6,8 @@ function ContextMenuBuilder() {
 	_.superClass(ContextMenuBuilder, this);
 }
 
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
 _.inherit(ContextMenuBuilder, ContainerBuilder);
 
 _.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{

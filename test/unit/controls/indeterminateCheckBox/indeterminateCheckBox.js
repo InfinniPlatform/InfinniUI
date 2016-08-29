@@ -2,7 +2,7 @@ describe('IndeterminateCheckBox', function () {
 	var indeterminateCheckBox;
 
 	beforeEach(function () {
-		indeterminateCheckBox = new IndeterminateCheckBox();
+		indeterminateCheckBox = new InfinniUI.IndeterminateCheckBox();
 	});
 
 	describe('Render', function () {

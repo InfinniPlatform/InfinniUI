@@ -1,5 +1,5 @@
 describe('DateTimePicker', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('DateTimePicker', {});
@@ -86,7 +86,7 @@ describe('DateTimePicker', function () {
             assert.equal(element.getLabelText(), "Datepicker's label", 'LabelText');
             assert.equal(element.getLabelFloating(), true, 'LabelFloating');
             assert.isFunction(element.getDisplayFormat(), 'DateTimeFormat');
-            assert.instanceOf(element.getEditMask(), DateTimeEditMask, 'EditMask');
+            assert.instanceOf(element.getEditMask(), InfinniUI.DateTimeEditMask, 'EditMask');
 
             assert.equal(element.getHintText(), "Hint", 'HintText');
             assert.equal(element.getErrorText(), "Error", 'ErrorText');
@@ -104,7 +104,7 @@ describe('DateTimePicker', function () {
 
         it('correct convert from string to date and from date to string', function () {
             // Given
-            var dateTimePicker = new DateTimePicker();
+            var dateTimePicker = new InfinniUI.DateTimePicker();
 
             dateTimePicker.render();
 
@@ -117,7 +117,7 @@ describe('DateTimePicker', function () {
 
         it('event OnValueChanged', function () {
             // Given
-            var dateTimePicker = new DateTimePicker(),
+            var dateTimePicker = new InfinniUI.DateTimePicker(),
                 onValueChangedFlag = 0;
 
             dateTimePicker.render();

@@ -8,6 +8,8 @@ function ButtonEdit(parent) {
     _.superClass(ButtonEdit, this, parent);
 }
 
+window.InfinniUI.ButtonEdit = ButtonEdit;
+
 _.inherit(ButtonEdit, TextBox);
 
 ButtonEdit.prototype.createControl = function (parent) {

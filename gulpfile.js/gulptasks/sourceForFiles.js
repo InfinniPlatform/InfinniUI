@@ -52,6 +52,7 @@ var sourceForFiles = {
 		'app/controls/tablePanel/**/*.js',
 		'app/controls/tabPanel/**/*.js',
 		'app/controls/treeView/**/*.js',
+		'app/controls/stackPanel/**/*.js',
 		'app/controls/**/*.js',
 
 		'app/data/dataSource/_mixins/*.js',
@@ -75,6 +76,7 @@ var sourceForFiles = {
 		'app/elements/datePicker/**/*.js',
 		'app/elements/timePicker/**/*.js',
 		'app/elements/dataElement/**/*.js',
+		'app/elements/stackPanel/**/*.js',
 		'app/elements/**/*.js',
 
 		'app/actions/_base/**/*.js',
@@ -101,11 +103,7 @@ var sourceForFiles = {
 		'app/linkView/openMode/strategy/_mixins/*.js',
 		'app/linkView/**/*.js',
 
-		'app/**/*.js',
-
-		'extensions/**/*.js',
-
-		'!app/utils/pdf/**/*.js'
+		'app/**/*.js'
 	],
 	vendorStylesFiles: [
 		'bower_components/font-awesome/css/font-awesome.min.css',
@@ -119,7 +117,6 @@ var sourceForFiles = {
 		'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
 		'bower_components/JavaScript-MD5/js/md5.js',
 		'bower_components/blockUI/jquery.blockUI.js',
-		'app/utils/pdf/build/pdf.js',
 		'bower_components/toastr/toastr.js',
 		'bootstrap-framework/js/tooltip.js',
 		'bower_components/jquery.cookie/jquery.cookie.js',

@@ -20,16 +20,17 @@ module.exports = function () {
     });
 
     this.When(/^я нажму на кнопку "([^"]*)" в выпадающем списке кнопок "([^"]*)"$/, function (buttonText, popupListText) {
-        var selector = './/div[contains(@class, "pl-popup-button")]//button[contains(@class, "pl-popup-button__button") and node() = "' + popupListText + '"]/../button[contains(@class, "pl-popup-button__grip")]';
+        var selector = this.selectors.XPATH.Button.popupCaption(popupListText);
         var xpath = this.by.xpath(selector);
         var that = this;
 
         return this.currentView.findElement(xpath)
-            .then(function (btn) {
-                selector = '//div[contains(@class, "pl-popup-button__dropdown")]/ul[contains(@class, "pl-popup-button__items")]//a[contains(@class, "pl-button") and node() = "' + buttonText + '"]';
+            .then(function (popupList) {
+                return popupList.click();
+            })
+            .then(function () {
+                selector = that.selectors.XPATH.Button.popupItem(buttonText);
                 xpath = that.by.xpath(selector);
-
-                btn.click();
 
                 return that.driver.findElement(xpath);
             })

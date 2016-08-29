@@ -2,7 +2,7 @@ describe('NumericBox', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
-            var numericBox = new NumericBox(),
+            var numericBox = new InfinniUI.NumericBox(),
                 $el, $control;
 
             // When
@@ -20,11 +20,11 @@ describe('NumericBox', function () {
 
         it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
-            var numericBox = new NumericBox(),
+            var numericBox = new InfinniUI.NumericBox(),
                 $el, $control;
-            var numericBox1 = new NumericBox(),
+            var numericBox1 = new InfinniUI.NumericBox(),
                 $el1, $control1;
-            var numericBox2 = new NumericBox(),
+            var numericBox2 = new InfinniUI.NumericBox(),
                 $el2, $control2;
 
             // When
@@ -64,7 +64,7 @@ describe('NumericBox', function () {
 
         it('Events onLoad, onValueChanged', function () {
             // Given
-            var numericBox = new NumericBox(),
+            var numericBox = new InfinniUI.NumericBox(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
@@ -89,8 +89,8 @@ describe('NumericBox', function () {
 
         it('should be triggered events: OnValueChanged, OnLoaded', function () {
             //Given
-            var builder = new ApplicationBuilder();
-            var view = new View();
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
             var metadata = {
                 "NumericBox": {
                     OnValueChanged:{

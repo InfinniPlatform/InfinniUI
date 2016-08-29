@@ -5,6 +5,8 @@ function BaseAction(parentView){
     this.initDefaultValues();
 }
 
+window.InfinniUI.BaseAction = BaseAction;
+
 _.extend(BaseAction.prototype, {
     defaults: {
 

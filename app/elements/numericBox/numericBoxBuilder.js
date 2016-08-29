@@ -7,6 +7,8 @@ function NumericBoxBuilder() {
     _.superClass(NumericBoxBuilder, this);
 }
 
+window.InfinniUI.NumericBoxBuilder = NumericBoxBuilder;
+
 _.inherit(NumericBoxBuilder, TextEditorBaseBuilder);
 
 NumericBoxBuilder.prototype.createElement = function (params) {

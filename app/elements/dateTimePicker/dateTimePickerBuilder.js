@@ -7,6 +7,8 @@ function DateTimePickerBuilder() {
     _.superClass(DateTimePickerBuilder, this);
 }
 
+window.InfinniUI.DateTimePickerBuilder = DateTimePickerBuilder;
+
 _.inherit(DateTimePickerBuilder, TextEditorBaseBuilder);
 
 DateTimePickerBuilder.prototype.createElement = function (params) {

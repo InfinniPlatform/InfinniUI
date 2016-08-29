@@ -25,6 +25,12 @@ var CommonButtonView = ControlView.extend({
         ControlView.prototype.updateProperties.call(this);
 
         this.updateContent();
+        this.updateType();
+    },
+
+    updateType: function() {
+        var type = this.model.get('type');
+        this.getButtonElement().attr('type', type);
     },
 
     updateContent: function(){

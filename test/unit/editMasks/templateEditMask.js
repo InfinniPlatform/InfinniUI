@@ -3,7 +3,7 @@ describe('TemplateEditMask', function () {
 
         it('successful build mask', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
 
             //When
 
@@ -13,7 +13,7 @@ describe('TemplateEditMask', function () {
 
         it('successful build template', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+\\9(999)000-00-00';
 
             //When
@@ -42,7 +42,7 @@ describe('TemplateEditMask', function () {
 
         it('successful move at start', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7(999)000-00-00';
 
             //When
@@ -54,7 +54,7 @@ describe('TemplateEditMask', function () {
 
         it('successful to last', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7(999)000-00-00';
 
             //When
@@ -66,7 +66,7 @@ describe('TemplateEditMask', function () {
 
         it('successful to set char', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
 
             //When
@@ -93,7 +93,7 @@ describe('TemplateEditMask', function () {
 
         it('successful to set char without MaskSaveLiteral', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
             editMask.maskSaveLiteral = false;
 
@@ -121,7 +121,7 @@ describe('TemplateEditMask', function () {
 
         it('successful getRegExpForMask with maskSaveLiteral', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
             editMask.maskSaveLiteral = true;
 
@@ -138,7 +138,7 @@ describe('TemplateEditMask', function () {
 
         it('successful getRegExpForMask without maskSaveLiteral', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
             editMask.maskSaveLiteral = false;
 
@@ -153,7 +153,7 @@ describe('TemplateEditMask', function () {
 
         it('successful set value without maskSaveLiteral', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
             editMask.maskSaveLiteral = false;
 
@@ -167,7 +167,7 @@ describe('TemplateEditMask', function () {
 
         it('successful set value with maskSaveLiteral', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '+7 (999)000-00-00';
             editMask.maskSaveLiteral = true;
 
@@ -181,7 +181,7 @@ describe('TemplateEditMask', function () {
 
         it('successful format special chars', function () {
             //Given
-            var editMask = new TemplateEditMask();
+            var editMask = new InfinniUI.TemplateEditMask();
             editMask.mask = '00/00/0000 \\at 99:99 99% (99$)';
 
             //When
@@ -202,7 +202,7 @@ describe('TemplateEditMask', function () {
 
         beforeEach(function () {
             chars = '@@55ЦЦ+-'.split('');
-            editMask = new TemplateEditMask();
+            editMask = new InfinniUI.TemplateEditMask();
             editMask.maskSaveLiteral = false;
             position = 0;
         });

@@ -17,8 +17,16 @@ var editorBaseModelMixin = {
         return value;
     },
 
+    _applyDefaultValue: function (value) {
+        var defaults = _.result(this, 'defaults');
+        return typeof value === 'undefined' ? defaults['value'] : value;
+    },
+
     _setValue: function(value, options) {
         value = this.transformValue(value);
+
+        value = this._applyDefaultValue(value);
+
         var
             oldValue = this.get('value'),
             message = {

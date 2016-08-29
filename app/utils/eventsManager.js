@@ -1,8 +1,8 @@
 function EventsManager () {
     this.handlers = {};
-
 }
 
+window.InfinniUI.EventsManager = EventsManager;
 
 EventsManager.prototype.on = function (event, handler) {
     if (typeof this.handlers[event] === 'undefined') {

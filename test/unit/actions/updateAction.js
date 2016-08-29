@@ -1,9 +1,9 @@
 describe('UpdateAction', function () {
     it('successful build', function () {
         // Given
-        var view = new View();
-        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
-        var builder = new ApplicationBuilder();
+        var view = new InfinniUI.View();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'MainDS', view: view });
+        var builder = new InfinniUI.ApplicationBuilder();
 
         view.getDataSources().push(dataSource);
 
@@ -25,9 +25,9 @@ describe('UpdateAction', function () {
 
     it('should update DataSource', function () {
         // Given
-        var view = new View();
-        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
-        var builder = new UpdateActionBuilder();
+        var view = new InfinniUI.View();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'MainDS', view: view });
+        var builder = new InfinniUI.UpdateActionBuilder();
 
         window.dsWasUpdated = false;
 
@@ -55,9 +55,9 @@ describe('UpdateAction', function () {
 
     it('should call onExecuted', function () {
         // Given
-        var view = new View();
-        var dataSource = new ObjectDataSource({ name: 'MainDS', view: view });
-        var builder = new UpdateActionBuilder();
+        var view = new InfinniUI.View();
+        var dataSource = new InfinniUI.ObjectDataSource({ name: 'MainDS', view: view });
+        var builder = new InfinniUI.UpdateActionBuilder();
 
         view.getDataSources().push(dataSource);
 

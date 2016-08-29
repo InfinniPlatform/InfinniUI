@@ -24,3 +24,5 @@ function DateTimeFormatBuilder () {
     }
 
 }
+
+window.InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;

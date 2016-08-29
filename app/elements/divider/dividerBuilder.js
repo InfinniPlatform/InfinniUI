@@ -7,6 +7,8 @@ function DividerBuilder() {
 	_.superClass(DividerBuilder, this);
 }
 
+window.InfinniUI.DividerBuilder = DividerBuilder;
+
 _.inherit(DividerBuilder, ElementBuilder);
 
 DividerBuilder.prototype.createElement = function (params) {

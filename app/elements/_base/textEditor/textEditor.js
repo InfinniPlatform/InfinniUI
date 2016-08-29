@@ -4,9 +4,7 @@
 
 var TextEditor = function () {
     var model = new TextEditorModel();
-
-
-
+    
     model.on('invalid', function (model, error) {
         console.log('error', error);
     });
@@ -16,6 +14,8 @@ var TextEditor = function () {
     this._model = model;
 
 };
+
+window.InfinniUI.TextEditor = TextEditor;
 
 TextEditor.prototype.setDisplayFormat = function (displayFormat) {
     this._model.set('displayFormat', displayFormat);

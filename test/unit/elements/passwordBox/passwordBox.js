@@ -1,5 +1,5 @@
 describe('PasswordBox', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('PasswordBox', {});
@@ -54,7 +54,7 @@ describe('PasswordBox', function () {
 
         it('event OnValueChanged', function () {
             // Given
-            var element = new PasswordBox(),
+            var element = new InfinniUI.PasswordBox(),
                 onValueChangedFlag = 0;
 
             element.render();
@@ -75,7 +75,7 @@ describe('PasswordBox', function () {
 
         it('event OnGotFocus/OnLostFocus', function () {
             // Given
-            var element = new PasswordBox(),
+            var element = new InfinniUI.PasswordBox(),
                 onFocusedFlag = 0;
 
             element.render();

@@ -1,7 +1,8 @@
 var ListEditorBaseModel = ContainerModel.extend( _.extend({
 
     defaults: _.defaults({
-        multiSelect: false
+        multiSelect: false,
+        disabledItemCondition: null
     }, ContainerModel.prototype.defaults),
 
     initialize: function () {

@@ -2,6 +2,8 @@ function RadioGroupBuilder() {
     _.superClass(RadioGroupBuilder, this);
 }
 
+window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
+
 _.inherit(RadioGroupBuilder, ListBoxBuilder);
 
 _.extend(RadioGroupBuilder.prototype, {

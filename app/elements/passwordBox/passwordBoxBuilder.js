@@ -8,6 +8,8 @@ function PasswordBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
+
 _.inherit(PasswordBoxBuilder, ElementBuilder);
 
 _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {

@@ -3,6 +3,9 @@ function DateTimeEditMask() {
     this.format = null;
 }
 
+window.InfinniUI.DateTimeEditMask = DateTimeEditMask;
+
+
 _.extend(DateTimeEditMask.prototype, editMaskMixin);
 
 _.extend(DateTimeEditMask.prototype, {
@@ -646,5 +649,3 @@ _.extend(DateTimeEditMask.prototype, {
     }
 
 });
-
-

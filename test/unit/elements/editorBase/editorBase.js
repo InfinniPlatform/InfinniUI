@@ -3,7 +3,7 @@ describe('EditorBase', function () {
 
         it('Base functional', function () {
             // Given
-            var textBox = new TextBox();
+            var textBox = new InfinniUI.TextBox();
 
             assert.isNull(textBox.getValue(), 'default value is null');
             assert.isNull(textBox.getHintText(), 'default hint text is null');
@@ -27,7 +27,7 @@ describe('EditorBase', function () {
 
         it('Base events functional', function () {
             // Given
-            var textBox = new TextBox(),
+            var textBox = new InfinniUI.TextBox(),
                 handling = 0;
 
             textBox.onValueChanging(onValueChangingHandler);
@@ -56,7 +56,7 @@ describe('EditorBase', function () {
 
         it('cancelling changing event', function () {
             // Given
-            var textBox = new TextBox(),
+            var textBox = new InfinniUI.TextBox(),
                 handling = 0;
 
             textBox.onValueChanging(onValueChangingHandler1);

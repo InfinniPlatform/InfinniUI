@@ -3,7 +3,7 @@ describe('PasswordBox', function () {
     var element;
 
     beforeEach(function () {
-        element = new PasswordBox();
+        element = new InfinniUI.PasswordBox();
     });
 
     describe('Render', function () {

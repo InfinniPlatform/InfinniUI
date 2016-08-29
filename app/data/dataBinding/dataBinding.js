@@ -219,3 +219,5 @@ var DataBinding = Backbone.Model.extend({
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;
     }
 });
+
+window.InfinniUI.DataBinding = DataBinding;

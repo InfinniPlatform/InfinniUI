@@ -7,6 +7,8 @@ function Container(parent, viewMode) {
     _.superClass(Container, this, parent, viewMode);
 }
 
+window.InfinniUI.Container = Container;
+
 _.inherit(Container, Element);
 
 Container.prototype.getItemTemplate = function () {

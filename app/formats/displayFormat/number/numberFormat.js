@@ -8,6 +8,9 @@ function NumberFormat(format){
     this.setFormat(format);
 }
 
+window.InfinniUI.NumberFormat = NumberFormat;
+
+
 _.extend(NumberFormat.prototype, {
 
     /**

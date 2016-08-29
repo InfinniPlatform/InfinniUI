@@ -2,6 +2,8 @@ function ListBoxBuilder() {
     _.superClass(ListBoxBuilder, this);
 }
 
+window.InfinniUI.ListBoxBuilder = ListBoxBuilder;
+
 _.inherit(ListBoxBuilder, ListEditorBaseBuilder);
 
 _.extend(ListBoxBuilder.prototype, /** @lends ListBoxBuilder.prototype */{

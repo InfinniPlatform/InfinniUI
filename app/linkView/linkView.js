@@ -7,6 +7,9 @@ function LinkView(parent) {
     this.dialogWidth;
 }
 
+window.InfinniUI.LinkView = LinkView;
+
+
 _.extend(LinkView.prototype, {
 
     setOpenMode: function (mode) {

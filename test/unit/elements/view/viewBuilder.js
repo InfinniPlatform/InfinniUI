@@ -51,7 +51,7 @@ describe('ViewBuilder', function () {
 
     it('should build Container and Element metadata', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = {
             Name: 'my_view',
             Items: [
@@ -70,16 +70,16 @@ describe('ViewBuilder', function () {
 
         // Then
         assert.equal(view.getName(), 'my_view');
-        assert.instanceOf(view.getItems(), Collection);
+        assert.instanceOf(view.getItems(), InfinniUI.Collection);
     });
 
     it('should build Scripts', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
 
         // Then
         assert.equal(view.getScripts().length, 2);
@@ -92,41 +92,41 @@ describe('ViewBuilder', function () {
 
     it('should build Parameters', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
-        var param = new Parameter({name: 'param1'});
+        var param = new InfinniUI.Parameter({name: 'param1'});
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, params: {param1: param}});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, params: {param1: param}});
 
         // Then
         assert.equal(view.getParameters().length, 1);
-        assert.instanceOf(view.getParameters().pop(), Parameter);
+        assert.instanceOf(view.getParameters().pop(), InfinniUI.Parameter);
     });
 
     it('should build DataSources', function () {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-        window.InfinniUI.providerRegister.register('ObjectDataSource', ObjectDataProvider);
+        window.InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
         var dataSources = view.getDataSources();
 
         // Then
         assert.equal(dataSources.length, 2);
-        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'documentDataSource1'; }), DocumentDataSource, 'wrong build for DocumentDataSource');
-        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'objectDataSource1'; }), ObjectDataSource, 'wrong build for ObjectDataSource');
+        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'documentDataSource1'; }), InfinniUI.DocumentDataSource, 'wrong build for DocumentDataSource');
+        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'objectDataSource1'; }), InfinniUI.ObjectDataSource, 'wrong build for ObjectDataSource');
     });
 
     it('should sort DataSources by priority', function (done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
 
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = {
             DataSources: [
                 {
@@ -172,7 +172,7 @@ describe('ViewBuilder', function () {
         };
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
 
         var dataSources = view.getDataSources()._items.map(function(obj){return obj.__value;}),
             ds4 = dataSources.find(function(item){ return item.name == 'ds4'; }),
@@ -198,7 +198,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnOpening', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = _.extend({}, viewMetadata, {
             Scripts: [
                 {
@@ -212,7 +212,7 @@ describe('ViewBuilder', function () {
         window.EventOnOpeningWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
         view.open();
 
         // Then
@@ -224,7 +224,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnOpened', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = _.extend({}, viewMetadata, {
             Scripts: [
                 {
@@ -238,7 +238,7 @@ describe('ViewBuilder', function () {
         window.EventOnOpenedWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
         view.open();
 
         // Then
@@ -250,7 +250,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnClosing', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = _.extend({}, viewMetadata, {
             Scripts: [
                 {
@@ -264,7 +264,7 @@ describe('ViewBuilder', function () {
         window.EventOnClosingWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
         view.close();
 
         // Then
@@ -273,7 +273,7 @@ describe('ViewBuilder', function () {
 
     it('should build OnClosed', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = _.extend({}, viewMetadata, {
             Scripts: [
                 {
@@ -287,7 +287,7 @@ describe('ViewBuilder', function () {
         window.EventOnClosedWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
         view.close();
 
         // Then
@@ -296,8 +296,8 @@ describe('ViewBuilder', function () {
 
     it('should build CloseButtonVisibility', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
-        var builder = new ApplicationBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var metadata = _.extend({}, viewMetadata, {
             CloseButtonVisibility: false
         });
@@ -311,7 +311,7 @@ describe('ViewBuilder', function () {
 
     it('should build HeaderTemplate', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = _.extend({}, viewMetadata, {
             HeaderTemplate: {
                 Icon: {
@@ -320,19 +320,19 @@ describe('ViewBuilder', function () {
         });
 
         // When
-        var view = viewBuilder.build(null, {builder: new ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
 
         // Then
         var headerTemplate = view.getHeaderTemplate();
         var header = headerTemplate();
 
-        assert.instanceOf(header, Icon);
+        assert.instanceOf(header, InfinniUI.Icon);
     });
 
     it('should build default value', function () {
         // Given
-        var viewBuilder = new ViewBuilder();
-        var builder = new ApplicationBuilder();
+        var viewBuilder = new InfinniUI.ViewBuilder();
+        var builder = new InfinniUI.ApplicationBuilder();
         var metadata = viewMetadata;
 
         // When
@@ -343,7 +343,7 @@ describe('ViewBuilder', function () {
         var header = headerTemplate();
 
         // Header
-        assert.instanceOf(header, Label);
+        assert.instanceOf(header, InfinniUI.Label);
         assert.equal(header.getValue(), 'TestView');
 
         // CloseButtonVisibility

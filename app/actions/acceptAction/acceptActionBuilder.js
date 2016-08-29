@@ -13,3 +13,5 @@ _.extend(AcceptActionBuilder.prototype,
         }
     }
 );
+
+window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;

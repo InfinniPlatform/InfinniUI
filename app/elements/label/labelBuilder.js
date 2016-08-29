@@ -10,6 +10,8 @@ function LabelBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
+window.InfinniUI.LabelBuilder = LabelBuilder;
+
 _.inherit(LabelBuilder, ElementBuilder);
 _.extend(LabelBuilder.prototype, {
     applyMetadata: function(params){

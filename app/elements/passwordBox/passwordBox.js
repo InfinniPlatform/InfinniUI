@@ -10,6 +10,8 @@ function PasswordBox(parent) {
     this.initialize_editorBase();
 }
 
+window.InfinniUI.PasswordBox = PasswordBox;
+
 _.inherit(PasswordBox, Element);
 
 _.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {

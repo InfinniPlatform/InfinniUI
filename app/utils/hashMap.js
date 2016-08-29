@@ -7,6 +7,8 @@ function HashMap() {
     this._values = [];
 }
 
+window.InfinniUI.HashMap = HashMap;
+
 Object.defineProperties(HashMap.prototype, /** @lends HashMap.prototype **/{
     length: {
         get: function () {
@@ -34,6 +36,15 @@ HashMap.prototype.add = function (key, value) {
         this._values.push(value);
     } else {
         this._values[i] = value;
+    }
+};
+
+HashMap.prototype.remove = function (key) {
+    var i = this._getIndexOfKey(key);
+
+    if (i !== -1) {
+        this._keys.splice(i, 1);
+        this._values.splice(i, 1);
     }
 };
 

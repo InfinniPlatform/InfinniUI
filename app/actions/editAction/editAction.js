@@ -79,3 +79,5 @@ _.extend(EditAction.prototype, {
         return !path.includes('.');
     }
 });
+
+window.InfinniUI.EditAction = EditAction;

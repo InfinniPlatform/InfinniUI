@@ -24,3 +24,5 @@ function DateTimeEditMaskBuilder () {
         return editMask;
     }
 }
+
+window.InfinniUI.DateTimeEditMaskBuilder = DateTimeEditMaskBuilder;

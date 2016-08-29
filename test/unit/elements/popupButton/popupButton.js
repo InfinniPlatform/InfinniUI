@@ -1,5 +1,5 @@
 describe('PopupButtonElement', function () {
-    var builder = new ApplicationBuilder();
+    var builder = new InfinniUI.ApplicationBuilder();
 
     describe('API', function () {
         var element = builder.buildType('PopupButton', {
@@ -53,7 +53,7 @@ describe('PopupButtonElement', function () {
 
         it('should execute action on click', function (done) {
             // Given
-            var button = new PopupButton(),
+            var button = new InfinniUI.PopupButton(),
                 onLastActionExecute = 0,
                 onNewActionExecute = 0;
 
@@ -80,12 +80,12 @@ describe('PopupButtonElement', function () {
             button.click();
 
             // Then
-
+            $('body').find('.pl-popup-button__dropdown').detach();
         });
 
         it('event onClick', function () {
             // Given
-            var button = new PopupButton(),
+            var button = new InfinniUI.PopupButton(),
                 onClickFlag = 0;
 
             button.onClick(function(){
@@ -100,11 +100,12 @@ describe('PopupButtonElement', function () {
 
             // Then
             assert.equal(onClickFlag, 1);
+            $('body').find('.pl-popup-button__dropdown').detach();
         });
 
         it('should save click handler after set new action', function () {
             // Given
-            var button = new PopupButton(),
+            var button = new InfinniUI.PopupButton(),
                 onClickFlag = 0;
 
             button.onClick(function(){
@@ -117,7 +118,7 @@ describe('PopupButtonElement', function () {
             button.render();
             button.click();
 
-            var action = new BaseAction();
+            var action = new InfinniUI.BaseAction();
             var execActionFlag=0;
             action.execute = function(){
                 execActionFlag++;
@@ -129,12 +130,13 @@ describe('PopupButtonElement', function () {
             // Then
             assert.equal(execActionFlag, 1);
             assert.equal(onClickFlag, 2);
+            $('body').find('.pl-popup-button__dropdown').detach();
 
         });
 
         it('should add items', function () {
             // Given
-            //var button = new PopupButton();
+            //var button = new InfinniUI.PopupButton();
 
             // When
             var items = button.getItems();
@@ -147,7 +149,7 @@ describe('PopupButtonElement', function () {
 
         it('should remove item', function () {
             // Given
-            var button = new PopupButton();
+            var button = new InfinniUI.PopupButton();
             var b1 = builder.buildType('Button', {});
             var b2 = builder.buildType('Button', {});
             var items = button.getItems();

@@ -69,7 +69,13 @@ module.exports = {
     ignoreNumbers: function (text, textWithIgnore) {
         var numbers = text.match(/\d+/g);
 
-        return this.format(textWithIgnore, numbers);
+        return this.format(textWithIgnore, numbers || []);
+    },
+
+    ignoreDates: function (text, textWithIgnore) {
+        var dates = text.match(/\d{2}.\d{2}.\d{4}/g);
+
+        return this.format(textWithIgnore, dates || []);
     },
 
     format: function (text, args) {

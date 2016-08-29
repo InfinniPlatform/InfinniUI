@@ -28,7 +28,7 @@ var myHooks = function () {
 
   this.registerHandler('BeforeStep', function (step, callback) {
     var attempt = 0;
-    var totalAttempts = 10;
+    var totalAttempts = 60;
 
     driver.manage().timeouts().implicitlyWait(config.timeouts.wait);
 

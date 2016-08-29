@@ -15,5 +15,22 @@ _.extend(PdfViewerControl.prototype, {
 
     onValueChanged: function(handler){
         this.controlModel.on('change:value', handler);
+    },
+
+    setWidth: function(width) {
+        this.controlModel.setWidth(width);
+    },
+
+    getWidth: function() {
+        return this.controlModel.getWidth();
+    },
+
+    setHeight: function(height) {
+        this.controlModel.setHeight(height);
+    },
+
+    getHeight: function() {
+        return this.controlModel.getHeight();
     }
+
 });

@@ -18,6 +18,8 @@ function DownloadExecutor(resultCallback, successCallback, failCallback) {
     this.failCallback = failCallback;
 }
 
+window.InfinniUI.DownloadExecutor = DownloadExecutor;
+
 DownloadExecutor.prototype.config = function (options) {
     _.extend(this.options, options);
 };

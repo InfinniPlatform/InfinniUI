@@ -7,6 +7,8 @@ function StackPanel(parent, viewMode) {
     _.superClass(StackPanel, this, parent, viewMode);
 }
 
+window.InfinniUI.StackPanel = StackPanel;
+
 _.inherit(StackPanel, Container);
 
 StackPanel.prototype.getOrientation = function () {

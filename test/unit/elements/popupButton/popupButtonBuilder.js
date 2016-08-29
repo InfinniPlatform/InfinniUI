@@ -40,8 +40,8 @@ describe('PopupButtonBuilder', function () {
             };
 
             // When
-            var builder = new PopupButtonBuilder();
-            var button = builder.build(null, {builder: new ApplicationBuilder(), metadata: metadata, parentView: new View()});
+            var builder = new InfinniUI.PopupButtonBuilder();
+            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
             // Then
             assert.isNotNull(button);
             assert.equal(button.getText(), 'Click me');

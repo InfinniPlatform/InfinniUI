@@ -2,6 +2,8 @@ function ButtonBuilder() {
     _.superClass(ButtonBuilder, this);
 }
 
+window.InfinniUI.ButtonBuilder = ButtonBuilder;
+
 _.inherit(ButtonBuilder, ElementBuilder);
 
 _.extend(ButtonBuilder.prototype, {
@@ -48,6 +50,10 @@ _.extend(ButtonBuilder.prototype, {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
         this.applyButtonMetadata(params);
+
+        if( params.metadata.Type ) {
+            params.element.setType(params.metadata.Type);
+        }
     }
 
 }, buttonBuilderMixin);

@@ -2,7 +2,7 @@ describe('ToggleButton', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
-            var toggleButton = new ToggleButton(),
+            var toggleButton = new InfinniUI.ToggleButton(),
                 $el;
 
             // When
@@ -19,7 +19,7 @@ describe('ToggleButton', function () {
 
         it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
             // Given
-            var toggleButton = new ToggleButton(),
+            var toggleButton = new InfinniUI.ToggleButton(),
                 $el;
 
             // When
@@ -44,7 +44,7 @@ describe('ToggleButton', function () {
 
         it('Events onLoad, onValueChanged', function () {
             // Given
-            var toggleButton = new ToggleButton(),
+            var toggleButton = new InfinniUI.ToggleButton(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
@@ -69,8 +69,8 @@ describe('ToggleButton', function () {
 
         it('should be true if scriptsHandlers call', function () {
             //Given
-            var toggleButton = new ToggleButtonBuilder();
-            var view = new View();
+            var toggleButton = new InfinniUI.ToggleButtonBuilder();
+            var view = new InfinniUI.View();
             var metadata = {
                 OnValueChanged:{
                     Name: 'OnValueChanged'

@@ -2,8 +2,10 @@
  *
  * @constructor
  */
-function ScriptBuilder() {
-}
+function ScriptBuilder() {}
+
+window.InfinniUI.ScriptBuilder = ScriptBuilder;
+
 
 ScriptBuilder.prototype.build = function (context, args) {
     var

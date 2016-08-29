@@ -7,8 +7,8 @@ var ButtonModel = ControlModel.extend({
     defaults: _.defaults({
         content: null,
         contentTemplate: null,
-        horizontalAlignment: 'Left'
-
+        horizontalAlignment: 'Left',
+        type: 'button'
     }, ControlModel.prototype.defaults),
 
     initialize: function () {

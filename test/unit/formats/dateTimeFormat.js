@@ -3,7 +3,7 @@ describe('DateTimeFormat', function () {
     describe('format', function () {
         it('successful build', function () {
             //Given
-            var builder = new DateTimeFormatBuilder();
+            var builder = new InfinniUI.DateTimeFormatBuilder();
             //When
             var format = builder.build(null, {metadata: {}});
             //Then
@@ -13,9 +13,9 @@ describe('DateTimeFormat', function () {
 
         it('should format year', function () {
             //Given
-            var formattingFull = new DateTimeFormat('yyyy');
-            var formattingShort = new DateTimeFormat('yy');
-            var formattingTooShort = new DateTimeFormat('%y');
+            var formattingFull = new InfinniUI.DateTimeFormat('yyyy');
+            var formattingShort = new InfinniUI.DateTimeFormat('yy');
+            var formattingTooShort = new InfinniUI.DateTimeFormat('%y');
 
             //When
             var date = new Date("21 May 1908 10:12");
@@ -28,11 +28,11 @@ describe('DateTimeFormat', function () {
 
         it('should format month', function () {
             //Given
-            var formattingFull = new DateTimeFormat('MMMM'),
-                formattingAbbr = new DateTimeFormat('MMM'),
-                formattingIndex = new DateTimeFormat('MM'),
-                formattingShortIndex = new DateTimeFormat('%M'),
-                enCulture = new Culture('en-US');
+            var formattingFull = new InfinniUI.DateTimeFormat('MMMM'),
+                formattingAbbr = new InfinniUI.DateTimeFormat('MMM'),
+                formattingIndex = new InfinniUI.DateTimeFormat('MM'),
+                formattingShortIndex = new InfinniUI.DateTimeFormat('%M'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var date = new Date("21 January 1908 10:12");
@@ -48,11 +48,11 @@ describe('DateTimeFormat', function () {
 
         it('should format day', function () {
             //Given
-            var formattingFull = new DateTimeFormat('dddd'),
-                formattingAbbr = new DateTimeFormat('ddd'),
-                formattingIndex = new DateTimeFormat('dd'),
-                formattingShortIndex = new DateTimeFormat('%d'),
-                enCulture = new Culture('en-US');
+            var formattingFull = new InfinniUI.DateTimeFormat('dddd'),
+                formattingAbbr = new InfinniUI.DateTimeFormat('ddd'),
+                formattingIndex = new InfinniUI.DateTimeFormat('dd'),
+                formattingShortIndex = new InfinniUI.DateTimeFormat('%d'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var date = new Date("2 January 1908 10:12");
@@ -68,10 +68,10 @@ describe('DateTimeFormat', function () {
 
         it('should format day', function () {
             //Given
-            var formattingFull = new DateTimeFormat('HH'),
-                formattingAbbr = new DateTimeFormat('%H'),
-                formattingIndex = new DateTimeFormat('hh'),
-                formattingShortIndex = new DateTimeFormat('%h');
+            var formattingFull = new InfinniUI.DateTimeFormat('HH'),
+                formattingAbbr = new InfinniUI.DateTimeFormat('%H'),
+                formattingIndex = new InfinniUI.DateTimeFormat('hh'),
+                formattingShortIndex = new InfinniUI.DateTimeFormat('%h');
 
             //When
             var date = new Date("2 January 1908 13:12");
@@ -85,8 +85,8 @@ describe('DateTimeFormat', function () {
 
         it('should format minutes', function () {
             //Given
-            var formatting = new DateTimeFormat('mm'),
-                formattingShort = new DateTimeFormat('%m');
+            var formatting = new InfinniUI.DateTimeFormat('mm'),
+                formattingShort = new InfinniUI.DateTimeFormat('%m');
 
             //When
             var date = new Date("2 January 1908 13:02");
@@ -98,8 +98,8 @@ describe('DateTimeFormat', function () {
 
         it('should format seconds', function () {
             //Given
-            var formatting = new DateTimeFormat('ss'),
-                formattingShort = new DateTimeFormat('%s');
+            var formatting = new InfinniUI.DateTimeFormat('ss'),
+                formattingShort = new InfinniUI.DateTimeFormat('%s');
 
             //When
             var date = new Date("2 January 1908 13:02:02");
@@ -111,9 +111,9 @@ describe('DateTimeFormat', function () {
 
         it('should format pm/am designator', function () {
             //Given
-            var formatting = new DateTimeFormat('tt'),
-                formattingShort = new DateTimeFormat('%t'),
-                enCulture = new Culture('en-US');
+            var formatting = new InfinniUI.DateTimeFormat('tt'),
+                formattingShort = new InfinniUI.DateTimeFormat('%t'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var datePM = new Date("2 January 1908 13:02");
@@ -128,7 +128,7 @@ describe('DateTimeFormat', function () {
 
         it('should format pm/am designator', function () {
             //Given
-            var formatting = new DateTimeFormat('zzz');
+            var formatting = new InfinniUI.DateTimeFormat('zzz');
 
             //When
             var date = new Date("2 January 1908 13:02:00");
@@ -139,9 +139,9 @@ describe('DateTimeFormat', function () {
 
         it('should format date and time separators', function () {
             //Given
-            var formattingTime = new DateTimeFormat('12:23'),
-                formattingDate = new DateTimeFormat('12/23'),
-                enCulture = new Culture('en-US');
+            var formattingTime = new InfinniUI.DateTimeFormat('12:23'),
+                formattingDate = new InfinniUI.DateTimeFormat('12/23'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var date = new Date("2 January 1908 13:02:00");
@@ -154,9 +154,9 @@ describe('DateTimeFormat', function () {
 
         it('escaping strings', function () {
             //Given
-            var formatting1 = new DateTimeFormat('"HH"'),
-                formatting2 = new DateTimeFormat("'HH'"),
-                formatting3 = new DateTimeFormat('HH "HH"');
+            var formatting1 = new InfinniUI.DateTimeFormat('"HH"'),
+                formatting2 = new InfinniUI.DateTimeFormat("'HH'"),
+                formatting3 = new InfinniUI.DateTimeFormat('HH "HH"');
 
             //When
             var date = new Date("2 January 1908 13:12");
@@ -170,8 +170,8 @@ describe('DateTimeFormat', function () {
 
         it('format by pattern f', function () {
             //Given
-            var formatting = new DateTimeFormat('f'),
-                enCulture = new Culture('en-US');
+            var formatting = new InfinniUI.DateTimeFormat('f'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var date = new Date("4 January 1908 13:12");
@@ -183,8 +183,8 @@ describe('DateTimeFormat', function () {
 
         it('format by pattern g', function () {
             //Given
-            var formatting = new DateTimeFormat('g'),
-                enCulture = new Culture('en-US');
+            var formatting = new InfinniUI.DateTimeFormat('g'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
             var date = new Date("4 January 1908 13:12");
@@ -196,7 +196,7 @@ describe('DateTimeFormat', function () {
 
         it('format by pattern s', function () {
             //Given
-            var formatting = new DateTimeFormat('s');
+            var formatting = new InfinniUI.DateTimeFormat('s');
 
             //When
             var date = new Date("4 January 1908 13:12:01");
@@ -207,7 +207,7 @@ describe('DateTimeFormat', function () {
 
         it('format by pattern T', function () {
             //Given
-            var formatting = new DateTimeFormat('T');
+            var formatting = new InfinniUI.DateTimeFormat('T');
 
             //When
             var date = new Date("4 January 1908 13:12:01");
@@ -218,7 +218,7 @@ describe('DateTimeFormat', function () {
 
         it('format by pattern H', function () {
             //Given
-            var formatting = new DateTimeFormat('H');
+            var formatting = new InfinniUI.DateTimeFormat('H');
 
             //When
             var date = new Date("4 January 1908 13:12:01");
@@ -229,7 +229,7 @@ describe('DateTimeFormat', function () {
 
         it('format collection', function () {
             //Given
-            var formatting = new DateTimeFormat('s');
+            var formatting = new InfinniUI.DateTimeFormat('s');
 
             //When
             var date = [new Date("4 January 1908 13:12:1"), new Date("5 January 1908 13:12:1"), new Date("6 January 1908 13:12:1")];
@@ -240,7 +240,7 @@ describe('DateTimeFormat', function () {
 
         it('format collection t', function () {
             //Given
-            var formatting = new DateTimeFormat('t');
+            var formatting = new InfinniUI.DateTimeFormat('t');
 
             //When
             var date = [new Date("4 January 1908 13:12:1"), new Date("5 January 1908 13:02:1"), new Date("6 January 1908 13:12:1")];

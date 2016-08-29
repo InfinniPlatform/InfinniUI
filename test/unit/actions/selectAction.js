@@ -1,8 +1,8 @@
 describe('SelectAction', function () {
     it('successful build', function () {
         // Given
-        var view = new View();
-        var builder = new ApplicationBuilder();
+        var view = new InfinniUI.View();
+        var builder = new InfinniUI.ApplicationBuilder();
 
         var metadata = {
             SelectAction: {

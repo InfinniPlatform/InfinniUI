@@ -6,6 +6,8 @@ var RequestExecutorDataStrategy = function (type) {
     }
 };
 
+window.InfinniUI.RequestExecutorDataStrategy = RequestExecutorDataStrategy;
+
 RequestExecutorDataStrategy.prototype.request = function (requestData, successCallbackHandler, failCallbackHandler) {
     return this.strategy.apply(this, Array.prototype.slice.call(arguments));
 };

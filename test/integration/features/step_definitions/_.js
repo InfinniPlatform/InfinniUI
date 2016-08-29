@@ -22,6 +22,8 @@ module.exports = function () {
             return new Promise(function (resolve, reject) {
                 msgs.forEach(function (msg, i) {
                     msg.getText().then(function (text) {
+                        messages[i] = that.helpers.ignoreDates(text.trim(), messages[i]);
+
                         var linesActual = text.split('\n');
                         var linesExpected = messages[i].split('\\n');
 
