@@ -7,13 +7,14 @@ var DateTimePickerModel = TextEditorBaseModel.extend(/** @lends DateTimePickerMo
         {},
         TextEditorBaseModel.prototype.defaults,
         {
-            mode: "Date",
-            today: new Date()
+            mode: "Date"
+            //today: new Date()
         }
     ),
 
     initialize: function () {
         TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        this.set('today', new Date());
         this.set('timeZone', InfinniUI.DateUtils.getDefaultTimeZone());
     },
 
