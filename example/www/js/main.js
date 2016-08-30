@@ -17,7 +17,7 @@ moment.locale('ru');
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
             setTimeout(function () {
-                InfinniUI.LayoutManager.init();
+                InfinniUI.layoutManager.init();
             }, 500 + i * 300);
         }
 
@@ -38,7 +38,7 @@ moment.locale('ru');
         });
 
         function onWindowResize() {
-            layoutManager.init();
+            InfinniUI.layoutManager.init();
         }
 
     })();
