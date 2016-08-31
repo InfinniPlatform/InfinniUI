@@ -44,6 +44,16 @@ var LinkElementView = CommonButtonView.extend({
             $link = this.getButtonElement();
 
         $link.attr('target', '_' + newTarget);
+    },
+
+    onClickHandler: function(e) {
+        var href = this.model.get('href');
+        if( href.indexOf('http://') === -1 ) {
+            InfinniUI.AppRouter.navigate(href, {trigger: true});
+            if( e.which !== 2 ) {
+                e.preventDefault();
+            }
+        }
     }
 
 });
