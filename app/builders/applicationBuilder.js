@@ -82,6 +82,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('UpdateAction', new UpdateActionBuilder());
         builder.register('ServerAction', new ServerActionBuilder());
 
+        builder.register('RouteToAction', new RouteToActionBuilder());
+
 
         builder.register('BooleanFormat', new BooleanFormatBuilder());
         builder.register('DateTimeFormat', new DateTimeFormatBuilder());

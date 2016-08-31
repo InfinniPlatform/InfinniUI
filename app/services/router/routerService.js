@@ -6,7 +6,8 @@ var routerService = (function(myRoutes) {
 	var parseRouteForBackbone = function(myRoutes) {
 		var routerObj = {};
 		routerObj.routes = {};
-		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 )  {
+		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 ) {
+			myRoutes[i].originalPath = myRoutes[i].Path;
 			if( myRoutes[i].Path.search('<%') !== -1 ) {
 				var tmpArr,
 						tmpParam,
@@ -18,23 +19,28 @@ var routerService = (function(myRoutes) {
 				}
 			}
 			routerObj.routes[myRoutes[i].Path.slice(1)] = myRoutes[i].Name; // remove first slash from myRoutes[i].Path for backbone
-			routerObj[myRoutes[i].Name] = myFunc(myRoutes[i].Path, myRoutes[i].Action);
+			routerObj[myRoutes[i].Name] = myFunc(myRoutes[i].Name, myRoutes[i].Action);
 		}
 		return routerObj;
 	};
 
-	var getLinkByName = function(name) {
+	var getLinkByName = function(name, originalPath) {
+		var original = originalPath || 'yes';
 		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 )  {
 			if( myRoutes[i].Name === name ) {
-				return myRoutes[i].Path;
+				if( original === 'yes' ) {
+					return myRoutes[i].originalPath;
+				} else {
+					return myRoutes[i].Path;
+				}
 			}
 		}
 	};
 
-	var myFunc = function(path, callback) {
+	var myFunc = function(name, callback) {
 		return function() {
 			var params = Array.prototype.slice.call(arguments);
-			new ScriptExecutor({getContext: function() {return 'No context';}}).executeScript(callback, { path: path, params: params });
+			new ScriptExecutor({getContext: function() {return 'No context';}}).executeScript(callback, { name: name, params: params });
 		};
 	};
 
@@ -54,8 +60,4 @@ var routerService = (function(myRoutes) {
 	};
 })(InfinniUI.config.Routes);
 
-window.InfinniUI.routerService = routerService;
-
-setTimeout(function () {
-	routerService.startRouter();
-}, 0);
+window.InfinniUI.RouterService = routerService;

@@ -153,11 +153,15 @@
 									"Name": "testRoute3",
 									"Params": [
 										{
-											"Name": "Value",
+											"Name": "userId",
 											"Value": {
-												"Source": "ds1",
-												"Property": "#.Value"
+												"Source": "ds2",
+												"Property": "$.userIdParam"
 											}
+										},
+										{
+											"Name": "pageNumber",
+											"Value": "theBiggestPageNumber"
 										}
 									]
 								}
@@ -172,11 +176,47 @@
 									"Name": "testRoute4",
 									"Query": [
 										{
-											"Name": "Value",
+											"Name": "queryId",
 											"Value": {
-												"Source": "ds1",
-												"Property": "#.Value"
+												"Source": "ds2",
+												"Property": "$.queryId1"
 											}
+										},
+										{
+											"Name": "userAge",
+											"Value": "btnTeenager"
+										}
+									]
+								}
+							}
+						}
+					},
+					{
+						"Button": {
+							"Text": "testRouteBtn4",
+							"Action": {
+								"RouteToAction": {
+									"Name": "testRoute7",
+									"Params": [
+										{
+											"Name": "pageNumber",
+											"Value": {
+												"Source": "ds2",
+												"Property": "$.pageNumber"
+											}
+										}
+									],
+									"Query": [
+										{
+											"Name": "queryId",
+											"Value": {
+												"Source": "ds2",
+												"Property": "$.queryId2"
+											}
+										},
+										{
+											"Name": "userAge",
+											"Value": "btnTeenager"
 										}
 									]
 								}

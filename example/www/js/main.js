@@ -17,7 +17,7 @@ moment.locale('ru');
         var $pageContent = $('body');
         for (var i = 3; i >= 0; i--) {
             setTimeout(function () {
-                InfinniUI.layoutManager.init();
+                InfinniUI.LayoutManager.init();
             }, 500 + i * 300);
         }
 
@@ -38,7 +38,7 @@ moment.locale('ru');
         });
 
         function onWindowResize() {
-            InfinniUI.layoutManager.init();
+            InfinniUI.LayoutManager.init();
         }
 
     })();
@@ -64,7 +64,11 @@ moment.locale('ru');
     openHomePage()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
-            action.execute();
+            action.execute(function() {
+                if( window.InfinniUI.RouterService ) {
+                    window.InfinniUI.RouterService.startRouter();
+                }
+            });
         });
 
     function openHomePage() {
