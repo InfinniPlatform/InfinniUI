@@ -67,6 +67,9 @@ var ViewPanelView = ControlView.extend({
         this.trigger('render');
 
         this.postrenderingActions(false);
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     }
 });

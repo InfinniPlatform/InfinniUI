@@ -27,6 +27,9 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
         this.updateProperties();
         this.trigger('render');
         this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

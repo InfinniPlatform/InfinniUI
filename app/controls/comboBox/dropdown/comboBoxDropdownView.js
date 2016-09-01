@@ -52,6 +52,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.bindUIElements();
         this.updateProperties();
         this.renderItems();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this.$el;
     },
 

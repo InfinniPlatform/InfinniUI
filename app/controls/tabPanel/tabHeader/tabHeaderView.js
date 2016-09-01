@@ -34,6 +34,9 @@ var TabHeaderView = Backbone.View.extend({
         this.$el.html(this.template);
         this.bindUIElements();
         this.trigger('rendered');
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

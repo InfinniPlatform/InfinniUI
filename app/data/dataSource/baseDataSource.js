@@ -630,7 +630,9 @@ var BaseDataSource = Backbone.Model.extend({
                 onError: onError
             });
         }
-
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('updateItems', {dataSource: this});
+        //devblockstop
     },
 
 
