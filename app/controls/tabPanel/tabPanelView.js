@@ -38,6 +38,9 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         this.trigger('render');
         this.updateProperties();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

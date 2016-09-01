@@ -219,6 +219,9 @@ var DataGridView = ListEditorBaseView.extend({
         this.postrenderingActions();
         setTimeout(function() {
             that.updateProperties();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: that});
+            //devblockstop
         }, 0);
         return this;
     },

@@ -38,7 +38,9 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
                 $el.scrollTop(0);
             }, 0);
         })(this.$el);
-
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

@@ -261,7 +261,9 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
         this.postrenderingActions();
 
-        var that = this;
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
 
         return this;
     }
