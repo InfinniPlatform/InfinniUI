@@ -375,10 +375,10 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     onClickToHeaderCellHandler: function (e) {
-        var $th = $(e.currentTarget);
-        var column = $th.data('pl-column');
+        var $th = $(e.currentTarget),
+            column = $th.data('pl-column');
 
-        if( column.isSortable() ){
+        if( column && column.isSortable() ){
             if(column.getSortDirection() === null) {
                 this.resetSort();
                 this.setUpColumnSort(column, $th, 'asc');
