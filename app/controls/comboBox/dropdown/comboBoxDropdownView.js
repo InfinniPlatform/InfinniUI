@@ -292,7 +292,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         if (direction === 'bottom') {
             style.top = window.pageYOffset + rect.bottom;
         } else {
-            style.top = rect.top - this.$el.height();
+            style.top = window.pageYOffset + rect.top - this.$el.height();
         }
 
         this.$el.css(style);
