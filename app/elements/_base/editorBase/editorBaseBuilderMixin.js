@@ -44,15 +44,17 @@ var editorBaseBuilderMixin = {
         }
 
         if (metadata.Value !== undefined) {
-            if(InfinniUI.Metadata.isBindingMetadata(metadata.Value)){
+            if (InfinniUI.Metadata.isBindingMetadata(metadata.Value)) {
                 var buildParams = {
                     parentView: params.parentView,
                     basePathOfProperty: params.basePathOfProperty
                 };
 
                 var dataBinding = params.builder.buildBinding(metadata.Value, buildParams);
-                if (bindingOptions.converter) {
-                    dataBinding.setConverter(bindingOptions.converter);
+                var mergedConverter = mergeConverters(dataBinding.getConverter(), bindingOptions.converter);
+
+                if (mergedConverter) {
+                    dataBinding.setConverter(mergedConverter);
                 }
                 if (bindingOptions.mode) {
                     dataBinding.setMode(bindingOptions.mode);
@@ -61,9 +63,24 @@ var editorBaseBuilderMixin = {
 
                 this.initValidationResultText(element, dataBinding);
 
-            }else{
+            } else {
                 params.element.setValue(metadata.Value);
             }
+        }
+
+        function mergeConverters(topPriority, nonPriority) {
+            topPriority = topPriority || {};
+            nonPriority = nonPriority || {};
+
+            if(!topPriority.toElement && nonPriority.toElement) {
+                topPriority.toElement = nonPriority.toElement;
+            }
+
+            if(!topPriority.toSource && nonPriority.toSource) {
+                topPriority.toSource = nonPriority.toSource;
+            }
+
+            return !_.isEmpty(topPriority) ? topPriority : null;
         }
 
         return {
@@ -79,7 +96,7 @@ var editorBaseBuilderMixin = {
         var source = binding.getSource();
         var property = binding.getSourceProperty();
 
-        if(typeof source.onErrorValidator == 'function'){
+        if (typeof source.onErrorValidator == 'function') {
             source.onErrorValidator(function (context, args) {
                 var result = args.value,
                     text = '';
@@ -91,7 +108,7 @@ var editorBaseBuilderMixin = {
             });
         }
 
-        if(typeof source.onWarningValidator == 'function'){
+        if (typeof source.onWarningValidator == 'function') {
             source.onWarningValidator(function (context, args) {
                 var result = args.value,
                     text = '';
@@ -114,5 +131,7 @@ var editorBaseBuilderMixin = {
                 })
                 .join(' ');
         }
-    }
+    },
+
+
 };
