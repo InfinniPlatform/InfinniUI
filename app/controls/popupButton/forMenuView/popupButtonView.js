@@ -149,11 +149,7 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
     },
 
     onClickGripHandler: function(){
-        if(!this.$dropdown.hasClass('open')){
-            this.open();
-        }else{
-            this.close();
-        }
+        this.toggle();
     },
 
     updateGrouping: function(){},

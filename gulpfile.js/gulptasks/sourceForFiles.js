@@ -107,22 +107,22 @@ var sourceForFiles = {
 	],
 	vendorStylesFiles: [
 		'bower_components/font-awesome/css/font-awesome.min.css',
-		'bower_components/toastr/toastr.css'
+		'bower_components/toastr/toastr.min.css'
 	],
 	vendorJsFiles: [
-		'bower_components/jquery/dist/jquery.js',
-		'bower_components/underscore/underscore.js',
+		'bower_components/jquery/dist/jquery.min.js',
+		'bower_components/underscore/underscore-min.js',
 		'bower_components/backbone/backbone.js',
-		'bower_components/moment/moment.js',
+		'bower_components/moment/min/moment.min.js',
 		'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
-		'bower_components/JavaScript-MD5/js/md5.js',
+		'bower_components/JavaScript-MD5/js/md5.min.js',
 		'bower_components/blockUI/jquery.blockUI.js',
-		'bower_components/toastr/toastr.js',
+		'bower_components/toastr/toastr.min.js',
 		'bootstrap-framework/js/tooltip.js',
 		'bower_components/jquery.cookie/jquery.cookie.js',
-		'bower_components/hammerjs/hammer.js',
+		'bower_components/hammerjs/hammer.min.js',
 		'bootstrap-framework/js/*.js',
-		'bower_components/signalr/jquery.signalR.js'
+		'bower_components/signalr/jquery.signalR.min.js'
 	],
 	templateFiles: [
 		"app/**/*.tpl.html",
