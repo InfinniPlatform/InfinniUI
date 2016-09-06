@@ -89,6 +89,9 @@ var BaseListBoxView = ListEditorBaseView.extend({
         this.trigger('render');
 
         this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

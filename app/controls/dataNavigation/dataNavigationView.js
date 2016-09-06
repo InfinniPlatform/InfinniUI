@@ -37,6 +37,10 @@ var DataNavigationView = ControlView.extend({
         this.trigger('render');
         this.renderPageSizes();
         this.postrenderingActions();
+
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

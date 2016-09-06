@@ -74,7 +74,9 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
         this.trigger('render');
 
         this.postrenderingActions();
-
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 
@@ -147,11 +149,7 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend({
     },
 
     onClickGripHandler: function(){
-        if(!this.$dropdown.hasClass('open')){
-            this.open();
-        }else{
-            this.close();
-        }
+        this.toggle();
     },
 
     updateGrouping: function(){},

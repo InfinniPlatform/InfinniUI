@@ -21,15 +21,21 @@ gulp.task('build', gulp.series(
 	'buildLess',
 	'vendorJs',
 	gulp.series('concatTemplates', 'unitTest', 'vendorStyles'),
-	gulp.series('fonts', 'jsonEditorPart1', 'jsonEditorPart2', 'jsonEditorPart3')
+	gulp.parallel('fonts', 'jsonEditorPart1', 'jsonEditorPart2', 'jsonEditorPart3')
 ));
 
-gulp.task('cleanAndBuild', gulp.series('cleanFolder', 'build'));
+gulp.task('build-dev', gulp.series(
+	'concatJs',
+	'buildLess',
+	'vendorJs',
+	gulp.series('concatTemplates', 'unitTest', 'vendorStyles'),
+	gulp.parallel('fonts', 'jsonEditorPart1', 'jsonEditorPart2', 'jsonEditorPart3')
+));
 
 gulp.task('fullWatch', function() {
 	watch(sourceForTasks.buildLess.srcForWatch, gulp.series('buildLess'));
 	watch(sourceForTasks.vendorStyles.src, gulp.series('vendorStyles'));
-	watch(sourceForTasks.concatJs.src, gulp.series('concatJs', 'concatJsProd'));
+	watch(sourceForTasks.concatJs.src, gulp.series('concatJs'));
 	watch(sourceForTasks.vendorJs.src, gulp.series('vendorJs'));
 	watch(sourceForTasks.unitTest.src, gulp.series('unitTest'));
 	watch(sourceForTasks.concatTemplates.src, gulp.series('concatTemplates'));
@@ -37,12 +43,12 @@ gulp.task('fullWatch', function() {
 });
 
 gulp.task('runTests', gulp.series(
-	'build',
+	'build-dev',
 	'server:tests'
 ));
 
-gulp.task('runTestsAndWatch', gulp.series(
-	'build',
+gulp.task('runDev', gulp.series(
+	'build-dev',
 	gulp.parallel('fullWatch', 'server:tests')
 ));
 
@@ -51,9 +57,9 @@ gulp.task('default', function(cb) {
 							'####Use any of defined tasks:\n' +
 							help +
 							'- gulp build\n' +
-							'- gulp cleanAndBuild\n' +
+							'- gulp build-dev\n' +
 							'- gulp runTests\n' +
-							'- gulp runTestsAndWatch'
+							'- gulp runDev'
 							);
 	cb();
 });

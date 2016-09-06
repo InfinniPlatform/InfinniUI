@@ -52,6 +52,9 @@ var ComboBoxDropdownView = Backbone.View.extend({
         this.bindUIElements();
         this.updateProperties();
         this.renderItems();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this.$el;
     },
 
@@ -289,7 +292,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         if (direction === 'bottom') {
             style.top = window.pageYOffset + rect.bottom;
         } else {
-            style.top = rect.top - this.$el.height();
+            style.top = window.pageYOffset + rect.top - this.$el.height();
         }
 
         this.$el.css(style);

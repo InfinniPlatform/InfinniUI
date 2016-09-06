@@ -22,6 +22,10 @@ var ComboBoxGroupView = Backbone.View.extend({
         this.ui.header.append(options.header);
         this.ui.items.append(options.items);
 
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+
         return this.$el;
     }
 

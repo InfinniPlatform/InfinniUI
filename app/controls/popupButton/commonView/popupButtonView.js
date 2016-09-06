@@ -47,7 +47,9 @@ var CommonPopupButtonView = ContainerView.extend({
         this.trigger('render');
 
         this.postrenderingActions();
-
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 
@@ -83,10 +85,6 @@ var CommonPopupButtonView = ContainerView.extend({
         this.alignDropdown();
 
         var $ignoredElements = this.$dropdown.add (this.ui.grip);
-
-        //new ActionOnLoseFocus($ignoredElements, function(){
-        //    that.close();
-        //});
     },
 
     close: function(){

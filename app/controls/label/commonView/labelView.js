@@ -92,6 +92,9 @@ var CommonLabelView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @
 
         this.trigger('render');
         this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
         return this;
     },
 

@@ -60,6 +60,10 @@ var ContextMenuView = ContainerView.extend({
 			that.open(args.value);
 		});
 
+		//devblockstart
+    window.InfinniUI.global.messageBus.send('render', {element: this});
+    //devblockstop
+
 		return this;
 	},
 
