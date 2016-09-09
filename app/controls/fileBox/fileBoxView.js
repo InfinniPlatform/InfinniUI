@@ -41,6 +41,8 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         this.listenTo(this.model, 'change:errorText', this.updateErrorText);
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
 
+        this.listenTo(this.model, 'invalid', this.onInvalidHandler);
+
         var acceptTypes = this.model.get('acceptTypes');
         acceptTypes.onChange(this.updateAcceptTypes.bind(this));
     },
@@ -267,6 +269,10 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
         //devblockstop
 
         return this;
+    },
+
+    onInvalidHandler: function () {
+        this.ui.input.val(null);
     }
 
 }));
