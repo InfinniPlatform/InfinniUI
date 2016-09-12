@@ -348,8 +348,6 @@ describe('ListEditorBase', function () {
             testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
-                //$layout.detach();
-
                 var $items = $layout.find('.pl-listbox-i'),
                     $chosen = $layout.find('.pl-listbox-i.pl-listbox-i-chosen'),
                     $selected = $layout.find('.pl-listbox-i.pl-listbox-i-selected'),

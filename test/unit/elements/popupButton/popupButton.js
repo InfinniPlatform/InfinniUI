@@ -18,17 +18,9 @@ describe('PopupButtonElement', function () {
     });
 
     describe('Checking methods', function () {
-        var button;
-
-        beforeEach(function () {
-            button =  builder.buildType('PopupButton', {
-                Items: []
-            });
-        });
-
         it('should create', function () {
             // Given
-
+            var button = new InfinniUI.PopupButton();
 
             // When
             var $el = button.render();
@@ -39,6 +31,7 @@ describe('PopupButtonElement', function () {
 
         it('should set text', function () {
             // Given
+            var button = new InfinniUI.PopupButton();
             button.setText('button');
             var $el = button.render();
 
@@ -136,7 +129,7 @@ describe('PopupButtonElement', function () {
 
         it('should add items', function () {
             // Given
-            //var button = new InfinniUI.PopupButton();
+            var button = new InfinniUI.PopupButton();
 
             // When
             var items = button.getItems();

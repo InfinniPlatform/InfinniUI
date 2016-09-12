@@ -375,7 +375,6 @@ describe('RestDataSource', function () {
             dataSource.onSelectedItemChanged(function(context, args){
                 result += '1';
 
-                //assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
                 assert.isTrue(args.value.FirstName ==  'Иван' || args.value.FirstName == 'Петр', 'right new value in args');
             });
 

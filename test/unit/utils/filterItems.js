@@ -50,7 +50,6 @@ describe("Filter items", function () {
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
 			var filter = 'not(eq(Id,3))';
-			// var filter = 'not(or(eq(Id,3),eq(Id,1)))';
 			var items = [
 				{Id: 1},
 				{Id: 2},

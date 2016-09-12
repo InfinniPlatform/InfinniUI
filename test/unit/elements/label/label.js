@@ -33,7 +33,7 @@ describe('Label', function () {
 
             var element = builder.build(metadata, {});
 
-            //assert.equal(element.getTextTrimming(), true, 'TextTrimming');
+            assert.equal(element.getTextTrimming(), true, 'TextTrimming');
             assert.equal(element.getTextWrapping(), true, 'TextWrapping');
 
             assert.equal(element.getVisible(), true, 'Visible');
