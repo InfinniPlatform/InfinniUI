@@ -30,47 +30,6 @@ describe('FileProvider', function () {
                     }
                 };
             });
-
-            //register fake DocumentDataSource provider
-            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
-                return {
-                    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-                        resultCallback();
-                    },
-                    createItem: function (resultCallback, idProperty) {
-                        var response = {
-                            'DisplayName': 'display name'
-                        };
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-
-                    saveItem: function (value, resultCallback, warnings, idProperty) {
-                        var response = [{
-                            InstanceId: "42"
-                        }];
-
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-                    setOrigin: function(){},
-                    setPath: function(){},
-                    setData : function(){},
-                    setFilter: function(){},
-                    setDocumentId: function(){},
-                    getDocumentId: function () {},
-                    createLocalItem: function (idProperty) {
-                        var result = {};
-
-                        result[idProperty] = window.InfinniUI.guid();
-
-                        return result;
-                    }
-                };
-
-            });
         });
 
 

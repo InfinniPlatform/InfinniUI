@@ -52,27 +52,10 @@ function FakeDataProvider(mode) {
         }
     ];
 
-    this.getItems = function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
+    this.getItems = function (resultCallback) {
         if (mode === undefined || mode() === 'Created') {
 
             var result = items;
-            /*var allItems = items;
-
-            for (var i = 0; i < pageSize; i++) {
-                var itemIndex = i + (pageNumber * pageSize);
-                if (itemIndex < allItems.length) {
-                    result.push(items[itemIndex]);
-                }
-                else {
-                    break;
-                }
-            }
-
-            if(criteriaList && criteriaList.length == 1 && criteriaList[0].CriteriaType == 1){
-                result = _.filter(result, function(item){
-                    return item.Id == criteriaList[0].Value;
-                });
-            }*/
 
             setTimeout(function(){
                 resultCallback({data:result});

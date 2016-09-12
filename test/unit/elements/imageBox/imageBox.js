@@ -74,58 +74,6 @@ describe('ImageBox', function () {
                     }
                 };
             });
-
-            //register fake DocumentDataSource provider
-            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
-                return {
-                    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-                        var items = [{
-                            "Id": "1",
-                            photo: {
-                                Info: {
-                                    ContentId: 'somePhotoId'
-                                }
-                            }
-                        }];
-                        setTimeout(function () {
-                            resultCallback(items);
-                        }, delay());
-                    },
-                    createItem: function (resultCallback, idProperty) {
-                        var response = {
-                            'DisplayName': 'display name'
-                        };
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-
-                    saveItem: function (value, resultCallback, warnings, idProperty) {
-                        var response = [{
-                            InstanceId: "42"
-                        }];
-
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-                    setOrigin: function(){},
-                    setPath: function(){},
-                    setData : function(){},
-                    setFilter: function(){},
-                    setDocumentId: function(){},
-                    getDocumentId: function () {},
-                    createLocalItem: function (idProperty) {
-                        var result = {};
-
-                        result[idProperty] = guid();
-                        result['__Id'] = result[idProperty];
-
-                        return result;
-                    }
-                };
-
-            });
         });
 
         //
