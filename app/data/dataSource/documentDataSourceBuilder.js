@@ -10,9 +10,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
 
         dataSource.setDocumentId(metadata['DocumentId']);
 
-        if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
-        if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
-
         if('Filter' in metadata){ dataSource.setFilter(metadata['Filter']); }
         if('FilterParams' in metadata){
             var params = metadata['FilterParams'];
@@ -25,6 +22,10 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
+
+        if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
+        // PageNumber нужно устанавливать последним, потому что его могут обнулять другие свойства.
+        if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
 
         if (Array.isArray(metadata.DefaultItems)) {
             dataSource.setProperty('', metadata.DefaultItems);

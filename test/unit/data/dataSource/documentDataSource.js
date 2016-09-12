@@ -208,6 +208,121 @@
             );
         });
 
+        it('should reset page number after setFilter', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilter('not(eq(_id,123))');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setFilterParams', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilterParams('documentName', 'Patient');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setPageSize', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setPageSize(20);
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setSearch', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setSearch('search');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setOrder', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setOrder('asc(_id)');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
         it('should create document', function (done) {
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));

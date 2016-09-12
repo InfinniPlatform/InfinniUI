@@ -22,20 +22,26 @@ var DocumentDataSource = RestDataSource.extend({
     initHandlers: function(){
         var model = this.get('model');
         var that = this;
-        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this),
+            updateGettingUrlParamsWithReset = function() {
+                that.suspendUpdate('updateGettingUrlParams');
+                that.get('model').setProperty('pageNumber', 0);
+                that.updateGettingUrlParams();
+                that.resumeUpdate('updateGettingUrlParams');
+            } ;
 
         model.onPropertyChanged('documentId', function(){
             that.updateGettingUrlParams();
             that.updateSettingUrlParams();
             that.updateDeletingUrlParams();
         });
-        model.onPropertyChanged('filter', updateGettingUrlParams);
-        model.onPropertyChanged('filterParams.*', updateGettingUrlParams);
+        model.onPropertyChanged('filter', updateGettingUrlParamsWithReset);
+        model.onPropertyChanged('filterParams.*', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
-        model.onPropertyChanged('pageSize', updateGettingUrlParams);
-        model.onPropertyChanged('search', updateGettingUrlParams);
+        model.onPropertyChanged('pageSize', updateGettingUrlParamsWithReset);
+        model.onPropertyChanged('search', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('select', updateGettingUrlParams);
-        model.onPropertyChanged('order', updateGettingUrlParams);
+        model.onPropertyChanged('order', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
 
         this.updateGettingUrlParams();
