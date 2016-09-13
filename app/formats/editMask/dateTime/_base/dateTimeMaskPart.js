@@ -3,7 +3,7 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpMonth = /^(?:1[0-2]|0?[1-9]?)$/;
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
-    var regExpHour24 = /^(?:[12][0-3]|[01]?[1-9]?)$/;
+    var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
     var regExp60 = /^[0-5]?[0-9]$/;
 
     return {
