@@ -1,58 +1,78 @@
-describe('MetadataViewBuilder', function () {
+describe('LinkViewBuilderBase', function () {
 
-    /*var builder = new InfinniUI.ApplicationBuilder();
-
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
-        return {
-            "getViewMetadata": function () {
-                return metadata;
+    it('should set base properties', function () {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "LinkViewBuilderTest"
             }
         };
+
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        assert.equal(linkView.getOpenMode(), "Default");
+        assert.isUndefined(linkView.containerName);
+        assert.isUndefined(linkView.dialogWidth);
+
+        // When
+        linkView.setOpenMode("Dialog");
+        linkView.setContainer("TestContainer");
+        linkView.setDialogWidth("100px");
+
+        // Then
+        assert.equal(linkView.getOpenMode(), "Dialog");
+        assert.equal(linkView.containerName, "TestContainer");
+        assert.equal(linkView.dialogWidth, "100px");
     });
 
-    var metadata = {
-            "DataSources": [
-
-                {
-                    "DocumentDataSource": {
-                        "Name": 'PatientDataSource',
-                        "ConfigId": 'ReceivingRoom',
-                        "DocumentId": 'HospitalizationRefusal'
-                    }
-                }
-            ],
-            "OpenMode": "Application",
-            "ConfigId": 'ReceivingRoom',
-            "DocumentId": 'HospitalizationRefusal',
-            "ViewType": 'ListView',
-            "MetadataName": 'HospitalizationRefusalListView',
-            //"Parameters": [
-            //    {
-            //        "Name" : 'Param1',
-            //        "Value" : {
-            //            "PropertyBinding": {
-            //                "DataSource": 'PatientDataSource',
-            //                "Property": 'LastName'
-            //            }
-            //        }
-            //    }
-            //],
-            "LayoutPanel" : {
-
+    it('inlineViewBuilder', function (done) {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "InlineViewBuilderTest"
             }
-    };
+        };
 
-    it('should build exists view', function () {
+        // When
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "InlineViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+
+    it('metadataViewBuilder', function (done) {
+        // Given
+        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
+            return {
+                "getMetadata": function (callback) {
+                    var metadata = {
+                        "Name": "MetadataViewBuilderTest"
+                    };
+                    callback(metadata);
+                }
+            };
+        });
 
         var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var builder = new MetadataViewBuilder();
-        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
+        var metadata = {
+            Path: "path/to/metadata"
+        };
 
-        applicationBuilder.appView = view;
-        applicationBuilder.appView.createView(function(view){
-            //assert.isNotNull(view.getParameter('Param1'));
-            assert.isNotNull(view.getDataSource('PatientDataSource'));
+        // When
+        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "MetadataViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
         });
-    });*/
+    });
 });
 

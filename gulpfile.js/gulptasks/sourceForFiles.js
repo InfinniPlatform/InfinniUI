@@ -101,6 +101,7 @@ var sourceForFiles = {
 		'app/formats/editMask/**/*.js',
 
 		'app/linkView/openMode/strategy/_mixins/*.js',
+		'app/linkView/linkViewBuilderBase.js',
 		'app/linkView/**/*.js',
 
 		'app/**/*.js'
