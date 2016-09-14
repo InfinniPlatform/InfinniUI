@@ -32,6 +32,7 @@
   "license": "GPL",
   "ignore": [
     "app",
+    "!app/styles",
     "certificates",
     "developer",
     "extensions",
