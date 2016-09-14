@@ -1,6 +1,6 @@
 {
   "name": "infinni-ui",
-  "dependencies": {
+  "devDependencies": {
     "backbone": "~1.1.2",
     "mocha": "1.x",
     "chai": "1.x",
@@ -29,5 +29,17 @@
     "infinni-ui",
     "ui-framework"
   ],
-  "license": "GPL"
+  "license": "GPL",
+  "ignore": [
+    "app",
+    "certificates",
+    "developer",
+    "extensions",
+    "gulpfile.js",
+    "test",
+    ".bowerrc",
+    ".gitignore",
+    "package.json",
+    "runTests.bat"
+  ]
 }
