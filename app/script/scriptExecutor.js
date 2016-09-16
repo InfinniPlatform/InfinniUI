@@ -23,6 +23,7 @@ ScriptExecutor.prototype.executeScript = function (scriptName, args) {
     var scriptBody;
     var scriptCompiled;
 
+    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
     if(scriptName.substr(0, 1) == '{'){
         scriptBody = scriptName.substr(1, scriptName.length - 2);
         scriptCompiled = this.buildScriptByBody(scriptBody);

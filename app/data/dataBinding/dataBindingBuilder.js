@@ -53,14 +53,6 @@ DataBindingBuilder.prototype.build = function (context, args) {
     return result;
 };
 
-DataBindingBuilder.prototype.findSource = function(view, sourceName){
-    var context = view.getContext();
-    var dataSource = context.dataSources[sourceName];
-    var parameter = context.parameters[sourceName];
-    var element = context.controls[sourceName];
-    return dataSource || parameter || element;
-};
-
 DataBindingBuilder.prototype.isScriptBody = function(value){
     return value && value.substr(0, 1) == '{';
 };

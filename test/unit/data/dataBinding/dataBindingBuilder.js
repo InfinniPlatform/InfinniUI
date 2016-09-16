@@ -1,35 +1,24 @@
 describe('DataBindingBuilder', function () {
 
-/*    it('should build DataBinding', function () {
+    it('should build DataBinding', function () {
         // Given
         var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
         var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_Source: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                    },
-                    controls: {
-                    }
-                };
-            },
-
             getDeferredOfMember: function(){
                 return {
                     done: function(handler){
-                        handler({});
+                        handler({
+                            onPropertyChanged: function(){}
+                        });
                     }
                 };
             }
         };
         var metadata = {
             Source: 'My_Source',
-            Property: '',
+            Property: 'Property',
             Mode: 'ToSource',
+            DefaultValue: 'DefaultValue',
             Converter: {
                 toSource: function(){},
                 toElement: function(){}
@@ -41,46 +30,111 @@ describe('DataBindingBuilder', function () {
 
         // Then
         assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
-        assert.isNotNull(dataBinding.getConverter());
-        assert.isNotNull(dataBinding.getSource());
-        assert.isNotNull(dataBinding.getSourceProperty());
+        assert.equal(dataBinding.getDefaultValue(), 'DefaultValue');
+        assert.isObject(dataBinding.getConverter());
+        assert.isObject(dataBinding.getSource());
+        assert.equal(dataBinding.getSourceProperty(), 'Property');
     });
 
-    it('should bind all type of source', function () {
-        // Given
-        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
-        var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_DataSource: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                        My_Parameter: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    controls: {
-                        My_Button: {
-                            onPropertyChanged: function(){}
+    describe('should bind all type of source', function () {
+
+        it('should bind dataSource', function(){
+            // Given
+            var viewMetadata = {
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1"
                         }
                     }
-                };
-            }
-        };
+                ]
+            };
 
-        // Then
-        dataBindingBuilder.build(null, { parentView: view, metadata: { Source: 'My_DataSource'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Parameter'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Button'} });
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'ObjectDataSource1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.ObjectDataSource);
+
+                view.close();
+            }
+        });
+
+        it('should bind parameter', function(){
+            // Given
+            var viewMetadata = {
+                Parameters : [
+                    {
+                        Name: 'Parameter1'
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Parameter1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Parameter);
+
+                view.close();
+            }
+        });
+
+        it('should bind element', function(){
+            // Given
+            var viewMetadata = {
+                Items : [
+                    {
+                        Label: {
+                            Name: 'Element1'
+                        }
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Element1',
+                    Property: 'value'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Element);
+
+                view.close();
+            }
+        });
+
     });
-*/
+
     it('should toElement converter work in inline style', function () {
         // Given
-        var metadata = {
-            Text: '��������',
+        var viewMetadata = {
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -119,13 +173,13 @@ describe('DataBindingBuilder', function () {
         };
 
         // When
-        testHelper.applyViewMetadata(metadata, onViewReady);
+        testHelper.applyViewMetadata(viewMetadata, onViewReady);
 
         // Then
-        function onViewReady(view, $layout){
-            $layout.detach();
+        function onViewReady(view, $view){
+            assert.equal($view.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
 
-            assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
+            view.close();
         }
     });
 });
