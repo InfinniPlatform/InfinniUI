@@ -72,12 +72,24 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         this.ui.header.empty();
         var headerTemplate = model.get('headerTemplate');
         if (typeof headerTemplate === 'function') {
-            var header = model.get('header');
-            this.ui.header.append(headerTemplate(null, {value: header}).render());
+            var header = model.get('header'),
+                $header = headerTemplate(null, {value: header}).render();
+
+            if( this.isDefaultHeader($header) ) {
+                this.ui.header.hide();
+            } else {
+                this.ui.header.show();
+                this.ui.header.append($header);
+            }
+
         }
     },
 
-
+    isDefaultHeader: function(headerTemplate) {
+        var defaultTemplate = InfinniUI.PanelBuilder.prototype.buildDefaultHeaderTemplate()(null, {value: null}),
+            defaultHeader = defaultTemplate.render();
+        return defaultHeader[0].isEqualNode(headerTemplate[0]);
+    },
 
     renderItemsContents: function () {
         var $items = this.$el.find('.pl-panel-i'),

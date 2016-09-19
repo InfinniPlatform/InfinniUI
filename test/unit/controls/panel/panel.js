@@ -35,51 +35,31 @@ describe('PanelControl', function () {
                 ],
                 "Items": [
                     {
-                        "TablePanel": {
-                            "Name": "",
-                            "Items": [
-                                {
-                                    "Row": {
-                                        "Items": [
-                                            {
-                                                "Cell": {
-                                                    "ColumnSpan": 3,
-                                                    "Items": [
-                                                        {
-                                                            "StackPanel": {
-                                                                "Name": "StackPanel_1",
-                                                                "Items": {
-                                                                    "Source": "BloodGroupDataSource",
-                                                                    "Property": ""
-                                                                },
-                                                                "ItemTemplate": {
-                                                                    "Panel": {
-                                                                        "Collapsible": true,
-                                                                        "Header": {
-                                                                            "Source": "BloodGroupDataSource",
-                                                                            "Property": "#.DisplayName"
-                                                                        },
-                                                                        "Items": [
-                                                                            {
-                                                                                "Label": {
-                                                                                    "Text": {
-                                                                                        "Source": "BloodGroupDataSource",
-                                                                                        "Property": "#.Id"
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                        "StackPanel": {
+                            "Name": "StackPanel_1",
+                            "Items": {
+                                "Source": "BloodGroupDataSource",
+                                "Property": ""
+                            },
+                            "ItemTemplate": {
+                                "Panel": {
+                                    "Collapsible": true,
+                                    "Header": {
+                                        "Source": "BloodGroupDataSource",
+                                        "Property": "#.DisplayName"
+                                    },
+                                    "Items": [
+                                        {
+                                            "Label": {
+                                                "Text": {
+                                                    "Source": "BloodGroupDataSource",
+                                                    "Property": "#.Id"
                                                 }
                                             }
-                                        ]
-                                    }
+                                        }
+                                    ]
                                 }
-                            ]
+                            }
                         }
                     }
                 ],
@@ -153,75 +133,26 @@ describe('PanelControl', function () {
         it('Should render Panel with 3 items(as label)', function () {
             // Given
             var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "BloodGroupDataSource",
-                            "Items": [
-                                {
-                                    "Id": 1,
-                                    "DisplayName": "I",
-                                    "SomeField": ""
-                                },
-                                {
-                                    "Id": 2,
-                                    "DisplayName": "II",
-                                    "SomeField": "val"
-                                },
-                                {
-                                    "Id": 3,
-                                    "DisplayName": "III",
-                                    "SomeField": 3
-                                },
-                                {
-                                    "Id": 4,
-                                    "DisplayName": "IV",
-                                    "SomeField": null
-                                }
-                            ]
-                        }
-                    }
-                ],
                 "Items": [
                     {
-                        "TablePanel": {
-                            "Name": "",
+                        "Panel": {
+                            "Collapsible": true,
+                            "Collapsed": true,
+                            "Header": "Header",
                             "Items": [
                                 {
-                                    "Row": {
-                                        "Items": [
-                                            {
-                                                "Cell": {
-                                                    "ColumnSpan": 3,
-                                                    "Items": [
-                                                        {
-                                                            "Panel": {
-                                                                "Collapsible": true,
-                                                                "Collapsed": true,
-                                                                "Header": "Header",
-                                                                "Items": [
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "One"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Two"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Three"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
+                                    "Label": {
+                                        "Text": "One"
+                                    }
+                                },
+                                {
+                                    "Label": {
+                                        "Text": "Two"
+                                    }
+                                },
+                                {
+                                    "Label": {
+                                        "Text": "Three"
                                     }
                                 }
                             ]
@@ -282,5 +213,37 @@ describe('PanelControl', function () {
 
             }
         });
+    });
+
+    it('Should hide header if it is empty', function () {
+        // Given
+        var metadata = {
+            "Items": [
+                {
+                    "Panel": {
+                        "Name": "TestPanel",
+                        "Header": "TestPanel"
+                    }
+                }
+            ]
+        };
+
+        testHelper.applyViewMetadata(metadata, onViewReady);
+
+        function onViewReady(view, $view) {
+            $view.detach();
+
+            var panel = view.context.controls['TestPanel'],
+                $panel = $view.find('.pl-panel'),
+                $panelHeader = $panel.find('.pl-panel-header');
+
+            assert.notEqual($panelHeader.css('display'), 'none');
+
+            // When
+            panel.setHeader(null);
+
+            // Then
+            assert.equal($panelHeader.css('display'), 'none');
+        }
     });
 });
