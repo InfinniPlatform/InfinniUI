@@ -1,14 +1,16 @@
 var notificationSubsription = (function() {
 	var subscription = {},
 			hubProxy,
+			hubName,
 			connection,
 			onSuccessCb,
 			onErrorCb,
 			isConnected = false;
 
-	var setUpConnection = function(hubName, onSuccess, onError) {
-		onSuccessCb = onSuccess;
-		onErrorCb = onError;
+	var setUpConnection = function(newHubName, onSuccess, onError) {
+		onSuccessCb = onSuccess || onSuccessCb;
+		onErrorCb = onError || onErrorCb;
+		hubName = newHubName || hubName;
 		connection = $.hubConnection(window.InfinniUI.config.serverUrl);
 		hubProxy = connection.createHubProxy(hubName);
 
@@ -102,17 +104,45 @@ var notificationSubsription = (function() {
 		connection.stop();
 	};
 
+	var reconnection = function() {
+		if( connection ) {
+			stopConnection();
+		}
+		setUpConnection();
+	};
+
 	var checkHandlers = function() {
 		if( _.size(subscription) === 0 ) {
 			stopConnection();
 		}
 	};
 
+	var on = function(eventName, callback) {
+		if( !connection ) {
+			console.error('Необходимо сначала установить соединение с сервером');
+		}
+		if( eventName === 'disconnected' ) {
+			connection[eventName](function() {
+				stopConnection();
+				callback();
+			});
+		} else if( connection[eventName] && eventName !== 'disconnected' ) {
+			connection[eventName](callback);
+		}
+	};
+
+	var isDisconnected = function() {
+		return $.connection.isDisconnecting(connection);
+	};
+
 	return {
 		startConnection: setUpConnection,
+		reconnection: reconnection,
 		subscribe: subscribe,
 		unsubscribe: unsubscribe,
-		stopConnection: stopConnection
+		stopConnection: stopConnection,
+		on: on,
+		isDisconnected: isDisconnected
 	};
 })();
 

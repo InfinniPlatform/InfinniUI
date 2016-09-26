@@ -124,7 +124,8 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.37';
+InfinniUI.VERSION = '2.1.38';
+
 //####app\utils\collection\collection.js
 /**
  *
@@ -10275,11 +10276,11 @@ _.extend(DataGridControl.prototype, {
     },
 
     onRowClick: function(callback) {
-        this.controlView.$el.on('click', '.pl-datagrid__body .pl-datagrid-row', callback);
+        this.controlView.$el.on('click', 'tbody .pl-datagrid-row', callback);
     },
 
     onRowDoubleClick: function(callback) {
-        this.controlView.$el.on('dblclick', '.pl-datagrid__body .pl-datagrid-row', callback);
+        this.controlView.$el.on('dblclick', 'tbody .pl-datagrid-row', callback);
     }
 });
 
@@ -24377,7 +24378,7 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
-//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBox.js
 /**
  *
  * @param parent
@@ -24402,7 +24403,7 @@ _.extend(IndeterminateCheckBox.prototype, {
 
 }, editorBaseMixin);
 
-//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBoxBuilder.js
 /**
  *
  * @constructor
@@ -34199,14 +34200,16 @@ InfinniUI.ModalWindowService = (function () {
 var notificationSubsription = (function() {
 	var subscription = {},
 			hubProxy,
+			hubName,
 			connection,
 			onSuccessCb,
 			onErrorCb,
 			isConnected = false;
 
-	var setUpConnection = function(hubName, onSuccess, onError) {
-		onSuccessCb = onSuccess;
-		onErrorCb = onError;
+	var setUpConnection = function(newHubName, onSuccess, onError) {
+		onSuccessCb = onSuccess || onSuccessCb;
+		onErrorCb = onError || onErrorCb;
+		hubName = newHubName || hubName;
 		connection = $.hubConnection(window.InfinniUI.config.serverUrl);
 		hubProxy = connection.createHubProxy(hubName);
 
@@ -34300,17 +34303,45 @@ var notificationSubsription = (function() {
 		connection.stop();
 	};
 
+	var reconnection = function() {
+		if( connection ) {
+			stopConnection();
+		}
+		setUpConnection();
+	};
+
 	var checkHandlers = function() {
 		if( _.size(subscription) === 0 ) {
 			stopConnection();
 		}
 	};
 
+	var on = function(eventName, callback) {
+		if( !connection ) {
+			console.error('Необходимо сначала установить соединение с сервером');
+		}
+		if( eventName === 'disconnected' ) {
+			connection[eventName](function() {
+				stopConnection();
+				callback();
+			});
+		} else if( connection[eventName] && eventName !== 'disconnected' ) {
+			connection[eventName](callback);
+		}
+	};
+
+	var isDisconnected = function() {
+		return $.connection.isDisconnecting(connection);
+	};
+
 	return {
 		startConnection: setUpConnection,
+		reconnection: reconnection,
 		subscribe: subscribe,
 		unsubscribe: unsubscribe,
-		stopConnection: stopConnection
+		stopConnection: stopConnection,
+		on: on,
+		isDisconnected: isDisconnected
 	};
 })();
 
