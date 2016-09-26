@@ -28,11 +28,11 @@ _.extend(DataGridControl.prototype, {
     },
 
     onRowClick: function(callback) {
-        this.controlView.$el.on('click', '.pl-datagrid__body .pl-datagrid-row', callback);
+        this.controlView.$el.on('click', 'tbody .pl-datagrid-row', callback);
     },
 
     onRowDoubleClick: function(callback) {
-        this.controlView.$el.on('dblclick', '.pl-datagrid__body .pl-datagrid-row', callback);
+        this.controlView.$el.on('dblclick', 'tbody .pl-datagrid-row', callback);
     }
 });
 
