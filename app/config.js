@@ -11,3 +11,5 @@ _.defaults( InfinniUI.config, {
 //devblockstop
 
 });
+
+InfinniUI.VERSION = '2.1.37';
