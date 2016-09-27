@@ -3,37 +3,37 @@
 
     var dataItems = [
         {
-            "_id": '1',
+            "_id": 1,
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "_id": '2',
+            "_id": 2,
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "_id": '3',
+            "_id": 4,
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "_id": '4',
+            "_id": 6,
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "_id": '5',
+            "_id": 5,
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "_id": '6',
+            "_id": 7,
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "_id": '10',
+            "_id": 10,
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -116,10 +116,10 @@
             );
         });
 
-/* TODO раскомментировать после фильтрации фейковых провайдеров
-        it('should get editing record', function (done) {
+
+        it('should set id filter', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var builder = new InfinniUI.ApplicationBuilder();
@@ -128,9 +128,8 @@
 
             //When
             dataSource.suspendUpdate();
-            dataSource.setIdFilter('1');
+            dataSource.setIdFilter(4);
             dataSource.resumeUpdate();
-
 
 
             var items = dataSource.updateItems(
@@ -138,7 +137,7 @@
 
                     // Then
                     assert.lengthOf(args.value, 1, 'length of filtered items set');
-                    assert.equal(args.value[0].Id, '1', 'value of filtered items set');
+                    assert.equal(args.value[0]._id, '4', 'value of filtered items set');
 
                     done();
                 }
@@ -146,9 +145,9 @@
         });
 
 
-        it('should update document', function (done) {
+        it('should update documents when pageNumber are changed', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new InfinniUI.DocumentDataSource({
@@ -169,7 +168,7 @@
                     dataSource.setPageNumber(1);
                     dataSource.resumeUpdate();
                     dataSource.updateItems(
-                        function(data){
+                        function(context, args){
 
                             // Then
                             assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
@@ -180,7 +179,7 @@
 
                 }
             );
-        });*/
+        });
 
         it('should restore selected item after updating', function (done) {
             // Given
@@ -546,44 +545,5 @@
                 });
             }
         });
-
-       /* TODO раскомментировать после фильтрации фейковых провайдеров
-        it('should add items', function (done) {
-
-            // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.suspendUpdate();
-            dataSource.setPageSize(5);
-            dataSource.resumeUpdate();
-
-
-            dataSource.updateItems(
-                function(context, args){
-
-                    assert.lengthOf(dataSource.getItems(), 5, 'datasource have 5 items');
-                    assert.equal(dataSource.getPageNumber(), 0, 'datasource at first page');
-
-                    //When
-                    dataSource.addNextItems(
-                        function(data){
-
-                            // Then
-                            assert.lengthOf(dataSource.getItems(), 7, 'after adding datasource have 7 items');
-                            assert.equal(dataSource.getPageSize(), 5, 'after adding datasource still have page size equal 5');
-                            assert.equal(dataSource.getPageNumber(), 1, 'after adding datasource at second page');
-                            done();
-
-                        }
-                    );
-
-                }
-            );
-        });*/
     });
 });

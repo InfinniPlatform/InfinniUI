@@ -12,7 +12,7 @@ _.extend( FakeRestDataProvider.prototype, {
     send: function(type, successHandler, errorHandler){
         var requestId = Math.round((Math.random() * 100000));
         var params = this.requestParams[type];
-        var that = this;
+        var result = _.clone(this.items);
 
 
         var urlString = params.origin + params.path;
@@ -25,12 +25,20 @@ _.extend( FakeRestDataProvider.prototype, {
 
         FakeRestDataProvider.prototype.lastSendedUrl = urlString;
 
+        if(params.data) {
+            if (params.data.filter) {
+                result = InfinniUI.FilterItems(result, params.data.filter);
+            }
+
+            result = result.splice(params.data.skip || 0, params.data.take || 15);
+        }
+
         setTimeout(function(){
             successHandler({
                 requestId: requestId,
                 data: {
                     Result: {
-                        Items:that.items
+                        Items: result
                     }
                 }
             });

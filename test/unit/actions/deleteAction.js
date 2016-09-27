@@ -103,11 +103,11 @@ describe('DeleteAction', function () {
                 deleteAction.execute();
 
                 // Then
-                setTimeout( function(){
+                dataSource.onItemDeleted( function(){
                         assert.equal(dataSource.getItems().length, (initCount - 1) );
                         assert.notInclude(dataSource.getItems(), initSelectedItem);
                         done();
-                }, 50);
+                });
 
             }
         );
