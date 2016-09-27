@@ -156,8 +156,6 @@ describe('Button', function () {
             //When
             var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
             button.render();
-            //var $button = $(button.render());
-            //$button.find('button').click();
             button.click();
 
             // Then
