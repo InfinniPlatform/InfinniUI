@@ -15175,6 +15175,109 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
 }));
 
+//####app\controls\frame\frameControl.js
+/**
+ *
+ * @constructor
+ * @augments Control
+ * @mixes editorBaseControlMixin
+ */
+var FrameControl = function () {
+    _.superClass(FrameControl, this);
+    this.initialize_editorBaseControl();
+};
+
+_.inherit(FrameControl, Control);
+
+_.extend(FrameControl.prototype, {
+
+    createControlModel: function () {
+        return new FrameModel();
+    },
+
+    createControlView: function (model) {
+        return new FrameView({model: model});
+    }
+
+}, editorBaseControlMixin);
+//####app\controls\frame\frameModel.js
+var FrameModel = ControlModel.extend(_.extend({
+
+    defaults: _.defaults({},
+        editorBaseModelMixin.defaults_editorBaseModel,
+        ControlModel.prototype.defaults
+    ),
+
+    initialize: function(){
+        ControlModel.prototype.initialize.apply(this, arguments);
+        this.initialize_editorBaseModel();
+    }
+}, editorBaseModelMixin));
+//####app\controls\frame\frameView.js
+/**
+ * @class FrameView
+ * @augments ControlView
+ * @mixes editorBaseViewMixin
+ */
+var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends FrameView.prototype */{
+
+    className: 'pl-frame',
+
+    template: InfinniUI.Template["controls/frame/template/frame.tpl.html"],
+
+    UI: _.extend({}, editorBaseViewMixin.UI, {
+        iframe: 'iframe'
+    }),
+
+    initialize: function () {
+        ControlView.prototype.initialize.apply(this);
+    },
+
+    initHandlersForProperties: function(){
+        ControlView.prototype.initHandlersForProperties.call(this);
+        editorBaseViewMixin.initHandlersForProperties.call(this);
+    },
+
+    updateProperties: function(){
+        ControlView.prototype.updateProperties.call(this);
+        editorBaseViewMixin.updateProperties.call(this);
+    },
+
+    updateValue: function(){
+        var value = this.model.get('value');
+
+        this.ui.iframe.attr('src', value);
+    },
+
+    getData: function () {
+        return _.extend(
+            {},
+            ControlView.prototype.getData.call(this),
+            editorBaseViewMixin.getData.call(this),
+            {
+
+            }
+        );
+    },
+
+    render: function () {
+        var model = this.model;
+
+        this.prerenderingActions();
+        this.renderTemplate(this.template);
+
+        this.updateProperties();
+
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    }
+
+}));
+
 //####app\controls\form\formControl.js
 function FormControl(parent) {
 	_.superClass(FormControl, this, parent);
@@ -15312,109 +15415,6 @@ var FormView = StackPanelView.extend({
 	}
 
 });
-
-//####app\controls\frame\frameControl.js
-/**
- *
- * @constructor
- * @augments Control
- * @mixes editorBaseControlMixin
- */
-var FrameControl = function () {
-    _.superClass(FrameControl, this);
-    this.initialize_editorBaseControl();
-};
-
-_.inherit(FrameControl, Control);
-
-_.extend(FrameControl.prototype, {
-
-    createControlModel: function () {
-        return new FrameModel();
-    },
-
-    createControlView: function (model) {
-        return new FrameView({model: model});
-    }
-
-}, editorBaseControlMixin);
-//####app\controls\frame\frameModel.js
-var FrameModel = ControlModel.extend(_.extend({
-
-    defaults: _.defaults({},
-        editorBaseModelMixin.defaults_editorBaseModel,
-        ControlModel.prototype.defaults
-    ),
-
-    initialize: function(){
-        ControlModel.prototype.initialize.apply(this, arguments);
-        this.initialize_editorBaseModel();
-    }
-}, editorBaseModelMixin));
-//####app\controls\frame\frameView.js
-/**
- * @class FrameView
- * @augments ControlView
- * @mixes editorBaseViewMixin
- */
-var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends FrameView.prototype */{
-
-    className: 'pl-frame',
-
-    template: InfinniUI.Template["controls/frame/template/frame.tpl.html"],
-
-    UI: _.extend({}, editorBaseViewMixin.UI, {
-        iframe: 'iframe'
-    }),
-
-    initialize: function () {
-        ControlView.prototype.initialize.apply(this);
-    },
-
-    initHandlersForProperties: function(){
-        ControlView.prototype.initHandlersForProperties.call(this);
-        editorBaseViewMixin.initHandlersForProperties.call(this);
-    },
-
-    updateProperties: function(){
-        ControlView.prototype.updateProperties.call(this);
-        editorBaseViewMixin.updateProperties.call(this);
-    },
-
-    updateValue: function(){
-        var value = this.model.get('value');
-
-        this.ui.iframe.attr('src', value);
-    },
-
-    getData: function () {
-        return _.extend(
-            {},
-            ControlView.prototype.getData.call(this),
-            editorBaseViewMixin.getData.call(this),
-            {
-
-            }
-        );
-    },
-
-    render: function () {
-        var model = this.model;
-
-        this.prerenderingActions();
-        this.renderTemplate(this.template);
-
-        this.updateProperties();
-
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    }
-
-}));
 
 //####app\controls\gridPanel\gridPanelControl.js
 /**
@@ -15627,6 +15627,73 @@ var IconView = ControlView.extend({
         this.renderIcon();
     }
 
+});
+
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
+function IndeterminateCheckBoxControl(parent) {
+	_.superClass(IndeterminateCheckBoxControl, this, parent);
+	this.initialize_editorBaseControl();
+}
+
+_.inherit(IndeterminateCheckBoxControl, CheckBoxControl);
+
+_.extend(IndeterminateCheckBoxControl.prototype, {
+
+	createControlModel: function () {
+		return new IndeterminateCheckBoxModel();
+	},
+
+	createControlView: function (model) {
+		return new IndeterminateCheckBoxView({model: model});
+	}
+
+}, editorBaseControlMixin);
+
+
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxModel.js
+var IndeterminateCheckBoxModel = CheckBoxModel.extend({
+
+	defaults: _.defaults({
+		value: 'unchecked'
+	}, CheckBoxModel.prototype.defaults)
+
+});
+
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxView.js
+/**
+ * @class IndeterminateCheckBoxView
+ * @augments ControlView
+ * @mixes editorBaseViewMixin
+ */
+var IndeterminateCheckBoxView = CheckBoxView.extend({
+
+	className: 'pl-indeterminate-checkbox',
+
+	onClickHandler: function () {
+		var model = this.model;
+
+		var enabled = model.get('enabled');
+		if (enabled) {
+			var newValue = model.get('value');
+			newValue = newValue === 'indeterminate' ? 'unchecked' : newValue === 'unchecked' ? 'checked' : 'unchecked';
+			model.set('value', newValue);
+		}
+	},
+
+	updateValue: function () {
+		var value = this.model.get('value');
+		if( value === 'checked' ) {
+			this.ui.input.prop('indeterminate', false);
+			this.ui.input.prop('checked', true);
+		} else if( value === 'unchecked' ) {
+			this.ui.input.prop('indeterminate', false);
+			this.ui.input.prop('checked', false);
+		} else if( value === 'indeterminate' ) {
+			this.ui.input.prop('checked', false);
+			this.ui.input.prop('indeterminate', true);
+		}
+
+	}
 });
 
 //####app\controls\imageBox\imageBoxControl.js
@@ -15897,73 +15964,6 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
 
 }));
 
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
-function IndeterminateCheckBoxControl(parent) {
-	_.superClass(IndeterminateCheckBoxControl, this, parent);
-	this.initialize_editorBaseControl();
-}
-
-_.inherit(IndeterminateCheckBoxControl, CheckBoxControl);
-
-_.extend(IndeterminateCheckBoxControl.prototype, {
-
-	createControlModel: function () {
-		return new IndeterminateCheckBoxModel();
-	},
-
-	createControlView: function (model) {
-		return new IndeterminateCheckBoxView({model: model});
-	}
-
-}, editorBaseControlMixin);
-
-
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxModel.js
-var IndeterminateCheckBoxModel = CheckBoxModel.extend({
-
-	defaults: _.defaults({
-		value: 'unchecked'
-	}, CheckBoxModel.prototype.defaults)
-
-});
-
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxView.js
-/**
- * @class IndeterminateCheckBoxView
- * @augments ControlView
- * @mixes editorBaseViewMixin
- */
-var IndeterminateCheckBoxView = CheckBoxView.extend({
-
-	className: 'pl-indeterminate-checkbox',
-
-	onClickHandler: function () {
-		var model = this.model;
-
-		var enabled = model.get('enabled');
-		if (enabled) {
-			var newValue = model.get('value');
-			newValue = newValue === 'indeterminate' ? 'unchecked' : newValue === 'unchecked' ? 'checked' : 'unchecked';
-			model.set('value', newValue);
-		}
-	},
-
-	updateValue: function () {
-		var value = this.model.get('value');
-		if( value === 'checked' ) {
-			this.ui.input.prop('indeterminate', false);
-			this.ui.input.prop('checked', true);
-		} else if( value === 'unchecked' ) {
-			this.ui.input.prop('indeterminate', false);
-			this.ui.input.prop('checked', false);
-		} else if( value === 'indeterminate' ) {
-			this.ui.input.prop('checked', false);
-			this.ui.input.prop('indeterminate', true);
-		}
-
-	}
-});
-
 //####app\controls\link\linkElementControl.js
 /**
  *
@@ -16110,105 +16110,6 @@ var LinkElementView = CommonButtonView.extend({
     });
 
 })();
-//####app\controls\menuBar\menuBarControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function MenuBarControl(parent) {
-    _.superClass(MenuBarControl, this, parent);
-}
-
-_.inherit(MenuBarControl, ContainerControl);
-
-_.extend(MenuBarControl.prototype,
-    /** @lends MenuBarControl.prototype */
-    {
-        createControlModel: function () {
-            return new MenuBarModel();
-        },
-
-        createControlView: function (model) {
-            return new MenuBarView({model: model});
-        }
-    }
-);
-
-
-//####app\controls\menuBar\menuBarModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var MenuBarModel = ContainerModel.extend(
-    /** @lends MenuBarModel.prototype */
-    {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        }
-    }
-);
-//####app\controls\menuBar\menuBarView.js
-/**
- * @class
- * @augments ControlView
- */
-var MenuBarView = ContainerView.extend(
-    /** @lends MenuBarView.prototype */
-    {
-        tagName: 'nav',
-        className: 'pl-menu-bar navbar navbar-default',
-
-        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
-
-        UI: {
-
-        },
-
-        render: function () {
-            this.prerenderingActions();
-
-            this.removeChildElements();
-
-            this.$el.html(this.template({
-                items: this.model.get('items')
-            }));
-            this.renderItemsContents();
-
-            this.bindUIElements();
-
-            this.updateProperties();
-            this.trigger('render');
-
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
-
-        renderItemsContents: function(){
-            var $items = this.$el.find('.pl-menu-bar-item'),
-                items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
-
-            $items.each(function(i, el){
-                item = items.getByIndex(i);
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                $(el)
-                    .append(element.render());
-            });
-        },
-
-        updateGrouping: function(){}
-    }
-);
-
 //####app\controls\numericBox\numericBoxControl.js
 /**
  *
@@ -16419,6 +16320,105 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
     }
 
 });
+
+//####app\controls\menuBar\menuBarControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function MenuBarControl(parent) {
+    _.superClass(MenuBarControl, this, parent);
+}
+
+_.inherit(MenuBarControl, ContainerControl);
+
+_.extend(MenuBarControl.prototype,
+    /** @lends MenuBarControl.prototype */
+    {
+        createControlModel: function () {
+            return new MenuBarModel();
+        },
+
+        createControlView: function (model) {
+            return new MenuBarView({model: model});
+        }
+    }
+);
+
+
+//####app\controls\menuBar\menuBarModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var MenuBarModel = ContainerModel.extend(
+    /** @lends MenuBarModel.prototype */
+    {
+        initialize: function () {
+            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        }
+    }
+);
+//####app\controls\menuBar\menuBarView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var MenuBarView = ContainerView.extend(
+    /** @lends MenuBarView.prototype */
+    {
+        tagName: 'nav',
+        className: 'pl-menu-bar navbar navbar-default',
+
+        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
+
+        UI: {
+
+        },
+
+        render: function () {
+            this.prerenderingActions();
+
+            this.removeChildElements();
+
+            this.$el.html(this.template({
+                items: this.model.get('items')
+            }));
+            this.renderItemsContents();
+
+            this.bindUIElements();
+
+            this.updateProperties();
+            this.trigger('render');
+
+            this.postrenderingActions();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: this});
+            //devblockstop
+            return this;
+        },
+
+        renderItemsContents: function(){
+            var $items = this.$el.find('.pl-menu-bar-item'),
+                items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                that = this,
+                element, item;
+
+            $items.each(function(i, el){
+                item = items.getByIndex(i);
+                element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
+                $(el)
+                    .append(element.render());
+            });
+        },
+
+        updateGrouping: function(){}
+    }
+);
 
 //####app\controls\panel\panelControl.js
 /**
@@ -26969,67 +26969,6 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
 });
 
-//####app\actions\_base\baseAction\baseAction.js
-function BaseAction(parentView){
-    this.parentView = parentView;
-    this._properties = Object.create(null);
-    _.defaults(this._properties, this.defaults);
-    this.initDefaultValues();
-}
-
-window.InfinniUI.BaseAction = BaseAction;
-
-_.extend(BaseAction.prototype, {
-    defaults: {
-
-    },
-
-    setProperty: function(name, value){
-        var props= this._properties;
-        if (props[name] !== value) {
-            props[name] = value;
-            this.trigger('change:' + name, this, value);
-        }
-    },
-
-    getProperty: function(name){
-        return this._properties[name];
-    },
-
-    initDefaultValues: function () {
-
-    },
-
-    onExecutedHandler: function(args) {
-        var onExecutedHandler = this.getProperty('onExecutedHandler');
-
-        if(_.isFunction(onExecutedHandler)) {
-            onExecutedHandler(args);
-        }
-    }
-
-}, Backbone.Events);
-
-InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
-    var builder = new ApplicationBuilder();
-
-    var action = builder.build( executeActionMetadata, {parentView: context.view});
-
-    action.execute(resultCallback);
-};
-
-//####app\actions\_base\baseAction\baseActionBuilderMixin.js
-var BaseActionBuilderMixin = {
-    applyBaseActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
-        }
-    }
-};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27121,6 +27060,67 @@ var BaseEditActionBuilderMixin = {
             metadata.DestinationValue.Property;
 
         action.setProperty('destinationProperty', destinationProperty);
+    }
+};
+//####app\actions\_base\baseAction\baseAction.js
+function BaseAction(parentView){
+    this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
+}
+
+window.InfinniUI.BaseAction = BaseAction;
+
+_.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
+    setProperty: function(name, value){
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
+    },
+
+    getProperty: function(name){
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
+    }
+
+}, Backbone.Events);
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};
+
+//####app\actions\_base\baseAction\baseActionBuilderMixin.js
+var BaseActionBuilderMixin = {
+    applyBaseActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnExecuted' in metadata) {
+            action.setProperty('onExecutedHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
+            });
+        }
     }
 };
 //####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
