@@ -34196,8 +34196,8 @@ InfinniUI.ModalWindowService = (function () {
     }
 })();
 
-//####app\services\notificationSubsription.js
-var notificationSubsription = (function() {
+//####app\services\notificationSubscription.js
+var notificationSubscription = (function() {
 	var subscription = {},
 			hubProxy,
 			hubName,
@@ -34304,7 +34304,7 @@ var notificationSubsription = (function() {
 	};
 
 	var reconnection = function() {
-		if( connection ) {
+		if( connection && hubProxy ) {
 			stopConnection();
 		}
 		setUpConnection();
@@ -34345,7 +34345,7 @@ var notificationSubsription = (function() {
 	};
 })();
 
-InfinniUI.global.notificationSubsription = notificationSubsription;
+InfinniUI.global.notificationSubscription = notificationSubscription;
 
 //####app\services\notifyService.js
 /**
