@@ -839,6 +839,171 @@ describe("Filter items", function () {
 			assert.equal(result1[1].Id, 3, 'filtered item is correct');
 		});
 
+		it("should return all items that have value of given param starts with given value", function () {
+			// Given
+			var filter = "startsWith(text,'Cat')";
+			var items = [
+				{
+					Id: 1,
+					text: 'cat has nine lives'
+				},
+				{
+					Id: 2,
+					text: 'My cat is really nice'
+				},
+				{
+					Id: 3,
+					text: 'Cat-and-mouse game'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 2, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param starts with given value (caseSensitive)", function () {
+			// Given
+			var filter = "startsWith(text,'Cat',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'cat has nine lives'
+				},
+				{
+					Id: 2,
+					text: 'Cat-and-mouse game'
+				},
+				{
+					Id: 3,
+					text: 'My cat is really nice'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param ends with given value", function () {
+			// Given
+			var filter = "endsWith(text,'Test')";
+			var items = [
+				{
+					Id: 1,
+					text: 'End of string is word Test'
+				},
+				{
+					Id: 2,
+					text: 'Test must be passed'
+				},
+				{
+					Id: 3,
+					text: 'My test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 2, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param ends with given value (caseSensitive)", function () {
+			// Given
+			var filter = "endsWith(text,'Test',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'Test must be passed'
+				},
+				{
+					Id: 2,
+					text: 'End of string is word Test'
+				},
+				{
+					Id: 3,
+					text: 'My test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param contains given value", function () {
+			// Given
+			var filter = "contains(text,'Test')";
+			var items = [
+				{
+					Id: 1,
+					text: 'Test at starting'
+				},
+				{
+					Id: 2,
+					text: 'Without search string'
+				},
+				{
+					Id: 3,
+					text: 'abracadabratestabracadabra'
+				},
+				{
+					Id: 4,
+					text: 't e s t'
+				},
+				{
+					Id: 5,
+					text: 'last test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 3, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+			assert.equal(result[2].Id, 5, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param contains given value (caseSensitive)", function () {
+			// Given
+			var filter = "contains(text,'Test',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'test at starting'
+				},
+				{
+					Id: 2,
+					text: 'Without search string'
+				},
+				{
+					Id: 3,
+					text: 'abracadabraTestabracadabra'
+				},
+				{
+					Id: 4,
+					text: 't e s t'
+				},
+				{
+					Id: 5,
+					text: 'last test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 3, 'filtered item is correct');
+		});
+
+
 
 	});
 });

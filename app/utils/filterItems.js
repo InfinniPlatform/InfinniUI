@@ -795,6 +795,7 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
+	// ToDo: добавить обработку параметров caseSensitive и diacriticSensitive
 	that.text = function(value, items, context) {
 		var tmpResult = [],
 				tmpString,
@@ -807,5 +808,50 @@ filterItems.filterMethods = (function() {
 		}
 		return tmpResult;
 	};
+
+	that.startsWith = function(value, items, context){
+		var propertyName = value[0],
+			expectedStartValue = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpPattern = '^{expectedStartValue}'.replace('{expectedStartValue}', expectedStartValue),
+			regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
+	that.endsWith = function(value, items, context){
+		var propertyName = value[0],
+			expectedEndValue = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpPattern = '{expectedEndValue}$'.replace('{expectedEndValue}', expectedEndValue),
+				regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
+	that.contains = function(value, items, context){
+		var propertyName = value[0],
+			searchString = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(searchString, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
 	return that;
 })();
