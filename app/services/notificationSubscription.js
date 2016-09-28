@@ -1,4 +1,4 @@
-var notificationSubsription = (function() {
+var notificationSubscription = (function() {
 	var subscription = {},
 			hubProxy,
 			hubName,
@@ -105,7 +105,7 @@ var notificationSubsription = (function() {
 	};
 
 	var reconnection = function() {
-		if( connection ) {
+		if( connection && hubProxy ) {
 			stopConnection();
 		}
 		setUpConnection();
@@ -146,4 +146,4 @@ var notificationSubsription = (function() {
 	};
 })();
 
-InfinniUI.global.notificationSubsription = notificationSubsription;
+InfinniUI.global.notificationSubscription = notificationSubscription;
