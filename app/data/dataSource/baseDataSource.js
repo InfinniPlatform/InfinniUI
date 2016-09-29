@@ -191,7 +191,6 @@ var BaseDataSource = Backbone.Model.extend({
         var propertyPaths = property.split('.');
         var firstChar;
         var indexOfSelectedItem;
-        var index;
         var resultOfSet;
 
         if(propertyPaths[0] == '$'){
@@ -356,6 +355,7 @@ var BaseDataSource = Backbone.Model.extend({
 
             // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из-за заморозки, нужно вызвать updateItems
             if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
+                // waitingOnUpdateItemsHandlers будут вызваны в _notifyAboutItemsUpdated или _onErrorProviderUpdateItemsHandle
                 this.updateItems();
             }
         }
@@ -611,16 +611,14 @@ var BaseDataSource = Backbone.Model.extend({
             var dataProvider = this.get('dataProvider'),
                 that = this;
 
-
-            onError = this._compensateOnErrorOfProviderHandler(onError);
-
-
             this.set('isRequestInProcess', true);
             dataProvider.getItems(
                 function (data) {
-                    that._handleSuccessUpdateItemsInProvider(data, onSuccess, onError);
+                    that._handleSuccessUpdateItemsInProvider(data, onSuccess);
                 },
-                onError
+                function (data) {
+                    that._onErrorProviderUpdateItemsHandle(data, onError);
+                }
             );
 
         }else{
@@ -635,26 +633,12 @@ var BaseDataSource = Backbone.Model.extend({
         //devblockstop
     },
 
-
-    _compensateOnErrorOfProviderHandler: function(onError){
-        var that = this;
-
-        return function(){
-            if(typeof onError == 'function'){
-                onError.apply(undefined, arguments);
-            }else{
-                that.trigger('onProviderError', arguments);
-            }
-        };
-
-    },
-
-    _handleSuccessUpdateItemsInProvider: function(data, onSuccess, onError){
+    _handleSuccessUpdateItemsInProvider: function(data, callback){
         var that = this,
             isWaiting =  that.get('isWaiting'),
             finishUpdating = function(){
                 that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                that._handleUpdatedItemsData(data.data, callback);
             };
 
         if(isWaiting){
@@ -666,24 +650,47 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _onErrorProviderUpdateItemsHandle: function(){
+    _onErrorProviderUpdateItemsHandle: function(data, callback){
+        var handlers = this.get('waitingOnUpdateItemsHandlers'),
+            context = this.getContext();
 
+        if( handlers.length == 0 && !_.isFunction(callback) ){
+            this._compensateOnErrorOfProviderHandler(data);
+            return;
+        }
+
+        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        for(var i = 0, ii = handlers.length; i < ii; i++){
+            if(handlers[i].onError){
+                handlers[i].onError(context, data);
+            }
+        }
+
+        this.set('waitingOnUpdateItemsHandlers', []);
+
+        if(_.isFunction(callback)) {
+            callback(context, data);
+        }
+    },
+
+    _compensateOnErrorOfProviderHandler: function(){
+        this.trigger('onProviderError', arguments);
     },
 
     setIsWaiting: function(value){
         this.set('isWaiting', value);
     },
 
-    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+    _handleUpdatedItemsData: function (itemsData, callback) {
         if(this.get('newItemsHandler')){
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
         this.setProperty('', itemsData);
-        this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
+        this._notifyAboutItemsUpdated(itemsData, callback);
     },
 
-    _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
+    _notifyAboutItemsUpdated: function (itemsData, callback) {
         var context = this.getContext();
         var argument = {
             value: itemsData,
@@ -700,8 +707,8 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.set('waitingOnUpdateItemsHandlers', []);
 
-        if (successHandler) {
-            successHandler(context, argument);
+        if (callback) {
+            callback(context, argument);
         }
 
         this.trigger('onItemsUpdated', context, argument);
@@ -937,10 +944,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         return promise;
     },
-
-    //setBindingBuilder: function(bindingBuilder){
-    //    this.set('bindingBuilder', bindingBuilder);
-    //},
 
     setIsLazy: function(isLazy){
         this.set('isLazy', isLazy);

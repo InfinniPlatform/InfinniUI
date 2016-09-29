@@ -42,9 +42,8 @@ describe('DataSourceBuilder', function () {
 
     FakeRestDataProvider.prototype.items = _.clone(items);
 
-    window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
     describe('build DocumentDataSource', function () {
+
         it('should build documentDataSource', function () {
             // Given When
             var metadata = {
@@ -72,6 +71,8 @@ describe('DataSourceBuilder', function () {
 
         it('should subscribe documentDataSource on changeProperty', function (done) {
             // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
             var metadata = {
                     Name: 'PatientDataSource',
                     DocumentId: 'Patient',

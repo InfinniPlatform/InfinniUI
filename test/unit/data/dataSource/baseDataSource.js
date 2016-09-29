@@ -33,4 +33,61 @@ describe('baseDataSource', function () {
         //When
         dataSource.validateOnErrors();
     });
+
+    it('should call suspended onSuccess callback if resumed update was success', function () {
+        // Given
+        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
+        window.suspendedOnSuccessWasCalled = false;
+        window.suspendedOnErrorWasCalled = false;
+
+        // When
+        dataSource.suspendUpdate();
+        dataSource.updateItems(
+            function(){ // onSuccess
+                window.suspendedOnSuccessWasCalled = true;
+            },
+            function(){ // onError
+                window.suspendedOnErrorWasCalled = true;
+            });
+        dataSource.resumeUpdate();
+
+        // Then
+        assert.isTrue(window.suspendedOnSuccessWasCalled);
+        assert.isFalse(window.suspendedOnErrorWasCalled);
+    });
+
+    it('should call suspended onError callback if resumed update was fail', function () {
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', function(){
+            return {
+                getItems: function(successHandler, errorHandler){
+                    errorHandler();
+                },
+                setOrigin: function(){},
+                setPath: function(){},
+                setData: function(){},
+                setParams: function(){}
+            }
+        });
+
+        var dataSource = new InfinniUI.DocumentDataSource( { view: fakeView() } );
+
+        window.suspendedOnSuccessWasCalled = false;
+        window.suspendedOnErrorWasCalled = false;
+
+        // When
+        dataSource.suspendUpdate();
+        dataSource.updateItems(
+            function(){ // onSuccess
+                window.suspendedOnSuccessWasCalled = true;
+            },
+            function(){ // onError
+                window.suspendedOnErrorWasCalled = true;
+            });
+        dataSource.resumeUpdate();
+
+        // Then
+        assert.isFalse(window.suspendedOnSuccessWasCalled);
+        assert.isTrue(window.suspendedOnErrorWasCalled);
+    });
 });

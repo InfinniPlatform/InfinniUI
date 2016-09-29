@@ -26,7 +26,7 @@ _.extend( FakeRestDataProvider.prototype, {
         FakeRestDataProvider.prototype.lastSendedUrl = urlString;
 
         if(params.data) {
-            if (params.data.filter) {
+            if ( _.isString(params.data.filter) ) {
                 result = InfinniUI.FilterItems(result, params.data.filter);
             }
 
