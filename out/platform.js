@@ -26969,6 +26969,67 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
 });
 
+//####app\actions\_base\baseAction\baseAction.js
+function BaseAction(parentView){
+    this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
+}
+
+window.InfinniUI.BaseAction = BaseAction;
+
+_.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
+    setProperty: function(name, value){
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
+    },
+
+    getProperty: function(name){
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
+    }
+
+}, Backbone.Events);
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};
+
+//####app\actions\_base\baseAction\baseActionBuilderMixin.js
+var BaseActionBuilderMixin = {
+    applyBaseActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnExecuted' in metadata) {
+            action.setProperty('onExecutedHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
+            });
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27062,67 +27123,6 @@ var BaseEditActionBuilderMixin = {
         action.setProperty('destinationProperty', destinationProperty);
     }
 };
-//####app\actions\_base\baseAction\baseAction.js
-function BaseAction(parentView){
-    this.parentView = parentView;
-    this._properties = Object.create(null);
-    _.defaults(this._properties, this.defaults);
-    this.initDefaultValues();
-}
-
-window.InfinniUI.BaseAction = BaseAction;
-
-_.extend(BaseAction.prototype, {
-    defaults: {
-
-    },
-
-    setProperty: function(name, value){
-        var props= this._properties;
-        if (props[name] !== value) {
-            props[name] = value;
-            this.trigger('change:' + name, this, value);
-        }
-    },
-
-    getProperty: function(name){
-        return this._properties[name];
-    },
-
-    initDefaultValues: function () {
-
-    },
-
-    onExecutedHandler: function(args) {
-        var onExecutedHandler = this.getProperty('onExecutedHandler');
-
-        if(_.isFunction(onExecutedHandler)) {
-            onExecutedHandler(args);
-        }
-    }
-
-}, Backbone.Events);
-
-InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
-    var builder = new ApplicationBuilder();
-
-    var action = builder.build( executeActionMetadata, {parentView: context.view});
-
-    action.execute(resultCallback);
-};
-
-//####app\actions\_base\baseAction\baseActionBuilderMixin.js
-var BaseActionBuilderMixin = {
-    applyBaseActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
-        }
-    }
-};
 //####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
 var BaseFallibleActionBuilderMixin = {
     applyBaseFallibleActionMetadata: function(action, params) {
@@ -27158,6 +27158,52 @@ var BaseFallibleActionMixin = {
         }
     }
 };
+//####app\actions\acceptAction\acceptAction.js
+function AcceptAction(parentView){
+    _.superClass(AcceptAction, this, parentView);
+}
+
+_.inherit(AcceptAction, BaseAction);
+
+
+_.extend(AcceptAction.prototype, {
+    execute: function(callback){
+        var that = this;
+
+        this.parentView.onClosed(function () {
+            that.onExecutedHandler();
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        this.parentView.setDialogResult(DialogResult.accepted);
+        this.parentView.close();
+    }
+});
+
+window.InfinniUI.AcceptAction = AcceptAction;
+
+//####app\actions\acceptAction\acceptActionBuilder.js
+function AcceptActionBuilder() {
+}
+
+_.extend(AcceptActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var action = new AcceptAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
+
 //####app\actions\addAction\addAction.js
 function AddAction(parentView){
     _.superClass(AddAction, this, parentView);
@@ -27218,52 +27264,6 @@ _.extend(AddActionBuilder.prototype,
 );
 
 window.InfinniUI.AddActionBuilder = AddActionBuilder;
-
-//####app\actions\acceptAction\acceptAction.js
-function AcceptAction(parentView){
-    _.superClass(AcceptAction, this, parentView);
-}
-
-_.inherit(AcceptAction, BaseAction);
-
-
-_.extend(AcceptAction.prototype, {
-    execute: function(callback){
-        var that = this;
-
-        this.parentView.onClosed(function () {
-            that.onExecutedHandler();
-
-            if (callback) {
-                callback();
-            }
-        });
-
-        this.parentView.setDialogResult(DialogResult.accepted);
-        this.parentView.close();
-    }
-});
-
-window.InfinniUI.AcceptAction = AcceptAction;
-
-//####app\actions\acceptAction\acceptActionBuilder.js
-function AcceptActionBuilder() {
-}
-
-_.extend(AcceptActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new AcceptAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
 
 //####app\actions\cancelAction\cancelAction.js
 function CancelAction(parentView){
@@ -34296,11 +34296,13 @@ var notificationSubscription = (function() {
 	};
 
 	var stopConnection = function() {
-		isConnected = false;
+		if( hubProxy ) {
+			isConnected = false;
 
-		eventSwitcher('off');
-		hubProxy = null;
-		connection.stop();
+			eventSwitcher('off');
+			hubProxy = null;
+			connection.stop();
+		}
 	};
 
 	var reconnection = function() {
@@ -34320,12 +34322,7 @@ var notificationSubscription = (function() {
 		if( !connection ) {
 			console.error('Необходимо сначала установить соединение с сервером');
 		}
-		if( eventName === 'disconnected' ) {
-			connection[eventName](function() {
-				stopConnection();
-				callback();
-			});
-		} else if( connection[eventName] && eventName !== 'disconnected' ) {
+		if( connection[eventName] ) {
 			connection[eventName](callback);
 		}
 	};

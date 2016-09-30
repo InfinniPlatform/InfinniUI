@@ -97,11 +97,13 @@ var notificationSubscription = (function() {
 	};
 
 	var stopConnection = function() {
-		isConnected = false;
+		if( hubProxy ) {
+			isConnected = false;
 
-		eventSwitcher('off');
-		hubProxy = null;
-		connection.stop();
+			eventSwitcher('off');
+			hubProxy = null;
+			connection.stop();
+		}
 	};
 
 	var reconnection = function() {
@@ -121,12 +123,7 @@ var notificationSubscription = (function() {
 		if( !connection ) {
 			console.error('Необходимо сначала установить соединение с сервером');
 		}
-		if( eventName === 'disconnected' ) {
-			connection[eventName](function() {
-				stopConnection();
-				callback();
-			});
-		} else if( connection[eventName] && eventName !== 'disconnected' ) {
+		if( connection[eventName] ) {
 			connection[eventName](callback);
 		}
 	};
