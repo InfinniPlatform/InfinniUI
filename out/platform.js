@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.39';
+InfinniUI.VERSION = '2.1.40';
 
 //####app\utils\collection\collection.js
 /**

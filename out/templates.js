@@ -55,11 +55,11 @@ this["InfinniUI"]["Template"]["controls/menuBar/template/menuBar.tpl.html"] = fu
 
 this["InfinniUI"]["Template"]["controls/numericBox/template/numericBox.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape;with (obj) {__p += '<label class="pl-control-label" for="' +__e( guid ) +'"></label>\r\n<div class="input-group">\r\n    <span class="pl-numeric-box-min input-group-addon"><i class="fa fa-minus"></i></span>\r\n    <input  class="pl-editor pl-control form-control pl-numeric-box-input" type="text" id="' +__e( guid ) +'" >\r\n    <span class="pl-numeric-box-max input-group-addon"><i class="fa fa-plus"></i></span>\r\n</div>\r\n\r\n<div class="pl-control-hint-text help-block hidden"></div>\r\n<div class="pl-control-error-text help-block hidden"></div>\r\n<div class="pl-control-warning-text help-block hidden"></div>\r\n\r\n\r\n';}return __p};
 
+this["InfinniUI"]["Template"]["controls/panel/template/panel.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) {__p += '<div class="pl-panel-header panel-heading">Panel header</div>\r\n<div class="pl-panel-body panel-body">\r\n    '; items.forEach(function(item, index){;__p += '\r\n    <div class="pl-panel-i"></div>\r\n    ';});;__p += '\r\n</div>';}return __p};
+
 this["InfinniUI"]["Template"]["controls/passwordBox/template/passwordBox.off.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape;with (obj) {__p += '<form autocomplete="off" onsubmit="return false;">\r\n<label class="pl-control-label" for="' +__e( guid ) +'"></label>\r\n<input class="pl-control form-control pl-password-box-input" type="password" id="' +__e( guid ) +'">\r\n<div class="pl-control-hint-text help-block hidden"></div>\r\n<div class="pl-control-error-text help-block hidden"></div>\r\n<div class="pl-control-warning-text help-block hidden"></div>\r\n</form>';}return __p};
 
 this["InfinniUI"]["Template"]["controls/passwordBox/template/passwordBox.on.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __e = _.escape;with (obj) {__p += '<label class="pl-control-label" for="' +__e( guid ) +'"></label>\r\n<input class="pl-control form-control pl-password-box-input" type="password" id="' +__e( guid ) +'">\r\n<div class="pl-control-hint-text help-block hidden"></div>\r\n<div class="pl-control-error-text help-block hidden"></div>\r\n<div class="pl-control-warning-text help-block hidden"></div>';}return __p};
-
-this["InfinniUI"]["Template"]["controls/panel/template/panel.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) {__p += '<div class="pl-panel-header panel-heading">Panel header</div>\r\n<div class="pl-panel-body panel-body">\r\n    '; items.forEach(function(item, index){;__p += '\r\n    <div class="pl-panel-i"></div>\r\n    ';});;__p += '\r\n</div>';}return __p};
 
 this["InfinniUI"]["Template"]["controls/scrollPanel/template/scrollPanel.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '', __j = Array.prototype.join;function print() { __p += __j.call(arguments, '') }with (obj) {__p += '<div class="pl-scrollpanel-body">\r\n    '; items.forEach(function(item, index){;__p += '\r\n    <div class="pl-scrollpanel-i"></div>\r\n    ';});;__p += '\r\n</div>';}return __p};
 
@@ -79,15 +79,15 @@ this["InfinniUI"]["Template"]["controls/textBox/template/oneline.tpl.html"] = fu
 
 this["InfinniUI"]["Template"]["controls/toggleButton/template/toggleButton.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div class="togglebutton-box">\r\n    <div class="togglebutton-container">\r\n        <span class="togglebutton-handle-on"></span>\r\n        <span class="togglebutton-handle-label">&nbsp;</span>\r\n        <span class="togglebutton-handle-off"></span>\r\n    </div>\r\n</div>';}return __p};
 
-this["InfinniUI"]["Template"]["controls/toolBar/template/toolBar.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div class="pl-tool-bar__container"></div>';}return __p};
-
-this["InfinniUI"]["Template"]["controls/toolBar/template/toolBarItem.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div style="display: inline-block;"></div>';}return __p};
-
 this["InfinniUI"]["Template"]["controls/treeView/template/node-checkbox.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<span class="pl-treeview-node__button"><!-- pl-treeview-node__button_collapse -->\r\n    <!-- expand/collapse button -->\r\n</span>\r\n\r\n<div class="pl-treeview-node__item pl-treeview-item"><!-- pl-treeview-item_checked -->\r\n    <div class="pl-treeview-item__checker pl-treeview-item__checker_checkbox">\r\n\r\n    </div>\r\n\r\n    <div class="pl-treeview-item__content"><!-- pl-treeview-item__content_selected -->\r\n        <!-- item content HTML markup -->\r\n    </div>\r\n</div>\r\n\r\n<div class="pl-treeview-node__items"><!-- pl-treeview-node__items_expanded -->\r\n    <!-- subitems list -->\r\n</div>';}return __p};
 
 this["InfinniUI"]["Template"]["controls/treeView/template/node-radio.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<span class="pl-treeview-node__button"><!-- pl-treeview-node__button_collapse -->\r\n    <!-- expand/collapse button -->\r\n</span>\r\n\r\n<div class="pl-treeview-node__item pl-treeview-item"><!-- pl-treeview-item_checked -->\r\n    <div class="pl-treeview-item__checker pl-treeview-item__checker_radio"></div>\r\n\r\n    <div class="pl-treeview-item__content"><!-- pl-treeview-item__content_selected -->\r\n        <!-- item content HTML markup -->\r\n    </div>\r\n</div>\r\n\r\n<div class="pl-treeview-node__items"><!-- pl-treeview-node__items_expanded -->\r\n    <!-- subitems list -->\r\n</div>';}return __p};
 
 this["InfinniUI"]["Template"]["controls/treeView/template/treeview.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '';}return __p};
+
+this["InfinniUI"]["Template"]["controls/toolBar/template/toolBar.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div class="pl-tool-bar__container"></div>';}return __p};
+
+this["InfinniUI"]["Template"]["controls/toolBar/template/toolBarItem.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div style="display: inline-block;"></div>';}return __p};
 
 this["InfinniUI"]["Template"]["services/ajaxLoaderIndicator/template/template.tpl.html"] = function(obj) {obj || (obj = {});var __t, __p = '';with (obj) {__p += '<div class="pl-ajaxloader-indicator"></div>';}return __p};
 
