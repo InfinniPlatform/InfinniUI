@@ -80,6 +80,10 @@ var editorBaseBuilderMixin = {
                 topPriority.toSource = nonPriority.toSource;
             }
 
+            if( !topPriority._element && nonPriority._element ) {
+                topPriority._element = nonPriority._element;
+            }
+
             return !_.isEmpty(topPriority) ? topPriority : null;
         }
 
