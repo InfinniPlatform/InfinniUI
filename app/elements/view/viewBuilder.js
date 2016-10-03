@@ -132,11 +132,11 @@ _.extend(ViewBuilder.prototype, {
             element.noDataSourceOnView();
         }
 
-        if( metadata.NotificationSubsriptions ) {
-            var subscriptor = InfinniUI.global.notificationSubsription;
-            for( var key in metadata.NotificationSubsriptions ) {
+        if( metadata.NotificationSubscriptions ) {
+            var subscriptor = InfinniUI.global.notificationSubscription;
+            for( var key in metadata.NotificationSubscriptions ) {
                 (function() {
-                    var script = metadata.NotificationSubsriptions[key];
+                    var script = metadata.NotificationSubscriptions[key];
                     subscriptor.subscribe(key, function(context, args) {
                         new ScriptExecutor(element).executeScript(script, {context: context, message: args.message});
                     }, this);
@@ -144,7 +144,7 @@ _.extend(ViewBuilder.prototype, {
             }
 
             element.onClosing(function() {
-                for( var key2 in metadata.NotificationSubsriptions ) {
+                for( var key2 in metadata.NotificationSubscriptions ) {
                     subscriptor.unsubscribe(key2, this);
                 }
             });
