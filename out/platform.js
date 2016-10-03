@@ -21262,6 +21262,10 @@ var editorBaseBuilderMixin = {
                 topPriority.toSource = nonPriority.toSource;
             }
 
+            if( !topPriority._element && nonPriority._element ) {
+                topPriority._element = nonPriority._element;
+            }
+
             return !_.isEmpty(topPriority) ? topPriority : null;
         }
 
@@ -23929,6 +23933,8 @@ function FileBoxValueConverter (element) {
     this._element = element;
 }
 
+window.InfinniUI.FileBoxValueConverter = FileBoxValueConverter;
+
 FileBoxValueConverter.prototype.toElement = function (context, args) {
     var value = args.value;
     var binding = args.binding;
@@ -23958,6 +23964,7 @@ FileBoxValueConverter.prototype.toElement = function (context, args) {
 
     return url;
 };
+
 //####app\elements\form\form.js
 /**
  *
