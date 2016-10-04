@@ -18,7 +18,7 @@ _.extend(ExtensionPanelBuilder.prototype, {
 
         var parameters = {};
         _.each(metadata.Parameters, function (parameterMetadata) {
-            var param = builder.buildType('Parameter', parameterMetadata, {parentView: parentView});
+            var param = builder.buildType('Parameter', parameterMetadata, {parentView: parentView, basePathOfProperty: params.basePathOfProperty});
             parameters[param.getName()] = param;
         });
 
