@@ -6,7 +6,7 @@
 var ImageBoxModel = ControlModel.extend( _.extend({
 
     defaults: _.defaults({
-            text: 'Выбрать изображение'
+            text: localized.strings.ImageBox.chooseImage
         },
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults

@@ -9,6 +9,7 @@ var sourceForFiles = {
 		'app/elements/_common/enums/*.js',
 		'app/elements/**/enums/*.js',
 		'app/config.js',
+		'app/localizations/**/*.js',
 		'app/utils/*/*.js',
 		'app/utils/**/*.js',
 		'app/messaging/**/*.js',
