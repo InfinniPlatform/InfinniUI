@@ -243,7 +243,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
     // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
-    g: 'MM/dd/yyyy HH:%m',
+    g: 'MM/dd/yyyy HH:mm',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -12870,6 +12870,95 @@ var TablePanelView = ContainerView.extend(
     }
 );
 
+//####app\controls\tablePanel\row\rowControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function RowControl(parent) {
+    _.superClass(RowControl, this, parent);
+}
+
+_.inherit(RowControl, ContainerControl);
+
+_.extend(RowControl.prototype,
+    /** @lends RowControl.prototype */
+    {
+        createControlModel: function () {
+            return new RowModel();
+        },
+
+        createControlView: function (model) {
+            return new RowView({model: model});
+        }
+    }
+);
+
+
+//####app\controls\tablePanel\row\rowModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var RowModel = ContainerModel.extend(
+    /** @lends RowModel.prototype */
+    {
+        initialize: function () {
+            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        }
+    }
+);
+//####app\controls\tablePanel\row\rowView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var RowView = ContainerView.extend(
+    /** @lends RowView.prototype */
+    {
+        className: 'pl-row row',
+
+        initialize: function (options) {
+            ContainerView.prototype.initialize.call(this, options);
+        },
+
+        render: function () {
+            this.prerenderingActions();
+
+            this.removeChildElements();
+
+            this.renderItemsContents();
+
+            this.updateProperties();
+            this.trigger('render');
+
+            this.postrenderingActions();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: this});
+            //devblockstop
+            return this;
+        },
+
+        renderItemsContents: function(){
+            var items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                that = this,
+                element, item;
+
+            items.forEach(function(item, i){
+                element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
+                that.$el
+                    .append(element.render());
+            });
+        },
+
+        updateGrouping: function(){}
+    }
+);
+
 //####app\controls\tablePanel\cell\cellControl.js
 /**
  *
@@ -12983,95 +13072,6 @@ var CellView = ContainerView.extend(
                 this.columnSpan = columnSpan;
             }
 
-        },
-
-        updateGrouping: function(){}
-    }
-);
-
-//####app\controls\tablePanel\row\rowControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function RowControl(parent) {
-    _.superClass(RowControl, this, parent);
-}
-
-_.inherit(RowControl, ContainerControl);
-
-_.extend(RowControl.prototype,
-    /** @lends RowControl.prototype */
-    {
-        createControlModel: function () {
-            return new RowModel();
-        },
-
-        createControlView: function (model) {
-            return new RowView({model: model});
-        }
-    }
-);
-
-
-//####app\controls\tablePanel\row\rowModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var RowModel = ContainerModel.extend(
-    /** @lends RowModel.prototype */
-    {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        }
-    }
-);
-//####app\controls\tablePanel\row\rowView.js
-/**
- * @class
- * @augments ControlView
- */
-var RowView = ContainerView.extend(
-    /** @lends RowView.prototype */
-    {
-        className: 'pl-row row',
-
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
-
-        render: function () {
-            this.prerenderingActions();
-
-            this.removeChildElements();
-
-            this.renderItemsContents();
-
-            this.updateProperties();
-            this.trigger('render');
-
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
-
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
-
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
-            });
         },
 
         updateGrouping: function(){}
@@ -17369,6 +17369,83 @@ var ToolBarView = ContainerView.extend({
     updateGrouping: function(){}
 });
 
+//####app\controls\viewPanel\viewPanelControl.js
+var ViewPanelControl = function () {
+    _.superClass(ViewPanelControl, this);
+};
+
+_.inherit(ViewPanelControl, Control);
+
+ViewPanelControl.prototype.createControlModel = function () {
+    return new ViewPanelModel();
+};
+
+ViewPanelControl.prototype.createControlView = function (model) {
+    return new ViewPanelView({model: model});
+};
+
+var ViewPanelModel = ControlModel.extend({
+    defaults: _.defaults({
+        layout: null
+    }, ControlModel.prototype.defaults),
+
+    initialize: function(){
+        var that = this;
+
+        ControlModel.prototype.initialize.apply(this);
+
+        this.once('change:layout', function (model, layout) {
+            if(layout && layout.onLoaded){
+                that.subscribeOnLoaded();
+            }
+        });
+    },
+
+    subscribeOnLoaded: function(){
+        var that = this;
+        var layout = this.get('layout');
+
+        layout.onLoaded(function(){
+            that.set('isLoaded', true);
+        });
+    }
+});
+
+var ViewPanelView = ControlView.extend({
+    className: 'pl-view-panel',
+
+    initialize: function () {
+        ControlView.prototype.initialize.apply(this);
+        this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
+    },
+
+    onChangeLayoutHandler: function (model, layout) {
+        this.$el.empty();
+        if(layout){
+            this.$el.append(layout.render());
+        }
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        var layout = this.model.get('layout');
+
+        if(layout){
+            this.$el.append(layout.render());
+        }
+
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions(false);
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    }
+});
+
 //####app\controls\view\viewControl.js
 /**
  *
@@ -17471,83 +17548,6 @@ var ViewView = ContainerView.extend(
         updateGrouping: function(){}
     }
 );
-
-//####app\controls\viewPanel\viewPanelControl.js
-var ViewPanelControl = function () {
-    _.superClass(ViewPanelControl, this);
-};
-
-_.inherit(ViewPanelControl, Control);
-
-ViewPanelControl.prototype.createControlModel = function () {
-    return new ViewPanelModel();
-};
-
-ViewPanelControl.prototype.createControlView = function (model) {
-    return new ViewPanelView({model: model});
-};
-
-var ViewPanelModel = ControlModel.extend({
-    defaults: _.defaults({
-        layout: null
-    }, ControlModel.prototype.defaults),
-
-    initialize: function(){
-        var that = this;
-
-        ControlModel.prototype.initialize.apply(this);
-
-        this.once('change:layout', function (model, layout) {
-            if(layout && layout.onLoaded){
-                that.subscribeOnLoaded();
-            }
-        });
-    },
-
-    subscribeOnLoaded: function(){
-        var that = this;
-        var layout = this.get('layout');
-
-        layout.onLoaded(function(){
-            that.set('isLoaded', true);
-        });
-    }
-});
-
-var ViewPanelView = ControlView.extend({
-    className: 'pl-view-panel',
-
-    initialize: function () {
-        ControlView.prototype.initialize.apply(this);
-        this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
-    },
-
-    onChangeLayoutHandler: function (model, layout) {
-        this.$el.empty();
-        if(layout){
-            this.$el.append(layout.render());
-        }
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        var layout = this.model.get('layout');
-
-        if(layout){
-            this.$el.append(layout.render());
-        }
-
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions(false);
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    }
-});
 
 //####app\data\dataSource\_mixins\dataSourceValidationNotifierMixin.js
 /**
@@ -25888,6 +25888,47 @@ _.extend(ToggleButtonBuilder.prototype, {
  * @property {String} TextOff
  */
 
+//####app\elements\toolBar\toolBar.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Container
+ */
+var ToolBar = function (parent) {
+    _.superClass(ToolBar, this, parent);
+};
+
+window.InfinniUI.ToolBar = ToolBar;
+
+_.inherit(ToolBar, Container);
+
+ToolBar.prototype.createControl = function () {
+    return new ToolBarControl();
+};
+
+//####app\elements\toolBar\toolBarBuilder.js
+/**
+ *
+ * @constructor
+ * @augments ContainerBuilder
+ */
+function ToolBarBuilder() {
+    _.superClass(ToolBarBuilder, this);
+}
+
+window.InfinniUI.ToolBarBuilder = ToolBarBuilder;
+
+_.inherit(ToolBarBuilder, ContainerBuilder);
+
+_.extend(ToolBarBuilder.prototype, /** @lends ToolBarBuilder.prototype */{
+
+    createElement: function (params) {
+        return new ToolBar(params.parent);
+    }
+
+});
+
 //####app\elements\treeView\treeView.js
 /**
  * @param parent
@@ -26002,47 +26043,6 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         }
         element.setParentSelector(parentSelector);
     }
-});
-
-//####app\elements\toolBar\toolBar.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Container
- */
-var ToolBar = function (parent) {
-    _.superClass(ToolBar, this, parent);
-};
-
-window.InfinniUI.ToolBar = ToolBar;
-
-_.inherit(ToolBar, Container);
-
-ToolBar.prototype.createControl = function () {
-    return new ToolBarControl();
-};
-
-//####app\elements\toolBar\toolBarBuilder.js
-/**
- *
- * @constructor
- * @augments ContainerBuilder
- */
-function ToolBarBuilder() {
-    _.superClass(ToolBarBuilder, this);
-}
-
-window.InfinniUI.ToolBarBuilder = ToolBarBuilder;
-
-_.inherit(ToolBarBuilder, ContainerBuilder);
-
-_.extend(ToolBarBuilder.prototype, /** @lends ToolBarBuilder.prototype */{
-
-    createElement: function (params) {
-        return new ToolBar(params.parent);
-    }
-
 });
 
 //####app\elements\view\view.js
@@ -27176,6 +27176,41 @@ var BaseActionBuilderMixin = {
         }
     }
 };
+//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
+var BaseFallibleActionBuilderMixin = {
+    applyBaseFallibleActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnSuccess' in metadata) {
+            action.setProperty('onSuccessHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
+            });
+        }
+
+        if('OnError' in metadata) {
+            action.setProperty('onErrorHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
+            });
+        }
+    }
+};
+//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
+var BaseFallibleActionMixin = {
+    onSuccessHandler: function(args) {
+        var onSuccessHandler = this.getProperty('onSuccessHandler');
+
+        if(_.isFunction(onSuccessHandler)) {
+            onSuccessHandler(args);
+        }
+    },
+    onErrorHandler: function(args) {
+        var onErrorHandler = this.getProperty('onErrorHandler');
+
+        if(_.isFunction(onErrorHandler)) {
+            onErrorHandler(args);
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27267,41 +27302,6 @@ var BaseEditActionBuilderMixin = {
             metadata.DestinationValue.Property;
 
         action.setProperty('destinationProperty', destinationProperty);
-    }
-};
-//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
-var BaseFallibleActionBuilderMixin = {
-    applyBaseFallibleActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnSuccess' in metadata) {
-            action.setProperty('onSuccessHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
-            });
-        }
-
-        if('OnError' in metadata) {
-            action.setProperty('onErrorHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
-            });
-        }
-    }
-};
-//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
-var BaseFallibleActionMixin = {
-    onSuccessHandler: function(args) {
-        var onSuccessHandler = this.getProperty('onSuccessHandler');
-
-        if(_.isFunction(onSuccessHandler)) {
-            onSuccessHandler(args);
-        }
-    },
-    onErrorHandler: function(args) {
-        var onErrorHandler = this.getProperty('onErrorHandler');
-
-        if(_.isFunction(onErrorHandler)) {
-            onErrorHandler(args);
-        }
     }
 };
 //####app\actions\acceptAction\acceptAction.js
@@ -27707,59 +27707,6 @@ _.extend(EditActionBuilder.prototype,
 
 window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
-//####app\actions\openAction\openAction.js
-function OpenAction(parentView){
-    _.superClass(OpenAction, this, parentView);
-}
-
-_.inherit(OpenAction, BaseAction);
-
-
-_.extend(OpenAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView'),
-            that = this;
-
-        linkView.createView(function (view) {
-
-            view.onLoaded(function () {
-                that.onExecutedHandler();
-
-                if (callback) {
-                    callback(view);
-                }
-            });
-
-            view.open();
-        });
-    }
-});
-
-window.InfinniUI.OpenAction = OpenAction;
-
-//####app\actions\openAction\openActionBuilder.js
-function OpenActionBuilder(){
-}
-
-
-_.extend(OpenActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new OpenAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
-            action.setProperty('linkView', linkView);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
-
 //####app\actions\routeToAction\routeToAction.js
 function RouteToAction(){
     _.superClass(RouteToAction, this);
@@ -27987,6 +27934,59 @@ _.extend(SelectActionBuilder.prototype,
 );
 
 window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
+
+//####app\actions\openAction\openAction.js
+function OpenAction(parentView){
+    _.superClass(OpenAction, this, parentView);
+}
+
+_.inherit(OpenAction, BaseAction);
+
+
+_.extend(OpenAction.prototype, {
+    execute: function(callback){
+        var linkView = this.getProperty('linkView'),
+            that = this;
+
+        linkView.createView(function (view) {
+
+            view.onLoaded(function () {
+                that.onExecutedHandler();
+
+                if (callback) {
+                    callback(view);
+                }
+            });
+
+            view.open();
+        });
+    }
+});
+
+window.InfinniUI.OpenAction = OpenAction;
+
+//####app\actions\openAction\openActionBuilder.js
+function OpenActionBuilder(){
+}
+
+
+_.extend(OpenActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new OpenAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
+            action.setProperty('linkView', linkView);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -34082,95 +34082,6 @@ _.extend(OpenModeDialogStrategy.prototype, {
     }
 });
 
-//####app\script\scriptBuilder.js
-/**
- *
- * @constructor
- */
-function ScriptBuilder() {}
-
-window.InfinniUI.ScriptBuilder = ScriptBuilder;
-
-
-ScriptBuilder.prototype.build = function (context, args) {
-    var
-        metadata = args.metadata,
-        name = metadata.Name,
-        body = metadata.Body;
-
-    var func = new Function('context', 'args', body);
-
-    return function (context, args) {
-        var result;
-        try {
-            result = func.call(undefined, context, args);
-        } catch (err) {
-            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
-            console.error(body);
-            console.groupEnd();
-        }
-        return result;
-    };
-};
-
-
-//####app\script\scriptExecutor.js
-/**
- *
- * @param parent
- * @constructor
- */
-function ScriptExecutor(parent) {
-    this.parent = parent;
-}
-
-window.InfinniUI.ScriptExecutor = ScriptExecutor;
-
-
-/**
- *
- * @param {string} scriptName
- * @param {Object} args
- * @returns {*}
- */
-ScriptExecutor.prototype.executeScript = function (scriptName, args) {
-    var parent = this.parent;
-    var context = parent.getContext();
-    var result;
-    var scriptBody;
-    var scriptCompiled;
-
-    if(scriptName.substr(0, 1) == '{'){
-        scriptBody = scriptName.substr(1, scriptName.length - 2);
-        scriptCompiled = this.buildScriptByBody(scriptBody);
-    }else{
-        scriptCompiled = parent.getScripts().getById(scriptName);
-        if(scriptCompiled){
-            scriptCompiled = scriptCompiled.func;
-        }
-    }
-
-
-
-    if (context && scriptCompiled) {
-        result = scriptCompiled.call(undefined, context, args);
-    }
-
-    return result;
-};
-
-ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
-    var context = this.parent.getContext();
-    var args = {
-        metadata: {
-            "Body": scriptBody,
-            "Name": "InlineScript"
-        }
-    };
-    var scriptBuilder = new ScriptBuilder();
-    return scriptBuilder.build(context, args);
-};
-
 //####app\services\modalWindowService.js
 InfinniUI.ModalWindowService = (function () {
     var modalQueue = [];
@@ -34394,6 +34305,95 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
+//####app\script\scriptBuilder.js
+/**
+ *
+ * @constructor
+ */
+function ScriptBuilder() {}
+
+window.InfinniUI.ScriptBuilder = ScriptBuilder;
+
+
+ScriptBuilder.prototype.build = function (context, args) {
+    var
+        metadata = args.metadata,
+        name = metadata.Name,
+        body = metadata.Body;
+
+    var func = new Function('context', 'args', body);
+
+    return function (context, args) {
+        var result;
+        try {
+            result = func.call(undefined, context, args);
+        } catch (err) {
+            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
+            console.error(body);
+            console.groupEnd();
+        }
+        return result;
+    };
+};
+
+
+//####app\script\scriptExecutor.js
+/**
+ *
+ * @param parent
+ * @constructor
+ */
+function ScriptExecutor(parent) {
+    this.parent = parent;
+}
+
+window.InfinniUI.ScriptExecutor = ScriptExecutor;
+
+
+/**
+ *
+ * @param {string} scriptName
+ * @param {Object} args
+ * @returns {*}
+ */
+ScriptExecutor.prototype.executeScript = function (scriptName, args) {
+    var parent = this.parent;
+    var context = parent.getContext();
+    var result;
+    var scriptBody;
+    var scriptCompiled;
+
+    if(scriptName.substr(0, 1) == '{'){
+        scriptBody = scriptName.substr(1, scriptName.length - 2);
+        scriptCompiled = this.buildScriptByBody(scriptBody);
+    }else{
+        scriptCompiled = parent.getScripts().getById(scriptName);
+        if(scriptCompiled){
+            scriptCompiled = scriptCompiled.func;
+        }
+    }
+
+
+
+    if (context && scriptCompiled) {
+        result = scriptCompiled.call(undefined, context, args);
+    }
+
+    return result;
+};
+
+ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
+    var context = this.parent.getContext();
+    var args = {
+        metadata: {
+            "Body": scriptBody,
+            "Name": "InlineScript"
+        }
+    };
+    var scriptBuilder = new ScriptBuilder();
+    return scriptBuilder.build(context, args);
+};
+
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {
