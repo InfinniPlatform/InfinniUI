@@ -12838,41 +12838,6 @@ describe('UploadFileBox', function () {
 
 });
 
-describe('Frame', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Frame', {});
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-});
-
-describe('FrameBuilder', function () {
-    describe('build', function () {
-        it('successful build Frame', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.FrameBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-    });
-});
-
 describe('ImageBox', function () {
 
     function delay(min, max) {
@@ -13158,6 +13123,41 @@ describe('ImageBox', function () {
 //    });
 
 
+});
+
+describe('Frame', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Frame', {});
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+});
+
+describe('FrameBuilder', function () {
+    describe('build', function () {
+        it('successful build Frame', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.FrameBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+    });
 });
 
 describe('Label', function () {
