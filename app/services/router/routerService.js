@@ -19,7 +19,7 @@ var routerService = (function(myRoutes) {
 				}
 			}
 			routerObj.routes[myRoutes[i].Path.slice(1)] = myRoutes[i].Name; // remove first slash from myRoutes[i].Path for backbone
-			routerObj[myRoutes[i].Name] = myFunc(myRoutes[i].Name, myRoutes[i].Action);
+			routerObj[myRoutes[i].Name] = onRouteSelectHandler(myRoutes[i].Name, myRoutes[i].Action);
 		}
 		return routerObj;
 	};
@@ -37,27 +37,52 @@ var routerService = (function(myRoutes) {
 		}
 	};
 
-	var myFunc = function(name, callback) {
+	var onRouteSelectHandler = function(name, script) {
 		return function() {
-			var params = Array.prototype.slice.call(arguments);
-			new ScriptExecutor({getContext: function() {return 'No context';}}).executeScript(callback, { name: name, params: params });
+			var params = _.extend(Array.prototype.slice.call(arguments),
+					{
+						routeParams: routerService._params
+					});
+
+			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, params: params });
 		};
 	};
 
 	var routerObj = parseRouteForBackbone(myRoutes);
 
 	var startRouter = function() {
-		var Router = Backbone.Router.extend(routerObj);
-		InfinniUI.AppRouter = new Router();
+		if( !InfinniUI.AppRouter ) {
+			var Router = Backbone.Router.extend(routerObj);
+			InfinniUI.AppRouter = new Router();
 
-		Backbone.history = Backbone.history || new Backbone.History({});
-		Backbone.history.start(InfinniUI.config.HistoryAPI);
+			Backbone.history = Backbone.history || new Backbone.History({});
+			Backbone.history.start(InfinniUI.config.HistoryAPI);
+		} else {
+			console.log("Попытка повторно запустить routerService");
+		}
 	};
 
-	return {
+	var setContext = function(context) {
+		this._context = context;
+	};
+
+	var setParams = function(params) {
+		this._params = params;
+	};
+
+	var addParams = function(params) {
+		this._params = _.extend( this._params||{} ,params);
+	};
+
+	var routerService = {
 		getLinkByName: getLinkByName,
-		startRouter: startRouter
+		startRouter: startRouter,
+		setContext: setContext,
+		setParams: setParams,
+		addParams: addParams
 	};
+
+	return routerService;
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;

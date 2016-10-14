@@ -2,15 +2,6 @@ var ContextMenuView = ContainerView.extend({
 
 	contextMenuTemplate: InfinniUI.Template["controls/contextMenu/template/contextMenu.tpl.html"],
 
-	updateProperties: function(){
-		ContainerView.prototype.updateProperties.call(this);
-
-		this.updateContent();
-	},
-
-	updateContent: CommonButtonView.prototype.updateContent,
-	updateText: CommonButtonView.prototype.updateText,
-
 	updateHorizontalAlignment: function(){
 		var horizontalAlignment = this.model.get('horizontalAlignment');
 		var that = this;
@@ -32,10 +23,6 @@ var ContextMenuView = ContainerView.extend({
 				}
 			}
 		);
-	},
-
-	getButtonElement: function(){
-		return this.ui.button;
 	},
 
 	render: function () {

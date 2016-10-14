@@ -53,8 +53,10 @@ var CommonButtonView = ControlView.extend({
 
     updateText: function(){
         var textForButton = this.model.get('text');
-        if (typeof textForButton == 'string'){
-            this.getButtonElement().html(textForButton);
+        var $button = this.getButtonElement();
+
+        if($button) {
+            $button.html(textForButton);
         }
     },
 
