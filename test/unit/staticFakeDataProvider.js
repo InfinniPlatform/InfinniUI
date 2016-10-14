@@ -86,5 +86,6 @@ _.extend(StaticFakeDataProvider.prototype, {
 
     setOrigin: function(){},
     setPath: function(){},
-    setData : function(){}
+    setData : function(){},
+    setMethod : function(){}
 });
