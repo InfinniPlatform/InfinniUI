@@ -20,12 +20,12 @@ InfinniUI.localizations['ru-RU'].strings = {
 InfinniUI.localizations['en-US'].strings = {
     ImageBox: {
         chooseImage: 'Choose photo',
-        imageSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}mb',
+        imageSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}MB',
         incorrectFormat: 'Uploading of this file type is forbidden'
     },
     FileBox: {
         noFile: 'Choose file...',
-        fileSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}mb',
+        fileSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}MB',
         incorrectFormat: 'Uploading of this file type is forbidden'
     },
     DateTimePicker: {
