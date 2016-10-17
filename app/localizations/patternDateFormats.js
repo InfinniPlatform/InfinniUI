@@ -22,7 +22,8 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     f: 'dddd, MMMM dd, yyyy h:%m tt',
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
-    g: 'M/%d/yyyy h:%m tt',
+    // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
+    g: 'MM/dd/yyyy HH:mm',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',

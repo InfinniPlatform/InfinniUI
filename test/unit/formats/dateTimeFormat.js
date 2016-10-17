@@ -191,7 +191,7 @@ describe('DateTimeFormat', function () {
 
             //Then
             assert.equal(formatting.format(date), '04.01.1908 13:12');
-            assert.equal(formatting.format(date, enCulture), '1/4/1908 1:12 PM');
+            assert.equal(formatting.format(date, enCulture), '01/04/1908 13:12');
         });
 
         it('format by pattern s', function () {

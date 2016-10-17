@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.43';
+InfinniUI.VERSION = '2.1.45';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -242,7 +242,8 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     f: 'dddd, MMMM dd, yyyy h:%m tt',
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
-    g: 'M/%d/yyyy h:%m tt',
+    // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
+    g: 'MM/dd/yyyy HH:mm',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -260,19 +261,39 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
 //####app\localizations\stringResources.js
 InfinniUI.localizations['ru-RU'].strings = {
     ImageBox: {
-        chooseImage: 'Выбрать изображение'
+        chooseImage: 'Выбрать изображение',
+        imageSizeTooBig: 'Размер выбранного файла {chosen-size}Мб больше допустимого размера {permitted-size}Мб',
+        incorrectFormat: 'Загрузка данного типа файла не разрешена'
     },
     FileBox: {
-        noFile: 'Файл не выбран...'
+        noFile: 'Файл не выбран...',
+        fileSizeTooBig: 'Размер выбранного файла {chosen-size}Мб больше допустимого размера {permitted-size}Мб',
+        incorrectFormat: 'Загрузка данного типа файла не разрешена'
+    },
+    DateTimePicker: {
+        time: 'Время',
+        clear: 'Очистить',
+        today: 'Сегодня',
+        date: 'Дата'
     }
 };
 
 InfinniUI.localizations['en-US'].strings = {
     ImageBox: {
-        chooseImage: 'Choose photo'
+        chooseImage: 'Choose photo',
+        imageSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}MB',
+        incorrectFormat: 'Uploading of this file type is forbidden'
     },
     FileBox: {
-        noFile: 'Choose file...'
+        noFile: 'Choose file...',
+        fileSizeTooBig: 'Size of the chosen file {chosen-size}MB is more than allowed {permitted-size}MB',
+        incorrectFormat: 'Uploading of this file type is forbidden'
+    },
+    DateTimePicker: {
+        time: 'Time',
+        clear: 'Clear',
+        today: 'Today',
+        date: 'Date'
     }
 };
 //####app\utils\collection\collection.js
@@ -9359,8 +9380,10 @@ var CommonButtonView = ControlView.extend({
 
     updateText: function(){
         var textForButton = this.model.get('text');
-        if (typeof textForButton == 'string'){
-            this.getButtonElement().html(textForButton);
+        var $button = this.getButtonElement();
+
+        if($button) {
+            $button.html(textForButton);
         }
     },
 
@@ -14609,15 +14632,6 @@ var ContextMenuView = ContainerView.extend({
 
 	contextMenuTemplate: InfinniUI.Template["controls/contextMenu/template/contextMenu.tpl.html"],
 
-	updateProperties: function(){
-		ContainerView.prototype.updateProperties.call(this);
-
-		this.updateContent();
-	},
-
-	updateContent: CommonButtonView.prototype.updateContent,
-	updateText: CommonButtonView.prototype.updateText,
-
 	updateHorizontalAlignment: function(){
 		var horizontalAlignment = this.model.get('horizontalAlignment');
 		var that = this;
@@ -14639,10 +14653,6 @@ var ContextMenuView = ContainerView.extend({
 				}
 			}
 		);
-	},
-
-	getButtonElement: function(){
-		return this.ui.button;
 	},
 
 	render: function () {
@@ -14975,7 +14985,9 @@ var FileBoxModel = ControlModel.extend( _.extend({
         if (file) {
             if (maxSize) {
                 if (file.size > maxSize) {
-                    return 'Размер выбранного файла ' + (file.size/(1024*1024)).toFixed(1) + 'Мб больше допустимого размера ' + (maxSize/(1024*1024)).toFixed(1) + 'Мб';
+                    return localized.strings.FileBox.fileSizeTooBig
+                        .replace(/\{chosen-size\}/g, (file.size/(1024*1024)).toFixed(1))
+                        .replace(/\{permitted-size\}/g, (maxSize/(1024*1024)).toFixed(1));
                 }
             }
 
@@ -14990,7 +15002,7 @@ var FileBoxModel = ControlModel.extend( _.extend({
                 }
 
                 if (!acceptType) {
-                    return 'Загрузка данного типа файла не разрешена';
+                    return localized.strings.FileBox.incorrectFormat;
                 }
 
             }
@@ -15840,12 +15852,14 @@ var ImageBoxModel = ControlModel.extend( _.extend({
         if (file) {
             if (maxSize) {
                 if (file.size > maxSize) {
-                    return 'Размер выбранного файла ' + (file.size/(1024*1024)).toFixed(1) + 'Мб больше допустимого размера ' + (maxSize/(1024*1024)).toFixed(1) + 'Мб';
+                    return localized.strings.ImageBox.imageSizeTooBig
+                        .replace(/\{chosen-size\}/g, (file.size/(1024*1024)).toFixed(1))
+                        .replace(/\{permitted-size\}/g, (maxSize/(1024*1024)).toFixed(1));
                 }
             }
 
             if (acceptTypes.length && !acceptTypes.contains(file.type)) {
-                return 'Загрузка данного типа файла не разрешена';
+                return localized.strings.ImageBox.incorrectFormat;
             }
         }
     },
@@ -17155,6 +17169,100 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
 
 });
 
+//####app\controls\toolBar\toolBarControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function ToolBarControl(parent) {
+    _.superClass(ToolBarControl, this, parent);
+}
+
+_.inherit(ToolBarControl, ContainerControl);
+
+_.extend(ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
+
+    createControlModel: function () {
+        return new ToolBarModel();
+    },
+
+    createControlView: function (model) {
+        return new ToolBarView({model: model});
+    }
+});
+
+
+//####app\controls\toolBar\toolBarModel.js
+/**
+ * @constructor
+ * @aurments ContainerModel
+ */
+var ToolBarModel = ContainerModel.extend({
+
+});
+
+//####app\controls\toolBar\toolBarView.js
+/**
+ * @constructor
+ * @augments ContainerView
+ */
+var ToolBarView = ContainerView.extend({
+
+    className: 'pl-tool-bar',
+
+    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
+
+    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
+
+    UI: {
+        container: '.pl-tool-bar__container'
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        this.renderTemplate(this.template);
+        this.ui.container.append(this.renderItems());
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderItems: function () {
+        var model = this.model;
+        var items = model.get('items');
+        var itemTemplate = model.get('itemTemplate');
+
+        this.removeChildElements();
+
+        var $elements = [];
+
+        items.forEach(function (item, index) {
+            var template = this.itemTemplate();
+            var $template = $(template);
+
+            var element = itemTemplate(null, {
+                index: index,
+                item: item
+            });
+            this.addChildElement(element);
+            $template.append(element.render());
+            $elements.push($template);
+        }, this);
+
+        return $elements;
+    },
+
+    updateGrouping: function(){}
+});
+
 //####app\controls\toggleButton\toggleButtonControl.js
 function ToggleButtonControl(parent) {
     _.superClass(ToggleButtonControl, this, parent);
@@ -17284,100 +17392,6 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
         this.switchClass('toggle', value ? 'on' : 'off', this.$el);
     }
 }));
-
-//####app\controls\toolBar\toolBarControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function ToolBarControl(parent) {
-    _.superClass(ToolBarControl, this, parent);
-}
-
-_.inherit(ToolBarControl, ContainerControl);
-
-_.extend(ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
-
-    createControlModel: function () {
-        return new ToolBarModel();
-    },
-
-    createControlView: function (model) {
-        return new ToolBarView({model: model});
-    }
-});
-
-
-//####app\controls\toolBar\toolBarModel.js
-/**
- * @constructor
- * @aurments ContainerModel
- */
-var ToolBarModel = ContainerModel.extend({
-
-});
-
-//####app\controls\toolBar\toolBarView.js
-/**
- * @constructor
- * @augments ContainerView
- */
-var ToolBarView = ContainerView.extend({
-
-    className: 'pl-tool-bar',
-
-    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
-
-    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
-
-    UI: {
-        container: '.pl-tool-bar__container'
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        this.renderTemplate(this.template);
-        this.ui.container.append(this.renderItems());
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderItems: function () {
-        var model = this.model;
-        var items = model.get('items');
-        var itemTemplate = model.get('itemTemplate');
-
-        this.removeChildElements();
-
-        var $elements = [];
-
-        items.forEach(function (item, index) {
-            var template = this.itemTemplate();
-            var $template = $(template);
-
-            var element = itemTemplate(null, {
-                index: index,
-                item: item
-            });
-            this.addChildElement(element);
-            $template.append(element.render());
-            $elements.push($template);
-        }, this);
-
-        return $elements;
-    },
-
-    updateGrouping: function(){}
-});
 
 //####app\controls\view\viewControl.js
 /**
@@ -22726,6 +22740,62 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
 
 
 
+//####app\elements\checkBox\checkBox.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augment Element
+ */
+function CheckBox(parent) {
+    _.superClass(CheckBox, this, parent);
+    this.initialize_editorBase();
+}
+
+window.InfinniUI.CheckBox = CheckBox;
+
+_.inherit(CheckBox, Element);
+
+
+_.extend(CheckBox.prototype, {
+
+    createControl: function (parent) {
+        return new CheckBoxControl(parent);
+    }
+
+}, editorBaseMixin);
+
+//####app\elements\checkBox\checkBoxBuilder.js
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ */
+function CheckBoxBuilder() {
+    _.superClass(CheckBoxBuilder, this);
+    this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.CheckBoxBuilder = CheckBoxBuilder;
+
+_.inherit(CheckBoxBuilder, ElementBuilder);
+
+
+_.extend(CheckBoxBuilder.prototype, {
+    createElement: function (params) {
+        return new CheckBox(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
+
+        //var element = params.element;
+        //var metadata = params.metadata;
+    }
+}, editorBaseBuilderMixin);
+
+
 //####app\elements\comboBox\comboBox.js
 /**
  * @augments ListEditorBase
@@ -22904,62 +22974,6 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         return 'combobox-' + guid();
     }
 });
-
-//####app\elements\checkBox\checkBox.js
-/**
- *
- * @param parent
- * @constructor
- * @augment Element
- */
-function CheckBox(parent) {
-    _.superClass(CheckBox, this, parent);
-    this.initialize_editorBase();
-}
-
-window.InfinniUI.CheckBox = CheckBox;
-
-_.inherit(CheckBox, Element);
-
-
-_.extend(CheckBox.prototype, {
-
-    createControl: function (parent) {
-        return new CheckBoxControl(parent);
-    }
-
-}, editorBaseMixin);
-
-//####app\elements\checkBox\checkBoxBuilder.js
-/**
- *
- * @constructor
- * @augments ElementBuilder
- */
-function CheckBoxBuilder() {
-    _.superClass(CheckBoxBuilder, this);
-    this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.CheckBoxBuilder = CheckBoxBuilder;
-
-_.inherit(CheckBoxBuilder, ElementBuilder);
-
-
-_.extend(CheckBoxBuilder.prototype, {
-    createElement: function (params) {
-        return new CheckBox(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-        this.applyMetadata_editorBaseBuilder(params);
-
-        //var element = params.element;
-        //var metadata = params.metadata;
-    }
-}, editorBaseBuilderMixin);
-
 
 //####app\elements\contextMenu\contextMenu.js
 /**
@@ -34481,29 +34495,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -34653,70 +34644,28 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\router\routerService.js
-var routerService = (function(myRoutes) {
-	if( !myRoutes ) {
-		return null;
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
 	}
 
-	var parseRouteForBackbone = function(myRoutes) {
-		var routerObj = {};
-		routerObj.routes = {};
-		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 ) {
-			myRoutes[i].originalPath = myRoutes[i].Path;
-			if( myRoutes[i].Path.search('<%') !== -1 ) {
-				var tmpArr,
-						tmpParam,
-						re = /\<\%[\sa-zA-Z0-9]+\%\>/g;
-				while( tmpArr = re.exec(myRoutes[i].Path) ) {
-					tmpParam = tmpArr[0].replace(/\s+/g, '').slice(2, -2);
-					myRoutes[i].Path = myRoutes[i].Path.slice(0, tmpArr.index) + ':' + tmpParam + myRoutes[i].Path.slice(tmpArr.index + tmpArr[0].length);
-					re.lastIndex = tmpArr.index + tmpParam.length;
-				}
-			}
-			routerObj.routes[myRoutes[i].Path.slice(1)] = myRoutes[i].Name; // remove first slash from myRoutes[i].Path for backbone
-			routerObj[myRoutes[i].Name] = myFunc(myRoutes[i].Name, myRoutes[i].Action);
-		}
-		return routerObj;
-	};
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
 
-	var getLinkByName = function(name, originalPath) {
-		var original = originalPath || 'yes';
-		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 )  {
-			if( myRoutes[i].Name === name ) {
-				if( original === 'yes' ) {
-					return myRoutes[i].originalPath;
-				} else {
-					return myRoutes[i].Path;
-				}
-			}
-		}
-	};
-
-	var myFunc = function(name, callback) {
-		return function() {
-			var params = Array.prototype.slice.call(arguments);
-			new ScriptExecutor({getContext: function() {return 'No context';}}).executeScript(callback, { name: name, params: params });
-		};
-	};
-
-	var routerObj = parseRouteForBackbone(myRoutes);
-
-	var startRouter = function() {
-		var Router = Backbone.Router.extend(routerObj);
-		InfinniUI.AppRouter = new Router();
-
-		Backbone.history = Backbone.history || new Backbone.History({});
-		Backbone.history.start(InfinniUI.config.HistoryAPI);
-	};
-
-	return {
-		getLinkByName: getLinkByName,
-		startRouter: startRouter
-	};
-})(InfinniUI.config.Routes);
-
-window.InfinniUI.RouterService = routerService;
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
 
 //####app\services\toolTipService\toolTipService.js
 InfinniUI.ToolTipService = (function () {
@@ -34743,4 +34692,94 @@ InfinniUI.ToolTipService = (function () {
 			.tooltip('show');
 	}
 })();
+
+//####app\services\router\routerService.js
+var routerService = (function(myRoutes) {
+	if( !myRoutes ) {
+		return null;
+	}
+
+	var parseRouteForBackbone = function(myRoutes) {
+		var routerObj = {};
+		routerObj.routes = {};
+		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 ) {
+			myRoutes[i].originalPath = myRoutes[i].Path;
+			if( myRoutes[i].Path.search('<%') !== -1 ) {
+				var tmpArr,
+						tmpParam,
+						re = /\<\%[\sa-zA-Z0-9]+\%\>/g;
+				while( tmpArr = re.exec(myRoutes[i].Path) ) {
+					tmpParam = tmpArr[0].replace(/\s+/g, '').slice(2, -2);
+					myRoutes[i].Path = myRoutes[i].Path.slice(0, tmpArr.index) + ':' + tmpParam + myRoutes[i].Path.slice(tmpArr.index + tmpArr[0].length);
+					re.lastIndex = tmpArr.index + tmpParam.length;
+				}
+			}
+			routerObj.routes[myRoutes[i].Path.slice(1)] = myRoutes[i].Name; // remove first slash from myRoutes[i].Path for backbone
+			routerObj[myRoutes[i].Name] = onRouteSelectHandler(myRoutes[i].Name, myRoutes[i].Action);
+		}
+		return routerObj;
+	};
+
+	var getLinkByName = function(name, originalPath) {
+		var original = originalPath || 'yes';
+		for( var i = 0, ii = myRoutes.length; i < ii; i += 1 )  {
+			if( myRoutes[i].Name === name ) {
+				if( original === 'yes' ) {
+					return myRoutes[i].originalPath;
+				} else {
+					return myRoutes[i].Path;
+				}
+			}
+		}
+	};
+
+	var onRouteSelectHandler = function(name, script) {
+		return function() {
+			var params = _.extend(Array.prototype.slice.call(arguments),
+					{
+						routeParams: routerService._params
+					});
+
+			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, params: params });
+		};
+	};
+
+	var routerObj = parseRouteForBackbone(myRoutes);
+
+	var startRouter = function() {
+		if( !InfinniUI.AppRouter ) {
+			var Router = Backbone.Router.extend(routerObj);
+			InfinniUI.AppRouter = new Router();
+
+			Backbone.history = Backbone.history || new Backbone.History({});
+			Backbone.history.start(InfinniUI.config.HistoryAPI);
+		} else {
+			console.log("Попытка повторно запустить routerService");
+		}
+	};
+
+	var setContext = function(context) {
+		this._context = context;
+	};
+
+	var setParams = function(params) {
+		this._params = params;
+	};
+
+	var addParams = function(params) {
+		this._params = _.extend( this._params||{} ,params);
+	};
+
+	var routerService = {
+		getLinkByName: getLinkByName,
+		startRouter: startRouter,
+		setContext: setContext,
+		setParams: setParams,
+		addParams: addParams
+	};
+
+	return routerService;
+})(InfinniUI.config.Routes);
+
+window.InfinniUI.RouterService = routerService;
 })();
