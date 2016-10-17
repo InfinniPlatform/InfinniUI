@@ -35,7 +35,9 @@ var FileBoxModel = ControlModel.extend( _.extend({
         if (file) {
             if (maxSize) {
                 if (file.size > maxSize) {
-                    return 'Размер выбранного файла ' + (file.size/(1024*1024)).toFixed(1) + 'Мб больше допустимого размера ' + (maxSize/(1024*1024)).toFixed(1) + 'Мб';
+                    return localized.strings.FileBox.fileSizeTooBig
+                        .replace(/\{chosen-size\}/g, (file.size/(1024*1024)).toFixed(1))
+                        .replace(/\{permitted-size\}/g, (maxSize/(1024*1024)).toFixed(1));
                 }
             }
 
@@ -50,7 +52,7 @@ var FileBoxModel = ControlModel.extend( _.extend({
                 }
 
                 if (!acceptType) {
-                    return 'Загрузка данного типа файла не разрешена';
+                    return localized.strings.FileBox.incorrectFormat;
                 }
 
             }
