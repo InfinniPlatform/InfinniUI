@@ -31,12 +31,14 @@ var ImageBoxModel = ControlModel.extend( _.extend({
         if (file) {
             if (maxSize) {
                 if (file.size > maxSize) {
-                    return 'Размер выбранного файла ' + (file.size/(1024*1024)).toFixed(1) + 'Мб больше допустимого размера ' + (maxSize/(1024*1024)).toFixed(1) + 'Мб';
+                    return localized.strings.ImageBox.imageSizeTooBig
+                        .replace(/\{chosen-size\}/g, (file.size/(1024*1024)).toFixed(1))
+                        .replace(/\{permitted-size\}/g, (maxSize/(1024*1024)).toFixed(1));
                 }
             }
 
             if (acceptTypes.length && !acceptTypes.contains(file.type)) {
-                return 'Загрузка данного типа файла не разрешена';
+                return localized.strings.ImageBox.incorrectFormat;
             }
         }
     },
