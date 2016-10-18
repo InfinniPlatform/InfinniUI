@@ -313,9 +313,10 @@ window.InfinniUI.AutoHeightService = {
 	},
 
 	slidingRecalculation: function (container) {
+		var that = this;
 		for (var i = 3; i >= 0; i--) {
 			setTimeout(function () {
-				this.recalculation(container);
+				that.recalculation(container);
 			}, 500 + i * 300);
 		}
 	},
