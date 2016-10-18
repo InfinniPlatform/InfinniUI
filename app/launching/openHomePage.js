@@ -10,11 +10,7 @@ window.InfinniUI.openHomePage = function($target) {
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
-            action.execute(function() {
-                if( window.InfinniUI.RouterService ) {
-                    window.InfinniUI.RouterService.startRouter();
-                }
-            });
+            action.execute();
         });
 };
 
