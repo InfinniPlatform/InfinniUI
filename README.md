@@ -1,3 +1,3 @@
 # Documentation
 
-http://docs.infinnity.ru
+http://infinniuireadthedocsorg.readthedocs.io/
