@@ -5,7 +5,7 @@ window.InfinniUI.openHomePage = function($target) {
     rootView.open($target);
 
     InfinniUI.LayoutManager.slidingRecalculation();
-    InfinniUI.AutoHeightService();
+    subscribeRecalculationOnWindowResize();
 
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
@@ -16,6 +16,22 @@ window.InfinniUI.openHomePage = function($target) {
                 }
             });
         });
+};
+
+function subscribeRecalculationOnWindowResize() {
+    var TIMEOUT = 40;
+    var WAIT = 50;
+    var resizeTimeout;
+
+    $(window).resize(function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(_.debounce(onWindowResize, WAIT), TIMEOUT);
+    });
+
+    function onWindowResize() {
+        window.InfinniUI.LayoutManager.recalculation();
+    }
+
 };
 
 function getHomePageLinkViewPromise() {
