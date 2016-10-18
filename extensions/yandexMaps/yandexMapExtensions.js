@@ -1,3 +1,6 @@
+// Для корректной работы данного расширения, необходимо включить в index.html строку:
+// <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+
 function YaMapExtension(context, args) {
 	this.context = context;
 

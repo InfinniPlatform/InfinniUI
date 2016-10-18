@@ -1,3 +1,6 @@
+// Для корректной работы данного расширения, необходимо включить в index.html строку:
+// <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC09SyyqSdo9TflFMZAuDUN7pse3h28Tk4&callback=initMap" async defer></script>
+
 function MapExtension(context, args) {
 	this.context = context;
 

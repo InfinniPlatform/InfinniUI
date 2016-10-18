@@ -1,3 +1,6 @@
+// Для корректной работы данного расширения, необходимо включить в index.html строку:
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
+
 function ChartExtension(context, args) {
 	this.context = context;
 
