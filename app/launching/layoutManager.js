@@ -298,7 +298,7 @@ var layoutManager = {
 		}
 	},
 
-	init: function (container) {
+	recalculation: function (container) {
 		if( window.InfinniUI.config.disableLayoutManager === true ) {
 			return false;
 		}
@@ -309,6 +309,14 @@ var layoutManager = {
 		if (this.exchange === null) {
 			this.exchange = window.InfinniUI.global.messageBus;
 			this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
+		}
+	},
+
+	slidingRecalculation: function (container) {
+		for (var i = 3; i >= 0; i--) {
+			setTimeout(function () {
+				this.recalculation(container);
+			}, 500 + i * 300);
 		}
 	},
 

@@ -105,6 +105,11 @@ var sourceForFiles = {
 		'app/linkView/linkViewBuilderBase.js',
 		'app/linkView/**/*.js',
 
+		'app/launching/layoutManager.js',
+		'app/launching/autoHeightService.js',
+		'app/launching/specialApplicationView.js',
+		'app/launching/*.js',
+
 		'app/**/*.js'
 	],
 	vendorStylesFiles: [

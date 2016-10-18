@@ -9,6 +9,8 @@ window.InfinniUI.config.configName = 'test';
 
 window.InfinniUI.config.homePage = '/testConfigurations/stab.json';
 
+window.InfinniUI.config.lang = 'ru-RU';
+
 // when disableLayoutManager = true, body will have full height and will scrollable
 // window.InfinniUI.config.disableLayoutManager = true;
 
