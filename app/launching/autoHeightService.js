@@ -1,4 +1,4 @@
-var layoutManager = {
+window.InfinniUI.AutoHeightService = {
 	windowHeight: 0,
 	clientHeight: 0,
 	exchange: null,
@@ -299,7 +299,7 @@ var layoutManager = {
 	},
 
 	recalculation: function (container) {
-		if( window.InfinniUI.config.disableLayoutManager === true ) {
+		if( window.InfinniUI.config.disableAutoHeightServicer === true ) {
 			return false;
 		}
 		container = container || document;
@@ -333,5 +333,3 @@ var layoutManager = {
 		this.resizeDialog();
 	}
 };
-
-window.InfinniUI.LayoutManager = layoutManager;

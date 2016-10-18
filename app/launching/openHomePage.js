@@ -4,7 +4,7 @@ window.InfinniUI.openHomePage = function($target) {
 
     rootView.open($target);
 
-    InfinniUI.LayoutManager.slidingRecalculation();
+    InfinniUI.AutoHeightService.slidingRecalculation();
     subscribeRecalculationOnWindowResize();
 
     getHomePageLinkViewPromise()
@@ -29,7 +29,7 @@ function subscribeRecalculationOnWindowResize() {
     });
 
     function onWindowResize() {
-        window.InfinniUI.LayoutManager.recalculation();
+        window.InfinniUI.AutoHeightService.recalculation();
     }
 
 };
