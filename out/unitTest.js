@@ -13,7 +13,7 @@ _.extend( FakeRestDataProvider.prototype, {
     send: function(type, successHandler, errorHandler){
         var requestId = Math.round((Math.random() * 100000));
         var params = this.requestParams[type];
-        var that = this;
+        var result = _.clone(this.items);
 
 
         var urlString = params.origin + params.path;
@@ -26,12 +26,20 @@ _.extend( FakeRestDataProvider.prototype, {
 
         FakeRestDataProvider.prototype.lastSendedUrl = urlString;
 
+        if(params.data) {
+            if ( _.isString(params.data.filter) ) {
+                result = InfinniUI.FilterItems(result, params.data.filter);
+            }
+
+            result = result.splice(params.data.skip || 0, params.data.take || 15);
+        }
+
         setTimeout(function(){
             successHandler({
                 requestId: requestId,
                 data: {
                     Result: {
-                        Items:that.items
+                        Items: result
                     }
                 }
             });
@@ -148,27 +156,10 @@ function FakeDataProvider(mode) {
         }
     ];
 
-    this.getItems = function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
+    this.getItems = function (resultCallback) {
         if (mode === undefined || mode() === 'Created') {
 
             var result = items;
-            /*var allItems = items;
-
-            for (var i = 0; i < pageSize; i++) {
-                var itemIndex = i + (pageNumber * pageSize);
-                if (itemIndex < allItems.length) {
-                    result.push(items[itemIndex]);
-                }
-                else {
-                    break;
-                }
-            }
-
-            if(criteriaList && criteriaList.length == 1 && criteriaList[0].CriteriaType == 1){
-                result = _.filter(result, function(item){
-                    return item.Id == criteriaList[0].Value;
-                });
-            }*/
 
             setTimeout(function(){
                 resultCallback({data:result});
@@ -1039,11 +1030,11 @@ describe('DeleteAction', function () {
                 deleteAction.execute();
 
                 // Then
-                setTimeout( function(){
+                dataSource.onItemDeleted( function(){
                         assert.equal(dataSource.getItems().length, (initCount - 1) );
                         assert.notInclude(dataSource.getItems(), initSelectedItem);
                         done();
-                }, 50);
+                });
 
             }
         );
@@ -3684,62 +3675,82 @@ describe('LinkView', function () {
     });
 });
 
-describe('MetadataViewBuilder', function () {
+describe('LinkViewBuilderBase', function () {
 
-    /*var builder = new InfinniUI.ApplicationBuilder();
-
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
-        return {
-            "getViewMetadata": function () {
-                return metadata;
+    it('should set base properties', function () {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "LinkViewBuilderTest"
             }
         };
+
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        assert.equal(linkView.getOpenMode(), "Default");
+        assert.isUndefined(linkView.containerName);
+        assert.isUndefined(linkView.dialogWidth);
+
+        // When
+        linkView.setOpenMode("Dialog");
+        linkView.setContainer("TestContainer");
+        linkView.setDialogWidth("100px");
+
+        // Then
+        assert.equal(linkView.getOpenMode(), "Dialog");
+        assert.equal(linkView.containerName, "TestContainer");
+        assert.equal(linkView.dialogWidth, "100px");
     });
 
-    var metadata = {
-            "DataSources": [
-
-                {
-                    "DocumentDataSource": {
-                        "Name": 'PatientDataSource',
-                        "ConfigId": 'ReceivingRoom',
-                        "DocumentId": 'HospitalizationRefusal'
-                    }
-                }
-            ],
-            "OpenMode": "Application",
-            "ConfigId": 'ReceivingRoom',
-            "DocumentId": 'HospitalizationRefusal',
-            "ViewType": 'ListView',
-            "MetadataName": 'HospitalizationRefusalListView',
-            //"Parameters": [
-            //    {
-            //        "Name" : 'Param1',
-            //        "Value" : {
-            //            "PropertyBinding": {
-            //                "DataSource": 'PatientDataSource',
-            //                "Property": 'LastName'
-            //            }
-            //        }
-            //    }
-            //],
-            "LayoutPanel" : {
-
+    it('inlineViewBuilder', function (done) {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "InlineViewBuilderTest"
             }
-    };
+        };
 
-    it('should build exists view', function () {
+        // When
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "InlineViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+
+    it('metadataViewBuilder', function (done) {
+        // Given
+        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
+            return {
+                "getMetadata": function (callback) {
+                    var metadata = {
+                        "Name": "MetadataViewBuilderTest"
+                    };
+                    callback(metadata);
+                }
+            };
+        });
 
         var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var builder = new MetadataViewBuilder();
-        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
+        var metadata = {
+            Path: "path/to/metadata"
+        };
 
-        applicationBuilder.appView = view;
-        applicationBuilder.appView.createView(function(view){
-            //assert.isNotNull(view.getParameter('Param1'));
-            assert.isNotNull(view.getDataSource('PatientDataSource'));
+        // When
+        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "MetadataViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
         });
-    });*/
+    });
 });
 
 
@@ -3796,181 +3807,61 @@ describe('MessageBus', function () {
 });
 
 describe('ScriptExecutor', function () {
-    var builder;
-    beforeEach(function () {
-        builder = new InfinniUI.ScriptBuilder();
-    });
 
     it('should build script handler', function () {
-
+        // Given
+        var builder = new InfinniUI.ScriptBuilder();
         var metadata = {
             Name: "Name",
             Body: "return 5;"
         };
 
+        // When
         var func = builder.build(null, {metadata: metadata});
 
+        // Then
         assert.equal(func.call(), 5);
     });
 
     it('should pass arguments to handler', function () {
-
+        // Given
+        var builder = new InfinniUI.ScriptBuilder();
         var metadata = {
             Name: "Name",
             Body: "return [context,args].join(':');"
         };
 
+        // When
         var func = builder.build(null, {metadata: metadata});
 
+        // Then
         assert.equal(func.call(undefined, "Context", "Args"), "Context:Args");
     });
-});
 
-describe('ScriptExecutor', function () {
-
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    window.InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
-        return {
-            "getMetadata": function () {
-                return metadata;
-            }
+    it('should execute script by name', function (done) {
+        var metadata = {
+            Scripts: [
+                {
+                    Name: "TestScript",
+                    Body: "window.testScriptWasExecuted = true;"
+                }
+            ]
         };
+
+        var onViewReady = function(view) {
+            // Given
+            window.testScriptWasExecuted = false;
+
+            //When
+            new window.InfinniUI.ScriptExecutor(view).executeScript('TestScript');
+
+            //Then
+            assert.isTrue(window.testScriptWasExecuted);
+            done();
+        };
+
+        testHelper.applyViewMetadata(metadata, onViewReady);
     });
-
-    var metadata = {
-        "Scripts" :[
-            {
-                "Name" : "OpenViewScript",
-                "Body" : "context.Controls['TextBox1'].setText('Hello world from script!');"
-            },
-            {
-                "Name" : "TestRunScript",
-                "Body" : "context.TestValue = args['test'];"
-            }
-        ],
-        "DataSources": [
-
-            {
-                "DocumentDataSource": {
-                    "Name": 'PatientDataSource',
-                    "ConfigId": 'ReceivingRoom',
-                    "DocumentId": 'HospitalizationRefusal'
-                }
-            },
-            {
-                "DocumentDataSource" : {
-                    "Name" : 'ClassifierDataSource',
-                    "ConfigId" : 'ClassifierStorage',
-                    "DocumentId" : 'SomeClassifier'
-                }
-            }
-        ],
-        "OpenMode": "Application",
-        "ViewType": 'ListView',
-        //"Parameters": [
-        //    {
-        //        "Name" : 'Param1'
-        //    }
-        //],
-        "LayoutPanel" : {
-            "StackPanel": {
-                "Name": "MainViewPanel",
-                "Items": [
-                    {
-                        "TextBox": {
-                            "Name": "TextBox1",
-                            "Multiline": true
-                        }
-                    },
-                    {
-                        "TextBox": {
-                            "Name": "TextBox2"
-                        }
-                    },
-                    {
-                        "ComboBox": {
-                            "Name": "ComboBox1",
-                            "DisplayProperty": "",
-                            "ValueProperty": "",
-                            "MultiSelect": true,
-                            "ShowClear": true,
-                            "Value" : {
-                                "DataSource" : "PatientDataSource",
-                                "Property" : "LastName"
-                            }
-                        }
-                    }
-                ]
-            }
-        }
-    };
-
-//    it('should create script context for opened view', function (done) {
-//
-//        var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
-//            var builder = new InfinniUI.ApplicationBuilder();
-//            var view = builder.buildType(fakeView(), 'View', metadata);
-//            resultCallback(view);
-//        });
-//        linkView.setOpenMode('Application');
-//
-//        linkView.createView(function(view){
-//
-//            assert.isNotNull(view.getContext());
-//            assert.isNotNull(view.getContext().DataSources['PatientDataSource']);
-//            assert.isNotNull(view.getContext().DataSources['ClassifierDataSource']);
-//            //assert.isNotNull(view.getContext().Parameters['Param1']);
-//            //assert.equal(view.getContext().Parameters['Param1'].getValue(),'1');
-//            assert.isNotNull(view.getContext().Controls['TextBox1']);
-//            assert.isNotNull(view.getContext().Controls['TextBox2']);
-//            assert.isNotNull(view.getContext().Controls['ComboBox1']);
-//
-//            var textBox1 = view.getContext().Controls['TextBox1'];
-//
-//            textBox1.setText('Hello world!');
-//            assert.equal(textBox1.getText(),'Hello world!');
-//
-//            var dataSource = view.getContext().DataSources["PatientDataSource"];
-//            assert.equal(dataSource.getName(),"PatientDataSource");
-//
-//            done();
-//        });
-//    });
-//
-//    it('should invoke script from ScriptExecutor', function(done){
-//
-//        var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
-//            var builder = new InfinniUI.ApplicationBuilder();
-//            var view = builder.buildType(fakeView(), 'View', metadata);
-//            resultCallback(view);
-//        });
-//        linkView.setOpenMode('Application');
-//
-//        linkView.createView(function(view){
-//
-//            var scriptExecutor = new ScriptExecutor(view);
-//            scriptExecutor.executeScript('OpenViewScript');
-//
-//            var textBox1 = view.getContext().Controls["TextBox1"];
-//            assert.equal(textBox1.getText(),'Hello world from script!');
-//
-//            var args = {
-//                "test" : 1
-//            };
-//
-//            var context = view.getContext();
-//            context.Scripts["TestRunScript"].Run(context,args);
-//
-//            assert.equal(context.TestValue,1);
-//
-//            done();
-//
-//        });
-//
-//    });
-
-
 });
 
 describe("Collection", function () {
@@ -5450,7 +5341,6 @@ describe("Filter items", function () {
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
 			var filter = 'not(eq(Id,3))';
-			// var filter = 'not(or(eq(Id,3),eq(Id,1)))';
 			var items = [
 				{Id: 1},
 				{Id: 2},
@@ -6240,6 +6130,171 @@ describe("Filter items", function () {
 			assert.equal(result1[1].Id, 3, 'filtered item is correct');
 		});
 
+		it("should return all items that have value of given param starts with given value", function () {
+			// Given
+			var filter = "startsWith(text,'Cat')";
+			var items = [
+				{
+					Id: 1,
+					text: 'cat has nine lives'
+				},
+				{
+					Id: 2,
+					text: 'My cat is really nice'
+				},
+				{
+					Id: 3,
+					text: 'Cat-and-mouse game'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 2, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param starts with given value (caseSensitive)", function () {
+			// Given
+			var filter = "startsWith(text,'Cat',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'cat has nine lives'
+				},
+				{
+					Id: 2,
+					text: 'Cat-and-mouse game'
+				},
+				{
+					Id: 3,
+					text: 'My cat is really nice'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param ends with given value", function () {
+			// Given
+			var filter = "endsWith(text,'Test')";
+			var items = [
+				{
+					Id: 1,
+					text: 'End of string is word Test'
+				},
+				{
+					Id: 2,
+					text: 'Test must be passed'
+				},
+				{
+					Id: 3,
+					text: 'My test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 2, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param ends with given value (caseSensitive)", function () {
+			// Given
+			var filter = "endsWith(text,'Test',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'Test must be passed'
+				},
+				{
+					Id: 2,
+					text: 'End of string is word Test'
+				},
+				{
+					Id: 3,
+					text: 'My test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 2, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param contains given value", function () {
+			// Given
+			var filter = "contains(text,'Test')";
+			var items = [
+				{
+					Id: 1,
+					text: 'Test at starting'
+				},
+				{
+					Id: 2,
+					text: 'Without search string'
+				},
+				{
+					Id: 3,
+					text: 'abracadabratestabracadabra'
+				},
+				{
+					Id: 4,
+					text: 't e s t'
+				},
+				{
+					Id: 5,
+					text: 'last test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 3, 'length of filtered items is right');
+			assert.equal(result[0].Id, 1, 'filtered item is correct');
+			assert.equal(result[1].Id, 3, 'filtered item is correct');
+			assert.equal(result[2].Id, 5, 'filtered item is correct');
+		});
+
+		it("should return all items that have value of given param contains given value (caseSensitive)", function () {
+			// Given
+			var filter = "contains(text,'Test',false)";
+			var items = [
+				{
+					Id: 1,
+					text: 'test at starting'
+				},
+				{
+					Id: 2,
+					text: 'Without search string'
+				},
+				{
+					Id: 3,
+					text: 'abracadabraTestabracadabra'
+				},
+				{
+					Id: 4,
+					text: 't e s t'
+				},
+				{
+					Id: 5,
+					text: 'last test'
+				}
+			];
+			// When
+			var result = InfinniUI.FilterItems(items, filter);
+			// Then
+			assert.lengthOf(result, 1, 'length of filtered items is right');
+			assert.equal(result[0].Id, 3, 'filtered item is correct');
+		});
+
+
 
 	});
 });
@@ -6407,23 +6462,16 @@ describe("ObjectUtils", function () {
 });
 describe('ButtonControl', function () {
     describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('Button', {});
-        });
-
         it('should render button with correct class', function () {
             //Given
-            button.setText('Click me!');
+            var builder = new InfinniUI.ApplicationBuilder(),
+                button = builder.buildType('Button', {});
 
             //When
             var $el = button.render();
 
             //Then
             assert.isTrue($el.hasClass('pl-button'));
-            assert.equal($.trim($el.text()), 'Click me!');
         });
     });
 });
@@ -7909,51 +7957,31 @@ describe('PanelControl', function () {
                 ],
                 "Items": [
                     {
-                        "TablePanel": {
-                            "Name": "",
-                            "Items": [
-                                {
-                                    "Row": {
-                                        "Items": [
-                                            {
-                                                "Cell": {
-                                                    "ColumnSpan": 3,
-                                                    "Items": [
-                                                        {
-                                                            "StackPanel": {
-                                                                "Name": "StackPanel_1",
-                                                                "Items": {
-                                                                    "Source": "BloodGroupDataSource",
-                                                                    "Property": ""
-                                                                },
-                                                                "ItemTemplate": {
-                                                                    "Panel": {
-                                                                        "Collapsible": true,
-                                                                        "Header": {
-                                                                            "Source": "BloodGroupDataSource",
-                                                                            "Property": "#.DisplayName"
-                                                                        },
-                                                                        "Items": [
-                                                                            {
-                                                                                "Label": {
-                                                                                    "Text": {
-                                                                                        "Source": "BloodGroupDataSource",
-                                                                                        "Property": "#.Id"
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                        "StackPanel": {
+                            "Name": "StackPanel_1",
+                            "Items": {
+                                "Source": "BloodGroupDataSource",
+                                "Property": ""
+                            },
+                            "ItemTemplate": {
+                                "Panel": {
+                                    "Collapsible": true,
+                                    "Header": {
+                                        "Source": "BloodGroupDataSource",
+                                        "Property": "#.DisplayName"
+                                    },
+                                    "Items": [
+                                        {
+                                            "Label": {
+                                                "Text": {
+                                                    "Source": "BloodGroupDataSource",
+                                                    "Property": "#.Id"
                                                 }
                                             }
-                                        ]
-                                    }
+                                        }
+                                    ]
                                 }
-                            ]
+                            }
                         }
                     }
                 ],
@@ -8027,75 +8055,26 @@ describe('PanelControl', function () {
         it('Should render Panel with 3 items(as label)', function () {
             // Given
             var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "BloodGroupDataSource",
-                            "Items": [
-                                {
-                                    "Id": 1,
-                                    "DisplayName": "I",
-                                    "SomeField": ""
-                                },
-                                {
-                                    "Id": 2,
-                                    "DisplayName": "II",
-                                    "SomeField": "val"
-                                },
-                                {
-                                    "Id": 3,
-                                    "DisplayName": "III",
-                                    "SomeField": 3
-                                },
-                                {
-                                    "Id": 4,
-                                    "DisplayName": "IV",
-                                    "SomeField": null
-                                }
-                            ]
-                        }
-                    }
-                ],
                 "Items": [
                     {
-                        "TablePanel": {
-                            "Name": "",
+                        "Panel": {
+                            "Collapsible": true,
+                            "Collapsed": true,
+                            "Header": "Header",
                             "Items": [
                                 {
-                                    "Row": {
-                                        "Items": [
-                                            {
-                                                "Cell": {
-                                                    "ColumnSpan": 3,
-                                                    "Items": [
-                                                        {
-                                                            "Panel": {
-                                                                "Collapsible": true,
-                                                                "Collapsed": true,
-                                                                "Header": "Header",
-                                                                "Items": [
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "One"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Two"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Three"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
+                                    "Label": {
+                                        "Text": "One"
+                                    }
+                                },
+                                {
+                                    "Label": {
+                                        "Text": "Two"
+                                    }
+                                },
+                                {
+                                    "Label": {
+                                        "Text": "Three"
                                     }
                                 }
                             ]
@@ -8156,6 +8135,38 @@ describe('PanelControl', function () {
 
             }
         });
+    });
+
+    it('Should hide header if it is empty', function () {
+        // Given
+        var metadata = {
+            "Items": [
+                {
+                    "Panel": {
+                        "Name": "TestPanel",
+                        "Header": "TestPanel"
+                    }
+                }
+            ]
+        };
+
+        testHelper.applyViewMetadata(metadata, onViewReady);
+
+        function onViewReady(view, $view) {
+            $view.detach();
+
+            var panel = view.context.controls['TestPanel'],
+                $panel = $view.find('.pl-panel'),
+                $panelHeader = $panel.find('.pl-panel-header');
+
+            assert.notEqual($panelHeader.css('display'), 'none');
+
+            // When
+            panel.setHeader(null);
+
+            // Then
+            assert.equal($panelHeader.css('display'), 'none');
+        }
     });
 });
 describe('PasswordBox', function () {
@@ -9331,36 +9342,25 @@ describe('DataBinding', function () {
 
 describe('DataBindingBuilder', function () {
 
-/*    it('should build DataBinding', function () {
+    it('should build DataBinding', function () {
         // Given
         var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
         var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_Source: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                    },
-                    controls: {
-                    }
-                };
-            },
-
             getDeferredOfMember: function(){
                 return {
                     done: function(handler){
-                        handler({});
+                        handler({
+                            onPropertyChanged: function(){}
+                        });
                     }
                 };
             }
         };
         var metadata = {
             Source: 'My_Source',
-            Property: '',
+            Property: 'Property',
             Mode: 'ToSource',
+            DefaultValue: 'DefaultValue',
             Converter: {
                 toSource: function(){},
                 toElement: function(){}
@@ -9372,46 +9372,111 @@ describe('DataBindingBuilder', function () {
 
         // Then
         assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
-        assert.isNotNull(dataBinding.getConverter());
-        assert.isNotNull(dataBinding.getSource());
-        assert.isNotNull(dataBinding.getSourceProperty());
+        assert.equal(dataBinding.getDefaultValue(), 'DefaultValue');
+        assert.isObject(dataBinding.getConverter());
+        assert.isObject(dataBinding.getSource());
+        assert.equal(dataBinding.getSourceProperty(), 'Property');
     });
 
-    it('should bind all type of source', function () {
-        // Given
-        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
-        var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_DataSource: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                        My_Parameter: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    controls: {
-                        My_Button: {
-                            onPropertyChanged: function(){}
+    describe('should bind all type of source', function () {
+
+        it('should bind dataSource', function(){
+            // Given
+            var viewMetadata = {
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1"
                         }
                     }
-                };
-            }
-        };
+                ]
+            };
 
-        // Then
-        dataBindingBuilder.build(null, { parentView: view, metadata: { Source: 'My_DataSource'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Parameter'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Button'} });
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'ObjectDataSource1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.ObjectDataSource);
+
+                view.close();
+            }
+        });
+
+        it('should bind parameter', function(){
+            // Given
+            var viewMetadata = {
+                Parameters : [
+                    {
+                        Name: 'Parameter1'
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Parameter1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Parameter);
+
+                view.close();
+            }
+        });
+
+        it('should bind element', function(){
+            // Given
+            var viewMetadata = {
+                Items : [
+                    {
+                        Label: {
+                            Name: 'Element1'
+                        }
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Element1',
+                    Property: 'value'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Element);
+
+                view.close();
+            }
+        });
+
     });
-*/
+
     it('should toElement converter work in inline style', function () {
         // Given
-        var metadata = {
-            Text: '��������',
+        var viewMetadata = {
             DataSources : [
                 {
                     ObjectDataSource: {
@@ -9450,13 +9515,13 @@ describe('DataBindingBuilder', function () {
         };
 
         // When
-        testHelper.applyViewMetadata(metadata, onViewReady);
+        testHelper.applyViewMetadata(viewMetadata, onViewReady);
 
         // Then
-        function onViewReady(view, $layout){
-            $layout.detach();
+        function onViewReady(view, $view){
+            assert.equal($view.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
 
-            assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
+            view.close();
         }
     });
 });
@@ -9525,6 +9590,63 @@ describe('baseDataSource', function () {
         //When
         dataSource.validateOnErrors();
     });
+
+    it('should call suspended onSuccess callback if resumed update was success', function () {
+        // Given
+        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
+        window.suspendedOnSuccessWasCalled = false;
+        window.suspendedOnErrorWasCalled = false;
+
+        // When
+        dataSource.suspendUpdate();
+        dataSource.updateItems(
+            function(){ // onSuccess
+                window.suspendedOnSuccessWasCalled = true;
+            },
+            function(){ // onError
+                window.suspendedOnErrorWasCalled = true;
+            });
+        dataSource.resumeUpdate();
+
+        // Then
+        assert.isTrue(window.suspendedOnSuccessWasCalled);
+        assert.isFalse(window.suspendedOnErrorWasCalled);
+    });
+
+    it('should call suspended onError callback if resumed update was fail', function () {
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', function(){
+            return {
+                getItems: function(successHandler, errorHandler){
+                    errorHandler();
+                },
+                setOrigin: function(){},
+                setPath: function(){},
+                setData: function(){},
+                setParams: function(){}
+            }
+        });
+
+        var dataSource = new InfinniUI.DocumentDataSource( { view: fakeView() } );
+
+        window.suspendedOnSuccessWasCalled = false;
+        window.suspendedOnErrorWasCalled = false;
+
+        // When
+        dataSource.suspendUpdate();
+        dataSource.updateItems(
+            function(){ // onSuccess
+                window.suspendedOnSuccessWasCalled = true;
+            },
+            function(){ // onError
+                window.suspendedOnErrorWasCalled = true;
+            });
+        dataSource.resumeUpdate();
+
+        // Then
+        assert.isFalse(window.suspendedOnSuccessWasCalled);
+        assert.isTrue(window.suspendedOnErrorWasCalled);
+    });
 });
 
 describe('baseDataSourceBuilder', function () {
@@ -9592,9 +9714,8 @@ describe('DataSourceBuilder', function () {
 
     FakeRestDataProvider.prototype.items = _.clone(items);
 
-    window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
     describe('build DocumentDataSource', function () {
+
         it('should build documentDataSource', function () {
             // Given When
             var metadata = {
@@ -9622,6 +9743,8 @@ describe('DataSourceBuilder', function () {
 
         it('should subscribe documentDataSource on changeProperty', function (done) {
             // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
             var metadata = {
                     Name: 'PatientDataSource',
                     DocumentId: 'Patient',
@@ -9826,37 +9949,37 @@ describe('DocumentDataSource', function () {
 
     var dataItems = [
         {
-            "_id": '1',
+            "_id": 1,
             "FirstName": "Иван",
             "LastName": "Иванов"
         },
         {
-            "_id": '2',
+            "_id": 2,
             "FirstName": "Петр",
             "LastName": "Петров"
         },
         {
-            "_id": '3',
+            "_id": 4,
             "FirstName": "Иван1",
             "LastName": "Иванов1"
         },
         {
-            "_id": '4',
+            "_id": 6,
             "FirstName": "Петр2",
             "LastName": "Петров2"
         },
         {
-            "_id": '5',
+            "_id": 5,
             "FirstName": "Иван3",
             "LastName": "Иванов3"
         },
         {
-            "_id": '6',
+            "_id": 7,
             "FirstName": "Петр4",
             "LastName": "Петров5"
         },
         {
-            "_id": '10',
+            "_id": 10,
             "FirstName": "Анна",
             "LastName": "Сергеева"
 
@@ -9939,10 +10062,10 @@ describe('DocumentDataSource', function () {
             );
         });
 
-/* TODO раскомментировать после фильтрации фейковых провайдеров
-        it('should get editing record', function (done) {
+
+        it('should set id filter', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var builder = new InfinniUI.ApplicationBuilder();
@@ -9951,9 +10074,8 @@ describe('DocumentDataSource', function () {
 
             //When
             dataSource.suspendUpdate();
-            dataSource.setIdFilter('1');
+            dataSource.setIdFilter(4);
             dataSource.resumeUpdate();
-
 
 
             var items = dataSource.updateItems(
@@ -9961,7 +10083,7 @@ describe('DocumentDataSource', function () {
 
                     // Then
                     assert.lengthOf(args.value, 1, 'length of filtered items set');
-                    assert.equal(args.value[0].Id, '1', 'value of filtered items set');
+                    assert.equal(args.value[0]._id, '4', 'value of filtered items set');
 
                     done();
                 }
@@ -9969,9 +10091,9 @@ describe('DocumentDataSource', function () {
         });
 
 
-        it('should update document', function (done) {
+        it('should update documents when pageNumber are changed', function (done) {
             // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 
             var dataSource = new InfinniUI.DocumentDataSource({
@@ -9992,7 +10114,7 @@ describe('DocumentDataSource', function () {
                     dataSource.setPageNumber(1);
                     dataSource.resumeUpdate();
                     dataSource.updateItems(
-                        function(data){
+                        function(context, args){
 
                             // Then
                             assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
@@ -10003,7 +10125,7 @@ describe('DocumentDataSource', function () {
 
                 }
             );
-        });*/
+        });
 
         it('should restore selected item after updating', function (done) {
             // Given
@@ -10027,6 +10149,121 @@ describe('DocumentDataSource', function () {
                             done();
                         }
                     );
+                }
+            );
+        });
+
+        it('should reset page number after setFilter', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilter('not(eq(_id,123))');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setFilterParams', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilterParams('documentName', 'Patient');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setPageSize', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setPageSize(20);
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setSearch', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setSearch('search');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setOrder', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setOrder('asc(_id)');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
                 }
             );
         });
@@ -10254,45 +10491,6 @@ describe('DocumentDataSource', function () {
                 });
             }
         });
-
-       /* TODO раскомментировать после фильтрации фейковых провайдеров
-        it('should add items', function (done) {
-
-            // Given
-            window.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.suspendUpdate();
-            dataSource.setPageSize(5);
-            dataSource.resumeUpdate();
-
-
-            dataSource.updateItems(
-                function(context, args){
-
-                    assert.lengthOf(dataSource.getItems(), 5, 'datasource have 5 items');
-                    assert.equal(dataSource.getPageNumber(), 0, 'datasource at first page');
-
-                    //When
-                    dataSource.addNextItems(
-                        function(data){
-
-                            // Then
-                            assert.lengthOf(dataSource.getItems(), 7, 'after adding datasource have 7 items');
-                            assert.equal(dataSource.getPageSize(), 5, 'after adding datasource still have page size equal 5');
-                            assert.equal(dataSource.getPageNumber(), 1, 'after adding datasource at second page');
-                            done();
-
-                        }
-                    );
-
-                }
-            );
-        });*/
     });
 });
 
@@ -10763,53 +10961,6 @@ describe('ObjectDataSource', function () {
             }
         });
     });
-
-    /* TODO раскомментировать когда в object DS заработают фильтры
-    describe('ObjectDataSource filter', function () {
-        it('should get filtered list of data', function () {
-            // Given //When
-            var ds = createObjectDataSource(),
-                items;
-
-            //When
-            ds.setFilter([
-                {
-                    CriteriaType: 64,
-                    Property: "FirstName",
-                    Value: "Иван"
-                }
-            ]);
-
-            // Then
-            items = ds.getItems();
-            assert.isTrue(ds.isDataReady(), 'dataReady status is right');
-            assert.lengthOf(items, 3, 'data provider returns items');
-        });
-
-        it('should reset filter', function () {
-            // Given //When
-            var ds = createObjectDataSource(),
-                items;
-
-            //When
-            ds.setFilter([
-                {
-                    CriteriaType: 64,
-                    Property: "FirstName",
-                    Value: "Иван"
-                }
-            ]);
-            assert.lengthOf(ds.getItems(), 3, 'Apply filter');
-
-            ds.setFilter([]);
-
-            // Then
-            items = ds.getItems();
-            assert.isTrue(ds.isDataReady(), 'dataReady status is right');
-            assert.lengthOf(items, 7, 'clear filter');
-        });
-
-    });*/
 });
 
 describe('RestDataSource', function () {
@@ -11189,7 +11340,6 @@ describe('RestDataSource', function () {
             dataSource.onSelectedItemChanged(function(context, args){
                 result += '1';
 
-                //assert.isTrue(!args.oldValue || args.oldValue.FirstName ==  'Иван', 'right old value in args');
                 assert.isTrue(args.value.FirstName ==  'Иван' || args.value.FirstName == 'Петр', 'right new value in args');
             });
 
@@ -11298,173 +11448,6 @@ describe('Parameters', function () {
         }
 
         assert.isTrue(handlerWasCalled, 'handler was called');
-    });
-
-});
-
-describe('FileProvider', function () {
-
-    function delay(min, max) {
-        if (typeof min === 'undefined') {
-            min = 100;
-        }
-        if (typeof  max === 'undefined') {
-            max = 200;
-        }
-
-        return Math.ceil(Math.random() * (max - min) + min);
-    }
-
-    describe('DocumentFileProvider', function () {
-
-        beforeEach(function () {
-            //register fake upload provider
-            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (/*metadata*/) {
-                return {
-                    uploadFile: function () {
-                        var deferred = $.Deferred();
-                        setTimeout(function () {
-                            deferred.resolve();
-                        }, delay());
-
-                        return deferred.promise();
-                    },
-                    getFileUrl: function () {
-                        return 'fake.html';
-                    }
-                };
-            });
-
-            //register fake DocumentDataSource provider
-            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
-                return {
-                    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-                        resultCallback();
-                    },
-                    createItem: function (resultCallback, idProperty) {
-                        var response = {
-                            'DisplayName': 'display name'
-                        };
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-
-                    saveItem: function (value, resultCallback, warnings, idProperty) {
-                        var response = [{
-                            InstanceId: "42"
-                        }];
-
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-                    setOrigin: function(){},
-                    setPath: function(){},
-                    setData : function(){},
-                    setFilter: function(){},
-                    setDocumentId: function(){},
-                    getDocumentId: function () {},
-                    createLocalItem: function (idProperty) {
-                        var result = {};
-
-                        result[idProperty] = window.InfinniUI.guid();
-
-                        return result;
-                    }
-                };
-
-            });
-        });
-
-
-        it('DocumentDataSource.saveItem without files', function (done) {
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View;
-            var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
-
-            ds.createItem(function (context, args) {
-                var item = args.value;
-                ds.setProperty('title', 'some title');
-                ds.saveItem(item, function (context, args) {
-                    var value = args.item;
-                    assert.equal(item, value);
-                    done();
-                }, function (args) {
-                    done('Fail on saveItem');
-                });
-
-            });
-        });
-/*
-        it('DocumentDataSource.saveItem with 1 file', function (done) {
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View;
-            var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
-            var uploadedFiles = [];
-
-            ds.on('onFileUploaded', function (context, args) {
-                uploadedFiles.push(args.value);
-            });
-
-            ds.createItem(function (context, args) {
-                var item = args.value;
-                ds.setProperty('title', 'some title');
-                var content = '<html><head></head><body>html content</body></html>';
-                ds.setFile(content, 'photo');
-                ds.saveItem(item, function (context, args) {
-                    var value = args.value;
-                    assert.equal(item, value);
-                    assert.lengthOf(uploadedFiles, 1, 'One file uploaded');
-                    assert.equal(uploadedFiles[0], content);
-                    done();
-                }, function (args) {
-                    done('Fail on saveItem');
-                });
-            });
-        });
-
-        it('DocumentDataSource.saveItem with files', function (done) {
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View;
-            var ds = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
-            var uploadedFiles = [];
-            var files = '1234567890'.split('')
-                .map(function (num) {
-                    return {
-                        property: 'protperty_' + num,
-                        content: '<html><head></head><body>html content #'+ num + '</body></html>'
-                    };
-                });
-
-
-            ds.on('onFileUploaded', function (context, args) {
-                uploadedFiles.push(args.value);
-            });
-
-            ds.createItem(function (context, args) {
-                var item = args.value;
-                ds.setProperty('title', 'some title');
-                var content = '<html><head></head><body>html content</body></html>';
-                files.forEach(function (file) {
-                    ds.setFile(file.content, file.property);
-                });
-
-                ds.saveItem(item, function (context, args) {
-                    var value = args.value;
-                    var amount = files.filter(function(file) {
-                        return uploadedFiles.indexOf(file.content !== -1);
-                    }).length;
-                    assert.equal(item, value);
-                    assert.lengthOf(uploadedFiles, files.length, 'All files uploaded');
-                    assert.equal(amount, files.length, 'specified files uploaded');
-                    done();
-                }, function (args) {
-                    done('Fail on saveItem');
-                });
-            });
-        });
-*/
     });
 
 });
@@ -11627,8 +11610,6 @@ describe('Button', function () {
             //When
             var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
             button.render();
-            //var $button = $(button.render());
-            //$button.find('button').click();
             button.click();
 
             // Then
@@ -12324,7 +12305,6 @@ describe('DataNavigation', function () {
         dataNavigation.setPageSize(1);
     });
 });
-
 describe('DateTimePicker', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -12655,187 +12635,87 @@ describe('Element', function () {
     });
 });
 
-describe('Extension Panel (build)', function () {
-    it('successful build', function () {
-        // Given
-        var builder = new InfinniUI.ExtensionPanelBuilder();
-        var metadata = {};
+describe('FileBox', function () {
 
-        // When
-        var extensionPanel = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
+    describe('Builder', function () {
 
-        // Then
-        assert.isNotNull(extensionPanel);
-    });
-
-    it('should find extensionPanel in global namespace', function (done) {
-        // Given
-        var builder = new InfinniUI.ExtensionPanelBuilder();
-        var metadata = {
-            "ExtensionName": "myExtensionPanel",
-            "Parameters": [
-                {
-                    "Name": "param1",
-                    "Value": "hello"
-                }
-            ]
-        };
-        var extensionPanel = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
-
-        window.myExtensionPanel = function(context, args){
-            // Then
-            assert.isDefined(args.$el);
-            assert.isDefined(args.parameters);
-
-            this.render = done;
-        };
-
-        // When
-        extensionPanel.render();
-    });
-});
-
-describe('UploadFileBox', function () {
-
-    describe('debug', function () {
-
-        it('render', function () {
+        it('should build fileBox', function () {
+            // Given
             var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View();
             var metadata = {
                 MaxSize: 0,
                 AcceptTypes: [
-                    'image/png'
+                    'image/png',
+                    'image/jpeg'
                 ]
             };
 
-            var element = builder.buildType("FileBox", metadata, {parent: view, parentView: view, builder: builder});
+            // When
+            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
 
-            var $el = element.render();
-            $('body').append($el);
-            $el.detach();
+            // Then
+            assert.instanceOf(fileBox, InfinniUI.FileBox);
+            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
         });
-
 
     });
 
-    //describe('UploadFileBox', function () {
-    //
-    //    var element;
-    //
-    //    beforeEach (function () {
-    //        element = new UploadFileBox();
-    //    });
-    //
-    //    it('Default property value', function () {
-    //        // Given
-    //
-    //        //$('body').append(element.render());
-    //        assert.strictEqual(element.getReadOnly(), false);
-    //        assert.strictEqual(element.getMaxSize(), 0);
-    //
-    //    });
-    //
-    //    it('Setting properties', function () {
-    //
-    //        // Given
-    //        element.setReadOnly(true);
-    //        element.setAcceptTypes(['video/*']);
-    //        element.setMaxSize(50000);
-    //        element.setValue({Info: {}});
-    //
-    //        assert.equal(element.getReadOnly(), true);
-    //        assert.deepEqual(element.getAcceptTypes(), ['video/*']);
-    //        assert.deepEqual(element.getValue(), {Info: {}});
-    //        assert.equal(element.getMaxSize(), 50000);
-    //    });
-    //
-    //});
+    describe('Base API', function () {
 
+        it('setting properties', function () {
+            // Given
+            var fileBox = new InfinniUI.FileBox();
 
-//    describe('UploadFileBox data binding', function () {
-//        it('should set UploadFileBox.value from property binding', function () {
-//
-//            //это говнокод
-//            $('#page-content').empty();
-//
-//            window.providerRegister.register('UploadDocumentDataSource', function (metadataValue) {
-//                return new DataProviderUpload(new QueryConstructorUpload('http://127.0.0.1:8888', metadataValue));
-//            });
-//
-//            window.providerRegister.register('DocumentDataSource', function () {
-//                return new FakeDataProvider();
-//            });
-//
-//            $('body').append($('<div>').attr('id', 'page-content'));
-//
-//            var metadata = {
-//                Text: 'Пациенты',
-//                DataSources: [
-//                    {
-//                        DocumentDataSource: {
-//                            Name : "PatientDataSource",
-//                            ConfigId: 'Demography',
-//                            DocumentId: 'Patient',
-//                            IdProperty: 'Id',
-//                            CreateAction: 'CreateDocument',
-//                            GetAction: 'GetDocument',
-//                            UpdateAction: 'SetDocument',
-//                            DeleteAction: 'DeleteDocument',
-//                            FillCreatedItem: true
-//                        }
-//                    }
-//                ],
-//                LayoutPanel: {
-//                    StackPanel: {
-//                        Name: 'MainViewPanel',
-//                        Items: [
-//                            {
-//                                UploadFileBox: {
-//                                    Name: 'UploadFileBox1',
-//                                    AcceptTypes: ['image/*', 'video/*'],
-//                                    MaxSize: 100000,
-//                                    Value : {
-//                                        FileBinding : {
-//                                            DataSource : 'PatientDataSource',
-//                                            Property : '$.file'
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        ]
-//                    }
-//                }
-//            };
-//
-//            var linkView = new InfinniUI.LinkView(null, function (resultCallback) {
-//                var builder = new InfinniUI.ApplicationBuilder();
-//                var view = builder.buildType(fakeView(), 'View', metadata);
-//                resultCallback(view);
-//            });
-//            linkView.setOpenMode('Application');
-//
-//            linkView.createView(function(view){
-//                view.open();
-//
-//                var itemToSelect = null;
-//                view.getDataSource('PatientDataSource').getItems(function(data){
-//                    itemToSelect = data[1];
-//                });
-//
-//                view.getDataSource('PatientDataSource').setSelectedItem(itemToSelect);
-//
-//
-//                //window.maindatasource = view.getDataSource('PatientDataSource');
-//
-//                //check text
-//                // assert.equal($('#page-content').find('input:text').val(), itemToSelect.LastName);
-//                // $('#page-content').remove();
-//            });
-//        });
-//    });
+            // When
+            fileBox.setMaxSize(50000);
+            fileBox.setFile('file');
+            fileBox.setAcceptTypes(['video/*']);
+            fileBox.setValue({Info: {}});
 
+            // Then
+            assert.equal(fileBox.getMaxSize(), 50000);
+            assert.equal(fileBox.getFile(), 'file');
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
+            assert.deepEqual(fileBox.getValue(), {Info: {}});
+        });
 
+    });
+});
+
+describe('Frame', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Frame', {});
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+});
+
+describe('FrameBuilder', function () {
+    describe('build', function () {
+        it('successful build Frame', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.FrameBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+    });
 });
 
 describe('ImageBox', function () {
@@ -12913,58 +12793,6 @@ describe('ImageBox', function () {
                         return [fieldName, instanceId, 'fake.html'].join('.');
                     }
                 };
-            });
-
-            //register fake DocumentDataSource provider
-            window.InfinniUI.providerRegister.register('DocumentDataSource', function (metadataValue) {
-                return {
-                    getItems: function (criteriaList, pageNumber, pageSize, sorting, resultCallback) {
-                        var items = [{
-                            "Id": "1",
-                            photo: {
-                                Info: {
-                                    ContentId: 'somePhotoId'
-                                }
-                            }
-                        }];
-                        setTimeout(function () {
-                            resultCallback(items);
-                        }, delay());
-                    },
-                    createItem: function (resultCallback, idProperty) {
-                        var response = {
-                            'DisplayName': 'display name'
-                        };
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-
-                    saveItem: function (value, resultCallback, warnings, idProperty) {
-                        var response = [{
-                            InstanceId: "42"
-                        }];
-
-                        setTimeout(function () {
-                            resultCallback(response);
-                        }, delay());
-                    },
-                    setOrigin: function(){},
-                    setPath: function(){},
-                    setData : function(){},
-                    setFilter: function(){},
-                    setDocumentId: function(){},
-                    getDocumentId: function () {},
-                    createLocalItem: function (idProperty) {
-                        var result = {};
-
-                        result[idProperty] = guid();
-                        result['__Id'] = result[idProperty];
-
-                        return result;
-                    }
-                };
-
             });
         });
 
@@ -13125,41 +12953,6 @@ describe('ImageBox', function () {
 
 });
 
-describe('Frame', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Frame', {});
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-});
-
-describe('FrameBuilder', function () {
-    describe('build', function () {
-        it('successful build Frame', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.FrameBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-    });
-});
-
 describe('Label', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -13195,7 +12988,7 @@ describe('Label', function () {
 
             var element = builder.build(metadata, {});
 
-            //assert.equal(element.getTextTrimming(), true, 'TextTrimming');
+            assert.equal(element.getTextTrimming(), true, 'TextTrimming');
             assert.equal(element.getTextWrapping(), true, 'TextWrapping');
 
             assert.equal(element.getVisible(), true, 'Visible');
@@ -13915,8 +13708,6 @@ describe('ListEditorBase', function () {
             testHelper.applyViewMetadata(metadata, onViewReady);
 
             function onViewReady(view, $layout){
-                //$layout.detach();
-
                 var $items = $layout.find('.pl-listbox-i'),
                     $chosen = $layout.find('.pl-listbox-i.pl-listbox-i-chosen'),
                     $selected = $layout.find('.pl-listbox-i.pl-listbox-i-selected'),
@@ -14484,17 +14275,9 @@ describe('PopupButtonElement', function () {
     });
 
     describe('Checking methods', function () {
-        var button;
-
-        beforeEach(function () {
-            button =  builder.buildType('PopupButton', {
-                Items: []
-            });
-        });
-
         it('should create', function () {
             // Given
-
+            var button = new InfinniUI.PopupButton();
 
             // When
             var $el = button.render();
@@ -14505,6 +14288,7 @@ describe('PopupButtonElement', function () {
 
         it('should set text', function () {
             // Given
+            var button = new InfinniUI.PopupButton();
             button.setText('button');
             var $el = button.render();
 
@@ -14602,7 +14386,7 @@ describe('PopupButtonElement', function () {
 
         it('should add items', function () {
             // Given
-            //var button = new InfinniUI.PopupButton();
+            var button = new InfinniUI.PopupButton();
 
             // When
             var items = button.getItems();

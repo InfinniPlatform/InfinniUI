@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.45';
+InfinniUI.VERSION = '2.2.0';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -3018,6 +3018,7 @@ filterItems.filterMethods = (function() {
 		return tmpResult;
 	};
 
+	// ToDo: добавить обработку параметров caseSensitive и diacriticSensitive
 	that.text = function(value, items, context) {
 		var tmpResult = [],
 				tmpString,
@@ -3030,6 +3031,51 @@ filterItems.filterMethods = (function() {
 		}
 		return tmpResult;
 	};
+
+	that.startsWith = function(value, items, context){
+		var propertyName = value[0],
+			expectedStartValue = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpPattern = '^{expectedStartValue}'.replace('{expectedStartValue}', expectedStartValue),
+			regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
+	that.endsWith = function(value, items, context){
+		var propertyName = value[0],
+			expectedEndValue = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpPattern = '{expectedEndValue}$'.replace('{expectedEndValue}', expectedEndValue),
+				regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
+	that.contains = function(value, items, context){
+		var propertyName = value[0],
+			searchString = _.isArray(value[1]) ? value[1][0] : value[1],
+			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+
+		var	regexpFlag = ignoreCase ? 'i' : '';
+
+		var result = _.filter(items, function(item) {
+			return new RegExp(searchString, regexpFlag).test(item[propertyName]);
+		});
+
+		return result;
+	};
+
 	return that;
 })();
 
@@ -3311,337 +3357,6 @@ window.InfinniUI.Keyboard = {
         return char;
     }
 };
-//####app\utils\layoutManager.js
-var layoutManager = {
-	windowHeight: 0,
-	clientHeight: 0,
-	exchange: null,
-	times: [],
-
-	setOuterHeight: function ($el, height, fix) {
-		var delta = 0;
-		'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
-			.split(',')
-			.forEach(function(name) {
-				delta += parseInt($el.css(name));
-			});
-		var contentHeight = height - delta;
-		if (fix) {
-			contentHeight += fix;
-		}
-
-		//@TODO Разобраться с багом, при задании clearfix.height = 0 вылезает лишний 1 пиксел. Временное решение:
-		//contentHeight = (contentHeight > 0) ? contentHeight - 1 : contentHeight;
-
-		$el.height(contentHeight);
-
-		return contentHeight;
-	},
-
-	getModalSelector: function () {
-		return '.modal-scrollable';
-	},
-
-	getSelector: function () {
-		//return '.pl-data-grid, .pl-scroll-panel, .pl-document-viewer, .pl-menu.vertical, .pl-tab-panel, .pl-treeview';
-		return '.verticalAlignmentStretch:not(:hidden)';
-	},
-
-	buildTree: function(items, parentEl, $parentEl, elements, list) {
-		var items = _.where(list, {parent: parentEl}),
-				manager = this;
-
-		return {
-			isElement: _.indexOf(elements, parentEl) !== -1,
-			element: parentEl,
-			$element: $parentEl,
-			child: _.map(items, function (item) {
-				return manager.buildTree(items, item.element, item.$element, elements, list );
-			})
-		};
-	},
-
-	formTree: function(elements, el, $el) {
-		var $parent,
-				list = [],
-				$element,
-				element;
-		//Строим дерево элементов: от концевых элементов поднимается к корневому элементу
-		for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
-			element = elements[i];
-			$element = $(element);
-			do {
-				$parent = $element.parent();
-
-				var a = _.findWhere(list, {element: element});
-				if (typeof a !== 'undefined') {
-					//Элемент уже занесен в список
-					break;
-				}
-				list.push({
-					element: element,
-					$element: $element,
-					parent: $parent.get(0),
-					$parent: $parent
-				});
-
-				$element = $parent;
-				element = $parent.get(0);
-			} while (element !== el);
-		}
-
-		return this.buildTree(list, el, $el, elements, list);
-	},
-
-	setHeight: function (node, height) {
-		var originalHeight = node.$element.attr('data-height-original');
-		if (originalHeight === '') {
-			node.$element.attr('data-height-original', node.element.style.height);
-		}
-		return this.setOuterHeight(node.$element, height);
-	},
-
-	defineWay: function(node, height) {
-		var nodeHeight = this.setHeight(node, height),
-				manager = this;
-
-		if( node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable') ) {
-			//Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
-			return;
-		} else if( node.$element.hasClass('tab-content') ) {
-			_.each(node.child, function (node) {
-				manager.defineWay(node, nodeHeight);
-			});
-		} else if( node.child.length > 0 ) {
-			this.goThroughTree(node, nodeHeight);
-		}
-	},
-
-	goThroughTree: function(node, height) {
-		var manager = this;
-		if( node.$element.parentsUntil('.modal').length ) {
-			node.$element.attr('data-height-original', node.element.style.height);
-		}
-
-		var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)'),
-		/*
-		 * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
-		*/
-				grid = _.chain(children)
-					.filter(function (el) {
-						var position = $(el).css('position');
-						return ['absolute', 'fixed'].indexOf(position) === -1;
-					})
-					.groupBy('offsetTop')
-					.value(),
-
-				heights = [];
-
-		_.each(grid, function (row, i) {
-			var nodes = [];
-			_.each(row, function (e) {
-				var n = _.find(node.child, function (c) {return c.element === e;});
-				if (n) nodes.push(n);
-			});
-
-			heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
-				return Math.max(height, $(e).outerHeight(true));
-			}, 0));
-
-			grid[i] = nodes;
-		}, this);
-
-		var fixedHeight = _.reduce(heights, function (total, height) {return total + height}, 0),
-				count = _.reduce(grid, function (count, row) {return row.length ? count + 1 : count}, 0),
-
-				heightForNode = Math.floor((height - fixedHeight) / count);
-
-		_.each(grid, function (row) {
-			if (row.length === 0) return;
-			_.each(row, function (node) {
-				manager.defineWay(node, heightForNode);
-			}, this);
-		}, this);
-	},
-
-	resize: function(el, pageHeight) {
-		var startTime = Date.now(); //start time
-		var $el = $(el),
-				contentHeight = this.setOuterHeight($el, pageHeight),
-				elements = $el.find(this.getSelector());
-
-		//var elements = Array.prototype.filter.call($el.find(this.getSelector()), function (element) {
-		//    //Исключаем элементы которые долдны занитмать всю доступную высоту,
-		//    // которые по какой-то причине оказались внутри ScrollPanel
-		//    return $(element).parents('.pl-scrollpanel').length === 0;
-		//});
-		if (elements.length === 0) {
-			return;
-		}
-
-		var tree = this.formTree(elements, el, $el);
-		/**
-		 * Если внутри child один элемент:
-		 *   - устанавливаем высоту в 100%
-		 * Если внутри child несколько элементов
-		 *   - offsetTop совпадают - устанавливаем высоту в 100%
-		 *   - offsetTop не совпадают - устанавливаем высоту в (100 / child.length)%
-		 */
-		this.defineWay(tree, pageHeight);
-		var endTime = Date.now(); //end time
-		this.timeWatcher(endTime - startTime);
-	},
-
-	timeWatcher: function(time) {
-		if( time >= 20 ) {
-			this.times.push(time);
-		}
-	},
-
-	getTimes: function() {
-		return this.times;
-	},
-
-	resizeView: function (container, clientHeight) {
-		var $page = $('#page-content', container);
-		//$page.height(clientHeight);
-		var contentHeight = this.setOuterHeight($page, clientHeight);
-		var that = this;
-
-		this.resize($page.get(0), contentHeight);
-
-		//$page.children().each(function (i, el) {
-		//    if (el.style.display !== 'none') {
-		//        //Обработка активной вкладки
-		//        var $tab = $(el);
-		//
-		//        var $bar = $(".pl-active-bar:not(:hidden)", $tab);
-		//
-		//        var barHeight = $bar.length ? $bar.outerHeight(true) : 0;
-		//        //var barHeight = $(".pl-active-bar", $tab).outerHeight(true);
-		//        $tab.children().each(function (i, el) {
-		//            if (false === el.classList.contains('pl-active-bar') && el.style.display !== 'none') {
-		//                var pageHeight = contentHeight - barHeight;
-		//                that.resize(el, pageHeight);
-		//            }
-		//        });
-		//    }
-		//});
-	},
-
-	resizeDialog: function () {
-		var manager = this;
-		$(this.getModalSelector()).each(function (i, el) {
-			manager._resizeDialog($(el));
-			manager.resetDialogHeight($(el));
-		});
-	},
-
-	resetDialogHeight: function($modal){
-		var space = 10;
-
-		if($modal.children()) {
-			var $container = $modal.children();
-
-			var $header = $('.modal-header', $container);
-			var $body = $('.modal-body', $container);
-
-			var $el = $(this.getSelector(), $modal);
-
-			$el.parentsUntil('.modal').css('height', 'auto');
-			$container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
-
-			$modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
-
-		}
-
-		//var $header = $('.modal-header', $container);
-		//var $body = $('.modal-body', $container);
-
-		//var headerHeight = $header.outerHeight(true);
-		//
-		//$container.css('margin-top', 0);
-		//
-		//var el = $(this.getSelector(), $modal);
-		//if (el.length === 0) {
-		//    //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
-		//    //Выравниваем по вертикали в центр
-		//    $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
-		//    return;
-		//}
-		//
-		//$body.css('min-height', '0');
-		//var containerHeight = this.setOuterHeight($modal, 'auto');
-		//
-		////Высота для содержимого окна диалога
-		//var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
-		//
-		//this.resize($body[0], clientHeight);
-		//$container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
-	},
-
-	_resizeDialog: function ($modal) {
-		var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
-
-		var $container = $modal.children();
-
-		$container.css('margin-top', 0);
-		//var marginTop = parseInt($container.css('margin-top'), 10);
-
-		var $header = $('.modal-header', $container);
-		var $body = $('.modal-body', $container);
-
-		var headerHeight = $header.outerHeight(true);
-		$body.css('max-height', this.windowHeight - headerHeight);
-
-		$container.css('margin-top', 0);
-
-		var el = $(this.getSelector(), $modal);
-		if (el.length !== 0) {
-			// Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
-			// пересчитываем высоту
-
-			//@TODO Зачем задавалась минимальная высота диалогов?
-			//$body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
-			var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
-
-			//Высота для содержимого окна диалога
-			var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
-
-			this.resize($body[0], clientHeight);
-		}
-	},
-
-	init: function (container) {
-		if( window.InfinniUI.config.disableLayoutManager === true ) {
-			return false;
-		}
-		container = container || document;
-		$('#page-content').addClass('page-content-overflow-hidden');
-		this.windowHeight = $(window).height();
-		this.onChangeLayout(container);
-		if (this.exchange === null) {
-			this.exchange = window.InfinniUI.global.messageBus;
-			this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
-		}
-	},
-
-	onChangeLayout: function (container) {
-		if (_.isEmpty(container)) {
-			container = document;
-		}
-
-		var clientHeight = this.windowHeight
-			- $("#page-top:not(:hidden)", container).outerHeight()
-			- $("#page-bottom:not(:hidden)", container).outerHeight()
-			- $("#menu-area:not(:hidden)", container).outerHeight();
-		this.resizeView(container, clientHeight);
-		this.resizeDialog();
-	}
-};
-
-window.InfinniUI.LayoutManager = layoutManager;
-
 //####app\utils\logger.js
 var LOG_LEVEL = {
     debug: 1,
@@ -15790,6 +15505,73 @@ var IconView = ControlView.extend({
 
 });
 
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
+function IndeterminateCheckBoxControl(parent) {
+	_.superClass(IndeterminateCheckBoxControl, this, parent);
+	this.initialize_editorBaseControl();
+}
+
+_.inherit(IndeterminateCheckBoxControl, CheckBoxControl);
+
+_.extend(IndeterminateCheckBoxControl.prototype, {
+
+	createControlModel: function () {
+		return new IndeterminateCheckBoxModel();
+	},
+
+	createControlView: function (model) {
+		return new IndeterminateCheckBoxView({model: model});
+	}
+
+}, editorBaseControlMixin);
+
+
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxModel.js
+var IndeterminateCheckBoxModel = CheckBoxModel.extend({
+
+	defaults: _.defaults({
+		value: 'unchecked'
+	}, CheckBoxModel.prototype.defaults)
+
+});
+
+//####app\controls\indeterminateCheckBox\indeterminateCheckBoxView.js
+/**
+ * @class IndeterminateCheckBoxView
+ * @augments ControlView
+ * @mixes editorBaseViewMixin
+ */
+var IndeterminateCheckBoxView = CheckBoxView.extend({
+
+	className: 'pl-indeterminate-checkbox',
+
+	onClickHandler: function () {
+		var model = this.model;
+
+		var enabled = model.get('enabled');
+		if (enabled) {
+			var newValue = model.get('value');
+			newValue = newValue === 'indeterminate' ? 'unchecked' : newValue === 'unchecked' ? 'checked' : 'unchecked';
+			model.set('value', newValue);
+		}
+	},
+
+	updateValue: function () {
+		var value = this.model.get('value');
+		if( value === 'checked' ) {
+			this.ui.input.prop('indeterminate', false);
+			this.ui.input.prop('checked', true);
+		} else if( value === 'unchecked' ) {
+			this.ui.input.prop('indeterminate', false);
+			this.ui.input.prop('checked', false);
+		} else if( value === 'indeterminate' ) {
+			this.ui.input.prop('checked', false);
+			this.ui.input.prop('indeterminate', true);
+		}
+
+	}
+});
+
 //####app\controls\imageBox\imageBoxControl.js
 /**
  *
@@ -16059,73 +15841,6 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     }
 
 }));
-
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
-function IndeterminateCheckBoxControl(parent) {
-	_.superClass(IndeterminateCheckBoxControl, this, parent);
-	this.initialize_editorBaseControl();
-}
-
-_.inherit(IndeterminateCheckBoxControl, CheckBoxControl);
-
-_.extend(IndeterminateCheckBoxControl.prototype, {
-
-	createControlModel: function () {
-		return new IndeterminateCheckBoxModel();
-	},
-
-	createControlView: function (model) {
-		return new IndeterminateCheckBoxView({model: model});
-	}
-
-}, editorBaseControlMixin);
-
-
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxModel.js
-var IndeterminateCheckBoxModel = CheckBoxModel.extend({
-
-	defaults: _.defaults({
-		value: 'unchecked'
-	}, CheckBoxModel.prototype.defaults)
-
-});
-
-//####app\controls\indeterminateCheckBox\indeterminateCheckBoxView.js
-/**
- * @class IndeterminateCheckBoxView
- * @augments ControlView
- * @mixes editorBaseViewMixin
- */
-var IndeterminateCheckBoxView = CheckBoxView.extend({
-
-	className: 'pl-indeterminate-checkbox',
-
-	onClickHandler: function () {
-		var model = this.model;
-
-		var enabled = model.get('enabled');
-		if (enabled) {
-			var newValue = model.get('value');
-			newValue = newValue === 'indeterminate' ? 'unchecked' : newValue === 'unchecked' ? 'checked' : 'unchecked';
-			model.set('value', newValue);
-		}
-	},
-
-	updateValue: function () {
-		var value = this.model.get('value');
-		if( value === 'checked' ) {
-			this.ui.input.prop('indeterminate', false);
-			this.ui.input.prop('checked', true);
-		} else if( value === 'unchecked' ) {
-			this.ui.input.prop('indeterminate', false);
-			this.ui.input.prop('checked', false);
-		} else if( value === 'indeterminate' ) {
-			this.ui.input.prop('checked', false);
-			this.ui.input.prop('indeterminate', true);
-		}
-
-	}
-});
 
 //####app\controls\link\linkElementControl.js
 /**
@@ -16769,12 +16484,24 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         this.ui.header.empty();
         var headerTemplate = model.get('headerTemplate');
         if (typeof headerTemplate === 'function') {
-            var header = model.get('header');
-            this.ui.header.append(headerTemplate(null, {value: header}).render());
+            var header = model.get('header'),
+                $header = headerTemplate(null, {value: header}).render();
+
+            if( this.isDefaultHeader($header) ) {
+                this.ui.header.hide();
+            } else {
+                this.ui.header.show();
+                this.ui.header.append($header);
+            }
+
         }
     },
 
-
+    isDefaultHeader: function(headerTemplate) {
+        var defaultTemplate = InfinniUI.PanelBuilder.prototype.buildDefaultHeaderTemplate()(null, {value: null}),
+            defaultHeader = defaultTemplate.render();
+        return defaultHeader[0].isEqualNode(headerTemplate[0]);
+    },
 
     renderItemsContents: function () {
         var $items = this.$el.find('.pl-panel-i'),
@@ -17169,100 +16896,6 @@ var ScrollPanelView = ContainerView.extend(/** @lends ScrollPanelView.prototype 
 
 });
 
-//####app\controls\toolBar\toolBarControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function ToolBarControl(parent) {
-    _.superClass(ToolBarControl, this, parent);
-}
-
-_.inherit(ToolBarControl, ContainerControl);
-
-_.extend(ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
-
-    createControlModel: function () {
-        return new ToolBarModel();
-    },
-
-    createControlView: function (model) {
-        return new ToolBarView({model: model});
-    }
-});
-
-
-//####app\controls\toolBar\toolBarModel.js
-/**
- * @constructor
- * @aurments ContainerModel
- */
-var ToolBarModel = ContainerModel.extend({
-
-});
-
-//####app\controls\toolBar\toolBarView.js
-/**
- * @constructor
- * @augments ContainerView
- */
-var ToolBarView = ContainerView.extend({
-
-    className: 'pl-tool-bar',
-
-    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
-
-    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
-
-    UI: {
-        container: '.pl-tool-bar__container'
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        this.renderTemplate(this.template);
-        this.ui.container.append(this.renderItems());
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderItems: function () {
-        var model = this.model;
-        var items = model.get('items');
-        var itemTemplate = model.get('itemTemplate');
-
-        this.removeChildElements();
-
-        var $elements = [];
-
-        items.forEach(function (item, index) {
-            var template = this.itemTemplate();
-            var $template = $(template);
-
-            var element = itemTemplate(null, {
-                index: index,
-                item: item
-            });
-            this.addChildElement(element);
-            $template.append(element.render());
-            $elements.push($template);
-        }, this);
-
-        return $elements;
-    },
-
-    updateGrouping: function(){}
-});
-
 //####app\controls\toggleButton\toggleButtonControl.js
 function ToggleButtonControl(parent) {
     _.superClass(ToggleButtonControl, this, parent);
@@ -17393,6 +17026,100 @@ var ToggleButtonView = ControlView.extend(/** @lends ToggleButtonView.prototype 
     }
 }));
 
+//####app\controls\toolBar\toolBarControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function ToolBarControl(parent) {
+    _.superClass(ToolBarControl, this, parent);
+}
+
+_.inherit(ToolBarControl, ContainerControl);
+
+_.extend(ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
+
+    createControlModel: function () {
+        return new ToolBarModel();
+    },
+
+    createControlView: function (model) {
+        return new ToolBarView({model: model});
+    }
+});
+
+
+//####app\controls\toolBar\toolBarModel.js
+/**
+ * @constructor
+ * @aurments ContainerModel
+ */
+var ToolBarModel = ContainerModel.extend({
+
+});
+
+//####app\controls\toolBar\toolBarView.js
+/**
+ * @constructor
+ * @augments ContainerView
+ */
+var ToolBarView = ContainerView.extend({
+
+    className: 'pl-tool-bar',
+
+    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
+
+    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
+
+    UI: {
+        container: '.pl-tool-bar__container'
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        this.renderTemplate(this.template);
+        this.ui.container.append(this.renderItems());
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderItems: function () {
+        var model = this.model;
+        var items = model.get('items');
+        var itemTemplate = model.get('itemTemplate');
+
+        this.removeChildElements();
+
+        var $elements = [];
+
+        items.forEach(function (item, index) {
+            var template = this.itemTemplate();
+            var $template = $(template);
+
+            var element = itemTemplate(null, {
+                index: index,
+                item: item
+            });
+            this.addChildElement(element);
+            $template.append(element.render());
+            $elements.push($template);
+        }, this);
+
+        return $elements;
+    },
+
+    updateGrouping: function(){}
+});
+
 //####app\controls\view\viewControl.js
 /**
  *
@@ -17510,7 +17237,7 @@ ViewPanelControl.prototype.createControlModel = function () {
 ViewPanelControl.prototype.createControlView = function (model) {
     return new ViewPanelView({model: model});
 };
-
+//####app\controls\viewPanel\viewPanelModel.js
 var ViewPanelModel = ControlModel.extend({
     defaults: _.defaults({
         layout: null
@@ -17537,7 +17264,7 @@ var ViewPanelModel = ControlModel.extend({
         });
     }
 });
-
+//####app\controls\viewPanel\viewPanelView.js
 var ViewPanelView = ControlView.extend({
     className: 'pl-view-panel',
 
@@ -17572,7 +17299,6 @@ var ViewPanelView = ControlView.extend({
         return this;
     }
 });
-
 //####app\data\dataSource\_mixins\dataSourceValidationNotifierMixin.js
 /**
  *
@@ -17797,7 +17523,6 @@ var BaseDataSource = Backbone.Model.extend({
         var propertyPaths = property.split('.');
         var firstChar;
         var indexOfSelectedItem;
-        var index;
         var resultOfSet;
 
         if(propertyPaths[0] == '$'){
@@ -17962,6 +17687,7 @@ var BaseDataSource = Backbone.Model.extend({
 
             // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из-за заморозки, нужно вызвать updateItems
             if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
+                // waitingOnUpdateItemsHandlers будут вызваны в _notifyAboutItemsUpdated или _onErrorProviderUpdateItemsHandle
                 this.updateItems();
             }
         }
@@ -18217,16 +17943,14 @@ var BaseDataSource = Backbone.Model.extend({
             var dataProvider = this.get('dataProvider'),
                 that = this;
 
-
-            onError = this._compensateOnErrorOfProviderHandler(onError);
-
-
             this.set('isRequestInProcess', true);
             dataProvider.getItems(
                 function (data) {
-                    that._handleSuccessUpdateItemsInProvider(data, onSuccess, onError);
+                    that._handleSuccessUpdateItemsInProvider(data, onSuccess);
                 },
-                onError
+                function (data) {
+                    that._onErrorProviderUpdateItemsHandle(data, onError);
+                }
             );
 
         }else{
@@ -18241,26 +17965,12 @@ var BaseDataSource = Backbone.Model.extend({
         //devblockstop
     },
 
-
-    _compensateOnErrorOfProviderHandler: function(onError){
-        var that = this;
-
-        return function(){
-            if(typeof onError == 'function'){
-                onError.apply(undefined, arguments);
-            }else{
-                that.trigger('onProviderError', arguments);
-            }
-        };
-
-    },
-
-    _handleSuccessUpdateItemsInProvider: function(data, onSuccess, onError){
+    _handleSuccessUpdateItemsInProvider: function(data, callback){
         var that = this,
             isWaiting =  that.get('isWaiting'),
             finishUpdating = function(){
                 that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, onSuccess, onError);
+                that._handleUpdatedItemsData(data.data, callback);
             };
 
         if(isWaiting){
@@ -18272,24 +17982,47 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _onErrorProviderUpdateItemsHandle: function(){
+    _onErrorProviderUpdateItemsHandle: function(data, callback){
+        var handlers = this.get('waitingOnUpdateItemsHandlers'),
+            context = this.getContext();
 
+        if( handlers.length == 0 && !_.isFunction(callback) ){
+            this._compensateOnErrorOfProviderHandler(data);
+            return;
+        }
+
+        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        for(var i = 0, ii = handlers.length; i < ii; i++){
+            if(handlers[i].onError){
+                handlers[i].onError(context, data);
+            }
+        }
+
+        this.set('waitingOnUpdateItemsHandlers', []);
+
+        if(_.isFunction(callback)) {
+            callback(context, data);
+        }
+    },
+
+    _compensateOnErrorOfProviderHandler: function(){
+        this.trigger('onProviderError', arguments);
     },
 
     setIsWaiting: function(value){
         this.set('isWaiting', value);
     },
 
-    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+    _handleUpdatedItemsData: function (itemsData, callback) {
         if(this.get('newItemsHandler')){
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
         this.setProperty('', itemsData);
-        this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
+        this._notifyAboutItemsUpdated(itemsData, callback);
     },
 
-    _notifyAboutItemsUpdated: function (itemsData, successHandler, errorHandler) {
+    _notifyAboutItemsUpdated: function (itemsData, callback) {
         var context = this.getContext();
         var argument = {
             value: itemsData,
@@ -18306,8 +18039,8 @@ var BaseDataSource = Backbone.Model.extend({
 
         this.set('waitingOnUpdateItemsHandlers', []);
 
-        if (successHandler) {
-            successHandler(context, argument);
+        if (callback) {
+            callback(context, argument);
         }
 
         this.trigger('onItemsUpdated', context, argument);
@@ -18543,10 +18276,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         return promise;
     },
-
-    //setBindingBuilder: function(bindingBuilder){
-    //    this.set('bindingBuilder', bindingBuilder);
-    //},
 
     setIsLazy: function(isLazy){
         this.set('isLazy', isLazy);
@@ -19075,20 +18804,26 @@ var DocumentDataSource = RestDataSource.extend({
     initHandlers: function(){
         var model = this.get('model');
         var that = this;
-        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this),
+            updateGettingUrlParamsWithReset = function() {
+                that.suspendUpdate('updateGettingUrlParams');
+                that.get('model').setProperty('pageNumber', 0);
+                that.updateGettingUrlParams();
+                that.resumeUpdate('updateGettingUrlParams');
+            } ;
 
         model.onPropertyChanged('documentId', function(){
             that.updateGettingUrlParams();
             that.updateSettingUrlParams();
             that.updateDeletingUrlParams();
         });
-        model.onPropertyChanged('filter', updateGettingUrlParams);
-        model.onPropertyChanged('filterParams.*', updateGettingUrlParams);
+        model.onPropertyChanged('filter', updateGettingUrlParamsWithReset);
+        model.onPropertyChanged('filterParams.*', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
-        model.onPropertyChanged('pageSize', updateGettingUrlParams);
-        model.onPropertyChanged('search', updateGettingUrlParams);
+        model.onPropertyChanged('pageSize', updateGettingUrlParamsWithReset);
+        model.onPropertyChanged('search', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('select', updateGettingUrlParams);
-        model.onPropertyChanged('order', updateGettingUrlParams);
+        model.onPropertyChanged('order', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
 
         this.updateGettingUrlParams();
@@ -19596,9 +19331,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
 
         dataSource.setDocumentId(metadata['DocumentId']);
 
-        if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
-        if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
-
         if('Filter' in metadata){ dataSource.setFilter(metadata['Filter']); }
         if('FilterParams' in metadata){
             var params = metadata['FilterParams'];
@@ -19611,6 +19343,10 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
+
+        if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
+        // PageNumber нужно устанавливать последним, потому что его могут обнулять другие свойства.
+        if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
 
         if (Array.isArray(metadata.DefaultItems)) {
             dataSource.setProperty('', metadata.DefaultItems);
@@ -27328,6 +27064,52 @@ var BaseFallibleActionMixin = {
         }
     }
 };
+//####app\actions\acceptAction\acceptAction.js
+function AcceptAction(parentView){
+    _.superClass(AcceptAction, this, parentView);
+}
+
+_.inherit(AcceptAction, BaseAction);
+
+
+_.extend(AcceptAction.prototype, {
+    execute: function(callback){
+        var that = this;
+
+        this.parentView.onClosed(function () {
+            that.onExecutedHandler();
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        this.parentView.setDialogResult(DialogResult.accepted);
+        this.parentView.close();
+    }
+});
+
+window.InfinniUI.AcceptAction = AcceptAction;
+
+//####app\actions\acceptAction\acceptActionBuilder.js
+function AcceptActionBuilder() {
+}
+
+_.extend(AcceptActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var action = new AcceptAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
+
 //####app\actions\addAction\addAction.js
 function AddAction(parentView){
     _.superClass(AddAction, this, parentView);
@@ -27389,52 +27171,6 @@ _.extend(AddActionBuilder.prototype,
 
 window.InfinniUI.AddActionBuilder = AddActionBuilder;
 
-//####app\actions\acceptAction\acceptAction.js
-function AcceptAction(parentView){
-    _.superClass(AcceptAction, this, parentView);
-}
-
-_.inherit(AcceptAction, BaseAction);
-
-
-_.extend(AcceptAction.prototype, {
-    execute: function(callback){
-        var that = this;
-
-        this.parentView.onClosed(function () {
-            that.onExecutedHandler();
-
-            if (callback) {
-                callback();
-            }
-        });
-
-        this.parentView.setDialogResult(DialogResult.accepted);
-        this.parentView.close();
-    }
-});
-
-window.InfinniUI.AcceptAction = AcceptAction;
-
-//####app\actions\acceptAction\acceptActionBuilder.js
-function AcceptActionBuilder() {
-}
-
-_.extend(AcceptActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new AcceptAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
-
 //####app\actions\cancelAction\cancelAction.js
 function CancelAction(parentView){
     _.superClass(CancelAction, this, parentView);
@@ -27479,6 +27215,111 @@ _.extend(CancelActionBuilder.prototype,
 );
 
 window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
+
+//####app\actions\editAction\editAction.js
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseEditAction);
+
+
+_.extend(EditAction.prototype, {
+    setSelectedItem: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
+
+        if( selectedItem == null ){
+
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isDocumentPath(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
+
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
+        }
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            this._setItem(editDataSource, selectedItem);
+        } else {
+            this._setDocument(editDataSource, selectedItem);
+        }
+
+        return true;
+    },
+
+    _resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('BaseEditAction');
+    },
+
+    _setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
+    },
+
+    _setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
+
+        if(item === undefined || item === null){
+            item = {};
+        }
+        this._resumeUpdateEditDataSource();
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
+    },
+
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            var item = editDataSource.getSelectedItem();
+            destinationDataSource.setProperty(destinationProperty, item);
+        } else {
+            destinationDataSource.updateItems();
+        }
+    },
+
+    _isDocumentPath: function(path){
+        return !path.includes('.');
+    }
+});
+
+window.InfinniUI.EditAction = EditAction;
+
+//####app\actions\editAction\editActionBuilder.js
+function EditActionBuilder(){}
+
+_.extend(EditActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseEditActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new EditAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseEditActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
 //####app\actions\deleteAction\deleteAction.js
 function DeleteAction(parentView){
@@ -27625,111 +27466,6 @@ _.extend(DeleteActionBuilder.prototype,
 );
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
-
-//####app\actions\editAction\editAction.js
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
-}
-
-_.inherit(EditAction, BaseEditAction);
-
-
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
-
-            // if selectedItem is empty and it is must be document
-            // return error
-            if( this._isDocumentPath(destinationProperty) ){
-                var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
-
-                return false;
-            }
-
-            // but if selectedItem is property of document
-            // it will be created
-            selectedItem = selectedItem || {};
-        }
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
-        } else {
-            this._setDocument(editDataSource, selectedItem);
-        }
-
-        return true;
-    },
-
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
-    },
-
-    _setDocument: function (editDataSource, selectedItem){
-        var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
-        editDataSource.tryInitData();
-        this._resumeUpdateEditDataSource();
-    },
-
-    _setItem: function(editDataSource, selectedItem){
-        var item = _.clone( selectedItem );
-
-        if(item === undefined || item === null){
-            item = {};
-        }
-        this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
-        editDataSource.setSelectedItem( item );
-    },
-
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            var item = editDataSource.getSelectedItem();
-            destinationDataSource.setProperty(destinationProperty, item);
-        } else {
-            destinationDataSource.updateItems();
-        }
-    },
-
-    _isDocumentPath: function(path){
-        return !path.includes('.');
-    }
-});
-
-window.InfinniUI.EditAction = EditAction;
-
-//####app\actions\editAction\editActionBuilder.js
-function EditActionBuilder(){}
-
-_.extend(EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new EditAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
 //####app\actions\openAction\openAction.js
 function OpenAction(parentView){
@@ -28883,14 +28619,6 @@ DataBindingBuilder.prototype.build = function (context, args) {
     return result;
 };
 
-DataBindingBuilder.prototype.findSource = function(view, sourceName){
-    var context = view.getContext();
-    var dataSource = context.dataSources[sourceName];
-    var parameter = context.parameters[sourceName];
-    var element = context.controls[sourceName];
-    return dataSource || parameter || element;
-};
-
 DataBindingBuilder.prototype.isScriptBody = function(value){
     return value && value.substr(0, 1) == '{';
 };
@@ -29129,9 +28857,7 @@ _.extend(ObjectDataProvider.prototype, {
         this.items = items;
     },
 
-    getItems: function (resultCallback, criteriaList, pageNumber, pageSize, sorting) {
-        //var filter = new FilterCriteriaType();
-        //var callback = filter.getFilterCallback(criteriaList);
+    getItems: function (resultCallback) {
         resultCallback({data: this.items.slice()});
     },
 
@@ -33658,46 +33384,44 @@ var openModeAutoFocusMixin = {
     }
 
 };
-//####app\linkView\inlineViewBuilder.js
-function InlineViewBuilder() {
-    this.build = function (context, args){
-        var that = this,
-            metadata = args.metadata;
+//####app\linkView\linkViewBuilderBase.js
+function LinkViewBuilderBase() {}
 
+_.extend(LinkViewBuilderBase.prototype, {
+
+    build: function (context, args) {
+        var metadata = args.metadata;
         var parentView = this.getParentViewByOpenMode(args, metadata.OpenMode);
 
         var linkView = new LinkView(parentView);
+        var viewTemplate = this.getViewTemplate(args, parentView);
 
-        linkView.setViewTemplate(function(onViewReadyHandler){
+        linkView.setViewTemplate(viewTemplate);
 
-            that.buildViewByMetadata(args, args.metadata['View'], parentView, function (view) {
-                return onViewReadyHandler.call(null, view);
-            });
-        });
-
-        if('OpenMode' in metadata){
+        if ('OpenMode' in metadata) {
             linkView.setOpenMode(metadata.OpenMode);
         }
 
-        if('Container' in metadata){
+        if ('Container' in metadata) {
             linkView.setContainer(metadata.Container);
         }
 
-        if('DialogWidth' in metadata){
+        if ('DialogWidth' in metadata) {
             linkView.setDialogWidth(metadata.DialogWidth);
         }
 
         return linkView;
-    };
+    },
 
+    getViewTemplate: function() {
+        throw 'LinkViewBuilderBase.getViewTemplate: В потомке LinkViewBuilderBase не переопределен метод getViewTemplate.';
+    },
 
-
-    this.buildViewByMetadata = function(params, viewMetadata, parentView, onViewReadyHandler){
+    buildViewByMetadata: function (params, viewMetadata, parentView, onViewReadyHandler) {
         var builder = params.builder;
         var parameters = this.buildParameters(params);
 
-        if (viewMetadata != null) {
-
+        if( viewMetadata != null) {
             var view = builder.buildType("View", viewMetadata, {
                 parentView: parentView,
                 parent: parentView,
@@ -33706,13 +33430,13 @@ function InlineViewBuilder() {
             });
 
             onViewReadyHandler(view);
+
         } else {
-            logger.error('view metadata for ' + metadata + ' not found.');
+            window.InfinniUI.global.logger.error('LinkViewBuilderBase.buildViewByMetadata: view metadata for ' + params.metadata + ' not found.');
         }
-    };
+    },
 
-
-   this.buildParameters = function(params){
+    buildParameters: function (params) {
         var parametersMetadata = params.metadata['Parameters'];
         var builder = params.builder;
         var parentView = params.parentView;
@@ -33722,25 +33446,60 @@ function InlineViewBuilder() {
         if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
             for (var i = 0; i < parametersMetadata.length; i++) {
                 if (parametersMetadata[i].Value !== undefined) {
-                    parameter = builder.buildType('Parameter', parametersMetadata[i], {parentView: parentView, basePathOfProperty: params.basePathOfProperty});
+                    parameter = builder.buildType('Parameter', parametersMetadata[i], {
+                        parentView: parentView,
+                        basePathOfProperty: params.basePathOfProperty
+                    });
                     result[parameter.getName()] = parameter;
                 }
             }
         }
         return result;
-   };
+    },
 
-    this.getParentViewByOpenMode = function(params, mode) {
+    getParentViewByOpenMode: function(params, mode) {
         if( mode == null || mode == "Default" ) {
             return params.parentView.getApplicationView();
         }
 
+        if( mode == "Container" ) {
+            var containerName = params.metadata.Container;
+            var container = InfinniUI.global.containers[containerName];
+
+            if(container){
+                return container.getView();
+            }else{
+                return params.parentView;
+            }
+        }
+
         return params.parentView;
-    };
+    }
+});
+
+//####app\linkView\inlineViewBuilder.js
+function InlineViewBuilder() {
+    _.superClass(InlineViewBuilder, this);
 }
+
+_.inherit(InlineViewBuilder, LinkViewBuilderBase);
 
 window.InfinniUI.InlineViewBuilder = InlineViewBuilder;
 
+_.extend(InlineViewBuilder.prototype, {
+
+    getViewTemplate: function(args, parentView) {
+        var that = this;
+
+        return function(onViewReadyHandler){
+
+            that.buildViewByMetadata(args, args.metadata['View'], parentView, function (view) {
+                return onViewReadyHandler.call(null, view);
+            });
+        }
+    }
+
+});
 //####app\linkView\linkView.js
 function LinkView(parent) {
     this.openMode = 'Default';
@@ -33832,37 +33591,17 @@ _.extend(LinkView.prototype, {
 });
 
 //####app\linkView\metadataViewBuilder.js
-function MetadataViewBuilder() {}
+function MetadataViewBuilder() {
+    _.superClass(MetadataViewBuilder, this);
+}
+
+_.inherit(MetadataViewBuilder, LinkViewBuilderBase);
 
 window.InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 
 _.extend(MetadataViewBuilder.prototype, {
 
-    build: function (context, args) {
-        var metadata = args.metadata;
-        var parentView = this.getParentViewByOpenMode(args, metadata.OpenMode);
-
-        var viewTemplate = this.buildViewTemplate(args, parentView);
-        var linkView = new LinkView(parentView);
-
-        linkView.setViewTemplate(viewTemplate);
-
-        if ('OpenMode' in metadata) {
-            linkView.setOpenMode(metadata.OpenMode);
-        }
-
-        if ('Container' in metadata) {
-            linkView.setContainer(metadata.Container);
-        }
-
-        if ('DialogWidth' in metadata) {
-            linkView.setDialogWidth(metadata.DialogWidth);
-        }
-
-        return linkView;
-    },
-
-    buildViewTemplate: function (params, parentView) {
+    getViewTemplate: function (params, parentView) {
         var metadata = params.metadata;
         var that = this;
 
@@ -33885,61 +33624,8 @@ _.extend(MetadataViewBuilder.prototype, {
                 that.buildViewByMetadata(params, viewMetadata, parentView, onReady);
             });
         };
-    },
-
-    buildViewByMetadata: function (params, viewMetadata, parentView, onViewReadyHandler) {
-        var builder = params.builder;
-        var parameters = this.buildParameters(params);
-
-        var view = builder.buildType("View", viewMetadata, {
-            parentView: parentView,
-            parent: parentView,
-            params: parameters,
-            suspended: params.suspended
-        });
-
-        onViewReadyHandler(view);
-    },
-
-    buildParameters: function (params) {
-        var parametersMetadata = params.metadata['Parameters'];
-        var builder = params.builder;
-        var parentView = params.parentView;
-        var result = {};
-        var parameter;
-
-        if (typeof parametersMetadata !== 'undefined' && parametersMetadata !== null) {
-            for (var i = 0; i < parametersMetadata.length; i++) {
-                if (parametersMetadata[i].Value !== undefined) {
-                    parameter = builder.buildType('Parameter', parametersMetadata[i], {
-                        parentView: parentView,
-                        basePathOfProperty: params.basePathOfProperty
-                    });
-                    result[parameter.getName()] = parameter;
-                }
-            }
-        }
-        return result;
-    },
-
-    getParentViewByOpenMode: function(params, mode) {
-        if( mode == null || mode == "Default" ) {
-            return params.parentView.getApplicationView();
-        }
-
-        if( mode == "Container" ) {
-            var containerName = params.metadata.Container;
-            var container = InfinniUI.global.containers[containerName];
-
-            if(container){
-                return container.getView();
-            }else{
-                return params.parentView;
-            }
-        }
-
-        return params.parentView;
     }
+
 });
 
 //####app\linkView\openMode\strategy\openModeContainerStrategy.js
@@ -34106,6 +33792,462 @@ _.extend(OpenModeDialogStrategy.prototype, {
     }
 });
 
+//####app\launching\autoHeightService.js
+window.InfinniUI.AutoHeightService = {
+	windowHeight: 0,
+	clientHeight: 0,
+	exchange: null,
+	times: [],
+
+	setOuterHeight: function ($el, height, fix) {
+		var delta = 0;
+		'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
+			.split(',')
+			.forEach(function(name) {
+				delta += parseInt($el.css(name));
+			});
+		var contentHeight = height - delta;
+		if (fix) {
+			contentHeight += fix;
+		}
+
+		//@TODO Разобраться с багом, при задании clearfix.height = 0 вылезает лишний 1 пиксел. Временное решение:
+		//contentHeight = (contentHeight > 0) ? contentHeight - 1 : contentHeight;
+
+		$el.height(contentHeight);
+
+		return contentHeight;
+	},
+
+	getModalSelector: function () {
+		return '.modal-scrollable';
+	},
+
+	getSelector: function () {
+		//return '.pl-data-grid, .pl-scroll-panel, .pl-document-viewer, .pl-menu.vertical, .pl-tab-panel, .pl-treeview';
+		return '.verticalAlignmentStretch:not(:hidden)';
+	},
+
+	buildTree: function(items, parentEl, $parentEl, elements, list) {
+		var items = _.where(list, {parent: parentEl}),
+				manager = this;
+
+		return {
+			isElement: _.indexOf(elements, parentEl) !== -1,
+			element: parentEl,
+			$element: $parentEl,
+			child: _.map(items, function (item) {
+				return manager.buildTree(items, item.element, item.$element, elements, list );
+			})
+		};
+	},
+
+	formTree: function(elements, el, $el) {
+		var $parent,
+				list = [],
+				$element,
+				element;
+		//Строим дерево элементов: от концевых элементов поднимается к корневому элементу
+		for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
+			element = elements[i];
+			$element = $(element);
+			do {
+				$parent = $element.parent();
+
+				var a = _.findWhere(list, {element: element});
+				if (typeof a !== 'undefined') {
+					//Элемент уже занесен в список
+					break;
+				}
+				list.push({
+					element: element,
+					$element: $element,
+					parent: $parent.get(0),
+					$parent: $parent
+				});
+
+				$element = $parent;
+				element = $parent.get(0);
+			} while (element !== el);
+		}
+
+		return this.buildTree(list, el, $el, elements, list);
+	},
+
+	setHeight: function (node, height) {
+		var originalHeight = node.$element.attr('data-height-original');
+		if (originalHeight === '') {
+			node.$element.attr('data-height-original', node.element.style.height);
+		}
+		return this.setOuterHeight(node.$element, height);
+	},
+
+	defineWay: function(node, height) {
+		var nodeHeight = this.setHeight(node, height),
+				manager = this;
+
+		if( node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable') ) {
+			//Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
+			return;
+		} else if( node.$element.hasClass('tab-content') ) {
+			_.each(node.child, function (node) {
+				manager.defineWay(node, nodeHeight);
+			});
+		} else if( node.child.length > 0 ) {
+			this.goThroughTree(node, nodeHeight);
+		}
+	},
+
+	goThroughTree: function(node, height) {
+		var manager = this;
+		if( node.$element.parentsUntil('.modal').length ) {
+			node.$element.attr('data-height-original', node.element.style.height);
+		}
+
+		var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)'),
+		/*
+		 * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
+		*/
+				grid = _.chain(children)
+					.filter(function (el) {
+						var position = $(el).css('position');
+						return ['absolute', 'fixed'].indexOf(position) === -1;
+					})
+					.groupBy('offsetTop')
+					.value(),
+
+				heights = [];
+
+		_.each(grid, function (row, i) {
+			var nodes = [];
+			_.each(row, function (e) {
+				var n = _.find(node.child, function (c) {return c.element === e;});
+				if (n) nodes.push(n);
+			});
+
+			heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
+				return Math.max(height, $(e).outerHeight(true));
+			}, 0));
+
+			grid[i] = nodes;
+		}, this);
+
+		var fixedHeight = _.reduce(heights, function (total, height) {return total + height}, 0),
+				count = _.reduce(grid, function (count, row) {return row.length ? count + 1 : count}, 0),
+
+				heightForNode = Math.floor((height - fixedHeight) / count);
+
+		_.each(grid, function (row) {
+			if (row.length === 0) return;
+			_.each(row, function (node) {
+				manager.defineWay(node, heightForNode);
+			}, this);
+		}, this);
+	},
+
+	resize: function(el, pageHeight) {
+		var startTime = Date.now(); //start time
+		var $el = $(el),
+				contentHeight = this.setOuterHeight($el, pageHeight),
+				elements = $el.find(this.getSelector());
+
+		//var elements = Array.prototype.filter.call($el.find(this.getSelector()), function (element) {
+		//    //Исключаем элементы которые долдны занитмать всю доступную высоту,
+		//    // которые по какой-то причине оказались внутри ScrollPanel
+		//    return $(element).parents('.pl-scrollpanel').length === 0;
+		//});
+		if (elements.length === 0) {
+			return;
+		}
+
+		var tree = this.formTree(elements, el, $el);
+		/**
+		 * Если внутри child один элемент:
+		 *   - устанавливаем высоту в 100%
+		 * Если внутри child несколько элементов
+		 *   - offsetTop совпадают - устанавливаем высоту в 100%
+		 *   - offsetTop не совпадают - устанавливаем высоту в (100 / child.length)%
+		 */
+		this.defineWay(tree, pageHeight);
+		var endTime = Date.now(); //end time
+		this.timeWatcher(endTime - startTime);
+	},
+
+	timeWatcher: function(time) {
+		if( time >= 20 ) {
+			this.times.push(time);
+		}
+	},
+
+	getTimes: function() {
+		return this.times;
+	},
+
+	resizeView: function (container, clientHeight) {
+		var $page = $('#page-content', container);
+		//$page.height(clientHeight);
+		var contentHeight = this.setOuterHeight($page, clientHeight);
+		var that = this;
+
+		this.resize($page.get(0), contentHeight);
+
+		//$page.children().each(function (i, el) {
+		//    if (el.style.display !== 'none') {
+		//        //Обработка активной вкладки
+		//        var $tab = $(el);
+		//
+		//        var $bar = $(".pl-active-bar:not(:hidden)", $tab);
+		//
+		//        var barHeight = $bar.length ? $bar.outerHeight(true) : 0;
+		//        //var barHeight = $(".pl-active-bar", $tab).outerHeight(true);
+		//        $tab.children().each(function (i, el) {
+		//            if (false === el.classList.contains('pl-active-bar') && el.style.display !== 'none') {
+		//                var pageHeight = contentHeight - barHeight;
+		//                that.resize(el, pageHeight);
+		//            }
+		//        });
+		//    }
+		//});
+	},
+
+	resizeDialog: function () {
+		var manager = this;
+		$(this.getModalSelector()).each(function (i, el) {
+			manager._resizeDialog($(el));
+			manager.resetDialogHeight($(el));
+		});
+	},
+
+	resetDialogHeight: function($modal){
+		var space = 10;
+
+		if($modal.children()) {
+			var $container = $modal.children();
+
+			var $header = $('.modal-header', $container);
+			var $body = $('.modal-body', $container);
+
+			var $el = $(this.getSelector(), $modal);
+
+			$el.parentsUntil('.modal').css('height', 'auto');
+			$container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
+
+			$modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
+
+		}
+
+		//var $header = $('.modal-header', $container);
+		//var $body = $('.modal-body', $container);
+
+		//var headerHeight = $header.outerHeight(true);
+		//
+		//$container.css('margin-top', 0);
+		//
+		//var el = $(this.getSelector(), $modal);
+		//if (el.length === 0) {
+		//    //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
+		//    //Выравниваем по вертикали в центр
+		//    $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
+		//    return;
+		//}
+		//
+		//$body.css('min-height', '0');
+		//var containerHeight = this.setOuterHeight($modal, 'auto');
+		//
+		////Высота для содержимого окна диалога
+		//var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+		//
+		//this.resize($body[0], clientHeight);
+		//$container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
+	},
+
+	_resizeDialog: function ($modal) {
+		var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
+
+		var $container = $modal.children();
+
+		$container.css('margin-top', 0);
+		//var marginTop = parseInt($container.css('margin-top'), 10);
+
+		var $header = $('.modal-header', $container);
+		var $body = $('.modal-body', $container);
+
+		var headerHeight = $header.outerHeight(true);
+		$body.css('max-height', this.windowHeight - headerHeight);
+
+		$container.css('margin-top', 0);
+
+		var el = $(this.getSelector(), $modal);
+		if (el.length !== 0) {
+			// Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
+			// пересчитываем высоту
+
+			//@TODO Зачем задавалась минимальная высота диалогов?
+			//$body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
+			var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
+
+			//Высота для содержимого окна диалога
+			var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+
+			this.resize($body[0], clientHeight);
+		}
+	},
+
+	recalculation: function (container) {
+		if( window.InfinniUI.config.disableAutoHeightServicer === true ) {
+			return false;
+		}
+		container = container || document;
+		$('#page-content').addClass('page-content-overflow-hidden');
+		this.windowHeight = $(window).height();
+		this.onChangeLayout(container);
+		if (this.exchange === null) {
+			this.exchange = window.InfinniUI.global.messageBus;
+			this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
+		}
+	},
+
+	slidingRecalculation: function (container) {
+		var that = this;
+		for (var i = 3; i >= 0; i--) {
+			setTimeout(function () {
+				that.recalculation(container);
+			}, 500 + i * 300);
+		}
+	},
+
+	onChangeLayout: function (container) {
+		if (_.isEmpty(container)) {
+			container = document;
+		}
+
+		var clientHeight = this.windowHeight
+			- $("#page-top:not(:hidden)", container).outerHeight()
+			- $("#page-bottom:not(:hidden)", container).outerHeight()
+			- $("#menu-area:not(:hidden)", container).outerHeight();
+		this.resizeView(container, clientHeight);
+		this.resizeDialog();
+	}
+};
+
+//####app\launching\specialApplicationView.js
+function SpecialApplicationView() {
+    var $container;
+
+    this.isView = true;
+
+    this.getContainer = function () {
+        return this.$container;
+    };
+
+    this.open = function ($el) {
+        this.$container = $el;
+    };
+
+    this.getApplicationView = function () {
+        return this;
+    };
+
+    this.menuIsInitialized = function () {
+        this.isMenuInitialized = true;
+
+        //this.initViewHandlers();
+    };
+
+    this.getContext = function(){
+        return null;
+    };
+}
+
+//####app\launching\openHomePage.js
+window.InfinniUI.openHomePage = function($target) {
+    var builder = new ApplicationBuilder(),
+        rootView = new SpecialApplicationView();
+
+    rootView.open($target);
+
+    InfinniUI.AutoHeightService.slidingRecalculation();
+    subscribeRecalculationOnWindowResize();
+
+    getHomePageLinkViewPromise()
+        .done(function (viewMetadata) {
+            var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
+            action.execute(function() {
+                if( window.InfinniUI.RouterService ) {
+                    window.InfinniUI.RouterService.startRouter();
+                }
+            });
+        });
+};
+
+function subscribeRecalculationOnWindowResize() {
+    var TIMEOUT = 40;
+    var WAIT = 50;
+    var resizeTimeout;
+
+    $(window).resize(function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(_.debounce(onWindowResize, WAIT), TIMEOUT);
+    });
+
+    function onWindowResize() {
+        window.InfinniUI.AutoHeightService.recalculation();
+    }
+
+};
+
+function getHomePageLinkViewPromise() {
+    var defer = $.Deferred();
+    var homePageMetadata = window.InfinniUI.config.homePage;
+
+    if (typeof homePageMetadata === 'string') {
+        $.ajax({
+                url: homePageMetadata,
+                dataType: "json"
+            })
+            .then(function (data) {
+                defer.resolve({
+                    LinkView: {
+                        InlineView: {
+                            View: data
+                        }
+                    }
+                })
+            }, function (jqXHR, textStatus, errorThrown) {
+                console.error(textStatus);
+            });
+    } else {
+        defer.resolve({
+            LinkView: {
+                AutoView: homePageMetadata
+            }
+        });
+    }
+
+    return defer.promise();
+};
+//####app\launching\startSettings.js
+if(InfinniUI.config.configName != null) {
+    document.title = InfinniUI.config.configName;
+}
+
+moment.locale(InfinniUI.config.lang && InfinniUI.config.lang.substr(0,2));
+
+InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
+
+InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
+    InfinniUI.AutoHeightService.slidingRecalculation();
+
+    return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(InfinniUI.config.serverUrl, metadataValue));
+});
+
+
+InfinniUI.providerRegister.register('DocumentDataSource', InfinniUI.Providers.RestDataProvider);
+InfinniUI.providerRegister.register('RestDataSource', InfinniUI.Providers.RestDataProvider);
+
+InfinniUI.providerRegister.register('ServerActionProvider', function () {
+    return new InfinniUI.Providers.ServerActionProvider();
+});
 //####app\script\scriptBuilder.js
 /**
  *
@@ -34164,6 +34306,7 @@ ScriptExecutor.prototype.executeScript = function (scriptName, args) {
     var scriptBody;
     var scriptCompiled;
 
+    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
     if(scriptName.substr(0, 1) == '{'){
         scriptBody = scriptName.substr(1, scriptName.length - 2);
         scriptCompiled = this.buildScriptByBody(scriptBody);
@@ -34495,6 +34638,29 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -34644,55 +34810,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body'
-
-			})
-			.tooltip('show');
-	}
-})();
-
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -34782,4 +34899,30 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+		var message = args.value;
+		showToolTip(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+	function showToolTip($element, content) {
+		$element
+			.tooltip({
+				html: true,
+				title:content,
+				placement: 'auto top',
+				container: 'body'
+
+			})
+			.tooltip('show');
+	}
+})();
 })();
