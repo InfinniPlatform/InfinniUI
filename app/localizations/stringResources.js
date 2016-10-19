@@ -14,6 +14,14 @@ InfinniUI.localizations['ru-RU'].strings = {
         clear: 'Очистить',
         today: 'Сегодня',
         date: 'Дата'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Вы уверены, что хотите удалить?",
+        "warnMessageNoItem": "Вы не выбрали элемент который необходимо удалить",
+        "agree": "Да",
+        "disagree": "Нет",
+        "cancel": "Закрыть"
     }
 };
 
@@ -33,5 +41,13 @@ InfinniUI.localizations['en-US'].strings = {
         clear: 'Clear',
         today: 'Today',
         date: 'Date'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Are you sure to remove item?",
+        "warnMessageNoItem": "Choose item that you want to remove",
+        "agree": "Yes",
+        "disagree": "No",
+        "cancel": "Close"
     }
 };
