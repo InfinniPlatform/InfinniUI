@@ -17,17 +17,17 @@ _.extend(DeleteAction.prototype,
             if( dataSource.getProperty(property) ) {
                 if(accept){
                     new MessageBox({
-                        text: 'Вы уверены, что хотите удалить?',
+                        text: localized.strings.DeleteAction.warnMessage,
                         buttons: [
                             {
-                                name: 'Да',
+                                name: localized.strings.DeleteAction.agree,
                                 type: 'action',
                                 onClick: function() {
                                     that.remove(callback);
                                 }
                             },
                             {
-                                name: 'Нет'
+                                name: localized.strings.DeleteAction.disagree
                             }
                         ]
                     });
@@ -36,10 +36,10 @@ _.extend(DeleteAction.prototype,
                 }
             } else {
                 new MessageBox({
-                    text: 'Вы не выбрали элемент который необходимо удалить',
+                    text: localized.strings.DeleteAction.warnMessageNoItem,
                     buttons: [
                         {
-                            name: 'Закрыть'
+                            name: localized.strings.DeleteAction.cancel
                         }
                     ]
                 });
