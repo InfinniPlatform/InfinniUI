@@ -1,3 +1,4 @@
 # Documentation
 
-http://infinniuireadthedocsorg.readthedocs.io/
+http://infinniui-en.readthedocs.io/
+http://docs.infinnity.ru/docs/API/
