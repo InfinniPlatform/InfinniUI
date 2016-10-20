@@ -679,7 +679,7 @@ var BaseDataSource = Backbone.Model.extend({
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
-        this.setProperty('', itemsData);
+        this._setItems(itemsData);
         this._notifyAboutItemsUpdated(itemsData, successHandler, errorHandler);
     },
 
@@ -748,7 +748,7 @@ var BaseDataSource = Backbone.Model.extend({
             items = [itemData];
         }
 
-        this.setProperty('', items);
+        this._setItems(items);
         this._includeItemToModifiedSet(itemData);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);

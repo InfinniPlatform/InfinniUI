@@ -27,7 +27,7 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
 
         if (Array.isArray(metadata.DefaultItems)) {
-            dataSource.setProperty('', metadata.DefaultItems);
+            dataSource._setItems(metadata.DefaultItems);
         }
     },
 
