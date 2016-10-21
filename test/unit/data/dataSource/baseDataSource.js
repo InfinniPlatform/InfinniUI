@@ -66,7 +66,7 @@ describe('baseDataSource', function () {
                 setOrigin: function(){},
                 setPath: function(){},
                 setData: function(){},
-                setParams: function(){}
+                setMethod: function(){}
             }
         });
 

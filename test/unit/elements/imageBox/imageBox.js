@@ -57,24 +57,23 @@ describe('ImageBox', function () {
 
     describe('Upload new file', function () {
 
-        beforeEach(function () {
-            //register fake upload provider
-            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
-                return {
-                    uploadFile: function () {
-                        var deferred = $.Deferred();
-                        setTimeout(function () {
-                            deferred.resolve();
-                        }, delay());
-
-                        return deferred.promise();
-                    },
-                    getFileUrl: function (fieldName, instanceId) {
-                        return [fieldName, instanceId, 'fake.html'].join('.');
-                    }
-                };
-            });
-        });
+        //beforeEach(function () {
+        //    //register fake upload provider
+        //    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+        //        return {
+        //            uploadFile: function () {
+        //                var deferred = $.Deferred();
+        //                setTimeout(function () {
+        //                    deferred.resolve();
+        //                }, delay());
+        //
+        //                return deferred.promise();
+        //            },
+        //            getFileUrl: function (fieldName, instanceId) {
+        //                return [fieldName, instanceId, 'fake.html'].join('.');
+        //            }
+        //        };
+        //    });
 
         //
         //it('Should set image url', function (done) {
