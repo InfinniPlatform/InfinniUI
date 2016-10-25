@@ -439,7 +439,8 @@ _.extend(StaticFakeDataProvider.prototype, {
 
     setOrigin: function(){},
     setPath: function(){},
-    setData : function(){}
+    setData : function(){},
+    setMethod : function(){}
 });
 describe('AcceptAction', function () {
     it('successful build', function () {
@@ -2188,6 +2189,7 @@ describe('ServerAction', function () {
             assert.equal(window.serverActionTest_urlParams.contentType, 'application/x-www-form-urlencoded; charset=utf-8');
         });
 
+
         it('post', function () {
             // Given
             window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
@@ -2260,6 +2262,83 @@ describe('ServerAction', function () {
             // Then
             assert.equal(window.serverActionTest_urlParams.args, '{"a":2,"b":"abc"}');
         });
+    });
+
+
+    it('should escape quote in Data', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+        var json = {"name": "value"};
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    b: '<%param1%>'
+                },
+                Params: {
+                    param1: JSON.stringify(json)
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.args.b, JSON.stringify(json));
+    });
+
+    it('should keep data type', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(JSON.stringify(data.args), JSON.stringify({"Number": 1, "String": "text", "Null": null}));
     });
 });
 
@@ -9623,7 +9702,7 @@ describe('baseDataSource', function () {
                 setOrigin: function(){},
                 setPath: function(){},
                 setData: function(){},
-                setParams: function(){}
+                setMethod: function(){}
             }
         });
 
@@ -12777,24 +12856,23 @@ describe('ImageBox', function () {
 
     describe('Upload new file', function () {
 
-        beforeEach(function () {
-            //register fake upload provider
-            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
-                return {
-                    uploadFile: function () {
-                        var deferred = $.Deferred();
-                        setTimeout(function () {
-                            deferred.resolve();
-                        }, delay());
-
-                        return deferred.promise();
-                    },
-                    getFileUrl: function (fieldName, instanceId) {
-                        return [fieldName, instanceId, 'fake.html'].join('.');
-                    }
-                };
-            });
-        });
+        //beforeEach(function () {
+        //    //register fake upload provider
+        //    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+        //        return {
+        //            uploadFile: function () {
+        //                var deferred = $.Deferred();
+        //                setTimeout(function () {
+        //                    deferred.resolve();
+        //                }, delay());
+        //
+        //                return deferred.promise();
+        //            },
+        //            getFileUrl: function (fieldName, instanceId) {
+        //                return [fieldName, instanceId, 'fake.html'].join('.');
+        //            }
+        //        };
+        //    });
 
         //
         //it('Should set image url', function (done) {
