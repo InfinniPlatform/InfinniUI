@@ -275,6 +275,14 @@ InfinniUI.localizations['ru-RU'].strings = {
         clear: 'Очистить',
         today: 'Сегодня',
         date: 'Дата'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Вы уверены, что хотите удалить?",
+        "warnMessageNoItem": "Вы не выбрали элемент который необходимо удалить",
+        "agree": "Да",
+        "disagree": "Нет",
+        "cancel": "Закрыть"
     }
 };
 
@@ -294,8 +302,17 @@ InfinniUI.localizations['en-US'].strings = {
         clear: 'Clear',
         today: 'Today',
         date: 'Date'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Are you sure to remove item?",
+        "warnMessageNoItem": "Choose item that you want to remove",
+        "agree": "Yes",
+        "disagree": "No",
+        "cancel": "Close"
     }
 };
+
 //####app\utils\collection\collection.js
 /**
  *
@@ -18018,7 +18035,7 @@ var BaseDataSource = Backbone.Model.extend({
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
-        this.setProperty('', itemsData);
+        this._setItems(itemsData);
         this._notifyAboutItemsUpdated(itemsData, callback);
     },
 
@@ -18087,7 +18104,7 @@ var BaseDataSource = Backbone.Model.extend({
             items = [itemData];
         }
 
-        this.setProperty('', items);
+        this._setItems(items);
         this._includeItemToModifiedSet(itemData);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
@@ -18546,7 +18563,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('get', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('get', templated);
-
+            dataProvider.setMethod('get', urlParams.method);
 
             if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or waiting resolving
                 that.updateItems();
@@ -18563,6 +18580,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('set', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('set', templated);
+            dataProvider.setMethod('set', urlParams.method);
         });
 
         this.get('model').onPropertyChanged('urlParams.delete.*', function(context, args){
@@ -18575,6 +18593,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('delete', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('delete', templated);
+            dataProvider.setMethod('delete', urlParams.method);
         });
     },
 
@@ -18834,7 +18853,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateGettingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'get',
+                method: 'get',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
@@ -18884,7 +18903,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateSettingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'post',
+                method: 'post',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
@@ -18897,7 +18916,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateDeletingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'delete',
+                method: 'delete',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId') + '/<%id%>',
                 data: {},
@@ -19349,7 +19368,7 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
 
         if (Array.isArray(metadata.DefaultItems)) {
-            dataSource.setProperty('', metadata.DefaultItems);
+            dataSource._setItems(metadata.DefaultItems);
         }
     },
 
@@ -27236,17 +27255,17 @@ _.extend(DeleteAction.prototype,
             if( dataSource.getProperty(property) ) {
                 if(accept){
                     new MessageBox({
-                        text: 'Вы уверены, что хотите удалить?',
+                        text: localized.strings.DeleteAction.warnMessage,
                         buttons: [
                             {
-                                name: 'Да',
+                                name: localized.strings.DeleteAction.agree,
                                 type: 'action',
                                 onClick: function() {
                                     that.remove(callback);
                                 }
                             },
                             {
-                                name: 'Нет'
+                                name: localized.strings.DeleteAction.disagree
                             }
                         ]
                     });
@@ -27255,10 +27274,10 @@ _.extend(DeleteAction.prototype,
                 }
             } else {
                 new MessageBox({
-                    text: 'Вы не выбрали элемент который необходимо удалить',
+                    text: localized.strings.DeleteAction.warnMessageNoItem,
                     buttons: [
                         {
-                            name: 'Закрыть'
+                            name: localized.strings.DeleteAction.cancel
                         }
                     ]
                 });
@@ -27362,111 +27381,6 @@ _.extend(DeleteActionBuilder.prototype,
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
 
-//####app\actions\editAction\editAction.js
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
-}
-
-_.inherit(EditAction, BaseEditAction);
-
-
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
-
-            // if selectedItem is empty and it is must be document
-            // return error
-            if( this._isDocumentPath(destinationProperty) ){
-                var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
-
-                return false;
-            }
-
-            // but if selectedItem is property of document
-            // it will be created
-            selectedItem = selectedItem || {};
-        }
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
-        } else {
-            this._setDocument(editDataSource, selectedItem);
-        }
-
-        return true;
-    },
-
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
-    },
-
-    _setDocument: function (editDataSource, selectedItem){
-        var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
-        editDataSource.tryInitData();
-        this._resumeUpdateEditDataSource();
-    },
-
-    _setItem: function(editDataSource, selectedItem){
-        var item = _.clone( selectedItem );
-
-        if(item === undefined || item === null){
-            item = {};
-        }
-        this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
-        editDataSource.setSelectedItem( item );
-    },
-
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            var item = editDataSource.getSelectedItem();
-            destinationDataSource.setProperty(destinationProperty, item);
-        } else {
-            destinationDataSource.updateItems();
-        }
-    },
-
-    _isDocumentPath: function(path){
-        return !path.includes('.');
-    }
-});
-
-window.InfinniUI.EditAction = EditAction;
-
-//####app\actions\editAction\editActionBuilder.js
-function EditActionBuilder(){}
-
-_.extend(EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new EditAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.EditActionBuilder = EditActionBuilder;
-
 //####app\actions\openAction\openAction.js
 function OpenAction(parentView){
     _.superClass(OpenAction, this, parentView);
@@ -27519,6 +27433,134 @@ _.extend(OpenActionBuilder.prototype,
 );
 
 window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
+
+//####app\actions\editAction\editAction.js
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseEditAction);
+
+
+_.extend(EditAction.prototype, {
+    setSelectedItem: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
+
+        if( selectedItem == null ){
+
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isRootItem(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
+
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
+        }
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            this._setItem(editDataSource, selectedItem);
+        } else {
+            this._setDocument(editDataSource, selectedItem);
+        }
+
+        return true;
+    },
+
+    _resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('BaseEditAction');
+    },
+
+    _setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
+    },
+
+    _setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
+
+        if(item === undefined || item === null){
+            item = {};
+        }
+        this._resumeUpdateEditDataSource();
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
+    },
+
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            var editedItem = editDataSource.getSelectedItem();
+            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
+
+            if( this._isRootItem(destinationProperty) ) {
+                this._overrideOriginItem(rootItem, editedItem);
+                destinationDataSource._includeItemToModifiedSet(rootItem);
+            }
+            // TODO: выяснить, почему без setProperty dataGrid не обновляется
+            destinationDataSource.setProperty(destinationProperty, editedItem);
+            destinationDataSource.saveItem(rootItem);
+        }
+
+        destinationDataSource.updateItems();
+    },
+
+    _overrideOriginItem: function(originItem, newItem) {
+        for(var property in originItem) {
+            delete originItem[property];
+        }
+
+        for(var property in newItem) {
+          originItem[property] = _.clone(newItem[property]);
+        }
+    },
+
+    _isRootItem: function(path){
+        return !path.includes('.');
+    },
+
+    _getRootItem: function(dataSource, property) {
+        var index = (property||'$').split('.')[0];
+        return dataSource.getProperty(index);
+    }
+});
+
+window.InfinniUI.EditAction = EditAction;
+
+//####app\actions\editAction\editActionBuilder.js
+function EditActionBuilder(){}
+
+_.extend(EditActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseEditActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new EditAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseEditActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
 //####app\actions\routeToAction\routeToAction.js
 function RouteToAction(){
@@ -27598,6 +27640,79 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 
 window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
 
+//####app\actions\saveAction\saveAction.js
+function SaveAction(parentView){
+    _.superClass(SaveAction, this, parentView);
+}
+
+_.inherit(SaveAction, BaseAction);
+
+
+_.extend(SaveAction.prototype,
+    BaseFallibleActionMixin,
+    {
+        execute: function(callback){
+            var parentView = this.parentView,
+                dataSource = this.getProperty('dataSource'),
+                canClose = this.getProperty('canClose'),
+                that = this;
+
+            var onSuccessSave = function(context, args){
+                    if(canClose !== false){
+                        parentView.setDialogResult(DialogResult.accepted);
+                        parentView.close();
+                    }
+
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
+
+                    if(_.isFunction(callback)){
+                        callback(context, args);
+                    }
+                },
+                onErrorSave = function(context, args){
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
+
+                    if (_.isFunction(callback)) {
+                        callback(context, args);
+                    }
+                };
+
+            var selectedItem = dataSource.getSelectedItem();
+            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
+        }
+    }
+);
+
+window.InfinniUI.SaveAction = SaveAction;
+
+//####app\actions\saveAction\saveActionBuilder.js
+function SaveActionBuilder() {}
+
+_.extend(SaveActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var parentView = args.parentView;
+            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+
+            var action = new SaveAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+            action.setProperty('canClose', args.metadata.CanClose);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+
 //####app\actions\selectAction\selectAction.js
 function SelectAction(parentView){
     _.superClass(SelectAction, this, parentView);
@@ -27674,79 +27789,6 @@ _.extend(SelectActionBuilder.prototype,
 );
 
 window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
-
-//####app\actions\saveAction\saveAction.js
-function SaveAction(parentView){
-    _.superClass(SaveAction, this, parentView);
-}
-
-_.inherit(SaveAction, BaseAction);
-
-
-_.extend(SaveAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
-            var parentView = this.parentView,
-                dataSource = this.getProperty('dataSource'),
-                canClose = this.getProperty('canClose'),
-                that = this;
-
-            var onSuccessSave = function(context, args){
-                    if(canClose !== false){
-                        parentView.setDialogResult(DialogResult.accepted);
-                        parentView.close();
-                    }
-
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
-
-                    if(_.isFunction(callback)){
-                        callback(context, args);
-                    }
-                },
-                onErrorSave = function(context, args){
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
-
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
-
-            var selectedItem = dataSource.getSelectedItem();
-            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
-        }
-    }
-);
-
-window.InfinniUI.SaveAction = SaveAction;
-
-//####app\actions\saveAction\saveActionBuilder.js
-function SaveActionBuilder() {}
-
-_.extend(SaveActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var parentView = args.parentView;
-            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
-
-            var action = new SaveAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
-
-            action.setProperty('dataSource', dataSource);
-            action.setProperty('canClose', args.metadata.CanClose);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -27955,26 +27997,60 @@ _.extend(ServerAction.prototype,
             return result;
         },
 
-        _replaceParamsInStr: function(str){
-            if(!str){
+        _replaceParamsInStr: function(str, escape){
+
+            if(!str || !_.isString(str)){
                 return str;
             }
 
             var that = this;
 
+
+            var matched = str.match(/^<%([\s\S]+?)%>$/);
+
+            if (matched) {
+                return this.getParam(matched[1]);
+            }
+
             return str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
-                return that.getParam(p2);
+                var val = that.getParam(p2);
+
+                if (escape && _.isString(val)) {
+                    val = val.replace(/"/g,'\\"');
+                }
+                return val;
             });
         },
 
+        _compileData: function (data) {
+            var res;
+
+            if (Array.isArray(data)) {
+                res = Array.map(function (item) {
+                    if (_.isObject(item) || Array.isArray(item)) {
+                        this._compileData(item);
+                    }
+                }, this);
+            } else if (_.isObject(data)) {
+                res = {};
+                Object.keys(data).forEach(function (name) {
+                    var parsedName = this._replaceParamsInStr(name);
+
+                    res[parsedName] = this._compileData(data[name]);
+                }, this);
+            } else {
+                res = this._replaceParamsInStr(data, true);
+            }
+
+            return res;
+        },
         _replaceParamsInObject: function(obj){
             if(_.isEmpty(obj) ){
                 return obj;
             }
 
-            var str = JSON.stringify(obj);
-            var replacedStr = this._replaceParamsInStr(str);
-            return JSON.parse(replacedStr);
+
+            return this._compileData(obj);
         }
     }
 );
@@ -28018,7 +28094,7 @@ _.extend(ServerActionBuilder.prototype,
 
                     var value = metadata.Params[name];
 
-                    if (typeof value != 'object') {
+                    if (Array.isArray(value) || value === null || typeof value != 'object') {
                         if (value !== undefined) {
                             action.setParam(name, value);
                         }
@@ -29297,6 +29373,11 @@ var ObjectDataSource = BaseDataSource.extend({
     setItems: function(items){
         this.get('dataProvider').setItems(items);
         this.updateItems();
+    },
+
+    _setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        BaseDataSource.prototype._setItems.apply(this, [items]);
     }
 
 });
