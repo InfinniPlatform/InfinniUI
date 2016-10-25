@@ -71,7 +71,7 @@ describe('DateTimeFormat', function () {
             var formattingFull = new InfinniUI.DateTimeFormat('HH'),
                 formattingAbbr = new InfinniUI.DateTimeFormat('%H'),
                 formattingIndex = new InfinniUI.DateTimeFormat('hh'),
-                formattingShortIndex = new InfinniUI.DateTimeFormat('%h');
+                formattingShortIndex = new InfinniUI.DateTimeFormat('h');
 
             //When
             var date = new Date("2 January 1908 13:12");
@@ -181,6 +181,21 @@ describe('DateTimeFormat', function () {
             assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908 1:12 PM');
         });
 
+        it('format by pattern F', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('F'),
+                enCulture = new InfinniUI.Culture('en-US'),
+                ruCulture = new InfinniUI.Culture('ru-RU');
+
+            //When
+            var date = new Date("4 January 1908 13:12:08");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04 Январь 1908 г. 13:12:08');
+            assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908 1:12:8 PM');
+        });
+
+
         it('format by pattern g', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('g'),
@@ -191,18 +206,63 @@ describe('DateTimeFormat', function () {
 
             //Then
             assert.equal(formatting.format(date), '04.01.1908 13:12');
-            assert.equal(formatting.format(date, enCulture), '01/04/1908 13:12');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908 1:12 PM');
         });
 
-        it('format by pattern s', function () {
+        it('format by pattern G', function () {
             //Given
-            var formatting = new InfinniUI.DateTimeFormat('s');
+            var formatting = new InfinniUI.DateTimeFormat('G'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
-            var date = new Date("4 January 1908 13:12:01");
+            var date = new Date("4 January 1908 13:12:06");
 
             //Then
-            assert.equal(formatting.format(date), '1908-01-04T13:12:01');
+            assert.equal(formatting.format(date, ruCulture), '04.01.1908 13:12:06');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908 1:12:6 PM');
+        });
+
+        it('format by pattern d', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('d'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04.01.1908');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908');
+        });
+
+        it('format by pattern D', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('D'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04 Январь 1908 г.');
+            assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908');
+        });
+
+        it('format by pattern t', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('t'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '13:12');
+            assert.equal(formatting.format(date, enCulture), '1:12 PM');
         });
 
         it('format by pattern T', function () {
@@ -214,6 +274,48 @@ describe('DateTimeFormat', function () {
 
             //Then
             assert.equal(formatting.format(date), '13:12:01');
+        });
+
+        it('format by pattern Y', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('Y'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), 'Январь 1908');
+            assert.equal(formatting.format(date, enCulture), 'January, 1908');
+        });
+
+        it('format by pattern M', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('M'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), 'Январь 04');
+            assert.equal(formatting.format(date, enCulture), 'January 04');
+        });
+
+        it('format by pattern s', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('s'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '1908-01-04T13:12:06');
+            assert.equal(formatting.format(date, enCulture), '1908-01-04T13:12:06');
         });
 
         it('format by pattern H', function () {
