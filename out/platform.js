@@ -27864,79 +27864,6 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 
 window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
 
-//####app\actions\saveAction\saveAction.js
-function SaveAction(parentView){
-    _.superClass(SaveAction, this, parentView);
-}
-
-_.inherit(SaveAction, BaseAction);
-
-
-_.extend(SaveAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
-            var parentView = this.parentView,
-                dataSource = this.getProperty('dataSource'),
-                canClose = this.getProperty('canClose'),
-                that = this;
-
-            var onSuccessSave = function(context, args){
-                    if(canClose !== false){
-                        parentView.setDialogResult(DialogResult.accepted);
-                        parentView.close();
-                    }
-
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
-
-                    if(_.isFunction(callback)){
-                        callback(context, args);
-                    }
-                },
-                onErrorSave = function(context, args){
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
-
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
-
-            var selectedItem = dataSource.getSelectedItem();
-            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
-        }
-    }
-);
-
-window.InfinniUI.SaveAction = SaveAction;
-
-//####app\actions\saveAction\saveActionBuilder.js
-function SaveActionBuilder() {}
-
-_.extend(SaveActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var parentView = args.parentView;
-            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
-
-            var action = new SaveAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
-
-            action.setProperty('dataSource', dataSource);
-            action.setProperty('canClose', args.metadata.CanClose);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
-
 //####app\actions\selectAction\selectAction.js
 function SelectAction(parentView){
     _.superClass(SelectAction, this, parentView);
@@ -28013,6 +27940,79 @@ _.extend(SelectActionBuilder.prototype,
 );
 
 window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
+
+//####app\actions\saveAction\saveAction.js
+function SaveAction(parentView){
+    _.superClass(SaveAction, this, parentView);
+}
+
+_.inherit(SaveAction, BaseAction);
+
+
+_.extend(SaveAction.prototype,
+    BaseFallibleActionMixin,
+    {
+        execute: function(callback){
+            var parentView = this.parentView,
+                dataSource = this.getProperty('dataSource'),
+                canClose = this.getProperty('canClose'),
+                that = this;
+
+            var onSuccessSave = function(context, args){
+                    if(canClose !== false){
+                        parentView.setDialogResult(DialogResult.accepted);
+                        parentView.close();
+                    }
+
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
+
+                    if(_.isFunction(callback)){
+                        callback(context, args);
+                    }
+                },
+                onErrorSave = function(context, args){
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
+
+                    if (_.isFunction(callback)) {
+                        callback(context, args);
+                    }
+                };
+
+            var selectedItem = dataSource.getSelectedItem();
+            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
+        }
+    }
+);
+
+window.InfinniUI.SaveAction = SaveAction;
+
+//####app\actions\saveAction\saveActionBuilder.js
+function SaveActionBuilder() {}
+
+_.extend(SaveActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var parentView = args.parentView;
+            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+
+            var action = new SaveAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+            action.setProperty('canClose', args.metadata.CanClose);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -28299,7 +28299,6 @@ _.extend(ServerActionBuilder.prototype,
             this.applyBaseFallibleActionMetadata(action, args);
 
             action.setProperty('origin', metadata.Origin || InfinniUI.config.serverUrl.replace(/\/$/, ''));
-            // action.setProperty('origin', metadata.Origin);
             action.setProperty('path', metadata.Path);
 
             if (metadata.Data) {
