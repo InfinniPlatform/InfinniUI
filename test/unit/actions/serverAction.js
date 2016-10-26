@@ -255,4 +255,48 @@ describe('ServerAction', function () {
         // Then
         assert.equal(JSON.stringify(data.args), JSON.stringify({"Number": 1, "String": "text", "Null": null}));
     });
+
+    it('should use "config.serverUrl" as "Origin" by default', function () {
+        var data;
+        // Given
+        var oldServerUrl = window.InfinniUI.config.serverUrl;
+
+        window.InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
+
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Path: '/public',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.requestUrl, 'ftp://ftp.site.org/public');
+    });
+
 });

@@ -2349,6 +2349,50 @@ describe('ServerAction', function () {
         // Then
         assert.equal(JSON.stringify(data.args), JSON.stringify({"Number": 1, "String": "text", "Null": null}));
     });
+
+    it('should use "config.serverUrl" when "Origin" is empty', function () {
+        var data;
+        // Given
+        var oldServerUrl = window.InfinniUI.config.serverUrl;
+
+        window.InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
+
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Path: '/public',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.requestUrl, 'ftp://ftp.site.org/public');
+    });
+
 });
 
 describe('UpdateAction', function () {
@@ -3728,100 +3772,6 @@ describe('ObjectFormat', function () {
 
 });
 
-describe('LinkView', function () {
-
-    describe('setOpenMode', function () {
-        it('should set openMode', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode('Dialog');
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Dialog');
-        });
-
-        it('should set openMode Default by default', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-
-        it('should set openMode Default if no mode passed', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode(null);
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-    });
-});
-
-describe('MetadataViewBuilder', function () {
-
-    /*var builder = new InfinniUI.ApplicationBuilder();
-
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
-        return {
-            "getViewMetadata": function () {
-                return metadata;
-            }
-        };
-    });
-
-    var metadata = {
-            "DataSources": [
-
-                {
-                    "DocumentDataSource": {
-                        "Name": 'PatientDataSource',
-                        "ConfigId": 'ReceivingRoom',
-                        "DocumentId": 'HospitalizationRefusal'
-                    }
-                }
-            ],
-            "OpenMode": "Application",
-            "ConfigId": 'ReceivingRoom',
-            "DocumentId": 'HospitalizationRefusal',
-            "ViewType": 'ListView',
-            "MetadataName": 'HospitalizationRefusalListView',
-            //"Parameters": [
-            //    {
-            //        "Name" : 'Param1',
-            //        "Value" : {
-            //            "PropertyBinding": {
-            //                "DataSource": 'PatientDataSource',
-            //                "Property": 'LastName'
-            //            }
-            //        }
-            //    }
-            //],
-            "LayoutPanel" : {
-
-            }
-    };
-
-    it('should build exists view', function () {
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var builder = new MetadataViewBuilder();
-        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
-
-        applicationBuilder.appView = view;
-        applicationBuilder.appView.createView(function(view){
-            //assert.isNotNull(view.getParameter('Param1'));
-            assert.isNotNull(view.getDataSource('PatientDataSource'));
-        });
-    });*/
-});
-
-
 describe('ScriptExecutor', function () {
     var builder;
     beforeEach(function () {
@@ -3999,6 +3949,100 @@ describe('ScriptExecutor', function () {
 
 
 });
+
+describe('LinkView', function () {
+
+    describe('setOpenMode', function () {
+        it('should set openMode', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode('Dialog');
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Dialog');
+        });
+
+        it('should set openMode Default by default', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+
+        it('should set openMode Default if no mode passed', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode(null);
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+    });
+});
+
+describe('MetadataViewBuilder', function () {
+
+    /*var builder = new InfinniUI.ApplicationBuilder();
+
+    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
+        return {
+            "getViewMetadata": function () {
+                return metadata;
+            }
+        };
+    });
+
+    var metadata = {
+            "DataSources": [
+
+                {
+                    "DocumentDataSource": {
+                        "Name": 'PatientDataSource',
+                        "ConfigId": 'ReceivingRoom',
+                        "DocumentId": 'HospitalizationRefusal'
+                    }
+                }
+            ],
+            "OpenMode": "Application",
+            "ConfigId": 'ReceivingRoom',
+            "DocumentId": 'HospitalizationRefusal',
+            "ViewType": 'ListView',
+            "MetadataName": 'HospitalizationRefusalListView',
+            //"Parameters": [
+            //    {
+            //        "Name" : 'Param1',
+            //        "Value" : {
+            //            "PropertyBinding": {
+            //                "DataSource": 'PatientDataSource',
+            //                "Property": 'LastName'
+            //            }
+            //        }
+            //    }
+            //],
+            "LayoutPanel" : {
+
+            }
+    };
+
+    it('should build exists view', function () {
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var builder = new MetadataViewBuilder();
+        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
+
+        applicationBuilder.appView = view;
+        applicationBuilder.appView.createView(function(view){
+            //assert.isNotNull(view.getParameter('Param1'));
+            assert.isNotNull(view.getDataSource('PatientDataSource'));
+        });
+    });*/
+});
+
 
 describe('MessageBus', function () {
     var messageBus;
@@ -6583,6 +6627,83 @@ describe('CheckBox', function () {
 
 });
 
+describe('ContextMenu (Control)', function () {
+
+	describe('Remove element from ListBox by clicking on button from ContextMenu', function () {
+
+		it('should remove selected item from DS', function () {
+			// Given
+			var metadata = {
+				Text: 'Пациенты',
+				DataSources : [
+					{
+						ObjectDataSource: {
+							"Name": "ObjectDataSource1",
+							"Items": [
+								{ "Id": 1, "Display": "LTE" },
+								{ "Id": 2, "Display": "3G" },
+								{ "Id": 3, "Display": "2G" }
+							]
+						}
+					}
+				],
+				Items: [
+					{
+						ListBox: {
+							ViewMode: "common",
+							ItemProperty: "Display",
+							Items: {
+								Source: "ObjectDataSource1"
+							},
+							"ItemTemplate":{
+								"Label": {
+									"Value": {
+										"Source": "ObjectDataSource1",
+										"Property": "#.Display"
+									}
+								}
+							},
+							ContextMenu: {
+								Items: [
+									{
+										Button: {
+											ViewMode: "link",
+											Text: "RemoveElement",
+											Action: {
+												DeleteAction: {
+													DestinationValue: {
+														Source: "ObjectDataSource1",
+														Property: "$"
+													}
+												}
+											}
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				$($layout.find('.pl-listbox-i')[1]).trigger('click');
+				view.childElements[0].childElements[0].childElements[0].click();
+				$('a[data-index=0]').trigger('click');
+				assert.lengthOf($layout.find('.pl-listbox-i'), 2, 'length of rest items in listbox');
+				assert.equal($layout.find('.pl-listbox-i:nth-child(1) span[title]').text(), 'LTE', 'binding in itemTemplate is right');
+				assert.equal($layout.find('.pl-listbox-i:nth-child(2) span[title]').text(), '2G', 'binding in itemTemplate is right');
+			}
+		});
+	});
+});
+
 describe('Container (Control)', function () {
 
     describe('StackPanel as exemplar of Container', function () {
@@ -7339,83 +7460,6 @@ describe('Container (Control)', function () {
     });
 });
 
-describe('ContextMenu (Control)', function () {
-
-	describe('Remove element from ListBox by clicking on button from ContextMenu', function () {
-
-		it('should remove selected item from DS', function () {
-			// Given
-			var metadata = {
-				Text: 'Пациенты',
-				DataSources : [
-					{
-						ObjectDataSource: {
-							"Name": "ObjectDataSource1",
-							"Items": [
-								{ "Id": 1, "Display": "LTE" },
-								{ "Id": 2, "Display": "3G" },
-								{ "Id": 3, "Display": "2G" }
-							]
-						}
-					}
-				],
-				Items: [
-					{
-						ListBox: {
-							ViewMode: "common",
-							ItemProperty: "Display",
-							Items: {
-								Source: "ObjectDataSource1"
-							},
-							"ItemTemplate":{
-								"Label": {
-									"Value": {
-										"Source": "ObjectDataSource1",
-										"Property": "#.Display"
-									}
-								}
-							},
-							ContextMenu: {
-								Items: [
-									{
-										Button: {
-											ViewMode: "link",
-											Text: "RemoveElement",
-											Action: {
-												DeleteAction: {
-													DestinationValue: {
-														Source: "ObjectDataSource1",
-														Property: "$"
-													}
-												}
-											}
-										}
-									}
-								]
-							}
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				$($layout.find('.pl-listbox-i')[1]).trigger('click');
-				view.childElements[0].childElements[0].childElements[0].click();
-				$('a[data-index=0]').trigger('click');
-				assert.lengthOf($layout.find('.pl-listbox-i'), 2, 'length of rest items in listbox');
-				assert.equal($layout.find('.pl-listbox-i:nth-child(1) span[title]').text(), 'LTE', 'binding in itemTemplate is right');
-				assert.equal($layout.find('.pl-listbox-i:nth-child(2) span[title]').text(), '2G', 'binding in itemTemplate is right');
-			}
-		});
-	});
-});
-
 describe('DataNavigationControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder()
@@ -7434,81 +7478,6 @@ describe('DataNavigationControl', function () {
             //Then
             assert.isTrue($el.hasClass('pl-data-navigation'));
         });
-    });
-});
-
-describe('DateTimePickerControl', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('render', function () {
-        it('should update date when change value', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            var oldDate = new Date(2012, 10, 2);
-            var newDate = new Date(2014, 7, 28);
-            var $el = dateTimePicker.render().find('.pl-datepicker-input');
-            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
-
-            //When
-            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
-
-            //Then
-            assert.equal($el.val(), '28.08.2014');
-        });
-
-        it('should clear date when value is null', function () {
-            //Given
-            var dateTimePicker = new InfinniUI.DateTimePickerControl();
-            var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
-
-            dateTimePicker.setValue(value);
-            assert.equal( dateTimePicker.getValue(), value);
-
-            //When
-            dateTimePicker.setValue(null);
-
-            //Then
-            assert.isNull(dateTimePicker.getValue());
-        });
-
-        it('should set minDate and maxDate', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            var minDate = InfinniUI.DateUtils.toISO8601(new Date(2010, 0, 1));
-            var maxDate = InfinniUI.DateUtils.toISO8601(new Date(2014, 11, 31));
-
-            //When
-            dateTimePicker.setMinValue(minDate);
-            dateTimePicker.setMaxValue(maxDate);
-
-            //Then
-            assert.equal(dateTimePicker.getMinValue(), minDate);
-            assert.equal(dateTimePicker.getMaxValue(), maxDate);
-        });
-
-        it('should set Enabled', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            dateTimePicker.setEnabled(false);
-
-            var $el = dateTimePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
-            assert.equal($el.length, 2);
-            $el.each(function (i, el) {
-                var $el = $(el);
-                assert.isTrue($el.prop('disabled'));
-            });
-
-            //When
-            dateTimePicker.setEnabled(true);
-
-            //Then
-            $el.each(function (i, el) {
-                var $el = $(el);
-                assert.isFalse($el.prop('disabled'));
-            });
-
-        });
-
     });
 });
 
@@ -7621,6 +7590,81 @@ describe('Form (Control)', function () {
 			}
 		});
 	});
+});
+
+describe('DateTimePickerControl', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('render', function () {
+        it('should update date when change value', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            var oldDate = new Date(2012, 10, 2);
+            var newDate = new Date(2014, 7, 28);
+            var $el = dateTimePicker.render().find('.pl-datepicker-input');
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
+
+            //When
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
+
+            //Then
+            assert.equal($el.val(), '28.08.2014');
+        });
+
+        it('should clear date when value is null', function () {
+            //Given
+            var dateTimePicker = new InfinniUI.DateTimePickerControl();
+            var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
+
+            dateTimePicker.setValue(value);
+            assert.equal( dateTimePicker.getValue(), value);
+
+            //When
+            dateTimePicker.setValue(null);
+
+            //Then
+            assert.isNull(dateTimePicker.getValue());
+        });
+
+        it('should set minDate and maxDate', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            var minDate = InfinniUI.DateUtils.toISO8601(new Date(2010, 0, 1));
+            var maxDate = InfinniUI.DateUtils.toISO8601(new Date(2014, 11, 31));
+
+            //When
+            dateTimePicker.setMinValue(minDate);
+            dateTimePicker.setMaxValue(maxDate);
+
+            //Then
+            assert.equal(dateTimePicker.getMinValue(), minDate);
+            assert.equal(dateTimePicker.getMaxValue(), maxDate);
+        });
+
+        it('should set Enabled', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            dateTimePicker.setEnabled(false);
+
+            var $el = dateTimePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
+            assert.equal($el.length, 2);
+            $el.each(function (i, el) {
+                var $el = $(el);
+                assert.isTrue($el.prop('disabled'));
+            });
+
+            //When
+            dateTimePicker.setEnabled(true);
+
+            //Then
+            $el.each(function (i, el) {
+                var $el = $(el);
+                assert.isFalse($el.prop('disabled'));
+            });
+
+        });
+
+    });
 });
 
 describe('Frame', function () {
@@ -7855,6 +7899,121 @@ describe('Label', function () {
         });
 
     });
+});
+
+describe('PasswordBox', function () {
+
+    var element;
+
+    beforeEach(function () {
+        element = new InfinniUI.PasswordBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: name', function () {
+                //Given
+                var $el = element.render();
+                assert.isUndefined($el.attr('pl-data-pl-name'));
+
+                //When
+                element.setName('UserPassword');
+
+                //Then
+                assert.equal($el.attr('data-pl-name'), 'UserPassword');
+            });
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = element.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                element.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: labelText', function () {
+                //Given
+                var
+                    label = "User's password",
+                    $el = element.render(),
+                    $label = $('label', $el);
+
+                //When
+                element.setLabelText(label);
+
+                //Then
+                assert.equal($label.html(), label);
+            });
+
+            it('Setting property: hintText', function () {
+                //Given
+                var
+                    hint = "my hint",
+                    $el = element.render(),
+                    $hint = $('.pl-control-hint-text ', $el);
+
+                //When
+                element.setHintText(hint);
+
+                //Then
+                assert.equal($hint.html(), hint);
+                assert.isFalse($hint.hasClass('hidden'));
+            });
+
+            it('Setting property: errorText', function () {
+                //Given
+                var
+                    text = "error",
+                    $el = element.render(),
+                    $text = $('.pl-control-error-text ', $el);
+
+                //When
+                element.setErrorText(text);
+
+                //Then
+                assert.equal($text.html(), text);
+                assert.isFalse($text.hasClass('hidden'));
+            });
+
+            it('Setting property: warningText', function () {
+                //Given
+                var
+                    text = "warning",
+                    $el = element.render(),
+                    $text = $('.pl-control-warning-text ', $el);
+
+                //When
+                element.setWarningText(text);
+
+                //Then
+                assert.equal($text.html(), text);
+                assert.isFalse($text.hasClass('hidden'));
+            });
+
+            it('Setting property: enabled', function () {
+                //Given
+                var
+                    $el = element.render(),
+                    $input = $('input', $el);
+
+                //When
+                element.setEnabled(false);
+
+                //Then
+                assert.isTrue($input.prop('disabled'));
+                assert.isTrue($el.hasClass('pl-disabled'));
+            });
+
+        });
+
+    });
+
 });
 
 describe('Link (Control)', function () {
@@ -8237,121 +8396,6 @@ describe('PanelControl', function () {
         });
     });
 });
-describe('PasswordBox', function () {
-
-    var element;
-
-    beforeEach(function () {
-        element = new InfinniUI.PasswordBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: name', function () {
-                //Given
-                var $el = element.render();
-                assert.isUndefined($el.attr('pl-data-pl-name'));
-
-                //When
-                element.setName('UserPassword');
-
-                //Then
-                assert.equal($el.attr('data-pl-name'), 'UserPassword');
-            });
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = element.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                element.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: labelText', function () {
-                //Given
-                var
-                    label = "User's password",
-                    $el = element.render(),
-                    $label = $('label', $el);
-
-                //When
-                element.setLabelText(label);
-
-                //Then
-                assert.equal($label.html(), label);
-            });
-
-            it('Setting property: hintText', function () {
-                //Given
-                var
-                    hint = "my hint",
-                    $el = element.render(),
-                    $hint = $('.pl-control-hint-text ', $el);
-
-                //When
-                element.setHintText(hint);
-
-                //Then
-                assert.equal($hint.html(), hint);
-                assert.isFalse($hint.hasClass('hidden'));
-            });
-
-            it('Setting property: errorText', function () {
-                //Given
-                var
-                    text = "error",
-                    $el = element.render(),
-                    $text = $('.pl-control-error-text ', $el);
-
-                //When
-                element.setErrorText(text);
-
-                //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
-
-            it('Setting property: warningText', function () {
-                //Given
-                var
-                    text = "warning",
-                    $el = element.render(),
-                    $text = $('.pl-control-warning-text ', $el);
-
-                //When
-                element.setWarningText(text);
-
-                //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
-
-            it('Setting property: enabled', function () {
-                //Given
-                var
-                    $el = element.render(),
-                    $input = $('input', $el);
-
-                //When
-                element.setEnabled(false);
-
-                //Then
-                assert.isTrue($input.prop('disabled'));
-                assert.isTrue($el.hasClass('pl-disabled'));
-            });
-
-        });
-
-    });
-
-});
-
 describe('PopupButtonControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder(),
@@ -8888,6 +8932,41 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
@@ -8949,41 +9028,6 @@ describe('TextEditorBase (Control)', function () {
     });
 
 });
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -9148,6 +9192,426 @@ describe('TreeView', function () {
         });
     });
 
+});
+describe('DataBinding', function () {
+    it('should bind source', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        assert.isNull(dataBinding.getSource());
+        assert.isNull(dataBinding.getSourceProperty());
+
+        // When
+        dataBinding.bindSource(new FakeElement(), 'property');
+
+        // Then
+        assert.isNotNull(dataBinding.getSource());
+        assert.isNotNull(dataBinding.getSourceProperty());
+    });
+
+    it('should bind element', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        assert.isNull(dataBinding.getElement());
+        assert.isNull(dataBinding.getElementProperty());
+
+        // When
+        dataBinding.bindElement(new FakeElement(), 'property');
+
+        // Then
+        assert.isNotNull(dataBinding.getElement());
+        assert.isNotNull(dataBinding.getElementProperty());
+    });
+
+    it('default mode should be twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        // Then
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.twoWay, 'default mode must be twoWay');
+    });
+
+    it('should refresh source on element change if mode is twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
+    });
+
+    it('should refresh element on source change if mode is twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
+    });
+
+    it('should not refresh source on element change if mode is toElement', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
+    });
+
+    it('should refresh element on source change if mode is toElement', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
+    });
+
+    it('should refresh source on element change if mode is toSource', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
+    });
+
+    it('should not refresh element on source change if mode is toSource', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
+    });
+
+    it('should not refresh element if mode is wrong', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
+    });
+
+    it('should not refresh source if mode is wrong', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
+    });
+
+    it('should convert value if have converter', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+        dataBinding.setConverter({
+            toSource: function(context, argument) {
+                return argument.value ? 5 : 3; // string to integer
+            },
+            toElement: function(context, argument) {
+                return argument.value > 4; // integer to string
+            }
+        });
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 5);
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), true, 'Ignored toElement converter');
+
+        // When
+        element.setProperty(elementProperty, false);
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 3, 'Ignored toSource converter');
+    });
+});
+
+describe('DataBindingBuilder', function () {
+
+/*    it('should build DataBinding', function () {
+        // Given
+        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
+        var view = {
+            getContext: function(){
+                return {
+                    dataSources: {
+                        My_Source: {
+                            onPropertyChanged: function(){}
+                        }
+                    },
+                    parameters: {
+                    },
+                    controls: {
+                    }
+                };
+            },
+
+            getDeferredOfMember: function(){
+                return {
+                    done: function(handler){
+                        handler({});
+                    }
+                };
+            }
+        };
+        var metadata = {
+            Source: 'My_Source',
+            Property: '',
+            Mode: 'ToSource',
+            Converter: {
+                toSource: function(){},
+                toElement: function(){}
+            }
+        };
+
+        // When
+        var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
+
+        // Then
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
+        assert.isNotNull(dataBinding.getConverter());
+        assert.isNotNull(dataBinding.getSource());
+        assert.isNotNull(dataBinding.getSourceProperty());
+    });
+
+    it('should bind all type of source', function () {
+        // Given
+        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
+        var view = {
+            getContext: function(){
+                return {
+                    dataSources: {
+                        My_DataSource: {
+                            onPropertyChanged: function(){}
+                        }
+                    },
+                    parameters: {
+                        My_Parameter: {
+                            onPropertyChanged: function(){}
+                        }
+                    },
+                    controls: {
+                        My_Button: {
+                            onPropertyChanged: function(){}
+                        }
+                    }
+                };
+            }
+        };
+
+        // Then
+        dataBindingBuilder.build(null, { parentView: view, metadata: { Source: 'My_DataSource'} });
+        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Parameter'} });
+        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Button'} });
+    });
+*/
+    it('should toElement converter work in inline style', function () {
+        // Given
+        var metadata = {
+            Text: '��������',
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 1, "Display": "LTE" },
+                            { "Id": 2, "Display": "3G" },
+                            { "Id": 3, "Display": "2G" }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                StackPanel: {
+                    Name: 'MainViewPanel',
+                    "ItemTemplate": {
+                        "TextBox": {
+                            "Name": "TextBox1",
+                            "Value": {
+                                "Source": "ObjectDataSource1",
+                                "Property": "#.Display",
+                                "Converter": {
+                                    "ToElement": "{return args.value + '!';}"
+                                },
+                                "Mode": "ToElement"
+                            }
+                        }
+                    },
+                    "Items" : {
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
+                    }
+                }
+            }]
+        };
+
+        // When
+        testHelper.applyViewMetadata(metadata, onViewReady);
+
+        // Then
+        function onViewReady(view, $layout){
+            $layout.detach();
+
+            assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
+        }
+    });
+});
+
+var FakeElement = Backbone.Model.extend({
+    onPropertyChanged: function(prop, callback){
+        this.set('callback', callback);
+    },
+
+    setName: function(name){
+        this.set('name', name);
+    },
+
+    getName: function(){
+        return this.get('name');
+    },
+
+    setProperty: function(property, newValue){
+        var oldValue = this.get(property);
+
+        if(oldValue != newValue){
+            this.set(property, newValue);
+            var callback = this.get('callback');
+            if(callback){
+                callback({}, {property: property, newValue: newValue});
+            }
+        }
+    },
+
+    getProperty: function(property){
+        return this.get(property);
+    }
 });
 describe('baseDataSource', function () {
 
@@ -10890,426 +11354,6 @@ describe('RestDataSource', function () {
     });
 });
 
-describe('DataBinding', function () {
-    it('should bind source', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        assert.isNull(dataBinding.getSource());
-        assert.isNull(dataBinding.getSourceProperty());
-
-        // When
-        dataBinding.bindSource(new FakeElement(), 'property');
-
-        // Then
-        assert.isNotNull(dataBinding.getSource());
-        assert.isNotNull(dataBinding.getSourceProperty());
-    });
-
-    it('should bind element', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        assert.isNull(dataBinding.getElement());
-        assert.isNull(dataBinding.getElementProperty());
-
-        // When
-        dataBinding.bindElement(new FakeElement(), 'property');
-
-        // Then
-        assert.isNotNull(dataBinding.getElement());
-        assert.isNotNull(dataBinding.getElementProperty());
-    });
-
-    it('default mode should be twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        // Then
-        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.twoWay, 'default mode must be twoWay');
-    });
-
-    it('should refresh source on element change if mode is twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
-    });
-
-    it('should refresh element on source change if mode is twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
-    });
-
-    it('should not refresh source on element change if mode is toElement', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
-    });
-
-    it('should refresh element on source change if mode is toElement', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
-    });
-
-    it('should refresh source on element change if mode is toSource', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toSource);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
-    });
-
-    it('should not refresh element on source change if mode is toSource', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toSource);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
-    });
-
-    it('should not refresh element if mode is wrong', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode('gubbish');
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
-    });
-
-    it('should not refresh source if mode is wrong', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode('gubbish');
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
-    });
-
-    it('should convert value if have converter', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-        dataBinding.setConverter({
-            toSource: function(context, argument) {
-                return argument.value ? 5 : 3; // string to integer
-            },
-            toElement: function(context, argument) {
-                return argument.value > 4; // integer to string
-            }
-        });
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 5);
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), true, 'Ignored toElement converter');
-
-        // When
-        element.setProperty(elementProperty, false);
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 3, 'Ignored toSource converter');
-    });
-});
-
-describe('DataBindingBuilder', function () {
-
-/*    it('should build DataBinding', function () {
-        // Given
-        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
-        var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_Source: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                    },
-                    controls: {
-                    }
-                };
-            },
-
-            getDeferredOfMember: function(){
-                return {
-                    done: function(handler){
-                        handler({});
-                    }
-                };
-            }
-        };
-        var metadata = {
-            Source: 'My_Source',
-            Property: '',
-            Mode: 'ToSource',
-            Converter: {
-                toSource: function(){},
-                toElement: function(){}
-            }
-        };
-
-        // When
-        var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
-
-        // Then
-        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
-        assert.isNotNull(dataBinding.getConverter());
-        assert.isNotNull(dataBinding.getSource());
-        assert.isNotNull(dataBinding.getSourceProperty());
-    });
-
-    it('should bind all type of source', function () {
-        // Given
-        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
-        var view = {
-            getContext: function(){
-                return {
-                    dataSources: {
-                        My_DataSource: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    parameters: {
-                        My_Parameter: {
-                            onPropertyChanged: function(){}
-                        }
-                    },
-                    controls: {
-                        My_Button: {
-                            onPropertyChanged: function(){}
-                        }
-                    }
-                };
-            }
-        };
-
-        // Then
-        dataBindingBuilder.build(null, { parentView: view, metadata: { Source: 'My_DataSource'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Parameter'} });
-        dataBindingBuilder.build(null, { parentView: view,  metadata: { Source: 'My_Button'} });
-    });
-*/
-    it('should toElement converter work in inline style', function () {
-        // Given
-        var metadata = {
-            Text: '��������',
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "LTE" },
-                            { "Id": 2, "Display": "3G" },
-                            { "Id": 3, "Display": "2G" }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemTemplate": {
-                        "TextBox": {
-                            "Name": "TextBox1",
-                            "Value": {
-                                "Source": "ObjectDataSource1",
-                                "Property": "#.Display",
-                                "Converter": {
-                                    "ToElement": "{return args.value + '!';}"
-                                },
-                                "Mode": "ToElement"
-                            }
-                        }
-                    },
-                    "Items" : {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
-            }]
-        };
-
-        // When
-        testHelper.applyViewMetadata(metadata, onViewReady);
-
-        // Then
-        function onViewReady(view, $layout){
-            $layout.detach();
-
-            assert.equal($layout.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
-        }
-    });
-});
-
-var FakeElement = Backbone.Model.extend({
-    onPropertyChanged: function(prop, callback){
-        this.set('callback', callback);
-    },
-
-    setName: function(name){
-        this.set('name', name);
-    },
-
-    getName: function(){
-        return this.get('name');
-    },
-
-    setProperty: function(property, newValue){
-        var oldValue = this.get(property);
-
-        if(oldValue != newValue){
-            this.set(property, newValue);
-            var callback = this.get('callback');
-            if(callback){
-                callback({}, {property: property, newValue: newValue});
-            }
-        }
-    },
-
-    getProperty: function(property){
-        return this.get(property);
-    }
-});
 describe('Parameters', function () {
 
     it('Parameter base API', function () {
@@ -11746,100 +11790,6 @@ describe('ButtonBuilder', function () {
             assert.equal(button.getHorizontalAlignment(), 'Right');
         });
 
-    });
-});
-
-describe('DataGrid', function () {
-
-    var metadata = {
-        DataSources : [
-            {
-                ObjectDataSource: {
-                    "Name": "ObjectDataSource1",
-                    "Items": [
-                        { "Id": 1, "Display": "LTE" },
-                        { "Id": 2, "Display": "3G" },
-                        { "Id": 3, "Display": "2G" }
-                    ]
-                }
-            }
-        ],
-        Items: [{
-
-            "DataGrid": {
-                "Name": "DataGrid1",
-                "Items": {
-                    "Source": "ObjectDataSource1",
-                    "Property": ""
-                },
-                "DisabledItemCondition": "{ return (args.value.Id == 2); }",
-                "Columns": [
-                    {
-                        "Header": "Id",
-                        "CellProperty": "Id"
-                    },
-                    {
-                        "Header": "Display",
-                        "CellProperty": "Display"
-                    }
-                ]
-            }
-        }]
-    };
-
-    describe('render', function () {
-        it('should render DataGrid', function (done) {
-            // Given When
-            testHelper.applyViewMetadata(metadata, onDataGridReady);
-
-            // Then
-            function onDataGridReady(view, $grid){
-                setTimeout(function() {
-                    assert.isObject($grid);
-
-                    var headers = $grid.find(".pl-datagrid-row_header .pl-label");
-                    assert.equal(headers.first().text(), "Id");
-                    assert.equal(headers.last().text(), "Display");
-
-                    var $body = $grid.find(".pl-datagrid-row_data");
-                    assert.equal($body.length, 3);
-
-                    done();
-                    view.close();
-                }, 0);
-            }
-        });
-    });
-
-    describe('API', function () {
-        it('should update DisabledItemCondition', function (done) {
-            // Given
-            testHelper.applyViewMetadata(metadata, function (view, $grid) {
-                setTimeout(function() {
-                    var grid = view.context.controls['DataGrid1'];
-                    //var $grid = grid.control.controlView.$el;
-
-                    var $rows = $grid.find("tbody .pl-datagrid-row");
-
-                    assert.isFalse($rows.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
-                    assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
-
-                    // When
-                    grid.setDisabledItemCondition( function (context, args) {
-                        return args.value.Id == 1;
-                    });
-
-                    // Then
-                    assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
-                    assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
-
-                    done();
-                    view.close();
-                }, 0);
-            });
-
-
-        });
     });
 });
 
@@ -12333,6 +12283,100 @@ describe('ComboBox', function () {
 
 });
 
+describe('DataGrid', function () {
+
+    var metadata = {
+        DataSources : [
+            {
+                ObjectDataSource: {
+                    "Name": "ObjectDataSource1",
+                    "Items": [
+                        { "Id": 1, "Display": "LTE" },
+                        { "Id": 2, "Display": "3G" },
+                        { "Id": 3, "Display": "2G" }
+                    ]
+                }
+            }
+        ],
+        Items: [{
+
+            "DataGrid": {
+                "Name": "DataGrid1",
+                "Items": {
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
+                },
+                "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                "Columns": [
+                    {
+                        "Header": "Id",
+                        "CellProperty": "Id"
+                    },
+                    {
+                        "Header": "Display",
+                        "CellProperty": "Display"
+                    }
+                ]
+            }
+        }]
+    };
+
+    describe('render', function () {
+        it('should render DataGrid', function (done) {
+            // Given When
+            testHelper.applyViewMetadata(metadata, onDataGridReady);
+
+            // Then
+            function onDataGridReady(view, $grid){
+                setTimeout(function() {
+                    assert.isObject($grid);
+
+                    var headers = $grid.find(".pl-datagrid-row_header .pl-label");
+                    assert.equal(headers.first().text(), "Id");
+                    assert.equal(headers.last().text(), "Display");
+
+                    var $body = $grid.find(".pl-datagrid-row_data");
+                    assert.equal($body.length, 3);
+
+                    done();
+                    view.close();
+                }, 0);
+            }
+        });
+    });
+
+    describe('API', function () {
+        it('should update DisabledItemCondition', function (done) {
+            // Given
+            testHelper.applyViewMetadata(metadata, function (view, $grid) {
+                setTimeout(function() {
+                    var grid = view.context.controls['DataGrid1'];
+                    //var $grid = grid.control.controlView.$el;
+
+                    var $rows = $grid.find("tbody .pl-datagrid-row");
+
+                    assert.isFalse($rows.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
+                    assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
+
+                    // When
+                    grid.setDisabledItemCondition( function (context, args) {
+                        return args.value.Id == 1;
+                    });
+
+                    // Then
+                    assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
+                    assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
+
+                    done();
+                    view.close();
+                }, 0);
+            });
+
+
+        });
+    });
+});
+
 describe('DataNavigation', function () {
     it('should pass test default property', function () {
         // Given
@@ -12402,97 +12446,6 @@ describe('DataNavigation', function () {
         // When
         dataNavigation.setPageSize(1);
     });
-});
-
-describe('EditorBase', function () {
-    describe('Textbox as exemplar of EditorBase', function () {
-
-        it('Base functional', function () {
-            // Given
-            var textBox = new InfinniUI.TextBox();
-
-            assert.isNull(textBox.getValue(), 'default value is null');
-            assert.isNull(textBox.getHintText(), 'default hint text is null');
-            assert.isNull(textBox.getErrorText(), 'default error text is null');
-            assert.isNull(textBox.getWarningText(), 'default warning text is null');
-
-
-            // When
-            textBox.setValue('value');
-            textBox.setHintText('hint text');
-            textBox.setErrorText('error text');
-            textBox.setWarningText('warning text');
-
-
-            // Then
-            assert.equal(textBox.getValue(), 'value', 'new value is right');
-            assert.equal(textBox.getHintText(), 'hint text', 'new hint text is right');
-            assert.equal(textBox.getErrorText(), 'error text', 'new error text is right');
-            assert.equal(textBox.getWarningText(), 'warning text', 'new warning text is right');
-        });
-
-        it('Base events functional', function () {
-            // Given
-            var textBox = new InfinniUI.TextBox(),
-                handling = 0;
-
-            textBox.onValueChanging(onValueChangingHandler);
-            textBox.onValueChanged(onValueChangedHandler);
-
-            // When
-            textBox.setValue('new');
-
-            // Then
-            function onValueChangingHandler(context, args){
-                assert.equal(handling, 0, 'right order: changing handler is first');
-                assert.isNull(args.oldValue, 'old value is null');
-                assert.equal(args.newValue, 'new', 'new value is "new"');
-                assert.equal(args.source, textBox, 'right source');
-
-                handling++;
-            }
-
-            function onValueChangedHandler(context, args){
-                assert.equal(handling, 1, 'right order: changing handler is second');
-                assert.isNull(args.oldValue, 'old value is null');
-                assert.equal(args.newValue, 'new', 'new value is "new"');
-                assert.equal(args.source, textBox, 'right source');
-            }
-        });
-
-        it('cancelling changing event', function () {
-            // Given
-            var textBox = new InfinniUI.TextBox(),
-                handling = 0;
-
-            textBox.onValueChanging(onValueChangingHandler1);
-            textBox.onValueChanging(onValueChangingHandler2);
-
-            // When
-            textBox.setValue('new');
-
-            // Then
-            function onValueChangingHandler1(context, args){
-                assert.equal(handling, 0, 'right order: changing handler is first');
-                assert.equal(args.newValue, 'new', 'new value is "new"');
-
-                handling++;
-
-                return false
-            }
-
-            function onValueChangingHandler2(context, args){
-                assert.equal(handling, 1, 'right order: this changing handler is second');
-                assert.equal(args.newValue, 'new', 'new value is "new"');
-
-                handling++;
-            }
-
-            assert.equal(handling, 2, 'right order');
-            assert.isNull(textBox.getValue(), 'value should not be changed');
-        });
-    });
-
 });
 
 describe('DateTimePicker', function () {
@@ -12654,6 +12607,97 @@ describe('DateTimePickerBuilder', function () {
 
         });
     });
+});
+
+describe('EditorBase', function () {
+    describe('Textbox as exemplar of EditorBase', function () {
+
+        it('Base functional', function () {
+            // Given
+            var textBox = new InfinniUI.TextBox();
+
+            assert.isNull(textBox.getValue(), 'default value is null');
+            assert.isNull(textBox.getHintText(), 'default hint text is null');
+            assert.isNull(textBox.getErrorText(), 'default error text is null');
+            assert.isNull(textBox.getWarningText(), 'default warning text is null');
+
+
+            // When
+            textBox.setValue('value');
+            textBox.setHintText('hint text');
+            textBox.setErrorText('error text');
+            textBox.setWarningText('warning text');
+
+
+            // Then
+            assert.equal(textBox.getValue(), 'value', 'new value is right');
+            assert.equal(textBox.getHintText(), 'hint text', 'new hint text is right');
+            assert.equal(textBox.getErrorText(), 'error text', 'new error text is right');
+            assert.equal(textBox.getWarningText(), 'warning text', 'new warning text is right');
+        });
+
+        it('Base events functional', function () {
+            // Given
+            var textBox = new InfinniUI.TextBox(),
+                handling = 0;
+
+            textBox.onValueChanging(onValueChangingHandler);
+            textBox.onValueChanged(onValueChangedHandler);
+
+            // When
+            textBox.setValue('new');
+
+            // Then
+            function onValueChangingHandler(context, args){
+                assert.equal(handling, 0, 'right order: changing handler is first');
+                assert.isNull(args.oldValue, 'old value is null');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+                assert.equal(args.source, textBox, 'right source');
+
+                handling++;
+            }
+
+            function onValueChangedHandler(context, args){
+                assert.equal(handling, 1, 'right order: changing handler is second');
+                assert.isNull(args.oldValue, 'old value is null');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+                assert.equal(args.source, textBox, 'right source');
+            }
+        });
+
+        it('cancelling changing event', function () {
+            // Given
+            var textBox = new InfinniUI.TextBox(),
+                handling = 0;
+
+            textBox.onValueChanging(onValueChangingHandler1);
+            textBox.onValueChanging(onValueChangingHandler2);
+
+            // When
+            textBox.setValue('new');
+
+            // Then
+            function onValueChangingHandler1(context, args){
+                assert.equal(handling, 0, 'right order: changing handler is first');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+
+                handling++;
+
+                return false
+            }
+
+            function onValueChangingHandler2(context, args){
+                assert.equal(handling, 1, 'right order: this changing handler is second');
+                assert.equal(args.newValue, 'new', 'new value is "new"');
+
+                handling++;
+            }
+
+            assert.equal(handling, 2, 'right order');
+            assert.isNull(textBox.getValue(), 'value should not be changed');
+        });
+    });
+
 });
 
 describe('Element', function () {
@@ -12915,6 +12959,41 @@ describe('UploadFileBox', function () {
 //    });
 
 
+});
+
+describe('Frame', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Frame', {});
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+});
+
+describe('FrameBuilder', function () {
+    describe('build', function () {
+        it('successful build Frame', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.FrameBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+    });
 });
 
 describe('ImageBox', function () {
@@ -13202,41 +13281,6 @@ describe('ImageBox', function () {
 //    });
 
 
-});
-
-describe('Frame', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Frame', {});
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-});
-
-describe('FrameBuilder', function () {
-    describe('build', function () {
-        it('successful build Frame', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.FrameBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-    });
 });
 
 describe('Label', function () {
@@ -14763,45 +14807,6 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
-describe('TabPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('Default values', function () {
-            var element = builder.buildType('TabPanel', {});
-
-            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
-            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
-        });
-
-
-    });
-
-
-});
-
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            TabPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var element = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(element, 'TabPanel');
-    });
-
-});
-
 describe('ScrollPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14847,6 +14852,45 @@ describe('ScrollPanelBuilder', function () {
 
         //Then
         assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
+});
+
+describe('TabPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('Default values', function () {
+            var element = builder.buildType('TabPanel', {});
+
+            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
+            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
+        });
+
+
+    });
+
+
+});
+
+describe('TabPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            TabPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var element = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(element, 'TabPanel');
     });
 
 });

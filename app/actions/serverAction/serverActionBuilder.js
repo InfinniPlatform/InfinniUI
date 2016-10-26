@@ -14,7 +14,7 @@ _.extend(ServerActionBuilder.prototype,
             this.applyBaseActionMetadata(action, args);
             this.applyBaseFallibleActionMetadata(action, args);
 
-            action.setProperty('origin', metadata.Origin);
+            action.setProperty('origin', metadata.Origin || InfinniUI.config.serverUrl.replace(/\/$/, ''));
             action.setProperty('path', metadata.Path);
 
             if (metadata.Data) {
