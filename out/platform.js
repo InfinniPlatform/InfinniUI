@@ -19705,7 +19705,8 @@ _.extend(Element.prototype, {
     },
 
     setFocused: function (value) {
-        return this.control.set('focused', !!value);
+        //Установка фокуса вручную
+        return this.control.setFocus();
     },
     onLostFocus: function (handler) {
         this.control.on('OnLostFocus', handler);
@@ -24089,6 +24090,58 @@ _.extend(GridPanelBuilder.prototype,
 
     });
 
+//####app\elements\icon\icon.js
+function Icon(parent) {
+    _.superClass(Icon, this, parent);
+}
+
+window.InfinniUI.Icon = Icon;
+
+_.inherit(Icon, Element);
+
+_.extend(Icon.prototype, {
+
+    createControl: function () {
+        return new IconControl();
+    },
+
+    setValue: function(value){
+        this.control.set('value', value);
+    },
+
+    getValue: function(){
+        return this.control.get('value');
+    },
+
+    onValueChanged: function(){}
+
+});
+
+//####app\elements\icon\iconBuilder.js
+function IconBuilder() {
+    _.superClass(ButtonBuilder, this);
+}
+
+window.InfinniUI.IconBuilder = IconBuilder;
+
+_.inherit(IconBuilder, ElementBuilder);
+
+_.extend(IconBuilder.prototype, {
+
+    createElement: function (params) {
+        return new Icon(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var metadata = params.metadata;
+
+        this.initBindingToProperty(params, 'Value');
+    }
+
+});
+
 //####app\elements\imageBox\imageBox.js
 /**
  *
@@ -24251,106 +24304,6 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
-//####app\elements\icon\icon.js
-function Icon(parent) {
-    _.superClass(Icon, this, parent);
-}
-
-window.InfinniUI.Icon = Icon;
-
-_.inherit(Icon, Element);
-
-_.extend(Icon.prototype, {
-
-    createControl: function () {
-        return new IconControl();
-    },
-
-    setValue: function(value){
-        this.control.set('value', value);
-    },
-
-    getValue: function(){
-        return this.control.get('value');
-    },
-
-    onValueChanged: function(){}
-
-});
-
-//####app\elements\icon\iconBuilder.js
-function IconBuilder() {
-    _.superClass(ButtonBuilder, this);
-}
-
-window.InfinniUI.IconBuilder = IconBuilder;
-
-_.inherit(IconBuilder, ElementBuilder);
-
-_.extend(IconBuilder.prototype, {
-
-    createElement: function (params) {
-        return new Icon(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        var metadata = params.metadata;
-
-        this.initBindingToProperty(params, 'Value');
-    }
-
-});
-
-//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
-/**
- *
- * @param parent
- * @constructor
- * @augment Element
- */
-function IndeterminateCheckBox(parent) {
-	_.superClass(IndeterminateCheckBox, this, parent);
-	this.initialize_editorBase();
-}
-
-window.InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
-
-_.inherit(IndeterminateCheckBox, CheckBox);
-
-
-_.extend(IndeterminateCheckBox.prototype, {
-
-	createControl: function (parent) {
-		return new IndeterminateCheckBoxControl(parent);
-	}
-
-}, editorBaseMixin);
-
-//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
-/**
- *
- * @constructor
- * @augments ElementBuilder
- */
-function IndeterminateCheckBoxBuilder() {
-	_.superClass(IndeterminateCheckBoxBuilder, this);
-	this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
-
-_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
-
-
-_.extend(IndeterminateCheckBoxBuilder.prototype, {
-	createElement: function (params) {
-		return new IndeterminateCheckBox(params.parent);
-	}
-});
-
-
 //####app\elements\label\label.js
 function Label(parent, viewMode) {
     _.superClass(Label, this, parent, viewMode);
@@ -24596,6 +24549,54 @@ _.extend(LinkBuilder.prototype, routerServiceMixin, {
 	}
 
 });
+
+//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augment Element
+ */
+function IndeterminateCheckBox(parent) {
+	_.superClass(IndeterminateCheckBox, this, parent);
+	this.initialize_editorBase();
+}
+
+window.InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
+
+_.inherit(IndeterminateCheckBox, CheckBox);
+
+
+_.extend(IndeterminateCheckBox.prototype, {
+
+	createControl: function (parent) {
+		return new IndeterminateCheckBoxControl(parent);
+	}
+
+}, editorBaseMixin);
+
+//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ */
+function IndeterminateCheckBoxBuilder() {
+	_.superClass(IndeterminateCheckBoxBuilder, this);
+	this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
+
+_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
+
+
+_.extend(IndeterminateCheckBoxBuilder.prototype, {
+	createElement: function (params) {
+		return new IndeterminateCheckBox(params.parent);
+	}
+});
+
 
 //####app\elements\menuBar\menuBar.js
 /**
@@ -29731,6 +29732,110 @@ var formatMixin = {
 
 window.InfinniUI.FormatMixin = formatMixin;
 
+//####app\formats\displayFormat\boolean\booleanFormat.js
+/**
+ * @description Формат отображения логического значения.
+ * @class BooleanFormat
+ * @mixes formatMixin
+ */
+var BooleanFormat = function () {};
+
+window.InfinniUI.BooleanFormat = BooleanFormat;
+
+_.extend(BooleanFormat.prototype, {
+
+    /**
+     * @description Текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultTrueText: 'True',
+
+    /**
+     * @description Текст для отображения ложного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultFalseText: 'False',
+
+    /**
+     * @description Возвращает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
+     * @returns {String}
+     */
+    getFalseText: function () {
+        return this.getPropertyValue('falseText', this.defaultFalseText);
+    },
+
+    /**
+     * @description Устанавливает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setFalseText: function (value) {
+        this.falseText = value;
+    },
+
+    /**
+     * @description Возвращает текст для отображения истинного значения.
+     * @memberOf BooleanFormat.prototype
+     * @returns {String}
+     */
+    getTrueText: function () {
+        return this.getPropertyValue('trueText', this.defaultTrueText);
+    },
+
+    /**
+     * @description Устанавливает текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setTrueText: function (value) {
+        this.trueText = value;
+    },
+
+    /**
+     * @description Форматирует значение
+     * @memberOf BooleanFormat.prototype
+     * @param {Boolean} originalValue
+     * @returns {String}
+     */
+    formatValue: function (originalValue) {
+        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
+            return this.getFalseText();
+        } else {
+            return this.getTrueText();
+        }
+    }
+
+}, formatMixin);
+
+//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
+/**
+ * @description Билдер BooleanFormat
+ * @class BooleanFormatBuilder
+ */
+function BooleanFormatBuilder () {
+
+    /**
+     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
+     * @memberOf BooleanFormatBuilder
+     * @instance
+     * @param context
+     * @param args
+     * @returns {BooleanFormat}
+     */
+    this.build = function (context, args) {
+
+        var format = new BooleanFormat();
+
+        format.setFalseText(args.metadata.FalseText);
+        format.setTrueText(args.metadata.TrueText);
+
+        return format;
+    }
+}
+
+window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
+
 //####app\formats\displayFormat\dateTime\dateTimeFormat.js
 /**
  * @description Формат отображения даты/времени.
@@ -30120,110 +30225,6 @@ function DateTimeFormatBuilder () {
 }
 
 window.InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;
-
-//####app\formats\displayFormat\boolean\booleanFormat.js
-/**
- * @description Формат отображения логического значения.
- * @class BooleanFormat
- * @mixes formatMixin
- */
-var BooleanFormat = function () {};
-
-window.InfinniUI.BooleanFormat = BooleanFormat;
-
-_.extend(BooleanFormat.prototype, {
-
-    /**
-     * @description Текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
-     */
-    defaultTrueText: 'True',
-
-    /**
-     * @description Текст для отображения ложного значения
-     * @memberOf BooleanFormat.prototype
-     */
-    defaultFalseText: 'False',
-
-    /**
-     * @description Возвращает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
-     * @returns {String}
-     */
-    getFalseText: function () {
-        return this.getPropertyValue('falseText', this.defaultFalseText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setFalseText: function (value) {
-        this.falseText = value;
-    },
-
-    /**
-     * @description Возвращает текст для отображения истинного значения.
-     * @memberOf BooleanFormat.prototype
-     * @returns {String}
-     */
-    getTrueText: function () {
-        return this.getPropertyValue('trueText', this.defaultTrueText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setTrueText: function (value) {
-        this.trueText = value;
-    },
-
-    /**
-     * @description Форматирует значение
-     * @memberOf BooleanFormat.prototype
-     * @param {Boolean} originalValue
-     * @returns {String}
-     */
-    formatValue: function (originalValue) {
-        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
-            return this.getFalseText();
-        } else {
-            return this.getTrueText();
-        }
-    }
-
-}, formatMixin);
-
-//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
-/**
- * @description Билдер BooleanFormat
- * @class BooleanFormatBuilder
- */
-function BooleanFormatBuilder () {
-
-    /**
-     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
-     * @memberOf BooleanFormatBuilder
-     * @instance
-     * @param context
-     * @param args
-     * @returns {BooleanFormat}
-     */
-    this.build = function (context, args) {
-
-        var format = new BooleanFormat();
-
-        format.setFalseText(args.metadata.FalseText);
-        format.setTrueText(args.metadata.TrueText);
-
-        return format;
-    }
-}
-
-window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
 
 //####app\formats\displayFormat\number\numberFormat.js
 /**
