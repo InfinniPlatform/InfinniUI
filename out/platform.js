@@ -13160,129 +13160,6 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
-//####app\controls\tabPanel\tabHeader\tabHeaderView.js
-var TabHeaderModel = Backbone.Model.extend({
-
-    defaults: {
-        text: '',
-        canClose: false
-    }
-});
-
-var TabHeaderView = Backbone.View.extend({
-
-    className: "pl-tabheader",
-
-    tagName: "li",
-
-    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
-
-    events: {
-        "click": "onClickHandler",
-        "click .pl-close": "onClickCloseHandler"
-    },
-
-    UI: {
-        label: '.pl-tabheader-text',
-        close: '.pl-close'
-    },
-
-    initialize: function (options) {
-        this.model = new TabHeaderModel(options);
-
-        this.on('rendered', this.onRenderedHandler);
-    },
-
-    render: function () {
-        this.$el.html(this.template);
-        this.bindUIElements();
-        this.trigger('rendered');
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    /**
-     *
-     * @param {string} value
-     */
-    setText: function (value) {
-        this.model.set('text', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setCanClose: function (value) {
-        this.model.set('canClose', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setSelected: function (value) {
-        this.model.set('selected', value);
-    },
-
-    /**
-     * @protected
-     */
-    updateProperties: function () {
-        this.updateTextHandler();
-        this.updateCanClose();
-        this.updateSelectedHandler();
-    },
-
-    /**
-     * @protected
-     */
-    onRenderedHandler: function () {
-        this.updateProperties();
-        this.listenTo(this.model, 'change:text', this.updateTextHandler);
-        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateTextHandler: function () {
-        var text = this.model.get('text');
-        this.ui.label.text(text);
-    },
-
-    /**
-     * @protected
-     */
-    updateCanClose: function () {
-        var canClose = this.model.get('canClose');
-        this.ui.close.toggleClass('hidden', !canClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateSelectedHandler: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('pl-active active', selected);
-    },
-
-    onClickHandler: function (event) {
-        this.trigger('selected');
-    },
-
-    onClickCloseHandler: function (event) {
-        event.stopPropagation();
-        this.trigger('close');
-    }
-
-});
-
-_.extend(TabHeaderView.prototype, bindUIElementsMixin);
-
 //####app\controls\tabPanel\tabPage\tabPageControl.js
 /**
  *
@@ -13407,6 +13284,129 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
     }
 
 });
+
+//####app\controls\tabPanel\tabHeader\tabHeaderView.js
+var TabHeaderModel = Backbone.Model.extend({
+
+    defaults: {
+        text: '',
+        canClose: false
+    }
+});
+
+var TabHeaderView = Backbone.View.extend({
+
+    className: "pl-tabheader",
+
+    tagName: "li",
+
+    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+
+    events: {
+        "click": "onClickHandler",
+        "click .pl-close": "onClickCloseHandler"
+    },
+
+    UI: {
+        label: '.pl-tabheader-text',
+        close: '.pl-close'
+    },
+
+    initialize: function (options) {
+        this.model = new TabHeaderModel(options);
+
+        this.on('rendered', this.onRenderedHandler);
+    },
+
+    render: function () {
+        this.$el.html(this.template);
+        this.bindUIElements();
+        this.trigger('rendered');
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    /**
+     *
+     * @param {string} value
+     */
+    setText: function (value) {
+        this.model.set('text', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setCanClose: function (value) {
+        this.model.set('canClose', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setSelected: function (value) {
+        this.model.set('selected', value);
+    },
+
+    /**
+     * @protected
+     */
+    updateProperties: function () {
+        this.updateTextHandler();
+        this.updateCanClose();
+        this.updateSelectedHandler();
+    },
+
+    /**
+     * @protected
+     */
+    onRenderedHandler: function () {
+        this.updateProperties();
+        this.listenTo(this.model, 'change:text', this.updateTextHandler);
+        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
+        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateTextHandler: function () {
+        var text = this.model.get('text');
+        this.ui.label.text(text);
+    },
+
+    /**
+     * @protected
+     */
+    updateCanClose: function () {
+        var canClose = this.model.get('canClose');
+        this.ui.close.toggleClass('hidden', !canClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedHandler: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('pl-active active', selected);
+    },
+
+    onClickHandler: function (event) {
+        this.trigger('selected');
+    },
+
+    onClickCloseHandler: function (event) {
+        event.stopPropagation();
+        this.trigger('close');
+    }
+
+});
+
+_.extend(TabHeaderView.prototype, bindUIElementsMixin);
 
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
@@ -14579,78 +14579,6 @@ var DividerView = ControlView.extend(
 	}
 );
 
-//####app\controls\extensionPanel\extensionPanel.js
-var ExtensionPanelControl = function () {
-    _.superClass(ExtensionPanelControl, this);
-};
-
-_.inherit(ExtensionPanelControl, ContainerControl);
-
-_.extend(ExtensionPanelControl.prototype, {
-
-    createControlModel: function () {
-        return new ExtensionPanelModel();
-    },
-
-    createControlView: function (model) {
-        return new ExtensionPanelView({model: model});
-    }
-});
-//####app\controls\extensionPanel\extensionPanelModel.js
-var ExtensionPanelModel = ContainerModel.extend({
-    defaults: _.defaults({
-        extensionName: null,
-        context: null
-    }, ContainerModel.prototype.defaults),
-
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this);
-    }
-});
-//####app\controls\extensionPanel\extensionPanelView.js
-var ExtensionPanelView = ContainerView.extend({
-    className: 'pl-extension-panel',
-
-    initialize: function () {
-        ContainerView.prototype.initialize.apply(this);
-        this.extensionObject = null;
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        if (!this.extensionObject) {
-            this.initExtensionObject();
-        }
-
-        this.extensionObject.render();
-
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    updateGrouping: function(){
-
-    },
-
-    initExtensionObject: function () {
-        var extensionName = this.model.get('extensionName'),
-            context = this.model.get('context'),
-            itemTemplate = this.model.get('itemTemplate'),
-            parameters = this.model.get('parameters'),
-            items = this.model.get('items'),
-            builder = this.model.get('builder');
-
-        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder});
-    }
-});
-
 //####app\controls\fileBox\fileBoxControl.js
 /**
  *
@@ -15068,6 +14996,216 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
 }));
 
+//####app\controls\extensionPanel\extensionPanel.js
+var ExtensionPanelControl = function () {
+    _.superClass(ExtensionPanelControl, this);
+};
+
+_.inherit(ExtensionPanelControl, ContainerControl);
+
+_.extend(ExtensionPanelControl.prototype, {
+
+    createControlModel: function () {
+        return new ExtensionPanelModel();
+    },
+
+    createControlView: function (model) {
+        return new ExtensionPanelView({model: model});
+    }
+});
+//####app\controls\extensionPanel\extensionPanelModel.js
+var ExtensionPanelModel = ContainerModel.extend({
+    defaults: _.defaults({
+        extensionName: null,
+        context: null
+    }, ContainerModel.prototype.defaults),
+
+    initialize: function () {
+        ContainerModel.prototype.initialize.apply(this);
+    }
+});
+//####app\controls\extensionPanel\extensionPanelView.js
+var ExtensionPanelView = ContainerView.extend({
+    className: 'pl-extension-panel',
+
+    initialize: function () {
+        ContainerView.prototype.initialize.apply(this);
+        this.extensionObject = null;
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        if (!this.extensionObject) {
+            this.initExtensionObject();
+        }
+
+        this.extensionObject.render();
+
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    updateGrouping: function(){
+
+    },
+
+    initExtensionObject: function () {
+        var extensionName = this.model.get('extensionName'),
+            context = this.model.get('context'),
+            itemTemplate = this.model.get('itemTemplate'),
+            parameters = this.model.get('parameters'),
+            items = this.model.get('items'),
+            builder = this.model.get('builder');
+
+        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder});
+    }
+});
+
+//####app\controls\form\formControl.js
+function FormControl(parent) {
+	_.superClass(FormControl, this, parent);
+}
+
+_.inherit(FormControl, StackPanelControl);
+
+_.extend(FormControl.prototype, {
+
+	createControlModel: function () {
+		return new FormModel();
+	},
+
+	createControlView: function (model) {
+		return new FormView({model: model});
+	},
+
+	onSubmit: function (callback) {
+		this.controlView.$el.on('submit', callback);
+	},
+
+	setSubmitFunction: function(func) {
+		this.controlModel.set('submitFunction', func);
+	},
+
+	getSubmitFunction: function() {
+		return this.controlModel.get('submitFunction');
+	},
+
+	setMethod: function(method) {
+		this.controlModel.set('method', method);
+	},
+
+	getMethod: function() {
+		 return this.controlModel.get('method');
+	},
+
+	setAction: function(action) {
+		this.controlModel.set('action', action);
+	},
+
+	getAction: function() {
+		 return this.controlModel.get('action');
+	}
+
+});
+
+//####app\controls\form\formModel.js
+var FormModel = StackPanelModel.extend({
+
+	defaults: _.defaults({
+		submitFunction: null,
+		method: '',
+		action: ''
+	}, StackPanelModel.prototype.defaults)
+
+});
+
+//####app\controls\form\formView.js
+/**
+ * @class FormView
+ * @augments StackPanelView
+ */
+var FormView = StackPanelView.extend({
+
+	className: 'pl-form',
+
+	tagName: 'form',
+
+	template: {
+		plain: InfinniUI.Template["controls/form/template/form.tpl.html"]
+	},
+
+	events: {
+		'submit': 'onSubmit'
+	},
+
+	onSubmit: function (e) {
+		e.preventDefault();
+	},
+
+	initialize: function (options) {
+		StackPanelView.prototype.initialize.call(this, options);
+
+		this.listenTo(this.model, 'change:method', this.updateMethod);
+		this.listenTo(this.model, 'change:action', this.updateAction);
+	},
+
+	updateGrouping: function(){
+		this.strategy = new StackPanelViewPlainStrategy(this);
+	},
+
+	render: function () {
+		this.prerenderingActions();
+
+		this.removeChildElements();
+
+		var preparedItems = this.strategy.prepareItemsForRendering();
+		var template = this.strategy.getTemplate();
+
+		this.$el.html(template(preparedItems));
+
+		this.strategy.appendItemsContent(preparedItems, '.pl-form-i');
+
+		this.bindUIElements();
+		this.updateProperties();
+		this.trigger('render');
+
+		this.postrenderingActions();
+
+		//devblockstart
+    window.InfinniUI.global.messageBus.send('render', {element: this});
+    //devblockstop
+    
+		return this;
+	},
+
+	updateProperties: function() {
+		StackPanelView.prototype.updateProperties.call(this);
+
+		this.updateMethod();
+		this.updateAction();
+	},
+
+	updateMethod: function() {
+		var method = this.model.get('method');
+
+		this.$el.attr('method', method);
+	},
+
+	updateAction: function() {
+		var action = this.model.get('action');
+
+		this.$el.attr('action', action);
+	}
+
+});
+
 //####app\controls\frame\frameControl.js
 /**
  *
@@ -15289,141 +15427,98 @@ var GridPanelView = ContainerView.extend(
     }
 );
 
-//####app\controls\form\formControl.js
-function FormControl(parent) {
-	_.superClass(FormControl, this, parent);
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
 }
 
-_.inherit(FormControl, StackPanelControl);
+_.inherit(IconControl, Control);
 
-_.extend(FormControl.prototype, {
+_.extend(IconControl.prototype, {
 
-	createControlModel: function () {
-		return new FormModel();
-	},
+    createControlModel: function () {
+        return new IconModel();
+    },
 
-	createControlView: function (model) {
-		return new FormView({model: model});
-	},
-
-	onSubmit: function (callback) {
-		this.controlView.$el.on('submit', callback);
-	},
-
-	setSubmitFunction: function(func) {
-		this.controlModel.set('submitFunction', func);
-	},
-
-	getSubmitFunction: function() {
-		return this.controlModel.get('submitFunction');
-	},
-
-	setMethod: function(method) {
-		this.controlModel.set('method', method);
-	},
-
-	getMethod: function() {
-		 return this.controlModel.get('method');
-	},
-
-	setAction: function(action) {
-		this.controlModel.set('action', action);
-	},
-
-	getAction: function() {
-		 return this.controlModel.get('action');
-	}
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
 
 });
-
-//####app\controls\form\formModel.js
-var FormModel = StackPanelModel.extend({
-
-	defaults: _.defaults({
-		submitFunction: null,
-		method: '',
-		action: ''
-	}, StackPanelModel.prototype.defaults)
-
-});
-
-//####app\controls\form\formView.js
+//####app\controls\icon\iconModel.js
 /**
- * @class FormView
- * @augments StackPanelView
+ * @class
+ * @augments ControlModel
  */
-var FormView = StackPanelView.extend({
+var IconModel = ControlModel.extend({
 
-	className: 'pl-form',
+    defaults: _.defaults({
+        value: null,
+        focusable: false
 
-	tagName: 'form',
+    }, ControlModel.prototype.defaults),
 
-	template: {
-		plain: InfinniUI.Template["controls/form/template/form.tpl.html"]
-	},
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
 
-	events: {
-		'submit': 'onSubmit'
-	},
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
 
-	onSubmit: function (e) {
-		e.preventDefault();
-	},
+    className: 'pl-icon fa',
 
-	initialize: function (options) {
-		StackPanelView.prototype.initialize.call(this, options);
+    tagName: 'i',
 
-		this.listenTo(this.model, 'change:method', this.updateMethod);
-		this.listenTo(this.model, 'change:action', this.updateAction);
-	},
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
 
-	updateGrouping: function(){
-		this.strategy = new StackPanelViewPlainStrategy(this);
-	},
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
 
-	render: function () {
-		this.prerenderingActions();
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+    },
 
-		this.removeChildElements();
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+    },
 
-		var preparedItems = this.strategy.prepareItemsForRendering();
-		var template = this.strategy.getTemplate();
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
 
-		this.$el.html(template(preparedItems));
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
 
-		this.strategy.appendItemsContent(preparedItems, '.pl-form-i');
-
-		this.bindUIElements();
-		this.updateProperties();
-		this.trigger('render');
-
-		this.postrenderingActions();
-
-		//devblockstart
-    window.InfinniUI.global.messageBus.send('render', {element: this});
-    //devblockstop
-    
-		return this;
-	},
-
-	updateProperties: function() {
-		StackPanelView.prototype.updateProperties.call(this);
-
-		this.updateMethod();
-		this.updateAction();
-	},
-
-	updateMethod: function() {
-		var method = this.model.get('method');
-
-		this.$el.attr('method', method);
-	},
-
-	updateAction: function() {
-		var action = this.model.get('action');
-
-		this.$el.attr('action', action);
-	}
+    updateValue: function () {
+        this.renderIcon();
+    }
 
 });
 
@@ -15764,200 +15859,6 @@ var IndeterminateCheckBoxView = CheckBoxView.extend({
 	}
 });
 
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    }
-
-});
-
-//####app\controls\menuBar\menuBarControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function MenuBarControl(parent) {
-    _.superClass(MenuBarControl, this, parent);
-}
-
-_.inherit(MenuBarControl, ContainerControl);
-
-_.extend(MenuBarControl.prototype,
-    /** @lends MenuBarControl.prototype */
-    {
-        createControlModel: function () {
-            return new MenuBarModel();
-        },
-
-        createControlView: function (model) {
-            return new MenuBarView({model: model});
-        }
-    }
-);
-
-
-//####app\controls\menuBar\menuBarModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var MenuBarModel = ContainerModel.extend(
-    /** @lends MenuBarModel.prototype */
-    {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        }
-    }
-);
-//####app\controls\menuBar\menuBarView.js
-/**
- * @class
- * @augments ControlView
- */
-var MenuBarView = ContainerView.extend(
-    /** @lends MenuBarView.prototype */
-    {
-        tagName: 'nav',
-        className: 'pl-menu-bar navbar navbar-default',
-
-        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
-
-        UI: {
-
-        },
-
-        render: function () {
-            this.prerenderingActions();
-
-            this.removeChildElements();
-
-            this.$el.html(this.template({
-                items: this.model.get('items')
-            }));
-            this.renderItemsContents();
-
-            this.bindUIElements();
-
-            this.updateProperties();
-            this.trigger('render');
-
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
-
-        renderItemsContents: function(){
-            var $items = this.$el.find('.pl-menu-bar-item'),
-                items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
-
-            $items.each(function(i, el){
-                item = items.getByIndex(i);
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                $(el)
-                    .append(element.render());
-            });
-        },
-
-        updateGrouping: function(){}
-    }
-);
-
 //####app\controls\link\linkElementControl.js
 /**
  *
@@ -16104,6 +16005,105 @@ var LinkElementView = CommonButtonView.extend({
     });
 
 })();
+//####app\controls\menuBar\menuBarControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function MenuBarControl(parent) {
+    _.superClass(MenuBarControl, this, parent);
+}
+
+_.inherit(MenuBarControl, ContainerControl);
+
+_.extend(MenuBarControl.prototype,
+    /** @lends MenuBarControl.prototype */
+    {
+        createControlModel: function () {
+            return new MenuBarModel();
+        },
+
+        createControlView: function (model) {
+            return new MenuBarView({model: model});
+        }
+    }
+);
+
+
+//####app\controls\menuBar\menuBarModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var MenuBarModel = ContainerModel.extend(
+    /** @lends MenuBarModel.prototype */
+    {
+        initialize: function () {
+            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        }
+    }
+);
+//####app\controls\menuBar\menuBarView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var MenuBarView = ContainerView.extend(
+    /** @lends MenuBarView.prototype */
+    {
+        tagName: 'nav',
+        className: 'pl-menu-bar navbar navbar-default',
+
+        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
+
+        UI: {
+
+        },
+
+        render: function () {
+            this.prerenderingActions();
+
+            this.removeChildElements();
+
+            this.$el.html(this.template({
+                items: this.model.get('items')
+            }));
+            this.renderItemsContents();
+
+            this.bindUIElements();
+
+            this.updateProperties();
+            this.trigger('render');
+
+            this.postrenderingActions();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: this});
+            //devblockstop
+            return this;
+        },
+
+        renderItemsContents: function(){
+            var $items = this.$el.find('.pl-menu-bar-item'),
+                items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                that = this,
+                element, item;
+
+            $items.each(function(i, el){
+                item = items.getByIndex(i);
+                element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
+                $(el)
+                    .append(element.render());
+            });
+        },
+
+        updateGrouping: function(){}
+    }
+);
+
 //####app\controls\numericBox\numericBoxControl.js
 /**
  *
@@ -17137,82 +17137,6 @@ var ToolBarView = ContainerView.extend({
     updateGrouping: function(){}
 });
 
-//####app\controls\viewPanel\viewPanelControl.js
-var ViewPanelControl = function () {
-    _.superClass(ViewPanelControl, this);
-};
-
-_.inherit(ViewPanelControl, Control);
-
-ViewPanelControl.prototype.createControlModel = function () {
-    return new ViewPanelModel();
-};
-
-ViewPanelControl.prototype.createControlView = function (model) {
-    return new ViewPanelView({model: model});
-};
-//####app\controls\viewPanel\viewPanelModel.js
-var ViewPanelModel = ControlModel.extend({
-    defaults: _.defaults({
-        layout: null
-    }, ControlModel.prototype.defaults),
-
-    initialize: function(){
-        var that = this;
-
-        ControlModel.prototype.initialize.apply(this);
-
-        this.once('change:layout', function (model, layout) {
-            if(layout && layout.onLoaded){
-                that.subscribeOnLoaded();
-            }
-        });
-    },
-
-    subscribeOnLoaded: function(){
-        var that = this;
-        var layout = this.get('layout');
-
-        layout.onLoaded(function(){
-            that.set('isLoaded', true);
-        });
-    }
-});
-//####app\controls\viewPanel\viewPanelView.js
-var ViewPanelView = ControlView.extend({
-    className: 'pl-view-panel',
-
-    initialize: function () {
-        ControlView.prototype.initialize.apply(this);
-        this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
-    },
-
-    onChangeLayoutHandler: function (model, layout) {
-        this.$el.empty();
-        if(layout){
-            this.$el.append(layout.render());
-        }
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        var layout = this.model.get('layout');
-
-        if(layout){
-            this.$el.append(layout.render());
-        }
-
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions(false);
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    }
-});
 //####app\controls\view\viewControl.js
 /**
  *
@@ -17316,6 +17240,82 @@ var ViewView = ContainerView.extend(
     }
 );
 
+//####app\controls\viewPanel\viewPanelControl.js
+var ViewPanelControl = function () {
+    _.superClass(ViewPanelControl, this);
+};
+
+_.inherit(ViewPanelControl, Control);
+
+ViewPanelControl.prototype.createControlModel = function () {
+    return new ViewPanelModel();
+};
+
+ViewPanelControl.prototype.createControlView = function (model) {
+    return new ViewPanelView({model: model});
+};
+//####app\controls\viewPanel\viewPanelModel.js
+var ViewPanelModel = ControlModel.extend({
+    defaults: _.defaults({
+        layout: null
+    }, ControlModel.prototype.defaults),
+
+    initialize: function(){
+        var that = this;
+
+        ControlModel.prototype.initialize.apply(this);
+
+        this.once('change:layout', function (model, layout) {
+            if(layout && layout.onLoaded){
+                that.subscribeOnLoaded();
+            }
+        });
+    },
+
+    subscribeOnLoaded: function(){
+        var that = this;
+        var layout = this.get('layout');
+
+        layout.onLoaded(function(){
+            that.set('isLoaded', true);
+        });
+    }
+});
+//####app\controls\viewPanel\viewPanelView.js
+var ViewPanelView = ControlView.extend({
+    className: 'pl-view-panel',
+
+    initialize: function () {
+        ControlView.prototype.initialize.apply(this);
+        this.listenTo(this.model, 'change:layout', this.onChangeLayoutHandler);
+    },
+
+    onChangeLayoutHandler: function (model, layout) {
+        this.$el.empty();
+        if(layout){
+            this.$el.append(layout.render());
+        }
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        var layout = this.model.get('layout');
+
+        if(layout){
+            this.$el.append(layout.render());
+        }
+
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions(false);
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    }
+});
 //####app\data\dataSource\_mixins\dataSourceValidationNotifierMixin.js
 /**
  *
@@ -19705,7 +19705,8 @@ _.extend(Element.prototype, {
     },
 
     setFocused: function (value) {
-        return this.control.set('focused', !!value);
+        //Установка фокуса вручную
+        return this.control.setFocus();
     },
     onLostFocus: function (handler) {
         this.control.on('OnLostFocus', handler);
@@ -22495,6 +22496,62 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
 
 
 
+//####app\elements\checkBox\checkBox.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augment Element
+ */
+function CheckBox(parent) {
+    _.superClass(CheckBox, this, parent);
+    this.initialize_editorBase();
+}
+
+window.InfinniUI.CheckBox = CheckBox;
+
+_.inherit(CheckBox, Element);
+
+
+_.extend(CheckBox.prototype, {
+
+    createControl: function (parent) {
+        return new CheckBoxControl(parent);
+    }
+
+}, editorBaseMixin);
+
+//####app\elements\checkBox\checkBoxBuilder.js
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ */
+function CheckBoxBuilder() {
+    _.superClass(CheckBoxBuilder, this);
+    this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.CheckBoxBuilder = CheckBoxBuilder;
+
+_.inherit(CheckBoxBuilder, ElementBuilder);
+
+
+_.extend(CheckBoxBuilder.prototype, {
+    createElement: function (params) {
+        return new CheckBox(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+        this.applyMetadata_editorBaseBuilder(params);
+
+        //var element = params.element;
+        //var metadata = params.metadata;
+    }
+}, editorBaseBuilderMixin);
+
+
 //####app\elements\comboBox\comboBox.js
 /**
  * @augments ListEditorBase
@@ -22672,6 +22729,53 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     generateName: function(){
         return 'combobox-' + guid();
     }
+});
+
+//####app\elements\contextMenu\contextMenu.js
+/**
+ * @class
+ * @constructor
+ * @arguments Container
+ */
+function ContextMenu(parent) {
+    _.superClass(ContextMenu, this, parent);
+}
+
+window.InfinniUI.ContextMenu = ContextMenu;
+
+_.inherit(ContextMenu, Container);
+
+_.extend(ContextMenu.prototype, {
+
+    createControl: function () {
+        return new ContextMenuControl();
+    }
+
+});
+
+//####app\elements\contextMenu\contextMenuBuilder.js
+/**
+ * @constructor
+ * @arguments ContainerBuilder
+ */
+function ContextMenuBuilder() {
+	_.superClass(ContextMenuBuilder, this);
+}
+
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
+_.inherit(ContextMenuBuilder, ContainerBuilder);
+
+_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+
+	createElement: function (params) {
+		return new ContextMenu(params.parent);
+	},
+
+	applyMetadata: function (params) {
+		ContainerBuilder.prototype.applyMetadata.call(this, params);
+	}
+
 });
 
 //####app\elements\dataGrid\dataGrid.js
@@ -23451,109 +23555,6 @@ _.extend(DataNavigationBuilder.prototype, {
 
 });
 
-//####app\elements\contextMenu\contextMenu.js
-/**
- * @class
- * @constructor
- * @arguments Container
- */
-function ContextMenu(parent) {
-    _.superClass(ContextMenu, this, parent);
-}
-
-window.InfinniUI.ContextMenu = ContextMenu;
-
-_.inherit(ContextMenu, Container);
-
-_.extend(ContextMenu.prototype, {
-
-    createControl: function () {
-        return new ContextMenuControl();
-    }
-
-});
-
-//####app\elements\contextMenu\contextMenuBuilder.js
-/**
- * @constructor
- * @arguments ContainerBuilder
- */
-function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
-}
-
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
-
-_.inherit(ContextMenuBuilder, ContainerBuilder);
-
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
-
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
-
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
-
-});
-
-//####app\elements\checkBox\checkBox.js
-/**
- *
- * @param parent
- * @constructor
- * @augment Element
- */
-function CheckBox(parent) {
-    _.superClass(CheckBox, this, parent);
-    this.initialize_editorBase();
-}
-
-window.InfinniUI.CheckBox = CheckBox;
-
-_.inherit(CheckBox, Element);
-
-
-_.extend(CheckBox.prototype, {
-
-    createControl: function (parent) {
-        return new CheckBoxControl(parent);
-    }
-
-}, editorBaseMixin);
-
-//####app\elements\checkBox\checkBoxBuilder.js
-/**
- *
- * @constructor
- * @augments ElementBuilder
- */
-function CheckBoxBuilder() {
-    _.superClass(CheckBoxBuilder, this);
-    this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.CheckBoxBuilder = CheckBoxBuilder;
-
-_.inherit(CheckBoxBuilder, ElementBuilder);
-
-
-_.extend(CheckBoxBuilder.prototype, {
-    createElement: function (params) {
-        return new CheckBox(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-        this.applyMetadata_editorBaseBuilder(params);
-
-        //var element = params.element;
-        //var metadata = params.metadata;
-    }
-}, editorBaseBuilderMixin);
-
-
 //####app\elements\divider\divider.js
 /**
  *
@@ -24303,6 +24304,54 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
+//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augment Element
+ */
+function IndeterminateCheckBox(parent) {
+	_.superClass(IndeterminateCheckBox, this, parent);
+	this.initialize_editorBase();
+}
+
+window.InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
+
+_.inherit(IndeterminateCheckBox, CheckBox);
+
+
+_.extend(IndeterminateCheckBox.prototype, {
+
+	createControl: function (parent) {
+		return new IndeterminateCheckBoxControl(parent);
+	}
+
+}, editorBaseMixin);
+
+//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
+/**
+ *
+ * @constructor
+ * @augments ElementBuilder
+ */
+function IndeterminateCheckBoxBuilder() {
+	_.superClass(IndeterminateCheckBoxBuilder, this);
+	this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
+
+_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
+
+
+_.extend(IndeterminateCheckBoxBuilder.prototype, {
+	createElement: function (params) {
+		return new IndeterminateCheckBox(params.parent);
+	}
+});
+
+
 //####app\elements\label\label.js
 function Label(parent, viewMode) {
     _.superClass(Label, this, parent, viewMode);
@@ -24548,54 +24597,6 @@ _.extend(LinkBuilder.prototype, routerServiceMixin, {
 	}
 
 });
-
-//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
-/**
- *
- * @param parent
- * @constructor
- * @augment Element
- */
-function IndeterminateCheckBox(parent) {
-	_.superClass(IndeterminateCheckBox, this, parent);
-	this.initialize_editorBase();
-}
-
-window.InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
-
-_.inherit(IndeterminateCheckBox, CheckBox);
-
-
-_.extend(IndeterminateCheckBox.prototype, {
-
-	createControl: function (parent) {
-		return new IndeterminateCheckBoxControl(parent);
-	}
-
-}, editorBaseMixin);
-
-//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
-/**
- *
- * @constructor
- * @augments ElementBuilder
- */
-function IndeterminateCheckBoxBuilder() {
-	_.superClass(IndeterminateCheckBoxBuilder, this);
-	this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
-
-_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
-
-
-_.extend(IndeterminateCheckBoxBuilder.prototype, {
-	createElement: function (params) {
-		return new IndeterminateCheckBox(params.parent);
-	}
-});
-
 
 //####app\elements\menuBar\menuBar.js
 /**
@@ -25160,31 +25161,6 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
     editorBaseBuilderMixin
 );
 
-//####app\elements\radioGroup\radioGroupBuilder.js
-function RadioGroupBuilder() {
-    _.superClass(RadioGroupBuilder, this);
-}
-
-window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
-
-_.inherit(RadioGroupBuilder, ListBoxBuilder);
-
-_.extend(RadioGroupBuilder.prototype, {
-
-    createElement: function (params) {
-        var viewMode = params.metadata['ViewMode'] || 'checking';
-        return new ListBox(params.parent, viewMode);
-    },
-
-    applyMetadata: function (params) {
-        var element = params.element;
-        ListBoxBuilder.prototype.applyMetadata.call(this, params);
-
-        element.setMultiSelect(false);
-    }
-
-});
-
 //####app\elements\popupButton\popupButton.js
 /**
  * @class
@@ -25259,6 +25235,31 @@ _.extend(PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype *
     }
 
 }, buttonBuilderMixin);
+
+//####app\elements\radioGroup\radioGroupBuilder.js
+function RadioGroupBuilder() {
+    _.superClass(RadioGroupBuilder, this);
+}
+
+window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
+
+_.inherit(RadioGroupBuilder, ListBoxBuilder);
+
+_.extend(RadioGroupBuilder.prototype, {
+
+    createElement: function (params) {
+        var viewMode = params.metadata['ViewMode'] || 'checking';
+        return new ListBox(params.parent, viewMode);
+    },
+
+    applyMetadata: function (params) {
+        var element = params.element;
+        ListBoxBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setMultiSelect(false);
+    }
+
+});
 
 //####app\elements\scrollPanel\scrollPanel.js
 /**
@@ -27381,59 +27382,6 @@ _.extend(DeleteActionBuilder.prototype,
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
 
-//####app\actions\openAction\openAction.js
-function OpenAction(parentView){
-    _.superClass(OpenAction, this, parentView);
-}
-
-_.inherit(OpenAction, BaseAction);
-
-
-_.extend(OpenAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView'),
-            that = this;
-
-        linkView.createView(function (view) {
-
-            view.onLoaded(function () {
-                that.onExecutedHandler();
-
-                if (callback) {
-                    callback(view);
-                }
-            });
-
-            view.open();
-        });
-    }
-});
-
-window.InfinniUI.OpenAction = OpenAction;
-
-//####app\actions\openAction\openActionBuilder.js
-function OpenActionBuilder(){
-}
-
-
-_.extend(OpenActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new OpenAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
-            action.setProperty('linkView', linkView);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
-
 //####app\actions\editAction\editAction.js
 function EditAction(parentView){
     _.superClass(EditAction, this, parentView);
@@ -27562,6 +27510,137 @@ _.extend(EditActionBuilder.prototype,
 
 window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
+//####app\actions\openAction\openAction.js
+function OpenAction(parentView){
+    _.superClass(OpenAction, this, parentView);
+}
+
+_.inherit(OpenAction, BaseAction);
+
+
+_.extend(OpenAction.prototype, {
+    execute: function(callback){
+        var linkView = this.getProperty('linkView'),
+            that = this;
+
+        linkView.createView(function (view) {
+
+            view.onLoaded(function () {
+                that.onExecutedHandler();
+
+                if (callback) {
+                    callback(view);
+                }
+            });
+
+            view.open();
+        });
+    }
+});
+
+window.InfinniUI.OpenAction = OpenAction;
+
+//####app\actions\openAction\openActionBuilder.js
+function OpenActionBuilder(){
+}
+
+
+_.extend(OpenActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new OpenAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
+            action.setProperty('linkView', linkView);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
+
+//####app\actions\routeToAction\routeToAction.js
+function RouteToAction(){
+    _.superClass(RouteToAction, this);
+    this.href = '';
+}
+
+_.inherit(RouteToAction, BaseAction);
+
+
+_.extend(RouteToAction.prototype, {
+
+    execute: function(callback){
+        var router = InfinniUI.AppRouter,
+            href = this.getHref();
+
+        router.navigate(href, {trigger: true});
+    },
+
+    getHref: function() {
+        return this.href;
+    },
+
+    setHref: function(href) {
+        this.href = href;
+    }
+
+});
+
+window.InfinniUI.RouteToAction = RouteToAction;
+
+//####app\actions\routeToAction\routeToActionBuilder.js
+function RouteToActionBuilder() {}
+
+_.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMixin, {
+
+	build: function (context, args) {
+		var action = new RouteToAction(),
+				newHref = routerService.getLinkByName(args.metadata.Name, 'no'),
+				hrefParams = args.metadata.Params,
+				query = args.metadata.Query;
+
+		action.setHref(newHref);
+		args.element = action;
+
+		if( hrefParams ) {
+			for( var i = 0, ii = hrefParams.length; i < ii; i += 1 ) {
+				if( typeof hrefParams[i].Value === 'string' ) {
+					if( action.getHref() !== newHref ) {
+						newHref = action.getHref();
+					}
+					newHref = this.replaceParamsInHref(newHref, hrefParams[i].Name, hrefParams[i].Value);
+					action.setHref(newHref);
+				} else {
+					this.bindParams(args, hrefParams[i].Name, hrefParams[i].Value, newHref);
+				}
+			}
+		}
+
+		if( query ) {
+			for( var i = 0, ii = query.length; i < ii; i += 1 ) {
+				if( typeof query[i].Value === 'string' ) {
+					if( action.getHref() !== newHref ) {
+						newHref = action.getHref();
+					}
+					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[i].Value);
+					action.setHref(newHref);
+				} else {
+					this.bindQuery(args, query[i].Name, query[i].Value, newHref);
+				}
+			}
+		}
+		return action;
+	}
+
+});
+
+window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
+
 //####app\actions\saveAction\saveAction.js
 function SaveAction(parentView){
     _.superClass(SaveAction, this, parentView);
@@ -27634,6 +27713,83 @@ _.extend(SaveActionBuilder.prototype,
 );
 
 window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+
+//####app\actions\selectAction\selectAction.js
+function SelectAction(parentView){
+    _.superClass(SelectAction, this, parentView);
+}
+
+_.inherit(SelectAction, BaseAction);
+
+
+_.extend(SelectAction.prototype, {
+    execute: function(callback){
+        var parentView = this.parentView,
+            linkView = this.getProperty('linkView'),
+            that = this;
+
+        var srcDataSourceName = this.getProperty('sourceSource'),
+            srcPropertyName = this.getProperty('sourceProperty');
+
+        var dstDataSourceName = this.getProperty('destinationSource'),
+            dstPropertyName = this.getProperty('destinationProperty');
+
+        linkView.createView(function(createdView){
+
+            createdView.onClosed(function (context, args) {
+                var dialogResult = createdView.getDialogResult();
+
+                if (dialogResult == DialogResult.accepted) {
+                    var srcDataSource = createdView.getContext().dataSources[srcDataSourceName];
+                    var dstDataSource = parentView.getContext().dataSources[dstDataSourceName];
+
+                    var value = srcDataSource.getProperty(srcPropertyName);
+                    dstDataSource.setProperty(dstPropertyName, value);
+                }
+
+                that.onExecutedHandler(args);
+
+                if (callback) {
+                    callback(context, args);
+                }
+            });
+
+            createdView.open();
+        });
+    }
+});
+
+window.InfinniUI.SelectAction = SelectAction;
+
+//####app\actions\selectAction\selectActionBuilder.js
+function SelectActionBuilder() {}
+
+_.extend(SelectActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var builder = args.builder,
+                metadata = args.metadata,
+                parentView = args.parentView;
+
+            var action = new SelectAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+
+            action.setProperty('linkView', linkView);
+            action.setProperty('sourceSource', metadata.SourceValue.Source);
+            action.setProperty('sourceProperty', metadata.SourceValue.Property);
+            action.setProperty('destinationSource', metadata.DestinationValue.Source);
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -27990,161 +28146,6 @@ var serverActionContentTypeStrategy = {
         }
     }
 };
-//####app\actions\selectAction\selectAction.js
-function SelectAction(parentView){
-    _.superClass(SelectAction, this, parentView);
-}
-
-_.inherit(SelectAction, BaseAction);
-
-
-_.extend(SelectAction.prototype, {
-    execute: function(callback){
-        var parentView = this.parentView,
-            linkView = this.getProperty('linkView'),
-            that = this;
-
-        var srcDataSourceName = this.getProperty('sourceSource'),
-            srcPropertyName = this.getProperty('sourceProperty');
-
-        var dstDataSourceName = this.getProperty('destinationSource'),
-            dstPropertyName = this.getProperty('destinationProperty');
-
-        linkView.createView(function(createdView){
-
-            createdView.onClosed(function (context, args) {
-                var dialogResult = createdView.getDialogResult();
-
-                if (dialogResult == DialogResult.accepted) {
-                    var srcDataSource = createdView.getContext().dataSources[srcDataSourceName];
-                    var dstDataSource = parentView.getContext().dataSources[dstDataSourceName];
-
-                    var value = srcDataSource.getProperty(srcPropertyName);
-                    dstDataSource.setProperty(dstPropertyName, value);
-                }
-
-                that.onExecutedHandler(args);
-
-                if (callback) {
-                    callback(context, args);
-                }
-            });
-
-            createdView.open();
-        });
-    }
-});
-
-window.InfinniUI.SelectAction = SelectAction;
-
-//####app\actions\selectAction\selectActionBuilder.js
-function SelectActionBuilder() {}
-
-_.extend(SelectActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var builder = args.builder,
-                metadata = args.metadata,
-                parentView = args.parentView;
-
-            var action = new SelectAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
-
-            action.setProperty('linkView', linkView);
-            action.setProperty('sourceSource', metadata.SourceValue.Source);
-            action.setProperty('sourceProperty', metadata.SourceValue.Property);
-            action.setProperty('destinationSource', metadata.DestinationValue.Source);
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
-
-//####app\actions\routeToAction\routeToAction.js
-function RouteToAction(){
-    _.superClass(RouteToAction, this);
-    this.href = '';
-}
-
-_.inherit(RouteToAction, BaseAction);
-
-
-_.extend(RouteToAction.prototype, {
-
-    execute: function(callback){
-        var router = InfinniUI.AppRouter,
-            href = this.getHref();
-
-        router.navigate(href, {trigger: true});
-    },
-
-    getHref: function() {
-        return this.href;
-    },
-
-    setHref: function(href) {
-        this.href = href;
-    }
-
-});
-
-window.InfinniUI.RouteToAction = RouteToAction;
-
-//####app\actions\routeToAction\routeToActionBuilder.js
-function RouteToActionBuilder() {}
-
-_.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMixin, {
-
-	build: function (context, args) {
-		var action = new RouteToAction(),
-				newHref = routerService.getLinkByName(args.metadata.Name, 'no'),
-				hrefParams = args.metadata.Params,
-				query = args.metadata.Query;
-
-		action.setHref(newHref);
-		args.element = action;
-
-		if( hrefParams ) {
-			for( var i = 0, ii = hrefParams.length; i < ii; i += 1 ) {
-				if( typeof hrefParams[i].Value === 'string' ) {
-					if( action.getHref() !== newHref ) {
-						newHref = action.getHref();
-					}
-					newHref = this.replaceParamsInHref(newHref, hrefParams[i].Name, hrefParams[i].Value);
-					action.setHref(newHref);
-				} else {
-					this.bindParams(args, hrefParams[i].Name, hrefParams[i].Value, newHref);
-				}
-			}
-		}
-
-		if( query ) {
-			for( var i = 0, ii = query.length; i < ii; i += 1 ) {
-				if( typeof query[i].Value === 'string' ) {
-					if( action.getHref() !== newHref ) {
-						newHref = action.getHref();
-					}
-					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[i].Value);
-					action.setHref(newHref);
-				} else {
-					this.bindQuery(args, query[i].Name, query[i].Value, newHref);
-				}
-			}
-		}
-		return action;
-	}
-
-});
-
-window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
-
 //####app\actions\updateAction\updateAction.js
 function UpdateAction(parentView){
     _.superClass(UpdateAction, this, parentView);
@@ -29731,6 +29732,110 @@ var formatMixin = {
 
 window.InfinniUI.FormatMixin = formatMixin;
 
+//####app\formats\displayFormat\boolean\booleanFormat.js
+/**
+ * @description Формат отображения логического значения.
+ * @class BooleanFormat
+ * @mixes formatMixin
+ */
+var BooleanFormat = function () {};
+
+window.InfinniUI.BooleanFormat = BooleanFormat;
+
+_.extend(BooleanFormat.prototype, {
+
+    /**
+     * @description Текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultTrueText: 'True',
+
+    /**
+     * @description Текст для отображения ложного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultFalseText: 'False',
+
+    /**
+     * @description Возвращает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
+     * @returns {String}
+     */
+    getFalseText: function () {
+        return this.getPropertyValue('falseText', this.defaultFalseText);
+    },
+
+    /**
+     * @description Устанавливает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setFalseText: function (value) {
+        this.falseText = value;
+    },
+
+    /**
+     * @description Возвращает текст для отображения истинного значения.
+     * @memberOf BooleanFormat.prototype
+     * @returns {String}
+     */
+    getTrueText: function () {
+        return this.getPropertyValue('trueText', this.defaultTrueText);
+    },
+
+    /**
+     * @description Устанавливает текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setTrueText: function (value) {
+        this.trueText = value;
+    },
+
+    /**
+     * @description Форматирует значение
+     * @memberOf BooleanFormat.prototype
+     * @param {Boolean} originalValue
+     * @returns {String}
+     */
+    formatValue: function (originalValue) {
+        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
+            return this.getFalseText();
+        } else {
+            return this.getTrueText();
+        }
+    }
+
+}, formatMixin);
+
+//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
+/**
+ * @description Билдер BooleanFormat
+ * @class BooleanFormatBuilder
+ */
+function BooleanFormatBuilder () {
+
+    /**
+     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
+     * @memberOf BooleanFormatBuilder
+     * @instance
+     * @param context
+     * @param args
+     * @returns {BooleanFormat}
+     */
+    this.build = function (context, args) {
+
+        var format = new BooleanFormat();
+
+        format.setFalseText(args.metadata.FalseText);
+        format.setTrueText(args.metadata.TrueText);
+
+        return format;
+    }
+}
+
+window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
+
 //####app\formats\displayFormat\dateTime\dateTimeFormat.js
 /**
  * @description Формат отображения даты/времени.
@@ -30315,110 +30420,6 @@ function NumberFormatBuilder () {
 }
 
 window.InfinniUI.NumberFormatBuilder = NumberFormatBuilder;
-
-//####app\formats\displayFormat\boolean\booleanFormat.js
-/**
- * @description Формат отображения логического значения.
- * @class BooleanFormat
- * @mixes formatMixin
- */
-var BooleanFormat = function () {};
-
-window.InfinniUI.BooleanFormat = BooleanFormat;
-
-_.extend(BooleanFormat.prototype, {
-
-    /**
-     * @description Текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
-     */
-    defaultTrueText: 'True',
-
-    /**
-     * @description Текст для отображения ложного значения
-     * @memberOf BooleanFormat.prototype
-     */
-    defaultFalseText: 'False',
-
-    /**
-     * @description Возвращает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
-     * @returns {String}
-     */
-    getFalseText: function () {
-        return this.getPropertyValue('falseText', this.defaultFalseText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setFalseText: function (value) {
-        this.falseText = value;
-    },
-
-    /**
-     * @description Возвращает текст для отображения истинного значения.
-     * @memberOf BooleanFormat.prototype
-     * @returns {String}
-     */
-    getTrueText: function () {
-        return this.getPropertyValue('trueText', this.defaultTrueText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setTrueText: function (value) {
-        this.trueText = value;
-    },
-
-    /**
-     * @description Форматирует значение
-     * @memberOf BooleanFormat.prototype
-     * @param {Boolean} originalValue
-     * @returns {String}
-     */
-    formatValue: function (originalValue) {
-        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
-            return this.getFalseText();
-        } else {
-            return this.getTrueText();
-        }
-    }
-
-}, formatMixin);
-
-//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
-/**
- * @description Билдер BooleanFormat
- * @class BooleanFormatBuilder
- */
-function BooleanFormatBuilder () {
-
-    /**
-     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
-     * @memberOf BooleanFormatBuilder
-     * @instance
-     * @param context
-     * @param args
-     * @returns {BooleanFormat}
-     */
-    this.build = function (context, args) {
-
-        var format = new BooleanFormat();
-
-        format.setFalseText(args.metadata.FalseText);
-        format.setTrueText(args.metadata.TrueText);
-
-        return format;
-    }
-}
-
-window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
 
 //####app\formats\displayFormat\object\objectFormat.js
 /**
@@ -34325,6 +34326,96 @@ InfinniUI.providerRegister.register('RestDataSource', InfinniUI.Providers.RestDa
 InfinniUI.providerRegister.register('ServerActionProvider', function () {
     return new InfinniUI.Providers.ServerActionProvider();
 });
+//####app\script\scriptBuilder.js
+/**
+ *
+ * @constructor
+ */
+function ScriptBuilder() {}
+
+window.InfinniUI.ScriptBuilder = ScriptBuilder;
+
+
+ScriptBuilder.prototype.build = function (context, args) {
+    var
+        metadata = args.metadata,
+        name = metadata.Name,
+        body = metadata.Body;
+
+    var func = new Function('context', 'args', body);
+
+    return function (context, args) {
+        var result;
+        try {
+            result = func.call(undefined, context, args);
+        } catch (err) {
+            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
+            console.error(body);
+            console.groupEnd();
+        }
+        return result;
+    };
+};
+
+
+//####app\script\scriptExecutor.js
+/**
+ *
+ * @param parent
+ * @constructor
+ */
+function ScriptExecutor(parent) {
+    this.parent = parent;
+}
+
+window.InfinniUI.ScriptExecutor = ScriptExecutor;
+
+
+/**
+ *
+ * @param {string} scriptName
+ * @param {Object} args
+ * @returns {*}
+ */
+ScriptExecutor.prototype.executeScript = function (scriptName, args) {
+    var parent = this.parent;
+    var context = parent.getContext();
+    var result;
+    var scriptBody;
+    var scriptCompiled;
+
+    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
+    if(scriptName.substr(0, 1) == '{'){
+        scriptBody = scriptName.substr(1, scriptName.length - 2);
+        scriptCompiled = this.buildScriptByBody(scriptBody);
+    }else{
+        scriptCompiled = parent.getScripts().getById(scriptName);
+        if(scriptCompiled){
+            scriptCompiled = scriptCompiled.func;
+        }
+    }
+
+
+
+    if (context && scriptCompiled) {
+        result = scriptCompiled.call(undefined, context, args);
+    }
+
+    return result;
+};
+
+ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
+    var context = this.parent.getContext();
+    var args = {
+        metadata: {
+            "Body": scriptBody,
+            "Name": "InlineScript"
+        }
+    };
+    var scriptBuilder = new ScriptBuilder();
+    return scriptBuilder.build(context, args);
+};
+
 //####app\services\modalWindowService.js
 InfinniUI.ModalWindowService = (function () {
     var modalQueue = [];
@@ -34548,96 +34639,6 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
-//####app\script\scriptBuilder.js
-/**
- *
- * @constructor
- */
-function ScriptBuilder() {}
-
-window.InfinniUI.ScriptBuilder = ScriptBuilder;
-
-
-ScriptBuilder.prototype.build = function (context, args) {
-    var
-        metadata = args.metadata,
-        name = metadata.Name,
-        body = metadata.Body;
-
-    var func = new Function('context', 'args', body);
-
-    return function (context, args) {
-        var result;
-        try {
-            result = func.call(undefined, context, args);
-        } catch (err) {
-            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
-            console.error(body);
-            console.groupEnd();
-        }
-        return result;
-    };
-};
-
-
-//####app\script\scriptExecutor.js
-/**
- *
- * @param parent
- * @constructor
- */
-function ScriptExecutor(parent) {
-    this.parent = parent;
-}
-
-window.InfinniUI.ScriptExecutor = ScriptExecutor;
-
-
-/**
- *
- * @param {string} scriptName
- * @param {Object} args
- * @returns {*}
- */
-ScriptExecutor.prototype.executeScript = function (scriptName, args) {
-    var parent = this.parent;
-    var context = parent.getContext();
-    var result;
-    var scriptBody;
-    var scriptCompiled;
-
-    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
-    if(scriptName.substr(0, 1) == '{'){
-        scriptBody = scriptName.substr(1, scriptName.length - 2);
-        scriptCompiled = this.buildScriptByBody(scriptBody);
-    }else{
-        scriptCompiled = parent.getScripts().getById(scriptName);
-        if(scriptCompiled){
-            scriptCompiled = scriptCompiled.func;
-        }
-    }
-
-
-
-    if (context && scriptCompiled) {
-        result = scriptCompiled.call(undefined, context, args);
-    }
-
-    return result;
-};
-
-ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
-    var context = this.parent.getContext();
-    var args = {
-        metadata: {
-            "Body": scriptBody,
-            "Name": "InlineScript"
-        }
-    };
-    var scriptBuilder = new ScriptBuilder();
-    return scriptBuilder.build(context, args);
-};
-
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {
@@ -34715,29 +34716,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -34887,6 +34865,29 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
