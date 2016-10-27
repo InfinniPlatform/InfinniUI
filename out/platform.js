@@ -16372,217 +16372,6 @@ var MenuBarView = ContainerView.extend(
     }
 );
 
-//####app\controls\numericBox\numericBoxControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments TextEditorBaseControl
- */
-function NumericBoxControl(parent) {
-    _.superClass(NumericBoxControl, this, parent);
-}
-
-_.inherit(NumericBoxControl, TextEditorBaseControl);
-
-_.extend(NumericBoxControl.prototype, {
-
-    createControlModel: function () {
-        return new NumericBoxModel();
-    },
-
-    createControlView: function (model) {
-        return new NumericBoxView({model: model});
-    }
-});
-
-
-//####app\controls\numericBox\numericBoxModel.js
-/**
- * @class
- * @augments TextEditorBaseModel
- */
-var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
-    defaults: _.defaults(
-        {
-            increment: 1,
-            inputType: 'number'
-        },
-        TextEditorBaseModel.prototype.defaults
-    ),
-
-    incValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(delta);
-    },
-
-    decValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(-delta);
-    },
-
-    addToValue: function (delta) {
-
-        var value = this.get('value');
-        var startValue = this.get('startValue');
-        var minValue = this.get('minValue');
-        var maxValue = this.get('maxValue');
-
-        var newValue = _.isNumber(value) ? value : +value;
-
-        if (this.isSetValue(value) && _.isNumber(value)) {
-            newValue += delta;
-        } else {
-            newValue = (_.isNumber(startValue)) ? startValue : 0;
-        }
-
-        if (_.isNumber(minValue) && newValue < minValue) {
-            newValue = minValue;
-        } else if (_.isNumber(maxValue) && newValue > maxValue) {
-            newValue = maxValue;
-        }
-
-        this.set('value', newValue);
-    },
-
-    initialize: function () {
-        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-    },
-
-    validateValue: function (value, callback) {
-
-        var
-            isValid = true,
-            min = this.get('minValue'),
-            max = this.get('maxValue');
-
-        if (!this.isSetValue(value)) {
-            return true;
-        }
-
-        if (_.isNumber(min) && _.isNumber(max)) {
-            if (value < min || value > max) {
-                isValid = false
-            }
-        } else if (_.isNumber(min) && value < min) {
-            isValid = false;
-        } else if (_.isNumber(max) && value > max) {
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-
-});
-//####app\controls\numericBox\numericBoxView.js
-/**
- * @class
- * @augments TextEditorBaseView
- */
-var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
-
-    className: "pl-numericbox form-group",
-
-    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
-
-    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
-        min: '.pl-numeric-box-min',
-        max: '.pl-numeric-box-max'
-    }),
-
-    events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'click .pl-numeric-box-min': 'onClickMinControlHandler',
-        'click .pl-numeric-box-max': 'onClickMaxControlHandler',
-        'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
-        'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
-    }),
-
-    render: function () {
-        this.prerenderingActions();
-        this.renderTemplate(this.template);
-        this.renderNumericBoxEditor();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    getData: function () {
-        var
-            model = this.model;
-
-        return _.extend({},
-            TextEditorBaseView.prototype.getData.call(this), {
-                minValue: model.get('minValue'),
-                maxValue: model.get('maxValue'),
-                increment: model.get('increment')
-            });
-    },
-
-    renderNumericBoxEditor: function () {
-        this.renderControlEditor();
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
-        this.ui.min.prop('disabled', !value);
-        this.ui.max.prop('disabled', !value);
-    },
-
-    onClickMinControlHandler: function () {
-        if (this.canChangeValue()) {
-            this.model.decValue();
-        }
-    },
-
-    onClickMaxControlHandler: function () {
-        if (this.canChangeValue()) {
-            this.model.incValue();
-        }
-    },
-
-    onMousedownMinControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.decValue.bind(this.model));
-        }
-    },
-
-    onMousedownMaxControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.incValue.bind(this.model));
-        }
-    },
-
-    repeatUpdateValue: function (cb) {
-        var intervalId;
-
-        window.document.addEventListener('mouseup', stopRepeat);
-
-        intervalId = setInterval(cb, 200);
-
-        function stopRepeat() {
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
-            }
-            window.document.removeEventListener('mouseup', stopRepeat);
-        }
-
-    },
-
-    canChangeValue: function () {
-        var model = this.model,
-            enabled = model.get('enabled');
-
-        return enabled === true;
-    }
-
-});
-
 //####app\controls\panel\panelControl.js
 /**
  *
@@ -16824,6 +16613,217 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         } else {
             this.onEventCallback();
         }
+    }
+
+});
+
+//####app\controls\numericBox\numericBoxControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments TextEditorBaseControl
+ */
+function NumericBoxControl(parent) {
+    _.superClass(NumericBoxControl, this, parent);
+}
+
+_.inherit(NumericBoxControl, TextEditorBaseControl);
+
+_.extend(NumericBoxControl.prototype, {
+
+    createControlModel: function () {
+        return new NumericBoxModel();
+    },
+
+    createControlView: function (model) {
+        return new NumericBoxView({model: model});
+    }
+});
+
+
+//####app\controls\numericBox\numericBoxModel.js
+/**
+ * @class
+ * @augments TextEditorBaseModel
+ */
+var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
+    defaults: _.defaults(
+        {
+            increment: 1,
+            inputType: 'number'
+        },
+        TextEditorBaseModel.prototype.defaults
+    ),
+
+    incValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(delta);
+    },
+
+    decValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(-delta);
+    },
+
+    addToValue: function (delta) {
+
+        var value = this.get('value');
+        var startValue = this.get('startValue');
+        var minValue = this.get('minValue');
+        var maxValue = this.get('maxValue');
+
+        var newValue = _.isNumber(value) ? value : +value;
+
+        if (this.isSetValue(value) && _.isNumber(value)) {
+            newValue += delta;
+        } else {
+            newValue = (_.isNumber(startValue)) ? startValue : 0;
+        }
+
+        if (_.isNumber(minValue) && newValue < minValue) {
+            newValue = minValue;
+        } else if (_.isNumber(maxValue) && newValue > maxValue) {
+            newValue = maxValue;
+        }
+
+        this.set('value', newValue);
+    },
+
+    initialize: function () {
+        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    },
+
+    validateValue: function (value, callback) {
+
+        var
+            isValid = true,
+            min = this.get('minValue'),
+            max = this.get('maxValue');
+
+        if (!this.isSetValue(value)) {
+            return true;
+        }
+
+        if (_.isNumber(min) && _.isNumber(max)) {
+            if (value < min || value > max) {
+                isValid = false
+            }
+        } else if (_.isNumber(min) && value < min) {
+            isValid = false;
+        } else if (_.isNumber(max) && value > max) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+
+});
+//####app\controls\numericBox\numericBoxView.js
+/**
+ * @class
+ * @augments TextEditorBaseView
+ */
+var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
+
+    className: "pl-numericbox form-group",
+
+    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
+
+    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
+        min: '.pl-numeric-box-min',
+        max: '.pl-numeric-box-max'
+    }),
+
+    events: _.extend({}, TextEditorBaseView.prototype.events, {
+        'click .pl-numeric-box-min': 'onClickMinControlHandler',
+        'click .pl-numeric-box-max': 'onClickMaxControlHandler',
+        'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
+        'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
+    }),
+
+    render: function () {
+        this.prerenderingActions();
+        this.renderTemplate(this.template);
+        this.renderNumericBoxEditor();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    getData: function () {
+        var
+            model = this.model;
+
+        return _.extend({},
+            TextEditorBaseView.prototype.getData.call(this), {
+                minValue: model.get('minValue'),
+                maxValue: model.get('maxValue'),
+                increment: model.get('increment')
+            });
+    },
+
+    renderNumericBoxEditor: function () {
+        this.renderControlEditor();
+    },
+
+    onChangeEnabledHandler: function (model, value) {
+        this.ui.control.prop('disabled', !value);
+        this.ui.min.prop('disabled', !value);
+        this.ui.max.prop('disabled', !value);
+    },
+
+    onClickMinControlHandler: function () {
+        if (this.canChangeValue()) {
+            this.model.decValue();
+        }
+    },
+
+    onClickMaxControlHandler: function () {
+        if (this.canChangeValue()) {
+            this.model.incValue();
+        }
+    },
+
+    onMousedownMinControlHandler: function (event) {
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        }
+    },
+
+    onMousedownMaxControlHandler: function (event) {
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        }
+    },
+
+    repeatUpdateValue: function (cb) {
+        var intervalId;
+
+        window.document.addEventListener('mouseup', stopRepeat);
+
+        intervalId = setInterval(cb, 200);
+
+        function stopRepeat() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            window.document.removeEventListener('mouseup', stopRepeat);
+        }
+
+    },
+
+    canChangeValue: function () {
+        var model = this.model,
+            enabled = model.get('enabled');
+
+        return enabled === true;
     }
 
 });
@@ -19952,7 +19952,6 @@ _.extend(Element.prototype, {
     },
 
     setFocused: function (value) {
-        // return this.control.set('focused', !!value);
         //Установка фокуса вручную
         return this.control.setFocus();
     },
@@ -27332,6 +27331,52 @@ var BaseFallibleActionMixin = {
         }
     }
 };
+//####app\actions\acceptAction\acceptAction.js
+function AcceptAction(parentView){
+    _.superClass(AcceptAction, this, parentView);
+}
+
+_.inherit(AcceptAction, BaseAction);
+
+
+_.extend(AcceptAction.prototype, {
+    execute: function(callback){
+        var that = this;
+
+        this.parentView.onClosed(function () {
+            that.onExecutedHandler();
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        this.parentView.setDialogResult(DialogResult.accepted);
+        this.parentView.close();
+    }
+});
+
+window.InfinniUI.AcceptAction = AcceptAction;
+
+//####app\actions\acceptAction\acceptActionBuilder.js
+function AcceptActionBuilder() {
+}
+
+_.extend(AcceptActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var action = new AcceptAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
+
 //####app\actions\addAction\addAction.js
 function AddAction(parentView){
     _.superClass(AddAction, this, parentView);
@@ -27392,52 +27437,6 @@ _.extend(AddActionBuilder.prototype,
 );
 
 window.InfinniUI.AddActionBuilder = AddActionBuilder;
-
-//####app\actions\acceptAction\acceptAction.js
-function AcceptAction(parentView){
-    _.superClass(AcceptAction, this, parentView);
-}
-
-_.inherit(AcceptAction, BaseAction);
-
-
-_.extend(AcceptAction.prototype, {
-    execute: function(callback){
-        var that = this;
-
-        this.parentView.onClosed(function () {
-            that.onExecutedHandler();
-
-            if (callback) {
-                callback();
-            }
-        });
-
-        this.parentView.setDialogResult(DialogResult.accepted);
-        this.parentView.close();
-    }
-});
-
-window.InfinniUI.AcceptAction = AcceptAction;
-
-//####app\actions\acceptAction\acceptActionBuilder.js
-function AcceptActionBuilder() {
-}
-
-_.extend(AcceptActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new AcceptAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
 
 //####app\actions\cancelAction\cancelAction.js
 function CancelAction(parentView){
@@ -27630,59 +27629,6 @@ _.extend(DeleteActionBuilder.prototype,
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
 
-//####app\actions\openAction\openAction.js
-function OpenAction(parentView){
-    _.superClass(OpenAction, this, parentView);
-}
-
-_.inherit(OpenAction, BaseAction);
-
-
-_.extend(OpenAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView'),
-            that = this;
-
-        linkView.createView(function (view) {
-
-            view.onLoaded(function () {
-                that.onExecutedHandler();
-
-                if (callback) {
-                    callback(view);
-                }
-            });
-
-            view.open();
-        });
-    }
-});
-
-window.InfinniUI.OpenAction = OpenAction;
-
-//####app\actions\openAction\openActionBuilder.js
-function OpenActionBuilder(){
-}
-
-
-_.extend(OpenActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new OpenAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
-            action.setProperty('linkView', linkView);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
-
 //####app\actions\editAction\editAction.js
 function EditAction(parentView){
     _.superClass(EditAction, this, parentView);
@@ -27788,6 +27734,59 @@ _.extend(EditActionBuilder.prototype,
 
 window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
+//####app\actions\openAction\openAction.js
+function OpenAction(parentView){
+    _.superClass(OpenAction, this, parentView);
+}
+
+_.inherit(OpenAction, BaseAction);
+
+
+_.extend(OpenAction.prototype, {
+    execute: function(callback){
+        var linkView = this.getProperty('linkView'),
+            that = this;
+
+        linkView.createView(function (view) {
+
+            view.onLoaded(function () {
+                that.onExecutedHandler();
+
+                if (callback) {
+                    callback(view);
+                }
+            });
+
+            view.open();
+        });
+    }
+});
+
+window.InfinniUI.OpenAction = OpenAction;
+
+//####app\actions\openAction\openActionBuilder.js
+function OpenActionBuilder(){
+}
+
+
+_.extend(OpenActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new OpenAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
+            action.setProperty('linkView', linkView);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
+
 //####app\actions\routeToAction\routeToAction.js
 function RouteToAction(){
     _.superClass(RouteToAction, this);
@@ -27866,6 +27865,79 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 
 window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
 
+//####app\actions\saveAction\saveAction.js
+function SaveAction(parentView){
+    _.superClass(SaveAction, this, parentView);
+}
+
+_.inherit(SaveAction, BaseAction);
+
+
+_.extend(SaveAction.prototype,
+    BaseFallibleActionMixin,
+    {
+        execute: function(callback){
+            var parentView = this.parentView,
+                dataSource = this.getProperty('dataSource'),
+                canClose = this.getProperty('canClose'),
+                that = this;
+
+            var onSuccessSave = function(context, args){
+                    if(canClose !== false){
+                        parentView.setDialogResult(DialogResult.accepted);
+                        parentView.close();
+                    }
+
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
+
+                    if(_.isFunction(callback)){
+                        callback(context, args);
+                    }
+                },
+                onErrorSave = function(context, args){
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
+
+                    if (_.isFunction(callback)) {
+                        callback(context, args);
+                    }
+                };
+
+            var selectedItem = dataSource.getSelectedItem();
+            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
+        }
+    }
+);
+
+window.InfinniUI.SaveAction = SaveAction;
+
+//####app\actions\saveAction\saveActionBuilder.js
+function SaveActionBuilder() {}
+
+_.extend(SaveActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var parentView = args.parentView;
+            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+
+            var action = new SaveAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+            action.setProperty('canClose', args.metadata.CanClose);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+
 //####app\actions\selectAction\selectAction.js
 function SelectAction(parentView){
     _.superClass(SelectAction, this, parentView);
@@ -27942,79 +28014,6 @@ _.extend(SelectActionBuilder.prototype,
 );
 
 window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
-
-//####app\actions\saveAction\saveAction.js
-function SaveAction(parentView){
-    _.superClass(SaveAction, this, parentView);
-}
-
-_.inherit(SaveAction, BaseAction);
-
-
-_.extend(SaveAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
-            var parentView = this.parentView,
-                dataSource = this.getProperty('dataSource'),
-                canClose = this.getProperty('canClose'),
-                that = this;
-
-            var onSuccessSave = function(context, args){
-                    if(canClose !== false){
-                        parentView.setDialogResult(DialogResult.accepted);
-                        parentView.close();
-                    }
-
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
-
-                    if(_.isFunction(callback)){
-                        callback(context, args);
-                    }
-                },
-                onErrorSave = function(context, args){
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
-
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
-
-            var selectedItem = dataSource.getSelectedItem();
-            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
-        }
-    }
-);
-
-window.InfinniUI.SaveAction = SaveAction;
-
-//####app\actions\saveAction\saveActionBuilder.js
-function SaveActionBuilder() {}
-
-_.extend(SaveActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var parentView = args.parentView;
-            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
-
-            var action = new SaveAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
-
-            action.setProperty('dataSource', dataSource);
-            action.setProperty('canClose', args.metadata.CanClose);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -34819,8 +34818,8 @@ InfinniUI.ToolTipService = (function () {
 				html: true,
 				title:content,
 				placement: 'auto top',
-				container: 'body'
-
+				container: 'body',
+				trigger: 'hover'
 			})
 			.tooltip('show');
 	}

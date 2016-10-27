@@ -7383,6 +7383,27 @@ describe('Container (Control)', function () {
     });
 });
 
+describe('DataNavigationControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('DataNavigation', {});
+        });
+
+        it('should render dataNavigation with correct class', function () {
+            //Given
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-data-navigation'));
+        });
+    });
+});
+
 describe('ContextMenu (Control)', function () {
 
 	describe('Remove element from ListBox by clicking on button from ContextMenu', function () {
@@ -7535,56 +7556,6 @@ describe('DateTimePickerControl', function () {
     });
 });
 
-describe('DataNavigationControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('DataNavigation', {});
-        });
-
-        it('should render dataNavigation with correct class', function () {
-            //Given
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-data-navigation'));
-        });
-    });
-});
-
-describe('Frame', function () {
-    var frame;
-
-    beforeEach(function () {
-        frame = new InfinniUI.Frame();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: value', function () {
-                //Given
-                var $el = frame.render();
-
-                //When
-                frame.setValue('http://docs.infinnity.ru/');
-
-                //Then
-                assert.equal($el.find('iframe').attr('src'), 'http://docs.infinnity.ru/');
-            });
-
-
-        });
-
-    });
-
-});
-
 describe('Form (Control)', function () {
 
 	describe('Check Form element', function () {
@@ -7696,102 +7667,33 @@ describe('Form (Control)', function () {
 	});
 });
 
-describe('Label', function () {
-    var label;
+describe('Frame', function () {
+    var frame;
 
     beforeEach(function () {
-        label = new InfinniUI.Label();
+        frame = new InfinniUI.Frame();
     });
 
     describe('Render', function () {
 
         describe('Setting the properties', function () {
 
-            it('Setting property: name', function () {
+            it('Setting property: value', function () {
                 //Given
-                var $el = label.render();
-                assert.isUndefined($el.attr('pl-data-pl-name'));
+                var $el = frame.render();
 
                 //When
-                label.setName('NewLabel');
+                frame.setValue('http://docs.infinnity.ru/');
 
                 //Then
-                assert.equal($el.attr('data-pl-name'), 'NewLabel');
+                assert.equal($el.find('iframe').attr('src'), 'http://docs.infinnity.ru/');
             });
 
-            it('Setting property: visible', function () {
-                //Given
-                var $el = label.render();
-                assert.isFalse($el.hasClass('hidden'));
 
-                //When
-                label.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: horizontalAlignment', function () {
-                //Given
-                var $el = label.render();
-                assert.isTrue($el.hasClass('pl-text-horizontal-Left'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Right'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
-
-                //When
-                label.setTextHorizontalAlignment('Right');
-
-                //Then
-                assert.isTrue($el.hasClass('pl-text-horizontal-Right'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Left'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
-                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
-            });
-
-            it('Setting property: text', function () {
-                //Given
-                label.setText('Default Label');
-
-                var $label = label.render();
-
-                assert.equal($label.html(), 'Default Label');
-
-                //When
-                label.setText('New Label');
-
-                //Then
-                assert.equal($label.html(), 'New Label');
-            });
-
-            it('Setting property: textWrapping', function () {
-                //Given
-                var $label = label.render();
-
-                assert.isTrue($label.hasClass('pl-text-wrapping'), 'default value must be true');
-
-                //When
-                label.setTextWrapping(false);
-
-                //Then
-                assert.isFalse($label.hasClass('pl-text-wrapping'), 'should not wrap if value false');
-            });
-
-            it('Setting property: textTrimming', function () {
-                //Given
-                var $label = label.render();
-
-                assert.isTrue($label.hasClass('pl-text-trimming'), 'default value must be true');
-
-                //When
-                label.setTextTrimming(false);
-
-                //Then
-                assert.isFalse($label.hasClass('pl-text-trimming'), 'should not trim if value false');
-            });
         });
 
     });
+
 });
 
 describe('IndeterminateCheckBox', function () {
@@ -7899,6 +7801,104 @@ describe('IndeterminateCheckBox', function () {
 
 	});
 
+});
+
+describe('Label', function () {
+    var label;
+
+    beforeEach(function () {
+        label = new InfinniUI.Label();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: name', function () {
+                //Given
+                var $el = label.render();
+                assert.isUndefined($el.attr('pl-data-pl-name'));
+
+                //When
+                label.setName('NewLabel');
+
+                //Then
+                assert.equal($el.attr('data-pl-name'), 'NewLabel');
+            });
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = label.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                label.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: horizontalAlignment', function () {
+                //Given
+                var $el = label.render();
+                assert.isTrue($el.hasClass('pl-text-horizontal-Left'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Right'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
+
+                //When
+                label.setTextHorizontalAlignment('Right');
+
+                //Then
+                assert.isTrue($el.hasClass('pl-text-horizontal-Right'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Left'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Center'));
+                assert.isFalse($el.hasClass('pl-text-horizontal-Justify'));
+            });
+
+            it('Setting property: text', function () {
+                //Given
+                label.setText('Default Label');
+
+                var $label = label.render();
+
+                assert.equal($label.html(), 'Default Label');
+
+                //When
+                label.setText('New Label');
+
+                //Then
+                assert.equal($label.html(), 'New Label');
+            });
+
+            it('Setting property: textWrapping', function () {
+                //Given
+                var $label = label.render();
+
+                assert.isTrue($label.hasClass('pl-text-wrapping'), 'default value must be true');
+
+                //When
+                label.setTextWrapping(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-wrapping'), 'should not wrap if value false');
+            });
+
+            it('Setting property: textTrimming', function () {
+                //Given
+                var $label = label.render();
+
+                assert.isTrue($label.hasClass('pl-text-trimming'), 'default value must be true');
+
+                //When
+                label.setTextTrimming(false);
+
+                //Then
+                assert.isFalse($label.hasClass('pl-text-trimming'), 'should not trim if value false');
+            });
+        });
+
+    });
 });
 
 describe('Link (Control)', function () {
@@ -9613,77 +9613,6 @@ var FakeElement = Backbone.Model.extend({
         return this.get(property);
     }
 });
-describe('Parameters', function () {
-
-    it('Parameter base API', function () {
-
-        // Given When
-        var view = fakeView();
-        var parameter = new InfinniUI.Parameter({view: view, name: 'name'});
-
-        // Then
-        assert.equal(parameter.getView(), view, 'view is right');
-        assert.equal(parameter.getName(), 'name', 'name is right');
-    });
-
-    it('Parameter value and property', function () {
-
-        // Given
-        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
-            val = {
-                f1:{
-                    value: 5
-                },
-                f2: 3
-            };
-
-        assert.isUndefined(parameter.getValue(), 'start value is undefined');
-        assert.isUndefined(parameter.getProperty(''), 'start property is undefined');
-        assert.isUndefined(parameter.getProperty('f1'), 'start property is undefined 2');
-        assert.isUndefined(parameter.getProperty('f1.value'), 'start property is undefined 3');
-
-        //When
-        parameter.setValue(val);
-
-        // Then
-        assert.equal(parameter.getValue(), val, 'value after setting is right');
-        assert.equal(parameter.getProperty(''), val, 'property after setting is right');
-        assert.equal(parameter.getProperty('f1'), val.f1, 'property after setting is right 2');
-        assert.equal(parameter.getProperty('f1.value'), val.f1.value, 'property after setting is right 3');
-    });
-
-    it('Parameter handling property changed', function () {
-
-        // Given
-        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
-            handlerWasCalled = false,
-            val = {
-                f1:{
-                    value: 5
-                },
-                f2: 3
-            };
-
-        parameter.setValue(10);
-
-        parameter.onPropertyChanged(onPropertyChangedHandler);
-
-        //When
-        parameter.setValue(val);
-
-        // Then
-        function onPropertyChangedHandler(context, args){
-            assert.equal(args.newValue, val, 'new value is right');
-            assert.equal(args.oldValue, 10, 'old value is right');
-
-            handlerWasCalled = true;
-        }
-
-        assert.isTrue(handlerWasCalled, 'handler was called');
-    });
-
-});
-
 describe('baseDataSource', function () {
 
     it('should check ErrorValidator before save', function (done) {
@@ -11425,6 +11354,77 @@ describe('RestDataSource', function () {
     });
 });
 
+describe('Parameters', function () {
+
+    it('Parameter base API', function () {
+
+        // Given When
+        var view = fakeView();
+        var parameter = new InfinniUI.Parameter({view: view, name: 'name'});
+
+        // Then
+        assert.equal(parameter.getView(), view, 'view is right');
+        assert.equal(parameter.getName(), 'name', 'name is right');
+    });
+
+    it('Parameter value and property', function () {
+
+        // Given
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
+
+        assert.isUndefined(parameter.getValue(), 'start value is undefined');
+        assert.isUndefined(parameter.getProperty(''), 'start property is undefined');
+        assert.isUndefined(parameter.getProperty('f1'), 'start property is undefined 2');
+        assert.isUndefined(parameter.getProperty('f1.value'), 'start property is undefined 3');
+
+        //When
+        parameter.setValue(val);
+
+        // Then
+        assert.equal(parameter.getValue(), val, 'value after setting is right');
+        assert.equal(parameter.getProperty(''), val, 'property after setting is right');
+        assert.equal(parameter.getProperty('f1'), val.f1, 'property after setting is right 2');
+        assert.equal(parameter.getProperty('f1.value'), val.f1.value, 'property after setting is right 3');
+    });
+
+    it('Parameter handling property changed', function () {
+
+        // Given
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
+            handlerWasCalled = false,
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
+
+        parameter.setValue(10);
+
+        parameter.onPropertyChanged(onPropertyChangedHandler);
+
+        //When
+        parameter.setValue(val);
+
+        // Then
+        function onPropertyChangedHandler(context, args){
+            assert.equal(args.newValue, val, 'new value is right');
+            assert.equal(args.oldValue, 10, 'old value is right');
+
+            handlerWasCalled = true;
+        }
+
+        assert.isTrue(handlerWasCalled, 'handler was called');
+    });
+
+});
+
 describe('FileProvider', function () {
 
     function delay(min, max) {
@@ -12961,41 +12961,6 @@ describe('Extension Panel (build)', function () {
     });
 });
 
-describe('Frame', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Frame', {});
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-});
-
-describe('FrameBuilder', function () {
-    describe('build', function () {
-        it('successful build Frame', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.FrameBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-    });
-});
-
 describe('ImageBox', function () {
 
     function delay(min, max) {
@@ -13281,6 +13246,41 @@ describe('ImageBox', function () {
 //    });
 
 
+});
+
+describe('Frame', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Frame', {});
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+});
+
+describe('FrameBuilder', function () {
+    describe('build', function () {
+        it('successful build Frame', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.FrameBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+    });
 });
 
 describe('Label', function () {
@@ -15116,69 +15116,6 @@ describe('TextEditorBase (Element)', function () {
 
 });
 
-describe('ToolBarElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-
-        describe('Implementing Container Methods', function () {
-            testHelper.checkContainerMethods(element);
-        });
-
-    });
-
-    describe('render', function () {
-
-        var element = builder.buildType('ToolBar', {
-            Items: [
-                {
-                    Button: {
-                        Text: "Button 1"
-                    }
-                },
-                {
-                    Button: {
-                        Text: "Button 2"
-                    }
-
-                }
-            ]
-        });
-
-        it('render element', function () {
-            // Given
-
-            // When
-            var $el = element.render();
-
-            // Then
-            assert.equal($el.length, 1)
-        });
-
-        it('contains items', function () {
-            var items = element.getItems();
-
-            assert.equal(items.length, 2);
-        })
-
-    });
-});
-
-describe('ToolBarBuilder', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-
-    it('Build ToolBar instance', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-        assert.isTrue(typeof element !== 'undefined' && element !== null);
-        assert.isTrue(element instanceof InfinniUI.ToolBar);
-    });
-
-});
-
 describe('ToggleButton', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -15290,6 +15227,69 @@ describe('ToggleButton', function () {
             assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
         });
     });
+});
+
+describe('ToolBarElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+
+        describe('Implementing Container Methods', function () {
+            testHelper.checkContainerMethods(element);
+        });
+
+    });
+
+    describe('render', function () {
+
+        var element = builder.buildType('ToolBar', {
+            Items: [
+                {
+                    Button: {
+                        Text: "Button 1"
+                    }
+                },
+                {
+                    Button: {
+                        Text: "Button 2"
+                    }
+
+                }
+            ]
+        });
+
+        it('render element', function () {
+            // Given
+
+            // When
+            var $el = element.render();
+
+            // Then
+            assert.equal($el.length, 1)
+        });
+
+        it('contains items', function () {
+            var items = element.getItems();
+
+            assert.equal(items.length, 2);
+        })
+
+    });
+});
+
+describe('ToolBarBuilder', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+
+    it('Build ToolBar instance', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+        assert.isTrue(typeof element !== 'undefined' && element !== null);
+        assert.isTrue(element instanceof InfinniUI.ToolBar);
+    });
+
 });
 
 describe('View', function () {
