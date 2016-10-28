@@ -7851,100 +7851,6 @@ describe('IndeterminateCheckBox', function () {
 
 });
 
-describe('Link (Control)', function () {
-
-	describe('Check href and target params in LinkElement', function () {
-
-		it('should update from default href attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
-
-				view.childElements[0].setHref('common.ru');
-				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
-
-				view.childElements[0].setHref('example.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
-			}
-		});
-
-		it('should update from default target attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				
-
-				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-
-		it('should apply href and target attributes from metadata', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-							"Href": "http://example.com",
-							"Target": "top"
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
-				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
-
-				view.childElements[0].setHref('http://exampleNew.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-	});
-});
-
 describe('Label', function () {
     var label;
 
@@ -8041,6 +7947,100 @@ describe('Label', function () {
         });
 
     });
+});
+
+describe('Link (Control)', function () {
+
+	describe('Check href and target params in LinkElement', function () {
+
+		it('should update from default href attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
+
+				view.childElements[0].setHref('common.ru');
+				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
+
+				view.childElements[0].setHref('example.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
+			}
+		});
+
+		it('should update from default target attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				
+
+				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+
+		it('should apply href and target attributes from metadata', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+							"Href": "http://example.com",
+							"Target": "top"
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
+				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
+
+				view.childElements[0].setHref('http://exampleNew.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+	});
 });
 
 describe('PanelControl', function () {
@@ -8407,68 +8407,6 @@ describe('PasswordBox', function () {
 
 });
 
-describe('PopupButtonControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder(),
-            button;
-
-        beforeEach(function () {
-            button = builder.buildType('PopupButton', {
-                Items: [
-                    {
-                        "Button": {
-                            "Name": "AddButton",
-                            "Text": "Add"
-                        }
-                    },
-                    {
-                        "Button": {
-                            "Name": "DropButton",
-                            "Text": "Drop"
-                        }
-                    },
-                    {
-                        "Button": {
-                            "Name": "BackButton",
-                            "Text": "Back"
-                        }
-                    }
-                ]
-            });
-        });
-
-
-        it('should render button with correct class', function () {
-            //Given
-            button.setText('Click me!');
-            //When
-            var $el = button.render();
-            //Then
-            var $button = $el.find('.pl-popup-button__button');
-            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
-            assert.equal($button.length, 1, 'button render');
-            assert.equal($button.text(), 'Click me!', 'button text');
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-        it('should handle onClick', function () {
-            //Given
-            var click = 0;
-            button.setText('Click me!');
-            button.onClick(function () {
-                click++;
-            });
-            //When
-            var $el = button.render();
-            button.click();
-            //Then
-            assert.isTrue(click === 1);
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-    });
-});
-
 describe('ScrollPanelControl', function () {
 
     describe('render', function () {
@@ -8577,6 +8515,68 @@ describe('ScrollPanelControl', function () {
         });
     });
 });
+describe('PopupButtonControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder(),
+            button;
+
+        beforeEach(function () {
+            button = builder.buildType('PopupButton', {
+                Items: [
+                    {
+                        "Button": {
+                            "Name": "AddButton",
+                            "Text": "Add"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "DropButton",
+                            "Text": "Drop"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "BackButton",
+                            "Text": "Back"
+                        }
+                    }
+                ]
+            });
+        });
+
+
+        it('should render button with correct class', function () {
+            //Given
+            button.setText('Click me!');
+            //When
+            var $el = button.render();
+            //Then
+            var $button = $el.find('.pl-popup-button__button');
+            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
+            assert.equal($button.length, 1, 'button render');
+            assert.equal($button.text(), 'Click me!', 'button text');
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+        it('should handle onClick', function () {
+            //Given
+            var click = 0;
+            button.setText('Click me!');
+            button.onClick(function () {
+                click++;
+            });
+            //When
+            var $el = button.render();
+            button.click();
+            //Then
+            assert.isTrue(click === 1);
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+    });
+});
+
 describe('TabPanelControl', function () {
 
     describe('render', function () {
@@ -14081,129 +14081,6 @@ describe('NumericBox', function () {
     });
 });
 
-describe('PasswordBox', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('PasswordBox', {});
-
-        describe('Implementing PasswordBox Methods', function () {
-            [
-                'getLabelText',
-                'setLabelText',
-                'getLabelFloating',
-                'setLabelFloating'
-            ].forEach(function (methodName) {
-                it(methodName, function () {
-                    testHelper.checkMethod(element, methodName);
-                });
-
-            });
-        });
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-    describe('Metadata', function () {
-
-        it('Using default value', function () {
-            var metadata = {
-                "PasswordBox": {}
-            };
-
-            var element = builder.build(metadata, {});
-            assert.equal(element.getLabelFloating(), false, 'LabelFloating');
-        });
-
-        it('Apply metadata', function () {
-            var metadata = {
-                "PasswordBox": {
-                    "LabelText": "Label",
-                    "LabelFloating": true
-                }
-            };
-
-            var element = builder.build(metadata, {});
-
-            assert.equal(element.getLabelText(), "Label", 'LabelText');
-            assert.equal(element.getLabelFloating(), true, 'LabelFloating');
-        });
-
-        it('event OnValueChanged', function () {
-            // Given
-            var element = new InfinniUI.PasswordBox(),
-                onValueChangedFlag = 0;
-
-            element.render();
-
-            element.onValueChanged(function () {
-                onValueChangedFlag++;
-            });
-
-            assert.equal(onValueChangedFlag, 0);
-
-            // When
-            element.setValue('P@$$w0rd');
-            element.setValue('password');
-
-            // Then
-            assert.equal(onValueChangedFlag, 2);
-        });
-
-        it('event OnGotFocus/OnLostFocus', function () {
-            // Given
-            var element = new InfinniUI.PasswordBox(),
-                onFocusedFlag = 0;
-
-            element.render();
-
-            element.onGotFocus(function () {
-                onFocusedFlag++;
-            });
-
-            element.onLostFocus(function () {
-                onFocusedFlag--;
-            });
-
-            assert.equal(onFocusedFlag, 0);
-
-            // When
-            element.setFocused(true);
-            // Then
-            assert.isTrue(element.getFocused());
-            assert.equal(onFocusedFlag, 1);
-            element.setFocused(false);
-            assert.isFalse(element.getFocused());
-            assert.equal(onFocusedFlag, 0);
-        });
-
-    });
-});
-
-describe('PasswordBoxBuilder', function () {
-    describe('build', function () {
-        it('successful build PasswordBox', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.LabelBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-    });
-});
-
 describe('PanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14375,6 +14252,129 @@ describe('PanelBuilder', function () {
         assert.equal(panel.getText(), 'panel');
     });
 
+});
+
+describe('PasswordBox', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('PasswordBox', {});
+
+        describe('Implementing PasswordBox Methods', function () {
+            [
+                'getLabelText',
+                'setLabelText',
+                'getLabelFloating',
+                'setLabelFloating'
+            ].forEach(function (methodName) {
+                it(methodName, function () {
+                    testHelper.checkMethod(element, methodName);
+                });
+
+            });
+        });
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+    describe('Metadata', function () {
+
+        it('Using default value', function () {
+            var metadata = {
+                "PasswordBox": {}
+            };
+
+            var element = builder.build(metadata, {});
+            assert.equal(element.getLabelFloating(), false, 'LabelFloating');
+        });
+
+        it('Apply metadata', function () {
+            var metadata = {
+                "PasswordBox": {
+                    "LabelText": "Label",
+                    "LabelFloating": true
+                }
+            };
+
+            var element = builder.build(metadata, {});
+
+            assert.equal(element.getLabelText(), "Label", 'LabelText');
+            assert.equal(element.getLabelFloating(), true, 'LabelFloating');
+        });
+
+        it('event OnValueChanged', function () {
+            // Given
+            var element = new InfinniUI.PasswordBox(),
+                onValueChangedFlag = 0;
+
+            element.render();
+
+            element.onValueChanged(function () {
+                onValueChangedFlag++;
+            });
+
+            assert.equal(onValueChangedFlag, 0);
+
+            // When
+            element.setValue('P@$$w0rd');
+            element.setValue('password');
+
+            // Then
+            assert.equal(onValueChangedFlag, 2);
+        });
+
+        it('event OnGotFocus/OnLostFocus', function () {
+            // Given
+            var element = new InfinniUI.PasswordBox(),
+                onFocusedFlag = 0;
+
+            element.render();
+
+            element.onGotFocus(function () {
+                onFocusedFlag++;
+            });
+
+            element.onLostFocus(function () {
+                onFocusedFlag--;
+            });
+
+            assert.equal(onFocusedFlag, 0);
+
+            // When
+            element.setFocused(true);
+            // Then
+            assert.isTrue(element.getFocused());
+            assert.equal(onFocusedFlag, 1);
+            element.setFocused(false);
+            assert.isFalse(element.getFocused());
+            assert.equal(onFocusedFlag, 0);
+        });
+
+    });
+});
+
+describe('PasswordBoxBuilder', function () {
+    describe('build', function () {
+        it('successful build PasswordBox', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.LabelBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+    });
 });
 
 describe('PopupButtonElement', function () {
