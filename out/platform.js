@@ -232,7 +232,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     T: 'HH:mm:ss',
 
     y: 'MMMM yyyy', Y: 'MMMM yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -243,7 +243,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
     // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
-    g: 'MM/dd/yyyy HH:mm',
+    g: 'M/%d/yyyy h:%m tt',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -253,7 +253,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     T: 'h:%m:%s tt',
 
     y: 'MMMM, yyyy', Y: 'MMMM, yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -24282,6 +24282,58 @@ _.extend(FrameBuilder.prototype, {
     editorBaseBuilderMixin
 );
 
+//####app\elements\icon\icon.js
+function Icon(parent) {
+    _.superClass(Icon, this, parent);
+}
+
+window.InfinniUI.Icon = Icon;
+
+_.inherit(Icon, Element);
+
+_.extend(Icon.prototype, {
+
+    createControl: function () {
+        return new IconControl();
+    },
+
+    setValue: function(value){
+        this.control.set('value', value);
+    },
+
+    getValue: function(){
+        return this.control.get('value');
+    },
+
+    onValueChanged: function(){}
+
+});
+
+//####app\elements\icon\iconBuilder.js
+function IconBuilder() {
+    _.superClass(ButtonBuilder, this);
+}
+
+window.InfinniUI.IconBuilder = IconBuilder;
+
+_.inherit(IconBuilder, ElementBuilder);
+
+_.extend(IconBuilder.prototype, {
+
+    createElement: function (params) {
+        return new Icon(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var metadata = params.metadata;
+
+        this.initBindingToProperty(params, 'Value');
+    }
+
+});
+
 //####app\elements\gridPanel\gridPanel.js
 /**
  * @param parent
@@ -24336,58 +24388,6 @@ _.extend(GridPanelBuilder.prototype,
         }
 
     });
-
-//####app\elements\icon\icon.js
-function Icon(parent) {
-    _.superClass(Icon, this, parent);
-}
-
-window.InfinniUI.Icon = Icon;
-
-_.inherit(Icon, Element);
-
-_.extend(Icon.prototype, {
-
-    createControl: function () {
-        return new IconControl();
-    },
-
-    setValue: function(value){
-        this.control.set('value', value);
-    },
-
-    getValue: function(){
-        return this.control.get('value');
-    },
-
-    onValueChanged: function(){}
-
-});
-
-//####app\elements\icon\iconBuilder.js
-function IconBuilder() {
-    _.superClass(ButtonBuilder, this);
-}
-
-window.InfinniUI.IconBuilder = IconBuilder;
-
-_.inherit(IconBuilder, ElementBuilder);
-
-_.extend(IconBuilder.prototype, {
-
-    createElement: function (params) {
-        return new Icon(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        var metadata = params.metadata;
-
-        this.initBindingToProperty(params, 'Value');
-    }
-
-});
 
 //####app\elements\imageBox\imageBox.js
 /**
@@ -27142,6 +27142,67 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
 });
 
+//####app\actions\_base\baseAction\baseAction.js
+function BaseAction(parentView){
+    this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
+}
+
+window.InfinniUI.BaseAction = BaseAction;
+
+_.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
+    setProperty: function(name, value){
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
+    },
+
+    getProperty: function(name){
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
+    }
+
+}, Backbone.Events);
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};
+
+//####app\actions\_base\baseAction\baseActionBuilderMixin.js
+var BaseActionBuilderMixin = {
+    applyBaseActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnExecuted' in metadata) {
+            action.setProperty('onExecutedHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
+            });
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27233,67 +27294,6 @@ var BaseEditActionBuilderMixin = {
             metadata.DestinationValue.Property;
 
         action.setProperty('destinationProperty', destinationProperty);
-    }
-};
-//####app\actions\_base\baseAction\baseAction.js
-function BaseAction(parentView){
-    this.parentView = parentView;
-    this._properties = Object.create(null);
-    _.defaults(this._properties, this.defaults);
-    this.initDefaultValues();
-}
-
-window.InfinniUI.BaseAction = BaseAction;
-
-_.extend(BaseAction.prototype, {
-    defaults: {
-
-    },
-
-    setProperty: function(name, value){
-        var props= this._properties;
-        if (props[name] !== value) {
-            props[name] = value;
-            this.trigger('change:' + name, this, value);
-        }
-    },
-
-    getProperty: function(name){
-        return this._properties[name];
-    },
-
-    initDefaultValues: function () {
-
-    },
-
-    onExecutedHandler: function(args) {
-        var onExecutedHandler = this.getProperty('onExecutedHandler');
-
-        if(_.isFunction(onExecutedHandler)) {
-            onExecutedHandler(args);
-        }
-    }
-
-}, Backbone.Events);
-
-InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
-    var builder = new ApplicationBuilder();
-
-    var action = builder.build( executeActionMetadata, {parentView: context.view});
-
-    action.execute(resultCallback);
-};
-
-//####app\actions\_base\baseAction\baseActionBuilderMixin.js
-var BaseActionBuilderMixin = {
-    applyBaseActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
-        }
     }
 };
 //####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
@@ -29518,149 +29518,6 @@ ServerActionProvider.prototype.download = function (requestData, resultCallback,
 };
 
 window.InfinniUI.Providers.ServerActionProvider = ServerActionProvider;
-//####app\data\dataSource\dataProviderReplaceItemQueue.js
-/**
- * @description Организация очереди запросов на создание/изменение документа.
- * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
- * @param attributes
- * @constructor
- */
-var DataProviderReplaceItemQueue = function (attributes) {
-    var _attributes = attributes || [];
-    var _queue = [];
-    var requestIdProperty = '__Id';
-
-    var getQueueItemCriteria = function (data) {
-        var criteria = _.pick(data, _attributes);
-        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
-        criteria[idProperty] = data[idProperty];
-        return criteria;
-    };
-
-    var getQueueItem = function (data) {
-        return _.findWhere(_queue, getQueueItemCriteria(data));
-    };
-
-    var getQueueItems = function (data) {
-        return _.where(_queue, getQueueItemCriteria(data));
-    };
-
-    var updateInstanceId = function (data, response) {
-        var items = getQueueItems(data);
-        items.forEach(function (item) {
-            item.Id = response.Id;
-            item.value.Id = response.Id;
-        });
-    };
-
-    var next = function (data) {
-        var index = _queue.indexOf(data);
-        if (index === -1) {
-            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
-        }
-        _queue.splice(index, 1);
-        var item = getQueueItem(data);
-        run(item);
-    };
-
-    var run = function (data) {
-        if (typeof data === 'undefined' || data === null) {
-            return;
-        }
-        data.request(data)
-            .done(updateInstanceId.bind(undefined, data))
-            .always(next.bind(undefined, data));
-    };
-
-
-    this.append = function (data, request) {
-        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
-        item.request = request;
-
-        var items = getQueueItems(item);
-        _queue.push(item);
-
-        if (items.length === 0) {
-            //В очереди нет запросов с заданными параметрами
-            run(data);
-        } else if (items.length > 1) {
-            //В очереди несколько элементов, удаляем промежуточные
-            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
-                var index = _queue.indexOf(items[i]);
-                _queue.splice(index, 1);
-            }
-        }
-    };
-
-};
-
-
-window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
-
-//####app\data\dataSource\objectDataSource.js
-var ObjectDataSource = BaseDataSource.extend({
-
-    initDataProvider: function(){
-        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
-        this.set('dataProvider', dataProvider);
-    },
-
-    setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        this.updateItems();
-    },
-
-    _setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        BaseDataSource.prototype._setItems.apply(this, [items]);
-    }
-
-});
-
-window.InfinniUI.ObjectDataSource = ObjectDataSource;
-
-//####app\data\dataSource\objectDataSourceBuilder.js
-function ObjectDataSourceBuilder() {
-}
-
-_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
-
-_.extend(ObjectDataSourceBuilder.prototype, {
-    createDataSource: function(parent){
-        return new ObjectDataSource({
-            view: parent
-        });
-    },
-
-    applyMetadata: function(builder, parent, metadata, dataSource){
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
-
-        if(!'IsLazy' in metadata){
-            dataSource.setIsLazy(false);
-        }
-
-        if(metadata.Items){
-            if($.isArray(metadata.Items)){
-                dataSource.setItems(metadata.Items);
-            }
-
-            if($.isPlainObject(metadata.Items)){
-                var binding = builder.buildBinding(metadata.Items, {
-                    parentView: parent
-                });
-
-                binding.setMode(InfinniUI.BindingModes.toElement);
-
-                binding.bindElement(dataSource, '');
-            }
-
-        }
-
-    }
-});
-
-window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
-
 //####app\data\parameter\parameter.js
 /**
  * @constructor
@@ -29895,6 +29752,149 @@ function ParameterBuilder() {
 }
 
 window.InfinniUI.ParameterBuilder = ParameterBuilder;
+
+//####app\data\dataSource\dataProviderReplaceItemQueue.js
+/**
+ * @description Организация очереди запросов на создание/изменение документа.
+ * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
+ * @param attributes
+ * @constructor
+ */
+var DataProviderReplaceItemQueue = function (attributes) {
+    var _attributes = attributes || [];
+    var _queue = [];
+    var requestIdProperty = '__Id';
+
+    var getQueueItemCriteria = function (data) {
+        var criteria = _.pick(data, _attributes);
+        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
+        criteria[idProperty] = data[idProperty];
+        return criteria;
+    };
+
+    var getQueueItem = function (data) {
+        return _.findWhere(_queue, getQueueItemCriteria(data));
+    };
+
+    var getQueueItems = function (data) {
+        return _.where(_queue, getQueueItemCriteria(data));
+    };
+
+    var updateInstanceId = function (data, response) {
+        var items = getQueueItems(data);
+        items.forEach(function (item) {
+            item.Id = response.Id;
+            item.value.Id = response.Id;
+        });
+    };
+
+    var next = function (data) {
+        var index = _queue.indexOf(data);
+        if (index === -1) {
+            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
+        }
+        _queue.splice(index, 1);
+        var item = getQueueItem(data);
+        run(item);
+    };
+
+    var run = function (data) {
+        if (typeof data === 'undefined' || data === null) {
+            return;
+        }
+        data.request(data)
+            .done(updateInstanceId.bind(undefined, data))
+            .always(next.bind(undefined, data));
+    };
+
+
+    this.append = function (data, request) {
+        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
+        item.request = request;
+
+        var items = getQueueItems(item);
+        _queue.push(item);
+
+        if (items.length === 0) {
+            //В очереди нет запросов с заданными параметрами
+            run(data);
+        } else if (items.length > 1) {
+            //В очереди несколько элементов, удаляем промежуточные
+            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
+                var index = _queue.indexOf(items[i]);
+                _queue.splice(index, 1);
+            }
+        }
+    };
+
+};
+
+
+window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
+
+//####app\data\dataSource\objectDataSource.js
+var ObjectDataSource = BaseDataSource.extend({
+
+    initDataProvider: function(){
+        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
+        this.set('dataProvider', dataProvider);
+    },
+
+    setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        this.updateItems();
+    },
+
+    _setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        BaseDataSource.prototype._setItems.apply(this, [items]);
+    }
+
+});
+
+window.InfinniUI.ObjectDataSource = ObjectDataSource;
+
+//####app\data\dataSource\objectDataSourceBuilder.js
+function ObjectDataSourceBuilder() {
+}
+
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(ObjectDataSourceBuilder.prototype, {
+    createDataSource: function(parent){
+        return new ObjectDataSource({
+            view: parent
+        });
+    },
+
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+
+        if(!'IsLazy' in metadata){
+            dataSource.setIsLazy(false);
+        }
+
+        if(metadata.Items){
+            if($.isArray(metadata.Items)){
+                dataSource.setItems(metadata.Items);
+            }
+
+            if($.isPlainObject(metadata.Items)){
+                var binding = builder.buildBinding(metadata.Items, {
+                    parentView: parent
+                });
+
+                binding.setMode(InfinniUI.BindingModes.toElement);
+
+                binding.bindElement(dataSource, '');
+            }
+
+        }
+
+    }
+});
+
+window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
 
 //####app\formats\displayFormat\_common\formatMixin.js
 /**
@@ -30265,17 +30265,12 @@ _.extend(DateTimeFormat.prototype, {
                 return hoursIndex.toString();
             }
         },
-        '%h': function(date){
-            var hoursIndex = date.getHours();
-            if(hoursIndex > 12){
-                hoursIndex -= 12;
-            }
-            return hoursIndex.toString();
-        },
         'h': function(date){
             var hoursIndex = date.getHours();
             if(hoursIndex > 12){
                 hoursIndex -= 12;
+            } else if (hoursIndex === 0) {
+                hoursIndex = 12;
             }
             return hoursIndex.toString();
         },
@@ -31008,12 +31003,56 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
     var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
+    var regExpHour12 = /^(?:0?\d|1[0-2])$/;
     var regExp60 = /^[0-5]?[0-9]$/;
+
+    function filledDay(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledMonth(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [2,3,4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledHours(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 2 || value.length === 2;
+    }
+
+    function filledMinutes(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
+    function filledSeconds(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
 
     return {
         'd': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 31;
             },
@@ -31023,6 +31062,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31049,6 +31089,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31065,7 +31106,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'M': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 12;
             },
@@ -31075,6 +31116,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31101,6 +31143,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31205,7 +31248,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'H': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 23;
             },
@@ -31215,6 +31258,34 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
+            prev: function (value) {
+                return this.getPrevIntValue(value);
+            },
+            next: function (value) {
+                return this.getNextIntValue(value);
+            },
+            format: function (value) {
+                return this.padNumber(value);
+            },
+            apply: function (value, part) {
+                value.setHours(part);
+                return value;
+            }
+        },
+        'h': {
+            init: function () {
+                this.width = 1;
+                this.min = 1;
+                this.max = 12;
+            },
+            match: function (value) {
+                return regExpHour12.test(value);
+            },
+            validator: function (value) {
+                return this.rangeValidator(value);
+            },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31241,6 +31312,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31257,7 +31329,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'm': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31267,6 +31339,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31293,6 +31366,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31309,7 +31383,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         's': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31319,6 +31393,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31345,6 +31420,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31413,6 +31489,44 @@ var DateTimeMaskPartStrategy = (function () {
                 }
                 return value;
             }
+        },
+        'tt': {
+            init: function () {
+                // this.min = 0;
+                // this.max = 1;
+                this.width = 2;
+            },
+            match: function() {
+                return false;
+            },
+            prev: function (value) {
+                var newValue = this.getPrevMonthValue('tt', value);
+
+                return (newValue === value) ? this.getNextMonthValue('tt', value): newValue;
+            },
+            next: function (value) {
+                var newValue = this.getNextMonthValue('tt', value);
+                return (newValue === value) ? this.getPrevMonthValue('tt', value): newValue;
+            },
+            apply: function (value, part) {
+                if (value instanceof Date) {
+                    var hours = value.getHours();
+                    var culture = this.getCurrentCulture();
+                    var formatInfo = culture.dateTimeFormatInfo;
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (part === formatInfo.pmDesignator) {
+                        hours += 12;
+                    }
+
+                    value.setHours(hours);
+                }
+
+                return value;
+            }
         }
 
     }
@@ -31428,6 +31542,14 @@ _.extend(DateTimeMaskPart.prototype, {
 
     init: function () {
 
+    },
+
+    filled: function (value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return value.length === this.width;
     },
 
     match: function (value) {
@@ -31505,9 +31627,15 @@ _.extend(DateTimeMaskPart.prototype, {
         return value;
     },
 
+    getCurrentCulture: function () {
+        var culture = new Culture(InfinniUI.config.lang);
+
+        return culture;
+    },
+
     getListForMask: function (mask) {
         //@TODO Получать культуру из контекста!
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
 
         var list;
@@ -31524,6 +31652,9 @@ _.extend(DateTimeMaskPart.prototype, {
                 break;
             case 'ddd':
                 list = formatInfo.abbreviatedDayNames;
+                break;
+            case 'tt':
+                list = [formatInfo.amDesignator, formatInfo.pmDesignator];
                 break;
         }
 
@@ -31894,27 +32025,25 @@ _.extend(DateTimeEditMask.prototype, {
 
         if (data !== null) {
             item = data.item;
-            index = position - data.left;
+            index = position - data.left;   //Позиция внутри текущего шаблона ввода маски
 
-            if (index > item.text.length) {
+            if (index > item.text.length) { //Если превышение по правой границе - в конец
+                position = data.left + item.text.length;
+                index = item.text.length;
+            } else if (index < 0) { //Если превышение по левой границе - в начало шаблона
                 position = data.left;
+                index = 0;
             }
 
             mask = this.masks[item.mask];
 
-            newpos = position - item.position;
-            if(newpos < 0) newpos = 0;
+            text = item.text.slice(0, index) + char + item.text.slice(index);
 
-            if(item.text.slice(newpos, newpos+1)) {
-                text = [item.text.slice(0, newpos), char, item.text.slice(newpos+1)].join('');
-            }else{
-                text = [item.text.slice(0, data.index), char, item.text.slice(data.index)].join('');
-            }
 
             if(mask.match(text)) {
                 item.text = text;
                 position = this.moveToNextChar(position);
-                if (mask.width === newpos+1) {
+                if (mask.filled(text)) {
                     position = this.getNextItemMask(position);
                 }
             } else {    //Нажатая кнопка не подходит под маску
@@ -32231,7 +32360,9 @@ _.extend(DateTimeEditMask.prototype, {
         's': new DateTimeMaskPart('s'),
         'ss': new DateTimeMaskPart('ss'),
         'MMM': new DateTimeMaskPart('MMM'),
-        'MMMM': new DateTimeMaskPart('MMMM')
+        'MMMM': new DateTimeMaskPart('MMMM'),
+        'h': new DateTimeMaskPart('h'),
+        'tt': new DateTimeMaskPart('tt')
     }
 
 });
