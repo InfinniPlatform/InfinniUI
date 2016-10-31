@@ -91,11 +91,11 @@ describe('PasswordBox', function () {
             assert.equal(onFocusedFlag, 0);
 
             // When
-            element.setFocused(true);
+            element.control.set('focused', true);
             // Then
             assert.isTrue(element.getFocused());
             assert.equal(onFocusedFlag, 1);
-            element.setFocused(false);
+            element.control.set('focused', false);
             assert.isFalse(element.getFocused());
             assert.equal(onFocusedFlag, 0);
         });
