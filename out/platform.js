@@ -232,7 +232,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     T: 'HH:mm:ss',
 
     y: 'MMMM yyyy', Y: 'MMMM yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -243,7 +243,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
     // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
-    g: 'MM/dd/yyyy HH:mm',
+    g: 'M/%d/yyyy h:%m tt',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -253,7 +253,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     T: 'h:%m:%s tt',
 
     y: 'MMMM, yyyy', Y: 'MMMM, yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -275,6 +275,14 @@ InfinniUI.localizations['ru-RU'].strings = {
         clear: 'Очистить',
         today: 'Сегодня',
         date: 'Дата'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Вы уверены, что хотите удалить?",
+        "warnMessageNoItem": "Вы не выбрали элемент который необходимо удалить",
+        "agree": "Да",
+        "disagree": "Нет",
+        "cancel": "Закрыть"
     }
 };
 
@@ -294,8 +302,17 @@ InfinniUI.localizations['en-US'].strings = {
         clear: 'Clear',
         today: 'Today',
         date: 'Date'
+    },
+
+    "DeleteAction": {
+        "warnMessage": "Are you sure to remove item?",
+        "warnMessageNoItem": "Choose item that you want to remove",
+        "agree": "Yes",
+        "disagree": "No",
+        "cancel": "Close"
     }
 };
+
 //####app\utils\collection\collection.js
 /**
  *
@@ -11795,6 +11812,52 @@ var ListBoxModel = ListEditorBaseModel.extend({
         ListEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     }
 });
+//####app\controls\listBox\commonView\listBoxView.js
+var CommonListBoxView = BaseListBoxView.extend({
+    className: 'pl-listbox pl-listbox-common-mode',
+
+    events: _.extend( {
+
+    }, BaseListBoxView.prototype.events),
+
+    initialize: function (options) {
+        BaseListBoxView.prototype.initialize.call(this, options);
+        this.initDomHandlers();
+    },
+
+    initDomHandlers: function(){
+        var $listBox = this.$el,
+            that = this;
+
+        $listBox.get(0).addEventListener('click', function(e){
+            e = $.event.fix(e);
+            var $el = $(e.target),
+                $currentListItem, item, isDisabledItem;
+
+            while($el.get(0) != $listBox.get(0)){
+                if($el.hasClass('pl-listbox-i')){
+                    $currentListItem = $el;
+                }
+
+                $el = $el.parent();
+            }
+
+            if($currentListItem.length > 0){
+                item = $currentListItem.data('pl-data-item');
+                isDisabledItem = that.model.isDisabledItem(item);
+
+                if(!isDisabledItem){
+                    that.model.toggleValue(item);
+                }
+
+                that.model.set('selectedItem', item);
+            }
+
+        }, true);
+    }
+});
+
+InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.common', CommonListBoxView);
 //####app\controls\listBox\checkingView\listBoxView.js
 var CheckingListBoxView = BaseListBoxView.extend({
     className: 'pl-listbox',
@@ -11858,52 +11921,6 @@ var CheckingListBoxView = BaseListBoxView.extend({
 });
 
 InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.checking', CheckingListBoxView);
-//####app\controls\listBox\commonView\listBoxView.js
-var CommonListBoxView = BaseListBoxView.extend({
-    className: 'pl-listbox pl-listbox-common-mode',
-
-    events: _.extend( {
-
-    }, BaseListBoxView.prototype.events),
-
-    initialize: function (options) {
-        BaseListBoxView.prototype.initialize.call(this, options);
-        this.initDomHandlers();
-    },
-
-    initDomHandlers: function(){
-        var $listBox = this.$el,
-            that = this;
-
-        $listBox.get(0).addEventListener('click', function(e){
-            e = $.event.fix(e);
-            var $el = $(e.target),
-                $currentListItem, item, isDisabledItem;
-
-            while($el.get(0) != $listBox.get(0)){
-                if($el.hasClass('pl-listbox-i')){
-                    $currentListItem = $el;
-                }
-
-                $el = $el.parent();
-            }
-
-            if($currentListItem.length > 0){
-                item = $currentListItem.data('pl-data-item');
-                isDisabledItem = that.model.isDisabledItem(item);
-
-                if(!isDisabledItem){
-                    that.model.toggleValue(item);
-                }
-
-                that.model.set('selectedItem', item);
-            }
-
-        }, true);
-    }
-});
-
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.common', CommonListBoxView);
 //####app\controls\popupButton\commonView\popupButtonView.js
 var CommonPopupButtonView = ContainerView.extend({
 
@@ -15292,6 +15309,101 @@ var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
 }));
 
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
+}
+
+_.inherit(IconControl, Control);
+
+_.extend(IconControl.prototype, {
+
+    createControlModel: function () {
+        return new IconModel();
+    },
+
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
+
+});
+//####app\controls\icon\iconModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+var IconModel = ControlModel.extend({
+
+    defaults: _.defaults({
+        value: null,
+        focusable: false
+
+    }, ControlModel.prototype.defaults),
+
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
+
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
+
+    className: 'pl-icon fa',
+
+    tagName: 'i',
+
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
+    updateValue: function () {
+        this.renderIcon();
+    }
+
+});
+
 //####app\controls\gridPanel\gridPanelControl.js
 /**
  *
@@ -15409,101 +15521,6 @@ var GridPanelView = ContainerView.extend(
         updateGrouping: function(){}
     }
 );
-
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    }
-
-});
 
 //####app\controls\imageBox\imageBoxControl.js
 /**
@@ -18018,7 +18035,7 @@ var BaseDataSource = Backbone.Model.extend({
             itemsData = this.get('newItemsHandler')(itemsData);
         }
 
-        this.setProperty('', itemsData);
+        this._setItems(itemsData);
         this._notifyAboutItemsUpdated(itemsData, callback);
     },
 
@@ -18087,7 +18104,7 @@ var BaseDataSource = Backbone.Model.extend({
             items = [itemData];
         }
 
-        this.setProperty('', items);
+        this._setItems(items);
         this._includeItemToModifiedSet(itemData);
         this.setSelectedItem(itemData);
         this._notifyAboutItemCreated(itemData, successHandler);
@@ -18546,7 +18563,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('get', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('get', templated);
-
+            dataProvider.setMethod('get', urlParams.method);
 
             if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or waiting resolving
                 that.updateItems();
@@ -18563,6 +18580,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('set', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('set', templated);
+            dataProvider.setMethod('set', urlParams.method);
         });
 
         this.get('model').onPropertyChanged('urlParams.delete.*', function(context, args){
@@ -18575,6 +18593,7 @@ var RestDataSource = BaseDataSource.extend({
             dataProvider.setPath('delete', templated);
             templated = that._templateParamsInObject(urlParams.data, urlParams.params);
             dataProvider.setData('delete', templated);
+            dataProvider.setMethod('delete', urlParams.method);
         });
     },
 
@@ -18834,7 +18853,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateGettingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'get',
+                method: 'get',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
@@ -18884,7 +18903,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateSettingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'post',
+                method: 'post',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId'),
                 data: {},
@@ -18897,7 +18916,7 @@ var DocumentDataSource = RestDataSource.extend({
     updateDeletingUrlParams: function(){
         var model = this.get('model'),
             params = {
-                type: 'delete',
+                method: 'delete',
                 origin: InfinniUI.config.serverUrl,
                 path: '/documents/' + this.get('model').getProperty('documentId') + '/<%id%>',
                 data: {},
@@ -19349,7 +19368,7 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
 
         if (Array.isArray(metadata.DefaultItems)) {
-            dataSource.setProperty('', metadata.DefaultItems);
+            dataSource._setItems(metadata.DefaultItems);
         }
     },
 
@@ -19686,7 +19705,8 @@ _.extend(Element.prototype, {
     },
 
     setFocused: function (value) {
-        return this.control.set('focused', !!value);
+        //Установка фокуса вручную
+        return this.control.setFocus();
     },
     onLostFocus: function (handler) {
         this.control.on('OnLostFocus', handler);
@@ -27236,17 +27256,17 @@ _.extend(DeleteAction.prototype,
             if( dataSource.getProperty(property) ) {
                 if(accept){
                     new MessageBox({
-                        text: 'Вы уверены, что хотите удалить?',
+                        text: localized.strings.DeleteAction.warnMessage,
                         buttons: [
                             {
-                                name: 'Да',
+                                name: localized.strings.DeleteAction.agree,
                                 type: 'action',
                                 onClick: function() {
                                     that.remove(callback);
                                 }
                             },
                             {
-                                name: 'Нет'
+                                name: localized.strings.DeleteAction.disagree
                             }
                         ]
                     });
@@ -27255,10 +27275,10 @@ _.extend(DeleteAction.prototype,
                 }
             } else {
                 new MessageBox({
-                    text: 'Вы не выбрали элемент который необходимо удалить',
+                    text: localized.strings.DeleteAction.warnMessageNoItem,
                     buttons: [
                         {
-                            name: 'Закрыть'
+                            name: localized.strings.DeleteAction.cancel
                         }
                     ]
                 });
@@ -27382,7 +27402,7 @@ _.extend(EditAction.prototype, {
 
             // if selectedItem is empty and it is must be document
             // return error
-            if( this._isDocumentPath(destinationProperty) ){
+            if( this._isRootItem(destinationProperty) ){
                 var logger = window.InfinniUI.global.logger;
                 var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
                 logger.error(message);
@@ -27433,15 +27453,38 @@ _.extend(EditAction.prototype, {
             destinationProperty = this.getProperty('destinationProperty');
 
         if( this._isObjectDataSource(editDataSource) ) {
-            var item = editDataSource.getSelectedItem();
-            destinationDataSource.setProperty(destinationProperty, item);
-        } else {
-            destinationDataSource.updateItems();
+            var editedItem = editDataSource.getSelectedItem();
+            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
+
+            if( this._isRootItem(destinationProperty) ) {
+                this._overrideOriginItem(rootItem, editedItem);
+                destinationDataSource._includeItemToModifiedSet(rootItem);
+            }
+            // TODO: выяснить, почему без setProperty dataGrid не обновляется
+            destinationDataSource.setProperty(destinationProperty, editedItem);
+            destinationDataSource.saveItem(rootItem);
+        }
+
+        destinationDataSource.updateItems();
+    },
+
+    _overrideOriginItem: function(originItem, newItem) {
+        for(var property in originItem) {
+            delete originItem[property];
+        }
+
+        for(var property in newItem) {
+          originItem[property] = _.clone(newItem[property]);
         }
     },
 
-    _isDocumentPath: function(path){
+    _isRootItem: function(path){
         return !path.includes('.');
+    },
+
+    _getRootItem: function(dataSource, property) {
+        var index = (property||'$').split('.')[0];
+        return dataSource.getProperty(index);
     }
 });
 
@@ -27598,6 +27641,79 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 
 window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
 
+//####app\actions\saveAction\saveAction.js
+function SaveAction(parentView){
+    _.superClass(SaveAction, this, parentView);
+}
+
+_.inherit(SaveAction, BaseAction);
+
+
+_.extend(SaveAction.prototype,
+    BaseFallibleActionMixin,
+    {
+        execute: function(callback){
+            var parentView = this.parentView,
+                dataSource = this.getProperty('dataSource'),
+                canClose = this.getProperty('canClose'),
+                that = this;
+
+            var onSuccessSave = function(context, args){
+                    if(canClose !== false){
+                        parentView.setDialogResult(DialogResult.accepted);
+                        parentView.close();
+                    }
+
+                    that.onExecutedHandler(args);
+                    that.onSuccessHandler(args);
+
+                    if(_.isFunction(callback)){
+                        callback(context, args);
+                    }
+                },
+                onErrorSave = function(context, args){
+                    that.onExecutedHandler(args);
+                    that.onErrorHandler(args);
+
+                    if (_.isFunction(callback)) {
+                        callback(context, args);
+                    }
+                };
+
+            var selectedItem = dataSource.getSelectedItem();
+            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
+        }
+    }
+);
+
+window.InfinniUI.SaveAction = SaveAction;
+
+//####app\actions\saveAction\saveActionBuilder.js
+function SaveActionBuilder() {}
+
+_.extend(SaveActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseFallibleActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var parentView = args.parentView;
+            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+
+            var action = new SaveAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseFallibleActionMetadata(action, args);
+
+            action.setProperty('dataSource', dataSource);
+            action.setProperty('canClose', args.metadata.CanClose);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+
 //####app\actions\selectAction\selectAction.js
 function SelectAction(parentView){
     _.superClass(SelectAction, this, parentView);
@@ -27674,79 +27790,6 @@ _.extend(SelectActionBuilder.prototype,
 );
 
 window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
-
-//####app\actions\saveAction\saveAction.js
-function SaveAction(parentView){
-    _.superClass(SaveAction, this, parentView);
-}
-
-_.inherit(SaveAction, BaseAction);
-
-
-_.extend(SaveAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
-            var parentView = this.parentView,
-                dataSource = this.getProperty('dataSource'),
-                canClose = this.getProperty('canClose'),
-                that = this;
-
-            var onSuccessSave = function(context, args){
-                    if(canClose !== false){
-                        parentView.setDialogResult(DialogResult.accepted);
-                        parentView.close();
-                    }
-
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
-
-                    if(_.isFunction(callback)){
-                        callback(context, args);
-                    }
-                },
-                onErrorSave = function(context, args){
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
-
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
-
-            var selectedItem = dataSource.getSelectedItem();
-            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
-        }
-    }
-);
-
-window.InfinniUI.SaveAction = SaveAction;
-
-//####app\actions\saveAction\saveActionBuilder.js
-function SaveActionBuilder() {}
-
-_.extend(SaveActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var parentView = args.parentView;
-            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
-
-            var action = new SaveAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
-
-            action.setProperty('dataSource', dataSource);
-            action.setProperty('canClose', args.metadata.CanClose);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
 
 //####app\actions\serverAction\downloadExecutor.js
 /**
@@ -27955,26 +27998,60 @@ _.extend(ServerAction.prototype,
             return result;
         },
 
-        _replaceParamsInStr: function(str){
-            if(!str){
+        _replaceParamsInStr: function(str, escape){
+
+            if(!str || !_.isString(str)){
                 return str;
             }
 
             var that = this;
 
+
+            var matched = str.match(/^<%([\s\S]+?)%>$/);
+
+            if (matched) {
+                return this.getParam(matched[1]);
+            }
+
             return str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
-                return that.getParam(p2);
+                var val = that.getParam(p2);
+
+                if (escape && _.isString(val)) {
+                    val = val.replace(/"/g,'\\"');
+                }
+                return val;
             });
         },
 
+        _compileData: function (data) {
+            var res;
+
+            if (Array.isArray(data)) {
+                res = Array.map(function (item) {
+                    if (_.isObject(item) || Array.isArray(item)) {
+                        this._compileData(item);
+                    }
+                }, this);
+            } else if (_.isObject(data)) {
+                res = {};
+                Object.keys(data).forEach(function (name) {
+                    var parsedName = this._replaceParamsInStr(name);
+
+                    res[parsedName] = this._compileData(data[name]);
+                }, this);
+            } else {
+                res = this._replaceParamsInStr(data, true);
+            }
+
+            return res;
+        },
         _replaceParamsInObject: function(obj){
             if(_.isEmpty(obj) ){
                 return obj;
             }
 
-            var str = JSON.stringify(obj);
-            var replacedStr = this._replaceParamsInStr(str);
-            return JSON.parse(replacedStr);
+
+            return this._compileData(obj);
         }
     }
 );
@@ -27998,7 +28075,7 @@ _.extend(ServerActionBuilder.prototype,
             this.applyBaseActionMetadata(action, args);
             this.applyBaseFallibleActionMetadata(action, args);
 
-            action.setProperty('origin', metadata.Origin);
+            action.setProperty('origin', metadata.Origin || InfinniUI.config.serverUrl.replace(/\/$/, ''));
             action.setProperty('path', metadata.Path);
 
             if (metadata.Data) {
@@ -28018,7 +28095,7 @@ _.extend(ServerActionBuilder.prototype,
 
                     var value = metadata.Params[name];
 
-                    if (typeof value != 'object') {
+                    if (Array.isArray(value) || value === null || typeof value != 'object') {
                         if (value !== undefined) {
                             action.setParam(name, value);
                         }
@@ -29297,6 +29374,11 @@ var ObjectDataSource = BaseDataSource.extend({
     setItems: function(items){
         this.get('dataProvider').setItems(items);
         this.updateItems();
+    },
+
+    _setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        BaseDataSource.prototype._setItems.apply(this, [items]);
     }
 
 });
@@ -29949,17 +30031,12 @@ _.extend(DateTimeFormat.prototype, {
                 return hoursIndex.toString();
             }
         },
-        '%h': function(date){
-            var hoursIndex = date.getHours();
-            if(hoursIndex > 12){
-                hoursIndex -= 12;
-            }
-            return hoursIndex.toString();
-        },
         'h': function(date){
             var hoursIndex = date.getHours();
             if(hoursIndex > 12){
                 hoursIndex -= 12;
+            } else if (hoursIndex === 0) {
+                hoursIndex = 12;
             }
             return hoursIndex.toString();
         },
@@ -30692,12 +30769,56 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
     var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
+    var regExpHour12 = /^(?:0?\d|1[0-2])$/;
     var regExp60 = /^[0-5]?[0-9]$/;
+
+    function filledDay(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledMonth(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [2,3,4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledHours(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 2 || value.length === 2;
+    }
+
+    function filledMinutes(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
+    function filledSeconds(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
 
     return {
         'd': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 31;
             },
@@ -30707,6 +30828,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30733,6 +30855,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30749,7 +30872,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'M': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 12;
             },
@@ -30759,6 +30882,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30785,6 +30909,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30889,7 +31014,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'H': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 23;
             },
@@ -30899,6 +31024,34 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
+            prev: function (value) {
+                return this.getPrevIntValue(value);
+            },
+            next: function (value) {
+                return this.getNextIntValue(value);
+            },
+            format: function (value) {
+                return this.padNumber(value);
+            },
+            apply: function (value, part) {
+                value.setHours(part);
+                return value;
+            }
+        },
+        'h': {
+            init: function () {
+                this.width = 1;
+                this.min = 1;
+                this.max = 12;
+            },
+            match: function (value) {
+                return regExpHour12.test(value);
+            },
+            validator: function (value) {
+                return this.rangeValidator(value);
+            },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30925,6 +31078,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30941,7 +31095,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'm': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -30951,6 +31105,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30977,6 +31132,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30993,7 +31149,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         's': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31003,6 +31159,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31029,6 +31186,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31097,6 +31255,44 @@ var DateTimeMaskPartStrategy = (function () {
                 }
                 return value;
             }
+        },
+        'tt': {
+            init: function () {
+                // this.min = 0;
+                // this.max = 1;
+                this.width = 2;
+            },
+            match: function() {
+                return false;
+            },
+            prev: function (value) {
+                var newValue = this.getPrevMonthValue('tt', value);
+
+                return (newValue === value) ? this.getNextMonthValue('tt', value): newValue;
+            },
+            next: function (value) {
+                var newValue = this.getNextMonthValue('tt', value);
+                return (newValue === value) ? this.getPrevMonthValue('tt', value): newValue;
+            },
+            apply: function (value, part) {
+                if (value instanceof Date) {
+                    var hours = value.getHours();
+                    var culture = this.getCurrentCulture();
+                    var formatInfo = culture.dateTimeFormatInfo;
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (part === formatInfo.pmDesignator) {
+                        hours += 12;
+                    }
+
+                    value.setHours(hours);
+                }
+
+                return value;
+            }
         }
 
     }
@@ -31112,6 +31308,14 @@ _.extend(DateTimeMaskPart.prototype, {
 
     init: function () {
 
+    },
+
+    filled: function (value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return value.length === this.width;
     },
 
     match: function (value) {
@@ -31189,9 +31393,15 @@ _.extend(DateTimeMaskPart.prototype, {
         return value;
     },
 
+    getCurrentCulture: function () {
+        var culture = new Culture(InfinniUI.config.lang);
+
+        return culture;
+    },
+
     getListForMask: function (mask) {
         //@TODO Получать культуру из контекста!
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
 
         var list;
@@ -31208,6 +31418,9 @@ _.extend(DateTimeMaskPart.prototype, {
                 break;
             case 'ddd':
                 list = formatInfo.abbreviatedDayNames;
+                break;
+            case 'tt':
+                list = [formatInfo.amDesignator, formatInfo.pmDesignator];
                 break;
         }
 
@@ -31578,27 +31791,25 @@ _.extend(DateTimeEditMask.prototype, {
 
         if (data !== null) {
             item = data.item;
-            index = position - data.left;
+            index = position - data.left;   //Позиция внутри текущего шаблона ввода маски
 
-            if (index > item.text.length) {
+            if (index > item.text.length) { //Если превышение по правой границе - в конец
+                position = data.left + item.text.length;
+                index = item.text.length;
+            } else if (index < 0) { //Если превышение по левой границе - в начало шаблона
                 position = data.left;
+                index = 0;
             }
 
             mask = this.masks[item.mask];
 
-            newpos = position - item.position;
-            if(newpos < 0) newpos = 0;
+            text = item.text.slice(0, index) + char + item.text.slice(index);
 
-            if(item.text.slice(newpos, newpos+1)) {
-                text = [item.text.slice(0, newpos), char, item.text.slice(newpos+1)].join('');
-            }else{
-                text = [item.text.slice(0, data.index), char, item.text.slice(data.index)].join('');
-            }
 
             if(mask.match(text)) {
                 item.text = text;
                 position = this.moveToNextChar(position);
-                if (mask.width === newpos+1) {
+                if (mask.filled(text)) {
                     position = this.getNextItemMask(position);
                 }
             } else {    //Нажатая кнопка не подходит под маску
@@ -31915,7 +32126,9 @@ _.extend(DateTimeEditMask.prototype, {
         's': new DateTimeMaskPart('s'),
         'ss': new DateTimeMaskPart('ss'),
         'MMM': new DateTimeMaskPart('MMM'),
-        'MMMM': new DateTimeMaskPart('MMMM')
+        'MMMM': new DateTimeMaskPart('MMMM'),
+        'h': new DateTimeMaskPart('h'),
+        'tt': new DateTimeMaskPart('tt')
     }
 
 });
@@ -33026,7 +33239,7 @@ _.extend(NumberEditMask.prototype, {
         var itemTemplate = this.getItemTemplate();
         var item = itemTemplate.item;
         var text = item.text;
-        var val = item.value.toString();
+        var val = (item.value === null || typeof item.value === 'undefined') ? '' : item.value.toString();
         var endLength = len + position;
         if(!char)char = "";
 
@@ -34915,8 +35128,8 @@ InfinniUI.ToolTipService = (function () {
 				html: true,
 				title:content,
 				placement: 'auto top',
-				container: 'body'
-
+				container: 'body',
+				trigger: 'hover'
 			})
 			.tooltip('show');
 	}

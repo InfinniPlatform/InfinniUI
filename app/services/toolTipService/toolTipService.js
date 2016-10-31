@@ -16,8 +16,8 @@ InfinniUI.ToolTipService = (function () {
 				html: true,
 				title:content,
 				placement: 'auto top',
-				container: 'body'
-
+				container: 'body',
+				trigger: 'hover'
 			})
 			.tooltip('show');
 	}

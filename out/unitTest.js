@@ -439,7 +439,8 @@ _.extend(StaticFakeDataProvider.prototype, {
 
     setOrigin: function(){},
     setPath: function(){},
-    setData : function(){}
+    setData : function(){},
+    setMethod : function(){}
 });
 describe('AcceptAction', function () {
     it('successful build', function () {
@@ -2188,6 +2189,7 @@ describe('ServerAction', function () {
             assert.equal(window.serverActionTest_urlParams.contentType, 'application/x-www-form-urlencoded; charset=utf-8');
         });
 
+
         it('post', function () {
             // Given
             window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
@@ -2261,6 +2263,127 @@ describe('ServerAction', function () {
             assert.equal(window.serverActionTest_urlParams.args, '{"a":2,"b":"abc"}');
         });
     });
+
+
+    it('should escape quote in Data', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+        var json = {"name": "value"};
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    b: '<%param1%>'
+                },
+                Params: {
+                    param1: JSON.stringify(json)
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.args.b, JSON.stringify(json));
+    });
+
+    it('should keep data type', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(JSON.stringify(data.args), JSON.stringify({"Number": 1, "String": "text", "Null": null}));
+    });
+
+    it('should use "config.serverUrl" as "Origin" by default', function () {
+        var data;
+        // Given
+        var oldServerUrl = window.InfinniUI.config.serverUrl;
+
+        window.InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
+
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Path: '/public',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.requestUrl, 'ftp://ftp.site.org/public');
+    });
+
 });
 
 describe('UpdateAction', function () {
@@ -3263,7 +3386,7 @@ describe('DateTimeFormat', function () {
             var formattingFull = new InfinniUI.DateTimeFormat('HH'),
                 formattingAbbr = new InfinniUI.DateTimeFormat('%H'),
                 formattingIndex = new InfinniUI.DateTimeFormat('hh'),
-                formattingShortIndex = new InfinniUI.DateTimeFormat('%h');
+                formattingShortIndex = new InfinniUI.DateTimeFormat('h');
 
             //When
             var date = new Date("2 January 1908 13:12");
@@ -3373,6 +3496,21 @@ describe('DateTimeFormat', function () {
             assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908 1:12 PM');
         });
 
+        it('format by pattern F', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('F'),
+                enCulture = new InfinniUI.Culture('en-US'),
+                ruCulture = new InfinniUI.Culture('ru-RU');
+
+            //When
+            var date = new Date("4 January 1908 13:12:08");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04 Январь 1908 г. 13:12:08');
+            assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908 1:12:8 PM');
+        });
+
+
         it('format by pattern g', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('g'),
@@ -3383,18 +3521,63 @@ describe('DateTimeFormat', function () {
 
             //Then
             assert.equal(formatting.format(date), '04.01.1908 13:12');
-            assert.equal(formatting.format(date, enCulture), '01/04/1908 13:12');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908 1:12 PM');
         });
 
-        it('format by pattern s', function () {
+        it('format by pattern G', function () {
             //Given
-            var formatting = new InfinniUI.DateTimeFormat('s');
+            var formatting = new InfinniUI.DateTimeFormat('G'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
 
             //When
-            var date = new Date("4 January 1908 13:12:01");
+            var date = new Date("4 January 1908 13:12:06");
 
             //Then
-            assert.equal(formatting.format(date), '1908-01-04T13:12:01');
+            assert.equal(formatting.format(date, ruCulture), '04.01.1908 13:12:06');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908 1:12:6 PM');
+        });
+
+        it('format by pattern d', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('d'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04.01.1908');
+            assert.equal(formatting.format(date, enCulture), '1/4/1908');
+        });
+
+        it('format by pattern D', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('D'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '04 Январь 1908 г.');
+            assert.equal(formatting.format(date, enCulture), 'Friday, January 04, 1908');
+        });
+
+        it('format by pattern t', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('t'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '13:12');
+            assert.equal(formatting.format(date, enCulture), '1:12 PM');
         });
 
         it('format by pattern T', function () {
@@ -3406,6 +3589,48 @@ describe('DateTimeFormat', function () {
 
             //Then
             assert.equal(formatting.format(date), '13:12:01');
+        });
+
+        it('format by pattern Y', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('Y'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), 'Январь 1908');
+            assert.equal(formatting.format(date, enCulture), 'January, 1908');
+        });
+
+        it('format by pattern M', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('M'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), 'Январь 04');
+            assert.equal(formatting.format(date, enCulture), 'January 04');
+        });
+
+        it('format by pattern s', function () {
+            //Given
+            var formatting = new InfinniUI.DateTimeFormat('s'),
+                ruCulture = new InfinniUI.Culture('ru-RU'),
+                enCulture = new InfinniUI.Culture('en-US');
+
+            //When
+            var date = new Date("4 January 1908 13:12:06");
+
+            //Then
+            assert.equal(formatting.format(date, ruCulture), '1908-01-04T13:12:06');
+            assert.equal(formatting.format(date, enCulture), '1908-01-04T13:12:06');
         });
 
         it('format by pattern H', function () {
@@ -6476,82 +6701,6 @@ describe('ButtonControl', function () {
     });
 });
 
-describe('CheckBox', function () {
-    var checkbox;
-
-    beforeEach(function () {
-        checkbox = new InfinniUI.CheckBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = checkbox.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                checkbox.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: text', function () {
-                //Given
-                checkbox.setText('Text 1');
-
-                var $el = checkbox.render(),
-                    $label = $('.checkbox-label', $el);
-
-                assert.equal($label.html(), 'Text 1');
-
-                //When
-                checkbox.setText('Text 2');
-
-                //Then
-                assert.equal($label.html(), 'Text 2');
-            });
-
-            it('Setting property: Enabled', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                assert.equal($input.prop('disabled'), false, 'Enabled by default');
-
-                //When
-                checkbox.setEnabled(false);
-
-                //Then
-                assert.equal($input.prop('disabled'), true, 'Disable element');
-            });
-
-        });
-
-        describe('events', function () {
-            it('Change value on click', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                checkbox.setValue(false);
-
-                //When
-                $input.click();
-
-                //Then
-                assert.equal(checkbox.getValue(), true, 'value changed');
-                assert.equal($input.prop('checked'), true, 'checkbox checked');
-            });
-        });
-
-    });
-
-});
-
 describe('Container (Control)', function () {
 
     describe('StackPanel as exemplar of Container', function () {
@@ -7306,6 +7455,82 @@ describe('Container (Control)', function () {
             assert.equal($layout.find('.pl-text-box-input').eq(2).val(), '2G', 'value in template is right');
         }
     });
+});
+
+describe('CheckBox', function () {
+    var checkbox;
+
+    beforeEach(function () {
+        checkbox = new InfinniUI.CheckBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = checkbox.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                checkbox.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: text', function () {
+                //Given
+                checkbox.setText('Text 1');
+
+                var $el = checkbox.render(),
+                    $label = $('.checkbox-label', $el);
+
+                assert.equal($label.html(), 'Text 1');
+
+                //When
+                checkbox.setText('Text 2');
+
+                //Then
+                assert.equal($label.html(), 'Text 2');
+            });
+
+            it('Setting property: Enabled', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                assert.equal($input.prop('disabled'), false, 'Enabled by default');
+
+                //When
+                checkbox.setEnabled(false);
+
+                //Then
+                assert.equal($input.prop('disabled'), true, 'Disable element');
+            });
+
+        });
+
+        describe('events', function () {
+            it('Change value on click', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                checkbox.setValue(false);
+
+                //When
+                $input.click();
+
+                //Then
+                assert.equal(checkbox.getValue(), true, 'value changed');
+                assert.equal($input.prop('checked'), true, 'checkbox checked');
+            });
+        });
+
+    });
+
 });
 
 describe('ContextMenu (Control)', function () {
@@ -8820,6 +9045,41 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
@@ -8881,41 +9141,6 @@ describe('TextEditorBase (Control)', function () {
     });
 
 });
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -9623,7 +9848,7 @@ describe('baseDataSource', function () {
                 setOrigin: function(){},
                 setPath: function(){},
                 setData: function(){},
-                setParams: function(){}
+                setMethod: function(){}
             }
         });
 
@@ -12557,6 +12782,54 @@ describe('EditorBase', function () {
 
 });
 
+describe('FileBox', function () {
+
+    describe('Builder', function () {
+
+        it('should build fileBox', function () {
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                MaxSize: 0,
+                AcceptTypes: [
+                    'image/png',
+                    'image/jpeg'
+                ]
+            };
+
+            // When
+            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
+
+            // Then
+            assert.instanceOf(fileBox, InfinniUI.FileBox);
+            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
+        });
+
+    });
+
+    describe('Base API', function () {
+
+        it('setting properties', function () {
+            // Given
+            var fileBox = new InfinniUI.FileBox();
+
+            // When
+            fileBox.setMaxSize(50000);
+            fileBox.setFile('file');
+            fileBox.setAcceptTypes(['video/*']);
+            fileBox.setValue({Info: {}});
+
+            // Then
+            assert.equal(fileBox.getMaxSize(), 50000);
+            assert.equal(fileBox.getFile(), 'file');
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
+            assert.deepEqual(fileBox.getValue(), {Info: {}});
+        });
+
+    });
+});
+
 describe('Element', function () {
     describe('Element as path of TextBox', function () {
 
@@ -12632,54 +12905,6 @@ describe('Element', function () {
                 done();
             }
         });
-    });
-});
-
-describe('FileBox', function () {
-
-    describe('Builder', function () {
-
-        it('should build fileBox', function () {
-            // Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var metadata = {
-                MaxSize: 0,
-                AcceptTypes: [
-                    'image/png',
-                    'image/jpeg'
-                ]
-            };
-
-            // When
-            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
-
-            // Then
-            assert.instanceOf(fileBox, InfinniUI.FileBox);
-            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
-        });
-
-    });
-
-    describe('Base API', function () {
-
-        it('setting properties', function () {
-            // Given
-            var fileBox = new InfinniUI.FileBox();
-
-            // When
-            fileBox.setMaxSize(50000);
-            fileBox.setFile('file');
-            fileBox.setAcceptTypes(['video/*']);
-            fileBox.setValue({Info: {}});
-
-            // Then
-            assert.equal(fileBox.getMaxSize(), 50000);
-            assert.equal(fileBox.getFile(), 'file');
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
-            assert.deepEqual(fileBox.getValue(), {Info: {}});
-        });
-
     });
 });
 
@@ -12777,24 +13002,23 @@ describe('ImageBox', function () {
 
     describe('Upload new file', function () {
 
-        beforeEach(function () {
-            //register fake upload provider
-            window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
-                return {
-                    uploadFile: function () {
-                        var deferred = $.Deferred();
-                        setTimeout(function () {
-                            deferred.resolve();
-                        }, delay());
-
-                        return deferred.promise();
-                    },
-                    getFileUrl: function (fieldName, instanceId) {
-                        return [fieldName, instanceId, 'fake.html'].join('.');
-                    }
-                };
-            });
-        });
+        //beforeEach(function () {
+        //    //register fake upload provider
+        //    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+        //        return {
+        //            uploadFile: function () {
+        //                var deferred = $.Deferred();
+        //                setTimeout(function () {
+        //                    deferred.resolve();
+        //                }, delay());
+        //
+        //                return deferred.promise();
+        //            },
+        //            getFileUrl: function (fieldName, instanceId) {
+        //                return [fieldName, instanceId, 'fake.html'].join('.');
+        //            }
+        //        };
+        //    });
 
         //
         //it('Should set image url', function (done) {
@@ -13166,198 +13390,6 @@ describe('LabelBuilder', function () {
     });
 });
 
-describe('ListBox', function () {
-
-    describe('render', function () {
-
-        it('should render listBox with grouping', function () {
-            // Given
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE", "Type": 1 },
-                                { "Id": 2, "Display": "A", "Type": 2 },
-                                { "Id": 3, "Display": "3G", "Type": 1 },
-                                { "Id": 4, "Display": "01", "Type": 3 },
-                                { "Id": 5, "Display": "2G", "Type": 1 },
-                                { "Id": 6, "Display": "02", "Type": 3 },
-                                { "Id": 7, "Display": "03", "Type": 3 },
-                                { "Id": 8, "Display": "B", "Type": 2 }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-
-                    ListBox: {
-                        "ItemProperty": "Display",
-                        "GroupItemProperty": "Type",
-                        "GroupValueProperty": "Type",
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-            // When
-            testHelper.applyViewMetadata(metadata, onListboxReady);
-
-            // Then
-            function onListboxReady(view, $view){
-                var titles = $view.find('.pl-listbox-group-title .pl-label')
-                                .map(function(i, item){return $(item).text()})
-                                .toArray();
-
-                assert.sameMembers(titles, ['1', '2', '3'], 'incorrect titles');
-
-                var firstGroup = $view.find('.pl-listbox-group-i:nth-child(1) .pl-listbox-group-body .pl-label')
-                                    .map(function(i, item){return $(item).text()})
-                                    .toArray();
-
-                assert.sameMembers(firstGroup, ['LTE', '2G', '3G'], 'incorrect first group');
-
-                var secondGroup = $view.find('.pl-listbox-group-i:nth-child(2) .pl-listbox-group-body .pl-label')
-                    .map(function(i, item){return $(item).text()})
-                    .toArray();
-
-                assert.sameMembers(secondGroup, ['A', 'B'], 'incorrect second group');
-
-                var thirdGroup = $view.find('.pl-listbox-group-i:nth-child(3) .pl-listbox-group-body .pl-label')
-                    .map(function(i, item){return $(item).text()})
-                    .toArray();
-
-                assert.sameMembers(thirdGroup, ['01', '02', '03'], 'incorrect third group');
-
-                view.close();
-            }
-        });
-
-        it('should render listBox without grouping', function () {
-            // Given
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE" },
-                                { "Id": 2, "Display": "3G" },
-                                { "Id": 3, "Display": "2G" }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-
-                    ListBox: {
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
-                                }
-                            }
-                        },
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-            // When
-
-            testHelper.applyViewMetadata(metadata, onListboxReady);
-
-            // Then
-            function onListboxReady(view, $view){
-                var items = $view.find('.pl-listbox-body .pl-label')
-                                .map(function(i, item){return $(item).text()})
-                                .toArray();
-
-                assert.sameMembers(items, ['LTE', '3G', '2G']);
-
-                view.close();
-            }
-        });
-
-    });
-
-    describe('api', function () {
-        it('should update DisabledItemCondition', function () {
-            // Given
-            var metadata = {
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE" },
-                                { "Id": 2, "Display": "3G" },
-                                { "Id": 3, "Display": "2G" }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-                    ListBox: {
-                        "Name": "ListBox1",
-                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
-                        "ViewMode": "base",
-                        "MultiSelect": true,
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
-                                }
-                            }
-                        },
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-
-            function onViewReady(view, $view) {
-                var listbox = view.context.controls['ListBox1'];
-                var items = $view.find('.pl-listbox-i');
-
-                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
-                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
-
-                // When
-                listbox.setDisabledItemCondition( function (context, args) {
-                    return args.value.Id == 1;
-                });
-
-                // Then
-                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
-                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
-                view.close();
-            }
-        });
-    });
-
-});
 describe('ListEditorBase', function () {
 
     describe('ListBox as exemplar of ListEditorBase', function (){
@@ -13824,6 +13856,198 @@ describe('ListEditorBase', function () {
 
 
 });
+describe('ListBox', function () {
+
+    describe('render', function () {
+
+        it('should render listBox with grouping', function () {
+            // Given
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE", "Type": 1 },
+                                { "Id": 2, "Display": "A", "Type": 2 },
+                                { "Id": 3, "Display": "3G", "Type": 1 },
+                                { "Id": 4, "Display": "01", "Type": 3 },
+                                { "Id": 5, "Display": "2G", "Type": 1 },
+                                { "Id": 6, "Display": "02", "Type": 3 },
+                                { "Id": 7, "Display": "03", "Type": 3 },
+                                { "Id": 8, "Display": "B", "Type": 2 }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    ListBox: {
+                        "ItemProperty": "Display",
+                        "GroupItemProperty": "Type",
+                        "GroupValueProperty": "Type",
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+            // When
+            testHelper.applyViewMetadata(metadata, onListboxReady);
+
+            // Then
+            function onListboxReady(view, $view){
+                var titles = $view.find('.pl-listbox-group-title .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(titles, ['1', '2', '3'], 'incorrect titles');
+
+                var firstGroup = $view.find('.pl-listbox-group-i:nth-child(1) .pl-listbox-group-body .pl-label')
+                                    .map(function(i, item){return $(item).text()})
+                                    .toArray();
+
+                assert.sameMembers(firstGroup, ['LTE', '2G', '3G'], 'incorrect first group');
+
+                var secondGroup = $view.find('.pl-listbox-group-i:nth-child(2) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(secondGroup, ['A', 'B'], 'incorrect second group');
+
+                var thirdGroup = $view.find('.pl-listbox-group-i:nth-child(3) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(thirdGroup, ['01', '02', '03'], 'incorrect third group');
+
+                view.close();
+            }
+        });
+
+        it('should render listBox without grouping', function () {
+            // Given
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    ListBox: {
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+            // When
+
+            testHelper.applyViewMetadata(metadata, onListboxReady);
+
+            // Then
+            function onListboxReady(view, $view){
+                var items = $view.find('.pl-listbox-body .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(items, ['LTE', '3G', '2G']);
+
+                view.close();
+            }
+        });
+
+    });
+
+    describe('api', function () {
+        it('should update DisabledItemCondition', function () {
+            // Given
+            var metadata = {
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+                    ListBox: {
+                        "Name": "ListBox1",
+                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                        "ViewMode": "base",
+                        "MultiSelect": true,
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+
+            function onViewReady(view, $view) {
+                var listbox = view.context.controls['ListBox1'];
+                var items = $view.find('.pl-listbox-i');
+
+                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
+                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
+
+                // When
+                listbox.setDisabledItemCondition( function (context, args) {
+                    return args.value.Id == 1;
+                });
+
+                // Then
+                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
+                view.close();
+            }
+        });
+    });
+
+});
 describe('NumericBox', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -14225,11 +14449,11 @@ describe('PasswordBox', function () {
             assert.equal(onFocusedFlag, 0);
 
             // When
-            element.setFocused(true);
+            element.control.set('focused', true);
             // Then
             assert.isTrue(element.getFocused());
             assert.equal(onFocusedFlag, 1);
-            element.setFocused(false);
+            element.control.set('focused', false);
             assert.isFalse(element.getFocused());
             assert.equal(onFocusedFlag, 0);
         });
@@ -14253,6 +14477,55 @@ describe('PasswordBoxBuilder', function () {
             assert.isObject(element);
         });
     });
+});
+
+describe('ScrollPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('implements API methods', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
+            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
+            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
+            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
+        });
+
+
+        it('Default values', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
+            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
+        });
+
+
+    });
+
+
+});
+
+describe('ScrollPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            ScrollPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var scrollPanel = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
 });
 
 describe('PopupButtonElement', function () {
@@ -14466,55 +14739,6 @@ describe('PopupButtonBuilder', function () {
 
         });
     });
-});
-
-describe('ScrollPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('implements API methods', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
-            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
-            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
-            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
-        });
-
-
-        it('Default values', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
-            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
-        });
-
-
-    });
-
-
-});
-
-describe('ScrollPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            ScrollPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var scrollPanel = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
 });
 
 describe('TabPanelElement', function () {
