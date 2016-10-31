@@ -232,7 +232,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     T: 'HH:mm:ss',
 
     y: 'MMMM yyyy', Y: 'MMMM yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -243,7 +243,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
     // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
-    g: 'MM/dd/yyyy HH:mm',
+    g: 'M/%d/yyyy h:%m tt',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -253,7 +253,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     T: 'h:%m:%s tt',
 
     y: 'MMMM, yyyy', Y: 'MMMM, yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -13160,129 +13160,6 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
-//####app\controls\tabPanel\tabHeader\tabHeaderView.js
-var TabHeaderModel = Backbone.Model.extend({
-
-    defaults: {
-        text: '',
-        canClose: false
-    }
-});
-
-var TabHeaderView = Backbone.View.extend({
-
-    className: "pl-tabheader",
-
-    tagName: "li",
-
-    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
-
-    events: {
-        "click": "onClickHandler",
-        "click .pl-close": "onClickCloseHandler"
-    },
-
-    UI: {
-        label: '.pl-tabheader-text',
-        close: '.pl-close'
-    },
-
-    initialize: function (options) {
-        this.model = new TabHeaderModel(options);
-
-        this.on('rendered', this.onRenderedHandler);
-    },
-
-    render: function () {
-        this.$el.html(this.template);
-        this.bindUIElements();
-        this.trigger('rendered');
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    /**
-     *
-     * @param {string} value
-     */
-    setText: function (value) {
-        this.model.set('text', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setCanClose: function (value) {
-        this.model.set('canClose', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setSelected: function (value) {
-        this.model.set('selected', value);
-    },
-
-    /**
-     * @protected
-     */
-    updateProperties: function () {
-        this.updateTextHandler();
-        this.updateCanClose();
-        this.updateSelectedHandler();
-    },
-
-    /**
-     * @protected
-     */
-    onRenderedHandler: function () {
-        this.updateProperties();
-        this.listenTo(this.model, 'change:text', this.updateTextHandler);
-        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateTextHandler: function () {
-        var text = this.model.get('text');
-        this.ui.label.text(text);
-    },
-
-    /**
-     * @protected
-     */
-    updateCanClose: function () {
-        var canClose = this.model.get('canClose');
-        this.ui.close.toggleClass('hidden', !canClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateSelectedHandler: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('pl-active active', selected);
-    },
-
-    onClickHandler: function (event) {
-        this.trigger('selected');
-    },
-
-    onClickCloseHandler: function (event) {
-        event.stopPropagation();
-        this.trigger('close');
-    }
-
-});
-
-_.extend(TabHeaderView.prototype, bindUIElementsMixin);
-
 //####app\controls\tabPanel\tabPage\tabPageControl.js
 /**
  *
@@ -13407,6 +13284,129 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
     }
 
 });
+
+//####app\controls\tabPanel\tabHeader\tabHeaderView.js
+var TabHeaderModel = Backbone.Model.extend({
+
+    defaults: {
+        text: '',
+        canClose: false
+    }
+});
+
+var TabHeaderView = Backbone.View.extend({
+
+    className: "pl-tabheader",
+
+    tagName: "li",
+
+    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+
+    events: {
+        "click": "onClickHandler",
+        "click .pl-close": "onClickCloseHandler"
+    },
+
+    UI: {
+        label: '.pl-tabheader-text',
+        close: '.pl-close'
+    },
+
+    initialize: function (options) {
+        this.model = new TabHeaderModel(options);
+
+        this.on('rendered', this.onRenderedHandler);
+    },
+
+    render: function () {
+        this.$el.html(this.template);
+        this.bindUIElements();
+        this.trigger('rendered');
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    /**
+     *
+     * @param {string} value
+     */
+    setText: function (value) {
+        this.model.set('text', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setCanClose: function (value) {
+        this.model.set('canClose', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setSelected: function (value) {
+        this.model.set('selected', value);
+    },
+
+    /**
+     * @protected
+     */
+    updateProperties: function () {
+        this.updateTextHandler();
+        this.updateCanClose();
+        this.updateSelectedHandler();
+    },
+
+    /**
+     * @protected
+     */
+    onRenderedHandler: function () {
+        this.updateProperties();
+        this.listenTo(this.model, 'change:text', this.updateTextHandler);
+        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
+        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateTextHandler: function () {
+        var text = this.model.get('text');
+        this.ui.label.text(text);
+    },
+
+    /**
+     * @protected
+     */
+    updateCanClose: function () {
+        var canClose = this.model.get('canClose');
+        this.ui.close.toggleClass('hidden', !canClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedHandler: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('pl-active active', selected);
+    },
+
+    onClickHandler: function (event) {
+        this.trigger('selected');
+    },
+
+    onClickCloseHandler: function (event) {
+        event.stopPropagation();
+        this.trigger('close');
+    }
+
+});
+
+_.extend(TabHeaderView.prototype, bindUIElementsMixin);
 
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
@@ -22552,53 +22552,6 @@ _.extend(CheckBoxBuilder.prototype, {
 }, editorBaseBuilderMixin);
 
 
-//####app\elements\contextMenu\contextMenu.js
-/**
- * @class
- * @constructor
- * @arguments Container
- */
-function ContextMenu(parent) {
-    _.superClass(ContextMenu, this, parent);
-}
-
-window.InfinniUI.ContextMenu = ContextMenu;
-
-_.inherit(ContextMenu, Container);
-
-_.extend(ContextMenu.prototype, {
-
-    createControl: function () {
-        return new ContextMenuControl();
-    }
-
-});
-
-//####app\elements\contextMenu\contextMenuBuilder.js
-/**
- * @constructor
- * @arguments ContainerBuilder
- */
-function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
-}
-
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
-
-_.inherit(ContextMenuBuilder, ContainerBuilder);
-
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
-
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
-
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
-
-});
-
 //####app\elements\comboBox\comboBox.js
 /**
  * @augments ListEditorBase
@@ -22776,6 +22729,53 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     generateName: function(){
         return 'combobox-' + guid();
     }
+});
+
+//####app\elements\contextMenu\contextMenu.js
+/**
+ * @class
+ * @constructor
+ * @arguments Container
+ */
+function ContextMenu(parent) {
+    _.superClass(ContextMenu, this, parent);
+}
+
+window.InfinniUI.ContextMenu = ContextMenu;
+
+_.inherit(ContextMenu, Container);
+
+_.extend(ContextMenu.prototype, {
+
+    createControl: function () {
+        return new ContextMenuControl();
+    }
+
+});
+
+//####app\elements\contextMenu\contextMenuBuilder.js
+/**
+ * @constructor
+ * @arguments ContainerBuilder
+ */
+function ContextMenuBuilder() {
+	_.superClass(ContextMenuBuilder, this);
+}
+
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
+_.inherit(ContextMenuBuilder, ContainerBuilder);
+
+_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+
+	createElement: function (params) {
+		return new ContextMenu(params.parent);
+	},
+
+	applyMetadata: function (params) {
+		ContainerBuilder.prototype.applyMetadata.call(this, params);
+	}
+
 });
 
 //####app\elements\dataGrid\dataGrid.js
@@ -27130,51 +27130,6 @@ _.extend(AcceptActionBuilder.prototype,
 
 window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
 
-//####app\actions\cancelAction\cancelAction.js
-function CancelAction(parentView){
-    _.superClass(CancelAction, this, parentView);
-}
-
-_.inherit(CancelAction, BaseAction);
-
-
-_.extend(CancelAction.prototype, {
-    execute: function(callback){
-        var that = this;
-
-        this.parentView.onClosed(function () {
-            that.onExecutedHandler();
-
-            if (callback) {
-                callback();
-            }
-        });
-
-        this.parentView.setDialogResult(DialogResult.canceled);
-        this.parentView.close();
-    }
-});
-
-window.InfinniUI.CancelAction = CancelAction;
-
-//####app\actions\cancelAction\cancelActionBuilder.js
-function CancelActionBuilder() {}
-
-_.extend(CancelActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new CancelAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
-
 //####app\actions\addAction\addAction.js
 function AddAction(parentView){
     _.superClass(AddAction, this, parentView);
@@ -27235,6 +27190,51 @@ _.extend(AddActionBuilder.prototype,
 );
 
 window.InfinniUI.AddActionBuilder = AddActionBuilder;
+
+//####app\actions\cancelAction\cancelAction.js
+function CancelAction(parentView){
+    _.superClass(CancelAction, this, parentView);
+}
+
+_.inherit(CancelAction, BaseAction);
+
+
+_.extend(CancelAction.prototype, {
+    execute: function(callback){
+        var that = this;
+
+        this.parentView.onClosed(function () {
+            that.onExecutedHandler();
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        this.parentView.setDialogResult(DialogResult.canceled);
+        this.parentView.close();
+    }
+});
+
+window.InfinniUI.CancelAction = CancelAction;
+
+//####app\actions\cancelAction\cancelActionBuilder.js
+function CancelActionBuilder() {}
+
+_.extend(CancelActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var action = new CancelAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
 
 //####app\actions\deleteAction\deleteAction.js
 function DeleteAction(parentView){
@@ -30031,17 +30031,12 @@ _.extend(DateTimeFormat.prototype, {
                 return hoursIndex.toString();
             }
         },
-        '%h': function(date){
-            var hoursIndex = date.getHours();
-            if(hoursIndex > 12){
-                hoursIndex -= 12;
-            }
-            return hoursIndex.toString();
-        },
         'h': function(date){
             var hoursIndex = date.getHours();
             if(hoursIndex > 12){
                 hoursIndex -= 12;
+            } else if (hoursIndex === 0) {
+                hoursIndex = 12;
             }
             return hoursIndex.toString();
         },
@@ -30774,12 +30769,56 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
     var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
+    var regExpHour12 = /^(?:0?\d|1[0-2])$/;
     var regExp60 = /^[0-5]?[0-9]$/;
+
+    function filledDay(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledMonth(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [2,3,4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledHours(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 2 || value.length === 2;
+    }
+
+    function filledMinutes(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
+    function filledSeconds(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
 
     return {
         'd': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 31;
             },
@@ -30789,6 +30828,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30815,6 +30855,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30831,7 +30872,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'M': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 12;
             },
@@ -30841,6 +30882,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30867,6 +30909,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30971,7 +31014,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'H': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 23;
             },
@@ -30981,6 +31024,34 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
+            prev: function (value) {
+                return this.getPrevIntValue(value);
+            },
+            next: function (value) {
+                return this.getNextIntValue(value);
+            },
+            format: function (value) {
+                return this.padNumber(value);
+            },
+            apply: function (value, part) {
+                value.setHours(part);
+                return value;
+            }
+        },
+        'h': {
+            init: function () {
+                this.width = 1;
+                this.min = 1;
+                this.max = 12;
+            },
+            match: function (value) {
+                return regExpHour12.test(value);
+            },
+            validator: function (value) {
+                return this.rangeValidator(value);
+            },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31007,6 +31078,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31023,7 +31095,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'm': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31033,6 +31105,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31059,6 +31132,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31075,7 +31149,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         's': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31085,6 +31159,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31111,6 +31186,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31179,6 +31255,44 @@ var DateTimeMaskPartStrategy = (function () {
                 }
                 return value;
             }
+        },
+        'tt': {
+            init: function () {
+                // this.min = 0;
+                // this.max = 1;
+                this.width = 2;
+            },
+            match: function() {
+                return false;
+            },
+            prev: function (value) {
+                var newValue = this.getPrevMonthValue('tt', value);
+
+                return (newValue === value) ? this.getNextMonthValue('tt', value): newValue;
+            },
+            next: function (value) {
+                var newValue = this.getNextMonthValue('tt', value);
+                return (newValue === value) ? this.getPrevMonthValue('tt', value): newValue;
+            },
+            apply: function (value, part) {
+                if (value instanceof Date) {
+                    var hours = value.getHours();
+                    var culture = this.getCurrentCulture();
+                    var formatInfo = culture.dateTimeFormatInfo;
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (part === formatInfo.pmDesignator) {
+                        hours += 12;
+                    }
+
+                    value.setHours(hours);
+                }
+
+                return value;
+            }
         }
 
     }
@@ -31194,6 +31308,14 @@ _.extend(DateTimeMaskPart.prototype, {
 
     init: function () {
 
+    },
+
+    filled: function (value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return value.length === this.width;
     },
 
     match: function (value) {
@@ -31271,9 +31393,15 @@ _.extend(DateTimeMaskPart.prototype, {
         return value;
     },
 
+    getCurrentCulture: function () {
+        var culture = new Culture(InfinniUI.config.lang);
+
+        return culture;
+    },
+
     getListForMask: function (mask) {
         //@TODO Получать культуру из контекста!
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
 
         var list;
@@ -31290,6 +31418,9 @@ _.extend(DateTimeMaskPart.prototype, {
                 break;
             case 'ddd':
                 list = formatInfo.abbreviatedDayNames;
+                break;
+            case 'tt':
+                list = [formatInfo.amDesignator, formatInfo.pmDesignator];
                 break;
         }
 
@@ -31660,27 +31791,25 @@ _.extend(DateTimeEditMask.prototype, {
 
         if (data !== null) {
             item = data.item;
-            index = position - data.left;
+            index = position - data.left;   //Позиция внутри текущего шаблона ввода маски
 
-            if (index > item.text.length) {
+            if (index > item.text.length) { //Если превышение по правой границе - в конец
+                position = data.left + item.text.length;
+                index = item.text.length;
+            } else if (index < 0) { //Если превышение по левой границе - в начало шаблона
                 position = data.left;
+                index = 0;
             }
 
             mask = this.masks[item.mask];
 
-            newpos = position - item.position;
-            if(newpos < 0) newpos = 0;
+            text = item.text.slice(0, index) + char + item.text.slice(index);
 
-            if(item.text.slice(newpos, newpos+1)) {
-                text = [item.text.slice(0, newpos), char, item.text.slice(newpos+1)].join('');
-            }else{
-                text = [item.text.slice(0, data.index), char, item.text.slice(data.index)].join('');
-            }
 
             if(mask.match(text)) {
                 item.text = text;
                 position = this.moveToNextChar(position);
-                if (mask.width === newpos+1) {
+                if (mask.filled(text)) {
                     position = this.getNextItemMask(position);
                 }
             } else {    //Нажатая кнопка не подходит под маску
@@ -31997,7 +32126,9 @@ _.extend(DateTimeEditMask.prototype, {
         's': new DateTimeMaskPart('s'),
         'ss': new DateTimeMaskPart('ss'),
         'MMM': new DateTimeMaskPart('MMM'),
-        'MMMM': new DateTimeMaskPart('MMMM')
+        'MMMM': new DateTimeMaskPart('MMMM'),
+        'h': new DateTimeMaskPart('h'),
+        'tt': new DateTimeMaskPart('tt')
     }
 
 });
@@ -34326,6 +34457,96 @@ InfinniUI.providerRegister.register('RestDataSource', InfinniUI.Providers.RestDa
 InfinniUI.providerRegister.register('ServerActionProvider', function () {
     return new InfinniUI.Providers.ServerActionProvider();
 });
+//####app\script\scriptBuilder.js
+/**
+ *
+ * @constructor
+ */
+function ScriptBuilder() {}
+
+window.InfinniUI.ScriptBuilder = ScriptBuilder;
+
+
+ScriptBuilder.prototype.build = function (context, args) {
+    var
+        metadata = args.metadata,
+        name = metadata.Name,
+        body = metadata.Body;
+
+    var func = new Function('context', 'args', body);
+
+    return function (context, args) {
+        var result;
+        try {
+            result = func.call(undefined, context, args);
+        } catch (err) {
+            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
+            console.error(body);
+            console.groupEnd();
+        }
+        return result;
+    };
+};
+
+
+//####app\script\scriptExecutor.js
+/**
+ *
+ * @param parent
+ * @constructor
+ */
+function ScriptExecutor(parent) {
+    this.parent = parent;
+}
+
+window.InfinniUI.ScriptExecutor = ScriptExecutor;
+
+
+/**
+ *
+ * @param {string} scriptName
+ * @param {Object} args
+ * @returns {*}
+ */
+ScriptExecutor.prototype.executeScript = function (scriptName, args) {
+    var parent = this.parent;
+    var context = parent.getContext();
+    var result;
+    var scriptBody;
+    var scriptCompiled;
+
+    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
+    if(scriptName.substr(0, 1) == '{'){
+        scriptBody = scriptName.substr(1, scriptName.length - 2);
+        scriptCompiled = this.buildScriptByBody(scriptBody);
+    }else{
+        scriptCompiled = parent.getScripts().getById(scriptName);
+        if(scriptCompiled){
+            scriptCompiled = scriptCompiled.func;
+        }
+    }
+
+
+
+    if (context && scriptCompiled) {
+        result = scriptCompiled.call(undefined, context, args);
+    }
+
+    return result;
+};
+
+ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
+    var context = this.parent.getContext();
+    var args = {
+        metadata: {
+            "Body": scriptBody,
+            "Name": "InlineScript"
+        }
+    };
+    var scriptBuilder = new ScriptBuilder();
+    return scriptBuilder.build(context, args);
+};
+
 //####app\services\modalWindowService.js
 InfinniUI.ModalWindowService = (function () {
     var modalQueue = [];
@@ -34549,96 +34770,6 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
-//####app\script\scriptBuilder.js
-/**
- *
- * @constructor
- */
-function ScriptBuilder() {}
-
-window.InfinniUI.ScriptBuilder = ScriptBuilder;
-
-
-ScriptBuilder.prototype.build = function (context, args) {
-    var
-        metadata = args.metadata,
-        name = metadata.Name,
-        body = metadata.Body;
-
-    var func = new Function('context', 'args', body);
-
-    return function (context, args) {
-        var result;
-        try {
-            result = func.call(undefined, context, args);
-        } catch (err) {
-            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
-            console.error(body);
-            console.groupEnd();
-        }
-        return result;
-    };
-};
-
-
-//####app\script\scriptExecutor.js
-/**
- *
- * @param parent
- * @constructor
- */
-function ScriptExecutor(parent) {
-    this.parent = parent;
-}
-
-window.InfinniUI.ScriptExecutor = ScriptExecutor;
-
-
-/**
- *
- * @param {string} scriptName
- * @param {Object} args
- * @returns {*}
- */
-ScriptExecutor.prototype.executeScript = function (scriptName, args) {
-    var parent = this.parent;
-    var context = parent.getContext();
-    var result;
-    var scriptBody;
-    var scriptCompiled;
-
-    // аналогичные действия выполняются в DataBindingBuilder, если будете править, там тоже измените
-    if(scriptName.substr(0, 1) == '{'){
-        scriptBody = scriptName.substr(1, scriptName.length - 2);
-        scriptCompiled = this.buildScriptByBody(scriptBody);
-    }else{
-        scriptCompiled = parent.getScripts().getById(scriptName);
-        if(scriptCompiled){
-            scriptCompiled = scriptCompiled.func;
-        }
-    }
-
-
-
-    if (context && scriptCompiled) {
-        result = scriptCompiled.call(undefined, context, args);
-    }
-
-    return result;
-};
-
-ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
-    var context = this.parent.getContext();
-    var args = {
-        metadata: {
-            "Body": scriptBody,
-            "Name": "InlineScript"
-        }
-    };
-    var scriptBuilder = new ScriptBuilder();
-    return scriptBuilder.build(context, args);
-};
-
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {

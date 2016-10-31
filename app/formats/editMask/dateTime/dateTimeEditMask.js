@@ -308,27 +308,25 @@ _.extend(DateTimeEditMask.prototype, {
 
         if (data !== null) {
             item = data.item;
-            index = position - data.left;
+            index = position - data.left;   //Позиция внутри текущего шаблона ввода маски
 
-            if (index > item.text.length) {
+            if (index > item.text.length) { //Если превышение по правой границе - в конец
+                position = data.left + item.text.length;
+                index = item.text.length;
+            } else if (index < 0) { //Если превышение по левой границе - в начало шаблона
                 position = data.left;
+                index = 0;
             }
 
             mask = this.masks[item.mask];
 
-            newpos = position - item.position;
-            if(newpos < 0) newpos = 0;
+            text = item.text.slice(0, index) + char + item.text.slice(index);
 
-            if(item.text.slice(newpos, newpos+1)) {
-                text = [item.text.slice(0, newpos), char, item.text.slice(newpos+1)].join('');
-            }else{
-                text = [item.text.slice(0, data.index), char, item.text.slice(data.index)].join('');
-            }
 
             if(mask.match(text)) {
                 item.text = text;
                 position = this.moveToNextChar(position);
-                if (mask.width === newpos+1) {
+                if (mask.filled(text)) {
                     position = this.getNextItemMask(position);
                 }
             } else {    //Нажатая кнопка не подходит под маску
@@ -645,7 +643,9 @@ _.extend(DateTimeEditMask.prototype, {
         's': new DateTimeMaskPart('s'),
         'ss': new DateTimeMaskPart('ss'),
         'MMM': new DateTimeMaskPart('MMM'),
-        'MMMM': new DateTimeMaskPart('MMMM')
+        'MMMM': new DateTimeMaskPart('MMMM'),
+        'h': new DateTimeMaskPart('h'),
+        'tt': new DateTimeMaskPart('tt')
     }
 
 });
