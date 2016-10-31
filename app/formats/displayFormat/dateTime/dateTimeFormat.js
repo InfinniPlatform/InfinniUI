@@ -192,17 +192,12 @@ _.extend(DateTimeFormat.prototype, {
                 return hoursIndex.toString();
             }
         },
-        '%h': function(date){
-            var hoursIndex = date.getHours();
-            if(hoursIndex > 12){
-                hoursIndex -= 12;
-            }
-            return hoursIndex.toString();
-        },
         'h': function(date){
             var hoursIndex = date.getHours();
             if(hoursIndex > 12){
                 hoursIndex -= 12;
+            } else if (hoursIndex === 0) {
+                hoursIndex = 12;
             }
             return hoursIndex.toString();
         },

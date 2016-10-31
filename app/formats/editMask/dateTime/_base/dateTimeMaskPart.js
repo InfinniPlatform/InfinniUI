@@ -4,12 +4,56 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
     var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
+    var regExpHour12 = /^(?:0?\d|1[0-2])$/;
     var regExp60 = /^[0-5]?[0-9]$/;
+
+    function filledDay(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledMonth(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [2,3,4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledHours(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 2 || value.length === 2;
+    }
+
+    function filledMinutes(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
+    function filledSeconds(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
 
     return {
         'd': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 31;
             },
@@ -19,6 +63,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -45,6 +90,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -61,7 +107,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'M': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 12;
             },
@@ -71,6 +117,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -97,6 +144,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -201,7 +249,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'H': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 23;
             },
@@ -211,6 +259,34 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
+            prev: function (value) {
+                return this.getPrevIntValue(value);
+            },
+            next: function (value) {
+                return this.getNextIntValue(value);
+            },
+            format: function (value) {
+                return this.padNumber(value);
+            },
+            apply: function (value, part) {
+                value.setHours(part);
+                return value;
+            }
+        },
+        'h': {
+            init: function () {
+                this.width = 1;
+                this.min = 1;
+                this.max = 12;
+            },
+            match: function (value) {
+                return regExpHour12.test(value);
+            },
+            validator: function (value) {
+                return this.rangeValidator(value);
+            },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -237,6 +313,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -253,7 +330,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'm': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -263,6 +340,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -289,6 +367,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -305,7 +384,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         's': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -315,6 +394,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -341,6 +421,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -409,6 +490,44 @@ var DateTimeMaskPartStrategy = (function () {
                 }
                 return value;
             }
+        },
+        'tt': {
+            init: function () {
+                // this.min = 0;
+                // this.max = 1;
+                this.width = 2;
+            },
+            match: function() {
+                return false;
+            },
+            prev: function (value) {
+                var newValue = this.getPrevMonthValue('tt', value);
+
+                return (newValue === value) ? this.getNextMonthValue('tt', value): newValue;
+            },
+            next: function (value) {
+                var newValue = this.getNextMonthValue('tt', value);
+                return (newValue === value) ? this.getPrevMonthValue('tt', value): newValue;
+            },
+            apply: function (value, part) {
+                if (value instanceof Date) {
+                    var hours = value.getHours();
+                    var culture = this.getCurrentCulture();
+                    var formatInfo = culture.dateTimeFormatInfo;
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (part === formatInfo.pmDesignator) {
+                        hours += 12;
+                    }
+
+                    value.setHours(hours);
+                }
+
+                return value;
+            }
         }
 
     }
@@ -424,6 +543,14 @@ _.extend(DateTimeMaskPart.prototype, {
 
     init: function () {
 
+    },
+
+    filled: function (value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return value.length === this.width;
     },
 
     match: function (value) {
@@ -501,9 +628,15 @@ _.extend(DateTimeMaskPart.prototype, {
         return value;
     },
 
+    getCurrentCulture: function () {
+        var culture = new Culture(InfinniUI.config.lang);
+
+        return culture;
+    },
+
     getListForMask: function (mask) {
         //@TODO Получать культуру из контекста!
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
 
         var list;
@@ -520,6 +653,9 @@ _.extend(DateTimeMaskPart.prototype, {
                 break;
             case 'ddd':
                 list = formatInfo.abbreviatedDayNames;
+                break;
+            case 'tt':
+                list = [formatInfo.amDesignator, formatInfo.pmDesignator];
                 break;
         }
 

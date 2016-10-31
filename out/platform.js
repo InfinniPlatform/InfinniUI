@@ -232,7 +232,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     T: 'HH:mm:ss',
 
     y: 'MMMM yyyy', Y: 'MMMM yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -243,7 +243,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 
     // TODO: Изменен формат для корректного отображения в DateTimePicker (UI-2453)
-    g: 'MM/dd/yyyy HH:mm',
+    g: 'M/%d/yyyy h:%m tt',
     G: 'M/%d/yyyy h:%m:%s tt',
 
     d: 'M/%d/yyyy',
@@ -253,7 +253,7 @@ InfinniUI.localizations['en-US'].patternDateFormats = {
     T: 'h:%m:%s tt',
 
     y: 'MMMM, yyyy', Y: 'MMMM, yyyy',
-    m: 'MMMM yy', M: 'MMMM yy',
+    m: 'MMMM dd', M: 'MMMM dd',
 
     s: 'yyyy-MM-ddTHH:mm:ss',
     u: 'yyyy-MM-dd HH:mm:ssZ'
@@ -13160,6 +13160,129 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
+//####app\controls\tabPanel\tabHeader\tabHeaderView.js
+var TabHeaderModel = Backbone.Model.extend({
+
+    defaults: {
+        text: '',
+        canClose: false
+    }
+});
+
+var TabHeaderView = Backbone.View.extend({
+
+    className: "pl-tabheader",
+
+    tagName: "li",
+
+    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+
+    events: {
+        "click": "onClickHandler",
+        "click .pl-close": "onClickCloseHandler"
+    },
+
+    UI: {
+        label: '.pl-tabheader-text',
+        close: '.pl-close'
+    },
+
+    initialize: function (options) {
+        this.model = new TabHeaderModel(options);
+
+        this.on('rendered', this.onRenderedHandler);
+    },
+
+    render: function () {
+        this.$el.html(this.template);
+        this.bindUIElements();
+        this.trigger('rendered');
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    /**
+     *
+     * @param {string} value
+     */
+    setText: function (value) {
+        this.model.set('text', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setCanClose: function (value) {
+        this.model.set('canClose', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setSelected: function (value) {
+        this.model.set('selected', value);
+    },
+
+    /**
+     * @protected
+     */
+    updateProperties: function () {
+        this.updateTextHandler();
+        this.updateCanClose();
+        this.updateSelectedHandler();
+    },
+
+    /**
+     * @protected
+     */
+    onRenderedHandler: function () {
+        this.updateProperties();
+        this.listenTo(this.model, 'change:text', this.updateTextHandler);
+        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
+        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateTextHandler: function () {
+        var text = this.model.get('text');
+        this.ui.label.text(text);
+    },
+
+    /**
+     * @protected
+     */
+    updateCanClose: function () {
+        var canClose = this.model.get('canClose');
+        this.ui.close.toggleClass('hidden', !canClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedHandler: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('pl-active active', selected);
+    },
+
+    onClickHandler: function (event) {
+        this.trigger('selected');
+    },
+
+    onClickCloseHandler: function (event) {
+        event.stopPropagation();
+        this.trigger('close');
+    }
+
+});
+
+_.extend(TabHeaderView.prototype, bindUIElementsMixin);
+
 //####app\controls\tabPanel\tabPage\tabPageControl.js
 /**
  *
@@ -13284,129 +13407,6 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
     }
 
 });
-
-//####app\controls\tabPanel\tabHeader\tabHeaderView.js
-var TabHeaderModel = Backbone.Model.extend({
-
-    defaults: {
-        text: '',
-        canClose: false
-    }
-});
-
-var TabHeaderView = Backbone.View.extend({
-
-    className: "pl-tabheader",
-
-    tagName: "li",
-
-    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
-
-    events: {
-        "click": "onClickHandler",
-        "click .pl-close": "onClickCloseHandler"
-    },
-
-    UI: {
-        label: '.pl-tabheader-text',
-        close: '.pl-close'
-    },
-
-    initialize: function (options) {
-        this.model = new TabHeaderModel(options);
-
-        this.on('rendered', this.onRenderedHandler);
-    },
-
-    render: function () {
-        this.$el.html(this.template);
-        this.bindUIElements();
-        this.trigger('rendered');
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    /**
-     *
-     * @param {string} value
-     */
-    setText: function (value) {
-        this.model.set('text', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setCanClose: function (value) {
-        this.model.set('canClose', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setSelected: function (value) {
-        this.model.set('selected', value);
-    },
-
-    /**
-     * @protected
-     */
-    updateProperties: function () {
-        this.updateTextHandler();
-        this.updateCanClose();
-        this.updateSelectedHandler();
-    },
-
-    /**
-     * @protected
-     */
-    onRenderedHandler: function () {
-        this.updateProperties();
-        this.listenTo(this.model, 'change:text', this.updateTextHandler);
-        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateTextHandler: function () {
-        var text = this.model.get('text');
-        this.ui.label.text(text);
-    },
-
-    /**
-     * @protected
-     */
-    updateCanClose: function () {
-        var canClose = this.model.get('canClose');
-        this.ui.close.toggleClass('hidden', !canClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateSelectedHandler: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('pl-active active', selected);
-    },
-
-    onClickHandler: function (event) {
-        this.trigger('selected');
-    },
-
-    onClickCloseHandler: function (event) {
-        event.stopPropagation();
-        this.trigger('close');
-    }
-
-});
-
-_.extend(TabHeaderView.prototype, bindUIElementsMixin);
 
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
@@ -14579,6 +14579,78 @@ var DividerView = ControlView.extend(
 	}
 );
 
+//####app\controls\extensionPanel\extensionPanel.js
+var ExtensionPanelControl = function () {
+    _.superClass(ExtensionPanelControl, this);
+};
+
+_.inherit(ExtensionPanelControl, ContainerControl);
+
+_.extend(ExtensionPanelControl.prototype, {
+
+    createControlModel: function () {
+        return new ExtensionPanelModel();
+    },
+
+    createControlView: function (model) {
+        return new ExtensionPanelView({model: model});
+    }
+});
+//####app\controls\extensionPanel\extensionPanelModel.js
+var ExtensionPanelModel = ContainerModel.extend({
+    defaults: _.defaults({
+        extensionName: null,
+        context: null
+    }, ContainerModel.prototype.defaults),
+
+    initialize: function () {
+        ContainerModel.prototype.initialize.apply(this);
+    }
+});
+//####app\controls\extensionPanel\extensionPanelView.js
+var ExtensionPanelView = ContainerView.extend({
+    className: 'pl-extension-panel',
+
+    initialize: function () {
+        ContainerView.prototype.initialize.apply(this);
+        this.extensionObject = null;
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        if (!this.extensionObject) {
+            this.initExtensionObject();
+        }
+
+        this.extensionObject.render();
+
+        this.updateProperties();
+        this.trigger('render');
+
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    updateGrouping: function(){
+
+    },
+
+    initExtensionObject: function () {
+        var extensionName = this.model.get('extensionName'),
+            context = this.model.get('context'),
+            itemTemplate = this.model.get('itemTemplate'),
+            parameters = this.model.get('parameters'),
+            items = this.model.get('items'),
+            builder = this.model.get('builder');
+
+        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder});
+    }
+});
+
 //####app\controls\fileBox\fileBoxControl.js
 /**
  *
@@ -14996,78 +15068,6 @@ var FileBoxView = ControlView.extend(/** @lends FileBoxView.prototype */ _.exten
 
 }));
 
-//####app\controls\extensionPanel\extensionPanel.js
-var ExtensionPanelControl = function () {
-    _.superClass(ExtensionPanelControl, this);
-};
-
-_.inherit(ExtensionPanelControl, ContainerControl);
-
-_.extend(ExtensionPanelControl.prototype, {
-
-    createControlModel: function () {
-        return new ExtensionPanelModel();
-    },
-
-    createControlView: function (model) {
-        return new ExtensionPanelView({model: model});
-    }
-});
-//####app\controls\extensionPanel\extensionPanelModel.js
-var ExtensionPanelModel = ContainerModel.extend({
-    defaults: _.defaults({
-        extensionName: null,
-        context: null
-    }, ContainerModel.prototype.defaults),
-
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this);
-    }
-});
-//####app\controls\extensionPanel\extensionPanelView.js
-var ExtensionPanelView = ContainerView.extend({
-    className: 'pl-extension-panel',
-
-    initialize: function () {
-        ContainerView.prototype.initialize.apply(this);
-        this.extensionObject = null;
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        if (!this.extensionObject) {
-            this.initExtensionObject();
-        }
-
-        this.extensionObject.render();
-
-        this.updateProperties();
-        this.trigger('render');
-
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    updateGrouping: function(){
-
-    },
-
-    initExtensionObject: function () {
-        var extensionName = this.model.get('extensionName'),
-            context = this.model.get('context'),
-            itemTemplate = this.model.get('itemTemplate'),
-            parameters = this.model.get('parameters'),
-            items = this.model.get('items'),
-            builder = this.model.get('builder');
-
-        this.extensionObject = new window[extensionName](context, {$el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder});
-    }
-});
-
 //####app\controls\form\formControl.js
 function FormControl(parent) {
 	_.superClass(FormControl, this, parent);
@@ -15309,6 +15309,101 @@ var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
 }));
 
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
+}
+
+_.inherit(IconControl, Control);
+
+_.extend(IconControl.prototype, {
+
+    createControlModel: function () {
+        return new IconModel();
+    },
+
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
+
+});
+//####app\controls\icon\iconModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+var IconModel = ControlModel.extend({
+
+    defaults: _.defaults({
+        value: null,
+        focusable: false
+
+    }, ControlModel.prototype.defaults),
+
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
+
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
+
+    className: 'pl-icon fa',
+
+    tagName: 'i',
+
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
+    updateValue: function () {
+        this.renderIcon();
+    }
+
+});
+
 //####app\controls\gridPanel\gridPanelControl.js
 /**
  *
@@ -15426,101 +15521,6 @@ var GridPanelView = ContainerView.extend(
         updateGrouping: function(){}
     }
 );
-
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    }
-
-});
 
 //####app\controls\imageBox\imageBoxControl.js
 /**
@@ -22731,6 +22731,53 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     }
 });
 
+//####app\elements\contextMenu\contextMenu.js
+/**
+ * @class
+ * @constructor
+ * @arguments Container
+ */
+function ContextMenu(parent) {
+    _.superClass(ContextMenu, this, parent);
+}
+
+window.InfinniUI.ContextMenu = ContextMenu;
+
+_.inherit(ContextMenu, Container);
+
+_.extend(ContextMenu.prototype, {
+
+    createControl: function () {
+        return new ContextMenuControl();
+    }
+
+});
+
+//####app\elements\contextMenu\contextMenuBuilder.js
+/**
+ * @constructor
+ * @arguments ContainerBuilder
+ */
+function ContextMenuBuilder() {
+	_.superClass(ContextMenuBuilder, this);
+}
+
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
+_.inherit(ContextMenuBuilder, ContainerBuilder);
+
+_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+
+	createElement: function (params) {
+		return new ContextMenu(params.parent);
+	},
+
+	applyMetadata: function (params) {
+		ContainerBuilder.prototype.applyMetadata.call(this, params);
+	}
+
+});
+
 //####app\elements\dataGrid\dataGrid.js
 function DataGrid(parent) {
     _.superClass(DataGrid, this, parent);
@@ -23352,53 +23399,6 @@ DataGridColumnBuilder.prototype.buildHeaderTemplateByDefault = function (params)
 
 };
 
-//####app\elements\contextMenu\contextMenu.js
-/**
- * @class
- * @constructor
- * @arguments Container
- */
-function ContextMenu(parent) {
-    _.superClass(ContextMenu, this, parent);
-}
-
-window.InfinniUI.ContextMenu = ContextMenu;
-
-_.inherit(ContextMenu, Container);
-
-_.extend(ContextMenu.prototype, {
-
-    createControl: function () {
-        return new ContextMenuControl();
-    }
-
-});
-
-//####app\elements\contextMenu\contextMenuBuilder.js
-/**
- * @constructor
- * @arguments ContainerBuilder
- */
-function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
-}
-
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
-
-_.inherit(ContextMenuBuilder, ContainerBuilder);
-
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
-
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
-
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
-
-});
-
 //####app\elements\dataNavigation\dataNavigation.js
 function DataNavigation (parent) {
     _.superClass(DataNavigation, this, parent);
@@ -23596,6 +23596,79 @@ DividerBuilder.prototype.applyMetadata = function (params) {
 	ElementBuilder.prototype.applyMetadata.call(this, params);
 };
 
+
+//####app\elements\extensionPanel\extensionPanel.js
+function ExtensionPanel(parent) {
+    _.superClass(ExtensionPanel, this, parent);
+}
+
+window.InfinniUI.ExtensionPanel = ExtensionPanel;
+
+_.inherit(ExtensionPanel, Container);
+
+_.extend(ExtensionPanel.prototype, {
+    createControl: function () {
+        var control = new ExtensionPanelControl();
+        return control;
+    },
+
+    setExtensionName: function (extensionName) {
+        return this.control.set('extensionName', extensionName);
+    },
+
+    setParameters: function (parameters) {
+        return this.control.set('parameters', parameters);
+    },
+
+    getParameters: function () {
+        return this.control.get('parameters');
+    },
+
+    setContext: function (context) {
+        this.control.set('context', context);
+    },
+
+    setBuilder: function (builder) {
+        this.control.set('builder', builder);
+    }
+});
+
+//####app\elements\extensionPanel\extensionPanelBuilder.js
+function ExtensionPanelBuilder() {}
+
+window.InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
+
+_.inherit(ExtensionPanelBuilder, ContainerBuilder);
+
+_.extend(ExtensionPanelBuilder.prototype, {
+
+    applyMetadata: function (params) {
+        var metadata = params.metadata;
+        var element = params.element;
+        var parentView = params.parentView;
+        var builder = params.builder;
+
+        ContainerBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setExtensionName(metadata['ExtensionName']);
+
+        var parameters = {};
+        _.each(metadata.Parameters, function (parameterMetadata) {
+            var param = builder.buildType('Parameter', parameterMetadata, {parentView: parentView, basePathOfProperty: params.basePathOfProperty});
+            parameters[param.getName()] = param;
+        });
+
+        element.setParameters(parameters);
+        element.setContext(parentView.getContext());
+        element.setBuilder(builder);
+    },
+
+    createElement: function (params) {
+        var element = new ExtensionPanel(params.parent);
+
+        return element;
+    }
+});
 
 //####app\elements\fileBox\fileBox.js
 /**
@@ -23810,79 +23883,6 @@ FileBoxValueConverter.prototype.toElement = function (context, args) {
 
     return url;
 };
-
-//####app\elements\extensionPanel\extensionPanel.js
-function ExtensionPanel(parent) {
-    _.superClass(ExtensionPanel, this, parent);
-}
-
-window.InfinniUI.ExtensionPanel = ExtensionPanel;
-
-_.inherit(ExtensionPanel, Container);
-
-_.extend(ExtensionPanel.prototype, {
-    createControl: function () {
-        var control = new ExtensionPanelControl();
-        return control;
-    },
-
-    setExtensionName: function (extensionName) {
-        return this.control.set('extensionName', extensionName);
-    },
-
-    setParameters: function (parameters) {
-        return this.control.set('parameters', parameters);
-    },
-
-    getParameters: function () {
-        return this.control.get('parameters');
-    },
-
-    setContext: function (context) {
-        this.control.set('context', context);
-    },
-
-    setBuilder: function (builder) {
-        this.control.set('builder', builder);
-    }
-});
-
-//####app\elements\extensionPanel\extensionPanelBuilder.js
-function ExtensionPanelBuilder() {}
-
-window.InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
-
-_.inherit(ExtensionPanelBuilder, ContainerBuilder);
-
-_.extend(ExtensionPanelBuilder.prototype, {
-
-    applyMetadata: function (params) {
-        var metadata = params.metadata;
-        var element = params.element;
-        var parentView = params.parentView;
-        var builder = params.builder;
-
-        ContainerBuilder.prototype.applyMetadata.call(this, params);
-
-        element.setExtensionName(metadata['ExtensionName']);
-
-        var parameters = {};
-        _.each(metadata.Parameters, function (parameterMetadata) {
-            var param = builder.buildType('Parameter', parameterMetadata, {parentView: parentView, basePathOfProperty: params.basePathOfProperty});
-            parameters[param.getName()] = param;
-        });
-
-        element.setParameters(parameters);
-        element.setContext(parentView.getContext());
-        element.setBuilder(builder);
-    },
-
-    createElement: function (params) {
-        var element = new ExtensionPanel(params.parent);
-
-        return element;
-    }
-});
 
 //####app\elements\form\form.js
 /**
@@ -30031,17 +30031,12 @@ _.extend(DateTimeFormat.prototype, {
                 return hoursIndex.toString();
             }
         },
-        '%h': function(date){
-            var hoursIndex = date.getHours();
-            if(hoursIndex > 12){
-                hoursIndex -= 12;
-            }
-            return hoursIndex.toString();
-        },
         'h': function(date){
             var hoursIndex = date.getHours();
             if(hoursIndex > 12){
                 hoursIndex -= 12;
+            } else if (hoursIndex === 0) {
+                hoursIndex = 12;
             }
             return hoursIndex.toString();
         },
@@ -30774,12 +30769,56 @@ var DateTimeMaskPartStrategy = (function () {
     var regExpFullYear = /^\d{1,4}$/;
     var regExpYear = /^\d{1,2}$/;
     var regExpHour24 = /^(?:[2][0-3]|[01]?[0-9]?)$/;
+    var regExpHour12 = /^(?:0?\d|1[0-2])$/;
     var regExp60 = /^[0-5]?[0-9]$/;
+
+    function filledDay(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledMonth(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        var val = parseInt(value, 10);
+        return [2,3,4,5,6,7,8,9].indexOf(val) !== -1 || value.length === 2;
+    }
+
+    function filledHours(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 2 || value.length === 2;
+    }
+
+    function filledMinutes(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
+    function filledSeconds(value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return parseInt(value, 10) > 5 || value.length === 2;
+    }
+
 
     return {
         'd': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 31;
             },
@@ -30789,6 +30828,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30815,6 +30855,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledDay,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30831,7 +30872,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'M': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 1;
                 this.max = 12;
             },
@@ -30841,6 +30882,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30867,6 +30909,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMonth,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -30971,7 +31014,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'H': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 23;
             },
@@ -30981,6 +31024,34 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
+            prev: function (value) {
+                return this.getPrevIntValue(value);
+            },
+            next: function (value) {
+                return this.getNextIntValue(value);
+            },
+            format: function (value) {
+                return this.padNumber(value);
+            },
+            apply: function (value, part) {
+                value.setHours(part);
+                return value;
+            }
+        },
+        'h': {
+            init: function () {
+                this.width = 1;
+                this.min = 1;
+                this.max = 12;
+            },
+            match: function (value) {
+                return regExpHour12.test(value);
+            },
+            validator: function (value) {
+                return this.rangeValidator(value);
+            },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31007,6 +31078,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledHours,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31023,7 +31095,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         'm': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31033,6 +31105,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31059,6 +31132,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledMinutes,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31075,7 +31149,7 @@ var DateTimeMaskPartStrategy = (function () {
         },
         's': {
             init: function () {
-                this.width = 2;
+                this.width = 1;
                 this.min = 0;
                 this.max = 59;
             },
@@ -31085,6 +31159,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31111,6 +31186,7 @@ var DateTimeMaskPartStrategy = (function () {
             validator: function (value) {
                 return this.rangeValidator(value);
             },
+            filled: filledSeconds,
             prev: function (value) {
                 return this.getPrevIntValue(value);
             },
@@ -31179,6 +31255,44 @@ var DateTimeMaskPartStrategy = (function () {
                 }
                 return value;
             }
+        },
+        'tt': {
+            init: function () {
+                // this.min = 0;
+                // this.max = 1;
+                this.width = 2;
+            },
+            match: function() {
+                return false;
+            },
+            prev: function (value) {
+                var newValue = this.getPrevMonthValue('tt', value);
+
+                return (newValue === value) ? this.getNextMonthValue('tt', value): newValue;
+            },
+            next: function (value) {
+                var newValue = this.getNextMonthValue('tt', value);
+                return (newValue === value) ? this.getPrevMonthValue('tt', value): newValue;
+            },
+            apply: function (value, part) {
+                if (value instanceof Date) {
+                    var hours = value.getHours();
+                    var culture = this.getCurrentCulture();
+                    var formatInfo = culture.dateTimeFormatInfo;
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (part === formatInfo.pmDesignator) {
+                        hours += 12;
+                    }
+
+                    value.setHours(hours);
+                }
+
+                return value;
+            }
         }
 
     }
@@ -31194,6 +31308,14 @@ _.extend(DateTimeMaskPart.prototype, {
 
     init: function () {
 
+    },
+
+    filled: function (value) {
+        if (value === null || typeof value === 'undefined') {
+            return false;
+        }
+
+        return value.length === this.width;
     },
 
     match: function (value) {
@@ -31271,9 +31393,15 @@ _.extend(DateTimeMaskPart.prototype, {
         return value;
     },
 
+    getCurrentCulture: function () {
+        var culture = new Culture(InfinniUI.config.lang);
+
+        return culture;
+    },
+
     getListForMask: function (mask) {
         //@TODO Получать культуру из контекста!
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
 
         var list;
@@ -31290,6 +31418,9 @@ _.extend(DateTimeMaskPart.prototype, {
                 break;
             case 'ddd':
                 list = formatInfo.abbreviatedDayNames;
+                break;
+            case 'tt':
+                list = [formatInfo.amDesignator, formatInfo.pmDesignator];
                 break;
         }
 
@@ -31660,27 +31791,25 @@ _.extend(DateTimeEditMask.prototype, {
 
         if (data !== null) {
             item = data.item;
-            index = position - data.left;
+            index = position - data.left;   //Позиция внутри текущего шаблона ввода маски
 
-            if (index > item.text.length) {
+            if (index > item.text.length) { //Если превышение по правой границе - в конец
+                position = data.left + item.text.length;
+                index = item.text.length;
+            } else if (index < 0) { //Если превышение по левой границе - в начало шаблона
                 position = data.left;
+                index = 0;
             }
 
             mask = this.masks[item.mask];
 
-            newpos = position - item.position;
-            if(newpos < 0) newpos = 0;
+            text = item.text.slice(0, index) + char + item.text.slice(index);
 
-            if(item.text.slice(newpos, newpos+1)) {
-                text = [item.text.slice(0, newpos), char, item.text.slice(newpos+1)].join('');
-            }else{
-                text = [item.text.slice(0, data.index), char, item.text.slice(data.index)].join('');
-            }
 
             if(mask.match(text)) {
                 item.text = text;
                 position = this.moveToNextChar(position);
-                if (mask.width === newpos+1) {
+                if (mask.filled(text)) {
                     position = this.getNextItemMask(position);
                 }
             } else {    //Нажатая кнопка не подходит под маску
@@ -31997,7 +32126,9 @@ _.extend(DateTimeEditMask.prototype, {
         's': new DateTimeMaskPart('s'),
         'ss': new DateTimeMaskPart('ss'),
         'MMM': new DateTimeMaskPart('MMM'),
-        'MMMM': new DateTimeMaskPart('MMMM')
+        'MMMM': new DateTimeMaskPart('MMMM'),
+        'h': new DateTimeMaskPart('h'),
+        'tt': new DateTimeMaskPart('tt')
     }
 
 });
@@ -34639,6 +34770,83 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
+//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
+var AjaxLoaderIndicator = function ($target, config) {
+    var defaults = {
+        delay: 50
+    };
+
+    var options = _.defaults({}, config, defaults);
+
+    var model = new AjaxLoaderIndicatorModel({}, options);
+    var ajaxLoaderIndicator = new AjaxLoaderIndicatorView({model: model});
+
+
+    var $indicator = ajaxLoaderIndicator.render().$el;
+    $target.append($indicator);
+};
+
+
+//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicatorModel.js
+var AjaxLoaderIndicatorModel = Backbone.Model.extend({
+
+    defaults: {
+        requests: 0,
+        progress: false
+    },
+
+    initialize: function (attributes, options) {
+        var exchange = window.InfinniUI.global.messageBus;
+
+        exchange.subscribe(messageTypes.onDataLoaded, this.onDataLoaded.bind(this));
+        exchange.subscribe(messageTypes.onDataLoading, this.onDataLoading.bind(this));
+
+        var onRequestsChanged = (options.delay > 0) ? _.debounce(this.onRequestsChanged.bind(this), 50) :
+            this.onRequestsChanged.bind(this);
+
+        this.on('change:requests', onRequestsChanged);
+    },
+
+    onDataLoading: function () {
+        var requests = this.get('requests');
+        this.set('requests', requests + 1);
+    },
+
+    onDataLoaded: function () {
+        var requests = this.get('requests');
+        this.set('requests', requests - 1);
+    },
+
+    onRequestsChanged: function (model, value) {
+        this.set('progress', value > 0);
+    }
+
+});
+//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicatorView.js
+var AjaxLoaderIndicatorView = Backbone.View.extend({
+
+    className: 'pl-ajaxloader',
+
+    template: InfinniUI.Template["services/ajaxLoaderIndicator/template/template.tpl.html"],
+
+    hiddenClassName: 'hidden',
+
+    initialize: function () {
+        this.listenTo(this.model, 'change:progress', this.updateProgress);
+    },
+
+    render: function () {
+        this.$el.html(this.template());
+        this.updateProgress();
+        return this;
+    },
+
+    updateProgress: function () {
+        var progress = this.model.get('progress');
+        this.$el.toggleClass(this.hiddenClassName, !progress);
+    }
+
+});
 //####app\services\contextMenuService\contextMenuService.js
 InfinniUI.ContextMenuService = (function () {
 
@@ -34811,83 +35019,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
-var AjaxLoaderIndicator = function ($target, config) {
-    var defaults = {
-        delay: 50
-    };
-
-    var options = _.defaults({}, config, defaults);
-
-    var model = new AjaxLoaderIndicatorModel({}, options);
-    var ajaxLoaderIndicator = new AjaxLoaderIndicatorView({model: model});
-
-
-    var $indicator = ajaxLoaderIndicator.render().$el;
-    $target.append($indicator);
-};
-
-
-//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicatorModel.js
-var AjaxLoaderIndicatorModel = Backbone.Model.extend({
-
-    defaults: {
-        requests: 0,
-        progress: false
-    },
-
-    initialize: function (attributes, options) {
-        var exchange = window.InfinniUI.global.messageBus;
-
-        exchange.subscribe(messageTypes.onDataLoaded, this.onDataLoaded.bind(this));
-        exchange.subscribe(messageTypes.onDataLoading, this.onDataLoading.bind(this));
-
-        var onRequestsChanged = (options.delay > 0) ? _.debounce(this.onRequestsChanged.bind(this), 50) :
-            this.onRequestsChanged.bind(this);
-
-        this.on('change:requests', onRequestsChanged);
-    },
-
-    onDataLoading: function () {
-        var requests = this.get('requests');
-        this.set('requests', requests + 1);
-    },
-
-    onDataLoaded: function () {
-        var requests = this.get('requests');
-        this.set('requests', requests - 1);
-    },
-
-    onRequestsChanged: function (model, value) {
-        this.set('progress', value > 0);
-    }
-
-});
-//####app\services\ajaxLoaderIndicator\ajaxLoaderIndicatorView.js
-var AjaxLoaderIndicatorView = Backbone.View.extend({
-
-    className: 'pl-ajaxloader',
-
-    template: InfinniUI.Template["services/ajaxLoaderIndicator/template/template.tpl.html"],
-
-    hiddenClassName: 'hidden',
-
-    initialize: function () {
-        this.listenTo(this.model, 'change:progress', this.updateProgress);
-    },
-
-    render: function () {
-        this.$el.html(this.template());
-        this.updateProgress();
-        return this;
-    },
-
-    updateProgress: function () {
-        var progress = this.model.get('progress');
-        this.$el.toggleClass(this.hiddenClassName, !progress);
-    }
-
-});
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
