@@ -2198,6 +2198,7 @@ describe('ServerAction', function () {
             assert.equal(window.serverActionTest_urlParams.contentType, 'application/x-www-form-urlencoded; charset=utf-8');
         });
 
+
         it('post', function () {
             // Given
             window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
@@ -2271,6 +2272,127 @@ describe('ServerAction', function () {
             assert.equal(window.serverActionTest_urlParams.args, '{"a":2,"b":"abc"}');
         });
     });
+
+
+    it('should escape quote in Data', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+        var json = {"name": "value"};
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    b: '<%param1%>'
+                },
+                Params: {
+                    param1: JSON.stringify(json)
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.args.b, JSON.stringify(json));
+    });
+
+    it('should keep data type', function () {
+        var data;
+        // Given
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Origin: 'http://some.ru',
+                Path: '/json',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(JSON.stringify(data.args), JSON.stringify({"Number": 1, "String": "text", "Null": null}));
+    });
+
+    it('should use "config.serverUrl" as "Origin" by default', function () {
+        var data;
+        // Given
+        var oldServerUrl = window.InfinniUI.config.serverUrl;
+
+        window.InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
+
+        window.InfinniUI.providerRegister.register('ServerActionProvider', function () {
+            return {
+                request: function (requestData) {
+                    data = requestData;
+                }
+            };
+        });
+
+        var builder = new InfinniUI.ApplicationBuilder();
+
+        var metadata = {
+            ServerAction: {
+                Path: '/public',
+                Method: 'POST',
+                Data: {
+                    "Number": '<%paramNumber%>',
+                    "String": '<%paramString%>',
+                    "Null": '<%paramNull%>'
+                },
+                Params: {
+                    paramNumber: 1,
+                    paramString: 'text',
+                    paramNull: null
+                }
+            }
+        };
+
+        var serverAction = builder.build(metadata, {parentView: fakeView()});
+
+        // When
+        serverAction.execute();
+
+        // Then
+        assert.equal(data.requestUrl, 'ftp://ftp.site.org/public');
+    });
+
 });
 
 describe('UpdateAction', function () {
@@ -14567,6 +14689,55 @@ describe('PasswordBoxBuilder', function () {
     });
 });
 
+describe('ScrollPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('implements API methods', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
+            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
+            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
+            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
+        });
+
+
+        it('Default values', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
+            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
+        });
+
+
+    });
+
+
+});
+
+describe('ScrollPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            ScrollPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var scrollPanel = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
+});
+
 describe('PopupButtonElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14785,55 +14956,6 @@ describe('PopupButtonBuilder', function () {
 
         });
     });
-});
-
-describe('ScrollPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('implements API methods', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
-            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
-            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
-            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
-        });
-
-
-        it('Default values', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
-            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
-        });
-
-
-    });
-
-
-});
-
-describe('ScrollPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            ScrollPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var scrollPanel = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
 });
 
 describe('TabPanelElement', function () {
@@ -15096,6 +15218,69 @@ describe('TextEditorBase (Element)', function () {
 
 });
 
+describe('ToolBarElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+
+        describe('Implementing Container Methods', function () {
+            testHelper.checkContainerMethods(element);
+        });
+
+    });
+
+    describe('render', function () {
+
+        var element = builder.buildType('ToolBar', {
+            Items: [
+                {
+                    Button: {
+                        Text: "Button 1"
+                    }
+                },
+                {
+                    Button: {
+                        Text: "Button 2"
+                    }
+
+                }
+            ]
+        });
+
+        it('render element', function () {
+            // Given
+
+            // When
+            var $el = element.render();
+
+            // Then
+            assert.equal($el.length, 1)
+        });
+
+        it('contains items', function () {
+            var items = element.getItems();
+
+            assert.equal(items.length, 2);
+        })
+
+    });
+});
+
+describe('ToolBarBuilder', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+
+    it('Build ToolBar instance', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+        assert.isTrue(typeof element !== 'undefined' && element !== null);
+        assert.isTrue(element instanceof InfinniUI.ToolBar);
+    });
+
+});
+
 describe('ToggleButton', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -15207,69 +15392,6 @@ describe('ToggleButton', function () {
             assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
         });
     });
-});
-
-describe('ToolBarElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-
-        describe('Implementing Container Methods', function () {
-            testHelper.checkContainerMethods(element);
-        });
-
-    });
-
-    describe('render', function () {
-
-        var element = builder.buildType('ToolBar', {
-            Items: [
-                {
-                    Button: {
-                        Text: "Button 1"
-                    }
-                },
-                {
-                    Button: {
-                        Text: "Button 2"
-                    }
-
-                }
-            ]
-        });
-
-        it('render element', function () {
-            // Given
-
-            // When
-            var $el = element.render();
-
-            // Then
-            assert.equal($el.length, 1)
-        });
-
-        it('contains items', function () {
-            var items = element.getItems();
-
-            assert.equal(items.length, 2);
-        })
-
-    });
-});
-
-describe('ToolBarBuilder', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-
-    it('Build ToolBar instance', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-        assert.isTrue(typeof element !== 'undefined' && element !== null);
-        assert.isTrue(element instanceof InfinniUI.ToolBar);
-    });
-
 });
 
 describe('View', function () {
