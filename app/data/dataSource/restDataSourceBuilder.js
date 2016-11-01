@@ -16,7 +16,9 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         var tmpParams;
 
-        this.initProviderErrorHandling(dataSource);
+        if ( metadata['OnProviderError'] == null ) {
+            this.initProviderErrorHandling(dataSource);
+        }
 
         if('GettingParams' in metadata){
             tmpParams = this.extractUrlParams(metadata['GettingParams'], '.urlParams.get.params');
