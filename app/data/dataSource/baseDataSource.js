@@ -468,7 +468,7 @@ var BaseDataSource = Backbone.Model.extend({
             logger = window.InfinniUI.global.logger,
             that = this,
             validateResult,
-            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
+            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -528,7 +528,7 @@ var BaseDataSource = Backbone.Model.extend({
             that = this,
             itemId = this.idOfItem(item),
             isItemInSet = this.get('itemsById')[itemId] !== undefined,
-            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
+            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
