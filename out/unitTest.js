@@ -7610,27 +7610,6 @@ describe('ContextMenu (Control)', function () {
 	});
 });
 
-describe('DataNavigationControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('DataNavigation', {});
-        });
-
-        it('should render dataNavigation with correct class', function () {
-            //Given
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-data-navigation'));
-        });
-    });
-});
-
 describe('DateTimePickerControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -7703,6 +7682,27 @@ describe('DateTimePickerControl', function () {
 
         });
 
+    });
+});
+
+describe('DataNavigationControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('DataNavigation', {});
+        });
+
+        it('should render dataNavigation with correct class', function () {
+            //Given
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-data-navigation'));
+        });
     });
 });
 
@@ -7953,6 +7953,100 @@ describe('IndeterminateCheckBox', function () {
 
 });
 
+describe('Link (Control)', function () {
+
+	describe('Check href and target params in LinkElement', function () {
+
+		it('should update from default href attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
+
+				view.childElements[0].setHref('common.ru');
+				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
+
+				view.childElements[0].setHref('example.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
+			}
+		});
+
+		it('should update from default target attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				
+
+				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+
+		it('should apply href and target attributes from metadata', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+							"Href": "http://example.com",
+							"Target": "top"
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
+				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
+
+				view.childElements[0].setHref('http://exampleNew.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+	});
+});
+
 describe('Label', function () {
     var label;
 
@@ -8049,100 +8143,6 @@ describe('Label', function () {
         });
 
     });
-});
-
-describe('Link (Control)', function () {
-
-	describe('Check href and target params in LinkElement', function () {
-
-		it('should update from default href attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
-
-				view.childElements[0].setHref('common.ru');
-				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
-
-				view.childElements[0].setHref('example.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
-			}
-		});
-
-		it('should update from default target attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				
-
-				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-
-		it('should apply href and target attributes from metadata', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-							"Href": "http://example.com",
-							"Target": "top"
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
-				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
-
-				view.childElements[0].setHref('http://exampleNew.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-	});
 });
 
 describe('PanelControl', function () {
@@ -8509,68 +8509,6 @@ describe('PasswordBox', function () {
 
 });
 
-describe('PopupButtonControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder(),
-            button;
-
-        beforeEach(function () {
-            button = builder.buildType('PopupButton', {
-                Items: [
-                    {
-                        "Button": {
-                            "Name": "AddButton",
-                            "Text": "Add"
-                        }
-                    },
-                    {
-                        "Button": {
-                            "Name": "DropButton",
-                            "Text": "Drop"
-                        }
-                    },
-                    {
-                        "Button": {
-                            "Name": "BackButton",
-                            "Text": "Back"
-                        }
-                    }
-                ]
-            });
-        });
-
-
-        it('should render button with correct class', function () {
-            //Given
-            button.setText('Click me!');
-            //When
-            var $el = button.render();
-            //Then
-            var $button = $el.find('.pl-popup-button__button');
-            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
-            assert.equal($button.length, 1, 'button render');
-            assert.equal($button.text(), 'Click me!', 'button text');
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-        it('should handle onClick', function () {
-            //Given
-            var click = 0;
-            button.setText('Click me!');
-            button.onClick(function () {
-                click++;
-            });
-            //When
-            var $el = button.render();
-            button.click();
-            //Then
-            assert.isTrue(click === 1);
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-    });
-});
-
 describe('ScrollPanelControl', function () {
 
     describe('render', function () {
@@ -8679,6 +8617,68 @@ describe('ScrollPanelControl', function () {
         });
     });
 });
+describe('PopupButtonControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder(),
+            button;
+
+        beforeEach(function () {
+            button = builder.buildType('PopupButton', {
+                Items: [
+                    {
+                        "Button": {
+                            "Name": "AddButton",
+                            "Text": "Add"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "DropButton",
+                            "Text": "Drop"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "BackButton",
+                            "Text": "Back"
+                        }
+                    }
+                ]
+            });
+        });
+
+
+        it('should render button with correct class', function () {
+            //Given
+            button.setText('Click me!');
+            //When
+            var $el = button.render();
+            //Then
+            var $button = $el.find('.pl-popup-button__button');
+            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
+            assert.equal($button.length, 1, 'button render');
+            assert.equal($button.text(), 'Click me!', 'button text');
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+        it('should handle onClick', function () {
+            //Given
+            var click = 0;
+            button.setText('Click me!');
+            button.onClick(function () {
+                click++;
+            });
+            //When
+            var $el = button.render();
+            button.click();
+            //Then
+            assert.isTrue(click === 1);
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+    });
+});
+
 describe('TabPanelControl', function () {
 
     describe('render', function () {
@@ -11677,6 +11677,205 @@ describe('Parameters', function () {
 
 });
 
+describe('Button', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Button', {});
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+
+        it('should set getContent', function () {
+
+            var element = new InfinniUI.Button();
+            assert.isNull(element.getContent());
+
+            // when
+            element.setContent(content);
+
+            // then
+            assert.isTrue(element.getContent() === content);
+
+            function content(context, args) {
+                return 'button content';
+            }
+        });
+
+    });
+
+
+    describe('render', function () {
+        var button;
+
+        beforeEach(function () {
+            button = builder.buildType('Button', {});
+        });
+
+        it('should create', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+
+            // When
+            var $el = button.render();
+
+            // Then
+            assert.equal($el.find('button').length, 1);
+        });
+
+        it('should set enabled', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+            button.setText('button');
+            var $el = button.render();
+
+            assert.equal(button.getEnabled(), true);
+            // When
+            button.setEnabled(false);
+
+            // Then
+            assert.equal(button.getEnabled(), false);
+        });
+
+        it('should set text', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+            button.setText('button');
+            var $el = button.render();
+
+            // When
+            button.setText('other button');
+
+            // Then
+            assert.equal($el.find('.btntext').text(), 'other button');
+        });
+
+
+        it('should execute action on click', function () {
+            // Given
+            var
+                //button = new InfinniUI.Button(),
+                onLastActionExecute = 0,
+                onNewActionExecute = 0;
+
+            button.setAction(new function(){
+                this.execute = function () {
+                    onLastActionExecute++;
+                };
+            });
+
+            button.setAction(new function(){
+                this.execute = function () {
+                    onNewActionExecute++;
+                };
+            });
+
+            assert.equal(onLastActionExecute, 0);
+            assert.equal(onNewActionExecute, 0);
+
+            // When
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(onLastActionExecute, 0);
+            assert.equal(onNewActionExecute, 1);
+        });
+
+        it('event onClick', function () {
+            // Given
+            var
+                //button = new InfinniUI.Button(),
+                onClickFlag = 0;
+
+            button.onClick(function(){
+                    onClickFlag++;
+            });
+
+            assert.equal(onClickFlag, 0);
+
+            // When
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(onClickFlag, 1);
+        });
+
+        it('should be true if scriptsHandlers call', function () {
+            //Given
+            var view = new InfinniUI.View();
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnClick',
+                func: function (context, args) {
+                    window.Test.button = 5;
+                }
+            });
+
+            scripts.add({
+                name: 'OnLoaded',
+                func: function (context, args) {
+                    window.Test.buttonLoaded = true;
+                }
+            });
+
+            var buttonBuilder = new InfinniUI.ButtonBuilder();
+            var metadata = {
+                OnClick:{
+                    Name: 'OnClick'
+                },
+                OnLoaded:{
+                    Name: 'OnLoaded'
+                }
+            };
+            window.Test = {button:1, buttonLoaded: false};
+
+            //When
+            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(window.Test.button, 5);
+            assert.isTrue(window.Test.buttonLoaded);
+        });
+    });
+});
+
+describe('ButtonBuilder', function () {
+    describe('build', function () {
+        it('successful build', function () {
+            // Given
+
+            var metadata = {
+                Text: "Click me",
+                Visible: false,
+                HorizontalAlignment: 'Right',
+                Action: {
+                    OpenAction: {
+                        LinkView: {
+                            AutoView: {}
+                        }
+                    }
+                }
+            };
+
+            // When
+            var builder = new InfinniUI.ButtonBuilder();
+            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
+
+            // Then
+            assert.isNotNull(button);
+            assert.equal(button.getText(), 'Click me');
+            assert.isFalse(button.getVisible());
+            assert.equal(button.getHorizontalAlignment(), 'Right');
+        });
+
+    });
+});
+
 describe('ComboBox', function () {
     describe('render', function () {
 
@@ -12167,6 +12366,76 @@ describe('ComboBox', function () {
 
 });
 
+describe('DataNavigation', function () {
+    it('should pass test default property', function () {
+        // Given
+        var metadata = {
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "PatientDataSource",
+                        "Items": [
+                            {"Id": 1, "Display": "LTE", "State": "New"},
+                            {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                            {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                DataNavigation: {
+                    Enabled: true,
+                    Name: "DataNavigation1",
+                    AvailablePageSizes: [ 20, 50, 100 ],
+                    DataSource: "PatientDataSource"
+                }
+            }]
+        };
+
+        // When
+        testHelper.applyViewMetadata(metadata, onDataNavigationReady);
+
+        // Then
+        function onDataNavigationReady(view, $view){
+            var dataNavigation = view.context.controls['DataNavigation1'];
+
+            assert.isDefined(dataNavigation);
+            assert.isTrue(dataNavigation.getEnabled());
+            assert.isTrue(dataNavigation.getVisible());
+            assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
+            assert.equal(dataNavigation.getDataSource().name, "PatientDataSource");
+
+            view.close();
+        }
+    });
+
+    it('should call onPageNumberChanged', function (done) {
+        // Given
+        var dataNavigation = new InfinniUI.DataNavigation();
+
+        dataNavigation.onPageNumberChanged(function(){
+            // Then
+            done();
+        });
+
+        // When
+        dataNavigation.setPageNumber(1);
+    });
+
+    it('should call onPageSizeChanged', function (done) {
+        // Given
+        var dataNavigation = new InfinniUI.DataNavigation();
+
+        dataNavigation.onPageSizeChanged(function(){
+            // Then
+            done();
+        });
+
+        // When
+        dataNavigation.setPageSize(1);
+    });
+});
 describe('DataGrid', function () {
 
     var metadata = {
@@ -12261,275 +12530,6 @@ describe('DataGrid', function () {
     });
 });
 
-describe('Button', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Button', {});
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-
-        it('should set getContent', function () {
-
-            var element = new InfinniUI.Button();
-            assert.isNull(element.getContent());
-
-            // when
-            element.setContent(content);
-
-            // then
-            assert.isTrue(element.getContent() === content);
-
-            function content(context, args) {
-                return 'button content';
-            }
-        });
-
-    });
-
-
-    describe('render', function () {
-        var button;
-
-        beforeEach(function () {
-            button = builder.buildType('Button', {});
-        });
-
-        it('should create', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-
-            // When
-            var $el = button.render();
-
-            // Then
-            assert.equal($el.find('button').length, 1);
-        });
-
-        it('should set enabled', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-            button.setText('button');
-            var $el = button.render();
-
-            assert.equal(button.getEnabled(), true);
-            // When
-            button.setEnabled(false);
-
-            // Then
-            assert.equal(button.getEnabled(), false);
-        });
-
-        it('should set text', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-            button.setText('button');
-            var $el = button.render();
-
-            // When
-            button.setText('other button');
-
-            // Then
-            assert.equal($el.find('.btntext').text(), 'other button');
-        });
-
-
-        it('should execute action on click', function () {
-            // Given
-            var
-                //button = new InfinniUI.Button(),
-                onLastActionExecute = 0,
-                onNewActionExecute = 0;
-
-            button.setAction(new function(){
-                this.execute = function () {
-                    onLastActionExecute++;
-                };
-            });
-
-            button.setAction(new function(){
-                this.execute = function () {
-                    onNewActionExecute++;
-                };
-            });
-
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 0);
-
-            // When
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 1);
-        });
-
-        it('event onClick', function () {
-            // Given
-            var
-                //button = new InfinniUI.Button(),
-                onClickFlag = 0;
-
-            button.onClick(function(){
-                    onClickFlag++;
-            });
-
-            assert.equal(onClickFlag, 0);
-
-            // When
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(onClickFlag, 1);
-        });
-
-        it('should be true if scriptsHandlers call', function () {
-            //Given
-            var view = new InfinniUI.View();
-            var scripts = view.getScripts();
-            scripts.add({
-                name: 'OnClick',
-                func: function (context, args) {
-                    window.Test.button = 5;
-                }
-            });
-
-            scripts.add({
-                name: 'OnLoaded',
-                func: function (context, args) {
-                    window.Test.buttonLoaded = true;
-                }
-            });
-
-            var buttonBuilder = new InfinniUI.ButtonBuilder();
-            var metadata = {
-                OnClick:{
-                    Name: 'OnClick'
-                },
-                OnLoaded:{
-                    Name: 'OnLoaded'
-                }
-            };
-            window.Test = {button:1, buttonLoaded: false};
-
-            //When
-            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(window.Test.button, 5);
-            assert.isTrue(window.Test.buttonLoaded);
-        });
-    });
-});
-
-describe('ButtonBuilder', function () {
-    describe('build', function () {
-        it('successful build', function () {
-            // Given
-
-            var metadata = {
-                Text: "Click me",
-                Visible: false,
-                HorizontalAlignment: 'Right',
-                Action: {
-                    OpenAction: {
-                        LinkView: {
-                            AutoView: {}
-                        }
-                    }
-                }
-            };
-
-            // When
-            var builder = new InfinniUI.ButtonBuilder();
-            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
-
-            // Then
-            assert.isNotNull(button);
-            assert.equal(button.getText(), 'Click me');
-            assert.isFalse(button.getVisible());
-            assert.equal(button.getHorizontalAlignment(), 'Right');
-        });
-
-    });
-});
-
-describe('DataNavigation', function () {
-    it('should pass test default property', function () {
-        // Given
-        var metadata = {
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "PatientDataSource",
-                        "Items": [
-                            {"Id": 1, "Display": "LTE", "State": "New"},
-                            {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                            {"Id": 3, "Display": "3G", "State": "Deprecated"}
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                DataNavigation: {
-                    Enabled: true,
-                    Name: "DataNavigation1",
-                    AvailablePageSizes: [ 20, 50, 100 ],
-                    DataSource: "PatientDataSource"
-                }
-            }]
-        };
-
-        // When
-        testHelper.applyViewMetadata(metadata, onDataNavigationReady);
-
-        // Then
-        function onDataNavigationReady(view, $view){
-            var dataNavigation = view.context.controls['DataNavigation1'];
-
-            assert.isDefined(dataNavigation);
-            assert.isTrue(dataNavigation.getEnabled());
-            assert.isTrue(dataNavigation.getVisible());
-            assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
-            assert.equal(dataNavigation.getDataSource().name, "PatientDataSource");
-
-            view.close();
-        }
-    });
-
-    it('should call onPageNumberChanged', function (done) {
-        // Given
-        var dataNavigation = new InfinniUI.DataNavigation();
-
-        dataNavigation.onPageNumberChanged(function(){
-            // Then
-            done();
-        });
-
-        // When
-        dataNavigation.setPageNumber(1);
-    });
-
-    it('should call onPageSizeChanged', function (done) {
-        // Given
-        var dataNavigation = new InfinniUI.DataNavigation();
-
-        dataNavigation.onPageSizeChanged(function(){
-            // Then
-            done();
-        });
-
-        // When
-        dataNavigation.setPageSize(1);
-    });
-});
 describe('DateTimePicker', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -12782,6 +12782,54 @@ describe('EditorBase', function () {
 
 });
 
+describe('FileBox', function () {
+
+    describe('Builder', function () {
+
+        it('should build fileBox', function () {
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                MaxSize: 0,
+                AcceptTypes: [
+                    'image/png',
+                    'image/jpeg'
+                ]
+            };
+
+            // When
+            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
+
+            // Then
+            assert.instanceOf(fileBox, InfinniUI.FileBox);
+            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
+        });
+
+    });
+
+    describe('Base API', function () {
+
+        it('setting properties', function () {
+            // Given
+            var fileBox = new InfinniUI.FileBox();
+
+            // When
+            fileBox.setMaxSize(50000);
+            fileBox.setFile('file');
+            fileBox.setAcceptTypes(['video/*']);
+            fileBox.setValue({Info: {}});
+
+            // Then
+            assert.equal(fileBox.getMaxSize(), 50000);
+            assert.equal(fileBox.getFile(), 'file');
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
+            assert.deepEqual(fileBox.getValue(), {Info: {}});
+        });
+
+    });
+});
+
 describe('Element', function () {
     describe('Element as path of TextBox', function () {
 
@@ -12857,54 +12905,6 @@ describe('Element', function () {
                 done();
             }
         });
-    });
-});
-
-describe('FileBox', function () {
-
-    describe('Builder', function () {
-
-        it('should build fileBox', function () {
-            // Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var metadata = {
-                MaxSize: 0,
-                AcceptTypes: [
-                    'image/png',
-                    'image/jpeg'
-                ]
-            };
-
-            // When
-            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
-
-            // Then
-            assert.instanceOf(fileBox, InfinniUI.FileBox);
-            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
-        });
-
-    });
-
-    describe('Base API', function () {
-
-        it('setting properties', function () {
-            // Given
-            var fileBox = new InfinniUI.FileBox();
-
-            // When
-            fileBox.setMaxSize(50000);
-            fileBox.setFile('file');
-            fileBox.setAcceptTypes(['video/*']);
-            fileBox.setValue({Info: {}});
-
-            // Then
-            assert.equal(fileBox.getMaxSize(), 50000);
-            assert.equal(fileBox.getFile(), 'file');
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
-            assert.deepEqual(fileBox.getValue(), {Info: {}});
-        });
-
     });
 });
 
@@ -14048,141 +14048,6 @@ describe('ListEditorBase', function () {
 
 
 });
-describe('NumericBox', function () {
-    describe('render', function () {
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                $el, $control;
-
-            // When
-            $el = numericBox.render();
-            $control = $el.find('input');
-
-            // Then
-            assert.equal($control.val(), 0);
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isFalse($el.hasClass('center-block'));
-        });
-
-        it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                $el, $control;
-            var numericBox1 = new InfinniUI.NumericBox(),
-                $el1, $control1;
-            var numericBox2 = new InfinniUI.NumericBox(),
-                $el2, $control2;
-
-            // When
-            $el = numericBox.render();
-            $control = $el.find('input');
-            numericBox1.render();
-            numericBox2.render();
-
-            numericBox.setValue(15);
-            numericBox.setMinValue(10);
-            numericBox.setMaxValue(50);
-            numericBox.setIncrement(5);
-            numericBox.setName('newName');
-            numericBox.setEnabled(false);
-            numericBox.setVisible(false);
-            numericBox.setHorizontalAlignment('Center');
-
-            numericBox1.setMaxValue(20);
-            numericBox1.setValue(50);
-            numericBox2.setMinValue(20);
-            numericBox2.setValue(5);
-
-            // Then
-            assert.equal(numericBox1.getValue(), 50);
-            assert.equal(numericBox2.getValue(), 5);
-
-            assert.equal(numericBox.getValue(), 15);
-            assert.equal(numericBox.getMinValue(), 10);
-            assert.equal(numericBox.getMaxValue(), 50);
-            assert.equal(numericBox.getIncrement(), 5);
-            assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isTrue($el.hasClass('pl-horizontal-Center'));
-        });
-
-        it('Events onLoad, onValueChanged', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                onLoadFlag = 0,
-                onValueChanged = 0;
-
-            numericBox.onLoaded(function () {
-                onLoadFlag++;
-            });
-            numericBox.onValueChanged(function () {
-                onValueChanged++;
-            });
-
-            assert.equal(onLoadFlag, 0);
-            assert.equal(onValueChanged, 0);
-
-            // When
-            numericBox.render();
-            numericBox.setValue(1);
-
-            // Then
-            assert.equal(onLoadFlag, 1);
-            assert.equal(onValueChanged, 1);
-        });
-
-        it('should be triggered events: OnValueChanged, OnLoaded', function () {
-            //Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View();
-            var metadata = {
-                "NumericBox": {
-                    OnValueChanged:{
-                        Name: 'OnValueChanged'
-                    },
-                    OnLoaded:{
-                        Name: 'OnLoaded'
-                    }
-                }
-            };
-            var scripts = view.getScripts();
-            var events = {
-                OnValueChanged: 0,
-                OnLoaded: 0
-            };
-
-            scripts.add({
-                name: "OnValueChanged",
-                func: function () {
-                    events.OnValueChanged++;
-                }
-            });
-
-            scripts.add({
-                name: "OnLoaded",
-                func: function () {
-                    events.OnLoaded++;
-                }
-            });
-
-            //When
-            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
-            element.setValue(true);
-            element.render();
-
-            // Then
-            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
-            assert.equal(events.OnLoaded, 1, 'OnLoaded');
-        });
-    });
-});
-
 describe('PanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14354,6 +14219,141 @@ describe('PanelBuilder', function () {
         assert.equal(panel.getText(), 'panel');
     });
 
+});
+
+describe('NumericBox', function () {
+    describe('render', function () {
+        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                $el, $control;
+
+            // When
+            $el = numericBox.render();
+            $control = $el.find('input');
+
+            // Then
+            assert.equal($control.val(), 0);
+            assert.isUndefined($el.attr('data-pl-name'));
+            assert.isFalse($control.prop('disabled'));
+            assert.isFalse($el.hasClass('hidden'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isFalse($el.hasClass('center-block'));
+        });
+
+        it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                $el, $control;
+            var numericBox1 = new InfinniUI.NumericBox(),
+                $el1, $control1;
+            var numericBox2 = new InfinniUI.NumericBox(),
+                $el2, $control2;
+
+            // When
+            $el = numericBox.render();
+            $control = $el.find('input');
+            numericBox1.render();
+            numericBox2.render();
+
+            numericBox.setValue(15);
+            numericBox.setMinValue(10);
+            numericBox.setMaxValue(50);
+            numericBox.setIncrement(5);
+            numericBox.setName('newName');
+            numericBox.setEnabled(false);
+            numericBox.setVisible(false);
+            numericBox.setHorizontalAlignment('Center');
+
+            numericBox1.setMaxValue(20);
+            numericBox1.setValue(50);
+            numericBox2.setMinValue(20);
+            numericBox2.setValue(5);
+
+            // Then
+            assert.equal(numericBox1.getValue(), 50);
+            assert.equal(numericBox2.getValue(), 5);
+
+            assert.equal(numericBox.getValue(), 15);
+            assert.equal(numericBox.getMinValue(), 10);
+            assert.equal(numericBox.getMaxValue(), 50);
+            assert.equal(numericBox.getIncrement(), 5);
+            assert.equal($el.attr('data-pl-name'), 'newName');
+            assert.isTrue($control.prop('disabled'));
+            assert.isTrue($el.hasClass('hidden'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isTrue($el.hasClass('pl-horizontal-Center'));
+        });
+
+        it('Events onLoad, onValueChanged', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                onLoadFlag = 0,
+                onValueChanged = 0;
+
+            numericBox.onLoaded(function () {
+                onLoadFlag++;
+            });
+            numericBox.onValueChanged(function () {
+                onValueChanged++;
+            });
+
+            assert.equal(onLoadFlag, 0);
+            assert.equal(onValueChanged, 0);
+
+            // When
+            numericBox.render();
+            numericBox.setValue(1);
+
+            // Then
+            assert.equal(onLoadFlag, 1);
+            assert.equal(onValueChanged, 1);
+        });
+
+        it('should be triggered events: OnValueChanged, OnLoaded', function () {
+            //Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
+            var metadata = {
+                "NumericBox": {
+                    OnValueChanged:{
+                        Name: 'OnValueChanged'
+                    },
+                    OnLoaded:{
+                        Name: 'OnLoaded'
+                    }
+                }
+            };
+            var scripts = view.getScripts();
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+
+            scripts.add({
+                name: "OnValueChanged",
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+
+            scripts.add({
+                name: "OnLoaded",
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
+
+            //When
+            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
+            element.setValue(true);
+            element.render();
+
+            // Then
+            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
+            assert.equal(events.OnLoaded, 1, 'OnLoaded');
+        });
+    });
 });
 
 describe('PasswordBox', function () {
@@ -14692,55 +14692,6 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
-describe('ScrollPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('implements API methods', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
-            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
-            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
-            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
-        });
-
-
-        it('Default values', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
-            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
-        });
-
-
-    });
-
-
-});
-
-describe('ScrollPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            ScrollPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var scrollPanel = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
-});
-
 describe('TabPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14910,6 +14861,55 @@ describe('TextBoxBuilder', function () {
             assert.isObject(element);
         });
     });
+});
+
+describe('ScrollPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('implements API methods', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
+            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
+            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
+            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
+        });
+
+
+        it('Default values', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
+            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
+        });
+
+
+    });
+
+
+});
+
+describe('ScrollPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            ScrollPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var scrollPanel = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
 });
 
 describe('TextEditorBase (Element)', function () {

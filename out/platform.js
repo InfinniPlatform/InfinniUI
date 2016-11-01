@@ -19193,6 +19193,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
         }
+
+        if (metadata.OnProviderError) {
+            dataSource.onProviderError(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            });
+        }
     },
 
     buildBindingBuilder: function(params){
@@ -19243,7 +19249,9 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         var tmpParams;
 
-        this.initProviderErrorHandling(dataSource);
+        if ( metadata['OnProviderError'] == null ) {
+            this.initProviderErrorHandling(dataSource);
+        }
 
         if('GettingParams' in metadata){
             tmpParams = this.extractUrlParams(metadata['GettingParams'], '.urlParams.get.params');
