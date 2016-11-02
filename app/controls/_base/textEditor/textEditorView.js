@@ -164,7 +164,9 @@ var TextEditorView = Backbone.View.extend({
             default:
                 //замена выделенного текста, по нажатию
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
+
                 event.preventDefault();
+
                 if (this.getSelectionLength() > 0) {
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
                 } else {
@@ -173,17 +175,16 @@ var TextEditorView = Backbone.View.extend({
                 }
 
                 this.model.setText(editMask.getText());
+
                 if (position !== false) {
                     this.setCaretPosition(position);
                 }
+
                 break;
         }
-
-
     },
 
     onKeyupHandler: function (event) {
-
         this.trigger('onKeyDown', {
             keyCode: event.which,
             value: this.model.getValue()
@@ -192,7 +193,6 @@ var TextEditorView = Backbone.View.extend({
 
     onClickHandler: function (event) {
         this.checkCurrentPosition();
-        event.preventDefault();
     },
 
     onPasteHandler: function (event) {
@@ -251,8 +251,6 @@ var TextEditorView = Backbone.View.extend({
 
         var originalEvent = event.originalEvent;
         var text = originalEvent.dataTransfer.getData('text/plain');
-
-
 
         this.textTyping(text, 0);
         this.$el.focus();
@@ -410,7 +408,5 @@ var TextEditorView = Backbone.View.extend({
                 this.checkCurrentPosition(position);
             }
         }
-
     }
-
 });
