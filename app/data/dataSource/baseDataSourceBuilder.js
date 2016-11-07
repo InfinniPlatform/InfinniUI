@@ -134,6 +134,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
         }
+
+        if (metadata.OnProviderError) {
+            dataSource.onProviderError(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            });
+        }
     },
 
     buildBindingBuilder: function(params){
