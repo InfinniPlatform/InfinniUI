@@ -17,10 +17,10 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have all given params", function () {
 			// Given
-			var filter = "and(eq(phrase,'param'),eq(index,2))";
+			var filter = "and(eq(phrase,'param'),eq(index,'2'))";
 			var items = [
-				{Id: 1, phrase: 'param', index: 2},
-				{Id: 2, index: 2},
+				{Id: 1, phrase: 'param', index: '2'},
+				{Id: 2, index: '2'},
 				{Id: 3}
 			];
 			// When
@@ -32,12 +32,12 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have at least one of given params", function () {
 			// Given
-			var filter = 'or(eq(Id,1),eq(props.fontSize,30))';
+			var filter = "or(eq(Id,1),eq(props.fontSize,'30'))";
 			var items = [
 				{Id: 1},
 				{Id: 2},
 				{Id: 3},
-				{Id: 4, props: {fontSize: 30}}
+				{Id: 4, props: {fontSize: '30'}}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);
@@ -49,11 +49,11 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
-			var filter = 'not(eq(Id,3))';
+			var filter = "not(eq(Id,'3'))";
 			var items = [
-				{Id: 1},
-				{Id: 2},
-				{Id: 3}
+				{Id: '1'},
+				{Id: '2'},
+				{Id: '3'}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);

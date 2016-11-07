@@ -15,6 +15,12 @@ var filterItems = (function() {
 			}
 			return value;
 		}
+		function stringToNumAsString(value) {
+			if( typeof value === 'string' && value.slice(0, 1) === "'" ) {
+				value = value.slice(1, -1);
+			}
+			return value;
+		}
 		function stringToBoolean(value) {
 			if( value === 'true' ) {
 				value = true;
@@ -34,6 +40,7 @@ var filterItems = (function() {
 					}
 					value[i] = stringToBoolean( value[i] );
 					value[i] = stringToNum( value[i] );
+					value[i] = stringToNumAsString( value[i] );
 				}
 			}
 			return value;
@@ -60,6 +67,7 @@ var filterItems = (function() {
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
 					if( filterTree.children[j].type === 'value' ) {
 						filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
+						filterTree.children[j].valueName = stringToNumAsString( filterTree.children[j].valueName ); // check on Number as string
 						filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
 						filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
 					}
@@ -127,7 +135,9 @@ filterItems.filterTreeBuilder = (function() {
 						tmpArr[0] = tmpArr[0].slice(0, -1);
 					}
 					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
-						tmpArr[0] = tmpArr[0].slice(1, -1);
+						if( isNaN( tmpArr[0].slice(1, -1) ) ) {
+							tmpArr[0] = tmpArr[0].slice(1, -1);
+						}
 					}
 					if( tmpArr[0].search(/tmpRE/) !== -1 ) {
 						tmpArr[0] = tmpArr[0].slice(1, -1).split(',');
