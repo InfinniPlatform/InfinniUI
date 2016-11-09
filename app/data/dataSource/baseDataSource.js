@@ -141,7 +141,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     onProviderError: function (handler) {
+        this.off('onProviderError');
         this.on('onProviderError', handler);
+
+        this.onProviderErrorHandler = handler;
     },
 
     getName: function () {
@@ -467,8 +470,7 @@ var BaseDataSource = Backbone.Model.extend({
             ds = this,
             logger = window.InfinniUI.global.logger,
             that = this,
-            validateResult,
-            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
+            validateResult;
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -495,7 +497,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -527,8 +530,7 @@ var BaseDataSource = Backbone.Model.extend({
         var dataProvider = this.get('dataProvider'),
             that = this,
             itemId = this.idOfItem(item),
-            isItemInSet = this.get('itemsById')[itemId] !== undefined,
-            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
+            isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
@@ -548,7 +550,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -618,6 +621,7 @@ var BaseDataSource = Backbone.Model.extend({
                 },
                 function (data) {
                     that._onErrorProviderUpdateItemsHandle(data, onError);
+                    that.trigger('onProviderError', {data: data});
                 }
             );
 
@@ -654,12 +658,7 @@ var BaseDataSource = Backbone.Model.extend({
         var handlers = this.get('waitingOnUpdateItemsHandlers'),
             context = this.getContext();
 
-        if( handlers.length == 0 && !_.isFunction(callback) ){
-            this._compensateOnErrorOfProviderHandler(data);
-            return;
-        }
-
-        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        // вызываем обработчики которые были переданы на отложенных updateItems (из-за замороженного источника)
         for(var i = 0, ii = handlers.length; i < ii; i++){
             if(handlers[i].onError){
                 handlers[i].onError(context, data);
@@ -671,10 +670,6 @@ var BaseDataSource = Backbone.Model.extend({
         if(_.isFunction(callback)) {
             callback(context, data);
         }
-    },
-
-    _compensateOnErrorOfProviderHandler: function(){
-        this.trigger('onProviderError', arguments);
     },
 
     setIsWaiting: function(value){
