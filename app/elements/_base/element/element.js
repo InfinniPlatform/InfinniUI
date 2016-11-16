@@ -513,7 +513,7 @@ _.extend(Element.prototype, {
 
         if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
             if(this.parent.isRemoved){
-                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечен как удаленный');
             }else{
                 this.parent.removeChild(this);
             }
