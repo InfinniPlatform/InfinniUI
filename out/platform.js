@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.1';
+InfinniUI.VERSION = '2.2.2';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -2255,6 +2255,12 @@ var filterItems = (function() {
 			}
 			return value;
 		}
+		function stringToNumAsString(value) {
+			if( typeof value === 'string' && value.slice(0, 1) === "'" ) {
+				value = value.slice(1, -1);
+			}
+			return value;
+		}
 		function stringToBoolean(value) {
 			if( value === 'true' ) {
 				value = true;
@@ -2274,6 +2280,7 @@ var filterItems = (function() {
 					}
 					value[i] = stringToBoolean( value[i] );
 					value[i] = stringToNum( value[i] );
+					value[i] = stringToNumAsString( value[i] );
 				}
 			}
 			return value;
@@ -2300,6 +2307,7 @@ var filterItems = (function() {
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
 					if( filterTree.children[j].type === 'value' ) {
 						filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
+						filterTree.children[j].valueName = stringToNumAsString( filterTree.children[j].valueName ); // check on Number as string
 						filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
 						filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
 					}
@@ -2367,7 +2375,9 @@ filterItems.filterTreeBuilder = (function() {
 						tmpArr[0] = tmpArr[0].slice(0, -1);
 					}
 					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
-						tmpArr[0] = tmpArr[0].slice(1, -1);
+						if( isNaN( tmpArr[0].slice(1, -1) ) ) {
+							tmpArr[0] = tmpArr[0].slice(1, -1);
+						}
 					}
 					if( tmpArr[0].search(/tmpRE/) !== -1 ) {
 						tmpArr[0] = tmpArr[0].slice(1, -1).split(',');
@@ -5892,7 +5902,9 @@ var TextEditorView = Backbone.View.extend({
             default:
                 //замена выделенного текста, по нажатию
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
+
                 event.preventDefault();
+
                 if (this.getSelectionLength() > 0) {
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
                 } else {
@@ -5901,17 +5913,16 @@ var TextEditorView = Backbone.View.extend({
                 }
 
                 this.model.setText(editMask.getText());
+
                 if (position !== false) {
                     this.setCaretPosition(position);
                 }
+
                 break;
         }
-
-
     },
 
     onKeyupHandler: function (event) {
-
         this.trigger('onKeyDown', {
             keyCode: event.which,
             value: this.model.getValue()
@@ -5920,7 +5931,6 @@ var TextEditorView = Backbone.View.extend({
 
     onClickHandler: function (event) {
         this.checkCurrentPosition();
-        event.preventDefault();
     },
 
     onPasteHandler: function (event) {
@@ -5979,8 +5989,6 @@ var TextEditorView = Backbone.View.extend({
 
         var originalEvent = event.originalEvent;
         var text = originalEvent.dataTransfer.getData('text/plain');
-
-
 
         this.textTyping(text, 0);
         this.$el.focus();
@@ -6138,9 +6146,7 @@ var TextEditorView = Backbone.View.extend({
                 this.checkCurrentPosition(position);
             }
         }
-
     }
-
 });
 //####app\controls\_base\textEditor\_mode\textEditorModelBaseModeStrategy.js
 /**
@@ -10570,7 +10576,6 @@ var DataGridView = ListEditorBaseView.extend({
                         model.toggleValue(valueSelector(undefined, {value:items.getByIndex(index)}));
                     }
                 });
-                element.childElements = element.control.controlView.childElements;
                 that.addRowElement(item, element);
 
                 var $element = element.render();
@@ -10713,7 +10718,7 @@ var DataGridRowView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.call(this);
-        this.childElements = [];
+
         this.on('render', function () {
             this.ui.toggleCell.on('click', this.onToggleHandler.bind(this));
         }, this);
@@ -10746,15 +10751,13 @@ var DataGridRowView = ControlView.extend({
         $el.html(template());
         this.bindUIElements();
 
-        var templates = this.model.get('cellTemplates');
+        var cellElements = this.model.get('cellElements');
         var templateDataCell = this.template.dataCell;
-        if (Array.isArray(templates)) {
-            templates.forEach(function (template, index) {
+        if (Array.isArray(cellElements)) {
+            cellElements.forEach(function (cellElement, index) {
                 var $cell = $(templateDataCell());
-                var cellElement = template();
                 $cell.append(cellElement.render());
                 $el.append($cell);
-                row.addChildElement(cellElement);
             });
         }
         this.updateProperties();
@@ -10789,23 +10792,6 @@ var DataGridRowView = ControlView.extend({
 
     onToggleHandler: function (event) {
         this.trigger('toggle');
-    },
-
-    addChildElement: function (element) {
-        this.childElements.push(element);
-    },
-
-    removeChildElements: function () {
-        this.childElements.forEach(function (element) {
-            element.remove();
-        });
-
-        this.childElements.length = 0;
-    },
-
-    remove: function () {
-        this.removeChildElements();
-        ControlView.prototype.remove.call(this);
     }
 
 
@@ -17490,7 +17476,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     onProviderError: function (handler) {
+        this.off('onProviderError');
         this.on('onProviderError', handler);
+
+        this.onProviderErrorHandler = handler;
     },
 
     getName: function () {
@@ -17816,8 +17805,7 @@ var BaseDataSource = Backbone.Model.extend({
             ds = this,
             logger = window.InfinniUI.global.logger,
             that = this,
-            validateResult,
-            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
+            validateResult;
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -17844,7 +17832,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -17876,8 +17865,7 @@ var BaseDataSource = Backbone.Model.extend({
         var dataProvider = this.get('dataProvider'),
             that = this,
             itemId = this.idOfItem(item),
-            isItemInSet = this.get('itemsById')[itemId] !== undefined,
-            errorInProvider = this._compensateOnErrorOfProviderHandler.bind(this, error);
+            isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
@@ -17897,7 +17885,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -17967,6 +17956,7 @@ var BaseDataSource = Backbone.Model.extend({
                 },
                 function (data) {
                     that._onErrorProviderUpdateItemsHandle(data, onError);
+                    that.trigger('onProviderError', {data: data});
                 }
             );
 
@@ -18003,12 +17993,7 @@ var BaseDataSource = Backbone.Model.extend({
         var handlers = this.get('waitingOnUpdateItemsHandlers'),
             context = this.getContext();
 
-        if( handlers.length == 0 && !_.isFunction(callback) ){
-            this._compensateOnErrorOfProviderHandler(data);
-            return;
-        }
-
-        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        // вызываем обработчики которые были переданы на отложенных updateItems (из-за замороженного источника)
         for(var i = 0, ii = handlers.length; i < ii; i++){
             if(handlers[i].onError){
                 handlers[i].onError(context, data);
@@ -18020,10 +18005,6 @@ var BaseDataSource = Backbone.Model.extend({
         if(_.isFunction(callback)) {
             callback(context, data);
         }
-    },
-
-    _compensateOnErrorOfProviderHandler: function(){
-        this.trigger('onProviderError', arguments);
     },
 
     setIsWaiting: function(value){
@@ -19250,7 +19231,7 @@ _.extend(RestDataSourceBuilder.prototype, {
         var tmpParams;
 
         if ( metadata['OnProviderError'] == null ) {
-            this.initProviderErrorHandling(dataSource);
+            dataSource.onProviderError( this._getCompensateProviderErrorHandler() );
         }
 
         if('GettingParams' in metadata){
@@ -19334,12 +19315,12 @@ _.extend(RestDataSourceBuilder.prototype, {
         }
     },
 
-    initProviderErrorHandling: function(dataSource){
-        dataSource.onProviderError(function(){
+    _getCompensateProviderErrorHandler: function(dataSource){
+        return function(){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
-        });
+        };
     }
 });
 
@@ -19907,7 +19888,7 @@ _.extend(Element.prototype, {
 
         if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
             if(this.parent.isRemoved){
-                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечен как удаленный');
             }else{
                 this.parent.removeChild(this);
             }
@@ -22958,12 +22939,15 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
             var columns = dataGrid.getColumns();
 
-            var cellItemTemplates = columns.toArray().map(function (column, index) {
+            var cellElements = columns.toArray().map(function (column, index) {
                 var cellTemplate = column.getCellTemplate();
                 var template = cellTemplate(itemsBinding);
-                return template.bind(column, context, args);
+                var cellEl = template(context, args);
+
+                row.addChild(cellEl);
+                return cellEl;
             });
-            row.setCellTemplates(cellItemTemplates);
+            row.setCellElements(cellElements);
             row.setMultiSelect(dataGrid.getMultiSelect());
             row.setShowSelectors(dataGrid.getShowSelectors());
             return row;
@@ -26527,8 +26511,8 @@ _.extend(DataGridRow.prototype, {
         return new DataGridRowControl()
     },
 
-    setCellTemplates: function (cellTemplates) {
-        this.control.set('cellTemplates', cellTemplates);
+    setCellElements: function (cellElements) {
+        this.control.set('cellElements', cellElements);
     },
 
     toggle: function (toggle) {
@@ -28108,7 +28092,13 @@ _.extend(ServerActionBuilder.prototype,
                             action.setParam(name, value);
                         }
                     } else {
-                        this._initBinding(name, value, action, parentView, builder);
+                        var buildParams = {
+                            parent: parentView,
+                            parentView: parentView,
+                            basePathOfProperty: args.basePathOfProperty
+                        };
+
+                        this._initBinding(name, value, action, buildParams, builder);
                     }
                 }
             }
@@ -28116,13 +28106,9 @@ _.extend(ServerActionBuilder.prototype,
             return action;
         },
 
-        _initBinding: function (paramName, paramValue, action, parentView, builder) {
-            var args = {
-                parent: parentView,
-                parentView: parentView
-            };
-
-            var dataBinding = builder.buildBinding(paramValue, args);
+        _initBinding: function (paramName, paramValue, action, buildParams, builder) {
+            
+            var dataBinding = builder.buildBinding(paramValue, buildParams);
 
             dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
@@ -29292,149 +29278,6 @@ ServerActionProvider.prototype.download = function (requestData, resultCallback,
 };
 
 window.InfinniUI.Providers.ServerActionProvider = ServerActionProvider;
-//####app\data\dataSource\dataProviderReplaceItemQueue.js
-/**
- * @description Организация очереди запросов на создание/изменение документа.
- * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
- * @param attributes
- * @constructor
- */
-var DataProviderReplaceItemQueue = function (attributes) {
-    var _attributes = attributes || [];
-    var _queue = [];
-    var requestIdProperty = '__Id';
-
-    var getQueueItemCriteria = function (data) {
-        var criteria = _.pick(data, _attributes);
-        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
-        criteria[idProperty] = data[idProperty];
-        return criteria;
-    };
-
-    var getQueueItem = function (data) {
-        return _.findWhere(_queue, getQueueItemCriteria(data));
-    };
-
-    var getQueueItems = function (data) {
-        return _.where(_queue, getQueueItemCriteria(data));
-    };
-
-    var updateInstanceId = function (data, response) {
-        var items = getQueueItems(data);
-        items.forEach(function (item) {
-            item.Id = response.Id;
-            item.value.Id = response.Id;
-        });
-    };
-
-    var next = function (data) {
-        var index = _queue.indexOf(data);
-        if (index === -1) {
-            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
-        }
-        _queue.splice(index, 1);
-        var item = getQueueItem(data);
-        run(item);
-    };
-
-    var run = function (data) {
-        if (typeof data === 'undefined' || data === null) {
-            return;
-        }
-        data.request(data)
-            .done(updateInstanceId.bind(undefined, data))
-            .always(next.bind(undefined, data));
-    };
-
-
-    this.append = function (data, request) {
-        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
-        item.request = request;
-
-        var items = getQueueItems(item);
-        _queue.push(item);
-
-        if (items.length === 0) {
-            //В очереди нет запросов с заданными параметрами
-            run(data);
-        } else if (items.length > 1) {
-            //В очереди несколько элементов, удаляем промежуточные
-            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
-                var index = _queue.indexOf(items[i]);
-                _queue.splice(index, 1);
-            }
-        }
-    };
-
-};
-
-
-window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
-
-//####app\data\dataSource\objectDataSource.js
-var ObjectDataSource = BaseDataSource.extend({
-
-    initDataProvider: function(){
-        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
-        this.set('dataProvider', dataProvider);
-    },
-
-    setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        this.updateItems();
-    },
-
-    _setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        BaseDataSource.prototype._setItems.apply(this, [items]);
-    }
-
-});
-
-window.InfinniUI.ObjectDataSource = ObjectDataSource;
-
-//####app\data\dataSource\objectDataSourceBuilder.js
-function ObjectDataSourceBuilder() {
-}
-
-_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
-
-_.extend(ObjectDataSourceBuilder.prototype, {
-    createDataSource: function(parent){
-        return new ObjectDataSource({
-            view: parent
-        });
-    },
-
-    applyMetadata: function(builder, parent, metadata, dataSource){
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
-
-        if(!'IsLazy' in metadata){
-            dataSource.setIsLazy(false);
-        }
-
-        if(metadata.Items){
-            if($.isArray(metadata.Items)){
-                dataSource.setItems(metadata.Items);
-            }
-
-            if($.isPlainObject(metadata.Items)){
-                var binding = builder.buildBinding(metadata.Items, {
-                    parentView: parent
-                });
-
-                binding.setMode(InfinniUI.BindingModes.toElement);
-
-                binding.bindElement(dataSource, '');
-            }
-
-        }
-
-    }
-});
-
-window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
-
 //####app\data\parameter\parameter.js
 /**
  * @constructor
@@ -29669,6 +29512,149 @@ function ParameterBuilder() {
 }
 
 window.InfinniUI.ParameterBuilder = ParameterBuilder;
+
+//####app\data\dataSource\dataProviderReplaceItemQueue.js
+/**
+ * @description Организация очереди запросов на создание/изменение документа.
+ * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
+ * @param attributes
+ * @constructor
+ */
+var DataProviderReplaceItemQueue = function (attributes) {
+    var _attributes = attributes || [];
+    var _queue = [];
+    var requestIdProperty = '__Id';
+
+    var getQueueItemCriteria = function (data) {
+        var criteria = _.pick(data, _attributes);
+        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
+        criteria[idProperty] = data[idProperty];
+        return criteria;
+    };
+
+    var getQueueItem = function (data) {
+        return _.findWhere(_queue, getQueueItemCriteria(data));
+    };
+
+    var getQueueItems = function (data) {
+        return _.where(_queue, getQueueItemCriteria(data));
+    };
+
+    var updateInstanceId = function (data, response) {
+        var items = getQueueItems(data);
+        items.forEach(function (item) {
+            item.Id = response.Id;
+            item.value.Id = response.Id;
+        });
+    };
+
+    var next = function (data) {
+        var index = _queue.indexOf(data);
+        if (index === -1) {
+            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
+        }
+        _queue.splice(index, 1);
+        var item = getQueueItem(data);
+        run(item);
+    };
+
+    var run = function (data) {
+        if (typeof data === 'undefined' || data === null) {
+            return;
+        }
+        data.request(data)
+            .done(updateInstanceId.bind(undefined, data))
+            .always(next.bind(undefined, data));
+    };
+
+
+    this.append = function (data, request) {
+        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
+        item.request = request;
+
+        var items = getQueueItems(item);
+        _queue.push(item);
+
+        if (items.length === 0) {
+            //В очереди нет запросов с заданными параметрами
+            run(data);
+        } else if (items.length > 1) {
+            //В очереди несколько элементов, удаляем промежуточные
+            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
+                var index = _queue.indexOf(items[i]);
+                _queue.splice(index, 1);
+            }
+        }
+    };
+
+};
+
+
+window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
+
+//####app\data\dataSource\objectDataSource.js
+var ObjectDataSource = BaseDataSource.extend({
+
+    initDataProvider: function(){
+        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
+        this.set('dataProvider', dataProvider);
+    },
+
+    setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        this.updateItems();
+    },
+
+    _setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        BaseDataSource.prototype._setItems.apply(this, [items]);
+    }
+
+});
+
+window.InfinniUI.ObjectDataSource = ObjectDataSource;
+
+//####app\data\dataSource\objectDataSourceBuilder.js
+function ObjectDataSourceBuilder() {
+}
+
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(ObjectDataSourceBuilder.prototype, {
+    createDataSource: function(parent){
+        return new ObjectDataSource({
+            view: parent
+        });
+    },
+
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+
+        if(!'IsLazy' in metadata){
+            dataSource.setIsLazy(false);
+        }
+
+        if(metadata.Items){
+            if($.isArray(metadata.Items)){
+                dataSource.setItems(metadata.Items);
+            }
+
+            if($.isPlainObject(metadata.Items)){
+                var binding = builder.buildBinding(metadata.Items, {
+                    parentView: parent
+                });
+
+                binding.setMode(InfinniUI.BindingModes.toElement);
+
+                binding.bindElement(dataSource, '');
+            }
+
+        }
+
+    }
+});
+
+window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
 
 //####app\formats\displayFormat\_common\formatMixin.js
 /**
@@ -34855,29 +34841,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -35027,6 +34990,29 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {

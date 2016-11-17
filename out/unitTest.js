@@ -5533,10 +5533,10 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have all given params", function () {
 			// Given
-			var filter = "and(eq(phrase,'param'),eq(index,2))";
+			var filter = "and(eq(phrase,'param'),eq(index,'2'))";
 			var items = [
-				{Id: 1, phrase: 'param', index: 2},
-				{Id: 2, index: 2},
+				{Id: 1, phrase: 'param', index: '2'},
+				{Id: 2, index: '2'},
 				{Id: 3}
 			];
 			// When
@@ -5548,12 +5548,12 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have at least one of given params", function () {
 			// Given
-			var filter = 'or(eq(Id,1),eq(props.fontSize,30))';
+			var filter = "or(eq(Id,1),eq(props.fontSize,'30'))";
 			var items = [
 				{Id: 1},
 				{Id: 2},
 				{Id: 3},
-				{Id: 4, props: {fontSize: 30}}
+				{Id: 4, props: {fontSize: '30'}}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);
@@ -5565,11 +5565,11 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
-			var filter = 'not(eq(Id,3))';
+			var filter = "not(eq(Id,'3'))";
 			var items = [
-				{Id: 1},
-				{Id: 2},
-				{Id: 3}
+				{Id: '1'},
+				{Id: '2'},
+				{Id: '3'}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);
@@ -6701,82 +6701,6 @@ describe('ButtonControl', function () {
     });
 });
 
-describe('CheckBox', function () {
-    var checkbox;
-
-    beforeEach(function () {
-        checkbox = new InfinniUI.CheckBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = checkbox.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                checkbox.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: text', function () {
-                //Given
-                checkbox.setText('Text 1');
-
-                var $el = checkbox.render(),
-                    $label = $('.checkbox-label', $el);
-
-                assert.equal($label.html(), 'Text 1');
-
-                //When
-                checkbox.setText('Text 2');
-
-                //Then
-                assert.equal($label.html(), 'Text 2');
-            });
-
-            it('Setting property: Enabled', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                assert.equal($input.prop('disabled'), false, 'Enabled by default');
-
-                //When
-                checkbox.setEnabled(false);
-
-                //Then
-                assert.equal($input.prop('disabled'), true, 'Disable element');
-            });
-
-        });
-
-        describe('events', function () {
-            it('Change value on click', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                checkbox.setValue(false);
-
-                //When
-                $input.click();
-
-                //Then
-                assert.equal(checkbox.getValue(), true, 'value changed');
-                assert.equal($input.prop('checked'), true, 'checkbox checked');
-            });
-        });
-
-    });
-
-});
-
 describe('Container (Control)', function () {
 
     describe('StackPanel as exemplar of Container', function () {
@@ -7531,6 +7455,82 @@ describe('Container (Control)', function () {
             assert.equal($layout.find('.pl-text-box-input').eq(2).val(), '2G', 'value in template is right');
         }
     });
+});
+
+describe('CheckBox', function () {
+    var checkbox;
+
+    beforeEach(function () {
+        checkbox = new InfinniUI.CheckBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = checkbox.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                checkbox.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: text', function () {
+                //Given
+                checkbox.setText('Text 1');
+
+                var $el = checkbox.render(),
+                    $label = $('.checkbox-label', $el);
+
+                assert.equal($label.html(), 'Text 1');
+
+                //When
+                checkbox.setText('Text 2');
+
+                //Then
+                assert.equal($label.html(), 'Text 2');
+            });
+
+            it('Setting property: Enabled', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                assert.equal($input.prop('disabled'), false, 'Enabled by default');
+
+                //When
+                checkbox.setEnabled(false);
+
+                //Then
+                assert.equal($input.prop('disabled'), true, 'Disable element');
+            });
+
+        });
+
+        describe('events', function () {
+            it('Change value on click', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                checkbox.setValue(false);
+
+                //When
+                $input.click();
+
+                //Then
+                assert.equal(checkbox.getValue(), true, 'value changed');
+                assert.equal($input.prop('checked'), true, 'checkbox checked');
+            });
+        });
+
+    });
+
 });
 
 describe('ContextMenu (Control)', function () {
@@ -12366,76 +12366,6 @@ describe('ComboBox', function () {
 
 });
 
-describe('DataNavigation', function () {
-    it('should pass test default property', function () {
-        // Given
-        var metadata = {
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "PatientDataSource",
-                        "Items": [
-                            {"Id": 1, "Display": "LTE", "State": "New"},
-                            {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                            {"Id": 3, "Display": "3G", "State": "Deprecated"}
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                DataNavigation: {
-                    Enabled: true,
-                    Name: "DataNavigation1",
-                    AvailablePageSizes: [ 20, 50, 100 ],
-                    DataSource: "PatientDataSource"
-                }
-            }]
-        };
-
-        // When
-        testHelper.applyViewMetadata(metadata, onDataNavigationReady);
-
-        // Then
-        function onDataNavigationReady(view, $view){
-            var dataNavigation = view.context.controls['DataNavigation1'];
-
-            assert.isDefined(dataNavigation);
-            assert.isTrue(dataNavigation.getEnabled());
-            assert.isTrue(dataNavigation.getVisible());
-            assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
-            assert.equal(dataNavigation.getDataSource().name, "PatientDataSource");
-
-            view.close();
-        }
-    });
-
-    it('should call onPageNumberChanged', function (done) {
-        // Given
-        var dataNavigation = new InfinniUI.DataNavigation();
-
-        dataNavigation.onPageNumberChanged(function(){
-            // Then
-            done();
-        });
-
-        // When
-        dataNavigation.setPageNumber(1);
-    });
-
-    it('should call onPageSizeChanged', function (done) {
-        // Given
-        var dataNavigation = new InfinniUI.DataNavigation();
-
-        dataNavigation.onPageSizeChanged(function(){
-            // Then
-            done();
-        });
-
-        // When
-        dataNavigation.setPageSize(1);
-    });
-});
 describe('DataGrid', function () {
 
     var metadata = {
@@ -12530,6 +12460,76 @@ describe('DataGrid', function () {
     });
 });
 
+describe('DataNavigation', function () {
+    it('should pass test default property', function () {
+        // Given
+        var metadata = {
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "PatientDataSource",
+                        "Items": [
+                            {"Id": 1, "Display": "LTE", "State": "New"},
+                            {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                            {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                DataNavigation: {
+                    Enabled: true,
+                    Name: "DataNavigation1",
+                    AvailablePageSizes: [ 20, 50, 100 ],
+                    DataSource: "PatientDataSource"
+                }
+            }]
+        };
+
+        // When
+        testHelper.applyViewMetadata(metadata, onDataNavigationReady);
+
+        // Then
+        function onDataNavigationReady(view, $view){
+            var dataNavigation = view.context.controls['DataNavigation1'];
+
+            assert.isDefined(dataNavigation);
+            assert.isTrue(dataNavigation.getEnabled());
+            assert.isTrue(dataNavigation.getVisible());
+            assert.equal(dataNavigation.getHorizontalAlignment(), 'Stretch');
+            assert.equal(dataNavigation.getDataSource().name, "PatientDataSource");
+
+            view.close();
+        }
+    });
+
+    it('should call onPageNumberChanged', function (done) {
+        // Given
+        var dataNavigation = new InfinniUI.DataNavigation();
+
+        dataNavigation.onPageNumberChanged(function(){
+            // Then
+            done();
+        });
+
+        // When
+        dataNavigation.setPageNumber(1);
+    });
+
+    it('should call onPageSizeChanged', function (done) {
+        // Given
+        var dataNavigation = new InfinniUI.DataNavigation();
+
+        dataNavigation.onPageSizeChanged(function(){
+            // Then
+            done();
+        });
+
+        // When
+        dataNavigation.setPageSize(1);
+    });
+});
 describe('DateTimePicker', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -12780,54 +12780,6 @@ describe('EditorBase', function () {
         });
     });
 
-});
-
-describe('FileBox', function () {
-
-    describe('Builder', function () {
-
-        it('should build fileBox', function () {
-            // Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var metadata = {
-                MaxSize: 0,
-                AcceptTypes: [
-                    'image/png',
-                    'image/jpeg'
-                ]
-            };
-
-            // When
-            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
-
-            // Then
-            assert.instanceOf(fileBox, InfinniUI.FileBox);
-            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
-        });
-
-    });
-
-    describe('Base API', function () {
-
-        it('setting properties', function () {
-            // Given
-            var fileBox = new InfinniUI.FileBox();
-
-            // When
-            fileBox.setMaxSize(50000);
-            fileBox.setFile('file');
-            fileBox.setAcceptTypes(['video/*']);
-            fileBox.setValue({Info: {}});
-
-            // Then
-            assert.equal(fileBox.getMaxSize(), 50000);
-            assert.equal(fileBox.getFile(), 'file');
-            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
-            assert.deepEqual(fileBox.getValue(), {Info: {}});
-        });
-
-    });
 });
 
 describe('Element', function () {
@@ -13175,6 +13127,54 @@ describe('ImageBox', function () {
 //    });
 
 
+});
+
+describe('FileBox', function () {
+
+    describe('Builder', function () {
+
+        it('should build fileBox', function () {
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                MaxSize: 0,
+                AcceptTypes: [
+                    'image/png',
+                    'image/jpeg'
+                ]
+            };
+
+            // When
+            var fileBox = builder.buildType("FileBox", metadata, {parentView: fakeView(), builder: builder});
+
+            // Then
+            assert.instanceOf(fileBox, InfinniUI.FileBox);
+            assert.equal(fileBox.getMaxSize(), metadata.MaxSize);
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), metadata.AcceptTypes);
+        });
+
+    });
+
+    describe('Base API', function () {
+
+        it('setting properties', function () {
+            // Given
+            var fileBox = new InfinniUI.FileBox();
+
+            // When
+            fileBox.setMaxSize(50000);
+            fileBox.setFile('file');
+            fileBox.setAcceptTypes(['video/*']);
+            fileBox.setValue({Info: {}});
+
+            // Then
+            assert.equal(fileBox.getMaxSize(), 50000);
+            assert.equal(fileBox.getFile(), 'file');
+            assert.deepEqual(fileBox.getAcceptTypes().toArray(), ['video/*']);
+            assert.deepEqual(fileBox.getValue(), {Info: {}});
+        });
+
+    });
 });
 
 describe('Label', function () {
@@ -14048,6 +14048,141 @@ describe('ListEditorBase', function () {
 
 
 });
+describe('NumericBox', function () {
+    describe('render', function () {
+        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                $el, $control;
+
+            // When
+            $el = numericBox.render();
+            $control = $el.find('input');
+
+            // Then
+            assert.equal($control.val(), 0);
+            assert.isUndefined($el.attr('data-pl-name'));
+            assert.isFalse($control.prop('disabled'));
+            assert.isFalse($el.hasClass('hidden'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isFalse($el.hasClass('center-block'));
+        });
+
+        it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                $el, $control;
+            var numericBox1 = new InfinniUI.NumericBox(),
+                $el1, $control1;
+            var numericBox2 = new InfinniUI.NumericBox(),
+                $el2, $control2;
+
+            // When
+            $el = numericBox.render();
+            $control = $el.find('input');
+            numericBox1.render();
+            numericBox2.render();
+
+            numericBox.setValue(15);
+            numericBox.setMinValue(10);
+            numericBox.setMaxValue(50);
+            numericBox.setIncrement(5);
+            numericBox.setName('newName');
+            numericBox.setEnabled(false);
+            numericBox.setVisible(false);
+            numericBox.setHorizontalAlignment('Center');
+
+            numericBox1.setMaxValue(20);
+            numericBox1.setValue(50);
+            numericBox2.setMinValue(20);
+            numericBox2.setValue(5);
+
+            // Then
+            assert.equal(numericBox1.getValue(), 50);
+            assert.equal(numericBox2.getValue(), 5);
+
+            assert.equal(numericBox.getValue(), 15);
+            assert.equal(numericBox.getMinValue(), 10);
+            assert.equal(numericBox.getMaxValue(), 50);
+            assert.equal(numericBox.getIncrement(), 5);
+            assert.equal($el.attr('data-pl-name'), 'newName');
+            assert.isTrue($control.prop('disabled'));
+            assert.isTrue($el.hasClass('hidden'));
+            assert.isFalse($el.hasClass('pl-horizontal-Left'));
+            assert.isTrue($el.hasClass('pl-horizontal-Center'));
+        });
+
+        it('Events onLoad, onValueChanged', function () {
+            // Given
+            var numericBox = new InfinniUI.NumericBox(),
+                onLoadFlag = 0,
+                onValueChanged = 0;
+
+            numericBox.onLoaded(function () {
+                onLoadFlag++;
+            });
+            numericBox.onValueChanged(function () {
+                onValueChanged++;
+            });
+
+            assert.equal(onLoadFlag, 0);
+            assert.equal(onValueChanged, 0);
+
+            // When
+            numericBox.render();
+            numericBox.setValue(1);
+
+            // Then
+            assert.equal(onLoadFlag, 1);
+            assert.equal(onValueChanged, 1);
+        });
+
+        it('should be triggered events: OnValueChanged, OnLoaded', function () {
+            //Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = new InfinniUI.View();
+            var metadata = {
+                "NumericBox": {
+                    OnValueChanged:{
+                        Name: 'OnValueChanged'
+                    },
+                    OnLoaded:{
+                        Name: 'OnLoaded'
+                    }
+                }
+            };
+            var scripts = view.getScripts();
+            var events = {
+                OnValueChanged: 0,
+                OnLoaded: 0
+            };
+
+            scripts.add({
+                name: "OnValueChanged",
+                func: function () {
+                    events.OnValueChanged++;
+                }
+            });
+
+            scripts.add({
+                name: "OnLoaded",
+                func: function () {
+                    events.OnLoaded++;
+                }
+            });
+
+            //When
+            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
+            element.setValue(true);
+            element.render();
+
+            // Then
+            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
+            assert.equal(events.OnLoaded, 1, 'OnLoaded');
+        });
+    });
+});
+
 describe('PanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14219,141 +14354,6 @@ describe('PanelBuilder', function () {
         assert.equal(panel.getText(), 'panel');
     });
 
-});
-
-describe('NumericBox', function () {
-    describe('render', function () {
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                $el, $control;
-
-            // When
-            $el = numericBox.render();
-            $control = $el.find('input');
-
-            // Then
-            assert.equal($control.val(), 0);
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isFalse($el.hasClass('center-block'));
-        });
-
-        it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                $el, $control;
-            var numericBox1 = new InfinniUI.NumericBox(),
-                $el1, $control1;
-            var numericBox2 = new InfinniUI.NumericBox(),
-                $el2, $control2;
-
-            // When
-            $el = numericBox.render();
-            $control = $el.find('input');
-            numericBox1.render();
-            numericBox2.render();
-
-            numericBox.setValue(15);
-            numericBox.setMinValue(10);
-            numericBox.setMaxValue(50);
-            numericBox.setIncrement(5);
-            numericBox.setName('newName');
-            numericBox.setEnabled(false);
-            numericBox.setVisible(false);
-            numericBox.setHorizontalAlignment('Center');
-
-            numericBox1.setMaxValue(20);
-            numericBox1.setValue(50);
-            numericBox2.setMinValue(20);
-            numericBox2.setValue(5);
-
-            // Then
-            assert.equal(numericBox1.getValue(), 50);
-            assert.equal(numericBox2.getValue(), 5);
-
-            assert.equal(numericBox.getValue(), 15);
-            assert.equal(numericBox.getMinValue(), 10);
-            assert.equal(numericBox.getMaxValue(), 50);
-            assert.equal(numericBox.getIncrement(), 5);
-            assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isTrue($el.hasClass('pl-horizontal-Center'));
-        });
-
-        it('Events onLoad, onValueChanged', function () {
-            // Given
-            var numericBox = new InfinniUI.NumericBox(),
-                onLoadFlag = 0,
-                onValueChanged = 0;
-
-            numericBox.onLoaded(function () {
-                onLoadFlag++;
-            });
-            numericBox.onValueChanged(function () {
-                onValueChanged++;
-            });
-
-            assert.equal(onLoadFlag, 0);
-            assert.equal(onValueChanged, 0);
-
-            // When
-            numericBox.render();
-            numericBox.setValue(1);
-
-            // Then
-            assert.equal(onLoadFlag, 1);
-            assert.equal(onValueChanged, 1);
-        });
-
-        it('should be triggered events: OnValueChanged, OnLoaded', function () {
-            //Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = new InfinniUI.View();
-            var metadata = {
-                "NumericBox": {
-                    OnValueChanged:{
-                        Name: 'OnValueChanged'
-                    },
-                    OnLoaded:{
-                        Name: 'OnLoaded'
-                    }
-                }
-            };
-            var scripts = view.getScripts();
-            var events = {
-                OnValueChanged: 0,
-                OnLoaded: 0
-            };
-
-            scripts.add({
-                name: "OnValueChanged",
-                func: function () {
-                    events.OnValueChanged++;
-                }
-            });
-
-            scripts.add({
-                name: "OnLoaded",
-                func: function () {
-                    events.OnLoaded++;
-                }
-            });
-
-            //When
-            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
-            element.setValue(true);
-            element.render();
-
-            // Then
-            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
-            assert.equal(events.OnLoaded, 1, 'OnLoaded');
-        });
-    });
 });
 
 describe('PasswordBox', function () {
@@ -14731,6 +14731,55 @@ describe('TabPanelBuilder', function () {
 
 });
 
+describe('ScrollPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('implements API methods', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
+            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
+            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
+            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
+        });
+
+
+        it('Default values', function () {
+            var element = builder.buildType('ScrollPanel', {});
+
+            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
+            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
+        });
+
+
+    });
+
+
+});
+
+describe('ScrollPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            ScrollPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var scrollPanel = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
+});
+
 describe('TextBox', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14861,55 +14910,6 @@ describe('TextBoxBuilder', function () {
             assert.isObject(element);
         });
     });
-});
-
-describe('ScrollPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('implements API methods', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.isFunction(element.getHorizontalScroll, 'getHorizontalScroll');
-            assert.isFunction(element.setHorizontalScroll, 'setHorizontalScroll');
-            assert.isFunction(element.getVerticalScroll, 'getVerticalScroll');
-            assert.isFunction(element.setVerticalScroll, 'setVerticalScroll');
-        });
-
-
-        it('Default values', function () {
-            var element = builder.buildType('ScrollPanel', {});
-
-            assert.equal(element.getHorizontalScroll(), InfinniUI.ScrollVisibility.auto, 'getHorizontalScroll');
-            assert.equal(element.getVerticalScroll(), InfinniUI.ScrollVisibility.auto, 'getVerticalScroll');
-        });
-
-
-    });
-
-
-});
-
-describe('ScrollPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            ScrollPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var scrollPanel = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
 });
 
 describe('TextEditorBase (Element)', function () {
@@ -15112,69 +15112,6 @@ describe('ToggleButton', function () {
             assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
         });
     });
-});
-
-describe('ToolBarElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-
-        describe('Implementing Container Methods', function () {
-            testHelper.checkContainerMethods(element);
-        });
-
-    });
-
-    describe('render', function () {
-
-        var element = builder.buildType('ToolBar', {
-            Items: [
-                {
-                    Button: {
-                        Text: "Button 1"
-                    }
-                },
-                {
-                    Button: {
-                        Text: "Button 2"
-                    }
-
-                }
-            ]
-        });
-
-        it('render element', function () {
-            // Given
-
-            // When
-            var $el = element.render();
-
-            // Then
-            assert.equal($el.length, 1)
-        });
-
-        it('contains items', function () {
-            var items = element.getItems();
-
-            assert.equal(items.length, 2);
-        })
-
-    });
-});
-
-describe('ToolBarBuilder', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-
-    it('Build ToolBar instance', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-        assert.isTrue(typeof element !== 'undefined' && element !== null);
-        assert.isTrue(element instanceof InfinniUI.ToolBar);
-    });
-
 });
 
 describe('View', function () {
@@ -16034,4 +15971,67 @@ describe('ViewBuilder', function () {
         // CloseButtonVisibility
         assert.isTrue(view.getCloseButtonVisibility());
     });
+});
+
+describe('ToolBarElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+
+        describe('Implementing Container Methods', function () {
+            testHelper.checkContainerMethods(element);
+        });
+
+    });
+
+    describe('render', function () {
+
+        var element = builder.buildType('ToolBar', {
+            Items: [
+                {
+                    Button: {
+                        Text: "Button 1"
+                    }
+                },
+                {
+                    Button: {
+                        Text: "Button 2"
+                    }
+
+                }
+            ]
+        });
+
+        it('render element', function () {
+            // Given
+
+            // When
+            var $el = element.render();
+
+            // Then
+            assert.equal($el.length, 1)
+        });
+
+        it('contains items', function () {
+            var items = element.getItems();
+
+            assert.equal(items.length, 2);
+        })
+
+    });
+});
+
+describe('ToolBarBuilder', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+
+    it('Build ToolBar instance', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+        assert.isTrue(typeof element !== 'undefined' && element !== null);
+        assert.isTrue(element instanceof InfinniUI.ToolBar);
+    });
+
 });

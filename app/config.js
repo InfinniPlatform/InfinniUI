@@ -12,4 +12,4 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.1';
+InfinniUI.VERSION = '2.2.2';
