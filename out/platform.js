@@ -10834,7 +10834,6 @@ var DataGridView = ListEditorBaseView.extend({
                         model.toggleValue(valueSelector(undefined, {value:items.getByIndex(index)}));
                     }
                 });
-                element.childElements = element.control.controlView.childElements;
                 that.addRowElement(item, element);
 
                 var $element = element.render();
@@ -10977,7 +10976,7 @@ var DataGridRowView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.call(this);
-        this.childElements = [];
+
         this.on('render', function () {
             this.ui.toggleCell.on('click', this.onToggleHandler.bind(this));
         }, this);
@@ -11010,15 +11009,13 @@ var DataGridRowView = ControlView.extend({
         $el.html(template());
         this.bindUIElements();
 
-        var templates = this.model.get('cellTemplates');
+        var cellElements = this.model.get('cellElements');
         var templateDataCell = this.template.dataCell;
-        if (Array.isArray(templates)) {
-            templates.forEach(function (template, index) {
+        if (Array.isArray(cellElements)) {
+            cellElements.forEach(function (cellElement, index) {
                 var $cell = $(templateDataCell());
-                var cellElement = template();
                 $cell.append(cellElement.render());
                 $el.append($cell);
-                row.addChildElement(cellElement);
             });
         }
         this.updateProperties();
@@ -11053,23 +11050,6 @@ var DataGridRowView = ControlView.extend({
 
     onToggleHandler: function (event) {
         this.trigger('toggle');
-    },
-
-    addChildElement: function (element) {
-        this.childElements.push(element);
-    },
-
-    removeChildElements: function () {
-        this.childElements.forEach(function (element) {
-            element.remove();
-        });
-
-        this.childElements.length = 0;
-    },
-
-    remove: function () {
-        this.removeChildElements();
-        ControlView.prototype.remove.call(this);
     }
 
 
@@ -19064,6 +19044,7 @@ var DocumentDataSource = RestDataSource.extend({
         model.setProperty('filterParams', {});
         this.setUpdatingItemsConverter(function(data){
             model.setProperty('totalCount', data['Result']['Count']);
+            model.setProperty('additionalResult', data['Result']['AdditionalResult']);
             return data['Result']['Items'];
         });
 
@@ -20142,7 +20123,7 @@ _.extend(Element.prototype, {
 
         if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
             if(this.parent.isRemoved){
-                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечен как удаленный');
             }else{
                 this.parent.removeChild(this);
             }
@@ -23193,12 +23174,15 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
             var columns = dataGrid.getColumns();
 
-            var cellItemTemplates = columns.toArray().map(function (column, index) {
+            var cellElements = columns.toArray().map(function (column, index) {
                 var cellTemplate = column.getCellTemplate();
                 var template = cellTemplate(itemsBinding);
-                return template.bind(column, context, args);
+                var cellEl = template(context, args);
+
+                row.addChild(cellEl);
+                return cellEl;
             });
-            row.setCellTemplates(cellItemTemplates);
+            row.setCellElements(cellElements);
             row.setMultiSelect(dataGrid.getMultiSelect());
             row.setShowSelectors(dataGrid.getShowSelectors());
             return row;
@@ -26762,8 +26746,8 @@ _.extend(DataGridRow.prototype, {
         return new DataGridRowControl()
     },
 
-    setCellTemplates: function (cellTemplates) {
-        this.control.set('cellTemplates', cellTemplates);
+    setCellElements: function (cellElements) {
+        this.control.set('cellElements', cellElements);
     },
 
     toggle: function (toggle) {
@@ -27138,6 +27122,67 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
 });
 
+//####app\actions\_base\baseAction\baseAction.js
+function BaseAction(parentView){
+    this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
+}
+
+window.InfinniUI.BaseAction = BaseAction;
+
+_.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
+    setProperty: function(name, value){
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
+    },
+
+    getProperty: function(name){
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
+    }
+
+}, Backbone.Events);
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};
+
+//####app\actions\_base\baseAction\baseActionBuilderMixin.js
+var BaseActionBuilderMixin = {
+    applyBaseActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnExecuted' in metadata) {
+            action.setProperty('onExecutedHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
+            });
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27263,67 +27308,6 @@ var BaseFallibleActionMixin = {
 
         if(_.isFunction(onErrorHandler)) {
             onErrorHandler(args);
-        }
-    }
-};
-//####app\actions\_base\baseAction\baseAction.js
-function BaseAction(parentView){
-    this.parentView = parentView;
-    this._properties = Object.create(null);
-    _.defaults(this._properties, this.defaults);
-    this.initDefaultValues();
-}
-
-window.InfinniUI.BaseAction = BaseAction;
-
-_.extend(BaseAction.prototype, {
-    defaults: {
-
-    },
-
-    setProperty: function(name, value){
-        var props= this._properties;
-        if (props[name] !== value) {
-            props[name] = value;
-            this.trigger('change:' + name, this, value);
-        }
-    },
-
-    getProperty: function(name){
-        return this._properties[name];
-    },
-
-    initDefaultValues: function () {
-
-    },
-
-    onExecutedHandler: function(args) {
-        var onExecutedHandler = this.getProperty('onExecutedHandler');
-
-        if(_.isFunction(onExecutedHandler)) {
-            onExecutedHandler(args);
-        }
-    }
-
-}, Backbone.Events);
-
-InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
-    var builder = new ApplicationBuilder();
-
-    var action = builder.build( executeActionMetadata, {parentView: context.view});
-
-    action.execute(resultCallback);
-};
-
-//####app\actions\_base\baseAction\baseActionBuilderMixin.js
-var BaseActionBuilderMixin = {
-    applyBaseActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
         }
     }
 };
@@ -27479,164 +27463,6 @@ _.extend(CancelActionBuilder.prototype,
 
 window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
 
-//####app\actions\openAction\openAction.js
-function OpenAction(parentView){
-    _.superClass(OpenAction, this, parentView);
-}
-
-_.inherit(OpenAction, BaseAction);
-
-
-_.extend(OpenAction.prototype, {
-    execute: function(callback){
-        var linkView = this.getProperty('linkView'),
-            that = this;
-
-        linkView.createView(function (view) {
-
-            view.onLoaded(function () {
-                that.onExecutedHandler();
-
-                if (callback) {
-                    callback(view);
-                }
-            });
-
-            view.open();
-        });
-    }
-});
-
-window.InfinniUI.OpenAction = OpenAction;
-
-//####app\actions\openAction\openActionBuilder.js
-function OpenActionBuilder(){
-}
-
-
-_.extend(OpenActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new OpenAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
-            action.setProperty('linkView', linkView);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
-
-//####app\actions\editAction\editAction.js
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
-}
-
-_.inherit(EditAction, BaseEditAction);
-
-
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
-
-            // if selectedItem is empty and it is must be document
-            // return error
-            if( this._isDocumentPath(destinationProperty) ){
-                var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
-
-                return false;
-            }
-
-            // but if selectedItem is property of document
-            // it will be created
-            selectedItem = selectedItem || {};
-        }
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
-        } else {
-            this._setDocument(editDataSource, selectedItem);
-        }
-
-        return true;
-    },
-
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
-    },
-
-    _setDocument: function (editDataSource, selectedItem){
-        var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
-        editDataSource.tryInitData();
-        this._resumeUpdateEditDataSource();
-    },
-
-    _setItem: function(editDataSource, selectedItem){
-        var item = _.clone( selectedItem );
-
-        if(item === undefined || item === null){
-            item = {};
-        }
-        this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
-        editDataSource.setSelectedItem( item );
-    },
-
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            var item = editDataSource.getSelectedItem();
-            destinationDataSource.setProperty(destinationProperty, item);
-        } else {
-            destinationDataSource.updateItems();
-        }
-    },
-
-    _isDocumentPath: function(path){
-        return !path.includes('.');
-    }
-});
-
-window.InfinniUI.EditAction = EditAction;
-
-//####app\actions\editAction\editActionBuilder.js
-function EditActionBuilder(){}
-
-_.extend(EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new EditAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.EditActionBuilder = EditActionBuilder;
-
 //####app\actions\deleteAction\deleteAction.js
 function DeleteAction(parentView){
     _.superClass(DeleteAction, this, parentView);
@@ -27782,6 +27608,164 @@ _.extend(DeleteActionBuilder.prototype,
 );
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
+
+//####app\actions\editAction\editAction.js
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseEditAction);
+
+
+_.extend(EditAction.prototype, {
+    setSelectedItem: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
+
+        if( selectedItem == null ){
+
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isDocumentPath(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
+
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
+        }
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            this._setItem(editDataSource, selectedItem);
+        } else {
+            this._setDocument(editDataSource, selectedItem);
+        }
+
+        return true;
+    },
+
+    _resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('BaseEditAction');
+    },
+
+    _setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
+    },
+
+    _setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
+
+        if(item === undefined || item === null){
+            item = {};
+        }
+        this._resumeUpdateEditDataSource();
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
+    },
+
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            var item = editDataSource.getSelectedItem();
+            destinationDataSource.setProperty(destinationProperty, item);
+        } else {
+            destinationDataSource.updateItems();
+        }
+    },
+
+    _isDocumentPath: function(path){
+        return !path.includes('.');
+    }
+});
+
+window.InfinniUI.EditAction = EditAction;
+
+//####app\actions\editAction\editActionBuilder.js
+function EditActionBuilder(){}
+
+_.extend(EditActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseEditActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new EditAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseEditActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.EditActionBuilder = EditActionBuilder;
+
+//####app\actions\openAction\openAction.js
+function OpenAction(parentView){
+    _.superClass(OpenAction, this, parentView);
+}
+
+_.inherit(OpenAction, BaseAction);
+
+
+_.extend(OpenAction.prototype, {
+    execute: function(callback){
+        var linkView = this.getProperty('linkView'),
+            that = this;
+
+        linkView.createView(function (view) {
+
+            view.onLoaded(function () {
+                that.onExecutedHandler();
+
+                if (callback) {
+                    callback(view);
+                }
+            });
+
+            view.open();
+        });
+    }
+});
+
+window.InfinniUI.OpenAction = OpenAction;
+
+//####app\actions\openAction\openActionBuilder.js
+function OpenActionBuilder(){
+}
+
+
+_.extend(OpenActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new OpenAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
+            action.setProperty('linkView', linkView);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
 
 //####app\actions\routeToAction\routeToAction.js
 function RouteToAction(){
@@ -29514,6 +29498,149 @@ ServerActionProvider.prototype.download = function (requestData, resultCallback,
 };
 
 window.InfinniUI.Providers.ServerActionProvider = ServerActionProvider;
+//####app\data\dataSource\dataProviderReplaceItemQueue.js
+/**
+ * @description Организация очереди запросов на создание/изменение документа.
+ * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
+ * @param attributes
+ * @constructor
+ */
+var DataProviderReplaceItemQueue = function (attributes) {
+    var _attributes = attributes || [];
+    var _queue = [];
+    var requestIdProperty = '__Id';
+
+    var getQueueItemCriteria = function (data) {
+        var criteria = _.pick(data, _attributes);
+        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
+        criteria[idProperty] = data[idProperty];
+        return criteria;
+    };
+
+    var getQueueItem = function (data) {
+        return _.findWhere(_queue, getQueueItemCriteria(data));
+    };
+
+    var getQueueItems = function (data) {
+        return _.where(_queue, getQueueItemCriteria(data));
+    };
+
+    var updateInstanceId = function (data, response) {
+        var items = getQueueItems(data);
+        items.forEach(function (item) {
+            item.Id = response.Id;
+            item.value.Id = response.Id;
+        });
+    };
+
+    var next = function (data) {
+        var index = _queue.indexOf(data);
+        if (index === -1) {
+            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
+        }
+        _queue.splice(index, 1);
+        var item = getQueueItem(data);
+        run(item);
+    };
+
+    var run = function (data) {
+        if (typeof data === 'undefined' || data === null) {
+            return;
+        }
+        data.request(data)
+            .done(updateInstanceId.bind(undefined, data))
+            .always(next.bind(undefined, data));
+    };
+
+
+    this.append = function (data, request) {
+        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
+        item.request = request;
+
+        var items = getQueueItems(item);
+        _queue.push(item);
+
+        if (items.length === 0) {
+            //В очереди нет запросов с заданными параметрами
+            run(data);
+        } else if (items.length > 1) {
+            //В очереди несколько элементов, удаляем промежуточные
+            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
+                var index = _queue.indexOf(items[i]);
+                _queue.splice(index, 1);
+            }
+        }
+    };
+
+};
+
+
+window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
+
+//####app\data\dataSource\objectDataSource.js
+var ObjectDataSource = BaseDataSource.extend({
+
+    initDataProvider: function(){
+        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
+        this.set('dataProvider', dataProvider);
+    },
+
+    setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        this.updateItems();
+    },
+
+    _setItems: function(items){
+        this.get('dataProvider').setItems(items);
+        BaseDataSource.prototype._setItems.apply(this, [items]);
+    }
+
+});
+
+window.InfinniUI.ObjectDataSource = ObjectDataSource;
+
+//####app\data\dataSource\objectDataSourceBuilder.js
+function ObjectDataSourceBuilder() {
+}
+
+_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+
+_.extend(ObjectDataSourceBuilder.prototype, {
+    createDataSource: function(parent){
+        return new ObjectDataSource({
+            view: parent
+        });
+    },
+
+    applyMetadata: function(builder, parent, metadata, dataSource){
+        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+
+        if(!'IsLazy' in metadata){
+            dataSource.setIsLazy(false);
+        }
+
+        if(metadata.Items){
+            if($.isArray(metadata.Items)){
+                dataSource.setItems(metadata.Items);
+            }
+
+            if($.isPlainObject(metadata.Items)){
+                var binding = builder.buildBinding(metadata.Items, {
+                    parentView: parent
+                });
+
+                binding.setMode(InfinniUI.BindingModes.toElement);
+
+                binding.bindElement(dataSource, '');
+            }
+
+        }
+
+    }
+});
+
+window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
+
 //####app\data\parameter\parameter.js
 /**
  * @constructor
@@ -29749,149 +29876,6 @@ function ParameterBuilder() {
 
 window.InfinniUI.ParameterBuilder = ParameterBuilder;
 
-//####app\data\dataSource\dataProviderReplaceItemQueue.js
-/**
- * @description Организация очереди запросов на создание/изменение документа.
- * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
- * @param attributes
- * @constructor
- */
-var DataProviderReplaceItemQueue = function (attributes) {
-    var _attributes = attributes || [];
-    var _queue = [];
-    var requestIdProperty = '__Id';
-
-    var getQueueItemCriteria = function (data) {
-        var criteria = _.pick(data, _attributes);
-        var idProperty = _.isEmpty(data[requestIdProperty]) ? 'Id' : requestIdProperty;
-        criteria[idProperty] = data[idProperty];
-        return criteria;
-    };
-
-    var getQueueItem = function (data) {
-        return _.findWhere(_queue, getQueueItemCriteria(data));
-    };
-
-    var getQueueItems = function (data) {
-        return _.where(_queue, getQueueItemCriteria(data));
-    };
-
-    var updateInstanceId = function (data, response) {
-        var items = getQueueItems(data);
-        items.forEach(function (item) {
-            item.Id = response.Id;
-            item.value.Id = response.Id;
-        });
-    };
-
-    var next = function (data) {
-        var index = _queue.indexOf(data);
-        if (index === -1) {
-            console.error('DataProviderReplaceItemQueue: Не найден запрос в очереди');
-        }
-        _queue.splice(index, 1);
-        var item = getQueueItem(data);
-        run(item);
-    };
-
-    var run = function (data) {
-        if (typeof data === 'undefined' || data === null) {
-            return;
-        }
-        data.request(data)
-            .done(updateInstanceId.bind(undefined, data))
-            .always(next.bind(undefined, data));
-    };
-
-
-    this.append = function (data, request) {
-        var item = _.defaults(data, _.pick(data.value, ['Id', requestIdProperty]));
-        item.request = request;
-
-        var items = getQueueItems(item);
-        _queue.push(item);
-
-        if (items.length === 0) {
-            //В очереди нет запросов с заданными параметрами
-            run(data);
-        } else if (items.length > 1) {
-            //В очереди несколько элементов, удаляем промежуточные
-            for (var i = 1, ln = items.length; i < ln; i = i + 1) {
-                var index = _queue.indexOf(items[i]);
-                _queue.splice(index, 1);
-            }
-        }
-    };
-
-};
-
-
-window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
-
-//####app\data\dataSource\objectDataSource.js
-var ObjectDataSource = BaseDataSource.extend({
-
-    initDataProvider: function(){
-        var dataProvider = window.InfinniUI.providerRegister.build('ObjectDataSource');
-        this.set('dataProvider', dataProvider);
-    },
-
-    setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        this.updateItems();
-    },
-
-    _setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        BaseDataSource.prototype._setItems.apply(this, [items]);
-    }
-
-});
-
-window.InfinniUI.ObjectDataSource = ObjectDataSource;
-
-//####app\data\dataSource\objectDataSourceBuilder.js
-function ObjectDataSourceBuilder() {
-}
-
-_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
-
-_.extend(ObjectDataSourceBuilder.prototype, {
-    createDataSource: function(parent){
-        return new ObjectDataSource({
-            view: parent
-        });
-    },
-
-    applyMetadata: function(builder, parent, metadata, dataSource){
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
-
-        if(!'IsLazy' in metadata){
-            dataSource.setIsLazy(false);
-        }
-
-        if(metadata.Items){
-            if($.isArray(metadata.Items)){
-                dataSource.setItems(metadata.Items);
-            }
-
-            if($.isPlainObject(metadata.Items)){
-                var binding = builder.buildBinding(metadata.Items, {
-                    parentView: parent
-                });
-
-                binding.setMode(InfinniUI.BindingModes.toElement);
-
-                binding.bindElement(dataSource, '');
-            }
-
-        }
-
-    }
-});
-
-window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
-
 //####app\formats\displayFormat\_common\formatMixin.js
 /**
  * @description Методы для форматоирования
@@ -29962,319 +29946,109 @@ var formatMixin = {
 
 window.InfinniUI.FormatMixin = formatMixin;
 
-//####app\formats\displayFormat\object\objectFormat.js
+//####app\formats\displayFormat\boolean\booleanFormat.js
 /**
- * @description Формат отображения объекта
- * @param {String} format Строка форматирования
- * @class ObjectFormat
+ * @description Формат отображения логического значения.
+ * @class BooleanFormat
  * @mixes formatMixin
  */
-function ObjectFormat(format) {
-    this.setFormat(format);
+var BooleanFormat = function () {};
 
-    this.formatters = [DateTimeFormat, NumberFormat];
-}
+window.InfinniUI.BooleanFormat = BooleanFormat;
 
-window.InfinniUI.ObjectFormat = ObjectFormat;
-
-
-_.extend(ObjectFormat.prototype, {
+_.extend(BooleanFormat.prototype, {
 
     /**
-     * @private
-     * @description Форматирует объект
-     * @memberOf ObjectFormat.prototype
-     * @param {*} originalValue Форматируемое значение
-     * @param {Culture} culture Культура
-     * @param {String} format Строка форматирования
+     * @description Текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultTrueText: 'True',
+
+    /**
+     * @description Текст для отображения ложного значения
+     * @memberOf BooleanFormat.prototype
+     */
+    defaultFalseText: 'False',
+
+    /**
+     * @description Возвращает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
      * @returns {String}
      */
-    formatValue: function (originalValue, culture, format) {
-
-        culture = culture || new Culture(InfinniUI.config.lang);
-        format = format || this.getFormat();
-
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
-        var value = '';
-
-        value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
-        
-        return value;
-
+    getFalseText: function () {
+        return this.getPropertyValue('falseText', this.defaultFalseText);
     },
 
     /**
-     * @private
-     * @description Форматирование каждого простого вхождения формата в строку форматирования объекта
-     * @memberOf ObjectFormat.prototype
-     * @param {*} originalValue Форматируемое значение
-     * @param {Culture} culture
-     * @param {String} match строка форматирования
+     * @description Устанавливает текст для отображения ложного значения.
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setFalseText: function (value) {
+        this.falseText = value;
+    },
+
+    /**
+     * @description Возвращает текст для отображения истинного значения.
+     * @memberOf BooleanFormat.prototype
      * @returns {String}
      */
-    formatIterator: function (originalValue, culture, match) {
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
+    getTrueText: function () {
+        return this.getPropertyValue('trueText', this.defaultTrueText);
+    },
 
-        var result, text, formatter, value, parts;
+    /**
+     * @description Устанавливает текст для отображения истинного значения
+     * @memberOf BooleanFormat.prototype
+     * @param {String} value
+     */
+    setTrueText: function (value) {
+        this.trueText = value;
+    },
 
-        result = match;
-        text = match.replace(trim, '');
-        parts = text.split(':');
-
-        if (typeof originalValue === 'object') {
-            value = (parts[0] === '') ? originalValue : InfinniUI.ObjectUtils.getPropertyValue(originalValue, parts[0]);
+    /**
+     * @description Форматирует значение
+     * @memberOf BooleanFormat.prototype
+     * @param {Boolean} originalValue
+     * @returns {String}
+     */
+    formatValue: function (originalValue) {
+        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
+            return this.getFalseText();
         } else {
-            value = originalValue;
+            return this.getTrueText();
         }
-
-        if (parts.length === 2) {
-            // Найдено "[Property]:Format"
-            for (var i = 0, ln = this.formatters.length; i < ln; i = i + 1) {
-                //Пытаемся по очереди отформатировать значение разными форматами
-                formatter = new this.formatters[i](parts[1]);
-                formatter.setOptions(this.getOptions());
-
-                text = formatter.format(value, culture);
-                if (text !== parts[1]) {
-                    //Если формат отформатировал строку - оставляем ее
-                    result = text;
-                    break;
-                }
-            }
-        } else {
-            // Найдено "[Property]"
-            result = value;
-        }
-
-        return (typeof result === 'undefined' || result === null) ? '' : result;
     }
-
-
-
 
 }, formatMixin);
 
-//####app\formats\displayFormat\object\objectFormatBuilder.js
+//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
 /**
- * @description Билдер ObjectFormat
- * @class ObjectFormatBuilder
+ * @description Билдер BooleanFormat
+ * @class BooleanFormatBuilder
  */
-function ObjectFormatBuilder () {
+function BooleanFormatBuilder () {
 
     /**
-     * @description Создает и инициализирует экземпляр {@link ObjectFormat}
-     * @memberOf ObjectFormatBuilder
+     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
+     * @memberOf BooleanFormatBuilder
+     * @instance
      * @param context
      * @param args
-     * @returns {ObjectFormat}
+     * @returns {BooleanFormat}
      */
     this.build = function (context, args) {
-        var format = new ObjectFormat();
 
-        format.setFormat(args.metadata.Format);
+        var format = new BooleanFormat();
+
+        format.setFalseText(args.metadata.FalseText);
+        format.setTrueText(args.metadata.TrueText);
 
         return format;
     }
 }
 
-window.InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;
-
-//####app\formats\displayFormat\number\numberFormat.js
-/**
- * @description Формат отображения числового значения.
- * @param {String} format Строка форматирования
- * @class NumberFormat
- * @mixes formatMixin
- */
-function NumberFormat(format){
-    this.setFormat(format);
-}
-
-window.InfinniUI.NumberFormat = NumberFormat;
-
-
-_.extend(NumberFormat.prototype, {
-
-    /**
-     * @description Строка форматирования числового значения по умолчанию
-     * @memberOf NumberFormat.prototype
-     */
-    defaultFormat: "n",
-
-    /**
-     * @description Форматирует числовое значение
-     * @memberOf NumberFormat.prototype
-     * @param {Number} originalValue Форматируемое значение
-     * @param {Culture} [culture] Культура
-     * @param {String} [format] Строка форматирования
-     * @returns {String}
-     */
-    formatValue: function(originalValue, culture, format){
-        if (typeof originalValue === 'undefined' || originalValue === null) {
-            return '';
-        }
-        var self = this;
-
-        culture = culture || new Culture(InfinniUI.config.lang);
-
-        format = format||this.getFormat();
-
-        return format.replace(this.rg, function(s, formatName, formatParam){
-            if(formatParam !== undefined && formatParam != ''){
-                formatParam = parseInt(formatParam);
-            }else{
-                formatParam = undefined;
-            }
-            return self.rules[formatName].call(self, originalValue, formatParam, culture);
-        });
-    },
-
-    rg: /^([pnc])(\d*)$/ig,
-
-    rules: {
-        'P': function(val, param, culture){
-            param = (param !== undefined) ? param : culture.numberFormatInfo.percentDecimalDigits;
-            var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.percentGroupSeparator, culture.numberFormatInfo.percentDecimalSeparator),
-                result;
-
-            if(isPositive){
-                result = culture.numberFormatInfo.percentPositivePattern.replace('p', formattedNumber);
-            }else{
-                result = culture.numberFormatInfo.percentNegativePattern.replace('p', formattedNumber);
-            }
-
-            result = result.replace('%', culture.numberFormatInfo.percentSymbol);
-
-            return result;
-        },
-        'p': function(val, param, culture){
-            val *= 100;
-            return this.rules.P.call(this, val, param, culture);
-        },
-        'n': function (val, param, culture) {
-            param = (param !== undefined) ? param : culture.numberFormatInfo.numberDecimalDigits;
-            var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.numberGroupSeparator, culture.numberFormatInfo.numberDecimalSeparator),
-                result;
-
-            if(isPositive){
-                result = culture.numberFormatInfo.numberPositivePattern.replace('n', formattedNumber);
-            }else{
-                result = culture.numberFormatInfo.numberNegativePattern.replace('n', formattedNumber);
-            }
-
-            return result;
-        },
-        'N': function () {
-            return this.rules.n.apply(this, arguments);
-        },
-        'c': function (val, param, culture) {
-            param = (param !== undefined) ? param : culture.numberFormatInfo.currencyDecimalDigits;
-            var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.currencyGroupSeparator, culture.numberFormatInfo.currencyDecimalSeparator),
-                result;
-
-            if(isPositive){
-                result = culture.numberFormatInfo.currencyPositivePattern.replace('c', formattedNumber);
-            }else{
-                result = culture.numberFormatInfo.currencyNegativePattern.replace('c', formattedNumber);
-            }
-            result = result.replace('$', culture.numberFormatInfo.currencySymbol);
-
-            return result;
-        },
-        'C': function () {
-            return this.rules.c.apply(this, arguments);
-        }
-    },
-
-    /**
-     * @protected
-     * @description Форматирует числовое значение
-     * @memberOf NumberFormat.prototype
-     * @param {Number} val Значение
-     * @param {Number} capacity Количество знаков в дробной части
-     * @param {Number} groupSeparator Разделитель между группами
-     * @param {String} decimalSeparator Разделитель между целой и дробной частью
-     * @returns {String}
-     */
-    formatNumber: function(val, capacity, groupSeparator, decimalSeparator){
-        val = val.toFixed(capacity);
-
-        var stringOfVal = val.toString(),
-            splittedVal = stringOfVal.split('.'),
-            intPath = this.formatIntPath(splittedVal[0], groupSeparator),
-            fractPath = this.formatFractPath(splittedVal[1], decimalSeparator, capacity);
-
-        return intPath + fractPath;
-    },
-
-    /**
-     * @protected
-     * @description Форматирует целую часть числа
-     * @memberOf NumberFormat.prototype
-     * @param {String} intPath Целая часть числа
-     * @param {String} splitter Разделитель между группами
-     * @returns {String}
-     */
-    formatIntPath: function(intPath, splitter){
-        return intPath.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g, '$1' + splitter);
-    },
-
-    /**
-     * @protected
-     * @description Форматирует дробную часть числа
-     * @memberOf NumberFormat.prototype
-     * @param {String} fractPath Дробная часть числа
-     * @param {String} splitter Разделитель между целой и дробной частью
-     * @param {Number} capacity Количество знаков в дробной части
-     * @returns {string}
-     */
-    formatFractPath: function(fractPath, splitter, capacity){
-        var result = fractPath ? fractPath : '',
-            postfix;
-
-        if(capacity == 0){
-            return '';
-        }
-
-        if(result.length >= capacity){
-            return splitter + result.substr(0, capacity)
-        }
-
-        postfix = Math.pow(10, capacity - result.length);
-        postfix = postfix.toString().substr(1);
-        return splitter + result + postfix;
-    }
-}, formatMixin);
-
-//####app\formats\displayFormat\number\numberFormatBuilder.js
-/**
- * @description Билдер NumberFormat
- * @class NumberFormatBuilder
- */
-function NumberFormatBuilder () {
-
-    /**
-     * @description Создает и инициализирует экземпляр {@link NumberFormat}
-     * @memberOf NumberFormatBuilder
-     * @param context
-     * @param args
-     * @returns {NumberFormat}
-     */
-    this.build = function (context, args) {
-        var format = new NumberFormat();
-
-        format.setFormat(args.metadata.Format);
-
-        return format;
-    }
-}
-
-window.InfinniUI.NumberFormatBuilder = NumberFormatBuilder;
+window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
 
 //####app\formats\displayFormat\dateTime\dateTimeFormat.js
 /**
@@ -30661,109 +30435,319 @@ function DateTimeFormatBuilder () {
 
 window.InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;
 
-//####app\formats\displayFormat\boolean\booleanFormat.js
+//####app\formats\displayFormat\number\numberFormat.js
 /**
- * @description Формат отображения логического значения.
- * @class BooleanFormat
+ * @description Формат отображения числового значения.
+ * @param {String} format Строка форматирования
+ * @class NumberFormat
  * @mixes formatMixin
  */
-var BooleanFormat = function () {};
+function NumberFormat(format){
+    this.setFormat(format);
+}
 
-window.InfinniUI.BooleanFormat = BooleanFormat;
+window.InfinniUI.NumberFormat = NumberFormat;
 
-_.extend(BooleanFormat.prototype, {
+
+_.extend(NumberFormat.prototype, {
 
     /**
-     * @description Текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
+     * @description Строка форматирования числового значения по умолчанию
+     * @memberOf NumberFormat.prototype
      */
-    defaultTrueText: 'True',
+    defaultFormat: "n",
 
     /**
-     * @description Текст для отображения ложного значения
-     * @memberOf BooleanFormat.prototype
-     */
-    defaultFalseText: 'False',
-
-    /**
-     * @description Возвращает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
+     * @description Форматирует числовое значение
+     * @memberOf NumberFormat.prototype
+     * @param {Number} originalValue Форматируемое значение
+     * @param {Culture} [culture] Культура
+     * @param {String} [format] Строка форматирования
      * @returns {String}
      */
-    getFalseText: function () {
-        return this.getPropertyValue('falseText', this.defaultFalseText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения ложного значения.
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setFalseText: function (value) {
-        this.falseText = value;
-    },
-
-    /**
-     * @description Возвращает текст для отображения истинного значения.
-     * @memberOf BooleanFormat.prototype
-     * @returns {String}
-     */
-    getTrueText: function () {
-        return this.getPropertyValue('trueText', this.defaultTrueText);
-    },
-
-    /**
-     * @description Устанавливает текст для отображения истинного значения
-     * @memberOf BooleanFormat.prototype
-     * @param {String} value
-     */
-    setTrueText: function (value) {
-        this.trueText = value;
-    },
-
-    /**
-     * @description Форматирует значение
-     * @memberOf BooleanFormat.prototype
-     * @param {Boolean} originalValue
-     * @returns {String}
-     */
-    formatValue: function (originalValue) {
-        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
-            return this.getFalseText();
-        } else {
-            return this.getTrueText();
+    formatValue: function(originalValue, culture, format){
+        if (typeof originalValue === 'undefined' || originalValue === null) {
+            return '';
         }
-    }
+        var self = this;
 
+        culture = culture || new Culture(InfinniUI.config.lang);
+
+        format = format||this.getFormat();
+
+        return format.replace(this.rg, function(s, formatName, formatParam){
+            if(formatParam !== undefined && formatParam != ''){
+                formatParam = parseInt(formatParam);
+            }else{
+                formatParam = undefined;
+            }
+            return self.rules[formatName].call(self, originalValue, formatParam, culture);
+        });
+    },
+
+    rg: /^([pnc])(\d*)$/ig,
+
+    rules: {
+        'P': function(val, param, culture){
+            param = (param !== undefined) ? param : culture.numberFormatInfo.percentDecimalDigits;
+            var isPositive = val >= 0,
+                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.percentGroupSeparator, culture.numberFormatInfo.percentDecimalSeparator),
+                result;
+
+            if(isPositive){
+                result = culture.numberFormatInfo.percentPositivePattern.replace('p', formattedNumber);
+            }else{
+                result = culture.numberFormatInfo.percentNegativePattern.replace('p', formattedNumber);
+            }
+
+            result = result.replace('%', culture.numberFormatInfo.percentSymbol);
+
+            return result;
+        },
+        'p': function(val, param, culture){
+            val *= 100;
+            return this.rules.P.call(this, val, param, culture);
+        },
+        'n': function (val, param, culture) {
+            param = (param !== undefined) ? param : culture.numberFormatInfo.numberDecimalDigits;
+            var isPositive = val >= 0,
+                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.numberGroupSeparator, culture.numberFormatInfo.numberDecimalSeparator),
+                result;
+
+            if(isPositive){
+                result = culture.numberFormatInfo.numberPositivePattern.replace('n', formattedNumber);
+            }else{
+                result = culture.numberFormatInfo.numberNegativePattern.replace('n', formattedNumber);
+            }
+
+            return result;
+        },
+        'N': function () {
+            return this.rules.n.apply(this, arguments);
+        },
+        'c': function (val, param, culture) {
+            param = (param !== undefined) ? param : culture.numberFormatInfo.currencyDecimalDigits;
+            var isPositive = val >= 0,
+                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.currencyGroupSeparator, culture.numberFormatInfo.currencyDecimalSeparator),
+                result;
+
+            if(isPositive){
+                result = culture.numberFormatInfo.currencyPositivePattern.replace('c', formattedNumber);
+            }else{
+                result = culture.numberFormatInfo.currencyNegativePattern.replace('c', formattedNumber);
+            }
+            result = result.replace('$', culture.numberFormatInfo.currencySymbol);
+
+            return result;
+        },
+        'C': function () {
+            return this.rules.c.apply(this, arguments);
+        }
+    },
+
+    /**
+     * @protected
+     * @description Форматирует числовое значение
+     * @memberOf NumberFormat.prototype
+     * @param {Number} val Значение
+     * @param {Number} capacity Количество знаков в дробной части
+     * @param {Number} groupSeparator Разделитель между группами
+     * @param {String} decimalSeparator Разделитель между целой и дробной частью
+     * @returns {String}
+     */
+    formatNumber: function(val, capacity, groupSeparator, decimalSeparator){
+        val = val.toFixed(capacity);
+
+        var stringOfVal = val.toString(),
+            splittedVal = stringOfVal.split('.'),
+            intPath = this.formatIntPath(splittedVal[0], groupSeparator),
+            fractPath = this.formatFractPath(splittedVal[1], decimalSeparator, capacity);
+
+        return intPath + fractPath;
+    },
+
+    /**
+     * @protected
+     * @description Форматирует целую часть числа
+     * @memberOf NumberFormat.prototype
+     * @param {String} intPath Целая часть числа
+     * @param {String} splitter Разделитель между группами
+     * @returns {String}
+     */
+    formatIntPath: function(intPath, splitter){
+        return intPath.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g, '$1' + splitter);
+    },
+
+    /**
+     * @protected
+     * @description Форматирует дробную часть числа
+     * @memberOf NumberFormat.prototype
+     * @param {String} fractPath Дробная часть числа
+     * @param {String} splitter Разделитель между целой и дробной частью
+     * @param {Number} capacity Количество знаков в дробной части
+     * @returns {string}
+     */
+    formatFractPath: function(fractPath, splitter, capacity){
+        var result = fractPath ? fractPath : '',
+            postfix;
+
+        if(capacity == 0){
+            return '';
+        }
+
+        if(result.length >= capacity){
+            return splitter + result.substr(0, capacity)
+        }
+
+        postfix = Math.pow(10, capacity - result.length);
+        postfix = postfix.toString().substr(1);
+        return splitter + result + postfix;
+    }
 }, formatMixin);
 
-//####app\formats\displayFormat\boolean\booleanFormatBuilder.js
+//####app\formats\displayFormat\number\numberFormatBuilder.js
 /**
- * @description Билдер BooleanFormat
- * @class BooleanFormatBuilder
+ * @description Билдер NumberFormat
+ * @class NumberFormatBuilder
  */
-function BooleanFormatBuilder () {
+function NumberFormatBuilder () {
 
     /**
-     * @description Создает и инициализирует экземпляр {@link BooleanFormat}
-     * @memberOf BooleanFormatBuilder
-     * @instance
+     * @description Создает и инициализирует экземпляр {@link NumberFormat}
+     * @memberOf NumberFormatBuilder
      * @param context
      * @param args
-     * @returns {BooleanFormat}
+     * @returns {NumberFormat}
      */
     this.build = function (context, args) {
+        var format = new NumberFormat();
 
-        var format = new BooleanFormat();
-
-        format.setFalseText(args.metadata.FalseText);
-        format.setTrueText(args.metadata.TrueText);
+        format.setFormat(args.metadata.Format);
 
         return format;
     }
 }
 
-window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
+window.InfinniUI.NumberFormatBuilder = NumberFormatBuilder;
+
+//####app\formats\displayFormat\object\objectFormat.js
+/**
+ * @description Формат отображения объекта
+ * @param {String} format Строка форматирования
+ * @class ObjectFormat
+ * @mixes formatMixin
+ */
+function ObjectFormat(format) {
+    this.setFormat(format);
+
+    this.formatters = [DateTimeFormat, NumberFormat];
+}
+
+window.InfinniUI.ObjectFormat = ObjectFormat;
+
+
+_.extend(ObjectFormat.prototype, {
+
+    /**
+     * @private
+     * @description Форматирует объект
+     * @memberOf ObjectFormat.prototype
+     * @param {*} originalValue Форматируемое значение
+     * @param {Culture} culture Культура
+     * @param {String} format Строка форматирования
+     * @returns {String}
+     */
+    formatValue: function (originalValue, culture, format) {
+
+        culture = culture || new Culture(InfinniUI.config.lang);
+        format = format || this.getFormat();
+
+        var regexp = /{[^}]*}/g;
+        var trim = /^{|}$/g;
+        var value = '';
+
+        value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
+        
+        return value;
+
+    },
+
+    /**
+     * @private
+     * @description Форматирование каждого простого вхождения формата в строку форматирования объекта
+     * @memberOf ObjectFormat.prototype
+     * @param {*} originalValue Форматируемое значение
+     * @param {Culture} culture
+     * @param {String} match строка форматирования
+     * @returns {String}
+     */
+    formatIterator: function (originalValue, culture, match) {
+        var regexp = /{[^}]*}/g;
+        var trim = /^{|}$/g;
+
+        var result, text, formatter, value, parts;
+
+        result = match;
+        text = match.replace(trim, '');
+        parts = text.split(':');
+
+        if (typeof originalValue === 'object') {
+            value = (parts[0] === '') ? originalValue : InfinniUI.ObjectUtils.getPropertyValue(originalValue, parts[0]);
+        } else {
+            value = originalValue;
+        }
+
+        if (parts.length === 2) {
+            // Найдено "[Property]:Format"
+            for (var i = 0, ln = this.formatters.length; i < ln; i = i + 1) {
+                //Пытаемся по очереди отформатировать значение разными форматами
+                formatter = new this.formatters[i](parts[1]);
+                formatter.setOptions(this.getOptions());
+
+                text = formatter.format(value, culture);
+                if (text !== parts[1]) {
+                    //Если формат отформатировал строку - оставляем ее
+                    result = text;
+                    break;
+                }
+            }
+        } else {
+            // Найдено "[Property]"
+            result = value;
+        }
+
+        return (typeof result === 'undefined' || result === null) ? '' : result;
+    }
+
+
+
+
+}, formatMixin);
+
+//####app\formats\displayFormat\object\objectFormatBuilder.js
+/**
+ * @description Билдер ObjectFormat
+ * @class ObjectFormatBuilder
+ */
+function ObjectFormatBuilder () {
+
+    /**
+     * @description Создает и инициализирует экземпляр {@link ObjectFormat}
+     * @memberOf ObjectFormatBuilder
+     * @param context
+     * @param args
+     * @returns {ObjectFormat}
+     */
+    this.build = function (context, args) {
+        var format = new ObjectFormat();
+
+        format.setFormat(args.metadata.Format);
+
+        return format;
+    }
+}
+
+window.InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;
 
 //####app\formats\editMask\_common\editMaskMixin.js
 var editMaskMixin = {
