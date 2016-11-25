@@ -13,6 +13,7 @@ var DocumentDataSource = RestDataSource.extend({
         model.setProperty('filterParams', {});
         this.setUpdatingItemsConverter(function(data){
             model.setProperty('totalCount', data['Result']['Count']);
+            model.setProperty('additionalResult', data['Result']['AdditionalResult']);
             return data['Result']['Items'];
         });
 

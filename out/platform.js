@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.0';
+InfinniUI.VERSION = '2.2.2';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -2255,6 +2255,12 @@ var filterItems = (function() {
 			}
 			return value;
 		}
+		function stringToNumAsString(value) {
+			if( typeof value === 'string' && value.slice(0, 1) === "'" ) {
+				value = value.slice(1, -1);
+			}
+			return value;
+		}
 		function stringToBoolean(value) {
 			if( value === 'true' ) {
 				value = true;
@@ -2274,6 +2280,7 @@ var filterItems = (function() {
 					}
 					value[i] = stringToBoolean( value[i] );
 					value[i] = stringToNum( value[i] );
+					value[i] = stringToNumAsString( value[i] );
 				}
 			}
 			return value;
@@ -2300,6 +2307,7 @@ var filterItems = (function() {
 				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
 					if( filterTree.children[j].type === 'value' ) {
 						filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
+						filterTree.children[j].valueName = stringToNumAsString( filterTree.children[j].valueName ); // check on Number as string
 						filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
 						filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
 					}
@@ -2367,7 +2375,9 @@ filterItems.filterTreeBuilder = (function() {
 						tmpArr[0] = tmpArr[0].slice(0, -1);
 					}
 					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
-						tmpArr[0] = tmpArr[0].slice(1, -1);
+						if( isNaN( tmpArr[0].slice(1, -1) ) ) {
+							tmpArr[0] = tmpArr[0].slice(1, -1);
+						}
 					}
 					if( tmpArr[0].search(/tmpRE/) !== -1 ) {
 						tmpArr[0] = tmpArr[0].slice(1, -1).split(',');
@@ -5892,7 +5902,9 @@ var TextEditorView = Backbone.View.extend({
             default:
                 //замена выделенного текста, по нажатию
                 var char = InfinniUI.Keyboard.getCharByKeyCode(event.keyCode);
+
                 event.preventDefault();
+
                 if (this.getSelectionLength() > 0) {
                     position = editMask.deleteSelectedText(this.getCaretPosition(), this.getSelectionLength(), char);
                 } else {
@@ -5901,17 +5913,16 @@ var TextEditorView = Backbone.View.extend({
                 }
 
                 this.model.setText(editMask.getText());
+
                 if (position !== false) {
                     this.setCaretPosition(position);
                 }
+
                 break;
         }
-
-
     },
 
     onKeyupHandler: function (event) {
-
         this.trigger('onKeyDown', {
             keyCode: event.which,
             value: this.model.getValue()
@@ -5920,7 +5931,6 @@ var TextEditorView = Backbone.View.extend({
 
     onClickHandler: function (event) {
         this.checkCurrentPosition();
-        event.preventDefault();
     },
 
     onPasteHandler: function (event) {
@@ -5979,8 +5989,6 @@ var TextEditorView = Backbone.View.extend({
 
         var originalEvent = event.originalEvent;
         var text = originalEvent.dataTransfer.getData('text/plain');
-
-
 
         this.textTyping(text, 0);
         this.$el.focus();
@@ -6138,9 +6146,7 @@ var TextEditorView = Backbone.View.extend({
                 this.checkCurrentPosition(position);
             }
         }
-
     }
-
 });
 //####app\controls\_base\textEditor\_mode\textEditorModelBaseModeStrategy.js
 /**
@@ -10570,7 +10576,6 @@ var DataGridView = ListEditorBaseView.extend({
                         model.toggleValue(valueSelector(undefined, {value:items.getByIndex(index)}));
                     }
                 });
-                element.childElements = element.control.controlView.childElements;
                 that.addRowElement(item, element);
 
                 var $element = element.render();
@@ -10713,7 +10718,7 @@ var DataGridRowView = ControlView.extend({
 
     initialize: function () {
         ControlView.prototype.initialize.call(this);
-        this.childElements = [];
+
         this.on('render', function () {
             this.ui.toggleCell.on('click', this.onToggleHandler.bind(this));
         }, this);
@@ -10746,15 +10751,13 @@ var DataGridRowView = ControlView.extend({
         $el.html(template());
         this.bindUIElements();
 
-        var templates = this.model.get('cellTemplates');
+        var cellElements = this.model.get('cellElements');
         var templateDataCell = this.template.dataCell;
-        if (Array.isArray(templates)) {
-            templates.forEach(function (template, index) {
+        if (Array.isArray(cellElements)) {
+            cellElements.forEach(function (cellElement, index) {
                 var $cell = $(templateDataCell());
-                var cellElement = template();
                 $cell.append(cellElement.render());
                 $el.append($cell);
-                row.addChildElement(cellElement);
             });
         }
         this.updateProperties();
@@ -10789,23 +10792,6 @@ var DataGridRowView = ControlView.extend({
 
     onToggleHandler: function (event) {
         this.trigger('toggle');
-    },
-
-    addChildElement: function (element) {
-        this.childElements.push(element);
-    },
-
-    removeChildElements: function () {
-        this.childElements.forEach(function (element) {
-            element.remove();
-        });
-
-        this.childElements.length = 0;
-    },
-
-    remove: function () {
-        this.removeChildElements();
-        ControlView.prototype.remove.call(this);
     }
 
 
@@ -12622,6 +12608,95 @@ var TablePanelView = ContainerView.extend(
     }
 );
 
+//####app\controls\tablePanel\row\rowControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function RowControl(parent) {
+    _.superClass(RowControl, this, parent);
+}
+
+_.inherit(RowControl, ContainerControl);
+
+_.extend(RowControl.prototype,
+    /** @lends RowControl.prototype */
+    {
+        createControlModel: function () {
+            return new RowModel();
+        },
+
+        createControlView: function (model) {
+            return new RowView({model: model});
+        }
+    }
+);
+
+
+//####app\controls\tablePanel\row\rowModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var RowModel = ContainerModel.extend(
+    /** @lends RowModel.prototype */
+    {
+        initialize: function () {
+            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        }
+    }
+);
+//####app\controls\tablePanel\row\rowView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var RowView = ContainerView.extend(
+    /** @lends RowView.prototype */
+    {
+        className: 'pl-row row',
+
+        initialize: function (options) {
+            ContainerView.prototype.initialize.call(this, options);
+        },
+
+        render: function () {
+            this.prerenderingActions();
+
+            this.removeChildElements();
+
+            this.renderItemsContents();
+
+            this.updateProperties();
+            this.trigger('render');
+
+            this.postrenderingActions();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: this});
+            //devblockstop
+            return this;
+        },
+
+        renderItemsContents: function(){
+            var items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                that = this,
+                element, item;
+
+            items.forEach(function(item, i){
+                element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
+                that.$el
+                    .append(element.render());
+            });
+        },
+
+        updateGrouping: function(){}
+    }
+);
+
 //####app\controls\tablePanel\cell\cellControl.js
 /**
  *
@@ -12735,95 +12810,6 @@ var CellView = ContainerView.extend(
                 this.columnSpan = columnSpan;
             }
 
-        },
-
-        updateGrouping: function(){}
-    }
-);
-
-//####app\controls\tablePanel\row\rowControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function RowControl(parent) {
-    _.superClass(RowControl, this, parent);
-}
-
-_.inherit(RowControl, ContainerControl);
-
-_.extend(RowControl.prototype,
-    /** @lends RowControl.prototype */
-    {
-        createControlModel: function () {
-            return new RowModel();
-        },
-
-        createControlView: function (model) {
-            return new RowView({model: model});
-        }
-    }
-);
-
-
-//####app\controls\tablePanel\row\rowModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var RowModel = ContainerModel.extend(
-    /** @lends RowModel.prototype */
-    {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        }
-    }
-);
-//####app\controls\tablePanel\row\rowView.js
-/**
- * @class
- * @augments ControlView
- */
-var RowView = ContainerView.extend(
-    /** @lends RowView.prototype */
-    {
-        className: 'pl-row row',
-
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
-
-        render: function () {
-            this.prerenderingActions();
-
-            this.removeChildElements();
-
-            this.renderItemsContents();
-
-            this.updateProperties();
-            this.trigger('render');
-
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
-
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
-
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
-            });
         },
 
         updateGrouping: function(){}
@@ -13160,6 +13146,129 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
+//####app\controls\tabPanel\tabHeader\tabHeaderView.js
+var TabHeaderModel = Backbone.Model.extend({
+
+    defaults: {
+        text: '',
+        canClose: false
+    }
+});
+
+var TabHeaderView = Backbone.View.extend({
+
+    className: "pl-tabheader",
+
+    tagName: "li",
+
+    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+
+    events: {
+        "click": "onClickHandler",
+        "click .pl-close": "onClickCloseHandler"
+    },
+
+    UI: {
+        label: '.pl-tabheader-text',
+        close: '.pl-close'
+    },
+
+    initialize: function (options) {
+        this.model = new TabHeaderModel(options);
+
+        this.on('rendered', this.onRenderedHandler);
+    },
+
+    render: function () {
+        this.$el.html(this.template);
+        this.bindUIElements();
+        this.trigger('rendered');
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    /**
+     *
+     * @param {string} value
+     */
+    setText: function (value) {
+        this.model.set('text', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setCanClose: function (value) {
+        this.model.set('canClose', value);
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setSelected: function (value) {
+        this.model.set('selected', value);
+    },
+
+    /**
+     * @protected
+     */
+    updateProperties: function () {
+        this.updateTextHandler();
+        this.updateCanClose();
+        this.updateSelectedHandler();
+    },
+
+    /**
+     * @protected
+     */
+    onRenderedHandler: function () {
+        this.updateProperties();
+        this.listenTo(this.model, 'change:text', this.updateTextHandler);
+        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
+        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateTextHandler: function () {
+        var text = this.model.get('text');
+        this.ui.label.text(text);
+    },
+
+    /**
+     * @protected
+     */
+    updateCanClose: function () {
+        var canClose = this.model.get('canClose');
+        this.ui.close.toggleClass('hidden', !canClose);
+    },
+
+    /**
+     * @protected
+     */
+    updateSelectedHandler: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('pl-active active', selected);
+    },
+
+    onClickHandler: function (event) {
+        this.trigger('selected');
+    },
+
+    onClickCloseHandler: function (event) {
+        event.stopPropagation();
+        this.trigger('close');
+    }
+
+});
+
+_.extend(TabHeaderView.prototype, bindUIElementsMixin);
+
 //####app\controls\tabPanel\tabPage\tabPageControl.js
 /**
  *
@@ -13284,129 +13393,6 @@ var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
     }
 
 });
-
-//####app\controls\tabPanel\tabHeader\tabHeaderView.js
-var TabHeaderModel = Backbone.Model.extend({
-
-    defaults: {
-        text: '',
-        canClose: false
-    }
-});
-
-var TabHeaderView = Backbone.View.extend({
-
-    className: "pl-tabheader",
-
-    tagName: "li",
-
-    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
-
-    events: {
-        "click": "onClickHandler",
-        "click .pl-close": "onClickCloseHandler"
-    },
-
-    UI: {
-        label: '.pl-tabheader-text',
-        close: '.pl-close'
-    },
-
-    initialize: function (options) {
-        this.model = new TabHeaderModel(options);
-
-        this.on('rendered', this.onRenderedHandler);
-    },
-
-    render: function () {
-        this.$el.html(this.template);
-        this.bindUIElements();
-        this.trigger('rendered');
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    /**
-     *
-     * @param {string} value
-     */
-    setText: function (value) {
-        this.model.set('text', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setCanClose: function (value) {
-        this.model.set('canClose', value);
-    },
-
-    /**
-     *
-     * @param {boolean} value
-     */
-    setSelected: function (value) {
-        this.model.set('selected', value);
-    },
-
-    /**
-     * @protected
-     */
-    updateProperties: function () {
-        this.updateTextHandler();
-        this.updateCanClose();
-        this.updateSelectedHandler();
-    },
-
-    /**
-     * @protected
-     */
-    onRenderedHandler: function () {
-        this.updateProperties();
-        this.listenTo(this.model, 'change:text', this.updateTextHandler);
-        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateTextHandler: function () {
-        var text = this.model.get('text');
-        this.ui.label.text(text);
-    },
-
-    /**
-     * @protected
-     */
-    updateCanClose: function () {
-        var canClose = this.model.get('canClose');
-        this.ui.close.toggleClass('hidden', !canClose);
-    },
-
-    /**
-     * @protected
-     */
-    updateSelectedHandler: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('pl-active active', selected);
-    },
-
-    onClickHandler: function (event) {
-        this.trigger('selected');
-    },
-
-    onClickCloseHandler: function (event) {
-        event.stopPropagation();
-        this.trigger('close');
-    }
-
-});
-
-_.extend(TabHeaderView.prototype, bindUIElementsMixin);
 
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
@@ -17490,7 +17476,10 @@ var BaseDataSource = Backbone.Model.extend({
     },
 
     onProviderError: function (handler) {
+        this.off('onProviderError');
         this.on('onProviderError', handler);
+
+        this.onProviderErrorHandler = handler;
     },
 
     getName: function () {
@@ -17816,8 +17805,7 @@ var BaseDataSource = Backbone.Model.extend({
             ds = this,
             logger = window.InfinniUI.global.logger,
             that = this,
-            validateResult,
-            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
+            validateResult;
 
         if (!this.isModified(item)) {
             this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
@@ -17844,7 +17832,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -17876,8 +17865,7 @@ var BaseDataSource = Backbone.Model.extend({
         var dataProvider = this.get('dataProvider'),
             that = this,
             itemId = this.idOfItem(item),
-            isItemInSet = this.get('itemsById')[itemId] !== undefined,
-            errorInProvider = this._compensateOnErrorOfProviderHandler(error);
+            isItemInSet = this.get('itemsById')[itemId] !== undefined;
 
         if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem(item, error);
@@ -17897,7 +17885,8 @@ var BaseDataSource = Backbone.Model.extend({
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result});
+            that._executeCallback(error, {item: item, result: result, data: data});
+            that.trigger('onProviderError', {item: item, data: data});
         });
     },
 
@@ -17967,6 +17956,7 @@ var BaseDataSource = Backbone.Model.extend({
                 },
                 function (data) {
                     that._onErrorProviderUpdateItemsHandle(data, onError);
+                    that.trigger('onProviderError', {data: data});
                 }
             );
 
@@ -18003,12 +17993,7 @@ var BaseDataSource = Backbone.Model.extend({
         var handlers = this.get('waitingOnUpdateItemsHandlers'),
             context = this.getContext();
 
-        if( handlers.length == 0 && !_.isFunction(callback) ){
-            this._compensateOnErrorOfProviderHandler(data);
-            return;
-        }
-
-        // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
+        // вызываем обработчики которые были переданы на отложенных updateItems (из-за замороженного источника)
         for(var i = 0, ii = handlers.length; i < ii; i++){
             if(handlers[i].onError){
                 handlers[i].onError(context, data);
@@ -18020,10 +18005,6 @@ var BaseDataSource = Backbone.Model.extend({
         if(_.isFunction(callback)) {
             callback(context, data);
         }
-    },
-
-    _compensateOnErrorOfProviderHandler: function(){
-        this.trigger('onProviderError', arguments);
     },
 
     setIsWaiting: function(value){
@@ -18814,6 +18795,7 @@ var DocumentDataSource = RestDataSource.extend({
         model.setProperty('filterParams', {});
         this.setUpdatingItemsConverter(function(data){
             model.setProperty('totalCount', data['Result']['Count']);
+            model.setProperty('additionalResult', data['Result']['AdditionalResult']);
             return data['Result']['Items'];
         });
 
@@ -19193,6 +19175,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
                 new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
             });
         }
+
+        if (metadata.OnProviderError) {
+            dataSource.onProviderError(function () {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            });
+        }
     },
 
     buildBindingBuilder: function(params){
@@ -19243,7 +19231,9 @@ _.extend(RestDataSourceBuilder.prototype, {
 
         var tmpParams;
 
-        this.initProviderErrorHandling(dataSource);
+        if ( metadata['OnProviderError'] == null ) {
+            dataSource.onProviderError( this._getCompensateProviderErrorHandler() );
+        }
 
         if('GettingParams' in metadata){
             tmpParams = this.extractUrlParams(metadata['GettingParams'], '.urlParams.get.params');
@@ -19326,12 +19316,12 @@ _.extend(RestDataSourceBuilder.prototype, {
         }
     },
 
-    initProviderErrorHandling: function(dataSource){
-        dataSource.onProviderError(function(){
+    _getCompensateProviderErrorHandler: function(dataSource){
+        return function(){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
-        });
+        };
     }
 });
 
@@ -19899,7 +19889,7 @@ _.extend(Element.prototype, {
 
         if (this.parent && this.parent.removeChild && !isInitiatedByParent) {
             if(this.parent.isRemoved){
-                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечан как удаленный');
+                logger.warn('Element.remove: Попытка удалить элемент из родителя, который помечен как удаленный');
             }else{
                 this.parent.removeChild(this);
             }
@@ -22950,12 +22940,15 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
             var columns = dataGrid.getColumns();
 
-            var cellItemTemplates = columns.toArray().map(function (column, index) {
+            var cellElements = columns.toArray().map(function (column, index) {
                 var cellTemplate = column.getCellTemplate();
                 var template = cellTemplate(itemsBinding);
-                return template.bind(column, context, args);
+                var cellEl = template(context, args);
+
+                row.addChild(cellEl);
+                return cellEl;
             });
-            row.setCellTemplates(cellItemTemplates);
+            row.setCellElements(cellElements);
             row.setMultiSelect(dataGrid.getMultiSelect());
             row.setShowSelectors(dataGrid.getShowSelectors());
             return row;
@@ -26519,8 +26512,8 @@ _.extend(DataGridRow.prototype, {
         return new DataGridRowControl()
     },
 
-    setCellTemplates: function (cellTemplates) {
-        this.control.set('cellTemplates', cellTemplates);
+    setCellElements: function (cellElements) {
+        this.control.set('cellElements', cellElements);
     },
 
     toggle: function (toggle) {
@@ -28100,7 +28093,13 @@ _.extend(ServerActionBuilder.prototype,
                             action.setParam(name, value);
                         }
                     } else {
-                        this._initBinding(name, value, action, parentView, builder);
+                        var buildParams = {
+                            parent: parentView,
+                            parentView: parentView,
+                            basePathOfProperty: args.basePathOfProperty
+                        };
+
+                        this._initBinding(name, value, action, buildParams, builder);
                     }
                 }
             }
@@ -28108,13 +28107,9 @@ _.extend(ServerActionBuilder.prototype,
             return action;
         },
 
-        _initBinding: function (paramName, paramValue, action, parentView, builder) {
-            var args = {
-                parent: parentView,
-                parentView: parentView
-            };
-
-            var dataBinding = builder.buildBinding(paramValue, args);
+        _initBinding: function (paramName, paramValue, action, buildParams, builder) {
+            
+            var dataBinding = builder.buildBinding(paramValue, buildParams);
 
             dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
