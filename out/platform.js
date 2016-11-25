@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.48';
+InfinniUI.VERSION = '2.1.49';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -34648,29 +34648,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -34820,6 +34797,55 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+		var message = args.value;
+		showToolTip(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+	function showToolTip($element, content) {
+		$element
+			.tooltip({
+				html: true,
+				title:content,
+				placement: 'auto top',
+				container: 'body',
+				trigger: 'hover'
+			})
+			.tooltip('show');
+	}
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -34909,30 +34935,4 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
-})();
 })();
