@@ -39,7 +39,13 @@ _.extend(ServerActionBuilder.prototype,
                             action.setParam(name, value);
                         }
                     } else {
-                        this._initBinding(name, value, action, parentView, builder);
+                        var buildParams = {
+                            parent: parentView,
+                            parentView: parentView,
+                            basePathOfProperty: args.basePathOfProperty
+                        };
+
+                        this._initBinding(name, value, action, buildParams, builder);
                     }
                 }
             }
@@ -47,13 +53,9 @@ _.extend(ServerActionBuilder.prototype,
             return action;
         },
 
-        _initBinding: function (paramName, paramValue, action, parentView, builder) {
-            var args = {
-                parent: parentView,
-                parentView: parentView
-            };
-
-            var dataBinding = builder.buildBinding(paramValue, args);
+        _initBinding: function (paramName, paramValue, action, buildParams, builder) {
+            
+            var dataBinding = builder.buildBinding(paramValue, buildParams);
 
             dataBinding.setMode(InfinniUI.BindingModes.toElement);
 

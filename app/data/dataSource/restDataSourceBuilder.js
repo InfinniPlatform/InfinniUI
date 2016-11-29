@@ -17,7 +17,7 @@ _.extend(RestDataSourceBuilder.prototype, {
         var tmpParams;
 
         if ( metadata['OnProviderError'] == null ) {
-            this.initProviderErrorHandling(dataSource);
+            dataSource.onProviderError( this._getCompensateProviderErrorHandler() );
         }
 
         if('GettingParams' in metadata){
@@ -101,12 +101,12 @@ _.extend(RestDataSourceBuilder.prototype, {
         }
     },
 
-    initProviderErrorHandling: function(dataSource){
-        dataSource.onProviderError(function(){
+    _getCompensateProviderErrorHandler: function(dataSource){
+        return function(){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
-        });
+        };
     }
 });
 
