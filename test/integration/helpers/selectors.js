@@ -201,7 +201,18 @@ module.exports = {
             element: function (tag, name) {
                 return './/' + tag + '[@data-pl-name="' + name + '"]';
             },
-            tags: [ 'div', 'a', 'i', 'p', 'span']
+            tags: [ 'div', 'a', 'i', 'p', 'span', 'ul', 'li']
+        },
+        RadioGroup: {
+            name: function (name) {
+                return './/div[contains(@class, "pl-listbox") and @data-pl-name="' + name + '"]';
+            },
+            text: function (text) {
+                return '/ul[@class="pl-listbox-control"]//div[contains(@class, "pl-listbox-body") and normalize-space(node()) = "' + text + '"]';
+            },
+            item: function (name, text) {
+                return this.name(name) + this.text(text);
+            }
         }
     }
 };

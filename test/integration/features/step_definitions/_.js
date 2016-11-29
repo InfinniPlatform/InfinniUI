@@ -103,32 +103,6 @@ module.exports = function () {
             });
     });
 
-    this.When(/^я не увижу кнопку "([^"]*)" в выпадающем списке кнопок "([^"]*)"$/, function (buttonText, popupListText) {
-        var selector = this.selectors.XPATH.Button.popupCaption(popupListText);
-        var xpath = this.by.xpath(selector);
-        var that = this;
-
-        return this.currentView.findElement(xpath)
-            .then(function (popupList) {
-                return popupList.click();
-            })
-            .then(function () {
-                selector = that.selectors.XPATH.Button.popupItem(buttonText);
-                xpath = that.by.xpath(selector);
-
-                return that.driver.findElements(xpath);
-            })
-            .then(function (elements) {
-                if(elements.length == 0) {
-                    throw new Error('Кнопки не существует');
-                }
-                return elements[0].isDisplayed();
-            })
-            .then(function (value) {
-                that.assert.equal(value, false, 'Кнопка видна');
-            });
-    });
-
     this.When(/^я нажму на клавишу "([^"]*)"$/, function (key) {
         var keys = {
             'enter': this.keys.ENTER
@@ -187,6 +161,21 @@ module.exports = function () {
                         reject(new Error('Элемент доступен'));
                     }
                 });
+            });
+    });
+
+    this.When(/^я нажму на элемент "([^"]*)"$/, function (elementName) {
+        elementName = this.helpers.parseElement(elementName);
+
+        var selector = this.selectors.XPATH.Element.byName(elementName.name);
+        var xpath = this.by.xpath(selector);
+
+        return this.currentView.findElements(xpath)
+            .then(function (elements) {
+                if (elements.length <= elementName.index) {
+                    throw new Error('Элемент не найден');
+                }
+                return elements[elementName.index].click();
             });
     });
 };
