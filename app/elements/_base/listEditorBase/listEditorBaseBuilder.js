@@ -30,14 +30,15 @@ _.extend(ListEditorBaseBuilder.prototype, {
     initSelecting: function(params, itemsBinding){
         var metadata = params.metadata;
         var element = params.element;
-        var dataSource = itemsBinding.getSource();
+        var source = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
-        var isBindingOnWholeDS = sourceProperty == '';
+        var isBindingOnWholeDS = sourceProperty == '',
+            sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
 
-        if(isBindingOnWholeDS){
-            dataSource.setSelectedItem(null);
+        if(sourceIsDataSource && isBindingOnWholeDS){
+            source.setSelectedItem(null);
 
-            dataSource.onSelectedItemChanged(function(context, args){
+            source.onSelectedItemChanged(function(context, args){
                 var currentSelectedItem = element.getSelectedItem(),
                     newSelectedItem = args.value;
 
@@ -48,11 +49,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
         }
 
         element.onSelectedItemChanged(function(context, args){
-            var currentSelectedItem = dataSource.getSelectedItem(),
-                newSelectedItem = args.value;
 
-            if(isBindingOnWholeDS && newSelectedItem != currentSelectedItem){
-                dataSource.setSelectedItem(newSelectedItem);
+            if(sourceIsDataSource && isBindingOnWholeDS) {
+                var currentSelectedItem = source.getSelectedItem(),
+                    newSelectedItem = args.value;
+
+                if (newSelectedItem != currentSelectedItem) {
+                    source.setSelectedItem(newSelectedItem);
+                }
             }
 
             if (metadata.OnSelectedItemChanged) {
