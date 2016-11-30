@@ -13,7 +13,7 @@ var PanelModel = ContainerModel.extend(/** @lends PanelModel.prototype */ {
     defaults: _.defaults({
         collapsible: false,
         collapsed: false,
-        collapsibleArea: ''
+        collapseChanger: ''
     }, ContainerModel.prototype.defaults),
 
     set: function (key, val, options) {

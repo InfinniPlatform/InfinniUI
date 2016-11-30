@@ -83,16 +83,16 @@ Panel.prototype.setHeader = function (value) {
  * @description Возвращает элемент для открытия панели
  * @returns {string}
  */
-Panel.prototype.getCollapsibleArea = function () {
-    return this.control.get('collapsibleArea');
+Panel.prototype.getCollapseChanger = function () {
+    return this.control.get('collapseChanger');
 };
 
 /**
  * @description Устанавливает элемент при клике на который раскрывается панель
  * @param {string} value
  */
-Panel.prototype.setCollapsibleArea = function (value) {
-    this.control.set('collapsibleArea', value);
+Panel.prototype.setCollapseChanger = function (value) {
+    this.control.set('collapseChanger', value);
 };
 
 /**
