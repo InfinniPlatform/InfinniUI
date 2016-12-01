@@ -31,9 +31,6 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         element.setCollapsed(metadata.Collapsed);
         element.setCollapseChanger(metadata.CollapseChanger);
 
-        var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
-        element.setHeaderTemplate(headerTemplate);
-
         if (metadata.Header && typeof metadata.Header === 'object') {
             //Header указывает на DataBinding
             var
@@ -48,6 +45,13 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         } else {
             //Header содержит значение для шаблона
             element.setHeader(metadata.Header);
+        }
+
+        if(!metadata.Header && !metadata.HeaderTemplate) {
+            element.setHeaderTemplate(null);
+        } else {
+            var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
+            element.setHeaderTemplate(headerTemplate);
         }
 
         this.initEventHandler(params);

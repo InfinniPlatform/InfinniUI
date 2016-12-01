@@ -215,7 +215,7 @@ describe('PanelControl', function () {
         });
     });
 
-    it('Should hide header if it is empty', function () {
+    it('Should hide header if headerTemplate is empty', function () {
         // Given
         var metadata = {
             "Items": [
@@ -240,7 +240,7 @@ describe('PanelControl', function () {
             assert.notEqual($panelHeader.css('display'), 'none');
 
             // When
-            panel.setHeader(null);
+            panel.setHeaderTemplate(null);
 
             // Then
             assert.equal($panelHeader.css('display'), 'none');

@@ -49,6 +49,7 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         this.listenTo(this.model, 'change:collapsed', this.updateCollapsed);
         this.listenTo(this.model, 'change:collapsible', this.updateCollapsible);
         this.listenTo(this.model, 'change:header', this.updateHeader);
+        this.listenTo(this.model, 'change:headerTemplate', this.updateHeader);
     },
 
     updateProperties: function () {
@@ -75,20 +76,12 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
             var header = model.get('header'),
                 $header = headerTemplate(null, {value: header}).render();
 
-            if( this.isDefaultHeader($header) ) {
-                this.ui.header.hide();
-            } else {
-                this.ui.header.show();
-                this.ui.header.append($header);
-            }
+            this.ui.header.show();
+            this.ui.header.append($header);
 
+        } else {
+            this.ui.header.hide();
         }
-    },
-
-    isDefaultHeader: function(headerTemplate) {
-        var defaultTemplate = InfinniUI.PanelBuilder.prototype.buildDefaultHeaderTemplate()(null, {value: null}),
-            defaultHeader = defaultTemplate.render();
-        return defaultHeader[0].isEqualNode(headerTemplate[0]);
     },
 
     renderItemsContents: function () {
