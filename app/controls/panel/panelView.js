@@ -131,9 +131,9 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     },
 
     onClickHeaderHandler: function (event) {
-        var collapsibleArea = this.model.get('collapsibleArea');
-        if( collapsibleArea !== '' ) {
-            if( $(event.target).closest('[data-pl-name=' + collapsibleArea + ']').length ) {
+        var collapseChanger = this.model.get('collapseChanger');
+        if( collapseChanger !== '' ) {
+            if( $(event.target).closest('[data-pl-name=' + collapseChanger + ']').length ) {
                 this.onEventCallback();
             }
         } else {

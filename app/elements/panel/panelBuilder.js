@@ -29,7 +29,7 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
 
         element.setCollapsible(metadata.Collapsible);
         element.setCollapsed(metadata.Collapsed);
-        element.setCollapsibleArea(metadata.CollapsibleArea);
+        element.setCollapseChanger(metadata.CollapseChanger);
 
         var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
         element.setHeaderTemplate(headerTemplate);
