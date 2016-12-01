@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.2';
+InfinniUI.VERSION = '2.2.3';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -16342,7 +16342,7 @@ var PanelModel = ContainerModel.extend(/** @lends PanelModel.prototype */ {
     defaults: _.defaults({
         collapsible: false,
         collapsed: false,
-        collapsibleArea: ''
+        collapseChanger: ''
     }, ContainerModel.prototype.defaults),
 
     set: function (key, val, options) {
@@ -16546,9 +16546,9 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     },
 
     onClickHeaderHandler: function (event) {
-        var collapsibleArea = this.model.get('collapsibleArea');
-        if( collapsibleArea !== '' ) {
-            if( $(event.target).closest('[data-pl-name=' + collapsibleArea + ']').length ) {
+        var collapseChanger = this.model.get('collapseChanger');
+        if( collapseChanger !== '' ) {
+            if( $(event.target).closest('[data-pl-name=' + collapseChanger + ']').length ) {
                 this.onEventCallback();
             }
         } else {
@@ -21412,14 +21412,15 @@ _.extend(ListEditorBaseBuilder.prototype, {
     initSelecting: function(params, itemsBinding){
         var metadata = params.metadata;
         var element = params.element;
-        var dataSource = itemsBinding.getSource();
+        var source = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
-        var isBindingOnWholeDS = sourceProperty == '';
+        var isBindingOnWholeDS = sourceProperty == '',
+            sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
 
-        if(isBindingOnWholeDS){
-            dataSource.setSelectedItem(null);
+        if(sourceIsDataSource && isBindingOnWholeDS){
+            source.setSelectedItem(null);
 
-            dataSource.onSelectedItemChanged(function(context, args){
+            source.onSelectedItemChanged(function(context, args){
                 var currentSelectedItem = element.getSelectedItem(),
                     newSelectedItem = args.value;
 
@@ -21430,11 +21431,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
         }
 
         element.onSelectedItemChanged(function(context, args){
-            var currentSelectedItem = dataSource.getSelectedItem(),
-                newSelectedItem = args.value;
 
-            if(isBindingOnWholeDS && newSelectedItem != currentSelectedItem){
-                dataSource.setSelectedItem(newSelectedItem);
+            if(sourceIsDataSource && isBindingOnWholeDS) {
+                var currentSelectedItem = source.getSelectedItem(),
+                    newSelectedItem = args.value;
+
+                if (newSelectedItem != currentSelectedItem) {
+                    source.setSelectedItem(newSelectedItem);
+                }
             }
 
             if (metadata.OnSelectedItemChanged) {
@@ -23969,61 +23973,6 @@ _.extend(FormBuilder.prototype, {
 	}
 });
 
-//####app\elements\gridPanel\gridPanel.js
-/**
- * @param parent
- * @constructor
- * @augments Container
- */
-function GridPanel(parent) {
-    _.superClass(GridPanel, this, parent);
-}
-
-window.InfinniUI.GridPanel = GridPanel;
-
-_.inherit(GridPanel, Container);
-
-_.extend(GridPanel.prototype, {
-    createControl: function () {
-        return new GridPanelControl();
-    }
-});
-
-//####app\elements\gridPanel\gridPanelBuilder.js
-/**
- * @constructor
- * @augments ContainerBuilder
- */
-function GridPanelBuilder() {
-    _.superClass(GridPanelBuilder, this);
-}
-
-window.InfinniUI.GridPanelBuilder = GridPanelBuilder;
-
-_.inherit(GridPanelBuilder, ContainerBuilder);
-
-_.extend(GridPanelBuilder.prototype,
-    /** @lends GridPanelBuilder.prototype*/
-    {
-        createElement: function (params) {
-            return new GridPanel(params.parent);
-        },
-
-        /**
-         * @param {Object} params
-         * @param {TablePanel} params.element
-         * @param {Object} params.metadata
-         */
-        applyMetadata: function (params) {
-            var
-                metadata = params.metadata,
-                element = params.element;
-
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
-        }
-
-    });
-
 //####app\elements\frame\frame.js
 /**
  *
@@ -24082,6 +24031,61 @@ _.extend(FrameBuilder.prototype, {
     },
     editorBaseBuilderMixin
 );
+
+//####app\elements\gridPanel\gridPanel.js
+/**
+ * @param parent
+ * @constructor
+ * @augments Container
+ */
+function GridPanel(parent) {
+    _.superClass(GridPanel, this, parent);
+}
+
+window.InfinniUI.GridPanel = GridPanel;
+
+_.inherit(GridPanel, Container);
+
+_.extend(GridPanel.prototype, {
+    createControl: function () {
+        return new GridPanelControl();
+    }
+});
+
+//####app\elements\gridPanel\gridPanelBuilder.js
+/**
+ * @constructor
+ * @augments ContainerBuilder
+ */
+function GridPanelBuilder() {
+    _.superClass(GridPanelBuilder, this);
+}
+
+window.InfinniUI.GridPanelBuilder = GridPanelBuilder;
+
+_.inherit(GridPanelBuilder, ContainerBuilder);
+
+_.extend(GridPanelBuilder.prototype,
+    /** @lends GridPanelBuilder.prototype*/
+    {
+        createElement: function (params) {
+            return new GridPanel(params.parent);
+        },
+
+        /**
+         * @param {Object} params
+         * @param {TablePanel} params.element
+         * @param {Object} params.metadata
+         */
+        applyMetadata: function (params) {
+            var
+                metadata = params.metadata,
+                element = params.element;
+
+            ContainerBuilder.prototype.applyMetadata.call(this, params);
+        }
+
+    });
 
 //####app\elements\icon\icon.js
 function Icon(parent) {
@@ -24871,16 +24875,16 @@ Panel.prototype.setHeader = function (value) {
  * @description Возвращает элемент для открытия панели
  * @returns {string}
  */
-Panel.prototype.getCollapsibleArea = function () {
-    return this.control.get('collapsibleArea');
+Panel.prototype.getCollapseChanger = function () {
+    return this.control.get('collapseChanger');
 };
 
 /**
  * @description Устанавливает элемент при клике на который раскрывается панель
  * @param {string} value
  */
-Panel.prototype.setCollapsibleArea = function (value) {
-    this.control.set('collapsibleArea', value);
+Panel.prototype.setCollapseChanger = function (value) {
+    this.control.set('collapseChanger', value);
 };
 
 /**
@@ -24955,7 +24959,7 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
 
         element.setCollapsible(metadata.Collapsible);
         element.setCollapsed(metadata.Collapsed);
-        element.setCollapsibleArea(metadata.CollapsibleArea);
+        element.setCollapseChanger(metadata.CollapseChanger);
 
         var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
         element.setHeaderTemplate(headerTemplate);
@@ -25229,31 +25233,6 @@ _.extend(PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype *
 
 }, buttonBuilderMixin);
 
-//####app\elements\radioGroup\radioGroupBuilder.js
-function RadioGroupBuilder() {
-    _.superClass(RadioGroupBuilder, this);
-}
-
-window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
-
-_.inherit(RadioGroupBuilder, ListBoxBuilder);
-
-_.extend(RadioGroupBuilder.prototype, {
-
-    createElement: function (params) {
-        var viewMode = params.metadata['ViewMode'] || 'checking';
-        return new ListBox(params.parent, viewMode);
-    },
-
-    applyMetadata: function (params) {
-        var element = params.element;
-        ListBoxBuilder.prototype.applyMetadata.call(this, params);
-
-        element.setMultiSelect(false);
-    }
-
-});
-
 //####app\elements\scrollPanel\scrollPanel.js
 /**
  * @param parent
@@ -25347,6 +25326,31 @@ _.extend(ScrollPanelBuilder.prototype, /** @lends ScrollPanelBuilder.prototype*/
         element.setVerticalScroll(metadata.VerticalScroll);
 
         return data;
+    }
+
+});
+
+//####app\elements\radioGroup\radioGroupBuilder.js
+function RadioGroupBuilder() {
+    _.superClass(RadioGroupBuilder, this);
+}
+
+window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
+
+_.inherit(RadioGroupBuilder, ListBoxBuilder);
+
+_.extend(RadioGroupBuilder.prototype, {
+
+    createElement: function (params) {
+        var viewMode = params.metadata['ViewMode'] || 'checking';
+        return new ListBox(params.parent, viewMode);
+    },
+
+    applyMetadata: function (params) {
+        var element = params.element;
+        ListBoxBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setMultiSelect(false);
     }
 
 });
@@ -32901,55 +32905,6 @@ function TemplateEditMaskBuilder () {
 
 window.InfinniUI.TemplateEditMaskBuilder = TemplateEditMaskBuilder;
 
-//####app\formats\editMask\regex\regexEditMask.js
-function RegexEditMask () {
-    this.mask = null;
-}
-
-window.InfinniUI.RegexEditMask = RegexEditMask;
-
-
-_.extend(RegexEditMask.prototype, editMaskMixin);
-
-_.extend(RegexEditMask.prototype, {
-
-    /**
-     * Проверка что маска была полностью заполнена
-     */
-    getIsComplete: function (value) {
-        var regExp;
-        this.value = value;
-        if (this.mask !== null) {
-            regExp = new RegExp(this.mask);
-            return regExp.test(value);
-        }
-        return false;
-    }
-
-
-});
-
-
-//####app\formats\editMask\regex\regexEditMaskBuilder.js
-/**
- * Билдер RegexEditMask
- * @constructor
- */
-function RegexEditMaskBuilder () {
-
-    this.build = function (context, args) {
-
-        var editMask = new RegexEditMask();
-
-        editMask.mask = args.metadata.Mask;
-
-        return editMask;
-    }
-
-}
-
-window.InfinniUI.RegexEditMaskBuilder = RegexEditMaskBuilder;
-
 //####app\formats\editMask\number\numberEditMask.js
 function NumberEditMask () {
     this.mask = null;
@@ -33558,6 +33513,55 @@ function NumberEditMaskBuilder () {
 }
 
 window.InfinniUI.NumberEditMaskBuilder = NumberEditMaskBuilder;
+
+//####app\formats\editMask\regex\regexEditMask.js
+function RegexEditMask () {
+    this.mask = null;
+}
+
+window.InfinniUI.RegexEditMask = RegexEditMask;
+
+
+_.extend(RegexEditMask.prototype, editMaskMixin);
+
+_.extend(RegexEditMask.prototype, {
+
+    /**
+     * Проверка что маска была полностью заполнена
+     */
+    getIsComplete: function (value) {
+        var regExp;
+        this.value = value;
+        if (this.mask !== null) {
+            regExp = new RegExp(this.mask);
+            return regExp.test(value);
+        }
+        return false;
+    }
+
+
+});
+
+
+//####app\formats\editMask\regex\regexEditMaskBuilder.js
+/**
+ * Билдер RegexEditMask
+ * @constructor
+ */
+function RegexEditMaskBuilder () {
+
+    this.build = function (context, args) {
+
+        var editMask = new RegexEditMask();
+
+        editMask.mask = args.metadata.Mask;
+
+        return editMask;
+    }
+
+}
+
+window.InfinniUI.RegexEditMaskBuilder = RegexEditMaskBuilder;
 
 //####app\linkView\openMode\strategy\_mixins\openModeAutoFocusMixin.js
 var openModeAutoFocusMixin = {
