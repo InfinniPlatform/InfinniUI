@@ -88,11 +88,17 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             var header = this.renderTabHeader(data.tabElement, selected);
 
             this.listenTo(header, 'selected', function () {
-                model.set('selectedItem', data.tabElement);
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    model.set('selectedItem', data.tabElement);
+                }
             });
 
             this.listenTo(header, 'close', function () {
-                data.tabElement.close();
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    data.tabElement.close();
+                }
             });
 
             return header;
@@ -110,6 +116,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         var header = new TabHeaderView({
             text: tabPageElement.getText(),
             canClose: tabPageElement.getCanClose(),
+            enabled: tabPageElement.getEnabled(),
             selected: selected
         });
 
@@ -119,6 +126,10 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         tabPageElement.onPropertyChanged('canClose', function () {
             header.setCanClose(tabPageElement.getCanClose());
+        });
+
+        tabPageElement.onPropertyChanged('enabled', function () {
+            header.setEnabled(tabPageElement.getEnabled());
         });
 
         this.ui.header.append(header.render().$el);
@@ -201,15 +212,28 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             tabPages = this.childElements,
             selectedItem = model.get('selectedItem');
 
-        if (!Array.isArray(tabPages)) {
+        if (!Array.isArray(tabPages) || tabPages.length == 0) {
             model.set('selectedItem', null);
-        } else if (tabPages.length) {
-            if (tabPages.indexOf(selectedItem) === -1) {
-                model.set('selectedItem', tabPages[0]);
-            }
         } else {
-            model.set('selectedItem', null);
+            if (tabPages.indexOf(selectedItem) === -1) {
+                var firstEnabledPageIndex = this._getFirstEnabledPageIndex();
+                if(firstEnabledPageIndex != -1) {
+                    model.set('selectedItem', tabPages[firstEnabledPageIndex]);
+                }
+            }
         }
+    },
+
+    _getFirstEnabledPageIndex: function() {
+        var tabPages = this.childElements;
+
+        for(var i=0; i<tabPages.length; ++i ){
+            if(tabPages[i].getEnabled()){
+                return i;
+            }
+        }
+
+        return -1;
     },
 
     /**
