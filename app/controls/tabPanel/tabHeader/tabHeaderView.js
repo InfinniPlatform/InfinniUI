@@ -2,6 +2,7 @@ var TabHeaderModel = Backbone.Model.extend({
 
     defaults: {
         text: '',
+        enabled: true,
         canClose: false
     }
 });
@@ -71,6 +72,7 @@ var TabHeaderView = Backbone.View.extend({
         this.updateTextHandler();
         this.updateCanClose();
         this.updateSelectedHandler();
+        this.updateEnabled();
     },
 
     /**
@@ -80,7 +82,8 @@ var TabHeaderView = Backbone.View.extend({
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
         this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:enabled', this.updateProperties); // нужно обновлять все свойства
     },
 
     /**
@@ -105,6 +108,11 @@ var TabHeaderView = Backbone.View.extend({
     updateSelectedHandler: function () {
         var selected = this.model.get('selected');
         this.$el.toggleClass('pl-active active', selected);
+    },
+
+    updateEnabled: function () {
+        var isEnabled = this.model.get('enabled');
+        this.$el.toggleClass('pl-disabled', !isEnabled);
     },
 
     onClickHandler: function (event) {
