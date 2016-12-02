@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.49';
+InfinniUI.VERSION = '2.1.50';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -13232,11 +13232,17 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             var header = this.renderTabHeader(data.tabElement, selected);
 
             this.listenTo(header, 'selected', function () {
-                model.set('selectedItem', data.tabElement);
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    model.set('selectedItem', data.tabElement);
+                }
             });
 
             this.listenTo(header, 'close', function () {
-                data.tabElement.close();
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    data.tabElement.close();
+                }
             });
 
             return header;
@@ -13254,6 +13260,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         var header = new TabHeaderView({
             text: tabPageElement.getText(),
             canClose: tabPageElement.getCanClose(),
+            enabled: tabPageElement.getEnabled(),
             selected: selected
         });
 
@@ -13263,6 +13270,10 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         tabPageElement.onPropertyChanged('canClose', function () {
             header.setCanClose(tabPageElement.getCanClose());
+        });
+
+        tabPageElement.onPropertyChanged('enabled', function () {
+            header.setEnabled(tabPageElement.getEnabled());
         });
 
         this.ui.header.append(header.render().$el);
@@ -13345,15 +13356,28 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             tabPages = this.childElements,
             selectedItem = model.get('selectedItem');
 
-        if (!Array.isArray(tabPages)) {
+        if (!Array.isArray(tabPages) || tabPages.length == 0) {
             model.set('selectedItem', null);
-        } else if (tabPages.length) {
-            if (tabPages.indexOf(selectedItem) === -1) {
-                model.set('selectedItem', tabPages[0]);
-            }
         } else {
-            model.set('selectedItem', null);
+            if (tabPages.indexOf(selectedItem) === -1) {
+                var firstEnabledPageIndex = this._getFirstEnabledPageIndex();
+                if(firstEnabledPageIndex != -1) {
+                    model.set('selectedItem', tabPages[firstEnabledPageIndex]);
+                }
+            }
         }
+    },
+
+    _getFirstEnabledPageIndex: function() {
+        var tabPages = this.childElements;
+
+        for(var i=0; i<tabPages.length; ++i ){
+            if(tabPages[i].getEnabled()){
+                return i;
+            }
+        }
+
+        return -1;
     },
 
     /**
@@ -13409,6 +13433,7 @@ var TabHeaderModel = Backbone.Model.extend({
 
     defaults: {
         text: '',
+        enabled: true,
         canClose: false
     }
 });
@@ -13478,6 +13503,7 @@ var TabHeaderView = Backbone.View.extend({
         this.updateTextHandler();
         this.updateCanClose();
         this.updateSelectedHandler();
+        this.updateEnabled();
     },
 
     /**
@@ -13487,7 +13513,8 @@ var TabHeaderView = Backbone.View.extend({
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
         this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:enabled', this.updateProperties); // нужно обновлять все свойства
     },
 
     /**
@@ -13512,6 +13539,11 @@ var TabHeaderView = Backbone.View.extend({
     updateSelectedHandler: function () {
         var selected = this.model.get('selected');
         this.$el.toggleClass('pl-active active', selected);
+    },
+
+    updateEnabled: function () {
+        var isEnabled = this.model.get('enabled');
+        this.$el.toggleClass('pl-disabled', !isEnabled);
     },
 
     onClickHandler: function (event) {
@@ -21646,14 +21678,15 @@ _.extend(ListEditorBaseBuilder.prototype, {
     initSelecting: function(params, itemsBinding){
         var metadata = params.metadata;
         var element = params.element;
-        var dataSource = itemsBinding.getSource();
+        var source = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
-        var isBindingOnWholeDS = sourceProperty == '';
+        var isBindingOnWholeDS = sourceProperty == '',
+            sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
 
-        if(isBindingOnWholeDS){
-            dataSource.setSelectedItem(null);
+        if(sourceIsDataSource && isBindingOnWholeDS){
+            source.setSelectedItem(null);
 
-            dataSource.onSelectedItemChanged(function(context, args){
+            source.onSelectedItemChanged(function(context, args){
                 var currentSelectedItem = element.getSelectedItem(),
                     newSelectedItem = args.value;
 
@@ -21664,11 +21697,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
         }
 
         element.onSelectedItemChanged(function(context, args){
-            var currentSelectedItem = dataSource.getSelectedItem(),
-                newSelectedItem = args.value;
 
-            if(isBindingOnWholeDS && newSelectedItem != currentSelectedItem){
-                dataSource.setSelectedItem(newSelectedItem);
+            if(sourceIsDataSource && isBindingOnWholeDS) {
+                var currentSelectedItem = source.getSelectedItem(),
+                    newSelectedItem = args.value;
+
+                if (newSelectedItem != currentSelectedItem) {
+                    source.setSelectedItem(newSelectedItem);
+                }
             }
 
             if (metadata.OnSelectedItemChanged) {
@@ -34648,6 +34684,29 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -34797,55 +34856,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
-})();
-
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -34935,4 +34945,30 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+		var message = args.value;
+		showToolTip(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+	function showToolTip($element, content) {
+		$element
+			.tooltip({
+				html: true,
+				title:content,
+				placement: 'auto top',
+				container: 'body',
+				trigger: 'hover'
+			})
+			.tooltip('show');
+	}
+})();
 })();
