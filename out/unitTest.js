@@ -14254,6 +14254,69 @@ describe('ListEditorBase', function () {
                 view.close();
             }
         });
+
+        it('should use items from parameter', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                Parameters: [{
+                    "Name": "Parameter1"
+                }],
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE"},
+                                {"Id": 2, "Display": "2G"},
+                                {"Id": 3, "Display": "2G"}
+                            ]
+                        }
+                    },{
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Value": { "Id": 2, "Display": "2G" }}
+                            ]
+                        }
+                    }
+                ],
+                "OnLoaded": '{context.parameters.Parameter1.setValue([{"Id": 1, "Display": "LTE"}, {"Id": 2, "Display": "2G"}, {"Id": 3, "Display": "2G"}]);}',
+                Items: [{
+
+                    ListBox: {
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "Parameter1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items": {
+                            "Source": "Parameter1",
+                            "Property": ""
+                        },
+                        "Value": {
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Value"
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $view){
+                assert.equal($view.find('.pl-listbox-i').length, 3);
+
+                view.close();
+            }
+        });
     });
 
 
@@ -14909,6 +14972,45 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
+describe('TabPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('Default values', function () {
+            var element = builder.buildType('TabPanel', {});
+
+            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
+            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
+        });
+
+
+    });
+
+
+});
+
+describe('TabPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            TabPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var element = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(element, 'TabPanel');
+    });
+
+});
+
 describe('ScrollPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14954,45 +15056,6 @@ describe('ScrollPanelBuilder', function () {
 
         //Then
         assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
-});
-
-describe('TabPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('Default values', function () {
-            var element = builder.buildType('TabPanel', {});
-
-            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
-            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
-        });
-
-
-    });
-
-
-});
-
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            TabPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var element = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(element, 'TabPanel');
     });
 
 });
