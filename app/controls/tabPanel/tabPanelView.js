@@ -32,7 +32,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         this.renderTemplate(this.getTemplate());
 
         this.renderItemsContents();
-        this.checkSelectedItem();
+        this.initSelectedItem();
 
         this.postrenderingActions();
 
@@ -114,11 +114,12 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      */
     renderTabHeader: function (tabPageElement, selected) {
         var header = new TabHeaderView({
-            text: tabPageElement.getText(),
-            canClose: tabPageElement.getCanClose(),
-            enabled: tabPageElement.getEnabled(),
-            selected: selected
-        });
+                text: tabPageElement.getText(),
+                canClose: tabPageElement.getCanClose(),
+                enabled: tabPageElement.getEnabled(),
+                selected: selected
+            }),
+            that = this;
 
         tabPageElement.onPropertyChanged('text', function () {
             header.setText(tabPageElement.getText());
@@ -130,6 +131,11 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         tabPageElement.onPropertyChanged('enabled', function () {
             header.setEnabled(tabPageElement.getEnabled());
+
+            var selectedTabPage = that.model.get('selectedItem');
+            if(tabPageElement == selectedTabPage){ // если видимость поменяли у выбранного элемента
+                that.resetDefaultSelectedItem();
+            }
         });
 
         this.ui.header.append(header.render().$el);
@@ -206,7 +212,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      * @protected
      * @description Проверяет чтобы одна из вкладок была активна
      */
-    checkSelectedItem: function () {
+    initSelectedItem: function () {
         var
             model = this.model,
             tabPages = this.childElements,
@@ -222,6 +228,11 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
                 }
             }
         }
+    },
+
+    resetDefaultSelectedItem: function () {
+        this.model.set('selectedItem', null);
+        this.initSelectedItem();
     },
 
     _getFirstEnabledPageIndex: function() {
