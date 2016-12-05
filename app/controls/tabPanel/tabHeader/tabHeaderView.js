@@ -65,6 +65,10 @@ var TabHeaderView = Backbone.View.extend({
         this.model.set('selected', value);
     },
 
+    setEnabled: function (value) {
+        this.model.set('enabled', value);
+    },
+
     /**
      * @protected
      */
