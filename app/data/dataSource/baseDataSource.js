@@ -467,8 +467,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
-            ds = this,
-            logger = window.InfinniUI.global.logger,
             that = this,
             validateResult;
 
@@ -495,10 +493,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -548,10 +547,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -620,8 +620,9 @@ var BaseDataSource = Backbone.Model.extend({
                     that._handleSuccessUpdateItemsInProvider(data, onSuccess);
                 },
                 function (data) {
+                    var context = that.getContext();
                     that._onErrorProviderUpdateItemsHandle(data, onError);
-                    that.trigger('onProviderError', {data: data});
+                    that.trigger('onProviderError', context, {data: data});
                 }
             );
 

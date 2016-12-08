@@ -124,20 +124,20 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         }
 
         if (metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            dataSource.onItemDeleted(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args);
             });
         }
 
         if (metadata.OnErrorValidator) {
-            dataSource.onErrorValidator(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
+            dataSource.onErrorValidator(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args);
             });
         }
 
         if (metadata.OnProviderError) {
-            dataSource.onProviderError(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            dataSource.onProviderError(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError, args);
             });
         }
     },
