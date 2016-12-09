@@ -102,7 +102,7 @@ _.extend(RestDataSourceBuilder.prototype, {
     },
 
     _getCompensateProviderErrorHandler: function(dataSource){
-        return function(){
+        return function(context, args){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
