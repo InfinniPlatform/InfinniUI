@@ -12918,7 +12918,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         this.renderTemplate(this.getTemplate());
 
         this.renderItemsContents();
-        this.checkSelectedItem();
+        this.initSelectedItem();
 
         this.postrenderingActions();
 
@@ -12974,11 +12974,17 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             var header = this.renderTabHeader(data.tabElement, selected);
 
             this.listenTo(header, 'selected', function () {
-                model.set('selectedItem', data.tabElement);
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    model.set('selectedItem', data.tabElement);
+                }
             });
 
             this.listenTo(header, 'close', function () {
-                data.tabElement.close();
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    data.tabElement.close();
+                }
             });
 
             return header;
@@ -12994,10 +13000,12 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      */
     renderTabHeader: function (tabPageElement, selected) {
         var header = new TabHeaderView({
-            text: tabPageElement.getText(),
-            canClose: tabPageElement.getCanClose(),
-            selected: selected
-        });
+                text: tabPageElement.getText(),
+                canClose: tabPageElement.getCanClose(),
+                enabled: tabPageElement.getEnabled(),
+                selected: selected
+            }),
+            that = this;
 
         tabPageElement.onPropertyChanged('text', function () {
             header.setText(tabPageElement.getText());
@@ -13005,6 +13013,15 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         tabPageElement.onPropertyChanged('canClose', function () {
             header.setCanClose(tabPageElement.getCanClose());
+        });
+
+        tabPageElement.onPropertyChanged('enabled', function () {
+            header.setEnabled(tabPageElement.getEnabled());
+
+            var selectedTabPage = that.model.get('selectedItem');
+            if(tabPageElement == selectedTabPage){ // если видимость поменяли у выбранного элемента
+                that.resetDefaultSelectedItem();
+            }
         });
 
         this.ui.header.append(header.render().$el);
@@ -13081,21 +13098,39 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      * @protected
      * @description Проверяет чтобы одна из вкладок была активна
      */
-    checkSelectedItem: function () {
+    initSelectedItem: function () {
         var
             model = this.model,
             tabPages = this.childElements,
             selectedItem = model.get('selectedItem');
 
-        if (!Array.isArray(tabPages)) {
+        if (!Array.isArray(tabPages) || tabPages.length == 0) {
             model.set('selectedItem', null);
-        } else if (tabPages.length) {
-            if (tabPages.indexOf(selectedItem) === -1) {
-                model.set('selectedItem', tabPages[0]);
-            }
         } else {
-            model.set('selectedItem', null);
+            if (tabPages.indexOf(selectedItem) === -1) {
+                var firstEnabledPageIndex = this._getFirstEnabledPageIndex();
+                if(firstEnabledPageIndex != -1) {
+                    model.set('selectedItem', tabPages[firstEnabledPageIndex]);
+                }
+            }
         }
+    },
+
+    resetDefaultSelectedItem: function () {
+        this.model.set('selectedItem', null);
+        this.initSelectedItem();
+    },
+
+    _getFirstEnabledPageIndex: function() {
+        var tabPages = this.childElements;
+
+        for(var i=0; i<tabPages.length; ++i ){
+            if(tabPages[i].getEnabled()){
+                return i;
+            }
+        }
+
+        return -1;
     },
 
     /**
@@ -13151,6 +13186,7 @@ var TabHeaderModel = Backbone.Model.extend({
 
     defaults: {
         text: '',
+        enabled: true,
         canClose: false
     }
 });
@@ -13213,6 +13249,10 @@ var TabHeaderView = Backbone.View.extend({
         this.model.set('selected', value);
     },
 
+    setEnabled: function (value) {
+        this.model.set('enabled', value);
+    },
+
     /**
      * @protected
      */
@@ -13220,6 +13260,7 @@ var TabHeaderView = Backbone.View.extend({
         this.updateTextHandler();
         this.updateCanClose();
         this.updateSelectedHandler();
+        this.updateEnabled();
     },
 
     /**
@@ -13229,7 +13270,8 @@ var TabHeaderView = Backbone.View.extend({
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
         this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:enabled', this.updateProperties); // нужно обновлять все свойства
     },
 
     /**
@@ -13254,6 +13296,11 @@ var TabHeaderView = Backbone.View.extend({
     updateSelectedHandler: function () {
         var selected = this.model.get('selected');
         this.$el.toggleClass('pl-active active', selected);
+    },
+
+    updateEnabled: function () {
+        var isEnabled = this.model.get('enabled');
+        this.$el.toggleClass('pl-disabled', !isEnabled);
     },
 
     onClickHandler: function (event) {
@@ -17802,8 +17849,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
-            ds = this,
-            logger = window.InfinniUI.global.logger,
             that = this,
             validateResult;
 
@@ -17830,10 +17875,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -17883,10 +17929,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -17955,8 +18002,9 @@ var BaseDataSource = Backbone.Model.extend({
                     that._handleSuccessUpdateItemsInProvider(data, onSuccess);
                 },
                 function (data) {
+                    var context = that.getContext();
                     that._onErrorProviderUpdateItemsHandle(data, onError);
-                    that.trigger('onProviderError', {data: data});
+                    that.trigger('onProviderError', context, {data: data});
                 }
             );
 
@@ -19165,20 +19213,20 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         }
 
         if (metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            dataSource.onItemDeleted(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args);
             });
         }
 
         if (metadata.OnErrorValidator) {
-            dataSource.onErrorValidator(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
+            dataSource.onErrorValidator(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args);
             });
         }
 
         if (metadata.OnProviderError) {
-            dataSource.onProviderError(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            dataSource.onProviderError(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError, args);
             });
         }
     },
@@ -19317,7 +19365,7 @@ _.extend(RestDataSourceBuilder.prototype, {
     },
 
     _getCompensateProviderErrorHandler: function(dataSource){
-        return function(){
+        return function(context, args){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
@@ -25233,6 +25281,31 @@ _.extend(PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype *
 
 }, buttonBuilderMixin);
 
+//####app\elements\radioGroup\radioGroupBuilder.js
+function RadioGroupBuilder() {
+    _.superClass(RadioGroupBuilder, this);
+}
+
+window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
+
+_.inherit(RadioGroupBuilder, ListBoxBuilder);
+
+_.extend(RadioGroupBuilder.prototype, {
+
+    createElement: function (params) {
+        var viewMode = params.metadata['ViewMode'] || 'checking';
+        return new ListBox(params.parent, viewMode);
+    },
+
+    applyMetadata: function (params) {
+        var element = params.element;
+        ListBoxBuilder.prototype.applyMetadata.call(this, params);
+
+        element.setMultiSelect(false);
+    }
+
+});
+
 //####app\elements\scrollPanel\scrollPanel.js
 /**
  * @param parent
@@ -25326,31 +25399,6 @@ _.extend(ScrollPanelBuilder.prototype, /** @lends ScrollPanelBuilder.prototype*/
         element.setVerticalScroll(metadata.VerticalScroll);
 
         return data;
-    }
-
-});
-
-//####app\elements\radioGroup\radioGroupBuilder.js
-function RadioGroupBuilder() {
-    _.superClass(RadioGroupBuilder, this);
-}
-
-window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
-
-_.inherit(RadioGroupBuilder, ListBoxBuilder);
-
-_.extend(RadioGroupBuilder.prototype, {
-
-    createElement: function (params) {
-        var viewMode = params.metadata['ViewMode'] || 'checking';
-        return new ListBox(params.parent, viewMode);
-    },
-
-    applyMetadata: function (params) {
-        var element = params.element;
-        ListBoxBuilder.prototype.applyMetadata.call(this, params);
-
-        element.setMultiSelect(false);
     }
 
 });
