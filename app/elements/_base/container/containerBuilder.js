@@ -338,25 +338,27 @@ _.extend(ContainerBuilder.prototype, {
                 var items = element.getItems(),
                     isCollectionChanged;
 
-                if(itemComparator){
+                if(!element.isRemoved) {
+                    if (itemComparator) {
 
-                    isCollectionChanged = items.set(value, true);
+                        isCollectionChanged = items.set(value, true);
 
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
 
-                    if (isCollectionChanged) {
-                        items.sort(itemComparator);
+                        if (isCollectionChanged) {
+                            items.sort(itemComparator);
+                        }
+
+                    } else {
+
+                        isCollectionChanged = items.set(value);
+
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
                     }
-
-                }else{
-
-                    isCollectionChanged = items.set(value);
-
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
                 }
 
             },
