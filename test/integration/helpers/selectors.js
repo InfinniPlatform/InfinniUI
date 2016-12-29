@@ -3,11 +3,20 @@
 module.exports = {
     XPATH: {
         TextBox: {
-            self: function () {
-                return './/div[contains(@class, "pl-textbox") or contains(@class, "pl-password-box")]';
+            textBoxByName: function(name) {
+                return './/div[contains(@class, "pl-textbox") and @data-pl-name = "' + name + '"]/*[self::input or self::textarea]';
             },
-            caption: function (text) {
-                return this.self() + '//label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]';
+            passwordBoxByName: function(name) {
+                return './/div[contains(@class, "pl-password-box") and @data-pl-name = "' + name + '"]/*[self::input or self::textarea]';
+            },
+            byName: function(name) {
+                return this.textBoxByName(name) + '|' + this.passwordBoxByName(name);
+            },
+            byLabelText: function(text) {
+                return './/div[contains(@class, "pl-textbox") or contains(@class, "pl-password-box")]/label[contains(@class, "pl-control-label") and normalize-space(node()) = "' + text + '"]/../*[self::input or self::textarea]';
+            },
+            caption: function(text) {
+                return this.byLabelText(text) + '|' + this.byName(text);
             }
         },
         Button: {
@@ -82,14 +91,17 @@ module.exports = {
             }
         },
         ComboBox: {
-            self: function () {
-                return './/div[contains(@class, "pl-combobox")]';
+            caption: function(text) {
+                return (this.byName(text) + '{label}' + '|' + this.byLabelText(text) + '{label}').replace(/\{label}/g, '/label[@class = "pl-control-label"]');
             },
-            caption: function (text) {
-                return this.self() + '/label[contains(@class, "pl-control-label") and normalize-space(node()) = ' + text + ']';
+            byName: function(name) {
+                return './/div[contains(@class, "pl-combobox") and @data-pl-name = ' + name + ']';
+            },
+            byLabelText: function(text) {
+                return './/div[contains(@class, "pl-combobox")]/label[contains(@class, "pl-control-label") and normalize-space(node()) = ' + text + ']/..';
             },
             button: function (text) {
-                return this.caption(text) + '/..//span[contains(@class, "pl-combobox__grip")]';
+                return (this.byName(text) + '{button}' + '|' + this.byLabelText(text) + '{button}').replace(/\{button}/g, '/..//span[contains(@class, "pl-combobox__grip")]');
             },
             dropDown: function (text) {
                 return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = ' + text + ']';
@@ -212,6 +224,20 @@ module.exports = {
             },
             item: function (name, text) {
                 return this.name(name) + this.text(text);
+            }
+        },
+        FileBox: {
+            caption: function(text) {
+                return this.byName(text) + '|' + this.byLabelText(text);
+            },
+            byName: function(name) {
+                return './/div[contains(@class, "pl-file-box") and @data-pl-name = "' + name + '"]';
+            },
+            byLabelText: function(text) {
+                return './/div[contains(@class, "pl-file-box")]//label[@class = "pl-control-label" and normalize-space(node()) = "' + text + '"]/../..';
+            },
+            removeButton: function() {
+                return './/button[contains(@class, "pl-filebox-btn-remove")]';
             }
         }
     }
