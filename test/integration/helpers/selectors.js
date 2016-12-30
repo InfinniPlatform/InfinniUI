@@ -101,7 +101,7 @@ module.exports = {
                 return './/div[contains(@class, "pl-combobox")]/label[contains(@class, "pl-control-label") and normalize-space(node()) = ' + text + ']/..';
             },
             button: function (text) {
-                return (this.byName(text) + '{button}' + '|' + this.byLabelText(text) + '{button}').replace(/\{button}/g, '/..//span[contains(@class, "pl-combobox__grip")]');
+                return (this.byName(text) + '{button}' + '|' + this.byLabelText(text) + '{button}').replace(/\{button}/g, '//span[contains(@class, "pl-combobox__grip")]');
             },
             dropDown: function (text) {
                 return '//div[contains(@class, "pl-dropdown-container")]//div[contains(@class, "pl-combobox-items")]/span[contains(@class, "pl-label") and normalize-space(node()) = ' + text + ']';
