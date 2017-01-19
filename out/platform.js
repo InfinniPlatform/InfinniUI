@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.3';
+InfinniUI.VERSION = '2.2.5';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -21104,25 +21104,27 @@ _.extend(ContainerBuilder.prototype, {
                 var items = element.getItems(),
                     isCollectionChanged;
 
-                if(itemComparator){
+                if(!element.isRemoved) {
+                    if (itemComparator) {
 
-                    isCollectionChanged = items.set(value, true);
+                        isCollectionChanged = items.set(value, true);
 
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
 
-                    if (isCollectionChanged) {
-                        items.sort(itemComparator);
+                        if (isCollectionChanged) {
+                            items.sort(itemComparator);
+                        }
+
+                    } else {
+
+                        isCollectionChanged = items.set(value);
+
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
                     }
-
-                }else{
-
-                    isCollectionChanged = items.set(value);
-
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
                 }
 
             },
@@ -27085,13 +27087,16 @@ var BaseEditActionBuilderMixin = {
 
         action.setProperty('linkView', linkView);
         action.setProperty('sourceSource', metadata.SourceValue.Source);
-        action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        var destinationProperty = (args.basePathOfProperty != null) ?
-            args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
-            metadata.DestinationValue.Property;
+        if (metadata.DestinationValue && metadata.DestinationValue.Source) {
+            action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        action.setProperty('destinationProperty', destinationProperty);
+            var destinationProperty = (args.basePathOfProperty != null) ?
+                args.basePathOfProperty.resolveProperty(metadata.DestinationValue.Property) :
+                metadata.DestinationValue.Property;
+
+            action.setProperty('destinationProperty', destinationProperty);
+        }
     }
 };
 //####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
@@ -27176,7 +27181,7 @@ _.extend(AcceptActionBuilder.prototype,
 window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
 
 //####app\actions\addAction\addAction.js
-function AddAction(parentView){
+function AddAction(parentView) {
     _.superClass(AddAction, this, parentView);
 }
 
@@ -27184,7 +27189,7 @@ _.inherit(AddAction, BaseEditAction);
 
 
 _.extend(AddAction.prototype, {
-    setSelectedItem: function(){
+    setSelectedItem: function() {
         var editDataSource = this.getProperty('editDataSource'),
             editView = editDataSource.getView();
 
@@ -27195,12 +27200,16 @@ _.extend(AddAction.prototype, {
         return true;
     },
 
-    save: function(){
+    save: function() {
         var editDataSource = this.getProperty('editDataSource'),
             destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty')  || "";
+            destinationProperty = this.getProperty('destinationProperty') || "";
 
-        if( this._isObjectDataSource(editDataSource) ) {
+        if (!destinationDataSource) {
+            return;
+        }
+
+        if (this._isObjectDataSource(editDataSource)) {
             var items = destinationDataSource.getProperty(destinationProperty) || [],
                 newItem = editDataSource.getSelectedItem();
 
