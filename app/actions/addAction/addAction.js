@@ -1,4 +1,4 @@
-function AddAction(parentView){
+function AddAction(parentView) {
     _.superClass(AddAction, this, parentView);
 }
 
@@ -6,7 +6,7 @@ _.inherit(AddAction, BaseEditAction);
 
 
 _.extend(AddAction.prototype, {
-    setSelectedItem: function(){
+    setSelectedItem: function() {
         var editDataSource = this.getProperty('editDataSource'),
             editView = editDataSource.getView();
 
@@ -17,12 +17,16 @@ _.extend(AddAction.prototype, {
         return true;
     },
 
-    save: function(){
+    save: function() {
         var editDataSource = this.getProperty('editDataSource'),
             destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty')  || "";
+            destinationProperty = this.getProperty('destinationProperty') || "";
 
-        if( this._isObjectDataSource(editDataSource) ) {
+        if (!destinationDataSource) {
+            return;
+        }
+
+        if (this._isObjectDataSource(editDataSource)) {
             var items = destinationDataSource.getProperty(destinationProperty) || [],
                 newItem = editDataSource.getSelectedItem();
 

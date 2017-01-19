@@ -16,12 +16,15 @@ var BaseEditActionBuilderMixin = {
 
         action.setProperty('linkView', linkView);
         action.setProperty('sourceSource', metadata.SourceValue.Source);
-        action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        var destinationProperty = (args.basePathOfProperty != null) ?
-            args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
-            metadata.DestinationValue.Property;
+        if (metadata.DestinationValue && metadata.DestinationValue.Source) {
+            action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        action.setProperty('destinationProperty', destinationProperty);
+            var destinationProperty = (args.basePathOfProperty != null) ?
+                args.basePathOfProperty.resolveProperty(metadata.DestinationValue.Property) :
+                metadata.DestinationValue.Property;
+
+            action.setProperty('destinationProperty', destinationProperty);
+        }
     }
 };
