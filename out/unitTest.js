@@ -495,21 +495,19 @@ describe('AcceptAction', function () {
     });
 });
 
-describe('AddAction', function () {
-    it('successful build', function () {
+describe('AddAction', function() {
+    it('successful build', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
+        var dataSource = new InfinniUI.ObjectDataSource({name: 'SomeDS', view: view});
 
         view.getDataSources().push(dataSource);
 
         var metadata = {
             AddAction: {
                 LinkView: {
-                    InlineView: {
-
-                    }
+                    InlineView: {}
                 },
                 DestinationValue: {
                     Source: 'SomeDS'
@@ -524,11 +522,11 @@ describe('AddAction', function () {
         var addAction = builder.build(metadata, {parentView: view});
 
         // Then
-        assert.isNotNull( addAction );
-        assert.isNotNull( addAction.execute, 'action should have execute' );
+        assert.isNotNull(addAction);
+        assert.isNotNull(addAction.execute, 'action should have execute');
     });
 
-    it('should add item to ObjectDataSource', function (done) {
+    it('should add item to ObjectDataSource', function(done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -571,8 +569,7 @@ describe('AddAction', function () {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
-                                                        "AcceptAction": {
-                                                        }
+                                                        "AcceptAction": {}
                                                     }
                                                 }
                                             }
@@ -586,7 +583,7 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             var addBtn = view.context.controls['AddButton'];
             var destinationDS = view.context.dataSources['ObjectDataSource'];
 
@@ -617,7 +614,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should add item to DocumentDataSource', function (done) {
+    it('should add item to DocumentDataSource', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -678,9 +675,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
                     var destinationDS = view.context.dataSources.DocumentDataSource;
                     var initCount = destinationDS.getItems().length;
@@ -702,7 +699,7 @@ describe('AddAction', function () {
                     saveBtn.click();
 
                     // Then
-                    view.context.dataSources.DocumentDataSource.updateItems( function() {
+                    view.context.dataSources.DocumentDataSource.updateItems(function() {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
@@ -717,7 +714,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should suspend SourceValue', function(done){
+    it('should suspend SourceValue', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -763,9 +760,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
 
                     // When
@@ -786,7 +783,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should call onExecuted', function(done){
+    it('should call onExecuted', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -829,8 +826,7 @@ describe('AddAction', function () {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
-                                                        "AcceptAction": {
-                                                        }
+                                                        "AcceptAction": {}
                                                     }
                                                 }
                                             }
@@ -844,9 +840,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
 
                     // When
@@ -869,6 +865,88 @@ describe('AddAction', function () {
                     view.close();
                 }
             );
+        });
+    });
+
+    it('should open add view without destination source', function(done) {
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+
+        var metadata = {
+            Name: 'ParentView',
+            Items: [
+                {
+                    Button: {
+                        Name: 'AddButton',
+                        Action: {
+                            AddAction: {
+                                SourceValue: {
+                                    Source: 'MainDataSource'
+                                },
+                                LinkView: {
+                                    InlineView: {
+                                        OpenMode: 'Dialog',
+                                        View: {
+                                            Name: 'AddView',
+                                            Text: 'AddAction withoud destination value',
+                                            DataSources: [
+                                                {
+                                                    DocumentDataSource: {
+                                                        Name: 'MainDataSource'
+                                                    }
+                                                }
+                                            ],
+                                            Items: [
+                                                {
+                                                    Button: {
+                                                        Name: 'SaveButton',
+                                                        Text: 'Save',
+                                                        Action: {
+                                                            SaveAction: {
+                                                                DestinationValue: {
+                                                                    Source: 'MainDataSource'
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view) {
+            var addButton = view.context.controls['AddButton'];
+
+            // When
+            addButton.click();
+
+            var childView = view.context.controls['AddView'];
+            var saveButton = childView.context.controls['SaveButton'];
+            var mainDataSource = childView.context.dataSources['MainDataSource'];
+
+            mainDataSource.setProperty('$.FirstName', 'John');
+            mainDataSource.setProperty('$.LastName', 'Doe');
+
+            mainDataSource.onItemSaved(function(context, args) {
+                var item = args.value.item;
+
+                assert.equal(item['FirstName'], 'John');
+                assert.equal(item['LastName'], 'Doe');
+
+                done();
+
+                // Cleanup
+                view.close();
+            });
+
+            saveButton.click();
         });
     });
 });
@@ -3865,6 +3943,58 @@ describe('ObjectFormat', function () {
 
 });
 
+describe('MessageBus', function () {
+    var messageBus;
+
+    beforeEach(function () {
+        messageBus = window.InfinniUI.global.messageBus;
+    });
+
+    describe('send', function () {
+        it('should send', function () {
+            var flag = 0;
+
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+
+            messageBus.send('myEvent', 2);
+
+            assert.equal(flag, 6);
+        });
+
+        it('should deliver message to valid subscribers', function () {
+            var flag1 = 0,
+                flag2 = 0;
+
+            messageBus.subscribe('myEvent_1', function (context, obj) {
+                flag1 += obj.value;
+            });
+            messageBus.subscribe('myEvent_1', function (context, obj) {
+                flag1 += obj.value;
+            });
+            messageBus.subscribe('myEvent_2', function (context, obj) {
+                flag2 += obj.value;
+            });
+            messageBus.subscribe('myEvent_2', function (context, obj) {
+                flag2 += obj.value;
+            });
+
+            messageBus.send('myEvent_1', 1);
+            messageBus.send('myEvent_2', 2);
+
+            assert.equal(flag1, 2, 'first handler flag is right');
+            assert.equal(flag2, 4, 'second handler flag is right');
+        });
+    });
+});
+
 describe('LinkView', function () {
 
     describe('setOpenMode', function () {
@@ -3979,55 +4109,61 @@ describe('LinkViewBuilderBase', function () {
 });
 
 
-describe('MessageBus', function () {
-    var messageBus;
+describe('ScriptExecutor', function () {
 
-    beforeEach(function () {
-        messageBus = window.InfinniUI.global.messageBus;
+    it('should build script handler', function () {
+        // Given
+        var builder = new InfinniUI.ScriptBuilder();
+        var metadata = {
+            Name: "Name",
+            Body: "return 5;"
+        };
+
+        // When
+        var func = builder.build(null, {metadata: metadata});
+
+        // Then
+        assert.equal(func.call(), 5);
     });
 
-    describe('send', function () {
-        it('should send', function () {
-            var flag = 0;
+    it('should pass arguments to handler', function () {
+        // Given
+        var builder = new InfinniUI.ScriptBuilder();
+        var metadata = {
+            Name: "Name",
+            Body: "return [context,args].join(':');"
+        };
 
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
+        // When
+        var func = builder.build(null, {metadata: metadata});
 
-            messageBus.send('myEvent', 2);
+        // Then
+        assert.equal(func.call(undefined, "Context", "Args"), "Context:Args");
+    });
 
-            assert.equal(flag, 6);
-        });
+    it('should execute script by name', function (done) {
+        var metadata = {
+            Scripts: [
+                {
+                    Name: "TestScript",
+                    Body: "window.testScriptWasExecuted = true;"
+                }
+            ]
+        };
 
-        it('should deliver message to valid subscribers', function () {
-            var flag1 = 0,
-                flag2 = 0;
+        var onViewReady = function(view) {
+            // Given
+            window.testScriptWasExecuted = false;
 
-            messageBus.subscribe('myEvent_1', function (context, obj) {
-                flag1 += obj.value;
-            });
-            messageBus.subscribe('myEvent_1', function (context, obj) {
-                flag1 += obj.value;
-            });
-            messageBus.subscribe('myEvent_2', function (context, obj) {
-                flag2 += obj.value;
-            });
-            messageBus.subscribe('myEvent_2', function (context, obj) {
-                flag2 += obj.value;
-            });
+            //When
+            new window.InfinniUI.ScriptExecutor(view).executeScript('TestScript');
 
-            messageBus.send('myEvent_1', 1);
-            messageBus.send('myEvent_2', 2);
+            //Then
+            assert.isTrue(window.testScriptWasExecuted);
+            done();
+        };
 
-            assert.equal(flag1, 2, 'first handler flag is right');
-            assert.equal(flag2, 4, 'second handler flag is right');
-        });
+        testHelper.applyViewMetadata(metadata, onViewReady);
     });
 });
 
@@ -5475,10 +5611,10 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have all given params", function () {
 			// Given
-			var filter = "and(eq(phrase,'param'),eq(index,2))";
+			var filter = "and(eq(phrase,'param'),eq(index,'2'))";
 			var items = [
-				{Id: 1, phrase: 'param', index: 2},
-				{Id: 2, index: 2},
+				{Id: 1, phrase: 'param', index: '2'},
+				{Id: 2, index: '2'},
 				{Id: 3}
 			];
 			// When
@@ -5490,12 +5626,12 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items that have at least one of given params", function () {
 			// Given
-			var filter = 'or(eq(Id,1),eq(props.fontSize,30))';
+			var filter = "or(eq(Id,1),eq(props.fontSize,'30'))";
 			var items = [
 				{Id: 1},
 				{Id: 2},
 				{Id: 3},
-				{Id: 4, props: {fontSize: 30}}
+				{Id: 4, props: {fontSize: '30'}}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);
@@ -5507,11 +5643,11 @@ describe("Filter items", function () {
 
 		it("FilterItems should return all items but not given item(s)", function () {
 			// Given
-			var filter = 'not(eq(Id,3))';
+			var filter = "not(eq(Id,'3'))";
 			var items = [
-				{Id: 1},
-				{Id: 2},
-				{Id: 3}
+				{Id: '1'},
+				{Id: '2'},
+				{Id: '3'}
 			];
 			// When
 			var result1 = InfinniUI.FilterItems(items, filter);
@@ -6627,61 +6763,19 @@ describe("ObjectUtils", function () {
         });
     });
 });
-describe('ScriptExecutor', function () {
-
-    it('should build script handler', function () {
-        // Given
-        var builder = new InfinniUI.ScriptBuilder();
-        var metadata = {
-            Name: "Name",
-            Body: "return 5;"
-        };
-
-        // When
-        var func = builder.build(null, {metadata: metadata});
-
-        // Then
-        assert.equal(func.call(), 5);
-    });
-
-    it('should pass arguments to handler', function () {
-        // Given
-        var builder = new InfinniUI.ScriptBuilder();
-        var metadata = {
-            Name: "Name",
-            Body: "return [context,args].join(':');"
-        };
-
-        // When
-        var func = builder.build(null, {metadata: metadata});
-
-        // Then
-        assert.equal(func.call(undefined, "Context", "Args"), "Context:Args");
-    });
-
-    it('should execute script by name', function (done) {
-        var metadata = {
-            Scripts: [
-                {
-                    Name: "TestScript",
-                    Body: "window.testScriptWasExecuted = true;"
-                }
-            ]
-        };
-
-        var onViewReady = function(view) {
-            // Given
-            window.testScriptWasExecuted = false;
+describe('ButtonControl', function () {
+    describe('render', function () {
+        it('should render button with correct class', function () {
+            //Given
+            var builder = new InfinniUI.ApplicationBuilder(),
+                button = builder.buildType('Button', {});
 
             //When
-            new window.InfinniUI.ScriptExecutor(view).executeScript('TestScript');
+            var $el = button.render();
 
             //Then
-            assert.isTrue(window.testScriptWasExecuted);
-            done();
-        };
-
-        testHelper.applyViewMetadata(metadata, onViewReady);
+            assert.isTrue($el.hasClass('pl-button'));
+        });
     });
 });
 
@@ -6759,22 +6853,6 @@ describe('CheckBox', function () {
 
     });
 
-});
-
-describe('ButtonControl', function () {
-    describe('render', function () {
-        it('should render button with correct class', function () {
-            //Given
-            var builder = new InfinniUI.ApplicationBuilder(),
-                button = builder.buildType('Button', {});
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-button'));
-        });
-    });
 });
 
 describe('Container (Control)', function () {
@@ -9106,41 +9184,6 @@ describe('TextEditorBase (Control)', function () {
     });
 
 });
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -9306,6 +9349,41 @@ describe('TreeView', function () {
     });
 
 });
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('DataBinding', function () {
     it('should bind source', function () {
         // Given
@@ -11677,205 +11755,6 @@ describe('Parameters', function () {
 
 });
 
-describe('Button', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Button', {});
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-
-        it('should set getContent', function () {
-
-            var element = new InfinniUI.Button();
-            assert.isNull(element.getContent());
-
-            // when
-            element.setContent(content);
-
-            // then
-            assert.isTrue(element.getContent() === content);
-
-            function content(context, args) {
-                return 'button content';
-            }
-        });
-
-    });
-
-
-    describe('render', function () {
-        var button;
-
-        beforeEach(function () {
-            button = builder.buildType('Button', {});
-        });
-
-        it('should create', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-
-            // When
-            var $el = button.render();
-
-            // Then
-            assert.equal($el.find('button').length, 1);
-        });
-
-        it('should set enabled', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-            button.setText('button');
-            var $el = button.render();
-
-            assert.equal(button.getEnabled(), true);
-            // When
-            button.setEnabled(false);
-
-            // Then
-            assert.equal(button.getEnabled(), false);
-        });
-
-        it('should set text', function () {
-            // Given
-            //var button = new InfinniUI.Button();
-            button.setText('button');
-            var $el = button.render();
-
-            // When
-            button.setText('other button');
-
-            // Then
-            assert.equal($el.find('.btntext').text(), 'other button');
-        });
-
-
-        it('should execute action on click', function () {
-            // Given
-            var
-                //button = new InfinniUI.Button(),
-                onLastActionExecute = 0,
-                onNewActionExecute = 0;
-
-            button.setAction(new function(){
-                this.execute = function () {
-                    onLastActionExecute++;
-                };
-            });
-
-            button.setAction(new function(){
-                this.execute = function () {
-                    onNewActionExecute++;
-                };
-            });
-
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 0);
-
-            // When
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 1);
-        });
-
-        it('event onClick', function () {
-            // Given
-            var
-                //button = new InfinniUI.Button(),
-                onClickFlag = 0;
-
-            button.onClick(function(){
-                    onClickFlag++;
-            });
-
-            assert.equal(onClickFlag, 0);
-
-            // When
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(onClickFlag, 1);
-        });
-
-        it('should be true if scriptsHandlers call', function () {
-            //Given
-            var view = new InfinniUI.View();
-            var scripts = view.getScripts();
-            scripts.add({
-                name: 'OnClick',
-                func: function (context, args) {
-                    window.Test.button = 5;
-                }
-            });
-
-            scripts.add({
-                name: 'OnLoaded',
-                func: function (context, args) {
-                    window.Test.buttonLoaded = true;
-                }
-            });
-
-            var buttonBuilder = new InfinniUI.ButtonBuilder();
-            var metadata = {
-                OnClick:{
-                    Name: 'OnClick'
-                },
-                OnLoaded:{
-                    Name: 'OnLoaded'
-                }
-            };
-            window.Test = {button:1, buttonLoaded: false};
-
-            //When
-            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
-            button.render();
-            button.click();
-
-            // Then
-            assert.equal(window.Test.button, 5);
-            assert.isTrue(window.Test.buttonLoaded);
-        });
-    });
-});
-
-describe('ButtonBuilder', function () {
-    describe('build', function () {
-        it('successful build', function () {
-            // Given
-
-            var metadata = {
-                Text: "Click me",
-                Visible: false,
-                HorizontalAlignment: 'Right',
-                Action: {
-                    OpenAction: {
-                        LinkView: {
-                            AutoView: {}
-                        }
-                    }
-                }
-            };
-
-            // When
-            var builder = new InfinniUI.ButtonBuilder();
-            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
-
-            // Then
-            assert.isNotNull(button);
-            assert.equal(button.getText(), 'Click me');
-            assert.isFalse(button.getVisible());
-            assert.equal(button.getHorizontalAlignment(), 'Right');
-        });
-
-    });
-});
-
 describe('ComboBox', function () {
     describe('render', function () {
 
@@ -12364,6 +12243,205 @@ describe('ComboBox', function () {
     });
 
 
+});
+
+describe('Button', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Button', {});
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+
+        it('should set getContent', function () {
+
+            var element = new InfinniUI.Button();
+            assert.isNull(element.getContent());
+
+            // when
+            element.setContent(content);
+
+            // then
+            assert.isTrue(element.getContent() === content);
+
+            function content(context, args) {
+                return 'button content';
+            }
+        });
+
+    });
+
+
+    describe('render', function () {
+        var button;
+
+        beforeEach(function () {
+            button = builder.buildType('Button', {});
+        });
+
+        it('should create', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+
+            // When
+            var $el = button.render();
+
+            // Then
+            assert.equal($el.find('button').length, 1);
+        });
+
+        it('should set enabled', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+            button.setText('button');
+            var $el = button.render();
+
+            assert.equal(button.getEnabled(), true);
+            // When
+            button.setEnabled(false);
+
+            // Then
+            assert.equal(button.getEnabled(), false);
+        });
+
+        it('should set text', function () {
+            // Given
+            //var button = new InfinniUI.Button();
+            button.setText('button');
+            var $el = button.render();
+
+            // When
+            button.setText('other button');
+
+            // Then
+            assert.equal($el.find('.btntext').text(), 'other button');
+        });
+
+
+        it('should execute action on click', function () {
+            // Given
+            var
+                //button = new InfinniUI.Button(),
+                onLastActionExecute = 0,
+                onNewActionExecute = 0;
+
+            button.setAction(new function(){
+                this.execute = function () {
+                    onLastActionExecute++;
+                };
+            });
+
+            button.setAction(new function(){
+                this.execute = function () {
+                    onNewActionExecute++;
+                };
+            });
+
+            assert.equal(onLastActionExecute, 0);
+            assert.equal(onNewActionExecute, 0);
+
+            // When
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(onLastActionExecute, 0);
+            assert.equal(onNewActionExecute, 1);
+        });
+
+        it('event onClick', function () {
+            // Given
+            var
+                //button = new InfinniUI.Button(),
+                onClickFlag = 0;
+
+            button.onClick(function(){
+                    onClickFlag++;
+            });
+
+            assert.equal(onClickFlag, 0);
+
+            // When
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(onClickFlag, 1);
+        });
+
+        it('should be true if scriptsHandlers call', function () {
+            //Given
+            var view = new InfinniUI.View();
+            var scripts = view.getScripts();
+            scripts.add({
+                name: 'OnClick',
+                func: function (context, args) {
+                    window.Test.button = 5;
+                }
+            });
+
+            scripts.add({
+                name: 'OnLoaded',
+                func: function (context, args) {
+                    window.Test.buttonLoaded = true;
+                }
+            });
+
+            var buttonBuilder = new InfinniUI.ButtonBuilder();
+            var metadata = {
+                OnClick:{
+                    Name: 'OnClick'
+                },
+                OnLoaded:{
+                    Name: 'OnLoaded'
+                }
+            };
+            window.Test = {button:1, buttonLoaded: false};
+
+            //When
+            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
+            button.render();
+            button.click();
+
+            // Then
+            assert.equal(window.Test.button, 5);
+            assert.isTrue(window.Test.buttonLoaded);
+        });
+    });
+});
+
+describe('ButtonBuilder', function () {
+    describe('build', function () {
+        it('successful build', function () {
+            // Given
+
+            var metadata = {
+                Text: "Click me",
+                Visible: false,
+                HorizontalAlignment: 'Right',
+                Action: {
+                    OpenAction: {
+                        LinkView: {
+                            AutoView: {}
+                        }
+                    }
+                }
+            };
+
+            // When
+            var builder = new InfinniUI.ButtonBuilder();
+            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
+
+            // Then
+            assert.isNotNull(button);
+            assert.equal(button.getText(), 'Click me');
+            assert.isFalse(button.getVisible());
+            assert.equal(button.getHorizontalAlignment(), 'Right');
+        });
+
+    });
 });
 
 describe('DataGrid', function () {
@@ -14040,6 +14118,69 @@ describe('ListEditorBase', function () {
                 // Then
                 var value = listBox.getValue();
                 assert.equal(value, 1, 'setValueItem set value right');
+
+                view.close();
+            }
+        });
+
+        it('should use items from parameter', function () {
+            // Given
+            var metadata = {
+                Text: 'Пациенты',
+                Parameters: [{
+                    "Name": "Parameter1"
+                }],
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE"},
+                                {"Id": 2, "Display": "2G"},
+                                {"Id": 3, "Display": "2G"}
+                            ]
+                        }
+                    },{
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Value": { "Id": 2, "Display": "2G" }}
+                            ]
+                        }
+                    }
+                ],
+                "OnLoaded": '{context.parameters.Parameter1.setValue([{"Id": 1, "Display": "LTE"}, {"Id": 2, "Display": "2G"}, {"Id": 3, "Display": "2G"}]);}',
+                Items: [{
+
+                    ListBox: {
+                        "ItemTemplate": {
+                            "TextBox": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "Parameter1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items": {
+                            "Source": "Parameter1",
+                            "Property": ""
+                        },
+                        "Value": {
+                            "Source": "ObjectDataSource1",
+                            "Property": "$.Value"
+                        }
+                    }
+                }]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $view){
+                assert.equal($view.find('.pl-listbox-i').length, 3);
 
                 view.close();
             }

@@ -1,18 +1,16 @@
-describe('AddAction', function () {
-    it('successful build', function () {
+describe('AddAction', function() {
+    it('successful build', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
+        var dataSource = new InfinniUI.ObjectDataSource({name: 'SomeDS', view: view});
 
         view.getDataSources().push(dataSource);
 
         var metadata = {
             AddAction: {
                 LinkView: {
-                    InlineView: {
-
-                    }
+                    InlineView: {}
                 },
                 DestinationValue: {
                     Source: 'SomeDS'
@@ -27,11 +25,11 @@ describe('AddAction', function () {
         var addAction = builder.build(metadata, {parentView: view});
 
         // Then
-        assert.isNotNull( addAction );
-        assert.isNotNull( addAction.execute, 'action should have execute' );
+        assert.isNotNull(addAction);
+        assert.isNotNull(addAction.execute, 'action should have execute');
     });
 
-    it('should add item to ObjectDataSource', function (done) {
+    it('should add item to ObjectDataSource', function(done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -74,8 +72,7 @@ describe('AddAction', function () {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
-                                                        "AcceptAction": {
-                                                        }
+                                                        "AcceptAction": {}
                                                     }
                                                 }
                                             }
@@ -89,7 +86,7 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             var addBtn = view.context.controls['AddButton'];
             var destinationDS = view.context.dataSources['ObjectDataSource'];
 
@@ -120,7 +117,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should add item to DocumentDataSource', function (done) {
+    it('should add item to DocumentDataSource', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -181,9 +178,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
                     var destinationDS = view.context.dataSources.DocumentDataSource;
                     var initCount = destinationDS.getItems().length;
@@ -205,7 +202,7 @@ describe('AddAction', function () {
                     saveBtn.click();
 
                     // Then
-                    view.context.dataSources.DocumentDataSource.updateItems( function() {
+                    view.context.dataSources.DocumentDataSource.updateItems(function() {
                         var destinationItems = destinationDS.getItems();
                         assert.equal(destinationItems.length, initCount + 1);
                         assert.include(destinationItems, newItem);
@@ -220,7 +217,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should suspend SourceValue', function(done){
+    it('should suspend SourceValue', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -266,9 +263,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
 
                     // When
@@ -289,7 +286,7 @@ describe('AddAction', function () {
         });
     });
 
-    it('should call onExecuted', function(done){
+    it('should call onExecuted', function(done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -332,8 +329,7 @@ describe('AddAction', function () {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
-                                                        "AcceptAction": {
-                                                        }
+                                                        "AcceptAction": {}
                                                     }
                                                 }
                                             }
@@ -347,9 +343,9 @@ describe('AddAction', function () {
             }]
         };
 
-        testHelper.applyViewMetadata(metadata, function(view){
+        testHelper.applyViewMetadata(metadata, function(view) {
             view.context.dataSources.DocumentDataSource.updateItems(
-                function(){
+                function() {
                     var addBtn = view.context.controls['AddButton'];
 
                     // When
@@ -372,6 +368,88 @@ describe('AddAction', function () {
                     view.close();
                 }
             );
+        });
+    });
+
+    it('should open add view without destination source', function(done) {
+        // Given
+        window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
+
+        var metadata = {
+            Name: 'ParentView',
+            Items: [
+                {
+                    Button: {
+                        Name: 'AddButton',
+                        Action: {
+                            AddAction: {
+                                SourceValue: {
+                                    Source: 'MainDataSource'
+                                },
+                                LinkView: {
+                                    InlineView: {
+                                        OpenMode: 'Dialog',
+                                        View: {
+                                            Name: 'AddView',
+                                            Text: 'AddAction withoud destination value',
+                                            DataSources: [
+                                                {
+                                                    DocumentDataSource: {
+                                                        Name: 'MainDataSource'
+                                                    }
+                                                }
+                                            ],
+                                            Items: [
+                                                {
+                                                    Button: {
+                                                        Name: 'SaveButton',
+                                                        Text: 'Save',
+                                                        Action: {
+                                                            SaveAction: {
+                                                                DestinationValue: {
+                                                                    Source: 'MainDataSource'
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view) {
+            var addButton = view.context.controls['AddButton'];
+
+            // When
+            addButton.click();
+
+            var childView = view.context.controls['AddView'];
+            var saveButton = childView.context.controls['SaveButton'];
+            var mainDataSource = childView.context.dataSources['MainDataSource'];
+
+            mainDataSource.setProperty('$.FirstName', 'John');
+            mainDataSource.setProperty('$.LastName', 'Doe');
+
+            mainDataSource.onItemSaved(function(context, args) {
+                var item = args.value.item;
+
+                assert.equal(item['FirstName'], 'John');
+                assert.equal(item['LastName'], 'Doe');
+
+                done();
+
+                // Cleanup
+                view.close();
+            });
+
+            saveButton.click();
         });
     });
 });

@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.2';
+InfinniUI.VERSION = '2.2.5';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -12608,95 +12608,6 @@ var TablePanelView = ContainerView.extend(
     }
 );
 
-//####app\controls\tablePanel\row\rowControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function RowControl(parent) {
-    _.superClass(RowControl, this, parent);
-}
-
-_.inherit(RowControl, ContainerControl);
-
-_.extend(RowControl.prototype,
-    /** @lends RowControl.prototype */
-    {
-        createControlModel: function () {
-            return new RowModel();
-        },
-
-        createControlView: function (model) {
-            return new RowView({model: model});
-        }
-    }
-);
-
-
-//####app\controls\tablePanel\row\rowModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var RowModel = ContainerModel.extend(
-    /** @lends RowModel.prototype */
-    {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-        }
-    }
-);
-//####app\controls\tablePanel\row\rowView.js
-/**
- * @class
- * @augments ControlView
- */
-var RowView = ContainerView.extend(
-    /** @lends RowView.prototype */
-    {
-        className: 'pl-row row',
-
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
-
-        render: function () {
-            this.prerenderingActions();
-
-            this.removeChildElements();
-
-            this.renderItemsContents();
-
-            this.updateProperties();
-            this.trigger('render');
-
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
-
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
-
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
-            });
-        },
-
-        updateGrouping: function(){}
-    }
-);
-
 //####app\controls\tablePanel\cell\cellControl.js
 /**
  *
@@ -12816,6 +12727,95 @@ var CellView = ContainerView.extend(
     }
 );
 
+//####app\controls\tablePanel\row\rowControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function RowControl(parent) {
+    _.superClass(RowControl, this, parent);
+}
+
+_.inherit(RowControl, ContainerControl);
+
+_.extend(RowControl.prototype,
+    /** @lends RowControl.prototype */
+    {
+        createControlModel: function () {
+            return new RowModel();
+        },
+
+        createControlView: function (model) {
+            return new RowView({model: model});
+        }
+    }
+);
+
+
+//####app\controls\tablePanel\row\rowModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var RowModel = ContainerModel.extend(
+    /** @lends RowModel.prototype */
+    {
+        initialize: function () {
+            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        }
+    }
+);
+//####app\controls\tablePanel\row\rowView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var RowView = ContainerView.extend(
+    /** @lends RowView.prototype */
+    {
+        className: 'pl-row row',
+
+        initialize: function (options) {
+            ContainerView.prototype.initialize.call(this, options);
+        },
+
+        render: function () {
+            this.prerenderingActions();
+
+            this.removeChildElements();
+
+            this.renderItemsContents();
+
+            this.updateProperties();
+            this.trigger('render');
+
+            this.postrenderingActions();
+            //devblockstart
+            window.InfinniUI.global.messageBus.send('render', {element: this});
+            //devblockstop
+            return this;
+        },
+
+        renderItemsContents: function(){
+            var items = this.model.get('items'),
+                itemTemplate = this.model.get('itemTemplate'),
+                that = this,
+                element, item;
+
+            items.forEach(function(item, i){
+                element = itemTemplate(undefined, {item: item, index: i});
+                that.addChildElement(element);
+                that.$el
+                    .append(element.render());
+            });
+        },
+
+        updateGrouping: function(){}
+    }
+);
+
 //####app\controls\tabPanel\tabPanelControl.js
 /**
  *
@@ -12918,7 +12918,7 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
         this.renderTemplate(this.getTemplate());
 
         this.renderItemsContents();
-        this.checkSelectedItem();
+        this.initSelectedItem();
 
         this.postrenderingActions();
 
@@ -12974,11 +12974,17 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
             var header = this.renderTabHeader(data.tabElement, selected);
 
             this.listenTo(header, 'selected', function () {
-                model.set('selectedItem', data.tabElement);
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    model.set('selectedItem', data.tabElement);
+                }
             });
 
             this.listenTo(header, 'close', function () {
-                data.tabElement.close();
+                var isEnabled = data.tabElement.getEnabled();
+                if(isEnabled) {
+                    data.tabElement.close();
+                }
             });
 
             return header;
@@ -12994,10 +13000,12 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      */
     renderTabHeader: function (tabPageElement, selected) {
         var header = new TabHeaderView({
-            text: tabPageElement.getText(),
-            canClose: tabPageElement.getCanClose(),
-            selected: selected
-        });
+                text: tabPageElement.getText(),
+                canClose: tabPageElement.getCanClose(),
+                enabled: tabPageElement.getEnabled(),
+                selected: selected
+            }),
+            that = this;
 
         tabPageElement.onPropertyChanged('text', function () {
             header.setText(tabPageElement.getText());
@@ -13005,6 +13013,15 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
         tabPageElement.onPropertyChanged('canClose', function () {
             header.setCanClose(tabPageElement.getCanClose());
+        });
+
+        tabPageElement.onPropertyChanged('enabled', function () {
+            header.setEnabled(tabPageElement.getEnabled());
+
+            var selectedTabPage = that.model.get('selectedItem');
+            if(tabPageElement == selectedTabPage){ // если видимость поменяли у выбранного элемента
+                that.resetDefaultSelectedItem();
+            }
         });
 
         this.ui.header.append(header.render().$el);
@@ -13081,21 +13098,39 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
      * @protected
      * @description Проверяет чтобы одна из вкладок была активна
      */
-    checkSelectedItem: function () {
+    initSelectedItem: function () {
         var
             model = this.model,
             tabPages = this.childElements,
             selectedItem = model.get('selectedItem');
 
-        if (!Array.isArray(tabPages)) {
+        if (!Array.isArray(tabPages) || tabPages.length == 0) {
             model.set('selectedItem', null);
-        } else if (tabPages.length) {
-            if (tabPages.indexOf(selectedItem) === -1) {
-                model.set('selectedItem', tabPages[0]);
-            }
         } else {
-            model.set('selectedItem', null);
+            if (tabPages.indexOf(selectedItem) === -1) {
+                var firstEnabledPageIndex = this._getFirstEnabledPageIndex();
+                if(firstEnabledPageIndex != -1) {
+                    model.set('selectedItem', tabPages[firstEnabledPageIndex]);
+                }
+            }
         }
+    },
+
+    resetDefaultSelectedItem: function () {
+        this.model.set('selectedItem', null);
+        this.initSelectedItem();
+    },
+
+    _getFirstEnabledPageIndex: function() {
+        var tabPages = this.childElements;
+
+        for(var i=0; i<tabPages.length; ++i ){
+            if(tabPages[i].getEnabled()){
+                return i;
+            }
+        }
+
+        return -1;
     },
 
     /**
@@ -13151,6 +13186,7 @@ var TabHeaderModel = Backbone.Model.extend({
 
     defaults: {
         text: '',
+        enabled: true,
         canClose: false
     }
 });
@@ -13213,6 +13249,10 @@ var TabHeaderView = Backbone.View.extend({
         this.model.set('selected', value);
     },
 
+    setEnabled: function (value) {
+        this.model.set('enabled', value);
+    },
+
     /**
      * @protected
      */
@@ -13220,6 +13260,7 @@ var TabHeaderView = Backbone.View.extend({
         this.updateTextHandler();
         this.updateCanClose();
         this.updateSelectedHandler();
+        this.updateEnabled();
     },
 
     /**
@@ -13229,7 +13270,8 @@ var TabHeaderView = Backbone.View.extend({
         this.updateProperties();
         this.listenTo(this.model, 'change:text', this.updateTextHandler);
         this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'cahnge:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:canClose', this.updateCanClose);
+        this.listenTo(this.model, 'change:enabled', this.updateProperties); // нужно обновлять все свойства
     },
 
     /**
@@ -13254,6 +13296,11 @@ var TabHeaderView = Backbone.View.extend({
     updateSelectedHandler: function () {
         var selected = this.model.get('selected');
         this.$el.toggleClass('pl-active active', selected);
+    },
+
+    updateEnabled: function () {
+        var isEnabled = this.model.get('enabled');
+        this.$el.toggleClass('pl-disabled', !isEnabled);
     },
 
     onClickHandler: function (event) {
@@ -16342,7 +16389,7 @@ var PanelModel = ContainerModel.extend(/** @lends PanelModel.prototype */ {
     defaults: _.defaults({
         collapsible: false,
         collapsed: false,
-        collapsibleArea: ''
+        collapseChanger: ''
     }, ContainerModel.prototype.defaults),
 
     set: function (key, val, options) {
@@ -16546,9 +16593,9 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
     },
 
     onClickHeaderHandler: function (event) {
-        var collapsibleArea = this.model.get('collapsibleArea');
-        if( collapsibleArea !== '' ) {
-            if( $(event.target).closest('[data-pl-name=' + collapsibleArea + ']').length ) {
+        var collapseChanger = this.model.get('collapseChanger');
+        if( collapseChanger !== '' ) {
+            if( $(event.target).closest('[data-pl-name=' + collapseChanger + ']').length ) {
                 this.onEventCallback();
             }
         } else {
@@ -17802,8 +17849,6 @@ var BaseDataSource = Backbone.Model.extend({
 
     saveItem: function (item, success, error) {
         var dataProvider = this.get('dataProvider'),
-            ds = this,
-            logger = window.InfinniUI.global.logger,
             that = this,
             validateResult;
 
@@ -17830,10 +17875,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -17883,10 +17929,11 @@ var BaseDataSource = Backbone.Model.extend({
                 that._executeCallback(error, {item: item, result: result});
             }
         }, function(data) {
-            var result = that._getValidationResult(data);
+            var result = that._getValidationResult(data),
+                context = that.getContext();
             that._notifyAboutValidation(result, 'error');
             that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', {item: item, data: data});
+            that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
 
@@ -17955,8 +18002,9 @@ var BaseDataSource = Backbone.Model.extend({
                     that._handleSuccessUpdateItemsInProvider(data, onSuccess);
                 },
                 function (data) {
+                    var context = that.getContext();
                     that._onErrorProviderUpdateItemsHandle(data, onError);
-                    that.trigger('onProviderError', {data: data});
+                    that.trigger('onProviderError', context, {data: data});
                 }
             );
 
@@ -19165,20 +19213,20 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
         }
 
         if (metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted);
+            dataSource.onItemDeleted(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args);
             });
         }
 
         if (metadata.OnErrorValidator) {
-            dataSource.onErrorValidator(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator);
+            dataSource.onErrorValidator(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args);
             });
         }
 
         if (metadata.OnProviderError) {
-            dataSource.onProviderError(function () {
-                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError);
+            dataSource.onProviderError(function (context, args) {
+                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError, args);
             });
         }
     },
@@ -19317,7 +19365,7 @@ _.extend(RestDataSourceBuilder.prototype, {
     },
 
     _getCompensateProviderErrorHandler: function(dataSource){
-        return function(){
+        return function(context, args){
             var exchange = window.InfinniUI.global.messageBus;
             exchange.send(messageTypes.onNotifyUser, {messageText: 'Ошибка на сервере', messageType: "error"});
 
@@ -21056,25 +21104,27 @@ _.extend(ContainerBuilder.prototype, {
                 var items = element.getItems(),
                     isCollectionChanged;
 
-                if(itemComparator){
+                if(!element.isRemoved) {
+                    if (itemComparator) {
 
-                    isCollectionChanged = items.set(value, true);
+                        isCollectionChanged = items.set(value, true);
 
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
 
-                    if (isCollectionChanged) {
-                        items.sort(itemComparator);
+                        if (isCollectionChanged) {
+                            items.sort(itemComparator);
+                        }
+
+                    } else {
+
+                        isCollectionChanged = items.set(value);
+
+                        items.forEach(function (item, index, collection) {
+                            collection.setProperty(index, 'bindingIndex', index);
+                        });
                     }
-
-                }else{
-
-                    isCollectionChanged = items.set(value);
-
-                    items.forEach(function (item, index, collection) {
-                        collection.setProperty(index, 'bindingIndex', index);
-                    });
                 }
 
             },
@@ -21412,14 +21462,15 @@ _.extend(ListEditorBaseBuilder.prototype, {
     initSelecting: function(params, itemsBinding){
         var metadata = params.metadata;
         var element = params.element;
-        var dataSource = itemsBinding.getSource();
+        var source = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
-        var isBindingOnWholeDS = sourceProperty == '';
+        var isBindingOnWholeDS = sourceProperty == '',
+            sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
 
-        if(isBindingOnWholeDS){
-            dataSource.setSelectedItem(null);
+        if(sourceIsDataSource && isBindingOnWholeDS){
+            source.setSelectedItem(null);
 
-            dataSource.onSelectedItemChanged(function(context, args){
+            source.onSelectedItemChanged(function(context, args){
                 var currentSelectedItem = element.getSelectedItem(),
                     newSelectedItem = args.value;
 
@@ -21430,11 +21481,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
         }
 
         element.onSelectedItemChanged(function(context, args){
-            var currentSelectedItem = dataSource.getSelectedItem(),
-                newSelectedItem = args.value;
 
-            if(isBindingOnWholeDS && newSelectedItem != currentSelectedItem){
-                dataSource.setSelectedItem(newSelectedItem);
+            if(sourceIsDataSource && isBindingOnWholeDS) {
+                var currentSelectedItem = source.getSelectedItem(),
+                    newSelectedItem = args.value;
+
+                if (newSelectedItem != currentSelectedItem) {
+                    source.setSelectedItem(newSelectedItem);
+                }
             }
 
             if (metadata.OnSelectedItemChanged) {
@@ -24871,16 +24925,16 @@ Panel.prototype.setHeader = function (value) {
  * @description Возвращает элемент для открытия панели
  * @returns {string}
  */
-Panel.prototype.getCollapsibleArea = function () {
-    return this.control.get('collapsibleArea');
+Panel.prototype.getCollapseChanger = function () {
+    return this.control.get('collapseChanger');
 };
 
 /**
  * @description Устанавливает элемент при клике на который раскрывается панель
  * @param {string} value
  */
-Panel.prototype.setCollapsibleArea = function (value) {
-    this.control.set('collapsibleArea', value);
+Panel.prototype.setCollapseChanger = function (value) {
+    this.control.set('collapseChanger', value);
 };
 
 /**
@@ -24955,7 +25009,7 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
 
         element.setCollapsible(metadata.Collapsible);
         element.setCollapsed(metadata.Collapsed);
-        element.setCollapsibleArea(metadata.CollapsibleArea);
+        element.setCollapseChanger(metadata.CollapseChanger);
 
         var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
         element.setHeaderTemplate(headerTemplate);
@@ -27033,13 +27087,16 @@ var BaseEditActionBuilderMixin = {
 
         action.setProperty('linkView', linkView);
         action.setProperty('sourceSource', metadata.SourceValue.Source);
-        action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        var destinationProperty = (args.basePathOfProperty != null) ?
-            args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
-            metadata.DestinationValue.Property;
+        if (metadata.DestinationValue && metadata.DestinationValue.Source) {
+            action.setProperty('destinationSource', metadata.DestinationValue.Source);
 
-        action.setProperty('destinationProperty', destinationProperty);
+            var destinationProperty = (args.basePathOfProperty != null) ?
+                args.basePathOfProperty.resolveProperty(metadata.DestinationValue.Property) :
+                metadata.DestinationValue.Property;
+
+            action.setProperty('destinationProperty', destinationProperty);
+        }
     }
 };
 //####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
@@ -27124,7 +27181,7 @@ _.extend(AcceptActionBuilder.prototype,
 window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
 
 //####app\actions\addAction\addAction.js
-function AddAction(parentView){
+function AddAction(parentView) {
     _.superClass(AddAction, this, parentView);
 }
 
@@ -27132,7 +27189,7 @@ _.inherit(AddAction, BaseEditAction);
 
 
 _.extend(AddAction.prototype, {
-    setSelectedItem: function(){
+    setSelectedItem: function() {
         var editDataSource = this.getProperty('editDataSource'),
             editView = editDataSource.getView();
 
@@ -27143,12 +27200,16 @@ _.extend(AddAction.prototype, {
         return true;
     },
 
-    save: function(){
+    save: function() {
         var editDataSource = this.getProperty('editDataSource'),
             destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty')  || "";
+            destinationProperty = this.getProperty('destinationProperty') || "";
 
-        if( this._isObjectDataSource(editDataSource) ) {
+        if (!destinationDataSource) {
+            return;
+        }
+
+        if (this._isObjectDataSource(editDataSource)) {
             var items = destinationDataSource.getProperty(destinationProperty) || [],
                 newItem = editDataSource.getSelectedItem();
 
