@@ -1,5 +1,5 @@
 ﻿jQuery(document).ready(function () {
-    if( InfinniUI.config.disableGetCurrentUser !== false ) {
+    if( InfinniUI.config.enableGetCurrentUser ) {
             InfinniUI.user = {
             onReadyDeferred: $.Deferred(),
             onReady: function(handler){

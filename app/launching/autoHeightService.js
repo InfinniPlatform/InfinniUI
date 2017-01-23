@@ -299,16 +299,15 @@ window.InfinniUI.AutoHeightService = {
 	},
 
 	recalculation: function (container) {
-		if( window.InfinniUI.config.disableAutoHeightServicer === true ) {
-			return false;
-		}
-		container = container || document;
-		$('#page-content').addClass('page-content-overflow-hidden');
-		this.windowHeight = $(window).height();
-		this.onChangeLayout(container);
-		if (this.exchange === null) {
-			this.exchange = window.InfinniUI.global.messageBus;
-			this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
+		if( window.InfinniUI.config.enableAutoHeightService ) {
+			container = container || document;
+			$('#page-content').addClass('page-content-overflow-hidden');
+			this.windowHeight = $(window).height();
+			this.onChangeLayout(container);
+			if (this.exchange === null) {
+				this.exchange = window.InfinniUI.global.messageBus;
+				this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
+			}
 		}
 	},
 
