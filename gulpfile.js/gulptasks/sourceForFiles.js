@@ -10,9 +10,9 @@ var sourceForFiles = {
 		'app/elements/**/enums/*.js',
 		'app/config.js',
 		'app/localizations/**/*.js',
-		'app/utils/*/*.js',
-		'app/utils/**/*.js',
 		'app/messaging/**/*.js',
+        'app/controls/_base/_mixins/ajaxRequestMixin.js',
+        'app/utils/**/*.js',
 
 		'app/controls/_base/_mixins/*.js',
 		'app/controls/_base/control/*.js',
