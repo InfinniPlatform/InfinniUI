@@ -40,11 +40,12 @@ var routerService = (function(myRoutes) {
 	var onRouteSelectHandler = function(name, script) {
 		return function() {
 			var params = {
+				name: name,
 				params: Array.prototype.slice.call(arguments),
 				routeParams: routerService._params
 			};
 
-			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, args: params });
+			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, params);
 		};
 	};
 
