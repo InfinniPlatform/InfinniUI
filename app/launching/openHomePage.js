@@ -4,8 +4,8 @@ window.InfinniUI.openHomePage = function($target) {
 
     rootView.open($target);
 
-    InfinniUI.AutoHeightService.slidingRecalculation($target);
-    subscribeRecalculationOnWindowResize($target);
+    InfinniUI.AutoHeightService.slidingRecalculation();
+    subscribeRecalculationOnWindowResize();
 
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
@@ -14,7 +14,7 @@ window.InfinniUI.openHomePage = function($target) {
         });
 };
 
-function subscribeRecalculationOnWindowResize($container) {
+function subscribeRecalculationOnWindowResize() {
     var TIMEOUT = 40;
     var WAIT = 50;
     var resizeTimeout;
@@ -25,7 +25,7 @@ function subscribeRecalculationOnWindowResize($container) {
     });
 
     function onWindowResize() {
-        window.InfinniUI.AutoHeightService.recalculation($container);
+        window.InfinniUI.AutoHeightService.recalculation();
     }
 
 };
