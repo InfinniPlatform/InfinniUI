@@ -39,16 +39,17 @@ var routerService = (function(myRoutes) {
 
 	var onRouteSelectHandler = function(name, script) {
 		return function() {
-			var params = _.extend(Array.prototype.slice.call(arguments),
-					{
-						routeParams: routerService._params
-					});
+			var params = {
+				params: Array.prototype.slice.call(arguments),
+				routeParams: routerService._params
+			};
 
-			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, params: params });
+			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, args: params });
 		};
 	};
 
 	var routerObj = parseRouteForBackbone(myRoutes);
+	
 
 	var startRouter = function() {
 		if( !InfinniUI.AppRouter ) {
