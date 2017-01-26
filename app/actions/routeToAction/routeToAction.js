@@ -1,28 +1,45 @@
-function RouteToAction(){
-    _.superClass(RouteToAction, this);
-    this.href = '';
+function RouteToAction() {
+	_.superClass( RouteToAction, this );
+	this.href = '';
+	this.replace = false;
 }
 
-_.inherit(RouteToAction, BaseAction);
+_.inherit( RouteToAction, BaseAction );
 
+_.extend( RouteToAction.prototype, {
 
-_.extend(RouteToAction.prototype, {
+	execute: function( callback ) {
+		var router = InfinniUI.AppRouter;
+		var href = this.getHref();
+		var replace = this.getReplace();
+		var options = {
+			trigger: true
+		};
 
-    execute: function(callback){
-        var router = InfinniUI.AppRouter,
-            href = this.getHref();
+		if( replace ) {
+			options.replace = true;
+		}
+		router.navigate( href, options );
+	},
 
-        router.navigate(href, {trigger: true});
-    },
+	getHref: function() {
+		return this.href;
+	},
 
-    getHref: function() {
-        return this.href;
-    },
+	setHref: function( href ) {
+		this.href = href;
+	},
 
-    setHref: function(href) {
-        this.href = href;
-    }
+	getReplace: function() {
+		return this.replace;
+	},
 
-});
+	setReplace: function( replace ) {
+		if( replace !== undefined ) {
+			this.replace = replace;
+		}
+	}
+
+} );
 
 window.InfinniUI.RouteToAction = RouteToAction;

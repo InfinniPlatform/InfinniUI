@@ -3,11 +3,13 @@ function RouteToActionBuilder() {}
 _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMixin, {
 
 	build: function (context, args) {
-		var action = new RouteToAction(),
-				newHref = routerService.getLinkByName(args.metadata.Name, 'no'),
-				hrefParams = args.metadata.Params,
-				query = args.metadata.Query;
+		var action = new RouteToAction();
+		var newHref = routerService.getLinkByName(args.metadata.Name, 'no');
+		var hrefParams = args.metadata.Params;
+		var query = args.metadata.Query;
+		var replace = args.metadata.Replace; // when true, can delete url from history
 
+		action.setReplace(replace);
 		action.setHref(newHref);
 		args.element = action;
 
@@ -26,15 +28,15 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 		}
 
 		if( query ) {
-			for( var i = 0, ii = query.length; i < ii; i += 1 ) {
-				if( typeof query[i].Value === 'string' ) {
+			for( var j = 0, jj = query.length; j < jj; j += 1 ) {
+				if( typeof query[j].Value === 'string' ) {
 					if( action.getHref() !== newHref ) {
 						newHref = action.getHref();
 					}
-					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[i].Value);
+					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[j].Value);
 					action.setHref(newHref);
 				} else {
-					this.bindQuery(args, query[i].Name, query[i].Value, newHref);
+					this.bindQuery(args, query[j].Name, query[j].Value, newHref);
 				}
 			}
 		}
