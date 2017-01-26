@@ -1,5 +1,5 @@
 jQuery(document).ready(function () {
-    if( InfinniUI.config.enableSignInExternalForm ) {
+    if( InfinniUI.config.disableSignInExternalForm !== false ) {
         getSignInExternalForm();
     }
 });
