@@ -12,10 +12,6 @@ window.InfinniUI.openHomePage = function($target) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
             action.execute();
         });
-
-    if( InfinniUI.config.enableGetCurrentUser ) {
-        setCurrentUser();
-    }
 };
 
 function subscribeRecalculationOnWindowResize($container) {
@@ -64,26 +60,3 @@ function getHomePageLinkViewPromise() {
 
     return defer.promise();
 };
-
-function refreshUserInfo() {
-    var authProvider = InfinniUI.global.session;
-    authProvider.getCurrentUser(
-        function (result) {
-            InfinniUI.user.onReadyDeferred.resolve(result);
-        },
-        function (error) {
-            InfinniUI.user.onReadyDeferred.resolve(null);
-        }
-    );
-};
-
-function setCurrentUser() {
-    InfinniUI.user = {
-        onReadyDeferred: $.Deferred(),
-        onReady: function(handler){
-            this.onReadyDeferred.done(handler);
-        }
-    };
-
-    refreshUserInfo();
-}
