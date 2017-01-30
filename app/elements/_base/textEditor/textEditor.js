@@ -70,3 +70,7 @@ TextEditor.prototype.onValueChanged = function (handler) {
         handler.call(null, value);
     });
 };
+
+TextEditor.prototype.setCaretPosition = function (value) {
+	this._view.setCaretPosition(value);
+};
