@@ -5,32 +5,17 @@ describe('baseDataSource', function () {
         var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
 
         dataSource.setErrorValidator(function(context, args) {
+            done();
             return {
-                IsValid: false
-            }
+                IsValid: true
+            };
         });
 
         dataSource.createItem(function(context, args){
             //When
             var item = args.value;
 
-            dataSource.saveItem(item,
-                function(){ assert.fail("success", "error", "success save invalid item"); },
-                // Then
-                function(){ done(); })
+            dataSource.saveItem(item)
         });
-    });
-
-    it('should call onErrorValidator handlers after validateOnErrors', function (done) {
-        // Given
-        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
-
-        dataSource.onErrorValidator(function(){
-            //Then
-            done();
-        });
-
-        //When
-        dataSource.validateOnErrors();
     });
 });
