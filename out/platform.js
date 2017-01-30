@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.5';
+InfinniUI.VERSION = '2.2.6';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -11460,189 +11460,189 @@ var SimpleLabelView = CommonLabelView.extend({
 
 InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Label.simple', SimpleLabelView);
 //####app\controls\listBox\baseView\listBoxView.js
-var BaseListBoxView = ListEditorBaseView.extend({
+var BaseListBoxView = ListEditorBaseView.extend( {
 
-    template: {
-        plain: InfinniUI.Template["controls/listBox/baseView/template/listBox.tpl.html"],
-        grouped: InfinniUI.Template["controls/listBox/baseView/template/listBoxGrouped.tpl.html"]
-    },
+	template: {
+		plain: InfinniUI.Template["controls/listBox/baseView/template/listBox.tpl.html"],
+		grouped: InfinniUI.Template["controls/listBox/baseView/template/listBoxGrouped.tpl.html"]
+	},
 
+	className: 'pl-listbox',
 
-    className: 'pl-listbox',
+	events: {
+		'change .pl-listbox-input': 'onChangeHandler'
+	},
 
-    events: {
-        'change .pl-listbox-input': 'onChangeHandler'
-    },
+	UI: _.defaults( {
+		items: '.pl-listbox-i',
+		checkingInputs: '.pl-listbox-input input'
+	}, ListEditorBaseView.prototype.UI ),
 
-    UI: _.defaults({
-        items: '.pl-listbox-i',
-        checkingInputs: '.pl-listbox-input input'
-    }, ListEditorBaseView.prototype.UI),
+	initialize: function( options ) {
+		//@TODO Реализовать обработку значений по умолчанию!
+		ListEditorBaseView.prototype.initialize.call( this, options );
+	},
 
-    initialize: function (options) {
-        //@TODO Реализовать обработку значений по умолчанию!
-        ListEditorBaseView.prototype.initialize.call(this, options);
-    },
+	updateGrouping: function() {
+		var isGrouped = this.model.get( 'groupValueSelector' ) != null;
 
-    updateGrouping: function(){
-        var isGrouped = this.model.get('groupValueSelector') != null;
+		if( isGrouped ) {
+			this.strategy = new ListBoxViewGroupStrategy( this );
+		} else {
+			this.strategy = new ListBoxViewPlainStrategy( this );
+		}
+	},
 
-        if(isGrouped){
-            this.strategy = new ListBoxViewGroupStrategy(this);
-        }else{
-            this.strategy = new ListBoxViewPlainStrategy(this);
-        }
-    },
+	updateValue: function() {
+		this.ui.items.removeClass( 'pl-listbox-i-chosen' );
+		this.ui.checkingInputs.prop( 'checked', false );
 
-    updateValue: function(){
-        this.ui.items.removeClass('pl-listbox-i-chosen');
-        this.ui.checkingInputs.prop('checked', false);
+		var value = this.model.get( 'value' ),
+			choosingItem, $choosingItem;
 
-        var value = this.model.get('value'),
-            choosingItem, $choosingItem;
+		if( !this.isMultiselect() && value !== undefined && value !== null ) {
+			value = [value];
+		}
 
-        if(!this.isMultiselect() && value !== undefined && value !== null){
-            value = [value];
-        }
+		if( $.isArray( value ) ) {
+			for( var i = 0, ii = value.length; i < ii; i++ ) {
+				choosingItem = this.model.itemByValue( value[i] );
+				$choosingItem = this._getElementByItem( choosingItem );
 
-        if($.isArray(value)){
-            for(var i= 0, ii=value.length; i < ii; i++){
-                choosingItem = this.model.itemByValue(value[i]);
-                $choosingItem = this._getElementByItem(choosingItem);
+				if( $choosingItem ) {
+					$choosingItem.addClass( 'pl-listbox-i-chosen' );
+					$choosingItem.find( '.pl-listbox-input input' ).prop( 'checked', true );
+				}
+			}
+		}
+	},
 
-                if($choosingItem){
-                    $choosingItem.addClass('pl-listbox-i-chosen');
-                    $choosingItem.find('.pl-listbox-input input').prop('checked', true);
-                }
-            }
-        }
-    },
+	updateSelectedItem: function( ignoreWasRendered ) {
+		if( !this.wasRendered && ignoreWasRendered != true ) {
+			return;
+		}
 
-    updateSelectedItem: function(ignoreWasRendered){
-        if(!this.wasRendered && ignoreWasRendered != true){
-            return;
-        }
+		this.ui.items.removeClass( 'pl-listbox-i-selected' );
 
-        this.ui.items.removeClass('pl-listbox-i-selected');
+		var selectedItem = this.model.get( 'selectedItem' ),
+			$selectedItem = this._getElementByItem( selectedItem );
 
-        var selectedItem = this.model.get('selectedItem'),
-            $selectedItem = this._getElementByItem(selectedItem);
+		if( $selectedItem && !$selectedItem.hasClass( 'pl-disabled-list-item' ) ) {
+			$selectedItem.addClass( 'pl-listbox-i-selected' );
+		}
+	},
 
-        if( $selectedItem && !$selectedItem.hasClass('pl-disabled-list-item') ) {
-            $selectedItem.addClass('pl-listbox-i-selected');
-        }
-    },
+	render: function() {
+		this.prerenderingActions();
 
-    render: function () {
-        this.prerenderingActions();
+		var preparedItems = this.strategy.prepareItemsForRendering();
+		var template = this.strategy.getTemplate();
 
-        var preparedItems = this.strategy.prepareItemsForRendering();
-        var template = this.strategy.getTemplate();
+		this.removeChildElements();
 
-        this.removeChildElements();
+		this.$el.html( template( preparedItems ) );
+		this.bindUIElements();
 
-        this.$el.html(template(preparedItems));
-        this.bindUIElements();
+		this.strategy.appendItemsContent( preparedItems );
 
-        this.strategy.appendItemsContent(preparedItems);
+		this.updateProperties();
 
-        this.updateProperties();
+		this.trigger( 'render' );
 
-        this.trigger('render');
+		this.postrenderingActions();
+		//devblockstart
+		window.InfinniUI.global.messageBus.send( 'render', {element: this} );
+		//devblockstop
+		return this;
+	},
 
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
+	getItems: function() {
+		return this.model.get( 'items' );
+	},
 
-    getItems: function(){
-        return this.model.get('items');
-    },
+	getItemTemplate: function() {
+		return this.model.get( 'itemTemplate' );
+	},
 
-    getItemTemplate: function(){
-        return this.model.get('itemTemplate');
-    },
+	getGroupValueSelector: function() {
+		return this.model.get( 'groupValueSelector' );
+	},
 
-    getGroupValueSelector: function(){
-        return this.model.get('groupValueSelector');
-    },
+	isMultiselect: function() {
+		return this.model.get( 'multiSelect' );
+	},
 
-    isMultiselect: function(){
-        return this.model.get('multiSelect');
-    },
+	isFocusable: function() {
+		return this.model.get( 'focusable' );
+	},
 
-    isFocusable: function () {
-        return this.model.get('focusable');
-    },
+	getGroupItemTemplate: function() {
+		return this.model.get( 'groupItemTemplate' );
+	},
 
-    getGroupItemTemplate: function(){
-        return this.model.get('groupItemTemplate');
-    },
+	onChangeHandler: function() {
+		var $checked = this.ui.checkingInputs.filter( ':checked' ).parent().parent(),
+			valueForModel = null,
+			model = this.model,
+			val;
 
-    onChangeHandler: function(){
-        var $checked = this.ui.checkingInputs.filter(':checked').parent().parent(),
-            valueForModel = null,
-            model = this.model,
-            val;
+		if( this.isMultiselect() ) {
+			valueForModel = [];
 
-        if(this.isMultiselect()){
-            valueForModel = [];
+			$checked.each( function( i, el ) {
+				val = $( el ).data( 'pl-data-item' );
+				valueForModel.push( model.valueByItem( val ) );
+			} );
 
-            $checked.each(function(i, el){
-                val = $(el).data('pl-data-item');
-                valueForModel.push(model.valueByItem(val));
-            });
+		} else {
+			if( $checked.length > 0 ) {
+				valueForModel = model.valueByItem( $checked.data( 'pl-data-item' ) );
+			}
+		}
 
-        }else{
-            if($checked.length > 0){
-                valueForModel = model.valueByItem($checked.data('pl-data-item'));
-            }
-        }
+		this.model.set( 'value', valueForModel );
+	},
 
-        this.model.set('value', valueForModel);
-    },
+	updateDisabledItem: function() {
+		var model = this.model;
+		var enabled = model.get( 'enabled' );
+		var disabledItemCondition = model.get( 'disabledItemCondition' );
 
-    updateDisabledItem: function(){
-        var model = this.model,
-            disabledItemCondition = model.get('disabledItemCondition');
+		this.ui.items.removeClass( 'pl-disabled-list-item' );
+		this.ui.checkingInputs.attr( 'disabled', null );
 
-        this.ui.items.removeClass('pl-disabled-list-item');
-        this.ui.checkingInputs.attr('disabled', null);
+		if( !enabled ) {
+			disabledItemCondition = function() { return true; };
+		}
 
-        if( disabledItemCondition != null ){
-            this.ui.items.each(function (i, el) {
-                var $el = $(el),
-                    item = $el.data('pl-data-item'),
-                    isDisabled = disabledItemCondition( undefined, {value: item});
+		if( disabledItemCondition != null ) {
+			this.ui.items.each( function( i, el ) {
+				var $el = $( el );
+				var item = $el.data( 'pl-data-item' );
+				var isDisabled = disabledItemCondition( undefined, {value: item} );
 
-                if(isDisabled){
-                    if( $el.hasClass('pl-listbox-i-selected') ) {
-                        this.model.set('selectedItem', null);
-                    }
-                    $el.toggleClass('pl-disabled-list-item', true);
-                    $el.find('input').attr('disabled', 'disabled');
-                    $el.find('button').attr('disabled', 'disabled');
-                }
-            })
-        }
-    },
+				if( isDisabled || !enabled ) {
+					if( $el.hasClass( 'pl-listbox-i-selected' ) ) {
+						this.model.set( 'selectedItem', null );
+					}
+					$el.toggleClass( 'pl-disabled-list-item', true );
+					$el.find( 'input' ).attr( 'disabled', 'disabled' );
+					$el.find( 'button' ).attr( 'disabled', 'disabled' );
+				}
+			} );
+		}
+	},
 
-    disableAll: function() {
-        this.ui.items.addClass('pl-disabled-list-item');
-    },
+	_getElementByItem: function( item ) {
+		var element = _.find( this.ui.items, function( listboxItem ) {
+			return $( listboxItem ).data( 'pl-data-item' ) == item;
+		} );
 
-    _getElementByItem: function(item){
-        var element = _.find(this.ui.items, function(listboxItem){
-            return $(listboxItem).data('pl-data-item') == item;
-        });
+		return $( element );
+	}
+} );
 
-        return $(element);
-    }
-});
-
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.ListBox.base', BaseListBoxView);
+InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.ListBox.base', BaseListBoxView );
 
 //####app\controls\listBox\baseView\viewGroupStrategy.js
 function ListBoxViewGroupStrategy(listbox) {
@@ -11779,14 +11779,6 @@ _.extend(ListBoxControl.prototype, {
         var ViewClass = window.InfinniUI.viewModes.ListBox[viewMode];
 
         return new ViewClass({model: model});
-    },
-
-    updateDisabledItem: function() {
-        this.controlView.updateDisabledItem();
-    },
-
-    disableAll: function() {
-        this.controlView.disableAll();
     }
 
 });
@@ -20554,10 +20546,10 @@ var routerServiceMixin = {
 
 	replaceParamsInHref: function(oldHref, param, newValue, hrefPattern) {
 		if( hrefPattern ) {
-			var newHref = hrefPattern.split('?')[0],
-					query = hrefPattern.split('?')[1],
-					tmpArr = newHref.split('/'),
-					index = tmpArr.indexOf(':' + param);
+			var newHref = hrefPattern.split('?')[0];
+			var query = hrefPattern.split('?')[1];
+			var tmpArr = newHref.split('/');
+			var index = tmpArr.indexOf(':' + param);
 
 			if( index === -1 ) {
 				throw new Error('Different param names in metadata and InfinniUI.config.Routes');
@@ -20576,11 +20568,11 @@ var routerServiceMixin = {
 
 	replaceParamsInQuery: function(oldHref, queryParam, newValue, queryPattern) {
 		if( queryPattern ) {
-			var newHref = oldHref.split('?')[0],
-					query = oldHref.split('?')[1],
-					queryTmp = queryPattern.split('?')[1],
-					tmpArr = queryTmp.split('&'),
-					index = -1;
+			var newHref = oldHref.split('?')[0];
+			var query = oldHref.split('?')[1];
+			var queryTmp = queryPattern.split('?')[1];
+			var tmpArr = queryTmp.split('&');
+			var index = -1;
 
 			for(var i = 0, ii = tmpArr.length; i < ii; i += 1) {
 				if( tmpArr[i].indexOf(':' + queryParam) !== -1 ) {
@@ -20603,49 +20595,49 @@ var routerServiceMixin = {
 	},
 
 	bindParams: function(params, paramName, paramValue, hrefPattern) {
-		var element = params.element,
-				builder = params.builder,
-				that = this,
-				args = {
-					parent: params.parent,
-					parentView: params.parentView,
-					basePathOfProperty: params.basePathOfProperty
-				};
+		var element = params.element;
+		var builder = params.builder;
+		var that = this;
+		var args = {
+			parent: params.parent,
+			parentView: params.parentView,
+			basePathOfProperty: params.basePathOfProperty
+		};
 
-			var dataBinding = params.builder.buildBinding(paramValue, args);
+		var dataBinding = params.builder.buildBinding(paramValue, args);
 
-			dataBinding.bindElement({
-				onPropertyChanged: function() {},
-				setProperty: function(elementProperty, newValue) {
-					var oldHref = element.getHref(),
-							newHref = that.replaceParamsInHref(oldHref, paramName, newValue, hrefPattern);
-					element.setHref(newHref);
-				},
-				getProperty: function() {}
-			}, '');
+		dataBinding.bindElement({
+			onPropertyChanged: function() {},
+			setProperty: function(elementProperty, newValue) {
+				var oldHref = element.getHref();
+				var newHref = that.replaceParamsInHref(oldHref, paramName, newValue, hrefPattern);
+				element.setHref(newHref);
+			},
+			getProperty: function() {}
+		}, '');
 	},
 
 	bindQuery: function(params, queryName, queryValue, queryPattern) {
-		var element = params.element,
-				builder = params.builder,
-				that = this,
-				args = {
-					parent: params.parent,
-					parentView: params.parentView,
-					basePathOfProperty: params.basePathOfProperty
-				};
+		var element = params.element;
+		var builder = params.builder;
+		var that = this;
+		var args = {
+			parent: params.parent,
+			parentView: params.parentView,
+			basePathOfProperty: params.basePathOfProperty
+		};
 
-			var dataBinding = params.builder.buildBinding(queryValue, args);
+		var dataBinding = params.builder.buildBinding(queryValue, args);
 
-			dataBinding.bindElement({
-				onPropertyChanged: function() {},
-				setProperty: function(elementProperty, newValue) {
-					var oldHref = element.getHref(),
-							newHref = that.replaceParamsInQuery(oldHref, queryName, newValue, queryPattern);
-					element.setHref(newHref);
-				},
-				getProperty: function() {}
-			}, '');
+		dataBinding.bindElement({
+			onPropertyChanged: function() {},
+			setProperty: function(elementProperty, newValue) {
+				var oldHref = element.getHref();
+				var newHref = that.replaceParamsInQuery(oldHref, queryName, newValue, queryPattern);
+				element.setHref(newHref);
+			},
+			getProperty: function() {}
+		}, '');
 	}
 };
 
@@ -21816,17 +21808,6 @@ _.inherit(ListBox, ListEditorBase);
 
 ListBox.prototype.createControl = function (viewMode) {
 	return new ListBoxControl(viewMode);
-};
-
-ListBox.prototype.setEnabled = function (value) {
-	if( _.isBoolean(value) ) {
-		ListEditorBase.prototype.setEnabled.call(this, value);
-		if( value ) {
-			this.control.updateDisabledItem();
-		} else {
-			this.control.disableAll();
-		}
-	}
 };
 
 //####app\elements\listBox\listBoxBuilder.js
@@ -27618,32 +27599,49 @@ _.extend(OpenActionBuilder.prototype,
 window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
 
 //####app\actions\routeToAction\routeToAction.js
-function RouteToAction(){
-    _.superClass(RouteToAction, this);
-    this.href = '';
+function RouteToAction() {
+	_.superClass( RouteToAction, this );
+	this.href = '';
+	this.replace = false;
 }
 
-_.inherit(RouteToAction, BaseAction);
+_.inherit( RouteToAction, BaseAction );
 
+_.extend( RouteToAction.prototype, {
 
-_.extend(RouteToAction.prototype, {
+	execute: function( callback ) {
+		var router = InfinniUI.AppRouter;
+		var href = this.getHref();
+		var replace = this.getReplace();
+		var options = {
+			trigger: true
+		};
 
-    execute: function(callback){
-        var router = InfinniUI.AppRouter,
-            href = this.getHref();
+		if( replace ) {
+			options.replace = true;
+		}
+		router.navigate( href, options );
+	},
 
-        router.navigate(href, {trigger: true});
-    },
+	getHref: function() {
+		return this.href;
+	},
 
-    getHref: function() {
-        return this.href;
-    },
+	setHref: function( href ) {
+		this.href = href;
+	},
 
-    setHref: function(href) {
-        this.href = href;
-    }
+	getReplace: function() {
+		return this.replace;
+	},
 
-});
+	setReplace: function( replace ) {
+		if( replace !== undefined ) {
+			this.replace = replace;
+		}
+	}
+
+} );
 
 window.InfinniUI.RouteToAction = RouteToAction;
 
@@ -27653,11 +27651,13 @@ function RouteToActionBuilder() {}
 _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMixin, {
 
 	build: function (context, args) {
-		var action = new RouteToAction(),
-				newHref = routerService.getLinkByName(args.metadata.Name, 'no'),
-				hrefParams = args.metadata.Params,
-				query = args.metadata.Query;
+		var action = new RouteToAction();
+		var newHref = routerService.getLinkByName(args.metadata.Name, 'no');
+		var hrefParams = args.metadata.Params;
+		var query = args.metadata.Query;
+		var replace = args.metadata.Replace; // when true, can delete url from history
 
+		action.setReplace(replace);
 		action.setHref(newHref);
 		args.element = action;
 
@@ -27676,15 +27676,15 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 		}
 
 		if( query ) {
-			for( var i = 0, ii = query.length; i < ii; i += 1 ) {
-				if( typeof query[i].Value === 'string' ) {
+			for( var j = 0, jj = query.length; j < jj; j += 1 ) {
+				if( typeof query[j].Value === 'string' ) {
 					if( action.getHref() !== newHref ) {
 						newHref = action.getHref();
 					}
-					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[i].Value);
+					newHref = this.replaceParamsInQuery(newHref, query[i].Name, query[j].Value);
 					action.setHref(newHref);
 				} else {
-					this.bindQuery(args, query[i].Name, query[i].Value, newHref);
+					this.bindQuery(args, query[j].Name, query[j].Value, newHref);
 				}
 			}
 		}
@@ -35075,6 +35075,32 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+		var message = args.value;
+		showToolTip(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+	function showToolTip($element, content) {
+		$element
+			.tooltip({
+				html: true,
+				title:content,
+				placement: 'auto top',
+				container: 'body',
+				trigger: 'hover'
+			})
+			.tooltip('show');
+	}
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -35117,16 +35143,18 @@ var routerService = (function(myRoutes) {
 
 	var onRouteSelectHandler = function(name, script) {
 		return function() {
-			var params = _.extend(Array.prototype.slice.call(arguments),
-					{
-						routeParams: routerService._params
-					});
+			var params = {
+				name: name,
+				params: Array.prototype.slice.call(arguments),
+				routeParams: routerService._params
+			};
 
-			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, { name: name, params: params });
+			new ScriptExecutor({getContext: function() {return routerService._context || "No context";}}).executeScript(script, params);
 		};
 	};
 
 	var routerObj = parseRouteForBackbone(myRoutes);
+	
 
 	var startRouter = function() {
 		if( !InfinniUI.AppRouter ) {
@@ -35164,30 +35192,4 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
-})();
 })();

@@ -4,21 +4,17 @@ window.InfinniUI.openHomePage = function($target) {
 
     rootView.open($target);
 
-    InfinniUI.AutoHeightService.slidingRecalculation($target);
-    subscribeRecalculationOnWindowResize($target);
+    InfinniUI.AutoHeightService.slidingRecalculation();
+    subscribeRecalculationOnWindowResize();
 
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
             action.execute();
         });
-
-    if( InfinniUI.config.enableGetCurrentUser ) {
-        setCurrentUser();
-    }
 };
 
-function subscribeRecalculationOnWindowResize($container) {
+function subscribeRecalculationOnWindowResize() {
     var TIMEOUT = 40;
     var WAIT = 50;
     var resizeTimeout;
@@ -29,7 +25,7 @@ function subscribeRecalculationOnWindowResize($container) {
     });
 
     function onWindowResize() {
-        window.InfinniUI.AutoHeightService.recalculation($container);
+        window.InfinniUI.AutoHeightService.recalculation();
     }
 
 };
@@ -64,26 +60,3 @@ function getHomePageLinkViewPromise() {
 
     return defer.promise();
 };
-
-function refreshUserInfo() {
-    var authProvider = InfinniUI.global.session;
-    authProvider.getCurrentUser(
-        function (result) {
-            InfinniUI.user.onReadyDeferred.resolve(result);
-        },
-        function (error) {
-            InfinniUI.user.onReadyDeferred.resolve(null);
-        }
-    );
-};
-
-function setCurrentUser() {
-    InfinniUI.user = {
-        onReadyDeferred: $.Deferred(),
-        onReady: function(handler){
-            this.onReadyDeferred.done(handler);
-        }
-    };
-
-    refreshUserInfo();
-}

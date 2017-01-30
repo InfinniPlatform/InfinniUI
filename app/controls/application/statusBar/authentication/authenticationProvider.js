@@ -53,6 +53,27 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     /**
+          * Изменяет активную роль текущего пользователя.
+          *
+          * @public
+          */
+    changeActiveRole: function (activeRole, resultCallback, errorCallback) {
+        var changeActiveRoleForm = {
+            ActiveRole: activeRole
+        };
+
+        this.sendPostRequestForServiceResult('/Auth/ChangeActiveRole', changeActiveRoleForm, function(){
+            var args = _.toArray(arguments);
+            args.push(activeRole);
+            if(resultCallback){
+                resultCallback.apply(this, args);
+            }
+
+            this.handlers.onActiveRoleChanged.fire.apply(this.handlers.onActiveRoleChanged, args);
+        }, errorCallback);
+    },
+
+    /**
           * Осуществляет вход пользователя в систему через внутренний провайдер.
           *
           * @public
