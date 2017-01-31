@@ -497,7 +497,7 @@ var BaseDataSource = Backbone.Model.extend({
             var result = that._getValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result, originalResult: data});
+            that._executeCallback(error, {item: item, result: result, originalResult: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
