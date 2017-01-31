@@ -6,8 +6,8 @@ InfinniUI.ModalWindowService = (function () {
             if (modalQueue.length != 0) {
                 var previous = modalQueue[modalQueue.length - 1];
 
-                previous.modal.hide();
-                previous.background.hide();
+                previous.modal.addClass('invisible');
+                previous.background.addClass('invisible');
             }
 
             modalQueue.push(obj);
@@ -20,8 +20,8 @@ InfinniUI.ModalWindowService = (function () {
                     if (i == length - 1 && i != 0) {
                         var previous = modalQueue[i - 1];
 
-                        previous.modal.show();
-                        previous.background.show();
+                        previous.modal.removeClass('invisible');
+                        previous.background.removeClass('invisible');
                         notifyLayoutChange();
                     }
 
