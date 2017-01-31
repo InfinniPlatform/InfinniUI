@@ -458,9 +458,9 @@
 
                 //When
                 var items = dataSource.getItems(),
-                    validateResult1 = dataSource.validateOnErrors(items[0]),
-                    validateResult2 = dataSource.validateOnErrors(items[1]),
-                    validateResult3 = dataSource.validateOnErrors();
+                    validateResult1 = dataSource.getValidationResult(items[0]),
+                    validateResult2 = dataSource.getValidationResult(items[1]),
+                    validateResult3 = dataSource.getValidationResult();
 
                 // Then
                 assert.isTrue(validateResult1.IsValid, 'successfully validation');
