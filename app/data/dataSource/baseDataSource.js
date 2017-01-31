@@ -471,33 +471,27 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
-            that._executeCallback(success, {item: item, result: {IsValid: true}});
+            this._notifyAboutItemSaved( {item: item, result: null} , 'notModified');
+            that._executeCallback(success, {item: item, validationResult: {IsValid: true}});
             return;
         }
 
         validateResult = this.getValidationResult(item);
         if (!validateResult.IsValid) {
-            this._notifyAboutValidation(validateResult, 'error');
-            this._executeCallback(error, {item: item, result: validateResult});
+            this._notifyAboutValidation(validateResult);
+            this._executeCallback(error, {item: item, validationResult: validateResult});
             return;
         }
 
         dataProvider.saveItem(item, function(data){
-            if( !('IsValid' in data) || data.IsValid === true ){
-                that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
-                that._executeCallback(success, {item: item, result: that._getValidationResult(data), originalResult: data});
-            }else{
-                var result = that._getValidationResult(data);
-                that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result, originalResult: data});
-            }
+            that._excludeItemFromModifiedSet(item);
+            that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
+            that._executeCallback(success, {item: item, validationResult: that._getValidationResult(data), originalResult: data});
         }, function(data) {
             var result = that._getValidationResult(data),
                 context = that.getContext();
-            that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result, originalResult: data});
+            that._notifyAboutValidation(result);
+            that._executeCallback(error, {item: item, validationResult: result, originalResult: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
@@ -540,18 +534,13 @@ var BaseDataSource = Backbone.Model.extend({
         this.beforeDeleteItem(item);
 
         dataProvider.deleteItem(item, function (data) {
-            if (!('IsValid' in data) || data['IsValid'] === true) {
-                that._handleDeletedItem(item, success);
-            } else {
-                var result = that._getValidationResult(data);
-                that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result});
-            }
+            // ToDo: проработать общую схему работы с callback'ами. В saveItem логика отличается, нет единообразия.
+            that._handleDeletedItem(item, success);
         }, function(data) {
             var result = that._getValidationResult(data),
                 context = that.getContext();
-            that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result, data: data});
+            that._notifyAboutValidation(result);
+            that._executeCallback(error, {item: item, validationResult: result, originalResult: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
@@ -849,7 +838,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationType) {
+    _notifyAboutValidation: function (validationResult) {
         if(!validationResult) {
             return;
         }
