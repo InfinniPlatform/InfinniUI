@@ -476,8 +476,9 @@ var BaseDataSource = Backbone.Model.extend({
             return;
         }
 
-        validateResult = this.validateOnErrors(item);
+        validateResult = this.getValidationResult(item);
         if (!validateResult.IsValid) {
+            this._notifyAboutValidation(validateResult, 'error');
             this._executeCallback(error, {item: item, result: validateResult});
             return;
         }
@@ -486,17 +487,17 @@ var BaseDataSource = Backbone.Model.extend({
             if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
                 that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
-                that._executeCallback(success, {item: item, result: that._getValidationResult(data)});
+                that._executeCallback(success, {item: item, result: that._getValidationResult(data), originalResult: data});
             }else{
                 var result = that._getValidationResult(data);
                 that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result});
+                that._executeCallback(error, {item: item, result: result, originalResult: data});
             }
         }, function(data) {
             var result = that._getValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result, data: data});
+            that._executeCallback(error, {item: item, result: result, originalResult: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
@@ -799,7 +800,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('errorValidator', validatingFunction);
     },
 
-    validateOnErrors: function (item, callback) {
+    getValidationResult: function (item) {
         var validatingFunction = this.get('errorValidator'),
             result = {
                 IsValid: true,
@@ -807,7 +808,7 @@ var BaseDataSource = Backbone.Model.extend({
             },
             isCheckingOneItem = !!item,
             context = this.getContext(),
-            items, subResult, itemIndex;
+            items, subResult;
 
         if (validatingFunction) {
             if (isCheckingOneItem) {
@@ -830,9 +831,6 @@ var BaseDataSource = Backbone.Model.extend({
 
             }
         }
-
-        this._notifyAboutValidation(result, 'error');
-        this._executeCallback(callback, {item: item, result: result});
 
         return result;
     },
