@@ -486,12 +486,12 @@ var BaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             that._excludeItemFromModifiedSet(item);
             that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
-            that._executeCallback(success, {item: item, validationResult: that._getValidationResult(data), originalResult: data});
+            that._executeCallback(success, {item: item, validationResult: that._getValidationResult(data), originalResponse: data});
         }, function(data) {
             var result = that._getValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result);
-            that._executeCallback(error, {item: item, validationResult: result, originalResult: data});
+            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
@@ -540,7 +540,7 @@ var BaseDataSource = Backbone.Model.extend({
             var result = that._getValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result);
-            that._executeCallback(error, {item: item, validationResult: result, originalResult: data});
+            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
             that.trigger('onProviderError', context, {item: item, data: data});
         });
     },
