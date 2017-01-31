@@ -73,7 +73,7 @@ describe('SaveAction', function () {
         saveAction.execute();
 
         // Then
-        assert.equal(view.getDialogResult(),InfinniUI.DialogResult.none, 'should not set DialogResult');
+        assert.equal(view.getDialogResult(), InfinniUI.DialogResult.accepted, 'should set DialogResult');
     });
 
     it('should call onExecuted', function () {
