@@ -487,16 +487,16 @@ var BaseDataSource = Backbone.Model.extend({
             if( !('IsValid' in data) || data.IsValid === true ){
                 that._excludeItemFromModifiedSet(item);
                 that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
-                that._executeCallback(success, {item: item, result: that._getValidationResult(data), originalResult: data});
+                that._executeCallback(success, {item: item, result: that._getValidationResult(data), originalResponse: data});
             }else{
                 var result = that._getValidationResult(data);
                 that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result, originalResult: data});
+                that._executeCallback(error, {item: item, result: result, originalResponse: data});
             }
         }, function(data) {
             var result = that._getValidationResult(data);
             that._notifyAboutValidation(result, 'error');
-            that._executeCallback(errorInProvider, {item: item, result: result, originalResult: data});
+            that._executeCallback(errorInProvider, {item: item, result: result, originalResponse: data});
         });
     },
 
