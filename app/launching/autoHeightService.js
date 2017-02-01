@@ -216,11 +216,10 @@ window.InfinniUI.AutoHeightService = {
 	},
 
 	resizeDialog: function () {
-		var manager = this;
-		$(this.getModalSelector()).each(function (i, el) {
-			manager._resizeDialog($(el));
-			manager.resetDialogHeight($(el));
-		});
+		var $currentDialog = $(this.getModalSelector()).last();
+
+		this._resizeDialog($currentDialog);
+		this.resetDialogHeight($currentDialog);
 	},
 
 	resetDialogHeight: function($modal){
