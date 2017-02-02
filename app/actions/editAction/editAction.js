@@ -74,9 +74,10 @@ _.extend(EditAction.prototype, {
             if( this._isRootItem(destinationProperty) ) {
                 this._overrideOriginItem(rootItem, editedItem);
                 destinationDataSource._includeItemToModifiedSet(rootItem);
+            } else {
+                destinationDataSource.setProperty(destinationProperty, editedItem);
             }
-            // TODO: выяснить, почему без setProperty dataGrid не обновляется
-            destinationDataSource.setProperty(destinationProperty, editedItem);
+
             destinationDataSource.saveItem(rootItem);
         }
 
