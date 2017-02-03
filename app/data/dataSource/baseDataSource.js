@@ -486,9 +486,9 @@ var BaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             that._excludeItemFromModifiedSet(item);
             that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
-            that._executeCallback(success, {item: item, validationResult: that._getValidationResult(data), originalResponse: data});
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
-            var result = that._getValidationResult(data),
+            var result = that._extractValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result);
             that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
@@ -496,7 +496,7 @@ var BaseDataSource = Backbone.Model.extend({
         });
     },
 
-    _getValidationResult: function(data){
+    _extractValidationResult: function(data){
         if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
             return data.data.responseJSON['Result']['ValidationResult'];
         }
@@ -537,7 +537,7 @@ var BaseDataSource = Backbone.Model.extend({
             // ToDo: проработать общую схему работы с callback'ами. В saveItem логика отличается, нет единообразия.
             that._handleDeletedItem(item, success);
         }, function(data) {
-            var result = that._getValidationResult(data),
+            var result = that._extractValidationResult(data),
                 context = that.getContext();
             that._notifyAboutValidation(result);
             that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
