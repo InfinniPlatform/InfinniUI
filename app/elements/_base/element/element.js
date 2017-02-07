@@ -496,7 +496,7 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
-    remove: function (isInitiatedByParent) {
+    remove: function (isInitiatedByParent, parent) {
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -506,7 +506,7 @@ _.extend(Element.prototype, {
         var children = this.childElements;
 
         for (var i = 0, ii = children.length; i < ii; i++) {
-            children[i].remove(true);
+            children[i].remove(true, this);
         }
 
         this.control.remove();
@@ -518,6 +518,10 @@ _.extend(Element.prototype, {
                 this.parent.removeChild(this);
             }
 
+        }
+
+        if( parent && this.parent && this.parent.removeChild && isInitiatedByParent && parent !== this.parent ) {
+          this.parent.removeChild(this);
         }
 
         this.isRemoved = true;

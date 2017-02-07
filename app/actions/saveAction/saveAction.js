@@ -15,6 +15,7 @@ _.extend( SaveAction.prototype,
 
 			var onSuccessSave = function( context, args ) {
 				parentView.setDialogResult( DialogResult.accepted );
+
 				if( canClose !== false ) {
 					parentView.close();
 				}
