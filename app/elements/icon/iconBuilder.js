@@ -18,6 +18,7 @@ _.extend(IconBuilder.prototype, {
         var metadata = params.metadata;
 
         this.initBindingToProperty(params, 'Value');
+        this.initBindingToProperty(params, 'Size');
     }
 
 });

@@ -6,6 +6,7 @@ var IconModel = ControlModel.extend({
 
     defaults: _.defaults({
         value: null,
+        size: '',
         focusable: false
 
     }, ControlModel.prototype.defaults),

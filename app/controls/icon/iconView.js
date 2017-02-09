@@ -27,11 +27,24 @@ var IconView = ControlView.extend({
     initHandlersForProperties: function () {
         ControlView.prototype.initHandlersForProperties.call(this);
         this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:size', this.updateSize);
+    },
+
+    updateSize: function() {
+      var newSize = this.model.get('size');
+      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
+      this.currentSize = newSize;
+    },
+
+    valueToSizeClassName: function ( value ) {
+        if( value ) return 'pl-iconSize-' + value.toLowerCase();
+        else return '';
     },
 
     updateProperties: function () {
         ControlView.prototype.updateProperties.call(this);
         this.updateValue();
+        this.updateSize();
     },
 
     updateFocusable: function () {

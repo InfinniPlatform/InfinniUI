@@ -188,66 +188,36 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     updateTextStyle: function () {
         var customStyle = this.model.get('textStyle');
-
-        if (this.currentTextStyle) {
-            this.$el
-                .removeClass(this.valueToTextClassName(this.currentTextStyle));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToTextClassName(customStyle));
-        }
-
+	      this.changeElementClass( this.valueToTextClassName( this.currentTextStyle ), this.valueToTextClassName( customStyle ) );
         this.currentTextStyle = customStyle;
     },
 
     updateBackground: function () {
         var customStyle = this.model.get('background');
-
-        if (this.currentBackground) {
-            this.$el
-                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToBackgroundClassName(customStyle));
-        }
-
+	      this.changeElementClass( this.valueToBackgroundClassName( this.currentBackground ), this.valueToBackgroundClassName( customStyle ) );
         this.currentBackground = customStyle;
     },
 
     updateForeground: function () {
         var customStyle = this.model.get('foreground');
-
-        if (this.currentForeground) {
-            this.$el
-                .removeClass(this.valueToForegroundClassName(this.currentForeground));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToForegroundClassName(customStyle));
-        }
-
+        this.changeElementClass( this.valueToForegroundClassName( this.currentForeground ), this.valueToForegroundClassName( customStyle ) );
         this.currentForeground = customStyle;
     },
 
     updateStyle: function () {
         var customStyle = this.model.get('style');
-
-        if (this.currentStyle) {
-            this.$el
-                .removeClass(this.currentStyle);
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(customStyle);
-        }
-
+        this.changeElementClass( this.currentStyle, customStyle );
         this.currentStyle = customStyle;
+    },
+
+    changeElementClass: function( oldClass, newClass ) {
+        if ( oldClass ) {
+            this.$el.removeClass( oldClass );
+        }
+
+        if ( newClass ) {
+            this.$el.addClass( newClass );
+         }
     },
 
     updateViewMode: function () {
@@ -347,15 +317,18 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     },
 
     valueToBackgroundClassName: function (value) {
-        return 'pl-' + value.toLowerCase() + '-bg';
+        if( value ) return 'pl-' + value.toLowerCase() + '-bg';
+        else return '';
     },
 
     valueToForegroundClassName: function (value) {
-        return 'pl-' + value.toLowerCase() + '-fg';
+        if( value ) return 'pl-' + value.toLowerCase() + '-fg';
+        else return '';
     },
 
     valueToTextClassName: function (value) {
-        return 'pl-' + value.toLowerCase();
+        if( value ) return 'pl-' + value.toLowerCase();
+        else return '';
     },
 
     renderTemplate: function (template) {
