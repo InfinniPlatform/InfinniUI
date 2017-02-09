@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.55';
+InfinniUI.VERSION = '2.1.56';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -20150,7 +20150,7 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
-    remove: function (isInitiatedByParent) {
+    remove: function (isInitiatedByParent, parent) {
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -20160,7 +20160,7 @@ _.extend(Element.prototype, {
         var children = this.childElements;
 
         for (var i = 0, ii = children.length; i < ii; i++) {
-            children[i].remove(true);
+            children[i].remove(true, this);
         }
 
         this.control.remove();
@@ -20172,6 +20172,10 @@ _.extend(Element.prototype, {
                 this.parent.removeChild(this);
             }
 
+        }
+
+        if( parent && this.parent && this.parent.removeChild && isInitiatedByParent && parent !== this.parent ) {
+          this.parent.removeChild(this);
         }
 
         this.isRemoved = true;
@@ -23052,162 +23056,6 @@ _.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype *
 
 });
 
-//####app\elements\dataNavigation\dataNavigation.js
-function DataNavigation (parent) {
-    _.superClass(DataNavigation, this, parent);
-}
-
-window.InfinniUI.DataNavigation = DataNavigation;
-
-_.inherit(DataNavigation, Element);
-
-_.extend(DataNavigation.prototype, {
-
-    createControl: function () {
-        return new DataNavigationControl();
-    },
-
-    getDataSource: function () {
-        return this.control.get('dataSource');
-    },
-
-    setDataSource: function (value) {
-        this.control.set('dataSource', value);
-    },
-
-    getAvailablePageSizes: function () {
-        return this.control.get('availablePageSizes');
-    },
-
-    setPageNumber: function (value) {
-        this.control.set('pageNumber', value)
-    },
-
-    getPageNumber: function () {
-        return this.control.get('pageNumber');
-    },
-
-    onPageNumberChanged: function (handler) {
-        this.control.onPageNumberChanged(this.createControlEventHandler(this, handler));
-    },
-
-    setPageSize: function (value) {
-        this.control.set('pageSize', value)
-    },
-
-    getPageSize: function () {
-        return this.control.get('pageSize');
-    },
-
-    onPageSizeChanged: function (handler) {
-        this.control.onPageSizeChanged(this.createControlEventHandler(this, handler));
-    },
-
-    getPageCount: function () {
-        return this.control.get('pageCount');
-    },
-
-    setPageCount: function (value) {
-        this.control.set('pageCount', value)
-    },
-
-    getIsDataReady: function () {
-        return this.control.get('isDataReady');
-    },
-
-    setIsDataReady: function (value) {
-        this.control.set('isDataReady', value)
-    }
-
-});
-
-//####app\elements\dataNavigation\dataNavigationBuilder.js
-function DataNavigationBuilder () {
-    _.superClass(DataNavigationBuilder, this);
-}
-
-window.InfinniUI.DataNavigationBuilder = DataNavigationBuilder;
-
-_.inherit(DataNavigationBuilder, ElementBuilder);
-
-_.extend(DataNavigationBuilder.prototype, {
-
-    createElement: function (params) {
-        return new DataNavigation(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        var element = params.element;
-        var metadata = params.metadata;
-        var pageSize;
-        var that = this;
-
-        if (Array.isArray(metadata.AvailablePageSizes)) {
-            element.getAvailablePageSizes().reset(metadata.AvailablePageSizes);
-        }
-
-        var ds = this.findDataSource(params);
-        if (ds) {
-            pageSize = ds.getProperty('.pageSize');
-
-            element.setDataSource(ds);
-            element.setPageSize(pageSize);
-
-            ds.onItemsUpdated(function(){
-                that.onDataUpdated(element, ds);
-            });
-
-            if(ds.isDataReady()){
-                this.onDataUpdated(element, ds);
-            }
-
-            element.onPageNumberChanged(function (context, message) {
-                ds.setProperty('.pageNumber', message.value);
-            });
-
-            element.onPageSizeChanged(function (context, message) {
-                ds.setProperty('.pageSize', message.value);
-            });
-        } else {
-            console.error('DataSource not found');
-        }
-
-    },
-
-    onDataUpdated: function(element, dataSource){
-        var dsTotalCount = dataSource.getProperty('.totalCount'),
-            pageSize = dataSource.getProperty('.pageSize'),
-            pageNumber = dataSource.getProperty('.pageNumber'),
-            pageCount;
-
-        if(typeof dsTotalCount == 'number'){
-            pageCount = Math.ceil(dsTotalCount/pageSize);
-            element.setPageCount(pageCount);
-        }
-
-        element.setPageNumber(pageNumber);
-        element.setIsDataReady(true);
-    },
-
-    findDataSource: function (params) {
-        var
-            name = params.metadata.DataSource,
-            view = params.parentView,
-            context,
-            dataSource;
-        
-        if (name && view) {
-            context = view.getContext();
-            dataSource = context.dataSources[name];
-        }
-
-        return dataSource;
-    }
-
-});
-
 //####app\elements\dataGrid\dataGrid.js
 function DataGrid(parent) {
     _.superClass(DataGrid, this, parent);
@@ -23831,6 +23679,162 @@ DataGridColumnBuilder.prototype.buildHeaderTemplateByDefault = function (params)
     };
 
 };
+
+//####app\elements\dataNavigation\dataNavigation.js
+function DataNavigation (parent) {
+    _.superClass(DataNavigation, this, parent);
+}
+
+window.InfinniUI.DataNavigation = DataNavigation;
+
+_.inherit(DataNavigation, Element);
+
+_.extend(DataNavigation.prototype, {
+
+    createControl: function () {
+        return new DataNavigationControl();
+    },
+
+    getDataSource: function () {
+        return this.control.get('dataSource');
+    },
+
+    setDataSource: function (value) {
+        this.control.set('dataSource', value);
+    },
+
+    getAvailablePageSizes: function () {
+        return this.control.get('availablePageSizes');
+    },
+
+    setPageNumber: function (value) {
+        this.control.set('pageNumber', value)
+    },
+
+    getPageNumber: function () {
+        return this.control.get('pageNumber');
+    },
+
+    onPageNumberChanged: function (handler) {
+        this.control.onPageNumberChanged(this.createControlEventHandler(this, handler));
+    },
+
+    setPageSize: function (value) {
+        this.control.set('pageSize', value)
+    },
+
+    getPageSize: function () {
+        return this.control.get('pageSize');
+    },
+
+    onPageSizeChanged: function (handler) {
+        this.control.onPageSizeChanged(this.createControlEventHandler(this, handler));
+    },
+
+    getPageCount: function () {
+        return this.control.get('pageCount');
+    },
+
+    setPageCount: function (value) {
+        this.control.set('pageCount', value)
+    },
+
+    getIsDataReady: function () {
+        return this.control.get('isDataReady');
+    },
+
+    setIsDataReady: function (value) {
+        this.control.set('isDataReady', value)
+    }
+
+});
+
+//####app\elements\dataNavigation\dataNavigationBuilder.js
+function DataNavigationBuilder () {
+    _.superClass(DataNavigationBuilder, this);
+}
+
+window.InfinniUI.DataNavigationBuilder = DataNavigationBuilder;
+
+_.inherit(DataNavigationBuilder, ElementBuilder);
+
+_.extend(DataNavigationBuilder.prototype, {
+
+    createElement: function (params) {
+        return new DataNavigation(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var element = params.element;
+        var metadata = params.metadata;
+        var pageSize;
+        var that = this;
+
+        if (Array.isArray(metadata.AvailablePageSizes)) {
+            element.getAvailablePageSizes().reset(metadata.AvailablePageSizes);
+        }
+
+        var ds = this.findDataSource(params);
+        if (ds) {
+            pageSize = ds.getProperty('.pageSize');
+
+            element.setDataSource(ds);
+            element.setPageSize(pageSize);
+
+            ds.onItemsUpdated(function(){
+                that.onDataUpdated(element, ds);
+            });
+
+            if(ds.isDataReady()){
+                this.onDataUpdated(element, ds);
+            }
+
+            element.onPageNumberChanged(function (context, message) {
+                ds.setProperty('.pageNumber', message.value);
+            });
+
+            element.onPageSizeChanged(function (context, message) {
+                ds.setProperty('.pageSize', message.value);
+            });
+        } else {
+            console.error('DataSource not found');
+        }
+
+    },
+
+    onDataUpdated: function(element, dataSource){
+        var dsTotalCount = dataSource.getProperty('.totalCount'),
+            pageSize = dataSource.getProperty('.pageSize'),
+            pageNumber = dataSource.getProperty('.pageNumber'),
+            pageCount;
+
+        if(typeof dsTotalCount == 'number'){
+            pageCount = Math.ceil(dsTotalCount/pageSize);
+            element.setPageCount(pageCount);
+        }
+
+        element.setPageNumber(pageNumber);
+        element.setIsDataReady(true);
+    },
+
+    findDataSource: function (params) {
+        var
+            name = params.metadata.DataSource,
+            view = params.parentView,
+            context,
+            dataSource;
+        
+        if (name && view) {
+            context = view.getContext();
+            dataSource = context.dataSources[name];
+        }
+
+        return dataSource;
+    }
+
+});
 
 //####app\elements\divider\divider.js
 /**
@@ -24581,7 +24585,7 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
-//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBox.js
 /**
  *
  * @param parent
@@ -24606,7 +24610,7 @@ _.extend(IndeterminateCheckBox.prototype, {
 
 }, editorBaseMixin);
 
-//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBoxBuilder.js
 /**
  *
  * @constructor
@@ -34309,6 +34313,95 @@ _.extend(OpenModeDialogStrategy.prototype, {
     }
 });
 
+//####app\script\scriptBuilder.js
+/**
+ *
+ * @constructor
+ */
+function ScriptBuilder() {}
+
+window.InfinniUI.ScriptBuilder = ScriptBuilder;
+
+
+ScriptBuilder.prototype.build = function (context, args) {
+    var
+        metadata = args.metadata,
+        name = metadata.Name,
+        body = metadata.Body;
+
+    var func = new Function('context', 'args', body);
+
+    return function (context, args) {
+        var result;
+        try {
+            result = func.call(undefined, context, args);
+        } catch (err) {
+            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
+            console.error(body);
+            console.groupEnd();
+        }
+        return result;
+    };
+};
+
+
+//####app\script\scriptExecutor.js
+/**
+ *
+ * @param parent
+ * @constructor
+ */
+function ScriptExecutor(parent) {
+    this.parent = parent;
+}
+
+window.InfinniUI.ScriptExecutor = ScriptExecutor;
+
+
+/**
+ *
+ * @param {string} scriptName
+ * @param {Object} args
+ * @returns {*}
+ */
+ScriptExecutor.prototype.executeScript = function (scriptName, args) {
+    var parent = this.parent;
+    var context = parent.getContext();
+    var result;
+    var scriptBody;
+    var scriptCompiled;
+
+    if(scriptName.substr(0, 1) == '{'){
+        scriptBody = scriptName.substr(1, scriptName.length - 2);
+        scriptCompiled = this.buildScriptByBody(scriptBody);
+    }else{
+        scriptCompiled = parent.getScripts().getById(scriptName);
+        if(scriptCompiled){
+            scriptCompiled = scriptCompiled.func;
+        }
+    }
+
+
+
+    if (context && scriptCompiled) {
+        result = scriptCompiled.call(undefined, context, args);
+    }
+
+    return result;
+};
+
+ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
+    var context = this.parent.getContext();
+    var args = {
+        metadata: {
+            "Body": scriptBody,
+            "Name": "InlineScript"
+        }
+    };
+    var scriptBuilder = new ScriptBuilder();
+    return scriptBuilder.build(context, args);
+};
+
 //####app\services\modalWindowService.js
 InfinniUI.ModalWindowService = (function () {
     var modalQueue = [];
@@ -34532,94 +34625,28 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
-//####app\script\scriptBuilder.js
-/**
- *
- * @constructor
- */
-function ScriptBuilder() {}
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
 
-window.InfinniUI.ScriptBuilder = ScriptBuilder;
+	var exchange = window.InfinniUI.global.messageBus;
 
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
 
-ScriptBuilder.prototype.build = function (context, args) {
-    var
-        metadata = args.metadata,
-        name = metadata.Name,
-        body = metadata.Body;
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
 
-    var func = new Function('context', 'args', body);
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
 
-    return function (context, args) {
-        var result;
-        try {
-            result = func.call(undefined, context, args);
-        } catch (err) {
-            console.groupCollapsed('%2$s: %1$c%3$s', 'color: #ff0000', name, err.message);
-            console.error(body);
-            console.groupEnd();
-        }
-        return result;
-    };
-};
-
-
-//####app\script\scriptExecutor.js
-/**
- *
- * @param parent
- * @constructor
- */
-function ScriptExecutor(parent) {
-    this.parent = parent;
-}
-
-window.InfinniUI.ScriptExecutor = ScriptExecutor;
-
-
-/**
- *
- * @param {string} scriptName
- * @param {Object} args
- * @returns {*}
- */
-ScriptExecutor.prototype.executeScript = function (scriptName, args) {
-    var parent = this.parent;
-    var context = parent.getContext();
-    var result;
-    var scriptBody;
-    var scriptCompiled;
-
-    if(scriptName.substr(0, 1) == '{'){
-        scriptBody = scriptName.substr(1, scriptName.length - 2);
-        scriptCompiled = this.buildScriptByBody(scriptBody);
-    }else{
-        scriptCompiled = parent.getScripts().getById(scriptName);
-        if(scriptCompiled){
-            scriptCompiled = scriptCompiled.func;
-        }
-    }
-
-
-
-    if (context && scriptCompiled) {
-        result = scriptCompiled.call(undefined, context, args);
-    }
-
-    return result;
-};
-
-ScriptExecutor.prototype.buildScriptByBody = function(scriptBody){
-    var context = this.parent.getContext();
-    var args = {
-        metadata: {
-            "Body": scriptBody,
-            "Name": "InlineScript"
-        }
-    };
-    var scriptBuilder = new ScriptBuilder();
-    return scriptBuilder.build(context, args);
-};
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
 
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
@@ -34698,29 +34725,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
