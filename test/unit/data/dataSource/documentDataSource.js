@@ -443,7 +443,7 @@
             }
         });
 
-        it('should validate item', function (done) {
+        it('should get ValidationResult for item', function (done) {
             // Given
             FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
 

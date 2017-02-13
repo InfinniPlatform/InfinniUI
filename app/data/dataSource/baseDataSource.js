@@ -486,17 +486,20 @@ var BaseDataSource = Backbone.Model.extend({
         dataProvider.saveItem(item, function(data){
             that._excludeItemFromModifiedSet(item);
             that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
-            that._executeCallback(success, {item: item, validationResult: that._getValidationResult(data), originalResponse: data});
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
-            var result = that._getValidationResult(data),
-                context = that.getContext();
-            that._notifyAboutValidation(result);
+            var result = that._extractValidationResult(data);
+
             that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
-            that.trigger('onProviderError', context, {item: item, data: data});
+            that._onServerErrorHandler({
+                response: data,
+                validationResult: result,
+                item: item
+            });
         });
     },
 
-    _getValidationResult: function(data){
+    _extractValidationResult: function(data){
         if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
             return data.data.responseJSON['Result']['ValidationResult'];
         }
@@ -534,20 +537,34 @@ var BaseDataSource = Backbone.Model.extend({
         this.beforeDeleteItem(item);
 
         dataProvider.deleteItem(item, function (data) {
-            // ToDo: проработать общую схему работы с callback'ами. В saveItem логика отличается, нет единообразия.
-            that._handleDeletedItem(item, success);
+            that._handleDeletedItem(item);
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
-            var result = that._getValidationResult(data),
-                context = that.getContext();
-            that._notifyAboutValidation(result);
+            var result = that._extractValidationResult(data);
+
             that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
-            that.trigger('onProviderError', context, {item: item, data: data});
+            that._onServerErrorHandler({
+                response: data,
+                validationResult: result,
+                item: item
+            });
         });
+    },
+
+    _onServerErrorHandler: function(params) {
+        var validationResult = params.validationResult,
+            context = this.getContext();
+
+        if( validationResult && validationResult.IsValid ) {
+            this._notifyAboutValidation(validationResult);
+        } else {
+            this.trigger('onProviderError', context, {item: params.item, data: params.response});
+        }
     },
 
     beforeDeleteItem: function(item){},
 
-    _handleDeletedItem: function (item, successHandler) {
+    _handleDeletedItem: function (item) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
         logger.warn({
@@ -562,9 +579,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         argument.value = item;
 
-        if (successHandler) {
-            successHandler(context, argument);
-        }
         this.trigger('onItemDeleted', context, argument);
     },
 
@@ -1041,7 +1055,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')[itemId];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 idProperty = this.get('idProperty'),
                 itemId = this.idOfItem(item),
@@ -1060,7 +1074,7 @@ BaseDataSource.identifyingStrategy = {
                 this.setSelectedItem(null);
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     },
 
@@ -1117,7 +1131,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')['-'];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 selectedItem = this.getSelectedItem(),
                 index = items.indexOf(item);
@@ -1131,7 +1145,7 @@ BaseDataSource.identifyingStrategy = {
                 }
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     }
 };

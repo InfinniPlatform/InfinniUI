@@ -158,7 +158,7 @@ describe('ObjectDataSource', function () {
             }
         });
 
-        it('should validate item', function (done) {
+        it('should get ValidationResult for item', function (done) {
             // Given
             var dataSource = createObjectDataSource();
 
