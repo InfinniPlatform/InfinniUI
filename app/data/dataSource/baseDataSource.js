@@ -537,8 +537,8 @@ var BaseDataSource = Backbone.Model.extend({
         this.beforeDeleteItem(item);
 
         dataProvider.deleteItem(item, function (data) {
-            // ToDo: проработать общую схему работы с callback'ами. В saveItem логика отличается, нет единообразия.
-            that._handleDeletedItem(item, success);
+            that._handleDeletedItem(item);
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
             var result = that._extractValidationResult(data);
 
@@ -564,7 +564,7 @@ var BaseDataSource = Backbone.Model.extend({
 
     beforeDeleteItem: function(item){},
 
-    _handleDeletedItem: function (item, successHandler) {
+    _handleDeletedItem: function (item) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
         logger.warn({
@@ -579,9 +579,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         argument.value = item;
 
-        if (successHandler) {
-            successHandler(context, argument);
-        }
         this.trigger('onItemDeleted', context, argument);
     },
 
@@ -1058,7 +1055,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')[itemId];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 idProperty = this.get('idProperty'),
                 itemId = this.idOfItem(item),
@@ -1077,7 +1074,7 @@ BaseDataSource.identifyingStrategy = {
                 this.setSelectedItem(null);
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     },
 
@@ -1134,7 +1131,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')['-'];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 selectedItem = this.getSelectedItem(),
                 index = items.indexOf(item);
@@ -1148,7 +1145,7 @@ BaseDataSource.identifyingStrategy = {
                 }
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     }
 };
