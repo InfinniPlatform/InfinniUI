@@ -1815,7 +1815,7 @@ describe('SaveAction', function () {
         saveAction.execute();
 
         // Then
-        assert.equal(view.getDialogResult(),InfinniUI.DialogResult.none, 'should not set DialogResult');
+        assert.equal(view.getDialogResult(), InfinniUI.DialogResult.accepted, 'should set DialogResult');
     });
 
     it('should call onExecuted', function () {
@@ -3332,120 +3332,6 @@ describe('TemplateEditMask', function () {
 
 });
 
-describe('LinkView', function () {
-
-    describe('setOpenMode', function () {
-        it('should set openMode', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode('Dialog');
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Dialog');
-        });
-
-        it('should set openMode Default by default', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-
-        it('should set openMode Default if no mode passed', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode(null);
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-    });
-});
-
-describe('LinkViewBuilderBase', function () {
-
-    it('should set base properties', function () {
-        // Given
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            View: {
-                Name: "LinkViewBuilderTest"
-            }
-        };
-
-        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        assert.equal(linkView.getOpenMode(), "Default");
-        assert.isUndefined(linkView.containerName);
-        assert.isUndefined(linkView.dialogWidth);
-
-        // When
-        linkView.setOpenMode("Dialog");
-        linkView.setContainer("TestContainer");
-        linkView.setDialogWidth("100px");
-
-        // Then
-        assert.equal(linkView.getOpenMode(), "Dialog");
-        assert.equal(linkView.containerName, "TestContainer");
-        assert.equal(linkView.dialogWidth, "100px");
-    });
-
-    it('inlineViewBuilder', function (done) {
-        // Given
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            View: {
-                Name: "InlineViewBuilderTest"
-            }
-        };
-
-        // When
-        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        linkView.createView(function(view){
-            // Then
-            assert.equal(view.name, "InlineViewBuilderTest");
-            assert.instanceOf(view, window.InfinniUI.View);
-            done();
-        });
-    });
-
-    it('metadataViewBuilder', function (done) {
-        // Given
-        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
-            return {
-                "getMetadata": function (callback) {
-                    var metadata = {
-                        "Name": "MetadataViewBuilderTest"
-                    };
-                    callback(metadata);
-                }
-            };
-        });
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            Path: "path/to/metadata"
-        };
-
-        // When
-        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        linkView.createView(function(view){
-            // Then
-            assert.equal(view.name, "MetadataViewBuilderTest");
-            assert.instanceOf(view, window.InfinniUI.View);
-            done();
-        });
-    });
-});
-
-
 describe('BooleanFormat', function () {
     describe('format', function () {
 
@@ -4056,6 +3942,120 @@ describe('ObjectFormat', function () {
     });
 
 });
+
+describe('LinkView', function () {
+
+    describe('setOpenMode', function () {
+        it('should set openMode', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode('Dialog');
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Dialog');
+        });
+
+        it('should set openMode Default by default', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+
+        it('should set openMode Default if no mode passed', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode(null);
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+    });
+});
+
+describe('LinkViewBuilderBase', function () {
+
+    it('should set base properties', function () {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "LinkViewBuilderTest"
+            }
+        };
+
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        assert.equal(linkView.getOpenMode(), "Default");
+        assert.isUndefined(linkView.containerName);
+        assert.isUndefined(linkView.dialogWidth);
+
+        // When
+        linkView.setOpenMode("Dialog");
+        linkView.setContainer("TestContainer");
+        linkView.setDialogWidth("100px");
+
+        // Then
+        assert.equal(linkView.getOpenMode(), "Dialog");
+        assert.equal(linkView.containerName, "TestContainer");
+        assert.equal(linkView.dialogWidth, "100px");
+    });
+
+    it('inlineViewBuilder', function (done) {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "InlineViewBuilderTest"
+            }
+        };
+
+        // When
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "InlineViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+
+    it('metadataViewBuilder', function (done) {
+        // Given
+        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
+            return {
+                "getMetadata": function (callback) {
+                    var metadata = {
+                        "Name": "MetadataViewBuilderTest"
+                    };
+                    callback(metadata);
+                }
+            };
+        });
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            Path: "path/to/metadata"
+        };
+
+        // When
+        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "MetadataViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+});
+
 
 describe('MessageBus', function () {
     var messageBus;
@@ -6763,551 +6763,6 @@ describe("ObjectUtils", function () {
         });
     });
 });
-describe('DataBinding', function () {
-    it('should bind source', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        assert.isNull(dataBinding.getSource());
-        assert.isNull(dataBinding.getSourceProperty());
-
-        // When
-        dataBinding.bindSource(new FakeElement(), 'property');
-
-        // Then
-        assert.isNotNull(dataBinding.getSource());
-        assert.isNotNull(dataBinding.getSourceProperty());
-    });
-
-    it('should bind element', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        assert.isNull(dataBinding.getElement());
-        assert.isNull(dataBinding.getElementProperty());
-
-        // When
-        dataBinding.bindElement(new FakeElement(), 'property');
-
-        // Then
-        assert.isNotNull(dataBinding.getElement());
-        assert.isNotNull(dataBinding.getElementProperty());
-    });
-
-    it('default mode should be twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-
-        // Then
-        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.twoWay, 'default mode must be twoWay');
-    });
-
-    it('should refresh source on element change if mode is twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
-    });
-
-    it('should refresh element on source change if mode is twoWay', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
-    });
-
-    it('should not refresh source on element change if mode is toElement', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
-    });
-
-    it('should refresh element on source change if mode is toElement', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
-    });
-
-    it('should refresh source on element change if mode is toSource', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toSource);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
-    });
-
-    it('should not refresh element on source change if mode is toSource', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.toSource);
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
-    });
-
-    it('should not refresh element if mode is wrong', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode('gubbish');
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 'source property new value' );
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
-    });
-
-    it('should not refresh source if mode is wrong', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode('gubbish');
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-        source.setProperty(sourceProperty, 'source property start value');
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-        element.setProperty(elementProperty, 'element property start value');
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        element.setProperty(elementProperty, 'element property new value' );
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
-    });
-
-    it('should convert value if have converter', function () {
-        // Given
-        var dataBinding = new InfinniUI.DataBinding();
-        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
-        dataBinding.setConverter({
-            toSource: function(context, argument) {
-                return argument.value ? 5 : 3; // string to integer
-            },
-            toElement: function(context, argument) {
-                return argument.value > 4; // integer to string
-            }
-        });
-
-        var source = new FakeElement();
-        var sourceProperty = 'sourceProperty';
-
-        var element = new FakeElement();
-        var elementProperty = 'elementProperty';
-
-        dataBinding.bindSource(source, sourceProperty);
-        dataBinding.bindElement(element, elementProperty);
-
-        // When
-        source.setProperty(sourceProperty, 5);
-
-        // Then
-        assert.equal(dataBinding.getElement().getProperty(elementProperty), true, 'Ignored toElement converter');
-
-        // When
-        element.setProperty(elementProperty, false);
-
-        // Then
-        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 3, 'Ignored toSource converter');
-    });
-});
-
-describe('DataBindingBuilder', function () {
-
-    it('should build DataBinding', function () {
-        // Given
-        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
-        var view = {
-            getDeferredOfMember: function(){
-                return {
-                    done: function(handler){
-                        handler({
-                            onPropertyChanged: function(){}
-                        });
-                    }
-                };
-            }
-        };
-        var metadata = {
-            Source: 'My_Source',
-            Property: 'Property',
-            Mode: 'ToSource',
-            DefaultValue: 'DefaultValue',
-            Converter: {
-                toSource: function(){},
-                toElement: function(){}
-            }
-        };
-
-        // When
-        var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
-
-        // Then
-        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
-        assert.equal(dataBinding.getDefaultValue(), 'DefaultValue');
-        assert.isObject(dataBinding.getConverter());
-        assert.isObject(dataBinding.getSource());
-        assert.equal(dataBinding.getSourceProperty(), 'Property');
-    });
-
-    describe('should bind all type of source', function () {
-
-        it('should bind dataSource', function(){
-            // Given
-            var viewMetadata = {
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1"
-                        }
-                    }
-                ]
-            };
-
-            testHelper.applyViewMetadata(viewMetadata, onViewReady);
-
-            function onViewReady(view, $view){
-                var bindingMetadata = {
-                    Source: 'ObjectDataSource1'
-                };
-
-                // When
-                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
-                    bindingSource = dataBinding.getSource();
-
-                // Then
-                assert.isDefined(bindingSource);
-                assert.instanceOf(bindingSource, InfinniUI.ObjectDataSource);
-
-                view.close();
-            }
-        });
-
-        it('should bind parameter', function(){
-            // Given
-            var viewMetadata = {
-                Parameters : [
-                    {
-                        Name: 'Parameter1'
-                    }
-                ]
-            };
-
-            testHelper.applyViewMetadata(viewMetadata, onViewReady);
-
-            function onViewReady(view, $view){
-                var bindingMetadata = {
-                    Source: 'Parameter1'
-                };
-
-                // When
-                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
-                    bindingSource = dataBinding.getSource();
-
-                // Then
-                assert.isDefined(bindingSource);
-                assert.instanceOf(bindingSource, InfinniUI.Parameter);
-
-                view.close();
-            }
-        });
-
-        it('should bind element', function(){
-            // Given
-            var viewMetadata = {
-                Items : [
-                    {
-                        Label: {
-                            Name: 'Element1'
-                        }
-                    }
-                ]
-            };
-
-            testHelper.applyViewMetadata(viewMetadata, onViewReady);
-
-            function onViewReady(view, $view){
-                var bindingMetadata = {
-                    Source: 'Element1',
-                    Property: 'value'
-                };
-
-                // When
-                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
-                    bindingSource = dataBinding.getSource();
-
-                // Then
-                assert.isDefined(bindingSource);
-                assert.instanceOf(bindingSource, InfinniUI.Element);
-
-                view.close();
-            }
-        });
-
-    });
-
-    it('should toElement converter work in inline style', function () {
-        // Given
-        var viewMetadata = {
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "LTE" },
-                            { "Id": 2, "Display": "3G" },
-                            { "Id": 3, "Display": "2G" }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                StackPanel: {
-                    Name: 'MainViewPanel',
-                    "ItemTemplate": {
-                        "TextBox": {
-                            "Name": "TextBox1",
-                            "Value": {
-                                "Source": "ObjectDataSource1",
-                                "Property": "#.Display",
-                                "Converter": {
-                                    "ToElement": "{return args.value + '!';}"
-                                },
-                                "Mode": "ToElement"
-                            }
-                        }
-                    },
-                    "Items" : {
-                        "Source": "ObjectDataSource1",
-                        "Property": ""
-                    }
-                }
-            }]
-        };
-
-        // When
-        testHelper.applyViewMetadata(viewMetadata, onViewReady);
-
-        // Then
-        function onViewReady(view, $view){
-            assert.equal($view.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
-
-            view.close();
-        }
-    });
-});
-
-var FakeElement = Backbone.Model.extend({
-    onPropertyChanged: function(prop, callback){
-        this.set('callback', callback);
-    },
-
-    setName: function(name){
-        this.set('name', name);
-    },
-
-    getName: function(){
-        return this.get('name');
-    },
-
-    setProperty: function(property, newValue){
-        var oldValue = this.get(property);
-
-        if(oldValue != newValue){
-            this.set(property, newValue);
-            var callback = this.get('callback');
-            if(callback){
-                callback({}, {property: property, newValue: newValue});
-            }
-        }
-    },
-
-    getProperty: function(property){
-        return this.get(property);
-    }
-});
-describe('Parameters', function () {
-
-    it('Parameter base API', function () {
-
-        // Given When
-        var view = fakeView();
-        var parameter = new InfinniUI.Parameter({view: view, name: 'name'});
-
-        // Then
-        assert.equal(parameter.getView(), view, 'view is right');
-        assert.equal(parameter.getName(), 'name', 'name is right');
-    });
-
-    it('Parameter value and property', function () {
-
-        // Given
-        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
-            val = {
-                f1:{
-                    value: 5
-                },
-                f2: 3
-            };
-
-        assert.isUndefined(parameter.getValue(), 'start value is undefined');
-        assert.isUndefined(parameter.getProperty(''), 'start property is undefined');
-        assert.isUndefined(parameter.getProperty('f1'), 'start property is undefined 2');
-        assert.isUndefined(parameter.getProperty('f1.value'), 'start property is undefined 3');
-
-        //When
-        parameter.setValue(val);
-
-        // Then
-        assert.equal(parameter.getValue(), val, 'value after setting is right');
-        assert.equal(parameter.getProperty(''), val, 'property after setting is right');
-        assert.equal(parameter.getProperty('f1'), val.f1, 'property after setting is right 2');
-        assert.equal(parameter.getProperty('f1.value'), val.f1.value, 'property after setting is right 3');
-    });
-
-    it('Parameter handling property changed', function () {
-
-        // Given
-        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
-            handlerWasCalled = false,
-            val = {
-                f1:{
-                    value: 5
-                },
-                f2: 3
-            };
-
-        parameter.setValue(10);
-
-        parameter.onPropertyChanged(onPropertyChangedHandler);
-
-        //When
-        parameter.setValue(val);
-
-        // Then
-        function onPropertyChangedHandler(context, args){
-            assert.equal(args.newValue, val, 'new value is right');
-            assert.equal(args.oldValue, 10, 'old value is right');
-
-            handlerWasCalled = true;
-        }
-
-        assert.isTrue(handlerWasCalled, 'handler was called');
-    });
-
-});
-
 describe('ButtonControl', function () {
     describe('render', function () {
         it('should render button with correct class', function () {
@@ -7322,1908 +6777,6 @@ describe('ButtonControl', function () {
             assert.isTrue($el.hasClass('pl-button'));
         });
     });
-});
-
-describe('baseDataSource', function () {
-
-    it('should check ErrorValidator before save', function (done) {
-        // Given
-        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
-
-        dataSource.setErrorValidator(function(context, args) {
-            return {
-                IsValid: false
-            }
-        });
-
-        dataSource.createItem(function(context, args){
-            //When
-            var item = args.value;
-
-            dataSource.saveItem(item,
-                function(){ assert.fail("success", "error", "success save invalid item"); },
-                // Then
-                function(){ done(); })
-        });
-    });
-
-    it('should call onErrorValidator handlers after validateOnErrors', function (done) {
-        // Given
-        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
-
-        dataSource.onErrorValidator(function(){
-            //Then
-            done();
-        });
-
-        //When
-        dataSource.validateOnErrors();
-    });
-
-    it('should call suspended onSuccess callback if resumed update was success', function () {
-        // Given
-        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
-        window.suspendedOnSuccessWasCalled = false;
-        window.suspendedOnErrorWasCalled = false;
-
-        // When
-        dataSource.suspendUpdate();
-        dataSource.updateItems(
-            function(){ // onSuccess
-                window.suspendedOnSuccessWasCalled = true;
-            },
-            function(){ // onError
-                window.suspendedOnErrorWasCalled = true;
-            });
-        dataSource.resumeUpdate();
-
-        // Then
-        assert.isTrue(window.suspendedOnSuccessWasCalled);
-        assert.isFalse(window.suspendedOnErrorWasCalled);
-    });
-
-    it('should call suspended onError callback if resumed update was fail', function () {
-        // Given
-        window.InfinniUI.providerRegister.register('DocumentDataSource', function(){
-            return {
-                getItems: function(successHandler, errorHandler){
-                    errorHandler();
-                },
-                setOrigin: function(){},
-                setPath: function(){},
-                setData: function(){},
-                setMethod: function(){}
-            }
-        });
-
-        var dataSource = new InfinniUI.DocumentDataSource( { view: fakeView() } );
-
-        window.suspendedOnSuccessWasCalled = false;
-        window.suspendedOnErrorWasCalled = false;
-
-        // When
-        dataSource.suspendUpdate();
-        dataSource.updateItems(
-            function(){ // onSuccess
-                window.suspendedOnSuccessWasCalled = true;
-            },
-            function(){ // onError
-                window.suspendedOnErrorWasCalled = true;
-            });
-        dataSource.resumeUpdate();
-
-        // Then
-        assert.isFalse(window.suspendedOnSuccessWasCalled);
-        assert.isTrue(window.suspendedOnErrorWasCalled);
-    });
-});
-
-describe('baseDataSourceBuilder', function () {
-
-    it('should init CustomProperties', function () {
-        // Given
-        var builder = new InfinniUI.ApplicationBuilder(),
-            metadata = {
-                CustomProperties: {
-                    pageNumber: 0,
-                    pageSize: 10
-                }
-            };
-
-        // When
-        var dataSource = builder.buildType('ObjectDataSource', metadata, {parentView: fakeView()});
-
-        // Then
-        assert.equal(dataSource.getProperty('.pageNumber'), 0);
-        assert.equal(dataSource.getProperty('.pageSize'), 10);
-    });
-});
-
-describe('DataSourceBuilder', function () {
-
-    var builder = new InfinniUI.ApplicationBuilder();
-    var items = [
-        {
-            "_id": '1',
-            "FirstName": "Иван",
-            "LastName": "Иванов"
-        },
-        {
-            "_id": '2',
-            "FirstName": "Петр",
-            "LastName": "Петров"
-        },
-        {
-            "_id": '3',
-            "FirstName": "Иван1",
-            "LastName": "Иванов1"
-        },
-        {
-            "_id": '4',
-            "FirstName": "Петр2",
-            "LastName": "Петров2"
-        },
-        {
-            "_id": '5',
-            "FirstName": "Иван3",
-            "LastName": "Иванов3"
-        },
-        {
-            "_id": '6',
-            "FirstName": "Петр4",
-            "LastName": "Петров5"
-        },
-        {
-            "_id": '10',
-            "FirstName": "Анна",
-            "LastName": "Сергеева"
-
-        }
-    ];
-
-    FakeRestDataProvider.prototype.items = _.clone(items);
-
-    describe('build DocumentDataSource', function () {
-
-        it('should build documentDataSource', function () {
-            // Given When
-            var metadata = {
-                    Name: 'PatientDataSource',
-                    DocumentId: 'Patient',
-                    FillCreatedItem: true,
-                    PageNumber: 1,
-                    PageSize: 5,
-
-                    onPropertyChanged: {
-                        Name: 'onPropertyChanged'
-                    }
-                };
-
-            var view = new InfinniUI.View(),
-                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view});
-
-            // Then
-            assert.equal(createdDataSource.getDocumentId(), 'Patient');
-            assert.equal(createdDataSource.getIdProperty(), '_id');
-            assert.equal(createdDataSource.getPageSize(), 5, 'PageSize');
-            assert.equal(createdDataSource.getPageNumber(), 1, 'PageNumber');
-            assert.isTrue(createdDataSource.getFillCreatedItem(), 'Value of FillCreatedItem');
-        });
-
-        it('should subscribe documentDataSource on changeProperty', function (done) {
-            // Given
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
-            var metadata = {
-                    Name: 'PatientDataSource',
-                    DocumentId: 'Patient',
-                    FillCreatedItem: true,
-                    PageNumber: 1,
-                    PageSize: 5,
-
-                    OnPropertyChanged: {
-                        Name: 'onPropertyChanged'
-                    }
-                };
-
-            var view = new InfinniUI.View(),
-                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view}),
-                scriptMetadata = {
-                    Name:"onPropertyChanged",
-                    Body: 'window.documentDataSourceTest = 1;'
-                };
-
-            view.getScripts().add({
-                name: 'onPropertyChanged',
-                func: builder.buildType('Script', scriptMetadata, {parentView: view})
-            });
-
-            createdDataSource.updateItems(onItemUpdates);
-
-            // When
-            function onItemUpdates(context, args){
-                createdDataSource.setProperty('FirstName', 'Иванидзе');
-            }
-
-            // Then
-            setTimeout(function(){
-                assert.equal(window.documentDataSourceTest, 1, 'Event OnSelectedItemChanged is called');
-                done();
-            }, 200);
-        });
-
-        it('should create ds from metadata', function (done) {
-            // Given
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        DocumentDataSource: {
-                            "Name": "DataSource1",
-                            "DocumentId": "Whatever"
-                        }
-                    }
-                ],
-                Items: []
-            };
-
-            var dataSource;
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout){
-                $layout.detach();
-
-                dataSource = view.getContext().dataSources['DataSource1'];
-                dataSource.updateItems(handleItemsReady);
-            }
-
-            function handleItemsReady(){
-                assert.isTrue(dataSource.getItems().length > 0, 'DS was update items');
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?skip=0&take=15', 'requested url is right');
-
-                done();
-            }
-        });
-
-        it('should update items on filter changing', function (done) {
-            // Given
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        DocumentDataSource: {
-                            "Name": "DataSource1",
-                            "DocumentId": "Whatever"
-                        }
-                    }
-                ],
-                Items: []
-            };
-            var result = '';
-
-            var dataSource;
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout){
-
-                $layout.detach();
-
-                dataSource = view.getContext().dataSources['DataSource1'];
-
-                dataSource.onItemsUpdated(function(){
-                    result += '1';
-
-                    if(result == '11'){
-                        assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,7)&skip=0&take=15', 'requested url is right (second)');
-                        done();
-                    }
-                });
-
-                dataSource.setFilter('eq(id,4)');
-
-                dataSource.updateItems(handleItemsReady1);
-            }
-
-            function handleItemsReady1(){
-                assert.equal(result, '', 'its first updated of item');
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
-
-                dataSource.setFilter('eq(id,<%uid%>)');
-                dataSource.setFilterParams('uid', 7);
-            }
-        });
-
-
-        it('should bind filter', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = _.clone(items);
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        DocumentDataSource: {
-                            "Name": "DataSource1",
-                            "DocumentId": "Whatever",
-                            "Filter": "eq(_id,<%param%>)",
-                            "FilterParams": {
-                                "param": {
-                                    "Source": "DataSource2",
-                                    "Property": "0._id"
-                                }
-                            }
-                        }
-                    },{
-
-                        DocumentDataSource: {
-                            "Name": "DataSource2",
-                            "DocumentId": "Whatever"
-                        }
-                    }
-                ],
-                Items: []
-            };
-            var result = '';
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout){
-
-                $layout.detach();
-
-                var dataSource1 = view.getContext().dataSources['DataSource1'];
-                var dataSource2 = view.getContext().dataSources['DataSource2'];
-
-                dataSource1.onItemsUpdated(function(){
-                    assert.equal(result, '2', 'second updated ds1');
-
-                    result += '1';
-                    dataSource2;
-                    assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(_id,1)&skip=0&take=15', 'requested url is right (ds1)');
-                    done();
-                });
-
-                dataSource2.onItemsUpdated(function(){
-
-                    assert.equal(result, '', 'first updated ds2');
-
-                    result += '2';
-
-                    dataSource1.updateItems();
-                });
-
-            }
-
-        });
-
-    });
-
-});
-
-describe('DocumentDataSource', function () {
-    window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-
-    var dataItems = [
-        {
-            "_id": 1,
-            "FirstName": "Иван",
-            "LastName": "Иванов"
-        },
-        {
-            "_id": 2,
-            "FirstName": "Петр",
-            "LastName": "Петров"
-        },
-        {
-            "_id": 4,
-            "FirstName": "Иван1",
-            "LastName": "Иванов1"
-        },
-        {
-            "_id": 6,
-            "FirstName": "Петр2",
-            "LastName": "Петров2"
-        },
-        {
-            "_id": 5,
-            "FirstName": "Иван3",
-            "LastName": "Иванов3"
-        },
-        {
-            "_id": 7,
-            "FirstName": "Петр4",
-            "LastName": "Петров5"
-        },
-        {
-            "_id": 10,
-            "FirstName": "Анна",
-            "LastName": "Сергеева"
-
-        }
-    ];
-
-    describe('DocumentDataSource base api', function () {
-        it('should get list of data', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
-            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
-
-            //When
-            dataSource.updateItems(
-                function(context, args){
-
-                    // Then
-                    assert.isTrue(args.value.length > 0, 'data provider returns items');
-                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
-                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
-                    done();
-
-                }
-            );
-        });
-
-        it('should return default list of data', function (done) {
-            // Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var defaultItems = [{"Id": "0000"}];
-            var metadata = {
-                "DefaultItems": defaultItems
-            };
-
-            // When
-            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
-
-            // Then
-            var items = documentDataSource.getItems();
-            assert.equal(items, defaultItems);
-            done();
-        });
-
-        it('should subscribe to property of selectedItem', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var result = '';
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.onPropertyChanged('$.FirstName', function(context, args){
-                result += ', ' + args.newValue;
-            });
-
-            dataSource.updateItems(
-                function(context, args){
-
-                    //When
-                    dataSource.setProperty('$.FirstName', 'Иванов 2');
-                    dataSource.setProperty('0.FirstName', 'Иванов 3');
-                    dataSource.setProperty('3.FirstName', 'Иванов 4');
-                    dataSource.setSelectedItem(dataSource.getItems()[1]);
-                    dataSource.setProperty('0.FirstName', 'Иванов 5');
-                    dataSource.setProperty('1.FirstName', 'Иванов 6');
-
-                    // Then
-                    assert.equal(result, ', Иван, Иванов 2, Иванов 3, Иванов 6', 'onPropertyChanged called in right order');
-                    done();
-
-                }
-            );
-        });
-
-
-        it('should set id filter', function (done) {
-            // Given
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var builder = new InfinniUI.ApplicationBuilder();
-            var view = fakeView();
-            var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
-
-            //When
-            dataSource.suspendUpdate();
-            dataSource.setIdFilter(4);
-            dataSource.resumeUpdate();
-
-
-            var items = dataSource.updateItems(
-                function (context, args) {
-
-                    // Then
-                    assert.lengthOf(args.value, 1, 'length of filtered items set');
-                    assert.equal(args.value[0]._id, '4', 'value of filtered items set');
-
-                    done();
-                }
-            );
-        });
-
-
-        it('should update documents when pageNumber are changed', function (done) {
-            // Given
-            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.suspendUpdate();
-            dataSource.setPageSize(5);
-            dataSource.resumeUpdate();
-
-            //When
-            dataSource.updateItems(
-                function(context, args){
-
-                    assert.lengthOf(dataSource.getItems(), 5, 'data provider returns 5 items');
-
-                    dataSource.suspendUpdate();
-                    dataSource.setPageNumber(1);
-                    dataSource.resumeUpdate();
-                    dataSource.updateItems(
-                        function(context, args){
-
-                            // Then
-                            assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
-                            done();
-
-                        }
-                    );
-
-                }
-            );
-        });
-
-        it('should restore selected item after updating', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    var items = dataSource.getItems();
-                    var selectedItem = items[3];
-                    dataSource.setSelectedItem(selectedItem);
-
-                    //When
-                    dataSource.updateItems(
-                        function(context, args){
-                            //Then
-                            assert.equal(dataSource.getSelectedItem(), selectedItem);
-                            done();
-                        }
-                    );
-                }
-            );
-        });
-
-        it('should reset page number after setFilter', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    dataSource.setPageNumber(5);
-                    assert.equal(dataSource.getPageNumber(), 5);
-
-                    //When
-                    dataSource.setFilter('not(eq(_id,123))');
-
-                    //Then
-                    assert.equal(dataSource.getPageNumber(), 0);
-                    done();
-                }
-            );
-        });
-
-        it('should reset page number after setFilterParams', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    dataSource.setPageNumber(5);
-                    assert.equal(dataSource.getPageNumber(), 5);
-
-                    //When
-                    dataSource.setFilterParams('documentName', 'Patient');
-
-                    //Then
-                    assert.equal(dataSource.getPageNumber(), 0);
-                    done();
-                }
-            );
-        });
-
-        it('should reset page number after setPageSize', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    dataSource.setPageNumber(5);
-                    assert.equal(dataSource.getPageNumber(), 5);
-
-                    //When
-                    dataSource.setPageSize(20);
-
-                    //Then
-                    assert.equal(dataSource.getPageNumber(), 0);
-                    done();
-                }
-            );
-        });
-
-        it('should reset page number after setSearch', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    dataSource.setPageNumber(5);
-                    assert.equal(dataSource.getPageNumber(), 5);
-
-                    //When
-                    dataSource.setSearch('search');
-
-                    //Then
-                    assert.equal(dataSource.getPageNumber(), 0);
-                    done();
-                }
-            );
-        });
-
-        it('should reset page number after setOrder', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(
-                function(){
-                    dataSource.setPageNumber(5);
-                    assert.equal(dataSource.getPageNumber(), 5);
-
-                    //When
-                    dataSource.setOrder('asc(_id)');
-
-                    //Then
-                    assert.equal(dataSource.getPageNumber(), 0);
-                    done();
-                }
-            );
-        });
-
-        it('should create document', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            //When
-            dataSource.createItem(
-                function(context, argument){
-
-                    // Then
-                    var newItem = argument.value;
-                    assert.ok(newItem, 'new item is ready');
-
-                    var items = dataSource.getItems();
-                    assert.lengthOf(items, 1, 'one element (when was created) in items');
-                    //assert.equal(items[0].prefilledField, 1, 'is right element in items after creating');
-                    done();
-                }
-            );
-        });
-
-        it('should get document property', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            //When
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
-                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
-                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
-                done();
-            }
-        });
-
-        it('should select item', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                var items = dataSource.getItems();
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
-
-                //When
-                dataSource.setSelectedItem(items[1]);
-
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
-                done();
-            }
-        });
-
-        it('should change document property', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-
-                //When
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
-
-                // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
-                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
-                done();
-            }
-        });
-
-        it('should change document property (full item change)', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
-
-                //When
-                var newItemData = {
-                    "_id": '1',
-                    "FirstName": "Ивано",
-                    "LastName": "Иванович"
-                };
-                dataSource.setProperty('$', newItemData);
-
-                // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
-                done();
-            }
-        });
-
-        it('should validate item', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.setErrorValidator(validator);
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-
-                //When
-                var items = dataSource.getItems(),
-                    validateResult1 = dataSource.validateOnErrors(items[0]),
-                    validateResult2 = dataSource.validateOnErrors(items[1]),
-                    validateResult3 = dataSource.validateOnErrors();
-
-                // Then
-                assert.isTrue(validateResult1.IsValid, 'successfully validation');
-
-                assert.isFalse(validateResult2.IsValid, 'fail validation');
-                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
-                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
-
-                assert.isFalse(validateResult3.IsValid, 'full validation');
-                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
-                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
-                done();
-            }
-
-            function validator(context, argument){
-                var result = {
-                    IsValid: true
-                };
-
-                if(argument.FirstName != 'Иван'){
-                    result.IsValid = false;
-                    result.Items = [{
-                        property: 'FirstName',
-                        message: 'Почему не Иван?!'
-                    }];
-                }
-
-                return result;
-            }
-        });
-
-        it('should save item', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(handleItemsReady1);
-
-            function handleItemsReady1(){
-
-                //When
-                var item = dataSource.getSelectedItem();
-
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.saveItem(item);
-
-                dataSource.updateItems(handleItemsReady2);
-            }
-
-            function handleItemsReady2(){
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
-                done();
-            }
-        });
-
-        it('should delete item', function (done) {
-            // Given
-            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
-
-            var dataSource = new InfinniUI.DocumentDataSource({
-                view: fakeView()
-            });
-
-            dataSource.updateItems(handleItemsReady1);
-
-            function handleItemsReady1(){
-
-                //When
-                var items = dataSource.getItems(),
-                    itemsCount = items.length;
-
-                dataSource.deleteItem(items[0], function(context, argument){
-                    // Then
-                    items = dataSource.getItems();
-                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
-                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
-                    done();
-                });
-            }
-        });
-    });
-});
-
-describe('TreeModel', function () {
-
-    describe('TreeModel', function () {
-        it('Simple handling', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = '';
-
-            treeModel.onPropertyChanged('p1', function(context, args){
-                result = result + '1';
-
-                assert.equal(context, 'context', 'passed context argument is right');
-                assert.isNull(args.oldValue, 'old value is right');
-                assert.equal(args.newValue, 1, 'new value is right');
-
-                assert.equal(treeModel.getProperty('p1'), 1, 'value was saved before handling');
-            });
-
-            //When
-            treeModel.setProperty('p1', 1);
-
-            // Then
-            assert.equal(result, '1', 'Handler was triggered');
-            assert.equal(treeModel.getProperty('p1'), 1, 'Value was right saved');
-        });
-
-
-        it('Handling many handlers', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = '';
-
-            treeModel.onPropertyChanged('p1', function(context, args){
-                result = result + '1';
-
-                assert.equal(context, 'context', 'passed context argument is right');
-                assert.isNull(args.oldValue, 'old value is right');
-                assert.equal(args.newValue, 1, 'new value is right');
-            });
-
-            treeModel.onPropertyChanged('p2', function(context, args){
-                result = result + '2';
-            });
-
-            //When
-            treeModel.setProperty('p1', 1);
-            treeModel.setProperty('p2', 2);
-            treeModel.setProperty('p2', 3);
-
-            // Then
-            assert.equal(result, '122', 'Handlers was triggered');
-
-            assert.equal(treeModel.getProperty('p1'), 1, 'Value p1 was right saved');
-            assert.equal(treeModel.getProperty('p2'), 3, 'Value p2 was right saved');
-        });
-
-        it('Handling deep sets', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = '';
-            var jsonOfVal;
-
-            treeModel.onPropertyChanged('p1.p11', function(context, args){
-                result = result + '1';
-
-                assert.isTrue(args.oldValue == undefined || args.oldValue == 1, 'old value is right');
-                assert.isTrue(args.newValue == 1 || args.newValue == 4, 'new value is right');
-
-                assert.isTrue(treeModel.getProperty('p1.p11') == 1 || treeModel.getProperty('p1.p11') == 4, 'value was saved before handling');
-            });
-
-            treeModel.onPropertyChanged('p1', function(context, args){
-                result = result + '2';
-
-                assert.equal(context, 'context', 'passed context argument is right');
-
-                jsonOfVal = JSON.stringify(args.oldValue);
-                assert.equal(jsonOfVal, '{"p11":1}','old value is right');
-                jsonOfVal = JSON.stringify(args.newValue);
-                assert.equal(jsonOfVal, '{"p11":4}', 'new value is right');
-
-                assert.equal(treeModel.getProperty('p1').p11, 4, 'value was saved before handling');
-            });
-
-            //When
-            treeModel.setProperty('p1.p11', 1);
-            treeModel.setProperty('p2.p11', 3);
-            treeModel.setProperty('p2', 2);
-            treeModel.setProperty('p1', {p11: 4});
-
-            // Then
-            assert.equal(result, '121', 'Handler was triggered');
-            assert.equal(treeModel.getProperty('p1').p11, 4, 'value was saved before handling');
-
-            jsonOfVal = JSON.stringify(treeModel.getProperty(''));
-            assert.equal(jsonOfVal, '{"p1":{"p11":4},"p2":2}', 'full data tree is right');
-        });
-
-        it('Handling onChange, on all properties', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = [];
-            var jsonOfVal;
-
-            treeModel.onPropertyChanged(function(context, args){
-                result.push(args.property);
-            });
-
-
-            //When
-            treeModel.setProperty('p1.p11', 1);
-            treeModel.setProperty('p2.p11', 3);
-            treeModel.setProperty('p2', 2);
-            treeModel.setProperty('p1', {p11: 4});
-
-            // Then
-            assert.equal(result.join(','), 'p1.p11,p2.p11,p2,p1', 'Handler was right triggered');
-        });
-
-        it('Handling onChange of subtree', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = [];
-            var jsonOfVal;
-
-            treeModel.onPropertyChanged('*', function(context, args){
-                result.push(args.property);
-            });
-
-            treeModel.onPropertyChanged('p1.*', function(context, args){
-                result.push(args.property);
-            });
-
-
-            //When
-            treeModel.setProperty('p1.p11.p111', 1);
-            treeModel.setProperty('p2.p11', 3);
-            treeModel.setProperty('p2', 2);
-            treeModel.setProperty('p1', {p11: 4});
-
-            // Then
-            assert.equal(result.join(','), 'p1.p11.p111,p1.p11.p111,p2.p11,p2,p1,p1', 'Handler was right triggered');
-        });
-
-        it('Auto unsubscribing if owner is checked as removed', function () {
-            // Given
-            var treeModel = new InfinniUI.TreeModel('context');
-            var result = '';
-            var jsonOfVal;
-            var owner1 = {
-                isRemoved: false
-            }, owner2 = {
-                isRemoved: false
-            };
-
-            treeModel.onPropertyChanged('p1.p11', function(context, args){
-                result = result + '1';
-
-                assert.isTrue(args.oldValue == undefined || args.oldValue == 1 || args.oldValue == 2, 'old value is right');
-                assert.isTrue(args.newValue == 1 || args.newValue == 4 || args.newValue == 2 || args.newValue == 8, 'new value is right');
-
-            }, {owner: owner1});
-
-            treeModel.onPropertyChanged('p1', function(context, args){
-
-                result = result + '2';
-
-            }, {owner: owner2});
-
-            //When
-            treeModel.setProperty('p1.p11', 1);
-            treeModel.setProperty('p2.p11', 3);
-            treeModel.setProperty('p2', 2);
-            treeModel.setProperty('p1', {p11: 4});
-
-            owner1.isRemoved = true;
-
-            treeModel.setProperty('p1.p11', 2);
-            treeModel.setProperty('p2.p11', 6);
-            treeModel.setProperty('p1', {p11: 8});
-
-            // Then
-            assert.equal(result, '1212', 'Handler was triggered');
-            assert.equal(treeModel.getProperty('p1').p11, 8, 'value was saved before handling');
-
-            jsonOfVal = JSON.stringify(treeModel.getProperty(''));
-            assert.equal(jsonOfVal, '{"p1":{"p11":8},"p2":{"p11":6}}', 'full data tree is right');
-        });
-    })
-});
-
-describe('ObjectDataSource', function () {
-    var items = [
-        {
-            "_id": '1',
-            "FirstName": "Иван",
-            "LastName": "Иванов"
-        },
-        {
-            "_id": '2',
-            "FirstName": "Петр",
-            "LastName": "Петров"
-        },
-        {
-            "_id": '3',
-            "FirstName": "Иван1",
-            "LastName": "Иванов1"
-        },
-        {
-            "_id": '4',
-            "FirstName": "Петр2",
-            "LastName": "Петров2"
-        },
-        {
-            "_id": '5',
-            "FirstName": "Иван3",
-            "LastName": "Иванов3"
-        },
-        {
-            "_id": '6',
-            "FirstName": "Петр4",
-            "LastName": "Петров5"
-        },
-        {
-            "_id": '10',
-            "FirstName": "Анна",
-            "LastName": "Сергеева"
-
-        }
-    ];
-
-    window.InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
-
-    function createObjectDataSource(metadata){
-
-        metadata = metadata || {};
-
-        var builder = new InfinniUI.ApplicationBuilder();
-        var view = fakeView();
-        var dataSource = builder.buildType('ObjectDataSource', metadata, {parent: view, parentView: view, builder: builder}),
-            initItems = JSON.parse(JSON.stringify(items));
-
-        dataSource.setItems(initItems);
-
-        return dataSource;
-    }
-
-    describe('ObjectDataSource base api', function () {
-        it('should get list of data', function () {
-            // Given //When
-            var dataSource = createObjectDataSource(),
-                items = dataSource.getItems();
-
-            // Then
-            assert.isTrue(dataSource.isDataReady(), 'dataReady status is right');
-            assert.isTrue(items.length > 0, 'data provider returns items');
-        });
-
-        it('should create document', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            //When
-            dataSource.createItem(
-                function(context, argument){
-
-                    // Then
-                    var newItem = argument.value;
-                    assert.ok(newItem, 'new item is ready');
-                    assert.ok(newItem._id, 'new item has _id');
-                    done();
-                }
-            );
-        });
-
-        it('should get document property', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            //When
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
-                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
-                done();
-            }
-        });
-
-        it('should select item', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                var items = dataSource.getItems();
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
-
-                //When
-                dataSource.setSelectedItem(items[1]);
-
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
-                done();
-            }
-        });
-
-        it('should change document property', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-
-                //When
-                dataSource.setProperty('FirstName', 'Иванидзе');
-
-                // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
-                done();
-            }
-        });
-
-        it('should change document property (full item change)', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
-
-                //When
-                var newItemData = {
-                    "_id": '1',
-                    "FirstName": "Ивано",
-                    "LastName": "Иванович"
-                };
-                dataSource.setProperty('$', newItemData);
-
-                // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
-                done();
-            }
-        });
-
-        it('should validate item', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.setErrorValidator(validator);
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-
-                //When
-                var items = dataSource.getItems(),
-                    validateResult1 = dataSource.validateOnErrors(items[0]),
-                    validateResult2 = dataSource.validateOnErrors(items[1]),
-                    validateResult3 = dataSource.validateOnErrors();
-
-                // Then
-                assert.isTrue(validateResult1.IsValid, 'successfully validation');
-
-                assert.isFalse(validateResult2.IsValid, 'fail validation');
-                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
-                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
-
-                assert.isFalse(validateResult3.IsValid, 'full validation');
-                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
-                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
-                done();
-            }
-
-            function validator(context, argument){
-                var result = {
-                    IsValid: true
-                };
-
-                if(argument.FirstName != 'Иван'){
-                    result.IsValid = false;
-                    result.Items = [{
-                        property: 'FirstName',
-                        message: 'Почему не Иван?!'
-                    }];
-                }
-
-                return result;
-            }
-        });
-
-        it('should save item', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.updateItems(handleItemsReady1);
-
-            function handleItemsReady1(){
-
-                //When
-                var item = dataSource.getSelectedItem();
-
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.saveItem(item);
-
-                dataSource.updateItems(handleItemsReady2);
-            }
-
-            function handleItemsReady2(){
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
-                done();
-            }
-        });
-
-        it('should delete item', function (done) {
-            // Given
-            var dataSource = createObjectDataSource();
-
-            dataSource.updateItems(handleItemsReady1);
-
-            function handleItemsReady1(){
-
-                //When
-                var items = dataSource.getItems(),
-                    itemsCount = items.length;
-
-                dataSource.deleteItem(items[0], function(context, argument){
-                    // Then
-                    items = dataSource.getItems();
-                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
-                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
-                    done();
-                });
-            }
-        });
-
-        it('should subscribe on itemsUpdated from metadata', function (done) {
-            var metadata = {
-                OnItemsUpdated: '{window.testCount = window.testCount || 0; window.testCount++; window.testArgs = args; window.testContext = context;}'
-            };
-
-            // Given
-            var dataSource = createObjectDataSource(metadata);
-
-            //When
-            dataSource.updateItems(handleItemsReady1);
-
-            function handleItemsReady1(){
-                // Then
-                assert.equal(window.testCount, 1, 'on items updated was called right times');
-                assert.isTrue(!!window.testArgs, 'on items updated handler passed args');
-                assert.isTrue(!!window.testContext, 'on items updated handler passed context');
-
-                delete window['testCount'];
-                delete window['testArgs'];
-                delete window['testContext'];
-
-                done();
-            }
-        });
-    });
-});
-
-describe('RestDataSource', function () {
-    window.InfinniUI.providerRegister.register('RestDataSource', FakeRestDataProvider);
-
-    var items = [
-        {
-            "_id": '1',
-            "FirstName": "Иван",
-            "LastName": "Иванов"
-        },
-        {
-            "_id": '2',
-            "FirstName": "Петр",
-            "LastName": "Петров"
-        },
-        {
-            "_id": '3',
-            "FirstName": "Иван1",
-            "LastName": "Иванов1"
-        },
-        {
-            "_id": '4',
-            "FirstName": "Петр2",
-            "LastName": "Петров2"
-        },
-        {
-            "_id": '5',
-            "FirstName": "Иван3",
-            "LastName": "Иванов3"
-        },
-        {
-            "_id": '6',
-            "FirstName": "Петр4",
-            "LastName": "Петров5"
-        },
-        {
-            "_id": '10',
-            "FirstName": "Анна",
-            "LastName": "Сергеева"
-
-        }
-    ];
-
-    function createRestDataSource(missParam){
-
-        var view = fakeView();
-        var dataSource = new InfinniUI.RestDataSource({ view: view }),
-            newItems = JSON.parse(JSON.stringify(items));
-
-        dataSource.suspendUpdate('urlTuning');
-        dataSource.setNewItemsHandler(function(newItemsData){
-            if(newItemsData){
-                return newItemsData['Result']['Items'];
-
-            }else{
-                return newItemsData;
-
-            }
-        });
-
-        /*
-        * кейсы использования фильтров
-        *
-        * удобно ли будет биндить автокомплит комбобокса на ДС вручную?
-        *
-        * DS{
-        *     Autocomplete: true,
-        *     AutocompleteValue: {
-        *         Source: "SomeDocDS",
-        *         Property: ".filter",
-        *         Direction: "ToSource",
-        *         Converters: {
-        *             ToSource: "{return 'eq(' + args.value + ')';}"
-        *         }
-        *     }
-        * }
-        * */
-
-        dataSource.setGettingUrlParams({
-            type: 'get',
-            origin:'http://some.ru',
-            path:'/some/id<%param1%><%param2%>?a=2&b=<%param1%><%param3%>',
-            data: {},
-
-            params: {
-                param1: 4,
-                param2: missParam ? undefined : '/',
-                param3: '&c=4'
-            }
-        });
-
-        dataSource.setSettingUrlParams({
-            type: 'post',
-            origin:'http://some.ru',
-            path:'/some/<%param1%>/<%param2%>',
-            data: {
-                a:2,
-                b: '<%param1%>',
-                c: '!1<%param2%>2!'
-            },
-
-            params: {
-                param1: '',
-                param2: ''
-            }
-        });
-
-        dataSource.setDeletingUrlParams({
-            type: 'delete',
-            origin:'http://some.ru',
-            path:'/some/<%param1%>/<%param2%>',
-            data: {
-                a:2,
-                b: '<%param1%>',
-                c: '!1<%param2%>2!'
-            },
-
-            params: {
-                param1: '',
-                param2: ''
-            }
-        });
-
-        dataSource.resumeUpdate('urlTuning');
-
-        FakeRestDataProvider.prototype.items = newItems;
-        FakeRestDataProvider.prototype.lastSendedUrl = '';
-
-        return dataSource;
-    }
-
-    describe('RestDataSourceBuilder', function () {
-
-        it('successful build', function () {
-            // Given
-            var builder = new InfinniUI.ApplicationBuilder();
-            var metadata = {
-                GettingParams: {
-                    Method: 'get',
-                    Origin: 'http://some.ru',
-                    Path: '/some/id<%param1%>',
-                    Data: {
-                        a: 'param1=<%param1%>'
-                    },
-
-                    Params: {
-                        param1: 4
-                    }
-                }
-            };
-
-            // When
-            var restDataSource = builder.buildType('RestDataSource', metadata, {parentView: fakeView()});
-
-            // Then
-            var gettingParams = restDataSource.getGettingUrlParams();
-
-            assert.equal(gettingParams.method, 'get');
-            assert.equal(gettingParams.origin, 'http://some.ru');
-            assert.equal(gettingParams.path, '/some/id<%param1%>');
-            assert.deepEqual(gettingParams.data, {a: 'param1=<%param1%>'});
-            assert.deepEqual(gettingParams.params, {param1: 4});
-        });
-
-    });
-
-    describe('RestDataSource base api', function () {
-
-        it('should get list of data', function (done) {
-            // Given
-
-
-            var dataSource = createRestDataSource();
-
-            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
-            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
-
-            //When
-
-            dataSource.updateItems(
-                function(context, args){
-                    // Then
-                    assert.isTrue(args.value.length > 0, 'data provider returns items');
-                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
-                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
-                    done();
-                }
-            );
-        });
-
-        it('should get document property', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-
-            //When
-            dataSource.updateItems(handleItemsReady);
-
-            function handleItemsReady(){
-                // Then
-                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
-                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
-                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
-                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return right spec property');
-                done();
-            }
-        });
-
-        it('should change document property', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-            var item3;
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
-                item3 = dataSource.getProperty('3');
-
-                //When
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.setProperty('$.LastName', 'Ивнв');
-                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
-                dataSource.setProperty('3', {
-                    "_id": '55',
-                    "FirstName": "П2",
-                    "LastName": "Пе2"
-                });
-                dataSource.setProperty('3.FirstName', 'П22');
-
-                // Then
-                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
-                assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'return property value by property after change property 2');
-                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
-                assert.equal(dataSource.getProperty('3.LastName'), "Пе2");
-                assert.equal(dataSource.getProperty('3.FirstName'), "П22");
-                assert.equal(dataSource.getProperty('3._id'), '55');
-                done();
-            }
-        });
-
-        it('should add changing items in modified set', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-            var item;
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                assert.isFalse(dataSource.isModified(), 'at first items is not modified');
-
-                //When
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.setProperty('$.LastName', 'Ивнв');
-                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
-                dataSource.setProperty('3.FirstName', 'Petrov');
-                dataSource.setProperty('3', {
-                    "_id": '55',
-                    "FirstName": "П2",
-                    "LastName": "Пе2"
-                });
-                dataSource.setProperty('4', {
-                    "_id": '5',
-                    "FirstName": "П5",
-                    "LastName": "Пе5"
-                });
-
-                // Then
-                assert.equal(_.size(dataSource.get('modifiedItems')), 4, 'length of modified items');
-                item = dataSource.getProperty('0');
-                assert.isTrue(dataSource.isModified(item), 'is modified 1');
-                item = dataSource.getProperty('2');
-                assert.isTrue(dataSource.isModified(item), 'is modified 2');
-                item = dataSource.getProperty('3');
-                assert.isTrue(dataSource.isModified(item), 'is modified 3');
-                item = dataSource.getProperty('4');
-                assert.isTrue(dataSource.isModified(item), 'is modified 4');
-
-                done();
-            }
-        });
-
-        it('should change spec value as property', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-            var item3;
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
-                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
-                item3 = dataSource.getProperty('3');
-
-                //When
-                dataSource.setProperty('.selectedItem', {'a':3});
-
-                // Then
-                assert.equal(dataSource.getProperty('.selectedItem.a'), 3, 'return property value by property after change property 5');
-                done();
-            }
-        });
-
-        it('should handle property changed', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-            var result = '';
-
-
-            function subscribeOnPropertyChanged(){
-                dataSource.onPropertyChanged('0.FirstName', function(context, args){
-                    result += '1';
-
-                    assert.equal(args.oldValue, 'Иван', 'right old value in args');
-                    assert.equal(args.newValue, 'Иванидзе', 'right new value in args');
-                    assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'value in source is new, when onPropertyChanged called');
-                });
-
-                dataSource.onPropertyChanged('0.LastName', function(context, args){
-                    result += '2';
-
-                    assert.equal(args.oldValue, 'Иванов', 'right old value in args');
-                    assert.equal(args.newValue, 'Ивнв', 'right new value in args');
-                    assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'value in source is new, when onPropertyChanged called');
-                });
-
-                dataSource.onPropertyChanged('.selectedItem', function(context, args){
-                    result += '3';
-
-                    assert.equal(args.oldValue.FirstName, 'Иванидзе', 'right old value in args');
-                    assert.equal(args.newValue.a, 3, 'right new value in args');
-                    assert.equal(dataSource.getSelectedItem().a, 3, 'value in source is new, when onPropertyChanged called');
-                });
-            }
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                subscribeOnPropertyChanged();
-
-                //When
-                dataSource.setProperty('FirstName', 'Иванидзе');
-                dataSource.setProperty('$.LastName', 'Ивнв');
-                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
-                dataSource.setProperty('3', {
-                    "_id": '55',
-                    "FirstName": "П2",
-                    "LastName": "Пе2"
-                });
-                dataSource.setProperty('3.FirstName', 'П22');
-
-                dataSource.setProperty('.selectedItem', {'a':3});
-
-                // Then
-                assert.equal(result, '123', 'all handlers called in correct order');
-                done();
-            }
-        });
-
-        it('should handle selectedItem changed', function (done) {
-            // Given
-            var dataSource = createRestDataSource();
-            var result = '';
-            var item;
-
-
-            dataSource.onSelectedItemChanged(function(context, args){
-                result += '1';
-
-                assert.isTrue(args.value.FirstName ==  'Иван' || args.value.FirstName == 'Петр', 'right new value in args');
-            });
-
-
-            dataSource.updateItems(handleItemsReady);
-
-
-            function handleItemsReady(){
-                item = dataSource.getItems()[1];
-
-                //When
-                dataSource.setSelectedItem(item);
-
-                // Then
-                assert.equal(result, '11', 'all handlers called in correct order');
-                done();
-            }
-        });
-
-        it('should handle url params changing', function (done) {
-            // Given
-            var dataSource = createRestDataSource(true);
-            var item;
-
-            assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, '', 'request was not sended');
-
-            dataSource.updateItems(handleItemsReady);
-
-            dataSource.setGettingUrlParams('params.param2', '/newVal/');
-
-            function handleItemsReady(){
-                // Then
-                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, 'http://some.ru/some/id4/newVal/?a=2&b=4&c=4', 'request sended on right url');
-
-                done();
-            }
-        });
-
-    });
-});
-
-describe('CheckBox', function () {
-    var checkbox;
-
-    beforeEach(function () {
-        checkbox = new InfinniUI.CheckBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = checkbox.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                checkbox.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: text', function () {
-                //Given
-                checkbox.setText('Text 1');
-
-                var $el = checkbox.render(),
-                    $label = $('.checkbox-label', $el);
-
-                assert.equal($label.html(), 'Text 1');
-
-                //When
-                checkbox.setText('Text 2');
-
-                //Then
-                assert.equal($label.html(), 'Text 2');
-            });
-
-            it('Setting property: Enabled', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                assert.equal($input.prop('disabled'), false, 'Enabled by default');
-
-                //When
-                checkbox.setEnabled(false);
-
-                //Then
-                assert.equal($input.prop('disabled'), true, 'Disable element');
-            });
-
-        });
-
-        describe('events', function () {
-            it('Change value on click', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                checkbox.setValue(false);
-
-                //When
-                $input.click();
-
-                //Then
-                assert.equal(checkbox.getValue(), true, 'value changed');
-                assert.equal($input.prop('checked'), true, 'checkbox checked');
-            });
-        });
-
-    });
-
 });
 
 describe('Container (Control)', function () {
@@ -9982,6 +7535,82 @@ describe('Container (Control)', function () {
     });
 });
 
+describe('CheckBox', function () {
+    var checkbox;
+
+    beforeEach(function () {
+        checkbox = new InfinniUI.CheckBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = checkbox.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                checkbox.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: text', function () {
+                //Given
+                checkbox.setText('Text 1');
+
+                var $el = checkbox.render(),
+                    $label = $('.checkbox-label', $el);
+
+                assert.equal($label.html(), 'Text 1');
+
+                //When
+                checkbox.setText('Text 2');
+
+                //Then
+                assert.equal($label.html(), 'Text 2');
+            });
+
+            it('Setting property: Enabled', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                assert.equal($input.prop('disabled'), false, 'Enabled by default');
+
+                //When
+                checkbox.setEnabled(false);
+
+                //Then
+                assert.equal($input.prop('disabled'), true, 'Disable element');
+            });
+
+        });
+
+        describe('events', function () {
+            it('Change value on click', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                checkbox.setValue(false);
+
+                //When
+                $input.click();
+
+                //Then
+                assert.equal(checkbox.getValue(), true, 'value changed');
+                assert.equal($input.prop('checked'), true, 'checkbox checked');
+            });
+        });
+
+    });
+
+});
+
 describe('ContextMenu (Control)', function () {
 
 	describe('Remove element from ListBox by clicking on button from ContextMenu', function () {
@@ -10077,81 +7706,6 @@ describe('DataNavigationControl', function () {
             //Then
             assert.isTrue($el.hasClass('pl-data-navigation'));
         });
-    });
-});
-
-describe('DateTimePickerControl', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('render', function () {
-        it('should update date when change value', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            var oldDate = new Date(2012, 10, 2);
-            var newDate = new Date(2014, 7, 28);
-            var $el = dateTimePicker.render().find('.pl-datepicker-input');
-            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
-
-            //When
-            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
-
-            //Then
-            assert.equal($el.val(), '28.08.2014');
-        });
-
-        it('should clear date when value is null', function () {
-            //Given
-            var dateTimePicker = new InfinniUI.DateTimePickerControl();
-            var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
-
-            dateTimePicker.setValue(value);
-            assert.equal( dateTimePicker.getValue(), value);
-
-            //When
-            dateTimePicker.setValue(null);
-
-            //Then
-            assert.isNull(dateTimePicker.getValue());
-        });
-
-        it('should set minDate and maxDate', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            var minDate = InfinniUI.DateUtils.toISO8601(new Date(2010, 0, 1));
-            var maxDate = InfinniUI.DateUtils.toISO8601(new Date(2014, 11, 31));
-
-            //When
-            dateTimePicker.setMinValue(minDate);
-            dateTimePicker.setMaxValue(maxDate);
-
-            //Then
-            assert.equal(dateTimePicker.getMinValue(), minDate);
-            assert.equal(dateTimePicker.getMaxValue(), maxDate);
-        });
-
-        it('should set Enabled', function () {
-            //Given
-            var dateTimePicker = builder.buildType('DateTimePicker', {});
-            dateTimePicker.setEnabled(false);
-
-            var $el = dateTimePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
-            assert.equal($el.length, 2);
-            $el.each(function (i, el) {
-                var $el = $(el);
-                assert.isTrue($el.prop('disabled'));
-            });
-
-            //When
-            dateTimePicker.setEnabled(true);
-
-            //Then
-            $el.each(function (i, el) {
-                var $el = $(el);
-                assert.isFalse($el.prop('disabled'));
-            });
-
-        });
-
     });
 });
 
@@ -10293,6 +7847,81 @@ describe('Frame', function () {
 
     });
 
+});
+
+describe('DateTimePickerControl', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('render', function () {
+        it('should update date when change value', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            var oldDate = new Date(2012, 10, 2);
+            var newDate = new Date(2014, 7, 28);
+            var $el = dateTimePicker.render().find('.pl-datepicker-input');
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(oldDate));
+
+            //When
+            dateTimePicker.setValue(InfinniUI.DateUtils.toISO8601(newDate));
+
+            //Then
+            assert.equal($el.val(), '28.08.2014');
+        });
+
+        it('should clear date when value is null', function () {
+            //Given
+            var dateTimePicker = new InfinniUI.DateTimePickerControl();
+            var value = InfinniUI.DateUtils.toISO8601(new Date(2012, 10, 2));
+
+            dateTimePicker.setValue(value);
+            assert.equal( dateTimePicker.getValue(), value);
+
+            //When
+            dateTimePicker.setValue(null);
+
+            //Then
+            assert.isNull(dateTimePicker.getValue());
+        });
+
+        it('should set minDate and maxDate', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            var minDate = InfinniUI.DateUtils.toISO8601(new Date(2010, 0, 1));
+            var maxDate = InfinniUI.DateUtils.toISO8601(new Date(2014, 11, 31));
+
+            //When
+            dateTimePicker.setMinValue(minDate);
+            dateTimePicker.setMaxValue(maxDate);
+
+            //Then
+            assert.equal(dateTimePicker.getMinValue(), minDate);
+            assert.equal(dateTimePicker.getMaxValue(), maxDate);
+        });
+
+        it('should set Enabled', function () {
+            //Given
+            var dateTimePicker = builder.buildType('DateTimePicker', {});
+            dateTimePicker.setEnabled(false);
+
+            var $el = dateTimePicker.render().find('.pl-datepicker-input, .pl-datepicker-calendar');
+            assert.equal($el.length, 2);
+            $el.each(function (i, el) {
+                var $el = $(el);
+                assert.isTrue($el.prop('disabled'));
+            });
+
+            //When
+            dateTimePicker.setEnabled(true);
+
+            //Then
+            $el.each(function (i, el) {
+                var $el = $(el);
+                assert.isFalse($el.prop('disabled'));
+            });
+
+        });
+
+    });
 });
 
 describe('IndeterminateCheckBox', function () {
@@ -10958,6 +8587,114 @@ describe('PasswordBox', function () {
 
 });
 
+describe('ScrollPanelControl', function () {
+
+    describe('render', function () {
+        it('Should render ScrollPanel', function () {
+
+            // Given
+            var metadata = {
+                "DataSources": [
+                    {
+                        "ObjectDataSource": {
+                            "Name": "BloodGroupDataSource",
+                            "Items": [
+                                {
+                                    "Id": 1,
+                                    "DisplayName": "I",
+                                    "SomeField": ""
+                                },
+                                {
+                                    "Id": 2,
+                                    "DisplayName": "II",
+                                    "SomeField": "val"
+                                },
+                                {
+                                    "Id": 3,
+                                    "DisplayName": "III",
+                                    "SomeField": 3
+                                },
+                                {
+                                    "Id": 4,
+                                    "DisplayName": "IV",
+                                    "SomeField": null
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Items": [
+                    {
+                        "TablePanel": {
+                            "Name": "",
+                            "Items": [
+                                {
+                                    "Row": {
+                                        "Items": [
+                                            {
+                                                "Cell": {
+                                                    "ColumnSpan": 3,
+                                                    "Items": [
+                                                        {
+                                                            "ScrollPanel": {
+                                                                "Name":"ScrollPanel_1",
+                                                                "Items": [{
+                                                                    "Label": {
+                                                                        "Text": "Label 1"
+                                                                    }
+                                                                },
+                                                                    {
+                                                                        "Label": {
+                                                                            "Text": "Label 2"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "Label": {
+                                                                            "Text": "Label 3"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "Label": {
+                                                                            "Text": "Label 4"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout) {
+                $layout.detach();
+                var
+                    $panel = $layout.find('.pl-scrollpanel'),
+                    $body = $panel.find('.pl-scrollpanel-body'),
+                    $content = $body.find('.pl-scrollpanel-i');
+
+                assert.equal($panel.length, 1, 'container');
+                assert.equal($body.length, 1, 'body');
+                assert.equal($content.length, 4, 'items');
+
+                assert.isTrue($panel.hasClass('pl-horizontal-scroll-auto'));
+                assert.isTrue($panel.hasClass('pl-vertical-scroll-auto'));
+            }
+        });
+    });
+});
 describe('PopupButtonControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder(),
@@ -11148,114 +8885,6 @@ describe('TabPanelControl', function () {
                 assert.equal($content.length, 1, 'content');
                 assert.equal($headers.length, 3, 'headers');
                 assert.equal($pages.length, 3, 'pages');
-            }
-        });
-    });
-});
-describe('ScrollPanelControl', function () {
-
-    describe('render', function () {
-        it('Should render ScrollPanel', function () {
-
-            // Given
-            var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "BloodGroupDataSource",
-                            "Items": [
-                                {
-                                    "Id": 1,
-                                    "DisplayName": "I",
-                                    "SomeField": ""
-                                },
-                                {
-                                    "Id": 2,
-                                    "DisplayName": "II",
-                                    "SomeField": "val"
-                                },
-                                {
-                                    "Id": 3,
-                                    "DisplayName": "III",
-                                    "SomeField": 3
-                                },
-                                {
-                                    "Id": 4,
-                                    "DisplayName": "IV",
-                                    "SomeField": null
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "Items": [
-                    {
-                        "TablePanel": {
-                            "Name": "",
-                            "Items": [
-                                {
-                                    "Row": {
-                                        "Items": [
-                                            {
-                                                "Cell": {
-                                                    "ColumnSpan": 3,
-                                                    "Items": [
-                                                        {
-                                                            "ScrollPanel": {
-                                                                "Name":"ScrollPanel_1",
-                                                                "Items": [{
-                                                                    "Label": {
-                                                                        "Text": "Label 1"
-                                                                    }
-                                                                },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Label 2"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Label 3"
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        "Label": {
-                                                                            "Text": "Label 4"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            };
-
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout) {
-                $layout.detach();
-                var
-                    $panel = $layout.find('.pl-scrollpanel'),
-                    $body = $panel.find('.pl-scrollpanel-body'),
-                    $content = $body.find('.pl-scrollpanel-i');
-
-                assert.equal($panel.length, 1, 'container');
-                assert.equal($body.length, 1, 'body');
-                assert.equal($content.length, 4, 'items');
-
-                assert.isTrue($panel.hasClass('pl-horizontal-scroll-auto'));
-                assert.isTrue($panel.hasClass('pl-vertical-scroll-auto'));
             }
         });
     });
@@ -11494,6 +9123,41 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
@@ -11555,41 +9219,6 @@ describe('TextEditorBase (Control)', function () {
     });
 
 });
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -11755,6 +9384,2305 @@ describe('TreeView', function () {
     });
 
 });
+describe('DataBinding', function () {
+    it('should bind source', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        assert.isNull(dataBinding.getSource());
+        assert.isNull(dataBinding.getSourceProperty());
+
+        // When
+        dataBinding.bindSource(new FakeElement(), 'property');
+
+        // Then
+        assert.isNotNull(dataBinding.getSource());
+        assert.isNotNull(dataBinding.getSourceProperty());
+    });
+
+    it('should bind element', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        assert.isNull(dataBinding.getElement());
+        assert.isNull(dataBinding.getElementProperty());
+
+        // When
+        dataBinding.bindElement(new FakeElement(), 'property');
+
+        // Then
+        assert.isNotNull(dataBinding.getElement());
+        assert.isNotNull(dataBinding.getElementProperty());
+    });
+
+    it('default mode should be twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+
+        // Then
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.twoWay, 'default mode must be twoWay');
+    });
+
+    it('should refresh source on element change if mode is twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
+    });
+
+    it('should refresh element on source change if mode is twoWay', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
+    });
+
+    it('should not refresh source on element change if mode is toElement', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
+    });
+
+    it('should refresh element on source change if mode is toElement', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toElement);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'source property new value');
+    });
+
+    it('should refresh source on element change if mode is toSource', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'element property new value');
+    });
+
+    it('should not refresh element on source change if mode is toSource', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.toSource);
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
+    });
+
+    it('should not refresh element if mode is wrong', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 'source property new value' );
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), 'element property start value');
+    });
+
+    it('should not refresh source if mode is wrong', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode('gubbish');
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+        source.setProperty(sourceProperty, 'source property start value');
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+        element.setProperty(elementProperty, 'element property start value');
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        element.setProperty(elementProperty, 'element property new value' );
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 'source property start value');
+    });
+
+    it('should convert value if have converter', function () {
+        // Given
+        var dataBinding = new InfinniUI.DataBinding();
+        dataBinding.setMode(InfinniUI.BindingModes.twoWay);
+        dataBinding.setConverter({
+            toSource: function(context, argument) {
+                return argument.value ? 5 : 3; // string to integer
+            },
+            toElement: function(context, argument) {
+                return argument.value > 4; // integer to string
+            }
+        });
+
+        var source = new FakeElement();
+        var sourceProperty = 'sourceProperty';
+
+        var element = new FakeElement();
+        var elementProperty = 'elementProperty';
+
+        dataBinding.bindSource(source, sourceProperty);
+        dataBinding.bindElement(element, elementProperty);
+
+        // When
+        source.setProperty(sourceProperty, 5);
+
+        // Then
+        assert.equal(dataBinding.getElement().getProperty(elementProperty), true, 'Ignored toElement converter');
+
+        // When
+        element.setProperty(elementProperty, false);
+
+        // Then
+        assert.equal(dataBinding.getSource().getProperty(sourceProperty), 3, 'Ignored toSource converter');
+    });
+});
+
+describe('DataBindingBuilder', function () {
+
+    it('should build DataBinding', function () {
+        // Given
+        var dataBindingBuilder = new InfinniUI.DataBindingBuilder();
+        var view = {
+            getDeferredOfMember: function(){
+                return {
+                    done: function(handler){
+                        handler({
+                            onPropertyChanged: function(){}
+                        });
+                    }
+                };
+            }
+        };
+        var metadata = {
+            Source: 'My_Source',
+            Property: 'Property',
+            Mode: 'ToSource',
+            DefaultValue: 'DefaultValue',
+            Converter: {
+                toSource: function(){},
+                toElement: function(){}
+            }
+        };
+
+        // When
+        var dataBinding = dataBindingBuilder.build(null, {parentView: view, metadata: metadata});
+
+        // Then
+        assert.equal(dataBinding.getMode(), InfinniUI.BindingModes.toSource);
+        assert.equal(dataBinding.getDefaultValue(), 'DefaultValue');
+        assert.isObject(dataBinding.getConverter());
+        assert.isObject(dataBinding.getSource());
+        assert.equal(dataBinding.getSourceProperty(), 'Property');
+    });
+
+    describe('should bind all type of source', function () {
+
+        it('should bind dataSource', function(){
+            // Given
+            var viewMetadata = {
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1"
+                        }
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'ObjectDataSource1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.ObjectDataSource);
+
+                view.close();
+            }
+        });
+
+        it('should bind parameter', function(){
+            // Given
+            var viewMetadata = {
+                Parameters : [
+                    {
+                        Name: 'Parameter1'
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Parameter1'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Parameter);
+
+                view.close();
+            }
+        });
+
+        it('should bind element', function(){
+            // Given
+            var viewMetadata = {
+                Items : [
+                    {
+                        Label: {
+                            Name: 'Element1'
+                        }
+                    }
+                ]
+            };
+
+            testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+            function onViewReady(view, $view){
+                var bindingMetadata = {
+                    Source: 'Element1',
+                    Property: 'value'
+                };
+
+                // When
+                var dataBinding = new InfinniUI.DataBindingBuilder().build(null, {parentView: view, metadata: bindingMetadata}),
+                    bindingSource = dataBinding.getSource();
+
+                // Then
+                assert.isDefined(bindingSource);
+                assert.instanceOf(bindingSource, InfinniUI.Element);
+
+                view.close();
+            }
+        });
+
+    });
+
+    it('should toElement converter work in inline style', function () {
+        // Given
+        var viewMetadata = {
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 1, "Display": "LTE" },
+                            { "Id": 2, "Display": "3G" },
+                            { "Id": 3, "Display": "2G" }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                StackPanel: {
+                    Name: 'MainViewPanel',
+                    "ItemTemplate": {
+                        "TextBox": {
+                            "Name": "TextBox1",
+                            "Value": {
+                                "Source": "ObjectDataSource1",
+                                "Property": "#.Display",
+                                "Converter": {
+                                    "ToElement": "{return args.value + '!';}"
+                                },
+                                "Mode": "ToElement"
+                            }
+                        }
+                    },
+                    "Items" : {
+                        "Source": "ObjectDataSource1",
+                        "Property": ""
+                    }
+                }
+            }]
+        };
+
+        // When
+        testHelper.applyViewMetadata(viewMetadata, onViewReady);
+
+        // Then
+        function onViewReady(view, $view){
+            assert.equal($view.find('.pl-text-box-input:first').val(), 'LTE!', 'binding in itemTemplate is right');
+
+            view.close();
+        }
+    });
+});
+
+var FakeElement = Backbone.Model.extend({
+    onPropertyChanged: function(prop, callback){
+        this.set('callback', callback);
+    },
+
+    setName: function(name){
+        this.set('name', name);
+    },
+
+    getName: function(){
+        return this.get('name');
+    },
+
+    setProperty: function(property, newValue){
+        var oldValue = this.get(property);
+
+        if(oldValue != newValue){
+            this.set(property, newValue);
+            var callback = this.get('callback');
+            if(callback){
+                callback({}, {property: property, newValue: newValue});
+            }
+        }
+    },
+
+    getProperty: function(property){
+        return this.get(property);
+    }
+});
+describe('baseDataSource', function () {
+
+    it('should check ErrorValidator before save', function (done) {
+        // Given
+        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
+
+        dataSource.setErrorValidator(function(context, args) {
+            done();
+            return {
+                IsValid: true
+            };
+        });
+
+        dataSource.createItem(function(context, args){
+            //When
+            var item = args.value;
+
+            dataSource.saveItem(item)
+        });
+    });
+});
+
+describe('baseDataSourceBuilder', function () {
+
+    it('should init CustomProperties', function () {
+        // Given
+        var builder = new InfinniUI.ApplicationBuilder(),
+            metadata = {
+                CustomProperties: {
+                    pageNumber: 0,
+                    pageSize: 10
+                }
+            };
+
+        // When
+        var dataSource = builder.buildType('ObjectDataSource', metadata, {parentView: fakeView()});
+
+        // Then
+        assert.equal(dataSource.getProperty('.pageNumber'), 0);
+        assert.equal(dataSource.getProperty('.pageSize'), 10);
+    });
+});
+
+describe('DataSourceBuilder', function () {
+
+    var builder = new InfinniUI.ApplicationBuilder();
+    var items = [
+        {
+            "_id": '1',
+            "FirstName": "Иван",
+            "LastName": "Иванов"
+        },
+        {
+            "_id": '2',
+            "FirstName": "Петр",
+            "LastName": "Петров"
+        },
+        {
+            "_id": '3',
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "_id": '4',
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "_id": '5',
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "_id": '6',
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
+            "_id": '10',
+            "FirstName": "Анна",
+            "LastName": "Сергеева"
+
+        }
+    ];
+
+    FakeRestDataProvider.prototype.items = _.clone(items);
+
+    describe('build DocumentDataSource', function () {
+
+        it('should build documentDataSource', function () {
+            // Given When
+            var metadata = {
+                    Name: 'PatientDataSource',
+                    DocumentId: 'Patient',
+                    FillCreatedItem: true,
+                    PageNumber: 1,
+                    PageSize: 5,
+
+                    onPropertyChanged: {
+                        Name: 'onPropertyChanged'
+                    }
+                };
+
+            var view = new InfinniUI.View(),
+                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view});
+
+            // Then
+            assert.equal(createdDataSource.getDocumentId(), 'Patient');
+            assert.equal(createdDataSource.getIdProperty(), '_id');
+            assert.equal(createdDataSource.getPageSize(), 5, 'PageSize');
+            assert.equal(createdDataSource.getPageNumber(), 1, 'PageNumber');
+            assert.isTrue(createdDataSource.getFillCreatedItem(), 'Value of FillCreatedItem');
+        });
+
+        it('should subscribe documentDataSource on changeProperty', function (done) {
+            // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+            var metadata = {
+                    Name: 'PatientDataSource',
+                    DocumentId: 'Patient',
+                    FillCreatedItem: true,
+                    PageNumber: 1,
+                    PageSize: 5,
+
+                    OnPropertyChanged: {
+                        Name: 'onPropertyChanged'
+                    }
+                };
+
+            var view = new InfinniUI.View(),
+                createdDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: view}),
+                scriptMetadata = {
+                    Name:"onPropertyChanged",
+                    Body: 'window.documentDataSourceTest = 1;'
+                };
+
+            view.getScripts().add({
+                name: 'onPropertyChanged',
+                func: builder.buildType('Script', scriptMetadata, {parentView: view})
+            });
+
+            createdDataSource.updateItems(onItemUpdates);
+
+            // When
+            function onItemUpdates(context, args){
+                createdDataSource.setProperty('FirstName', 'Иванидзе');
+            }
+
+            // Then
+            setTimeout(function(){
+                assert.equal(window.documentDataSourceTest, 1, 'Event OnSelectedItemChanged is called');
+                done();
+            }, 200);
+        });
+
+        it('should create ds from metadata', function (done) {
+            // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        DocumentDataSource: {
+                            "Name": "DataSource1",
+                            "DocumentId": "Whatever"
+                        }
+                    }
+                ],
+                Items: []
+            };
+
+            var dataSource;
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+                $layout.detach();
+
+                dataSource = view.getContext().dataSources['DataSource1'];
+                dataSource.updateItems(handleItemsReady);
+            }
+
+            function handleItemsReady(){
+                assert.isTrue(dataSource.getItems().length > 0, 'DS was update items');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?skip=0&take=15', 'requested url is right');
+
+                done();
+            }
+        });
+
+        it('should update items on filter changing', function (done) {
+            // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        DocumentDataSource: {
+                            "Name": "DataSource1",
+                            "DocumentId": "Whatever"
+                        }
+                    }
+                ],
+                Items: []
+            };
+            var result = '';
+
+            var dataSource;
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                $layout.detach();
+
+                dataSource = view.getContext().dataSources['DataSource1'];
+
+                dataSource.onItemsUpdated(function(){
+                    result += '1';
+
+                    if(result == '11'){
+                        assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,7)&skip=0&take=15', 'requested url is right (second)');
+                        done();
+                    }
+                });
+
+                dataSource.setFilter('eq(id,4)');
+
+                dataSource.updateItems(handleItemsReady1);
+            }
+
+            function handleItemsReady1(){
+                assert.equal(result, '', 'its first updated of item');
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(id,4)&skip=0&take=15', 'requested url is right (first)');
+
+                dataSource.setFilter('eq(id,<%uid%>)');
+                dataSource.setFilterParams('uid', 7);
+            }
+        });
+
+
+        it('should bind filter', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = _.clone(items);
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        DocumentDataSource: {
+                            "Name": "DataSource1",
+                            "DocumentId": "Whatever",
+                            "Filter": "eq(_id,<%param%>)",
+                            "FilterParams": {
+                                "param": {
+                                    "Source": "DataSource2",
+                                    "Property": "0._id"
+                                }
+                            }
+                        }
+                    },{
+
+                        DocumentDataSource: {
+                            "Name": "DataSource2",
+                            "DocumentId": "Whatever"
+                        }
+                    }
+                ],
+                Items: []
+            };
+            var result = '';
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                $layout.detach();
+
+                var dataSource1 = view.getContext().dataSources['DataSource1'];
+                var dataSource2 = view.getContext().dataSources['DataSource2'];
+
+                dataSource1.onItemsUpdated(function(){
+                    assert.equal(result, '2', 'second updated ds1');
+
+                    result += '1';
+                    dataSource2;
+                    assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, InfinniUI.config.serverUrl + '/documents/Whatever?filter=eq(_id,1)&skip=0&take=15', 'requested url is right (ds1)');
+                    done();
+                });
+
+                dataSource2.onItemsUpdated(function(){
+
+                    assert.equal(result, '', 'first updated ds2');
+
+                    result += '2';
+
+                    dataSource1.updateItems();
+                });
+
+            }
+
+        });
+
+    });
+
+});
+
+describe('DocumentDataSource', function () {
+    window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+
+    var dataItems = [
+        {
+            "_id": 1,
+            "FirstName": "Иван",
+            "LastName": "Иванов"
+        },
+        {
+            "_id": 2,
+            "FirstName": "Петр",
+            "LastName": "Петров"
+        },
+        {
+            "_id": 4,
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "_id": 6,
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "_id": 5,
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "_id": 7,
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
+            "_id": 10,
+            "FirstName": "Анна",
+            "LastName": "Сергеева"
+
+        }
+    ];
+
+    describe('DocumentDataSource base api', function () {
+        it('should get list of data', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
+            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
+
+            //When
+            dataSource.updateItems(
+                function(context, args){
+
+                    // Then
+                    assert.isTrue(args.value.length > 0, 'data provider returns items');
+                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
+                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
+                    done();
+
+                }
+            );
+        });
+
+        it('should return default list of data', function (done) {
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var defaultItems = [{"Id": "0000"}];
+            var metadata = {
+                "DefaultItems": defaultItems
+            };
+
+            // When
+            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
+
+            // Then
+            var items = documentDataSource.getItems();
+            assert.equal(items, defaultItems);
+            done();
+        });
+
+        it('should subscribe to property of selectedItem', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var result = '';
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.onPropertyChanged('$.FirstName', function(context, args){
+                result += ', ' + args.newValue;
+            });
+
+            dataSource.updateItems(
+                function(context, args){
+
+                    //When
+                    dataSource.setProperty('$.FirstName', 'Иванов 2');
+                    dataSource.setProperty('0.FirstName', 'Иванов 3');
+                    dataSource.setProperty('3.FirstName', 'Иванов 4');
+                    dataSource.setSelectedItem(dataSource.getItems()[1]);
+                    dataSource.setProperty('0.FirstName', 'Иванов 5');
+                    dataSource.setProperty('1.FirstName', 'Иванов 6');
+
+                    // Then
+                    assert.equal(result, ', Иван, Иванов 2, Иванов 3, Иванов 6', 'onPropertyChanged called in right order');
+                    done();
+
+                }
+            );
+        });
+
+
+        it('should set id filter', function (done) {
+            // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var builder = new InfinniUI.ApplicationBuilder();
+            var view = fakeView();
+            var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
+
+            //When
+            dataSource.suspendUpdate();
+            dataSource.setIdFilter(4);
+            dataSource.resumeUpdate();
+
+
+            var items = dataSource.updateItems(
+                function (context, args) {
+
+                    // Then
+                    assert.lengthOf(args.value, 1, 'length of filtered items set');
+                    assert.equal(args.value[0]._id, '4', 'value of filtered items set');
+
+                    done();
+                }
+            );
+        });
+
+
+        it('should update documents when pageNumber are changed', function (done) {
+            // Given
+            window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.suspendUpdate();
+            dataSource.setPageSize(5);
+            dataSource.resumeUpdate();
+
+            //When
+            dataSource.updateItems(
+                function(context, args){
+
+                    assert.lengthOf(dataSource.getItems(), 5, 'data provider returns 5 items');
+
+                    dataSource.suspendUpdate();
+                    dataSource.setPageNumber(1);
+                    dataSource.resumeUpdate();
+                    dataSource.updateItems(
+                        function(context, args){
+
+                            // Then
+                            assert.lengthOf(dataSource.getItems(), 2, 'data provider returns 2 items');
+                            done();
+
+                        }
+                    );
+
+                }
+            );
+        });
+
+        it('should restore selected item after updating', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    var items = dataSource.getItems();
+                    var selectedItem = items[3];
+                    dataSource.setSelectedItem(selectedItem);
+
+                    //When
+                    dataSource.updateItems(
+                        function(context, args){
+                            //Then
+                            assert.equal(dataSource.getSelectedItem(), selectedItem);
+                            done();
+                        }
+                    );
+                }
+            );
+        });
+
+        it('should reset page number after setFilter', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilter('not(eq(_id,123))');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setFilterParams', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setFilterParams('documentName', 'Patient');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setPageSize', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setPageSize(20);
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setSearch', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setSearch('search');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should reset page number after setOrder', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(
+                function(){
+                    dataSource.setPageNumber(5);
+                    assert.equal(dataSource.getPageNumber(), 5);
+
+                    //When
+                    dataSource.setOrder('asc(_id)');
+
+                    //Then
+                    assert.equal(dataSource.getPageNumber(), 0);
+                    done();
+                }
+            );
+        });
+
+        it('should create document', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            //When
+            dataSource.createItem(
+                function(context, argument){
+
+                    // Then
+                    var newItem = argument.value;
+                    assert.ok(newItem, 'new item is ready');
+
+                    var items = dataSource.getItems();
+                    assert.lengthOf(items, 1, 'one element (when was created) in items');
+                    //assert.equal(items[0].prefilledField, 1, 'is right element in items after creating');
+                    done();
+                }
+            );
+        });
+
+        it('should get document property', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            //When
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
+                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
+                done();
+            }
+        });
+
+        it('should select item', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                var items = dataSource.getItems();
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+
+                //When
+                dataSource.setSelectedItem(items[1]);
+
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
+                done();
+            }
+        });
+
+        it('should change document property', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
+                done();
+            }
+        });
+
+        it('should change document property (full item change)', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
+
+                //When
+                var newItemData = {
+                    "_id": '1',
+                    "FirstName": "Ивано",
+                    "LastName": "Иванович"
+                };
+                dataSource.setProperty('$', newItemData);
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
+                done();
+            }
+        });
+
+        it('should get ValidationResult for item', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.setErrorValidator(validator);
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+
+                //When
+                var items = dataSource.getItems(),
+                    validateResult1 = dataSource.getValidationResult(items[0]),
+                    validateResult2 = dataSource.getValidationResult(items[1]),
+                    validateResult3 = dataSource.getValidationResult();
+
+                // Then
+                assert.isTrue(validateResult1.IsValid, 'successfully validation');
+
+                assert.isFalse(validateResult2.IsValid, 'fail validation');
+                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
+                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
+
+                assert.isFalse(validateResult3.IsValid, 'full validation');
+                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
+                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
+                done();
+            }
+
+            function validator(context, argument){
+                var result = {
+                    IsValid: true
+                };
+
+                if(argument.FirstName != 'Иван'){
+                    result.IsValid = false;
+                    result.Items = [{
+                        property: 'FirstName',
+                        message: 'Почему не Иван?!'
+                    }];
+                }
+
+                return result;
+            }
+        });
+
+        it('should save item', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var item = dataSource.getSelectedItem();
+
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.saveItem(item);
+
+                dataSource.updateItems(handleItemsReady2);
+            }
+
+            function handleItemsReady2(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
+                done();
+            }
+        });
+
+        it('should delete item', function (done) {
+            // Given
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            var dataSource = new InfinniUI.DocumentDataSource({
+                view: fakeView()
+            });
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var items = dataSource.getItems(),
+                    itemsCount = items.length;
+
+                dataSource.deleteItem(items[0], function(context, argument){
+                    // Then
+                    items = dataSource.getItems();
+                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
+                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
+                    done();
+                });
+            }
+        });
+    });
+});
+
+describe('TreeModel', function () {
+
+    describe('TreeModel', function () {
+        it('Simple handling', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = '';
+
+            treeModel.onPropertyChanged('p1', function(context, args){
+                result = result + '1';
+
+                assert.equal(context, 'context', 'passed context argument is right');
+                assert.isNull(args.oldValue, 'old value is right');
+                assert.equal(args.newValue, 1, 'new value is right');
+
+                assert.equal(treeModel.getProperty('p1'), 1, 'value was saved before handling');
+            });
+
+            //When
+            treeModel.setProperty('p1', 1);
+
+            // Then
+            assert.equal(result, '1', 'Handler was triggered');
+            assert.equal(treeModel.getProperty('p1'), 1, 'Value was right saved');
+        });
+
+
+        it('Handling many handlers', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = '';
+
+            treeModel.onPropertyChanged('p1', function(context, args){
+                result = result + '1';
+
+                assert.equal(context, 'context', 'passed context argument is right');
+                assert.isNull(args.oldValue, 'old value is right');
+                assert.equal(args.newValue, 1, 'new value is right');
+            });
+
+            treeModel.onPropertyChanged('p2', function(context, args){
+                result = result + '2';
+            });
+
+            //When
+            treeModel.setProperty('p1', 1);
+            treeModel.setProperty('p2', 2);
+            treeModel.setProperty('p2', 3);
+
+            // Then
+            assert.equal(result, '122', 'Handlers was triggered');
+
+            assert.equal(treeModel.getProperty('p1'), 1, 'Value p1 was right saved');
+            assert.equal(treeModel.getProperty('p2'), 3, 'Value p2 was right saved');
+        });
+
+        it('Handling deep sets', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = '';
+            var jsonOfVal;
+
+            treeModel.onPropertyChanged('p1.p11', function(context, args){
+                result = result + '1';
+
+                assert.isTrue(args.oldValue == undefined || args.oldValue == 1, 'old value is right');
+                assert.isTrue(args.newValue == 1 || args.newValue == 4, 'new value is right');
+
+                assert.isTrue(treeModel.getProperty('p1.p11') == 1 || treeModel.getProperty('p1.p11') == 4, 'value was saved before handling');
+            });
+
+            treeModel.onPropertyChanged('p1', function(context, args){
+                result = result + '2';
+
+                assert.equal(context, 'context', 'passed context argument is right');
+
+                jsonOfVal = JSON.stringify(args.oldValue);
+                assert.equal(jsonOfVal, '{"p11":1}','old value is right');
+                jsonOfVal = JSON.stringify(args.newValue);
+                assert.equal(jsonOfVal, '{"p11":4}', 'new value is right');
+
+                assert.equal(treeModel.getProperty('p1').p11, 4, 'value was saved before handling');
+            });
+
+            //When
+            treeModel.setProperty('p1.p11', 1);
+            treeModel.setProperty('p2.p11', 3);
+            treeModel.setProperty('p2', 2);
+            treeModel.setProperty('p1', {p11: 4});
+
+            // Then
+            assert.equal(result, '121', 'Handler was triggered');
+            assert.equal(treeModel.getProperty('p1').p11, 4, 'value was saved before handling');
+
+            jsonOfVal = JSON.stringify(treeModel.getProperty(''));
+            assert.equal(jsonOfVal, '{"p1":{"p11":4},"p2":2}', 'full data tree is right');
+        });
+
+        it('Handling onChange, on all properties', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = [];
+            var jsonOfVal;
+
+            treeModel.onPropertyChanged(function(context, args){
+                result.push(args.property);
+            });
+
+
+            //When
+            treeModel.setProperty('p1.p11', 1);
+            treeModel.setProperty('p2.p11', 3);
+            treeModel.setProperty('p2', 2);
+            treeModel.setProperty('p1', {p11: 4});
+
+            // Then
+            assert.equal(result.join(','), 'p1.p11,p2.p11,p2,p1', 'Handler was right triggered');
+        });
+
+        it('Handling onChange of subtree', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = [];
+            var jsonOfVal;
+
+            treeModel.onPropertyChanged('*', function(context, args){
+                result.push(args.property);
+            });
+
+            treeModel.onPropertyChanged('p1.*', function(context, args){
+                result.push(args.property);
+            });
+
+
+            //When
+            treeModel.setProperty('p1.p11.p111', 1);
+            treeModel.setProperty('p2.p11', 3);
+            treeModel.setProperty('p2', 2);
+            treeModel.setProperty('p1', {p11: 4});
+
+            // Then
+            assert.equal(result.join(','), 'p1.p11.p111,p1.p11.p111,p2.p11,p2,p1,p1', 'Handler was right triggered');
+        });
+
+        it('Auto unsubscribing if owner is checked as removed', function () {
+            // Given
+            var treeModel = new InfinniUI.TreeModel('context');
+            var result = '';
+            var jsonOfVal;
+            var owner1 = {
+                isRemoved: false
+            }, owner2 = {
+                isRemoved: false
+            };
+
+            treeModel.onPropertyChanged('p1.p11', function(context, args){
+                result = result + '1';
+
+                assert.isTrue(args.oldValue == undefined || args.oldValue == 1 || args.oldValue == 2, 'old value is right');
+                assert.isTrue(args.newValue == 1 || args.newValue == 4 || args.newValue == 2 || args.newValue == 8, 'new value is right');
+
+            }, {owner: owner1});
+
+            treeModel.onPropertyChanged('p1', function(context, args){
+
+                result = result + '2';
+
+            }, {owner: owner2});
+
+            //When
+            treeModel.setProperty('p1.p11', 1);
+            treeModel.setProperty('p2.p11', 3);
+            treeModel.setProperty('p2', 2);
+            treeModel.setProperty('p1', {p11: 4});
+
+            owner1.isRemoved = true;
+
+            treeModel.setProperty('p1.p11', 2);
+            treeModel.setProperty('p2.p11', 6);
+            treeModel.setProperty('p1', {p11: 8});
+
+            // Then
+            assert.equal(result, '1212', 'Handler was triggered');
+            assert.equal(treeModel.getProperty('p1').p11, 8, 'value was saved before handling');
+
+            jsonOfVal = JSON.stringify(treeModel.getProperty(''));
+            assert.equal(jsonOfVal, '{"p1":{"p11":8},"p2":{"p11":6}}', 'full data tree is right');
+        });
+    })
+});
+
+describe('ObjectDataSource', function () {
+    var items = [
+        {
+            "_id": '1',
+            "FirstName": "Иван",
+            "LastName": "Иванов"
+        },
+        {
+            "_id": '2',
+            "FirstName": "Петр",
+            "LastName": "Петров"
+        },
+        {
+            "_id": '3',
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "_id": '4',
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "_id": '5',
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "_id": '6',
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
+            "_id": '10',
+            "FirstName": "Анна",
+            "LastName": "Сергеева"
+
+        }
+    ];
+
+    window.InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
+
+    function createObjectDataSource(metadata){
+
+        metadata = metadata || {};
+
+        var builder = new InfinniUI.ApplicationBuilder();
+        var view = fakeView();
+        var dataSource = builder.buildType('ObjectDataSource', metadata, {parent: view, parentView: view, builder: builder}),
+            initItems = JSON.parse(JSON.stringify(items));
+
+        dataSource.setItems(initItems);
+
+        return dataSource;
+    }
+
+    describe('ObjectDataSource base api', function () {
+        it('should get list of data', function () {
+            // Given //When
+            var dataSource = createObjectDataSource(),
+                items = dataSource.getItems();
+
+            // Then
+            assert.isTrue(dataSource.isDataReady(), 'dataReady status is right');
+            assert.isTrue(items.length > 0, 'data provider returns items');
+        });
+
+        it('should create document', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            //When
+            dataSource.createItem(
+                function(context, argument){
+
+                    // Then
+                    var newItem = argument.value;
+                    assert.ok(newItem, 'new item is ready');
+                    assert.ok(newItem._id, 'new item has _id');
+                    done();
+                }
+            );
+        });
+
+        it('should get document property', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            //When
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
+                done();
+            }
+        });
+
+        it('should select item', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                var items = dataSource.getItems();
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+
+                //When
+                dataSource.setSelectedItem(items[1]);
+
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Петр', 'return property value by simple property after change selected item');
+                done();
+            }
+        });
+
+        it('should change document property', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
+                done();
+            }
+        });
+
+        it('should change document property (full item change)', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by property');
+
+                //When
+                var newItemData = {
+                    "_id": '1',
+                    "FirstName": "Ивано",
+                    "LastName": "Иванович"
+                };
+                dataSource.setProperty('$', newItemData);
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Ивано', 'return property value by property after change property');
+                done();
+            }
+        });
+
+        it('should get ValidationResult for item', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.setErrorValidator(validator);
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+
+                //When
+                var items = dataSource.getItems(),
+                    validateResult1 = dataSource.getValidationResult(items[0]),
+                    validateResult2 = dataSource.getValidationResult(items[1]),
+                    validateResult3 = dataSource.getValidationResult();
+
+                // Then
+                assert.isTrue(validateResult1.IsValid, 'successfully validation');
+
+                assert.isFalse(validateResult2.IsValid, 'fail validation');
+                assert.lengthOf(validateResult2.Items, 1, 'fail validation results');
+                assert.equal(validateResult2.Items[0].property, 'FirstName', 'fail validation property result');
+
+                assert.isFalse(validateResult3.IsValid, 'full validation');
+                assert.lengthOf(validateResult3.Items, 6, 'full validation results');
+                assert.equal(validateResult3.Items[3].property, '4.FirstName', 'full validation property result');
+                done();
+            }
+
+            function validator(context, argument){
+                var result = {
+                    IsValid: true
+                };
+
+                if(argument.FirstName != 'Иван'){
+                    result.IsValid = false;
+                    result.Items = [{
+                        property: 'FirstName',
+                        message: 'Почему не Иван?!'
+                    }];
+                }
+
+                return result;
+            }
+        });
+
+        it('should save item', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var item = dataSource.getSelectedItem();
+
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.saveItem(item);
+
+                dataSource.updateItems(handleItemsReady2);
+            }
+
+            function handleItemsReady2(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'item is saved');
+                done();
+            }
+        });
+
+        it('should delete item', function (done) {
+            // Given
+            var dataSource = createObjectDataSource();
+
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+
+                //When
+                var items = dataSource.getItems(),
+                    itemsCount = items.length;
+
+                dataSource.deleteItem(items[0], function(context, argument){
+                    // Then
+                    items = dataSource.getItems();
+                    assert.lengthOf(items, itemsCount-1, 'items length is decrease');
+                    assert.equal(dataSource.getSelectedItem(), null, 'deleted item exclude from selected item');
+                    done();
+                });
+            }
+        });
+
+        it('should subscribe on itemsUpdated from metadata', function (done) {
+            var metadata = {
+                OnItemsUpdated: '{window.testCount = window.testCount || 0; window.testCount++; window.testArgs = args; window.testContext = context;}'
+            };
+
+            // Given
+            var dataSource = createObjectDataSource(metadata);
+
+            //When
+            dataSource.updateItems(handleItemsReady1);
+
+            function handleItemsReady1(){
+                // Then
+                assert.equal(window.testCount, 1, 'on items updated was called right times');
+                assert.isTrue(!!window.testArgs, 'on items updated handler passed args');
+                assert.isTrue(!!window.testContext, 'on items updated handler passed context');
+
+                delete window['testCount'];
+                delete window['testArgs'];
+                delete window['testContext'];
+
+                done();
+            }
+        });
+    });
+});
+
+describe('RestDataSource', function () {
+    window.InfinniUI.providerRegister.register('RestDataSource', FakeRestDataProvider);
+
+    var items = [
+        {
+            "_id": '1',
+            "FirstName": "Иван",
+            "LastName": "Иванов"
+        },
+        {
+            "_id": '2',
+            "FirstName": "Петр",
+            "LastName": "Петров"
+        },
+        {
+            "_id": '3',
+            "FirstName": "Иван1",
+            "LastName": "Иванов1"
+        },
+        {
+            "_id": '4',
+            "FirstName": "Петр2",
+            "LastName": "Петров2"
+        },
+        {
+            "_id": '5',
+            "FirstName": "Иван3",
+            "LastName": "Иванов3"
+        },
+        {
+            "_id": '6',
+            "FirstName": "Петр4",
+            "LastName": "Петров5"
+        },
+        {
+            "_id": '10',
+            "FirstName": "Анна",
+            "LastName": "Сергеева"
+
+        }
+    ];
+
+    function createRestDataSource(missParam){
+
+        var view = fakeView();
+        var dataSource = new InfinniUI.RestDataSource({ view: view }),
+            newItems = JSON.parse(JSON.stringify(items));
+
+        dataSource.suspendUpdate('urlTuning');
+        dataSource.setNewItemsHandler(function(newItemsData){
+            if(newItemsData){
+                return newItemsData['Result']['Items'];
+
+            }else{
+                return newItemsData;
+
+            }
+        });
+
+        /*
+        * кейсы использования фильтров
+        *
+        * удобно ли будет биндить автокомплит комбобокса на ДС вручную?
+        *
+        * DS{
+        *     Autocomplete: true,
+        *     AutocompleteValue: {
+        *         Source: "SomeDocDS",
+        *         Property: ".filter",
+        *         Direction: "ToSource",
+        *         Converters: {
+        *             ToSource: "{return 'eq(' + args.value + ')';}"
+        *         }
+        *     }
+        * }
+        * */
+
+        dataSource.setGettingUrlParams({
+            type: 'get',
+            origin:'http://some.ru',
+            path:'/some/id<%param1%><%param2%>?a=2&b=<%param1%><%param3%>',
+            data: {},
+
+            params: {
+                param1: 4,
+                param2: missParam ? undefined : '/',
+                param3: '&c=4'
+            }
+        });
+
+        dataSource.setSettingUrlParams({
+            type: 'post',
+            origin:'http://some.ru',
+            path:'/some/<%param1%>/<%param2%>',
+            data: {
+                a:2,
+                b: '<%param1%>',
+                c: '!1<%param2%>2!'
+            },
+
+            params: {
+                param1: '',
+                param2: ''
+            }
+        });
+
+        dataSource.setDeletingUrlParams({
+            type: 'delete',
+            origin:'http://some.ru',
+            path:'/some/<%param1%>/<%param2%>',
+            data: {
+                a:2,
+                b: '<%param1%>',
+                c: '!1<%param2%>2!'
+            },
+
+            params: {
+                param1: '',
+                param2: ''
+            }
+        });
+
+        dataSource.resumeUpdate('urlTuning');
+
+        FakeRestDataProvider.prototype.items = newItems;
+        FakeRestDataProvider.prototype.lastSendedUrl = '';
+
+        return dataSource;
+    }
+
+    describe('RestDataSourceBuilder', function () {
+
+        it('successful build', function () {
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                GettingParams: {
+                    Method: 'get',
+                    Origin: 'http://some.ru',
+                    Path: '/some/id<%param1%>',
+                    Data: {
+                        a: 'param1=<%param1%>'
+                    },
+
+                    Params: {
+                        param1: 4
+                    }
+                }
+            };
+
+            // When
+            var restDataSource = builder.buildType('RestDataSource', metadata, {parentView: fakeView()});
+
+            // Then
+            var gettingParams = restDataSource.getGettingUrlParams();
+
+            assert.equal(gettingParams.method, 'get');
+            assert.equal(gettingParams.origin, 'http://some.ru');
+            assert.equal(gettingParams.path, '/some/id<%param1%>');
+            assert.deepEqual(gettingParams.data, {a: 'param1=<%param1%>'});
+            assert.deepEqual(gettingParams.params, {param1: 4});
+        });
+
+    });
+
+    describe('RestDataSource base api', function () {
+
+        it('should get list of data', function (done) {
+            // Given
+
+
+            var dataSource = createRestDataSource();
+
+            assert.isFalse(dataSource.isDataReady(), 'dataReady status is right (false)');
+            assert.isFalse(dataSource.get('isRequestInProcess'), 'is request not in process');
+
+            //When
+
+            dataSource.updateItems(
+                function(context, args){
+                    // Then
+                    assert.isTrue(args.value.length > 0, 'data provider returns items');
+                    assert.isTrue(dataSource.getItems().length > 0, 'data source have items');
+                    assert.isTrue(dataSource.isDataReady(), 'dataReady status is right (true)');
+                    done();
+                }
+            );
+        });
+
+        it('should get document property', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+
+            //When
+            dataSource.updateItems(handleItemsReady);
+
+            function handleItemsReady(){
+                // Then
+                assert.equal(dataSource.getProperty('FirstName'), 'Иван', 'return property value by simple property');
+                assert.equal(dataSource.getProperty('$.FirstName'), 'Иван', 'return property value by relative property');
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иван', 'return property - full item by $ selector');
+                assert.equal(dataSource.getProperty('2.FirstName'), 'Иван1', 'return property - full item by index selector');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return right spec property');
+                done();
+            }
+        });
+
+        it('should change document property', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var item3;
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
+                item3 = dataSource.getProperty('3');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('$.LastName', 'Ивнв');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+                dataSource.setProperty('3', {
+                    "_id": '55',
+                    "FirstName": "П2",
+                    "LastName": "Пе2"
+                });
+                dataSource.setProperty('3.FirstName', 'П22');
+
+                // Then
+                assert.equal(dataSource.getProperty('$').FirstName, 'Иванидзе', 'return property value by property after change property');
+                assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'return property value by property after change property 2');
+                assert.equal(dataSource.getProperty('2').FirstName, 'Иванидзе-дзе', 'return property value by property after change property by id');
+                assert.equal(dataSource.getProperty('3.LastName'), "Пе2");
+                assert.equal(dataSource.getProperty('3.FirstName'), "П22");
+                assert.equal(dataSource.getProperty('3._id'), '55');
+                done();
+            }
+        });
+
+        it('should add changing items in modified set', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var item;
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.isFalse(dataSource.isModified(), 'at first items is not modified');
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('$.LastName', 'Ивнв');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+                dataSource.setProperty('3.FirstName', 'Petrov');
+                dataSource.setProperty('3', {
+                    "_id": '55',
+                    "FirstName": "П2",
+                    "LastName": "Пе2"
+                });
+                dataSource.setProperty('4', {
+                    "_id": '5',
+                    "FirstName": "П5",
+                    "LastName": "Пе5"
+                });
+
+                // Then
+                assert.equal(_.size(dataSource.get('modifiedItems')), 4, 'length of modified items');
+                item = dataSource.getProperty('0');
+                assert.isTrue(dataSource.isModified(item), 'is modified 1');
+                item = dataSource.getProperty('2');
+                assert.isTrue(dataSource.isModified(item), 'is modified 2');
+                item = dataSource.getProperty('3');
+                assert.isTrue(dataSource.isModified(item), 'is modified 3');
+                item = dataSource.getProperty('4');
+                assert.isTrue(dataSource.isModified(item), 'is modified 4');
+
+                done();
+            }
+        });
+
+        it('should change spec value as property', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var item3;
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                assert.equal(dataSource.getProperty('FirstName'),'Иван', 'return property value by property');
+                assert.equal(dataSource.getProperty('.selectedItem._id'), 1, 'return property value by property 2');
+                item3 = dataSource.getProperty('3');
+
+                //When
+                dataSource.setProperty('.selectedItem', {'a':3});
+
+                // Then
+                assert.equal(dataSource.getProperty('.selectedItem.a'), 3, 'return property value by property after change property 5');
+                done();
+            }
+        });
+
+        it('should handle property changed', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var result = '';
+
+
+            function subscribeOnPropertyChanged(){
+                dataSource.onPropertyChanged('0.FirstName', function(context, args){
+                    result += '1';
+
+                    assert.equal(args.oldValue, 'Иван', 'right old value in args');
+                    assert.equal(args.newValue, 'Иванидзе', 'right new value in args');
+                    assert.equal(dataSource.getProperty('FirstName'), 'Иванидзе', 'value in source is new, when onPropertyChanged called');
+                });
+
+                dataSource.onPropertyChanged('0.LastName', function(context, args){
+                    result += '2';
+
+                    assert.equal(args.oldValue, 'Иванов', 'right old value in args');
+                    assert.equal(args.newValue, 'Ивнв', 'right new value in args');
+                    assert.equal(dataSource.getProperty('LastName'), 'Ивнв', 'value in source is new, when onPropertyChanged called');
+                });
+
+                dataSource.onPropertyChanged('.selectedItem', function(context, args){
+                    result += '3';
+
+                    assert.equal(args.oldValue.FirstName, 'Иванидзе', 'right old value in args');
+                    assert.equal(args.newValue.a, 3, 'right new value in args');
+                    assert.equal(dataSource.getSelectedItem().a, 3, 'value in source is new, when onPropertyChanged called');
+                });
+            }
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                subscribeOnPropertyChanged();
+
+                //When
+                dataSource.setProperty('FirstName', 'Иванидзе');
+                dataSource.setProperty('$.LastName', 'Ивнв');
+                dataSource.setProperty('2.FirstName', 'Иванидзе-дзе');
+                dataSource.setProperty('3', {
+                    "_id": '55',
+                    "FirstName": "П2",
+                    "LastName": "Пе2"
+                });
+                dataSource.setProperty('3.FirstName', 'П22');
+
+                dataSource.setProperty('.selectedItem', {'a':3});
+
+                // Then
+                assert.equal(result, '123', 'all handlers called in correct order');
+                done();
+            }
+        });
+
+        it('should handle selectedItem changed', function (done) {
+            // Given
+            var dataSource = createRestDataSource();
+            var result = '';
+            var item;
+
+
+            dataSource.onSelectedItemChanged(function(context, args){
+                result += '1';
+
+                assert.isTrue(args.value.FirstName ==  'Иван' || args.value.FirstName == 'Петр', 'right new value in args');
+            });
+
+
+            dataSource.updateItems(handleItemsReady);
+
+
+            function handleItemsReady(){
+                item = dataSource.getItems()[1];
+
+                //When
+                dataSource.setSelectedItem(item);
+
+                // Then
+                assert.equal(result, '11', 'all handlers called in correct order');
+                done();
+            }
+        });
+
+        it('should handle url params changing', function (done) {
+            // Given
+            var dataSource = createRestDataSource(true);
+            var item;
+
+            assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, '', 'request was not sended');
+
+            dataSource.updateItems(handleItemsReady);
+
+            dataSource.setGettingUrlParams('params.param2', '/newVal/');
+
+            function handleItemsReady(){
+                // Then
+                assert.equal(FakeRestDataProvider.prototype.lastSendedUrl, 'http://some.ru/some/id4/newVal/?a=2&b=4&c=4', 'request sended on right url');
+
+                done();
+            }
+        });
+
+    });
+});
+
+describe('Parameters', function () {
+
+    it('Parameter base API', function () {
+
+        // Given When
+        var view = fakeView();
+        var parameter = new InfinniUI.Parameter({view: view, name: 'name'});
+
+        // Then
+        assert.equal(parameter.getView(), view, 'view is right');
+        assert.equal(parameter.getName(), 'name', 'name is right');
+    });
+
+    it('Parameter value and property', function () {
+
+        // Given
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
+
+        assert.isUndefined(parameter.getValue(), 'start value is undefined');
+        assert.isUndefined(parameter.getProperty(''), 'start property is undefined');
+        assert.isUndefined(parameter.getProperty('f1'), 'start property is undefined 2');
+        assert.isUndefined(parameter.getProperty('f1.value'), 'start property is undefined 3');
+
+        //When
+        parameter.setValue(val);
+
+        // Then
+        assert.equal(parameter.getValue(), val, 'value after setting is right');
+        assert.equal(parameter.getProperty(''), val, 'property after setting is right');
+        assert.equal(parameter.getProperty('f1'), val.f1, 'property after setting is right 2');
+        assert.equal(parameter.getProperty('f1.value'), val.f1.value, 'property after setting is right 3');
+    });
+
+    it('Parameter handling property changed', function () {
+
+        // Given
+        var parameter = new InfinniUI.Parameter({view: fakeView(), name: 'name'}),
+            handlerWasCalled = false,
+            val = {
+                f1:{
+                    value: 5
+                },
+                f2: 3
+            };
+
+        parameter.setValue(10);
+
+        parameter.onPropertyChanged(onPropertyChangedHandler);
+
+        //When
+        parameter.setValue(val);
+
+        // Then
+        function onPropertyChangedHandler(context, args){
+            assert.equal(args.newValue, val, 'new value is right');
+            assert.equal(args.oldValue, 10, 'old value is right');
+
+            handlerWasCalled = true;
+        }
+
+        assert.isTrue(handlerWasCalled, 'handler was called');
+    });
+
+});
+
 describe('Button', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -13255,198 +13183,6 @@ describe('ImageBox', function () {
 
 });
 
-describe('ListBox', function () {
-
-    describe('render', function () {
-
-        it('should render listBox with grouping', function () {
-            // Given
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE", "Type": 1 },
-                                { "Id": 2, "Display": "A", "Type": 2 },
-                                { "Id": 3, "Display": "3G", "Type": 1 },
-                                { "Id": 4, "Display": "01", "Type": 3 },
-                                { "Id": 5, "Display": "2G", "Type": 1 },
-                                { "Id": 6, "Display": "02", "Type": 3 },
-                                { "Id": 7, "Display": "03", "Type": 3 },
-                                { "Id": 8, "Display": "B", "Type": 2 }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-
-                    ListBox: {
-                        "ItemProperty": "Display",
-                        "GroupItemProperty": "Type",
-                        "GroupValueProperty": "Type",
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-            // When
-            testHelper.applyViewMetadata(metadata, onListboxReady);
-
-            // Then
-            function onListboxReady(view, $view){
-                var titles = $view.find('.pl-listbox-group-title .pl-label')
-                                .map(function(i, item){return $(item).text()})
-                                .toArray();
-
-                assert.sameMembers(titles, ['1', '2', '3'], 'incorrect titles');
-
-                var firstGroup = $view.find('.pl-listbox-group-i:nth-child(1) .pl-listbox-group-body .pl-label')
-                                    .map(function(i, item){return $(item).text()})
-                                    .toArray();
-
-                assert.sameMembers(firstGroup, ['LTE', '2G', '3G'], 'incorrect first group');
-
-                var secondGroup = $view.find('.pl-listbox-group-i:nth-child(2) .pl-listbox-group-body .pl-label')
-                    .map(function(i, item){return $(item).text()})
-                    .toArray();
-
-                assert.sameMembers(secondGroup, ['A', 'B'], 'incorrect second group');
-
-                var thirdGroup = $view.find('.pl-listbox-group-i:nth-child(3) .pl-listbox-group-body .pl-label')
-                    .map(function(i, item){return $(item).text()})
-                    .toArray();
-
-                assert.sameMembers(thirdGroup, ['01', '02', '03'], 'incorrect third group');
-
-                view.close();
-            }
-        });
-
-        it('should render listBox without grouping', function () {
-            // Given
-
-            var metadata = {
-                Text: 'Пациенты',
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE" },
-                                { "Id": 2, "Display": "3G" },
-                                { "Id": 3, "Display": "2G" }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-
-                    ListBox: {
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
-                                }
-                            }
-                        },
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-            // When
-
-            testHelper.applyViewMetadata(metadata, onListboxReady);
-
-            // Then
-            function onListboxReady(view, $view){
-                var items = $view.find('.pl-listbox-body .pl-label')
-                                .map(function(i, item){return $(item).text()})
-                                .toArray();
-
-                assert.sameMembers(items, ['LTE', '3G', '2G']);
-
-                view.close();
-            }
-        });
-
-    });
-
-    describe('api', function () {
-        it('should update DisabledItemCondition', function () {
-            // Given
-            var metadata = {
-                DataSources : [
-                    {
-                        ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                { "Id": 1, "Display": "LTE" },
-                                { "Id": 2, "Display": "3G" },
-                                { "Id": 3, "Display": "2G" }
-                            ]
-                        }
-                    }
-                ],
-                Items: [{
-                    ListBox: {
-                        "Name": "ListBox1",
-                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
-                        "ViewMode": "base",
-                        "MultiSelect": true,
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
-                                }
-                            }
-                        },
-                        "Items" : {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
-                        }
-                    }
-                }]
-            };
-
-
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-
-            function onViewReady(view, $view) {
-                var listbox = view.context.controls['ListBox1'];
-                var items = $view.find('.pl-listbox-i');
-
-                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
-                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
-
-                // When
-                listbox.setDisabledItemCondition( function (context, args) {
-                    return args.value.Id == 1;
-                });
-
-                // Then
-                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
-                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
-                view.close();
-            }
-        });
-    });
-
-});
 describe('Label', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -13660,6 +13396,198 @@ describe('LabelBuilder', function () {
     });
 });
 
+describe('ListBox', function () {
+
+    describe('render', function () {
+
+        it('should render listBox with grouping', function () {
+            // Given
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE", "Type": 1 },
+                                { "Id": 2, "Display": "A", "Type": 2 },
+                                { "Id": 3, "Display": "3G", "Type": 1 },
+                                { "Id": 4, "Display": "01", "Type": 3 },
+                                { "Id": 5, "Display": "2G", "Type": 1 },
+                                { "Id": 6, "Display": "02", "Type": 3 },
+                                { "Id": 7, "Display": "03", "Type": 3 },
+                                { "Id": 8, "Display": "B", "Type": 2 }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    ListBox: {
+                        "ItemProperty": "Display",
+                        "GroupItemProperty": "Type",
+                        "GroupValueProperty": "Type",
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+            // When
+            testHelper.applyViewMetadata(metadata, onListboxReady);
+
+            // Then
+            function onListboxReady(view, $view){
+                var titles = $view.find('.pl-listbox-group-title .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(titles, ['1', '2', '3'], 'incorrect titles');
+
+                var firstGroup = $view.find('.pl-listbox-group-i:nth-child(1) .pl-listbox-group-body .pl-label')
+                                    .map(function(i, item){return $(item).text()})
+                                    .toArray();
+
+                assert.sameMembers(firstGroup, ['LTE', '2G', '3G'], 'incorrect first group');
+
+                var secondGroup = $view.find('.pl-listbox-group-i:nth-child(2) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(secondGroup, ['A', 'B'], 'incorrect second group');
+
+                var thirdGroup = $view.find('.pl-listbox-group-i:nth-child(3) .pl-listbox-group-body .pl-label')
+                    .map(function(i, item){return $(item).text()})
+                    .toArray();
+
+                assert.sameMembers(thirdGroup, ['01', '02', '03'], 'incorrect third group');
+
+                view.close();
+            }
+        });
+
+        it('should render listBox without grouping', function () {
+            // Given
+
+            var metadata = {
+                Text: 'Пациенты',
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+
+                    ListBox: {
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+            // When
+
+            testHelper.applyViewMetadata(metadata, onListboxReady);
+
+            // Then
+            function onListboxReady(view, $view){
+                var items = $view.find('.pl-listbox-body .pl-label')
+                                .map(function(i, item){return $(item).text()})
+                                .toArray();
+
+                assert.sameMembers(items, ['LTE', '3G', '2G']);
+
+                view.close();
+            }
+        });
+
+    });
+
+    describe('api', function () {
+        it('should update DisabledItemCondition', function () {
+            // Given
+            var metadata = {
+                DataSources : [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDataSource1",
+                            "Items": [
+                                { "Id": 1, "Display": "LTE" },
+                                { "Id": 2, "Display": "3G" },
+                                { "Id": 3, "Display": "2G" }
+                            ]
+                        }
+                    }
+                ],
+                Items: [{
+                    ListBox: {
+                        "Name": "ListBox1",
+                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                        "ViewMode": "base",
+                        "MultiSelect": true,
+                        "ItemTemplate": {
+                            "Label": {
+                                "Name": "TextBox1",
+                                "Value": {
+                                    "Source": "ObjectDataSource1",
+                                    "Property": "#.Display"
+                                }
+                            }
+                        },
+                        "Items" : {
+                            "Source": "ObjectDataSource1",
+                            "Property": ""
+                        }
+                    }
+                }]
+            };
+
+
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+
+            function onViewReady(view, $view) {
+                var listbox = view.context.controls['ListBox1'];
+                var items = $view.find('.pl-listbox-i');
+
+                assert.isFalse(items.eq(0).hasClass('pl-disabled-list-item'), 'bad render for enabled item');
+                assert.isTrue(items.eq(1).hasClass('pl-disabled-list-item'), 'bad render for disabled item');
+
+                // When
+                listbox.setDisabledItemCondition( function (context, args) {
+                    return args.value.Id == 1;
+                });
+
+                // Then
+                assert.isTrue(items.eq(0).hasClass('pl-disabled-list-item'), 'items not updated');
+                assert.isFalse(items.eq(1).hasClass('pl-disabled-list-item'), 'items not updated');
+                view.close();
+            }
+        });
+    });
+
+});
 describe('ListEditorBase', function () {
 
     describe('ListBox as exemplar of ListEditorBase', function (){
@@ -14833,6 +14761,45 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
+describe('TabPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('Default values', function () {
+            var element = builder.buildType('TabPanel', {});
+
+            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
+            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
+        });
+
+
+    });
+
+
+});
+
+describe('TabPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            TabPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var element = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(element, 'TabPanel');
+    });
+
+});
+
 describe('ScrollPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14878,45 +14845,6 @@ describe('ScrollPanelBuilder', function () {
 
         //Then
         assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
-});
-
-describe('TabPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('Default values', function () {
-            var element = builder.buildType('TabPanel', {});
-
-            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
-            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
-        });
-
-
-    });
-
-
-});
-
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            TabPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var element = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(element, 'TabPanel');
     });
 
 });
