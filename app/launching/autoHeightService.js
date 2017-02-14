@@ -246,7 +246,7 @@ window.InfinniUI.AutoHeightService = {
 
     recalculation: function (container) {
         if (window.InfinniUI.config.enableAutoHeightService) {
-            $('#page-content').addClass('page-content-overflow-hidden');
+            $(container).addClass('page-content-overflow-hidden');
             this.windowHeight = $(window).height();
             this.onChangeLayout(container);
             if (this.exchange === null) {
