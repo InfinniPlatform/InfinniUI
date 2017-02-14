@@ -4,17 +4,21 @@ window.InfinniUI.openHomePage = function($target) {
 
     rootView.open($target);
 
-    InfinniUI.AutoHeightService.slidingRecalculation();
-    subscribeRecalculationOnWindowResize();
+    InfinniUI.AutoHeightService.slidingRecalculation($target);
+    subscribeRecalculationOnWindowResize($target);
 
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
             action.execute();
         });
+
+    if( InfinniUI.config.enableGetCurrentUser ) {
+        setCurrentUser();
+    }
 };
 
-function subscribeRecalculationOnWindowResize() {
+function subscribeRecalculationOnWindowResize($container) {
     var TIMEOUT = 40;
     var WAIT = 50;
     var resizeTimeout;
@@ -25,7 +29,7 @@ function subscribeRecalculationOnWindowResize() {
     });
 
     function onWindowResize() {
-        window.InfinniUI.AutoHeightService.recalculation();
+        window.InfinniUI.AutoHeightService.recalculation($container);
     }
 
 };
@@ -60,3 +64,26 @@ function getHomePageLinkViewPromise() {
 
     return defer.promise();
 };
+
+function refreshUserInfo() {
+    var authProvider = InfinniUI.global.session;
+    authProvider.getCurrentUser(
+        function (result) {
+            InfinniUI.user.onReadyDeferred.resolve(result);
+        },
+        function (error) {
+            InfinniUI.user.onReadyDeferred.resolve(null);
+        }
+    );
+};
+
+function setCurrentUser() {
+    InfinniUI.user = {
+        onReadyDeferred: $.Deferred(),
+        onReady: function(handler){
+            this.onReadyDeferred.done(handler);
+        }
+    };
+
+    refreshUserInfo();
+}
