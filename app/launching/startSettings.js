@@ -6,10 +6,11 @@ moment.locale(InfinniUI.config.lang && InfinniUI.config.lang.substr(0,2));
 
 InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
-InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
-    InfinniUI.AutoHeightService.slidingRecalculation();
+InfinniUI.providerRegister.register('MetadataDataSource', function (args) {
+    var applicationContainer = args.applicationView && args.applicationView.getContainer();
+    InfinniUI.AutoHeightService.slidingRecalculation(applicationContainer);
 
-    return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(InfinniUI.config.serverUrl, metadataValue));
+    return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(InfinniUI.config.serverUrl, args.metadata));
 });
 
 

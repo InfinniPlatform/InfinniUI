@@ -12,11 +12,11 @@ window.InfinniUI.config.homePage = '/viewExample/homePage.json';
 
 window.InfinniUI.config.lang = 'en-US';
 
-// when disableAutoHeightService = true, body will have full height and will scrollable
-// window.InfinniUI.config.disableAutoHeightService = true;
+// when enableAutoHeightService = false, body will have full height and will scrollable
+window.InfinniUI.config.enableAutoHeightService = false;
 
-// when need to disable GetCurrentUser and when need to disable SignInExternalForm
-window.InfinniUI.config.disableGetCurrentUser = window.InfinniUI.config.disableSignInExternalForm = false;
+// when need to use GetCurrentUser
+window.InfinniUI.config.enableGetCurrentUser = true;
 
 
 

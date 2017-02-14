@@ -1,6 +1,4 @@
 function SpecialApplicationView() {
-    var $container;
-
     this.isView = true;
 
     this.getContainer = function () {
@@ -9,16 +7,14 @@ function SpecialApplicationView() {
 
     this.open = function ($el) {
         this.$container = $el;
+
+        if( $el ) {
+            $el.addClass('special-application-view');
+        }
     };
 
     this.getApplicationView = function () {
         return this;
-    };
-
-    this.menuIsInitialized = function () {
-        this.isMenuInitialized = true;
-
-        //this.initViewHandlers();
     };
 
     this.getContext = function(){
