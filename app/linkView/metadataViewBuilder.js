@@ -9,12 +9,11 @@ window.InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 _.extend(MetadataViewBuilder.prototype, {
 
     getViewTemplate: function (params, parentView) {
-        var metadata = params.metadata,
-            applicationView = parentView && parentView.getApplicationView(),
-            that = this;
+        var metadata = params.metadata;
+        var that = this;
 
         return function (onViewReadyHandler) {
-            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata, applicationView);
+            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
 
             metadataProvider.getMetadata(function (viewMetadata) {
 
