@@ -251,7 +251,7 @@ window.InfinniUI.AutoHeightService = {
             this.onChangeLayout(container);
             if (this.exchange === null) {
                 this.exchange = window.InfinniUI.global.messageBus;
-                this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
+                this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this, container), 42));
             }
         }
     },
