@@ -213,10 +213,6 @@ var TreeViewView = ListEditorBaseView.extend({
                 }
             });
         }
-    },
-
-    rerender: function () {
-
     }
 
 

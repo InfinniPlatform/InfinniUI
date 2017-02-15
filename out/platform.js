@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.6';
+InfinniUI.VERSION = '2.2.8';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -4617,66 +4617,36 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
 
     updateTextStyle: function () {
         var customStyle = this.model.get('textStyle');
-
-        if (this.currentTextStyle) {
-            this.$el
-                .removeClass(this.valueToTextClassName(this.currentTextStyle));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToTextClassName(customStyle));
-        }
-
+	      this.changeElementClass( this.valueToTextClassName( this.currentTextStyle ), this.valueToTextClassName( customStyle ) );
         this.currentTextStyle = customStyle;
     },
 
     updateBackground: function () {
         var customStyle = this.model.get('background');
-
-        if (this.currentBackground) {
-            this.$el
-                .removeClass(this.valueToBackgroundClassName(this.currentBackground));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToBackgroundClassName(customStyle));
-        }
-
+	      this.changeElementClass( this.valueToBackgroundClassName( this.currentBackground ), this.valueToBackgroundClassName( customStyle ) );
         this.currentBackground = customStyle;
     },
 
     updateForeground: function () {
         var customStyle = this.model.get('foreground');
-
-        if (this.currentForeground) {
-            this.$el
-                .removeClass(this.valueToForegroundClassName(this.currentForeground));
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(this.valueToForegroundClassName(customStyle));
-        }
-
+        this.changeElementClass( this.valueToForegroundClassName( this.currentForeground ), this.valueToForegroundClassName( customStyle ) );
         this.currentForeground = customStyle;
     },
 
     updateStyle: function () {
         var customStyle = this.model.get('style');
-
-        if (this.currentStyle) {
-            this.$el
-                .removeClass(this.currentStyle);
-        }
-
-        if (customStyle) {
-            this.$el
-                .addClass(customStyle);
-        }
-
+        this.changeElementClass( this.currentStyle, customStyle );
         this.currentStyle = customStyle;
+    },
+
+    changeElementClass: function( oldClass, newClass ) {
+        if ( oldClass ) {
+            this.$el.removeClass( oldClass );
+        }
+
+        if ( newClass ) {
+            this.$el.addClass( newClass );
+         }
     },
 
     updateViewMode: function () {
@@ -4776,15 +4746,18 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
     },
 
     valueToBackgroundClassName: function (value) {
-        return 'pl-' + value.toLowerCase() + '-bg';
+        if( value ) return 'pl-' + value.toLowerCase() + '-bg';
+        else return '';
     },
 
     valueToForegroundClassName: function (value) {
-        return 'pl-' + value.toLowerCase() + '-fg';
+        if( value ) return 'pl-' + value.toLowerCase() + '-fg';
+        else return '';
     },
 
     valueToTextClassName: function (value) {
-        return 'pl-' + value.toLowerCase();
+        if( value ) return 'pl-' + value.toLowerCase();
+        else return '';
     },
 
     renderTemplate: function (template) {
@@ -6118,7 +6091,6 @@ var TextEditorView = Backbone.View.extend({
 
     onFocusinHandler: function (/* event */) {
         this.model.setEditMode();
-        setTimeout(this.setCaretPosition.bind(this, 0), 4);
     },
 
     onFocusoutHandler: function (/* event */) {
@@ -6148,6 +6120,7 @@ var TextEditorView = Backbone.View.extend({
         }
     }
 });
+
 //####app\controls\_base\textEditor\_mode\textEditorModelBaseModeStrategy.js
 /**
  *
@@ -7711,7 +7684,8 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
     }),
 
     events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'click .pl-datepicker-calendar': 'onClickDropdownHandler'
+        'click .pl-datepicker-calendar': 'onClickDropdownHandler',
+        'focusin': 'onFocusinHandler'
     }),
 
     initialize: function () {
@@ -7797,7 +7771,14 @@ var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView
         throw new Error('Не перекрыт getTemplate');
     },
 
-    onClickDropdownHandler: function (event) {}
+    onClickDropdownHandler: function (event) {},
+
+    onFocusinHandler: function () {
+        var editor = this.model.get('editor');
+        setTimeout(function() {
+		        editor.setCaretPosition(0);
+        }, 4);
+    }
 
 });
 
@@ -13681,10 +13662,6 @@ var TreeViewView = ListEditorBaseView.extend({
                 }
             });
         }
-    },
-
-    rerender: function () {
-
     }
 
 
@@ -15452,101 +15429,6 @@ var GridPanelView = ContainerView.extend(
     }
 );
 
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    }
-
-});
-
 //####app\controls\imageBox\imageBoxControl.js
 /**
  *
@@ -15816,6 +15698,115 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     }
 
 }));
+
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
+}
+
+_.inherit(IconControl, Control);
+
+_.extend(IconControl.prototype, {
+
+    createControlModel: function () {
+        return new IconModel();
+    },
+
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
+
+});
+//####app\controls\icon\iconModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+var IconModel = ControlModel.extend({
+
+    defaults: _.defaults({
+        value: null,
+        size: '',
+        focusable: false
+
+    }, ControlModel.prototype.defaults),
+
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
+
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
+
+    className: 'pl-icon fa',
+
+    tagName: 'i',
+
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:size', this.updateSize);
+    },
+
+    updateSize: function() {
+      var newSize = this.model.get('size');
+      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
+      this.currentSize = newSize;
+    },
+
+    valueToSizeClassName: function ( value ) {
+        if( value ) return 'pl-iconSize-' + value.toLowerCase();
+        else return '';
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+        this.updateSize();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
+    updateValue: function () {
+        this.renderIcon();
+    }
+
+});
 
 //####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
 function IndeterminateCheckBoxControl(parent) {
@@ -17845,37 +17836,35 @@ var BaseDataSource = Backbone.Model.extend({
             validateResult;
 
         if (!this.isModified(item)) {
-            this._notifyAboutItemSaved({item: item, result: null}, 'notModified');
-            that._executeCallback(success, {item: item, result: {IsValid: true}});
+            this._notifyAboutItemSaved( {item: item, result: null} , 'notModified');
+            that._executeCallback(success, {item: item, validationResult: {IsValid: true}});
             return;
         }
 
-        validateResult = this.validateOnErrors(item);
+        validateResult = this.getValidationResult(item);
         if (!validateResult.IsValid) {
-            this._executeCallback(error, {item: item, result: validateResult});
+            this._notifyAboutValidation(validateResult);
+            this._executeCallback(error, {item: item, validationResult: validateResult});
             return;
         }
 
         dataProvider.saveItem(item, function(data){
-            if( !('IsValid' in data) || data.IsValid === true ){
-                that._excludeItemFromModifiedSet(item);
-                that._notifyAboutItemSaved({item: item, result: data.data}, 'modified');
-                that._executeCallback(success, {item: item, result: that._getValidationResult(data)});
-            }else{
-                var result = that._getValidationResult(data);
-                that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result});
-            }
+            that._excludeItemFromModifiedSet(item);
+            that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
-            var result = that._getValidationResult(data),
-                context = that.getContext();
-            that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', context, {item: item, data: data});
+            var result = that._extractValidationResult(data);
+
+            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
+            that._onServerErrorHandler({
+                response: data,
+                validationResult: result,
+                item: item
+            });
         });
     },
 
-    _getValidationResult: function(data){
+    _extractValidationResult: function(data){
         if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
             return data.data.responseJSON['Result']['ValidationResult'];
         }
@@ -17913,25 +17902,34 @@ var BaseDataSource = Backbone.Model.extend({
         this.beforeDeleteItem(item);
 
         dataProvider.deleteItem(item, function (data) {
-            if (!('IsValid' in data) || data['IsValid'] === true) {
-                that._handleDeletedItem(item, success);
-            } else {
-                var result = that._getValidationResult(data);
-                that._notifyAboutValidation(result, 'error');
-                that._executeCallback(error, {item: item, result: result});
-            }
+            that._handleDeletedItem(item);
+            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
         }, function(data) {
-            var result = that._getValidationResult(data),
-                context = that.getContext();
-            that._notifyAboutValidation(result, 'error');
-            that._executeCallback(error, {item: item, result: result, data: data});
-            that.trigger('onProviderError', context, {item: item, data: data});
+            var result = that._extractValidationResult(data);
+
+            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
+            that._onServerErrorHandler({
+                response: data,
+                validationResult: result,
+                item: item
+            });
         });
+    },
+
+    _onServerErrorHandler: function(params) {
+        var validationResult = params.validationResult,
+            context = this.getContext();
+
+        if( validationResult && validationResult.IsValid ) {
+            this._notifyAboutValidation(validationResult);
+        } else {
+            this.trigger('onProviderError', context, {item: params.item, data: params.response});
+        }
     },
 
     beforeDeleteItem: function(item){},
 
-    _handleDeletedItem: function (item, successHandler) {
+    _handleDeletedItem: function (item) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
         logger.warn({
@@ -17946,9 +17944,6 @@ var BaseDataSource = Backbone.Model.extend({
 
         argument.value = item;
 
-        if (successHandler) {
-            successHandler(context, argument);
-        }
         this.trigger('onItemDeleted', context, argument);
     },
 
@@ -18173,7 +18168,7 @@ var BaseDataSource = Backbone.Model.extend({
         this.set('errorValidator', validatingFunction);
     },
 
-    validateOnErrors: function (item, callback) {
+    getValidationResult: function (item) {
         var validatingFunction = this.get('errorValidator'),
             result = {
                 IsValid: true,
@@ -18181,7 +18176,7 @@ var BaseDataSource = Backbone.Model.extend({
             },
             isCheckingOneItem = !!item,
             context = this.getContext(),
-            items, subResult, itemIndex;
+            items, subResult;
 
         if (validatingFunction) {
             if (isCheckingOneItem) {
@@ -18205,9 +18200,6 @@ var BaseDataSource = Backbone.Model.extend({
             }
         }
 
-        this._notifyAboutValidation(result, 'error');
-        this._executeCallback(callback, {item: item, result: result});
-
         return result;
     },
 
@@ -18225,7 +18217,7 @@ var BaseDataSource = Backbone.Model.extend({
         }
     },
 
-    _notifyAboutValidation: function (validationResult, validationType) {
+    _notifyAboutValidation: function (validationResult) {
         if(!validationResult) {
             return;
         }
@@ -18428,7 +18420,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')[itemId];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 idProperty = this.get('idProperty'),
                 itemId = this.idOfItem(item),
@@ -18447,7 +18439,7 @@ BaseDataSource.identifyingStrategy = {
                 this.setSelectedItem(null);
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     },
 
@@ -18504,7 +18496,7 @@ BaseDataSource.identifyingStrategy = {
             delete this.get('modifiedItems')['-'];
         },
 
-        _handleDeletedItem: function (item, successHandler) {
+        _handleDeletedItem: function (item) {
             var items = this.getItems(),
                 selectedItem = this.getSelectedItem(),
                 index = items.indexOf(item);
@@ -18518,7 +18510,7 @@ BaseDataSource.identifyingStrategy = {
                 }
             }
 
-            this._notifyAboutItemDeleted(item, successHandler);
+            this._notifyAboutItemDeleted(item);
         }
     }
 };
@@ -19912,7 +19904,7 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
-    remove: function (isInitiatedByParent) {
+    remove: function (isInitiatedByParent, parent) {
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -19922,7 +19914,7 @@ _.extend(Element.prototype, {
         var children = this.childElements;
 
         for (var i = 0, ii = children.length; i < ii; i++) {
-            children[i].remove(true);
+            children[i].remove(true, this);
         }
 
         this.control.remove();
@@ -19934,6 +19926,10 @@ _.extend(Element.prototype, {
                 this.parent.removeChild(this);
             }
 
+        }
+
+        if( parent && this.parent && this.parent.removeChild && isInitiatedByParent && parent !== this.parent ) {
+          this.parent.removeChild(this);
         }
 
         this.isRemoved = true;
@@ -21795,6 +21791,10 @@ TextEditor.prototype.onValueChanged = function (handler) {
 
         handler.call(null, value);
     });
+};
+
+TextEditor.prototype.setCaretPosition = function (value) {
+	this._view.setCaretPosition(value);
 };
 
 //####app\elements\listBox\listBox.js
@@ -24119,31 +24119,42 @@ _.extend(GridPanelBuilder.prototype,
     });
 
 //####app\elements\icon\icon.js
-function Icon(parent) {
-    _.superClass(Icon, this, parent);
+function Icon( parent ) {
+	_.superClass( Icon, this, parent );
 }
 
 window.InfinniUI.Icon = Icon;
 
-_.inherit(Icon, Element);
+_.inherit( Icon, Element );
 
-_.extend(Icon.prototype, {
+_.extend( Icon.prototype, {
 
-    createControl: function () {
-        return new IconControl();
-    },
+	createControl: function() {
+		return new IconControl();
+	},
 
-    setValue: function(value){
-        this.control.set('value', value);
-    },
+	setValue: function( value ) {
+		this.control.set( 'value', value );
+	},
 
-    getValue: function(){
-        return this.control.get('value');
-    },
+	getValue: function() {
+		return this.control.get( 'value' );
+	},
 
-    onValueChanged: function(){}
+	getSize: function() {
+		return this.control.get( 'size' );
+	},
 
-});
+	setSize: function( size ) {
+		if( typeof size == 'string' ) {
+			this.control.set( 'size', size );
+		}
+	},
+
+	onValueChanged: function() {
+	}
+
+} );
 
 //####app\elements\icon\iconBuilder.js
 function IconBuilder() {
@@ -24166,6 +24177,7 @@ _.extend(IconBuilder.prototype, {
         var metadata = params.metadata;
 
         this.initBindingToProperty(params, 'Value');
+        this.initBindingToProperty(params, 'Size');
     }
 
 });
@@ -24820,6 +24832,86 @@ NumericBoxBuilder.prototype.applyMetadata = function (params) {
 };
 
 
+//####app\elements\passwordBox\passwordBox.js
+/**
+ *
+ * @constructor
+ * @augments Element
+ * @mixes editorBaseMixin
+ * @mixes labelTextElementMixin
+ */
+function PasswordBox(parent) {
+    _.superClass(PasswordBox, this, parent);
+    this.initialize_editorBase();
+}
+
+window.InfinniUI.PasswordBox = PasswordBox;
+
+_.inherit(PasswordBox, Element);
+
+_.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
+
+        setAutocomplete: function (value) {
+            if (typeof value === 'undefined' || value === null) {
+                return;
+            }
+            this.control.set('autocomplete', !!value);
+        },
+
+        getAutocomplete: function () {
+            return this.control.get('autocomplete');
+        },
+
+        createControl: function () {
+            return new PasswordBoxControl();
+        },
+
+        getRawValue: function () {
+            return this.control.get('rawValue');
+        }
+
+    },
+    editorBaseMixin,
+    labelTextElementMixin
+);
+
+//####app\elements\passwordBox\passwordBoxBuilder.js
+/**
+ * @constructor
+ * @augments ElementBuilder
+ * @mixes editorBaseBuilderMixin
+ */
+function PasswordBoxBuilder() {
+    _.superClass(PasswordBoxBuilder, this);
+    this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
+
+_.inherit(PasswordBoxBuilder, ElementBuilder);
+
+_.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {
+
+        applyMetadata: function (params) {
+            ElementBuilder.prototype.applyMetadata.call(this, params);
+            this.applyMetadata_editorBaseBuilder(params);
+
+            var metadata = params.metadata,
+                element = params.element;
+
+            this.initBindingToProperty(params, 'LabelText');
+            element.setAutocomplete(metadata.Autocomplete);
+        },
+
+        createElement: function (params) {
+            var element = new PasswordBox(params.parent);
+            return element;
+        }
+
+    },
+    editorBaseBuilderMixin
+);
+
 //####app\elements\panel\panel.js
 /**
  * @param parent
@@ -25108,86 +25200,6 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
     }
 
 });
-
-//####app\elements\passwordBox\passwordBox.js
-/**
- *
- * @constructor
- * @augments Element
- * @mixes editorBaseMixin
- * @mixes labelTextElementMixin
- */
-function PasswordBox(parent) {
-    _.superClass(PasswordBox, this, parent);
-    this.initialize_editorBase();
-}
-
-window.InfinniUI.PasswordBox = PasswordBox;
-
-_.inherit(PasswordBox, Element);
-
-_.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
-
-        setAutocomplete: function (value) {
-            if (typeof value === 'undefined' || value === null) {
-                return;
-            }
-            this.control.set('autocomplete', !!value);
-        },
-
-        getAutocomplete: function () {
-            return this.control.get('autocomplete');
-        },
-
-        createControl: function () {
-            return new PasswordBoxControl();
-        },
-
-        getRawValue: function () {
-            return this.control.get('rawValue');
-        }
-
-    },
-    editorBaseMixin,
-    labelTextElementMixin
-);
-
-//####app\elements\passwordBox\passwordBoxBuilder.js
-/**
- * @constructor
- * @augments ElementBuilder
- * @mixes editorBaseBuilderMixin
- */
-function PasswordBoxBuilder() {
-    _.superClass(PasswordBoxBuilder, this);
-    this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
-
-_.inherit(PasswordBoxBuilder, ElementBuilder);
-
-_.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {
-
-        applyMetadata: function (params) {
-            ElementBuilder.prototype.applyMetadata.call(this, params);
-            this.applyMetadata_editorBaseBuilder(params);
-
-            var metadata = params.metadata,
-                element = params.element;
-
-            this.initBindingToProperty(params, 'LabelText');
-            element.setAutocomplete(metadata.Autocomplete);
-        },
-
-        createElement: function (params) {
-            var element = new PasswordBox(params.parent);
-            return element;
-        }
-
-    },
-    editorBaseBuilderMixin
-);
 
 //####app\elements\popupButton\popupButton.js
 /**
@@ -27271,6 +27283,135 @@ _.extend(CancelActionBuilder.prototype,
 
 window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
 
+//####app\actions\editAction\editAction.js
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseEditAction);
+
+
+_.extend(EditAction.prototype, {
+    setSelectedItem: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
+
+        if( selectedItem == null ){
+
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isRootItem(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
+
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
+        }
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            this._setItem(editDataSource, selectedItem);
+        } else {
+            this._setDocument(editDataSource, selectedItem);
+        }
+
+        return true;
+    },
+
+    _resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('BaseEditAction');
+    },
+
+    _setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
+    },
+
+    _setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
+
+        if(item === undefined || item === null){
+            item = {};
+        }
+        this._resumeUpdateEditDataSource();
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
+    },
+
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            var editedItem = editDataSource.getSelectedItem();
+            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
+
+            if( this._isRootItem(destinationProperty) ) {
+                this._overrideOriginItem(rootItem, editedItem);
+                destinationDataSource._includeItemToModifiedSet(rootItem);
+            } else {
+                destinationDataSource.setProperty(destinationProperty, editedItem);
+            }
+
+            destinationDataSource.saveItem(rootItem);
+        }
+
+        destinationDataSource.updateItems();
+    },
+
+    _overrideOriginItem: function(originItem, newItem) {
+        for(var property in originItem) {
+            delete originItem[property];
+        }
+
+        for(var property in newItem) {
+          originItem[property] = _.clone(newItem[property]);
+        }
+    },
+
+    _isRootItem: function(path){
+        return !path.includes('.');
+    },
+
+    _getRootItem: function(dataSource, property) {
+        var index = (property||'$').split('.')[0];
+        return dataSource.getProperty(index);
+    }
+});
+
+window.InfinniUI.EditAction = EditAction;
+
+//####app\actions\editAction\editActionBuilder.js
+function EditActionBuilder(){}
+
+_.extend(EditActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseEditActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new EditAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseEditActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.EditActionBuilder = EditActionBuilder;
+
 //####app\actions\deleteAction\deleteAction.js
 function DeleteAction(parentView){
     _.superClass(DeleteAction, this, parentView);
@@ -27416,134 +27557,6 @@ _.extend(DeleteActionBuilder.prototype,
 );
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
-
-//####app\actions\editAction\editAction.js
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
-}
-
-_.inherit(EditAction, BaseEditAction);
-
-
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
-
-            // if selectedItem is empty and it is must be document
-            // return error
-            if( this._isRootItem(destinationProperty) ){
-                var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
-
-                return false;
-            }
-
-            // but if selectedItem is property of document
-            // it will be created
-            selectedItem = selectedItem || {};
-        }
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
-        } else {
-            this._setDocument(editDataSource, selectedItem);
-        }
-
-        return true;
-    },
-
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
-    },
-
-    _setDocument: function (editDataSource, selectedItem){
-        var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
-        editDataSource.tryInitData();
-        this._resumeUpdateEditDataSource();
-    },
-
-    _setItem: function(editDataSource, selectedItem){
-        var item = _.clone( selectedItem );
-
-        if(item === undefined || item === null){
-            item = {};
-        }
-        this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
-        editDataSource.setSelectedItem( item );
-    },
-
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            var editedItem = editDataSource.getSelectedItem();
-            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
-
-            if( this._isRootItem(destinationProperty) ) {
-                this._overrideOriginItem(rootItem, editedItem);
-                destinationDataSource._includeItemToModifiedSet(rootItem);
-            }
-            // TODO: выяснить, почему без setProperty dataGrid не обновляется
-            destinationDataSource.setProperty(destinationProperty, editedItem);
-            destinationDataSource.saveItem(rootItem);
-        }
-
-        destinationDataSource.updateItems();
-    },
-
-    _overrideOriginItem: function(originItem, newItem) {
-        for(var property in originItem) {
-            delete originItem[property];
-        }
-
-        for(var property in newItem) {
-          originItem[property] = _.clone(newItem[property]);
-        }
-    },
-
-    _isRootItem: function(path){
-        return !path.includes('.');
-    },
-
-    _getRootItem: function(dataSource, property) {
-        var index = (property||'$').split('.')[0];
-        return dataSource.getProperty(index);
-    }
-});
-
-window.InfinniUI.EditAction = EditAction;
-
-//####app\actions\editAction\editActionBuilder.js
-function EditActionBuilder(){}
-
-_.extend(EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new EditAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
 //####app\actions\openAction\openAction.js
 function OpenAction(parentView){
@@ -27696,48 +27709,48 @@ _.extend(RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMi
 window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
 
 //####app\actions\saveAction\saveAction.js
-function SaveAction(parentView){
-    _.superClass(SaveAction, this, parentView);
+function SaveAction( parentView ) {
+	_.superClass( SaveAction, this, parentView );
 }
 
-_.inherit(SaveAction, BaseAction);
+_.inherit( SaveAction, BaseAction );
 
+_.extend( SaveAction.prototype,
+	BaseFallibleActionMixin,
+	{
+		execute: function( callback ) {
+			var parentView = this.parentView;
+			var dataSource = this.getProperty( 'dataSource' );
+			var canClose = this.getProperty( 'canClose' );
+			var that = this;
 
-_.extend(SaveAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
-            var parentView = this.parentView,
-                dataSource = this.getProperty('dataSource'),
-                canClose = this.getProperty('canClose'),
-                that = this;
+			var onSuccessSave = function( context, args ) {
+				parentView.setDialogResult( DialogResult.accepted );
 
-            var onSuccessSave = function(context, args){
-                    if(canClose !== false){
-                        parentView.setDialogResult(DialogResult.accepted);
-                        parentView.close();
-                    }
+				if( canClose !== false ) {
+					parentView.close();
+				}
 
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
+				that.onExecutedHandler( args );
+				that.onSuccessHandler( args );
 
-                    if(_.isFunction(callback)){
-                        callback(context, args);
-                    }
-                },
-                onErrorSave = function(context, args){
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
+				if( _.isFunction( callback ) ) {
+					callback( context, args );
+				}
+			};
+			var onErrorSave = function( context, args ) {
+				that.onExecutedHandler( args );
+				that.onErrorHandler( args );
 
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
+				if( _.isFunction( callback ) ) {
+					callback( context, args );
+				}
+			};
 
-            var selectedItem = dataSource.getSelectedItem();
-            dataSource.saveItem(selectedItem, onSuccessSave, onErrorSave);
-        }
-    }
+			var selectedItem = dataSource.getSelectedItem();
+			dataSource.saveItem( selectedItem, onSuccessSave, onErrorSave );
+		}
+	}
 );
 
 window.InfinniUI.SaveAction = SaveAction;
@@ -34280,11 +34293,10 @@ window.InfinniUI.AutoHeightService = {
 	},
 
 	resizeDialog: function () {
-		var manager = this;
-		$(this.getModalSelector()).each(function (i, el) {
-			manager._resizeDialog($(el));
-			manager.resetDialogHeight($(el));
-		});
+		var $currentDialog = $(this.getModalSelector()).last();
+
+		this._resizeDialog($currentDialog);
+		this.resetDialogHeight($currentDialog);
 	},
 
 	resetDialogHeight: function($modal){
@@ -34612,8 +34624,8 @@ InfinniUI.ModalWindowService = (function () {
             if (modalQueue.length != 0) {
                 var previous = modalQueue[modalQueue.length - 1];
 
-                previous.modal.hide();
-                previous.background.hide();
+                previous.modal.addClass('invisible');
+                previous.background.addClass('invisible');
             }
 
             modalQueue.push(obj);
@@ -34626,8 +34638,8 @@ InfinniUI.ModalWindowService = (function () {
                     if (i == length - 1 && i != 0) {
                         var previous = modalQueue[i - 1];
 
-                        previous.modal.show();
-                        previous.background.show();
+                        previous.modal.removeClass('invisible');
+                        previous.background.removeClass('invisible');
                         notifyLayoutChange();
                     }
 
@@ -35075,32 +35087,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
-})();
-
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -35192,4 +35178,30 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
+		var message = args.value;
+		showToolTip(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+	function showToolTip($element, content) {
+		$element
+			.tooltip({
+				html: true,
+				title:content,
+				placement: 'auto top',
+				container: 'body',
+				trigger: 'hover'
+			})
+			.tooltip('show');
+	}
+})();
 })();
