@@ -56,10 +56,10 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var cellElements = this.model.get('cellElements');
-        var templateDataCell = this.template.dataCell;
+        var templateDataCell = this.template.dataCell();
         if (Array.isArray(cellElements)) {
             cellElements.forEach(function (cellElement, index) {
-                var $cell = $(templateDataCell());
+                var $cell = $(templateDataCell);
                 $cell.append(cellElement.render());
                 $el.append($cell);
             });
