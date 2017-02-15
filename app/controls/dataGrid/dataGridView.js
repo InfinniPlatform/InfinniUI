@@ -269,14 +269,14 @@ var DataGridView = ListEditorBaseView.extend({
     renderHeaders: function () {
         var that = this;
         var columns = this.model.get('columns');
-        var templateHeaderCell = this.template.headerCell;
+        var templateHeaderCell = this.template.headerCell();
         var sizeCells = [];
-        var templateSizeCells = this.template.sizeCell;
+        var templateSizeCells = this.template.sizeCell();
 
         var $headers = columns.toArray().map(function (column) {
 
-            sizeCells.push(templateSizeCells());
-            var $th = $(templateHeaderCell());
+            sizeCells.push(templateSizeCells);
+            var $th = $(templateHeaderCell);
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
