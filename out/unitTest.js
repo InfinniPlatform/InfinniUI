@@ -3263,100 +3263,6 @@ describe('TemplateEditMask', function () {
 
 });
 
-describe('LinkView', function () {
-
-    describe('setOpenMode', function () {
-        it('should set openMode', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode('Dialog');
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Dialog');
-        });
-
-        it('should set openMode Default by default', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-
-        it('should set openMode Default if no mode passed', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode(null);
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-    });
-});
-
-describe('MetadataViewBuilder', function () {
-
-    /*var builder = new InfinniUI.ApplicationBuilder();
-
-    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
-        return {
-            "getViewMetadata": function () {
-                return metadata;
-            }
-        };
-    });
-
-    var metadata = {
-            "DataSources": [
-
-                {
-                    "DocumentDataSource": {
-                        "Name": 'PatientDataSource',
-                        "ConfigId": 'ReceivingRoom',
-                        "DocumentId": 'HospitalizationRefusal'
-                    }
-                }
-            ],
-            "OpenMode": "Application",
-            "ConfigId": 'ReceivingRoom',
-            "DocumentId": 'HospitalizationRefusal',
-            "ViewType": 'ListView',
-            "MetadataName": 'HospitalizationRefusalListView',
-            //"Parameters": [
-            //    {
-            //        "Name" : 'Param1',
-            //        "Value" : {
-            //            "PropertyBinding": {
-            //                "DataSource": 'PatientDataSource',
-            //                "Property": 'LastName'
-            //            }
-            //        }
-            //    }
-            //],
-            "LayoutPanel" : {
-
-            }
-    };
-
-    it('should build exists view', function () {
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var builder = new MetadataViewBuilder();
-        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
-
-        applicationBuilder.appView = view;
-        applicationBuilder.appView.createView(function(view){
-            //assert.isNotNull(view.getParameter('Param1'));
-            assert.isNotNull(view.getDataSource('PatientDataSource'));
-        });
-    });*/
-});
-
-
 describe('BooleanFormat', function () {
     describe('format', function () {
 
@@ -3967,6 +3873,100 @@ describe('ObjectFormat', function () {
     });
 
 });
+
+describe('LinkView', function () {
+
+    describe('setOpenMode', function () {
+        it('should set openMode', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode('Dialog');
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Dialog');
+        });
+
+        it('should set openMode Default by default', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+
+        it('should set openMode Default if no mode passed', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode(null);
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+    });
+});
+
+describe('MetadataViewBuilder', function () {
+
+    /*var builder = new InfinniUI.ApplicationBuilder();
+
+    window.providerRegister.register('MetadataDataSource', function (metadataValue) {
+        return {
+            "getViewMetadata": function () {
+                return metadata;
+            }
+        };
+    });
+
+    var metadata = {
+            "DataSources": [
+
+                {
+                    "DocumentDataSource": {
+                        "Name": 'PatientDataSource',
+                        "ConfigId": 'ReceivingRoom',
+                        "DocumentId": 'HospitalizationRefusal'
+                    }
+                }
+            ],
+            "OpenMode": "Application",
+            "ConfigId": 'ReceivingRoom',
+            "DocumentId": 'HospitalizationRefusal',
+            "ViewType": 'ListView',
+            "MetadataName": 'HospitalizationRefusalListView',
+            //"Parameters": [
+            //    {
+            //        "Name" : 'Param1',
+            //        "Value" : {
+            //            "PropertyBinding": {
+            //                "DataSource": 'PatientDataSource',
+            //                "Property": 'LastName'
+            //            }
+            //        }
+            //    }
+            //],
+            "LayoutPanel" : {
+
+            }
+    };
+
+    it('should build exists view', function () {
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var builder = new MetadataViewBuilder();
+        var view = builder.build(null, {builder: applicationBuilder, view: {}, metadata: metadata});
+
+        applicationBuilder.appView = view;
+        applicationBuilder.appView.createView(function(view){
+            //assert.isNotNull(view.getParameter('Param1'));
+            assert.isNotNull(view.getDataSource('PatientDataSource'));
+        });
+    });*/
+});
+
 
 describe('MessageBus', function () {
     var messageBus;

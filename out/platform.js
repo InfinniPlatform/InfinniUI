@@ -10761,14 +10761,14 @@ var DataGridView = ListEditorBaseView.extend({
     renderHeaders: function () {
         var that = this;
         var columns = this.model.get('columns');
-        var templateHeaderCell = this.template.headerCell;
+        var templateHeaderCell = this.template.headerCell();
         var sizeCells = [];
-        var templateSizeCells = this.template.sizeCell;
+        var templateSizeCells = this.template.sizeCell();
 
         var $headers = columns.toArray().map(function (column) {
 
-            sizeCells.push(templateSizeCells());
-            var $th = $(templateHeaderCell());
+            sizeCells.push(templateSizeCells);
+            var $th = $(templateHeaderCell);
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
@@ -11009,10 +11009,10 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var cellElements = this.model.get('cellElements');
-        var templateDataCell = this.template.dataCell;
+        var templateDataCell = this.template.dataCell();
         if (Array.isArray(cellElements)) {
             cellElements.forEach(function (cellElement, index) {
-                var $cell = $(templateDataCell());
+                var $cell = $(templateDataCell);
                 $cell.append(cellElement.render());
                 $el.append($cell);
             });
@@ -34625,29 +34625,6 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {
@@ -34725,6 +34702,29 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
