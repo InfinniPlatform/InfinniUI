@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.56';
+InfinniUI.VERSION = '2.1.57';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -10761,14 +10761,16 @@ var DataGridView = ListEditorBaseView.extend({
     renderHeaders: function () {
         var that = this;
         var columns = this.model.get('columns');
-        var templateHeaderCell = this.template.headerCell();
+        // var templateHeaderCell = this.template.headerCell();
         var sizeCells = [];
         var templateSizeCells = this.template.sizeCell();
 
         var $headers = columns.toArray().map(function (column) {
 
             sizeCells.push(templateSizeCells);
-            var $th = $(templateHeaderCell);
+            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+            // bug related to task JK-4516
+            var $th = $('<th class="pl-datagrid-row__cell"></th>');
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
@@ -11009,10 +11011,12 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var cellElements = this.model.get('cellElements');
-        var templateDataCell = this.template.dataCell();
+        // var templateDataCell = this.template.dataCell();
         if (Array.isArray(cellElements)) {
             cellElements.forEach(function (cellElement, index) {
-                var $cell = $(templateDataCell);
+	            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+	            // bug related to task JK-4516
+                var $cell = $('<td class="pl-datagrid-row__cell"></td>');
                 $cell.append(cellElement.render());
                 $el.append($cell);
             });
