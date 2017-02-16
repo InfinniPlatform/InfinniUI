@@ -269,14 +269,16 @@ var DataGridView = ListEditorBaseView.extend({
     renderHeaders: function () {
         var that = this;
         var columns = this.model.get('columns');
-        var templateHeaderCell = this.template.headerCell();
+        // var templateHeaderCell = this.template.headerCell();
         var sizeCells = [];
         var templateSizeCells = this.template.sizeCell();
 
         var $headers = columns.toArray().map(function (column) {
 
             sizeCells.push(templateSizeCells);
-            var $th = $(templateHeaderCell);
+            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+            // bug related to task JK-4516
+            var $th = $('<th class="pl-datagrid-row__cell"></th>');
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();

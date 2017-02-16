@@ -104,19 +104,13 @@ module.exports = function () {
     });
 
     this.When(/^я нажму на клавишу "([^"]*)"$/, function (key) {
-        var keys = {
-            'enter': this.keys.ENTER
-        };
-
-        key = keys[key.toLowerCase()];
-
-        if (!key) {
-            throw new Error('Неизвестная клавиша');
-        }
+        var keys = this._.map(key.split('+'), function(k) {
+            return this.keys[k.trim().toUpperCase()];
+        }.bind(this));
 
         return this.driver.switchTo().activeElement()
             .then(function (element) {
-                return element.sendKeys(key);
+                return element.sendKeys.apply(element, keys);
             });
     });
 

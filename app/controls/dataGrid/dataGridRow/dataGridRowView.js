@@ -56,10 +56,12 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var cellElements = this.model.get('cellElements');
-        var templateDataCell = this.template.dataCell();
+        // var templateDataCell = this.template.dataCell();
         if (Array.isArray(cellElements)) {
             cellElements.forEach(function (cellElement, index) {
-                var $cell = $(templateDataCell);
+	            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+	            // bug related to task JK-4516
+                var $cell = $('<td class="pl-datagrid-row__cell"></td>');
                 $cell.append(cellElement.render());
                 $el.append($cell);
             });
