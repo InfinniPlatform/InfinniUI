@@ -9,15 +9,18 @@ _.extend(DeleteAction.prototype,
     BaseFallibleActionMixin,
     {
         execute: function(callback){
-            var accept = this.getProperty('accept'),
-                that = this,
-                dataSource = this.getProperty('destinationSource'),
-                property = this.getProperty('destinationProperty');
+            var accept = this.getProperty('accept');
+            var that = this;
+            var dataSource = this.getProperty('destinationSource');
+            var property = this.getProperty('destinationProperty');
+            var acceptMessage = this.getProperty('acceptMessage') || localized.strings.DeleteAction.warnMessage;
+            var acceptMessageType = this.getProperty('acceptMessageType') || 'default';
 
             if( dataSource.getProperty(property) ) {
                 if(accept){
                     new MessageBox({
-                        text: localized.strings.DeleteAction.warnMessage,
+                        text: acceptMessage,
+                        type: acceptMessageType,
                         buttons: [
                             {
                                 name: localized.strings.DeleteAction.agree,
@@ -37,6 +40,7 @@ _.extend(DeleteAction.prototype,
             } else {
                 new MessageBox({
                     text: localized.strings.DeleteAction.warnMessageNoItem,
+	                  type: 'error',
                     buttons: [
                         {
                             name: localized.strings.DeleteAction.cancel

@@ -22,6 +22,8 @@ _.extend(DeleteActionBuilder.prototype,
                                         propertyName;
 
             action.setProperty('accept', accept);
+            action.setProperty('acceptMessage', metadata.AcceptMessage);
+            action.setProperty('acceptMessageType', metadata.AcceptMessageType);
             action.setProperty('destinationSource', dataSource);
             action.setProperty('destinationProperty', destinationProperty);
 

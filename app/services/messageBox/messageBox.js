@@ -102,7 +102,6 @@ var MessageBox = Backbone.View.extend({
 
     applyDefaultOptions: function (config) {
         var options = _.defaults({}, config, {
-            type: 'default',
             buttons: []
         });
         this.applyDefaultButtonsOptions(options);

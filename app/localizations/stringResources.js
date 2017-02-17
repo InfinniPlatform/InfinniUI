@@ -16,7 +16,7 @@ InfinniUI.localizations['ru-RU'].strings = {
         date: 'Дата'
     },
 
-    "DeleteAction": {
+    DeleteAction: {
         "warnMessage": "Вы уверены, что хотите удалить?",
         "warnMessageNoItem": "Вы не выбрали элемент который необходимо удалить",
         "agree": "Да",
@@ -43,7 +43,7 @@ InfinniUI.localizations['en-US'].strings = {
         date: 'Date'
     },
 
-    "DeleteAction": {
+    DeleteAction: {
         "warnMessage": "Are you sure to remove item?",
         "warnMessageNoItem": "Choose item that you want to remove",
         "agree": "Yes",
