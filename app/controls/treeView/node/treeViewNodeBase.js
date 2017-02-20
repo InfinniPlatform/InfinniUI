@@ -3,11 +3,14 @@ var TreeViewNodeBase = Backbone.View.extend({
     className: 'pl-treeview-node',
 
     classNameCheckerChecked: 'pl-treeview-item__checker_checked',
+    classNameCheckerUnchecked: 'pl-treeview-item__checker_unchecked',
     classNameContentSelected: 'pl-treeview-item__content_selected',
     classNameItemsExpanded: 'pl-treeview-node__items_expanded',
     classNameItemsCollapsed: 'pl-treeview-node__items_collapsed',
     classNameButtonCollapse: 'pl-treeview-node__button_collapse',
     classNameButtonExpand: 'pl-treeview-node__button_expand',
+    classNameButtonNone: 'pl-treeview-node__button_none',
+    classNameIsLeaf: 'pl-treeview-node_is-leaf',
 
     UI: {
         checker: '.pl-treeview-item__checker',
@@ -17,16 +20,18 @@ var TreeViewNodeBase = Backbone.View.extend({
     },
 
     initialize: function () {
-        var model = new Backbone.Model({collapsed: true});
+        var model = new Backbone.Model({collapsed: true, isLeaf: true});
         this.model = model;
         this.listenTo(model, 'change:selected', this.updateSelected);
         this.listenTo(model, 'change:checked', this.updateChecked);
         this.listenTo(model, 'change:collapsed', this.updateCollapsed);
+        this.listenTo(model, 'change:isLeaf', this.updateCollapsed);
     },
 
     updateChecked: function () {
         var checked = this.model.get('checked');
         this.ui.checker.toggleClass(this.classNameCheckerChecked, checked === true);
+        this.ui.checker.toggleClass(this.classNameCheckerUnchecked, checked !== true);
     },
 
     updateSelected: function () {
@@ -35,11 +40,15 @@ var TreeViewNodeBase = Backbone.View.extend({
     },
 
     updateCollapsed: function () {
+        var isLeaf = this.model.get('isLeaf');
         var collapsed = !!this.model.get('collapsed');
-        this.ui.items.toggleClass(this.classNameItemsExpanded, !collapsed);
-        this.ui.items.toggleClass(this.classNameItemsCollapsed, collapsed);
-        this.ui.button.toggleClass(this.classNameButtonCollapse, !collapsed);
-        this.ui.button.toggleClass(this.classNameButtonExpand, collapsed);
+        this.ui.items.toggleClass(this.classNameItemsExpanded, !collapsed && !isLeaf);
+        this.ui.items.toggleClass(this.classNameItemsCollapsed, collapsed && !isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonCollapse, !collapsed && !isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonExpand, collapsed && !isLeaf);
+
+        this.$el.toggleClass(this.classNameIsLeaf, isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonNone, isLeaf);
     },
 
     updateState: function () {
@@ -84,6 +93,7 @@ var TreeViewNodeBase = Backbone.View.extend({
 
     setItemsContent: function ($itemsContent) {
         this.ui.items.empty();
+        this.model.set('isLeaf', !$itemsContent.length);
         this.ui.items.append($itemsContent);
     },
 
