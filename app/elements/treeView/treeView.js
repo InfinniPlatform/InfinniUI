@@ -45,3 +45,31 @@ TreeView.prototype.getParentSelector = function () {
 TreeView.prototype.setParentSelector = function (value) {
     this.control.set('parentSelector', value);
 };
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.expand = function( key ) {
+    this.control.expand(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.collapse = function( key ) {
+    this.control.collapse(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.toggle = function( key ) {
+    this.control.toggle(key);
+};
+
+
+
+

@@ -86,6 +86,18 @@ var TreeViewNodeBase = Backbone.View.extend({
         this.model.set('collapsed', !collapsed);
     },
 
+    expand: function () {
+        this.model.set('collapsed', false);
+    },
+
+    collapse: function(  ) {
+        this.model.set('collapsed', true);
+    },
+
+    getCollapsed: function(  ) {
+        return this.model.get('collapsed');
+    },
+
     setItemContent: function ($itemContent) {
         this.ui.content.empty();
         this.ui.content.append($itemContent);

@@ -13158,6 +13158,131 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
+//####app\controls\tabPanel\tabPage\tabPageControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function TabPageControl(parent) {
+    _.superClass(TabPageControl, this, parent);
+}
+
+_.inherit(TabPageControl, ContainerControl);
+
+_.extend(TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
+
+
+    createControlModel: function () {
+        return new TabPageModel();
+    },
+
+    createControlView: function (model) {
+        return new TabPageView({model: model});
+    }
+
+
+});
+
+
+//####app\controls\tabPanel\tabPage\tabPageModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var TabPageModel = ContainerModel.extend(/** @lends TabPageModel.prototype */ {
+
+    initialize: function () {
+        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    },
+
+    defaults: _.defaults(
+        {
+            canClose: false,
+            selected: false
+        },
+        ContainerModel.prototype.defaults
+    )
+
+});
+//####app\controls\tabPanel\tabPage\tabPageView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
+
+    className: 'pl-tabpage hidden',
+
+    template: InfinniUI.Template["controls/tabPanel/tabPage/template/tabPage.tpl.html"],
+
+    UI: {
+
+    },
+
+    initHandlersForProperties: function () {
+        ContainerView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:selected', this.updateSelected);
+    },
+
+    updateProperties: function () {
+        ContainerView.prototype.updateProperties.call(this);
+        this.updateSelected();
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        this.removeChildElements();
+
+        this.$el.html(this.template({
+            items: this.model.get('items')
+        }));
+        this.renderItemsContents();
+
+        this.bindUIElements();
+
+        this.postrenderingActions();
+
+        this.trigger('render');
+        this.updateProperties();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderItemsContents: function () {
+        var $items = this.$el.find('.pl-tabpage-i'),
+            items = this.model.get('items'),
+            itemTemplate = this.model.get('itemTemplate'),
+            that = this,
+            element, item;
+
+        $items.each(function (i, el) {
+            item = items.getByIndex(i);
+            element = itemTemplate(undefined, {item: item, index: i});
+            that.addChildElement(element);
+            $(el)
+                .append(element.render());
+        });
+    },
+
+    updateSelected: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('hidden', !selected);
+    },
+
+    /**
+     * @protected
+     */
+    updateGrouping: function () {
+
+    }
+
+});
+
 //####app\controls\tabPanel\tabHeader\tabHeaderView.js
 var TabHeaderModel = Backbone.Model.extend({
 
@@ -13293,131 +13418,6 @@ var TabHeaderView = Backbone.View.extend({
 
 _.extend(TabHeaderView.prototype, bindUIElementsMixin);
 
-//####app\controls\tabPanel\tabPage\tabPageControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function TabPageControl(parent) {
-    _.superClass(TabPageControl, this, parent);
-}
-
-_.inherit(TabPageControl, ContainerControl);
-
-_.extend(TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
-
-
-    createControlModel: function () {
-        return new TabPageModel();
-    },
-
-    createControlView: function (model) {
-        return new TabPageView({model: model});
-    }
-
-
-});
-
-
-//####app\controls\tabPanel\tabPage\tabPageModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var TabPageModel = ContainerModel.extend(/** @lends TabPageModel.prototype */ {
-
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-    },
-
-    defaults: _.defaults(
-        {
-            canClose: false,
-            selected: false
-        },
-        ContainerModel.prototype.defaults
-    )
-
-});
-//####app\controls\tabPanel\tabPage\tabPageView.js
-/**
- * @class
- * @augments ControlView
- */
-var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
-
-    className: 'pl-tabpage hidden',
-
-    template: InfinniUI.Template["controls/tabPanel/tabPage/template/tabPage.tpl.html"],
-
-    UI: {
-
-    },
-
-    initHandlersForProperties: function () {
-        ContainerView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:selected', this.updateSelected);
-    },
-
-    updateProperties: function () {
-        ContainerView.prototype.updateProperties.call(this);
-        this.updateSelected();
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        this.removeChildElements();
-
-        this.$el.html(this.template({
-            items: this.model.get('items')
-        }));
-        this.renderItemsContents();
-
-        this.bindUIElements();
-
-        this.postrenderingActions();
-
-        this.trigger('render');
-        this.updateProperties();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderItemsContents: function () {
-        var $items = this.$el.find('.pl-tabpage-i'),
-            items = this.model.get('items'),
-            itemTemplate = this.model.get('itemTemplate'),
-            that = this,
-            element, item;
-
-        $items.each(function (i, el) {
-            item = items.getByIndex(i);
-            element = itemTemplate(undefined, {item: item, index: i});
-            that.addChildElement(element);
-            $(el)
-                .append(element.render());
-        });
-    },
-
-    updateSelected: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('hidden', !selected);
-    },
-
-    /**
-     * @protected
-     */
-    updateGrouping: function () {
-
-    }
-
-});
-
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
     _.superClass(TreeViewControl, this);
@@ -13433,7 +13433,21 @@ _.extend(TreeViewControl.prototype, {
 
     createControlView: function (model) {
         return new TreeViewView({model: model});
+    },
+
+    expand: function( key ) {
+        this.controlView.expandNode(key);
+    },
+
+    collapse: function( key ) {
+        this.controlView.collapseNode(key);
+    },
+
+    toggle: function( key ) {
+        this.controlView.toggleNode(key);
     }
+
+
 });
 
 
@@ -13465,12 +13479,25 @@ var TreeViewView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
-        this.ItemsMap = new HashMap();
+        this.itemsMap = new HashMap();
+        this.nodesMap = new HashMap();
 
+    },
+
+    addChildElement: function (node, item) {
+        this.nodesMap.add(item, node);
+        ListEditorBaseView.prototype.addChildElement.call( this, node );
+    },
+
+    removeChildElements: function(  ) {
+        this.nodesMap.clear();
+        this.itemsMap.clear();
+        ListEditorBaseView.prototype.removeChildElements.call( this);
     },
 
     render: function () {
         this.prerenderingActions();
+        this.removeChildElements();
 
         this.renderTemplate(this.getTemplate());
 
@@ -13496,9 +13523,7 @@ var TreeViewView = ListEditorBaseView.extend({
             keySelector = model.get('keySelector'),
             nodeConstructor = this.getNodeConstructor(),
             itemTemplate = model.get('itemTemplate'),
-            itemsMap = this.ItemsMap;
-
-        itemsMap.clear();
+            itemsMap = this.itemsMap;
 
         $nodes = renderNodes();
         this.$el.append($nodes);
@@ -13545,6 +13570,7 @@ var TreeViewView = ListEditorBaseView.extend({
                         $subitems = renderNodes(key);
                     node.setItemsContent($subitems);
 
+                    view.addChildElement(node, item);
                     itemsMap.add(key, item);
 
                     return $node;
@@ -13613,7 +13639,7 @@ var TreeViewView = ListEditorBaseView.extend({
         var parentSelector = this.model.get('parentSelector'),
             parentId = parentSelector(null, {value: item});
 
-        return parentId && this.ItemsMap.get(parentId);
+        return parentId && this.itemsMap.get(parentId);
     },
 
     getTemplate: function () {
@@ -13666,6 +13692,65 @@ var TreeViewView = ListEditorBaseView.extend({
                 }
             });
         }
+    },
+
+    collapseNode: function( key ) {
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            node.collapse();
+        }
+    },
+
+    toggleNode: function( key ) {
+
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            var collapsed = node.getCollapsed();
+
+            var toggle = collapsed ? this.expandNode : this.collapseNode;
+            toggle.call(this, key);
+        }
+
+    },
+
+    expandNode: function( key ) {
+        var model = this.model;
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        var parentSelector = model.get('parentSelector');
+        var keySelector = model.get('keySelector');
+        var parentId;
+        var nodes = [node];
+
+        while (parentId = parentSelector(null, {value: item})) {
+            if (!parentId) {
+                break;
+            }
+            item = this.itemsMap.get(parentId);
+            node = this.nodesMap.get(item);
+            nodes.push(node);
+        }
+
+        nodes.reverse().forEach(function (node) {
+            node.expand();
+        });
     }
 
 
@@ -13758,6 +13843,18 @@ var TreeViewNodeBase = Backbone.View.extend({
         var collapsed = model.get('collapsed');
 
         this.model.set('collapsed', !collapsed);
+    },
+
+    expand: function () {
+        this.model.set('collapsed', false);
+    },
+
+    collapse: function(  ) {
+        this.model.set('collapsed', true);
+    },
+
+    getCollapsed: function(  ) {
+        return this.model.get('collapsed');
     },
 
     setItemContent: function ($itemContent) {
@@ -25812,6 +25909,34 @@ TreeView.prototype.setParentSelector = function (value) {
     this.control.set('parentSelector', value);
 };
 
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.expand = function( key ) {
+    this.control.expand(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.collapse = function( key ) {
+    this.control.collapse(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.toggle = function( key ) {
+    this.control.toggle(key);
+};
+
+
+
+
+
 //####app\elements\treeView\treeViewBuilder.js
 function TreeViewBuilder() {
     _.superClass(TreeViewBuilder, this);
@@ -34852,6 +34977,29 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {
@@ -34929,29 +35077,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
