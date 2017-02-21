@@ -23,6 +23,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
         this.initBindingToProperty(params, 'LabelText');
+        this.resolveExpressionInText(params, 'LabelText');
         element.setAutocomplete(params.metadata.Autocomplete);
         element.setShowClear(params.metadata.ShowClear);
 

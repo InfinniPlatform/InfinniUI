@@ -22,7 +22,7 @@ describe('TextEditorBase (Element)', function () {
                         "Source": "ObjectDataSource1",
                         "Property": "$.Display"
                     },
-                    "DisplayFormat": "{:n2}",
+                    "DisplayFormat": "${:n2}",
 
                     "EditMask": {
                         "NumberEditMask": {

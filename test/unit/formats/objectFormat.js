@@ -3,21 +3,21 @@ describe('ObjectFormat', function () {
 
         it('successful build', function () {
             //Given
-            var metadata = {Format: '{}'};
+            var metadata = {Format: '${}'};
             var builder = new InfinniUI.ObjectFormatBuilder();
             //When
             var format = builder.build(null, { metadata: metadata } );
             //Then
             assert.isFunction(format.format);
-            assert.equal(format.getFormat(), '{}');
+            assert.equal(format.getFormat(), '${}');
         });
 
         it('should format simple data type ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {:n2} kg");
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${:n2} kg");
             var enCulture = new InfinniUI.Culture('en-US');
 
             //When
@@ -36,10 +36,10 @@ describe('ObjectFormat', function () {
 
         it('should format complex data type ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
             var enCulture = new InfinniUI.Culture('en-US');
 
             //When
@@ -57,10 +57,10 @@ describe('ObjectFormat', function () {
 
         it('should format collection ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
             var enCulture = new InfinniUI.Culture('en-US');
 
             //When
@@ -78,7 +78,7 @@ describe('ObjectFormat', function () {
 
         it('should format when value is undefined', function () {
             //Given
-            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(), "Hello,  !");
@@ -86,7 +86,7 @@ describe('ObjectFormat', function () {
 
         it('should format when value is null', function () {
             //Given
-            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(null), "Hello,  !");

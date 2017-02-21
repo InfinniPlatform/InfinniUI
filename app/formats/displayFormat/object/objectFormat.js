@@ -29,8 +29,8 @@ _.extend(ObjectFormat.prototype, {
         culture = culture || new Culture(InfinniUI.config.lang);
         format = format || this.getFormat();
 
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
+        var regexp = /\$\{[^}]*}/g;
+        var trim = /^\$\{|\}$/g;
         var value = '';
 
         value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
@@ -49,8 +49,8 @@ _.extend(ObjectFormat.prototype, {
      * @returns {String}
      */
     formatIterator: function (originalValue, culture, match) {
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
+        var regexp = /\$\{[^}]*}/g;
+        var trim = /^\$\{|\}$/g;
 
         var result, text, formatter, value, parts;
 

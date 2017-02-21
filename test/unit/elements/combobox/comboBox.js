@@ -96,7 +96,7 @@ describe('ComboBox', function () {
                             "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "{Id} - {DisplayName}",
+                        "ValueFormat": "${Id} - ${DisplayName}",
                         "MultiSelect": false,
                         "Value": {
                             "Source": "ObjectDataSource2",
@@ -173,7 +173,7 @@ describe('ComboBox', function () {
                             "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "{Id} - {DisplayName}",
+                        "ValueFormat": "${Id} - ${DisplayName}",
                         "MultiSelect": true,
                         "Value": {
                             "Source": "ObjectDataSource2",

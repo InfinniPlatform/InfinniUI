@@ -19,7 +19,7 @@ DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     });
 
     _.defaults(params.metadata, {
-        DisplayFormat: '{:d}',
+        DisplayFormat: '${:d}',
         EditMask: {DateTimeEditMask: {Mask: 'd'}}
     });
 };

@@ -10,6 +10,7 @@ window.InfinniUI.config.configName = 'test';
 
 window.InfinniUI.config.homePage = '/viewExample/homePage.json';
 
+// window.InfinniUI.config.lang = 'ru-RU';
 window.InfinniUI.config.lang = 'en-US';
 
 // when enableAutoHeightService = false, body will have full height and will scrollable

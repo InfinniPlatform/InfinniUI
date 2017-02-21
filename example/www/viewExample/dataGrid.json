@@ -13,6 +13,14 @@
 					{"_id": 7, "Name": "Desktop", "currency": 2000, "Display": "1920x1080"}
 				]
 			}
+		},
+		{
+			"ObjectDataSource": {
+				"Name": "ObjectDataSource2",
+				"Items": [
+					{"_id": 1, "Name": "Add"}
+				]
+			}
 		}
 	],
 	"Items": [
@@ -28,7 +36,7 @@
 										"Items": [
 											{
 												"Label": {
-													"Value": "Different Filters",
+													"Text": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.name}",
 													"HorizontalAlignment": "Center",
 													"TextStyle": "display1"
 												}
@@ -42,7 +50,7 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "Filter by Name"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byName}"
 												}
 											}
 										]
@@ -54,7 +62,7 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "Filter by Price"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byPrice}"
 												}
 											}
 										]
@@ -66,7 +74,7 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "Filter by Display"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byDisplay}"
 												}
 											}
 										]
@@ -83,7 +91,7 @@
 														{
 															"Button": {
 																"Name": "AddBtn",
-																"Text": "Add",
+																"Text": "{= args.parentView.context.dataSources.ObjectDataSource2.getItems()[0].Name}",
 																"HorizontalAlignment": "Right",
 																"Action": {
 																	"AddAction": {
@@ -131,7 +139,7 @@
 																	},
 																	{
 																		"Header": "Price",
-																		"CellFormat": "$ {currency}"
+																		"CellFormat": "$ ${currency}"
 																	},
 																	{
 																		"Header": "Display",
@@ -217,6 +225,8 @@
 																							},
 																							"Action": {
 																								"DeleteAction": {
+																									"AcceptMessage": "Let's delete it nahren",
+																									"AcceptMessageType": "warn",
 																									"DestinationValue": {
 																										"Source": "ObjectDataSource",
 																										"Property": "$"

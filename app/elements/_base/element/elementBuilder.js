@@ -61,6 +61,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 				element = params.element;
 
 		this.initBindingToProperty(params, 'Text');
+		this.resolveExpressionInText(params, 'Text');
 		this.initBindingToProperty(params, 'Visible', true);
 		this.initBindingToProperty(params, 'Enabled', true);
 		this.initBindingToProperty(params, 'HorizontalAlignment');
@@ -165,29 +166,27 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	},
 
 	initBindingToProperty: function (params, propertyName, isBooleanBinding) {
-		var metadata = params.metadata,
-				propertyMetadata = metadata[propertyName],
-				element = params.element,
-				lowerCasePropertyName = this.lowerFirstSymbol(propertyName),
-				converter;
+		var metadata = params.metadata;
+		var propertyMetadata = metadata[propertyName];
+		var element = params.element;
+		var lowerCasePropertyName = this.lowerFirstSymbol(propertyName);
+		var converter;
 
-		if (!propertyMetadata || typeof propertyMetadata != 'object') {
-			if (propertyMetadata !== undefined) {
+		if(!propertyMetadata || typeof propertyMetadata != 'object') {
+			if(propertyMetadata !== undefined) {
 				params.element['set' + propertyName](propertyMetadata);
 			}
 			return null;
-
 		} else {
 			var args = {
 				parent: params.parent,
 				parentView: params.parentView,
 				basePathOfProperty: params.basePathOfProperty
 			};
-
 			var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
-			var oldConverter;
 
-			if (isBooleanBinding) {
+			var oldConverter;
+			if(isBooleanBinding) {
 				dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
 				converter = dataBinding.getConverter();
@@ -215,6 +214,23 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 			dataBinding.bindElement(element, lowerCasePropertyName);
 
 			return dataBinding;
+		}
+	},
+
+	resolveExpressionInText: function( params, propertyName ) {
+		var valueToResolve = params.metadata[ propertyName ];
+		if( valueToResolve && typeof valueToResolve === 'string' && valueToResolve.slice(0, 2) === '{=' && valueToResolve.slice(-1) === '}' ) {
+			var args = {
+				parent: params.parent,
+				parentView: params.parentView,
+				basePathOfProperty: params.basePathOfProperty
+			};
+
+			var expression = '{return ' + valueToResolve.slice(2, -1) + ';}';
+			var newValue = new ScriptExecutor(params.element.getScriptsStorage()).executeScript(expression, args);
+			if( newValue !== undefined ) {
+				params.element['set' + propertyName](newValue);
+			}
 		}
 	},
 

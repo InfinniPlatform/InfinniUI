@@ -229,7 +229,7 @@ describe('Container (Control)', function () {
 
                     StackPanel: {
                         Name: 'MainViewPanel',
-                        "ItemFormat": "Connect: {Name.Temp}",
+                        "ItemFormat": "Connect: ${Name.Temp}",
                         "Items" : {
                             "Source": "ObjectDataSource1",
                             "Property": ""
@@ -663,7 +663,7 @@ describe('Container (Control)', function () {
                                         }
                                     }
                                 },
-                                "GroupItemFormat": "Connect: {Display}",
+                                "GroupItemFormat": "Connect: ${Display}",
                                 "GroupValueProperty": "Display",
                                 "Items" : {
                                     "Source": "ObjectDataSource1",

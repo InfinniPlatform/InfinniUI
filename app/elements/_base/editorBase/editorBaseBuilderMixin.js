@@ -27,9 +27,12 @@ var editorBaseBuilderMixin = {
         bindingOptions.valueProperty = bindingOptions.valueProperty || 'value';
 
         element.setLabelFloating(metadata.LabelFloating);
-        element.setHintText(metadata.HintText);
-        element.setErrorText(metadata.ErrorText);
-        element.setWarningText(metadata.WarningText);
+        this.initBindingToProperty(params, 'HintText');
+        this.resolveExpressionInText(params, 'HintText');
+        this.initBindingToProperty(params, 'ErrorText');
+        this.resolveExpressionInText(params, 'ErrorText');
+        this.initBindingToProperty(params, 'WarningText');
+        this.resolveExpressionInText(params, 'WarningText');
 
         if (metadata.OnValueChanging) {
             element.onValueChanging(function (context, args) {

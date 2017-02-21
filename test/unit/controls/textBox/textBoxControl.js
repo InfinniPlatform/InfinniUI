@@ -86,7 +86,7 @@ describe('TextBoxControl', function () {
                     Multiline: true,
                     LineCount: 4,
 
-                    DisplayFormat: "{title}"
+                    DisplayFormat: "${title}"
                 });
 
                 // When
@@ -167,7 +167,7 @@ describe('TextBoxControl', function () {
                 // Given
                 var element = builder.buildType('TextBox', {
                     Multiline: false,
-                    DisplayFormat: "{title}"
+                    DisplayFormat: "${title}"
                 });
 
                 // When

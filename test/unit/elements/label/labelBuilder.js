@@ -30,7 +30,7 @@ describe('LabelBuilder', function () {
                 "Items": [{
                     Label: {
                         Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
+                        DisplayFormat: "некоторый текст ${property}",
                         Value: {
                             Source: "ObjectDataSource",
                             Property: "$"
@@ -74,7 +74,7 @@ describe('LabelBuilder', function () {
                 "Items": [{
                     Label: {
                         Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
+                        DisplayFormat: "некоторый текст ${property}",
                         Value: {
                             Source: "ObjectDataSource",
                             Property: "$"

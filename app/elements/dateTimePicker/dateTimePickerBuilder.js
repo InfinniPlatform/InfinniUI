@@ -44,9 +44,9 @@ DateTimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     var metadata = params.metadata;
     var defaultFormat = {
-            Date: '{:d}',
-            DateTime: '{:g}',
-            Time: '{:T}'
+            Date: '${:d}',
+            DateTime: '${:g}',
+            Time: '${:T}'
         },
         defaultEditMask = {
             Date: {DateTimeEditMask: {Mask: 'd'}},
