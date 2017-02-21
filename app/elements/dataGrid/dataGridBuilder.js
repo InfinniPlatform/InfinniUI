@@ -26,6 +26,8 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
             element.onCheckAllChanged(function(context, args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
             });
+        } else {
+            setDefaultCheckAllBehavior(element);
         }
 
         if( metadata.OnRowClick ) {
@@ -105,3 +107,67 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
     }
 
 });
+
+/**
+ * @description Устанавливает поведение по умолчанию для кнопки "Выбрать все"
+ * @param {DataGrid} element
+ * @constructor
+ */
+function setDefaultCheckAllBehavior( element ) {
+    var checkAll = element.getCheckAll();
+
+    element.onValueChanged(onValueChangedHandler);
+    element.onCheckAllChanged(onCheckAllChangedHandler);
+
+    /**
+     *
+     * @param context
+     * @param {Object} event
+     * @param {DataGrid} event.source
+     * @param {boolean} event.newValue
+     * @param {boolean} event.oldValue
+     */
+    function onValueChangedHandler(context, event  ) {
+        setCheckAll(_.isEqual(event.newValue, itemsToValue()));
+    }
+
+    /**
+     *
+     * @param context
+     * @param {Object} event
+     * @param {DataGrid} event.source
+     * @param {boolean} event.value
+     */
+    function onCheckAllChangedHandler( context, event ) {
+        var state = event.value;
+
+        if (state === checkAll) {
+            return;
+        }
+
+        setCheckAll(state);
+
+        var value = state ? itemsToValue() : [];
+
+        element.setValue(value);
+    }
+
+    /**
+     * @returns {Array}
+     */
+    function itemsToValue() {
+        var valueSelector = element.getValueSelector();
+        var items = element.getItems().toArray();
+
+        return items.map(function (item) {
+            return valueSelector(undefined, {value: item});
+        });
+    }
+
+    function setCheckAll(state) {
+        checkAll = state;
+        element.setCheckAll(state);
+    }
+
+
+}

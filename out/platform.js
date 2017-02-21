@@ -313,1108 +313,109 @@ InfinniUI.localizations['en-US'].strings = {
     }
 };
 
-//####app\utils\collection\collection.js
-/**
- *
- * @param {Array} items
- * @param {string} [idProperty]
- * @param {function} [comparator]
- * @constructor
- */
-function Collection (items, idProperty, comparator) {
-    if (!Array.isArray(items)) {
-        items = [];
-    }
+//####app\messaging\messageBus.js
+function MessageBus(view) {
+    var subscriptions = {};
 
-    /**
-     * @type {Array.<Object>}
-     * @protected
-     */
-    this._items = items.map(function (value, index) {
-        return this.createCollectionItem(value, index);
-    }, this);
-
-    /**
-     * @type {string|null}
-     * @protected
-     */
-    this._idProperty = idProperty;
-
-    /**
-     * @type {function}
-     * @protected
-     */
-    this._comparator = comparator || defaultComparator;
-
-    function defaultComparator (a, b) {
-        if (a < b) {
-            return -1;
-        } else if (a > b) {
-            return 1;
+    this.send = function (messageType, messageBody) {
+        messageType = patchMessageType(messageType);
+        if (subscriptions[messageType]) {
+            var context;
+            if (view && view.getContext) {
+                context = view.getContext();
+            }
+            _.each(subscriptions[messageType], function (handler) {
+                handler(context, { value: messageBody });
+            });
         }
-        return 0;
-    }
+    };
 
-    /**
-     *
-     * @type {CollectionEventManager}
-     */
-    this.events = new CollectionEventManager();
+    this.subscribe = function (messageType, messageHandler) {
+        messageType = patchMessageType(messageType);
+        if (!subscriptions[messageType]) {
+            subscriptions[messageType] = [];
+        }
+        
+        subscriptions[messageType].push(messageHandler);
+    };
+
+    this.unsubscribeByType = function (messageType) {
+        messageType = patchMessageType(messageType);
+        if (subscriptions[messageType]) {
+            delete subscriptions[messageType];
+        }
+    };
+
+    this.getView = function () {
+        return view;
+    };
+
+    function patchMessageType(messageType) {
+
+        if (typeof messageType === 'object' && typeof messageType.name !== 'undefined') {
+            messageType = messageType.name;
+        }
+
+        return messageType;
+    }
 }
 
-window.InfinniUI.Collection = Collection;
+window.InfinniUI.global.messageBus = new MessageBus();
+//####app\messaging\messageTypes.js
+window.messageTypes = {
 
+    onViewBuildError: {name: 'onViewBuildError'},
+    onViewCreated: {name: 'onViewCreated'},
 
-Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
-    /**
-     * @type {string|null}
-     */
-    idProperty: {
-        get: function () {
-            return this._idProperty;
-        },
-        enumerable: false
-    },
-    /**
-     * @type {function}
-     */
-    comparator: {
-        get: function () {
-            return this._comparator;
-        },
-        enumerable: false
-    },
-    /**
-     * @type {number}
-     */
-    length: {
-        get: function () {
-            return this._items.length;
-        },
-        enumerable: false
-    },
-    /**
-     * @type {boolean}
-     */
-    hasIdProperty: {
-        get: function () {
-            return typeof this._idProperty !== 'undefined';
-        },
-        enumerable: false
-    }
-});
+    onChangeLayout: {name: 'OnChangeLayout'},
+    onNotifyUser: {name: 'onNotifyUser'},
+    onToolTip: {name: 'onToolTip'},
 
-/**
- *
- * @param {number} index
- * @param {string} propertyName
- * @param {*} value
- * @returns {Collection}
- */
-Collection.prototype.setProperty = function (index, propertyName, value) {
-    var item = this._items[index];
+    onContextMenu: {name: 'onContextMenu'},
+    onOpenContextMenu: {name: 'onOpenContextMenu'},
 
-    if (item) {
-        item[propertyName] = value;
-    }
-    return this;
+    onDataLoading: {name: 'onDataLoading'},
+    onDataLoaded: {name: 'onDataLoaded'}
+
 };
 
-/**
- *
- * @param {number} index
- * @param {string} propertyName
- * @returns {*}
- */
-Collection.prototype.getProperty = function (index, propertyName) {
-    var item = this._items[index];
 
-    if (item) {
-        return item[propertyName];
-    }
-};
+//####app\controls\_base\_mixins\ajaxRequestMixin.js
+var ajaxRequestMixin = (function (bus) {
 
-/**
- * @description Возвращает количество элементов в коллекции
- * @returns {number} Количество элементов в коллекции
- */
-Collection.prototype.size = function () {
-    return this.length;
-};
-
-/**
- * @description Добавляет элемент в конец коллекции
- * @param {*} value
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.push = function (value) {
-    var items = this._items;
-    var item = this.createCollectionItem(value, items.length);
-
-    items.push(item);
-
-    this.events.onAdd([value]);
-    return true;
-};
-
-/**
- * @description Добавляет элемент в конец коллекции. @see {@link Collection.push}
- */
-Collection.prototype.add = Collection.prototype.push;
-
-/**
- * @description Добавляет элементы в конец коллекции
- * @param {Array} values
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.addAll = function (values) {
-    if (!Array.isArray(values)) {
-        return false;
-    }
-
-    var items = this._items;
-    var changed = values.length > 0;
-
-    values.forEach(function (value) {
-        var item = this.createCollectionItem(value, items.length);
-        items.push(item);
-    }, this);
-
-    if (changed) {
-        this.events.onAdd(values);
-    }
-    return changed;
-};
-
-/**
- * @description Вставляет элемент в указанную позицию коллекции
- * @param {number} index
- * @param {*} newItem
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.insert = function (index, newItem) {
-    var item = this.createCollectionItem(newItem, index);
-    this._items.splice(index, 0, item);
-
-    this.events.onAdd([newItem], index);
-    return true;
-};
-
-/**
- *
- * @param {number} index
- * @param {Array} newItems
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.insertAll = function (index, newItems) {
-    if (!Array.isArray(newItems)) {
-        return false;
-    }
-
-    var items = this._items;
-    var changed = newItems.length > 0;
-
-    newItems.forEach(function(value, i) {
-        var start = index + i;
-        var item = this.createCollectionItem(value, start);
-        items.splice(start, 0, item);
-    }, this);
-
-    if (changed) {
-        this.events.onAdd(newItems, index);
-    }
-    return changed;
-};
-
-/**
- * @description Устанавливает список элементов коллекции
- * @param {Array} newItems
- * @return {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.reset = function (newItems) {
-    var changed, items;
-
-    if (!Array.isArray(newItems)) {
-        return false;
-    }
-
-    changed = this._items.length !== newItems.length;
-
-    items = newItems.map(function (value, index) {
-        if (!changed) {
-            changed = !this.isEqual(value, this.getCollectionItemValue(index));
+    function invokeCallback(cb, args) {
+        var result;
+        if (typeof cb === 'function') {
+            result = cb.apply(null, Array.prototype.slice.call(args));
         }
-        return this.createCollectionItem(value, index);
-
-    }, this);
-
-    this._items.length = 0;
-
-    Array.prototype.push.apply(this._items, items);
-    if (changed) {
-        this.events.onReset();
-    }
-    return changed;
-};
-
-
-/**
- * @description Заменяет элемент коллекции на указанный
- * @param {Array} newItems
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.set = function (newItems, silent) {
-    var items = this._items;
-
-    if (!Array.isArray(newItems)) {
-        return false;
+        return result;
     }
 
-    var changed = items.length !== newItems.length;
-    var _newItems = newItems.slice();
-    var matched, i = 0;
-    var itemValue, newValue = null, newValueIndex;
+    return {
 
-
-
-    _newItems.forEach(function(newItem, index){
-        if (index < items.length) {
-            //Изменение элементов
-            if (!changed) {
-                changed = !this.isEqual(this.getCollectionItemValue(index), _newItems[index]);
+        onBeforeRequest: function (callback) {
+            return function () {
+                bus.send(messageTypes.onDataLoading, {});
+                return invokeCallback(callback, arguments);
             }
-            if (changed) {
-                this.updateCollectionItem(items[index], newItem);
+        },
+
+        onSuccessRequest: function (callback) {
+            return function () {
+                bus.send(messageTypes.onDataLoaded, {success: true});
+                return invokeCallback(callback, arguments);
             }
-        } else {
-            //Новые элементы
-            changed = true;
-            items.push(this.createCollectionItem(newItem, items.length));
-        }
-    }, this);
+        },
 
-    if (newItems.length < items.length) {
-        items.splice(newItems.length)
-    }
-
-    if (changed && !silent) {
-        this.events.onReset();
-    }
-    return changed;
-};
-
-/**
- * @description Заменяет элемент коллекции на указанный.
- * @param {*} oldItem
- * @param {*} newItem
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.replace = function (oldItem, newItem) {
-    var itemValue;
-    var changed = false;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        if (this.isEqual(oldItem, itemValue)) {
-            this.updateCollectionItem(this._items[i], newItem);
-            changed = true;
-            break;
+        onErrorRequest: function (callback) {
+            return function () {
+                bus.send(messageTypes.onDataLoaded, {success: false});
+                return invokeCallback(callback, arguments);
+            }
         }
     }
 
-    if (changed) {
-        this.events.onReplace([oldItem], [newItem]);
-    }
-    return changed;
-};
-
-/**
- * @description Удаляет последний элемент из коллекции
- * @returns {*|undefined} Возвращает последний элемент коллекции, который был удален
- */
-Collection.prototype.pop = function () {
-    if (this._items.length === 0) {
-        return;
-    }
-
-    var itemValue = this.getCollectionItemValue(this.length - 1);
-    this._items.pop();
-    this.events.onRemove([itemValue], this._items.length);
-    return itemValue;
-};
-
-/**
- * @description Удаляет указанный элемент из коллекции
- * @param {*} item
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.remove = function (item) {
-    var itemValue;
-    var itemIndex;
-
-    var changed = true;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        itemIndex = i;
-        if (this.isEqual(item, itemValue)) {
-            this._items.splice(i, 1);
-            changed = true;
-            break;
-        }
-    }
-
-    if (changed) {
-        this.events.onRemove([item], itemIndex);
-    }
-    return changed;
-};
-
-/**
- * @description Удаляет элемент с указанным идентификатором из коллекции
- * @param {number|string} id
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.removeById = function (id) {
-    if (!this.hasIdProperty) {
-        return false;
-    }
-
-    var itemValue;
-    var itemIndex;
-
-    var changed = true;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        itemIndex = i;
-        if (this.getValueId(itemValue) === id) {
-            this._items.splice(i, 1);
-            changed = true;
-            break;
-        }
-    }
-
-    if (changed) {
-        this.events.onRemove([itemValue], itemIndex);
-    }
-    return changed;
-};
-
-/**
- * @description Удаляет элемент с указанным индексом из коллекции
- * @param {number} index
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.removeAt = function (index) {
-    if (index >= this._items.length) {
-        return false;
-    }
-
-    var item = this.getCollectionItemValue(index);
-    this._items.splice(index, 1);
-
-    this.events.onRemove([item], index);
-    return true;
-};
-
-
-/**
- * @description Удаляет указанные элементы из коллекции
- * @param {Array} items
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.removeAll = function (items) {
-    if (!Array.isArray(items)) {
-        return false;
-    }
-
-    var collectionItems = this._items;
-    var deletedItems = [];
-    var changed;
-
-    items.forEach(function (value) {
-
-        deletedItems = collectionItems.filter(function (item) {
-            return this.isEqual(value, this.getItemValue(item));
-        }, this);
-
-        deletedItems.forEach(function (item) {
-            var index = collectionItems.indexOf(item);
-            collectionItems.splice(index, 1);
-        });
-    }, this);
-
-    changed = deletedItems.length > 0;
-
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
-        //@TODO Добавить параметр oldStartingIndex для события
-        this.events.onRemove(values);
-    }
-    return changed;
-};
-
-
-/**
- * @description Удаляет диапазон элементов из коллекции
- * @param {number} fromIndex
- * @param {number} [count]
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.removeRange = function (fromIndex, count) {
-    var items = this._items;
-    var changed;
-
-    if (fromIndex >= items.length) {
-        return false;
-    }
-
-    if (typeof count === 'undefined') {
-        count = items.length - fromIndex;
-    }
-
-    var deletedItems = items.splice(fromIndex, count);
-    changed = deletedItems.length > 0;
-
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
-
-        this.events.onRemove(values, fromIndex);
-    }
-    return changed;
-};
-
-
-/**
- * @description Удаляет все элементы из коллекции, удовлетворяющие указанному условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.removeEvery = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        return false;
-    }
-
-    var items = this._items;
-    var changed;
-    var deletedItems = items.filter(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
-
-    deletedItems.forEach(function (deletedItem) {
-        var index = items.indexOf(deletedItem);
-        items.splice(index, 1);
-    });
-
-    changed = deletedItems.length > 0;
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
-
-        this.events.onRemove(values);
-    }
-    return changed;
-};
-
-
-/**
- * @description Удаляет все элементы из коллекции
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.clear = function () {
-    var
-        items = this._items,
-        changed = items.length > 0,
-        values = items.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
-
-
-    items.length = 0;
-
-    if (changed) {
-        this.events.onRemove(values, 0);
-    }
-
-    return changed;
-};
-
-/**
- * @description Возвращает элемент коллекции с заданным идентификатором.
- * @param {number|string} id
- * @returns {*|undefined} Элемент коллекции с заданным идентификатором
- */
-Collection.prototype.getById = function (id) {
-    if (!this.hasIdProperty) {
-        return false;
-    }
-
-    var items = this._items;
-    var itemValue, result;
-
-    for (var i = 0; i < items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        if (this.getValueId(itemValue) === id) {
-            result = itemValue;
-            break;
-        }
-    }
-
-    return result;
-};
-
-/**
- * @description Возвращает элемент коллекции с заданным индексом
- * @param {number} index
- * @returns {*|undefined}
- */
-Collection.prototype.getByIndex = function (index) {
-    return this.getCollectionItemValue(index);
-};
-
-/**
- * #description Возвращает первый найденный элемент коллекции, удовлетворяющий условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {*|undefined} Первый найденный элемент коллекции, удовлетворяющий указанному условию.
- */
-Collection.prototype.find = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        return false;
-    }
-
-    var items = this._items;
-    var itemIndex;
-    var matched = items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        itemIndex = index;
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
-
-    if (matched) {
-        return this.getCollectionItemValue(itemIndex);
-    }
-};
-
-/**
- * @description Возвращает индекс первого найденного элемента коллекции при поиске с начала
- * @param {*} item
- * @param {number} [fromIndex = 0]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
- */
-Collection.prototype.indexOf = function (item, fromIndex) {
-    var
-        items = this._items,
-        index = -1;
-
-    if (typeof fromIndex === 'undefined') {
-        fromIndex = 0;
-    }
-
-    for (var i = fromIndex;  i < items.length; i = i + 1) {
-        var itemValue = this.getItemValue(items[i]);
-        if (this.isEqual(item, itemValue)) {
-            index = i;
-            break;
-        }
-    }
-
-    return index;
-};
-
-
-/**
- * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
- * @param {*} item
- * @param {number} [fromIndex]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
- */
-Collection.prototype.lastIndexOf = function (item, fromIndex) {
-    var
-        items = this._items,
-        index = -1;
-
-    if (typeof fromIndex === 'undefined') {
-        fromIndex = items.length - 1;
-    }
-
-    if (items.length === 0 || fromIndex >= items.length) {
-        return -1;
-    }
-
-    for (var i = fromIndex;  i > 0; i = i - 1) {
-        var itemValue = this.getItemValue(items[i]);
-        if (this.isEqual(item, itemValue)) {
-            index = i;
-            break;
-        }
-    }
-
-    return index;
-};
-
-/**
- * @description Возвращает индекс первого найденного элемента коллекции, удовлетворяющего условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
- */
-Collection.prototype.findIndex = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        return false;
-    }
-
-    var items = this._items;
-    var itemIndex = -1;
-    var matched = items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        itemIndex = index;
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
-
-    return matched ? itemIndex : -1;
-};
-
-/**
- * @description Проверяет наличие указанного элемента в коллекции
- * @param {*} item
- * @param {number} [fromIndex = 0]
- * @returns {boolean} Возвращает true, если указанный элемент содержится в коллекции, иначе - false
- */
-Collection.prototype.contains = function (item, fromIndex) {
-    fromIndex = fromIndex || 0;
-
-    var
-        found = false,
-        items = this._items;
-
-    for (var i = fromIndex; i < items.length; i = i + 1) {
-        var itemValue = this.getItemValue(items[i]);
-        found = this.isEqual(itemValue, item);
-        if (found) {
-            break;
-        }
-    }
-
-    return found;
-};
-
-
-/**
- * @description Проверяет, что каждый элемент коллекции удовлетворяет указанному условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {boolean} Возвращает true, если каждый элемент удовлетворяют указанному условию, иначе - false
- */
-Collection.prototype.every = function (predicate, thisArg) {
-
-    if (typeof predicate !== 'function') {
-        return false;
-    }
-
-    var items = this._items;
-
-    return items.every(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
-};
-
-
-/**
- * @description Проверяет, что некоторый элемент коллекции удовлетворяет указанному условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {boolean} Возвращает true, если есть элемент, удовлетворяющий указанному условию, иначе - false
- */
-Collection.prototype.some = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        return false;
-    }
-
-    var items = this._items;
-
-    return items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
-};
-
-/**
- * @description Перечисляет все элементы коллекции
- * @param {function} callback
- * @param [thisArg]
- */
-Collection.prototype.forEach = function (callback, thisArg) {
-    if (typeof callback !== 'function') {
-        return;
-    }
-
-    var items = this._items;
-
-    items.forEach(function (item, index) {
-        var itemValue = this.getItemValue(item);
-
-        callback.call(thisArg, itemValue, index, this);
-    }, this);
-};
-
-/**
- * @description Возвращает элементы коллекции, удовлетворяющие указанному условию
- * @param {function} predicate
- * @param [thisArg]
- * @returns {Array}
- */
-Collection.prototype.filter = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        return [];
-    }
-
-    var items = this._items;
-
-    return items
-        .filter(function (item, index) {
-            var itemValue = this.getItemValue(item);
-            return predicate.call(thisArg, itemValue, index, this);
-        }, this)
-        .map(function (item) {
-            return this.getItemValue(item);
-        }, this);
-};
-
-/**
- * @description Возвращает указанный диапазон элементов коллекции
- * @param {number} fromIndex
- * @param {number} [count]
- * @returns {Array}
- */
-Collection.prototype.take = function (fromIndex, count) {
-    var items = this._items;
-
-    if (typeof count == 'undefined') {
-        count = items.length;
-    }
-
-    return items
-        .slice(fromIndex, fromIndex + count)
-        .map(function(item) {
-            return this.getItemValue(item);
-        }, this);
-};
-
-/**
- * @description Возвращает массив всех элементов коллекции
- * @returns {Array} Массив, содержащий все элементы коллекции
- */
-Collection.prototype.toArray = function () {
-    return this._items.map(function (item) {
-        return this.getItemValue(item);
-    }, this);
-};
-
-/**
- * @description Перемещает элемент коллекции в позицию с указанным индексом
- * @param {number} oldIndex
- * @param {number} newIndex
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.move = function (oldIndex, newIndex) {
-    var items = this._items,
-        item;
-
-    if (oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex) {
-        return false;
-    }
-
-    item = items.splice(oldIndex, 1).pop();
-
-    if (oldIndex > newIndex) {
-        items.splice(newIndex, 0, item);
-    } else {
-        items.splice(newIndex - 1, 0, item);
-    }
-
-    var changed = items[oldIndex] !== item;
-
-    if (changed) {
-        var value = this.getItemValue(item);
-        this.events.onMove([value], [value], oldIndex, newIndex);
-    }
-    return changed;
-};
-
-/**
- * @description Сортирует список элементов коллекции
- * @param {function} comparator
- * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
- */
-Collection.prototype.sort = function (comparator) {
-    if (typeof comparator !== 'function') {
-        comparator = this._comparator;
-    }
-
-    var
-        items = this._items,
-        collection = this,
-        _items= items.slice(),
-        changed = false;
-
-    items.sort(function(item1, item2) {
-        return comparator(collection.getItemValue(item1), collection.getItemValue(item2));
-    });
-
-    for (var i = 0; i < items.length; i = i + 1) {
-        if (items[i] !== _items[i]) {
-            changed = true;
-            break;
-        }
-    }
-
-    if (changed) {
-        this.events.onReset();
-    }
-    return changed;
-};
-
-/**
- * @description Создает копию коллекции элементов
- * @returns {Collection} Новый экземпляр коллекции элементов, который является копией исходной коллекции
- */
-Collection.prototype.clone = function () {
-    return new this.constructor(this.toArray(), this._idProperty, this.comparator);
-};
-
-
-Collection.prototype.onAdd = function (handler) {
-    this.events.on('add', handler);
-};
-
-Collection.prototype.onReplace = function (handler) {
-    this.events.on('replace', handler);
-};
-
-Collection.prototype.onRemove = function (handler) {
-    this.events.on('remove', handler);
-};
-
-Collection.prototype.onMove = function (handler) {
-    this.events.on('move', handler);
-};
-
-Collection.prototype.onReset = function (handler) {
-    this.events.on('reset', handler);
-};
-
-Collection.prototype.onChange = function (handler) {
-    this.events.on('change', handler);
-};
-
-Collection.prototype.toString = function () {
-    return this._items
-        .map(function (item) {
-            return JSON.stringify(this.getItemValue(item));
-        }, this)
-        .join(',');
-};
-
-/**
- * @protected
- * @param value
- * @returns {*}
- */
-Collection.prototype.getValueId = function (value) {
-    if (this.hasIdProperty && typeof  value !== 'undefined' && value !== null) {
-        return value[this._idProperty]
-    }
-};
-
-/**
- * @protected
- * @param value1
- * @param value2
- * @returns {boolean}
- */
-Collection.prototype.isEqual = function (value1, value2) {
-    var idProperty = this.idProperty;
-
-    if (this.hasIdProperty) {
-        if(isNotEmpty(value1, value2)) {
-            return value1[idProperty] === value2[idProperty];
-        } else {
-            return false;
-        }
-    } else {
-        return value1 === value2;
-    }
-
-    function isNotEmpty() {
-        var values = Array.prototype.slice.call(arguments);
-        return values.every(function (value) {
-            return typeof value !== 'undefined' && value !== null;
-        });
-    }
-};
-
-/**
- * @protected
- * @param {*} value
- * @param {number} [index]
- * @returns {CollectionItem}
- */
-Collection.prototype.createCollectionItem = function (value, index) {
-    var item = Object.create(null);
-
-    item.__value = value;
-    item.__index = index;
-
-    return item;
-};
-
-/**
- * @protected
- * @param item
- * @param value
- * @returns {*}
- */
-Collection.prototype.updateCollectionItem = function (item, value) {
-    item.__value = value;
-    return item;
-};
-
-/**
- * @protected
- * @param {number} index
- * @return {*}
- */
-Collection.prototype.getCollectionItemValue = function (index) {
-    var item = this._items[index];
-
-    return this.getItemValue(item);
-};
-
-Collection.prototype.getItemValue = function (item) {
-    if (item) {
-        return item.__value;
-    }
-};
-
-/**
- * @typedef {Object} CollectionItem
- * @property {*} __value
- * @property {number} __index
- */
-
-//####app\utils\collection\collectionEventManager.js
-/**
- *
- * @constructor
- */
-function CollectionEventManager () {}
-
-window.InfinniUI.CollectionEventManager = CollectionEventManager;
-
-
-_.extend(CollectionEventManager.prototype, Backbone.Events);
-
-
-/**
- *
- * @param {Array} newItems
- * @param {number} [newStartingIndex]
- * @returns {CollectionEventManager}
- */
-CollectionEventManager.prototype.onAdd = function (newItems, newStartingIndex) {
-    var params = {
-        action: 'add',
-        newItems: newItems,
-        newStartingIndex: typeof newStartingIndex !== 'undefined' ? newStartingIndex : -1
-    };
-
-    this.trigger('add', params);
-    this.trigger('change', params);
-
-    return this;
-};
-
-/**
- *
- * @returns {CollectionEventManager}
- */
-CollectionEventManager.prototype.onReset = function () {
-    var params = {
-        action: 'reset'
-    };
-
-    this.trigger('reset', params);
-    this.trigger('change', params);
-    return this;
-};
-
-/**
- *
- * @param {Array} oldItems
- * @param {Array} newItems
- * @returns {CollectionEventManager}
- */
-CollectionEventManager.prototype.onReplace = function (oldItems, newItems) {
-    var params = {
-        action: 'replace',
-        oldItems: oldItems,
-        newItems: newItems
-    };
-
-    this.trigger('replace', params);
-    this.trigger('change', params);
-    return this;
-};
-
-/**
- *
- * @param {Array} oldItems
- * @param {number} [oldStartingIndex]
- * @returns {CollectionEventManager}
- */
-CollectionEventManager.prototype.onRemove = function (oldItems, oldStartingIndex) {
-    var params = {
-        action: 'remove',
-        oldItems: oldItems,
-        oldStartingIndex: typeof oldStartingIndex !== 'undefined' ? oldStartingIndex : -1
-    };
-
-    this.trigger('remove', params);
-    this.trigger('change', params);
-    return this;
-};
-
-/**
- *
- * @param {Array} oldItems
- * @param {Array} newItems
- * @param {number} oldStartingIndex
- * @param {number} newStartingIndex
- * @returns {CollectionEventManager}
- */
-CollectionEventManager.prototype.onMove = function (oldItems, newItems, oldStartingIndex, newStartingIndex) {
-    var params = {
-        oldItems: oldItems,
-        newItems: newItems,
-        oldStartingIndex: oldStartingIndex,
-        newStartingIndex: newStartingIndex
-    };
-
-    this.trigger('move', params);
-    this.trigger('change', params);
-    return this;
-};
-
-
-
-
+})(window.InfinniUI.global.messageBus);
 //####app\utils\actionOnLoseFocus.js
 var ActionOnLoseFocus = function ($el, action) {
     var that = this;
@@ -1434,6 +435,257 @@ ActionOnLoseFocus.prototype.checkNeedToAction = function (e) {
 
 window.InfinniUI.ActionOnLoseFocus = ActionOnLoseFocus;
 
+//####app\utils\authenticationProvider.js
+/**
+  * Провайдер аутентификации.
+  *
+  * @constructor
+  */
+function AuthenticationProvider(baseAddress) {
+    this.baseAddress = baseAddress;
+}
+
+
+_.extend(AuthenticationProvider.prototype, {
+    handlers: {
+        onActiveRoleChanged: $.Callbacks(),
+        onSignInInternal: $.Callbacks(),
+        onSignOut: $.Callbacks()
+    },
+
+    /**
+          * Возвращает информацию о текущем пользователе.
+          *
+          * @public
+          */
+    getCurrentUser: function(resultCallback, errorCallback) {
+        this.sendPostRequestForServiceResult('/Auth/GetCurrentUser', {}, resultCallback, errorCallback);
+    },
+
+    /**
+          * Изменяет пароль текущего пользователя.
+          *
+          * @public
+          */
+    changePassword: function (oldPassword, newPassword, resultCallback, errorCallback) {
+        var changePasswordForm = {
+            OldPassword: oldPassword,
+            NewPassword: newPassword
+        };
+
+        this.sendPostRequestForServiceResult('/Auth/ChangePassword', changePasswordForm, resultCallback, errorCallback);
+    },
+
+    /**
+          * Изменяет персональную информацию текущего пользователя.
+          *
+          * @public
+          */
+    changeProfile: function (displayName, description, resultCallback, errorCallback) {
+        var changeProfileForm = {
+            DisplayName: displayName,
+            Description: description
+        };
+
+        this.sendPostRequestForServiceResult('/Auth/ChangeProfile', changeProfileForm, resultCallback, errorCallback);
+    },
+
+    /**
+          * Осуществляет вход пользователя в систему через внутренний провайдер.
+          *
+          * @public
+          */
+    signInInternal: function (userName, password, remember, resultCallback, errorCallback) {
+        var signInInternalForm = {
+            UserName: userName,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequestForServiceResult('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
+    },
+
+    /**
+          * Возвращает форму входа пользователя в систему через внешний провайдер.
+          *
+          * @public
+          */
+    getSignInExternalForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
+        this.getExternalLoginForm('/Auth/SignInExternal', successUrl, failureUrl, resultCallback, errorCallback);
+    },
+
+    /**
+          * Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
+          *
+          * @public
+          */
+    getLinkExternalLoginForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
+        this.getExternalLoginForm('/Auth/LinkExternalLogin', successUrl, failureUrl, resultCallback, errorCallback);
+    },
+
+    /**
+          * Удаляет у текущего пользователя имя входа у внешнего провайдера.
+          *
+          * @public
+          */
+    unlinkExternalLogin: function (provider, providerKey, resultCallback, errorCallback) {
+        var unlinkExternalLoginForm = {
+            Provider: provider,
+            ProviderKey: providerKey
+        };
+
+        this.sendPostRequest('/Auth/UnlinkExternalLogin', unlinkExternalLoginForm, resultCallback, errorCallback);
+    },
+
+    /**
+          * Выход пользователя из системы.
+          *
+          * @public
+          */
+    signOut: function (resultCallback, errorCallback) {
+        var signOutInternalForm = {
+            "id" : null,
+            "changesObject" : {},
+            "replace" : false
+        };
+
+        this.sendPostRequestForServiceResult('/Auth/SignOut', null, function(){
+            InfinniUI.user.onReadyDeferred = $.Deferred();
+            InfinniUI.user.onReadyDeferred.resolve(null);
+
+            var args = _.toArray(arguments);
+            if(resultCallback){
+                resultCallback.apply(this, args);
+            }
+
+            this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
+
+        }.bind(this), errorCallback);
+    },
+
+    getExternalLoginForm: function (requestUri, successUrl, failureUrl, resultCallback, errorCallback) {
+        var url = this.baseAddress + requestUri;
+        this.sendPostRequest('/Auth/GetExternalProviders', {},
+            function (result) {
+                var formElement = $(document.createElement('form'));
+                formElement.attr('method', 'POST');
+                formElement.attr('action', url);
+
+                var successUrlElement = $(document.createElement('input'));
+                successUrlElement.attr('type', 'hidden');
+                successUrlElement.attr('name', 'SuccessUrl');
+                successUrlElement.attr('value', successUrl);
+                formElement.append(successUrlElement);
+
+                var failureUrlElement = $(document.createElement('input'));
+                failureUrlElement.attr('type', 'hidden');
+                failureUrlElement.attr('name', 'FailureUrl');
+                failureUrlElement.attr('value', failureUrl);
+                formElement.append(failureUrlElement);
+
+                if (result !== null && result !== undefined) {
+                    for (var i = 0; i < result.length; ++i) {
+                        var providerInfo = result[i];
+                        var providerType = providerInfo.Type;
+                        var providerName = providerInfo.Name;
+
+                        var loginButton = $(document.createElement('button'));
+                        loginButton.attr('type', 'submit');
+                        loginButton.attr('name', 'Provider');
+                        loginButton.attr('value', providerType);
+                        loginButton.text(providerName);
+                        formElement.append(loginButton);
+                    }
+                }
+
+                resultCallback(formElement);
+            },
+            errorCallback
+        );
+    },
+
+    sendGetRequest: function (requestUri, resultCallback, errorCallback) {
+        $.ajax(this.baseAddress + requestUri, {
+            type: 'GET',
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(resultCallback),
+            error: this.onErrorRequest(function (error) {
+                if(errorCallback) {
+                    errorCallback(error.responseJSON);
+                }
+            })
+        });
+    },
+
+    sendPostRequest: function (requestUri, requestData, resultCallback, errorCallback) {
+        var that = this;
+
+        if (requestData !== null) {
+            requestData = JSON.stringify(requestData);
+        }
+        $.ajax(this.baseAddress + requestUri, {
+            type: 'POST',
+            xhrFields: {
+                withCredentials: true
+            },
+            data: requestData,
+            contentType: 'application/json',
+            beforeSend: this.onBeforeRequest(),
+            success: this.onSuccessRequest(resultCallback),
+            error: this.onErrorRequest(function (error) {
+                if(error.status != 200) {
+                    if(errorCallback) {
+                        errorCallback(error.responseJSON);
+                    }
+                } else {
+                    that.onSuccessRequest(resultCallback).apply(that, arguments);
+                }
+            })
+        });
+    },
+
+    sendPostRequestForServiceResult: function (requestUri, requestData, successCallback, errorCallback) {
+        var resultCallback = function(){
+            var args = _.toArray(arguments),
+                serviceResult = args[0];
+
+            if(serviceResult['Success']){
+                args[0] = serviceResult['Result'];
+
+                if( _.isFunction(successCallback) ){
+                    successCallback.apply(this, args);
+                }
+            } else {
+                args[0] = serviceResult['Error'];
+
+                if( _.isFunction(errorCallback) ){
+                    errorCallback.apply(this, args);
+                }
+            }
+        };
+
+        this.sendPostRequest(requestUri, requestData, resultCallback, errorCallback);
+    },
+
+    onActiveRoleChanged: function(handler){
+        this.handlers.onActiveRoleChanged.add(handler);
+    },
+
+    onSignInInternal: function(handler){
+        this.handlers.onSignInInternal.add(handler);
+    },
+
+    onSignOut: function(handler){
+        this.handlers.onSignOut.add(handler);
+    }
+});
+
+_.extend(AuthenticationProvider.prototype, ajaxRequestMixin);
+
+InfinniUI.global.session = new AuthenticationProvider(InfinniUI.config.serverUrl);
 //####app\utils\basePathOfProperty.js
 function BasePathOfProperty(basePathOfProperty, baseIndex, parentBasePath ) {
 
@@ -4053,109 +3305,1108 @@ var urlManager = {
 };
 
 window.InfinniUI.UrlManager = urlManager;
-//####app\messaging\messageBus.js
-function MessageBus(view) {
-    var subscriptions = {};
-
-    this.send = function (messageType, messageBody) {
-        messageType = patchMessageType(messageType);
-        if (subscriptions[messageType]) {
-            var context;
-            if (view && view.getContext) {
-                context = view.getContext();
-            }
-            _.each(subscriptions[messageType], function (handler) {
-                handler(context, { value: messageBody });
-            });
-        }
-    };
-
-    this.subscribe = function (messageType, messageHandler) {
-        messageType = patchMessageType(messageType);
-        if (!subscriptions[messageType]) {
-            subscriptions[messageType] = [];
-        }
-        
-        subscriptions[messageType].push(messageHandler);
-    };
-
-    this.unsubscribeByType = function (messageType) {
-        messageType = patchMessageType(messageType);
-        if (subscriptions[messageType]) {
-            delete subscriptions[messageType];
-        }
-    };
-
-    this.getView = function () {
-        return view;
-    };
-
-    function patchMessageType(messageType) {
-
-        if (typeof messageType === 'object' && typeof messageType.name !== 'undefined') {
-            messageType = messageType.name;
-        }
-
-        return messageType;
+//####app\utils\collection\collection.js
+/**
+ *
+ * @param {Array} items
+ * @param {string} [idProperty]
+ * @param {function} [comparator]
+ * @constructor
+ */
+function Collection (items, idProperty, comparator) {
+    if (!Array.isArray(items)) {
+        items = [];
     }
+
+    /**
+     * @type {Array.<Object>}
+     * @protected
+     */
+    this._items = items.map(function (value, index) {
+        return this.createCollectionItem(value, index);
+    }, this);
+
+    /**
+     * @type {string|null}
+     * @protected
+     */
+    this._idProperty = idProperty;
+
+    /**
+     * @type {function}
+     * @protected
+     */
+    this._comparator = comparator || defaultComparator;
+
+    function defaultComparator (a, b) {
+        if (a < b) {
+            return -1;
+        } else if (a > b) {
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
+     *
+     * @type {CollectionEventManager}
+     */
+    this.events = new CollectionEventManager();
 }
 
-window.InfinniUI.global.messageBus = new MessageBus();
-//####app\messaging\messageTypes.js
-window.messageTypes = {
+window.InfinniUI.Collection = Collection;
 
-    onViewBuildError: {name: 'onViewBuildError'},
-    onViewCreated: {name: 'onViewCreated'},
 
-    onChangeLayout: {name: 'OnChangeLayout'},
-    onNotifyUser: {name: 'onNotifyUser'},
-    onToolTip: {name: 'onToolTip'},
+Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
+    /**
+     * @type {string|null}
+     */
+    idProperty: {
+        get: function () {
+            return this._idProperty;
+        },
+        enumerable: false
+    },
+    /**
+     * @type {function}
+     */
+    comparator: {
+        get: function () {
+            return this._comparator;
+        },
+        enumerable: false
+    },
+    /**
+     * @type {number}
+     */
+    length: {
+        get: function () {
+            return this._items.length;
+        },
+        enumerable: false
+    },
+    /**
+     * @type {boolean}
+     */
+    hasIdProperty: {
+        get: function () {
+            return typeof this._idProperty !== 'undefined';
+        },
+        enumerable: false
+    }
+});
 
-    onContextMenu: {name: 'onContextMenu'},
-    onOpenContextMenu: {name: 'onOpenContextMenu'},
+/**
+ *
+ * @param {number} index
+ * @param {string} propertyName
+ * @param {*} value
+ * @returns {Collection}
+ */
+Collection.prototype.setProperty = function (index, propertyName, value) {
+    var item = this._items[index];
 
-    onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'}
+    if (item) {
+        item[propertyName] = value;
+    }
+    return this;
+};
 
+/**
+ *
+ * @param {number} index
+ * @param {string} propertyName
+ * @returns {*}
+ */
+Collection.prototype.getProperty = function (index, propertyName) {
+    var item = this._items[index];
+
+    if (item) {
+        return item[propertyName];
+    }
+};
+
+/**
+ * @description Возвращает количество элементов в коллекции
+ * @returns {number} Количество элементов в коллекции
+ */
+Collection.prototype.size = function () {
+    return this.length;
+};
+
+/**
+ * @description Добавляет элемент в конец коллекции
+ * @param {*} value
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.push = function (value) {
+    var items = this._items;
+    var item = this.createCollectionItem(value, items.length);
+
+    items.push(item);
+
+    this.events.onAdd([value]);
+    return true;
+};
+
+/**
+ * @description Добавляет элемент в конец коллекции. @see {@link Collection.push}
+ */
+Collection.prototype.add = Collection.prototype.push;
+
+/**
+ * @description Добавляет элементы в конец коллекции
+ * @param {Array} values
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.addAll = function (values) {
+    if (!Array.isArray(values)) {
+        return false;
+    }
+
+    var items = this._items;
+    var changed = values.length > 0;
+
+    values.forEach(function (value) {
+        var item = this.createCollectionItem(value, items.length);
+        items.push(item);
+    }, this);
+
+    if (changed) {
+        this.events.onAdd(values);
+    }
+    return changed;
+};
+
+/**
+ * @description Вставляет элемент в указанную позицию коллекции
+ * @param {number} index
+ * @param {*} newItem
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.insert = function (index, newItem) {
+    var item = this.createCollectionItem(newItem, index);
+    this._items.splice(index, 0, item);
+
+    this.events.onAdd([newItem], index);
+    return true;
+};
+
+/**
+ *
+ * @param {number} index
+ * @param {Array} newItems
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.insertAll = function (index, newItems) {
+    if (!Array.isArray(newItems)) {
+        return false;
+    }
+
+    var items = this._items;
+    var changed = newItems.length > 0;
+
+    newItems.forEach(function(value, i) {
+        var start = index + i;
+        var item = this.createCollectionItem(value, start);
+        items.splice(start, 0, item);
+    }, this);
+
+    if (changed) {
+        this.events.onAdd(newItems, index);
+    }
+    return changed;
+};
+
+/**
+ * @description Устанавливает список элементов коллекции
+ * @param {Array} newItems
+ * @return {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.reset = function (newItems) {
+    var changed, items;
+
+    if (!Array.isArray(newItems)) {
+        return false;
+    }
+
+    changed = this._items.length !== newItems.length;
+
+    items = newItems.map(function (value, index) {
+        if (!changed) {
+            changed = !this.isEqual(value, this.getCollectionItemValue(index));
+        }
+        return this.createCollectionItem(value, index);
+
+    }, this);
+
+    this._items.length = 0;
+
+    Array.prototype.push.apply(this._items, items);
+    if (changed) {
+        this.events.onReset();
+    }
+    return changed;
 };
 
 
-//####app\controls\_base\_mixins\ajaxRequestMixin.js
-var ajaxRequestMixin = (function (bus) {
+/**
+ * @description Заменяет элемент коллекции на указанный
+ * @param {Array} newItems
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.set = function (newItems, silent) {
+    var items = this._items;
 
-    function invokeCallback(cb, args) {
-        var result;
-        if (typeof cb === 'function') {
-            result = cb.apply(null, Array.prototype.slice.call(args));
-        }
-        return result;
+    if (!Array.isArray(newItems)) {
+        return false;
     }
 
-    return {
+    var changed = items.length !== newItems.length;
+    var _newItems = newItems.slice();
+    var matched, i = 0;
+    var itemValue, newValue = null, newValueIndex;
 
-        onBeforeRequest: function (callback) {
-            return function () {
-                bus.send(messageTypes.onDataLoading, {});
-                return invokeCallback(callback, arguments);
-            }
-        },
 
-        onSuccessRequest: function (callback) {
-            return function () {
-                bus.send(messageTypes.onDataLoaded, {success: true});
-                return invokeCallback(callback, arguments);
-            }
-        },
 
-        onErrorRequest: function (callback) {
-            return function () {
-                bus.send(messageTypes.onDataLoaded, {success: false});
-                return invokeCallback(callback, arguments);
+    _newItems.forEach(function(newItem, index){
+        if (index < items.length) {
+            //Изменение элементов
+            if (!changed) {
+                changed = !this.isEqual(this.getCollectionItemValue(index), _newItems[index]);
             }
+            if (changed) {
+                this.updateCollectionItem(items[index], newItem);
+            }
+        } else {
+            //Новые элементы
+            changed = true;
+            items.push(this.createCollectionItem(newItem, items.length));
+        }
+    }, this);
+
+    if (newItems.length < items.length) {
+        items.splice(newItems.length)
+    }
+
+    if (changed && !silent) {
+        this.events.onReset();
+    }
+    return changed;
+};
+
+/**
+ * @description Заменяет элемент коллекции на указанный.
+ * @param {*} oldItem
+ * @param {*} newItem
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.replace = function (oldItem, newItem) {
+    var itemValue;
+    var changed = false;
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        itemValue = this.getCollectionItemValue(i);
+        if (this.isEqual(oldItem, itemValue)) {
+            this.updateCollectionItem(this._items[i], newItem);
+            changed = true;
+            break;
         }
     }
 
-})(window.InfinniUI.global.messageBus);
+    if (changed) {
+        this.events.onReplace([oldItem], [newItem]);
+    }
+    return changed;
+};
+
+/**
+ * @description Удаляет последний элемент из коллекции
+ * @returns {*|undefined} Возвращает последний элемент коллекции, который был удален
+ */
+Collection.prototype.pop = function () {
+    if (this._items.length === 0) {
+        return;
+    }
+
+    var itemValue = this.getCollectionItemValue(this.length - 1);
+    this._items.pop();
+    this.events.onRemove([itemValue], this._items.length);
+    return itemValue;
+};
+
+/**
+ * @description Удаляет указанный элемент из коллекции
+ * @param {*} item
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.remove = function (item) {
+    var itemValue;
+    var itemIndex;
+
+    var changed = true;
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        itemValue = this.getCollectionItemValue(i);
+        itemIndex = i;
+        if (this.isEqual(item, itemValue)) {
+            this._items.splice(i, 1);
+            changed = true;
+            break;
+        }
+    }
+
+    if (changed) {
+        this.events.onRemove([item], itemIndex);
+    }
+    return changed;
+};
+
+/**
+ * @description Удаляет элемент с указанным идентификатором из коллекции
+ * @param {number|string} id
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.removeById = function (id) {
+    if (!this.hasIdProperty) {
+        return false;
+    }
+
+    var itemValue;
+    var itemIndex;
+
+    var changed = true;
+    for (var i = 0; i < this._items.length; i = i + 1) {
+        itemValue = this.getCollectionItemValue(i);
+        itemIndex = i;
+        if (this.getValueId(itemValue) === id) {
+            this._items.splice(i, 1);
+            changed = true;
+            break;
+        }
+    }
+
+    if (changed) {
+        this.events.onRemove([itemValue], itemIndex);
+    }
+    return changed;
+};
+
+/**
+ * @description Удаляет элемент с указанным индексом из коллекции
+ * @param {number} index
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.removeAt = function (index) {
+    if (index >= this._items.length) {
+        return false;
+    }
+
+    var item = this.getCollectionItemValue(index);
+    this._items.splice(index, 1);
+
+    this.events.onRemove([item], index);
+    return true;
+};
+
+
+/**
+ * @description Удаляет указанные элементы из коллекции
+ * @param {Array} items
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.removeAll = function (items) {
+    if (!Array.isArray(items)) {
+        return false;
+    }
+
+    var collectionItems = this._items;
+    var deletedItems = [];
+    var changed;
+
+    items.forEach(function (value) {
+
+        deletedItems = collectionItems.filter(function (item) {
+            return this.isEqual(value, this.getItemValue(item));
+        }, this);
+
+        deletedItems.forEach(function (item) {
+            var index = collectionItems.indexOf(item);
+            collectionItems.splice(index, 1);
+        });
+    }, this);
+
+    changed = deletedItems.length > 0;
+
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+        //@TODO Добавить параметр oldStartingIndex для события
+        this.events.onRemove(values);
+    }
+    return changed;
+};
+
+
+/**
+ * @description Удаляет диапазон элементов из коллекции
+ * @param {number} fromIndex
+ * @param {number} [count]
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.removeRange = function (fromIndex, count) {
+    var items = this._items;
+    var changed;
+
+    if (fromIndex >= items.length) {
+        return false;
+    }
+
+    if (typeof count === 'undefined') {
+        count = items.length - fromIndex;
+    }
+
+    var deletedItems = items.splice(fromIndex, count);
+    changed = deletedItems.length > 0;
+
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
+        this.events.onRemove(values, fromIndex);
+    }
+    return changed;
+};
+
+
+/**
+ * @description Удаляет все элементы из коллекции, удовлетворяющие указанному условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.removeEvery = function (predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        return false;
+    }
+
+    var items = this._items;
+    var changed;
+    var deletedItems = items.filter(function (item, index) {
+        var itemValue = this.getItemValue(item);
+        return predicate.call(thisArg, itemValue, index, this);
+    }, this);
+
+    deletedItems.forEach(function (deletedItem) {
+        var index = items.indexOf(deletedItem);
+        items.splice(index, 1);
+    });
+
+    changed = deletedItems.length > 0;
+    if (changed) {
+        var values = deletedItems.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
+        this.events.onRemove(values);
+    }
+    return changed;
+};
+
+
+/**
+ * @description Удаляет все элементы из коллекции
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.clear = function () {
+    var
+        items = this._items,
+        changed = items.length > 0,
+        values = items.map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+
+
+    items.length = 0;
+
+    if (changed) {
+        this.events.onRemove(values, 0);
+    }
+
+    return changed;
+};
+
+/**
+ * @description Возвращает элемент коллекции с заданным идентификатором.
+ * @param {number|string} id
+ * @returns {*|undefined} Элемент коллекции с заданным идентификатором
+ */
+Collection.prototype.getById = function (id) {
+    if (!this.hasIdProperty) {
+        return false;
+    }
+
+    var items = this._items;
+    var itemValue, result;
+
+    for (var i = 0; i < items.length; i = i + 1) {
+        itemValue = this.getCollectionItemValue(i);
+        if (this.getValueId(itemValue) === id) {
+            result = itemValue;
+            break;
+        }
+    }
+
+    return result;
+};
+
+/**
+ * @description Возвращает элемент коллекции с заданным индексом
+ * @param {number} index
+ * @returns {*|undefined}
+ */
+Collection.prototype.getByIndex = function (index) {
+    return this.getCollectionItemValue(index);
+};
+
+/**
+ * #description Возвращает первый найденный элемент коллекции, удовлетворяющий условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {*|undefined} Первый найденный элемент коллекции, удовлетворяющий указанному условию.
+ */
+Collection.prototype.find = function (predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        return false;
+    }
+
+    var items = this._items;
+    var itemIndex;
+    var matched = items.some(function (item, index) {
+        var itemValue = this.getItemValue(item);
+        itemIndex = index;
+        return predicate.call(thisArg, itemValue, index, this);
+    }, this);
+
+    if (matched) {
+        return this.getCollectionItemValue(itemIndex);
+    }
+};
+
+/**
+ * @description Возвращает индекс первого найденного элемента коллекции при поиске с начала
+ * @param {*} item
+ * @param {number} [fromIndex = 0]
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ */
+Collection.prototype.indexOf = function (item, fromIndex) {
+    var
+        items = this._items,
+        index = -1;
+
+    if (typeof fromIndex === 'undefined') {
+        fromIndex = 0;
+    }
+
+    for (var i = fromIndex;  i < items.length; i = i + 1) {
+        var itemValue = this.getItemValue(items[i]);
+        if (this.isEqual(item, itemValue)) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+};
+
+
+/**
+ * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
+ * @param {*} item
+ * @param {number} [fromIndex]
+ * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ */
+Collection.prototype.lastIndexOf = function (item, fromIndex) {
+    var
+        items = this._items,
+        index = -1;
+
+    if (typeof fromIndex === 'undefined') {
+        fromIndex = items.length - 1;
+    }
+
+    if (items.length === 0 || fromIndex >= items.length) {
+        return -1;
+    }
+
+    for (var i = fromIndex;  i > 0; i = i - 1) {
+        var itemValue = this.getItemValue(items[i]);
+        if (this.isEqual(item, itemValue)) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+};
+
+/**
+ * @description Возвращает индекс первого найденного элемента коллекции, удовлетворяющего условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
+ */
+Collection.prototype.findIndex = function (predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        return false;
+    }
+
+    var items = this._items;
+    var itemIndex = -1;
+    var matched = items.some(function (item, index) {
+        var itemValue = this.getItemValue(item);
+        itemIndex = index;
+        return predicate.call(thisArg, itemValue, index, this);
+    }, this);
+
+    return matched ? itemIndex : -1;
+};
+
+/**
+ * @description Проверяет наличие указанного элемента в коллекции
+ * @param {*} item
+ * @param {number} [fromIndex = 0]
+ * @returns {boolean} Возвращает true, если указанный элемент содержится в коллекции, иначе - false
+ */
+Collection.prototype.contains = function (item, fromIndex) {
+    fromIndex = fromIndex || 0;
+
+    var
+        found = false,
+        items = this._items;
+
+    for (var i = fromIndex; i < items.length; i = i + 1) {
+        var itemValue = this.getItemValue(items[i]);
+        found = this.isEqual(itemValue, item);
+        if (found) {
+            break;
+        }
+    }
+
+    return found;
+};
+
+
+/**
+ * @description Проверяет, что каждый элемент коллекции удовлетворяет указанному условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {boolean} Возвращает true, если каждый элемент удовлетворяют указанному условию, иначе - false
+ */
+Collection.prototype.every = function (predicate, thisArg) {
+
+    if (typeof predicate !== 'function') {
+        return false;
+    }
+
+    var items = this._items;
+
+    return items.every(function (item, index) {
+        var itemValue = this.getItemValue(item);
+        return predicate.call(thisArg, itemValue, index, this);
+    }, this);
+};
+
+
+/**
+ * @description Проверяет, что некоторый элемент коллекции удовлетворяет указанному условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {boolean} Возвращает true, если есть элемент, удовлетворяющий указанному условию, иначе - false
+ */
+Collection.prototype.some = function (predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        return false;
+    }
+
+    var items = this._items;
+
+    return items.some(function (item, index) {
+        var itemValue = this.getItemValue(item);
+        return predicate.call(thisArg, itemValue, index, this);
+    }, this);
+};
+
+/**
+ * @description Перечисляет все элементы коллекции
+ * @param {function} callback
+ * @param [thisArg]
+ */
+Collection.prototype.forEach = function (callback, thisArg) {
+    if (typeof callback !== 'function') {
+        return;
+    }
+
+    var items = this._items;
+
+    items.forEach(function (item, index) {
+        var itemValue = this.getItemValue(item);
+
+        callback.call(thisArg, itemValue, index, this);
+    }, this);
+};
+
+/**
+ * @description Возвращает элементы коллекции, удовлетворяющие указанному условию
+ * @param {function} predicate
+ * @param [thisArg]
+ * @returns {Array}
+ */
+Collection.prototype.filter = function (predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        return [];
+    }
+
+    var items = this._items;
+
+    return items
+        .filter(function (item, index) {
+            var itemValue = this.getItemValue(item);
+            return predicate.call(thisArg, itemValue, index, this);
+        }, this)
+        .map(function (item) {
+            return this.getItemValue(item);
+        }, this);
+};
+
+/**
+ * @description Возвращает указанный диапазон элементов коллекции
+ * @param {number} fromIndex
+ * @param {number} [count]
+ * @returns {Array}
+ */
+Collection.prototype.take = function (fromIndex, count) {
+    var items = this._items;
+
+    if (typeof count == 'undefined') {
+        count = items.length;
+    }
+
+    return items
+        .slice(fromIndex, fromIndex + count)
+        .map(function(item) {
+            return this.getItemValue(item);
+        }, this);
+};
+
+/**
+ * @description Возвращает массив всех элементов коллекции
+ * @returns {Array} Массив, содержащий все элементы коллекции
+ */
+Collection.prototype.toArray = function () {
+    return this._items.map(function (item) {
+        return this.getItemValue(item);
+    }, this);
+};
+
+/**
+ * @description Перемещает элемент коллекции в позицию с указанным индексом
+ * @param {number} oldIndex
+ * @param {number} newIndex
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.move = function (oldIndex, newIndex) {
+    var items = this._items,
+        item;
+
+    if (oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex) {
+        return false;
+    }
+
+    item = items.splice(oldIndex, 1).pop();
+
+    if (oldIndex > newIndex) {
+        items.splice(newIndex, 0, item);
+    } else {
+        items.splice(newIndex - 1, 0, item);
+    }
+
+    var changed = items[oldIndex] !== item;
+
+    if (changed) {
+        var value = this.getItemValue(item);
+        this.events.onMove([value], [value], oldIndex, newIndex);
+    }
+    return changed;
+};
+
+/**
+ * @description Сортирует список элементов коллекции
+ * @param {function} comparator
+ * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
+ */
+Collection.prototype.sort = function (comparator) {
+    if (typeof comparator !== 'function') {
+        comparator = this._comparator;
+    }
+
+    var
+        items = this._items,
+        collection = this,
+        _items= items.slice(),
+        changed = false;
+
+    items.sort(function(item1, item2) {
+        return comparator(collection.getItemValue(item1), collection.getItemValue(item2));
+    });
+
+    for (var i = 0; i < items.length; i = i + 1) {
+        if (items[i] !== _items[i]) {
+            changed = true;
+            break;
+        }
+    }
+
+    if (changed) {
+        this.events.onReset();
+    }
+    return changed;
+};
+
+/**
+ * @description Создает копию коллекции элементов
+ * @returns {Collection} Новый экземпляр коллекции элементов, который является копией исходной коллекции
+ */
+Collection.prototype.clone = function () {
+    return new this.constructor(this.toArray(), this._idProperty, this.comparator);
+};
+
+
+Collection.prototype.onAdd = function (handler) {
+    this.events.on('add', handler);
+};
+
+Collection.prototype.onReplace = function (handler) {
+    this.events.on('replace', handler);
+};
+
+Collection.prototype.onRemove = function (handler) {
+    this.events.on('remove', handler);
+};
+
+Collection.prototype.onMove = function (handler) {
+    this.events.on('move', handler);
+};
+
+Collection.prototype.onReset = function (handler) {
+    this.events.on('reset', handler);
+};
+
+Collection.prototype.onChange = function (handler) {
+    this.events.on('change', handler);
+};
+
+Collection.prototype.toString = function () {
+    return this._items
+        .map(function (item) {
+            return JSON.stringify(this.getItemValue(item));
+        }, this)
+        .join(',');
+};
+
+/**
+ * @protected
+ * @param value
+ * @returns {*}
+ */
+Collection.prototype.getValueId = function (value) {
+    if (this.hasIdProperty && typeof  value !== 'undefined' && value !== null) {
+        return value[this._idProperty]
+    }
+};
+
+/**
+ * @protected
+ * @param value1
+ * @param value2
+ * @returns {boolean}
+ */
+Collection.prototype.isEqual = function (value1, value2) {
+    var idProperty = this.idProperty;
+
+    if (this.hasIdProperty) {
+        if(isNotEmpty(value1, value2)) {
+            return value1[idProperty] === value2[idProperty];
+        } else {
+            return false;
+        }
+    } else {
+        return value1 === value2;
+    }
+
+    function isNotEmpty() {
+        var values = Array.prototype.slice.call(arguments);
+        return values.every(function (value) {
+            return typeof value !== 'undefined' && value !== null;
+        });
+    }
+};
+
+/**
+ * @protected
+ * @param {*} value
+ * @param {number} [index]
+ * @returns {CollectionItem}
+ */
+Collection.prototype.createCollectionItem = function (value, index) {
+    var item = Object.create(null);
+
+    item.__value = value;
+    item.__index = index;
+
+    return item;
+};
+
+/**
+ * @protected
+ * @param item
+ * @param value
+ * @returns {*}
+ */
+Collection.prototype.updateCollectionItem = function (item, value) {
+    item.__value = value;
+    return item;
+};
+
+/**
+ * @protected
+ * @param {number} index
+ * @return {*}
+ */
+Collection.prototype.getCollectionItemValue = function (index) {
+    var item = this._items[index];
+
+    return this.getItemValue(item);
+};
+
+Collection.prototype.getItemValue = function (item) {
+    if (item) {
+        return item.__value;
+    }
+};
+
+/**
+ * @typedef {Object} CollectionItem
+ * @property {*} __value
+ * @property {number} __index
+ */
+
+//####app\utils\collection\collectionEventManager.js
+/**
+ *
+ * @constructor
+ */
+function CollectionEventManager () {}
+
+window.InfinniUI.CollectionEventManager = CollectionEventManager;
+
+
+_.extend(CollectionEventManager.prototype, Backbone.Events);
+
+
+/**
+ *
+ * @param {Array} newItems
+ * @param {number} [newStartingIndex]
+ * @returns {CollectionEventManager}
+ */
+CollectionEventManager.prototype.onAdd = function (newItems, newStartingIndex) {
+    var params = {
+        action: 'add',
+        newItems: newItems,
+        newStartingIndex: typeof newStartingIndex !== 'undefined' ? newStartingIndex : -1
+    };
+
+    this.trigger('add', params);
+    this.trigger('change', params);
+
+    return this;
+};
+
+/**
+ *
+ * @returns {CollectionEventManager}
+ */
+CollectionEventManager.prototype.onReset = function () {
+    var params = {
+        action: 'reset'
+    };
+
+    this.trigger('reset', params);
+    this.trigger('change', params);
+    return this;
+};
+
+/**
+ *
+ * @param {Array} oldItems
+ * @param {Array} newItems
+ * @returns {CollectionEventManager}
+ */
+CollectionEventManager.prototype.onReplace = function (oldItems, newItems) {
+    var params = {
+        action: 'replace',
+        oldItems: oldItems,
+        newItems: newItems
+    };
+
+    this.trigger('replace', params);
+    this.trigger('change', params);
+    return this;
+};
+
+/**
+ *
+ * @param {Array} oldItems
+ * @param {number} [oldStartingIndex]
+ * @returns {CollectionEventManager}
+ */
+CollectionEventManager.prototype.onRemove = function (oldItems, oldStartingIndex) {
+    var params = {
+        action: 'remove',
+        oldItems: oldItems,
+        oldStartingIndex: typeof oldStartingIndex !== 'undefined' ? oldStartingIndex : -1
+    };
+
+    this.trigger('remove', params);
+    this.trigger('change', params);
+    return this;
+};
+
+/**
+ *
+ * @param {Array} oldItems
+ * @param {Array} newItems
+ * @param {number} oldStartingIndex
+ * @param {number} newStartingIndex
+ * @returns {CollectionEventManager}
+ */
+CollectionEventManager.prototype.onMove = function (oldItems, newItems, oldStartingIndex, newStartingIndex) {
+    var params = {
+        oldItems: oldItems,
+        newItems: newItems,
+        oldStartingIndex: oldStartingIndex,
+        newStartingIndex: newStartingIndex
+    };
+
+    this.trigger('move', params);
+    this.trigger('change', params);
+    return this;
+};
+
+
+
+
 //####app\controls\_base\_mixins\bindUIElementsMixin.js
 var bindUIElementsMixin = {
     /**
@@ -8398,651 +8649,6 @@ var TimePickerView = DateTimePickerView .extend({
     className: "pl-datepicker pl-timepicker form-group"
 
 });
-//####app\controls\application\statusBar\statusBar.js
-var StatusBarControl = function () {
-    _.superClass(StatusBarControl, this);
-};
-_.inherit(StatusBarControl, Control);
-_.extend(StatusBarControl.prototype, {
-    createControlModel: function () {
-        return new StatusBarModel();
-    },
-    createControlView: function (model) {
-        return new StatusBarView({model: model});
-    }
-});
-
-var StatusBarModel = ControlModel.extend({
-    defaults: _.defaults({}, ControlModel.prototype.defaults, {
-        time: '',
-        date: '',
-        result: null
-    })
-});
-
-var StatusBarView = ControlView.extend({
-    className: 'pl-status-bar',
-
-    events: {
-        'click .signIn': 'signInHandler',
-        'click .signOut': 'signOutHandler',
-        'click .status-bar-menu': 'openMenuHandler'
-    },
-
-    template: InfinniUI.Template['controls/application/statusBar/template.tpl.html'],
-    loginTemplate: InfinniUI.Template['controls/application/statusBar/authentication/loginTemplate.tpl.html'],
-
-    enterTemplate: InfinniUI.Template['controls/application/statusBar/authentication/enterTemplate.tpl.html'],
-    successTemplate: InfinniUI.Template['controls/application/statusBar/authentication/successTemplate.tpl.html'],
-
-    initialize: function () {
-        var self = this;
-        self.model.set('time', moment().format('HH:mm'));
-        self.model.set('date', moment().format('D MMMM'));
-
-        window.setInterval(function () {
-            self.model.set('time', moment().format('HH:mm'));
-            self.model.set('date', moment().format('D MMMM'));
-            self.dateRender();
-        }, 10 * 1000);
-
-        getUserInfo(this);
-        this.listenTo(this.model, 'change:result', this.render);
-    },
-
-    dateRender: function () {
-        this.$el.find('.time').text(this.model.get('time'));
-        this.$el.find('.date').text(this.model.get('date'));
-    },
-
-    signInHandler: function () {
-        var self = this;
-        if (!this.$modal) {
-            this.$modal = $(this.loginTemplate({}));
-            this.$modal.appendTo('body');
-        }
-
-        this.$modal.modal('show');
-        this.$modal.on('hidden.bs.modal', function () {
-            $(this).find('#password, #userName').val('');
-            $(this).find('#remember').attr('checked', false);
-        });
-        this.$modal.find('.post').on('click', function () {
-            signInInternal(self);
-        })
-    },
-    openMenuHandler: function(){
-        var menu = $('.app-area').find('.pl-menu');
-        var area = menu.closest('.app-area');
-
-        if(menu.length && area.length) {
-            if($(area).is(':visible')) {
-                area.css({
-                    'display': 'none'
-                });
-            }else{
-                area.css({
-                    'position': 'absolute',
-                    'width': '100%',
-                    'display': 'block',
-                    'overflow': 'hidden'
-                });
-            }
-        }
-    },
-
-    signOutHandler: function () {
-        signOut(this);
-    },
-
-    render: function () {
-        var result = this.model.get('result');debugger;
-        var header = InfinniUI.config.configName;
-        var $wrap = $(this.template({header: header}));
-        var $loginTemplate,
-            self = this;
-
-        window.adjustLoginResult(result).then(function(r){
-            if (result) {
-                $loginTemplate = $(self.successTemplate({
-                    displayName: r.UserName,
-                    activeRole: r.ActiveRole,
-                    roles: _.pluck(result.Roles, 'DisplayName').join(', ')
-                }));
-            } else {
-                $loginTemplate = $(self.enterTemplate({}));
-            }
-
-            $wrap.find('.page-header-inner').prepend($loginTemplate);
-            self.$el
-                .empty()
-                .append($wrap);
-        });
-
-        this.$el.find('.calendar').datepicker({
-            todayHighlight: true,
-            language: 'ru'
-        });
-
-        //~fix DatePicker auto close
-        this.$el.find('.dropdown-toggle').on('click.bs.dropdown', function() {
-            var clicks = $(this).data('clicks');
-            if (clicks) {
-                $(this).parent('.dropdown').off('hide.bs.dropdown');
-            } else {
-                $(this).parent('.dropdown').on('hide.bs.dropdown', function () {return false;});
-            }
-            $(this).data("clicks", !clicks);
-        });
-
-        return this;
-    }
-});
-//####app\controls\application\statusBar\authentication\authenticationProvider.js
-/**
-  * Провайдер аутентификации.
-  *
-  * @constructor
-  */
-function AuthenticationProvider(baseAddress) {
-    this.baseAddress = baseAddress;
-}
-
-
-_.extend(AuthenticationProvider.prototype, {
-    handlers: {
-        onActiveRoleChanged: $.Callbacks(),
-        onSignInInternal: $.Callbacks(),
-        onSignOut: $.Callbacks()
-    },
-
-    /**
-          * Возвращает информацию о текущем пользователе.
-          *
-          * @public
-          */
-    getCurrentUser: function(resultCallback, errorCallback) {
-        this.sendPostRequestForServiceResult('/Auth/GetCurrentUser', {}, resultCallback, errorCallback);
-    },
-
-    /**
-          * Изменяет пароль текущего пользователя.
-          *
-          * @public
-          */
-    changePassword: function (oldPassword, newPassword, resultCallback, errorCallback) {
-        var changePasswordForm = {
-            OldPassword: oldPassword,
-            NewPassword: newPassword
-        };
-
-        this.sendPostRequestForServiceResult('/Auth/ChangePassword', changePasswordForm, resultCallback, errorCallback);
-    },
-
-    /**
-          * Изменяет персональную информацию текущего пользователя.
-          *
-          * @public
-          */
-    changeProfile: function (displayName, description, resultCallback, errorCallback) {
-        var changeProfileForm = {
-            DisplayName: displayName,
-            Description: description
-        };
-
-        this.sendPostRequestForServiceResult('/Auth/ChangeProfile', changeProfileForm, resultCallback, errorCallback);
-    },
-
-    /**
-          * Изменяет активную роль текущего пользователя.
-          *
-          * @public
-          */
-    changeActiveRole: function (activeRole, resultCallback, errorCallback) {
-        var changeActiveRoleForm = {
-            ActiveRole: activeRole
-        };
-
-        this.sendPostRequestForServiceResult('/Auth/ChangeActiveRole', changeActiveRoleForm, function(){
-            var args = _.toArray(arguments);
-            args.push(activeRole);
-            if(resultCallback){
-                resultCallback.apply(this, args);
-            }
-
-            this.handlers.onActiveRoleChanged.fire.apply(this.handlers.onActiveRoleChanged, args);
-        }, errorCallback);
-    },
-
-    /**
-          * Осуществляет вход пользователя в систему через внутренний провайдер.
-          *
-          * @public
-          */
-    signInInternal: function (userName, password, remember, resultCallback, errorCallback) {
-        var signInInternalForm = {
-            UserName: userName,
-            Password: password,
-            Remember: remember
-        };
-
-        this.sendPostRequestForServiceResult('/Auth/SignInInternal', signInInternalForm, resultCallback, errorCallback);
-    },
-
-    /**
-          * Возвращает форму входа пользователя в систему через внешний провайдер.
-          *
-          * @public
-          */
-    getSignInExternalForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
-        this.getExternalLoginForm('/Auth/SignInExternal', successUrl, failureUrl, resultCallback, errorCallback);
-    },
-
-    /**
-          * Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
-          *
-          * @public
-          */
-    getLinkExternalLoginForm: function (successUrl, failureUrl, resultCallback, errorCallback) {
-        this.getExternalLoginForm('/Auth/LinkExternalLogin', successUrl, failureUrl, resultCallback, errorCallback);
-    },
-
-    /**
-          * Удаляет у текущего пользователя имя входа у внешнего провайдера.
-          *
-          * @public
-          */
-    unlinkExternalLogin: function (provider, providerKey, resultCallback, errorCallback) {
-        var unlinkExternalLoginForm = {
-            Provider: provider,
-            ProviderKey: providerKey
-        };
-
-        this.sendPostRequest('/Auth/UnlinkExternalLogin', unlinkExternalLoginForm, resultCallback, errorCallback);
-    },
-
-    /**
-          * Выход пользователя из системы.
-          *
-          * @public
-          */
-    signOut: function (resultCallback, errorCallback) {
-        var signOutInternalForm = {
-            "id" : null,
-            "changesObject" : {},
-            "replace" : false
-        };
-
-        this.sendPostRequestForServiceResult('/Auth/SignOut', null, function(){
-            InfinniUI.user.onReadyDeferred = $.Deferred();
-            InfinniUI.user.onReadyDeferred.resolve(null);
-
-            var args = _.toArray(arguments);
-            if(resultCallback){
-                resultCallback.apply(this, args);
-            }
-
-            this.handlers.onSignOut.fire.apply(this.handlers.onSignOut, args);
-
-        }.bind(this), errorCallback);
-    },
-
-    getExternalLoginForm: function (requestUri, successUrl, failureUrl, resultCallback, errorCallback) {
-        var url = this.baseAddress + requestUri;
-        this.sendPostRequest('/Auth/GetExternalProviders', {},
-            function (result) {
-                var formElement = $(document.createElement('form'));
-                formElement.attr('method', 'POST');
-                formElement.attr('action', url);
-
-                var successUrlElement = $(document.createElement('input'));
-                successUrlElement.attr('type', 'hidden');
-                successUrlElement.attr('name', 'SuccessUrl');
-                successUrlElement.attr('value', successUrl);
-                formElement.append(successUrlElement);
-
-                var failureUrlElement = $(document.createElement('input'));
-                failureUrlElement.attr('type', 'hidden');
-                failureUrlElement.attr('name', 'FailureUrl');
-                failureUrlElement.attr('value', failureUrl);
-                formElement.append(failureUrlElement);
-
-                if (result !== null && result !== undefined) {
-                    for (var i = 0; i < result.length; ++i) {
-                        var providerInfo = result[i];
-                        var providerType = providerInfo.Type;
-                        var providerName = providerInfo.Name;
-
-                        var loginButton = $(document.createElement('button'));
-                        loginButton.attr('type', 'submit');
-                        loginButton.attr('name', 'Provider');
-                        loginButton.attr('value', providerType);
-                        loginButton.text(providerName);
-                        formElement.append(loginButton);
-                    }
-                }
-
-                resultCallback(formElement);
-            },
-            errorCallback
-        );
-    },
-
-    sendGetRequest: function (requestUri, resultCallback, errorCallback) {
-        $.ajax(this.baseAddress + requestUri, {
-            type: 'GET',
-            xhrFields: {
-                withCredentials: true
-            },
-            beforeSend: this.onBeforeRequest(),
-            success: this.onSuccessRequest(resultCallback),
-            error: this.onErrorRequest(function (error) {
-                if(errorCallback) {
-                    errorCallback(error.responseJSON);
-                }
-            })
-        });
-    },
-
-    sendPostRequest: function (requestUri, requestData, resultCallback, errorCallback) {
-        var that = this;
-
-        if (requestData !== null) {
-            requestData = JSON.stringify(requestData);
-        }
-        $.ajax(this.baseAddress + requestUri, {
-            type: 'POST',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: requestData,
-            contentType: 'application/json',
-            beforeSend: this.onBeforeRequest(),
-            success: this.onSuccessRequest(resultCallback),
-            error: this.onErrorRequest(function (error) {
-                if(error.status != 200) {
-                    if(errorCallback) {
-                        errorCallback(error.responseJSON);
-                    }
-                } else {
-                    that.onSuccessRequest(resultCallback).apply(that, arguments);
-                }
-            })
-        });
-    },
-
-    sendPostRequestForServiceResult: function (requestUri, requestData, successCallback, errorCallback) {
-        var resultCallback = function(){
-            var args = _.toArray(arguments),
-                serviceResult = args[0];
-
-            if(serviceResult['Success']){
-                args[0] = serviceResult['Result'];
-
-                if( _.isFunction(successCallback) ){
-                    successCallback.apply(this, args);
-                }
-            } else {
-                args[0] = serviceResult['Error'];
-
-                if( _.isFunction(errorCallback) ){
-                    errorCallback.apply(this, args);
-                }
-            }
-        };
-
-        this.sendPostRequest(requestUri, requestData, resultCallback, errorCallback);
-    },
-
-    onActiveRoleChanged: function(handler){
-        this.handlers.onActiveRoleChanged.add(handler);
-    },
-
-    onSignInInternal: function(handler){
-        this.handlers.onSignInInternal.add(handler);
-    },
-
-    onSignOut: function(handler){
-        this.handlers.onSignOut.add(handler);
-    }
-});
-
-_.extend(AuthenticationProvider.prototype, ajaxRequestMixin);
-
-InfinniUI.global.session = new AuthenticationProvider(InfinniUI.config.serverUrl);
-//####app\controls\application\statusBar\authentication\SignInSuccessView.js
-jQuery(document).ready(function () {
-    if( InfinniUI.config.disableGetCurrentUser !== false ) {
-            InfinniUI.user = {
-            onReadyDeferred: $.Deferred(),
-            onReady: function(handler){
-                this.onReadyDeferred.done(handler);
-            }
-        };
-
-        refreshUserInfo();
-    }
-});
-
-function getUserInfo(self){
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-    authProvider.getCurrentUser(
-        function (result) {
-            self.model.set('result', result);
-        },
-        function (error) {
-            showObject('#signInInternalResult', error);
-        }
-    );
-}
-
-function refreshUserInfo() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-    authProvider.getCurrentUser(
-        function (result) {
-            InfinniUI.user.onReadyDeferred.resolve(result);
-        },
-        function (error) {
-            InfinniUI.user .onReadyDeferred.resolve(null);
-        }
-    );
-}
-
-function changePassword() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    authProvider.changePassword(
-        $('#oldPassword').val(),
-        $('#newPassword').val(),
-        function (result) {
-            refreshUserInfo();
-        },
-        function (error) {
-            showObject('#changePasswordResult', error);
-        }
-    );
-}
-
-function changeProfile() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    authProvider.changeProfile(
-        $('#displayName').val(),
-        $('#description').val(),
-        function (result) {
-            refreshUserInfo();
-        },
-        function (error) {
-            showObject('#changeProfileResult', error);
-        }
-    );
-}
-
-function changeActiveRole() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    authProvider.changeActiveRole(
-        $('#activeRole').val(),
-        function (result) {
-            refreshUserInfo();
-        },
-        function (error) {
-            showObject('#сhangeActiveRoleResult', error);
-        }
-    );
-}
-
-function getLinkExternalLoginForm() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    authProvider.getLinkExternalLoginForm(
-        getAbsoluteUri('/Home/SignInSuccess'),
-        getAbsoluteUri('/Home/SignInFailure'),
-        function (result) {
-            $('#linkExternalLoginForm').append(result);
-        },
-        function (error) {
-            showObject('#linkExternalLoginResult', error);
-        }
-    );
-}
-
-function unlinkExternalLogin(provider, providerKey) {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    authProvider.unlinkExternalLogin(
-        provider,
-        providerKey,
-        function (result) {
-            refreshUserInfo();
-        },
-        function (error) {
-            showObject('#unlinkExternalLoginResult', error);
-        }
-    );
-}
-
-function signOut(self) {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-
-    onSuccessSignOut(getHomePageContext());
-
-    authProvider.signOut(
-        function (result) {
-
-
-            window.getCurrentUserName = function(){
-                return null;
-            };
-
-            //self.model.set('result', result);
-            self.model.set('result', null);
-            location.reload();
-//            window.location = '/Home/SignIn';
-        },
-        function (error) {
-            showObject('#getCurrentUserResult', error.responseJSON);
-        }
-    );
-}
-
-function setUserInfo(userInfo) {
-    //showObject('#getCurrentUserResult', userInfo);
-    //$('#displayName').val(userInfo.DisplayName);
-    //$('#description').val(userInfo.Description);
-    //$('#activeRole').val(userInfo.ActiveRole);
-
-    if (userInfo.Logins !== null && userInfo.Logins !== undefined) {
-        var externalLogins = $('#externalLogins');
-
-        for (var i = 0; i < userInfo.Logins.length; ++i) {
-            var loginInfo = userInfo.Logins[i];
-            var provider = loginInfo.Provider;
-            var providerKey = loginInfo.ProviderKey;
-
-            var unlinkButton = $(document.createElement('input'));
-            unlinkButton.attr('type', 'button');
-            unlinkButton.attr('value', provider);
-            unlinkButton.attr('onclick', 'unlinkExternalLogin(\'' + provider + '\', \'' + providerKey + '\')');
-            externalLogins.append(unlinkButton);
-        }
-    }
-    getLinkExternalLoginForm();
-}
-
-function getAbsoluteUri(relativeUri) {
-    return location.protocol + '//' + location.host + relativeUri;
-}
-
-function showObject(element, object) {
-    var text = formatObject(object);
-    $(element).text(text);
-}
-
-function formatObject(object) {
-    return JSON.stringify(object, null, 4);
-}
-
-//####app\controls\application\statusBar\authentication\SignInView.js
-jQuery(document).ready(function () {
-    if( InfinniUI.config.disableSignInExternalForm !== false ) {
-        getSignInExternalForm();
-    }
-});
-
-function signInInternal(self) {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-    authProvider.signInInternal(
-        $('#userName').val(),
-        $('#password').val(),
-        $('#remember').is(':checked'),
-        function (result) {
-
-
-            window.getCurrentUserName = function(){
-                return result.UserName;
-            };
-
-            self.model.set('result', result);
-            self.$modal.modal('hide');
-            location.reload();
-        },
-        function (error) {
-            if(error.Error.indexOf('Invalid username or password') > -1){
-                toastr.error('Неверный логин или пароль', "Ошибка!");
-            }
-            showObject('#signInInternalResult', error);
-        }
-    );
-}
-
-function getSignInExternalForm() {
-    var authProvider = new AuthenticationProvider(InfinniUI.config.serverUrl);
-    authProvider.getSignInExternalForm(
-        getAbsoluteUri('/Home/SignInSuccess'),
-        getAbsoluteUri('/Home/SignInFailure'),
-        function (result) {
-            $('#signInExternalForm').append(result);
-        },
-        function (error) {
-            showObject('#signInExternalResult', error);
-        }
-    );
-}
-
-function getAbsoluteUri(relativeUri) {
-    return location.protocol + '//' + location.host + relativeUri;
-}
-
-function showObject(element, object) {
-    var text = formatObject(object);
-    $(element).text(text);
-}
-
-function formatObject(object) {
-    return JSON.stringify(object, null, 4);
-}
-
 //####app\controls\button\commonView\buttonView.js
 /**
  * @class ButtonView
@@ -10485,14 +10091,16 @@ var DataGridView = ListEditorBaseView.extend({
     renderHeaders: function () {
         var that = this;
         var columns = this.model.get('columns');
-        var templateHeaderCell = this.template.headerCell;
+        // var templateHeaderCell = this.template.headerCell();
         var sizeCells = [];
-        var templateSizeCells = this.template.sizeCell;
+        var templateSizeCells = this.template.sizeCell();
 
         var $headers = columns.toArray().map(function (column) {
 
-            sizeCells.push(templateSizeCells());
-            var $th = $(templateHeaderCell());
+            sizeCells.push(templateSizeCells);
+            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+            // bug related to task JK-4516
+            var $th = $('<th class="pl-datagrid-row__cell"></th>');
 
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
@@ -10733,10 +10341,12 @@ var DataGridRowView = ControlView.extend({
         this.bindUIElements();
 
         var cellElements = this.model.get('cellElements');
-        var templateDataCell = this.template.dataCell;
+        // var templateDataCell = this.template.dataCell();
         if (Array.isArray(cellElements)) {
             cellElements.forEach(function (cellElement, index) {
-                var $cell = $(templateDataCell());
+	            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+	            // bug related to task JK-4516
+                var $cell = $('<td class="pl-datagrid-row__cell"></td>');
                 $cell.append(cellElement.render());
                 $el.append($cell);
             });
@@ -15429,6 +15039,115 @@ var GridPanelView = ContainerView.extend(
     }
 );
 
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
+}
+
+_.inherit(IconControl, Control);
+
+_.extend(IconControl.prototype, {
+
+    createControlModel: function () {
+        return new IconModel();
+    },
+
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
+
+});
+//####app\controls\icon\iconModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+var IconModel = ControlModel.extend({
+
+    defaults: _.defaults({
+        value: null,
+        size: '',
+        focusable: false
+
+    }, ControlModel.prototype.defaults),
+
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
+
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
+
+    className: 'pl-icon fa',
+
+    tagName: 'i',
+
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:size', this.updateSize);
+    },
+
+    updateSize: function() {
+      var newSize = this.model.get('size');
+      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
+      this.currentSize = newSize;
+    },
+
+    valueToSizeClassName: function ( value ) {
+        if( value ) return 'pl-iconSize-' + value.toLowerCase();
+        else return '';
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+        this.updateSize();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
+    updateValue: function () {
+        this.renderIcon();
+    }
+
+});
+
 //####app\controls\imageBox\imageBoxControl.js
 /**
  *
@@ -15698,115 +15417,6 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     }
 
 }));
-
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        size: '',
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:size', this.updateSize);
-    },
-
-    updateSize: function() {
-      var newSize = this.model.get('size');
-      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
-      this.currentSize = newSize;
-    },
-
-    valueToSizeClassName: function ( value ) {
-        if( value ) return 'pl-iconSize-' + value.toLowerCase();
-        else return '';
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-        this.updateSize();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    }
-
-});
 
 //####app\controls\indeterminateCheckBox\indeterminateCheckBoxControl.js
 function IndeterminateCheckBoxControl(parent) {
@@ -16494,6 +16104,7 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         this.listenTo(this.model, 'change:collapsed', this.updateCollapsed);
         this.listenTo(this.model, 'change:collapsible', this.updateCollapsible);
         this.listenTo(this.model, 'change:header', this.updateHeader);
+        this.listenTo(this.model, 'change:headerTemplate', this.updateHeader);
     },
 
     updateProperties: function () {
@@ -16520,20 +16131,12 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
             var header = model.get('header'),
                 $header = headerTemplate(null, {value: header}).render();
 
-            if( this.isDefaultHeader($header) ) {
-                this.ui.header.hide();
-            } else {
-                this.ui.header.show();
-                this.ui.header.append($header);
-            }
+            this.ui.header.show();
+            this.ui.header.append($header);
 
+        } else {
+            this.ui.header.hide();
         }
-    },
-
-    isDefaultHeader: function(headerTemplate) {
-        var defaultTemplate = InfinniUI.PanelBuilder.prototype.buildDefaultHeaderTemplate()(null, {value: null}),
-            defaultHeader = defaultTemplate.render();
-        return defaultHeader[0].isEqualNode(headerTemplate[0]);
     },
 
     renderItemsContents: function () {
@@ -22867,6 +22470,14 @@ DataGrid.prototype.getCheckAll = function () {
 };
 
 /**
+ * @description Устанавливает состояние элемента "Выбрать все" из шапки таблицы
+ * @params {boolean} checkAll
+ */
+DataGrid.prototype.setCheckAll = function (checkAll) {
+    this.control.set('checkAll', checkAll);
+};
+
+/**
  * @description Устанавливает обработчик события о том, что изменилось состояние элемента "Выбрать все" в шапке таблицы
  * @param {function} handler
  */
@@ -22926,6 +22537,8 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
             element.onCheckAllChanged(function(context, args) {
                 new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
             });
+        } else {
+            setDefaultCheckAllBehavior(element);
         }
 
         if( metadata.OnRowClick ) {
@@ -23005,6 +22618,70 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
     }
 
 });
+
+/**
+ * @description Устанавливает поведение по умолчанию для кнопки "Выбрать все"
+ * @param {DataGrid} element
+ * @constructor
+ */
+function setDefaultCheckAllBehavior( element ) {
+    var checkAll = element.getCheckAll();
+
+    element.onValueChanged(onValueChangedHandler);
+    element.onCheckAllChanged(onCheckAllChangedHandler);
+
+    /**
+     *
+     * @param context
+     * @param {Object} event
+     * @param {DataGrid} event.source
+     * @param {boolean} event.newValue
+     * @param {boolean} event.oldValue
+     */
+    function onValueChangedHandler(context, event  ) {
+        setCheckAll(_.isEqual(event.newValue, itemsToValue()));
+    }
+
+    /**
+     *
+     * @param context
+     * @param {Object} event
+     * @param {DataGrid} event.source
+     * @param {boolean} event.value
+     */
+    function onCheckAllChangedHandler( context, event ) {
+        var state = event.value;
+
+        if (state === checkAll) {
+            return;
+        }
+
+        setCheckAll(state);
+
+        var value = state ? itemsToValue() : [];
+
+        element.setValue(value);
+    }
+
+    /**
+     * @returns {Array}
+     */
+    function itemsToValue() {
+        var valueSelector = element.getValueSelector();
+        var items = element.getItems().toArray();
+
+        return items.map(function (item) {
+            return valueSelector(undefined, {value: item});
+        });
+    }
+
+    function setCheckAll(state) {
+        checkAll = state;
+        element.setCheckAll(state);
+    }
+
+
+}
 
 //####app\elements\dataGrid\dataGridColumn.js
 function DataGridColumn() {
@@ -24832,86 +24509,6 @@ NumericBoxBuilder.prototype.applyMetadata = function (params) {
 };
 
 
-//####app\elements\passwordBox\passwordBox.js
-/**
- *
- * @constructor
- * @augments Element
- * @mixes editorBaseMixin
- * @mixes labelTextElementMixin
- */
-function PasswordBox(parent) {
-    _.superClass(PasswordBox, this, parent);
-    this.initialize_editorBase();
-}
-
-window.InfinniUI.PasswordBox = PasswordBox;
-
-_.inherit(PasswordBox, Element);
-
-_.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
-
-        setAutocomplete: function (value) {
-            if (typeof value === 'undefined' || value === null) {
-                return;
-            }
-            this.control.set('autocomplete', !!value);
-        },
-
-        getAutocomplete: function () {
-            return this.control.get('autocomplete');
-        },
-
-        createControl: function () {
-            return new PasswordBoxControl();
-        },
-
-        getRawValue: function () {
-            return this.control.get('rawValue');
-        }
-
-    },
-    editorBaseMixin,
-    labelTextElementMixin
-);
-
-//####app\elements\passwordBox\passwordBoxBuilder.js
-/**
- * @constructor
- * @augments ElementBuilder
- * @mixes editorBaseBuilderMixin
- */
-function PasswordBoxBuilder() {
-    _.superClass(PasswordBoxBuilder, this);
-    this.initialize_editorBaseBuilder();
-}
-
-window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
-
-_.inherit(PasswordBoxBuilder, ElementBuilder);
-
-_.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {
-
-        applyMetadata: function (params) {
-            ElementBuilder.prototype.applyMetadata.call(this, params);
-            this.applyMetadata_editorBaseBuilder(params);
-
-            var metadata = params.metadata,
-                element = params.element;
-
-            this.initBindingToProperty(params, 'LabelText');
-            element.setAutocomplete(metadata.Autocomplete);
-        },
-
-        createElement: function (params) {
-            var element = new PasswordBox(params.parent);
-            return element;
-        }
-
-    },
-    editorBaseBuilderMixin
-);
-
 //####app\elements\panel\panel.js
 /**
  * @param parent
@@ -25084,9 +24681,6 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         element.setCollapsed(metadata.Collapsed);
         element.setCollapseChanger(metadata.CollapseChanger);
 
-        var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
-        element.setHeaderTemplate(headerTemplate);
-
         if (metadata.Header && typeof metadata.Header === 'object') {
             //Header указывает на DataBinding
             var
@@ -25101,6 +24695,13 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
         } else {
             //Header содержит значение для шаблона
             element.setHeader(metadata.Header);
+        }
+
+        if(!metadata.Header && !metadata.HeaderTemplate) {
+            element.setHeaderTemplate(null);
+        } else {
+            var headerTemplate = this.buildHeaderTemplate(metadata.HeaderTemplate, params);
+            element.setHeaderTemplate(headerTemplate);
         }
 
         this.initEventHandler(params);
@@ -25200,6 +24801,86 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
     }
 
 });
+
+//####app\elements\passwordBox\passwordBox.js
+/**
+ *
+ * @constructor
+ * @augments Element
+ * @mixes editorBaseMixin
+ * @mixes labelTextElementMixin
+ */
+function PasswordBox(parent) {
+    _.superClass(PasswordBox, this, parent);
+    this.initialize_editorBase();
+}
+
+window.InfinniUI.PasswordBox = PasswordBox;
+
+_.inherit(PasswordBox, Element);
+
+_.extend(PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
+
+        setAutocomplete: function (value) {
+            if (typeof value === 'undefined' || value === null) {
+                return;
+            }
+            this.control.set('autocomplete', !!value);
+        },
+
+        getAutocomplete: function () {
+            return this.control.get('autocomplete');
+        },
+
+        createControl: function () {
+            return new PasswordBoxControl();
+        },
+
+        getRawValue: function () {
+            return this.control.get('rawValue');
+        }
+
+    },
+    editorBaseMixin,
+    labelTextElementMixin
+);
+
+//####app\elements\passwordBox\passwordBoxBuilder.js
+/**
+ * @constructor
+ * @augments ElementBuilder
+ * @mixes editorBaseBuilderMixin
+ */
+function PasswordBoxBuilder() {
+    _.superClass(PasswordBoxBuilder, this);
+    this.initialize_editorBaseBuilder();
+}
+
+window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
+
+_.inherit(PasswordBoxBuilder, ElementBuilder);
+
+_.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {
+
+        applyMetadata: function (params) {
+            ElementBuilder.prototype.applyMetadata.call(this, params);
+            this.applyMetadata_editorBaseBuilder(params);
+
+            var metadata = params.metadata,
+                element = params.element;
+
+            this.initBindingToProperty(params, 'LabelText');
+            element.setAutocomplete(metadata.Autocomplete);
+        },
+
+        createElement: function (params) {
+            var element = new PasswordBox(params.parent);
+            return element;
+        }
+
+    },
+    editorBaseBuilderMixin
+);
 
 //####app\elements\popupButton\popupButton.js
 /**
@@ -27283,135 +26964,6 @@ _.extend(CancelActionBuilder.prototype,
 
 window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
 
-//####app\actions\editAction\editAction.js
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
-}
-
-_.inherit(EditAction, BaseEditAction);
-
-
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
-
-            // if selectedItem is empty and it is must be document
-            // return error
-            if( this._isRootItem(destinationProperty) ){
-                var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
-
-                return false;
-            }
-
-            // but if selectedItem is property of document
-            // it will be created
-            selectedItem = selectedItem || {};
-        }
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
-        } else {
-            this._setDocument(editDataSource, selectedItem);
-        }
-
-        return true;
-    },
-
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
-    },
-
-    _setDocument: function (editDataSource, selectedItem){
-        var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
-        editDataSource.tryInitData();
-        this._resumeUpdateEditDataSource();
-    },
-
-    _setItem: function(editDataSource, selectedItem){
-        var item = _.clone( selectedItem );
-
-        if(item === undefined || item === null){
-            item = {};
-        }
-        this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
-        editDataSource.setSelectedItem( item );
-    },
-
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        if( this._isObjectDataSource(editDataSource) ) {
-            var editedItem = editDataSource.getSelectedItem();
-            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
-
-            if( this._isRootItem(destinationProperty) ) {
-                this._overrideOriginItem(rootItem, editedItem);
-                destinationDataSource._includeItemToModifiedSet(rootItem);
-            } else {
-                destinationDataSource.setProperty(destinationProperty, editedItem);
-            }
-
-            destinationDataSource.saveItem(rootItem);
-        }
-
-        destinationDataSource.updateItems();
-    },
-
-    _overrideOriginItem: function(originItem, newItem) {
-        for(var property in originItem) {
-            delete originItem[property];
-        }
-
-        for(var property in newItem) {
-          originItem[property] = _.clone(newItem[property]);
-        }
-    },
-
-    _isRootItem: function(path){
-        return !path.includes('.');
-    },
-
-    _getRootItem: function(dataSource, property) {
-        var index = (property||'$').split('.')[0];
-        return dataSource.getProperty(index);
-    }
-});
-
-window.InfinniUI.EditAction = EditAction;
-
-//####app\actions\editAction\editActionBuilder.js
-function EditActionBuilder(){}
-
-_.extend(EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new EditAction(args.parentView);
-
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.EditActionBuilder = EditActionBuilder;
-
 //####app\actions\deleteAction\deleteAction.js
 function DeleteAction(parentView){
     _.superClass(DeleteAction, this, parentView);
@@ -27557,6 +27109,135 @@ _.extend(DeleteActionBuilder.prototype,
 );
 
 window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
+
+//####app\actions\editAction\editAction.js
+function EditAction(parentView){
+    _.superClass(EditAction, this, parentView);
+}
+
+_.inherit(EditAction, BaseEditAction);
+
+
+_.extend(EditAction.prototype, {
+    setSelectedItem: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        var selectedItem = destinationDataSource.getProperty(destinationProperty);
+
+        if( selectedItem == null ){
+
+            // if selectedItem is empty and it is must be document
+            // return error
+            if( this._isRootItem(destinationProperty) ){
+                var logger = window.InfinniUI.global.logger;
+                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
+                logger.error(message);
+
+                return false;
+            }
+
+            // but if selectedItem is property of document
+            // it will be created
+            selectedItem = selectedItem || {};
+        }
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            this._setItem(editDataSource, selectedItem);
+        } else {
+            this._setDocument(editDataSource, selectedItem);
+        }
+
+        return true;
+    },
+
+    _resumeUpdateEditDataSource: function () {
+        var editDataSource = this.getProperty('editDataSource');
+        editDataSource.resumeUpdate('BaseEditAction');
+    },
+
+    _setDocument: function (editDataSource, selectedItem){
+        var selectedItemId = editDataSource.idOfItem( selectedItem );
+        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.tryInitData();
+        this._resumeUpdateEditDataSource();
+    },
+
+    _setItem: function(editDataSource, selectedItem){
+        var item = _.clone( selectedItem );
+
+        if(item === undefined || item === null){
+            item = {};
+        }
+        this._resumeUpdateEditDataSource();
+        editDataSource.setItems( [item] );
+        editDataSource.setSelectedItem( item );
+    },
+
+    save: function(){
+        var editDataSource = this.getProperty('editDataSource'),
+            destinationDataSource = this.getProperty('destinationDataSource'),
+            destinationProperty = this.getProperty('destinationProperty');
+
+        if( this._isObjectDataSource(editDataSource) ) {
+            var editedItem = editDataSource.getSelectedItem();
+            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
+
+            if( this._isRootItem(destinationProperty) ) {
+                this._overrideOriginItem(rootItem, editedItem);
+                destinationDataSource._includeItemToModifiedSet(rootItem);
+            } else {
+                destinationDataSource.setProperty(destinationProperty, editedItem);
+            }
+
+            destinationDataSource.saveItem(rootItem);
+        }
+
+        destinationDataSource.updateItems();
+    },
+
+    _overrideOriginItem: function(originItem, newItem) {
+        for(var property in originItem) {
+            delete originItem[property];
+        }
+
+        for(var property in newItem) {
+          originItem[property] = _.clone(newItem[property]);
+        }
+    },
+
+    _isRootItem: function(path){
+        return !path.includes('.');
+    },
+
+    _getRootItem: function(dataSource, property) {
+        var index = (property||'$').split('.')[0];
+        return dataSource.getProperty(index);
+    }
+});
+
+window.InfinniUI.EditAction = EditAction;
+
+//####app\actions\editAction\editActionBuilder.js
+function EditActionBuilder(){}
+
+_.extend(EditActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    BaseEditActionBuilderMixin,
+    {
+        build: function(context, args){
+            var action = new EditAction(args.parentView);
+
+            this.applyBaseActionMetadata(action, args);
+            this.applyBaseEditActionMetadata(action, args);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.EditActionBuilder = EditActionBuilder;
 
 //####app\actions\openAction\openAction.js
 function OpenAction(parentView){
@@ -33884,11 +33565,14 @@ window.InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 _.extend(MetadataViewBuilder.prototype, {
 
     getViewTemplate: function (params, parentView) {
-        var metadata = params.metadata;
-        var that = this;
+        var metadataDataSourceBuildProps = {
+                metadata: params.metadata,
+                applicationView: parentView && parentView.getApplicationView()
+            },
+            that = this;
 
         return function (onViewReadyHandler) {
-            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadata);
+            var metadataProvider = window.InfinniUI.providerRegister.build('MetadataDataSource', metadataDataSourceBuildProps);
 
             metadataProvider.getMetadata(function (viewMetadata) {
 
@@ -34076,221 +33760,195 @@ _.extend(OpenModeDialogStrategy.prototype, {
 
 //####app\launching\autoHeightService.js
 window.InfinniUI.AutoHeightService = {
-	windowHeight: 0,
-	clientHeight: 0,
-	exchange: null,
-	times: [],
+    windowHeight: 0,
+    clientHeight: 0,
+    exchange: null,
+    times: [],
 
-	setOuterHeight: function ($el, height, fix) {
-		var delta = 0;
-		'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
-			.split(',')
-			.forEach(function(name) {
-				delta += parseInt($el.css(name));
-			});
-		var contentHeight = height - delta;
-		if (fix) {
-			contentHeight += fix;
-		}
+    setOuterHeight: function ($el, height, fix) {
+        var delta = 0;
+        'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
+            .split(',')
+            .forEach(function (name) {
+                delta += parseInt($el.css(name));
+            });
+        var contentHeight = height - delta;
+        if (fix) {
+            contentHeight += fix;
+        }
 
-		//@TODO Разобраться с багом, при задании clearfix.height = 0 вылезает лишний 1 пиксел. Временное решение:
-		//contentHeight = (contentHeight > 0) ? contentHeight - 1 : contentHeight;
+        $el.height(contentHeight);
 
-		$el.height(contentHeight);
+        return contentHeight;
+    },
 
-		return contentHeight;
-	},
+    getModalSelector: function () {
+        return '.modal-scrollable';
+    },
 
-	getModalSelector: function () {
-		return '.modal-scrollable';
-	},
+    getSelector: function () {
+        return '.verticalAlignmentStretch:not(:hidden)';
+    },
 
-	getSelector: function () {
-		//return '.pl-data-grid, .pl-scroll-panel, .pl-document-viewer, .pl-menu.vertical, .pl-tab-panel, .pl-treeview';
-		return '.verticalAlignmentStretch:not(:hidden)';
-	},
+    buildTree: function (items, parentEl, $parentEl, elements, list) {
+        var items = _.where(list, {parent: parentEl}),
+            manager = this;
 
-	buildTree: function(items, parentEl, $parentEl, elements, list) {
-		var items = _.where(list, {parent: parentEl}),
-				manager = this;
+        return {
+            isElement: _.indexOf(elements, parentEl) !== -1,
+            element: parentEl,
+            $element: $parentEl,
+            child: _.map(items, function (item) {
+                return manager.buildTree(items, item.element, item.$element, elements, list);
+            })
+        };
+    },
 
-		return {
-			isElement: _.indexOf(elements, parentEl) !== -1,
-			element: parentEl,
-			$element: $parentEl,
-			child: _.map(items, function (item) {
-				return manager.buildTree(items, item.element, item.$element, elements, list );
-			})
-		};
-	},
+    formTree: function (elements, el, $el) {
+        var $parent,
+            list = [],
+            $element,
+            element;
+        //Строим дерево элементов: от концевых элементов поднимается к корневому элементу
+        for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
+            element = elements[i];
+            $element = $(element);
+            do {
+                $parent = $element.parent();
 
-	formTree: function(elements, el, $el) {
-		var $parent,
-				list = [],
-				$element,
-				element;
-		//Строим дерево элементов: от концевых элементов поднимается к корневому элементу
-		for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
-			element = elements[i];
-			$element = $(element);
-			do {
-				$parent = $element.parent();
+                var a = _.findWhere(list, {element: element});
+                if (typeof a !== 'undefined') {
+                    //Элемент уже занесен в список
+                    break;
+                }
+                list.push({
+                    element: element,
+                    $element: $element,
+                    parent: $parent.get(0),
+                    $parent: $parent
+                });
 
-				var a = _.findWhere(list, {element: element});
-				if (typeof a !== 'undefined') {
-					//Элемент уже занесен в список
-					break;
-				}
-				list.push({
-					element: element,
-					$element: $element,
-					parent: $parent.get(0),
-					$parent: $parent
-				});
+                $element = $parent;
+                element = $parent.get(0);
+            } while (element !== el);
+        }
 
-				$element = $parent;
-				element = $parent.get(0);
-			} while (element !== el);
-		}
+        return this.buildTree(list, el, $el, elements, list);
+    },
 
-		return this.buildTree(list, el, $el, elements, list);
-	},
+    setHeight: function (node, height) {
+        var originalHeight = node.$element.attr('data-height-original');
+        if (originalHeight === '') {
+            node.$element.attr('data-height-original', node.element.style.height);
+        }
+        return this.setOuterHeight(node.$element, height);
+    },
 
-	setHeight: function (node, height) {
-		var originalHeight = node.$element.attr('data-height-original');
-		if (originalHeight === '') {
-			node.$element.attr('data-height-original', node.element.style.height);
-		}
-		return this.setOuterHeight(node.$element, height);
-	},
+    /**
+     * Если внутри child один элемент:
+     *   - устанавливаем высоту в 100% (под 100% здесь и далее понимается height)
+     * Если внутри child несколько элементов
+     *   - offsetTop совпадают - устанавливаем высоту в 100%
+     *   - offsetTop не совпадают - устанавливаем высоту в (100% / child.length)
+     */
+    defineWay: function (node, height) {
+        var nodeHeight = this.setHeight(node, height),
+            manager = this;
 
-	defineWay: function(node, height) {
-		var nodeHeight = this.setHeight(node, height),
-				manager = this;
+        if (node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable')) {
+            //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
+            return;
+        } else if (node.$element.hasClass('tab-content')) {
+            _.each(node.child, function (node) {
+                manager.defineWay(node, nodeHeight);
+            });
+        } else if (node.child.length > 0) {
+            this.goThroughTree(node, nodeHeight);
+        }
+    },
 
-		if( node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable') ) {
-			//Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
-			return;
-		} else if( node.$element.hasClass('tab-content') ) {
-			_.each(node.child, function (node) {
-				manager.defineWay(node, nodeHeight);
-			});
-		} else if( node.child.length > 0 ) {
-			this.goThroughTree(node, nodeHeight);
-		}
-	},
+    goThroughTree: function (node, height) {
+        var manager = this;
+        if (node.$element.parentsUntil('.modal').length) {
+            node.$element.attr('data-height-original', node.element.style.height);
+        }
 
-	goThroughTree: function(node, height) {
-		var manager = this;
-		if( node.$element.parentsUntil('.modal').length ) {
-			node.$element.attr('data-height-original', node.element.style.height);
-		}
+        var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)'),
+            grid = _.chain(children)
+                .filter(function (el) {
+                    var position = $(el).css('position');
+                    return ['absolute', 'fixed'].indexOf(position) === -1;
+                })
+                .groupBy('offsetTop')
+                .value(),
 
-		var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)'),
-		/*
-		 * @TODO Возможно правильнее исключать из обсчета все элементы с абсолютным позиционированием
-		*/
-				grid = _.chain(children)
-					.filter(function (el) {
-						var position = $(el).css('position');
-						return ['absolute', 'fixed'].indexOf(position) === -1;
-					})
-					.groupBy('offsetTop')
-					.value(),
+            heights = [];
 
-				heights = [];
+        _.each(grid, function (row, i) {
+            var nodes = [];
+            _.each(row, function (e) {
+                var n = _.find(node.child, function (c) {
+                    return c.element === e;
+                });
+                if (n) nodes.push(n);
+            });
 
-		_.each(grid, function (row, i) {
-			var nodes = [];
-			_.each(row, function (e) {
-				var n = _.find(node.child, function (c) {return c.element === e;});
-				if (n) nodes.push(n);
-			});
+            heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
+                return Math.max(height, $(e).outerHeight(true));
+            }, 0));
 
-			heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
-				return Math.max(height, $(e).outerHeight(true));
-			}, 0));
+            grid[i] = nodes;
+        }, this);
 
-			grid[i] = nodes;
-		}, this);
+        var fixedHeight = _.reduce(heights, function (total, height) {
+                return total + height
+            }, 0),
+            count = _.reduce(grid, function (count, row) {
+                return row.length ? count + 1 : count
+            }, 0),
 
-		var fixedHeight = _.reduce(heights, function (total, height) {return total + height}, 0),
-				count = _.reduce(grid, function (count, row) {return row.length ? count + 1 : count}, 0),
+            heightForNode = Math.floor((height - fixedHeight) / count);
 
-				heightForNode = Math.floor((height - fixedHeight) / count);
+        _.each(grid, function (row) {
+            if (row.length === 0) return;
+            _.each(row, function (node) {
+                manager.defineWay(node, heightForNode);
+            }, this);
+        }, this);
+    },
 
-		_.each(grid, function (row) {
-			if (row.length === 0) return;
-			_.each(row, function (node) {
-				manager.defineWay(node, heightForNode);
-			}, this);
-		}, this);
-	},
+    resize: function (el, pageHeight) {
+        var startTime = Date.now(); //start time
+        var $el = $(el),
+            elements = $el.find(this.getSelector());
 
-	resize: function(el, pageHeight) {
-		var startTime = Date.now(); //start time
-		var $el = $(el),
-				contentHeight = this.setOuterHeight($el, pageHeight),
-				elements = $el.find(this.getSelector());
+        if (elements.length === 0) {
+            return;
+        }
 
-		//var elements = Array.prototype.filter.call($el.find(this.getSelector()), function (element) {
-		//    //Исключаем элементы которые долдны занитмать всю доступную высоту,
-		//    // которые по какой-то причине оказались внутри ScrollPanel
-		//    return $(element).parents('.pl-scrollpanel').length === 0;
-		//});
-		if (elements.length === 0) {
-			return;
-		}
+        var tree = this.formTree(elements, el, $el);
+        this.defineWay(tree, pageHeight);
+        var endTime = Date.now(); //end time
+        this.timeWatcher(endTime - startTime);
+    },
 
-		var tree = this.formTree(elements, el, $el);
-		/**
-		 * Если внутри child один элемент:
-		 *   - устанавливаем высоту в 100%
-		 * Если внутри child несколько элементов
-		 *   - offsetTop совпадают - устанавливаем высоту в 100%
-		 *   - offsetTop не совпадают - устанавливаем высоту в (100 / child.length)%
-		 */
-		this.defineWay(tree, pageHeight);
-		var endTime = Date.now(); //end time
-		this.timeWatcher(endTime - startTime);
-	},
+    timeWatcher: function (time) {
+        if (time >= 20) {
+            this.times.push(time);
+        }
+    },
 
-	timeWatcher: function(time) {
-		if( time >= 20 ) {
-			this.times.push(time);
-		}
-	},
+    getTimes: function () {
+        return this.times;
+    },
 
-	getTimes: function() {
-		return this.times;
-	},
+    resizeView: function (container, clientHeight) {
+        var $page = $( container || document );
 
-	resizeView: function (container, clientHeight) {
-		var $page = $('#page-content', container);
-		//$page.height(clientHeight);
-		var contentHeight = this.setOuterHeight($page, clientHeight);
-		var that = this;
+        var contentHeight = this.setOuterHeight($page, clientHeight);
 
-		this.resize($page.get(0), contentHeight);
-
-		//$page.children().each(function (i, el) {
-		//    if (el.style.display !== 'none') {
-		//        //Обработка активной вкладки
-		//        var $tab = $(el);
-		//
-		//        var $bar = $(".pl-active-bar:not(:hidden)", $tab);
-		//
-		//        var barHeight = $bar.length ? $bar.outerHeight(true) : 0;
-		//        //var barHeight = $(".pl-active-bar", $tab).outerHeight(true);
-		//        $tab.children().each(function (i, el) {
-		//            if (false === el.classList.contains('pl-active-bar') && el.style.display !== 'none') {
-		//                var pageHeight = contentHeight - barHeight;
-		//                that.resize(el, pageHeight);
-		//            }
-		//        });
-		//    }
-		//});
-	},
+        this.resize($page.get(0), contentHeight);
+    },
 
 	resizeDialog: function () {
 		var $currentDialog = $(this.getModalSelector()).last();
@@ -34299,122 +33957,84 @@ window.InfinniUI.AutoHeightService = {
 		this.resetDialogHeight($currentDialog);
 	},
 
-	resetDialogHeight: function($modal){
-		var space = 10;
+    resetDialogHeight: function ($modal) {
+        var space = 10;
 
-		if($modal.children()) {
-			var $container = $modal.children();
+        if ($modal.children()) {
+            var $container = $modal.children();
 
-			var $header = $('.modal-header', $container);
-			var $body = $('.modal-body', $container);
+            var $header = $('.modal-header', $container);
+            var $body = $('.modal-body', $container);
 
-			var $el = $(this.getSelector(), $modal);
+            var $el = $(this.getSelector(), $modal);
 
-			$el.parentsUntil('.modal').css('height', 'auto');
-			$container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
+            $el.parentsUntil('.modal').css('height', 'auto');
+            $container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
 
-			$modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
+            $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
 
-		}
+        }
+    },
 
-		//var $header = $('.modal-header', $container);
-		//var $body = $('.modal-body', $container);
+    _resizeDialog: function ($modal) {
+        var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
 
-		//var headerHeight = $header.outerHeight(true);
-		//
-		//$container.css('margin-top', 0);
-		//
-		//var el = $(this.getSelector(), $modal);
-		//if (el.length === 0) {
-		//    //Если диалог не содержит элементы которые должны растягиваться по вертикали на 100%
-		//    //Выравниваем по вертикали в центр
-		//    $container.css('top', (this.windowHeight - headerHeight - $body.outerHeight(true)) / 2);
-		//    return;
-		//}
-		//
-		//$body.css('min-height', '0');
-		//var containerHeight = this.setOuterHeight($modal, 'auto');
-		//
-		////Высота для содержимого окна диалога
-		//var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
-		//
-		//this.resize($body[0], clientHeight);
-		//$container.css('top', (this.windowHeight - headerHeight - clientHeight) / 2);
-	},
+        var $container = $modal.children();
 
-	_resizeDialog: function ($modal) {
-		var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
+        $container.css('margin-top', 0);
 
-		var $container = $modal.children();
+        var $header = $('.modal-header', $container);
+        var $body = $('.modal-body', $container);
 
-		$container.css('margin-top', 0);
-		//var marginTop = parseInt($container.css('margin-top'), 10);
+        var headerHeight = $header.outerHeight(true);
+        $body.css('max-height', this.windowHeight - headerHeight);
 
-		var $header = $('.modal-header', $container);
-		var $body = $('.modal-body', $container);
+        $container.css('margin-top', 0);
 
-		var headerHeight = $header.outerHeight(true);
-		$body.css('max-height', this.windowHeight - headerHeight);
+        var el = $(this.getSelector(), $modal);
+        if (el.length !== 0) {
+            // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
+            // пересчитываем высоту
 
-		$container.css('margin-top', 0);
+            var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
 
-		var el = $(this.getSelector(), $modal);
-		if (el.length !== 0) {
-			// Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
-			// пересчитываем высоту
+            //Высота для содержимого окна диалога
+            var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
 
-			//@TODO Зачем задавалась минимальная высота диалогов?
-			//$body.css('min-height', (this.windowHeight - $header.outerHeight(true) - space * 2) / 2);
-			var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
+            this.resize($body[0], clientHeight);
+        }
+    },
 
-			//Высота для содержимого окна диалога
-			var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+    recalculation: function (container) {
+        if (window.InfinniUI.config.enableAutoHeightService) {
+            $(container).addClass('page-content-overflow-hidden');
+            this.windowHeight = $(window).height();
+            this.onChangeLayout(container);
+            if (this.exchange === null) {
+                this.exchange = window.InfinniUI.global.messageBus;
+                this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this, container), 42));
+            }
+        }
+    },
 
-			this.resize($body[0], clientHeight);
-		}
-	},
+    slidingRecalculation: function (container) {
+        var that = this;
+        for (var i = 3; i >= 0; i--) {
+            setTimeout(function () {
+                that.recalculation(container);
+            }, 500 + i * 300);
+        }
+    },
 
-	recalculation: function (container) {
-		if( window.InfinniUI.config.disableAutoHeightServicer === true ) {
-			return false;
-		}
-		container = container || document;
-		$('#page-content').addClass('page-content-overflow-hidden');
-		this.windowHeight = $(window).height();
-		this.onChangeLayout(container);
-		if (this.exchange === null) {
-			this.exchange = window.InfinniUI.global.messageBus;
-			this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this), 42));
-		}
-	},
-
-	slidingRecalculation: function (container) {
-		var that = this;
-		for (var i = 3; i >= 0; i--) {
-			setTimeout(function () {
-				that.recalculation(container);
-			}, 500 + i * 300);
-		}
-	},
-
-	onChangeLayout: function (container) {
-		if (_.isEmpty(container)) {
-			container = document;
-		}
-
-		var clientHeight = this.windowHeight
-			- $("#page-top:not(:hidden)", container).outerHeight()
-			- $("#page-bottom:not(:hidden)", container).outerHeight()
-			- $("#menu-area:not(:hidden)", container).outerHeight();
-		this.resizeView(container, clientHeight);
-		this.resizeDialog();
-	}
+    onChangeLayout: function (container) {
+        var clientHeight = this.windowHeight;
+        this.resizeView(container, clientHeight);
+        this.resizeDialog();
+    }
 };
 
 //####app\launching\specialApplicationView.js
 function SpecialApplicationView() {
-    var $container;
-
     this.isView = true;
 
     this.getContainer = function () {
@@ -34423,16 +34043,14 @@ function SpecialApplicationView() {
 
     this.open = function ($el) {
         this.$container = $el;
+
+        if( $el ) {
+            $el.addClass('special-application-view');
+        }
     };
 
     this.getApplicationView = function () {
         return this;
-    };
-
-    this.menuIsInitialized = function () {
-        this.isMenuInitialized = true;
-
-        //this.initViewHandlers();
     };
 
     this.getContext = function(){
@@ -34447,17 +34065,21 @@ window.InfinniUI.openHomePage = function($target) {
 
     rootView.open($target);
 
-    InfinniUI.AutoHeightService.slidingRecalculation();
-    subscribeRecalculationOnWindowResize();
+    InfinniUI.AutoHeightService.slidingRecalculation($target);
+    subscribeRecalculationOnWindowResize($target);
 
     getHomePageLinkViewPromise()
         .done(function (viewMetadata) {
             var action = builder.buildType('OpenAction', viewMetadata, {parentView: rootView});
             action.execute();
         });
+
+    if( InfinniUI.config.enableGetCurrentUser ) {
+        setCurrentUser();
+    }
 };
 
-function subscribeRecalculationOnWindowResize() {
+function subscribeRecalculationOnWindowResize($container) {
     var TIMEOUT = 40;
     var WAIT = 50;
     var resizeTimeout;
@@ -34468,7 +34090,7 @@ function subscribeRecalculationOnWindowResize() {
     });
 
     function onWindowResize() {
-        window.InfinniUI.AutoHeightService.recalculation();
+        window.InfinniUI.AutoHeightService.recalculation($container);
     }
 
 };
@@ -34503,6 +34125,29 @@ function getHomePageLinkViewPromise() {
 
     return defer.promise();
 };
+
+function refreshUserInfo() {
+    var authProvider = InfinniUI.global.session;
+    authProvider.getCurrentUser(
+        function (result) {
+            InfinniUI.user.onReadyDeferred.resolve(result);
+        },
+        function (error) {
+            InfinniUI.user.onReadyDeferred.resolve(null);
+        }
+    );
+};
+
+function setCurrentUser() {
+    InfinniUI.user = {
+        onReadyDeferred: $.Deferred(),
+        onReady: function(handler){
+            this.onReadyDeferred.done(handler);
+        }
+    };
+
+    refreshUserInfo();
+}
 //####app\launching\startSettings.js
 if(InfinniUI.config.configName != null) {
     document.title = InfinniUI.config.configName;
@@ -34512,10 +34157,11 @@ moment.locale(InfinniUI.config.lang && InfinniUI.config.lang.substr(0,2));
 
 InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
 
-InfinniUI.providerRegister.register('MetadataDataSource', function (metadataValue) {
-    InfinniUI.AutoHeightService.slidingRecalculation();
+InfinniUI.providerRegister.register('MetadataDataSource', function (args) {
+    var applicationContainer = args.applicationView && args.applicationView.getContainer();
+    InfinniUI.AutoHeightService.slidingRecalculation(applicationContainer);
 
-    return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(InfinniUI.config.serverUrl, metadataValue));
+    return new InfinniUI.Providers.MetadataProviderREST(new InfinniUI.Providers.QueryConstructorMetadata(InfinniUI.config.serverUrl, args.metadata));
 });
 
 

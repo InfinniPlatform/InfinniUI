@@ -61,6 +61,14 @@ DataGrid.prototype.getCheckAll = function () {
 };
 
 /**
+ * @description Устанавливает состояние элемента "Выбрать все" из шапки таблицы
+ * @params {boolean} checkAll
+ */
+DataGrid.prototype.setCheckAll = function (checkAll) {
+    this.control.set('checkAll', checkAll);
+};
+
+/**
  * @description Устанавливает обработчик события о том, что изменилось состояние элемента "Выбрать все" в шапке таблицы
  * @param {function} handler
  */
