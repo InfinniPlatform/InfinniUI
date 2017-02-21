@@ -105,22 +105,10 @@ var editorBaseBuilderMixin = {
                 var result = args.value,
                     text = '';
 
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
+                if (!result.IsValid && Array.isArray(result.Items)) {
+                    text = getTextForItems(result.Items);
                 }
                 element.setErrorText(text);
-            });
-        }
-
-        if (typeof source.onWarningValidator == 'function') {
-            source.onWarningValidator(function (context, args) {
-                var result = args.value,
-                    text = '';
-
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
-                }
-                element.setWarningText(text);
             });
         }
 
@@ -128,10 +116,10 @@ var editorBaseBuilderMixin = {
         function getTextForItems(items, callback) {
             return items
                 .filter(function (item) {
-                    return property === item.property;
+                    return property === item.Property;
                 })
                 .map(function (item) {
-                    return item.message;
+                    return item.Message;
                 })
                 .join(' ');
         }

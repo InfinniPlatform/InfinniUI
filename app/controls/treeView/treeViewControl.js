@@ -12,6 +12,20 @@ _.extend(TreeViewControl.prototype, {
 
     createControlView: function (model) {
         return new TreeViewView({model: model});
+    },
+
+    expand: function( key ) {
+        this.controlView.expandNode(key);
+    },
+
+    collapse: function( key ) {
+        this.controlView.collapseNode(key);
+    },
+
+    toggle: function( key ) {
+        this.controlView.toggleNode(key);
     }
+
+
 });
 

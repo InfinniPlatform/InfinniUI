@@ -12,12 +12,25 @@ var TreeViewView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
-        this.ItemsMap = new HashMap();
+        this.itemsMap = new HashMap();
+        this.nodesMap = new HashMap();
 
+    },
+
+    addChildElement: function (node, item) {
+        this.nodesMap.add(item, node);
+        ListEditorBaseView.prototype.addChildElement.call( this, node );
+    },
+
+    removeChildElements: function(  ) {
+        this.nodesMap.clear();
+        this.itemsMap.clear();
+        ListEditorBaseView.prototype.removeChildElements.call( this);
     },
 
     render: function () {
         this.prerenderingActions();
+        this.removeChildElements();
 
         this.renderTemplate(this.getTemplate());
 
@@ -43,9 +56,7 @@ var TreeViewView = ListEditorBaseView.extend({
             keySelector = model.get('keySelector'),
             nodeConstructor = this.getNodeConstructor(),
             itemTemplate = model.get('itemTemplate'),
-            itemsMap = this.ItemsMap;
-
-        itemsMap.clear();
+            itemsMap = this.itemsMap;
 
         $nodes = renderNodes();
         this.$el.append($nodes);
@@ -92,6 +103,7 @@ var TreeViewView = ListEditorBaseView.extend({
                         $subitems = renderNodes(key);
                     node.setItemsContent($subitems);
 
+                    view.addChildElement(node, item);
                     itemsMap.add(key, item);
 
                     return $node;
@@ -160,7 +172,7 @@ var TreeViewView = ListEditorBaseView.extend({
         var parentSelector = this.model.get('parentSelector'),
             parentId = parentSelector(null, {value: item});
 
-        return parentId && this.ItemsMap.get(parentId);
+        return parentId && this.itemsMap.get(parentId);
     },
 
     getTemplate: function () {
@@ -213,6 +225,65 @@ var TreeViewView = ListEditorBaseView.extend({
                 }
             });
         }
+    },
+
+    collapseNode: function( key ) {
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            node.collapse();
+        }
+    },
+
+    toggleNode: function( key ) {
+
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            var collapsed = node.getCollapsed();
+
+            var toggle = collapsed ? this.expandNode : this.collapseNode;
+            toggle.call(this, key);
+        }
+
+    },
+
+    expandNode: function( key ) {
+        var model = this.model;
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        var parentSelector = model.get('parentSelector');
+        var keySelector = model.get('keySelector');
+        var parentId;
+        var nodes = [node];
+
+        while (parentId = parentSelector(null, {value: item})) {
+            if (!parentId) {
+                break;
+            }
+            item = this.itemsMap.get(parentId);
+            node = this.nodesMap.get(item);
+            nodes.push(node);
+        }
+
+        nodes.reverse().forEach(function (node) {
+            node.expand();
+        });
     }
 
 
