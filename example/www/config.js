@@ -8,7 +8,7 @@ window.InfinniUI.config.cacheMetadata = false;
 window.InfinniUI.config.serverUrl = 'http://' + window.location.host;
 window.InfinniUI.config.configName = 'test';
 
-window.InfinniUI.config.homePage = '/testConfigurations/treeview.json';
+window.InfinniUI.config.homePage = '/viewExample/homePage.json';
 
 window.InfinniUI.config.lang = 'en-US';
 
