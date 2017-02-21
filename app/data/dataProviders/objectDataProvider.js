@@ -18,12 +18,9 @@ _.extend(ObjectDataProvider.prototype, {
         resultCallback(item);
     },
 
-    saveItem: function (item, resultCallback) {
+    saveItem: function (item, successCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
         if (itemIndex == -1) {
             items.push(item);
@@ -31,24 +28,31 @@ _.extend(ObjectDataProvider.prototype, {
             items[itemIndex] = item;
         }
 
-        resultCallback(result);
+        successCallback( {} );
     },
 
-    deleteItem: function (item, resultCallback) {
+    deleteItem: function (item, successCallback, errorCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
-        if (itemIndex == -1) {
-            result.isValid = false;
-            result.message = 'Удаляемый элемент не найден';
-        } else {
+        if (itemIndex != -1) {
             items.splice(itemIndex, 1);
+            successCallback( {} );
+        } else {
+            errorCallback({
+                data: {
+                    Result: {
+                        ValidationResult: {
+                            IsValid: false,
+                            Items: [{
+                                Property: '',
+                                Message: 'Удаляемый элемент не найден'
+                            }]
+                        }
+                    }
+                }
+            });
         }
-
-        resultCallback(result);
     },
 
     createIdFilter: function (id) {
