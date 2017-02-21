@@ -31,7 +31,7 @@ describe('EditAction', function () {
         assert.isNotNull( editAction.execute, 'action should have execute' );
     });
 
-    it('should edit item from ObjectDataSource', function (done) {
+    it('should edit document from ObjectDataSource', function (done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -42,6 +42,7 @@ describe('EditAction', function () {
                         "IsLazy": false,
                         "Items": [
                             {
+                                "_id": 1,
                                 "Name": "OldValue"
                             }
                         ]
@@ -75,6 +76,15 @@ describe('EditAction', function () {
                                         ],
                                         "Items": [
                                             {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
@@ -97,22 +107,22 @@ describe('EditAction', function () {
             var edtBtn = view.context.controls['EditButton'];
             var destinationDS = view.context.dataSources['ObjectDataSource'];
 
+            assert.equal(destinationDS.getItems().length, 1);
             assert.equal(destinationDS.getItems()[0].Name, "OldValue");
 
             // When
             edtBtn.click();
 
             var childView = view.context.controls['EditView'];
-            var sourceDS = childView.context.dataSources['MainDataSource'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
             var acceptBtn = childView.context.controls['AcceptBtn'];
 
-            var selectedItem = sourceDS.getSelectedItem();
-            selectedItem.Name = "NewValue";
-            sourceDS.setSelectedItem(selectedItem);
+            nameTextBox.setValue("NewValue");
 
             acceptBtn.click();
 
             // Then
+            assert.equal(destinationDS.getItems().length, 1, 'edit action should not add items');
             assert.equal(destinationDS.getItems()[0].Name, "NewValue");
 
             done();
@@ -120,7 +130,111 @@ describe('EditAction', function () {
         });
     });
 
-    it('should edit item from DocumentDataSource', function (done) {
+    it('should edit array item in document from ObjectDataSource', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                "_id": 1,
+                                "People": [
+                                    {
+                                        "_id": 10,
+                                        "Name": "OldValue"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "EditButton",
+                    "Action": {
+                        "EditAction": {
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "0.People.0"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Edit",
+                                        "Name": "EditView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var edtBtn = view.context.controls['EditButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            assert.equal(destinationDS.getItems()[0].People.length, 1);
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "OldValue");
+
+            // When
+            edtBtn.click();
+
+            var childView = view.context.controls['EditView'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            nameTextBox.setValue("NewValue");
+
+            acceptBtn.click();
+
+            // Then
+            assert.equal(destinationDS.getItems()[0].People.length, 1, 'edit action should not add items');
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "NewValue");
+
+            done();
+            view.close();
+        });
+    });
+
+    it('should edit document from DocumentDataSource', function (done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
