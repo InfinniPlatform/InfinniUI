@@ -18,7 +18,7 @@ TimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     });
 
     _.defaults(params.metadata, {
-        DisplayFormat: '{:T}',
+        DisplayFormat: '${:T}',
         EditMask: {
             DateTimeEditMask: {
                 Mask: 'T'
