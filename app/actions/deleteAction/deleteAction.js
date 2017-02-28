@@ -54,7 +54,7 @@ _.extend(DeleteAction.prototype,
             var dataSource = this.getProperty('destinationSource'),
                 property = this.getProperty('destinationProperty');
 
-            if( this._isDocumentProperty(property) ) {
+            if( this._isRootElementPath(property) ) {
                 this._deleteDocument(dataSource, property, callback);
             } else {
                 this._deleteArrayElement(dataSource, property, callback);
@@ -102,10 +102,6 @@ _.extend(DeleteAction.prototype,
             if (_.isFunction(callback)) {
                 callback();
             }
-        },
-
-        _isDocumentProperty: function(propertyName){
-            return propertyName == '$' || _.isFinite(propertyName);
         }
     }
 );
