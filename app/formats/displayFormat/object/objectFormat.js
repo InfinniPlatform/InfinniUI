@@ -26,7 +26,7 @@ _.extend(ObjectFormat.prototype, {
      */
     formatValue: function (originalValue, culture, format) {
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
         format = format || this.getFormat();
 
         var regexp = /\$\{[^}]*}/g;

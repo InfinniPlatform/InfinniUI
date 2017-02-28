@@ -18,7 +18,7 @@ describe('ObjectFormat', function () {
             var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${:d}");
             var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${:T}");
             var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = 'Ivan';
@@ -40,7 +40,7 @@ describe('ObjectFormat', function () {
             var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
             var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
             var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = { FirstName: "Ivan", MiddleName: "Ivanovich" };
@@ -61,7 +61,7 @@ describe('ObjectFormat', function () {
             var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
             var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
             var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = [{ FirstName: "Ivan", MiddleName: "Ivanovich" }, { FirstName: "Petr", MiddleName: "Petrov" }];

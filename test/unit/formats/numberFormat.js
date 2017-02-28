@@ -15,7 +15,7 @@ describe('NumberFormatting', function () {
             var formatting_p = new InfinniUI.NumberFormat('p');
             var formatting_p0 = new InfinniUI.NumberFormat('p0');
             var formatting_p1 = new InfinniUI.NumberFormat('p1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 123.4567;
@@ -33,7 +33,7 @@ describe('NumberFormatting', function () {
             var formatting_n = new InfinniUI.NumberFormat('n');
             var formatting_n0 = new InfinniUI.NumberFormat('n0');
             var formatting_n1 = new InfinniUI.NumberFormat('n1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 1234.5678;
@@ -51,7 +51,7 @@ describe('NumberFormatting', function () {
             var formatting_c = new InfinniUI.NumberFormat('c');
             var formatting_c0 = new InfinniUI.NumberFormat('c0');
             var formatting_c1 = new InfinniUI.NumberFormat('c1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 1234.5678;
@@ -69,7 +69,7 @@ describe('NumberFormatting', function () {
             var formatting_c = new InfinniUI.NumberFormat('c');
             var formatting_c0 = new InfinniUI.NumberFormat('c0');
             var formatting_c1 = new InfinniUI.NumberFormat('c1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = [1234.5678, 2901.2345, 2678.9012];

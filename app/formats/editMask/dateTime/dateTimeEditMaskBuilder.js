@@ -8,7 +8,7 @@ function DateTimeEditMaskBuilder () {
         var formatOptions = args.formatOptions;
 
         var editMask = new DateTimeEditMask();
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = localized;
         var mask;
 
         if (typeof InfinniUI.localizations[culture.name].patternDateFormats[args.metadata.Mask] !== 'undefined') {
