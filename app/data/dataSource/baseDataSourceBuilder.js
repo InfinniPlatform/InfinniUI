@@ -40,14 +40,12 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
             dataSource.setIdProperty( idProperty );
         }
 
-        dataSource.setName( metadata.Name );
-        dataSource.setFillCreatedItem( metadata.FillCreatedItem );
-        //dataSource.setPageSize(metadata.PageSize || 15);
-        //dataSource.setPageNumber(metadata.PageNumber || 0);
-        //
-        //if('Sorting' in metadata){
-        //    dataSource.setSorting(metadata['Sorting']);
-        //}
+        dataSource.setName(metadata.Name);
+        dataSource.setFillCreatedItem(metadata.FillCreatedItem);
+
+        if('IsLazy' in metadata){
+            dataSource.setIsLazy(metadata['IsLazy']);
+        }
 
         if( 'Search' in metadata ) {
             dataSource.setSearch( metadata['Search'] );
