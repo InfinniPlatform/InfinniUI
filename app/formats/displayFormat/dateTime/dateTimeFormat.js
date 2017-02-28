@@ -35,7 +35,7 @@ _.extend(DateTimeFormat.prototype, {
         }
         var self = this;
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
 
         var date = this.createDate(originalDate);
 

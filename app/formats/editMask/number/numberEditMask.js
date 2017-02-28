@@ -1,8 +1,6 @@
 function NumberEditMask () {
     this.mask = null;
     this.format = null;
-    //@TODO Получать культуру из контекста!
-    this.culture = new Culture(InfinniUI.config.lang);
 }
 
 window.InfinniUI.NumberEditMask = NumberEditMask;
@@ -29,15 +27,15 @@ _.extend(NumberEditMask.prototype, {
             switch (matches[0]) {
                 case 'n':
                 case 'N':
-                    separator = this.culture.numberFormatInfo.numberDecimalSeparator;
+                    separator = localized.numberFormatInfo.numberDecimalSeparator;
                     break;
                 case 'p':
                 case 'P':
-                    separator = this.culture.numberFormatInfo.percentDecimalSeparator;
+                    separator = localized.numberFormatInfo.percentDecimalSeparator;
                     break;
                 case 'c':
                 case 'C':
-                    separator = this.culture.numberFormatInfo.currencyDecimalSeparator;
+                    separator = localized.numberFormatInfo.currencyDecimalSeparator;
                     break;
             }
         }
@@ -59,15 +57,15 @@ _.extend(NumberEditMask.prototype, {
                 switch (matches[0]) {
                     case 'n':
                     case 'N':
-                        decimalDigits = this.culture.numberFormatInfo.numberDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.numberDecimalDigits;
                         break;
                     case 'p':
                     case 'P':
-                        decimalDigits = this.culture.numberFormatInfo.percentDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.percentDecimalDigits;
                         break;
                     case 'c':
                     case 'C':
-                        decimalDigits = this.culture.numberFormatInfo.currencyDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.currencyDecimalDigits;
                         break;
                 }
             }

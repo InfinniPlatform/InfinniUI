@@ -13,10 +13,12 @@ window.InfinniUI.Metadata = window.InfinniUI.Metadata || {};
 
 window.InfinniUI.localizations = window.InfinniUI.localizations || {
     'ru-RU': {
-        caption: 'Русский'
+        caption: 'Русский',
+        name: 'ru-RU'
     },
     'en-US': {
-        caption: 'English'
+        caption: 'English',
+        name: 'en-US'
     }
 };
 

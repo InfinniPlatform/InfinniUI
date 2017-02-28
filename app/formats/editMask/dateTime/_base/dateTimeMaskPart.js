@@ -629,8 +629,7 @@ _.extend(DateTimeMaskPart.prototype, {
     },
 
     getCurrentCulture: function () {
-        var culture = new Culture(InfinniUI.config.lang);
-
+        var culture = InfinniUI.localizations[InfinniUI.config.lang];
         return culture;
     },
 

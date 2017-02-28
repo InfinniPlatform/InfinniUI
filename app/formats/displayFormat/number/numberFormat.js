@@ -33,7 +33,7 @@ _.extend(NumberFormat.prototype, {
         }
         var self = this;
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
 
         format = format||this.getFormat();
 
