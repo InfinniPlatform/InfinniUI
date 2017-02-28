@@ -10,10 +10,10 @@ var underscore = require('underscore');
 var config = require('./config.json');
 
 var capabilities = {
-    chrome: function () {
+    chrome: function() {
         return webdriver.Capabilities.chrome();
     },
-    phantomjs: function () {
+    phantomjs: function() {
         var caps = webdriver.Capabilities.phantomjs();
 
         if (args.phantomjs) {
@@ -24,13 +24,13 @@ var capabilities = {
     }
 };
 
-var buildChromeDriver = function () {
+var buildChromeDriver = function() {
     return new webdriver.Builder()
         .withCapabilities(capabilities.chrome())
         .build();
 };
 
-var buildFirefoxDriver = function () {
+var buildFirefoxDriver = function() {
     var firefox = require('selenium-webdriver/firefox');
     var profile = new firefox.Profile('C:\\firefoxProfile');
     var options = new firefox.Options().setProfile(profile);
@@ -38,7 +38,7 @@ var buildFirefoxDriver = function () {
     return new firefox.Driver(options);
 };
 
-var buildPhantomDriver = function () {
+var buildPhantomDriver = function() {
     return new webdriver.Builder()
         .withCapabilities(capabilities.phantomjs())
         .build();
@@ -66,7 +66,7 @@ var driver;
     }
 })(args.platform);
 
-var getDriver = function () {
+var getDriver = function() {
     return driver;
 };
 
@@ -86,7 +86,7 @@ var World = function World() {
     this.currentView = null;
 
     this.driver.manage().timeouts().implicitlyWait(config.timeouts.main);
-    this.driver.manage().window().setSize(config.screen.width, config.screen.height);
+    this.driver.manage().window().maximize();
 
     if (!fs.existsSync(screenshotPath)) {
         fs.mkdirSync(screenshotPath);
