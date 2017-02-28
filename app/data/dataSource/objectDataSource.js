@@ -27,13 +27,10 @@ var ObjectDataSource = BaseDataSource.extend({
         dataProvider.setFilter(filterPattern, filterParams);
     },
 
+    // в отличии от _setItems должен установить элементы "насовсем", т.е. изменить в провайдере тоже
     setItems: function(items){
         this.get('dataProvider').setItems(items);
         this.updateItems();
-    },
-
-    _setItems: function(items){
-        BaseDataSource.prototype._setItems.apply(this, [items]);
     }
 
 });

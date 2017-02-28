@@ -54,10 +54,10 @@ _.extend(DeleteAction.prototype,
             var dataSource = this.getProperty('destinationSource'),
                 property = this.getProperty('destinationProperty');
 
-            if( this._isDocument(property) ) {
+            if( this._isDocumentProperty(property) ) {
                 this._deleteDocument(dataSource, property, callback);
             } else {
-                this._deleteItem(dataSource, property, callback);
+                this._deleteArrayElement(dataSource, property, callback);
             }
         },
 
@@ -86,7 +86,7 @@ _.extend(DeleteAction.prototype,
             dataSource.deleteItem(selectedItem, onSuccessDelete, onErrorDelete);
         },
 
-        _deleteItem: function(dataSource, property, callback){
+        _deleteArrayElement: function(dataSource, property, callback){
             var propertyPathList = property.split("."),
                 index = propertyPathList.pop(),
                 parentProperty = propertyPathList.join("."),
@@ -104,7 +104,7 @@ _.extend(DeleteAction.prototype,
             }
         },
 
-        _isDocument: function(propertyName){
+        _isDocumentProperty: function(propertyName){
             return propertyName == '$' || _.isFinite(propertyName);
         }
     }

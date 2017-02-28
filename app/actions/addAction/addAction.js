@@ -27,13 +27,22 @@ _.extend(AddAction.prototype, {
         }
 
         if (this._isObjectDataSource(editDataSource)) {
-            var items = destinationDataSource.getProperty(destinationProperty) || [],
-                newItem = editDataSource.getSelectedItem();
+            var newItem = editDataSource.getSelectedItem();
 
-            items = _.clone(items);
-            items.push(newItem);
+            if( this._isRootElementPath(destinationProperty) ){
+                destinationDataSource._includeItemToModifiedSet(newItem);
+                destinationDataSource.saveItem(newItem, function(){
+                    destinationDataSource.updateItems();
+                });
+            } else {
+                var items = destinationDataSource.getProperty(destinationProperty) || [];
 
-            destinationDataSource.setProperty(destinationProperty, items);
+                items = _.clone(items);
+                items.push(newItem);
+
+                destinationDataSource.setProperty(destinationProperty, items);
+            }
+
         } else {
             destinationDataSource.updateItems();
         }

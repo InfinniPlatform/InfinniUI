@@ -34,6 +34,10 @@ _.extend(BaseAction.prototype, {
         if(_.isFunction(onExecutedHandler)) {
             onExecutedHandler(args);
         }
+    },
+
+    _isRootElementPath: function(path){
+        return !path.includes('.');
     }
 
 }, Backbone.Events);
