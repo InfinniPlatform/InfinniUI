@@ -1,6 +1,7 @@
 var ObjectDataProvider = function (items, idProperty) {
     this.items = items || [];
     this.idProperty = idProperty || '_id';
+    this.filter = '';
 };
 
 _.extend(ObjectDataProvider.prototype, {
@@ -10,7 +11,43 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     getItems: function (resultCallback) {
-        resultCallback({data: this.items.slice()});
+        var items = this.items.slice();
+        var filter = this.getFilter();
+
+        if( filter ) {
+            items = filterItems( items, filter );
+        }
+        resultCallback({data: items});
+    },
+
+    setFilter: function(filterPattern, filterParams) {
+        var param;
+        var correctFilter = false;
+        var re = /\<\%[a-zA-Z0-9\s]+\%\>/g;
+
+        if( filterPattern.search( re ) === -1 ) {
+            correctFilter = true;
+        } else {
+            while( param = re.exec( filterPattern ) ) {
+                var paramName = param[ 0 ].replace( /\s+/, '' ).slice( 2, -2 );
+                var paramValue = filterParams[ paramName ] || '';
+                if( paramValue.length ) {
+                    correctFilter = true;
+                }
+                filterPattern = filterPattern.slice( 0, param.index ) + '\'' + paramValue + '\'' + filterPattern.slice( param.index + param[ 0 ].length );
+                param.lastIndex = param.index + paramValue.length;
+            }
+        }
+
+        if( correctFilter ) {
+            this.filter = filterPattern;
+        } else {
+            this.filter = '';
+        }
+    },
+
+    getFilter: function() {
+        return this.filter;
     },
 
     createItem: function (resultCallback) {

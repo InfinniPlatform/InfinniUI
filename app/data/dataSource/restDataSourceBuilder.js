@@ -1,6 +1,6 @@
 var RestDataSourceBuilder = function() {
     _.superClass(RestDataSourceBuilder, this);
-}
+};
 
 _.inherit(RestDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -78,26 +78,6 @@ _.extend(RestDataSourceBuilder.prototype, {
             for(var k in params){
                 this.initBindingToProperty(params[k], dataSource, parentView, pathForBinding + '.' + k, builder);
             }
-        }
-    },
-
-    initBindingToProperty: function (valueMetadata, dataSource, parentView, pathForBinding, builder) {
-        if (typeof valueMetadata != 'object') {
-            if (valueMetadata !== undefined) {
-                dataSource.setProperty(pathForBinding, valueMetadata);
-            }
-
-        } else {
-            var args = {
-                parent: parentView,
-                parentView: parentView
-            };
-
-            var dataBinding = builder.buildBinding(valueMetadata, args);
-
-            dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-            dataBinding.bindElement(dataSource, pathForBinding);
         }
     },
 

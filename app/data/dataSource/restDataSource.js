@@ -103,36 +103,6 @@ var RestDataSource = BaseDataSource.extend({
 
     },
 
-    getGettingUrlParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setGettingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
-    },
-
     getSettingUrlParams: function(propertyName){
         if(arguments.length == 0){
             propertyName = 'urlParams.set';

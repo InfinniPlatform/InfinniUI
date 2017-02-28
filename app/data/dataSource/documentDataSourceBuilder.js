@@ -1,6 +1,6 @@
 var DocumentDataSourceBuilder = function() {
     _.superClass(DocumentDataSourceBuilder, this);
-}
+};
 
 _.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -10,15 +10,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
 
         dataSource.setDocumentId(metadata['DocumentId']);
 
-        if('Filter' in metadata){ dataSource.setFilter(metadata['Filter']); }
-        if('FilterParams' in metadata){
-            var params = metadata['FilterParams'];
-            for(var k in params){
-                this.initBindingToProperty(params[k], dataSource, parent, '.filterParams.' + k, builder);
-            }
-        }
-
-        if('Search' in metadata){ dataSource.setSearch(metadata['Search']); }
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
@@ -36,9 +27,8 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         return new DocumentDataSource({
             view: parent
         });
-    },
+    }
 
-    initBindingToProperty: RestDataSourceBuilder.prototype.initBindingToProperty
 });
 
 window.InfinniUI.DocumentDataSourceBuilder = DocumentDataSourceBuilder;

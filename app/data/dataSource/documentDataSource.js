@@ -10,7 +10,6 @@ var DocumentDataSource = RestDataSource.extend({
         var model = this.get('model');
         model.setProperty('pageNumber', 0);
         model.setProperty('pageSize', 15);
-        model.setProperty('filterParams', {});
         this.setUpdatingItemsConverter(function(data){
             model.setProperty('totalCount', data['Result']['Count']);
             model.setProperty('additionalResult', data['Result']['AdditionalResult']);
@@ -21,26 +20,21 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     initHandlers: function(){
+        BaseDataSource.prototype.initHandlers.apply(this, Array.prototype.slice.call(arguments));
         var model = this.get('model');
         var that = this;
-        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this),
-            updateGettingUrlParamsWithReset = function() {
-                that.suspendUpdate('updateGettingUrlParams');
-                that.get('model').setProperty('pageNumber', 0);
-                that.updateGettingUrlParams();
-                that.resumeUpdate('updateGettingUrlParams');
-            } ;
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+        var updateGettingUrlParamsWithReset = _.bind(this.updateGettingUrlParamsWithReset, this);
 
         model.onPropertyChanged('documentId', function(){
             that.updateGettingUrlParams();
             that.updateSettingUrlParams();
             that.updateDeletingUrlParams();
         });
-        model.onPropertyChanged('filter', updateGettingUrlParamsWithReset);
-        model.onPropertyChanged('filterParams.*', updateGettingUrlParamsWithReset);
+
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
         model.onPropertyChanged('pageSize', updateGettingUrlParamsWithReset);
-        model.onPropertyChanged('search', updateGettingUrlParamsWithReset);
+
         model.onPropertyChanged('select', updateGettingUrlParams);
         model.onPropertyChanged('order', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
@@ -50,55 +44,7 @@ var DocumentDataSource = RestDataSource.extend({
         this.updateDeletingUrlParams();
     },
 
-    updateGettingUrlParams: function(){
-        var model = this.get('model'),
-            params = {
-                method: 'get',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get('model').getProperty('documentId'),
-                data: {},
-                params: {}
-            },
-            filter = model.getProperty('filter'),
-            filterParams = model.getProperty('filterParams'),
-            pageNumber = model.getProperty('pageNumber'),
-            pageSize = model.getProperty('pageSize'),
-            searchStr = model.getProperty('search'),
-            select = model.getProperty('select'),
-            order = model.getProperty('order'),
-            needTotalCount = model.getProperty('needTotalCount');
 
-        if(filter){
-            params.data.filter = filter;
-            if(filterParams){
-                _.extend(params.params, filterParams);
-            }
-        }
-
-        if(pageSize){
-            pageNumber = pageNumber || 0;
-            params.data.skip = pageNumber*pageSize;
-            params.data.take = pageSize;
-        }
-
-        if(searchStr){
-            params.data.search = searchStr;
-        }
-
-        if(select){
-            params.data.select = select;
-        }
-
-        if(order){
-            params.data.order = order;
-        }
-
-        if(needTotalCount){
-            params.data.count = needTotalCount;
-        }
-
-        this.setGettingUrlParams(params);
-    },
 
     updateSettingUrlParams: function(){
         var model = this.get('model'),
@@ -128,7 +74,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     initDataProvider: function(){
         var dataProvider = window.InfinniUI.providerRegister.build('DocumentDataSource');
-
         this.set('dataProvider', dataProvider);
     },
 
@@ -138,49 +83,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     setDocumentId: function(documentId){
         this.get('model').setProperty('documentId', documentId);
-    },
-
-    getFilter: function(){
-        return this.get('model').getProperty('filter');
-    },
-
-    setFilter: function(filter){
-        this.get('model').setProperty('filter', filter);
-    },
-
-    getFilterParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setFilterParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
-    },
-
-    setIdFilter: function (itemId) {
-        this.setFilter('eq(' + this.getIdProperty() + ','+ this.quoteValue(itemId) + ')');
     },
 
     getPageNumber: function(){
@@ -197,14 +99,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     setPageSize: function(pageSize){
         this.get('model').setProperty('pageSize', pageSize);
-    },
-
-    getSearch: function(){
-        return this.get('model').getProperty('search');
-    },
-
-    setSearch: function(searchStr){
-        this.get('model').setProperty('search', searchStr);
     },
 
     getSelect: function(){
@@ -242,13 +136,17 @@ var DocumentDataSource = RestDataSource.extend({
         }
     },
 
+    setIdFilter: function (itemId) {
+        this.setFilter('eq(' + this.getIdProperty() + ','+ this.quoteValue(itemId) + ')');
+    },
+
     quoteValue: function (value) {
         var VALUE_QUOTE_CHAR = '\'';
 
         if (_.isString(value)) {
             return VALUE_QUOTE_CHAR + value + VALUE_QUOTE_CHAR;
         } else {
-            return value
+            return value;
         }
     }
 

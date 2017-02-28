@@ -3,84 +3,96 @@
  * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
-}
+};
 
-_.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
-    build: function (context, args) {
-        var dataSource = this.createDataSource(args.parentView);
-        dataSource.suspendUpdate('tuningInSourceBuilder');
+_.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
+    build: function( context, args ) {
+        var dataSource = this.createDataSource( args.parentView );
+        dataSource.suspendUpdate( 'tuningInSourceBuilder' );
 
-        this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
+        this.applyMetadata( args.builder, args.parentView, args.metadata, dataSource );
 
-        this.applySuspended(dataSource, args.suspended);
+        this.applySuspended( dataSource, args.suspended );
 
-        dataSource.resumeUpdate('tuningInSourceBuilder');
+        dataSource.resumeUpdate( 'tuningInSourceBuilder' );
 
         return dataSource;
     },
 
-    applySuspended: function (dataSource, suspended) {
-        if (!suspended) {
+    applySuspended: function( dataSource, suspended ) {
+        if( !suspended ) {
             return;
         }
 
-        for (var name in suspended) {
-            if (!suspended.hasOwnProperty(name) || dataSource.getName() !== name) {
+        for( var name in suspended ) {
+            if( !suspended.hasOwnProperty( name ) || dataSource.getName() !== name ) {
                 continue;
             }
 
-            dataSource.suspendUpdate(suspended[name]);
+            dataSource.suspendUpdate( suspended[name] );
         }
 
     },
 
-    applyMetadata: function (builder, parentView, metadata, dataSource) {
+    applyMetadata: function( builder, parentView, metadata, dataSource ) {
         var idProperty = metadata.IdProperty;
-        if (idProperty) {
-            dataSource.setIdProperty(idProperty);
+        if( idProperty ) {
+            dataSource.setIdProperty( idProperty );
         }
 
-        dataSource.setName(metadata.Name);
-        dataSource.setFillCreatedItem(metadata.FillCreatedItem);
+        dataSource.setName( metadata.Name );
+        dataSource.setFillCreatedItem( metadata.FillCreatedItem );
         //dataSource.setPageSize(metadata.PageSize || 15);
         //dataSource.setPageNumber(metadata.PageNumber || 0);
         //
         //if('Sorting' in metadata){
         //    dataSource.setSorting(metadata['Sorting']);
         //}
-        //
-        //var queryMetadata;
-        //if('Query' in metadata){
-        //    dataSource.setFilter(metadata['Query']);
-        //}
 
-        if('IsLazy' in metadata){
-            dataSource.setIsLazy(metadata['IsLazy']);
+        if( 'Search' in metadata ) {
+            dataSource.setSearch( metadata['Search'] );
         }
 
-        if('ResolvePriority' in metadata){
-            dataSource.setResolvePriority(metadata['ResolvePriority']);
+        if( 'Filter' in metadata ) {
+            dataSource.setFilter( metadata['Filter'] );
+        }
+        if( 'FilterParams' in metadata ) {
+            var params = metadata['FilterParams'];
+            for( var k in params ) {
+                this.initBindingToProperty( params[k], dataSource, parentView, '.filterParams.' + k, builder );
+            }
         }
 
-        if( _.isObject(metadata.CustomProperties) ) {
-            this.initCustomProperties(dataSource, metadata.CustomProperties);
+        if( 'IsLazy' in metadata ) {
+            dataSource.setIsLazy( metadata['IsLazy'] );
         }
 
-        this.initValidation(parentView, dataSource, metadata);
-        this.initNotifyValidation(dataSource);
-        this.initScriptsHandlers(parentView, metadata, dataSource);
+        if( 'ResolvePriority' in metadata ) {
+            dataSource.setResolvePriority( metadata['ResolvePriority'] );
+        }
 
-        this.initFileProvider(dataSource);
+        if( _.isObject( metadata.CustomProperties ) ) {
+            this.initCustomProperties( dataSource, metadata.CustomProperties );
+        }
+
+        this.initValidation( parentView, dataSource, metadata );
+        this.initNotifyValidation( dataSource );
+        this.initScriptsHandlers( parentView, metadata, dataSource );
+
+        this.initFileProvider( dataSource );
     },
 
-    createDataSource: function (parent) {
-        throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
-    },
-
-    initCustomProperties: function(dataSource, customProperties){
-        _.each(customProperties, function(value, key){
-            dataSource.setProperty('.' + key, value);
+    createDataSource: function( parent ) {
+        // throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+        return new BaseDataSource({
+            view: parent
         });
+    },
+
+    initCustomProperties: function( dataSource, customProperties ) {
+        _.each( customProperties, function( value, key ) {
+            dataSource.setProperty( '.' + key, value );
+        } );
     },
 
     /**
@@ -90,83 +102,101 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
      * @param dataSource
      * @param metadata
      */
-    initValidation: function (parentView, dataSource, metadata) {
-        if (metadata.ValidationErrors) {
-            dataSource.setErrorValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
-            });
+    initValidation: function( parentView, dataSource, metadata ) {
+        if( metadata.ValidationErrors ) {
+            dataSource.setErrorValidator( function( context, args ) {
+                return new ScriptExecutor( parentView ).executeScript( metadata.ValidationErrors.Name || metadata.ValidationErrors, args );
+            } );
         }
     },
 
     //Скриптовые обработчики на события
-    initScriptsHandlers: function (parentView, metadata, dataSource) {
+    initScriptsHandlers: function( parentView, metadata, dataSource ) {
 
-        if( !parentView ){
+        if( !parentView ) {
             return;
         }
 
-        if (metadata.OnSelectedItemChanged) {
-            dataSource.onSelectedItemChanged(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
-            });
+        if( metadata.OnSelectedItemChanged ) {
+            dataSource.onSelectedItemChanged( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args );
+            } );
         }
 
-        if (metadata.OnItemsUpdated) {
-            dataSource.onItemsUpdated(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
-            });
+        if( metadata.OnItemsUpdated ) {
+            dataSource.onItemsUpdated( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args );
+            } );
         }
 
-        if (metadata.OnPropertyChanged) {
-            dataSource.onPropertyChanged(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
-            });
+        if( metadata.OnPropertyChanged ) {
+            dataSource.onPropertyChanged( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args );
+            } );
         }
 
-        if (metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args);
-            });
+        if( metadata.OnItemDeleted ) {
+            dataSource.onItemDeleted( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args );
+            } );
         }
 
-        if (metadata.OnErrorValidator) {
-            dataSource.onErrorValidator(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args);
-            });
+        if( metadata.OnErrorValidator ) {
+            dataSource.onErrorValidator( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args );
+            } );
         }
 
-        if (metadata.OnProviderError) {
-            dataSource.onProviderError(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError, args);
-            });
+        if( metadata.OnProviderError ) {
+            dataSource.onProviderError( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnProviderError.Name || metadata.OnProviderError, args );
+            } );
         }
     },
 
-    buildBindingBuilder: function(params){
+    buildBindingBuilder: function( params ) {
 
-        return function(bindingMetadata){
-            return params.builder.buildBinding(bindingMetadata, {
+        return function( bindingMetadata ) {
+            return params.builder.buildBinding( bindingMetadata, {
                 parentView: params.parentView,
                 basePathOfProperty: params.basePathOfProperty
-            });
+            } );
         };
     },
 
-     initFileProvider: function (dataSource) {
+    initFileProvider: function( dataSource ) {
 
-             var host = InfinniUI.config.serverUrl;
+        var host = InfinniUI.config.serverUrl;
 
-             var fileUrlConstructor = new DocumentUploadQueryConstructor(host);
+        var fileUrlConstructor = new DocumentUploadQueryConstructor( host );
 
-             var fileProvider = new DocumentFileProvider(fileUrlConstructor);
+        var fileProvider = new DocumentFileProvider( fileUrlConstructor );
 
-             dataSource.setFileProvider(fileProvider);
-     }
+        dataSource.setFileProvider( fileProvider );
+    },
 
+    initBindingToProperty: function( valueMetadata, dataSource, parentView, pathForBinding, builder ) {
+        if( typeof valueMetadata != 'object' ) {
+            if( valueMetadata !== undefined ) {
+                dataSource.setProperty( pathForBinding, valueMetadata );
+            }
 
-});
+        } else {
+            var args = {
+                parent: parentView,
+                parentView: parentView
+            };
 
+            var dataBinding = builder.buildBinding( valueMetadata, args );
 
-_.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
+            dataBinding.setMode( InfinniUI.BindingModes.toElement );
+
+            dataBinding.bindElement( dataSource, pathForBinding );
+        }
+    }
+
+} );
+
+_.extend( BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin );
 
 window.InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

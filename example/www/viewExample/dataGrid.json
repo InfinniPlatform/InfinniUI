@@ -11,14 +11,29 @@
 					{"_id": 5, "Name": "Desktop small", "currency": 1500, "Display": "1024x768"},
 					{"_id": 6, "Name": "Desktop middle", "currency": 1600, "Display": "1600x900"},
 					{"_id": 7, "Name": "Desktop", "currency": 2000, "Display": "1920x1080"}
-				]
+				],
+				"Filter": "and(contains(Name, <%filterName%>),contains(currency, <%filterPrice%>),contains(Display, <%filterDisplay%>))",
+				"FilterParams": {
+					"filterName": {
+						"Source": "ObjectDataSource2",
+						"Property": "$.FilterName"
+					},
+					"filterPrice": {
+						"Source": "ObjectDataSource2",
+						"Property": "$.FilterPrice"
+					},
+					"filterDisplay": {
+						"Source": "ObjectDataSource2",
+						"Property": "$.FilterDisplay"
+					}
+				}
 			}
 		},
 		{
 			"ObjectDataSource": {
 				"Name": "ObjectDataSource2",
 				"Items": [
-					{"_id": 1, "Name": "Add"}
+					{"_id": 1, "FilterName": "", "FilterPrice": "", "FilterDisplay": ""}
 				]
 			}
 		}
@@ -50,7 +65,11 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byName}"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byName}",
+													"Value": {
+														"Source": "ObjectDataSource2",
+														"Property": "$.FilterName"
+													}
 												}
 											}
 										]
@@ -62,7 +81,11 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byPrice}"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byPrice}",
+													"Value": {
+														"Source": "ObjectDataSource2",
+														"Property": "$.FilterPrice"
+													}
 												}
 											}
 										]
@@ -74,7 +97,11 @@
 										"Items": [
 											{
 												"TextBox": {
-													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byDisplay}"
+													"LabelText": "{=InfinniUI.localizations[InfinniUI.config.lang].strings.customMessage.filterLabels.byDisplay}",
+													"Value": {
+														"Source": "ObjectDataSource2",
+														"Property": "$.FilterDisplay"
+													}
 												}
 											}
 										]
@@ -82,8 +109,20 @@
 								},
 								{
 									"Cell": {
-										"ColumnSpan": 12,
-
+										"ColumnSpan": 4,
+										"Items": [
+											{
+												"Button": {
+													"Text": "Найти",
+													"OnClick": "{ filterItems( context, args ) }"
+												}
+											}
+										]
+									}
+								},
+								{
+									"Cell": {
+										"ColumnSpan": 8,
 										"Items": [
 											{
 												"StackPanel": {
@@ -91,7 +130,7 @@
 														{
 															"Button": {
 																"Name": "AddBtn",
-																"Text": "{= args.parentView.context.dataSources.ObjectDataSource2.getItems()[0].Name}",
+																"Text": "Add",
 																"HorizontalAlignment": "Right",
 																"Action": {
 																	"AddAction": {
@@ -128,7 +167,7 @@
 													"Items": [
 														{
 															"DataGrid": {
-																"Name": "ItemsPanel",
+																"Name": "DataGrid",
 																"MultiSelect": true,
 																"VerticalAlignment": "Stretch",
 																"CheckAllVisible": true,
@@ -225,7 +264,7 @@
 																							},
 																							"Action": {
 																								"DeleteAction": {
-																									"AcceptMessage": "Let's delete it nahren",
+																									"AcceptMessage": "Let's delete it",
 																									"AcceptMessageType": "warn",
 																									"DestinationValue": {
 																										"Source": "ObjectDataSource",
