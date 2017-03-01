@@ -239,6 +239,21 @@ module.exports = {
             removeButton: function() {
                 return './/button[contains(@class, "pl-filebox-btn-remove")]';
             }
+        },
+        TreeView: {
+            name: function(name) {
+                return './/div[contains(@class, "pl-treeview") and @data-pl-name="' + name + '"]';
+            },
+            node: function(text) {
+                // Относительно name()
+                return './/div[contains(@class, "pl-treeview-node")]' +
+                    '/div[contains(@class, "pl-treeview-node__item")]' +
+                    '/div[contains(@class, "pl-treeview-item__content") and normalize-space(node()) = "' + text + '"]';
+            },
+            button: function() {
+                // Относительно node()
+                return './../../span[contains(@class, "pl-treeview-node__button")]';
+            }
         }
     }
 };

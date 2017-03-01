@@ -173,4 +173,10 @@ module.exports = function () {
                 return elements[elementName.index].click();
             });
     });
+    
+    this.When(/^выполнится задержка на "([^"]*)" секунд$/, function(time) {
+        return new Promise(function(resolve) {
+            setTimeout(resolve, parseInt(time, 10) * 1000);
+        });
+    });
 };
