@@ -86,7 +86,14 @@ var World = function World() {
     this.currentView = null;
 
     this.driver.manage().timeouts().implicitlyWait(config.timeouts.main);
-    this.driver.manage().window().maximize();
+
+    if (!args.teamcity && !args.width && !args.height) {
+        this.driver.manage().window().maximize();
+    } else {
+        var width = args.width ? parseInt(args.width, 10) : config.screen.width;
+        var height = args.height ? parseInt(args.height, 10) : config.screen.height;
+        this.driver.manage().window().setSize(width, height);
+    }
 
     if (!fs.existsSync(screenshotPath)) {
         fs.mkdirSync(screenshotPath);
