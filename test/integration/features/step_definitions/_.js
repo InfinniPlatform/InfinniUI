@@ -189,4 +189,10 @@ module.exports = function () {
                 });
             });
     });
+    
+    this.When(/^выполнится задержка на "([^"]*)" секунд$/, function(time) {
+        return new Promise(function(resolve) {
+            setTimeout(resolve, parseInt(time, 10) * 1000);
+        });
+    });
 };

@@ -202,6 +202,21 @@ module.exports = {
                 return './/' + tag + '[@data-pl-name="' + name + '"]';
             },
             tags: [ 'div', 'a', 'i', 'p', 'span']
+        },
+        TreeView: {
+            name: function(name) {
+                return './/div[contains(@class, "pl-treeview") and @data-pl-name="' + name + '"]';
+            },
+            node: function(text) {
+                // Относительно name()
+                return './/div[contains(@class, "pl-treeview-node")]' +
+                    '/div[contains(@class, "pl-treeview-node__item")]' +
+                    '/div[contains(@class, "pl-treeview-item__content") and normalize-space(node()) = "' + text + '"]';
+            },
+            button: function() {
+                // Относительно node()
+                return './../../span[contains(@class, "pl-treeview-node__button")]';
+            }
         }
     }
 };
