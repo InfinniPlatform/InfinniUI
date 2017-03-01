@@ -96,14 +96,14 @@ filterItems.filterTreeBuilder = (function() {
                 tmpString,
                 tmpString2,
                 tmpRE,
-                reForDates = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
-                reForParamAsArray = /\,[a-zA-Z0-9\'\,\_\.]+\)/g,
-                reForArrayFromOneElem = /\[[a-zA-Z0-9\'\_\.]+\]/g,
-                reForElemsOfTree = /[a-zA-Z]+[(]|\[[a-zA-Z0-9\S]+\]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]/g,
+                reForDates = /date\(\'[\d\wа-яёА-ЯЁ\:\-\+\.\s]+\'\)/g,
+                reForParamAsArray = /\,[\d\wа-яёА-ЯЁ\'\,\_\.]+\)/g,
+                reForArrayFromOneElem = /\[[\d\w\'\_\.]+\]/g,
+                reForElemsOfTree = /[\w]+[(]|\[[\d\wа-яёА-ЯЁ\S]+\]|[-\']{0,1}[\d\wа-яёА-ЯЁ_\.]+[\']{0,1}[,)$]/g,
                 reForClosingBrackets = /[)]/g,
-                reForRegExp = /\'([a-zA-Z0-9\S\W\D]+\s*)+\'/g,
+                reForRegExp = /\'([\d\w\S\W\D]+\s*)+\'/g,
                 reForSpaces = /\s+/g,
-                reForFewWordsInQuotes = /\'([a-zA-Z0-9\s]+\s*)+\'/g,
+                reForFewWordsInQuotes = /\'([\d\wа-яёА-ЯЁ\s]+\s*)+\'/g,
                 arr = [];
             while( tmpArr = reForDates.exec( filter ) ) { // search all dates and convert it to number of s [0.000]
                 tmpNum = Date.parse( tmpArr[0].slice( 6, -2 ) ) / 1000 + '';
