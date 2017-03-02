@@ -300,6 +300,11 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         }
     },
 
+    remove: function () {
+        this.trigger(messageTypes.onRemove.name);
+        Backbone.View.prototype.remove.apply(this, Array.prototype.slice.call(arguments));
+    },
+
     switchClass: function (name, value, $el, separator) {
         if (typeof separator === 'undefined') {
             separator = '-';

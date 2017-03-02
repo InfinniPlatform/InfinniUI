@@ -1193,7 +1193,7 @@ describe('EditAction', function () {
         assert.isNotNull( editAction.execute, 'action should have execute' );
     });
 
-    it('should edit item from ObjectDataSource', function (done) {
+    it('should edit document from ObjectDataSource', function (done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -1204,6 +1204,7 @@ describe('EditAction', function () {
                         "IsLazy": false,
                         "Items": [
                             {
+                                "_id": 1,
                                 "Name": "OldValue"
                             }
                         ]
@@ -1237,6 +1238,15 @@ describe('EditAction', function () {
                                         ],
                                         "Items": [
                                             {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
@@ -1259,22 +1269,22 @@ describe('EditAction', function () {
             var edtBtn = view.context.controls['EditButton'];
             var destinationDS = view.context.dataSources['ObjectDataSource'];
 
+            assert.equal(destinationDS.getItems().length, 1);
             assert.equal(destinationDS.getItems()[0].Name, "OldValue");
 
             // When
             edtBtn.click();
 
             var childView = view.context.controls['EditView'];
-            var sourceDS = childView.context.dataSources['MainDataSource'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
             var acceptBtn = childView.context.controls['AcceptBtn'];
 
-            var selectedItem = sourceDS.getSelectedItem();
-            selectedItem.Name = "NewValue";
-            sourceDS.setSelectedItem(selectedItem);
+            nameTextBox.setValue("NewValue");
 
             acceptBtn.click();
 
             // Then
+            assert.equal(destinationDS.getItems().length, 1, 'edit action should not add items');
             assert.equal(destinationDS.getItems()[0].Name, "NewValue");
 
             done();
@@ -1282,7 +1292,111 @@ describe('EditAction', function () {
         });
     });
 
-    it('should edit item from DocumentDataSource', function (done) {
+    it('should edit array item in document from ObjectDataSource', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                "_id": 1,
+                                "People": [
+                                    {
+                                        "_id": 10,
+                                        "Name": "OldValue"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "EditButton",
+                    "Action": {
+                        "EditAction": {
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "0.People.0"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Edit",
+                                        "Name": "EditView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var edtBtn = view.context.controls['EditButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            assert.equal(destinationDS.getItems()[0].People.length, 1);
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "OldValue");
+
+            // When
+            edtBtn.click();
+
+            var childView = view.context.controls['EditView'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            nameTextBox.setValue("NewValue");
+
+            acceptBtn.click();
+
+            // Then
+            assert.equal(destinationDS.getItems()[0].People.length, 1, 'edit action should not add items');
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "NewValue");
+
+            done();
+            view.close();
+        });
+    });
+
+    it('should edit document from DocumentDataSource', function (done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -3425,7 +3539,7 @@ describe('DateTimeFormat', function () {
                 formattingAbbr = new InfinniUI.DateTimeFormat('MMM'),
                 formattingIndex = new InfinniUI.DateTimeFormat('MM'),
                 formattingShortIndex = new InfinniUI.DateTimeFormat('%M'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("21 January 1908 10:12");
@@ -3445,7 +3559,7 @@ describe('DateTimeFormat', function () {
                 formattingAbbr = new InfinniUI.DateTimeFormat('ddd'),
                 formattingIndex = new InfinniUI.DateTimeFormat('dd'),
                 formattingShortIndex = new InfinniUI.DateTimeFormat('%d'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("2 January 1908 10:12");
@@ -3506,7 +3620,7 @@ describe('DateTimeFormat', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('tt'),
                 formattingShort = new InfinniUI.DateTimeFormat('%t'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var datePM = new Date("2 January 1908 13:02");
@@ -3534,7 +3648,7 @@ describe('DateTimeFormat', function () {
             //Given
             var formattingTime = new InfinniUI.DateTimeFormat('12:23'),
                 formattingDate = new InfinniUI.DateTimeFormat('12/23'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("2 January 1908 13:02:00");
@@ -3564,7 +3678,7 @@ describe('DateTimeFormat', function () {
         it('format by pattern f', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('f'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12");
@@ -3577,8 +3691,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern F', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('F'),
-                enCulture = new InfinniUI.Culture('en-US'),
-                ruCulture = new InfinniUI.Culture('ru-RU');
+                enCulture = InfinniUI.localizations['en-US'],
+                ruCulture = InfinniUI.localizations['ru-RU'];
 
             //When
             var date = new Date("4 January 1908 13:12:08");
@@ -3592,7 +3706,7 @@ describe('DateTimeFormat', function () {
         it('format by pattern g', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('g'),
-                enCulture = new InfinniUI.Culture('en-US');
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12");
@@ -3605,8 +3719,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern G', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('G'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3619,8 +3733,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern d', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('d'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3633,8 +3747,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern D', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('D'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3647,8 +3761,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern t', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('t'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3672,8 +3786,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern Y', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('Y'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3686,8 +3800,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern M', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('M'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3700,8 +3814,8 @@ describe('DateTimeFormat', function () {
         it('format by pattern s', function () {
             //Given
             var formatting = new InfinniUI.DateTimeFormat('s'),
-                ruCulture = new InfinniUI.Culture('ru-RU'),
-                enCulture = new InfinniUI.Culture('en-US');
+                ruCulture = InfinniUI.localizations['ru-RU'],
+                enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var date = new Date("4 January 1908 13:12:06");
@@ -3775,7 +3889,7 @@ describe('NumberFormatting', function () {
             var formatting_p = new InfinniUI.NumberFormat('p');
             var formatting_p0 = new InfinniUI.NumberFormat('p0');
             var formatting_p1 = new InfinniUI.NumberFormat('p1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 123.4567;
@@ -3793,7 +3907,7 @@ describe('NumberFormatting', function () {
             var formatting_n = new InfinniUI.NumberFormat('n');
             var formatting_n0 = new InfinniUI.NumberFormat('n0');
             var formatting_n1 = new InfinniUI.NumberFormat('n1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 1234.5678;
@@ -3811,7 +3925,7 @@ describe('NumberFormatting', function () {
             var formatting_c = new InfinniUI.NumberFormat('c');
             var formatting_c0 = new InfinniUI.NumberFormat('c0');
             var formatting_c1 = new InfinniUI.NumberFormat('c1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = 1234.5678;
@@ -3829,7 +3943,7 @@ describe('NumberFormatting', function () {
             var formatting_c = new InfinniUI.NumberFormat('c');
             var formatting_c0 = new InfinniUI.NumberFormat('c0');
             var formatting_c1 = new InfinniUI.NumberFormat('c1');
-            var enCulture = new InfinniUI.Culture('en-US');
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var val = [1234.5678, 2901.2345, 2678.9012];
@@ -3851,22 +3965,22 @@ describe('ObjectFormat', function () {
 
         it('successful build', function () {
             //Given
-            var metadata = {Format: '{}'};
+            var metadata = {Format: '${}'};
             var builder = new InfinniUI.ObjectFormatBuilder();
             //When
             var format = builder.build(null, { metadata: metadata } );
             //Then
             assert.isFunction(format.format);
-            assert.equal(format.getFormat(), '{}');
+            assert.equal(format.getFormat(), '${}');
         });
 
         it('should format simple data type ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${:n2} kg");
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = 'Ivan';
@@ -3884,11 +3998,11 @@ describe('ObjectFormat', function () {
 
         it('should format complex data type ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = { FirstName: "Ivan", MiddleName: "Ivanovich" };
@@ -3905,11 +4019,11 @@ describe('ObjectFormat', function () {
 
         it('should format collection ', function () {
             //Given
-            var formatter_1 = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
-            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: {BirthDate:d}");
-            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: {BirthDate:T}");
-            var formatter_4 = new InfinniUI.ObjectFormat("Weight: {Weight:n2} kg");
-            var enCulture = new InfinniUI.Culture('en-US');
+            var formatter_1 = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
+            var formatter_2 = new InfinniUI.ObjectFormat("Birth date: ${BirthDate:d}");
+            var formatter_3 = new InfinniUI.ObjectFormat("Birth time: ${BirthDate:T}");
+            var formatter_4 = new InfinniUI.ObjectFormat("Weight: ${Weight:n2} kg");
+            var enCulture = InfinniUI.localizations['en-US'];
 
             //When
             var value_1 = [{ FirstName: "Ivan", MiddleName: "Ivanovich" }, { FirstName: "Petr", MiddleName: "Petrov" }];
@@ -3926,7 +4040,7 @@ describe('ObjectFormat', function () {
 
         it('should format when value is undefined', function () {
             //Given
-            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(), "Hello,  !");
@@ -3934,65 +4048,13 @@ describe('ObjectFormat', function () {
 
         it('should format when value is null', function () {
             //Given
-            var formatter = new InfinniUI.ObjectFormat("Hello, {FirstName} {MiddleName}!");
+            var formatter = new InfinniUI.ObjectFormat("Hello, ${FirstName} ${MiddleName}!");
             //When
             //Then
             assert.equal(formatter.format(null), "Hello,  !");
         });
     });
 
-});
-
-describe('MessageBus', function () {
-    var messageBus;
-
-    beforeEach(function () {
-        messageBus = window.InfinniUI.global.messageBus;
-    });
-
-    describe('send', function () {
-        it('should send', function () {
-            var flag = 0;
-
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
-            messageBus.subscribe('myEvent', function (context, obj) {
-                flag += obj.value;
-            });
-
-            messageBus.send('myEvent', 2);
-
-            assert.equal(flag, 6);
-        });
-
-        it('should deliver message to valid subscribers', function () {
-            var flag1 = 0,
-                flag2 = 0;
-
-            messageBus.subscribe('myEvent_1', function (context, obj) {
-                flag1 += obj.value;
-            });
-            messageBus.subscribe('myEvent_1', function (context, obj) {
-                flag1 += obj.value;
-            });
-            messageBus.subscribe('myEvent_2', function (context, obj) {
-                flag2 += obj.value;
-            });
-            messageBus.subscribe('myEvent_2', function (context, obj) {
-                flag2 += obj.value;
-            });
-
-            messageBus.send('myEvent_1', 1);
-            messageBus.send('myEvent_2', 2);
-
-            assert.equal(flag1, 2, 'first handler flag is right');
-            assert.equal(flag2, 4, 'second handler flag is right');
-        });
-    });
 });
 
 describe('LinkView', function () {
@@ -4108,6 +4170,58 @@ describe('LinkViewBuilderBase', function () {
     });
 });
 
+
+describe('MessageBus', function () {
+    var messageBus;
+
+    beforeEach(function () {
+        messageBus = window.InfinniUI.global.messageBus;
+    });
+
+    describe('send', function () {
+        it('should send', function () {
+            var flag = 0;
+
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+            messageBus.subscribe('myEvent', function (context, obj) {
+                flag += obj.value;
+            });
+
+            messageBus.send('myEvent', 2);
+
+            assert.equal(flag, 6);
+        });
+
+        it('should deliver message to valid subscribers', function () {
+            var flag1 = 0,
+                flag2 = 0;
+
+            messageBus.subscribe('myEvent_1', function (context, obj) {
+                flag1 += obj.value;
+            });
+            messageBus.subscribe('myEvent_1', function (context, obj) {
+                flag1 += obj.value;
+            });
+            messageBus.subscribe('myEvent_2', function (context, obj) {
+                flag2 += obj.value;
+            });
+            messageBus.subscribe('myEvent_2', function (context, obj) {
+                flag2 += obj.value;
+            });
+
+            messageBus.send('myEvent_1', 1);
+            messageBus.send('myEvent_2', 2);
+
+            assert.equal(flag1, 2, 'first handler flag is right');
+            assert.equal(flag2, 4, 'second handler flag is right');
+        });
+    });
+});
 
 describe('ScriptExecutor', function () {
 
@@ -7086,7 +7200,7 @@ describe('Container (Control)', function () {
 
                     StackPanel: {
                         Name: 'MainViewPanel',
-                        "ItemFormat": "Connect: {Name.Temp}",
+                        "ItemFormat": "Connect: ${Name.Temp}",
                         "Items" : {
                             "Source": "ObjectDataSource1",
                             "Property": ""
@@ -7520,7 +7634,7 @@ describe('Container (Control)', function () {
                                         }
                                     }
                                 },
-                                "GroupItemFormat": "Connect: {Display}",
+                                "GroupItemFormat": "Connect: ${Display}",
                                 "GroupValueProperty": "Display",
                                 "Items" : {
                                     "Source": "ObjectDataSource1",
@@ -7688,6 +7802,27 @@ describe('ContextMenu (Control)', function () {
 	});
 });
 
+describe('DataNavigationControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('DataNavigation', {});
+        });
+
+        it('should render dataNavigation with correct class', function () {
+            //Given
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-data-navigation'));
+        });
+    });
+});
+
 describe('DateTimePickerControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -7760,27 +7895,6 @@ describe('DateTimePickerControl', function () {
 
         });
 
-    });
-});
-
-describe('DataNavigationControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('DataNavigation', {});
-        });
-
-        it('should render dataNavigation with correct class', function () {
-            //Given
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-data-navigation'));
-        });
     });
 });
 
@@ -8129,100 +8243,6 @@ describe('Label', function () {
     });
 });
 
-describe('Link (Control)', function () {
-
-	describe('Check href and target params in LinkElement', function () {
-
-		it('should update from default href attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
-
-				view.childElements[0].setHref('common.ru');
-				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
-
-				view.childElements[0].setHref('example.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
-			}
-		});
-
-		it('should update from default target attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				
-
-				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-
-		it('should apply href and target attributes from metadata', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-							"Href": "http://example.com",
-							"Target": "top"
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
-				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
-
-				view.childElements[0].setHref('http://exampleNew.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-	});
-});
-
 describe('PanelControl', function () {
 
     describe('render', function () {
@@ -8472,6 +8492,100 @@ describe('PanelControl', function () {
         }
     });
 });
+describe('Link (Control)', function () {
+
+	describe('Check href and target params in LinkElement', function () {
+
+		it('should update from default href attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
+
+				view.childElements[0].setHref('common.ru');
+				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
+
+				view.childElements[0].setHref('example.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
+			}
+		});
+
+		it('should update from default target attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				
+
+				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+
+		it('should apply href and target attributes from metadata', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+							"Href": "http://example.com",
+							"Target": "top"
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
+				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
+
+				view.childElements[0].setHref('http://exampleNew.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+	});
+});
+
 describe('PasswordBox', function () {
 
     var element;
@@ -8977,7 +9091,7 @@ describe('TextBoxControl', function () {
                     Multiline: true,
                     LineCount: 4,
 
-                    DisplayFormat: "{title}"
+                    DisplayFormat: "${title}"
                 });
 
                 // When
@@ -9058,7 +9172,7 @@ describe('TextBoxControl', function () {
                 // Given
                 var element = builder.buildType('TextBox', {
                     Multiline: false,
-                    DisplayFormat: "{title}"
+                    DisplayFormat: "${title}"
                 });
 
                 // When
@@ -9123,6 +9237,41 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
@@ -9184,41 +9333,6 @@ describe('TextEditorBase (Control)', function () {
     });
 
 });
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -11980,7 +12094,7 @@ describe('ComboBox', function () {
                             "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "{Id} - {DisplayName}",
+                        "ValueFormat": "${Id} - ${DisplayName}",
                         "MultiSelect": false,
                         "Value": {
                             "Source": "ObjectDataSource2",
@@ -12057,7 +12171,7 @@ describe('ComboBox', function () {
                             "Property": ""
                         },
                         "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "{Id} - {DisplayName}",
+                        "ValueFormat": "${Id} - ${DisplayName}",
                         "MultiSelect": true,
                         "Value": {
                             "Source": "ObjectDataSource2",
@@ -13328,7 +13442,7 @@ describe('LabelBuilder', function () {
                 "Items": [{
                     Label: {
                         Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
+                        DisplayFormat: "некоторый текст ${property}",
                         Value: {
                             Source: "ObjectDataSource",
                             Property: "$"
@@ -13372,7 +13486,7 @@ describe('LabelBuilder', function () {
                 "Items": [{
                     Label: {
                         Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
+                        DisplayFormat: "некоторый текст ${property}",
                         Value: {
                             Source: "ObjectDataSource",
                             Property: "$"
@@ -15005,7 +15119,7 @@ describe('TextEditorBase (Element)', function () {
                         "Source": "ObjectDataSource1",
                         "Property": "$.Display"
                     },
-                    "DisplayFormat": "{:n2}",
+                    "DisplayFormat": "${:n2}",
 
                     "EditMask": {
                         "NumberEditMask": {

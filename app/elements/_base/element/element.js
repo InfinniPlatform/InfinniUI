@@ -496,7 +496,12 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
+    onRemove: function( handler ) {
+        return this.control.onRemove(this.createControlEventHandler(this, handler));
+    },
+
     remove: function (isInitiatedByParent, parent) {
+
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -557,6 +562,7 @@ _.extend(Element.prototype, {
         }
 
         return function (message) {
+            message = message || {};
             _.extend(
                 message,
                 additionParams
