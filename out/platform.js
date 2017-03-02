@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.58';
+InfinniUI.VERSION = '2.1.59';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -4367,12 +4367,16 @@ window.messageTypes = {
     onChangeLayout: {name: 'OnChangeLayout'},
     onNotifyUser: {name: 'onNotifyUser'},
     onToolTip: {name: 'onToolTip'},
+    onRemove: {name: 'onRemove'},
 
     onContextMenu: {name: 'onContextMenu'},
     onOpenContextMenu: {name: 'onOpenContextMenu'},
 
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'}
+    onDataLoaded: {name: 'onDataLoaded'},
+
+    onToolTipDestroy: {name: 'onToolTipDestroy'},
+    onToolTipInit: {name: 'onToolTipInit'}
 
 };
 
@@ -4615,6 +4619,10 @@ _.extend(Control.prototype, {
 
     onKeyUp: function (handler) {
         this.controlView.$el.on('keyup', handler);
+    },
+
+    onRemove: function( handler ) {
+        this.controlView.on(messageTypes.onRemove.name, handler);
     },
 
     remove: function () {
@@ -5014,6 +5022,11 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         if (triggeringOnLoaded) {
             this.trigger('onLoaded');
         }
+    },
+
+    remove: function () {
+        this.trigger(messageTypes.onRemove.name);
+        Backbone.View.prototype.remove.apply(this, Array.prototype.slice.call(arguments));
     },
 
     switchClass: function (name, value, $el, separator) {
@@ -17420,6 +17433,71 @@ var ToolBarView = ContainerView.extend({
     updateGrouping: function(){}
 });
 
+//####app\controls\tooltip\tooltipControl.js
+var TooltipControl = function () {
+    _.superClass(TooltipControl, this);
+};
+
+_.inherit(TooltipControl, Control);
+
+_.extend(TooltipControl.prototype, {
+
+    createControlModel: function(  ) {
+        return new InfinniUI.TooltipModel();
+    },
+
+    createControlView: function( model ) {
+        return new InfinniUI.TooltipView({model: model});
+    }
+
+});
+
+InfinniUI.TooltipControl = TooltipControl;
+//####app\controls\tooltip\tooltipModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+InfinniUI.TooltipModel = ControlModel.extend( {
+
+
+} );
+
+//####app\controls\tooltip\tooltipView.js
+InfinniUI.TooltipView = ControlView.extend({
+
+    render: function(){
+        this.prerenderingActions();
+        this.renderContent();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    initHandlersForProperties: function(  ) {
+        ControlView.prototype.initHandlersForProperties.apply(this, Array.prototype.slice.call(arguments));
+
+        this.listenTo(this.model, 'change:content', this.updateContent);
+    },
+
+    updateContent: function(  ) {
+        this.renderContent();
+    },
+
+    /**
+     * @protected
+     */
+    renderContent: function() {
+        var model = this.model;
+        var content = model.get('content');
+        this.$el.html(content.render());
+    }
+
+});
+
 //####app\controls\view\viewControl.js
 /**
  *
@@ -20155,7 +20233,12 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
+    onRemove: function( handler ) {
+        return this.control.onRemove(this.createControlEventHandler(this, handler));
+    },
+
     remove: function (isInitiatedByParent, parent) {
+
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -20216,6 +20299,7 @@ _.extend(Element.prototype, {
         }
 
         return function (message) {
+            message = message || {};
             _.extend(
                 message,
                 additionParams
@@ -20510,28 +20594,17 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	},
 
 	initToolTip: function (params) {
-		var exchange = window.InfinniUI.global.messageBus,
-				builder = params.builder,
-				element = params.element,
-				metadata = params.metadata,
-				tooltip;
+		var builder = params.builder,
+			element = params.element,
+			metadata = params.metadata;
 
-		var argumentForBuilder = {
+		var tooltipBuilderParams = {
+            basePathOfProperty: params.basePathOfProperty,
 			parent: element,
-			parentView: params.parentView,
-			basePathOfProperty: params.basePathOfProperty
+			parentView: params.parentView
 		};
 
-		if (typeof metadata.ToolTip === 'string') {
-			tooltip = builder.buildType("Label", {
-				"Text": metadata.ToolTip
-			}, argumentForBuilder);
-		} else {
-			tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
-		}
-
-		element.setToolTip(tooltip);
-		exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+		element.setToolTip(builder.buildType('ToolTip', metadata['ToolTip'], tooltipBuilderParams));
 	},
 
 	initContextMenu: function(params) {
@@ -24309,58 +24382,6 @@ _.extend(FrameBuilder.prototype, {
     editorBaseBuilderMixin
 );
 
-//####app\elements\icon\icon.js
-function Icon(parent) {
-    _.superClass(Icon, this, parent);
-}
-
-window.InfinniUI.Icon = Icon;
-
-_.inherit(Icon, Element);
-
-_.extend(Icon.prototype, {
-
-    createControl: function () {
-        return new IconControl();
-    },
-
-    setValue: function(value){
-        this.control.set('value', value);
-    },
-
-    getValue: function(){
-        return this.control.get('value');
-    },
-
-    onValueChanged: function(){}
-
-});
-
-//####app\elements\icon\iconBuilder.js
-function IconBuilder() {
-    _.superClass(ButtonBuilder, this);
-}
-
-window.InfinniUI.IconBuilder = IconBuilder;
-
-_.inherit(IconBuilder, ElementBuilder);
-
-_.extend(IconBuilder.prototype, {
-
-    createElement: function (params) {
-        return new Icon(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        var metadata = params.metadata;
-
-        this.initBindingToProperty(params, 'Value');
-    }
-
-});
-
 //####app\elements\gridPanel\gridPanel.js
 /**
  * @param parent
@@ -24415,6 +24436,58 @@ _.extend(GridPanelBuilder.prototype,
         }
 
     });
+
+//####app\elements\icon\icon.js
+function Icon(parent) {
+    _.superClass(Icon, this, parent);
+}
+
+window.InfinniUI.Icon = Icon;
+
+_.inherit(Icon, Element);
+
+_.extend(Icon.prototype, {
+
+    createControl: function () {
+        return new IconControl();
+    },
+
+    setValue: function(value){
+        this.control.set('value', value);
+    },
+
+    getValue: function(){
+        return this.control.get('value');
+    },
+
+    onValueChanged: function(){}
+
+});
+
+//####app\elements\icon\iconBuilder.js
+function IconBuilder() {
+    _.superClass(ButtonBuilder, this);
+}
+
+window.InfinniUI.IconBuilder = IconBuilder;
+
+_.inherit(IconBuilder, ElementBuilder);
+
+_.extend(IconBuilder.prototype, {
+
+    createElement: function (params) {
+        return new Icon(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var metadata = params.metadata;
+
+        this.initBindingToProperty(params, 'Value');
+    }
+
+});
 
 //####app\elements\imageBox\imageBox.js
 /**
@@ -24578,7 +24651,7 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
-//####app\elements\indeterminateCheckbox\indeterminateCheckBox.js
+//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
 /**
  *
  * @param parent
@@ -24603,7 +24676,7 @@ _.extend(IndeterminateCheckBox.prototype, {
 
 }, editorBaseMixin);
 
-//####app\elements\indeterminateCheckbox\indeterminateCheckBoxBuilder.js
+//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
 /**
  *
  * @constructor
@@ -26099,6 +26172,114 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
     }
 });
 
+//####app\elements\tooltip\tooltip.js
+var Tooltip = function (parent) {
+    _.superClass( Icon, this, parent );
+};
+
+_.inherit(Tooltip, Element);
+
+
+_.extend(Tooltip.prototype, {
+
+    createControl: function () {
+        return new InfinniUI.TooltipControl();
+    },
+
+    setContent: function (content) {
+        this.control.set('content', content);
+    }
+
+
+});
+
+
+InfinniUI.Tooltip = Tooltip;
+
+//####app\elements\tooltip\tooltipBuilder.js
+function TooltipBuilder() {
+    _.superClass( TooltipBuilder, this );
+}
+
+InfinniUI.TooltipBuilder = TooltipBuilder;
+
+_.inherit( TooltipBuilder, ElementBuilder );
+
+_.extend( TooltipBuilder.prototype, {
+
+    createElement: function( params ) {
+        return new InfinniUI.Tooltip();
+    },
+
+    normalizeMetadata: function( metadata ) {
+        if( typeof metadata === 'string' ) {
+            metadata = {
+                Text: metadata
+            }
+        }
+
+        return metadata;
+    },
+
+    applyMetadata: function( params ) {
+        var tooltip = params.element;
+
+        params.metadata = this.normalizeMetadata( params.metadata );
+
+        ElementBuilder.prototype.applyMetadata.call( this, params );
+        tooltip.setContent( this.buildContent( params.metadata, params ) );
+
+        var exchange = InfinniUI.global.messageBus;
+
+        exchange.send(messageTypes.onToolTipInit, {element: params.parent, content: tooltip});
+        params.parent.onRemove(function () {
+            exchange.send(messageTypes.onToolTipDestroy, {element: params.parent});
+        });
+
+    },
+
+    buildContent: function( metadata, params ) {
+        var builder = params.builder;
+        var builderParams = {
+            parent: params.element,
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
+        var content;
+
+        if( 'Text' in metadata ) {
+            content = this.buildTextContent( metadata[ 'Text' ], builder, builderParams );
+        } else {
+            content = this.buildElementContent( metadata, builder, builderParams );
+        }
+
+        return content;
+    },
+
+    /**
+     * @protected
+     * @param text
+     * @param builder
+     * @param builderParams
+     * @return {*}
+     */
+    buildTextContent: function( text, builder, builderParams ) {
+        return builder.buildType( "Label", {
+            "Text": text
+        }, builderParams )
+    },
+
+    /**
+     * @protected
+     * @param metadata
+     * @param builder
+     * @param builderParams
+     */
+    buildElementContent: function( metadata, builder, builderParams ) {
+        return builder.build( metadata, builderParams );
+    }
+
+} );
 //####app\elements\view\view.js
 /**
  * @param parent
@@ -28563,6 +28744,8 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('Divider', new DividerBuilder());
         builder.register('ContextMenu', new ContextMenuBuilder());
+
+        builder.register('ToolTip', new InfinniUI.TooltipBuilder());
 
 
         var registerQueue = ApplicationBuilder.registerQueue;
@@ -34962,28 +35145,60 @@ var routerService = (function(myRoutes) {
 window.InfinniUI.RouterService = routerService;
 
 //####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
+InfinniUI.ToolTipService = (function() {
 
-	var exchange = window.InfinniUI.global.messageBus;
+    var TOOLTIP_PLACEMENT = 'auto top';
+    var TOOLTIP_CONTAINER = 'body';
+    var TOOLTIP_TRIGGER = 'hover';
 
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
+    var exchange = window.InfinniUI.global.messageBus;
 
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
+    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
+
+    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
+
+    function destroyToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        $element.tooltip( 'destroy' );
+    }
+
+    function initToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var content = extractContentFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        var options = {
+            html: true,
+            title: function() {
+                return content.render();
+            },
+            placement: TOOLTIP_PLACEMENT,
+            container: TOOLTIP_CONTAINER,
+            trigger: TOOLTIP_TRIGGER
+        };
+
+        $element.tooltip( options );
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractContentFromArgs( args ) {
+        return args.value.content;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractElementFromArgs( args ) {
+        return args.value.element;
+    }
+
 })();
 })();

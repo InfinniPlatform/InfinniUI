@@ -102,6 +102,10 @@ _.extend(Control.prototype, {
         this.controlView.$el.on('keyup', handler);
     },
 
+    onRemove: function( handler ) {
+        this.controlView.on(messageTypes.onRemove.name, handler);
+    },
+
     remove: function () {
         this.controlView.remove();
     },
