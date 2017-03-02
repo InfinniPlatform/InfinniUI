@@ -63,7 +63,8 @@ var GridPanelView = ContainerView.extend(
 
         renderRow: function (row) {
             var view = this;
-            var $row = $(this.template.row());
+            // var $row = $(this.template.row());
+            var $row = $('<div class="pl-clearfix"></div>');
             $row.append(row.map(function(element) {
                 view.addChildElement(element);
                 return element.render();
