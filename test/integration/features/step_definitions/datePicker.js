@@ -36,7 +36,7 @@ module.exports = function() {
 
         date = this.helpers.parseDate(date);
 
-        return this.currentView.findElement(xpath)
+        return this.currentView.findElements(xpath)
             .then(function(labels) {
                 if (labels.length <= picker.index) {
                     throw new Error('Элемент не найден');
@@ -61,7 +61,7 @@ module.exports = function() {
         var xpath = this.by.xpath(selector);
         var that = this;
 
-        return this.currentView.findElement(xpath)
+        return this.currentView.findElements(xpath)
             .then(function(labels) {
                 if (labels.length <= picker.index) {
                     throw new Error('Элемент не найден');
