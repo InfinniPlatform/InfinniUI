@@ -1193,7 +1193,7 @@ describe('EditAction', function () {
         assert.isNotNull( editAction.execute, 'action should have execute' );
     });
 
-    it('should edit item from ObjectDataSource', function (done) {
+    it('should edit document from ObjectDataSource', function (done) {
         // Given
         var metadata = {
             "Text": 'Parent View',
@@ -1204,6 +1204,7 @@ describe('EditAction', function () {
                         "IsLazy": false,
                         "Items": [
                             {
+                                "_id": 1,
                                 "Name": "OldValue"
                             }
                         ]
@@ -1237,6 +1238,15 @@ describe('EditAction', function () {
                                         ],
                                         "Items": [
                                             {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
                                                 "Button": {
                                                     "Name": "AcceptBtn",
                                                     "Action": {
@@ -1259,22 +1269,22 @@ describe('EditAction', function () {
             var edtBtn = view.context.controls['EditButton'];
             var destinationDS = view.context.dataSources['ObjectDataSource'];
 
+            assert.equal(destinationDS.getItems().length, 1);
             assert.equal(destinationDS.getItems()[0].Name, "OldValue");
 
             // When
             edtBtn.click();
 
             var childView = view.context.controls['EditView'];
-            var sourceDS = childView.context.dataSources['MainDataSource'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
             var acceptBtn = childView.context.controls['AcceptBtn'];
 
-            var selectedItem = sourceDS.getSelectedItem();
-            selectedItem.Name = "NewValue";
-            sourceDS.setSelectedItem(selectedItem);
+            nameTextBox.setValue("NewValue");
 
             acceptBtn.click();
 
             // Then
+            assert.equal(destinationDS.getItems().length, 1, 'edit action should not add items');
             assert.equal(destinationDS.getItems()[0].Name, "NewValue");
 
             done();
@@ -1282,7 +1292,111 @@ describe('EditAction', function () {
         });
     });
 
-    it('should edit item from DocumentDataSource', function (done) {
+    it('should edit array item in document from ObjectDataSource', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "DataSources": [
+                {
+                    "ObjectDataSource": {
+                        "Name": "ObjectDataSource",
+                        "IsLazy": false,
+                        "Items": [
+                            {
+                                "_id": 1,
+                                "People": [
+                                    {
+                                        "_id": 10,
+                                        "Name": "OldValue"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "Items": [{
+                "Button": {
+                    "Name": "EditButton",
+                    "Action": {
+                        "EditAction": {
+                            "DestinationValue": {
+                                "Source": "ObjectDataSource",
+                                "Property": "0.People.0"
+                            },
+                            "SourceValue": {
+                                "Source": "MainDataSource"
+                            },
+                            "LinkView": {
+                                "InlineView": {
+                                    "OpenMode": "Dialog",
+                                    "View": {
+                                        "Text": "Edit",
+                                        "Name": "EditView",
+                                        "DataSources": [
+                                            {
+                                                "ObjectDataSource": {
+                                                    "Name": "MainDataSource"
+                                                }
+                                            }
+                                        ],
+                                        "Items": [
+                                            {
+                                                "TextBox": {
+                                                    "Name": "NameTextBox",
+                                                    "Value": {
+                                                        "Source": "MainDataSource",
+                                                        "Property": "$.Name"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "Button": {
+                                                    "Name": "AcceptBtn",
+                                                    "Action": {
+                                                        "AcceptAction": {
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+
+        testHelper.applyViewMetadata(metadata, function(view){
+            var edtBtn = view.context.controls['EditButton'];
+            var destinationDS = view.context.dataSources['ObjectDataSource'];
+
+            assert.equal(destinationDS.getItems()[0].People.length, 1);
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "OldValue");
+
+            // When
+            edtBtn.click();
+
+            var childView = view.context.controls['EditView'];
+            var nameTextBox = childView.context.controls['NameTextBox'];
+            var acceptBtn = childView.context.controls['AcceptBtn'];
+
+            nameTextBox.setValue("NewValue");
+
+            acceptBtn.click();
+
+            // Then
+            assert.equal(destinationDS.getItems()[0].People.length, 1, 'edit action should not add items');
+            assert.equal(destinationDS.getItems()[0].People[0].Name, "NewValue");
+
+            done();
+            view.close();
+        });
+    });
+
+    it('should edit document from DocumentDataSource', function (done) {
         // Given
         window.InfinniUI.providerRegister.register('DocumentDataSource', StaticFakeDataProvider);
 
@@ -7688,27 +7802,6 @@ describe('ContextMenu (Control)', function () {
 	});
 });
 
-describe('DataNavigationControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('DataNavigation', {});
-        });
-
-        it('should render dataNavigation with correct class', function () {
-            //Given
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-data-navigation'));
-        });
-    });
-});
-
 describe('DateTimePickerControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -7781,6 +7874,27 @@ describe('DateTimePickerControl', function () {
 
         });
 
+    });
+});
+
+describe('DataNavigationControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('DataNavigation', {});
+        });
+
+        it('should render dataNavigation with correct class', function () {
+            //Given
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-data-navigation'));
+        });
     });
 });
 
@@ -7921,6 +8035,113 @@ describe('Frame', function () {
         });
 
     });
+
+});
+
+describe('IndeterminateCheckBox', function () {
+	var indeterminateCheckBox;
+
+	beforeEach(function () {
+		indeterminateCheckBox = new InfinniUI.IndeterminateCheckBox();
+	});
+
+	describe('Render', function () {
+
+		describe('Setting the properties', function () {
+
+			it('Setting property: visible', function () {
+				//Given
+				var $el = indeterminateCheckBox.render();
+				assert.isFalse($el.hasClass('hidden'));
+
+				//When
+				indeterminateCheckBox.setVisible(false);
+
+				//Then
+				assert.isTrue($el.hasClass('hidden'));
+			});
+
+			it('Setting property: text', function () {
+				//Given
+				indeterminateCheckBox.setText('Text 1');
+
+				var $el = indeterminateCheckBox.render(),
+					$label = $('.checkbox-label', $el);
+
+				assert.equal($label.html(), 'Text 1');
+
+				//When
+				indeterminateCheckBox.setText('Text 2');
+
+				//Then
+				assert.equal($label.html(), 'Text 2');
+			});
+
+			it('Setting property: Enabled', function () {
+				//Given
+				var $el = indeterminateCheckBox.render(),
+					$input = $('input', $el);
+
+				assert.equal($input.prop('disabled'), false, 'Enabled by default');
+
+				//When
+				indeterminateCheckBox.setEnabled(false);
+
+				//Then
+				assert.equal($input.prop('disabled'), true, 'Disable element');
+			});
+
+			it('Setting property: indeterminate', function () {
+				//Given
+				var $el = indeterminateCheckBox.render(),
+					$input = $('input', $el);
+
+				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
+
+				//When
+				indeterminateCheckBox.setValue('indeterminate');
+
+				//Then
+				assert.equal($input.prop('indeterminate'), true, 'Indeterminate state for indeterminateCheckBox');
+			});
+
+		});
+
+		describe('events', function () {
+			it('Change value on click', function () {
+				//Given
+				var $el = indeterminateCheckBox.render(),
+					$input = $('input', $el);
+
+				indeterminateCheckBox.setValue('unchecked');
+
+				//When
+				$input.click();
+
+				//Then
+				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
+				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
+				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
+
+				//When
+				$input.click();
+
+				//Then
+				assert.equal(indeterminateCheckBox.getValue(), 'unchecked', 'value changed');
+				assert.equal($input.prop('checked'), false, 'indeterminateCheckBox checked');
+				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
+
+				//When
+				$input.click();
+
+				//Then
+				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
+				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
+				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
+			});
+		});
+
+	});
 
 });
 
@@ -8114,113 +8335,6 @@ describe('Link (Control)', function () {
 			}
 		});
 	});
-});
-
-describe('IndeterminateCheckBox', function () {
-	var indeterminateCheckBox;
-
-	beforeEach(function () {
-		indeterminateCheckBox = new InfinniUI.IndeterminateCheckBox();
-	});
-
-	describe('Render', function () {
-
-		describe('Setting the properties', function () {
-
-			it('Setting property: visible', function () {
-				//Given
-				var $el = indeterminateCheckBox.render();
-				assert.isFalse($el.hasClass('hidden'));
-
-				//When
-				indeterminateCheckBox.setVisible(false);
-
-				//Then
-				assert.isTrue($el.hasClass('hidden'));
-			});
-
-			it('Setting property: text', function () {
-				//Given
-				indeterminateCheckBox.setText('Text 1');
-
-				var $el = indeterminateCheckBox.render(),
-					$label = $('.checkbox-label', $el);
-
-				assert.equal($label.html(), 'Text 1');
-
-				//When
-				indeterminateCheckBox.setText('Text 2');
-
-				//Then
-				assert.equal($label.html(), 'Text 2');
-			});
-
-			it('Setting property: Enabled', function () {
-				//Given
-				var $el = indeterminateCheckBox.render(),
-					$input = $('input', $el);
-
-				assert.equal($input.prop('disabled'), false, 'Enabled by default');
-
-				//When
-				indeterminateCheckBox.setEnabled(false);
-
-				//Then
-				assert.equal($input.prop('disabled'), true, 'Disable element');
-			});
-
-			it('Setting property: indeterminate', function () {
-				//Given
-				var $el = indeterminateCheckBox.render(),
-					$input = $('input', $el);
-
-				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
-
-				//When
-				indeterminateCheckBox.setValue('indeterminate');
-
-				//Then
-				assert.equal($input.prop('indeterminate'), true, 'Indeterminate state for indeterminateCheckBox');
-			});
-
-		});
-
-		describe('events', function () {
-			it('Change value on click', function () {
-				//Given
-				var $el = indeterminateCheckBox.render(),
-					$input = $('input', $el);
-
-				indeterminateCheckBox.setValue('unchecked');
-
-				//When
-				$input.click();
-
-				//Then
-				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
-				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
-				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
-
-				//When
-				$input.click();
-
-				//Then
-				assert.equal(indeterminateCheckBox.getValue(), 'unchecked', 'value changed');
-				assert.equal($input.prop('checked'), false, 'indeterminateCheckBox checked');
-				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
-
-				//When
-				$input.click();
-
-				//Then
-				assert.equal(indeterminateCheckBox.getValue(), 'checked', 'value changed');
-				assert.equal($input.prop('checked'), true, 'indeterminateCheckBox checked');
-				assert.equal($input.prop('indeterminate'), false, 'Indeterminate state by default');
-			});
-		});
-
-	});
-
 });
 
 describe('PanelControl', function () {
@@ -8889,67 +9003,6 @@ describe('TabPanelControl', function () {
         });
     });
 });
-describe('TextEditorBase (Control)', function () {
-    describe('Textbox as exemplar of TextEditorBase', function () {
-        var metadata_1 = {
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "2.2222" },
-                            { "Id": 2, "Display": "3.2222" },
-                            { "Id": 3, "Display": "4.2222" }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                "TextBox": {
-                    "Name": "TextBox1",
-                    "Value": {
-                        "Source": "ObjectDataSource1",
-                        "Property": "$.Display"
-                    },
-                    "DisplayFormat": {
-                        "NumberFormat": {
-                            "Format": "n2"
-                        }
-                    },
-                    "EditMask": {
-                        "NumberEditMask": {
-                            "Mask": "n3"
-                        }
-                    }
-                }
-            }]
-        };
-
-        it('metadata', function () {
-            // Given
-            var metadata = metadata_1;
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout){
-
-                var $input = $layout.find('.pl-text-box-input');
-
-                assert.equal($input.val(), '2,22', 'binding and formatting is right');
-
-                $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
-                assert.equal($input.val(), '2,222', 'mask is right');
-
-                $layout.detach();
-            }
-        });
-
-    });
-
-});
 describe('TextBoxControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -9184,6 +9237,67 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('TextEditorBase (Control)', function () {
+    describe('Textbox as exemplar of TextEditorBase', function () {
+        var metadata_1 = {
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 1, "Display": "2.2222" },
+                            { "Id": 2, "Display": "3.2222" },
+                            { "Id": 3, "Display": "4.2222" }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                "TextBox": {
+                    "Name": "TextBox1",
+                    "Value": {
+                        "Source": "ObjectDataSource1",
+                        "Property": "$.Display"
+                    },
+                    "DisplayFormat": {
+                        "NumberFormat": {
+                            "Format": "n2"
+                        }
+                    },
+                    "EditMask": {
+                        "NumberEditMask": {
+                            "Mask": "n3"
+                        }
+                    }
+                }
+            }]
+        };
+
+        it('metadata', function () {
+            // Given
+            var metadata = metadata_1;
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                var $input = $layout.find('.pl-text-box-input');
+
+                assert.equal($input.val(), '2,22', 'binding and formatting is right');
+
+                $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
+                assert.equal($input.val(), '2,222', 'mask is right');
+
+                $layout.detach();
+            }
+        });
+
+    });
+
+});
 describe('ToolBarControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder()
@@ -12949,219 +13063,6 @@ describe('FrameBuilder', function () {
     });
 });
 
-describe('Label', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('Label', {});
-
-        describe('Implementing Label Methods', function () {
-            ['getDisplayFormat', 'setDisplayFormat', 'getTextTrimming', 'setTextTrimming',
-                'getTextWrapping', 'setTextWrapping']
-                .forEach(function (methodName) {
-                    it(methodName, function () {
-                        testHelper.checkMethod(element, methodName);
-                    });
-
-                });
-        });
-
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
-
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
-
-    describe('Metadata', function () {
-
-        it('Using default value', function () {
-            var metadata = {
-                "Label": {}
-            };
-
-            var element = builder.build(metadata, {});
-
-            assert.equal(element.getTextTrimming(), true, 'TextTrimming');
-            assert.equal(element.getTextWrapping(), true, 'TextWrapping');
-
-            assert.equal(element.getVisible(), true, 'Visible');
-            assert.equal(element.getVerticalAlignment(), 'Top', 'VerticalAlignment');
-            assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
-            var displayFormat = element.getDisplayFormat();
-            var value = {};
-            assert.isTrue(displayFormat(null, {value: value}) === value, 'DisplayFormat');
-        });
-
-        it('Apply metadata', function () {
-            var metadata = {
-                "Label": {
-                    "TextWrapping": false,
-
-                    "Text": "Label",
-                    "LabelFloating": true,
-                    "DisplayFormat": "d",
-                    "HintText": "Hint",
-                    "ErrorText": "Error",
-                    "WarningText": "Warning",
-
-                    "Name": "Label1",
-                    "Enabled": false,
-                    "Visible": false,
-                    "VerticalAlignment": "Bottom",
-                    "HorizontalAlignment": "Right",
-                    "TextStyle": "Display4",
-                    "Foreground": "Primary1",
-                    "Background": "Accent1"
-                }
-            };
-
-            var element = builder.build(metadata, {});
-
-            assert.equal(element.getTextWrapping(), false, 'TextWrapping');
-            assert.isFunction(element.getDisplayFormat(), 'DisplayFormat');
-
-            assert.equal(element.getHintText(), "Hint", 'HintText');
-            assert.equal(element.getErrorText(), "Error", 'ErrorText');
-            assert.equal(element.getWarningText(), "Warning", 'WarningText');
-
-            assert.equal(element.getName(), "Label1", 'Name');
-            assert.equal(element.getText(), "Label", 'LabelText');
-            assert.equal(element.getEnabled(), false, 'Enabled');
-            assert.equal(element.getVisible(), false, 'Visible');
-            assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
-            assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
-            assert.equal(element.getForeground(), 'Primary1', 'Foreground');
-            assert.equal(element.getBackground(), 'Accent1', 'Background');
-
-        });
-
-        it('event OnValueChanged', function () {
-            // Given
-            var label = new InfinniUI.Label(),
-                onValueChangedFlag = 0;
-
-            label.render();
-
-            label.onValueChanged(function () {
-                onValueChangedFlag++;
-            });
-
-            assert.equal(onValueChangedFlag, 0);
-
-            // When
-            label.setValue('2014-07-29');
-            label.setValue('2014-07-30');
-
-            // Then
-            assert.equal(onValueChangedFlag, 2);
-        });
-
-    });
-});
-
-describe('LabelBuilder', function () {
-    describe('build', function () {
-        it('successful build Label', function () {
-            // Given
-
-            var metadata = {};
-
-            // When
-            var builder = new InfinniUI.LabelBuilder();
-            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
-
-            // Then
-            assert.isNotNull(element);
-            assert.isObject(element);
-        });
-
-        it('dataBinding should update display value', function () {
-            // Given
-
-            var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "ObjectDataSource",
-                            "IsLazy": false,
-                            "Items": []
-                        }
-                    }
-                ],
-                "Items": [{
-                    Label: {
-                        Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
-                        Value: {
-                            Source: "ObjectDataSource",
-                            Property: "$"
-                        }
-                    }
-                }]
-            };
-
-            testHelper.applyViewMetadata(metadata, function(view){
-                var label = view.context.controls["Label1"];
-                var ds = view.context.dataSources["ObjectDataSource"];
-
-                ds.createItem();
-
-                var item = ds.getSelectedItem();
-                item.property = "123";
-                ds.setProperty("$", { property: "123" });
-
-                assert.equal(label.getDisplayValue(), "некоторый текст 123");
-                assert.equal(label.control.controlView.$el.html(), "некоторый текст 123");
-
-                view.close();
-            });
-        });
-
-        it('dataBinding should update display value - 2', function () {
-            // Given
-
-            var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "ObjectDataSource",
-                            "IsLazy": false,
-                            "Items": [{
-                                property: "old"
-                            }]
-                        }
-                    }
-                ],
-                "Items": [{
-                    Label: {
-                        Name: "Label1",
-                        DisplayFormat: "некоторый текст {property}",
-                        Value: {
-                            Source: "ObjectDataSource",
-                            Property: "$"
-                        }
-                    }
-                }]
-            };
-
-            testHelper.applyViewMetadata(metadata, function(view){
-                var label = view.context.controls["Label1"];
-                var ds = view.context.dataSources["ObjectDataSource"];
-
-                ds.setProperty("$", { property: "new" });
-
-                assert.equal(label.getDisplayValue(), "некоторый текст new");
-                assert.equal(label.control.controlView.$el.html(), "некоторый текст new");
-
-                view.close();
-            });
-        });
-    });
-});
-
 describe('ImageBox', function () {
 
     function delay(min, max) {
@@ -13394,6 +13295,219 @@ describe('ImageBox', function () {
 //    });
 
 
+});
+
+describe('Label', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('Label', {});
+
+        describe('Implementing Label Methods', function () {
+            ['getDisplayFormat', 'setDisplayFormat', 'getTextTrimming', 'setTextTrimming',
+                'getTextWrapping', 'setTextWrapping']
+                .forEach(function (methodName) {
+                    it(methodName, function () {
+                        testHelper.checkMethod(element, methodName);
+                    });
+
+                });
+        });
+
+        describe('Implementing EditorBase Methods', function () {
+            testHelper.checkEditorBaseMethods(element);
+        });
+
+        describe('Implementing Element Methods', function () {
+            testHelper.checkElementMethods(element);
+        });
+    });
+
+    describe('Metadata', function () {
+
+        it('Using default value', function () {
+            var metadata = {
+                "Label": {}
+            };
+
+            var element = builder.build(metadata, {});
+
+            assert.equal(element.getTextTrimming(), true, 'TextTrimming');
+            assert.equal(element.getTextWrapping(), true, 'TextWrapping');
+
+            assert.equal(element.getVisible(), true, 'Visible');
+            assert.equal(element.getVerticalAlignment(), 'Top', 'VerticalAlignment');
+            assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
+            var displayFormat = element.getDisplayFormat();
+            var value = {};
+            assert.isTrue(displayFormat(null, {value: value}) === value, 'DisplayFormat');
+        });
+
+        it('Apply metadata', function () {
+            var metadata = {
+                "Label": {
+                    "TextWrapping": false,
+
+                    "Text": "Label",
+                    "LabelFloating": true,
+                    "DisplayFormat": "d",
+                    "HintText": "Hint",
+                    "ErrorText": "Error",
+                    "WarningText": "Warning",
+
+                    "Name": "Label1",
+                    "Enabled": false,
+                    "Visible": false,
+                    "VerticalAlignment": "Bottom",
+                    "HorizontalAlignment": "Right",
+                    "TextStyle": "Display4",
+                    "Foreground": "Primary1",
+                    "Background": "Accent1"
+                }
+            };
+
+            var element = builder.build(metadata, {});
+
+            assert.equal(element.getTextWrapping(), false, 'TextWrapping');
+            assert.isFunction(element.getDisplayFormat(), 'DisplayFormat');
+
+            assert.equal(element.getHintText(), "Hint", 'HintText');
+            assert.equal(element.getErrorText(), "Error", 'ErrorText');
+            assert.equal(element.getWarningText(), "Warning", 'WarningText');
+
+            assert.equal(element.getName(), "Label1", 'Name');
+            assert.equal(element.getText(), "Label", 'LabelText');
+            assert.equal(element.getEnabled(), false, 'Enabled');
+            assert.equal(element.getVisible(), false, 'Visible');
+            assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
+            assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
+            assert.equal(element.getForeground(), 'Primary1', 'Foreground');
+            assert.equal(element.getBackground(), 'Accent1', 'Background');
+
+        });
+
+        it('event OnValueChanged', function () {
+            // Given
+            var label = new InfinniUI.Label(),
+                onValueChangedFlag = 0;
+
+            label.render();
+
+            label.onValueChanged(function () {
+                onValueChangedFlag++;
+            });
+
+            assert.equal(onValueChangedFlag, 0);
+
+            // When
+            label.setValue('2014-07-29');
+            label.setValue('2014-07-30');
+
+            // Then
+            assert.equal(onValueChangedFlag, 2);
+        });
+
+    });
+});
+
+describe('LabelBuilder', function () {
+    describe('build', function () {
+        it('successful build Label', function () {
+            // Given
+
+            var metadata = {};
+
+            // When
+            var builder = new InfinniUI.LabelBuilder();
+            var element = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), view: new InfinniUI.View(), metadata: metadata});
+
+            // Then
+            assert.isNotNull(element);
+            assert.isObject(element);
+        });
+
+        it('dataBinding should update display value', function () {
+            // Given
+
+            var metadata = {
+                "DataSources": [
+                    {
+                        "ObjectDataSource": {
+                            "Name": "ObjectDataSource",
+                            "IsLazy": false,
+                            "Items": []
+                        }
+                    }
+                ],
+                "Items": [{
+                    Label: {
+                        Name: "Label1",
+                        DisplayFormat: "некоторый текст {property}",
+                        Value: {
+                            Source: "ObjectDataSource",
+                            Property: "$"
+                        }
+                    }
+                }]
+            };
+
+            testHelper.applyViewMetadata(metadata, function(view){
+                var label = view.context.controls["Label1"];
+                var ds = view.context.dataSources["ObjectDataSource"];
+
+                ds.createItem();
+
+                var item = ds.getSelectedItem();
+                item.property = "123";
+                ds.setProperty("$", { property: "123" });
+
+                assert.equal(label.getDisplayValue(), "некоторый текст 123");
+                assert.equal(label.control.controlView.$el.html(), "некоторый текст 123");
+
+                view.close();
+            });
+        });
+
+        it('dataBinding should update display value - 2', function () {
+            // Given
+
+            var metadata = {
+                "DataSources": [
+                    {
+                        "ObjectDataSource": {
+                            "Name": "ObjectDataSource",
+                            "IsLazy": false,
+                            "Items": [{
+                                property: "old"
+                            }]
+                        }
+                    }
+                ],
+                "Items": [{
+                    Label: {
+                        Name: "Label1",
+                        DisplayFormat: "некоторый текст {property}",
+                        Value: {
+                            Source: "ObjectDataSource",
+                            Property: "$"
+                        }
+                    }
+                }]
+            };
+
+            testHelper.applyViewMetadata(metadata, function(view){
+                var label = view.context.controls["Label1"];
+                var ds = view.context.dataSources["ObjectDataSource"];
+
+                ds.setProperty("$", { property: "new" });
+
+                assert.equal(label.getDisplayValue(), "некоторый текст new");
+                assert.equal(label.control.controlView.$el.html(), "некоторый текст new");
+
+                view.close();
+            });
+        });
+    });
 });
 
 describe('ListBox', function () {

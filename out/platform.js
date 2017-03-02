@@ -4110,12 +4110,16 @@ window.messageTypes = {
     onChangeLayout: {name: 'OnChangeLayout'},
     onNotifyUser: {name: 'onNotifyUser'},
     onToolTip: {name: 'onToolTip'},
+    onRemove: {name: 'onRemove'},
 
     onContextMenu: {name: 'onContextMenu'},
     onOpenContextMenu: {name: 'onOpenContextMenu'},
 
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'}
+    onDataLoaded: {name: 'onDataLoaded'},
+
+    onToolTipDestroy: {name: 'onToolTipDestroy'},
+    onToolTipInit: {name: 'onToolTipInit'}
 
 };
 
@@ -4358,6 +4362,10 @@ _.extend(Control.prototype, {
 
     onKeyUp: function (handler) {
         this.controlView.$el.on('keyup', handler);
+    },
+
+    onRemove: function( handler ) {
+        this.controlView.on(messageTypes.onRemove.name, handler);
     },
 
     remove: function () {
@@ -4727,6 +4735,11 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         if (triggeringOnLoaded) {
             this.trigger('onLoaded');
         }
+    },
+
+    remove: function () {
+        this.trigger(messageTypes.onRemove.name);
+        Backbone.View.prototype.remove.apply(this, Array.prototype.slice.call(arguments));
     },
 
     switchClass: function (name, value, $el, separator) {
@@ -13158,131 +13171,6 @@ var TabPanelView = ContainerView.extend(/** @lends TabPanelView.prototype */ {
 
 });
 
-//####app\controls\tabPanel\tabPage\tabPageControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments ContainerControl
- */
-function TabPageControl(parent) {
-    _.superClass(TabPageControl, this, parent);
-}
-
-_.inherit(TabPageControl, ContainerControl);
-
-_.extend(TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
-
-
-    createControlModel: function () {
-        return new TabPageModel();
-    },
-
-    createControlView: function (model) {
-        return new TabPageView({model: model});
-    }
-
-
-});
-
-
-//####app\controls\tabPanel\tabPage\tabPageModel.js
-/**
- * @constructor
- * @augments ContainerModel
- */
-var TabPageModel = ContainerModel.extend(/** @lends TabPageModel.prototype */ {
-
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-    },
-
-    defaults: _.defaults(
-        {
-            canClose: false,
-            selected: false
-        },
-        ContainerModel.prototype.defaults
-    )
-
-});
-//####app\controls\tabPanel\tabPage\tabPageView.js
-/**
- * @class
- * @augments ControlView
- */
-var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
-
-    className: 'pl-tabpage hidden',
-
-    template: InfinniUI.Template["controls/tabPanel/tabPage/template/tabPage.tpl.html"],
-
-    UI: {
-
-    },
-
-    initHandlersForProperties: function () {
-        ContainerView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:selected', this.updateSelected);
-    },
-
-    updateProperties: function () {
-        ContainerView.prototype.updateProperties.call(this);
-        this.updateSelected();
-    },
-
-    render: function () {
-        this.prerenderingActions();
-
-        this.removeChildElements();
-
-        this.$el.html(this.template({
-            items: this.model.get('items')
-        }));
-        this.renderItemsContents();
-
-        this.bindUIElements();
-
-        this.postrenderingActions();
-
-        this.trigger('render');
-        this.updateProperties();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderItemsContents: function () {
-        var $items = this.$el.find('.pl-tabpage-i'),
-            items = this.model.get('items'),
-            itemTemplate = this.model.get('itemTemplate'),
-            that = this,
-            element, item;
-
-        $items.each(function (i, el) {
-            item = items.getByIndex(i);
-            element = itemTemplate(undefined, {item: item, index: i});
-            that.addChildElement(element);
-            $(el)
-                .append(element.render());
-        });
-    },
-
-    updateSelected: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('hidden', !selected);
-    },
-
-    /**
-     * @protected
-     */
-    updateGrouping: function () {
-
-    }
-
-});
-
 //####app\controls\tabPanel\tabHeader\tabHeaderView.js
 var TabHeaderModel = Backbone.Model.extend({
 
@@ -13417,6 +13305,131 @@ var TabHeaderView = Backbone.View.extend({
 });
 
 _.extend(TabHeaderView.prototype, bindUIElementsMixin);
+
+//####app\controls\tabPanel\tabPage\tabPageControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments ContainerControl
+ */
+function TabPageControl(parent) {
+    _.superClass(TabPageControl, this, parent);
+}
+
+_.inherit(TabPageControl, ContainerControl);
+
+_.extend(TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
+
+
+    createControlModel: function () {
+        return new TabPageModel();
+    },
+
+    createControlView: function (model) {
+        return new TabPageView({model: model});
+    }
+
+
+});
+
+
+//####app\controls\tabPanel\tabPage\tabPageModel.js
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
+var TabPageModel = ContainerModel.extend(/** @lends TabPageModel.prototype */ {
+
+    initialize: function () {
+        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    },
+
+    defaults: _.defaults(
+        {
+            canClose: false,
+            selected: false
+        },
+        ContainerModel.prototype.defaults
+    )
+
+});
+//####app\controls\tabPanel\tabPage\tabPageView.js
+/**
+ * @class
+ * @augments ControlView
+ */
+var TabPageView = ContainerView.extend(/** @lends TabPageView.prototype */ {
+
+    className: 'pl-tabpage hidden',
+
+    template: InfinniUI.Template["controls/tabPanel/tabPage/template/tabPage.tpl.html"],
+
+    UI: {
+
+    },
+
+    initHandlersForProperties: function () {
+        ContainerView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:selected', this.updateSelected);
+    },
+
+    updateProperties: function () {
+        ContainerView.prototype.updateProperties.call(this);
+        this.updateSelected();
+    },
+
+    render: function () {
+        this.prerenderingActions();
+
+        this.removeChildElements();
+
+        this.$el.html(this.template({
+            items: this.model.get('items')
+        }));
+        this.renderItemsContents();
+
+        this.bindUIElements();
+
+        this.postrenderingActions();
+
+        this.trigger('render');
+        this.updateProperties();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderItemsContents: function () {
+        var $items = this.$el.find('.pl-tabpage-i'),
+            items = this.model.get('items'),
+            itemTemplate = this.model.get('itemTemplate'),
+            that = this,
+            element, item;
+
+        $items.each(function (i, el) {
+            item = items.getByIndex(i);
+            element = itemTemplate(undefined, {item: item, index: i});
+            that.addChildElement(element);
+            $(el)
+                .append(element.render());
+        });
+    },
+
+    updateSelected: function () {
+        var selected = this.model.get('selected');
+        this.$el.toggleClass('hidden', !selected);
+    },
+
+    /**
+     * @protected
+     */
+    updateGrouping: function () {
+
+    }
+
+});
 
 //####app\controls\treeView\treeViewControl.js
 function TreeViewControl() {
@@ -15528,7 +15541,8 @@ var GridPanelView = ContainerView.extend(
 
         renderRow: function (row) {
             var view = this;
-            var $row = $(this.template.row());
+            // var $row = $(this.template.row());
+            var $row = $('<div class="pl-clearfix"></div>');
             $row.append(row.map(function(element) {
                 view.addChildElement(element);
                 return element.render();
@@ -17262,6 +17276,71 @@ var ToolBarView = ContainerView.extend({
     },
 
     updateGrouping: function(){}
+});
+
+//####app\controls\tooltip\tooltipControl.js
+var TooltipControl = function () {
+    _.superClass(TooltipControl, this);
+};
+
+_.inherit(TooltipControl, Control);
+
+_.extend(TooltipControl.prototype, {
+
+    createControlModel: function(  ) {
+        return new InfinniUI.TooltipModel();
+    },
+
+    createControlView: function( model ) {
+        return new InfinniUI.TooltipView({model: model});
+    }
+
+});
+
+InfinniUI.TooltipControl = TooltipControl;
+//####app\controls\tooltip\tooltipModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+InfinniUI.TooltipModel = ControlModel.extend( {
+
+
+} );
+
+//####app\controls\tooltip\tooltipView.js
+InfinniUI.TooltipView = ControlView.extend({
+
+    render: function(){
+        this.prerenderingActions();
+        this.renderContent();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    initHandlersForProperties: function(  ) {
+        ControlView.prototype.initHandlersForProperties.apply(this, Array.prototype.slice.call(arguments));
+
+        this.listenTo(this.model, 'change:content', this.updateContent);
+    },
+
+    updateContent: function(  ) {
+        this.renderContent();
+    },
+
+    /**
+     * @protected
+     */
+    renderContent: function() {
+        var model = this.model;
+        var content = model.get('content');
+        this.$el.html(content.render());
+    }
+
 });
 
 //####app\controls\view\viewControl.js
@@ -20015,7 +20094,12 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
+    onRemove: function( handler ) {
+        return this.control.onRemove(this.createControlEventHandler(this, handler));
+    },
+
     remove: function (isInitiatedByParent, parent) {
+
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -20076,6 +20160,7 @@ _.extend(Element.prototype, {
         }
 
         return function (message) {
+            message = message || {};
             _.extend(
                 message,
                 additionParams
@@ -20370,28 +20455,17 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	},
 
 	initToolTip: function (params) {
-		var exchange = window.InfinniUI.global.messageBus,
-				builder = params.builder,
-				element = params.element,
-				metadata = params.metadata,
-				tooltip;
+		var builder = params.builder,
+			element = params.element,
+			metadata = params.metadata;
 
-		var argumentForBuilder = {
+		var tooltipBuilderParams = {
+            basePathOfProperty: params.basePathOfProperty,
 			parent: element,
-			parentView: params.parentView,
-			basePathOfProperty: params.basePathOfProperty
+			parentView: params.parentView
 		};
 
-		if (typeof metadata.ToolTip === 'string') {
-			tooltip = builder.buildType("Label", {
-				"Text": metadata.ToolTip
-			}, argumentForBuilder);
-		} else {
-			tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
-		}
-
-		element.setToolTip(tooltip);
-		exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+		element.setToolTip(builder.buildType('ToolTip', metadata['ToolTip'], tooltipBuilderParams));
 	},
 
 	initContextMenu: function(params) {
@@ -21345,22 +21419,10 @@ var editorBaseBuilderMixin = {
                 var result = args.value,
                     text = '';
 
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
+                if (!result.IsValid && Array.isArray(result.Items)) {
+                    text = getTextForItems(result.Items);
                 }
                 element.setErrorText(text);
-            });
-        }
-
-        if (typeof source.onWarningValidator == 'function') {
-            source.onWarningValidator(function (context, args) {
-                var result = args.value,
-                    text = '';
-
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
-                }
-                element.setWarningText(text);
             });
         }
 
@@ -21368,10 +21430,10 @@ var editorBaseBuilderMixin = {
         function getTextForItems(items, callback) {
             return items
                 .filter(function (item) {
-                    return property === item.property;
+                    return property === item.Property;
                 })
                 .map(function (item) {
-                    return item.message;
+                    return item.Message;
                 })
                 .join(' ');
         }
@@ -22867,53 +22929,6 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     }
 });
 
-//####app\elements\contextMenu\contextMenu.js
-/**
- * @class
- * @constructor
- * @arguments Container
- */
-function ContextMenu(parent) {
-    _.superClass(ContextMenu, this, parent);
-}
-
-window.InfinniUI.ContextMenu = ContextMenu;
-
-_.inherit(ContextMenu, Container);
-
-_.extend(ContextMenu.prototype, {
-
-    createControl: function () {
-        return new ContextMenuControl();
-    }
-
-});
-
-//####app\elements\contextMenu\contextMenuBuilder.js
-/**
- * @constructor
- * @arguments ContainerBuilder
- */
-function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
-}
-
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
-
-_.inherit(ContextMenuBuilder, ContainerBuilder);
-
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
-
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
-
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
-
-});
-
 //####app\elements\dataGrid\dataGrid.js
 function DataGrid(parent) {
     _.superClass(DataGrid, this, parent);
@@ -23537,6 +23552,53 @@ DataGridColumnBuilder.prototype.buildHeaderTemplateByDefault = function (params)
     };
 
 };
+
+//####app\elements\contextMenu\contextMenu.js
+/**
+ * @class
+ * @constructor
+ * @arguments Container
+ */
+function ContextMenu(parent) {
+    _.superClass(ContextMenu, this, parent);
+}
+
+window.InfinniUI.ContextMenu = ContextMenu;
+
+_.inherit(ContextMenu, Container);
+
+_.extend(ContextMenu.prototype, {
+
+    createControl: function () {
+        return new ContextMenuControl();
+    }
+
+});
+
+//####app\elements\contextMenu\contextMenuBuilder.js
+/**
+ * @constructor
+ * @arguments ContainerBuilder
+ */
+function ContextMenuBuilder() {
+	_.superClass(ContextMenuBuilder, this);
+}
+
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
+_.inherit(ContextMenuBuilder, ContainerBuilder);
+
+_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+
+	createElement: function (params) {
+		return new ContextMenu(params.parent);
+	},
+
+	applyMetadata: function (params) {
+		ContainerBuilder.prototype.applyMetadata.call(this, params);
+	}
+
+});
 
 //####app\elements\dataNavigation\dataNavigation.js
 function DataNavigation (parent) {
@@ -25860,6 +25922,114 @@ _.extend(ToolBarBuilder.prototype, /** @lends ToolBarBuilder.prototype */{
 
 });
 
+//####app\elements\tooltip\tooltip.js
+var Tooltip = function (parent) {
+    _.superClass( Icon, this, parent );
+};
+
+_.inherit(Tooltip, Element);
+
+
+_.extend(Tooltip.prototype, {
+
+    createControl: function () {
+        return new InfinniUI.TooltipControl();
+    },
+
+    setContent: function (content) {
+        this.control.set('content', content);
+    }
+
+
+});
+
+
+InfinniUI.Tooltip = Tooltip;
+
+//####app\elements\tooltip\tooltipBuilder.js
+function TooltipBuilder() {
+    _.superClass( TooltipBuilder, this );
+}
+
+InfinniUI.TooltipBuilder = TooltipBuilder;
+
+_.inherit( TooltipBuilder, ElementBuilder );
+
+_.extend( TooltipBuilder.prototype, {
+
+    createElement: function( params ) {
+        return new InfinniUI.Tooltip();
+    },
+
+    normalizeMetadata: function( metadata ) {
+        if( typeof metadata === 'string' ) {
+            metadata = {
+                Text: metadata
+            }
+        }
+
+        return metadata;
+    },
+
+    applyMetadata: function( params ) {
+        var tooltip = params.element;
+
+        params.metadata = this.normalizeMetadata( params.metadata );
+
+        ElementBuilder.prototype.applyMetadata.call( this, params );
+        tooltip.setContent( this.buildContent( params.metadata, params ) );
+
+        var exchange = InfinniUI.global.messageBus;
+
+        exchange.send(messageTypes.onToolTipInit, {element: params.parent, content: tooltip});
+        params.parent.onRemove(function () {
+            exchange.send(messageTypes.onToolTipDestroy, {element: params.parent});
+        });
+
+    },
+
+    buildContent: function( metadata, params ) {
+        var builder = params.builder;
+        var builderParams = {
+            parent: params.element,
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
+        var content;
+
+        if( 'Text' in metadata ) {
+            content = this.buildTextContent( metadata[ 'Text' ], builder, builderParams );
+        } else {
+            content = this.buildElementContent( metadata, builder, builderParams );
+        }
+
+        return content;
+    },
+
+    /**
+     * @protected
+     * @param text
+     * @param builder
+     * @param builderParams
+     * @return {*}
+     */
+    buildTextContent: function( text, builder, builderParams ) {
+        return builder.buildType( "Label", {
+            "Text": text
+        }, builderParams )
+    },
+
+    /**
+     * @protected
+     * @param metadata
+     * @param builder
+     * @param builderParams
+     */
+    buildElementContent: function( metadata, builder, builderParams ) {
+        return builder.build( metadata, builderParams );
+    }
+
+} );
 //####app\elements\treeView\treeView.js
 /**
  * @param parent
@@ -27074,6 +27244,67 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
 });
 
+//####app\actions\_base\baseAction\baseAction.js
+function BaseAction(parentView){
+    this.parentView = parentView;
+    this._properties = Object.create(null);
+    _.defaults(this._properties, this.defaults);
+    this.initDefaultValues();
+}
+
+window.InfinniUI.BaseAction = BaseAction;
+
+_.extend(BaseAction.prototype, {
+    defaults: {
+
+    },
+
+    setProperty: function(name, value){
+        var props= this._properties;
+        if (props[name] !== value) {
+            props[name] = value;
+            this.trigger('change:' + name, this, value);
+        }
+    },
+
+    getProperty: function(name){
+        return this._properties[name];
+    },
+
+    initDefaultValues: function () {
+
+    },
+
+    onExecutedHandler: function(args) {
+        var onExecutedHandler = this.getProperty('onExecutedHandler');
+
+        if(_.isFunction(onExecutedHandler)) {
+            onExecutedHandler(args);
+        }
+    }
+
+}, Backbone.Events);
+
+InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
+    var builder = new ApplicationBuilder();
+
+    var action = builder.build( executeActionMetadata, {parentView: context.view});
+
+    action.execute(resultCallback);
+};
+
+//####app\actions\_base\baseAction\baseActionBuilderMixin.js
+var BaseActionBuilderMixin = {
+    applyBaseActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnExecuted' in metadata) {
+            action.setProperty('onExecutedHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
+            });
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27167,67 +27398,6 @@ var BaseEditActionBuilderMixin = {
                 metadata.DestinationValue.Property;
 
             action.setProperty('destinationProperty', destinationProperty);
-        }
-    }
-};
-//####app\actions\_base\baseAction\baseAction.js
-function BaseAction(parentView){
-    this.parentView = parentView;
-    this._properties = Object.create(null);
-    _.defaults(this._properties, this.defaults);
-    this.initDefaultValues();
-}
-
-window.InfinniUI.BaseAction = BaseAction;
-
-_.extend(BaseAction.prototype, {
-    defaults: {
-
-    },
-
-    setProperty: function(name, value){
-        var props= this._properties;
-        if (props[name] !== value) {
-            props[name] = value;
-            this.trigger('change:' + name, this, value);
-        }
-    },
-
-    getProperty: function(name){
-        return this._properties[name];
-    },
-
-    initDefaultValues: function () {
-
-    },
-
-    onExecutedHandler: function(args) {
-        var onExecutedHandler = this.getProperty('onExecutedHandler');
-
-        if(_.isFunction(onExecutedHandler)) {
-            onExecutedHandler(args);
-        }
-    }
-
-}, Backbone.Events);
-
-InfinniUI.global.executeAction = function (context, executeActionMetadata, resultCallback) {
-    var builder = new ApplicationBuilder();
-
-    var action = builder.build( executeActionMetadata, {parentView: context.view});
-
-    action.execute(resultCallback);
-};
-
-//####app\actions\_base\baseAction\baseActionBuilderMixin.js
-var BaseActionBuilderMixin = {
-    applyBaseActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
         }
     }
 };
@@ -28521,6 +28691,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Divider', new DividerBuilder());
         builder.register('ContextMenu', new ContextMenuBuilder());
 
+        builder.register('ToolTip', new InfinniUI.TooltipBuilder());
+
 
         var registerQueue = ApplicationBuilder.registerQueue;
         for(var i = 0, ii = registerQueue.length; i<ii; i++){
@@ -29151,12 +29323,9 @@ _.extend(ObjectDataProvider.prototype, {
         resultCallback(item);
     },
 
-    saveItem: function (item, resultCallback) {
+    saveItem: function (item, successCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
         if (itemIndex == -1) {
             items.push(item);
@@ -29164,24 +29333,31 @@ _.extend(ObjectDataProvider.prototype, {
             items[itemIndex] = item;
         }
 
-        resultCallback(result);
+        successCallback( {} );
     },
 
-    deleteItem: function (item, resultCallback) {
+    deleteItem: function (item, successCallback, errorCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
-        if (itemIndex == -1) {
-            result.isValid = false;
-            result.message = 'Удаляемый элемент не найден';
-        } else {
+        if (itemIndex != -1) {
             items.splice(itemIndex, 1);
+            successCallback( {} );
+        } else {
+            errorCallback({
+                data: {
+                    Result: {
+                        ValidationResult: {
+                            IsValid: false,
+                            Items: [{
+                                Property: '',
+                                Message: 'Удаляемый элемент не найден'
+                            }]
+                        }
+                    }
+                }
+            });
         }
-
-        resultCallback(result);
     },
 
     createIdFilter: function (id) {
@@ -34977,29 +35153,6 @@ InfinniUI.NotifyService = (function () {
 
     });
 })();
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\ajaxLoaderIndicator\ajaxLoaderIndicator.js
 var AjaxLoaderIndicator = function ($target, config) {
     var defaults = {
@@ -35077,6 +35230,29 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -35319,28 +35495,60 @@ var routerService = (function(myRoutes) {
 window.InfinniUI.RouterService = routerService;
 
 //####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
+InfinniUI.ToolTipService = (function() {
 
-	var exchange = window.InfinniUI.global.messageBus;
+    var TOOLTIP_PLACEMENT = 'auto top';
+    var TOOLTIP_CONTAINER = 'body';
+    var TOOLTIP_TRIGGER = 'hover';
 
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
+    var exchange = window.InfinniUI.global.messageBus;
 
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
+    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
+
+    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
+
+    function destroyToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        $element.tooltip( 'destroy' );
+    }
+
+    function initToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var content = extractContentFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        var options = {
+            html: true,
+            title: function() {
+                return content.render();
+            },
+            placement: TOOLTIP_PLACEMENT,
+            container: TOOLTIP_CONTAINER,
+            trigger: TOOLTIP_TRIGGER
+        };
+
+        $element.tooltip( options );
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractContentFromArgs( args ) {
+        return args.value.content;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractElementFromArgs( args ) {
+        return args.value.element;
+    }
+
 })();
 })();

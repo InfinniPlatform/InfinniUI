@@ -100,6 +100,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Divider', new DividerBuilder());
         builder.register('ContextMenu', new ContextMenuBuilder());
 
+        builder.register('ToolTip', new InfinniUI.TooltipBuilder());
+
 
         var registerQueue = ApplicationBuilder.registerQueue;
         for(var i = 0, ii = registerQueue.length; i<ii; i++){
