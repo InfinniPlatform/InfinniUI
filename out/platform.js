@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.1.57';
+InfinniUI.VERSION = '2.1.58';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -15709,7 +15709,8 @@ var GridPanelView = ContainerView.extend(
 
         renderRow: function (row) {
             var view = this;
-            var $row = $(this.template.row());
+            // var $row = $(this.template.row());
+            var $row = $('<div class="pl-clearfix"></div>');
             $row.append(row.map(function(element) {
                 view.addChildElement(element);
                 return element.render();
@@ -21484,22 +21485,10 @@ var editorBaseBuilderMixin = {
                 var result = args.value,
                     text = '';
 
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
+                if (!result.IsValid && Array.isArray(result.Items)) {
+                    text = getTextForItems(result.Items);
                 }
                 element.setErrorText(text);
-            });
-        }
-
-        if (typeof source.onWarningValidator == 'function') {
-            source.onWarningValidator(function (context, args) {
-                var result = args.value,
-                    text = '';
-
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
-                }
-                element.setWarningText(text);
             });
         }
 
@@ -21507,10 +21496,10 @@ var editorBaseBuilderMixin = {
         function getTextForItems(items, callback) {
             return items
                 .filter(function (item) {
-                    return property === item.property;
+                    return property === item.Property;
                 })
                 .map(function (item) {
-                    return item.message;
+                    return item.Message;
                 })
                 .join(' ');
         }
@@ -24320,6 +24309,58 @@ _.extend(FrameBuilder.prototype, {
     editorBaseBuilderMixin
 );
 
+//####app\elements\icon\icon.js
+function Icon(parent) {
+    _.superClass(Icon, this, parent);
+}
+
+window.InfinniUI.Icon = Icon;
+
+_.inherit(Icon, Element);
+
+_.extend(Icon.prototype, {
+
+    createControl: function () {
+        return new IconControl();
+    },
+
+    setValue: function(value){
+        this.control.set('value', value);
+    },
+
+    getValue: function(){
+        return this.control.get('value');
+    },
+
+    onValueChanged: function(){}
+
+});
+
+//####app\elements\icon\iconBuilder.js
+function IconBuilder() {
+    _.superClass(ButtonBuilder, this);
+}
+
+window.InfinniUI.IconBuilder = IconBuilder;
+
+_.inherit(IconBuilder, ElementBuilder);
+
+_.extend(IconBuilder.prototype, {
+
+    createElement: function (params) {
+        return new Icon(params.parent);
+    },
+
+    applyMetadata: function (params) {
+        ElementBuilder.prototype.applyMetadata.call(this, params);
+
+        var metadata = params.metadata;
+
+        this.initBindingToProperty(params, 'Value');
+    }
+
+});
+
 //####app\elements\gridPanel\gridPanel.js
 /**
  * @param parent
@@ -24374,58 +24415,6 @@ _.extend(GridPanelBuilder.prototype,
         }
 
     });
-
-//####app\elements\icon\icon.js
-function Icon(parent) {
-    _.superClass(Icon, this, parent);
-}
-
-window.InfinniUI.Icon = Icon;
-
-_.inherit(Icon, Element);
-
-_.extend(Icon.prototype, {
-
-    createControl: function () {
-        return new IconControl();
-    },
-
-    setValue: function(value){
-        this.control.set('value', value);
-    },
-
-    getValue: function(){
-        return this.control.get('value');
-    },
-
-    onValueChanged: function(){}
-
-});
-
-//####app\elements\icon\iconBuilder.js
-function IconBuilder() {
-    _.superClass(ButtonBuilder, this);
-}
-
-window.InfinniUI.IconBuilder = IconBuilder;
-
-_.inherit(IconBuilder, ElementBuilder);
-
-_.extend(IconBuilder.prototype, {
-
-    createElement: function (params) {
-        return new Icon(params.parent);
-    },
-
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
-
-        var metadata = params.metadata;
-
-        this.initBindingToProperty(params, 'Value');
-    }
-
-});
 
 //####app\elements\imageBox\imageBox.js
 /**
@@ -29215,12 +29204,9 @@ _.extend(ObjectDataProvider.prototype, {
         resultCallback(item);
     },
 
-    saveItem: function (item, resultCallback) {
+    saveItem: function (item, successCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
         if (itemIndex == -1) {
             items.push(item);
@@ -29228,24 +29214,31 @@ _.extend(ObjectDataProvider.prototype, {
             items[itemIndex] = item;
         }
 
-        resultCallback(result);
+        successCallback( {} );
     },
 
-    deleteItem: function (item, resultCallback) {
+    deleteItem: function (item, successCallback, errorCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
-        if (itemIndex == -1) {
-            result.isValid = false;
-            result.message = 'Удаляемый элемент не найден';
-        } else {
+        if (itemIndex != -1) {
             items.splice(itemIndex, 1);
+            successCallback( {} );
+        } else {
+            errorCallback({
+                data: {
+                    Result: {
+                        ValidationResult: {
+                            IsValid: false,
+                            Items: [{
+                                Property: '',
+                                Message: 'Удаляемый элемент не найден'
+                            }]
+                        }
+                    }
+                }
+            });
         }
-
-        resultCallback(result);
     },
 
     createIdFilter: function (id) {
