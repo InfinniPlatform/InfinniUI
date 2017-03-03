@@ -59,6 +59,10 @@ var IconView = ControlView.extend({
 
     updateValue: function () {
         this.renderIcon();
+    },
+
+    updateTextStyle: function () {
+        // do nothing, because icon don't have text
     }
 
 });
