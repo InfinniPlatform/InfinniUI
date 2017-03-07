@@ -453,10 +453,10 @@ describe("Collection", function () {
 
             handlers.reset();
             changed = collection.reset(['C', 'D']);
-            assert.isFalse(changed, 'Not changed on step 3');
+            assert.isTrue(changed, 'Changed on step 3');
             assert.equal(String(collection), '"C","D"');
-            assert.isFalse(handlers.checkEvent('onReset'), 'onReset event');
-            assert.isFalse(handlers.checkEvent('onChange'), 'onChange event');
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should reset objects", function () {

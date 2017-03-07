@@ -222,14 +222,10 @@ Collection.prototype.reset = function (newItems) {
         return false;
     }
 
-    changed = this._items.length !== newItems.length;
+    changed = this._items !== newItems;
 
     items = newItems.map(function (value, index) {
-        if (!changed) {
-            changed = !this.isEqual(value, this.getCollectionItemValue(index));
-        }
         return this.createCollectionItem(value, index);
-
     }, this);
 
     this._items.length = 0;
@@ -254,7 +250,7 @@ Collection.prototype.set = function (newItems, silent) {
         return false;
     }
 
-    var changed = items.length !== newItems.length;
+    var changed = this._items !== newItems;;
     var _newItems = newItems.slice();
     var matched, i = 0;
     var itemValue, newValue = null, newValueIndex;
@@ -263,10 +259,6 @@ Collection.prototype.set = function (newItems, silent) {
 
     _newItems.forEach(function(newItem, index){
         if (index < items.length) {
-            //Изменение элементов
-            if (!changed) {
-                changed = !this.isEqual(this.getCollectionItemValue(index), _newItems[index]);
-            }
             if (changed) {
                 this.updateCollectionItem(items[index], newItem);
             }
