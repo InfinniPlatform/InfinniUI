@@ -17,10 +17,12 @@ window.InfinniUI.Metadata = window.InfinniUI.Metadata || {};
 
 window.InfinniUI.localizations = window.InfinniUI.localizations || {
     'ru-RU': {
-        caption: 'Русский'
+        caption: 'Русский',
+        name: 'ru-RU'
     },
     'en-US': {
-        caption: 'English'
+        caption: 'English',
+        name: 'en-US'
     }
 };
 
@@ -126,17 +128,6 @@ _.defaults( InfinniUI.config, {
 
 InfinniUI.VERSION = '2.2.8';
 
-//####app\localizations\culture.js
-function Culture(name){
-    this.name = name;
-    this.caption = InfinniUI.localizations[name].caption;
-    this.dateTimeFormatInfo = InfinniUI.localizations[name].dateTimeFormatInfo;
-    this.numberFormatInfo = InfinniUI.localizations[name].numberFormatInfo;
-}
-
-window.InfinniUI.global.culture = new Culture(InfinniUI.config.lang);
-window.InfinniUI.Culture = Culture;
-
 //####app\localizations\dateTimeFormatInfo.js
 InfinniUI.localizations['ru-RU'].dateTimeFormatInfo = {
     monthNames: [ "Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь" ],
@@ -162,7 +153,7 @@ InfinniUI.localizations['en-US'].dateTimeFormatInfo = {
     firstDayOfWeek: 0
 };
 //####app\localizations\localized.js
-var localized = InfinniUI.localizations [InfinniUI.config.lang];
+var localized = InfinniUI.localizations[InfinniUI.config.lang];
 
 InfinniUI.localized = localized;
 //####app\localizations\numberFormatInfo.js
@@ -277,7 +268,7 @@ InfinniUI.localizations['ru-RU'].strings = {
         date: 'Дата'
     },
 
-    "DeleteAction": {
+    DeleteAction: {
         "warnMessage": "Вы уверены, что хотите удалить?",
         "warnMessageNoItem": "Вы не выбрали элемент который необходимо удалить",
         "agree": "Да",
@@ -304,7 +295,7 @@ InfinniUI.localizations['en-US'].strings = {
         date: 'Date'
     },
 
-    "DeleteAction": {
+    DeleteAction: {
         "warnMessage": "Are you sure to remove item?",
         "warnMessageNoItem": "Choose item that you want to remove",
         "agree": "Yes",
@@ -312,7 +303,6 @@ InfinniUI.localizations['en-US'].strings = {
         "cancel": "Close"
     }
 };
-
 //####app\messaging\messageBus.js
 function MessageBus(view) {
     var subscriptions = {};
@@ -370,12 +360,16 @@ window.messageTypes = {
     onChangeLayout: {name: 'OnChangeLayout'},
     onNotifyUser: {name: 'onNotifyUser'},
     onToolTip: {name: 'onToolTip'},
+    onRemove: {name: 'onRemove'},
 
     onContextMenu: {name: 'onContextMenu'},
     onOpenContextMenu: {name: 'onOpenContextMenu'},
 
     onDataLoading: {name: 'onDataLoading'},
-    onDataLoaded: {name: 'onDataLoaded'}
+    onDataLoaded: {name: 'onDataLoaded'},
+
+    onToolTipDestroy: {name: 'onToolTipDestroy'},
+    onToolTipInit: {name: 'onToolTipInit'}
 
 };
 
@@ -1492,870 +1486,875 @@ window.InfinniUI.format.humanFileSize = function (size) {
 //####app\utils\filterItems.js
 var filterItems = (function() {
 
-	return function(items, filter) {
-		if( !filter ){
-			return items;
-		}
+    return function( items, filter ) {
+        if( !filter ) {
+            return items;
+        }
 
-		var itemsForFilter = JSON.parse(JSON.stringify(items)),
-				filterMethods = filterItems.filterMethods,
-				filterTree = filterItems.filterTreeBuilder.buildUpFilterTree(filter);
+        var itemsForFilter = JSON.parse( JSON.stringify( items ) ),
+            filterMethods = filterItems.filterMethods,
+            filterTree = filterItems.filterTreeBuilder.buildUpFilterTree( filter );
 
-		function stringToNum(value) {
-			if( typeof value === 'string' && !isNaN(value) ) {
-				value = +value;
-			}
-			return value;
-		}
-		function stringToNumAsString(value) {
-			if( typeof value === 'string' && value.slice(0, 1) === "'" ) {
-				value = value.slice(1, -1);
-			}
-			return value;
-		}
-		function stringToBoolean(value) {
-			if( value === 'true' ) {
-				value = true;
-			} else if( value === 'false' ) {
-				value = false;
-			} else if( value === 'null' ) {
-				value = null;
-			}
-			return value;
-		}
-		function stringToArr(value) {
-			if( typeof value === 'string' && value.search(/\[[\'a-zA-Z0-9,]+\]/) !== -1 ) {
-				value = value.slice(1, -1).split(',');
-				for( var i = 0, ii = value.length; i < ii; i += 1 ) {
-					if( value[i].slice(-1) === "'" ) {
-						value[i] = value[i].slice(1, -1);
-					}
-					value[i] = stringToBoolean( value[i] );
-					value[i] = stringToNum( value[i] );
-					value[i] = stringToNumAsString( value[i] );
-				}
-			}
-			return value;
-		}
-		function findContext(currentContext, currentFunc) {
-			if( currentFunc.functionName === 'match' ) {
-				currentContext = currentFunc.children[0].valueName;
-			}
-			return currentContext;
-		}
-		function filterExec(filterTree, items, context) { // filterTree is object, items is array
-			var tmpChild1, tmpChild2 = [];
-			// find context
-			context = findContext( context, filterTree );
-			for( var j = 0, jj = filterTree.children.length; j < jj; j += 1 ) {
-				// if any child is function
-				// call filterExec with children of this child
-				if( filterTree.children[j].type === 'function' ) {
-					tmpChild1 = filterTree.children[j];
+        function stringToNum( value ) {
+            if( typeof value === 'string' && !isNaN( value ) ) {
+                value = +value;
+            }
+            return value;
+        }
 
-					filterTree.children[j].valueName = filterExec(tmpChild1, items, context);
-					filterTree.children[j].newType = 'value';
-				}
-				if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
-					if( filterTree.children[j].type === 'value' ) {
-						filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
-						filterTree.children[j].valueName = stringToNumAsString( filterTree.children[j].valueName ); // check on Number as string
-						filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
-						filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
-					}
-					tmpChild2.push( filterTree.children[j].valueName );
-				}
-			}
-			return filterMethods[filterTree.functionName](tmpChild2, items, context); // tmpChild2 is array
-		}
-		return filterExec(filterTree, itemsForFilter);
-	};
-})(filterItems);
+        function stringToNumAsString( value ) {
+            if( typeof value === 'string' && value.slice( 0, 1 ) === "'" ) {
+                value = value.slice( 1, -1 );
+            }
+            return value;
+        }
+
+        function stringToBoolean( value ) {
+            if( value === 'true' ) {
+                value = true;
+            } else if( value === 'false' ) {
+                value = false;
+            } else if( value === 'null' ) {
+                value = null;
+            }
+            return value;
+        }
+
+        function stringToArr( value ) {
+            if( typeof value === 'string' && value.search( /\[[\'a-zA-Z0-9,]+\]/ ) !== -1 ) {
+                value = value.slice( 1, -1 ).split( ',' );
+                for( var i = 0, ii = value.length; i < ii; i += 1 ) {
+                    if( value[i].slice( -1 ) === "'" ) {
+                        value[i] = value[i].slice( 1, -1 );
+                    }
+                    value[i] = stringToBoolean( value[i] );
+                    value[i] = stringToNum( value[i] );
+                    value[i] = stringToNumAsString( value[i] );
+                }
+            }
+            return value;
+        }
+
+        function findContext( currentContext, currentFunc ) {
+            if( currentFunc.functionName === 'match' ) {
+                currentContext = currentFunc.children[0].valueName;
+            }
+            return currentContext;
+        }
+
+        function filterExec( filterTree, items, context ) { // filterTree is object, items is array
+            var tmpChild1, tmpChild2 = [];
+            // find context
+            context = findContext( context, filterTree );
+            for( var j = 0, jj = filterTree.children.length; j < jj; j += 1 ) {
+                // if any child is function
+                // call filterExec with children of this child
+                if( filterTree.children[j].type === 'function' ) {
+                    tmpChild1 = filterTree.children[j];
+
+                    filterTree.children[j].valueName = filterExec( tmpChild1, items, context );
+                    filterTree.children[j].newType = 'value';
+                }
+                if( filterTree.children[j].type === 'value' || filterTree.children[j].newType === 'value' ) {
+                    if( filterTree.children[j].type === 'value' ) {
+                        filterTree.children[j].valueName = stringToNum( filterTree.children[j].valueName ); // check on Number
+                        filterTree.children[j].valueName = stringToNumAsString( filterTree.children[j].valueName ); // check on Number as string
+                        filterTree.children[j].valueName = stringToBoolean( filterTree.children[j].valueName ); // check on Boolean
+                        filterTree.children[j].valueName = stringToArr( filterTree.children[j].valueName ); // check on Array
+                    }
+                    tmpChild2.push( filterTree.children[j].valueName );
+                }
+            }
+            return filterMethods[filterTree.functionName]( tmpChild2, items, context ); // tmpChild2 is array
+        }
+
+        return filterExec( filterTree, itemsForFilter );
+    };
+})( filterItems );
 
 window.InfinniUI.FilterItems = filterItems;
 
-
 filterItems.filterTreeBuilder = (function() {
-	var that = {},
-			splitStringToArray = function(filter) { //filter is string
-				var tmpArr,
-						tmpNum,
-						tmpString,
-						tmpString2,
-						tmpRE,
-						reForDates = /date\(\'[0-9a-zA-Z\:\-\+\.\s]+\'\)/g,
-						reForParamAsArray = /\,[a-zA-Z0-9\'\,\_\.]+\)/g,
-						reForArrayFromOneElem = /\[[a-zA-Z0-9\'\_\.]+\]/g,
-						reForElemsOfTree = /[a-zA-Z]+[(]|\[[a-zA-Z0-9\S]+\]|[-\']{0,1}[a-zA-Z0-9_\.]+[\']{0,1}[,)$]/g,
-						reForClosingBrackets = /[)]/g,
-						reForRegExp = /\'([a-zA-Z0-9\S\W\D]+\s*)+\'/g,
-						reForSpaces = /\s+/g,
-						reForFewWordsInQuotes = /\'([a-zA-Z0-9\s]+\s*)+\'/g,
-						arr = [];
-				while( tmpArr = reForDates.exec(filter) ) { // search all dates and convert it to number of s [0.000]
-					tmpNum = Date.parse( tmpArr[0].slice(6, -2) ) / 1000 + '';
-					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					reForDates.lastIndex = tmpArr.index + tmpNum.length;
-				}
-				while( tmpArr = reForRegExp.exec(filter) ) { // search for regexp
-					tmpNum = tmpArr[0];
-					if( tmpNum.search(reForSpaces) !== -1 || tmpNum.search(reForFewWordsInQuotes) !== -1 ) {
-						while( tmpString = reForFewWordsInQuotes.exec(tmpNum) ) {
-							tmpString2 = tmpString[0].replace(reForSpaces, '_');
-							tmpNum = tmpNum.slice(0, tmpString.index) + tmpString2 + tmpNum.slice(tmpString.index + tmpString[0].length);
-						}
-					} else {
-						tmpRE = tmpNum.slice(1, -1);
-						tmpNum = 'tmpRE';
-					}
-					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					reForRegExp.lastIndex = tmpArr.index + tmpNum.length;
-				}
-				filter = filter.replace(/\s+/g, '');
-				while( tmpArr = reForParamAsArray.exec(filter) ) { // search second param
-					tmpNum = '[' + tmpArr[0].slice(1, -1) + '])';
-					filter = filter.slice(0, tmpArr.index + 1) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					reForParamAsArray.lastIndex = tmpArr.index + tmpNum.length;
-				}
-				while( tmpArr = reForArrayFromOneElem.exec(filter) ) { // convert array from 1 element to number or string or boolean
-					tmpNum = tmpArr[0].slice(1, -1);
-					filter = filter.slice(0, tmpArr.index) + tmpNum + filter.slice(tmpArr.index + tmpArr[0].length);
-					reForArrayFromOneElem.lastIndex = tmpArr.index + tmpNum.length;
-				}
-				while( tmpArr = reForElemsOfTree.exec(filter) ) { // search all functions and values with their index
-					if( tmpArr[0].length > 1 && (tmpArr[0].slice(-1) === ',' || tmpArr[0].slice(-1) === ')')  ) {
-						tmpArr[0] = tmpArr[0].slice(0, -1);
-					}
-					if( tmpArr[0].length > 1 && tmpArr[0].slice(0, 1) === "'" ) {
-						if( isNaN( tmpArr[0].slice(1, -1) ) ) {
-							tmpArr[0] = tmpArr[0].slice(1, -1);
-						}
-					}
-					if( tmpArr[0].search(/tmpRE/) !== -1 ) {
-						tmpArr[0] = tmpArr[0].slice(1, -1).split(',');
-						tmpArr[0][0] = tmpRE;
-					}
-					arr.push(tmpArr);
-				}
-				while( tmpArr = reForClosingBrackets.exec(filter) ) { // search all closing brackets with their index
-					arr.push(tmpArr);
-				}
-				arr.sort(function(a, b) { // sort arr by indexes to put all data in right order
-					return a.index - b.index;
-				});
-				return arr;
-			},
-			divideToFunctionsAndValues = function(arrayToDivide) { //arrayToDivide is array
-				var tmpArr = [],
-						values = [],
-						filterArr = [],
-						counter = 0,
-						that,
-						tmpSymbol,
-						thatValue,
-						firstPart;
-				// split all data to different functions
-				for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
-					if( typeof arrayToDivide[i][0] === 'string' ) {
-						tmpSymbol = arrayToDivide[i][0].slice(-1);
-					} else {
-						tmpSymbol = ']';
-					}
-					if( tmpSymbol === '(' ) { // define functions from string
-						that = {};
-						that.type = 'function';
-						that.functionName = arrayToDivide[i][0].slice(0, -1);
-						that.index = arrayToDivide[i].index;
-						tmpArr.push( that );
-					} else if( tmpSymbol === ')' ) { // define where end of function
-						filterArr[counter] = [];
-						firstPart = tmpArr.pop();
-						firstPart.range = [];
-						firstPart.range.push( firstPart.index );
-						firstPart.children = [];
-						firstPart.range.push( arrayToDivide[i].index );
-						filterArr[counter] = firstPart;
-						counter += 1;
-					} else { // define params that are values
-						thatValue = {};
-						thatValue.type = 'value';
-						thatValue.valueName = arrayToDivide[i][0];
-						thatValue.index = arrayToDivide[i].index;
-						values.push( thatValue );
-					}
-				}
-				return [filterArr, values];
-			},
-			addValuesAsChildren = function(filterArr, values) { // filterArr, values are arrays
-				//add values to right place as children for functions
-				//define right place by range of index property
-				for( var i = 0, ii = values.length; i < ii; i += 1 ) {
-					for( var j = 0, jj = filterArr.length; j < jj; j += 1 ) {
-						if( values[i] !== null ) {
-							if( values[i].index > filterArr[j].range[0] && values[i].index < filterArr[j].range[1] ) {
-								filterArr[j].children.push( values[i] );
-								values[i] = null;
-							}
-						}
-					}
-				}
-				return filterArr;
-			},
-			filterArrToTree = function(filterArr) { // filterArr is array
-				// build up a filter tree
-				// by putting some functions as children for other
-				for( var i = 0; i < filterArr.length; i += 1 ) {
-					for( var j = 0; j < filterArr.length; j += 1 ) {
-						if( filterArr[j] !== null || filterArr[i] !== null ) {
-							//search for first result[j] where we can put result[i] as his child
-							//if find, put it and remove result[i]
-							if( filterArr[i].range[0] > filterArr[j].range[0] && filterArr[i].range[1] < filterArr[j].range[1] ) {
-								//if result[j] already have any children, check their indexes to define where put new child
-								if( filterArr[j].children[0] !== undefined && filterArr[j].children[0].index > filterArr[i].range[0] ) {
-									filterArr[j].children.unshift( filterArr[i] );
-									filterArr.splice(i, 1);
-									i -= 1;
-									break;
-								} else {
-									filterArr[j].children.push( filterArr[i] );
-									filterArr.splice(i, 1);
-									i -= 1;
-									break;
-								}
-							}
-						}
-					}
-				}
-				return filterArr[0];
-			};
-	that.buildUpFilterTree = function(filter) { // filter is string
-		var tmpArr;
-		tmpArr = splitStringToArray(filter);
-		tmpArr = divideToFunctionsAndValues(tmpArr);
-		tmpArr = addValuesAsChildren(tmpArr[0], tmpArr[1]);
-		return filterArrToTree(tmpArr);
-	};
-	return that;
+    var that = {},
+        splitStringToArray = function( filter ) { //filter is string
+            var tmpArr,
+                tmpNum,
+                tmpString,
+                tmpString2,
+                tmpRE,
+                reForDates = /date\(\'[\d\wа-яёА-ЯЁ\:\-\+\.\s]+\'\)/g,
+                reForParamAsArray = /\,[\d\wа-яёА-ЯЁ\'\,\_\.]+\)/g,
+                reForArrayFromOneElem = /\[[\d\w\'\_\.]+\]/g,
+                reForElemsOfTree = /[\w]+[(]|\[[\d\wа-яёА-ЯЁ\S]+\]|[-\']{0,1}[\d\wа-яёА-ЯЁ_\.]+[\']{0,1}[,)$]/g,
+                reForClosingBrackets = /[)]/g,
+                reForRegExp = /\'([\d\w\S\W\D]+\s*)+\'/g,
+                reForSpaces = /\s+/g,
+                reForFewWordsInQuotes = /\'([\d\wа-яёА-ЯЁ\s]+\s*)+\'/g,
+                arr = [];
+            while( tmpArr = reForDates.exec( filter ) ) { // search all dates and convert it to number of s [0.000]
+                tmpNum = Date.parse( tmpArr[0].slice( 6, -2 ) ) / 1000 + '';
+                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[0].length );
+                reForDates.lastIndex = tmpArr.index + tmpNum.length;
+            }
+            while( tmpArr = reForRegExp.exec( filter ) ) { // search for regexp
+                tmpNum = tmpArr[0];
+                if( tmpNum.search( reForSpaces ) !== -1 || tmpNum.search( reForFewWordsInQuotes ) !== -1 ) {
+                    while( tmpString = reForFewWordsInQuotes.exec( tmpNum ) ) {
+                        tmpString2 = tmpString[0].replace( reForSpaces, '_' );
+                        tmpNum = tmpNum.slice( 0, tmpString.index ) + tmpString2 + tmpNum.slice( tmpString.index + tmpString[0].length );
+                    }
+                } else {
+                    tmpRE = tmpNum.slice( 1, -1 );
+                    tmpNum = 'tmpRE';
+                }
+                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[0].length );
+                reForRegExp.lastIndex = tmpArr.index + tmpNum.length;
+            }
+            filter = filter.replace( /\s+/g, '' );
+            while( tmpArr = reForParamAsArray.exec( filter ) ) { // search second param
+                tmpNum = '[' + tmpArr[0].slice( 1, -1 ) + '])';
+                filter = filter.slice( 0, tmpArr.index + 1 ) + tmpNum + filter.slice( tmpArr.index + tmpArr[0].length );
+                reForParamAsArray.lastIndex = tmpArr.index + tmpNum.length;
+            }
+            while( tmpArr = reForArrayFromOneElem.exec( filter ) ) { // convert array from 1 element to number or string or boolean
+                tmpNum = tmpArr[0].slice( 1, -1 );
+                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[0].length );
+                reForArrayFromOneElem.lastIndex = tmpArr.index + tmpNum.length;
+            }
+            while( tmpArr = reForElemsOfTree.exec( filter ) ) { // search all functions and values with their index
+                if( tmpArr[0].length > 1 && (tmpArr[0].slice( -1 ) === ',' || tmpArr[0].slice( -1 ) === ')') ) {
+                    tmpArr[0] = tmpArr[0].slice( 0, -1 );
+                }
+                if( tmpArr[0].length > 1 && tmpArr[0].slice( 0, 1 ) === "'" ) {
+                    if( isNaN( tmpArr[0].slice( 1, -1 ) ) ) {
+                        tmpArr[0] = tmpArr[0].slice( 1, -1 );
+                    }
+                }
+                if( tmpArr[0].search( /tmpRE/ ) !== -1 ) {
+                    tmpArr[0] = tmpArr[0].slice( 1, -1 ).split( ',' );
+                    tmpArr[0][0] = tmpRE;
+                }
+                arr.push( tmpArr );
+            }
+            while( tmpArr = reForClosingBrackets.exec( filter ) ) { // search all closing brackets with their index
+                arr.push( tmpArr );
+            }
+            arr.sort( function( a, b ) { // sort arr by indexes to put all data in right order
+                return a.index - b.index;
+            } );
+            return arr;
+        },
+        divideToFunctionsAndValues = function( arrayToDivide ) { //arrayToDivide is array
+            var tmpArr = [],
+                values = [],
+                filterArr = [],
+                counter = 0,
+                that,
+                tmpSymbol,
+                thatValue,
+                firstPart;
+            // split all data to different functions
+            for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
+                if( typeof arrayToDivide[i][0] === 'string' ) {
+                    tmpSymbol = arrayToDivide[i][0].slice( -1 );
+                } else {
+                    tmpSymbol = ']';
+                }
+                if( tmpSymbol === '(' ) { // define functions from string
+                    that = {};
+                    that.type = 'function';
+                    that.functionName = arrayToDivide[i][0].slice( 0, -1 );
+                    that.index = arrayToDivide[i].index;
+                    tmpArr.push( that );
+                } else if( tmpSymbol === ')' ) { // define where end of function
+                    filterArr[counter] = [];
+                    firstPart = tmpArr.pop();
+                    firstPart.range = [];
+                    firstPart.range.push( firstPart.index );
+                    firstPart.children = [];
+                    firstPart.range.push( arrayToDivide[i].index );
+                    filterArr[counter] = firstPart;
+                    counter += 1;
+                } else { // define params that are values
+                    thatValue = {};
+                    thatValue.type = 'value';
+                    thatValue.valueName = arrayToDivide[i][0];
+                    thatValue.index = arrayToDivide[i].index;
+                    values.push( thatValue );
+                }
+            }
+            return [filterArr, values];
+        },
+        addValuesAsChildren = function( filterArr, values ) { // filterArr, values are arrays
+            //add values to right place as children for functions
+            //define right place by range of index property
+            for( var i = 0, ii = values.length; i < ii; i += 1 ) {
+                for( var j = 0, jj = filterArr.length; j < jj; j += 1 ) {
+                    if( values[i] !== null ) {
+                        if( values[i].index > filterArr[j].range[0] && values[i].index < filterArr[j].range[1] ) {
+                            filterArr[j].children.push( values[i] );
+                            values[i] = null;
+                        }
+                    }
+                }
+            }
+            return filterArr;
+        },
+        filterArrToTree = function( filterArr ) { // filterArr is array
+            // build up a filter tree
+            // by putting some functions as children for other
+            for( var i = 0; i < filterArr.length; i += 1 ) {
+                for( var j = 0; j < filterArr.length; j += 1 ) {
+                    if( filterArr[j] !== null || filterArr[i] !== null ) {
+                        //search for first result[j] where we can put result[i] as his child
+                        //if find, put it and remove result[i]
+                        if( filterArr[i].range[0] > filterArr[j].range[0] && filterArr[i].range[1] < filterArr[j].range[1] ) {
+                            //if result[j] already have any children, check their indexes to define where put new child
+                            if( filterArr[j].children[0] !== undefined && filterArr[j].children[0].index > filterArr[i].range[0] ) {
+                                filterArr[j].children.unshift( filterArr[i] );
+                                filterArr.splice( i, 1 );
+                                i -= 1;
+                                break;
+                            } else {
+                                filterArr[j].children.push( filterArr[i] );
+                                filterArr.splice( i, 1 );
+                                i -= 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return filterArr[0];
+        };
+    that.buildUpFilterTree = function( filter ) { // filter is string
+        var tmpArr;
+        tmpArr = splitStringToArray( filter );
+        tmpArr = divideToFunctionsAndValues( tmpArr );
+        tmpArr = addValuesAsChildren( tmpArr[0], tmpArr[1] );
+        return filterArrToTree( tmpArr );
+    };
+    return that;
 })();
 
 //sub method for filterItems with filter methods
 filterItems.filterMethods = (function() {
-	var that = {};
+    var that = {};
 
-	that.eq = function(value, items, context) { // value is array: value[0] - param, value[1] - value
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) === value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) === value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
+    that.eq = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) === value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) === value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.and = function(values, items, context) {
-		return _.intersection.apply(_, values);
-	};
+    that.and = function( values, items, context ) {
+        return _.intersection.apply( _, values );
+    };
 
-	that.or = function(values, items, context) {
-		return _.union.apply(_, values);
-	};
+    that.or = function( values, items, context ) {
+        return _.union.apply( _, values );
+    };
 
-	that.not = function(values, items, context) { // values[0] is array
-		var tmpResult = items.slice();
-		return _.difference(tmpResult, values[0]);
-	};
+    that.not = function( values, items, context ) { // values[0] is array
+        var tmpResult = items.slice();
+        return _.difference( tmpResult, values[0] );
+    };
 
-	that.notEq = function(value, items, context) {
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+    that.notEq = function( value, items, context ) {
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) !== value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) !== value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
-	// compare for numbers and dates
-	that.gt = function(value, items, context) { // value is array: value[0] - param, value[1] - value
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) !== value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) !== value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
+    // compare for numbers and dates
+    that.gt = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) > value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) > value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
-	// compare for numbers and dates
-	that.gte = function(value, items, context) { // value is array: value[0] - param, value[1] - value
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) > value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) > value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
+    // compare for numbers and dates
+    that.gte = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) >= value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) >= value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
-	// compare for numbers and dates
-	that.lt = function(value, items, context) { // value is array: value[0] - param, value[1] - value
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) >= value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) >= value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
+    // compare for numbers and dates
+    that.lt = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) < value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) < value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
-	// compare for numbers and dates
-	that.lte = function(value, items, context) { // value is array: value[0] - param, value[1] - value
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) < value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) < value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
+    // compare for numbers and dates
+    that.lte = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( globalUI.getPropertyValue( items[i][context][j], value[0] ) <= value[1] ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( globalUI.getPropertyValue( items[i], value[0] ) <= value[1] ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( globalUI.getPropertyValue( items[i][context][j], value[0] ) <= value[1] ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( globalUI.getPropertyValue( items[i], value[0] ) <= value[1] ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.in = function(values, items, context) { // values[1] is array
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+    that.in = function( values, items, context ) { // values[1] is array
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) !== -1 ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) !== -1 ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) !== -1 ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) !== -1 ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.notIn = function(values, items, context) { // values[1] is array
-		var tmpResult = [],
-				tmpResult2,
-				length,
-				globalUI = InfinniUI.ObjectUtils;
+    that.notIn = function( values, items, context ) { // values[1] is array
+        var tmpResult = [],
+            tmpResult2,
+            length,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			if( context ) {
-				tmpResult2 = [];
-				if( items[i][context] === undefined ) {
-					length = -1;
-				} else {
-					length = items[i][context].length;
-				}
-				for( var j = 0, jj = length; j < jj; j += 1 ) {
-					if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) === -1 ) {
-						tmpResult2.push( items[i] );
-					}
-				}
-				if( length === tmpResult2.length ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) === -1 ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            if( context ) {
+                tmpResult2 = [];
+                if( items[i][context] === undefined ) {
+                    length = -1;
+                } else {
+                    length = items[i][context].length;
+                }
+                for( var j = 0, jj = length; j < jj; j += 1 ) {
+                    if( _.indexOf( values[1], globalUI.getPropertyValue( items[i][context][j], values[0] ) ) === -1 ) {
+                        tmpResult2.push( items[i] );
+                    }
+                }
+                if( length === tmpResult2.length ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( _.indexOf( values[1], globalUI.getPropertyValue( items[i], values[0] ) ) === -1 ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.exists = function(value, items, context) { // value[1] is string
-		var tmpResult = [],
-				tmpValue,
-				globalUI = InfinniUI.ObjectUtils;
+    that.exists = function( value, items, context ) { // value[1] is string
+        var tmpResult = [],
+            tmpValue,
+            globalUI = InfinniUI.ObjectUtils;
 
-		if( value[1] === undefined ) {
-			value[1] = true;
-		}
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpValue = globalUI.getPropertyValue( items[i], value[0] );
-			if( value[1] === true ) {
-				if( !_.isUndefined(tmpValue) && !_.isNull(tmpValue) ) {
-					tmpResult.push( items[i] );
-				}
-			} else {
-				if( _.isUndefined(tmpValue) || _.isNull(tmpValue) ) {
-					tmpResult.push( items[i] );
-				}
-			}
-		}
-		return tmpResult;
-	};
+        if( value[1] === undefined ) {
+            value[1] = true;
+        }
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpValue = globalUI.getPropertyValue( items[i], value[0] );
+            if( value[1] === true ) {
+                if( !_.isUndefined( tmpValue ) && !_.isNull( tmpValue ) ) {
+                    tmpResult.push( items[i] );
+                }
+            } else {
+                if( _.isUndefined( tmpValue ) || _.isNull( tmpValue ) ) {
+                    tmpResult.push( items[i] );
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.match = function(values, items, context) {
-		var tmpResult = [],
-				globalUI = InfinniUI.ObjectUtils;
-		for( var i = 0, ii = values[1].length; i < ii; i += 1 ) {
-			if( globalUI.getPropertyValue( values[1][i], values[0] ) !== undefined ) {
-				tmpResult.push( values[1][i] );
-			}
-		}
-		return tmpResult;
-	};
+    that.match = function( values, items, context ) {
+        var tmpResult = [],
+            globalUI = InfinniUI.ObjectUtils;
+        for( var i = 0, ii = values[1].length; i < ii; i += 1 ) {
+            if( globalUI.getPropertyValue( values[1][i], values[0] ) !== undefined ) {
+                tmpResult.push( values[1][i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.all = function(values, items, context) { // value[1] is array
-		var tmpResult = [],
-				counter,
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.all = function( values, items, context ) { // value[1] is array
+        var tmpResult = [],
+            counter,
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
-			counter = 0;
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
-					counter += 1;
-				}
-			}
-			if( jj === counter ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+            counter = 0;
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+                    counter += 1;
+                }
+            }
+            if( jj === counter ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyIn = function(values, items, context) { // value[1] is array
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyIn = function( values, items, context ) { // value[1] is array
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyNotIn = function(values, items, context) { // value[1] is array
-		var tmpResult = [],
-				counter,
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyNotIn = function( values, items, context ) { // value[1] is array
+        var tmpResult = [],
+            counter,
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], values[0] );
-			counter = 0;
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
-					counter += 1;
-				}
-			}
-			if( counter === 0 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], values[0] );
+            counter = 0;
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( _.indexOf( values[1], tmpArr[j] ) !== -1 ) {
+                    counter += 1;
+                }
+            }
+            if( counter === 0 ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyEq = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyEq = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( _.indexOf(tmpArr, value[1]) !== -1 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( _.indexOf( tmpArr, value[1] ) !== -1 ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyNotEq = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyNotEq = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( tmpArr[j] !== value[1] ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( tmpArr[j] !== value[1] ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyGt = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyGt = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( tmpArr[j] > value[1] ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( tmpArr[j] > value[1] ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyGte = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyGte = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( tmpArr[j] >= value[1] ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( tmpArr[j] >= value[1] ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyLt = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyLt = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( tmpArr[j] < value[1] ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( tmpArr[j] < value[1] ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.anyLte = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.anyLte = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
-				if( tmpArr[j] <= value[1] ) {
-					tmpResult.push( items[i] );
-					break;
-				}
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            for( var j = 0, jj = tmpArr.length; j < jj; j += 1 ) {
+                if( tmpArr[j] <= value[1] ) {
+                    tmpResult.push( items[i] );
+                    break;
+                }
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeEq = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeEq = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length === value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length === value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeNotEq = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeNotEq = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length !== value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length !== value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeGt = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeGt = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length > value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length > value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeGte = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeGte = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length >= value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length >= value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeLt = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeLt = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length < value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length < value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.sizeLte = function(value, items, context) {
-		var tmpResult = [],
-				tmpArr,
-				globalUI = InfinniUI.ObjectUtils;
+    that.sizeLte = function( value, items, context ) {
+        var tmpResult = [],
+            tmpArr,
+            globalUI = InfinniUI.ObjectUtils;
 
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpArr = globalUI.getPropertyValue( items[i], value[0] );
-			if( tmpArr.length <= value[1] ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpArr = globalUI.getPropertyValue( items[i], value[0] );
+            if( tmpArr.length <= value[1] ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.regexp = function(values, items, context) { // value[1] is array
-		var tmpResult = [],
-				tmpObjValue,
-				globalUI = InfinniUI.ObjectUtils,
-				flags = '',
-				regexp;
-		for( var j = 1, jj = values[1].length; j < jj; j += 1 ) {
-			flags += values[1][j];
-		}
-		regexp = new RegExp(values[1][0], flags);
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpObjValue = globalUI.getPropertyValue( items[i], values[0] );
-			if( tmpObjValue.search(regexp) !== -1 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+    that.regexp = function( values, items, context ) { // value[1] is array
+        var tmpResult = [],
+            tmpObjValue,
+            globalUI = InfinniUI.ObjectUtils,
+            flags = '',
+            regexp;
+        for( var j = 1, jj = values[1].length; j < jj; j += 1 ) {
+            flags += values[1][j];
+        }
+        regexp = new RegExp( values[1][0], flags );
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpObjValue = globalUI.getPropertyValue( items[i], values[0] );
+            if( tmpObjValue.search( regexp ) !== -1 ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	// ToDo: добавить обработку параметров caseSensitive и diacriticSensitive
-	that.text = function(value, items, context) {
-		var tmpResult = [],
-				tmpString,
-				subString = value[0].replace('_', ' ').toLowerCase();
-		for( var i = 0, ii = items.length; i < ii; i += 1 ) {
-			tmpString = JSON.stringify(items[i]).toLowerCase();
-			if( tmpString.indexOf( subString ) !== -1 ) {
-				tmpResult.push( items[i] );
-			}
-		}
-		return tmpResult;
-	};
+    // ToDo: добавить обработку параметров caseSensitive и diacriticSensitive
+    that.text = function( value, items, context ) {
+        var tmpResult = [],
+            tmpString,
+            subString = value[0].replace( '_', ' ' ).toLowerCase();
+        for( var i = 0, ii = items.length; i < ii; i += 1 ) {
+            tmpString = JSON.stringify( items[i] ).toLowerCase();
+            if( tmpString.indexOf( subString ) !== -1 ) {
+                tmpResult.push( items[i] );
+            }
+        }
+        return tmpResult;
+    };
 
-	that.startsWith = function(value, items, context){
-		var propertyName = value[0],
-			expectedStartValue = _.isArray(value[1]) ? value[1][0] : value[1],
-			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+    that.startsWith = function( value, items, context ) {
+        var propertyName = value[0],
+            expectedStartValue = _.isArray( value[1] ) ? value[1][0] : value[1],
+            ignoreCase = _.isArray( value[1] ) ? (value[1][1] !== false) : true;
 
-		var	regexpPattern = '^{expectedStartValue}'.replace('{expectedStartValue}', expectedStartValue),
-			regexpFlag = ignoreCase ? 'i' : '';
+        var regexpPattern = '^{expectedStartValue}'.replace( '{expectedStartValue}', expectedStartValue ),
+            regexpFlag = ignoreCase ? 'i' : '';
 
-		var result = _.filter(items, function(item) {
-			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
-		});
+        var result = _.filter( items, function( item ) {
+            return new RegExp( regexpPattern, regexpFlag ).test( item[propertyName] );
+        } );
 
-		return result;
-	};
+        return result;
+    };
 
-	that.endsWith = function(value, items, context){
-		var propertyName = value[0],
-			expectedEndValue = _.isArray(value[1]) ? value[1][0] : value[1],
-			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+    that.endsWith = function( value, items, context ) {
+        var propertyName = value[0],
+            expectedEndValue = _.isArray( value[1] ) ? value[1][0] : value[1],
+            ignoreCase = _.isArray( value[1] ) ? (value[1][1] !== false) : true;
 
-		var	regexpPattern = '{expectedEndValue}$'.replace('{expectedEndValue}', expectedEndValue),
-				regexpFlag = ignoreCase ? 'i' : '';
+        var regexpPattern = '{expectedEndValue}$'.replace( '{expectedEndValue}', expectedEndValue ),
+            regexpFlag = ignoreCase ? 'i' : '';
 
-		var result = _.filter(items, function(item) {
-			return new RegExp(regexpPattern, regexpFlag).test(item[propertyName]);
-		});
+        var result = _.filter( items, function( item ) {
+            return new RegExp( regexpPattern, regexpFlag ).test( item[propertyName] );
+        } );
 
-		return result;
-	};
+        return result;
+    };
 
-	that.contains = function(value, items, context){
-		var propertyName = value[0],
-			searchString = _.isArray(value[1]) ? value[1][0] : value[1],
-			ignoreCase = _.isArray(value[1]) ? (value[1][1] !== false) : true;
+    that.contains = function( value, items, context ) {
+        var propertyName = value[0],
+            searchString = _.isArray( value[1] ) ? value[1][0] : value[1] || '',
+            ignoreCase = _.isArray( value[1] ) ? (value[1][1] !== false) : true;
 
-		var	regexpFlag = ignoreCase ? 'i' : '';
+        var regexpFlag = ignoreCase ? 'i' : '';
 
-		var result = _.filter(items, function(item) {
-			return new RegExp(searchString, regexpFlag).test(item[propertyName]);
-		});
+        var result = _.filter( items, function( item ) {
+            return new RegExp( searchString, regexpFlag ).test( item[propertyName] );
+        } );
 
-		return result;
-	};
+        return result;
+    };
 
-	return that;
+    return that;
 })();
 
 //####app\utils\hashMap.js
@@ -4611,6 +4610,10 @@ _.extend(Control.prototype, {
         this.controlView.$el.on('keyup', handler);
     },
 
+    onRemove: function( handler ) {
+        this.controlView.on(messageTypes.onRemove.name, handler);
+    },
+
     remove: function () {
         this.controlView.remove();
     },
@@ -4978,6 +4981,11 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         if (triggeringOnLoaded) {
             this.trigger('onLoaded');
         }
+    },
+
+    remove: function () {
+        this.trigger(messageTypes.onRemove.name);
+        Backbone.View.prototype.remove.apply(this, Array.prototype.slice.call(arguments));
     },
 
     switchClass: function (name, value, $el, separator) {
@@ -13039,7 +13047,21 @@ _.extend(TreeViewControl.prototype, {
 
     createControlView: function (model) {
         return new TreeViewView({model: model});
+    },
+
+    expand: function( key ) {
+        this.controlView.expandNode(key);
+    },
+
+    collapse: function( key ) {
+        this.controlView.collapseNode(key);
+    },
+
+    toggle: function( key ) {
+        this.controlView.toggleNode(key);
     }
+
+
 });
 
 
@@ -13071,12 +13093,25 @@ var TreeViewView = ListEditorBaseView.extend({
 
     initialize: function (options) {
         ListEditorBaseView.prototype.initialize.call(this, options);
-        this.ItemsMap = new HashMap();
+        this.itemsMap = new HashMap();
+        this.nodesMap = new HashMap();
 
+    },
+
+    addChildElement: function (node, item) {
+        this.nodesMap.add(item, node);
+        ListEditorBaseView.prototype.addChildElement.call( this, node );
+    },
+
+    removeChildElements: function(  ) {
+        this.nodesMap.clear();
+        this.itemsMap.clear();
+        ListEditorBaseView.prototype.removeChildElements.call( this);
     },
 
     render: function () {
         this.prerenderingActions();
+        this.removeChildElements();
 
         this.renderTemplate(this.getTemplate());
 
@@ -13102,9 +13137,7 @@ var TreeViewView = ListEditorBaseView.extend({
             keySelector = model.get('keySelector'),
             nodeConstructor = this.getNodeConstructor(),
             itemTemplate = model.get('itemTemplate'),
-            itemsMap = this.ItemsMap;
-
-        itemsMap.clear();
+            itemsMap = this.itemsMap;
 
         $nodes = renderNodes();
         this.$el.append($nodes);
@@ -13151,6 +13184,7 @@ var TreeViewView = ListEditorBaseView.extend({
                         $subitems = renderNodes(key);
                     node.setItemsContent($subitems);
 
+                    view.addChildElement(node, item);
                     itemsMap.add(key, item);
 
                     return $node;
@@ -13219,7 +13253,7 @@ var TreeViewView = ListEditorBaseView.extend({
         var parentSelector = this.model.get('parentSelector'),
             parentId = parentSelector(null, {value: item});
 
-        return parentId && this.ItemsMap.get(parentId);
+        return parentId && this.itemsMap.get(parentId);
     },
 
     getTemplate: function () {
@@ -13272,6 +13306,65 @@ var TreeViewView = ListEditorBaseView.extend({
                 }
             });
         }
+    },
+
+    collapseNode: function( key ) {
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            node.collapse();
+        }
+    },
+
+    toggleNode: function( key ) {
+
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        if (node) {
+            var collapsed = node.getCollapsed();
+
+            var toggle = collapsed ? this.expandNode : this.collapseNode;
+            toggle.call(this, key);
+        }
+
+    },
+
+    expandNode: function( key ) {
+        var model = this.model;
+        var item = this.itemsMap.get(key);
+
+        if (!item) {
+            return;
+        }
+
+        var node = this.nodesMap.get(item);
+        var parentSelector = model.get('parentSelector');
+        var keySelector = model.get('keySelector');
+        var parentId;
+        var nodes = [node];
+
+        while (parentId = parentSelector(null, {value: item})) {
+            if (!parentId) {
+                break;
+            }
+            item = this.itemsMap.get(parentId);
+            node = this.nodesMap.get(item);
+            nodes.push(node);
+        }
+
+        nodes.reverse().forEach(function (node) {
+            node.expand();
+        });
     }
 
 
@@ -13283,11 +13376,14 @@ var TreeViewNodeBase = Backbone.View.extend({
     className: 'pl-treeview-node',
 
     classNameCheckerChecked: 'pl-treeview-item__checker_checked',
+    classNameCheckerUnchecked: 'pl-treeview-item__checker_unchecked',
     classNameContentSelected: 'pl-treeview-item__content_selected',
     classNameItemsExpanded: 'pl-treeview-node__items_expanded',
     classNameItemsCollapsed: 'pl-treeview-node__items_collapsed',
     classNameButtonCollapse: 'pl-treeview-node__button_collapse',
     classNameButtonExpand: 'pl-treeview-node__button_expand',
+    classNameButtonNone: 'pl-treeview-node__button_none',
+    classNameIsLeaf: 'pl-treeview-node_is-leaf',
 
     UI: {
         checker: '.pl-treeview-item__checker',
@@ -13297,16 +13393,18 @@ var TreeViewNodeBase = Backbone.View.extend({
     },
 
     initialize: function () {
-        var model = new Backbone.Model({collapsed: true});
+        var model = new Backbone.Model({collapsed: true, isLeaf: true});
         this.model = model;
         this.listenTo(model, 'change:selected', this.updateSelected);
         this.listenTo(model, 'change:checked', this.updateChecked);
         this.listenTo(model, 'change:collapsed', this.updateCollapsed);
+        this.listenTo(model, 'change:isLeaf', this.updateCollapsed);
     },
 
     updateChecked: function () {
         var checked = this.model.get('checked');
         this.ui.checker.toggleClass(this.classNameCheckerChecked, checked === true);
+        this.ui.checker.toggleClass(this.classNameCheckerUnchecked, checked !== true);
     },
 
     updateSelected: function () {
@@ -13315,11 +13413,15 @@ var TreeViewNodeBase = Backbone.View.extend({
     },
 
     updateCollapsed: function () {
+        var isLeaf = this.model.get('isLeaf');
         var collapsed = !!this.model.get('collapsed');
-        this.ui.items.toggleClass(this.classNameItemsExpanded, !collapsed);
-        this.ui.items.toggleClass(this.classNameItemsCollapsed, collapsed);
-        this.ui.button.toggleClass(this.classNameButtonCollapse, !collapsed);
-        this.ui.button.toggleClass(this.classNameButtonExpand, collapsed);
+        this.ui.items.toggleClass(this.classNameItemsExpanded, !collapsed && !isLeaf);
+        this.ui.items.toggleClass(this.classNameItemsCollapsed, collapsed && !isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonCollapse, !collapsed && !isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonExpand, collapsed && !isLeaf);
+
+        this.$el.toggleClass(this.classNameIsLeaf, isLeaf);
+        this.ui.button.toggleClass(this.classNameButtonNone, isLeaf);
     },
 
     updateState: function () {
@@ -13357,6 +13459,18 @@ var TreeViewNodeBase = Backbone.View.extend({
         this.model.set('collapsed', !collapsed);
     },
 
+    expand: function () {
+        this.model.set('collapsed', false);
+    },
+
+    collapse: function(  ) {
+        this.model.set('collapsed', true);
+    },
+
+    getCollapsed: function(  ) {
+        return this.model.get('collapsed');
+    },
+
     setItemContent: function ($itemContent) {
         this.ui.content.empty();
         this.ui.content.append($itemContent);
@@ -13364,6 +13478,7 @@ var TreeViewNodeBase = Backbone.View.extend({
 
     setItemsContent: function ($itemsContent) {
         this.ui.items.empty();
+        this.model.set('isLeaf', !$itemsContent.length);
         this.ui.items.append($itemsContent);
     },
 
@@ -15027,7 +15142,8 @@ var GridPanelView = ContainerView.extend(
 
         renderRow: function (row) {
             var view = this;
-            var $row = $(this.template.row());
+            // var $row = $(this.template.row());
+            var $row = $('<div class="pl-clearfix"></div>');
             $row.append(row.map(function(element) {
                 view.addChildElement(element);
                 return element.render();
@@ -16756,6 +16872,71 @@ var ToolBarView = ContainerView.extend({
     updateGrouping: function(){}
 });
 
+//####app\controls\tooltip\tooltipControl.js
+var TooltipControl = function () {
+    _.superClass(TooltipControl, this);
+};
+
+_.inherit(TooltipControl, Control);
+
+_.extend(TooltipControl.prototype, {
+
+    createControlModel: function(  ) {
+        return new InfinniUI.TooltipModel();
+    },
+
+    createControlView: function( model ) {
+        return new InfinniUI.TooltipView({model: model});
+    }
+
+});
+
+InfinniUI.TooltipControl = TooltipControl;
+//####app\controls\tooltip\tooltipModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+InfinniUI.TooltipModel = ControlModel.extend( {
+
+
+} );
+
+//####app\controls\tooltip\tooltipView.js
+InfinniUI.TooltipView = ControlView.extend({
+
+    render: function(){
+        this.prerenderingActions();
+        this.renderContent();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    initHandlersForProperties: function(  ) {
+        ControlView.prototype.initHandlersForProperties.apply(this, Array.prototype.slice.call(arguments));
+
+        this.listenTo(this.model, 'change:content', this.updateContent);
+    },
+
+    updateContent: function(  ) {
+        this.renderContent();
+    },
+
+    /**
+     * @protected
+     */
+    renderContent: function() {
+        var model = this.model;
+        var content = model.get('content');
+        this.$el.html(content.render());
+    }
+
+});
+
 //####app\controls\view\viewControl.js
 /**
  *
@@ -16971,7 +17152,7 @@ var DataSourceValidationNotifierMixin = {
  * @augments Backbone.Model
  * @mixes dataSourceFindItemMixin
  */
-var BaseDataSource = Backbone.Model.extend({
+var BaseDataSource = Backbone.Model.extend( {
     defaults: {
         name: null,
         idProperty: '_id',
@@ -17015,373 +17196,519 @@ var BaseDataSource = Backbone.Model.extend({
 
     },
 
-    initialize: function () {
-        var view = this.get('view');
+    initialize: function() {
+        var view = this.get( 'view' );
         var modelStartTree = {
             items: null,
             selectedItem: null
         };
 
         this.initDataProvider();
-        if (!view) {
+
+        if( !view ) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
-        this.set('suspendingList', []);
-        this.set('waitingOnUpdateItemsHandlers', []);
-        this.set('model', new TreeModel(view.getContext(), this, modelStartTree));
+        this.set( 'suspendingList', [] );
+        this.set( 'waitingOnUpdateItemsHandlers', [] );
+        this.set( 'model', new TreeModel( view.getContext(), this, modelStartTree ) );
 
-        _.extend( this, BaseDataSource.identifyingStrategy.byId);
+        _.extend( this, BaseDataSource.identifyingStrategy.byId );
     },
 
-    initDataProvider: function () {
-        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
+    initHandlers: function() {
+        var model = this.get( 'model' );
+        var updateGettingUrlParamsWithReset = _.bind( this.updateGettingUrlParamsWithReset, this );
+
+        model.setProperty('filterParams', {});
+
+        model.onPropertyChanged( 'search', updateGettingUrlParamsWithReset );
+        model.onPropertyChanged( 'filter', updateGettingUrlParamsWithReset );
+        model.onPropertyChanged( 'filterParams.*', updateGettingUrlParamsWithReset );
     },
 
-    onPropertyChanged: function (property, handler, owner) {
+    updateGettingUrlParamsWithReset: function() {
+        this.suspendUpdate( 'updateGettingUrlParams' );
+        this.get( 'model' ).setProperty( 'pageNumber', 0 );
+        this.updateGettingUrlParams();
+        this.resumeUpdate( 'updateGettingUrlParams' );
+    },
 
-        if (typeof property == 'function') {
+    updateGettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                method: 'get',
+                origin: InfinniUI.config.serverUrl,
+                path: '/documents/' + this.get('model').getProperty('documentId'),
+                data: {},
+                params: {}
+            },
+            filter = model.getProperty('filter'),
+            filterParams = model.getProperty('filterParams'),
+            pageNumber = model.getProperty('pageNumber'),
+            pageSize = model.getProperty('pageSize'),
+            searchStr = model.getProperty('search'),
+            select = model.getProperty('select'),
+            order = model.getProperty('order'),
+            needTotalCount = model.getProperty('needTotalCount');
+
+        if(filter){
+            params.data.filter = filter;
+            if(filterParams){
+                _.extend(params.params, filterParams);
+            }
+        }
+
+        if(pageSize){
+            pageNumber = pageNumber || 0;
+            params.data.skip = pageNumber*pageSize;
+            params.data.take = pageSize;
+        }
+
+        if(searchStr){
+            params.data.search = searchStr;
+        }
+
+        if(select){
+            params.data.select = select;
+        }
+
+        if(order){
+            params.data.order = order;
+        }
+
+        if(needTotalCount){
+            params.data.count = needTotalCount;
+        }
+
+        this.setGettingUrlParams(params);
+    },
+
+    getGettingUrlParams: function(propertyName){
+        if(arguments.length == 0){
+            propertyName = 'urlParams.get';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'urlParams.get';
+            }else{
+                propertyName = 'urlParams.get.' + propertyName;
+            }
+        }
+        return this.get('model').getProperty(propertyName);
+    },
+
+    setGettingUrlParams: function(propertyName, value){
+        if(arguments.length == 1){
+            value = propertyName;
+            propertyName = 'urlParams.get';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'urlParams.get';
+            }else{
+                propertyName = 'urlParams.get.' + propertyName;
+            }
+        }
+
+        this.get('model').setProperty(propertyName, value);
+    },
+
+    initDataProvider: function() {
+        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.';
+    },
+
+    getSearch: function(){
+        return this.get('model').getProperty('search');
+    },
+
+    setSearch: function(searchStr){
+        this.get('model').setProperty('search', searchStr);
+    },
+
+    getFilter: function(){
+        return this.get('model').getProperty('filter');
+    },
+
+    setFilter: function(filter){
+        this.get('model').setProperty('filter', filter);
+    },
+
+    getFilterParams: function(propertyName){
+        if(arguments.length == 0){
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        return this.get('model').getProperty(propertyName);
+    },
+
+    setFilterParams: function(propertyName, value){
+        if(arguments.length == 1){
+            value = propertyName;
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        this.get('model').setProperty(propertyName, value);
+    },
+
+    onPropertyChanged: function( property, handler, owner ) {
+
+        if( typeof property == 'function' ) {
             owner = handler;
             handler = property;
             property = '*';
         }
 
-        if(property.charAt(0) == '.'){
-            property = property.substr(1);
-        }else{
-            if(property == ''){
+        if( property.charAt( 0 ) == '.' ) {
+            property = property.substr( 1 );
+        } else {
+            if( property == '' ) {
                 property = 'items';
-            }else{
+            } else {
                 property = 'items.' + property;
             }
 
         }
 
-        this.get('model').onPropertyChanged(property, function(context, args){
+        this.get( 'model' ).onPropertyChanged( property, function( context, args ) {
             var property = args.property;
 
-            if(property.substr(0,6) == 'items.'){
-                property = property.substr(6);
-            }else if(property == 'items'){
+            if( property.substr( 0, 6 ) == 'items.' ) {
+                property = property.substr( 6 );
+            } else if( property == 'items' ) {
                 property = '';
-            } else{
+            } else {
                 property = '.' + property;
             }
 
             args.property = property;
 
-            handler(context, args);
-        }, owner);
+            handler( context, args );
+        }, owner );
     },
 
-    onSelectedItemChanged: function (handler, owner) {
+    onSelectedItemChanged: function( handler, owner ) {
         var that = this;
 
-        this.get('model').onPropertyChanged('selectedItem', function(context, args){
+        this.get( 'model' ).onPropertyChanged( 'selectedItem', function( context, args ) {
             var argument = that._getArgumentTemplate();
             argument.value = args.newValue;
 
-            handler(context, argument);
-        }, owner);
+            handler( context, argument );
+        }, owner );
     },
 
-    onErrorValidator: function (handler) {
-        this.on('onErrorValidator', handler);
+    onErrorValidator: function( handler ) {
+        this.on( 'onErrorValidator', handler );
     },
 
-    onItemSaved: function (handler) {
-        this.on('onItemSaved', handler);
+    onItemSaved: function( handler ) {
+        this.on( 'onItemSaved', handler );
     },
 
-    onItemCreated: function (handler) {
-        this.on('onItemCreated', handler);
+    onItemCreated: function( handler ) {
+        this.on( 'onItemCreated', handler );
     },
 
-    onItemsUpdated: function (handler) {
-        this.on('onItemsUpdated', handler);
+    onItemsUpdated: function( handler ) {
+        this.on( 'onItemsUpdated', handler );
     },
 
-    onItemsUpdatedOnce: function (handler) {
-        this.once('onItemsUpdated', handler);
+    onItemsUpdatedOnce: function( handler ) {
+        this.once( 'onItemsUpdated', handler );
     },
 
-    onItemDeleted: function (handler) {
-        this.on('onItemDeleted', handler);
+    onItemDeleted: function( handler ) {
+        this.on( 'onItemDeleted', handler );
     },
 
-    onProviderError: function (handler) {
-        this.off('onProviderError');
-        this.on('onProviderError', handler);
+    onProviderError: function( handler ) {
+        this.off( 'onProviderError' );
+        this.on( 'onProviderError', handler );
 
         this.onProviderErrorHandler = handler;
     },
 
-    getName: function () {
-        return this.get('name');
+    getName: function() {
+        return this.get( 'name' );
     },
 
-    setName: function (name) {
-        this.set('name', name);
+    setName: function( name ) {
+        this.set( 'name', name );
         this.name = name;
     },
 
-    getView: function () {
-        return this.get('view');
+    getView: function() {
+        return this.get( 'view' );
     },
 
-    getProperty: function (property) {
-        var firstChar = property.charAt(0);
+    getProperty: function( property ) {
+        var firstChar = property.charAt( 0 );
         var indexOfSelectedItem;
 
-        if( this.get('isNumRegEx').test(firstChar) ){
+        if( this.get( 'isNumRegEx' ).test( firstChar ) ) {
             property = 'items.' + property;
 
-        }else if(firstChar == ''){
+        } else if( firstChar == '' ) {
             property = 'items';
 
-        }else if(firstChar == '$'){
+        } else if( firstChar == '$' ) {
             indexOfSelectedItem = this._indexOfSelectedItem();
-            if(indexOfSelectedItem == -1){
+            if( indexOfSelectedItem == -1 ) {
                 return undefined;
             }
-            property = 'items.' + indexOfSelectedItem + property.substr(1);
+            property = 'items.' + indexOfSelectedItem + property.substr( 1 );
 
-        }else if(firstChar == '.'){
-            property = property.substr(1);
-        }else{
+        } else if( firstChar == '.' ) {
+            property = property.substr( 1 );
+        } else {
             indexOfSelectedItem = this._indexOfSelectedItem();
-            if(indexOfSelectedItem == -1){
+            if( indexOfSelectedItem == -1 ) {
                 return undefined;
             }
             property = 'items.' + indexOfSelectedItem + '.' + property;
         }
 
-        return this.get('model').getProperty(property);
+        return this.get( 'model' ).getProperty( property );
     },
 
-    setProperty: function (property, value) {
-        var propertyPaths = property.split('.');
+    setProperty: function( property, value ) {
+        var propertyPaths = property.split( '.' );
         var firstChar;
         var indexOfSelectedItem;
         var resultOfSet;
 
-        if(propertyPaths[0] == '$'){
+        if( propertyPaths[0] == '$' ) {
             indexOfSelectedItem = this._indexOfSelectedItem();
-            if(indexOfSelectedItem == -1){
+            if( indexOfSelectedItem == -1 ) {
                 return;
             }
 
-            property = indexOfSelectedItem + property.substr(1);
+            property = indexOfSelectedItem + property.substr( 1 );
             propertyPaths[0] = indexOfSelectedItem.toString();
         }
 
-        firstChar = property.charAt(0);
+        firstChar = property.charAt( 0 );
 
-        if(propertyPaths.length == 1){
+        if( propertyPaths.length == 1 ) {
 
-            if(propertyPaths[0] == ''){
-                this._setItems(value);
+            if( propertyPaths[0] == '' ) {
+                this._setItems( value );
 
-            }else if( this.get('isNumRegEx').test(propertyPaths[0]) ){
-                this._changeItem(propertyPaths[0], value);
+            } else if( this.get( 'isNumRegEx' ).test( propertyPaths[0] ) ) {
+                this._changeItem( propertyPaths[0], value );
 
-            }else{
+            } else {
                 indexOfSelectedItem = this._indexOfSelectedItem();
-                if(indexOfSelectedItem == -1){
+                if( indexOfSelectedItem == -1 ) {
                     return;
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
-                resultOfSet = this.get('model').setProperty(property, value);
+                resultOfSet = this.get( 'model' ).setProperty( property, value );
 
-                if(resultOfSet){
-                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
+                if( resultOfSet ) {
+                    this._includeItemToModifiedSetByIndex( indexOfSelectedItem );
                 }
-            }
-
-        }else{
-            if(firstChar == '.'){
-                property = property.substr(1);
-                this.get('model').setProperty(property, value);
-
-            }else if(this.get('isNumRegEx').test(firstChar)){
-                property = 'items.' + property;
-                resultOfSet = this.get('model').setProperty(property, value);
-
-                if(resultOfSet){
-                    this._includeItemToModifiedSetByIndex( parseInt(propertyPaths[0]));
-                }
-            }else{
-                indexOfSelectedItem = this._indexOfSelectedItem();
-                if(indexOfSelectedItem == -1){
-                    return;
-                }
-                property = 'items.' + indexOfSelectedItem + '.' + property;
-                resultOfSet = this.get('model').setProperty(property, value);
-
-                if(resultOfSet){
-                    this._includeItemToModifiedSetByIndex(indexOfSelectedItem);
-                }
-            }
-        }
-    },
-
-    _setItems: function (items) {
-        this._detectIdentifyingMode(items);
-
-        var indexOfItemsById;
-
-        this.set('isDataReady', true);
-        this.get('model').setProperty('items', items);
-        this._clearModifiedSet();
-        if (items && items.length > 0) {
-            indexOfItemsById = this._indexItemsById(items);
-            this.set('itemsById', indexOfItemsById);
-
-            if( !this._restoreSelectedItem() ){
-                this.setSelectedItem(items[0]);
             }
 
         } else {
-            this.setSelectedItem(null);
+            if( firstChar == '.' ) {
+                property = property.substr( 1 );
+                this.get( 'model' ).setProperty( property, value );
+
+            } else if( this.get( 'isNumRegEx' ).test( firstChar ) ) {
+                property = 'items.' + property;
+                resultOfSet = this.get( 'model' ).setProperty( property, value );
+
+                if( resultOfSet ) {
+                    this._includeItemToModifiedSetByIndex( parseInt( propertyPaths[0] ) );
+                }
+            } else {
+                indexOfSelectedItem = this._indexOfSelectedItem();
+                if( indexOfSelectedItem == -1 ) {
+                    return;
+                }
+                property = 'items.' + indexOfSelectedItem + '.' + property;
+                resultOfSet = this.get( 'model' ).setProperty( property, value );
+
+                if( resultOfSet ) {
+                    this._includeItemToModifiedSetByIndex( indexOfSelectedItem );
+                }
+            }
         }
     },
 
-    _restoreSelectedItem: function(){
+    _setItems: function( items ) {
+        this._detectIdentifyingMode( items );
+
+        var indexOfItemsById;
+
+        this.set( 'isDataReady', true );
+        this.get( 'model' ).setProperty( 'items', items );
+        this._clearModifiedSet();
+        if( items && items.length > 0 ) {
+            indexOfItemsById = this._indexItemsById( items );
+            this.set( 'itemsById', indexOfItemsById );
+
+            if( !this._restoreSelectedItem() ) {
+                this.setSelectedItem( items[0] );
+            }
+
+        } else {
+            this.setSelectedItem( null );
+        }
+    },
+
+    _restoreSelectedItem: function() {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
-        logger.warn({
+        logger.warn( {
             message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
             source: this
-        });
+        } );
     },
 
-    getSelectedItem: function () {
-        return this.get('model').getProperty('selectedItem');
+    getSelectedItem: function() {
+        return this.get( 'model' ).getProperty( 'selectedItem' );
     },
 
-    setSelectedItem: function (item, success, error) {
+    setSelectedItem: function( item, success, error ) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
-        logger.warn({
+        logger.warn( {
             message: 'BaseDataSource.setSelectedItem: not overrided by strategy',
             source: this
-        });
+        } );
     },
 
-    _notifyAboutSelectedItem: function (item, successHandler) {
+    _notifyAboutSelectedItem: function( item, successHandler ) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
 
-        if (successHandler) {
-            successHandler(context, argument);
+        if( successHandler ) {
+            successHandler( context, argument );
         }
     },
 
-    _tuneMirroringOfModel: function(index){
-        if(index != -1){
-            this.get('model').setMirroring('items.$', 'items.'+index);
-        }else{
-            this.get('model').setMirroring(null, null);
+    _tuneMirroringOfModel: function( index ) {
+        if( index != -1 ) {
+            this.get( 'model' ).setMirroring( 'items.$', 'items.' + index );
+        } else {
+            this.get( 'model' ).setMirroring( null, null );
         }
     },
 
-    getIdProperty: function () {
-        return this.get('idProperty');
+    getIdProperty: function() {
+        return this.get( 'idProperty' );
     },
 
-    setIdProperty: function (value) {
-        this.set('idProperty', value);
+    setIdProperty: function( value ) {
+        this.set( 'idProperty', value );
     },
 
-    getFillCreatedItem: function () {
-        return this.get('fillCreatedItem');
+    getFillCreatedItem: function() {
+        return this.get( 'fillCreatedItem' );
     },
 
-    setFillCreatedItem: function (fillCreatedItem) {
-        this.set('fillCreatedItem', fillCreatedItem);
+    setFillCreatedItem: function( fillCreatedItem ) {
+        this.set( 'fillCreatedItem', fillCreatedItem );
     },
 
-    suspendUpdate: function (name) {
+    suspendUpdate: function( name ) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspendingList');
-        if (suspended.indexOf(reason) === -1) {
-            suspended = suspended.slice(0);
-            suspended.push(reason);
-            this.set('suspendingList', suspended);
+        var suspended = this.get( 'suspendingList' );
+        if( suspended.indexOf( reason ) === -1 ) {
+            suspended = suspended.slice( 0 );
+            suspended.push( reason );
+            this.set( 'suspendingList', suspended );
         }
     },
 
-    resumeUpdate: function (name) {
+    resumeUpdate: function( name ) {
         var reason = name || 'default';
 
-        var suspended = this.get('suspendingList');
-        var index = suspended.indexOf(reason);
+        var suspended = this.get( 'suspendingList' );
+        var index = suspended.indexOf( reason );
 
-        if (index !== -1) {
-            suspended = suspended.slice(0);
-            suspended.splice(index, 1);
-            this.set('suspendingList', suspended);
+        if( index !== -1 ) {
+            suspended = suspended.slice( 0 );
+            suspended.splice( index, 1 );
+            this.set( 'suspendingList', suspended );
 
             // если источник полностью разморожен, а до этого вызывались updateItems, не выполненные из-за заморозки, нужно вызвать updateItems
-            if(!this.isUpdateSuspended() && this.get('waitingOnUpdateItemsHandlers').length > 0){
+            if( !this.isUpdateSuspended() && this.get( 'waitingOnUpdateItemsHandlers' ).length > 0 ) {
                 // waitingOnUpdateItemsHandlers будут вызваны в _notifyAboutItemsUpdated или _onErrorProviderUpdateItemsHandle
                 this.updateItems();
             }
         }
     },
 
-    isUpdateSuspended: function () {
-        var suspended = this.get('suspendingList');
+    isUpdateSuspended: function() {
+        var suspended = this.get( 'suspendingList' );
         return suspended.length > 0;
     },
 
-    isModifiedItems: function () {
+    isModifiedItems: function() {
         return this.isModified();
     },
 
-    isModified: function (item) {
-        if (arguments.length == 0) {
-            return _.size(this.get('modifiedItems')) > 0;
+    isModified: function( item ) {
+        if( arguments.length == 0 ) {
+            return _.size( this.get( 'modifiedItems' ) ) > 0;
         }
 
-        if (item === null || item === undefined) {
+        if( item === null || item === undefined ) {
             return false;
         }
         else {
-            var itemId = this.idOfItem(item);
-            return itemId in this.get('modifiedItems');
+            var itemId = this.idOfItem( item );
+            return itemId in this.get( 'modifiedItems' );
         }
     },
 
-    _includeItemToModifiedSetByIndex: function (index) {
+    _includeItemToModifiedSetByIndex: function( index ) {
         var item;
 
         item = this.getItems()[index];
-        this._includeItemToModifiedSet(item);
+        this._includeItemToModifiedSet( item );
     },
 
-    _includeItemToModifiedSet: function (item) {
+    _includeItemToModifiedSet: function( item ) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
-        logger.warn({
+        logger.warn( {
             message: 'BaseDataSource._includeItemToModifiedSet: not overrided by strategy',
             source: this
-        });
+        } );
     },
 
-    _excludeItemFromModifiedSet: function (item) {
+    _excludeItemFromModifiedSet: function( item ) {
         // override by strategy
         var logger = window.InfinniUI.global.logger;
-        logger.warn({
+        logger.warn( {
             message: 'BaseDataSource._excludeItemFromModifiedSet: not overrided by strategy',
             source: this
-        });
+        } );
     },
 
-    _clearModifiedSet: function () {
-        this.set('modifiedItems', {});
+    _clearModifiedSet: function() {
+        this.set( 'modifiedItems', {} );
     },
 
     /**
@@ -17389,168 +17716,177 @@ var BaseDataSource = Backbone.Model.extend({
      * @param propertyName
      * @private
      */
-    _checkPropertyName: function (propertyName) {
+    _checkPropertyName: function( propertyName ) {
         var result = true;
         try {
-            if (propertyName && propertyName.length > 0) {
-                result = propertyName.match(/^[\$#@\d]+/);
+            if( propertyName && propertyName.length > 0 ) {
+                result = propertyName.match( /^[\$#@\d]+/ );
             }
-            if (!result) {
-                throw new Error('Wrong property name "' + propertyName + '"');
+            if( !result ) {
+                throw new Error( 'Wrong property name "' + propertyName + '"' );
             }
-        } catch (e) {
-            console.debug(e);
+        } catch( e ) {
+            console.debug( e );
         }
     },
 
-    _changeItem: function(index, value){
-        var item = this.get('model').getProperty('items.'+index),
+    _changeItem: function( index, value ) {
+        var item = this.get( 'model' ).getProperty( 'items.' + index ),
             isSelectedItem = (item == this.getSelectedItem()),
-            idProperty = this.get('idProperty'),
-            indexedItemsById = this.get('itemsById');
+            idProperty = this.get( 'idProperty' ),
+            indexedItemsById = this.get( 'itemsById' );
 
-        if(value == item){
+        if( value == item ) {
             return;
         }
 
-        this._excludeItemFromModifiedSet(item);
+        this._excludeItemFromModifiedSet( item );
         delete indexedItemsById[item[idProperty]];
 
-        this.get('model').setProperty('items.'+index, value);
+        this.get( 'model' ).setProperty( 'items.' + index, value );
 
-        this._includeItemToModifiedSet(value);
+        this._includeItemToModifiedSet( value );
         indexedItemsById[value[idProperty]] = value;
-        this.set('itemsById', indexedItemsById);
+        this.set( 'itemsById', indexedItemsById );
 
-        if(isSelectedItem) {
-            this.get('model').setProperty('selectedItem', value);
+        if( isSelectedItem ) {
+            this.get( 'model' ).setProperty( 'selectedItem', value );
         }
     },
 
-    tryInitData: function(){
-        if (!this.get('isDataReady') && !this.get('isRequestInProcess')){
+    tryInitData: function() {
+        if( !this.get( 'isDataReady' ) && !this.get( 'isRequestInProcess' ) ) {
             this.updateItems();
         }
     },
 
-    saveItem: function (item, success, error) {
-        var dataProvider = this.get('dataProvider'),
+    saveItem: function( item, success, error ) {
+        var dataProvider = this.get( 'dataProvider' ),
             that = this,
             validateResult;
 
-        if (!this.isModified(item)) {
-            this._notifyAboutItemSaved( {item: item, result: null} , 'notModified');
-            that._executeCallback(success, {item: item, validationResult: {IsValid: true}});
+        if( !this.isModified( item ) ) {
+            this._notifyAboutItemSaved( {item: item, result: null}, 'notModified' );
+            that._executeCallback( success, {item: item, validationResult: {IsValid: true}} );
             return;
         }
 
-        validateResult = this.getValidationResult(item);
-        if (!validateResult.IsValid) {
-            this._notifyAboutValidation(validateResult);
-            this._executeCallback(error, {item: item, validationResult: validateResult});
+        validateResult = this.getValidationResult( item );
+        if( !validateResult.IsValid ) {
+            this._notifyAboutValidation( validateResult );
+            this._executeCallback( error, {item: item, validationResult: validateResult} );
             return;
         }
 
-        dataProvider.saveItem(item, function(data){
-            that._excludeItemFromModifiedSet(item);
-            that._notifyAboutItemSaved( {item: item, result: data.data} , 'modified');
-            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
-        }, function(data) {
-            var result = that._extractValidationResult(data);
+        dataProvider.saveItem( item, function( data ) {
+            that._excludeItemFromModifiedSet( item );
+            that._notifyAboutItemSaved( {item: item, result: data.data}, 'modified' );
+            that._executeCallback( success, {
+                item: item,
+                validationResult: that._extractValidationResult( data ),
+                originalResponse: data
+            } );
+        }, function( data ) {
+            var result = that._extractValidationResult( data );
 
-            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
-            that._onServerErrorHandler({
+            that._executeCallback( error, {item: item, validationResult: result, originalResponse: data} );
+            that._onServerErrorHandler( {
                 response: data,
                 validationResult: result,
                 item: item
-            });
-        });
+            } );
+        } );
     },
 
-    _extractValidationResult: function(data){
-        if(data.data && data.data.responseJSON && data.data.responseJSON['Result']){
+    _extractValidationResult: function( data ) {
+        if( data.data && data.data.responseJSON && data.data.responseJSON['Result'] ) {
             return data.data.responseJSON['Result']['ValidationResult'];
         }
-        
+
         return data.data && data.data['Result'] && data.data['Result']['ValidationResult'];
     },
 
-    _executeCallback: function(callback, args){
-        if(callback){
-            callback(this.getContext(), args);
+    _executeCallback: function( callback, args ) {
+        if( callback ) {
+            callback( this.getContext(), args );
         }
     },
 
-    _notifyAboutItemSaved: function (data, result) {
+    _notifyAboutItemSaved: function( data, result ) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = data;
         argument.result = result;
 
-        this.trigger('onItemSaved', context, argument);
+        this.trigger( 'onItemSaved', context, argument );
     },
 
-    deleteItem: function (item, success, error) {
-        var dataProvider = this.get('dataProvider'),
+    deleteItem: function( item, success, error ) {
+        var dataProvider = this.get( 'dataProvider' ),
             that = this,
-            itemId = this.idOfItem(item),
-            isItemInSet = this.get('itemsById')[itemId] !== undefined;
+            itemId = this.idOfItem( item ),
+            isItemInSet = this.get( 'itemsById' )[itemId] !== undefined;
 
-        if ( item == null || ( itemId !== undefined && !isItemInSet ) ) {
-            this._notifyAboutMissingDeletedItem(item, error);
+        if( item == null || ( itemId !== undefined && !isItemInSet ) ) {
+            this._notifyAboutMissingDeletedItem( item, error );
             return;
         }
 
-        this.beforeDeleteItem(item);
+        this.beforeDeleteItem( item );
 
-        dataProvider.deleteItem(item, function (data) {
-            that._handleDeletedItem(item);
-            that._executeCallback(success, {item: item, validationResult: that._extractValidationResult(data), originalResponse: data});
-        }, function(data) {
-            var result = that._extractValidationResult(data);
+        dataProvider.deleteItem( item, function( data ) {
+            that._handleDeletedItem( item );
+            that._executeCallback( success, {
+                item: item,
+                validationResult: that._extractValidationResult( data ),
+                originalResponse: data
+            } );
+        }, function( data ) {
+            var result = that._extractValidationResult( data );
 
-            that._executeCallback(error, {item: item, validationResult: result, originalResponse: data});
-            that._onServerErrorHandler({
+            that._executeCallback( error, {item: item, validationResult: result, originalResponse: data} );
+            that._onServerErrorHandler( {
                 response: data,
                 validationResult: result,
                 item: item
-            });
-        });
+            } );
+        } );
     },
 
-    _onServerErrorHandler: function(params) {
+    _onServerErrorHandler: function( params ) {
         var validationResult = params.validationResult,
             context = this.getContext();
 
         if( validationResult && validationResult.IsValid ) {
-            this._notifyAboutValidation(validationResult);
+            this._notifyAboutValidation( validationResult );
         } else {
-            this.trigger('onProviderError', context, {item: params.item, data: params.response});
+            this.trigger( 'onProviderError', context, {item: params.item, data: params.response} );
         }
     },
 
-    beforeDeleteItem: function(item){},
-
-    _handleDeletedItem: function (item) {
-        // override by strategy
-        var logger = window.InfinniUI.global.logger;
-        logger.warn({
-            message: 'BaseDataSource._handleDeletedItem: not overrided by strategy',
-            source: this
-        });
+    beforeDeleteItem: function( item ) {
     },
 
-    _notifyAboutItemDeleted: function (item, successHandler) {
+    _handleDeletedItem: function( item ) {
+        // override by strategy
+        var logger = window.InfinniUI.global.logger;
+        logger.warn( {
+            message: 'BaseDataSource._handleDeletedItem: not overrided by strategy',
+            source: this
+        } );
+    },
+
+    _notifyAboutItemDeleted: function( item, successHandler ) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
         argument.value = item;
 
-        this.trigger('onItemDeleted', context, argument);
+        this.trigger( 'onItemDeleted', context, argument );
     },
 
-    _notifyAboutMissingDeletedItem: function (item, errorHandler) {
+    _notifyAboutMissingDeletedItem: function( item, errorHandler ) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
@@ -17559,106 +17895,106 @@ var BaseDataSource = Backbone.Model.extend({
             message: 'Нельзя удалить элемент, которого нет текущем наборе источника данных'
         };
 
-        if (errorHandler) {
-            errorHandler(context, argument);
+        if( errorHandler ) {
+            errorHandler( context, argument );
         }
     },
 
-    isDataReady: function () {
-        return this.get('isDataReady');
+    isDataReady: function() {
+        return this.get( 'isDataReady' );
     },
 
-    getItems: function () {
+    getItems: function() {
         var logger = window.InfinniUI.global.logger;
 
-        if (!this.isDataReady()) {
-            logger.warn({
-                message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get('name') + '), до того как он был проинициализирован данными',
+        if( !this.isDataReady() ) {
+            logger.warn( {
+                message: 'BaseDataSource: Попытка получить данные источника данных (' + this.get( 'name' ) + '), до того как он был проинициализирован данными',
                 source: this
-            });
+            } );
         }
 
-        return this.get('model').getProperty('items');
+        return this.get( 'model' ).getProperty( 'items' );
     },
 
-    updateItems: function (onSuccess, onError) {
-        if (!this.isUpdateSuspended()) {
-            var dataProvider = this.get('dataProvider'),
+    updateItems: function( onSuccess, onError ) {
+        if( !this.isUpdateSuspended() ) {
+            var dataProvider = this.get( 'dataProvider' ),
                 that = this;
 
-            this.set('isRequestInProcess', true);
+            this.set( 'isRequestInProcess', true );
             dataProvider.getItems(
-                function (data) {
-                    that._handleSuccessUpdateItemsInProvider(data, onSuccess);
+                function( data ) {
+                    that._handleSuccessUpdateItemsInProvider( data, onSuccess );
                 },
-                function (data) {
+                function( data ) {
                     var context = that.getContext();
-                    that._onErrorProviderUpdateItemsHandle(data, onError);
-                    that.trigger('onProviderError', context, {data: data});
+                    that._onErrorProviderUpdateItemsHandle( data, onError );
+                    that.trigger( 'onProviderError', context, {data: data} );
                 }
             );
 
-        }else{
-            var handlers = this.get('waitingOnUpdateItemsHandlers');
-            handlers.push({
+        } else {
+            var handlers = this.get( 'waitingOnUpdateItemsHandlers' );
+            handlers.push( {
                 onSuccess: onSuccess,
                 onError: onError
-            });
+            } );
         }
         //devblockstart
-        window.InfinniUI.global.messageBus.send('updateItems', {dataSource: this});
+        window.InfinniUI.global.messageBus.send( 'updateItems', {dataSource: this} );
         //devblockstop
     },
 
-    _handleSuccessUpdateItemsInProvider: function(data, callback){
+    _handleSuccessUpdateItemsInProvider: function( data, callback ) {
         var that = this,
-            isWaiting =  that.get('isWaiting'),
-            finishUpdating = function(){
-                that.set('isRequestInProcess', false);
-                that._handleUpdatedItemsData(data.data, callback);
+            isWaiting = that.get( 'isWaiting' ),
+            finishUpdating = function() {
+                that.set( 'isRequestInProcess', false );
+                that._handleUpdatedItemsData( data.data, callback );
             };
 
-        if(isWaiting){
-            that.once('change:isWaiting', function () {
+        if( isWaiting ) {
+            that.once( 'change:isWaiting', function() {
                 finishUpdating();
-            });
+            } );
         } else {
             finishUpdating();
         }
     },
 
-    _onErrorProviderUpdateItemsHandle: function(data, callback){
-        var handlers = this.get('waitingOnUpdateItemsHandlers'),
+    _onErrorProviderUpdateItemsHandle: function( data, callback ) {
+        var handlers = this.get( 'waitingOnUpdateItemsHandlers' ),
             context = this.getContext();
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из-за замороженного источника)
-        for(var i = 0, ii = handlers.length; i < ii; i++){
-            if(handlers[i].onError){
-                handlers[i].onError(context, data);
+        for( var i = 0, ii = handlers.length; i < ii; i++ ) {
+            if( handlers[i].onError ) {
+                handlers[i].onError( context, data );
             }
         }
 
-        this.set('waitingOnUpdateItemsHandlers', []);
+        this.set( 'waitingOnUpdateItemsHandlers', [] );
 
-        if(_.isFunction(callback)) {
-            callback(context, data);
+        if( _.isFunction( callback ) ) {
+            callback( context, data );
         }
     },
 
-    setIsWaiting: function(value){
-        this.set('isWaiting', value);
+    setIsWaiting: function( value ) {
+        this.set( 'isWaiting', value );
     },
 
-    _handleUpdatedItemsData: function (itemsData, callback) {
-        if(this.get('newItemsHandler')){
-            itemsData = this.get('newItemsHandler')(itemsData);
+    _handleUpdatedItemsData: function( itemsData, callback ) {
+        if( this.get( 'newItemsHandler' ) ) {
+            itemsData = this.get( 'newItemsHandler' )( itemsData );
         }
 
-        this._setItems(itemsData);
-        this._notifyAboutItemsUpdated(itemsData, callback);
+        this._setItems( itemsData );
+        this._notifyAboutItemsUpdated( itemsData, callback );
     },
 
-    _notifyAboutItemsUpdated: function (itemsData, callback) {
+    _notifyAboutItemsUpdated: function( itemsData, callback ) {
         var context = this.getContext();
         var argument = {
             value: itemsData,
@@ -17666,23 +18002,23 @@ var BaseDataSource = Backbone.Model.extend({
         };
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
-        var handlers = this.get('waitingOnUpdateItemsHandlers');
-        for(var i = 0, ii = handlers.length; i < ii; i++){
-            if(handlers[i].onSuccess){
-                handlers[i].onSuccess(context, argument);
+        var handlers = this.get( 'waitingOnUpdateItemsHandlers' );
+        for( var i = 0, ii = handlers.length; i < ii; i++ ) {
+            if( handlers[i].onSuccess ) {
+                handlers[i].onSuccess( context, argument );
             }
         }
 
-        this.set('waitingOnUpdateItemsHandlers', []);
+        this.set( 'waitingOnUpdateItemsHandlers', [] );
 
-        if (callback) {
-            callback(context, argument);
+        if( callback ) {
+            callback( context, argument );
         }
 
-        this.trigger('onItemsUpdated', context, argument);
+        this.trigger( 'onItemsUpdated', context, argument );
     },
 
-    _notifyAboutItemsUpdatedAsPropertyChanged: function (itemsData) {
+    _notifyAboutItemsUpdatedAsPropertyChanged: function( itemsData ) {
         var context = this.getContext(),
             argument = this._getArgumentTemplate();
 
@@ -17690,89 +18026,83 @@ var BaseDataSource = Backbone.Model.extend({
         argument.newValue = itemsData;
         argument.oldValue = null;
 
-        this.trigger('onPropertyChanged', context, argument);
-        this.trigger('onPropertyChanged:', context, argument);
+        this.trigger( 'onPropertyChanged', context, argument );
+        this.trigger( 'onPropertyChanged:', context, argument );
     },
 
-    createItem: function (success, error) {
-        var dataProvider = this.get('dataProvider'),
-            idProperty = this.get('idProperty'),
+    createItem: function( success, error ) {
+        var dataProvider = this.get( 'dataProvider' ),
+            idProperty = this.get( 'idProperty' ),
             that = this,
             localItem;
 
-        if (this.get('fillCreatedItem')) {
+        if( this.get( 'fillCreatedItem' ) ) {
             dataProvider.createItem(
-                function (item) {
-                    that._handleDataForCreatingItem(item, success);
+                function( item ) {
+                    that._handleDataForCreatingItem( item, success );
                 },
                 idProperty
             );
         } else {
-            localItem = dataProvider.createLocalItem(idProperty);
-            this._handleDataForCreatingItem(localItem, success);
+            localItem = dataProvider.createLocalItem( idProperty );
+            this._handleDataForCreatingItem( localItem, success );
         }
     },
 
-    _handleDataForCreatingItem: function (itemData, successHandler) {
+    _handleDataForCreatingItem: function( itemData, successHandler ) {
         var items = this.getItems();
 
-        if(items) {
+        if( items ) {
             items = items.slice();
-            items.push(itemData);
-        }else{
+            items.push( itemData );
+        } else {
             items = [itemData];
         }
 
-        this._setItems(items);
-        this._includeItemToModifiedSet(itemData);
-        this.setSelectedItem(itemData);
-        this._notifyAboutItemCreated(itemData, successHandler);
+        this._setItems( items );
+        this._includeItemToModifiedSet( itemData );
+        this.setSelectedItem( itemData );
+        this._notifyAboutItemCreated( itemData, successHandler );
     },
 
-    _notifyAboutItemCreated: function (createdItem, successHandler) {
+    _notifyAboutItemCreated: function( createdItem, successHandler ) {
         var context = this.getContext(),
             argument = {
                 value: createdItem
             };
 
-        if (successHandler) {
-            successHandler(context, argument);
+        if( successHandler ) {
+            successHandler( context, argument );
         }
-        this.trigger('onItemCreated', context, argument);
+        this.trigger( 'onItemCreated', context, argument );
     },
 
-    getFilter: function () {
+    _setCriteriaList: function( criteriaList, onSuccess, onError ) {
+        this.set( 'criteriaList', criteriaList );
+        this.updateItems( onSuccess, onError );
     },
 
-    setFilter: function (value, onSuccess, onError) {
+    setIdFilter: function( itemId ) {
+        var dataProvider = this.get( 'dataProvider' ),
+            idFilter = dataProvider.createIdFilter( itemId );
+
+        this.setFilter( idFilter );
     },
 
-    _setCriteriaList: function(criteriaList, onSuccess, onError){
-        this.set('criteriaList', criteriaList);
-        this.updateItems(onSuccess, onError);
+    setNewItemsHandler: function( handler ) {
+        this.set( 'newItemsHandler', handler );
     },
 
-    setIdFilter: function (itemId) {
-        var dataProvider = this.get('dataProvider'),
-            idFilter = dataProvider.createIdFilter(itemId);
-
-        this.setFilter(idFilter);
+    getErrorValidator: function() {
+        return this.get( 'errorValidator' );
     },
 
-    setNewItemsHandler: function(handler){
-        this.set('newItemsHandler', handler);
+    setErrorValidator: function( validatingFunction ) {
+        this.set( 'errorValidator', validatingFunction );
     },
 
-    getErrorValidator: function () {
-        return this.get('errorValidator');
-    },
-
-    setErrorValidator: function (validatingFunction) {
-        this.set('errorValidator', validatingFunction);
-    },
-
-    getValidationResult: function (item) {
-        var validatingFunction = this.get('errorValidator'),
+    getValidationResult: function( item ) {
+        var validatingFunction = this.get( 'errorValidator' ),
             result = {
                 IsValid: true,
                 Items: []
@@ -17781,21 +18111,21 @@ var BaseDataSource = Backbone.Model.extend({
             context = this.getContext(),
             items, subResult;
 
-        if (validatingFunction) {
-            if (isCheckingOneItem) {
+        if( validatingFunction ) {
+            if( isCheckingOneItem ) {
 
-                result = validatingFunction(context, item);
+                result = validatingFunction( context, item );
 
             } else {
 
                 items = this.getItems();
-                for (var i = 0, ii = items.length; i < ii; i++) {
+                for( var i = 0, ii = items.length; i < ii; i++ ) {
 
-                    subResult = validatingFunction(context, items[i]);
-                    if (!subResult.IsValid) {
-                        this._addIndexToPropertiesOfValidationMessage(subResult.Items, i);
+                    subResult = validatingFunction( context, items[i] );
+                    if( !subResult.IsValid ) {
+                        this._addIndexToPropertiesOfValidationMessage( subResult.Items, i );
                         result.IsValid = false;
-                        result.Items = _.union(result.Items, subResult.Items);
+                        result.Items = _.union( result.Items, subResult.Items );
                     }
 
                 }
@@ -17806,22 +18136,22 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
-    setFileProvider: function (fileProvider) {
-        this.set('fileProvider', fileProvider);
+    setFileProvider: function( fileProvider ) {
+        this.set( 'fileProvider', fileProvider );
     },
 
-    getFileProvider: function () {
-        return this.get('fileProvider');
+    getFileProvider: function() {
+        return this.get( 'fileProvider' );
     },
 
-    _addIndexToPropertiesOfValidationMessage: function (validationMessages, index) {
-        for (var i = 0, ii = validationMessages.length; i < ii; i++) {
+    _addIndexToPropertiesOfValidationMessage: function( validationMessages, index ) {
+        for( var i = 0, ii = validationMessages.length; i < ii; i++ ) {
             validationMessages[i].property = index + '.' + validationMessages[i].property;
         }
     },
 
-    _notifyAboutValidation: function (validationResult) {
-        if(!validationResult) {
+    _notifyAboutValidation: function( validationResult ) {
+        if( !validationResult ) {
             return;
         }
 
@@ -17830,18 +18160,18 @@ var BaseDataSource = Backbone.Model.extend({
                 value: validationResult
             };
 
-        this.trigger('onErrorValidator', context, argument);
+        this.trigger( 'onErrorValidator', context, argument );
     },
 
-    getContext: function () {
+    getContext: function() {
         return this.getView().getContext();
     },
 
-    _indexItemsById: function (items) {
-        var idProperty = this.get('idProperty'),
+    _indexItemsById: function( items ) {
+        var idProperty = this.get( 'idProperty' ),
             result = {},
             idValue;
-        for (var i = 0, ii = items.length; i < ii; i++) {
+        for( var i = 0, ii = items.length; i < ii; i++ ) {
             idValue = items[i][idProperty];
             result[idValue] = items[i];
         }
@@ -17849,129 +18179,128 @@ var BaseDataSource = Backbone.Model.extend({
         return result;
     },
 
-    _indexOfItem: function(item){
+    _indexOfItem: function( item ) {
         var items = this.getItems();
-        if(!items){
+        if( !items ) {
             return -1;
         }
-        return items.indexOf(item);
+        return items.indexOf( item );
     },
 
-    _indexOfSelectedItem: function(){
+    _indexOfSelectedItem: function() {
         var selectedItem = this.getSelectedItem();
 
-        return this._indexOfItem(selectedItem);
+        return this._indexOfItem( selectedItem );
     },
 
-    idOfItem: function (item) {
-        var idProperty = this.get('idProperty');
-        if (!item) {
+    idOfItem: function( item ) {
+        var idProperty = this.get( 'idProperty' );
+        if( !item ) {
             return undefined;
         }
         return item[idProperty];
     },
 
-    getCurrentRequestPromise: function(){
+    getCurrentRequestPromise: function() {
         var promise = $.Deferred();
         var logger = window.InfinniUI.global.logger;
 
-        if(this.get('isRequestInProcess')){
-            this.onItemsUpdatedOnce(function(){
-                if(this.isDataReady()){
+        if( this.get( 'isRequestInProcess' ) ) {
+            this.onItemsUpdatedOnce( function() {
+                if( this.isDataReady() ) {
                     promise.resolve();
-                }else{
-                    logger.warn({
+                } else {
+                    logger.warn( {
                         message: 'BaseDataSource: strange, expected other dataReady status',
                         source: this
-                    });
+                    } );
                 }
-            });
-        }else{
+            } );
+        } else {
             promise.resolve();
         }
 
         return promise;
     },
 
-    getNearestRequestPromise: function(){
+    getNearestRequestPromise: function() {
         var promise = $.Deferred();
 
-        this.onItemsUpdatedOnce( function(){
-            if(this.isDataReady()){
+        this.onItemsUpdatedOnce( function() {
+            if( this.isDataReady() ) {
                 promise.resolve();
-            }else{
-                logger.warn({
+            } else {
+                logger.warn( {
                     message: 'BaseDataSource: strange, expected other dataReady status',
                     source: this
-                });
+                } );
             }
-        });
+        } );
 
         return promise;
     },
 
-    setIsLazy: function(isLazy){
-        this.set('isLazy', isLazy);
+    setIsLazy: function( isLazy ) {
+        this.set( 'isLazy', isLazy );
     },
 
-    isLazy: function(){
-        return this.get('isLazy');
+    isLazy: function() {
+        return this.get( 'isLazy' );
     },
 
-    setResolvePriority: function(priority){
-        this.set('resolvePriority', priority);
+    setResolvePriority: function( priority ) {
+        this.set( 'resolvePriority', priority );
     },
 
-    getResolvePriority: function(){
-        return this.get('resolvePriority');
+    getResolvePriority: function() {
+        return this.get( 'resolvePriority' );
     },
 
-    _copyObject: function (currentObject) {
-        return JSON.parse(JSON.stringify(currentObject));
+    _copyObject: function( currentObject ) {
+        return JSON.parse( JSON.stringify( currentObject ) );
     },
 
-    _getArgumentTemplate: function () {
+    _getArgumentTemplate: function() {
         return {
             source: this
         };
     },
 
-    _detectIdentifyingMode: function(items){
-        if( $.isArray(items) && items.length > 0){
-            if( !$.isPlainObject(items[0]) || this.getIdProperty() in items[0] ){
-                this.set('identifyingMode', 'byId');
-                _.extend( this, BaseDataSource.identifyingStrategy.byId);
-            }else{
-                this.set('identifyingMode', 'byLink');
-                _.extend( this, BaseDataSource.identifyingStrategy.byLink);
+    _detectIdentifyingMode: function( items ) {
+        if( $.isArray( items ) && items.length > 0 ) {
+            if( !$.isPlainObject( items[0] ) || this.getIdProperty() in items[0] ) {
+                this.set( 'identifyingMode', 'byId' );
+                _.extend( this, BaseDataSource.identifyingStrategy.byId );
+            } else {
+                this.set( 'identifyingMode', 'byLink' );
+                _.extend( this, BaseDataSource.identifyingStrategy.byLink );
             }
-        }else{
-            this.set('identifyingMode', 'byId');
-            _.extend( this, BaseDataSource.identifyingStrategy.byId);
+        } else {
+            this.set( 'identifyingMode', 'byId' );
+            _.extend( this, BaseDataSource.identifyingStrategy.byId );
         }
     },
 
-    _getIdentifyingMode: function(){
-        return this.get('identifyingMode');
+    _getIdentifyingMode: function() {
+        return this.get( 'identifyingMode' );
     }
 
-});
-
+} );
 
 BaseDataSource.identifyingStrategy = {
 
     byId: {
-        _restoreSelectedItem: function(){
+        _restoreSelectedItem: function() {
 
             var selectedItem = this.getSelectedItem(),
-                selectedItemId = this.idOfItem(selectedItem);
+                selectedItemId = this.idOfItem( selectedItem );
 
-            if( selectedItemId != null ){
-                var items = this.get('itemsById');
+            if( selectedItemId != null ) {
+                var items = this.get( 'itemsById' );
                 var newSelectedItem = items[selectedItemId];
 
-                if( newSelectedItem != null ){
-                    this.setSelectedItem(newSelectedItem);
+                if( newSelectedItem != null ) {
+                    this.setSelectedItem( newSelectedItem );
                     return true;
                 }
             }
@@ -17979,141 +18308,139 @@ BaseDataSource.identifyingStrategy = {
             return false;
         },
 
-        setSelectedItem: function (item, success, error) {
+        setSelectedItem: function( item, success, error ) {
             var currentSelectedItem = this.getSelectedItem(),
-                items = this.get('itemsById'),
-                itemId = this.idOfItem(item),
+                items = this.get( 'itemsById' ),
+                itemId = this.idOfItem( item ),
                 index;
 
-
-            if (typeof item == 'undefined') {
+            if( typeof item == 'undefined' ) {
                 item = null;
             }
 
-            if (item == currentSelectedItem) {
+            if( item == currentSelectedItem ) {
                 return;
             }
 
-            if (item !== null) {
-                if (!items[itemId]) {
-                    if (!error) {
+            if( item !== null ) {
+                if( !items[itemId] ) {
+                    if( !error ) {
                         throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
                     } else {
-                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        error( this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'} );
                         return;
                     }
                 }
             }
 
-            this.get('model').setProperty('selectedItem', item);
+            this.get( 'model' ).setProperty( 'selectedItem', item );
 
-            index = this._indexOfItem(items[itemId]);
-            this._tuneMirroringOfModel(index);
+            index = this._indexOfItem( items[itemId] );
+            this._tuneMirroringOfModel( index );
 
-            this._notifyAboutSelectedItem(item, success);
+            this._notifyAboutSelectedItem( item, success );
         },
 
-        _includeItemToModifiedSet: function (item) {
-            var itemId = this.idOfItem(item);
-            this.get('modifiedItems')[itemId] = item;
+        _includeItemToModifiedSet: function( item ) {
+            var itemId = this.idOfItem( item );
+            this.get( 'modifiedItems' )[itemId] = item;
         },
 
-        _excludeItemFromModifiedSet: function (item) {
-            var itemId = this.idOfItem(item);
-            delete this.get('modifiedItems')[itemId];
+        _excludeItemFromModifiedSet: function( item ) {
+            var itemId = this.idOfItem( item );
+            delete this.get( 'modifiedItems' )[itemId];
         },
 
-        _handleDeletedItem: function (item) {
+        _handleDeletedItem: function( item ) {
             var items = this.getItems(),
-                idProperty = this.get('idProperty'),
-                itemId = this.idOfItem(item),
+                idProperty = this.get( 'idProperty' ),
+                itemId = this.idOfItem( item ),
                 selectedItem = this.getSelectedItem();
 
-            for (var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++) {
-                if (items[i][idProperty] == itemId) {
-                    items.splice(i, 1);
+            for( var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++ ) {
+                if( items[i][idProperty] == itemId ) {
+                    items.splice( i, 1 );
                     needExit = true;
                 }
             }
-            delete this.get('itemsById')[itemId];
-            this._excludeItemFromModifiedSet(item);
+            delete this.get( 'itemsById' )[itemId];
+            this._excludeItemFromModifiedSet( item );
 
-            if (selectedItem && selectedItem[idProperty] == itemId) {
-                this.setSelectedItem(null);
+            if( selectedItem && selectedItem[idProperty] == itemId ) {
+                this.setSelectedItem( null );
             }
 
-            this._notifyAboutItemDeleted(item);
+            this._notifyAboutItemDeleted( item );
         }
     },
 
     byLink: {
-        _restoreSelectedItem: function(){
+        _restoreSelectedItem: function() {
 
             var selectedItem = this.getSelectedItem();
             var items = this.getItems();
 
-            if( items.indexOf(selectedItem) == -1 ){
+            if( items.indexOf( selectedItem ) == -1 ) {
                 return false;
-            }else{
+            } else {
                 return true;
             }
         },
 
-        setSelectedItem: function (item, success, error) {
+        setSelectedItem: function( item, success, error ) {
             var currentSelectedItem = this.getSelectedItem(),
                 items = this.getItems(),
-                index = this._indexOfItem(item);
+                index = this._indexOfItem( item );
 
-
-            if (typeof item == 'undefined') {
+            if( typeof item == 'undefined' ) {
                 item = null;
             }
 
-            if (item == currentSelectedItem) {
+            if( item == currentSelectedItem ) {
                 return;
             }
 
-            if (item !== null) {
-                if (index == -1) {
-                    if (!error) {
+            if( item !== null ) {
+                if( index == -1 ) {
+                    if( !error ) {
                         throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
                     } else {
-                        error(this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'});
+                        error( this.getContext(), {error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.'} );
                         return;
                     }
                 }
             }
 
-            this.get('model').setProperty('selectedItem', item);
+            this.get( 'model' ).setProperty( 'selectedItem', item );
 
-            this._tuneMirroringOfModel(index);
+            this._tuneMirroringOfModel( index );
 
-            this._notifyAboutSelectedItem(item, success);
+            this._notifyAboutSelectedItem( item, success );
         },
 
-        _includeItemToModifiedSet: function (item) {
-            this.get('modifiedItems')['-'] = item;
+        _includeItemToModifiedSet: function( item ) {
+            this.get( 'modifiedItems' )['-'] = item;
         },
 
-        _excludeItemFromModifiedSet: function (item) {
-            delete this.get('modifiedItems')['-'];
+        _excludeItemFromModifiedSet: function( item ) {
+            delete this.get( 'modifiedItems' )['-'];
         },
 
-        _handleDeletedItem: function (item) {
+        _handleDeletedItem: function( item ) {
             var items = this.getItems(),
                 selectedItem = this.getSelectedItem(),
-                index = items.indexOf(item);
+                index = items.indexOf( item );
 
-            if(index >= 0){
-                items.splice(index, 1);
-                this._excludeItemFromModifiedSet(item);
+            if( index >= 0 ) {
+                items.splice( index, 1 );
+                this._excludeItemFromModifiedSet( item );
 
-                if (selectedItem && selectedItem == item) {
-                    this.setSelectedItem(null);
+                if( selectedItem && selectedItem == item ) {
+                    this.setSelectedItem( null );
                 }
             }
 
-            this._notifyAboutItemDeleted(item);
+            this._notifyAboutItemDeleted( item );
         }
     }
 };
@@ -18224,36 +18551,6 @@ var RestDataSource = BaseDataSource.extend({
             BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
         }
 
-    },
-
-    getGettingUrlParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setGettingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
     },
 
     getSettingUrlParams: function(propertyName){
@@ -18427,7 +18724,6 @@ var DocumentDataSource = RestDataSource.extend({
         var model = this.get('model');
         model.setProperty('pageNumber', 0);
         model.setProperty('pageSize', 15);
-        model.setProperty('filterParams', {});
         this.setUpdatingItemsConverter(function(data){
             model.setProperty('totalCount', data['Result']['Count']);
             model.setProperty('additionalResult', data['Result']['AdditionalResult']);
@@ -18438,26 +18734,21 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     initHandlers: function(){
+        BaseDataSource.prototype.initHandlers.apply(this, Array.prototype.slice.call(arguments));
         var model = this.get('model');
         var that = this;
-        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this),
-            updateGettingUrlParamsWithReset = function() {
-                that.suspendUpdate('updateGettingUrlParams');
-                that.get('model').setProperty('pageNumber', 0);
-                that.updateGettingUrlParams();
-                that.resumeUpdate('updateGettingUrlParams');
-            } ;
+        var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
+        var updateGettingUrlParamsWithReset = _.bind(this.updateGettingUrlParamsWithReset, this);
 
         model.onPropertyChanged('documentId', function(){
             that.updateGettingUrlParams();
             that.updateSettingUrlParams();
             that.updateDeletingUrlParams();
         });
-        model.onPropertyChanged('filter', updateGettingUrlParamsWithReset);
-        model.onPropertyChanged('filterParams.*', updateGettingUrlParamsWithReset);
+
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
         model.onPropertyChanged('pageSize', updateGettingUrlParamsWithReset);
-        model.onPropertyChanged('search', updateGettingUrlParamsWithReset);
+
         model.onPropertyChanged('select', updateGettingUrlParams);
         model.onPropertyChanged('order', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
@@ -18467,55 +18758,7 @@ var DocumentDataSource = RestDataSource.extend({
         this.updateDeletingUrlParams();
     },
 
-    updateGettingUrlParams: function(){
-        var model = this.get('model'),
-            params = {
-                method: 'get',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get('model').getProperty('documentId'),
-                data: {},
-                params: {}
-            },
-            filter = model.getProperty('filter'),
-            filterParams = model.getProperty('filterParams'),
-            pageNumber = model.getProperty('pageNumber'),
-            pageSize = model.getProperty('pageSize'),
-            searchStr = model.getProperty('search'),
-            select = model.getProperty('select'),
-            order = model.getProperty('order'),
-            needTotalCount = model.getProperty('needTotalCount');
 
-        if(filter){
-            params.data.filter = filter;
-            if(filterParams){
-                _.extend(params.params, filterParams);
-            }
-        }
-
-        if(pageSize){
-            pageNumber = pageNumber || 0;
-            params.data.skip = pageNumber*pageSize;
-            params.data.take = pageSize;
-        }
-
-        if(searchStr){
-            params.data.search = searchStr;
-        }
-
-        if(select){
-            params.data.select = select;
-        }
-
-        if(order){
-            params.data.order = order;
-        }
-
-        if(needTotalCount){
-            params.data.count = needTotalCount;
-        }
-
-        this.setGettingUrlParams(params);
-    },
 
     updateSettingUrlParams: function(){
         var model = this.get('model'),
@@ -18545,7 +18788,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     initDataProvider: function(){
         var dataProvider = window.InfinniUI.providerRegister.build('DocumentDataSource');
-
         this.set('dataProvider', dataProvider);
     },
 
@@ -18555,49 +18797,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     setDocumentId: function(documentId){
         this.get('model').setProperty('documentId', documentId);
-    },
-
-    getFilter: function(){
-        return this.get('model').getProperty('filter');
-    },
-
-    setFilter: function(filter){
-        this.get('model').setProperty('filter', filter);
-    },
-
-    getFilterParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setFilterParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
-    },
-
-    setIdFilter: function (itemId) {
-        this.setFilter('eq(' + this.getIdProperty() + ','+ this.quoteValue(itemId) + ')');
     },
 
     getPageNumber: function(){
@@ -18614,14 +18813,6 @@ var DocumentDataSource = RestDataSource.extend({
 
     setPageSize: function(pageSize){
         this.get('model').setProperty('pageSize', pageSize);
-    },
-
-    getSearch: function(){
-        return this.get('model').getProperty('search');
-    },
-
-    setSearch: function(searchStr){
-        this.get('model').setProperty('search', searchStr);
     },
 
     getSelect: function(){
@@ -18659,13 +18850,17 @@ var DocumentDataSource = RestDataSource.extend({
         }
     },
 
+    setIdFilter: function (itemId) {
+        this.setFilter('eq(' + this.getIdProperty() + ','+ this.quoteValue(itemId) + ')');
+    },
+
     quoteValue: function (value) {
         var VALUE_QUOTE_CHAR = '\'';
 
         if (_.isString(value)) {
             return VALUE_QUOTE_CHAR + value + VALUE_QUOTE_CHAR;
         } else {
-            return value
+            return value;
         }
     }
 
@@ -18679,84 +18874,94 @@ window.InfinniUI.DocumentDataSource = DocumentDataSource;
  * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
-}
+};
 
-_.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
-    build: function (context, args) {
-        var dataSource = this.createDataSource(args.parentView);
-        dataSource.suspendUpdate('tuningInSourceBuilder');
+_.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
+    build: function( context, args ) {
+        var dataSource = this.createDataSource( args.parentView );
+        dataSource.suspendUpdate( 'tuningInSourceBuilder' );
 
-        this.applyMetadata(args.builder, args.parentView, args.metadata, dataSource);
+        this.applyMetadata( args.builder, args.parentView, args.metadata, dataSource );
 
-        this.applySuspended(dataSource, args.suspended);
+        this.applySuspended( dataSource, args.suspended );
 
-        dataSource.resumeUpdate('tuningInSourceBuilder');
+        dataSource.resumeUpdate( 'tuningInSourceBuilder' );
 
         return dataSource;
     },
 
-    applySuspended: function (dataSource, suspended) {
-        if (!suspended) {
+    applySuspended: function( dataSource, suspended ) {
+        if( !suspended ) {
             return;
         }
 
-        for (var name in suspended) {
-            if (!suspended.hasOwnProperty(name) || dataSource.getName() !== name) {
+        for( var name in suspended ) {
+            if( !suspended.hasOwnProperty( name ) || dataSource.getName() !== name ) {
                 continue;
             }
 
-            dataSource.suspendUpdate(suspended[name]);
+            dataSource.suspendUpdate( suspended[name] );
         }
 
     },
 
-    applyMetadata: function (builder, parentView, metadata, dataSource) {
+    applyMetadata: function( builder, parentView, metadata, dataSource ) {
         var idProperty = metadata.IdProperty;
-        if (idProperty) {
-            dataSource.setIdProperty(idProperty);
+        if( idProperty ) {
+            dataSource.setIdProperty( idProperty );
         }
 
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
-        //dataSource.setPageSize(metadata.PageSize || 15);
-        //dataSource.setPageNumber(metadata.PageNumber || 0);
-        //
-        //if('Sorting' in metadata){
-        //    dataSource.setSorting(metadata['Sorting']);
-        //}
-        //
-        //var queryMetadata;
-        //if('Query' in metadata){
-        //    dataSource.setFilter(metadata['Query']);
-        //}
 
         if('IsLazy' in metadata){
             dataSource.setIsLazy(metadata['IsLazy']);
         }
 
-        if('ResolvePriority' in metadata){
-            dataSource.setResolvePriority(metadata['ResolvePriority']);
+        if( 'Search' in metadata ) {
+            dataSource.setSearch( metadata['Search'] );
         }
 
-        if( _.isObject(metadata.CustomProperties) ) {
-            this.initCustomProperties(dataSource, metadata.CustomProperties);
+        if( 'Filter' in metadata ) {
+            dataSource.setFilter( metadata['Filter'] );
+        }
+        if( 'FilterParams' in metadata ) {
+            var params = metadata['FilterParams'];
+            for( var k in params ) {
+                this.initBindingToProperty( params[k], dataSource, parentView, '.filterParams.' + k, builder );
+            }
         }
 
-        this.initValidation(parentView, dataSource, metadata);
-        this.initNotifyValidation(dataSource);
-        this.initScriptsHandlers(parentView, metadata, dataSource);
+        if( 'IsLazy' in metadata ) {
+            dataSource.setIsLazy( metadata['IsLazy'] );
+        }
 
-        this.initFileProvider(dataSource);
+        if( 'ResolvePriority' in metadata ) {
+            dataSource.setResolvePriority( metadata['ResolvePriority'] );
+        }
+
+        if( _.isObject( metadata.CustomProperties ) ) {
+            this.initCustomProperties( dataSource, metadata.CustomProperties );
+        }
+
+        this.initValidation( parentView, dataSource, metadata );
+        this.initNotifyValidation( dataSource );
+        this.initScriptsHandlers( parentView, metadata, dataSource );
+
+        this.initFileProvider( dataSource );
     },
 
-    createDataSource: function (parent) {
-        throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
-    },
-
-    initCustomProperties: function(dataSource, customProperties){
-        _.each(customProperties, function(value, key){
-            dataSource.setProperty('.' + key, value);
+    createDataSource: function( parent ) {
+        // throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
+        return new BaseDataSource({
+            view: parent
         });
+    },
+
+    initCustomProperties: function( dataSource, customProperties ) {
+        _.each( customProperties, function( value, key ) {
+            dataSource.setProperty( '.' + key, value );
+        } );
     },
 
     /**
@@ -18766,91 +18971,109 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
      * @param dataSource
      * @param metadata
      */
-    initValidation: function (parentView, dataSource, metadata) {
-        if (metadata.ValidationErrors) {
-            dataSource.setErrorValidator(function (context, args) {
-                return new ScriptExecutor(parentView).executeScript(metadata.ValidationErrors.Name || metadata.ValidationErrors, args);
-            });
+    initValidation: function( parentView, dataSource, metadata ) {
+        if( metadata.ValidationErrors ) {
+            dataSource.setErrorValidator( function( context, args ) {
+                return new ScriptExecutor( parentView ).executeScript( metadata.ValidationErrors.Name || metadata.ValidationErrors, args );
+            } );
         }
     },
 
     //Скриптовые обработчики на события
-    initScriptsHandlers: function (parentView, metadata, dataSource) {
+    initScriptsHandlers: function( parentView, metadata, dataSource ) {
 
-        if( !parentView ){
+        if( !parentView ) {
             return;
         }
 
-        if (metadata.OnSelectedItemChanged) {
-            dataSource.onSelectedItemChanged(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
-            });
+        if( metadata.OnSelectedItemChanged ) {
+            dataSource.onSelectedItemChanged( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args );
+            } );
         }
 
-        if (metadata.OnItemsUpdated) {
-            dataSource.onItemsUpdated(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args);
-            });
+        if( metadata.OnItemsUpdated ) {
+            dataSource.onItemsUpdated( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args );
+            } );
         }
 
-        if (metadata.OnPropertyChanged) {
-            dataSource.onPropertyChanged(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args);
-            });
+        if( metadata.OnPropertyChanged ) {
+            dataSource.onPropertyChanged( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args );
+            } );
         }
 
-        if (metadata.OnItemDeleted) {
-            dataSource.onItemDeleted(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args);
-            });
+        if( metadata.OnItemDeleted ) {
+            dataSource.onItemDeleted( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args );
+            } );
         }
 
-        if (metadata.OnErrorValidator) {
-            dataSource.onErrorValidator(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args);
-            });
+        if( metadata.OnErrorValidator ) {
+            dataSource.onErrorValidator( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args );
+            } );
         }
 
-        if (metadata.OnProviderError) {
-            dataSource.onProviderError(function (context, args) {
-                new ScriptExecutor(parentView).executeScript(metadata.OnProviderError.Name || metadata.OnProviderError, args);
-            });
+        if( metadata.OnProviderError ) {
+            dataSource.onProviderError( function( context, args ) {
+                new ScriptExecutor( parentView ).executeScript( metadata.OnProviderError.Name || metadata.OnProviderError, args );
+            } );
         }
     },
 
-    buildBindingBuilder: function(params){
+    buildBindingBuilder: function( params ) {
 
-        return function(bindingMetadata){
-            return params.builder.buildBinding(bindingMetadata, {
+        return function( bindingMetadata ) {
+            return params.builder.buildBinding( bindingMetadata, {
                 parentView: params.parentView,
                 basePathOfProperty: params.basePathOfProperty
-            });
+            } );
         };
     },
 
-     initFileProvider: function (dataSource) {
+    initFileProvider: function( dataSource ) {
 
-             var host = InfinniUI.config.serverUrl;
+        var host = InfinniUI.config.serverUrl;
 
-             var fileUrlConstructor = new DocumentUploadQueryConstructor(host);
+        var fileUrlConstructor = new DocumentUploadQueryConstructor( host );
 
-             var fileProvider = new DocumentFileProvider(fileUrlConstructor);
+        var fileProvider = new DocumentFileProvider( fileUrlConstructor );
 
-             dataSource.setFileProvider(fileProvider);
-     }
+        dataSource.setFileProvider( fileProvider );
+    },
 
+    initBindingToProperty: function( valueMetadata, dataSource, parentView, pathForBinding, builder ) {
+        if( typeof valueMetadata != 'object' ) {
+            if( valueMetadata !== undefined ) {
+                dataSource.setProperty( pathForBinding, valueMetadata );
+            }
 
-});
+        } else {
+            var args = {
+                parent: parentView,
+                parentView: parentView
+            };
 
+            var dataBinding = builder.buildBinding( valueMetadata, args );
 
-_.extend(BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin);
+            dataBinding.setMode( InfinniUI.BindingModes.toElement );
+
+            dataBinding.bindElement( dataSource, pathForBinding );
+        }
+    }
+
+} );
+
+_.extend( BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin );
 
 window.InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;
 
 //####app\data\dataSource\restDataSourceBuilder.js
 var RestDataSourceBuilder = function() {
     _.superClass(RestDataSourceBuilder, this);
-}
+};
 
 _.inherit(RestDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -18931,26 +19154,6 @@ _.extend(RestDataSourceBuilder.prototype, {
         }
     },
 
-    initBindingToProperty: function (valueMetadata, dataSource, parentView, pathForBinding, builder) {
-        if (typeof valueMetadata != 'object') {
-            if (valueMetadata !== undefined) {
-                dataSource.setProperty(pathForBinding, valueMetadata);
-            }
-
-        } else {
-            var args = {
-                parent: parentView,
-                parentView: parentView
-            };
-
-            var dataBinding = builder.buildBinding(valueMetadata, args);
-
-            dataBinding.setMode(InfinniUI.BindingModes.toElement);
-
-            dataBinding.bindElement(dataSource, pathForBinding);
-        }
-    },
-
     _getCompensateProviderErrorHandler: function(dataSource){
         return function(context, args){
             var exchange = window.InfinniUI.global.messageBus;
@@ -18965,7 +19168,7 @@ window.InfinniUI.RestDataSourceBuilder = RestDataSourceBuilder;
 //####app\data\dataSource\documentDataSourceBuilder.js
 var DocumentDataSourceBuilder = function() {
     _.superClass(DocumentDataSourceBuilder, this);
-}
+};
 
 _.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -18975,15 +19178,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
 
         dataSource.setDocumentId(metadata['DocumentId']);
 
-        if('Filter' in metadata){ dataSource.setFilter(metadata['Filter']); }
-        if('FilterParams' in metadata){
-            var params = metadata['FilterParams'];
-            for(var k in params){
-                this.initBindingToProperty(params[k], dataSource, parent, '.filterParams.' + k, builder);
-            }
-        }
-
-        if('Search' in metadata){ dataSource.setSearch(metadata['Search']); }
         if('Select' in metadata){ dataSource.setSelect(metadata['Select']); }
         if('Order' in metadata){ dataSource.setOrder(metadata['Order']); }
         if('NeedTotalCount' in metadata){ dataSource.setNeedTotalCount(metadata['NeedTotalCount']); }
@@ -19001,9 +19195,8 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         return new DocumentDataSource({
             view: parent
         });
-    },
+    }
 
-    initBindingToProperty: RestDataSourceBuilder.prototype.initBindingToProperty
 });
 
 window.InfinniUI.DocumentDataSourceBuilder = DocumentDataSourceBuilder;
@@ -19507,7 +19700,12 @@ _.extend(Element.prototype, {
         return this.control.onMouseWheel(callback);
     },
 
+    onRemove: function( handler ) {
+        return this.control.onRemove(this.createControlEventHandler(this, handler));
+    },
+
     remove: function (isInitiatedByParent, parent) {
+
         var logger = window.InfinniUI.global.logger;
         if(this.isRemoved){
             logger.warn('Element.remove: Попытка удалить элемент, который уже был удален');
@@ -19568,6 +19766,7 @@ _.extend(Element.prototype, {
         }
 
         return function (message) {
+            message = message || {};
             _.extend(
                 message,
                 additionParams
@@ -19704,6 +19903,7 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 				element = params.element;
 
 		this.initBindingToProperty(params, 'Text');
+		this.resolveExpressionInText(params, 'Text');
 		this.initBindingToProperty(params, 'Visible', true);
 		this.initBindingToProperty(params, 'Enabled', true);
 		this.initBindingToProperty(params, 'HorizontalAlignment');
@@ -19808,29 +20008,27 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	},
 
 	initBindingToProperty: function (params, propertyName, isBooleanBinding) {
-		var metadata = params.metadata,
-				propertyMetadata = metadata[propertyName],
-				element = params.element,
-				lowerCasePropertyName = this.lowerFirstSymbol(propertyName),
-				converter;
+		var metadata = params.metadata;
+		var propertyMetadata = metadata[propertyName];
+		var element = params.element;
+		var lowerCasePropertyName = this.lowerFirstSymbol(propertyName);
+		var converter;
 
-		if (!propertyMetadata || typeof propertyMetadata != 'object') {
-			if (propertyMetadata !== undefined) {
+		if(!propertyMetadata || typeof propertyMetadata != 'object') {
+			if(propertyMetadata !== undefined) {
 				params.element['set' + propertyName](propertyMetadata);
 			}
 			return null;
-
 		} else {
 			var args = {
 				parent: params.parent,
 				parentView: params.parentView,
 				basePathOfProperty: params.basePathOfProperty
 			};
-
 			var dataBinding = params.builder.buildBinding(metadata[propertyName], args);
-			var oldConverter;
 
-			if (isBooleanBinding) {
+			var oldConverter;
+			if(isBooleanBinding) {
 				dataBinding.setMode(InfinniUI.BindingModes.toElement);
 
 				converter = dataBinding.getConverter();
@@ -19861,29 +20059,35 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 		}
 	},
 
-	initToolTip: function (params) {
-		var exchange = window.InfinniUI.global.messageBus,
-				builder = params.builder,
-				element = params.element,
-				metadata = params.metadata,
-				tooltip;
+	resolveExpressionInText: function( params, propertyName ) {
+		var valueToResolve = params.metadata[ propertyName ];
+		if( valueToResolve && typeof valueToResolve === 'string' && valueToResolve.slice(0, 2) === '{=' && valueToResolve.slice(-1) === '}' ) {
+			var args = {
+				parent: params.parent,
+				parentView: params.parentView,
+				basePathOfProperty: params.basePathOfProperty
+			};
 
-		var argumentForBuilder = {
+			var expression = '{return ' + valueToResolve.slice(2, -1) + ';}';
+			var newValue = new ScriptExecutor(params.element.getScriptsStorage()).executeScript(expression, args);
+			if( newValue !== undefined ) {
+				params.element['set' + propertyName](newValue);
+			}
+		}
+	},
+
+	initToolTip: function (params) {
+		var builder = params.builder,
+			element = params.element,
+			metadata = params.metadata;
+
+		var tooltipBuilderParams = {
+            basePathOfProperty: params.basePathOfProperty,
 			parent: element,
-			parentView: params.parentView,
-			basePathOfProperty: params.basePathOfProperty
+			parentView: params.parentView
 		};
 
-		if (typeof metadata.ToolTip === 'string') {
-			tooltip = builder.buildType("Label", {
-				"Text": metadata.ToolTip
-			}, argumentForBuilder);
-		} else {
-			tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
-		}
-
-		element.setToolTip(tooltip);
-		exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+		element.setToolTip(builder.buildType('ToolTip', metadata['ToolTip'], tooltipBuilderParams));
 	},
 
 	initContextMenu: function(params) {
@@ -20759,9 +20963,12 @@ var editorBaseBuilderMixin = {
         bindingOptions.valueProperty = bindingOptions.valueProperty || 'value';
 
         element.setLabelFloating(metadata.LabelFloating);
-        element.setHintText(metadata.HintText);
-        element.setErrorText(metadata.ErrorText);
-        element.setWarningText(metadata.WarningText);
+        this.initBindingToProperty(params, 'HintText');
+        this.resolveExpressionInText(params, 'HintText');
+        this.initBindingToProperty(params, 'ErrorText');
+        this.resolveExpressionInText(params, 'ErrorText');
+        this.initBindingToProperty(params, 'WarningText');
+        this.resolveExpressionInText(params, 'WarningText');
 
         if (metadata.OnValueChanging) {
             element.onValueChanging(function (context, args) {
@@ -20837,22 +21044,10 @@ var editorBaseBuilderMixin = {
                 var result = args.value,
                     text = '';
 
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
+                if (!result.IsValid && Array.isArray(result.Items)) {
+                    text = getTextForItems(result.Items);
                 }
                 element.setErrorText(text);
-            });
-        }
-
-        if (typeof source.onWarningValidator == 'function') {
-            source.onWarningValidator(function (context, args) {
-                var result = args.value,
-                    text = '';
-
-                if (!result.isValid && Array.isArray(result.items)) {
-                    text = getTextForItems(result.items);
-                }
-                element.setWarningText(text);
             });
         }
 
@@ -20860,10 +21055,10 @@ var editorBaseBuilderMixin = {
         function getTextForItems(items, callback) {
             return items
                 .filter(function (item) {
-                    return property === item.property;
+                    return property === item.Property;
                 })
                 .map(function (item) {
-                    return item.message;
+                    return item.Message;
                 })
                 .join(' ');
         }
@@ -21243,6 +21438,7 @@ _.extend(TextEditorBaseBuilder.prototype, {
         var element = params.element;
 
         this.initBindingToProperty(params, 'LabelText');
+        this.resolveExpressionInText(params, 'LabelText');
 
         element.setInputType(this.getCompatibleInputType(params));
         this
@@ -21626,9 +21822,9 @@ DateTimePickerBuilder.prototype.applyMaxValue = function (element, maxValue) {
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     var metadata = params.metadata;
     var defaultFormat = {
-            Date: '{:d}',
-            DateTime: '{:g}',
-            Time: '{:T}'
+            Date: '${:d}',
+            DateTime: '${:g}',
+            Time: '${:T}'
         },
         defaultEditMask = {
             Date: {DateTimeEditMask: {Mask: 'd'}},
@@ -21720,7 +21916,7 @@ DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     });
 
     _.defaults(params.metadata, {
-        DisplayFormat: '{:d}',
+        DisplayFormat: '${:d}',
         EditMask: {DateTimeEditMask: {Mask: 'd'}}
     });
 };
@@ -21779,7 +21975,7 @@ TimePickerBuilder.prototype.applyDefaultMetadata = function (params) {
     });
 
     _.defaults(params.metadata, {
-        DisplayFormat: '{:T}',
+        DisplayFormat: '${:T}',
         EditMask: {
             DateTimeEditMask: {
                 Mask: 'T'
@@ -22264,6 +22460,7 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
         this.initValueTemplate(data.valueBinding, params);
         this.initBindingToProperty(params, 'LabelText');
+        this.resolveExpressionInText(params, 'LabelText');
         element.setAutocomplete(params.metadata.Autocomplete);
         element.setShowClear(params.metadata.ShowClear);
 
@@ -23520,6 +23717,7 @@ _.extend(FileBoxBuilder.prototype, {
         }
 
         this.initBindingToProperty(params, 'LabelText');
+        this.resolveExpressionInText(params, 'LabelText');
 
         // Привязка данных односторонняя т.к.:
         // 1. по значению из источника данных - сформировать URL изображения.
@@ -24870,6 +25068,7 @@ _.extend(PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype *
                 element = params.element;
 
             this.initBindingToProperty(params, 'LabelText');
+	          this.resolveExpressionInText(params, 'LabelText');
             element.setAutocomplete(metadata.Autocomplete);
         },
 
@@ -25430,6 +25629,114 @@ _.extend(ToolBarBuilder.prototype, /** @lends ToolBarBuilder.prototype */{
 
 });
 
+//####app\elements\tooltip\tooltip.js
+var Tooltip = function (parent) {
+    _.superClass( Icon, this, parent );
+};
+
+_.inherit(Tooltip, Element);
+
+
+_.extend(Tooltip.prototype, {
+
+    createControl: function () {
+        return new InfinniUI.TooltipControl();
+    },
+
+    setContent: function (content) {
+        this.control.set('content', content);
+    }
+
+
+});
+
+
+InfinniUI.Tooltip = Tooltip;
+
+//####app\elements\tooltip\tooltipBuilder.js
+function TooltipBuilder() {
+    _.superClass( TooltipBuilder, this );
+}
+
+InfinniUI.TooltipBuilder = TooltipBuilder;
+
+_.inherit( TooltipBuilder, ElementBuilder );
+
+_.extend( TooltipBuilder.prototype, {
+
+    createElement: function( params ) {
+        return new InfinniUI.Tooltip();
+    },
+
+    normalizeMetadata: function( metadata ) {
+        if( typeof metadata === 'string' ) {
+            metadata = {
+                Text: metadata
+            }
+        }
+
+        return metadata;
+    },
+
+    applyMetadata: function( params ) {
+        var tooltip = params.element;
+
+        params.metadata = this.normalizeMetadata( params.metadata );
+
+        ElementBuilder.prototype.applyMetadata.call( this, params );
+        tooltip.setContent( this.buildContent( params.metadata, params ) );
+
+        var exchange = InfinniUI.global.messageBus;
+
+        exchange.send(messageTypes.onToolTipInit, {element: params.parent, content: tooltip});
+        params.parent.onRemove(function () {
+            exchange.send(messageTypes.onToolTipDestroy, {element: params.parent});
+        });
+
+    },
+
+    buildContent: function( metadata, params ) {
+        var builder = params.builder;
+        var builderParams = {
+            parent: params.element,
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        };
+        var content;
+
+        if( 'Text' in metadata ) {
+            content = this.buildTextContent( metadata[ 'Text' ], builder, builderParams );
+        } else {
+            content = this.buildElementContent( metadata, builder, builderParams );
+        }
+
+        return content;
+    },
+
+    /**
+     * @protected
+     * @param text
+     * @param builder
+     * @param builderParams
+     * @return {*}
+     */
+    buildTextContent: function( text, builder, builderParams ) {
+        return builder.buildType( "Label", {
+            "Text": text
+        }, builderParams )
+    },
+
+    /**
+     * @protected
+     * @param metadata
+     * @param builder
+     * @param builderParams
+     */
+    buildElementContent: function( metadata, builder, builderParams ) {
+        return builder.build( metadata, builderParams );
+    }
+
+} );
 //####app\elements\treeView\treeView.js
 /**
  * @param parent
@@ -25478,6 +25785,34 @@ TreeView.prototype.getParentSelector = function () {
 TreeView.prototype.setParentSelector = function (value) {
     this.control.set('parentSelector', value);
 };
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.expand = function( key ) {
+    this.control.expand(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.collapse = function( key ) {
+    this.control.collapse(key);
+};
+
+/**
+ *
+ * @param key
+ */
+TreeView.prototype.toggle = function( key ) {
+    this.control.toggle(key);
+};
+
+
+
+
 
 //####app\elements\treeView\treeViewBuilder.js
 function TreeViewBuilder() {
@@ -26653,6 +26988,10 @@ _.extend(BaseAction.prototype, {
         if(_.isFunction(onExecutedHandler)) {
             onExecutedHandler(args);
         }
+    },
+
+    _isRootElementPath: function(path){
+        return !path.includes('.');
     }
 
 }, Backbone.Events);
@@ -26884,13 +27223,22 @@ _.extend(AddAction.prototype, {
         }
 
         if (this._isObjectDataSource(editDataSource)) {
-            var items = destinationDataSource.getProperty(destinationProperty) || [],
-                newItem = editDataSource.getSelectedItem();
+            var newItem = editDataSource.getSelectedItem();
 
-            items = _.clone(items);
-            items.push(newItem);
+            if( this._isRootElementPath(destinationProperty) ){
+                destinationDataSource._includeItemToModifiedSet(newItem);
+                destinationDataSource.saveItem(newItem, function(){
+                    destinationDataSource.updateItems();
+                });
+            } else {
+                var items = destinationDataSource.getProperty(destinationProperty) || [];
 
-            destinationDataSource.setProperty(destinationProperty, items);
+                items = _.clone(items);
+                items.push(newItem);
+
+                destinationDataSource.setProperty(destinationProperty, items);
+            }
+
         } else {
             destinationDataSource.updateItems();
         }
@@ -26976,15 +27324,18 @@ _.extend(DeleteAction.prototype,
     BaseFallibleActionMixin,
     {
         execute: function(callback){
-            var accept = this.getProperty('accept'),
-                that = this,
-                dataSource = this.getProperty('destinationSource'),
-                property = this.getProperty('destinationProperty');
+            var accept = this.getProperty('accept');
+            var that = this;
+            var dataSource = this.getProperty('destinationSource');
+            var property = this.getProperty('destinationProperty');
+            var acceptMessage = this.getProperty('acceptMessage') || localized.strings.DeleteAction.warnMessage;
+            var acceptMessageType = this.getProperty('acceptMessageType') || 'default';
 
             if( dataSource.getProperty(property) ) {
                 if(accept){
                     new MessageBox({
-                        text: localized.strings.DeleteAction.warnMessage,
+                        text: acceptMessage,
+                        type: acceptMessageType,
                         buttons: [
                             {
                                 name: localized.strings.DeleteAction.agree,
@@ -27004,6 +27355,7 @@ _.extend(DeleteAction.prototype,
             } else {
                 new MessageBox({
                     text: localized.strings.DeleteAction.warnMessageNoItem,
+	                  type: 'error',
                     buttons: [
                         {
                             name: localized.strings.DeleteAction.cancel
@@ -27017,10 +27369,10 @@ _.extend(DeleteAction.prototype,
             var dataSource = this.getProperty('destinationSource'),
                 property = this.getProperty('destinationProperty');
 
-            if( this._isDocument(property) ) {
+            if( this._isRootElementPath(property) ) {
                 this._deleteDocument(dataSource, property, callback);
             } else {
-                this._deleteItem(dataSource, property, callback);
+                this._deleteArrayElement(dataSource, property, callback);
             }
         },
 
@@ -27049,7 +27401,7 @@ _.extend(DeleteAction.prototype,
             dataSource.deleteItem(selectedItem, onSuccessDelete, onErrorDelete);
         },
 
-        _deleteItem: function(dataSource, property, callback){
+        _deleteArrayElement: function(dataSource, property, callback){
             var propertyPathList = property.split("."),
                 index = propertyPathList.pop(),
                 parentProperty = propertyPathList.join("."),
@@ -27065,10 +27417,6 @@ _.extend(DeleteAction.prototype,
             if (_.isFunction(callback)) {
                 callback();
             }
-        },
-
-        _isDocument: function(propertyName){
-            return propertyName == '$' || _.isFinite(propertyName);
         }
     }
 );
@@ -27100,6 +27448,8 @@ _.extend(DeleteActionBuilder.prototype,
                                         propertyName;
 
             action.setProperty('accept', accept);
+            action.setProperty('acceptMessage', metadata.AcceptMessage);
+            action.setProperty('acceptMessageType', metadata.AcceptMessageType);
             action.setProperty('destinationSource', dataSource);
             action.setProperty('destinationProperty', destinationProperty);
 
@@ -27130,7 +27480,7 @@ _.extend(EditAction.prototype, {
 
             // if selectedItem is empty and it is must be document
             // return error
-            if( this._isRootItem(destinationProperty) ){
+            if( this._isRootElementPath(destinationProperty) ){
                 var logger = window.InfinniUI.global.logger;
                 var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
                 logger.error(message);
@@ -27181,20 +27531,22 @@ _.extend(EditAction.prototype, {
             destinationProperty = this.getProperty('destinationProperty');
 
         if( this._isObjectDataSource(editDataSource) ) {
-            var editedItem = editDataSource.getSelectedItem();
-            var rootItem = this._getRootItem(destinationDataSource, destinationProperty);
+            var editedItem = editDataSource.getSelectedItem(),
+                originItem = destinationDataSource.getProperty(destinationProperty);
 
-            if( this._isRootItem(destinationProperty) ) {
-                this._overrideOriginItem(rootItem, editedItem);
-                destinationDataSource._includeItemToModifiedSet(rootItem);
+            if( this._isRootElementPath(destinationProperty) ) {
+                this._overrideOriginItem(originItem, editedItem);
+                destinationDataSource._includeItemToModifiedSet(originItem);
+                destinationDataSource.saveItem(originItem, function(){
+                    destinationDataSource.updateItems();
+                });
             } else {
                 destinationDataSource.setProperty(destinationProperty, editedItem);
             }
 
-            destinationDataSource.saveItem(rootItem);
+        } else {
+            destinationDataSource.updateItems();
         }
-
-        destinationDataSource.updateItems();
     },
 
     _overrideOriginItem: function(originItem, newItem) {
@@ -27205,15 +27557,6 @@ _.extend(EditAction.prototype, {
         for(var property in newItem) {
           originItem[property] = _.clone(newItem[property]);
         }
-    },
-
-    _isRootItem: function(path){
-        return !path.includes('.');
-    },
-
-    _getRootItem: function(dataSource, property) {
-        var index = (property||'$').split('.')[0];
-        return dataSource.getProperty(index);
     }
 });
 
@@ -28063,6 +28406,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Divider', new DividerBuilder());
         builder.register('ContextMenu', new ContextMenuBuilder());
 
+        builder.register('ToolTip', new InfinniUI.TooltipBuilder());
+
 
         var registerQueue = ApplicationBuilder.registerQueue;
         for(var i = 0, ii = registerQueue.length; i<ii; i++){
@@ -28676,6 +29021,7 @@ DocumentUploadQueryConstructor.prototype.getFileUrl = function (fieldName, insta
 var ObjectDataProvider = function (items, idProperty) {
     this.items = items || [];
     this.idProperty = idProperty || '_id';
+    this.filter = '';
 };
 
 _.extend(ObjectDataProvider.prototype, {
@@ -28685,7 +29031,43 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     getItems: function (resultCallback) {
-        resultCallback({data: this.items.slice()});
+        var items = this.items.slice();
+        var filter = this.getFilter();
+
+        if( filter ) {
+            items = filterItems( items, filter );
+        }
+        resultCallback({data: items});
+    },
+
+    setFilter: function(filterPattern, filterParams) {
+        var param;
+        var correctFilter = false;
+        var re = /\<\%[a-zA-Z0-9\s]+\%\>/g;
+
+        if( filterPattern.search( re ) === -1 ) {
+            correctFilter = true;
+        } else {
+            while( param = re.exec( filterPattern ) ) {
+                var paramName = param[ 0 ].replace( /\s+/, '' ).slice( 2, -2 );
+                var paramValue = filterParams[ paramName ] || '';
+                if( paramValue.length ) {
+                    correctFilter = true;
+                }
+                filterPattern = filterPattern.slice( 0, param.index ) + '\'' + paramValue + '\'' + filterPattern.slice( param.index + param[ 0 ].length );
+                param.lastIndex = param.index + paramValue.length;
+            }
+        }
+
+        if( correctFilter ) {
+            this.filter = filterPattern;
+        } else {
+            this.filter = '';
+        }
+    },
+
+    getFilter: function() {
+        return this.filter;
     },
 
     createItem: function (resultCallback) {
@@ -28693,12 +29075,9 @@ _.extend(ObjectDataProvider.prototype, {
         resultCallback(item);
     },
 
-    saveItem: function (item, resultCallback) {
+    saveItem: function (item, successCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
         if (itemIndex == -1) {
             items.push(item);
@@ -28706,24 +29085,31 @@ _.extend(ObjectDataProvider.prototype, {
             items[itemIndex] = item;
         }
 
-        resultCallback(result);
+        successCallback( {} );
     },
 
-    deleteItem: function (item, resultCallback) {
+    deleteItem: function (item, successCallback, errorCallback) {
         var items = this.items,
-            itemIndex = this._getIndexOfItem(item),
-            result = {
-                isValid: true
-            };
+            itemIndex = this._getIndexOfItem(item);
 
-        if (itemIndex == -1) {
-            result.isValid = false;
-            result.message = 'Удаляемый элемент не найден';
-        } else {
+        if (itemIndex != -1) {
             items.splice(itemIndex, 1);
+            successCallback( {} );
+        } else {
+            errorCallback({
+                data: {
+                    Result: {
+                        ValidationResult: {
+                            IsValid: false,
+                            Items: [{
+                                Property: '',
+                                Message: 'Удаляемый элемент не найден'
+                            }]
+                        }
+                    }
+                }
+            });
         }
-
-        resultCallback(result);
     },
 
     createIdFilter: function (id) {
@@ -29121,14 +29507,32 @@ var ObjectDataSource = BaseDataSource.extend({
         this.set('dataProvider', dataProvider);
     },
 
+    initialize: function() {
+        BaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        this.initHandlers();
+    },
+
+    initHandlers: function() {
+        var model = this.get( 'model' );
+        var updateFilter = _.bind(this.updateFilter, this);
+
+        model.setProperty('filterParams', {});
+        model.onPropertyChanged( 'filter', updateFilter );
+        model.onPropertyChanged( 'filterParams.*', updateFilter );
+    },
+
+    updateFilter: function() {
+        var dataProvider = this.get('dataProvider');
+        var filterPattern = this.getFilter();
+        var filterParams = this.getFilterParams();
+
+        dataProvider.setFilter(filterPattern, filterParams);
+    },
+
+    // в отличии от _setItems должен установить элементы "насовсем", т.е. изменить в провайдере тоже
     setItems: function(items){
         this.get('dataProvider').setItems(items);
         this.updateItems();
-    },
-
-    _setItems: function(items){
-        this.get('dataProvider').setItems(items);
-        BaseDataSource.prototype._setItems.apply(this, [items]);
     }
 
 });
@@ -29624,7 +30028,7 @@ _.extend(DateTimeFormat.prototype, {
         }
         var self = this;
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
 
         var date = this.createDate(originalDate);
 
@@ -30007,7 +30411,7 @@ _.extend(NumberFormat.prototype, {
         }
         var self = this;
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
 
         format = format||this.getFormat();
 
@@ -30195,11 +30599,11 @@ _.extend(ObjectFormat.prototype, {
      */
     formatValue: function (originalValue, culture, format) {
 
-        culture = culture || new Culture(InfinniUI.config.lang);
+        culture = culture || localized;
         format = format || this.getFormat();
 
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
+        var regexp = /\$\{[^}]*}/g;
+        var trim = /^\$\{|\}$/g;
         var value = '';
 
         value = format.replace(regexp, this.formatIterator.bind(this, originalValue, culture));
@@ -30218,8 +30622,8 @@ _.extend(ObjectFormat.prototype, {
      * @returns {String}
      */
     formatIterator: function (originalValue, culture, match) {
-        var regexp = /{[^}]*}/g;
-        var trim = /^{|}$/g;
+        var regexp = /\$\{[^}]*}/g;
+        var trim = /^\$\{|\}$/g;
 
         var result, text, formatter, value, parts;
 
@@ -31144,8 +31548,7 @@ _.extend(DateTimeMaskPart.prototype, {
     },
 
     getCurrentCulture: function () {
-        var culture = new Culture(InfinniUI.config.lang);
-
+        var culture = InfinniUI.localizations[InfinniUI.config.lang];
         return culture;
     },
 
@@ -31894,7 +32297,7 @@ function DateTimeEditMaskBuilder () {
         var formatOptions = args.formatOptions;
 
         var editMask = new DateTimeEditMask();
-        var culture = new Culture(InfinniUI.config.lang);
+        var culture = localized;
         var mask;
 
         if (typeof InfinniUI.localizations[culture.name].patternDateFormats[args.metadata.Mask] !== 'undefined') {
@@ -32660,8 +33063,6 @@ window.InfinniUI.TemplateEditMaskBuilder = TemplateEditMaskBuilder;
 function NumberEditMask () {
     this.mask = null;
     this.format = null;
-    //@TODO Получать культуру из контекста!
-    this.culture = new Culture(InfinniUI.config.lang);
 }
 
 window.InfinniUI.NumberEditMask = NumberEditMask;
@@ -32688,15 +33089,15 @@ _.extend(NumberEditMask.prototype, {
             switch (matches[0]) {
                 case 'n':
                 case 'N':
-                    separator = this.culture.numberFormatInfo.numberDecimalSeparator;
+                    separator = localized.numberFormatInfo.numberDecimalSeparator;
                     break;
                 case 'p':
                 case 'P':
-                    separator = this.culture.numberFormatInfo.percentDecimalSeparator;
+                    separator = localized.numberFormatInfo.percentDecimalSeparator;
                     break;
                 case 'c':
                 case 'C':
-                    separator = this.culture.numberFormatInfo.currencyDecimalSeparator;
+                    separator = localized.numberFormatInfo.currencyDecimalSeparator;
                     break;
             }
         }
@@ -32718,15 +33119,15 @@ _.extend(NumberEditMask.prototype, {
                 switch (matches[0]) {
                     case 'n':
                     case 'N':
-                        decimalDigits = this.culture.numberFormatInfo.numberDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.numberDecimalDigits;
                         break;
                     case 'p':
                     case 'P':
-                        decimalDigits = this.culture.numberFormatInfo.percentDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.percentDecimalDigits;
                         break;
                     case 'c':
                     case 'C':
-                        decimalDigits = this.culture.numberFormatInfo.currencyDecimalDigits;
+                        decimalDigits = localized.numberFormatInfo.currencyDecimalDigits;
                         break;
                 }
             }
@@ -34689,7 +35090,6 @@ var MessageBox = Backbone.View.extend({
 
     applyDefaultOptions: function (config) {
         var options = _.defaults({}, config, {
-            type: 'default',
             buttons: []
         });
         this.applyDefaultButtonsOptions(options);
@@ -34733,6 +35133,64 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function() {
+
+    var TOOLTIP_PLACEMENT = 'auto top';
+    var TOOLTIP_CONTAINER = 'body';
+    var TOOLTIP_TRIGGER = 'hover';
+
+    var exchange = window.InfinniUI.global.messageBus;
+
+    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
+
+    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
+
+    function destroyToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        $element.tooltip( 'destroy' );
+    }
+
+    function initToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var content = extractContentFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        var options = {
+            html: true,
+            title: function() {
+                return content.render();
+            },
+            placement: TOOLTIP_PLACEMENT,
+            container: TOOLTIP_CONTAINER,
+            trigger: TOOLTIP_TRIGGER
+        };
+
+        $element.tooltip( options );
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractContentFromArgs( args ) {
+        return args.value.content;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractElementFromArgs( args ) {
+        return args.value.element;
+    }
+
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -34824,30 +35282,4 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onToolTip.name, function (context, args) {
-		var message = args.value;
-		showToolTip(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-	function showToolTip($element, content) {
-		$element
-			.tooltip({
-				html: true,
-				title:content,
-				placement: 'auto top',
-				container: 'body',
-				trigger: 'hover'
-			})
-			.tooltip('show');
-	}
-})();
 })();

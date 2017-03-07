@@ -235,28 +235,17 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 	},
 
 	initToolTip: function (params) {
-		var exchange = window.InfinniUI.global.messageBus,
-				builder = params.builder,
-				element = params.element,
-				metadata = params.metadata,
-				tooltip;
+		var builder = params.builder,
+			element = params.element,
+			metadata = params.metadata;
 
-		var argumentForBuilder = {
+		var tooltipBuilderParams = {
+            basePathOfProperty: params.basePathOfProperty,
 			parent: element,
-			parentView: params.parentView,
-			basePathOfProperty: params.basePathOfProperty
+			parentView: params.parentView
 		};
 
-		if (typeof metadata.ToolTip === 'string') {
-			tooltip = builder.buildType("Label", {
-				"Text": metadata.ToolTip
-			}, argumentForBuilder);
-		} else {
-			tooltip = builder.build(metadata.ToolTip, argumentForBuilder);
-		}
-
-		element.setToolTip(tooltip);
-		exchange.send(messageTypes.onToolTip.name, { source: element, content: tooltip.render() });
+		element.setToolTip(builder.buildType('ToolTip', metadata['ToolTip'], tooltipBuilderParams));
 	},
 
 	initContextMenu: function(params) {
