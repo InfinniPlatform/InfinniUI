@@ -476,11 +476,12 @@ describe('AcceptAction', function () {
         var view = new InfinniUI.View();
         var builder = new InfinniUI.AcceptActionBuilder();
         var acceptAction = builder.build(null, {
-                                                parentView: view,
-                                                metadata: {
-                                                    OnExecuted: "{ window.onExecutedWasCalled = true; }"
-                                                }
-                                            });
+            builder: new InfinniUI.ApplicationBuilder(),
+            parentView: view,
+            metadata: {
+                OnExecuted: "{ window.onExecutedWasCalled = true; }"
+            }
+        });
 
         assert.isUndefined(window.onExecutedWasCalled);
 
@@ -985,6 +986,7 @@ describe('CancelAction', function () {
         var view = new InfinniUI.View();
         var builder = new InfinniUI.CancelActionBuilder();
         var cancelAction = builder.build(null, {
+            builder: new InfinniUI.ApplicationBuilder(),
             parentView: view,
             metadata: {
                 OnExecuted: "{ window.onExecutedWasCalled = true; }"
@@ -1944,7 +1946,7 @@ describe('SaveAction', function () {
             }
         };
 
-        var saveAction = builder.build(null, {parentView: view, metadata: metadata});
+        var saveAction = builder.build(null, {parentView: view, metadata: metadata, builder: new InfinniUI.ApplicationBuilder()});
 
         assert.isUndefined(window.onExecutedWasCalled);
 
@@ -2648,7 +2650,7 @@ describe('UpdateAction', function () {
             }
         };
 
-        var updateAction = builder.build(null, {parentView: view, metadata: metadata});
+        var updateAction = builder.build(null, {parentView: view, metadata: metadata, builder: new InfinniUI.ApplicationBuilder()});
 
         assert.isUndefined(window.onExecutedWasCalled);
 
@@ -3446,6 +3448,120 @@ describe('TemplateEditMask', function () {
 
 });
 
+describe('LinkView', function () {
+
+    describe('setOpenMode', function () {
+        it('should set openMode', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode('Dialog');
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Dialog');
+        });
+
+        it('should set openMode Default by default', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+
+        it('should set openMode Default if no mode passed', function () {
+            //Given
+            var view = new InfinniUI.LinkView();
+
+            //When
+            view.setOpenMode(null);
+
+            //Then
+            assert.equal(view.getOpenMode(), 'Default');
+        });
+    });
+});
+
+describe('LinkViewBuilderBase', function () {
+
+    it('should set base properties', function () {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "LinkViewBuilderTest"
+            }
+        };
+
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        assert.equal(linkView.getOpenMode(), "Default");
+        assert.isUndefined(linkView.containerName);
+        assert.isUndefined(linkView.dialogWidth);
+
+        // When
+        linkView.setOpenMode("Dialog");
+        linkView.setContainer("TestContainer");
+        linkView.setDialogWidth("100px");
+
+        // Then
+        assert.equal(linkView.getOpenMode(), "Dialog");
+        assert.equal(linkView.containerName, "TestContainer");
+        assert.equal(linkView.dialogWidth, "100px");
+    });
+
+    it('inlineViewBuilder', function (done) {
+        // Given
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            View: {
+                Name: "InlineViewBuilderTest"
+            }
+        };
+
+        // When
+        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "InlineViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+
+    it('metadataViewBuilder', function (done) {
+        // Given
+        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
+            return {
+                "getMetadata": function (callback) {
+                    var metadata = {
+                        "Name": "MetadataViewBuilderTest"
+                    };
+                    callback(metadata);
+                }
+            };
+        });
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+        var metadata = {
+            Path: "path/to/metadata"
+        };
+
+        // When
+        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
+
+        linkView.createView(function(view){
+            // Then
+            assert.equal(view.name, "MetadataViewBuilderTest");
+            assert.instanceOf(view, window.InfinniUI.View);
+            done();
+        });
+    });
+});
+
+
 describe('BooleanFormat', function () {
     describe('format', function () {
 
@@ -4057,120 +4173,6 @@ describe('ObjectFormat', function () {
 
 });
 
-describe('LinkView', function () {
-
-    describe('setOpenMode', function () {
-        it('should set openMode', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode('Dialog');
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Dialog');
-        });
-
-        it('should set openMode Default by default', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-
-        it('should set openMode Default if no mode passed', function () {
-            //Given
-            var view = new InfinniUI.LinkView();
-
-            //When
-            view.setOpenMode(null);
-
-            //Then
-            assert.equal(view.getOpenMode(), 'Default');
-        });
-    });
-});
-
-describe('LinkViewBuilderBase', function () {
-
-    it('should set base properties', function () {
-        // Given
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            View: {
-                Name: "LinkViewBuilderTest"
-            }
-        };
-
-        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        assert.equal(linkView.getOpenMode(), "Default");
-        assert.isUndefined(linkView.containerName);
-        assert.isUndefined(linkView.dialogWidth);
-
-        // When
-        linkView.setOpenMode("Dialog");
-        linkView.setContainer("TestContainer");
-        linkView.setDialogWidth("100px");
-
-        // Then
-        assert.equal(linkView.getOpenMode(), "Dialog");
-        assert.equal(linkView.containerName, "TestContainer");
-        assert.equal(linkView.dialogWidth, "100px");
-    });
-
-    it('inlineViewBuilder', function (done) {
-        // Given
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            View: {
-                Name: "InlineViewBuilderTest"
-            }
-        };
-
-        // When
-        var linkView = applicationBuilder.buildType("InlineView", metadata, { builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        linkView.createView(function(view){
-            // Then
-            assert.equal(view.name, "InlineViewBuilderTest");
-            assert.instanceOf(view, window.InfinniUI.View);
-            done();
-        });
-    });
-
-    it('metadataViewBuilder', function (done) {
-        // Given
-        window.InfinniUI.providerRegister.register('MetadataDataSource', function () {
-            return {
-                "getMetadata": function (callback) {
-                    var metadata = {
-                        "Name": "MetadataViewBuilderTest"
-                    };
-                    callback(metadata);
-                }
-            };
-        });
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-        var metadata = {
-            Path: "path/to/metadata"
-        };
-
-        // When
-        var linkView = applicationBuilder.buildType("AutoView", metadata, {builder: applicationBuilder, parentView: fakeApplicationView() });
-
-        linkView.createView(function(view){
-            // Then
-            assert.equal(view.name, "MetadataViewBuilderTest");
-            assert.instanceOf(view, window.InfinniUI.View);
-            done();
-        });
-    });
-});
-
-
 describe('MessageBus', function () {
     var messageBus;
 
@@ -4736,10 +4738,10 @@ describe("Collection", function () {
 
             handlers.reset();
             changed = collection.reset(['C', 'D']);
-            assert.isFalse(changed, 'Not changed on step 3');
+            assert.isTrue(changed, 'Changed on step 3');
             assert.equal(String(collection), '"C","D"');
-            assert.isFalse(handlers.checkEvent('onReset'), 'onReset event');
-            assert.isFalse(handlers.checkEvent('onChange'), 'onChange event');
+            assert.isTrue(handlers.checkEvent('onReset'), 'onReset event');
+            assert.isTrue(handlers.checkEvent('onChange'), 'onChange event');
         });
 
         it("should reset objects", function () {
@@ -6893,82 +6895,6 @@ describe('ButtonControl', function () {
     });
 });
 
-describe('CheckBox', function () {
-    var checkbox;
-
-    beforeEach(function () {
-        checkbox = new InfinniUI.CheckBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = checkbox.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                checkbox.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: text', function () {
-                //Given
-                checkbox.setText('Text 1');
-
-                var $el = checkbox.render(),
-                    $label = $('.checkbox-label', $el);
-
-                assert.equal($label.html(), 'Text 1');
-
-                //When
-                checkbox.setText('Text 2');
-
-                //Then
-                assert.equal($label.html(), 'Text 2');
-            });
-
-            it('Setting property: Enabled', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                assert.equal($input.prop('disabled'), false, 'Enabled by default');
-
-                //When
-                checkbox.setEnabled(false);
-
-                //Then
-                assert.equal($input.prop('disabled'), true, 'Disable element');
-            });
-
-        });
-
-        describe('events', function () {
-            it('Change value on click', function () {
-                //Given
-                var $el = checkbox.render(),
-                    $input = $('input', $el);
-
-                checkbox.setValue(false);
-
-                //When
-                $input.click();
-
-                //Then
-                assert.equal(checkbox.getValue(), true, 'value changed');
-                assert.equal($input.prop('checked'), true, 'checkbox checked');
-            });
-        });
-
-    });
-
-});
-
 describe('Container (Control)', function () {
 
     describe('StackPanel as exemplar of Container', function () {
@@ -7802,6 +7728,82 @@ describe('ContextMenu (Control)', function () {
 	});
 });
 
+describe('CheckBox', function () {
+    var checkbox;
+
+    beforeEach(function () {
+        checkbox = new InfinniUI.CheckBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = checkbox.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                checkbox.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: text', function () {
+                //Given
+                checkbox.setText('Text 1');
+
+                var $el = checkbox.render(),
+                    $label = $('.checkbox-label', $el);
+
+                assert.equal($label.html(), 'Text 1');
+
+                //When
+                checkbox.setText('Text 2');
+
+                //Then
+                assert.equal($label.html(), 'Text 2');
+            });
+
+            it('Setting property: Enabled', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                assert.equal($input.prop('disabled'), false, 'Enabled by default');
+
+                //When
+                checkbox.setEnabled(false);
+
+                //Then
+                assert.equal($input.prop('disabled'), true, 'Disable element');
+            });
+
+        });
+
+        describe('events', function () {
+            it('Change value on click', function () {
+                //Given
+                var $el = checkbox.render(),
+                    $input = $('input', $el);
+
+                checkbox.setValue(false);
+
+                //When
+                $input.click();
+
+                //Then
+                assert.equal(checkbox.getValue(), true, 'value changed');
+                assert.equal($input.prop('checked'), true, 'checkbox checked');
+            });
+        });
+
+    });
+
+});
+
 describe('DataNavigationControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder()
@@ -8243,6 +8245,100 @@ describe('Label', function () {
     });
 });
 
+describe('Link (Control)', function () {
+
+	describe('Check href and target params in LinkElement', function () {
+
+		it('should update from default href attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
+
+				view.childElements[0].setHref('common.ru');
+				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
+
+				view.childElements[0].setHref('example.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
+			}
+		});
+
+		it('should update from default target attribute', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				
+
+				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+
+		it('should apply href and target attributes from metadata', function () {
+			// Given
+			var metadata = {
+				Items: [
+					{
+						Link: {
+							"Href": "http://example.com",
+							"Target": "top"
+						}
+					}
+				]
+			};
+
+			// When
+			testHelper.applyViewMetadata(metadata, onViewReady);
+
+			// Then
+			function onViewReady(view, $layout){
+				$layout.detach();
+
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
+				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
+
+				view.childElements[0].setHref('http://exampleNew.com');
+				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
+
+				view.childElements[0].setTarget('blank');
+				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
+			}
+		});
+	});
+});
+
 describe('PanelControl', function () {
 
     describe('render', function () {
@@ -8492,100 +8588,6 @@ describe('PanelControl', function () {
         }
     });
 });
-describe('Link (Control)', function () {
-
-	describe('Check href and target params in LinkElement', function () {
-
-		it('should update from default href attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'javascript:;', 'attribute href is right');
-
-				view.childElements[0].setHref('common.ru');
-				assert.equal($layout.find('.pl-link').attr('href'), 'common.ru', 'attribute href is right');
-
-				view.childElements[0].setHref('example.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'example.com', 'attribute href is right');
-			}
-		});
-
-		it('should update from default target attribute', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				
-
-				assert.equal($layout.find('.pl-link').attr('target'), '_self', 'attribute target is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-
-		it('should apply href and target attributes from metadata', function () {
-			// Given
-			var metadata = {
-				Items: [
-					{
-						Link: {
-							"Href": "http://example.com",
-							"Target": "top"
-						}
-					}
-				]
-			};
-
-			// When
-			testHelper.applyViewMetadata(metadata, onViewReady);
-
-			// Then
-			function onViewReady(view, $layout){
-				$layout.detach();
-
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://example.com', 'attribute href is right');
-				assert.equal($layout.find('.pl-link').attr('target'), '_top', 'attribute target is right');
-
-				view.childElements[0].setHref('http://exampleNew.com');
-				assert.equal($layout.find('.pl-link').attr('href'), 'http://exampleNew.com', 'attribute href is right');
-
-				view.childElements[0].setTarget('blank');
-				assert.equal($layout.find('.pl-link').attr('target'), '_blank', 'attribute target is right');
-			}
-		});
-	});
-});
-
 describe('PasswordBox', function () {
 
     var element;
@@ -9237,41 +9239,6 @@ describe('TextBoxControl', function () {
     })
 });
 
-describe('ToolBarControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , toolbar;
-
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
-                Items: [
-                    {
-                        Button: {
-                            Text: 'Button 1'
-                        }
-                    },
-                    {
-                        Label: {
-                            Text: 'Button 2'
-                        }
-                    }
-                ]
-            });
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-
-
-            //When
-            var $el = toolbar.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
-
 describe('TextEditorBase (Control)', function () {
     describe('Textbox as exemplar of TextEditorBase', function () {
         var metadata_1 = {
@@ -9498,6 +9465,41 @@ describe('TreeView', function () {
     });
 
 });
+describe('ToolBarControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , toolbar;
+
+        beforeEach(function () {
+            toolbar = builder.buildType('ToolBar', {
+                Items: [
+                    {
+                        Button: {
+                            Text: 'Button 1'
+                        }
+                    },
+                    {
+                        Label: {
+                            Text: 'Button 2'
+                        }
+                    }
+                ]
+            });
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+
+
+            //When
+            var $el = toolbar.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-tool-bar'));
+        });
+    });
+});
+
 describe('DataBinding', function () {
     it('should bind source', function () {
         // Given
@@ -11996,6 +11998,100 @@ describe('ButtonBuilder', function () {
     });
 });
 
+describe('DataGrid', function () {
+
+    var metadata = {
+        DataSources : [
+            {
+                ObjectDataSource: {
+                    "Name": "ObjectDataSource1",
+                    "Items": [
+                        { "Id": 1, "Display": "LTE" },
+                        { "Id": 2, "Display": "3G" },
+                        { "Id": 3, "Display": "2G" }
+                    ]
+                }
+            }
+        ],
+        Items: [{
+
+            "DataGrid": {
+                "Name": "DataGrid1",
+                "Items": {
+                    "Source": "ObjectDataSource1",
+                    "Property": ""
+                },
+                "DisabledItemCondition": "{ return (args.value.Id == 2); }",
+                "Columns": [
+                    {
+                        "Header": "Id",
+                        "CellProperty": "Id"
+                    },
+                    {
+                        "Header": "Display",
+                        "CellProperty": "Display"
+                    }
+                ]
+            }
+        }]
+    };
+
+    describe('render', function () {
+        it('should render DataGrid', function (done) {
+            // Given When
+            testHelper.applyViewMetadata(metadata, onDataGridReady);
+
+            // Then
+            function onDataGridReady(view, $grid){
+                setTimeout(function() {
+                    assert.isObject($grid);
+
+                    var headers = $grid.find(".pl-datagrid-row_header .pl-label");
+                    assert.equal(headers.first().text(), "Id");
+                    assert.equal(headers.last().text(), "Display");
+
+                    var $body = $grid.find(".pl-datagrid-row_data");
+                    assert.equal($body.length, 3);
+
+                    done();
+                    view.close();
+                }, 0);
+            }
+        });
+    });
+
+    describe('API', function () {
+        it('should update DisabledItemCondition', function (done) {
+            // Given
+            testHelper.applyViewMetadata(metadata, function (view, $grid) {
+                setTimeout(function() {
+                    var grid = view.context.controls['DataGrid1'];
+                    //var $grid = grid.control.controlView.$el;
+
+                    var $rows = $grid.find("tbody .pl-datagrid-row");
+
+                    assert.isFalse($rows.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
+                    assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
+
+                    // When
+                    grid.setDisabledItemCondition( function (context, args) {
+                        return args.value.Id == 1;
+                    });
+
+                    // Then
+                    assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
+                    assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
+
+                    done();
+                    view.close();
+                }, 0);
+            });
+
+
+        });
+    });
+});
+
 describe('ComboBox', function () {
     describe('render', function () {
 
@@ -12484,100 +12580,6 @@ describe('ComboBox', function () {
     });
 
 
-});
-
-describe('DataGrid', function () {
-
-    var metadata = {
-        DataSources : [
-            {
-                ObjectDataSource: {
-                    "Name": "ObjectDataSource1",
-                    "Items": [
-                        { "Id": 1, "Display": "LTE" },
-                        { "Id": 2, "Display": "3G" },
-                        { "Id": 3, "Display": "2G" }
-                    ]
-                }
-            }
-        ],
-        Items: [{
-
-            "DataGrid": {
-                "Name": "DataGrid1",
-                "Items": {
-                    "Source": "ObjectDataSource1",
-                    "Property": ""
-                },
-                "DisabledItemCondition": "{ return (args.value.Id == 2); }",
-                "Columns": [
-                    {
-                        "Header": "Id",
-                        "CellProperty": "Id"
-                    },
-                    {
-                        "Header": "Display",
-                        "CellProperty": "Display"
-                    }
-                ]
-            }
-        }]
-    };
-
-    describe('render', function () {
-        it('should render DataGrid', function (done) {
-            // Given When
-            testHelper.applyViewMetadata(metadata, onDataGridReady);
-
-            // Then
-            function onDataGridReady(view, $grid){
-                setTimeout(function() {
-                    assert.isObject($grid);
-
-                    var headers = $grid.find(".pl-datagrid-row_header .pl-label");
-                    assert.equal(headers.first().text(), "Id");
-                    assert.equal(headers.last().text(), "Display");
-
-                    var $body = $grid.find(".pl-datagrid-row_data");
-                    assert.equal($body.length, 3);
-
-                    done();
-                    view.close();
-                }, 0);
-            }
-        });
-    });
-
-    describe('API', function () {
-        it('should update DisabledItemCondition', function (done) {
-            // Given
-            testHelper.applyViewMetadata(metadata, function (view, $grid) {
-                setTimeout(function() {
-                    var grid = view.context.controls['DataGrid1'];
-                    //var $grid = grid.control.controlView.$el;
-
-                    var $rows = $grid.find("tbody .pl-datagrid-row");
-
-                    assert.isFalse($rows.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
-                    assert.isTrue($rows.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
-
-                    // When
-                    grid.setDisabledItemCondition( function (context, args) {
-                        return args.value.Id == 1;
-                    });
-
-                    // Then
-                    assert.isTrue($rows.eq(0).hasClass('pl-disabled'), 'items not updated');
-                    assert.isFalse($rows.eq(1).hasClass('pl-disabled'), 'items not updated');
-
-                    done();
-                    view.close();
-                }, 0);
-            });
-
-
-        });
-    });
 });
 
 describe('DataNavigation', function () {

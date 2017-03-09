@@ -88,7 +88,7 @@ describe('SaveAction', function () {
             }
         };
 
-        var saveAction = builder.build(null, {parentView: view, metadata: metadata});
+        var saveAction = builder.build(null, {parentView: view, metadata: metadata, builder: new InfinniUI.ApplicationBuilder()});
 
         assert.isUndefined(window.onExecutedWasCalled);
 

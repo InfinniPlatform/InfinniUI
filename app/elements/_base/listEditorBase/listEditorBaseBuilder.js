@@ -48,6 +48,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
             });
         }
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
+        var onSelectedItemExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
+
         element.onSelectedItemChanged(function(context, args){
 
             if(sourceIsDataSource && isBindingOnWholeDS) {
@@ -59,9 +67,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
                 }
             }
 
-            if (metadata.OnSelectedItemChanged) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
-            }
+            onSelectedItemExecutor(args);
         });
     },
 

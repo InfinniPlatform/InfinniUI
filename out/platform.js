@@ -3529,14 +3529,10 @@ Collection.prototype.reset = function (newItems) {
         return false;
     }
 
-    changed = this._items.length !== newItems.length;
+    changed = this._items !== newItems;
 
     items = newItems.map(function (value, index) {
-        if (!changed) {
-            changed = !this.isEqual(value, this.getCollectionItemValue(index));
-        }
         return this.createCollectionItem(value, index);
-
     }, this);
 
     this._items.length = 0;
@@ -3561,7 +3557,7 @@ Collection.prototype.set = function (newItems, silent) {
         return false;
     }
 
-    var changed = items.length !== newItems.length;
+    var changed = this._items !== newItems;;
     var _newItems = newItems.slice();
     var matched, i = 0;
     var itemValue, newValue = null, newValueIndex;
@@ -3570,10 +3566,6 @@ Collection.prototype.set = function (newItems, silent) {
 
     _newItems.forEach(function(newItem, index){
         if (index < items.length) {
-            //Изменение элементов
-            if (!changed) {
-                changed = !this.isEqual(this.getCollectionItemValue(index), _newItems[index]);
-            }
             if (changed) {
                 this.updateCollectionItem(items[index], newItem);
             }
@@ -4406,6 +4398,138 @@ CollectionEventManager.prototype.onMove = function (oldItems, newItems, oldStart
 
 
 
+//####app\executor\ActionExecutor.js
+/**
+ *
+ * @param {ActionFactory} actionFactory
+ * @return {Function}
+ * @constructor
+ */
+function ActionExecutor(actionFactory) {
+
+    var action = null;
+
+    return function( ) {
+
+        if (action === null) {
+            action = actionFactory.get();
+        }
+
+        var cb = Array.prototype.filter.call(arguments, function( arg ) {
+            return typeof arg === 'function'
+        }).pop();
+
+        action.execute.call(action, cb);
+    }
+
+}
+//####app\executor\ActionFactory.js
+function ActionFactory(actionMetadata, builder, builderParams) {
+
+    return {
+        get: get
+    };
+
+    function get(  ) {
+        return builder.build(actionMetadata, builderParams);
+    }
+}
+//####app\executor\BaseScriptExecutor.js
+function BaseScriptExecutor(view, scriptFactory) {
+
+    var script = null;
+
+    return function( args ) {
+        var context = view ? view.getContext() : null;
+
+        if (script === null) {
+            script = scriptFactory.get();
+        }
+
+        script.call(null, context, args)
+    }
+
+}
+//####app\executor\CompiledScriptFactory.js
+function CompiledScriptFactory(scriptName, parentView) {
+    return {
+        get: get
+    };
+
+    function get() {
+        var scriptsStorage = parentView.getScriptsStorage();
+
+        var script = scriptsStorage.getScripts().getById(scriptName);
+
+        return script ? script.func : void 0;
+    }
+}
+//####app\executor\Executor.js
+/**
+ *
+ * @param metadata
+ * @param builder
+ * @param {Object} builderParams
+ * @param builderParams.parentView
+ * @param builderParams.parent
+ * @param {string} builderParams.basePathOfProperty
+ * @return {Function}
+ * @constructor
+ */
+function Executor(metadata, builder, builderParams) {
+
+    var handler;
+    var scriptName, scriptBody;
+
+    if (!metadata) {
+        console.log('Metadata not found');
+    } else if (typeof metadata === 'string') {
+        if (metadata[0] === '{' && metadata[metadata.length - 1] === '}') {
+            scriptBody = metadata.substring(1, metadata.length - 1);
+            handler = BaseScriptExecutor(builderParams.parentView, InlineScriptFactory(scriptBody, builder, builderParams));
+        } else {
+            scriptName = metadata;
+            handler = BaseScriptExecutor(builderParams.parentView, CompiledScriptFactory(scriptName, builderParams.parentView));
+        }
+    } else if (metadata['Name']) {//CompiledScript
+        scriptName = metadata['Name'];
+        handler = BaseScriptExecutor(builderParams.parentView, CompiledScriptFactory(scriptName, builderParams.parentView));
+    } else if (typeof metadata === 'object') {
+        //Action
+        handler = ActionExecutor(ActionFactory(metadata, builder, builderParams));
+    } else {
+        console.log('Unknown metadata');
+    }
+
+    return handler ? handler :  function() {};
+}
+//####app\executor\InlineScriptFactory.js
+function InlineScriptFactory(scriptBody, builder, builderParams) {
+    
+    return {
+        get: get
+    };
+
+    function get(  ) {
+        var scriptBuilderParams = {
+            parentView: builderParams.parentView,
+            parent: builderParams.parent,
+            basePathOfProperty: builderParams.basePathOfProperty
+        };
+
+        var scriptMetadata = {
+            Body: scriptBody,
+            Name: 'InlineScript'
+        };
+
+        var script = builder.buildType('Script', scriptMetadata, scriptBuilderParams);
+
+        return function (context, args) {
+            script.call(null, context, args);
+        }
+    }
+    
+}
 //####app\controls\_base\_mixins\bindUIElementsMixin.js
 var bindUIElementsMixin = {
     /**
@@ -15260,6 +15384,10 @@ var IconView = ControlView.extend({
 
     updateValue: function () {
         this.renderIcon();
+    },
+
+    updateTextStyle: function () {
+        // do nothing, because icon don't have text
     }
 
 });
@@ -19927,83 +20055,75 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 			element.setName(metadata.Name);
 		}
 
+        var executorBuilderParams = {
+            	parentView: params.parentView,
+                parent: element,
+            	basePathOfProperty: params.basePathOfProperty
+        };
 
 		if (metadata.OnLoaded) {
-			element.onLoaded(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded, { source: element });
-			});
+            var onLoadedExecutor = Executor(metadata.OnLoaded, params.builder, executorBuilderParams);
+			element.onLoaded(onLoadedExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnGotFocus) {
-			element.onGotFocus(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name || metadata.OnGotFocus, { source: element });
-			});
+            var onGotFocusExecutor = Executor(metadata.OnGotFocus, params.builder, executorBuilderParams);
+			element.onGotFocus(onGotFocusExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnLostFocus) {
-			element.onLostFocus(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name || metadata.OnLostFocus, { source: element });
-			});
+            var onLostFocusExecutor = Executor(metadata.OnLostFocus, params.builder, executorBuilderParams);
+			element.onLostFocus(onLostFocusExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnDoubleClick) {
-			element.onDoubleClick(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, args);
-			});
+            var onDoubleClickExecutor = Executor(metadata.OnDoubleClick, params.builder, executorBuilderParams);
+            element.onDoubleClick(onDoubleClickExecutor);
 		}
 
 		if (metadata.OnClick) {
-			element.onClick(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, args);
-			});
+			var onClickExecutor = Executor(metadata.OnClick, params.builder, executorBuilderParams);
+			element.onClick(onClickExecutor);
 		}
 
 		if (metadata.OnMouseEnter) {
-			element.onMouseEnter(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseEnter.Name || metadata.OnMouseEnter, args);
-			});
+            var onMouseEnterExecutor = Executor(metadata.OnMouseEnter, params.builder, executorBuilderParams);
+            element.onMouseEnter(onMouseEnterExecutor);
 		}
 
 		if (metadata.OnMouseLeave) {
-			element.onMouseLeave(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseLeave.Name || metadata.OnMouseLeave, args);
-			});
+            var onMouseLeaveExecutor = Executor(metadata.OnMouseLeave, params.builder, executorBuilderParams);
+			element.onMouseLeave(onMouseLeaveExecutor);
 		}
 
 		if (metadata.OnMouseMove) {
-			element.onMouseMove(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseMove.Name || metadata.OnMouseMove, args);
-			});
+            var onMouseMoveExecutor = Executor(metadata.OnMouseMove, params.builder, executorBuilderParams);
+			element.onMouseMove(onMouseMoveExecutor);
 		}
 
 		if (metadata.OnKeyDown) {
-			element.onKeyDown(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, args);
-			});
+            var onKeyDownExecutor = Executor(metadata.OnKeyDown, params.builder, executorBuilderParams);
+			element.onKeyDown(onKeyDownExecutor);
 		}
 
 		if (metadata.OnKeyUp) {
-			element.onKeyUp(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyUp.Name || metadata.OnKeyUp, args);
-			});
+            var onKeyUpExecutor = Executor(metadata.OnKeyUp, params.builder, executorBuilderParams);
+			element.onKeyUp(onKeyUpExecutor);
 		}
 
 		if (metadata.OnMouseDown) {
-			element.onMouseDown(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDown.Name || metadata.OnMouseDown, args);
-			});
+            var onMouseDownExecutor = Executor(metadata.OnMouseDown, params.builder, executorBuilderParams);
+			element.onMouseDown(onMouseDownExecutor);
 		}
 
 		if (metadata.OnMouseUp) {
-			element.onMouseUp(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseUp.Name || metadata.OnMouseUp, args);
-			});
+            var onMouseUpExecutor = Executor(metadata.OnMouseUp, params.builder, executorBuilderParams);
+			element.onMouseUp(onMouseUpExecutor);
 		}
 
 		if (metadata.OnMouseWheel) {
-			element.onMouseWheel(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseWheel.Name || metadata.OnMouseWheel, args);
-			});
+            var onMouseWheelExecutor = Executor(metadata.OnMouseWheel, params.builder, executorBuilderParams);
+			element.onMouseWheel(onMouseWheelExecutor);
 		}
 	},
 
@@ -20176,15 +20296,13 @@ var buttonBuilderMixin = {
         this.initTemplatingContent(params);
 
         if (metadata.Action) {
-            var args = {
+            var executorBuilderParams = {
                 parentView: params.parentView,
                 parent: element,
                 basePathOfProperty: params.basePathOfProperty
             };
-            var action = builder.build(metadata.Action, args);
-            element.onClick(function(){
-                action.execute();
-            });
+            var onClickExecutor = Executor(metadata.Action, builder, executorBuilderParams);
+            element.onClick(onClickExecutor);
         }
     },
 
@@ -20970,15 +21088,24 @@ var editorBaseBuilderMixin = {
         this.initBindingToProperty(params, 'WarningText');
         this.resolveExpressionInText(params, 'WarningText');
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnValueChanging) {
+            var onValueChangingExecutor = Executor(metadata.OnValueChanging, params.builder, executorBuilderParams);
+
             element.onValueChanging(function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.parentView);
-                return scriptExecutor.executeScript(metadata.OnValueChanging.Name || metadata.OnValueChanging, args);
+                return onValueChangingExecutor(args);
             });
         }
         if (metadata.OnValueChanged) {
+            var onValueChangedExecutor = Executor(metadata.OnValueChanged, params.builder, executorBuilderParams);
+
             element.onValueChanged(function (context, args) {
-                new ScriptExecutor(params.parentView).executeScript(metadata.OnValueChanged.Name || metadata.OnValueChanged, args);
+                onValueChangedExecutor(args);
             });
         }
 
@@ -21266,6 +21393,14 @@ _.extend(ListEditorBaseBuilder.prototype, {
             });
         }
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
+        var onSelectedItemExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
+
         element.onSelectedItemChanged(function(context, args){
 
             if(sourceIsDataSource && isBindingOnWholeDS) {
@@ -21277,9 +21412,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
                 }
             }
 
-            if (metadata.OnSelectedItemChanged) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
-            }
+            onSelectedItemExecutor(args);
         });
     },
 
@@ -22312,9 +22445,15 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
         return;
     }
 
-    element.onButtonClick(function (args) {
-        new ScriptExecutor(element.getScriptsStorage()).executeScript(onButtonClick.Name || onButtonClick, args);
-    });
+    var executorBuilderParams = {
+        parentView: params.parentView,
+        parent: element,
+        basePathOfProperty: params.basePathOfProperty
+    };
+
+    var executor = Executor(onButtonClick, params.builder, executorBuilderParams);
+
+    element.onButtonClick(executor);
 
 };
 
@@ -22730,24 +22869,29 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         element.setShowSelectors(metadata.ShowSelectors);
         element.setCheckAllVisible(metadata.CheckAllVisible);
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if(metadata.OnCheckAllChanged){
+            var onCheckAllChangedExecutor = Executor(metadata.OnCheckAllChanged, params.builder, executorBuilderParams);
             element.onCheckAllChanged(function(context, args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
+                onCheckAllChangedExecutor(args);
             });
         } else {
             setDefaultCheckAllBehavior(element);
         }
 
         if( metadata.OnRowClick ) {
-            element.onRowClick(function (args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowClick.Name || metadata.OnRowClick, args);
-            });
+            var onRowClickExecutor = Executor(metadata.OnRowClick, params.builder, executorBuilderParams);
+            element.onRowClick(onRowClickExecutor);
         }
 
         if( metadata.OnRowDoubleClick ) {
-            element.onRowDoubleClick(function (args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowDoubleClick.Name || metadata.OnRowDoubleClick, args);
-            });
+            var onRowDoubleClickExecutor = Executor(metadata.OnRowDoubleClick, params.builder, executorBuilderParams);
+            element.onRowDoubleClick(onRowDoubleClickExecutor);
         }
 
         this.applyColumnsMetadata(params);
@@ -23864,9 +24008,13 @@ _.extend(FormBuilder.prototype, {
 		StackPanelBuilder.prototype.applyMetadata.call(this, params);
 
 		if( metadata.OnSubmit ) {
-			element.onSubmit(function() {
-				return new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnSubmit.Name || metadata.OnSubmit);
-			});
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: element,
+                basePathOfProperty: params.basePathOfProperty
+            };
+            var onSubmitExecutor = Executor(metadata.OnSubmit, params.builder, executorBuilderParams);
+			element.onSubmit(onSubmitExecutor);
 		}
 
 		if( metadata.Method ) {
@@ -24373,31 +24521,12 @@ _.extend(LabelBuilder.prototype, {
         element.setEscapeHtml(params.metadata.EscapeHtml);
         
         this.initDisplayFormat(params);
-        this.initScriptsHandlers(params);
-
     },
 
     initDisplayFormat: function (params) {
         var metadata = params.metadata;
         var format = this.buildDisplayFormat(metadata.DisplayFormat, params);
         params.element.setDisplayFormat(format);
-    },
-
-    initScriptsHandlers: function(params){
-        var metadata = params.metadata;
-
-        //Скриптовые обработчики на события
-        if (params.view && metadata.OnLoaded){
-            params.element.onLoaded(function() {
-                new ScriptExecutor(params.view).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded);
-            });
-        }
-
-        if (params.view && metadata.OnValueChanged){
-            params.element.onValueChanged(function() {
-                new ScriptExecutor(params.view).executeScript(metadata.OnValueChanged.Name || metadata.OnValueChanged);
-            });
-        }
     },
 
     createElement: function(params){
@@ -24916,33 +25045,37 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
             metadata = params.metadata,
             element = params.element;
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnExpanding) {
+            var onExpandingExecutor = Executor(metadata.OnExpanding, params.builder, executorBuilderParams);
             element.onExpanding(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnExpanding.Name || metadata.OnExpanding, args);
+                return onExpandingExecutor(args);
             });
         }
         if (metadata.OnExpanded) {
+            var onExpandedExecutor = Executor(metadata.OnExpanded, params.builder, executorBuilderParams);
             element.onExpanded(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnExpanded.Name || metadata.OnExpanded, args);
+                return onExpandedExecutor(args);
             });
         }
         if (metadata.OnCollapsing) {
+            var onCollapsingExecutor = Executor(metadata.OnCollapsing, params.builder, executorBuilderParams);
+
             element.onCollapsing(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsing.Name || metadata.OnCollapsing, args);
+                return onCollapsingExecutor(args);
             });
         }
         if (metadata.OnCollapsed) {
-            element.onCollapsed(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsed.Name || metadata.OnCollapsed, args);
-            });
-        }
+            var onCollapsedExecutor = Executor(metadata.OnCollapsed, params.builder, executorBuilderParams);
 
-        function createScriptExecutor () {
-            return new ScriptExecutor(params.parentView)
+            element.onCollapsed(function (context, args) {
+                return onCollapsedExecutor(args);
+            });
         }
     },
 
@@ -25496,10 +25629,16 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
             exchange.send('OnChangeLayout', {});
         });
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnSelectedItemChanged) {
+            var onSelectedItemChangedExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
             element.onSelectedItemChanged(function (context, args) {
-                return new ScriptExecutor(params.parentView)
-                    .executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
+                onSelectedItemChangedExecutor(args);
             });
         }
     }
@@ -26397,28 +26536,30 @@ _.extend(ViewBuilder.prototype, {
 
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
 
+        var executorBuilderParams = {
+            parentView: element,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if(metadata.OnOpening){
-            element.onOpening(function() {
-                return new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
-            });
+            var onOpeningExecutor = Executor(metadata.OnOpening, params.builder, executorBuilderParams);
+            element.onOpening(onOpeningExecutor);
         }
 
         if(metadata.OnOpened){
-            element.onOpened(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnOpened.Name || metadata.OnOpened);
-            });
+            var onOpenedExecutor = Executor(metadata.OnOpened, params.builder, executorBuilderParams);
+            element.onOpened(onOpenedExecutor);
         }
 
         if(metadata.OnClosing){
-            element.onClosing(function() {
-                return new ScriptExecutor(element).executeScript(metadata.OnClosing.Name || metadata.OnClosing);
-            });
+            var onClosingExecutor = Executor(metadata.OnClosing, params.builder, executorBuilderParams);
+            element.onClosing(onClosingExecutor);
         }
 
         if(metadata.OnClosed){
-            element.onClosed(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnClosed.Name || metadata.OnClosed);
-            });
+            var onClosedExecutor = Executor(metadata.OnClosed, params.builder, executorBuilderParams);
+            element.onClosed(onClosedExecutor);
         }
 
         ContainerBuilder.prototype.applyMetadata.call(this, params);
@@ -26433,7 +26574,15 @@ _.extend(ViewBuilder.prototype, {
             onStartCreating = metadata.OnStartCreating;
 
         if (onStartCreating) {
-            new ScriptExecutor(element).executeScript(onStartCreating.Name || onStartCreating, {});
+
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: element,
+                basePathOfProperty: params.basePathOfProperty
+            };
+
+            var onStartCreatingExecutor = Executor(onStartCreating, params.builder, executorBuilderParams);
+            onStartCreatingExecutor({});
         }
     },
 
@@ -26934,20 +27083,22 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
             metadata = params.metadata,
             element = params.element;
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnClosing) {
-            element.onClosing(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosing.Name || metadata.OnClosing, {});
-            });
+            var onClosingExecutor = Executor(metadata.OnClosing, params.builder, executorBuilderParams);
+            element.onClosing(onClosingExecutor.bind(null, {}));
         }
 
         if (metadata.OnClosed) {
-            element.onClosed(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosed.Name || metadata.OnClosed, {});
-            });
+            var onClosedExecutor = Executor(metadata.OnClosed, params.builder, executorBuilderParams);
+            element.onClosed(onClosedExecutor.bind(null, {}));
         }
     }
-
-
 
 });
 
@@ -27010,9 +27161,15 @@ var BaseActionBuilderMixin = {
         var metadata = params.metadata;
 
         if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
+
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: params.parent,
+                basePathOfProperty: params.basePathOfProperty
+            };
+
+            var executor = Executor(metadata.OnExecuted, params.builder, executorBuilderParams);
+            action.setProperty('onExecutedHandler', executor);
         }
     }
 };
@@ -27117,16 +27274,20 @@ var BaseFallibleActionBuilderMixin = {
     applyBaseFallibleActionMetadata: function(action, params) {
         var metadata = params.metadata;
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: params.parent,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if('OnSuccess' in metadata) {
-            action.setProperty('onSuccessHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
-            });
+            var onSuccessExecutor = Executor(metadata.OnSuccess, params.builder, executorBuilderParams);
+            action.setProperty('onSuccessHandler', onSuccessExecutor);
         }
 
         if('OnError' in metadata) {
-            action.setProperty('onErrorHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
-            });
+            var onErrorExecutor = Executor(metadata.OnError, params.builder, executorBuilderParams);
+            action.setProperty('onErrorHandler', onErrorExecutor);
         }
     }
 };
@@ -35133,64 +35294,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function() {
-
-    var TOOLTIP_PLACEMENT = 'auto top';
-    var TOOLTIP_CONTAINER = 'body';
-    var TOOLTIP_TRIGGER = 'hover';
-
-    var exchange = window.InfinniUI.global.messageBus;
-
-    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
-
-    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
-
-    function destroyToolTip( context, args ) {
-        var element = extractElementFromArgs( args );
-        var $element = element.control.controlView.$el;
-
-        $element.tooltip( 'destroy' );
-    }
-
-    function initToolTip( context, args ) {
-        var element = extractElementFromArgs( args );
-        var content = extractContentFromArgs( args );
-        var $element = element.control.controlView.$el;
-
-        var options = {
-            html: true,
-            title: function() {
-                return content.render();
-            },
-            placement: TOOLTIP_PLACEMENT,
-            container: TOOLTIP_CONTAINER,
-            trigger: TOOLTIP_TRIGGER
-        };
-
-        $element.tooltip( options );
-    }
-
-    /**
-     *
-     * @param {Object} args
-     * @returns InfinniUI.Element
-     */
-    function extractContentFromArgs( args ) {
-        return args.value.content;
-    }
-
-    /**
-     *
-     * @param {Object} args
-     * @returns InfinniUI.Element
-     */
-    function extractElementFromArgs( args ) {
-        return args.value.element;
-    }
-
-})();
-
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -35282,4 +35385,62 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function() {
+
+    var TOOLTIP_PLACEMENT = 'auto top';
+    var TOOLTIP_CONTAINER = 'body';
+    var TOOLTIP_TRIGGER = 'hover';
+
+    var exchange = window.InfinniUI.global.messageBus;
+
+    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
+
+    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
+
+    function destroyToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        $element.tooltip( 'destroy' );
+    }
+
+    function initToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var content = extractContentFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        var options = {
+            html: true,
+            title: function() {
+                return content.render();
+            },
+            placement: TOOLTIP_PLACEMENT,
+            container: TOOLTIP_CONTAINER,
+            trigger: TOOLTIP_TRIGGER
+        };
+
+        $element.tooltip( options );
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractContentFromArgs( args ) {
+        return args.value.content;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractElementFromArgs( args ) {
+        return args.value.element;
+    }
+
+})();
 })();

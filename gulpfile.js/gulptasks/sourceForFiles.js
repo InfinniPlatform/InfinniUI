@@ -13,6 +13,7 @@ var sourceForFiles = {
 		'app/messaging/**/*.js',
         'app/controls/_base/_mixins/ajaxRequestMixin.js',
         'app/utils/**/*.js',
+		'app/executor/**/*.js',
 
 		'app/controls/_base/_mixins/*.js',
 		'app/controls/_base/control/*.js',

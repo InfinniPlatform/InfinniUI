@@ -68,33 +68,37 @@ _.extend(PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
             metadata = params.metadata,
             element = params.element;
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnExpanding) {
+            var onExpandingExecutor = Executor(metadata.OnExpanding, params.builder, executorBuilderParams);
             element.onExpanding(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnExpanding.Name || metadata.OnExpanding, args);
+                return onExpandingExecutor(args);
             });
         }
         if (metadata.OnExpanded) {
+            var onExpandedExecutor = Executor(metadata.OnExpanded, params.builder, executorBuilderParams);
             element.onExpanded(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnExpanded.Name || metadata.OnExpanded, args);
+                return onExpandedExecutor(args);
             });
         }
         if (metadata.OnCollapsing) {
+            var onCollapsingExecutor = Executor(metadata.OnCollapsing, params.builder, executorBuilderParams);
+
             element.onCollapsing(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsing.Name || metadata.OnCollapsing, args);
+                return onCollapsingExecutor(args);
             });
         }
         if (metadata.OnCollapsed) {
-            element.onCollapsed(function (context, args) {
-                return createScriptExecutor()
-                    .executeScript(metadata.OnCollapsed.Name || metadata.OnCollapsed, args);
-            });
-        }
+            var onCollapsedExecutor = Executor(metadata.OnCollapsed, params.builder, executorBuilderParams);
 
-        function createScriptExecutor () {
-            return new ScriptExecutor(params.parentView)
+            element.onCollapsed(function (context, args) {
+                return onCollapsedExecutor(args);
+            });
         }
     },
 

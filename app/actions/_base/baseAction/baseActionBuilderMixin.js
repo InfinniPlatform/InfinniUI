@@ -3,9 +3,15 @@ var BaseActionBuilderMixin = {
         var metadata = params.metadata;
 
         if('OnExecuted' in metadata) {
-            action.setProperty('onExecutedHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnExecuted.Name || metadata.OnExecuted, args);
-            });
+
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: params.parent,
+                basePathOfProperty: params.basePathOfProperty
+            };
+
+            var executor = Executor(metadata.OnExecuted, params.builder, executorBuilderParams);
+            action.setProperty('onExecutedHandler', executor);
         }
     }
 };

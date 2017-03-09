@@ -23,9 +23,13 @@ _.extend(FormBuilder.prototype, {
 		StackPanelBuilder.prototype.applyMetadata.call(this, params);
 
 		if( metadata.OnSubmit ) {
-			element.onSubmit(function() {
-				return new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnSubmit.Name || metadata.OnSubmit);
-			});
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: element,
+                basePathOfProperty: params.basePathOfProperty
+            };
+            var onSubmitExecutor = Executor(metadata.OnSubmit, params.builder, executorBuilderParams);
+			element.onSubmit(onSubmitExecutor);
 		}
 
 		if( metadata.Method ) {

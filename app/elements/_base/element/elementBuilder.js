@@ -85,83 +85,75 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 			element.setName(metadata.Name);
 		}
 
+        var executorBuilderParams = {
+            	parentView: params.parentView,
+                parent: element,
+            	basePathOfProperty: params.basePathOfProperty
+        };
 
 		if (metadata.OnLoaded) {
-			element.onLoaded(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLoaded.Name || metadata.OnLoaded, { source: element });
-			});
+            var onLoadedExecutor = Executor(metadata.OnLoaded, params.builder, executorBuilderParams);
+			element.onLoaded(onLoadedExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnGotFocus) {
-			element.onGotFocus(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnGotFocus.Name || metadata.OnGotFocus, { source: element });
-			});
+            var onGotFocusExecutor = Executor(metadata.OnGotFocus, params.builder, executorBuilderParams);
+			element.onGotFocus(onGotFocusExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnLostFocus) {
-			element.onLostFocus(function () {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnLostFocus.Name || metadata.OnLostFocus, { source: element });
-			});
+            var onLostFocusExecutor = Executor(metadata.OnLostFocus, params.builder, executorBuilderParams);
+			element.onLostFocus(onLostFocusExecutor.bind(null, { source: element }));
 		}
 
 		if (metadata.OnDoubleClick) {
-			element.onDoubleClick(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnDoubleClick.Name || metadata.OnDoubleClick, args);
-			});
+            var onDoubleClickExecutor = Executor(metadata.OnDoubleClick, params.builder, executorBuilderParams);
+            element.onDoubleClick(onDoubleClickExecutor);
 		}
 
 		if (metadata.OnClick) {
-			element.onClick(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnClick.Name || metadata.OnClick, args);
-			});
+			var onClickExecutor = Executor(metadata.OnClick, params.builder, executorBuilderParams);
+			element.onClick(onClickExecutor);
 		}
 
 		if (metadata.OnMouseEnter) {
-			element.onMouseEnter(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseEnter.Name || metadata.OnMouseEnter, args);
-			});
+            var onMouseEnterExecutor = Executor(metadata.OnMouseEnter, params.builder, executorBuilderParams);
+            element.onMouseEnter(onMouseEnterExecutor);
 		}
 
 		if (metadata.OnMouseLeave) {
-			element.onMouseLeave(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseLeave.Name || metadata.OnMouseLeave, args);
-			});
+            var onMouseLeaveExecutor = Executor(metadata.OnMouseLeave, params.builder, executorBuilderParams);
+			element.onMouseLeave(onMouseLeaveExecutor);
 		}
 
 		if (metadata.OnMouseMove) {
-			element.onMouseMove(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseMove.Name || metadata.OnMouseMove, args);
-			});
+            var onMouseMoveExecutor = Executor(metadata.OnMouseMove, params.builder, executorBuilderParams);
+			element.onMouseMove(onMouseMoveExecutor);
 		}
 
 		if (metadata.OnKeyDown) {
-			element.onKeyDown(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyDown.Name || metadata.OnKeyDown, args);
-			});
+            var onKeyDownExecutor = Executor(metadata.OnKeyDown, params.builder, executorBuilderParams);
+			element.onKeyDown(onKeyDownExecutor);
 		}
 
 		if (metadata.OnKeyUp) {
-			element.onKeyUp(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnKeyUp.Name || metadata.OnKeyUp, args);
-			});
+            var onKeyUpExecutor = Executor(metadata.OnKeyUp, params.builder, executorBuilderParams);
+			element.onKeyUp(onKeyUpExecutor);
 		}
 
 		if (metadata.OnMouseDown) {
-			element.onMouseDown(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseDown.Name || metadata.OnMouseDown, args);
-			});
+            var onMouseDownExecutor = Executor(metadata.OnMouseDown, params.builder, executorBuilderParams);
+			element.onMouseDown(onMouseDownExecutor);
 		}
 
 		if (metadata.OnMouseUp) {
-			element.onMouseUp(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseUp.Name || metadata.OnMouseUp, args);
-			});
+            var onMouseUpExecutor = Executor(metadata.OnMouseUp, params.builder, executorBuilderParams);
+			element.onMouseUp(onMouseUpExecutor);
 		}
 
 		if (metadata.OnMouseWheel) {
-			element.onMouseWheel(function (args) {
-				new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnMouseWheel.Name || metadata.OnMouseWheel, args);
-			});
+            var onMouseWheelExecutor = Executor(metadata.OnMouseWheel, params.builder, executorBuilderParams);
+			element.onMouseWheel(onMouseWheelExecutor);
 		}
 	},
 

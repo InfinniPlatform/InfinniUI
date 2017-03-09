@@ -7,15 +7,13 @@ var buttonBuilderMixin = {
         this.initTemplatingContent(params);
 
         if (metadata.Action) {
-            var args = {
+            var executorBuilderParams = {
                 parentView: params.parentView,
                 parent: element,
                 basePathOfProperty: params.basePathOfProperty
             };
-            var action = builder.build(metadata.Action, args);
-            element.onClick(function(){
-                action.execute();
-            });
+            var onClickExecutor = Executor(metadata.Action, builder, executorBuilderParams);
+            element.onClick(onClickExecutor);
         }
     },
 

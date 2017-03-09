@@ -32,11 +32,12 @@ describe('AcceptAction', function () {
         var view = new InfinniUI.View();
         var builder = new InfinniUI.AcceptActionBuilder();
         var acceptAction = builder.build(null, {
-                                                parentView: view,
-                                                metadata: {
-                                                    OnExecuted: "{ window.onExecutedWasCalled = true; }"
-                                                }
-                                            });
+            builder: new InfinniUI.ApplicationBuilder(),
+            parentView: view,
+            metadata: {
+                OnExecuted: "{ window.onExecutedWasCalled = true; }"
+            }
+        });
 
         assert.isUndefined(window.onExecutedWasCalled);
 

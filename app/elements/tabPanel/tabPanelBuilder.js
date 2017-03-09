@@ -45,10 +45,16 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
             exchange.send('OnChangeLayout', {});
         });
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnSelectedItemChanged) {
+            var onSelectedItemChangedExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
             element.onSelectedItemChanged(function (context, args) {
-                return new ScriptExecutor(params.parentView)
-                    .executeScript(metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args);
+                onSelectedItemChangedExecutor(args);
             });
         }
     }
