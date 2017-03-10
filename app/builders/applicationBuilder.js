@@ -33,6 +33,8 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('MenuBar', new MenuBarBuilder());
 
         builder.register('DataGrid', new DataGridBuilder());
+        builder.register('DataGridRow', new DataGridRowBuilder());
+
         builder.register('DataGridColumn', new DataGridColumnBuilder());
         builder.register('ListBox', new ListBoxBuilder());
 
