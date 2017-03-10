@@ -6877,6 +6877,22 @@ describe("ObjectUtils", function () {
         });
     });
 });
+describe('ButtonControl', function () {
+    describe('render', function () {
+        it('should render button with correct class', function () {
+            //Given
+            var builder = new InfinniUI.ApplicationBuilder(),
+                button = builder.buildType('Button', {});
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-button'));
+        });
+    });
+});
+
 describe('CheckBox', function () {
     var checkbox;
 
@@ -6951,22 +6967,6 @@ describe('CheckBox', function () {
 
     });
 
-});
-
-describe('ButtonControl', function () {
-    describe('render', function () {
-        it('should render button with correct class', function () {
-            //Given
-            var builder = new InfinniUI.ApplicationBuilder(),
-                button = builder.buildType('Button', {});
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-button'));
-        });
-    });
 });
 
 describe('Container (Control)', function () {
@@ -7802,6 +7802,27 @@ describe('ContextMenu (Control)', function () {
 	});
 });
 
+describe('DataNavigationControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('DataNavigation', {});
+        });
+
+        it('should render dataNavigation with correct class', function () {
+            //Given
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-data-navigation'));
+        });
+    });
+});
+
 describe('DateTimePickerControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -7874,27 +7895,6 @@ describe('DateTimePickerControl', function () {
 
         });
 
-    });
-});
-
-describe('DataNavigationControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('DataNavigation', {});
-        });
-
-        it('should render dataNavigation with correct class', function () {
-            //Given
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-data-navigation'));
-        });
     });
 });
 
@@ -14875,6 +14875,45 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
+describe('TabPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('Default values', function () {
+            var element = builder.buildType('TabPanel', {});
+
+            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
+            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
+        });
+
+
+    });
+
+
+});
+
+describe('TabPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            TabPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var element = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(element, 'TabPanel');
+    });
+
+});
+
 describe('ScrollPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14920,45 +14959,6 @@ describe('ScrollPanelBuilder', function () {
 
         //Then
         assert.isObject(scrollPanel, 'scrollPanel');
-    });
-
-});
-
-describe('TabPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('Default values', function () {
-            var element = builder.buildType('TabPanel', {});
-
-            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
-            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
-        });
-
-
-    });
-
-
-});
-
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            TabPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var element = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(element, 'TabPanel');
     });
 
 });
