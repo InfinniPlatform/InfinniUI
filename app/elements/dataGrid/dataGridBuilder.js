@@ -67,7 +67,13 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         var builder = this;
 
         return function (context, args) {
-            var row = dataGrid.createRow();
+
+            var row = params.builder.buildType('DataGridRow', {}, {
+                parent: dataGrid,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+
             row.setGrid(dataGrid);
 
             ['RowStyle', 'RowBackground', 'RowForeground', 'RowTextStyle']
@@ -77,10 +83,9 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
             var cellElements = columns.toArray().map(function (column, index) {
                 var cellTemplate = column.getCellTemplate();
-                var template = cellTemplate(itemsBinding);
+                var template = cellTemplate(itemsBinding, row);
                 var cellEl = template(context, args);
 
-                row.addChild(cellEl);
                 return cellEl;
             });
             row.setCellElements(cellElements);
