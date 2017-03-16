@@ -154,28 +154,30 @@ _.extend(ViewBuilder.prototype, {
 
         element.setHeaderTemplate(this.buildHeaderTemplate(element, params));
 
+        var executorBuilderParams = {
+            parentView: element,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if(metadata.OnOpening){
-            element.onOpening(function() {
-                return new ScriptExecutor(element).executeScript(metadata.OnOpening.Name || metadata.OnOpening);
-            });
+            var onOpeningExecutor = Executor(metadata.OnOpening, params.builder, executorBuilderParams);
+            element.onOpening(onOpeningExecutor);
         }
 
         if(metadata.OnOpened){
-            element.onOpened(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnOpened.Name || metadata.OnOpened);
-            });
+            var onOpenedExecutor = Executor(metadata.OnOpened, params.builder, executorBuilderParams);
+            element.onOpened(onOpenedExecutor);
         }
 
         if(metadata.OnClosing){
-            element.onClosing(function() {
-                return new ScriptExecutor(element).executeScript(metadata.OnClosing.Name || metadata.OnClosing);
-            });
+            var onClosingExecutor = Executor(metadata.OnClosing, params.builder, executorBuilderParams);
+            element.onClosing(onClosingExecutor);
         }
 
         if(metadata.OnClosed){
-            element.onClosed(function() {
-                new ScriptExecutor(element).executeScript(metadata.OnClosed.Name || metadata.OnClosed);
-            });
+            var onClosedExecutor = Executor(metadata.OnClosed, params.builder, executorBuilderParams);
+            element.onClosed(onClosedExecutor);
         }
 
         ContainerBuilder.prototype.applyMetadata.call(this, params);
@@ -190,7 +192,15 @@ _.extend(ViewBuilder.prototype, {
             onStartCreating = metadata.OnStartCreating;
 
         if (onStartCreating) {
-            new ScriptExecutor(element).executeScript(onStartCreating.Name || onStartCreating, {});
+
+            var executorBuilderParams = {
+                parentView: params.parentView,
+                parent: element,
+                basePathOfProperty: params.basePathOfProperty
+            };
+
+            var onStartCreatingExecutor = Executor(onStartCreating, params.builder, executorBuilderParams);
+            onStartCreatingExecutor({});
         }
     },
 

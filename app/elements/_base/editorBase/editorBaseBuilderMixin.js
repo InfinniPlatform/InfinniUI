@@ -34,15 +34,24 @@ var editorBaseBuilderMixin = {
         this.initBindingToProperty(params, 'WarningText');
         this.resolveExpressionInText(params, 'WarningText');
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnValueChanging) {
+            var onValueChangingExecutor = Executor(metadata.OnValueChanging, params.builder, executorBuilderParams);
+
             element.onValueChanging(function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.parentView);
-                return scriptExecutor.executeScript(metadata.OnValueChanging.Name || metadata.OnValueChanging, args);
+                return onValueChangingExecutor(args);
             });
         }
         if (metadata.OnValueChanged) {
+            var onValueChangedExecutor = Executor(metadata.OnValueChanged, params.builder, executorBuilderParams);
+
             element.onValueChanged(function (context, args) {
-                new ScriptExecutor(params.parentView).executeScript(metadata.OnValueChanged.Name || metadata.OnValueChanged, args);
+                onValueChangedExecutor(args);
             });
         }
 

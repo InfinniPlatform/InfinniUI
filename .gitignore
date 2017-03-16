@@ -45,3 +45,4 @@ example/www/compiled/*
 example/node_modules/*
 example/bower_cache/*
 example/bower_components/*
+out/

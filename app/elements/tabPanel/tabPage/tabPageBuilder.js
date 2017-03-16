@@ -43,19 +43,21 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
             metadata = params.metadata,
             element = params.element;
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if (metadata.OnClosing) {
-            element.onClosing(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosing.Name || metadata.OnClosing, {});
-            });
+            var onClosingExecutor = Executor(metadata.OnClosing, params.builder, executorBuilderParams);
+            element.onClosing(onClosingExecutor.bind(null, {}));
         }
 
         if (metadata.OnClosed) {
-            element.onClosed(function () {
-                return new ScriptExecutor(params.parentView).executeScript(metadata.OnClosed.Name || metadata.OnClosed, {});
-            });
+            var onClosedExecutor = Executor(metadata.OnClosed, params.builder, executorBuilderParams);
+            element.onClosed(onClosedExecutor.bind(null, {}));
         }
     }
-
-
 
 });

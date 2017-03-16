@@ -22,24 +22,29 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         element.setShowSelectors(metadata.ShowSelectors);
         element.setCheckAllVisible(metadata.CheckAllVisible);
 
+        var executorBuilderParams = {
+            parentView: params.parentView,
+            parent: element,
+            basePathOfProperty: params.basePathOfProperty
+        };
+
         if(metadata.OnCheckAllChanged){
+            var onCheckAllChangedExecutor = Executor(metadata.OnCheckAllChanged, params.builder, executorBuilderParams);
             element.onCheckAllChanged(function(context, args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCheckAllChanged.Name || metadata.OnCheckAllChanged, args);
+                onCheckAllChangedExecutor(args);
             });
         } else {
             setDefaultCheckAllBehavior(element);
         }
 
         if( metadata.OnRowClick ) {
-            element.onRowClick(function (args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowClick.Name || metadata.OnRowClick, args);
-            });
+            var onRowClickExecutor = Executor(metadata.OnRowClick, params.builder, executorBuilderParams);
+            element.onRowClick(onRowClickExecutor);
         }
 
         if( metadata.OnRowDoubleClick ) {
-            element.onRowDoubleClick(function (args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnRowDoubleClick.Name || metadata.OnRowDoubleClick, args);
-            });
+            var onRowDoubleClickExecutor = Executor(metadata.OnRowDoubleClick, params.builder, executorBuilderParams);
+            element.onRowDoubleClick(onRowDoubleClickExecutor);
         }
 
         this.applyColumnsMetadata(params);
@@ -69,7 +74,13 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         var builder = this;
 
         return function (context, args) {
-            var row = dataGrid.createRow();
+
+            var row = params.builder.buildType('DataGridRow', {}, {
+                parent: dataGrid,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+
             row.setGrid(dataGrid);
 
             ['RowStyle', 'RowBackground', 'RowForeground', 'RowTextStyle']
@@ -79,10 +90,9 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
 
             var cellElements = columns.toArray().map(function (column, index) {
                 var cellTemplate = column.getCellTemplate();
-                var template = cellTemplate(itemsBinding);
+                var template = cellTemplate(itemsBinding, row);
                 var cellEl = template(context, args);
 
-                row.addChild(cellEl);
                 return cellEl;
             });
             row.setCellElements(cellElements);

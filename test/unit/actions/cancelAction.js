@@ -32,6 +32,7 @@ describe('CancelAction', function () {
         var view = new InfinniUI.View();
         var builder = new InfinniUI.CancelActionBuilder();
         var cancelAction = builder.build(null, {
+            builder: new InfinniUI.ApplicationBuilder(),
             parentView: view,
             metadata: {
                 OnExecuted: "{ window.onExecutedWasCalled = true; }"

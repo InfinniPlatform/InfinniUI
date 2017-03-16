@@ -66,9 +66,15 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
         return;
     }
 
-    element.onButtonClick(function (args) {
-        new ScriptExecutor(element.getScriptsStorage()).executeScript(onButtonClick.Name || onButtonClick, args);
-    });
+    var executorBuilderParams = {
+        parentView: params.parentView,
+        parent: element,
+        basePathOfProperty: params.basePathOfProperty
+    };
+
+    var executor = Executor(onButtonClick, params.builder, executorBuilderParams);
+
+    element.onButtonClick(executor);
 
 };
 

@@ -109,11 +109,11 @@ DataGridColumnBuilder.prototype.buildCellTemplateByTemplate = function (params, 
     var builder = params.builder;
     var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty('');
 
-    return function (itemsBinding) {
+    return function (itemsBinding, row) {
         return function  (context, args) {
             var index = args.index;
             var argumentForBuilder = {
-                parent: dataGrid,
+                parent: row,
                 parentView: params.parentView
             };
             argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild('', index);
@@ -129,10 +129,10 @@ DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function (params, ce
         grid = column.parent,
         format = this.buildDisplayFormat(cellFormatMetadata, params);
 
-    return function  (itemsBinding) {
+    return function  (itemsBinding, row) {
         return function (context, args) {
             var index = args.index;
-            var label = new Label(this);
+            var builder = params.builder;
 
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
@@ -142,6 +142,12 @@ DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function (params, ce
             if (itemsBinding.getSourceProperty() != '') {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
+
+            var label = builder.buildType('Label', {}, {
+                parent: row,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
 
             label.setDisplayFormat(format);
 
@@ -158,9 +164,15 @@ DataGridColumnBuilder.prototype.buildCellTemplateBySelector = function (params, 
     var column = params.element,
         grid = column.parent;
 
-    return function  () {
+    return function  (itemsBinding, row) {
         return function (context, args) {
-            var label = new Label(this);
+
+            var label = params.builder.buildType('Label', {}, {
+                parent: row,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
+
             var scriptExecutor = new ScriptExecutor(grid.getScriptsStorage());
             var value = scriptExecutor.executeScript(cellSelectorMetadata.Name || cellSelectorMetadata, {
                 value: args.item
@@ -173,15 +185,13 @@ DataGridColumnBuilder.prototype.buildCellTemplateBySelector = function (params, 
 };
 
 DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (params, cellProperty) {
-    var column = params.element,
-        grid = column.parent;
+    var grid = params.element;
 
-    return function  (itemsBinding) {
+    return function  (itemsBinding, row) {
 
         return function (context, args) {
             var index = args.index;
-            var label = new Label(grid);
-
+            var builder = params.builder;
 
             var sourceProperty;
             var source = itemsBinding.getSource();
@@ -195,6 +205,13 @@ DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function (params, c
             if (cellProperty != '') {
                 sourceProperty = sourceProperty + '.' + cellProperty;
             }
+
+
+            var label = builder.buildType('Label', {}, {
+                parent: row,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            });
 
             binding.bindSource(source, sourceProperty);
             binding.bindElement(label, 'value');
@@ -284,12 +301,22 @@ DataGridColumnBuilder.prototype.buildHeaderTemplateByMetadata = function (header
 /**
  * @protected
  * @param {Object} params
+ * @param {DataGrid} params.element
  * @returns {Function}
  */
 DataGridColumnBuilder.prototype.buildHeaderTemplateByDefault = function (params) {
 
+    var builder = params.builder;
+
+
     return function (context, args) {
-        var label = new Label(this);
+
+        var label = builder.buildType('Label', {}, {
+            parent: params.element,
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        });
+
         label.setText(args.value);
         return label;
     };
