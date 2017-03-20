@@ -1,6 +1,6 @@
 var DocumentDataSourceBuilder = function() {
     _.superClass(DocumentDataSourceBuilder, this);
-}
+};
 
 _.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -26,10 +26,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
         // PageNumber нужно устанавливать последним, потому что его могут обнулять другие свойства.
         if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
-
-        if (Array.isArray(metadata.DefaultItems)) {
-            dataSource._setItems(metadata.DefaultItems);
-        }
     },
 
     createDataSource: function(parent){
