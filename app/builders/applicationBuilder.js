@@ -33,7 +33,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('MenuBar', new MenuBarBuilder());
 
         builder.register('DataGrid', new DataGridBuilder());
-        builder.register('DataGridRow', new DataGridRowBuilder());
+        builder.register('DataGridRow', new DataGridRowBuilder()); // служебный элемент, в документировании не нуждается
 
         builder.register('DataGridColumn', new DataGridColumnBuilder());
         builder.register('ListBox', new ListBoxBuilder());
@@ -102,6 +102,7 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('Divider', new DividerBuilder());
         builder.register('ContextMenu', new ContextMenuBuilder());
 
+        // служебный элемент, в документировании не нуждается
         builder.register('ToolTip', new InfinniUI.TooltipBuilder());
 
 

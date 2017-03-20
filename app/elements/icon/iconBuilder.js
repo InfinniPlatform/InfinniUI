@@ -15,8 +15,6 @@ _.extend(IconBuilder.prototype, {
     applyMetadata: function (params) {
         ElementBuilder.prototype.applyMetadata.call(this, params);
 
-        var metadata = params.metadata;
-
         this.initBindingToProperty(params, 'Value');
         this.initBindingToProperty(params, 'Size');
     }
