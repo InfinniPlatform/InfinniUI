@@ -66,21 +66,49 @@
             );
         });
 
-        it('should return default list of data', function (done) {
+        it('should suspend DocumentDataSource from metadata', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
             // Given
             var builder = new InfinniUI.ApplicationBuilder();
-            var defaultItems = [{"Id": "0000"}];
             var metadata = {
-                "DefaultItems": defaultItems
+                "SuspendUpdate": 'testSuspend'
             };
 
             // When
             var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
 
+            documentDataSource.updateItems();
+
             // Then
-            var items = documentDataSource.getItems();
-            assert.equal(items, defaultItems);
-            done();
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), false);
+                done();
+            }, 10 );
+        });
+
+        it('should resume DocumentDataSource from metadata suspend', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                "SuspendUpdate": 'testSuspend'
+            };
+
+            // When
+            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
+            documentDataSource.updateItems();
+
+            // Then
+            documentDataSource.resumeUpdate( 'testSuspend' );
+
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), true);
+                done();
+            }, 10 );
         });
 
         it('should subscribe to property of selectedItem', function (done) {

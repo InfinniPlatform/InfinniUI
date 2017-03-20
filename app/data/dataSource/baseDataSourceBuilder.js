@@ -40,6 +40,10 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
             dataSource.setIdProperty( idProperty );
         }
 
+        if( 'SuspendUpdate' in metadata ) {
+            dataSource.suspendUpdate( metadata['SuspendUpdate'] );
+        }
+
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
 
