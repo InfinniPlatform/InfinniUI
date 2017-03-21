@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.9';
+InfinniUI.VERSION = '2.2.10';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -18114,7 +18114,7 @@ var BaseDataSource = Backbone.Model.extend({
         var validationResult = params.validationResult,
             context = this.getContext();
 
-        if( validationResult && validationResult.IsValid ) {
+        if( validationResult && validationResult.Items ) {
             this._notifyAboutValidation(validationResult);
         } else {
             this.trigger('onProviderError', context, {item: params.item, data: params.response});
@@ -21430,7 +21430,7 @@ var editorBaseBuilderMixin = {
                 })
                 .join(' ');
         }
-    },
+    }
 
 
 };
@@ -27351,41 +27351,6 @@ var BaseActionBuilderMixin = {
         }
     }
 };
-//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
-var BaseFallibleActionBuilderMixin = {
-    applyBaseFallibleActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnSuccess' in metadata) {
-            action.setProperty('onSuccessHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
-            });
-        }
-
-        if('OnError' in metadata) {
-            action.setProperty('onErrorHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
-            });
-        }
-    }
-};
-//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
-var BaseFallibleActionMixin = {
-    onSuccessHandler: function(args) {
-        var onSuccessHandler = this.getProperty('onSuccessHandler');
-
-        if(_.isFunction(onSuccessHandler)) {
-            onSuccessHandler(args);
-        }
-    },
-    onErrorHandler: function(args) {
-        var onErrorHandler = this.getProperty('onErrorHandler');
-
-        if(_.isFunction(onErrorHandler)) {
-            onErrorHandler(args);
-        }
-    }
-};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27479,6 +27444,41 @@ var BaseEditActionBuilderMixin = {
                 metadata.DestinationValue.Property;
 
             action.setProperty('destinationProperty', destinationProperty);
+        }
+    }
+};
+//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
+var BaseFallibleActionBuilderMixin = {
+    applyBaseFallibleActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnSuccess' in metadata) {
+            action.setProperty('onSuccessHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
+            });
+        }
+
+        if('OnError' in metadata) {
+            action.setProperty('onErrorHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
+            });
+        }
+    }
+};
+//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
+var BaseFallibleActionMixin = {
+    onSuccessHandler: function(args) {
+        var onSuccessHandler = this.getProperty('onSuccessHandler');
+
+        if(_.isFunction(onSuccessHandler)) {
+            onSuccessHandler(args);
+        }
+    },
+    onErrorHandler: function(args) {
+        var onErrorHandler = this.getProperty('onErrorHandler');
+
+        if(_.isFunction(onErrorHandler)) {
+            onErrorHandler(args);
         }
     }
 };
@@ -35278,29 +35278,6 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -35450,6 +35427,87 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
+//####app\services\toolTipService\toolTipService.js
+InfinniUI.ToolTipService = (function() {
+
+    var TOOLTIP_PLACEMENT = 'auto top';
+    var TOOLTIP_CONTAINER = 'body';
+    var TOOLTIP_TRIGGER = 'hover';
+
+    var exchange = window.InfinniUI.global.messageBus;
+
+    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
+
+    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
+
+    function destroyToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        $element.tooltip( 'destroy' );
+    }
+
+    function initToolTip( context, args ) {
+        var element = extractElementFromArgs( args );
+        var content = extractContentFromArgs( args );
+        var $element = element.control.controlView.$el;
+
+        var options = {
+            html: true,
+            title: function() {
+                return content.render();
+            },
+            placement: TOOLTIP_PLACEMENT,
+            container: TOOLTIP_CONTAINER,
+            trigger: TOOLTIP_TRIGGER
+        };
+
+        $element.tooltip( options );
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractContentFromArgs( args ) {
+        return args.value.content;
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @returns InfinniUI.Element
+     */
+    function extractElementFromArgs( args ) {
+        return args.value.element;
+    }
+
+})();
+
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
@@ -35541,62 +35599,4 @@ var routerService = (function(myRoutes) {
 })(InfinniUI.config.Routes);
 
 window.InfinniUI.RouterService = routerService;
-
-//####app\services\toolTipService\toolTipService.js
-InfinniUI.ToolTipService = (function() {
-
-    var TOOLTIP_PLACEMENT = 'auto top';
-    var TOOLTIP_CONTAINER = 'body';
-    var TOOLTIP_TRIGGER = 'hover';
-
-    var exchange = window.InfinniUI.global.messageBus;
-
-    exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
-
-    exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
-
-    function destroyToolTip( context, args ) {
-        var element = extractElementFromArgs( args );
-        var $element = element.control.controlView.$el;
-
-        $element.tooltip( 'destroy' );
-    }
-
-    function initToolTip( context, args ) {
-        var element = extractElementFromArgs( args );
-        var content = extractContentFromArgs( args );
-        var $element = element.control.controlView.$el;
-
-        var options = {
-            html: true,
-            title: function() {
-                return content.render();
-            },
-            placement: TOOLTIP_PLACEMENT,
-            container: TOOLTIP_CONTAINER,
-            trigger: TOOLTIP_TRIGGER
-        };
-
-        $element.tooltip( options );
-    }
-
-    /**
-     *
-     * @param {Object} args
-     * @returns InfinniUI.Element
-     */
-    function extractContentFromArgs( args ) {
-        return args.value.content;
-    }
-
-    /**
-     *
-     * @param {Object} args
-     * @returns InfinniUI.Element
-     */
-    function extractElementFromArgs( args ) {
-        return args.value.element;
-    }
-
-})();
 })();
