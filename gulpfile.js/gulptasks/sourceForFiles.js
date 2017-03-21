@@ -113,23 +113,20 @@ var sourceForFiles = {
 		'app/**/*.js'
 	],
 	vendorStylesFiles: [
-		'bower_components/font-awesome/css/font-awesome.min.css',
-		'bower_components/toastr/toastr.min.css'
+		'node_modules/font-awesome/css/font-awesome.min.css',
+		'node_modules/toastr/build/toastr.min.css'
 	],
 	vendorJsFiles: [
-		'bower_components/jquery/dist/jquery.min.js',
-		'bower_components/underscore/underscore-min.js',
-		'bower_components/backbone/backbone.js',
-		'bower_components/moment/min/moment.min.js',
-		'bower_components/jquery-bootpag/lib/jquery.bootpag.min.js',
-		'bower_components/JavaScript-MD5/js/md5.min.js',
-		'bower_components/blockUI/jquery.blockUI.js',
-		'bower_components/toastr/toastr.min.js',
+		'node_modules/jquery/dist/jquery.min.js',
+		'node_modules/underscore/underscore-min.js',
+		'node_modules/backbone/backbone.js',
+		'node_modules/moment/min/moment.min.js',
+		'node_modules/block-ui/jquery.blockUI.js',
+		'node_modules/toastr/build/toastr.min.js',
 		'bootstrap-framework/js/tooltip.js',
-		'bower_components/jquery.cookie/jquery.cookie.js',
-		'bower_components/hammerjs/hammer.min.js',
+		'node_modules/jquery.cookie/jquery.cookie.js',
 		'bootstrap-framework/js/*.js',
-		'bower_components/signalr/jquery.signalR.min.js'
+		'node_modules/signalr/jquery.signalR.min.js'
 	],
 	templateFiles: [
 		"app/**/*.tpl.html",
@@ -141,29 +138,8 @@ var sourceForFiles = {
 		'test/unit/**/*.js'
 	],
 	fontsFiles: [
-		'bower_components/font-awesome/fonts/**/*.*'
-	],
-	devModeFiles: {
-		jsonEditorJs: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.js',
-			dest: 'out/jsonEditor'
-		},
-		jsonEditorCSS: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.css',
-			dest: 'out/jsonEditor/css'
-		},
-		jsonEditorSVG: {
-			src: 'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg',
-			dest: 'out/jsonEditor/css/img'
-		},
-		jsonEditorDialog: {
-			src: 'developer/jsonEditor/editorDialog/*',
-			dest: 'out/jsonEditor'
-		},
-		concatToPlatform: {
-			src: './developer/jsonEditor/*.*'
-		}
-	}
+		'node_modules/font-awesome/fonts/**/*.*'
+	]
 };
 
 module.exports = sourceForFiles;
