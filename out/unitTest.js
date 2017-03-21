@@ -7898,6 +7898,35 @@ describe('DateTimePickerControl', function () {
     });
 });
 
+describe('Frame', function () {
+    var frame;
+
+    beforeEach(function () {
+        frame = new InfinniUI.Frame();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: value', function () {
+                //Given
+                var $el = frame.render();
+
+                //When
+                frame.setValue('http://docs.infinnity.ru/');
+
+                //Then
+                assert.equal($el.find('iframe').attr('src'), 'http://docs.infinnity.ru/');
+            });
+
+
+        });
+
+    });
+
+});
+
 describe('Form (Control)', function () {
 
 	describe('Check Form element', function () {
@@ -8007,35 +8036,6 @@ describe('Form (Control)', function () {
 			}
 		});
 	});
-});
-
-describe('Frame', function () {
-    var frame;
-
-    beforeEach(function () {
-        frame = new InfinniUI.Frame();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: value', function () {
-                //Given
-                var $el = frame.render();
-
-                //When
-                frame.setValue('http://docs.infinnity.ru/');
-
-                //Then
-                assert.equal($el.find('iframe').attr('src'), 'http://docs.infinnity.ru/');
-            });
-
-
-        });
-
-    });
-
 });
 
 describe('IndeterminateCheckBox', function () {
@@ -8337,6 +8337,121 @@ describe('Link (Control)', function () {
 	});
 });
 
+describe('PasswordBox', function () {
+
+    var element;
+
+    beforeEach(function () {
+        element = new InfinniUI.PasswordBox();
+    });
+
+    describe('Render', function () {
+
+        describe('Setting the properties', function () {
+
+            it('Setting property: name', function () {
+                //Given
+                var $el = element.render();
+                assert.isUndefined($el.attr('pl-data-pl-name'));
+
+                //When
+                element.setName('UserPassword');
+
+                //Then
+                assert.equal($el.attr('data-pl-name'), 'UserPassword');
+            });
+
+            it('Setting property: visible', function () {
+                //Given
+                var $el = element.render();
+                assert.isFalse($el.hasClass('hidden'));
+
+                //When
+                element.setVisible(false);
+
+                //Then
+                assert.isTrue($el.hasClass('hidden'));
+            });
+
+            it('Setting property: labelText', function () {
+                //Given
+                var
+                    label = "User's password",
+                    $el = element.render(),
+                    $label = $('label', $el);
+
+                //When
+                element.setLabelText(label);
+
+                //Then
+                assert.equal($label.html(), label);
+            });
+
+            it('Setting property: hintText', function () {
+                //Given
+                var
+                    hint = "my hint",
+                    $el = element.render(),
+                    $hint = $('.pl-control-hint-text ', $el);
+
+                //When
+                element.setHintText(hint);
+
+                //Then
+                assert.equal($hint.html(), hint);
+                assert.isFalse($hint.hasClass('hidden'));
+            });
+
+            it('Setting property: errorText', function () {
+                //Given
+                var
+                    text = "error",
+                    $el = element.render(),
+                    $text = $('.pl-control-error-text ', $el);
+
+                //When
+                element.setErrorText(text);
+
+                //Then
+                assert.equal($text.html(), text);
+                assert.isFalse($text.hasClass('hidden'));
+            });
+
+            it('Setting property: warningText', function () {
+                //Given
+                var
+                    text = "warning",
+                    $el = element.render(),
+                    $text = $('.pl-control-warning-text ', $el);
+
+                //When
+                element.setWarningText(text);
+
+                //Then
+                assert.equal($text.html(), text);
+                assert.isFalse($text.hasClass('hidden'));
+            });
+
+            it('Setting property: enabled', function () {
+                //Given
+                var
+                    $el = element.render(),
+                    $input = $('input', $el);
+
+                //When
+                element.setEnabled(false);
+
+                //Then
+                assert.isTrue($input.prop('disabled'));
+                assert.isTrue($el.hasClass('pl-disabled'));
+            });
+
+        });
+
+    });
+
+});
+
 describe('PanelControl', function () {
 
     describe('render', function () {
@@ -8586,121 +8701,6 @@ describe('PanelControl', function () {
         }
     });
 });
-describe('PasswordBox', function () {
-
-    var element;
-
-    beforeEach(function () {
-        element = new InfinniUI.PasswordBox();
-    });
-
-    describe('Render', function () {
-
-        describe('Setting the properties', function () {
-
-            it('Setting property: name', function () {
-                //Given
-                var $el = element.render();
-                assert.isUndefined($el.attr('pl-data-pl-name'));
-
-                //When
-                element.setName('UserPassword');
-
-                //Then
-                assert.equal($el.attr('data-pl-name'), 'UserPassword');
-            });
-
-            it('Setting property: visible', function () {
-                //Given
-                var $el = element.render();
-                assert.isFalse($el.hasClass('hidden'));
-
-                //When
-                element.setVisible(false);
-
-                //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
-
-            it('Setting property: labelText', function () {
-                //Given
-                var
-                    label = "User's password",
-                    $el = element.render(),
-                    $label = $('label', $el);
-
-                //When
-                element.setLabelText(label);
-
-                //Then
-                assert.equal($label.html(), label);
-            });
-
-            it('Setting property: hintText', function () {
-                //Given
-                var
-                    hint = "my hint",
-                    $el = element.render(),
-                    $hint = $('.pl-control-hint-text ', $el);
-
-                //When
-                element.setHintText(hint);
-
-                //Then
-                assert.equal($hint.html(), hint);
-                assert.isFalse($hint.hasClass('hidden'));
-            });
-
-            it('Setting property: errorText', function () {
-                //Given
-                var
-                    text = "error",
-                    $el = element.render(),
-                    $text = $('.pl-control-error-text ', $el);
-
-                //When
-                element.setErrorText(text);
-
-                //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
-
-            it('Setting property: warningText', function () {
-                //Given
-                var
-                    text = "warning",
-                    $el = element.render(),
-                    $text = $('.pl-control-warning-text ', $el);
-
-                //When
-                element.setWarningText(text);
-
-                //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
-
-            it('Setting property: enabled', function () {
-                //Given
-                var
-                    $el = element.render(),
-                    $input = $('input', $el);
-
-                //When
-                element.setEnabled(false);
-
-                //Then
-                assert.isTrue($input.prop('disabled'));
-                assert.isTrue($el.hasClass('pl-disabled'));
-            });
-
-        });
-
-    });
-
-});
-
 describe('PopupButtonControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder(),
@@ -10357,21 +10357,49 @@ describe('DocumentDataSource', function () {
             );
         });
 
-        it('should return default list of data', function (done) {
+        it('should suspend DocumentDataSource from metadata', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
             // Given
             var builder = new InfinniUI.ApplicationBuilder();
-            var defaultItems = [{"Id": "0000"}];
             var metadata = {
-                "DefaultItems": defaultItems
+                "SuspendUpdate": 'testSuspend'
             };
 
             // When
             var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
 
+            documentDataSource.updateItems();
+
             // Then
-            var items = documentDataSource.getItems();
-            assert.equal(items, defaultItems);
-            done();
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), false);
+                done();
+            }, 10 );
+        });
+
+        it('should resume DocumentDataSource from metadata suspend', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                "SuspendUpdate": 'testSuspend'
+            };
+
+            // When
+            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
+            documentDataSource.updateItems();
+
+            // Then
+            documentDataSource.resumeUpdate( 'testSuspend' );
+
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), true);
+                done();
+            }, 10 );
         });
 
         it('should subscribe to property of selectedItem', function (done) {
@@ -14875,45 +14903,6 @@ describe('PopupButtonBuilder', function () {
     });
 });
 
-describe('TabPanelElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-
-        it('Default values', function () {
-            var element = builder.buildType('TabPanel', {});
-
-            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
-            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
-        });
-
-
-    });
-
-
-});
-
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
-
-        //Given
-        var metadata = {
-            TabPanel: {
-                Items: []
-            }
-        };
-
-        var applicationBuilder = new InfinniUI.ApplicationBuilder();
-
-        //When
-        var element = applicationBuilder.build(metadata, {});
-
-        //Then
-        assert.isObject(element, 'TabPanel');
-    });
-
-});
-
 describe('ScrollPanelElement', function () {
     var builder = new InfinniUI.ApplicationBuilder();
 
@@ -14959,6 +14948,45 @@ describe('ScrollPanelBuilder', function () {
 
         //Then
         assert.isObject(scrollPanel, 'scrollPanel');
+    });
+
+});
+
+describe('TabPanelElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+
+        it('Default values', function () {
+            var element = builder.buildType('TabPanel', {});
+
+            assert.equal(element.getHeaderLocation(), InfinniUI.TabHeaderLocation.top, 'HeaderLocation');
+            assert.equal(element.getHeaderOrientation(), InfinniUI.TabHeaderOrientation.horizontal, 'HeaderOrientation');
+        });
+
+
+    });
+
+
+});
+
+describe('TabPanelBuilder', function () {
+    it('should build', function () {
+
+        //Given
+        var metadata = {
+            TabPanel: {
+                Items: []
+            }
+        };
+
+        var applicationBuilder = new InfinniUI.ApplicationBuilder();
+
+        //When
+        var element = applicationBuilder.build(metadata, {});
+
+        //Then
+        assert.isObject(element, 'TabPanel');
     });
 
 });
@@ -15184,6 +15212,69 @@ describe('TextEditorBase (Element)', function () {
 
 });
 
+describe('ToolBarElement', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+    describe('API', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+
+        describe('Implementing Container Methods', function () {
+            testHelper.checkContainerMethods(element);
+        });
+
+    });
+
+    describe('render', function () {
+
+        var element = builder.buildType('ToolBar', {
+            Items: [
+                {
+                    Button: {
+                        Text: "Button 1"
+                    }
+                },
+                {
+                    Button: {
+                        Text: "Button 2"
+                    }
+
+                }
+            ]
+        });
+
+        it('render element', function () {
+            // Given
+
+            // When
+            var $el = element.render();
+
+            // Then
+            assert.equal($el.length, 1)
+        });
+
+        it('contains items', function () {
+            var items = element.getItems();
+
+            assert.equal(items.length, 2);
+        })
+
+    });
+});
+
+describe('ToolBarBuilder', function () {
+    var builder = new InfinniUI.ApplicationBuilder();
+
+
+    it('Build ToolBar instance', function () {
+        var element = builder.buildType('ToolBar', {Items: []});
+
+        assert.isTrue(typeof element !== 'undefined' && element !== null);
+        assert.isTrue(element instanceof InfinniUI.ToolBar);
+    });
+
+});
+
 describe('ToggleButton', function () {
     describe('render', function () {
         it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
@@ -15295,69 +15386,6 @@ describe('ToggleButton', function () {
             assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
         });
     });
-});
-
-describe('ToolBarElement', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-    describe('API', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-
-        describe('Implementing Container Methods', function () {
-            testHelper.checkContainerMethods(element);
-        });
-
-    });
-
-    describe('render', function () {
-
-        var element = builder.buildType('ToolBar', {
-            Items: [
-                {
-                    Button: {
-                        Text: "Button 1"
-                    }
-                },
-                {
-                    Button: {
-                        Text: "Button 2"
-                    }
-
-                }
-            ]
-        });
-
-        it('render element', function () {
-            // Given
-
-            // When
-            var $el = element.render();
-
-            // Then
-            assert.equal($el.length, 1)
-        });
-
-        it('contains items', function () {
-            var items = element.getItems();
-
-            assert.equal(items.length, 2);
-        })
-
-    });
-});
-
-describe('ToolBarBuilder', function () {
-    var builder = new InfinniUI.ApplicationBuilder();
-
-
-    it('Build ToolBar instance', function () {
-        var element = builder.buildType('ToolBar', {Items: []});
-
-        assert.isTrue(typeof element !== 'undefined' && element !== null);
-        assert.isTrue(element instanceof InfinniUI.ToolBar);
-    });
-
 });
 
 describe('View', function () {

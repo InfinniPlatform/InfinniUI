@@ -124,7 +124,7 @@ _.defaults( InfinniUI.config, {
 
 });
 
-InfinniUI.VERSION = '2.2.8';
+InfinniUI.VERSION = '2.2.9';
 
 //####app\localizations\culture.js
 function Culture(name){
@@ -15435,119 +15435,6 @@ var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends 
 
 }));
 
-//####app\controls\icon\iconControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments Control
- */
-function IconControl() {
-    _.superClass(IconControl, this);
-}
-
-_.inherit(IconControl, Control);
-
-_.extend(IconControl.prototype, {
-
-    createControlModel: function () {
-        return new IconModel();
-    },
-
-    createControlView: function (model) {
-        return new IconView({model: model});
-    }
-
-});
-//####app\controls\icon\iconModel.js
-/**
- * @class
- * @augments ControlModel
- */
-var IconModel = ControlModel.extend({
-
-    defaults: _.defaults({
-        value: null,
-        size: '',
-        focusable: false
-
-    }, ControlModel.prototype.defaults),
-
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
-    }
-
-});
-//####app\controls\icon\iconView.js
-/**
- * @class IconView
- * @arguments ControlView
- */
-var IconView = ControlView.extend({
-
-    className: 'pl-icon fa',
-
-    tagName: 'i',
-
-    render: function(){
-        this.prerenderingActions();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
-    },
-
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:size', this.updateSize);
-    },
-
-    updateSize: function() {
-      var newSize = this.model.get('size');
-      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
-      this.currentSize = newSize;
-    },
-
-    valueToSizeClassName: function ( value ) {
-        if( value ) return 'pl-iconSize-' + value.toLowerCase();
-        else return '';
-    },
-
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
-        this.updateValue();
-        this.updateSize();
-    },
-
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
-
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
-        } else {
-            this.$el.removeAttr('tabindex');
-        }
-    },
-
-    updateValue: function () {
-        this.renderIcon();
-    },
-
-    updateTextStyle: function () {
-        // do nothing, because icon don't have text
-    }
-
-});
-
 //####app\controls\gridPanel\gridPanelControl.js
 /**
  *
@@ -15666,6 +15553,119 @@ var GridPanelView = ContainerView.extend(
         updateGrouping: function(){}
     }
 );
+
+//####app\controls\icon\iconControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Control
+ */
+function IconControl() {
+    _.superClass(IconControl, this);
+}
+
+_.inherit(IconControl, Control);
+
+_.extend(IconControl.prototype, {
+
+    createControlModel: function () {
+        return new IconModel();
+    },
+
+    createControlView: function (model) {
+        return new IconView({model: model});
+    }
+
+});
+//####app\controls\icon\iconModel.js
+/**
+ * @class
+ * @augments ControlModel
+ */
+var IconModel = ControlModel.extend({
+
+    defaults: _.defaults({
+        value: null,
+        size: '',
+        focusable: false
+
+    }, ControlModel.prototype.defaults),
+
+    initialize: function () {
+        ControlModel.prototype.initialize.apply(this, arguments);
+    }
+
+});
+//####app\controls\icon\iconView.js
+/**
+ * @class IconView
+ * @arguments ControlView
+ */
+var IconView = ControlView.extend({
+
+    className: 'pl-icon fa',
+
+    tagName: 'i',
+
+    render: function(){
+        this.prerenderingActions();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    renderIcon: function () {
+        var value = this.model.get('value');
+        this.switchClass('fa', value);
+    },
+
+    initHandlersForProperties: function () {
+        ControlView.prototype.initHandlersForProperties.call(this);
+        this.listenTo(this.model, 'change:value', this.updateValue);
+        this.listenTo(this.model, 'change:size', this.updateSize);
+    },
+
+    updateSize: function() {
+      var newSize = this.model.get('size');
+      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
+      this.currentSize = newSize;
+    },
+
+    valueToSizeClassName: function ( value ) {
+        if( value ) return 'pl-iconSize-' + value.toLowerCase();
+        else return '';
+    },
+
+    updateProperties: function () {
+        ControlView.prototype.updateProperties.call(this);
+        this.updateValue();
+        this.updateSize();
+    },
+
+    updateFocusable: function () {
+        var focusable = this.model.get('focusable');
+
+        if (focusable) {
+            this.$el.attr('tabindex', 0);
+        } else {
+            this.$el.removeAttr('tabindex');
+        }
+    },
+
+    updateValue: function () {
+        this.renderIcon();
+    },
+
+    updateTextStyle: function () {
+        // do nothing, because icon don't have text
+    }
+
+});
 
 //####app\controls\imageBox\imageBoxControl.js
 /**
@@ -16249,6 +16249,217 @@ var MenuBarView = ContainerView.extend(
     }
 );
 
+//####app\controls\numericBox\numericBoxControl.js
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments TextEditorBaseControl
+ */
+function NumericBoxControl(parent) {
+    _.superClass(NumericBoxControl, this, parent);
+}
+
+_.inherit(NumericBoxControl, TextEditorBaseControl);
+
+_.extend(NumericBoxControl.prototype, {
+
+    createControlModel: function () {
+        return new NumericBoxModel();
+    },
+
+    createControlView: function (model) {
+        return new NumericBoxView({model: model});
+    }
+});
+
+
+//####app\controls\numericBox\numericBoxModel.js
+/**
+ * @class
+ * @augments TextEditorBaseModel
+ */
+var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
+    defaults: _.defaults(
+        {
+            increment: 1,
+            inputType: 'number'
+        },
+        TextEditorBaseModel.prototype.defaults
+    ),
+
+    incValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(delta);
+    },
+
+    decValue: function () {
+        var delta = this.get('increment');
+        this.addToValue(-delta);
+    },
+
+    addToValue: function (delta) {
+
+        var value = this.get('value');
+        var startValue = this.get('startValue');
+        var minValue = this.get('minValue');
+        var maxValue = this.get('maxValue');
+
+        var newValue = _.isNumber(value) ? value : +value;
+
+        if (this.isSetValue(value) && _.isNumber(value)) {
+            newValue += delta;
+        } else {
+            newValue = (_.isNumber(startValue)) ? startValue : 0;
+        }
+
+        if (_.isNumber(minValue) && newValue < minValue) {
+            newValue = minValue;
+        } else if (_.isNumber(maxValue) && newValue > maxValue) {
+            newValue = maxValue;
+        }
+
+        this.set('value', newValue);
+    },
+
+    initialize: function () {
+        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    },
+
+    validateValue: function (value, callback) {
+
+        var
+            isValid = true,
+            min = this.get('minValue'),
+            max = this.get('maxValue');
+
+        if (!this.isSetValue(value)) {
+            return true;
+        }
+
+        if (_.isNumber(min) && _.isNumber(max)) {
+            if (value < min || value > max) {
+                isValid = false
+            }
+        } else if (_.isNumber(min) && value < min) {
+            isValid = false;
+        } else if (_.isNumber(max) && value > max) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+
+});
+//####app\controls\numericBox\numericBoxView.js
+/**
+ * @class
+ * @augments TextEditorBaseView
+ */
+var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
+
+    className: "pl-numericbox form-group",
+
+    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
+
+    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
+        min: '.pl-numeric-box-min',
+        max: '.pl-numeric-box-max'
+    }),
+
+    events: _.extend({}, TextEditorBaseView.prototype.events, {
+        'click .pl-numeric-box-min': 'onClickMinControlHandler',
+        'click .pl-numeric-box-max': 'onClickMaxControlHandler',
+        'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
+        'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
+    }),
+
+    render: function () {
+        this.prerenderingActions();
+        this.renderTemplate(this.template);
+        this.renderNumericBoxEditor();
+        this.updateProperties();
+        this.trigger('render');
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send('render', {element: this});
+        //devblockstop
+        return this;
+    },
+
+    getData: function () {
+        var
+            model = this.model;
+
+        return _.extend({},
+            TextEditorBaseView.prototype.getData.call(this), {
+                minValue: model.get('minValue'),
+                maxValue: model.get('maxValue'),
+                increment: model.get('increment')
+            });
+    },
+
+    renderNumericBoxEditor: function () {
+        this.renderControlEditor();
+    },
+
+    onChangeEnabledHandler: function (model, value) {
+        this.ui.control.prop('disabled', !value);
+        this.ui.min.prop('disabled', !value);
+        this.ui.max.prop('disabled', !value);
+    },
+
+    onClickMinControlHandler: function () {
+        if (this.canChangeValue()) {
+            this.model.decValue();
+        }
+    },
+
+    onClickMaxControlHandler: function () {
+        if (this.canChangeValue()) {
+            this.model.incValue();
+        }
+    },
+
+    onMousedownMinControlHandler: function (event) {
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.decValue.bind(this.model));
+        }
+    },
+
+    onMousedownMaxControlHandler: function (event) {
+        if (this.canChangeValue()) {
+            this.repeatUpdateValue(this.model.incValue.bind(this.model));
+        }
+    },
+
+    repeatUpdateValue: function (cb) {
+        var intervalId;
+
+        window.document.addEventListener('mouseup', stopRepeat);
+
+        intervalId = setInterval(cb, 200);
+
+        function stopRepeat() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            window.document.removeEventListener('mouseup', stopRepeat);
+        }
+
+    },
+
+    canChangeValue: function () {
+        var model = this.model,
+            enabled = model.get('enabled');
+
+        return enabled === true;
+    }
+
+});
+
 //####app\controls\panel\panelControl.js
 /**
  *
@@ -16502,217 +16713,6 @@ var PanelView = ContainerView.extend(/** @lends PanelView.prototype */ {
         } else {
             this.onEventCallback();
         }
-    }
-
-});
-
-//####app\controls\numericBox\numericBoxControl.js
-/**
- *
- * @param parent
- * @constructor
- * @augments TextEditorBaseControl
- */
-function NumericBoxControl(parent) {
-    _.superClass(NumericBoxControl, this, parent);
-}
-
-_.inherit(NumericBoxControl, TextEditorBaseControl);
-
-_.extend(NumericBoxControl.prototype, {
-
-    createControlModel: function () {
-        return new NumericBoxModel();
-    },
-
-    createControlView: function (model) {
-        return new NumericBoxView({model: model});
-    }
-});
-
-
-//####app\controls\numericBox\numericBoxModel.js
-/**
- * @class
- * @augments TextEditorBaseModel
- */
-var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
-    defaults: _.defaults(
-        {
-            increment: 1,
-            inputType: 'number'
-        },
-        TextEditorBaseModel.prototype.defaults
-    ),
-
-    incValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(delta);
-    },
-
-    decValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(-delta);
-    },
-
-    addToValue: function (delta) {
-
-        var value = this.get('value');
-        var startValue = this.get('startValue');
-        var minValue = this.get('minValue');
-        var maxValue = this.get('maxValue');
-
-        var newValue = _.isNumber(value) ? value : +value;
-
-        if (this.isSetValue(value) && _.isNumber(value)) {
-            newValue += delta;
-        } else {
-            newValue = (_.isNumber(startValue)) ? startValue : 0;
-        }
-
-        if (_.isNumber(minValue) && newValue < minValue) {
-            newValue = minValue;
-        } else if (_.isNumber(maxValue) && newValue > maxValue) {
-            newValue = maxValue;
-        }
-
-        this.set('value', newValue);
-    },
-
-    initialize: function () {
-        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-    },
-
-    validateValue: function (value, callback) {
-
-        var
-            isValid = true,
-            min = this.get('minValue'),
-            max = this.get('maxValue');
-
-        if (!this.isSetValue(value)) {
-            return true;
-        }
-
-        if (_.isNumber(min) && _.isNumber(max)) {
-            if (value < min || value > max) {
-                isValid = false
-            }
-        } else if (_.isNumber(min) && value < min) {
-            isValid = false;
-        } else if (_.isNumber(max) && value > max) {
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-
-});
-//####app\controls\numericBox\numericBoxView.js
-/**
- * @class
- * @augments TextEditorBaseView
- */
-var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
-
-    className: "pl-numericbox form-group",
-
-    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
-
-    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
-        min: '.pl-numeric-box-min',
-        max: '.pl-numeric-box-max'
-    }),
-
-    events: _.extend({}, TextEditorBaseView.prototype.events, {
-        'click .pl-numeric-box-min': 'onClickMinControlHandler',
-        'click .pl-numeric-box-max': 'onClickMaxControlHandler',
-        'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
-        'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
-    }),
-
-    render: function () {
-        this.prerenderingActions();
-        this.renderTemplate(this.template);
-        this.renderNumericBoxEditor();
-        this.updateProperties();
-        this.trigger('render');
-        this.postrenderingActions();
-        //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
-        //devblockstop
-        return this;
-    },
-
-    getData: function () {
-        var
-            model = this.model;
-
-        return _.extend({},
-            TextEditorBaseView.prototype.getData.call(this), {
-                minValue: model.get('minValue'),
-                maxValue: model.get('maxValue'),
-                increment: model.get('increment')
-            });
-    },
-
-    renderNumericBoxEditor: function () {
-        this.renderControlEditor();
-    },
-
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
-        this.ui.min.prop('disabled', !value);
-        this.ui.max.prop('disabled', !value);
-    },
-
-    onClickMinControlHandler: function () {
-        if (this.canChangeValue()) {
-            this.model.decValue();
-        }
-    },
-
-    onClickMaxControlHandler: function () {
-        if (this.canChangeValue()) {
-            this.model.incValue();
-        }
-    },
-
-    onMousedownMinControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.decValue.bind(this.model));
-        }
-    },
-
-    onMousedownMaxControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.incValue.bind(this.model));
-        }
-    },
-
-    repeatUpdateValue: function (cb) {
-        var intervalId;
-
-        window.document.addEventListener('mouseup', stopRepeat);
-
-        intervalId = setInterval(cb, 200);
-
-        function stopRepeat() {
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
-            }
-            window.document.removeEventListener('mouseup', stopRepeat);
-        }
-
-    },
-
-    canChangeValue: function () {
-        var model = this.model,
-            enabled = model.get('enabled');
-
-        return enabled === true;
     }
 
 });
@@ -19270,7 +19270,7 @@ window.InfinniUI.DocumentDataSource = DocumentDataSource;
  * @mixes DataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
-}
+};
 
 _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
     build: function (context, args) {
@@ -19307,19 +19307,12 @@ _.extend(BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.proto
             dataSource.setIdProperty(idProperty);
         }
 
+        if( 'SuspendUpdate' in metadata ) {
+            dataSource.suspendUpdate( metadata['SuspendUpdate'] );
+        }
+
         dataSource.setName(metadata.Name);
         dataSource.setFillCreatedItem(metadata.FillCreatedItem);
-        //dataSource.setPageSize(metadata.PageSize || 15);
-        //dataSource.setPageNumber(metadata.PageNumber || 0);
-        //
-        //if('Sorting' in metadata){
-        //    dataSource.setSorting(metadata['Sorting']);
-        //}
-        //
-        //var queryMetadata;
-        //if('Query' in metadata){
-        //    dataSource.setFilter(metadata['Query']);
-        //}
 
         if('IsLazy' in metadata){
             dataSource.setIsLazy(metadata['IsLazy']);
@@ -19556,7 +19549,7 @@ window.InfinniUI.RestDataSourceBuilder = RestDataSourceBuilder;
 //####app\data\dataSource\documentDataSourceBuilder.js
 var DocumentDataSourceBuilder = function() {
     _.superClass(DocumentDataSourceBuilder, this);
-}
+};
 
 _.inherit(DocumentDataSourceBuilder, BaseDataSourceBuilder);
 
@@ -19582,10 +19575,6 @@ _.extend(DocumentDataSourceBuilder.prototype, {
         if('PageSize' in metadata){ dataSource.setPageSize(metadata['PageSize']); }
         // PageNumber нужно устанавливать последним, потому что его могут обнулять другие свойства.
         if('PageNumber' in metadata){ dataSource.setPageNumber(metadata['PageNumber']); }
-
-        if (Array.isArray(metadata.DefaultItems)) {
-            dataSource._setItems(metadata.DefaultItems);
-        }
     },
 
     createDataSource: function(parent){
@@ -24574,7 +24563,7 @@ ImageBoxValueConverter.prototype.toElement = function (context, args) {
     }
     return url;
 };
-//####app\elements\indeterminateCheckBox\indeterminateCheckBox.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBox.js
 /**
  *
  * @param parent
@@ -24599,7 +24588,7 @@ _.extend(IndeterminateCheckBox.prototype, {
 
 }, editorBaseMixin);
 
-//####app\elements\indeterminateCheckBox\indeterminateCheckBoxBuilder.js
+//####app\elements\indeterminateCheckbox\indeterminateCheckBoxBuilder.js
 /**
  *
  * @constructor
@@ -27014,56 +27003,6 @@ _.extend(DataGridRow.prototype, {
 });
 
 
-//####app\elements\tablePanel\row\row.js
-/**
- * @param parent
- * @constructor
- * @augments Container
- */
-function Row(parent) {
-    _.superClass(Row, this, parent);
-}
-
-_.inherit(Row, Container);
-
-_.extend(Row.prototype, {
-    createControl: function () {
-        return new RowControl();
-    }
-});
-//####app\elements\tablePanel\row\rowBuilder.js
-/**
- * @constructor
- * @augments ContainerBuilder
- */
-function RowBuilder() {
-    _.superClass(RowBuilder, this);
-}
-
-_.inherit(RowBuilder, ContainerBuilder);
-
-_.extend(RowBuilder.prototype,
-    /** @lends RowBuilder.prototype*/
-    {
-        createElement: function (params) {
-            return new Row(params.parent);
-        },
-
-        /**
-         * @param {Object} params
-         * @param {RowBuilder} params.element
-         * @param {Object} params.metadata
-         */
-        applyMetadata: function (params) {
-            var
-                metadata = params.metadata,
-                element = params.element;
-
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
-        }
-
-    });
-
 //####app\elements\tablePanel\cell\cell.js
 /**
  * @param parent
@@ -27120,6 +27059,56 @@ _.extend(CellBuilder.prototype,
             ContainerBuilder.prototype.applyMetadata.call(this, params);
 
             params.element.setColumnSpan(metadata.ColumnSpan);
+        }
+
+    });
+
+//####app\elements\tablePanel\row\row.js
+/**
+ * @param parent
+ * @constructor
+ * @augments Container
+ */
+function Row(parent) {
+    _.superClass(Row, this, parent);
+}
+
+_.inherit(Row, Container);
+
+_.extend(Row.prototype, {
+    createControl: function () {
+        return new RowControl();
+    }
+});
+//####app\elements\tablePanel\row\rowBuilder.js
+/**
+ * @constructor
+ * @augments ContainerBuilder
+ */
+function RowBuilder() {
+    _.superClass(RowBuilder, this);
+}
+
+_.inherit(RowBuilder, ContainerBuilder);
+
+_.extend(RowBuilder.prototype,
+    /** @lends RowBuilder.prototype*/
+    {
+        createElement: function (params) {
+            return new Row(params.parent);
+        },
+
+        /**
+         * @param {Object} params
+         * @param {RowBuilder} params.element
+         * @param {Object} params.metadata
+         */
+        applyMetadata: function (params) {
+            var
+                metadata = params.metadata,
+                element = params.element;
+
+            ContainerBuilder.prototype.applyMetadata.call(this, params);
         }
 
     });
@@ -27362,6 +27351,41 @@ var BaseActionBuilderMixin = {
         }
     }
 };
+//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
+var BaseFallibleActionBuilderMixin = {
+    applyBaseFallibleActionMetadata: function(action, params) {
+        var metadata = params.metadata;
+
+        if('OnSuccess' in metadata) {
+            action.setProperty('onSuccessHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
+            });
+        }
+
+        if('OnError' in metadata) {
+            action.setProperty('onErrorHandler', function(args) {
+                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
+            });
+        }
+    }
+};
+//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
+var BaseFallibleActionMixin = {
+    onSuccessHandler: function(args) {
+        var onSuccessHandler = this.getProperty('onSuccessHandler');
+
+        if(_.isFunction(onSuccessHandler)) {
+            onSuccessHandler(args);
+        }
+    },
+    onErrorHandler: function(args) {
+        var onErrorHandler = this.getProperty('onErrorHandler');
+
+        if(_.isFunction(onErrorHandler)) {
+            onErrorHandler(args);
+        }
+    }
+};
 //####app\actions\_base\baseEditAction\baseEditAction.js
 function BaseEditAction(parentView){
     _.superClass(BaseEditAction, this, parentView);
@@ -27455,41 +27479,6 @@ var BaseEditActionBuilderMixin = {
                 metadata.DestinationValue.Property;
 
             action.setProperty('destinationProperty', destinationProperty);
-        }
-    }
-};
-//####app\actions\_base\baseFallibleAction\baseFallibleActionBuilderMixin.js
-var BaseFallibleActionBuilderMixin = {
-    applyBaseFallibleActionMetadata: function(action, params) {
-        var metadata = params.metadata;
-
-        if('OnSuccess' in metadata) {
-            action.setProperty('onSuccessHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnSuccess.Name || metadata.OnSuccess, args);
-            });
-        }
-
-        if('OnError' in metadata) {
-            action.setProperty('onErrorHandler', function(args) {
-                new ScriptExecutor(action.parentView).executeScript(metadata.OnError.Name || metadata.OnError, args);
-            });
-        }
-    }
-};
-//####app\actions\_base\baseFallibleAction\baseFallibleActionMixin.js
-var BaseFallibleActionMixin = {
-    onSuccessHandler: function(args) {
-        var onSuccessHandler = this.getProperty('onSuccessHandler');
-
-        if(_.isFunction(onSuccessHandler)) {
-            onSuccessHandler(args);
-        }
-    },
-    onErrorHandler: function(args) {
-        var onErrorHandler = this.getProperty('onErrorHandler');
-
-        if(_.isFunction(onErrorHandler)) {
-            onErrorHandler(args);
         }
     }
 };
@@ -35289,6 +35278,29 @@ var AjaxLoaderIndicatorView = Backbone.View.extend({
     }
 
 });
+//####app\services\contextMenuService\contextMenuService.js
+InfinniUI.ContextMenuService = (function () {
+
+	var exchange = window.InfinniUI.global.messageBus;
+
+	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
+		var message = args.value;
+		initContextMenu(getSourceElement(message.source), message.content);
+	});
+
+	function getSourceElement(source) {
+		return source.control.controlView.$el
+	}
+
+	function initContextMenu($element, content) {
+		$element.on('contextmenu', function(event) {
+			event.preventDefault();
+
+			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
+		});
+	}
+})();
+
 //####app\services\messageBox\messageBox.js
 /**
  * @constructor
@@ -35438,29 +35450,6 @@ InfinniUI.MessageBox = MessageBox;
         }
     ]
 });*/
-//####app\services\contextMenuService\contextMenuService.js
-InfinniUI.ContextMenuService = (function () {
-
-	var exchange = window.InfinniUI.global.messageBus;
-
-	exchange.subscribe(messageTypes.onContextMenu.name, function (context, args) {
-		var message = args.value;
-		initContextMenu(getSourceElement(message.source), message.content);
-	});
-
-	function getSourceElement(source) {
-		return source.control.controlView.$el
-	}
-
-	function initContextMenu($element, content) {
-		$element.on('contextmenu', function(event) {
-			event.preventDefault();
-
-			exchange.send(messageTypes.onOpenContextMenu.name, { x: event.pageX, y: event.pageY });
-		});
-	}
-})();
-
 //####app\services\router\routerService.js
 var routerService = (function(myRoutes) {
 	if( !myRoutes ) {
