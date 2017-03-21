@@ -555,7 +555,7 @@ var BaseDataSource = Backbone.Model.extend({
         var validationResult = params.validationResult,
             context = this.getContext();
 
-        if( validationResult && validationResult.IsValid ) {
+        if( validationResult && validationResult.Items ) {
             this._notifyAboutValidation(validationResult);
         } else {
             this.trigger('onProviderError', context, {item: params.item, data: params.response});

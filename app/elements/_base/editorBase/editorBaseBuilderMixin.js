@@ -123,7 +123,7 @@ var editorBaseBuilderMixin = {
                 })
                 .join(' ');
         }
-    },
+    }
 
 
 };
