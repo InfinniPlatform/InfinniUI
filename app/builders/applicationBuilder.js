@@ -75,6 +75,7 @@ _.extend(ApplicationBuilder.prototype, {
 
         builder.register('AcceptAction', new AcceptActionBuilder());
         builder.register('AddAction', new AddActionBuilder());
+        builder.register('CreateItemAction', new CreateItemActionBuilder());
         builder.register('CancelAction', new CancelActionBuilder());
         builder.register('DeleteAction', new DeleteActionBuilder());
         builder.register('EditAction', new EditActionBuilder());
