@@ -520,7 +520,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         if( !this.isModified( item ) ) {
             this._notifyAboutItemSaved( {item: item, result: null}, 'notModified' );
-            that._executeCallback( success, {item: item, validationResult: {IsValid: true}} );
+            that._executeCallback( success, {item: item, validationResult: new ValidationResult()} );
             return;
         }
 
@@ -854,14 +854,11 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     getValidationResult: function( item ) {
-        var validatingFunction = this.get( 'errorValidator' ),
-            result = {
-                IsValid: true,
-                Items: []
-            },
-            isCheckingOneItem = !!item,
-            context = this.getContext(),
-            items, subResult;
+        var validatingFunction = this.getErrorValidator();
+        var result = new ValidationResult();
+        var isCheckingOneItem = !!item;
+        var context = this.getContext();
+        var items, subResult;
 
         if( validatingFunction ) {
             if( isCheckingOneItem ) {
