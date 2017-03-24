@@ -3,9 +3,9 @@
 var sourceForFiles = require('./sourceForFiles');
 
 var sourceForTasks = {
-	cleanFolder: {
+	clean: {
 		src: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/cleanFolder"
+		taskPath: "./gulptasks/clean"
 	},
 	buildLess: {
 		src: sourceForFiles.stylesFiles,

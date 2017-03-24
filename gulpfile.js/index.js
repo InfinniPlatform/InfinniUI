@@ -11,6 +11,7 @@ var gulp = require('gulp'),
 					return task(callback);
 				});
 			};
+
 for(var key in sourceForTasks) {
 	help += ('- gulp ' + key + '\n');
 	lazyRequireTask(key, sourceForTasks[key].taskPath, sourceForTasks[key]);
@@ -20,18 +21,8 @@ gulp.task('build', gulp.series(
 	gulp.parallel('concatJs', 'concatJsProd'),
 	'buildLess',
 	'vendorJs',
-	'concatTemplates', 
-	'unitTest', 
-	'vendorStyles',
-	'fonts'
-));
-
-gulp.task('build-dev', gulp.series(
-	'concatJs',
-	'buildLess',
-	'vendorJs',
-	'concatTemplates', 
-	'unitTest', 
+	'concatTemplates',
+	'unitTest',
 	'vendorStyles',
 	'fonts'
 ));
@@ -46,13 +37,13 @@ gulp.task('fullWatch', function() {
 	watch(sourceForTasks.fonts.src, gulp.series('fonts'));
 });
 
-gulp.task('runTests', gulp.series(
-	'build-dev',
+gulp.task('run:tests', gulp.series(
+	'build',
 	'server:tests'
 ));
 
-gulp.task('runDev', gulp.series(
-	'build-dev',
+gulp.task('run:dev', gulp.series(
+	'build',
 	gulp.parallel('fullWatch', 'server:tests')
 ));
 
@@ -61,9 +52,8 @@ gulp.task('default', function(cb) {
 							'####Use any of defined tasks:\n' +
 							help +
 							'- gulp build\n' +
-							'- gulp build-dev\n' +
-							'- gulp runTests\n' +
-							'- gulp runDev'
+							'- gulp run:tests\n' +
+							'- gulp run:dev'
 							);
 	cb();
 });
