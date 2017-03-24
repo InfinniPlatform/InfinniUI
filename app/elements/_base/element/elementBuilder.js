@@ -22,16 +22,6 @@ _.extend(ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 			args.parent.addChild(element);
 		}
 
-//devblockstart
-		element.onMouseDown( function(eventData) {
-			if( eventData.ctrlKey ){
-				args.metadata.isSelectedElement = true;
-				args.parentView.showSelectedElementMetadata();
-				eventData.nativeEventData.stopPropagation();
-			}
-		});
-//devblockstop
-
 		return element;
 	},
 

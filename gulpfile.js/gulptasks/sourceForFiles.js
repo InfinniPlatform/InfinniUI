@@ -136,28 +136,7 @@ var sourceForFiles = {
 	],
 	fontsFiles: [
 		'bower_components/font-awesome/fonts/**/*.*'
-	],
-	devModeFiles: {
-		jsonEditorJs: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.js',
-			dest: 'out/jsonEditor'
-		},
-		jsonEditorCSS: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.css',
-			dest: 'out/jsonEditor/css'
-		},
-		jsonEditorSVG: {
-			src: 'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg',
-			dest: 'out/jsonEditor/css/img'
-		},
-		jsonEditorDialog: {
-			src: 'developer/jsonEditor/editorDialog/*',
-			dest: 'out/jsonEditor'
-		},
-		concatToPlatform: {
-			src: './developer/jsonEditor/*.*'
-		}
-	}
+	]
 };
 
 module.exports = sourceForFiles;

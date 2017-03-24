@@ -341,17 +341,5 @@ _.extend(View.prototype,
         getFocusOnControl: function () {
             return this.control.get('focusOnControl');
         }
-
-//devblockstart
-        ,showSelectedElementMetadata: function(){
-            if(this.handlers.onSelectedElementChange){
-                this.handlers.onSelectedElementChange();
-            }
-        }
-
-        ,onSelectedElementChange: function(handler) {
-            this.handlers.onSelectedElementChange = handler;
-        }
-//devblockstop
     }
 );

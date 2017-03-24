@@ -2,12 +2,6 @@
 
 var sourceForFiles = require('./sourceForFiles');
 
-var jsFilesForDevMode = sourceForFiles.jsFiles
-	.slice()
-	.join()
-	.replace('!', sourceForFiles.devModeFiles.concatToPlatform.src + ',!')
-	.split(',');
-
 var sourceForTasks = {
 	cleanFolder: {
 		src: sourceForFiles.platformOutputFolder,
@@ -21,7 +15,7 @@ var sourceForTasks = {
 		taskPath: "./gulptasks/buildLess"
 	},
 	concatJs: {
-		src: jsFilesForDevMode,
+		src: sourceForFiles.jsFiles,
 		finalName: "platform.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatJs"
@@ -56,28 +50,6 @@ var sourceForTasks = {
 		finalName: "templates.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatTemplates"
-	},
-	jsonEditorPart1: {
-		src: [
-			sourceForFiles.devModeFiles.jsonEditorJs.src,
-			sourceForFiles.devModeFiles.jsonEditorDialog.src
-		],
-		dest: sourceForFiles.platformOutputFolder + "jsonEditor",
-		taskPath: "./gulptasks/copyFiles"
-	},
-	jsonEditorPart2: {
-		src: [
-			sourceForFiles.devModeFiles.jsonEditorCSS.src
-		],
-		dest: sourceForFiles.platformOutputFolder + "jsonEditor/css/",
-		taskPath: "./gulptasks/copyFiles"
-	},
-	jsonEditorPart3: {
-		src: [
-			sourceForFiles.devModeFiles.jsonEditorSVG.src
-		],
-		dest: sourceForFiles.platformOutputFolder + "jsonEditor/css/img",
-		taskPath: "./gulptasks/copyFiles"
 	},
 	fonts: {
 		src: sourceForFiles.fontsFiles,

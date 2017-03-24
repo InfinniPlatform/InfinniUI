@@ -20,16 +20,20 @@ gulp.task('build', gulp.series(
 	gulp.parallel('concatJs', 'concatJsProd'),
 	'buildLess',
 	'vendorJs',
-	gulp.series('concatTemplates', 'unitTest', 'vendorStyles'),
-	gulp.parallel('fonts', 'jsonEditorPart1', 'jsonEditorPart2', 'jsonEditorPart3')
+	'concatTemplates', 
+	'unitTest', 
+	'vendorStyles',
+	'fonts'
 ));
 
 gulp.task('build-dev', gulp.series(
 	'concatJs',
 	'buildLess',
 	'vendorJs',
-	gulp.series('concatTemplates', 'unitTest', 'vendorStyles'),
-	gulp.parallel('fonts', 'jsonEditorPart1', 'jsonEditorPart2', 'jsonEditorPart3')
+	'concatTemplates', 
+	'unitTest', 
+	'vendorStyles',
+	'fonts'
 ));
 
 gulp.task('fullWatch', function() {
