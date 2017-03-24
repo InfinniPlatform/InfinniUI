@@ -43,7 +43,6 @@ describe('DateTimePicker', function () {
             assert.equal(element.getEnabled(), true, 'Enabled');
             assert.equal(element.getVisible(), true, 'Visible');
             assert.equal(element.getLabelFloating(), false, 'LabelFloating');
-            assert.equal(element.getVerticalAlignment(), 'Top', 'VerticalAlignment');
             assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
             assert.equal(element.getTextHorizontalAlignment(), 'Left', 'TextHorizontalAlignment');
         });
@@ -69,7 +68,6 @@ describe('DateTimePicker', function () {
                     "WarningText": "Warning",
                     "Enabled": false,
                     "Visible": false,
-                    "VerticalAlignment": "Bottom",
                     "HorizontalAlignment": "Right",
                     "TextStyle": "Display4",
                     "Foreground": "Primary1",
@@ -95,7 +93,6 @@ describe('DateTimePicker', function () {
             assert.equal(element.getName(), "DatePicker1", 'Name');
             assert.equal(element.getEnabled(), false, 'Enabled');
             assert.equal(element.getVisible(), false, 'Visible');
-            assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
             assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
             assert.equal(element.getForeground(), 'Primary1', 'Foreground');
             assert.equal(element.getBackground(), 'Accent1', 'Background');

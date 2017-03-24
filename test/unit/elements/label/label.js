@@ -37,7 +37,6 @@ describe('Label', function () {
             assert.equal(element.getTextWrapping(), true, 'TextWrapping');
 
             assert.equal(element.getVisible(), true, 'Visible');
-            assert.equal(element.getVerticalAlignment(), 'Top', 'VerticalAlignment');
             assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
             var displayFormat = element.getDisplayFormat();
             var value = {};
@@ -59,7 +58,6 @@ describe('Label', function () {
                     "Name": "Label1",
                     "Enabled": false,
                     "Visible": false,
-                    "VerticalAlignment": "Bottom",
                     "HorizontalAlignment": "Right",
                     "TextStyle": "Display4",
                     "Foreground": "Primary1",
@@ -80,7 +78,6 @@ describe('Label', function () {
             assert.equal(element.getText(), "Label", 'LabelText');
             assert.equal(element.getEnabled(), false, 'Enabled');
             assert.equal(element.getVisible(), false, 'Visible');
-            assert.equal(element.getVerticalAlignment(), 'Bottom', 'VerticalAlignment');
             assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
             assert.equal(element.getForeground(), 'Primary1', 'Foreground');
             assert.equal(element.getBackground(), 'Accent1', 'Background');

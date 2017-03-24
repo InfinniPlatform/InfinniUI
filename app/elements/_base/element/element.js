@@ -256,16 +256,6 @@ _.extend(Element.prototype, {
         }
     },
 
-    getVerticalAlignment: function () {
-        return this.control.get('verticalAlignment');
-    },
-
-    setVerticalAlignment: function (verticalAlignment) {
-        if (typeof verticalAlignment == 'string') {
-            this.control.set('verticalAlignment', verticalAlignment);
-        }
-    },
-
     getTextStyle: function () {
         return this.control.get('textStyle');
     },
