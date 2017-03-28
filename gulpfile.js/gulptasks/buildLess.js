@@ -9,8 +9,7 @@ module.exports = function(options) {
 		return combiner(
 			gulp.src(options.src),
 			$.less(),
-			$.myth(),
-			$.csso(),
+			$.csso(), // minify css
 			$.autoprefixer({browsers: ['last 2 versions']}),
 			gulp.dest(options.dest)
 		).on('error', $.notify.onError({

@@ -3,11 +3,11 @@
 var sourceForFiles = require('./sourceForFiles');
 
 var sourceForTasks = {
-	clean: {
+	'clean': {
 		src: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/clean"
 	},
-	buildLess: {
+	'build:less': {
 		src: sourceForFiles.stylesFiles,
 		srcForWatch: sourceForFiles.stylesFilesForWatch,
 		finalName: "main.css",
@@ -20,44 +20,44 @@ var sourceForTasks = {
 		dest: "package/",
 		taskPath: "./gulptasks/copyFiles"
 	},
-	concatJs: {
+	'build:js': {
 		src: sourceForFiles.jsFiles,
 		finalName: "platform.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatJs"
 	},
-	concatJsProd: {
+	'build:prod-js': {
 		src: sourceForFiles.jsFiles,
 		finalName: "platform.min.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatJsProd"
 	},
-	vendorStyles: {
+	'concat:vendor-styles': {
 		src: sourceForFiles.vendorStylesFiles,
 		finalName: "vendor.css",
 		dest: sourceForFiles.platformOutputFolder + "css",
 		taskPath: "./gulptasks/concatFiles"
 	},
-	vendorJs: {
+	'concat:vendor-js': {
 		src: sourceForFiles.vendorJsFiles,
 		finalName: "vendor.js",
 		uglifyJs: true,
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
 	},
-	unitTest: {
+	'test:unit': {
 		src: sourceForFiles.unitTestFiles,
 		finalName: "unitTest.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
 	},
-	concatTemplates: {
+	'concat:templates': {
 		src: sourceForFiles.templateFiles,
 		finalName: "templates.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatTemplates"
 	},
-	fonts: {
+	'fonts': {
 		base: sourceForFiles.fonts.base,
 		src: sourceForFiles.fonts.src,
 		dest: sourceForFiles.platformOutputFolder + "fonts/",

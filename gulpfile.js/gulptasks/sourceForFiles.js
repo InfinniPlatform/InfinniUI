@@ -1,6 +1,6 @@
 'use strict';
 
-var platformOutputFolder = './out/';
+var platformOutputFolder = './dist/';
 
 var sourceForFiles = {
 	platformOutputFolder: platformOutputFolder,

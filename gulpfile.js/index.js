@@ -18,22 +18,22 @@ for(var key in sourceForTasks) {
 }
 
 gulp.task('build', gulp.series(
-	gulp.parallel('concatJs', 'concatJsProd'),
-	'buildLess',
-	'vendorJs',
-	'concatTemplates',
-	'unitTest',
-	'vendorStyles',
+	gulp.parallel('build:js', 'build:prod-js'),
+	'build:less',
+	'concat:vendor-js',
+	'concat:templates',
+	'test:unit',
+	'concat:vendor-styles',
 	'fonts'
 ));
 
-gulp.task('fullWatch', function() {
-	watch(sourceForTasks.buildLess.srcForWatch, gulp.series('buildLess'));
-	watch(sourceForTasks.vendorStyles.src, gulp.series('vendorStyles'));
-	watch(sourceForTasks.concatJs.src, gulp.series('concatJs'));
-	watch(sourceForTasks.vendorJs.src, gulp.series('vendorJs'));
-	watch(sourceForTasks.unitTest.src, gulp.series('unitTest'));
-	watch(sourceForTasks.concatTemplates.src, gulp.series('concatTemplates'));
+gulp.task('full-watch', function() {
+	watch(sourceForTasks.buildLess.srcForWatch, gulp.series('build:less'));
+	watch(sourceForTasks.vendorStyles.src, gulp.series('concat:vendor-styles'));
+	watch(sourceForTasks.concatJs.src, gulp.series('build:js'));
+	watch(sourceForTasks.vendorJs.src, gulp.series('concat:vendor-js'));
+	watch(sourceForTasks.unitTest.src, gulp.series('test:unit'));
+	watch(sourceForTasks.concatTemplates.src, gulp.series('concat:templates'));
 	watch(sourceForTasks.fonts.src, gulp.series('fonts'));
 });
 
@@ -44,7 +44,7 @@ gulp.task('run:tests', gulp.series(
 
 gulp.task('run:dev', gulp.series(
 	'build',
-	gulp.parallel('fullWatch', 'server:tests')
+	gulp.parallel('full-watch', 'server:tests')
 ));
 
 gulp.task('default', function(cb) {
