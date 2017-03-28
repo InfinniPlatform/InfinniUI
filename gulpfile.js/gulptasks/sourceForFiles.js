@@ -1,8 +1,10 @@
 'use strict';
+
+var platformOutputFolder = './out/';
 var sourceForFiles = {
-	platformOutputFolder: "./out/",
+	platformOutputFolder: platformOutputFolder,
 	stylesFiles: ['app/styles/main.less'],
-	stylesFilesForWatch: ["./app/styles/**/*.less"],
+	stylesFilesForWatch: ['./app/styles/**/*.less'],
 	jsFiles: [
 		'app/utils/strict.js',
 		'app/utils/namespace.js',
@@ -134,9 +136,28 @@ var sourceForFiles = {
 		'test/unit/fakeRestDataProvider.js',
 		'test/unit/**/*.js'
 	],
-	fontsFiles: [
-		'bower_components/font-awesome/fonts/**/*.*'
-	]
+	fonts: {
+		base: 'bower_components/font-awesome/fonts/',
+		src: [ 'bower_components/font-awesome/fonts/**/*' ]
+	},
+	package: {
+		base: '.',
+		src: [
+			'app/styles/**/*.less',
+			'bootstrap-framework/less/**/*.less',
+
+			'example/**/*',
+			'!example/bower_cache/**/*',
+			'!example/bower_components/**/*',
+			'!example/node_modules/**/*',
+			'!example/www/compiled/**/*',
+			'!example/www/js/**/*',
+
+			 platformOutputFolder + '**/*',
+			'LICENSE',
+			'package.json'
+		]
+	}
 };
 
 module.exports = sourceForFiles;

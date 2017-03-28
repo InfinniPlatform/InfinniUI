@@ -14,6 +14,12 @@ var sourceForTasks = {
 		dest: sourceForFiles.platformOutputFolder + "css/",
 		taskPath: "./gulptasks/buildLess"
 	},
+	'assemble:package': {
+		base: sourceForFiles.package.base,
+		src: sourceForFiles.package.src,
+		dest: "package/",
+		taskPath: "./gulptasks/copyFiles"
+	},
 	concatJs: {
 		src: sourceForFiles.jsFiles,
 		finalName: "platform.js",
@@ -52,7 +58,8 @@ var sourceForTasks = {
 		taskPath: "./gulptasks/concatTemplates"
 	},
 	fonts: {
-		src: sourceForFiles.fontsFiles,
+		base: sourceForFiles.fonts.base,
+		src: sourceForFiles.fonts.src,
 		dest: sourceForFiles.platformOutputFolder + "fonts/",
 		taskPath: "./gulptasks/copyFiles"
 	},
