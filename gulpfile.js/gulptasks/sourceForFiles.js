@@ -1,8 +1,10 @@
 'use strict';
+
+var platformOutputFolder = './out/';
 var sourceForFiles = {
-	platformOutputFolder: "./out/",
+	platformOutputFolder: platformOutputFolder,
 	stylesFiles: ['app/styles/main.less'],
-	stylesFilesForWatch: ["./app/styles/**/*.less"],
+	stylesFilesForWatch: ['./app/styles/**/*.less'],
 	jsFiles: [
 		'app/utils/strict.js',
 		'app/utils/namespace.js',
@@ -139,29 +141,27 @@ var sourceForFiles = {
 		'test/unit/fakeRestDataProvider.js',
 		'test/unit/**/*.js'
 	],
-	fontsFiles: [
-		'bower_components/font-awesome/fonts/**/*.*'
-	],
-	devModeFiles: {
-		jsonEditorJs: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.js',
-			dest: 'out/jsonEditor'
-		},
-		jsonEditorCSS: {
-			src: 'bower_components/jsoneditor/dist/jsoneditor.min.css',
-			dest: 'out/jsonEditor/css'
-		},
-		jsonEditorSVG: {
-			src: 'bower_components/jsoneditor/dist/img/jsoneditor-icons.svg',
-			dest: 'out/jsonEditor/css/img'
-		},
-		jsonEditorDialog: {
-			src: 'developer/jsonEditor/editorDialog/*',
-			dest: 'out/jsonEditor'
-		},
-		concatToPlatform: {
-			src: './developer/jsonEditor/*.*'
-		}
+	fonts: {
+		base: 'bower_components/font-awesome/fonts/',
+		src: [ 'bower_components/font-awesome/fonts/**/*' ]
+	},
+	package: {
+		base: '.',
+		src: [
+			'app/styles/**/*.less',
+			'bootstrap-framework/less/**/*.less',
+
+			'example/**/*',
+			'!example/bower_cache/**/*',
+			'!example/bower_components/**/*',
+			'!example/node_modules/**/*',
+			'!example/www/compiled/**/*',
+			'!example/www/js/**/*',
+
+			 platformOutputFolder + '**/*',
+			'LICENSE',
+			'package.json'
+		]
 	}
 };
 

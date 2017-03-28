@@ -1,5 +1,5 @@
 {
-  "name": "InfinniUI",
+  "name": "infinni-ui",
   "devDependencies": {
     "browser-sync": "^2.12.x",
     "del": "^2.2.0",
@@ -27,8 +27,10 @@
     "through2": "2.x"
   },
   "scripts": {
-    "build": "npm i && bower i && gulp cleanFolder && gulp build",
-    "build-dev": "npm i && bower i && gulp cleanFolder && gulp build-dev",
-    "run-tests": "gulp runTests"
+    "build-full": "npm i && bower i && npm run build",
+    "build": "gulp clean && gulp build",
+    "pack": "npm run build-full && gulp assemble:package",
+    "pack-for-teamcity": "gulp assemble:package",
+    "tests": "gulp run:tests"
   }
 }
