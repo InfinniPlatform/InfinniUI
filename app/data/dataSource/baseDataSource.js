@@ -55,7 +55,6 @@ var BaseDataSource = Backbone.Model.extend( {
         };
 
         this.initDataProvider();
-
         if( !view ) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
@@ -66,153 +65,8 @@ var BaseDataSource = Backbone.Model.extend( {
         _.extend( this, BaseDataSource.identifyingStrategy.byId );
     },
 
-    initHandlers: function() {
-        var model = this.get( 'model' );
-        var updateGettingUrlParamsWithReset = _.bind( this.updateGettingUrlParamsWithReset, this );
-
-        model.setProperty('filterParams', {});
-
-        model.onPropertyChanged( 'search', updateGettingUrlParamsWithReset );
-        model.onPropertyChanged( 'filter', updateGettingUrlParamsWithReset );
-        model.onPropertyChanged( 'filterParams.*', updateGettingUrlParamsWithReset );
-    },
-
-    updateGettingUrlParamsWithReset: function() {
-        this.suspendUpdate( 'updateGettingUrlParams' );
-        this.get( 'model' ).setProperty( 'pageNumber', 0 );
-        this.updateGettingUrlParams();
-        this.resumeUpdate( 'updateGettingUrlParams' );
-    },
-
-    updateGettingUrlParams: function(){
-        var model = this.get('model'),
-            params = {
-                method: 'get',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get('model').getProperty('documentId'),
-                data: {},
-                params: {}
-            },
-            filter = model.getProperty('filter'),
-            filterParams = model.getProperty('filterParams'),
-            pageNumber = model.getProperty('pageNumber'),
-            pageSize = model.getProperty('pageSize'),
-            searchStr = model.getProperty('search'),
-            select = model.getProperty('select'),
-            order = model.getProperty('order'),
-            needTotalCount = model.getProperty('needTotalCount');
-
-        if(filter){
-            params.data.filter = filter;
-            if(filterParams){
-                _.extend(params.params, filterParams);
-            }
-        }
-
-        if(pageSize){
-            pageNumber = pageNumber || 0;
-            params.data.skip = pageNumber*pageSize;
-            params.data.take = pageSize;
-        }
-
-        if(searchStr){
-            params.data.search = searchStr;
-        }
-
-        if(select){
-            params.data.select = select;
-        }
-
-        if(order){
-            params.data.order = order;
-        }
-
-        if(needTotalCount){
-            params.data.count = needTotalCount;
-        }
-
-        this.setGettingUrlParams(params);
-    },
-
-    getGettingUrlParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setGettingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'urlParams.get';
-            }else{
-                propertyName = 'urlParams.get.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
-    },
-
     initDataProvider: function() {
-        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.';
-    },
-
-    getSearch: function(){
-        return this.get('model').getProperty('search');
-    },
-
-    setSearch: function(searchStr){
-        this.get('model').setProperty('search', searchStr);
-    },
-
-    getFilter: function(){
-        return this.get('model').getProperty('filter');
-    },
-
-    setFilter: function(filter){
-        this.get('model').setProperty('filter', filter);
-    },
-
-    getFilterParams: function(propertyName){
-        if(arguments.length == 0){
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        return this.get('model').getProperty(propertyName);
-    },
-
-    setFilterParams: function(propertyName, value){
-        if(arguments.length == 1){
-            value = propertyName;
-            propertyName = 'filterParams';
-
-        }else{
-            if(propertyName == ''){
-                propertyName = 'filterParams';
-            }else{
-                propertyName = 'filterParams.' + propertyName;
-            }
-        }
-
-        this.get('model').setProperty(propertyName, value);
+        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
     },
 
     onPropertyChanged: function( property, handler, owner ) {
@@ -709,7 +563,7 @@ var BaseDataSource = Backbone.Model.extend( {
         var validationResult = params.validationResult,
             context = this.getContext();
 
-        if( validationResult && validationResult.IsValid ) {
+        if( validationResult && validationResult.Items ) {
             this._notifyAboutValidation( validationResult );
         } else {
             this.trigger( 'onProviderError', context, {item: params.item, data: params.response} );
@@ -926,6 +780,12 @@ var BaseDataSource = Backbone.Model.extend( {
             successHandler( context, argument );
         }
         this.trigger( 'onItemCreated', context, argument );
+    },
+
+    getFilter: function() {
+    },
+
+    setFilter: function( value, onSuccess, onError ) {
     },
 
     _setCriteriaList: function( criteriaList, onSuccess, onError ) {

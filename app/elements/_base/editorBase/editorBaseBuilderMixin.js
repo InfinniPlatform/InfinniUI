@@ -135,7 +135,7 @@ var editorBaseBuilderMixin = {
                 })
                 .join(' ');
         }
-    },
+    }
 
 
 };

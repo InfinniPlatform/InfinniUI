@@ -3,9 +3,9 @@
 var sourceForFiles = require('./sourceForFiles');
 
 var sourceForTasks = {
-	cleanFolder: {
+	clean: {
 		src: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/cleanFolder"
+		taskPath: "./gulptasks/clean"
 	},
 	buildLess: {
 		src: sourceForFiles.stylesFiles,
@@ -13,6 +13,12 @@ var sourceForTasks = {
 		finalName: "main.css",
 		dest: sourceForFiles.platformOutputFolder + "css/",
 		taskPath: "./gulptasks/buildLess"
+	},
+	'assemble:package': {
+		base: sourceForFiles.package.base,
+		src: sourceForFiles.package.src,
+		dest: "package/",
+		taskPath: "./gulptasks/copyFiles"
 	},
 	concatJs: {
 		src: sourceForFiles.jsFiles,
@@ -52,7 +58,8 @@ var sourceForTasks = {
 		taskPath: "./gulptasks/concatTemplates"
 	},
 	fonts: {
-		src: sourceForFiles.fontsFiles,
+		base: sourceForFiles.fonts.base,
+		src: sourceForFiles.fonts.src,
 		dest: sourceForFiles.platformOutputFolder + "fonts/",
 		taskPath: "./gulptasks/copyFiles"
 	},
