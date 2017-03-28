@@ -24,13 +24,13 @@ var sourceForTasks = {
 		src: sourceForFiles.jsFiles,
 		finalName: "platform.js",
 		dest: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/concatJs"
+		taskPath: "./gulptasks/buildJs"
 	},
 	'build:prod-js': {
 		src: sourceForFiles.jsFiles,
 		finalName: "platform.min.js",
 		dest: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/concatJsProd"
+		taskPath: "./gulptasks/buildJsProd"
 	},
 	'concat:vendor-styles': {
 		src: sourceForFiles.vendorStylesFiles,
@@ -45,7 +45,7 @@ var sourceForTasks = {
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
 	},
-	'test:unit': {
+	'concat:unit-tests': {
 		src: sourceForFiles.unitTestFiles,
 		finalName: "unitTest.js",
 		dest: sourceForFiles.platformOutputFolder,
@@ -57,7 +57,7 @@ var sourceForTasks = {
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatTemplates"
 	},
-	'fonts': {
+	'copy:fonts': {
 		base: sourceForFiles.fonts.base,
 		src: sourceForFiles.fonts.src,
 		dest: sourceForFiles.platformOutputFolder + "fonts/",

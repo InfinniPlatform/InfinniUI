@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>InfinniUI - test</title>
     <link rel="stylesheet" href="/node_modules/mocha/mocha.css"/>
-    <link href="/out/css/main.css" rel="stylesheet" type="text/css">
+    <link href="/dist/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div id="mocha"></div>
 <div id="sandbox"></div>
 
-<script src="/out/vendor.js"></script>
+<script src="/dist/vendor.js"></script>
 <script src="/node_modules/mocha/mocha.js"></script>
 <script src="/node_modules/chai/chai.js"></script>
 
@@ -21,11 +21,11 @@
     window.InfinniUI.config = window.InfinniUI.config || {};
     window.InfinniUI.config.$rootContainer = $('#sandbox');
 </script>
-<script src="/out/templates.js"></script>
-<script src="/out/platform.js"></script>
+<script src="/dist/templates.js"></script>
+<script src="/dist/platform.js"></script>
 <script src="/test/testHelpers.js"></script>
 <script src="/test/testHelper.js"></script>
-<script src="/out/unitTest.js"></script>
+<script src="/dist/unitTest.js"></script>
 
 <script>
     mocha.run();
