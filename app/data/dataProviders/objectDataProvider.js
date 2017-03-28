@@ -69,23 +69,19 @@ _.extend(ObjectDataProvider.prototype, {
     },
 
     deleteItem: function (item, successCallback, errorCallback) {
-        var items = this.items,
-            itemIndex = this._getIndexOfItem(item);
+        var items = this.items;
+        var itemIndex = this._getIndexOfItem(item);
+        var validationResult = new ValidationResult();
 
         if (itemIndex != -1) {
             items.splice(itemIndex, 1);
             successCallback( {} );
         } else {
+            validationResult.error( 'Удаляемый элемент не найден' );
             errorCallback({
                 data: {
                     Result: {
-                        ValidationResult: {
-                            IsValid: false,
-                            Items: [{
-                                Property: '',
-                                Message: 'Удаляемый элемент не найден'
-                            }]
-                        }
+                        ValidationResult: validationResult
                     }
                 }
             });

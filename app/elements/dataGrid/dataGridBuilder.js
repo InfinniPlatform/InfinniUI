@@ -22,6 +22,8 @@ _.extend(DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         element.setShowSelectors(metadata.ShowSelectors);
         element.setCheckAllVisible(metadata.CheckAllVisible);
 
+        this.initBindingToProperty(params, 'VerticalAlignment');
+
         var executorBuilderParams = {
             parentView: params.parentView,
             parent: element,

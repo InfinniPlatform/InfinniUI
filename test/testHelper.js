@@ -45,10 +45,9 @@ var testHelper = {
     checkElementMethods: function(element) {
         ['getView', 'getParent', 'setParent', 'getName', 'setName', 'getText', 'setText',
             'getFocusable', 'setFocusable', 'getFocused', 'setFocused', 'getEnabled', 'setEnabled', 'getVisible',
-            'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getVerticalAlignment',
-            'setVerticalAlignment', 'getTextHorizontalAlignment', 'setTextHorizontalAlignment',
-            '!getTextVerticalAlignment', '!setTextVerticalAlignment', 'getTextStyle', 'setTextStyle', 'getForeground',
-            'setForeground', 'getBackground', 'setBackground', 'getChildElements',
+            'setVisible', 'getHorizontalAlignment', 'setHorizontalAlignment', 'getTextHorizontalAlignment',
+            'setTextHorizontalAlignment', '!getTextVerticalAlignment', '!setTextVerticalAlignment', 'getTextStyle',
+            'setTextStyle', 'getForeground', 'setForeground', 'getBackground', 'setBackground', 'getChildElements',
             'getProperty', 'setProperty']
             .forEach(function (methodName) {
                 it(methodName, function () {

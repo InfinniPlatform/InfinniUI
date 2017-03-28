@@ -20,21 +20,26 @@ var DocumentDataSource = RestDataSource.extend({
     },
 
     initHandlers: function(){
-        BaseDataSource.prototype.initHandlers.apply(this, Array.prototype.slice.call(arguments));
         var model = this.get('model');
         var that = this;
         var updateGettingUrlParams = _.bind(this.updateGettingUrlParams, this);
-        var updateGettingUrlParamsWithReset = _.bind(this.updateGettingUrlParamsWithReset, this);
+        var updateGettingUrlParamsWithReset = function() {
+            that.suspendUpdate('updateGettingUrlParams');
+            that.get('model').setProperty('pageNumber', 0);
+            that.updateGettingUrlParams();
+            that.resumeUpdate('updateGettingUrlParams');
+        };
 
         model.onPropertyChanged('documentId', function(){
             that.updateGettingUrlParams();
             that.updateSettingUrlParams();
             that.updateDeletingUrlParams();
         });
-
+        model.onPropertyChanged('filter', updateGettingUrlParamsWithReset);
+        model.onPropertyChanged('filterParams.*', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('pageNumber', updateGettingUrlParams);
         model.onPropertyChanged('pageSize', updateGettingUrlParamsWithReset);
-
+        model.onPropertyChanged('search', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('select', updateGettingUrlParams);
         model.onPropertyChanged('order', updateGettingUrlParamsWithReset);
         model.onPropertyChanged('needTotalCount', updateGettingUrlParams);
@@ -44,7 +49,62 @@ var DocumentDataSource = RestDataSource.extend({
         this.updateDeletingUrlParams();
     },
 
+    updateGettingUrlParamsWithReset: function() {
+        this.suspendUpdate( 'updateGettingUrlParams' );
+        this.get( 'model' ).setProperty( 'pageNumber', 0 );
+        this.updateGettingUrlParams();
+        this.resumeUpdate( 'updateGettingUrlParams' );
+    },
 
+    updateGettingUrlParams: function(){
+        var model = this.get('model'),
+            params = {
+                method: 'get',
+                origin: InfinniUI.config.serverUrl,
+                path: '/documents/' + this.get('model').getProperty('documentId'),
+                data: {},
+                params: {}
+            },
+            filter = model.getProperty('filter'),
+            filterParams = model.getProperty('filterParams'),
+            pageNumber = model.getProperty('pageNumber'),
+            pageSize = model.getProperty('pageSize'),
+            searchStr = model.getProperty('search'),
+            select = model.getProperty('select'),
+            order = model.getProperty('order'),
+            needTotalCount = model.getProperty('needTotalCount');
+
+        if(filter){
+            params.data.filter = filter;
+            if(filterParams){
+                _.extend(params.params, filterParams);
+            }
+        }
+
+        if(pageSize){
+            pageNumber = pageNumber || 0;
+            params.data.skip = pageNumber*pageSize;
+            params.data.take = pageSize;
+        }
+
+        if(searchStr){
+            params.data.search = searchStr;
+        }
+
+        if(select){
+            params.data.select = select;
+        }
+
+        if(order){
+            params.data.order = order;
+        }
+
+        if(needTotalCount){
+            params.data.count = needTotalCount;
+        }
+
+        this.setGettingUrlParams(params);
+    },
 
     updateSettingUrlParams: function(){
         var model = this.get('model'),

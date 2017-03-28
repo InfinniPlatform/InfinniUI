@@ -90,11 +90,21 @@ DataGrid.prototype.onRowClick = function (handler) {
     return this.control.onRowClick(callback);
 };
 
-DataGrid.prototype.onRowDoubleClick = function (handler) {
+DataGrid.prototype.onRowDoubleClick = function(handler) {
     var that = this,
         callback = function (nativeEventData) {
             var eventData = that._getHandlingMouseEventData(nativeEventData);
             handler(eventData);
         };
     return this.control.onRowDoubleClick(callback);
+};
+
+DataGrid.prototype.getVerticalAlignment = function() {
+    return this.control.get('verticalAlignment');
+};
+
+DataGrid.prototype.setVerticalAlignment = function(verticalAlignment) {
+    if (typeof verticalAlignment == 'string') {
+        this.control.set('verticalAlignment', verticalAlignment);
+    }
 };

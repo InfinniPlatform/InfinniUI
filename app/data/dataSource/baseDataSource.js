@@ -55,6 +55,7 @@ var BaseDataSource = Backbone.Model.extend( {
         };
 
         this.initDataProvider();
+
         if( !view ) {
             throw 'BaseDataSource.initialize: При создании объекта не была задана view.'
         }
@@ -66,7 +67,54 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     initDataProvider: function() {
-        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.'
+        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.';
+    },
+
+    getSearch: function(){
+        return this.get('model').getProperty('search');
+    },
+
+    setSearch: function(searchStr){
+        this.get('model').setProperty('search', searchStr);
+    },
+
+    getFilter: function(){
+        return this.get('model').getProperty('filter');
+    },
+
+    setFilter: function(filter){
+        this.get('model').setProperty('filter', filter);
+    },
+
+    getFilterParams: function(propertyName){
+        if(arguments.length == 0){
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        return this.get('model').getProperty(propertyName);
+    },
+
+    setFilterParams: function(propertyName, value){
+        if(arguments.length == 1){
+            value = propertyName;
+            propertyName = 'filterParams';
+
+        }else{
+            if(propertyName == ''){
+                propertyName = 'filterParams';
+            }else{
+                propertyName = 'filterParams.' + propertyName;
+            }
+        }
+
+        this.get('model').setProperty(propertyName, value);
     },
 
     onPropertyChanged: function( property, handler, owner ) {
@@ -472,7 +520,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         if( !this.isModified( item ) ) {
             this._notifyAboutItemSaved( {item: item, result: null}, 'notModified' );
-            that._executeCallback( success, {item: item, validationResult: {IsValid: true}} );
+            that._executeCallback( success, {item: item, validationResult: new ValidationResult()} );
             return;
         }
 
@@ -562,9 +610,8 @@ var BaseDataSource = Backbone.Model.extend( {
     _onServerErrorHandler: function( params ) {
         var validationResult = params.validationResult,
             context = this.getContext();
-
         if( validationResult && validationResult.Items ) {
-            this._notifyAboutValidation( validationResult );
+            this._notifyAboutValidation(validationResult);
         } else {
             this.trigger( 'onProviderError', context, {item: params.item, data: params.response} );
         }
@@ -782,12 +829,6 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onItemCreated', context, argument );
     },
 
-    getFilter: function() {
-    },
-
-    setFilter: function( value, onSuccess, onError ) {
-    },
-
     _setCriteriaList: function( criteriaList, onSuccess, onError ) {
         this.set( 'criteriaList', criteriaList );
         this.updateItems( onSuccess, onError );
@@ -813,14 +854,11 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     getValidationResult: function( item ) {
-        var validatingFunction = this.get( 'errorValidator' ),
-            result = {
-                IsValid: true,
-                Items: []
-            },
-            isCheckingOneItem = !!item,
-            context = this.getContext(),
-            items, subResult;
+        var validatingFunction = this.getErrorValidator();
+        var result = new ValidationResult();
+        var isCheckingOneItem = !!item;
+        var context = this.getContext();
+        var items, subResult;
 
         if( validatingFunction ) {
             if( isCheckingOneItem ) {

@@ -214,8 +214,7 @@ describe('TextBoxControl', function () {
                 Name: 'TextBox1',
                 Enabled: false,
                 Visible: false,
-                HorizontalAlignment: 'Stretch',
-                VerticalAlignment: 'Bottom'
+                HorizontalAlignment: 'Stretch'
             });
 
             // When
@@ -226,7 +225,6 @@ describe('TextBoxControl', function () {
             assert.isTrue($el.hasClass('pl-disabled'), 'Enabled');
             assert.isTrue($el.hasClass('hidden'), 'Visible');
             assert.isTrue($el.hasClass('pl-horizontal-Stretch'), 'HorizontalAlignment');
-            assert.isTrue($el.hasClass('verticalAlignmentBottom'), 'VerticalAlignment');
         });
 
     })

@@ -44,6 +44,7 @@ var DataGridView = ListEditorBaseView.extend({
         this.listenTo(this.model, 'change:showSelectors', this.updateShowSelectors);
         this.listenTo(this.model, 'change:checkAllVisible', this.updateCheckAllVisible);
         this.listenTo(this.model, 'change:checkAll', this.updateCheckAll);
+        this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
 
         /** Update hash item => element when item changed **/
         var rowElements = this.rowElements;
@@ -64,6 +65,7 @@ var DataGridView = ListEditorBaseView.extend({
         this.updateCheckAllVisible();
         this.updateCheckAll();
         this.updateDisabledItem();
+        this.updateVerticalAlignment();
     },
 
     updateShowSelectors: function () {
@@ -77,7 +79,7 @@ var DataGridView = ListEditorBaseView.extend({
     },
 
     updateVerticalAlignment: function () {
-        ListEditorBaseView.prototype.updateVerticalAlignment.call(this);
+        this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.$el, false);
         this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.ui.body, false);
     },
 

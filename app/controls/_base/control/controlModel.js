@@ -7,7 +7,6 @@ var ControlModel = Backbone.Model.extend({
         visible: true,
         textHorizontalAlignment: InfinniUI.TextHorizontalAlignment.left,
         horizontalAlignment: 'Stretch',
-        verticalAlignment: 'Top',
         textStyle: null,
         background: null,
         foreground: null,

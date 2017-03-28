@@ -27,7 +27,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.listenTo(this.model, 'change:visible', this.updateVisible);
         this.listenTo(this.model, 'change:horizontalAlignment', this.updateHorizontalAlignment);
         this.listenTo(this.model, 'change:textHorizontalAlignment', this.updateTextHorizontalAlignment);
-        this.listenTo(this.model, 'change:verticalAlignment', this.updateVerticalAlignment);
         this.listenTo(this.model, 'change:enabled', this.updateEnabled);
         this.listenTo(this.model, 'change:name', this.updateName);
         this.listenTo(this.model, 'change:style', this.updateStyle);
@@ -80,7 +79,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         this.updateVisible();
         this.updateTextHorizontalAlignment();
         this.updateHorizontalAlignment();
-        this.updateVerticalAlignment();
         this.updateEnabled();
         this.updateName();
         this.updateText();
@@ -151,19 +149,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
         var isEnabled = this.model.get('enabled');
         this.$el
             .toggleClass('pl-disabled', !isEnabled);
-    },
-
-    updateVerticalAlignment: function () {
-        //var verticalAlignment = this.model.get('verticalAlignment');
-        this.switchClass('verticalAlignment', this.model.get('verticalAlignment'), this.$el, false);
-
-        //var prefix = 'verticalAlignment';
-        //var regexp = new RegExp('(^|\\s)' + prefix + '\\S+', 'ig');
-        //
-        //this.$el.removeClass(function (i, name) {
-        //        return (name.match(regexp) || []).join(' ');
-        //    })
-        //    .addClass(prefix + verticalAlignment);
     },
 
     updateTextHorizontalAlignment: function () {
@@ -352,7 +337,6 @@ var ControlView = Backbone.View.extend(/** @lends ControlView.prototype */{
             enabled: model.get('enabled'),
             visible: model.get('visible'),
             horizontalAlignment: model.get('horizontalAlignment'),
-            verticalAlignment: model.get('verticalAlignment'),
             textHorizontalAlignment: model.get('textHorizontalAlignment'),
             textVerticalAlignment: model.get('textVerticalAlignment'),
             textStyle: model.get('textStyle'),
