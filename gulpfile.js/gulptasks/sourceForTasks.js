@@ -4,7 +4,7 @@ var sourceForFiles = require('./sourceForFiles');
 
 var sourceForTasks = {
 	clean: {
-		src: sourceForFiles.platformOutputFolder,
+		src: [ sourceForFiles.platformOutputFolder, sourceForFiles.packageOutFolder ],
 		taskPath: "./gulptasks/clean"
 	},
 	buildLess: {
@@ -17,7 +17,7 @@ var sourceForTasks = {
 	'assemble:package': {
 		base: sourceForFiles.package.base,
 		src: sourceForFiles.package.src,
-		dest: "package/",
+		dest: sourceForFiles.packageOutFolder,
 		taskPath: "./gulptasks/copyFiles"
 	},
 	concatJs: {

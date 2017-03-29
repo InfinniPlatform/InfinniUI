@@ -3,6 +3,7 @@
 var platformOutputFolder = './out/';
 var sourceForFiles = {
 	platformOutputFolder: platformOutputFolder,
+	packageOutFolder: 'package/',
 	stylesFiles: ['app/styles/main.less'],
 	stylesFilesForWatch: ['./app/styles/**/*.less'],
 	jsFiles: [
