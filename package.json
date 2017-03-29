@@ -1,5 +1,6 @@
 {
   "name": "infinni-ui",
+  "version": "",
   "devDependencies": {
     "browser-sync": "^2.12.x",
     "del": "^2.2.0",
