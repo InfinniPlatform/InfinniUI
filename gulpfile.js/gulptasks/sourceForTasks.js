@@ -3,9 +3,11 @@
 var sourceForFiles = require('./sourceForFiles');
 
 var sourceForTasks = {
-	'clean': {
-		src: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/clean"
+	'assemble:package': {
+		base: sourceForFiles.package.base,
+		src: sourceForFiles.package.src,
+		dest: "package/",
+		taskPath: "./gulptasks/copyFiles"
 	},
 	'build:less': {
 		src: sourceForFiles.stylesFiles,
@@ -13,12 +15,6 @@ var sourceForTasks = {
 		finalName: "main.css",
 		dest: sourceForFiles.platformOutputFolder + "css/",
 		taskPath: "./gulptasks/buildLess"
-	},
-	'assemble:package': {
-		base: sourceForFiles.package.base,
-		src: sourceForFiles.package.src,
-		dest: "package/",
-		taskPath: "./gulptasks/copyFiles"
 	},
 	'build:js': {
 		src: sourceForFiles.jsFiles,
@@ -32,11 +28,15 @@ var sourceForTasks = {
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/buildJsProd"
 	},
-	'concat:vendor-styles': {
-		src: sourceForFiles.vendorStylesFiles,
-		finalName: "vendor.css",
-		dest: sourceForFiles.platformOutputFolder + "css",
-		taskPath: "./gulptasks/concatFiles"
+	'clean': {
+		src: sourceForFiles.platformOutputFolder,
+		taskPath: "./gulptasks/clean"
+	},
+	'concat:templates': {
+		src: sourceForFiles.templateFiles,
+		finalName: "templates.js",
+		dest: sourceForFiles.platformOutputFolder,
+		taskPath: "./gulptasks/concatTemplates"
 	},
 	'concat:vendor-js': {
 		src: sourceForFiles.vendorJsFiles,
@@ -45,17 +45,17 @@ var sourceForTasks = {
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
 	},
+	'concat:vendor-styles': {
+		src: sourceForFiles.vendorStylesFiles,
+		finalName: "vendor.css",
+		dest: sourceForFiles.platformOutputFolder + "css",
+		taskPath: "./gulptasks/concatFiles"
+	},
 	'concat:unit-tests': {
 		src: sourceForFiles.unitTestFiles,
 		finalName: "unitTest.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
-	},
-	'concat:templates': {
-		src: sourceForFiles.templateFiles,
-		finalName: "templates.js",
-		dest: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/concatTemplates"
 	},
 	'copy:fonts': {
 		base: sourceForFiles.fonts.base,

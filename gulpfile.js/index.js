@@ -21,20 +21,20 @@ gulp.task('build', gulp.parallel(
 	'build:js',
 	'build:prod-js',
 	'build:less',
-	'concat:vendor-js',
 	'concat:templates',
-	'concat:unit-tests',
+	'concat:vendor-js',
 	'concat:vendor-styles',
+	'concat:unit-tests',
 	'copy:fonts'
 ));
 
 gulp.task('full-watch', function() {
 	watch(sourceForTasks['build:less'].srcForWatch, gulp.series('build:less'));
-	watch(sourceForTasks['concat:vendor-styles'].src, gulp.series('concat:vendor-styles'));
 	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
+	watch(sourceForTasks['concat:templates'].src, gulp.series('concat:templates'));
+	watch(sourceForTasks['concat:vendor-styles'].src, gulp.series('concat:vendor-styles'));
 	watch(sourceForTasks['concat:vendor-js'].src, gulp.series('concat:vendor-js'));
 	watch(sourceForTasks['concat:unit-tests'].src, gulp.series('concat:unit-tests'));
-	watch(sourceForTasks['concat:templates'].src, gulp.series('concat:templates'));
 	watch(sourceForTasks['copy:fonts'].src, gulp.series('copy:fonts'));
 });
 
