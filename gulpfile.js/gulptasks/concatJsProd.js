@@ -2,6 +2,7 @@
 
 var gulp = require('gulp'),
 		combiner = require('stream-combiner2').obj,
+		version = require('../../package.json').version,
 		$ = require('gulp-load-plugins')();
 
 module.exports = function(options) {
@@ -10,6 +11,7 @@ module.exports = function(options) {
 			gulp.src(options.src),
 			$.replace(/\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig, ''),
 			$.concat(options.finalName),
+			$.replace(/<%infinniui_version%>/g, version),
 			$.uglify(),
 			$.wrapper({
 				header: ';(function(){',

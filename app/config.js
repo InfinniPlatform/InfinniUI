@@ -5,4 +5,5 @@ _.defaults( InfinniUI.config, {
     configName: 'InfinniUI'
 });
 
-InfinniUI.VERSION = '';
+
+InfinniUI.VERSION='<%infinniui_version%>';

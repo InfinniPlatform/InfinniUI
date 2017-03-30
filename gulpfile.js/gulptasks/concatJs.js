@@ -2,7 +2,8 @@
 
 var gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
-    combiner = require('stream-combiner2').obj;
+    combiner = require('stream-combiner2').obj,
+    version = require('../../package.json').version;
 
 module.exports = function (options) {
     return function (callback) {
@@ -14,6 +15,7 @@ module.exports = function (options) {
                 }
             }),
             $.concat(options.finalName),
+            $.replace(/<%infinniui_version%>/g, version),
             $.wrapper({
                 header: ';(function(){\n',
                 footer: '})();'
