@@ -6,4 +6,5 @@ _.defaults( InfinniUI.config, {
     configName: 'InfinniUI'
 });
 
-InfinniUI.VERSION = '2.2.11';
+
+InfinniUI.VERSION='<%infinniui_version%>';
