@@ -24,9 +24,6 @@ function Executor(metadata, builder, builderParams) {
             scriptName = metadata;
             handler = BaseScriptExecutor(builderParams.parentView, CompiledScriptFactory(scriptName, builderParams.parentView));
         }
-    } else if (metadata['Name']) {//CompiledScript
-        scriptName = metadata['Name'];
-        handler = BaseScriptExecutor(builderParams.parentView, CompiledScriptFactory(scriptName, builderParams.parentView));
     } else if (typeof metadata === 'object') {
         //Action
         handler = ActionExecutor(ActionFactory(metadata, builder, builderParams));

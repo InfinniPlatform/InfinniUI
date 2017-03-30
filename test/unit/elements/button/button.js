@@ -144,12 +144,8 @@ describe('Button', function () {
 
             var buttonBuilder = new InfinniUI.ButtonBuilder();
             var metadata = {
-                OnClick:{
-                    Name: 'OnClick'
-                },
-                OnLoaded:{
-                    Name: 'OnLoaded'
-                }
+                OnClick: 'OnClick',
+                OnLoaded: 'OnLoaded'
             };
             window.Test = {button:1, buttonLoaded: false};
 

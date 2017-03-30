@@ -35,7 +35,7 @@ DataGridColumnBuilder.prototype.build = function (element, metadata, params) {
 
         if (metadata.SortFunction) {
             column.onSort(function (args) {
-                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.SortFunction.Name || metadata.SortFunction, args);
+                new ScriptExecutor(element.getScriptsStorage()).executeScript( metadata.SortFunction, args );
             });
         }
     }
@@ -174,7 +174,7 @@ DataGridColumnBuilder.prototype.buildCellTemplateBySelector = function (params, 
             });
 
             var scriptExecutor = new ScriptExecutor(grid.getScriptsStorage());
-            var value = scriptExecutor.executeScript(cellSelectorMetadata.Name || cellSelectorMetadata, {
+            var value = scriptExecutor.executeScript( cellSelectorMetadata, {
                 value: args.item
             });
 
@@ -236,7 +236,7 @@ DataGridColumnBuilder.prototype.buildCellSelector = function (column, metadata, 
     if (metadata.CellSelector) {
         cellSelector = function (context, args) {
             var scriptExecutor = new ScriptExecutor(params.parent);
-            return scriptExecutor.executeScript(metadata.CellSelector.Name || metadata.CellSelector, args)
+            return scriptExecutor.executeScript( metadata.CellSelector, args );
         };
     } else if (metadata.CellProperty) {
         var propertyName = metadata.CellProperty;

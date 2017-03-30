@@ -133,7 +133,7 @@ _.extend(ContainerBuilder.prototype, {
         if (metadata.GroupValueSelector) {
             groupValueSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name || metadata.GroupValueSelector, args)
+                return scriptExecutor.executeScript( metadata.GroupValueSelector, args);
             };
         } else if (metadata.GroupValueProperty) {
             groupValueSelector = function (context, args) {
@@ -236,7 +236,7 @@ _.extend(ContainerBuilder.prototype, {
 
             binding.setConverter({
                 toElement: function (_context, _args) {
-                    return scriptExecutor.executeScript(itemSelectorMetadata.Name || itemSelectorMetadata, _args);
+                    return scriptExecutor.executeScript( itemSelectorMetadata, _args );
                 }
             });
 
@@ -320,7 +320,7 @@ _.extend(ContainerBuilder.prototype, {
 
         if(metadata.ItemComparator){
             itemComparator = function (item1, item2) {
-                return scriptExecutor.executeScript(metadata.ItemComparator.Name || metadata.ItemComparator, {item1: item1, item2: item2});
+                return scriptExecutor.executeScript( metadata.ItemComparator, {item1: item1, item2: item2});
             };
         }
 

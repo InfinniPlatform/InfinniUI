@@ -107,7 +107,7 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
     initValidation: function( parentView, dataSource, metadata ) {
         if( metadata.ValidationErrors ) {
             dataSource.setErrorValidator( function( context, args ) {
-                return new ScriptExecutor( parentView ).executeScript( metadata.ValidationErrors.Name || metadata.ValidationErrors, args );
+                return new ScriptExecutor( parentView ).executeScript( metadata.ValidationErrors, args );
             } );
         }
     },
@@ -121,37 +121,37 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
 
         if( metadata.OnSelectedItemChanged ) {
             dataSource.onSelectedItemChanged( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnSelectedItemChanged.Name || metadata.OnSelectedItemChanged, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnSelectedItemChanged, args );
             } );
         }
 
         if( metadata.OnItemsUpdated ) {
             dataSource.onItemsUpdated( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnItemsUpdated.Name || metadata.OnItemsUpdated, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemsUpdated, args );
             } );
         }
 
         if( metadata.OnPropertyChanged ) {
             dataSource.onPropertyChanged( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnPropertyChanged.Name || metadata.OnPropertyChanged, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnPropertyChanged, args );
             } );
         }
 
         if( metadata.OnItemDeleted ) {
             dataSource.onItemDeleted( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnItemDeleted.Name || metadata.OnItemDeleted, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnItemDeleted, args );
             } );
         }
 
         if( metadata.OnErrorValidator ) {
             dataSource.onErrorValidator( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnErrorValidator.Name || metadata.OnErrorValidator, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnErrorValidator, args );
             } );
         }
 
         if( metadata.OnProviderError ) {
             dataSource.onProviderError( function( context, args ) {
-                new ScriptExecutor( parentView ).executeScript( metadata.OnProviderError.Name || metadata.OnProviderError, args );
+                new ScriptExecutor( parentView ).executeScript( metadata.OnProviderError, args );
             } );
         }
     },

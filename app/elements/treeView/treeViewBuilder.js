@@ -27,7 +27,7 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         if (metadata.KeySelector) {
             keySelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.KeySelector.Name || metadata.KeySelector, args)
+                return scriptExecutor.executeScript( metadata.KeySelector, args );
             }
         } else if (metadata.KeyProperty) {
             keySelector = function (context, args) {
@@ -49,7 +49,7 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         if (metadata.ParentSelector) {
             parentSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.ParentSelector.Name || metadata.ParentSelector, args)
+                return scriptExecutor.executeScript( metadata.ParentSelector, args );
             }
         } else if (metadata.ParentProperty) {
             parentSelector = function (context, args) {

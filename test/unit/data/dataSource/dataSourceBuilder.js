@@ -53,9 +53,7 @@ describe('DataSourceBuilder', function () {
                     PageNumber: 1,
                     PageSize: 5,
 
-                    onPropertyChanged: {
-                        Name: 'onPropertyChanged'
-                    }
+                    onPropertyChanged: 'onPropertyChanged'
                 };
 
             var view = new InfinniUI.View(),
@@ -80,9 +78,7 @@ describe('DataSourceBuilder', function () {
                     PageNumber: 1,
                     PageSize: 5,
 
-                    OnPropertyChanged: {
-                        Name: 'onPropertyChanged'
-                    }
+                    OnPropertyChanged: 'onPropertyChanged'
                 };
 
             var view = new InfinniUI.View(),

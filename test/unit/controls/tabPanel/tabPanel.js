@@ -37,9 +37,7 @@ describe('TabPanelControl', function () {
                 "Items": [
                     {
                         "TabPanel": {
-                            "OnSelectedItemChanged": {
-                                "Name": "OnSelectedItemChanged"
-                            },
+                            "OnSelectedItemChanged": "OnSelectedItemChanged",
                             "HeaderLocation": "Left",
                             "Items": [
                                 {
@@ -58,12 +56,8 @@ describe('TabPanelControl', function () {
                                     "TabPage": {
                                         "Text": "Header of Page2",
                                         "CanClose": true,
-                                        "OnClosing": {
-                                            "Name": "OnClosing"
-                                        },
-                                        "OnClosed": {
-                                            "Name": "OnClosed2"
-                                        },
+                                        "OnClosing": "OnClosing",
+                                        "OnClosed": "OnClosed2",
                                         "Items": [
                                             {
                                                 "Label": {
