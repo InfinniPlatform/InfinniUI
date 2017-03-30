@@ -14,7 +14,7 @@ var projectFolderForExtensions = './www/compiled/js/';
 
 
 // Платформенные перменные (не рекомендуется менять)
-var platformOutputFolder = '/out/';
+var platformOutputFolder = '/dist/';
 var stylesFile = '/app/styles/main.less';
 
 var jsFiles = ['./js/**/*.js'];

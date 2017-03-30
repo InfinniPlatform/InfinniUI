@@ -1,7 +1,7 @@
 {
   "name": "infinni-ui-example",
   "dependencies": {
-    "infinni-ui": "2.2.11"
+    "infinni-ui": "^3.0.0"
   },
   "devDependencies": {
     "browser-sync": "^2.12.x",
