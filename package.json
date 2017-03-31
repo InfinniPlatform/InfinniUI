@@ -32,6 +32,7 @@
     "moment": "2.18.0",
     "signalr": "2.2.1",
     "stream-combiner2": "1.1.1",
+    "streamqueue": "^1.1.1",
     "through2": "2.x",
     "toastr": "2.1.2"
   },

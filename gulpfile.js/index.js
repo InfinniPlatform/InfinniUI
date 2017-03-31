@@ -21,7 +21,6 @@ gulp.task('build', gulp.parallel(
 	'build:js',
 	'build:prod-js',
 	'build:less',
-	'concat:templates',
 	'concat:vendor-js',
 	'concat:vendor-styles',
 	'concat:unit-tests',
@@ -31,7 +30,7 @@ gulp.task('build', gulp.parallel(
 gulp.task('full-watch', function() {
 	watch(sourceForTasks['build:less'].srcForWatch, gulp.series('build:less'));
 	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
-	watch(sourceForTasks['concat:templates'].src, gulp.series('concat:templates'));
+	watch(sourceForTasks['build:js'].templateSrc, gulp.series('build:js'));
 	watch(sourceForTasks['concat:vendor-styles'].src, gulp.series('concat:vendor-styles'));
 	watch(sourceForTasks['concat:vendor-js'].src, gulp.series('concat:vendor-js'));
 	watch(sourceForTasks['concat:unit-tests'].src, gulp.series('concat:unit-tests'));

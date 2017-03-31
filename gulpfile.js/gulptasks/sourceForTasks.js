@@ -18,6 +18,7 @@ var sourceForTasks = {
 	},
 	'build:js': {
 		src: sourceForFiles.jsFiles,
+		templateSrc: sourceForFiles.templateFiles,
 		finalName: "platform.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/buildJs"
@@ -31,12 +32,6 @@ var sourceForTasks = {
 	'clean': {
 		src: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/clean"
-	},
-	'concat:templates': {
-		src: sourceForFiles.templateFiles,
-		finalName: "templates.js",
-		dest: sourceForFiles.platformOutputFolder,
-		taskPath: "./gulptasks/concatTemplates"
 	},
 	'concat:vendor-js': {
 		src: sourceForFiles.vendorJsFiles,
