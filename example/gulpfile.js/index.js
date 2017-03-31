@@ -16,15 +16,16 @@ for(var key in sourceForTasks) {
 	lazyRequireTask(key, sourceForTasks[key].taskPath, sourceForTasks[key]);
 }
 
-gulp.task('build', gulp.series(
-	gulp.parallel(gulp.series('copyPlatform', 'overrideLess'), 'concatJs', 'concatTemplates')
+gulp.task('build', gulp.parallel(
+		gulp.series('copyPlatform', 'overrideLess'),
+		'concatJs'
 ));
 
 gulp.task('fullWatch', function() {
 	watch(sourceForTasks.copyPlatform.src, gulp.series('copyPlatform', 'overrideLess'));
 	watch(sourceForTasks.overrideLess.srcForWatch, gulp.series('overrideLess'));
 	watch(sourceForTasks.concatJs.src, gulp.series('concatJs'));
-	watch(sourceForTasks.concatTemplates.src, gulp.series('concatTemplates'));
+	watch(sourceForTasks.concatJs.templateSrc, gulp.series('concatJs'));
 });
 
 gulp.task('example', gulp.series(

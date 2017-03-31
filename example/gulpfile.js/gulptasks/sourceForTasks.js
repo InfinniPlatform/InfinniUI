@@ -45,15 +45,10 @@ var sourceForTasks = {
 	},
 	concatJs: {
 		src: jsFiles,
+		templateSrc: templateFiles,
 		finalName: "app.js",
 		dest: projectFolderForExtensions,
 		taskPath: "./gulptasks/concatJs"
-	},
-	concatTemplates: {
-		src: templateFiles,
-		finalName: "templates.js",
-		dest: projectFolderForExtensions,
-		taskPath: "./gulptasks/concatTemplates"
 	},
 	'server:example': {
 		src: "./www",

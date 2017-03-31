@@ -1,24 +1,36 @@
 'use strict';
 
 var gulp = require('gulp'),
-			$ = require('gulp-load-plugins')(),
-			combiner = require('stream-combiner2').obj,
-			isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
+    $ = require('gulp-load-plugins')(),
+    streamqueue = require('streamqueue'),
+    isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
-module.exports = function(options) {
-	return function(callback) {
-		return combiner(
-			gulp.src(options.src, {base: '.'}),
-			$.wrapper({
-				header: function(file) {
-					return '//####' + file.base.replace(file.cwd, '') + file.relative + '\n';
-				}
-			}),
-			$.concat(options.finalName),
-			$.if(!isDevelopment, $.uglify()),
-			gulp.dest(options.dest)
-		).on('error', $.notify.onError({
-				title: options.taskName
-		}));
-	};
+var templateNamespaceInitString = 'window["InfinniUI"] = window["InfinniUI"] || {};\nwindow["InfinniUI"]["Template"] = window["InfinniUI"]["Template"] || {};\n';
+
+function getTemplateStream(src) {
+    return gulp.src(src)
+        .pipe($.templateCompile({
+            namespace: 'InfinniUI.Template',
+            IIFE: false
+        }))
+        .pipe($.replace(templateNamespaceInitString, ''))
+        .pipe($.replace(/\r*\n/g, ''));
+}
+
+function getJsStream(src) {
+    return gulp.src(src, {base: '.'})
+        .pipe($.wrapper({
+            header: function (file) {
+                return '//####' + file.relative + '\n';
+            }
+        }));
+}
+
+module.exports = function (options) {
+    return function (callback) {
+        return streamqueue({objectMode: true}, getTemplateStream(options.templateSrc), getJsStream(options.src))
+            .pipe($.concat(options.finalName))
+            .pipe($.if(!isDevelopment, $.uglify()))
+            .pipe(gulp.dest(options.dest));
+    };
 };
