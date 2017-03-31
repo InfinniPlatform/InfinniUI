@@ -4,6 +4,7 @@ var platformOutputFolder = './dist/';
 
 var sourceForFiles = {
 	platformOutputFolder: platformOutputFolder,
+	platformJsOutputFile: 'platform.js',
 	stylesFiles: ['app/styles/main.less'],
 	stylesFilesForWatch: ["./app/styles/**/*.less"],
 	jsFiles: [

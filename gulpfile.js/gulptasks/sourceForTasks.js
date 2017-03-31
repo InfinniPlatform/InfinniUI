@@ -19,12 +19,12 @@ var sourceForTasks = {
 	'build:js': {
 		src: sourceForFiles.jsFiles,
 		templateSrc: sourceForFiles.templateFiles,
-		finalName: "platform.js",
+		finalName: sourceForFiles.platformJsOutputFile,
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/buildJs"
 	},
 	'build:prod-js': {
-		src: sourceForFiles.jsFiles,
+		src: sourceForFiles.platformOutputFolder + "/" + sourceForFiles.platformJsOutputFile,
 		finalName: "platform.min.js",
 		dest: sourceForFiles.platformOutputFolder,
 		taskPath: "./gulptasks/buildJsProd"

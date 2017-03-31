@@ -9,12 +9,8 @@ module.exports = function(options) {
 		return combiner(
 			gulp.src(options.src),
 			$.replace(/\/\/devblockstart((?!devblock)[\s\S])*\/\/devblockstop/ig, ''),
-			$.concat(options.finalName),
+			$.rename({suffix: '.min'}),
 			$.uglify(),
-			$.wrapper({
-				header: ';(function(){',
-				footer: '})();'
-			}),
 			gulp.dest(options.dest)
 		).on('error', $.notify.onError({
 			title: options.taskName

@@ -19,12 +19,16 @@ for(var key in sourceForTasks) {
 
 gulp.task('build', gulp.parallel(
 	'build:js',
-	'build:prod-js',
 	'build:less',
 	'concat:vendor-js',
 	'concat:vendor-styles',
 	'concat:unit-tests',
 	'copy:fonts'
+));
+
+gulp.task('build:prod', gulp.series(
+		'build',
+		'build:prod-js'
 ));
 
 gulp.task('full-watch', function() {
@@ -52,6 +56,7 @@ gulp.task('default', function(cb) {
 							'####Use any of defined tasks:\n' +
 							help +
 							'- gulp build\n' +
+							'- gulp build:prod\n' +
 							'- gulp run:tests\n' +
 							'- gulp run:dev'
 							);
