@@ -17,20 +17,20 @@ for(var key in sourceForTasks) {
 }
 
 gulp.task('build', gulp.parallel(
-		gulp.series('copyPlatform', 'overrideLess'),
-		'concatJs'
+		gulp.series('copy:platform', 'override:less'),
+		'build:js'
 ));
 
-gulp.task('fullWatch', function() {
-	watch(sourceForTasks.copyPlatform.src, gulp.series('copyPlatform', 'overrideLess'));
-	watch(sourceForTasks.overrideLess.srcForWatch, gulp.series('overrideLess'));
-	watch(sourceForTasks.concatJs.src, gulp.series('concatJs'));
-	watch(sourceForTasks.concatJs.templateSrc, gulp.series('concatJs'));
+gulp.task('watch', function() {
+	watch(sourceForTasks['copy:platform'].src, gulp.series('copy:platform', 'override:less'));
+	watch(sourceForTasks['override:less'].srcForWatch, gulp.series('override:less'));
+	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
+	watch(sourceForTasks['build:js'].templateSrc, gulp.series('build:js'));
 });
 
 gulp.task('example', gulp.series(
 	'build',
-	gulp.parallel('fullWatch', 'server:example')
+	gulp.parallel('watch', 'server:example')
 ));
 
 gulp.task('default', function(cb) {

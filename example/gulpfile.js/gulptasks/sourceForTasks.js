@@ -21,11 +21,11 @@ var jsFiles = ['./js/**/*.js'];
 var templateFiles = ["./js/**/*.tpl.html"];
 
 var sourceForTasks = {
-	cleanFolder: {
+	'clean': {
 		src: projectFolderForPlatform,
-		taskPath: "./gulptasks/cleanFolder"
+		taskPath: "./gulptasks/clean"
 	},
-	overrideLess: {
+	'override:less': {
 		src: infinniUIpath + stylesFile,
 		changedVariables: {
 			"pl-override-platform-variables-path": '../..' + fromInfinniToNewStylesPath + 'platform-variables.less',
@@ -38,17 +38,17 @@ var sourceForTasks = {
 		dest: projectFolderForPlatform + "css/",
 		taskPath: "./gulptasks/overrideLess"
 	},
-	copyPlatform: {
+	'copy:platform': {
 		src: [infinniUIpath + platformOutputFolder + '**/*.*', '!' + infinniUIpath + platformOutputFolder + 'unitTest.js'],
 		dest: projectFolderForPlatform,
 		taskPath: "./gulptasks/copyFiles"
 	},
-	concatJs: {
+	'build:js': {
 		src: jsFiles,
 		templateSrc: templateFiles,
 		finalName: "app.js",
 		dest: projectFolderForExtensions,
-		taskPath: "./gulptasks/concatJs"
+		taskPath: "./gulptasks/buildJs"
 	},
 	'server:example': {
 		src: "./www",

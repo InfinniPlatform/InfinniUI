@@ -6,7 +6,7 @@ var sourceForFiles = {
 	platformOutputFolder: platformOutputFolder,
 	platformJsOutputFile: 'platform.js',
 	stylesFiles: ['app/styles/main.less'],
-	stylesFilesForWatch: ["./app/styles/**/*.less"],
+	stylesFilesForWatch: ['./app/styles/**/*.less'],
 	jsFiles: [
 		'app/utils/strict.js',
 		'app/utils/namespace.js',
@@ -151,14 +151,16 @@ var sourceForFiles = {
 			'app/styles/**/*.less',
 			'bootstrap-framework/less/**/*.less',
 
-			'example/**/*',
-			'!example/bower_cache/**/*',
-			'!example/bower_components/**/*',
-			'!example/node_modules/**/*',
-			'!example/www/compiled/**/*',
-			'!example/www/js/**/*',
+			'example/gulpfile.js/**/*.*',
+			'example/js/**/*.*',
+			'example/styles/**/*',
+			'example/www/*.*',
+			'example/www/img/**/*.*',
+			'example/www/js/**/*.*',
+			'example/www/testConfigurations/**/*.*',
+			'example/www/viewExample/**/*.*',
 
-			 platformOutputFolder + '**/*',
+			 platformOutputFolder + '**/*.*',
 			'LICENSE',
 			'package.json'
 		]

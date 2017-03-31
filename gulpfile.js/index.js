@@ -31,7 +31,7 @@ gulp.task('build:prod', gulp.series(
 		'build:prod-js'
 ));
 
-gulp.task('full-watch', function() {
+gulp.task('watch', function() {
 	watch(sourceForTasks['build:less'].srcForWatch, gulp.series('build:less'));
 	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
 	watch(sourceForTasks['build:js'].templateSrc, gulp.series('build:js'));
@@ -48,7 +48,7 @@ gulp.task('run:tests', gulp.series(
 
 gulp.task('run:dev', gulp.series(
 	'build',
-	gulp.parallel('full-watch', 'server:tests')
+	gulp.parallel('watch', 'server:tests')
 ));
 
 gulp.task('default', function(cb) {
