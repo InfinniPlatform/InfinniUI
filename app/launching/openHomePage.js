@@ -2,6 +2,10 @@ window.InfinniUI.openHomePage = function($target) {
     var builder = new ApplicationBuilder(),
         rootView = new SpecialApplicationView();
 
+    window.InfinniUI.localStorageDataSource = new window.InfinniUI.LocalStorageDataSource({
+        view: rootView
+    });
+
     rootView.open($target);
 
     InfinniUI.AutoHeightService.slidingRecalculation($target);
@@ -32,7 +36,7 @@ function subscribeRecalculationOnWindowResize($container) {
         window.InfinniUI.AutoHeightService.recalculation($container);
     }
 
-};
+}
 
 function getHomePageLinkViewPromise() {
     var defer = $.Deferred();
@@ -63,7 +67,7 @@ function getHomePageLinkViewPromise() {
     }
 
     return defer.promise();
-};
+}
 
 function refreshUserInfo() {
     var authProvider = InfinniUI.global.session;
@@ -75,7 +79,7 @@ function refreshUserInfo() {
             InfinniUI.user.onReadyDeferred.resolve(null);
         }
     );
-};
+}
 
 function setCurrentUser() {
     InfinniUI.user = {

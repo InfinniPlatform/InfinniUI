@@ -106,7 +106,7 @@ var DataBinding = Backbone.Model.extend({
         var logger = window.InfinniUI.global.logger;
 
         if(this.get('element') != null){
-            var message = stringUtils.format('DataBinding. bindElement: повторная инициализация. {0} заменен на {1}', [this.get('element').getName(), element.getName()])
+            var message = stringUtils.format('DataBinding. bindElement: повторная инициализация. {0} заменен на {1}', [this.get('element').getName(), element.getName()]);
             logger.warn(message);
         }
 
