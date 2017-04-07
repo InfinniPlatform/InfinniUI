@@ -136,7 +136,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         }
 
-        this.get( 'model' ).onPropertyChanged( property, function( context, args ) {
+        return this.get( 'model' ).onPropertyChanged( property, function( context, args ) {
             var property = args.property;
 
             if( property.substr( 0, 6 ) == 'items.' ) {
@@ -153,6 +153,27 @@ var BaseDataSource = Backbone.Model.extend( {
         }, owner );
     },
 
+    offPropertyChanged: function( propertyName, bindId ) {
+
+        if( propertyName.charAt( 0 ) == '.' ) {
+            propertyName = propertyName.substr( 1 );
+        } else {
+            if( propertyName == '' ) {
+                propertyName = 'items';
+            } else {
+                propertyName = 'items.' + propertyName;
+            }
+
+        }
+
+        this.get('model').offPropertyChanged( propertyName, bindId );
+    },
+
+    remove: function() {
+        this.off();
+        this.clear();
+    },
+
     onSelectedItemChanged: function( handler, owner ) {
         var that = this;
 
@@ -164,8 +185,12 @@ var BaseDataSource = Backbone.Model.extend( {
         }, owner );
     },
 
-    onErrorValidator: function( handler ) {
-        this.on( 'onErrorValidator', handler );
+    onErrorValidator: function( handler, subscriptionContext ) {
+        this.on( 'onErrorValidator', handler, subscriptionContext );
+    },
+
+    offErrorValidator: function( subscriptionContext ) {
+        this.off( null, null, subscriptionContext );
     },
 
     onItemSaved: function( handler ) {
@@ -183,7 +208,6 @@ var BaseDataSource = Backbone.Model.extend( {
     onItemsUpdatedOnce: function( handler ) {
         this.once( 'onItemsUpdated', handler );
     },
-
     onItemDeleted: function( handler ) {
         this.on( 'onItemDeleted', handler );
     },

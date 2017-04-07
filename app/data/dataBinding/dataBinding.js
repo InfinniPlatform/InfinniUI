@@ -59,9 +59,11 @@ var DataBinding = Backbone.Model.extend({
             this._initPropertyOnElement();
         }
 
-        source.onPropertyChanged(property, function(context, argument){
+        var bindId = source.onPropertyChanged(property, function(context, argument){
             that._onSourcePropertyChangedHandler(context, argument);
         });
+
+        this.set('bindId', bindId);
 
         if( this._isWorkingWithSelectedItems(source) ){
             this._initBehaviorWithSelectedItem();
@@ -117,7 +119,26 @@ var DataBinding = Backbone.Model.extend({
             that._onElementPropertyChangedHandler(context, argument);
         });
 
+        if( element.onRemove ) {
+            element.onRemove( function( context, args ) {
+                var source = that.get('source');
+                var bindId = that.get('bindId');
+                var propertyName = that.get('sourceProperty');
+
+                if( source.offPropertyChanged ) {
+                    source.offPropertyChanged( propertyName, bindId );
+                }
+                that.remove();
+
+            } );
+        }
+
         this._initPropertyOnElement();
+    },
+
+    remove: function() {
+        this.off();
+        this.clear();
     },
 
     _initPropertyOnElement: function(){

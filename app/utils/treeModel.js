@@ -55,6 +55,15 @@ _.extend(TreeModel.prototype, {
         }
 
         handlersNode[bindId] = handler;
+
+        return bindId;
+    },
+
+    offPropertyChanged: function( propertyName, bindId ) {
+        var handlersNode = this._getHandlersSubTree(propertyName, true);
+        if( handlersNode[ bindId ] ) {
+            delete handlersNode[ bindId ];
+        }
     },
 
     _getHandlersSubTree: function(propertyName, restoreIfNoProperty){

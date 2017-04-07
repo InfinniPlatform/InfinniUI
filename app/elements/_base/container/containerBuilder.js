@@ -338,27 +338,29 @@ _.extend(ContainerBuilder.prototype, {
                 var items = element.getItems(),
                     isCollectionChanged;
 
-                if(!element.isRemoved) {
-                    if (itemComparator) {
+                if( element.isRemoved ) {
+                    console.log( 'if you see it, something got wrong with UI-2587' );
+                }
 
-                        isCollectionChanged = items.set(value, true);
+                if (itemComparator) {
 
-                        items.forEach(function (item, index, collection) {
-                            collection.setProperty(index, 'bindingIndex', index);
-                        });
+                    isCollectionChanged = items.set(value, true);
 
-                        if (isCollectionChanged) {
-                            items.sort(itemComparator);
-                        }
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
 
-                    } else {
-
-                        isCollectionChanged = items.set(value);
-
-                        items.forEach(function (item, index, collection) {
-                            collection.setProperty(index, 'bindingIndex', index);
-                        });
+                    if (isCollectionChanged) {
+                        items.sort(itemComparator);
                     }
+
+                } else {
+
+                    isCollectionChanged = items.set(value);
+
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
                 }
 
             },
