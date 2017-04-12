@@ -3,7 +3,7 @@
  * @mixes editorBaseViewMixin
  * @constructor
  */
-var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.extend({}, editorBaseViewMixin, {
+var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.extend({}, editorBaseViewMixin, exifRotate, {
 
     className: 'pl-imagebox',
 
@@ -23,7 +23,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
     },
 
 
-    initHandlersForProperties: function(){
+    initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call(this);
 
         this.listenTo(this.model, 'change:value', this.updateValue);
@@ -32,7 +32,7 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.listenTo(this.model, 'change:warningText', this.updateWarningText);
     },
 
-    updateProperties: function(){
+    updateProperties: function() {
         ControlView.prototype.updateProperties.call(this);
 
         this.updateValue();
@@ -41,92 +41,137 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         this.updateWarningText();
     },
 
-    updateFocusable: function () {
+    updateFocusable: function() {
         var focusable = this.model.get('focusable');
 
-        if (focusable) {
+        if( focusable ) {
             this.ui.file.attr('tabindex', 0);
         } else {
             this.ui.file.removeAttr('tabindex');
         }
     },
 
-    updateText: function () {
+    updateText: function() {
         var text = this.model.get('text');
         this.ui.uploadButton.text(text);
     },
 
-    updateEnabled: function () {
+    updateEnabled: function() {
         ControlView.prototype.updateEnabled.call(this);
         var isEnabled = this.model.get('enabled');
         this.ui.input.prop('disabled', !isEnabled);
     },
 
-    updateValue: function () {
+    updateValue: function() {
+        var that = this;
         var model = this.model;
         var value = model.get('value');
+        var savedFile = model.get('file');
 
-        if (value && typeof value === 'object') {
+        if( value && typeof value === 'object' ) {
             //Native FileAPI File instance, start loading preview
             this.stopLoadingFile();
             var fileLoader = this.loadPreview(value);
 
             this.fileLoader = fileLoader;
 
-            fileLoader.then(function (file, content) {
+            fileLoader.then(function(file, content) {
                 this.updateUrl(content);
-            }.bind(this), function (err) {
+                this.orientation( file, function( base64img, value ) {
+                    if( value ) {
+                        that.rotate( value );
+                    }
+                } );
+            }.bind(this), function(err) {
                 console.log(err);
-            });
+            } );
         } else {
+            this.orientation( savedFile, function( base64img, value ) {
+                if( value ) {
+                    that.rotate( value );
+                }
+            } );
             this.updateUrl(value);
         }
     },
 
-    updateUrl: function (url) {
+    rotate: function( value ) {
+        this.model.set( 'rotatedSide', value );
+        this.ui.img.css( 'transform', this.rotation[ value ] );
+    },
+
+    updateUrl: function(url) {
+        var that = this;
         this.ui.img.attr('src', url);
         var none = url === null || typeof url === 'undefined';
         this.$el.toggleClass('pl-empty', none);
+
+        this.ui.img.get(0).onload = function() {
+            that.setPerfectPosition();
+        };
     },
 
-    stopLoadingFile: function () {
+    setPerfectPosition: function() {
+        var img = this.ui.img;
+        var width = img.width();
+        var height = img.height();
+        var rotatedSide = this.model.get( 'rotatedSide' );
+        var wideSide = 'limit-width';
+        var currentWideSide = this.model.get( 'currentWideSide' );
+
+        if( rotatedSide == 6 || rotatedSide == 8 ) {
+            var tmpWidth = width;
+            width = height;
+            height = tmpWidth;
+        }
+
+        if( width >= height ) {
+            wideSide = 'limit-height';
+        }
+
+        this.$el.removeClass( currentWideSide );
+        this.$el.addClass( wideSide );
+        this.model.set( 'currentWideSide', wideSide );
+    },
+
+    stopLoadingFile: function() {
         var fileLoader = this.fileLoader;
-        if (fileLoader && fileLoader.state() === 'pending') {
+        if( fileLoader && fileLoader.state() === 'pending' ) {
             fileLoader.reject();
         }
     },
 
-    loadPreview: function (file) {
+    loadPreview: function(file) {
         var defer = $.Deferred();
         var reader = new FileReader();
-        reader.onload = (function (file) {
-            return function (event) {
+        reader.onload = (function(file) {
+            return function(event) {
                 defer.resolve(file, event.target.result);
             };
         }(file));
-        reader.onerror  = function (event) {
+        reader.onerror = function(event) {
             defer.reject(event);
         };
         reader.readAsDataURL(file);
         return defer.promise();
     },
 
-    onClickRemoveImageHandler: function () {
+    onClickRemoveImageHandler: function() {
         this.model.removeFile();
         this.ui.input.val('');
     },
 
-    onChangeFileHandler: function () {
+    onChangeFileHandler: function() {
         var file = null;
         var files = this.ui.input[0].files;
 
-        if (files && files[0]) {
+        if( files && files[0] ) {
             file = files[0];
         }
         this.model.setFile(file);
     },
 
-    render: function () {
+    render: function() {
         this.prerenderingActions();
 
         this.renderTemplate(this.template);

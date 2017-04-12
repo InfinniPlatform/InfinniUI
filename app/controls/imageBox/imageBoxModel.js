@@ -6,7 +6,9 @@
 var ImageBoxModel = ControlModel.extend( _.extend({
 
     defaults: _.defaults({
-            text: localized.strings.ImageBox.chooseImage
+            text: localized.strings.ImageBox.chooseImage,
+            currentWideSide: null,
+            rotatedSide: null
         },
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults
@@ -17,7 +19,6 @@ var ImageBoxModel = ControlModel.extend( _.extend({
         this.initialize_editorBaseModel();
 
         this.set('acceptTypes', new Collection());
-        this.on('change:file', this.onChangeFileHandler);
 
         this.on("invalid", function(model, error) {
             this.set('errorText', error);
@@ -51,45 +52,6 @@ var ImageBoxModel = ControlModel.extend( _.extend({
 
     removeFile: function () {
         this.setFile(null);
-    },
-
-    onChangeFileHandler: function (model, file) {
-        //this.stopLoadingFile();
-        //if (file) {
-        //    var fileLoader = this.loadPreview(file);
-        //
-        //    this.fileLoader = fileLoader;
-        //
-        //    fileLoader.then(function (file, content) {
-        //        model.set('value', content);
-        //    }, function (err) {
-        //        console.log(err);
-        //    });
-        //} else {
-        //    model.set('value', null);
-        //}
-    },
-
-    //stopLoadingFile: function () {
-    //    var fileLoader = this.fileLoader;
-    //    if (fileLoader && fileLoader.state() === 'pending') {
-    //        fileLoader.reject();
-    //    }
-    //},
-    //
-    //loadPreview: function (file) {
-    //    var defer = $.Deferred();
-    //    var reader = new FileReader();
-    //    reader.onload = (function (file) {
-    //        return function (event) {
-    //            defer.resolve(file, event.target.result);
-    //        };
-    //    }(file));
-    //    reader.onerror  = function (event) {
-    //        defer.reject(event);
-    //    };
-    //    reader.readAsDataURL(file);
-    //    return defer.promise();
-    //}
+    }
 
 }, editorBaseModelMixin));
