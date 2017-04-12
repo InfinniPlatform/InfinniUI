@@ -67,6 +67,7 @@ _.extend(ViewBuilder.prototype, {
                     }
                 }
 
+                param.set('view', params.element);
                 parameters.add(param);
                 if(metadata.Parameters[i]['OnPropertyChanged']){
                     param.onPropertyChanged(function(){
