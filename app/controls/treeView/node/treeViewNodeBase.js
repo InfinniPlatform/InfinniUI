@@ -19,7 +19,7 @@ var TreeViewNodeBase = Backbone.View.extend({
         button: '.pl-treeview-node__button'
     },
 
-    initialize: function () {
+    initialize: function() {
         var model = new Backbone.Model({collapsed: true, isLeaf: true});
         this.model = model;
         this.listenTo(model, 'change:selected', this.updateSelected);
@@ -28,18 +28,18 @@ var TreeViewNodeBase = Backbone.View.extend({
         this.listenTo(model, 'change:isLeaf', this.updateCollapsed);
     },
 
-    updateChecked: function () {
+    updateChecked: function() {
         var checked = this.model.get('checked');
         this.ui.checker.toggleClass(this.classNameCheckerChecked, checked === true);
         this.ui.checker.toggleClass(this.classNameCheckerUnchecked, checked !== true);
     },
 
-    updateSelected: function () {
+    updateSelected: function() {
         var selected = this.model.get('selected');
         this.ui.content.toggleClass(this.classNameContentSelected, selected === true);
     },
 
-    updateCollapsed: function () {
+    updateCollapsed: function() {
         var isLeaf = this.model.get('isLeaf');
         var collapsed = !!this.model.get('collapsed');
         this.ui.items.toggleClass(this.classNameItemsExpanded, !collapsed && !isLeaf);
@@ -51,13 +51,13 @@ var TreeViewNodeBase = Backbone.View.extend({
         this.ui.button.toggleClass(this.classNameButtonNone, isLeaf);
     },
 
-    updateState: function () {
+    updateState: function() {
         this.updateCollapsed();
         this.updateSelected();
         this.updateChecked();
     },
 
-    render: function () {
+    render: function() {
         this.$el.html(this.template);
         this.bindUIElements();
         this.updateState();
@@ -65,59 +65,65 @@ var TreeViewNodeBase = Backbone.View.extend({
         return this;
     },
 
-    initDomEventsHandlers: function () {
+    initDomEventsHandlers: function() {
         this.ui.button.on('click', this.onClickEventHandler.bind(this));
         this.ui.content[0].addEventListener('click', this.onClickItemHandler.bind(this), true);
         this.ui.checker[0].addEventListener('click', this.onClickCheckHandler.bind(this), true);
     },
 
-    onClickItemHandler: function (event) {
+    onClickItemHandler: function(event) {
         this.trigger('select');
     },
 
-    onClickCheckHandler: function (event) {
+    onClickCheckHandler: function(event) {
         this.trigger('check');
     },
 
-    toggle: function () {
+    toggle: function() {
         var model = this.model;
         var collapsed = model.get('collapsed');
 
-        this.model.set('collapsed', !collapsed);
+        if( !collapsed ) {
+            this.collapse();
+        } else {
+            this.expand();
+        }
     },
 
-    expand: function () {
+    expand: function() {
         this.model.set('collapsed', false);
+        this.trigger('expand');
     },
 
-    collapse: function(  ) {
+    collapse: function() {
         this.model.set('collapsed', true);
+        this.trigger('collapse');
     },
 
-    getCollapsed: function(  ) {
+    getCollapsed: function() {
         return this.model.get('collapsed');
     },
 
-    setItemContent: function ($itemContent) {
+    setItemContent: function($itemContent) {
         this.ui.content.empty();
         this.ui.content.append($itemContent);
     },
 
-    setItemsContent: function ($itemsContent) {
+    setItemsContent: function($itemsContent) {
         this.ui.items.empty();
         this.model.set('isLeaf', !$itemsContent.length);
         this.ui.items.append($itemsContent);
     },
 
-    onClickEventHandler: function (event) {
+    onClickEventHandler: function(event) {
         this.toggle();
     },
 
-    setSelected: function (selected) {
+    setSelected: function(selected) {
         this.model.set('selected', selected);
     },
 
-    setChecked: function (checked) {
+    setChecked: function(checked) {
         this.model.set('checked', checked);
     }
 });
