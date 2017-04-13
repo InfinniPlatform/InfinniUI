@@ -76,27 +76,34 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
             this.fileLoader = fileLoader;
 
             fileLoader.then(function(file, content) {
-                this.updateUrl(content);
-                this.orientation( file, function( base64img, value ) {
-                    if( value ) {
-                        that.rotate( value );
-                    }
-                } );
+                if( file ) {
+                    this.orientation( file, function( base64img, value ) {
+                        if( value ) {
+                            that.rotate( value );
+                            that.updateUrl(content);
+                        }
+                    } );
+                } else {
+                    this.updateUrl(content);
+                }
             }.bind(this), function(err) {
                 console.log(err);
             } );
         } else {
-            this.orientation( savedFile, function( base64img, value ) {
-                if( value ) {
-                    that.rotate( value );
-                }
-            } );
-            this.updateUrl(value);
+            if( savedFile ) {
+                this.orientation( savedFile, function( base64img, value ) {
+                    if( value ) {
+                        that.rotate( value );
+                        that.updateUrl(value);
+                    }
+                } );
+            } else {
+                this.updateUrl(value);
+            }
         }
     },
 
     rotate: function( value ) {
-        this.model.set( 'rotatedSide', value );
         this.ui.img.css( 'transform', this.rotation[ value ] );
     },
 
@@ -115,15 +122,8 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
         var img = this.ui.img;
         var width = img.width();
         var height = img.height();
-        var rotatedSide = this.model.get( 'rotatedSide' );
         var wideSide = 'limit-width';
         var currentWideSide = this.model.get( 'currentWideSide' );
-
-        if( rotatedSide == 6 || rotatedSide == 8 ) {
-            var tmpWidth = width;
-            width = height;
-            height = tmpWidth;
-        }
 
         if( width >= height ) {
             wideSide = 'limit-height';

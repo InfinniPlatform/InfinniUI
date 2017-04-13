@@ -7,8 +7,7 @@ var ImageBoxModel = ControlModel.extend( _.extend({
 
     defaults: _.defaults({
             text: localized.strings.ImageBox.chooseImage,
-            currentWideSide: null,
-            rotatedSide: null
+            currentWideSide: null
         },
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults
