@@ -13,10 +13,26 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
     },
 
     applyMetadata: function (params) {
+        var element = params.element;
+        var metadata = params.metadata;
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
         this._initKeySelector(params);
         this._initParentSelector(params);
+
+        if( metadata.OnExpand ) {
+            var onExpandExecutor = function( item ) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnExpand, { item: item });
+            };
+            element.setOnExpand(onExpandExecutor);
+        }
+
+        if( metadata.OnCollapse ) {
+            var onCollapseExecutor = function( item ) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCollapse, { item: item });
+            };
+            element.setOnCollapse(onCollapseExecutor);
+        }
     },
 
     _initKeySelector: function (params) {

@@ -97,6 +97,8 @@ var TreeViewView = ListEditorBaseView.extend({
 
                     view.listenTo(node, 'select', view.onSelectNodeHandler.bind(view, item, node));
                     view.listenTo(node, 'check', view.onCheckNodeHandler.bind(view, item, node));
+                    view.listenTo( node, 'expand', view.onExpandNodeHandler.bind( view, item ) );
+                    view.listenTo( node, 'collapse', view.onCollapseNodeHandler.bind( view, item ) );
 
                     node.setItemContent($item);
                     var key = keySelector(null, {value: item}),
@@ -241,7 +243,6 @@ var TreeViewView = ListEditorBaseView.extend({
     },
 
     toggleNode: function( key ) {
-
         var item = this.itemsMap.get(key);
 
         if (!item) {
@@ -255,7 +256,6 @@ var TreeViewView = ListEditorBaseView.extend({
             var toggle = collapsed ? this.expandNode : this.collapseNode;
             toggle.call(this, key);
         }
-
     },
 
     expandNode: function( key ) {
@@ -284,6 +284,24 @@ var TreeViewView = ListEditorBaseView.extend({
         nodes.reverse().forEach(function (node) {
             node.expand();
         });
+    },
+
+    onExpandNodeHandler: function( item ) {
+        var model = this.model;
+        var onExpandNode = model.get( 'onExpand' );
+
+        if( onExpandNode ) {
+            onExpandNode( item );
+        }
+    },
+
+    onCollapseNodeHandler: function( item ) {
+        var model = this.model;
+        var onCollapseNode = model.get( 'onCollapse' );
+
+        if( onCollapseNode ) {
+            onCollapseNode( item );
+        }
     }
 
 
