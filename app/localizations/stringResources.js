@@ -22,6 +22,10 @@ InfinniUI.localizations['ru-RU'].strings = {
         "agree": "Да",
         "disagree": "Нет",
         "cancel": "Закрыть"
+    },
+
+    ComboBox: {
+        "noItemsMessage": "По запросу \"<span class=\"search-message\"></span>\" ничего не найдено"
     }
 };
 
@@ -49,5 +53,9 @@ InfinniUI.localizations['en-US'].strings = {
         "agree": "Yes",
         "disagree": "No",
         "cancel": "Close"
+    },
+
+    ComboBox: {
+        "noItemsMessage": "\"<span class=\"search-message\"></span>\" not found"
     }
 };
