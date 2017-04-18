@@ -54,10 +54,6 @@ var exifRotate = {
             }
         };
 
-        if( !file || typeof file === 'string' ) {
-            return file;
-        } else {
-            fileReader.readAsArrayBuffer( file );
-        }
+        fileReader.readAsArrayBuffer( file );
     }
 };
