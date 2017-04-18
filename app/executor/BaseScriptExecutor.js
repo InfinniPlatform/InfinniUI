@@ -9,7 +9,7 @@ function BaseScriptExecutor(view, scriptFactory) {
             script = scriptFactory.get();
         }
 
-        script.call(null, context, args)
+        return script.call(null, context, args)
     }
 
 }
