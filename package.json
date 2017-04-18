@@ -1,5 +1,6 @@
 {
   "name": "infinni-ui",
+  "version": "",
   "devDependencies": {
     "backbone": "1.1.2",
     "block-ui": "2.70.1",

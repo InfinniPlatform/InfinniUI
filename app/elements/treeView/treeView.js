@@ -70,6 +70,38 @@ TreeView.prototype.toggle = function( key ) {
     this.control.toggle(key);
 };
 
+/**
+ *
+ * @returns {Function}
+ */
+TreeView.prototype.getOnExpand = function () {
+    return this.control.get('onExpand');
+};
+
+/**
+ *
+ * @param {Function} callback
+ */
+TreeView.prototype.setOnExpand = function (callback) {
+    this.control.set('onExpand', callback);
+};
+
+/**
+ *
+ * @returns {Function}
+ */
+TreeView.prototype.getOnCollapse = function () {
+    return this.control.get('onCollapse');
+};
+
+/**
+ *
+ * @param {Function} callback
+ */
+TreeView.prototype.setOnCollapse = function (callback) {
+    this.control.set('onCollapse', callback);
+};
+
 
 
 

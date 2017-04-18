@@ -13,10 +13,26 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
     },
 
     applyMetadata: function (params) {
+        var element = params.element;
+        var metadata = params.metadata;
         var data = ListEditorBaseBuilder.prototype.applyMetadata.call(this, params);
 
         this._initKeySelector(params);
         this._initParentSelector(params);
+
+        if( metadata.OnExpand ) {
+            var onExpandExecutor = function( item ) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnExpand, { item: item });
+            };
+            element.setOnExpand(onExpandExecutor);
+        }
+
+        if( metadata.OnCollapse ) {
+            var onCollapseExecutor = function( item ) {
+                new ScriptExecutor(element.getScriptsStorage()).executeScript(metadata.OnCollapse, { item: item });
+            };
+            element.setOnCollapse(onCollapseExecutor);
+        }
     },
 
     _initKeySelector: function (params) {
@@ -27,7 +43,7 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         if (metadata.KeySelector) {
             keySelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.KeySelector.Name || metadata.KeySelector, args)
+                return scriptExecutor.executeScript( metadata.KeySelector, args );
             }
         } else if (metadata.KeyProperty) {
             keySelector = function (context, args) {
@@ -49,7 +65,7 @@ _.extend(TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         if (metadata.ParentSelector) {
             parentSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.ParentSelector.Name || metadata.ParentSelector, args)
+                return scriptExecutor.executeScript( metadata.ParentSelector, args );
             }
         } else if (metadata.ParentProperty) {
             parentSelector = function (context, args) {

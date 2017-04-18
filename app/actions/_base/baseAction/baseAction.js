@@ -9,7 +9,7 @@ window.InfinniUI.BaseAction = BaseAction;
 
 _.extend(BaseAction.prototype, {
     defaults: {
-
+        canExecute: null
     },
 
     setProperty: function(name, value){

@@ -59,12 +59,4 @@ _.extend(ImageBox.prototype, {
         }
     }
 
-    //setUrl: function (value) {
-    //    this.control.set('url', value);
-    //},
-    //
-    //getUrl: function () {
-    //    return this.control.get('url');
-    //}
-
 }, editorBaseMixin);

@@ -314,6 +314,10 @@ _.extend(View.prototype,
         },
 
         getDeferredOfMember: function(memberName){
+            if( memberName === 'LocalStorageDS' ) {
+                return $.Deferred().resolve( window.InfinniUI.localStorageDataSource );
+            }
+
             if(! (memberName in this.membersDeferreds) ){
                 this.membersDeferreds[memberName] = $.Deferred();
 

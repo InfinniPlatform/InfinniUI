@@ -278,9 +278,7 @@ describe('Container (Control)', function () {
 
                     StackPanel: {
                         Name: 'MainViewPanel',
-                        "ItemSelector":{
-                            Name: 'GetTitle'
-                        },
+                        "ItemSelector": "GetTitle",
                         "Items" : {
                             "Source": "ObjectDataSource1",
                             "Property": ""
@@ -724,9 +722,7 @@ describe('Container (Control)', function () {
                         "Property": ""
                     },
 
-                    "ItemComparator": {
-                        "Name": "IdComparator"
-                    }
+                    "ItemComparator": "IdComparator"
                 }
             }],
 

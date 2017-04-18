@@ -133,7 +133,7 @@ _.extend(ContainerBuilder.prototype, {
         if (metadata.GroupValueSelector) {
             groupValueSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.GroupValueSelector.Name || metadata.GroupValueSelector, args)
+                return scriptExecutor.executeScript( metadata.GroupValueSelector, args);
             };
         } else if (metadata.GroupValueProperty) {
             groupValueSelector = function (context, args) {
@@ -236,7 +236,7 @@ _.extend(ContainerBuilder.prototype, {
 
             binding.setConverter({
                 toElement: function (_context, _args) {
-                    return scriptExecutor.executeScript(itemSelectorMetadata.Name || itemSelectorMetadata, _args);
+                    return scriptExecutor.executeScript( itemSelectorMetadata, _args );
                 }
             });
 
@@ -320,7 +320,7 @@ _.extend(ContainerBuilder.prototype, {
 
         if(metadata.ItemComparator){
             itemComparator = function (item1, item2) {
-                return scriptExecutor.executeScript(metadata.ItemComparator.Name || metadata.ItemComparator, {item1: item1, item2: item2});
+                return scriptExecutor.executeScript( metadata.ItemComparator, {item1: item1, item2: item2});
             };
         }
 
@@ -338,27 +338,29 @@ _.extend(ContainerBuilder.prototype, {
                 var items = element.getItems(),
                     isCollectionChanged;
 
-                if(!element.isRemoved) {
-                    if (itemComparator) {
+                if( element.isRemoved ) {
+                    console.log( 'if you see it, something got wrong with UI-2587' );
+                }
 
-                        isCollectionChanged = items.set(value, true);
+                if (itemComparator) {
 
-                        items.forEach(function (item, index, collection) {
-                            collection.setProperty(index, 'bindingIndex', index);
-                        });
+                    isCollectionChanged = items.set(value, true);
 
-                        if (isCollectionChanged) {
-                            items.sort(itemComparator);
-                        }
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
 
-                    } else {
-
-                        isCollectionChanged = items.set(value);
-
-                        items.forEach(function (item, index, collection) {
-                            collection.setProperty(index, 'bindingIndex', index);
-                        });
+                    if (isCollectionChanged) {
+                        items.sort(itemComparator);
                     }
+
+                } else {
+
+                    isCollectionChanged = items.set(value);
+
+                    items.forEach(function (item, index, collection) {
+                        collection.setProperty(index, 'bindingIndex', index);
+                    });
                 }
 
             },

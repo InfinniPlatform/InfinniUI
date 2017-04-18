@@ -123,6 +123,68 @@ describe('ComboBox', function () {
             }
         });
 
+        it('Set info message in dropdown', function () {
+            // Given
+            var metadata = {
+                "DataSources": [
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDS1",
+                            "Items": [
+                                {"Id": 1, "Display": "LTE", "State": "New"},
+                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
+                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            ]
+                        }
+                    },
+                    {
+                        ObjectDataSource: {
+                            "Name": "ObjectDS2",
+                            "Items": []
+                        }
+                    }
+                ],
+                "Items": [
+                    {
+                        "ComboBox": {
+                            "Name": "ComboBoxInfoMessage",
+                            "Autocomplete": true,
+                            "Value": {
+                                "Source": "ObjectDS1",
+                                "Property": "$.State"
+                            },
+                            "Items": {
+                                "Source": "ObjectDS2",
+                                "Property": ""
+                            }
+                        }
+                    }
+                ]
+            };
+
+
+            // When
+            testHelper.applyViewMetadata( metadata, onViewReady );
+
+            // Then
+            function onViewReady( view, $layout ) {
+                $layout.detach();
+                var comboBox = view.context.controls[ 'ComboBoxInfoMessage' ];
+                var $gripBtn = $layout.find( '.pl-combobox__grip' );
+
+                $gripBtn.click();
+                var $noItemsMesage = $( '.pl-combobox-items-empty' );
+
+                assert.equal( $noItemsMesage.find( '.search-message' ).length, 1);
+
+                comboBox.setNoItemsMessage( 'Ask something' );
+                assert.equal( $noItemsMesage.text(), 'Ask something' );
+
+                comboBox.setNoItemsMessage( 'Ask something else' );
+                assert.equal( $noItemsMesage.text(), 'Ask something else' );
+            }
+        });
+
         it('ValueSelector multiselect', function () {
             // Given
             var metadata = {

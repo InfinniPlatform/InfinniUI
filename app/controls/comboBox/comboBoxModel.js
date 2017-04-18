@@ -1,6 +1,7 @@
 var ComboBoxModel = ListEditorBaseModel.extend({
 
     defaults: _.defaults({
+        noItemsMessage: null,
         showClear: true,
         autocomplete: false,
         autocompleteValue: '',
@@ -116,5 +117,9 @@ var ComboBoxModel = ListEditorBaseModel.extend({
         var value = this.valueByItem(item);
         this.toggleValue(value, toggle);
         this.trigger('toggle');
+    },
+
+    setNoItemsMessage: function( message ) {
+        this.set( 'noItemsMessage', message );
     }
 });

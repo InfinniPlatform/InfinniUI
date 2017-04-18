@@ -12,6 +12,10 @@ _.extend(ComboBoxControl.prototype, {
 
     createControlView: function (model) {
         return new ComboBoxView({model: model});
+    },
+
+    setNoItemsMessage: function( message ) {
+        this.controlModel.setNoItemsMessage( message );
     }
 });
 

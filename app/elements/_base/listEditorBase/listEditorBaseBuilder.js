@@ -90,7 +90,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
         if (metadata.ValueSelector) {
             valueSelector = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(params.element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.ValueSelector.Name || metadata.ValueSelector, args)
+                return scriptExecutor.executeScript( metadata.ValueSelector, args );
             };
         } else if (metadata.ValueProperty) {
             valueSelector = function (context, args) {
@@ -112,7 +112,7 @@ _.extend(ListEditorBaseBuilder.prototype, {
         if (metadata.DisabledItemCondition) {
             disabledItemCondition = function (context, args) {
                 var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
-                return scriptExecutor.executeScript(metadata.DisabledItemCondition.Name || metadata.DisabledItemCondition, args)
+                return scriptExecutor.executeScript( metadata.DisabledItemCondition, args );
             };
         }
 

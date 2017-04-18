@@ -5,6 +5,7 @@ if(InfinniUI.config.configName != null) {
 moment.locale(InfinniUI.config.lang && InfinniUI.config.lang.substr(0,2));
 
 InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
+InfinniUI.providerRegister.register('LocalStorageDataSource', InfinniUI.Providers.LocalStorageDataProvider);
 
 InfinniUI.providerRegister.register('MetadataDataSource', function (args) {
     var applicationContainer = args.applicationView && args.applicationView.getContainer();

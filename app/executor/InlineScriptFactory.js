@@ -19,7 +19,7 @@ function InlineScriptFactory(scriptBody, builder, builderParams) {
         var script = builder.buildType('Script', scriptMetadata, scriptBuilderParams);
 
         return function (context, args) {
-            script.call(null, context, args);
+            return script.call(null, context, args);
         }
     }
     

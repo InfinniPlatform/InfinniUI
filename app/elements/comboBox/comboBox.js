@@ -54,3 +54,7 @@ ComboBox.prototype.setAutocompleteValue = function (value) {
     this.control.set('autocompleteValue', value);
 };
 
+ComboBox.prototype.setNoItemsMessage = function ( value ) {
+    this.control.setNoItemsMessage( value );
+};
+

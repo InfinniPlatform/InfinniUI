@@ -108,4 +108,63 @@ describe('OpenAction', function () {
             view.close();
         });
     });
+
+    it('should open view after confirmation received', function (done) {
+        // Given
+        var metadata = {
+            "Text": 'Parent View',
+            "Items": [{
+
+                "Button": {
+                    "Name": "OpenViewButton",
+                    "Action": {
+                        "OpenAction": {
+                            "LinkView": {
+                                "InlineView": {
+                                    "View": {
+                                        "Text": "Child View",
+                                        "Name": "ChildView"
+                                    },
+                                    "OpenMode": "Dialog"
+                                }
+                            },
+                            "CanExecute": "{ return window.actionCanExecute( context, args ); }"
+                        }
+                    }
+                }
+            }]
+        };
+
+        window.actionCanExecute = function( context, args ) {
+            return new Promise( function( resolve, reject ) {
+                setTimeout( function() {
+                    resolve( true );
+                }, 10);
+            } );
+        };
+
+        testHelper.applyViewMetadata(metadata, function( view ){
+            var btn = view.context.controls['OpenViewButton'];
+
+            // When
+            btn.click();
+
+            var childView = view.context.controls[ 'ChildView' ];
+            assert.isUndefined( childView );
+
+            setTimeout( function() {
+                // Then
+                childView = view.context.controls[ 'ChildView' ];
+                var viewIsOpened = childView.isLoaded();
+
+                assert.isTrue( viewIsOpened );
+                childView.close();
+
+                done();
+                view.close();
+
+            }, 50 );
+        });
+    });
+
 });

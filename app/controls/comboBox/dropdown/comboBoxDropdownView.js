@@ -11,8 +11,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
         items: '.pl-combobox-items',
         filter: '.pl-combobox-filter',
         text: '.pl-combobox-filter-text',
-        noItems: '.pl-combobox-items-empty',
-        search: '.pl-combobox-items-empty > span'
+        noItems: '.pl-combobox-items-empty'
     },
 
     initialize: function () {
@@ -24,6 +23,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
             this.strategy = new ComboBoxPlainViewStrategy(this);
         }
 
+        this.listenTo( this.model, 'change:noItemsMessage', this.updateNoItemsMessage );
         this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
         this.listenTo(this.model, 'change:autocompleteValue', this.onChangeSearchHandler);
         this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
@@ -42,6 +42,13 @@ var ComboBoxDropdownView = Backbone.View.extend({
 
     updateProperties: function () {
         this.updateAutocomplete();
+        this.updateNoItemsMessage();
+    },
+
+    updateNoItemsMessage: function() {
+        var model = this.model;
+        var noItemsMessage = model.get( 'noItemsMessage' ) || localized.strings.ComboBox.noItemsMessage;
+        this.ui.noItems.html( noItemsMessage );
     },
 
     render: function () {
@@ -242,8 +249,11 @@ var ComboBoxDropdownView = Backbone.View.extend({
         }
     },
 
-    onChangeSearchHandler: function (model, value) {
-        this.ui.search.text(value);
+    onChangeSearchHandler: function ( model, value ) {
+        var search = this.ui.noItems.find( '.search-message' );
+        if( search.length ) {
+            search.text( value );
+        }
     },
 
     onChangeSelectedItem: function (model, value) {

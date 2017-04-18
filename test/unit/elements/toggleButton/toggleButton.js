@@ -72,12 +72,8 @@ describe('ToggleButton', function () {
             var toggleButton = new InfinniUI.ToggleButtonBuilder();
             var view = new InfinniUI.View();
             var metadata = {
-                OnValueChanged:{
-                    Name: 'OnValueChanged'
-                },
-                OnLoaded:{
-                    Name: 'OnLoaded'
-                }
+                OnValueChanged: 'OnValueChanged',
+                OnLoaded: 'OnLoaded'
             };
 
             var events = {

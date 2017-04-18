@@ -93,12 +93,8 @@ describe('NumericBox', function () {
             var view = new InfinniUI.View();
             var metadata = {
                 "NumericBox": {
-                    OnValueChanged:{
-                        Name: 'OnValueChanged'
-                    },
-                    OnLoaded:{
-                        Name: 'OnLoaded'
-                    }
+                    OnValueChanged: 'OnValueChanged',
+                    OnLoaded: 'OnLoaded'
                 }
             };
             var scripts = view.getScripts();

@@ -121,6 +121,10 @@ var editorBaseBuilderMixin = {
                     text = getTextForItems(result.Items);
                 }
                 element.setErrorText(text);
+            }, element);
+
+            element.onRemove(function(context, args) {
+                source.offErrorValidator(element);
             });
         }
 

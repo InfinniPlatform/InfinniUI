@@ -57,12 +57,8 @@ describe('TextBox', function () {
             var view = new InfinniUI.View();
             var metadata = {
                 "TextBox": {
-                    OnValueChanged:{
-                        Name: 'OnValueChanged'
-                    },
-                    OnLoaded:{
-                        Name: 'OnLoaded'
-                    }
+                    OnValueChanged: 'OnValueChanged',
+                    OnLoaded: 'OnLoaded'
                 }
             };
             var events = {
