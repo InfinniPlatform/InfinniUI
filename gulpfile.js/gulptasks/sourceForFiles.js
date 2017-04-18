@@ -134,8 +134,7 @@ var sourceForFiles = {
 		'node_modules/signalr/jquery.signalR.min.js'
 	],
 	templateFiles: [
-		"app/**/*.tpl.html",
-		"extensions/**/*.tpl.html"
+		'app/**/*.tpl.html'
 	],
 	unitTestFiles: [
 		'app/utils/strict.js',
