@@ -2,9 +2,8 @@ window.InfinniUI = window.InfinniUI || {};
 window.InfinniUI.config = window.InfinniUI.config || {};
 window.InfinniUI.config.lang = 'en-US';
 
-// перекрываем дефолтные конфиги, лежащие в InfinniUI/app/config.js
-
-window.InfinniUI.config.cacheMetadata = false;
+// override default configs located in InfinniUI/app/config.js
+// window.InfinniUI.config.cacheMetadata = true;
 window.InfinniUI.config.serverUrl = 'http://' + window.location.host;
 window.InfinniUI.config.configName = 'test';
 
