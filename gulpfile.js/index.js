@@ -22,7 +22,6 @@ gulp.task('build', gulp.parallel(
 	'build:less',
 	'concat:vendor-js',
 	'concat:vendor-styles',
-	'concat:unit-tests',
 	'copy:fonts'
 ));
 
@@ -43,11 +42,7 @@ gulp.task('watch', function() {
 
 gulp.task('run:tests', gulp.series(
 	'build',
-	'server:tests'
-));
-
-gulp.task('run:dev', gulp.series(
-	'build',
+	'concat:unit-tests',
 	gulp.parallel('watch', 'server:tests')
 ));
 
@@ -57,8 +52,7 @@ gulp.task('default', function(cb) {
 							help +
 							'- gulp build\n' +
 							'- gulp build:prod\n' +
-							'- gulp run:tests\n' +
-							'- gulp run:dev'
+							'- gulp run:tests'
 							);
 	cb();
 });

@@ -49,7 +49,7 @@ var sourceForTasks = {
 	'concat:unit-tests': {
 		src: sourceForFiles.unitTestFiles,
 		finalName: "unitTest.js",
-		dest: sourceForFiles.platformOutputFolder,
+		dest: "./test/unit/dist/",
 		taskPath: "./gulptasks/concatFiles"
 	},
 	'copy:fonts': {
