@@ -2,6 +2,10 @@ if(InfinniUI.config.configName != null) {
     document.title = InfinniUI.config.configName;
 }
 
+if( InfinniUI.config.cacheMetadata === false ) {
+    $.ajaxSetup( { cache: false } );
+}
+
 moment.locale(InfinniUI.config.lang && InfinniUI.config.lang.substr(0,2));
 
 InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
