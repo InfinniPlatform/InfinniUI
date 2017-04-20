@@ -1,4 +1,5 @@
 var ControlModel = Backbone.Model.extend( {
+
     defaults: {
         text: null,
         name: null,
@@ -29,7 +30,7 @@ var ControlModel = Backbone.Model.extend( {
             defaults = this.defaults,
             attrs;
 
-        if( key === null ) return this;
+        if( key === null || typeof key === 'undefined' ) return this;
         if( typeof key === 'object' ) {
             attrs = key;
             options = val;

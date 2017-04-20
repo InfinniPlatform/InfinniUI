@@ -12,7 +12,7 @@ DataBindingBuilder.prototype.build = function( context, args ) {
     var scriptName;
 
 
-    if( metadata.Source === null ) {
+    if( metadata.Source === null || typeof metadata.Source === 'undefined' ) {
         logger.error( 'DataBindingBuilder: не указан источник.' );
         throw new Error( 'DataBindingBuilder: not declared source in DataBinding metadata.' );
     }

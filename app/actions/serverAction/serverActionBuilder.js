@@ -32,7 +32,7 @@ _.extend( ServerActionBuilder.prototype, BaseActionBuilderMixin, BaseFallibleAct
 
                 var value = metadata.Params[ name ];
 
-                if( Array.isArray( value ) || value === null || typeof value != 'object' ) {
+                if( Array.isArray( value ) || value === null || typeof value !== 'object' ) {
                     if( value !== undefined ) {
                         action.setParam( name, value );
                     }

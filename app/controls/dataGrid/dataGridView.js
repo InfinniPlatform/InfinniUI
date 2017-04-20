@@ -166,7 +166,7 @@ var DataGridView = ListEditorBaseView.extend( {
         var disabledItemCondition = model.get( 'disabledItemCondition' );
         var isEnabled;
 
-        if( disabledItemCondition !== null ) {
+        if( disabledItemCondition !== null && typeof disabledItemCondition !== 'undefined' ) {
             this.rowElements.forEach( function( rowElement, item ) {
                 isEnabled = !disabledItemCondition( undefined, { value: item } );
                 if( rowElement.getSelected() === item && isEnabled === false ) {
@@ -183,6 +183,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
     updateEnabled: function() {
         var isEnabled = this.model.get( 'enabled' );
+
         if( isEnabled ) {
             this.updateDisabledItem();
         } else {
