@@ -1,46 +1,46 @@
 describe( 'LocalStorageDataSource', function() {
     var items = [
         {
-            "_id": '1',
-            "FirstName": "Иван",
-            "LastName": "Иванов"
+            '_id': '1',
+            'FirstName': 'Иван',
+            'LastName': 'Иванов'
         },
         {
-            "_id": '2',
-            "FirstName": "Петр",
-            "LastName": "Петров"
+            '_id': '2',
+            'FirstName': 'Петр',
+            'LastName': 'Петров'
         },
         {
-            "_id": '3',
-            "FirstName": "Иван1",
-            "LastName": "Иванов1"
+            '_id': '3',
+            'FirstName': 'Иван1',
+            'LastName': 'Иванов1'
         },
         {
-            "_id": '4',
-            "FirstName": "Петр2",
-            "LastName": "Петров2"
+            '_id': '4',
+            'FirstName': 'Петр2',
+            'LastName': 'Петров2'
         },
         {
-            "_id": '5',
-            "FirstName": "Иван3",
-            "LastName": "Иванов3"
+            '_id': '5',
+            'FirstName': 'Иван3',
+            'LastName': 'Иванов3'
         },
         {
-            "_id": '6',
-            "FirstName": "Петр4",
-            "LastName": "Петров5"
+            '_id': '6',
+            'FirstName': 'Петр4',
+            'LastName': 'Петров5'
         },
         {
-            "_id": '10',
-            "FirstName": "Анна",
-            "LastName": "Сергеева"
+            '_id': '10',
+            'FirstName': 'Анна',
+            'LastName': 'Сергеева'
 
         }
     ];
 
-    window.InfinniUI.localStorageDataSource = new window.InfinniUI.LocalStorageDataSource({
+    window.InfinniUI.localStorageDataSource = new window.InfinniUI.LocalStorageDataSource( {
         view: fakeView()
-    });
+    } );
 
     function createLocalStorageDataSource( onItemsUpdated ) {
         // clear LocalStorage
@@ -149,9 +149,9 @@ describe( 'LocalStorageDataSource', function() {
 
                 //When
                 var newItemData = {
-                    "_id": '1',
-                    "FirstName": "Ивано",
-                    "LastName": "Иванович"
+                    '_id': '1',
+                    'FirstName': 'Ивано',
+                    'LastName': 'Иванович'
                 };
                 dataSource.setProperty( '$', newItemData );
 
@@ -317,20 +317,19 @@ describe( 'LocalStorageDataSource', function() {
             };
 
 
-
-            testHelper.applyViewMetadata(metadata1, function(view) {
+            testHelper.applyViewMetadata( metadata1, function( view ) {
                 view1 = view;
 
-                testHelper.applyViewMetadata(metadata2, function(view) {
+                testHelper.applyViewMetadata( metadata2, function( view ) {
                     view2 = view;
 
-                    var label1 = view1.context.controls["Label1"];
-                    var label2 = view2.context.controls["Label2"];
+                    var label1 = view1.context.controls[ 'Label1' ];
+                    var label2 = view2.context.controls[ 'Label2' ];
 
                     label1.setValue( 'Валера' );
 
-                    assert.equal(label2.getValue(), 'Валера', 'second label updated value');
-                    assert.equal(label1.getValue(), label2.getValue(), 'labels have equal values');
+                    assert.equal( label2.getValue(), 'Валера', 'second label updated value' );
+                    assert.equal( label1.getValue(), label2.getValue(), 'labels have equal values' );
 
                     view1.close();
                     view2.close();
@@ -338,8 +337,8 @@ describe( 'LocalStorageDataSource', function() {
                     localStorage.clear();
 
                     done();
-                });
-            });
+                } );
+            } );
 
         } );
     } );

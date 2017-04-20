@@ -19,13 +19,13 @@ describe( 'ValidationResult', function() {
     it( 'should validate required properties', function( done ) {
         // Given
         var metadata = {
-            "Text": 'Parent View',
-            "DataSources": [
+            'Text': 'Parent View',
+            'DataSources': [
                 {
-                    "ObjectDataSource": {
-                        "Name": "ObjectDataSource",
-                        "ValidationErrors": "{ return window.InfinniUI.validateItems( context, args ) }",
-                        "Items": []
+                    'ObjectDataSource': {
+                        'Name': 'ObjectDataSource',
+                        'ValidationErrors': '{ return window.InfinniUI.validateItems( context, args ) }',
+                        'Items': []
                     }
                 }
             ]
@@ -47,7 +47,7 @@ describe( 'ValidationResult', function() {
                 }
                 return validationResult;
             };
-            var destinationDS = view.context.dataSources['ObjectDataSource'];
+            var destinationDS = view.context.dataSources[ 'ObjectDataSource' ];
             var item = {
                 _id: 1,
                 name: 'Name',

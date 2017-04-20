@@ -1,5 +1,5 @@
-describe('ScrollPanelBuilder', function () {
-    it('should build', function () {
+describe( 'ScrollPanelBuilder', function() {
+    it( 'should build', function() {
 
         //Given
         var metadata = {
@@ -11,10 +11,10 @@ describe('ScrollPanelBuilder', function () {
         var applicationBuilder = new InfinniUI.ApplicationBuilder();
 
         //When
-        var scrollPanel = applicationBuilder.build(metadata, {});
+        var scrollPanel = applicationBuilder.build( metadata, {} );
 
         //Then
-        assert.isObject(scrollPanel, 'scrollPanel');
-    });
+        assert.isObject( scrollPanel, 'scrollPanel' );
+    } );
 
-});
+} );
