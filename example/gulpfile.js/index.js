@@ -17,15 +17,17 @@ for(var key in sourceForTasks) {
 }
 
 gulp.task('build', gulp.parallel(
-		gulp.series('copy:platform', 'override:less'),
-		'build:js'
+		gulp.series('copy:platform', 'build:platform-less'),
+		'build:js',
+		'build:less'
 ));
 
 gulp.task('watch', function() {
-	watch(sourceForTasks['copy:platform'].src, gulp.series('copy:platform', 'override:less'));
-	watch(sourceForTasks['override:less'].srcForWatch, gulp.series('override:less'));
+	watch(sourceForTasks['copy:platform'].src, gulp.series('copy:platform', 'build:platform-less'));
+	watch(sourceForTasks['build:platform-less'].srcForWatch, gulp.series('build:platform-less'));
 	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
 	watch(sourceForTasks['build:js'].templateSrc, gulp.series('build:js'));
+	watch(sourceForTasks['build:less'].srcForWatch, gulp.series('build:less'));
 });
 
 gulp.task('example', gulp.series(

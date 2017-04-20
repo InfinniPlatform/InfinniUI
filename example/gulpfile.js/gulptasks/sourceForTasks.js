@@ -25,18 +25,17 @@ var sourceForTasks = {
 		src: projectFolderForPlatform,
 		taskPath: "./gulptasks/clean"
 	},
-	'override:less': {
-		src: infinniUIpath + stylesFile,
-		changedVariables: {
-			"pl-override-platform-variables-path": '../..' + fromInfinniToNewStylesPath + 'platform-variables.less',
-			"pl-override-bootstrap-variables-path": '../..' + fromInfinniToNewStylesPath + 'bootstrap-variables.less',
-			"pl-bootstrap-theme-path": '../..' + fromInfinniToNewStylesPath + 'bootstrap-theme.less',
-			"pl-extension-path": '../..' + fromInfinniToNewStylesPath + 'extensions.less'
-		},
+	'build:less': {
+		src: "./styles/main.less",
 		srcForWatch: "./styles/",
-		finalName: "main.css",
-		dest: projectFolderForPlatform + "css/",
-		taskPath: "./gulptasks/overrideLess"
+		dest: "./www/compiled/style",
+		taskPath: "./gulptasks/buildLess"
+	},
+	'build:platform-less': {
+		src: "./styles/platform/overridden-platform.less",
+		srcForWatch: "./styles/platform/",
+		dest: "./www/compiled/style",
+		taskPath: "./gulptasks/buildLess"
 	},
 	'copy:platform': {
 		src: [infinniUIpath + platformOutputFolder + '**/*.*', '!' + infinniUIpath + platformOutputFolder + 'unitTest.js'],
