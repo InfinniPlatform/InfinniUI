@@ -1,9 +1,9 @@
 'use strict';
 // Необходимо указать путь до платфомы в bower_components
-var infinniUIpath = './bower_components/infinni-ui/';
+var infinniUIpath = '..';
 
 // Путь из infinniUIpath к прикладным стилям
-var fromInfinniToNewStylesPath = '/../../styles/';
+var fromInfinniToNewStylesPath = '/example/styles/';
 
 // Путь до папки-результата
 var projectRootFolder = './www/';

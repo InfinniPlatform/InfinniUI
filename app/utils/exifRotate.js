@@ -12,7 +12,7 @@ var exifRotate = {
         var bytes = new Uint8Array( buffer );
         var len = bytes.byteLength;
         for( var i = 0; i < len; i++ ) {
-            binary += String.fromCharCode( bytes[ i ] )
+            binary += String.fromCharCode( bytes[ i ] );
         }
         return window.btoa( binary );
     },
@@ -21,7 +21,7 @@ var exifRotate = {
         var that = this;
         var fileReader = new FileReader();
         fileReader.onloadend = function() {
-            var base64img = "data:" + file.type + ";base64," + that._arrayBufferToBase64( fileReader.result );
+            var base64img = 'data:' + file.type + ';base64,' + that._arrayBufferToBase64( fileReader.result );
             var scanner = new DataView( fileReader.result );
             var idx = 0;
             var value = 1; // Non-rotated is the default
@@ -47,6 +47,8 @@ var exifRotate = {
                         value = scanner.getUint16( idx + 6, false );
                         maxBytes = 0; // Stop scanning
                         break;
+                    default:
+                        break;
                 }
             }
             if( callback ) {
@@ -56,4 +58,5 @@ var exifRotate = {
 
         fileReader.readAsArrayBuffer( file );
     }
+
 };

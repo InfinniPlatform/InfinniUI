@@ -14,7 +14,7 @@ _.extend( CreateItemActionBuilder.prototype,
                 action.setProperty( 'destinationSource', metadata.DestinationValue.Source );
                 action.setProperty( 'destinationDataSource', context.dataSources[ metadata.DestinationValue.Source ] );
 
-                var destinationProperty = (args.basePathOfProperty != null) ?
+                var destinationProperty = ( args.basePathOfProperty !== null ) ?
                     args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
                     metadata.DestinationValue.Property;
 

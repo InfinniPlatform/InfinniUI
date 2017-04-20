@@ -1,45 +1,45 @@
-function FormControl(parent) {
-	_.superClass(FormControl, this, parent);
+function FormControl( parent ) {
+    _.superClass( FormControl, this, parent );
 }
 
-_.inherit(FormControl, StackPanelControl);
+_.inherit( FormControl, StackPanelControl );
 
-_.extend(FormControl.prototype, {
+_.extend( FormControl.prototype, {
 
-	createControlModel: function () {
-		return new FormModel();
-	},
+    createControlModel: function() {
+        return new FormModel();
+    },
 
-	createControlView: function (model) {
-		return new FormView({model: model});
-	},
+    createControlView: function( model ) {
+        return new FormView( { model: model } );
+    },
 
-	onSubmit: function (callback) {
-		this.controlView.$el.on('submit', callback);
-	},
+    onSubmit: function( callback ) {
+        this.controlView.$el.on( 'submit', callback );
+    },
 
-	setSubmitFunction: function(func) {
-		this.controlModel.set('submitFunction', func);
-	},
+    setSubmitFunction: function( func ) {
+        this.controlModel.set( 'submitFunction', func );
+    },
 
-	getSubmitFunction: function() {
-		return this.controlModel.get('submitFunction');
-	},
+    getSubmitFunction: function() {
+        return this.controlModel.get( 'submitFunction' );
+    },
 
-	setMethod: function(method) {
-		this.controlModel.set('method', method);
-	},
+    setMethod: function( method ) {
+        this.controlModel.set( 'method', method );
+    },
 
-	getMethod: function() {
-		 return this.controlModel.get('method');
-	},
+    getMethod: function() {
+        return this.controlModel.get( 'method' );
+    },
 
-	setAction: function(action) {
-		this.controlModel.set('action', action);
-	},
+    setAction: function( action ) {
+        this.controlModel.set( 'action', action );
+    },
 
-	getAction: function() {
-		 return this.controlModel.get('action');
-	}
+    getAction: function() {
+        return this.controlModel.get( 'action' );
+    }
 
-});
+} );

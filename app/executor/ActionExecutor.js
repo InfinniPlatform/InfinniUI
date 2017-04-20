@@ -4,19 +4,17 @@
  * @return {Function}
  * @constructor
  */
-function ActionExecutor(actionFactory) {
-
+function ActionExecutor( actionFactory ) {
     var action = null;
 
     return function() {
-
-        if (action === null) {
+        if( action === null ) {
             action = actionFactory.get();
         }
 
-        var cb = Array.prototype.filter.call(arguments, function( arg ) {
-            return typeof arg === 'function'
-        }).pop();
+        var cb = Array.prototype.filter.call( arguments, function( arg ) {
+            return typeof arg === 'function';
+        } ).pop();
 
         var canExecute = action.getProperty( 'canExecute' );
         if( canExecute ) {
@@ -28,14 +26,11 @@ function ActionExecutor(actionFactory) {
                 } )
                 .then( function( result ) {
                     if( result ) {
-                        action.execute.call(action, cb);
+                        action.execute.call( action, cb );
                     }
                 } );
         } else {
-            action.execute.call(action, cb);
+            action.execute.call( action, cb );
         }
-
-
-    }
-
+    };
 }

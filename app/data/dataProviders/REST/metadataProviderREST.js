@@ -1,8 +1,7 @@
-function MetadataProviderREST(metadataUrlConstructor, successCallback, failCallback) {
-
-    this.getMetadata = function (resultCallback) {
+function MetadataProviderREST( metadataUrlConstructor, successCallback, failCallback ) {
+    this.getMetadata = function( resultCallback ) {
         var data = metadataUrlConstructor.constructMetadataRequest();
-        new RequestExecutor(resultCallback,successCallback,failCallback, this.cache).makeRequest(data);
+        new RequestExecutor( resultCallback, successCallback, failCallback, this.cache ).makeRequest( data );
     };
 }
 

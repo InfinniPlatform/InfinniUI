@@ -3,47 +3,47 @@
  * @augments ContainerBuilder
  */
 function PopupButtonBuilder() {
-    _.superClass(PopupButtonBuilder, this);
+    _.superClass( PopupButtonBuilder, this );
 }
 
 window.InfinniUI.PopupButtonBuilder = PopupButtonBuilder;
 
-_.inherit(PopupButtonBuilder, ContainerBuilder);
+_.inherit( PopupButtonBuilder, ContainerBuilder );
 
-_.extend(PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype */{
+_.extend( PopupButtonBuilder.prototype, /** @lends PopupButtonBuilder.prototype */{
 
-    createElement: function (params) {
-        var viewMode = this.detectViewMode(params);
-        return new PopupButton(params.parent, viewMode);
+    createElement: function( params ) {
+        var viewMode = this.detectViewMode( params );
+        return new PopupButton( params.parent, viewMode );
     },
 
-    detectViewMode: function(params){
-        var viewMode = params.metadata['ViewMode'];
+    detectViewMode: function( params ) {
+        var viewMode = params.metadata[ 'ViewMode' ];
         var el = params.parent;
         var exit = false;
 
-        if(!viewMode){
-            while(!exit){
-                if(el){
-                    if(el instanceof MenuBar){
+        if( !viewMode ) {
+            while( !exit ) {
+                if( el ) {
+                    if( el instanceof MenuBar ) {
                         viewMode = 'forMenu';
                         exit = true;
-                    }else{
+                    } else {
                         el = el.parent;
                     }
-                }else{
+                } else {
                     exit = true;
                 }
             }
 
         }
 
-        return viewMode
+        return viewMode;
     },
 
-    applyMetadata: function (params) {
-        ContainerBuilder.prototype.applyMetadata.call(this, params);
-        this.applyButtonMetadata.call(this, params);
+    applyMetadata: function( params ) {
+        ContainerBuilder.prototype.applyMetadata.call( this, params );
+        this.applyButtonMetadata.call( this, params );
     }
 
-}, buttonBuilderMixin);
+}, buttonBuilderMixin );

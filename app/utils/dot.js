@@ -2,7 +2,7 @@
  * Синглтон для работы с путями построенными по dot-notation
  **/
 
-window.InfinniUI.ObjectUtils = (function () {
+window.InfinniUI.ObjectUtils = ( function() {
 
     /**
      * Возвращает значение свойства.
@@ -12,24 +12,24 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {array} propertyPathTerms Путь к свойству объекта в виде коллекции термов.
      * @returns {*} Значение свойства.
      */
-    function getPropertyByPath(target, propertyPathTerms) {
-        if (target !== null && target !== undefined
-            && propertyPathTerms !== null && propertyPathTerms !== undefined) {
+    function getPropertyByPath( target, propertyPathTerms ) {
+        if( target !== null && target !== undefined
+            && propertyPathTerms !== null && propertyPathTerms !== undefined ) {
 
             var parent = target;
             var length = propertyPathTerms.length;
 
-            for (var i = 0; i < length; ++i) {
-                if (parent !== null && parent !== undefined) {
-                    var term = propertyPathTerms[i];
+            for( var i = 0; i < length; ++i ) {
+                if( parent !== null && parent !== undefined ) {
+                    var term = propertyPathTerms[ i ];
 
-                    var termCollectionIndex = parseCollectionIndex(term);
+                    var termCollectionIndex = parseCollectionIndex( term );
 
-                    if (termCollectionIndex >= 0) {
-                        parent = getCollectionItem(parent, termCollectionIndex);
+                    if( termCollectionIndex >= 0 ) {
+                        parent = getCollectionItem( parent, termCollectionIndex );
                     }
                     else {
-                        parent = getObjectProperty(parent, term);
+                        parent = getObjectProperty( parent, term );
                     }
                 }
                 else {
@@ -52,33 +52,32 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {*} propertyValue Значение свойства объекта.
      * @returns {*} Значение свойства.
      */
-    function setPropertyByPath(target, propertyPathTerms, propertyValue) {
+    function setPropertyByPath( target, propertyPathTerms, propertyValue ) {
         var parent = target;
         var length = propertyPathTerms.length - 1;
+        var term = propertyPathTerms[ 0 ];
+        var termCollectionIndex = parseCollectionIndex( term );
 
-        var term = propertyPathTerms[0];
-        var termCollectionIndex = parseCollectionIndex(term);
+        for( var i = 0; i < length; ++i ) {
+            var termValue = ( termCollectionIndex >= 0 )
+                ? getCollectionItem( parent, termCollectionIndex )
+                : getObjectProperty( parent, term );
 
-        for (var i = 0; i < length; ++i) {
-            var termValue = (termCollectionIndex >= 0)
-                ? getCollectionItem(parent, termCollectionIndex)
-                : getObjectProperty(parent, term);
+            var nextTerm = propertyPathTerms[ i + 1 ];
+            var nextTermCollectionIndex = parseCollectionIndex( nextTerm );
 
-            var nextTerm = propertyPathTerms[i + 1];
-            var nextTermCollectionIndex = parseCollectionIndex(nextTerm);
-
-            if(nextTermCollectionIndex >= 0){
-                if(!$.isArray(termValue)){
+            if( nextTermCollectionIndex >= 0 ) {
+                if( !$.isArray( termValue ) ) {
                     termValue = [];
                 }
 
-                setCollectionItem(parent, termCollectionIndex, termValue);
-            }else{
-                if(!$.isPlainObject(termValue)){
+                setCollectionItem( parent, termCollectionIndex, termValue );
+            } else {
+                if( !$.isPlainObject( termValue ) ) {
                     termValue = {};
                 }
 
-                setObjectProperty(parent, term, termValue);
+                setObjectProperty( parent, term, termValue );
             }
 
             parent = termValue;
@@ -86,11 +85,11 @@ window.InfinniUI.ObjectUtils = (function () {
             termCollectionIndex = nextTermCollectionIndex;
         }
 
-        if (termCollectionIndex >= 0) {
-            setCollectionItem(parent, termCollectionIndex, propertyValue);
+        if( termCollectionIndex >= 0 ) {
+            setCollectionItem( parent, termCollectionIndex, propertyValue );
         }
         else {
-            setObjectProperty(parent, term, propertyValue);
+            setObjectProperty( parent, term, propertyValue );
         }
     }
 
@@ -101,12 +100,12 @@ window.InfinniUI.ObjectUtils = (function () {
      * @private
      * @param {string} propertyPath Имя свойства.
      */
-    function splitPropertyPath(propertyPath) {
-        if (_.isEmpty(propertyPath)) {
+    function splitPropertyPath( propertyPath ) {
+        if( _.isEmpty( propertyPath ) ) {
             return null;
         }
 
-        return propertyPath.split(".");
+        return propertyPath.split( '.' );
     }
 
     /**
@@ -116,16 +115,16 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {string} propertyName Имя свойства.
      * @returns {number} Индекс элемента коллекции или -1.
      */
-    function parseCollectionIndex(propertyName) {
+    function parseCollectionIndex( propertyName ) {
         var index = -1;
 
-        if (propertyName === "$") {
+        if( propertyName === '$' ) {
             index = 0;
         }
         else {
-            var tryParse = parseInt(propertyName);
+            var tryParse = parseInt( propertyName );
 
-            if (!isNaN(tryParse)) {
+            if( !isNaN( tryParse ) ) {
                 index = tryParse;
             }
         }
@@ -142,12 +141,12 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {number} index Индекс элемента.
      * @returns {*} Элемент коллекции.
      */
-    function getCollectionItem(target, index) {
-        if (target !== null && target !== undefined
-            && Object.prototype.toString.call(target) === "[object Array]"
-            && index >= 0 && index < target.length) {
+    function getCollectionItem( target, index ) {
+        if( target !== null && target !== undefined
+            && Object.prototype.toString.call( target ) === '[object Array]'
+            && index >= 0 && index < target.length ) {
 
-            return target[index];
+            return target[ index ];
         }
 
         return null;
@@ -161,12 +160,12 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {number} index Индекс элемента.
      * @param {*} item Элемент коллекции.
      */
-    function setCollectionItem(target, index, item) {
-        if (target !== null && target !== undefined
-            && Object.prototype.toString.call(target) === "[object Array]"
-            && index >= 0 && index < target.length) {
+    function setCollectionItem( target, index, item ) {
+        if( target !== null && target !== undefined
+            && Object.prototype.toString.call( target ) === '[object Array]'
+            && index >= 0 && index < target.length ) {
 
-            target[index] = item;
+            target[ index ] = item;
         }
     }
 
@@ -179,12 +178,12 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {string} propertyName Наименование свойства.
      * @returns {*} Значение свойства.
      */
-    function getObjectProperty(target, propertyName) {
-        if (target !== null && target !== undefined
-            && Object.prototype.toString.call(target) === "[object Object]"
-            && propertyName !== null && propertyName !== undefined) {
+    function getObjectProperty( target, propertyName ) {
+        if( target !== null && target !== undefined
+            && Object.prototype.toString.call( target ) === '[object Object]'
+            && propertyName !== null && propertyName !== undefined ) {
 
-            return target[propertyName];
+            return target[ propertyName ];
         }
 
         return null;
@@ -198,12 +197,12 @@ window.InfinniUI.ObjectUtils = (function () {
      * @param {string} propertyName Наименование свойства.
      * @param {*} propertyValue Значение свойства.
      */
-    function setObjectProperty(target, propertyName, propertyValue) {
-        if (target !== null && target !== undefined
-            && Object.prototype.toString.call(target) === "[object Object]"
-            && propertyName !== null && propertyName !== undefined) {
+    function setObjectProperty( target, propertyName, propertyValue ) {
+        if( target !== null && target !== undefined
+            && Object.prototype.toString.call( target ) === '[object Object]'
+            && propertyName !== null && propertyName !== undefined ) {
 
-            target[propertyName] = propertyValue;
+            target[ propertyName ] = propertyValue;
         }
     }
 
@@ -217,22 +216,22 @@ window.InfinniUI.ObjectUtils = (function () {
          * @param {string|Object} propertyPath Путь к свойству или объект для построения значения.
          * @returns {*} Значение свойства.
          */
-        getPropertyValue: function (target, propertyPath) {
+        getPropertyValue: function( target, propertyPath ) {
             var result;
 
-            var getPropertyValue = function (target, propertyPath) {
-                var propertyPathTerms = splitPropertyPath(propertyPath);
-                var result = getPropertyByPath(target, propertyPathTerms);
+            var getPropertyValue = function( target, propertyPath ) {
+                var propertyPathTerms = splitPropertyPath( propertyPath );
+                var result = getPropertyByPath( target, propertyPathTerms );
                 return typeof result === 'undefined' ? null : result;
             };
 
-            if (_.isObject(propertyPath)) {
+            if( _.isObject( propertyPath ) ) {
                 result = {};
-                _.each(propertyPath, function (v, n) {
-                    result[n] = getPropertyValue(target, v);
-                });
+                _.each( propertyPath, function( v, n ) {
+                    result[ n ] = getPropertyValue( target, v );
+                } );
             } else {
-                result = getPropertyValue(target, propertyPath);
+                result = getPropertyValue( target, propertyPath );
             }
             return result;
         },
@@ -245,27 +244,27 @@ window.InfinniUI.ObjectUtils = (function () {
          * @param {string} propertyPath Путь к свойству.
          * @param {*} propertyValue Значение свойства.
          */
-        setPropertyValue: function (target, propertyPath, propertyValue) {
-            if (target !== null && target !== undefined && !_.isEmpty(propertyPath)) {
-                var propertyPathTerms = splitPropertyPath(propertyPath);
+        setPropertyValue: function( target, propertyPath, propertyValue ) {
+            if( target !== null && target !== undefined && !_.isEmpty( propertyPath ) ) {
+                var propertyPathTerms = splitPropertyPath( propertyPath );
 
-                if(propertyValue instanceof Date){
-                    setPropertyByPath(target, propertyPathTerms, new Date(propertyValue));
-                } else if(propertyValue instanceof File){
-                    setPropertyByPath(target, propertyPathTerms, propertyValue);
-                } else{
-                    setPropertyByPath(target, propertyPathTerms, propertyValue);
+                if( propertyValue instanceof Date ) {
+                    setPropertyByPath( target, propertyPathTerms, new Date( propertyValue ) );
+                } else if( propertyValue instanceof File ) {
+                    setPropertyByPath( target, propertyPathTerms, propertyValue );
+                } else {
+                    setPropertyByPath( target, propertyPathTerms, propertyValue );
                 }
             }
         },
 
-        setPropertyValueDirect: function (target, propertyPath, propertyValue) {
-            if (target !== null && target !== undefined && !_.isEmpty(propertyPath)) {
-                var propertyPathTerms = splitPropertyPath(propertyPath);
-                setPropertyByPath(target, propertyPathTerms, propertyValue);
+        setPropertyValueDirect: function( target, propertyPath, propertyValue ) {
+            if( target !== null && target !== undefined && !_.isEmpty( propertyPath ) ) {
+                var propertyPathTerms = splitPropertyPath( propertyPath );
+                setPropertyByPath( target, propertyPathTerms, propertyValue );
             }
         }
     };
-})();
+} )();
 
 

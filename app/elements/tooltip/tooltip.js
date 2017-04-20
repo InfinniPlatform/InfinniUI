@@ -1,22 +1,22 @@
-var Tooltip = function (parent) {
+var Tooltip = function( parent ) {
     _.superClass( Icon, this, parent );
 };
 
-_.inherit(Tooltip, Element);
+_.inherit( Tooltip, Element );
 
 
-_.extend(Tooltip.prototype, {
+_.extend( Tooltip.prototype, {
 
-    createControl: function () {
+    createControl: function() {
         return new InfinniUI.TooltipControl();
     },
 
-    setContent: function (content) {
-        this.control.set('content', content);
+    setContent: function( content ) {
+        this.control.set( 'content', content );
     }
 
 
-});
+} );
 
 
 InfinniUI.Tooltip = Tooltip;

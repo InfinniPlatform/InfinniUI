@@ -4,83 +4,83 @@ window.InfinniUI.AutoHeightService = {
     exchange: null,
     times: [],
 
-    setOuterHeight: function ($el, height, fix) {
+    setOuterHeight: function( $el, height, fix ) {
         var delta = 0;
         'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
-            .split(',')
-            .forEach(function (name) {
-                delta += parseInt($el.css(name));
-            });
+            .split( ',' )
+            .forEach( function( name ) {
+                delta += parseInt( $el.css( name ) );
+            } );
         var contentHeight = height - delta;
-        if (fix) {
+        if( fix ) {
             contentHeight += fix;
         }
 
-        $el.height(contentHeight);
+        $el.height( contentHeight );
 
         return contentHeight;
     },
 
-    getModalSelector: function () {
+    getModalSelector: function() {
         return '.modal-scrollable';
     },
 
-    getSelector: function () {
+    getSelector: function() {
         return '.verticalAlignmentStretch:not(:hidden)';
     },
 
-    buildTree: function (items, parentEl, $parentEl, elements, list) {
-        var items = _.where(list, {parent: parentEl}),
-            manager = this;
+    buildTree: function( items, parentEl, $parentEl, elements, list ) {
+        var manager = this;
+        items = _.where( list, { parent: parentEl } );
 
         return {
-            isElement: _.indexOf(elements, parentEl) !== -1,
+            isElement: _.indexOf( elements, parentEl ) !== -1,
             element: parentEl,
             $element: $parentEl,
-            child: _.map(items, function (item) {
-                return manager.buildTree(items, item.element, item.$element, elements, list);
-            })
+            child: _.map( items, function( item ) {
+                return manager.buildTree( items, item.element, item.$element, elements, list );
+            } )
         };
     },
 
-    formTree: function (elements, el, $el) {
+    formTree: function( elements, el, $el ) {
         var $parent,
             list = [],
             $element,
             element;
         //Строим дерево элементов: от концевых элементов поднимается к корневому элементу
-        for (var i = 0, ln = elements.length; i < ln; i = i + 1) {
-            element = elements[i];
-            $element = $(element);
+        for( var i = 0, ln = elements.length; i < ln; i = i + 1 ) {
+            element = elements[ i ];
+            $element = $( element );
             do {
                 $parent = $element.parent();
 
-                var a = _.findWhere(list, {element: element});
-                if (typeof a !== 'undefined') {
+                var a = _.findWhere( list, { element: element } );
+                if( typeof a !== 'undefined' ) {
                     //Элемент уже занесен в список
                     break;
                 }
-                list.push({
+                list.push( {
                     element: element,
                     $element: $element,
-                    parent: $parent.get(0),
+                    parent: $parent.get( 0 ),
                     $parent: $parent
-                });
+                } );
 
                 $element = $parent;
-                element = $parent.get(0);
-            } while (element !== el);
+                element = $parent.get( 0 );
+            } while( element !== el );
         }
 
-        return this.buildTree(list, el, $el, elements, list);
+        return this.buildTree( list, el, $el, elements, list );
     },
 
-    setHeight: function (node, height) {
-        var originalHeight = node.$element.attr('data-height-original');
-        if (originalHeight === '') {
-            node.$element.attr('data-height-original', node.element.style.height);
+    setHeight: function( node, height ) {
+        var originalHeight = node.$element.attr( 'data-height-original' );
+        if( originalHeight === '' ) {
+            node.$element.attr( 'data-height-original', node.element.style.height );
         }
-        return this.setOuterHeight(node.$element, height);
+        return this.setOuterHeight( node.$element, height );
     },
 
     /**
@@ -90,184 +90,186 @@ window.InfinniUI.AutoHeightService = {
      *   - offsetTop совпадают - устанавливаем высоту в 100%
      *   - offsetTop не совпадают - устанавливаем высоту в (100% / child.length)
      */
-    defineWay: function (node, height) {
-        var nodeHeight = this.setHeight(node, height),
+    defineWay: function( node, height ) {
+        var nodeHeight = this.setHeight( node, height ),
             manager = this;
 
-        if (node.$element.hasClass('pl-scroll-panel') || node.$element.hasClass('modal-scrollable')) {
+        if( node.$element.hasClass( 'pl-scroll-panel' ) || node.$element.hasClass( 'modal-scrollable' ) ) {
             //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
             return;
-        } else if (node.$element.hasClass('tab-content')) {
-            _.each(node.child, function (node) {
-                manager.defineWay(node, nodeHeight);
-            });
-        } else if (node.child.length > 0) {
-            this.goThroughTree(node, nodeHeight);
+        } else if( node.$element.hasClass( 'tab-content' ) ) {
+            _.each( node.child, function( node ) {
+                manager.defineWay( node, nodeHeight );
+            } );
+        } else if( node.child.length > 0 ) {
+            this.goThroughTree( node, nodeHeight );
         }
     },
 
-    goThroughTree: function (node, height) {
+    goThroughTree: function( node, height ) {
         var manager = this;
-        if (node.$element.parentsUntil('.modal').length) {
-            node.$element.attr('data-height-original', node.element.style.height);
+        if( node.$element.parentsUntil( '.modal' ).length ) {
+            node.$element.attr( 'data-height-original', node.element.style.height );
         }
 
-        var children = node.$element.children(':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)'),
-            grid = _.chain(children)
-                .filter(function (el) {
-                    var position = $(el).css('position');
-                    return ['absolute', 'fixed'].indexOf(position) === -1;
-                })
-                .groupBy('offsetTop')
-                .value(),
+        var children = node.$element
+            .children( ':not(:hidden):not(.modal-scrollable):not(.modal-backdrop):not(.pl-dropdown-container)' );
+        var grid = _.chain( children )
+            .filter( function( el ) {
+                var position = $( el ).css( 'position' );
+                return [ 'absolute', 'fixed' ].indexOf( position ) === -1;
+            } )
+            .groupBy( 'offsetTop' )
+            .value();
+        var heights = [];
 
-            heights = [];
-
-        _.each(grid, function (row, i) {
+        _.each( grid, function( row, i ) {
             var nodes = [];
-            _.each(row, function (e) {
-                var n = _.find(node.child, function (c) {
+            _.each( row, function( e ) {
+                var n = _.find( node.child, function( c ) {
                     return c.element === e;
-                });
-                if (n) nodes.push(n);
-            });
+                } );
+                if( n ) nodes.push( n );
+            } );
 
-            heights.push(nodes.length ? 0 : _.reduce(row, function (height, e) {
-                return Math.max(height, $(e).outerHeight(true));
-            }, 0));
+            heights.push( nodes.length ? 0 : _.reduce( row, function( height, e ) {
+                return Math.max( height, $( e ).outerHeight( true ) );
+            }, 0 ) );
 
-            grid[i] = nodes;
-        }, this);
+            grid[ i ] = nodes;
+        }, this );
 
-        var fixedHeight = _.reduce(heights, function (total, height) {
-                return total + height
-            }, 0),
-            count = _.reduce(grid, function (count, row) {
-                return row.length ? count + 1 : count
-            }, 0),
+        var fixedHeight = _.reduce( heights, function( total, height ) {
+                return total + height;
+            }, 0 ),
+            count = _.reduce( grid, function( count, row ) {
+                return row.length ? count + 1 : count;
+            }, 0 ),
 
-            heightForNode = Math.floor((height - fixedHeight) / count);
+            heightForNode = Math.floor( ( height - fixedHeight ) / count );
 
-        _.each(grid, function (row) {
-            if (row.length === 0) return;
-            _.each(row, function (node) {
-                manager.defineWay(node, heightForNode);
-            }, this);
-        }, this);
+        _.each( grid, function( row ) {
+            if( row.length === 0 ) return;
+            _.each( row, function( node ) {
+                manager.defineWay( node, heightForNode );
+            }, this );
+        }, this );
     },
 
-    resize: function (el, pageHeight) {
+    resize: function( el, pageHeight ) {
         var startTime = Date.now(); //start time
-        var $el = $(el),
-            elements = $el.find(this.getSelector());
+        var $el = $( el ),
+            elements = $el.find( this.getSelector() );
 
-        if (elements.length === 0) {
+        if( elements.length === 0 ) {
             return;
         }
 
-        var tree = this.formTree(elements, el, $el);
-        this.defineWay(tree, pageHeight);
+        var tree = this.formTree( elements, el, $el );
+        this.defineWay( tree, pageHeight );
         var endTime = Date.now(); //end time
-        this.timeWatcher(endTime - startTime);
+        this.timeWatcher( endTime - startTime );
     },
 
-    timeWatcher: function (time) {
-        if (time >= 20) {
-            this.times.push(time);
+    timeWatcher: function( time ) {
+        if( time >= 20 ) {
+            this.times.push( time );
         }
     },
 
-    getTimes: function () {
+    getTimes: function() {
         return this.times;
     },
 
-    resizeView: function (container, clientHeight) {
+    resizeView: function( container, clientHeight ) {
         var $page = $( container || document );
 
-        var contentHeight = this.setOuterHeight($page, clientHeight);
+        var contentHeight = this.setOuterHeight( $page, clientHeight );
 
-        this.resize($page.get(0), contentHeight);
+        this.resize( $page.get( 0 ), contentHeight );
     },
 
-	resizeDialog: function () {
-		var $currentDialog = $(this.getModalSelector()).last();
+    resizeDialog: function() {
+        var $currentDialog = $( this.getModalSelector() ).last();
 
-		this._resizeDialog($currentDialog);
-		this.resetDialogHeight($currentDialog);
-	},
+        this._resizeDialog( $currentDialog );
+        this.resetDialogHeight( $currentDialog );
+    },
 
-    resetDialogHeight: function ($modal) {
+    resetDialogHeight: function( $modal ) {
         var space = 10;
 
-        if ($modal.children()) {
+        if( $modal.children() ) {
             var $container = $modal.children();
 
-            var $header = $('.modal-header', $container);
-            var $body = $('.modal-body', $container);
+            var $header = $( '.modal-header', $container );
+            var $body = $( '.modal-body', $container );
 
-            var $el = $(this.getSelector(), $modal);
+            var $el = $( this.getSelector(), $modal );
 
-            $el.parentsUntil('.modal').css('height', 'auto');
-            $container.css('top', (this.windowHeight - $header.outerHeight(true) - $body.outerHeight(true)) / 2);
+            $el.parentsUntil( '.modal' ).css( 'height', 'auto' );
+            $container
+                .css( 'top', ( this.windowHeight - $header.outerHeight( true ) - $body.outerHeight( true ) ) / 2 );
 
-            $modal.children('.modal:not(.messagebox)').height($body.outerHeight(true) + $header.outerHeight(true));
-
+            $modal.children( '.modal:not(.messagebox)' )
+                .height( $body.outerHeight( true ) + $header.outerHeight( true ) );
         }
     },
 
-    _resizeDialog: function ($modal) {
+    _resizeDialog: function( $modal ) {
         var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
 
         var $container = $modal.children();
 
-        $container.css('margin-top', 0);
+        $container.css( 'margin-top', 0 );
 
-        var $header = $('.modal-header', $container);
-        var $body = $('.modal-body', $container);
+        var $header = $( '.modal-header', $container );
+        var $body = $( '.modal-body', $container );
 
-        var headerHeight = $header.outerHeight(true);
-        $body.css('max-height', this.windowHeight - headerHeight);
+        var headerHeight = $header.outerHeight( true );
+        $body.css( 'max-height', this.windowHeight - headerHeight );
 
-        $container.css('margin-top', 0);
+        $container.css( 'margin-top', 0 );
 
-        var el = $(this.getSelector(), $modal);
-        if (el.length !== 0) {
+        var el = $( this.getSelector(), $modal );
+        if( el.length !== 0 ) {
             // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
             // пересчитываем высоту
 
-            var containerHeight = this.setOuterHeight($modal, this.windowHeight - space * 2);
+            var containerHeight = this.setOuterHeight( $modal, this.windowHeight - space * 2 );
 
             //Высота для содержимого окна диалога
-            var clientHeight = this.setOuterHeight($container, containerHeight) - $header.outerHeight();
+            var clientHeight = this.setOuterHeight( $container, containerHeight ) - $header.outerHeight();
 
-            this.resize($body[0], clientHeight);
+            this.resize( $body[ 0 ], clientHeight );
         }
     },
 
-    recalculation: function (container) {
-        if (window.InfinniUI.config.enableAutoHeightService) {
-            $(container).addClass('page-content-overflow-hidden');
-            this.windowHeight = $(window).height();
-            this.onChangeLayout(container);
-            if (this.exchange === null) {
+    recalculation: function( container ) {
+        if( window.InfinniUI.config.enableAutoHeightService ) {
+            $( container ).addClass( 'page-content-overflow-hidden' );
+            this.windowHeight = $( window ).height();
+            this.onChangeLayout( container );
+            if( this.exchange === null ) {
                 this.exchange = window.InfinniUI.global.messageBus;
-                this.exchange.subscribe('OnChangeLayout', _.debounce(this.onChangeLayout.bind(this, container), 42));
+                this.exchange
+                    .subscribe( 'OnChangeLayout', _.debounce( this.onChangeLayout.bind( this, container ), 42 ) );
             }
         }
     },
 
-    slidingRecalculation: function (container) {
+    slidingRecalculation: function( container ) {
         var that = this;
-        for (var i = 3; i >= 0; i--) {
-            setTimeout(function () {
-                that.recalculation(container);
-            }, 500 + i * 300);
+        for( var i = 3; i >= 0; i-- ) {
+            setTimeout( function() {
+                that.recalculation( container );
+            }, 500 + i * 300 );
         }
     },
 
-    onChangeLayout: function (container) {
+    onChangeLayout: function( container ) {
         var clientHeight = this.windowHeight;
-        this.resizeView(container, clientHeight);
+        this.resizeView( container, clientHeight );
         this.resizeDialog();
     }
 };

@@ -1,14 +1,14 @@
-function AddActionBuilder(){}
+function AddActionBuilder() {}
 
-_.extend(AddActionBuilder.prototype,
+_.extend( AddActionBuilder.prototype,
     BaseActionBuilderMixin,
     BaseEditActionBuilderMixin,
     {
-        build: function(context, args){
-            var action = new AddAction(args.parentView);
+        build: function( context, args ) {
+            var action = new AddAction( args.parentView );
 
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
+            this.applyBaseActionMetadata( action, args );
+            this.applyBaseEditActionMetadata( action, args );
 
             return action;
         }

@@ -3,28 +3,28 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var SimpleLabelView = CommonLabelView.extend({
+var SimpleLabelView = CommonLabelView.extend( {
     tagName: 'span',
 
-    template: function(){return '';},
-    UI: _.extend({}, editorBaseViewMixin.UI, {
+    template: function() {return '';},
+    UI: _.extend( {}, editorBaseViewMixin.UI, {
 
-    }),
+    } ),
 
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
+    updateFocusable: function() {
+        var focusable = this.model.get( 'focusable' );
 
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
+        if ( focusable ) {
+            this.$el.attr( 'tabindex', 0 );
         } else {
-            this.$el.removeAttr('tabindex');
+            this.$el.removeAttr( 'tabindex' );
         }
     },
 
-    getLabelElement: function(){
+    getLabelElement: function() {
         return this.$el;
     }
 
-});
+} );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Label.simple', SimpleLabelView);
+InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.Label.simple', SimpleLabelView );

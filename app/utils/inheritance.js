@@ -1,5 +1,5 @@
-_.mixin({
-    'inherit': function (child, parent) {
+_.mixin( {
+    'inherit': function( child, parent ) {
         var f = new Function();
         f.prototype = parent.prototype;
 
@@ -9,10 +9,10 @@ _.mixin({
         child.superclass = parent.prototype;
     },
 
-    'superClass': function (obj, context, values) {
-        var args = _.toArray(arguments);
-        args.splice(0, 2);
+    'superClass': function( obj, context, values ) {
+        var args = _.toArray( arguments );
+        args.splice( 0, 2 );
 
-        obj.superclass.constructor.apply(context, args);
+        obj.superclass.constructor.apply( context, args );
     }
-});
+} );

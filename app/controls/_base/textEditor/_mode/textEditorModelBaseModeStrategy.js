@@ -10,7 +10,7 @@ function TextEditorModelBaseModeStrategy() {
  * @abstract
  * @param {TextEditorModel} model
  */
-TextEditorModelBaseModeStrategy.prototype.updateText = function (model) {
+TextEditorModelBaseModeStrategy.prototype.updateText = function( model ) {
 
 };
 
@@ -21,7 +21,7 @@ TextEditorModelBaseModeStrategy.prototype.updateText = function (model) {
  * @param {string} text
  * @param {boolean} ui Признак исзменения со стороны UI
  */
-TextEditorModelBaseModeStrategy.prototype.setText = function (model, text, ui) {
+TextEditorModelBaseModeStrategy.prototype.setText = function( model, text, ui ) {
 
 };
 
@@ -30,7 +30,7 @@ TextEditorModelBaseModeStrategy.prototype.setText = function (model, text, ui) {
  * @param model
  * @param value
  */
-TextEditorModelBaseModeStrategy.prototype.onChangeTextHandler = function (model, value, options) {
+TextEditorModelBaseModeStrategy.prototype.onChangeTextHandler = function( model, value, options ) {
 
 };
 

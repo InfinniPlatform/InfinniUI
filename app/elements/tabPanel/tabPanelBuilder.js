@@ -3,17 +3,17 @@
  * @augments ContainerBuilder
  */
 function TabPanelBuilder() {
-    _.superClass(TabPanelBuilder, this);
+    _.superClass( TabPanelBuilder, this );
 }
 
 window.InfinniUI.TabPanelBuilder = TabPanelBuilder;
 
-_.inherit(TabPanelBuilder, ContainerBuilder);
+_.inherit( TabPanelBuilder, ContainerBuilder );
 
-_.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
+_.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
 
-    createElement: function (params) {
-        return new TabPanel(params.parent);
+    createElement: function( params ) {
+        return new TabPanel( params.parent );
     },
 
     /**
@@ -21,29 +21,29 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
      * @param {Panel} params.element
      * @param {Object} params.metadata
      */
-    applyMetadata: function (params) {
+    applyMetadata: function( params ) {
         var
             metadata = params.metadata,
             element = params.element;
 
-        var data = ContainerBuilder.prototype.applyMetadata.call(this, params);
+        var data = ContainerBuilder.prototype.applyMetadata.call( this, params );
 
-        element.setHeaderLocation(metadata.HeaderLocation);
-        element.setHeaderOrientation(metadata.HeaderOrientation);
+        element.setHeaderLocation( metadata.HeaderLocation );
+        element.setHeaderOrientation( metadata.HeaderOrientation );
 
-        this.initScriptHandlers(params);
+        this.initScriptHandlers( params );
         return data;
     },
 
-    initScriptHandlers: function (params) {
+    initScriptHandlers: function( params ) {
         var
             metadata = params.metadata,
             element = params.element;
 
-        element.onSelectedItemChanged(function (context, args) {
+        element.onSelectedItemChanged( function( context, args ) {
             var exchange = window.InfinniUI.global.messageBus;
-            exchange.send('OnChangeLayout', {});
-        });
+            exchange.send( 'OnChangeLayout', {} );
+        } );
 
         var executorBuilderParams = {
             parentView: params.parentView,
@@ -51,13 +51,13 @@ _.extend(TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
             basePathOfProperty: params.basePathOfProperty
         };
 
-        if (metadata.OnSelectedItemChanged) {
-            var onSelectedItemChangedExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
-            element.onSelectedItemChanged(function (context, args) {
-                onSelectedItemChangedExecutor(args);
-            });
+        if ( metadata.OnSelectedItemChanged ) {
+            var onSelectedItemChangedExecutor = Executor( metadata.OnSelectedItemChanged, params.builder, executorBuilderParams );
+            element.onSelectedItemChanged( function( context, args ) {
+                onSelectedItemChangedExecutor( args );
+            } );
         }
     }
 
 
-});
+} );

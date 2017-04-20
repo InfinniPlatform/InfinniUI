@@ -1,27 +1,27 @@
-function RegexEditMask () {
+function RegexEditMask() {
     this.mask = null;
 }
 
 window.InfinniUI.RegexEditMask = RegexEditMask;
 
 
-_.extend(RegexEditMask.prototype, editMaskMixin);
+_.extend( RegexEditMask.prototype, editMaskMixin );
 
-_.extend(RegexEditMask.prototype, {
+_.extend( RegexEditMask.prototype, {
 
     /**
      * Проверка что маска была полностью заполнена
      */
-    getIsComplete: function (value) {
+    getIsComplete: function( value ) {
         var regExp;
         this.value = value;
-        if (this.mask !== null) {
-            regExp = new RegExp(this.mask);
-            return regExp.test(value);
+        if ( this.mask !== null ) {
+            regExp = new RegExp( this.mask );
+            return regExp.test( value );
         }
         return false;
     }
 
 
-});
+} );
 

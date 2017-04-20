@@ -1,17 +1,17 @@
-function OpenActionBuilder(){
+function OpenActionBuilder() {
 }
 
 
-_.extend(OpenActionBuilder.prototype,
+_.extend( OpenActionBuilder.prototype,
     BaseActionBuilderMixin,
     {
-        build: function(context, args){
-            var action = new OpenAction(args.parentView);
+        build: function( context, args ) {
+            var action = new OpenAction( args.parentView );
 
-            this.applyBaseActionMetadata(action, args);
+            this.applyBaseActionMetadata( action, args );
 
-            var linkView = args.builder.build(args.metadata.LinkView, {parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty});
-            action.setProperty('linkView', linkView);
+            var linkView = args.builder.build( args.metadata.LinkView, { parent: args.parent, parentView: args.parentView, basePathOfProperty: args.basePathOfProperty } );
+            action.setProperty( 'linkView', linkView );
 
             return action;
         }

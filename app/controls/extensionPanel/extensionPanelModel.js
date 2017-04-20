@@ -1,10 +1,10 @@
-var ExtensionPanelModel = ContainerModel.extend({
-    defaults: _.defaults({
+var ExtensionPanelModel = ContainerModel.extend( {
+    defaults: _.defaults( {
         extensionName: null,
         context: null
-    }, ContainerModel.prototype.defaults),
+    }, ContainerModel.prototype.defaults ),
 
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this);
+    initialize: function() {
+        ContainerModel.prototype.initialize.apply( this );
     }
-});
+} );

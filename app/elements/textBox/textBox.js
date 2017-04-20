@@ -4,35 +4,35 @@
  * @constructor
  * @augments TextEditorBase
  */
-function TextBox(parent) {
-    _.superClass(TextBox, this, parent);
+function TextBox( parent ) {
+    _.superClass( TextBox, this, parent );
 }
 
 window.InfinniUI.TextBox = TextBox;
 
-_.inherit(TextBox, TextEditorBase);
+_.inherit( TextBox, TextEditorBase );
 
-_.extend(TextBox.prototype, {
-    createControl: function (parent) {
-        return new TextBoxControl(parent);
+_.extend( TextBox.prototype, {
+    createControl: function( parent ) {
+        return new TextBoxControl( parent );
     },
 
-    getMultiline: function () {
-        return this.control.get('multiline');
+    getMultiline: function() {
+        return this.control.get( 'multiline' );
     },
 
-    setMultiline: function (value) {
-        this.control.set('multiline', value);
+    setMultiline: function( value ) {
+        this.control.set( 'multiline', value );
     },
 
-    getLineCount: function () {
-        return this.control.get('lineCount');
+    getLineCount: function() {
+        return this.control.get( 'lineCount' );
     },
 
-    setLineCount: function (value) {
-        this.control.set('lineCount', value);
+    setLineCount: function( value ) {
+        this.control.set( 'lineCount', value );
     }
 
-});
+} );
 
 

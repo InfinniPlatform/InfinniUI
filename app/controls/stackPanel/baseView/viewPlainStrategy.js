@@ -1,10 +1,10 @@
-function StackPanelViewPlainStrategy(stackPanel) {
+function StackPanelViewPlainStrategy( stackPanel ) {
     this.stackPanel = stackPanel;
-};
+}
 
-_.extend(StackPanelViewPlainStrategy.prototype, {
+_.extend( StackPanelViewPlainStrategy.prototype, {
 
-    prepareItemsForRendering: function(){
+    prepareItemsForRendering: function() {
         var items = this.stackPanel.getItems(),
             result = {
                 items: items.toArray()
@@ -13,11 +13,11 @@ _.extend(StackPanelViewPlainStrategy.prototype, {
         return result;
     },
 
-    getTemplate: function(){
+    getTemplate: function() {
         return this.stackPanel.template.plain;
     },
 
-    appendItemsContent: function(preparedItems, childElementsClass){
+    appendItemsContent: function( preparedItems, childElementsClass ) {
         var $stackPanel = this.stackPanel.$el,
             itemTemplate = this.stackPanel.getItemTemplate(),
             items = preparedItems.items,
@@ -26,13 +26,13 @@ _.extend(StackPanelViewPlainStrategy.prototype, {
 
         childElementsClass = childElementsClass || '.pl-stack-panel-i';
 
-        $stackPanel.find(childElementsClass).each(function(i, el){
-            $el = $(el);
-            itemEl = itemTemplate(undefined, {index: i, item: items[i]});
-            stackPanel.addChildElement(itemEl);
-            $el.append(itemEl.render());
+        $stackPanel.find( childElementsClass ).each( function( i, el ) {
+            $el = $( el );
+            itemEl = itemTemplate( undefined, { index: i, item: items[ i ] } );
+            stackPanel.addChildElement( itemEl );
+            $el.append( itemEl.render() );
 
-            $el.parent().data('pl-data-item', items[i]);
-        });
+            $el.parent().data( 'pl-data-item', items[ i ] );
+        } );
     }
-});
+} );

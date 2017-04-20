@@ -1,13 +1,13 @@
 function AcceptActionBuilder() {
 }
 
-_.extend(AcceptActionBuilder.prototype,
+_.extend( AcceptActionBuilder.prototype,
     BaseActionBuilderMixin,
     {
-        build: function (context, args) {
-            var action = new AcceptAction(args.parentView);
+        build: function( context, args ) {
+            var action = new AcceptAction( args.parentView );
 
-            this.applyBaseActionMetadata(action, args);
+            this.applyBaseActionMetadata( action, args );
 
             return action;
         }

@@ -1,16 +1,16 @@
-var ExtensionPanelControl = function () {
-    _.superClass(ExtensionPanelControl, this);
+var ExtensionPanelControl = function() {
+    _.superClass( ExtensionPanelControl, this );
 };
 
-_.inherit(ExtensionPanelControl, ContainerControl);
+_.inherit( ExtensionPanelControl, ContainerControl );
 
-_.extend(ExtensionPanelControl.prototype, {
+_.extend( ExtensionPanelControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new ExtensionPanelModel();
     },
 
-    createControlView: function (model) {
-        return new ExtensionPanelView({model: model});
+    createControlView: function( model ) {
+        return new ExtensionPanelView( { model: model } );
     }
-});
+} );

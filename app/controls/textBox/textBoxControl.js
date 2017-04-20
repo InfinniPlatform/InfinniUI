@@ -4,20 +4,20 @@
  * @constructor
  * @augments TextEditorBaseControl
  */
-function TextBoxControl(parent) {
-    _.superClass(TextBoxControl, this, parent);
+function TextBoxControl( parent ) {
+    _.superClass( TextBoxControl, this, parent );
 }
 
-_.inherit(TextBoxControl, TextEditorBaseControl);
+_.inherit( TextBoxControl, TextEditorBaseControl );
 
-_.extend(TextBoxControl.prototype, {
+_.extend( TextBoxControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new TextBoxModel();
     },
 
-    createControlView: function (model) {
-        return new TextBoxView({model: model});
+    createControlView: function( model ) {
+        return new TextBoxView( { model: model } );
     }
-});
+} );
 

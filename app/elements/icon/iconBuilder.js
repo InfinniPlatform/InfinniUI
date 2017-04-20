@@ -1,22 +1,22 @@
 function IconBuilder() {
-    _.superClass(ButtonBuilder, this);
+    _.superClass( ButtonBuilder, this );
 }
 
 window.InfinniUI.IconBuilder = IconBuilder;
 
-_.inherit(IconBuilder, ElementBuilder);
+_.inherit( IconBuilder, ElementBuilder );
 
-_.extend(IconBuilder.prototype, {
+_.extend( IconBuilder.prototype, {
 
-    createElement: function (params) {
-        return new Icon(params.parent);
+    createElement: function( params ) {
+        return new Icon( params.parent );
     },
 
-    applyMetadata: function (params) {
-        ElementBuilder.prototype.applyMetadata.call(this, params);
+    applyMetadata: function( params ) {
+        ElementBuilder.prototype.applyMetadata.call( this, params );
 
-        this.initBindingToProperty(params, 'Value');
-        this.initBindingToProperty(params, 'Size');
+        this.initBindingToProperty( params, 'Value' );
+        this.initBindingToProperty( params, 'Size' );
     }
 
-});
+} );

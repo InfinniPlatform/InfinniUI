@@ -2,10 +2,10 @@
  * @constructor
  * @augments ContainerModel
  */
-var ScrollPanelModel = ContainerModel.extend(/** @lends ScrollPanelModel.prototype */ {
+var ScrollPanelModel = ContainerModel.extend( /** @lends ScrollPanelModel.prototype */ {
 
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    initialize: function() {
+        ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
     defaults: _.defaults(
@@ -17,4 +17,4 @@ var ScrollPanelModel = ContainerModel.extend(/** @lends ScrollPanelModel.prototy
         ContainerModel.prototype.defaults
     )
 
-});
+} );

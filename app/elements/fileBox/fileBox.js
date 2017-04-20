@@ -6,22 +6,22 @@
  * @mixes labelTextElementMixin
  * @constructor
  */
-function FileBox(parent) {
-    _.superClass(FileBox, this, parent);
+function FileBox( parent ) {
+    _.superClass( FileBox, this, parent );
 
     this.initialize_editorBase();
 }
 
 window.InfinniUI.FileBox = FileBox;
 
-_.inherit(FileBox, Element);
+_.inherit( FileBox, Element );
 
-_.extend(FileBox.prototype, {
-    getFile: function () {
-        return this.control.get('file');
+_.extend( FileBox.prototype, {
+    getFile: function() {
+        return this.control.get( 'file' );
     },
 
-    createControl: function () {
+    createControl: function() {
         return new FileBoxControl();
     },
 
@@ -29,24 +29,24 @@ _.extend(FileBox.prototype, {
      * @description Возвращает максимальный размер данных в байтах
      * @returns {number}
      */
-    getMaxSize: function () {
-        return this.control.get('maxSize');
+    getMaxSize: function() {
+        return this.control.get( 'maxSize' );
     },
 
     /**
      * @description Устанавливает максимальный размер данных в байтах
      * @param {number} value
      */
-    setMaxSize: function (value) {
-        this.control.set('maxSize', value);
+    setMaxSize: function( value ) {
+        this.control.set( 'maxSize', value );
     },
 
     /**
      * @description Возвращает коллекцию допустимых форматов данных
      * @returns {Collection}
      */
-    getAcceptTypes: function () {
-        return this.control.get('acceptTypes');
+    getAcceptTypes: function() {
+        return this.control.get( 'acceptTypes' );
     },
 
 
@@ -59,35 +59,35 @@ _.extend(FileBox.prototype, {
      * @description Недокументированный!
      * @param {Array} types
      */
-    setAcceptTypes: function (types) {
+    setAcceptTypes: function( types ) {
         var collection = this.getAcceptTypes();
-        if (Array.isArray(types)) {
-            collection.set(types)
+        if ( Array.isArray( types ) ) {
+            collection.set( types );
         }
     },
 
     // НЕдокументированные методы
-    setFile: function (value) {
-        this.control.set('file', value);
+    setFile: function( value ) {
+        this.control.set( 'file', value );
     },
 
-    setFileName: function (value) {
-        this.control.set('fileName', value);
+    setFileName: function( value ) {
+        this.control.set( 'fileName', value );
         return this;
     },
 
-    setFileSize: function (value) {
-        this.control.set('fileSize', value);
+    setFileSize: function( value ) {
+        this.control.set( 'fileSize', value );
         return this;
     },
 
-    setFileTime: function (value) {
-        this.control.set('fileTime', value);
+    setFileTime: function( value ) {
+        this.control.set( 'fileTime', value );
         return this;
     },
 
-    setFileType: function (value) {
-        this.control.set('fileType', value);
+    setFileType: function( value ) {
+        this.control.set( 'fileType', value );
         return this;
     }
 

@@ -5,7 +5,7 @@
  * @param {Function} [failCallback]
  * @constructor
  */
-var DocumentFileProvider = function (urlConstructor, successCallback, failCallback) {
+var DocumentFileProvider = function( urlConstructor, successCallback, failCallback ) {
     this.urlConstructor = urlConstructor;
     this.successCallback = successCallback;
     this.failCallback = failCallback;
@@ -19,6 +19,6 @@ window.InfinniUI.Providers.DocumentFileProvider = DocumentFileProvider;
  * @param {string} instanceId
  * @returns {String}
  */
-DocumentFileProvider.prototype.getFileUrl = function (fieldName, instanceId, contentId) {
-    return this.urlConstructor.getFileUrl(fieldName, instanceId, contentId);
+DocumentFileProvider.prototype.getFileUrl = function( fieldName, instanceId, contentId ) {
+    return this.urlConstructor.getFileUrl( fieldName, instanceId, contentId );
 };

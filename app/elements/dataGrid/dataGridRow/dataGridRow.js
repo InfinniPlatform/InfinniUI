@@ -1,108 +1,108 @@
 function DataGridRow() {
-    _.superClass(DataGridRow, this);
+    _.superClass( DataGridRow, this );
 
-    this._transformRowProperties({
+    this._transformRowProperties( {
         rowBackground: 'background',
         rowForeground: 'foreground',
         rowTextStyle: 'textStyle',
         rowStyle: 'style'
-    });
+    } );
 }
 
-_.inherit(DataGridRow, Element);
+_.inherit( DataGridRow, Element );
 
 
-_.extend(DataGridRow.prototype, {
+_.extend( DataGridRow.prototype, {
 
-    createControl: function () {
-        return new DataGridRowControl()
+    createControl: function() {
+        return new DataGridRowControl();
     },
 
-    setCellElements: function (cellElements) {
-        this.control.set('cellElements', cellElements);
+    setCellElements: function( cellElements ) {
+        this.control.set( 'cellElements', cellElements );
     },
 
-    toggle: function (toggle) {
-        this.control.set('toggle', toggle);
+    toggle: function( toggle ) {
+        this.control.set( 'toggle', toggle );
     },
 
-    getSelected: function () {
-        this.control.get('selected');
+    getSelected: function() {
+        this.control.get( 'selected' );
     },
 
-    setSelected: function (selected) {
-        this.control.set('selected', selected);
+    setSelected: function( selected ) {
+        this.control.set( 'selected', selected );
     },
 
-    setMultiSelect: function (multiSelect) {
-        this.control.set('multiSelect', multiSelect);
+    setMultiSelect: function( multiSelect ) {
+        this.control.set( 'multiSelect', multiSelect );
     },
 
-    setShowSelectors: function (showSelectors) {
-        this.control.set('showSelectors', showSelectors);
+    setShowSelectors: function( showSelectors ) {
+        this.control.set( 'showSelectors', showSelectors );
     },
 
-    onToggle: function (handler) {
-        this.control.onToggle(handler);
+    onToggle: function( handler ) {
+        this.control.onToggle( handler );
     },
 
     /** RowBackground **/
-    setRowBackground: function (value) {
-        this.control.set('rowBackground', value);
+    setRowBackground: function( value ) {
+        this.control.set( 'rowBackground', value );
     },
 
-    getRowBackground: function () {
-        return this.control.get('rowBackground');
+    getRowBackground: function() {
+        return this.control.get( 'rowBackground' );
     },
 
     /** RowForeground **/
-    setRowForeground: function (value) {
-        this.control.set('rowForeground', value);
+    setRowForeground: function( value ) {
+        this.control.set( 'rowForeground', value );
     },
 
-    getRowForeground: function () {
-        return this.control.get('rowForeground');
+    getRowForeground: function() {
+        return this.control.get( 'rowForeground' );
     },
 
     /** RowTextStyle */
-    setRowTextStyle: function (value) {
-        this.control.set('rowTextStyle', value);
+    setRowTextStyle: function( value ) {
+        this.control.set( 'rowTextStyle', value );
     },
 
-    getRowTextStyle: function () {
-        return this.control.get('rowTextStyle');
+    getRowTextStyle: function() {
+        return this.control.get( 'rowTextStyle' );
     },
 
     /** RowStyle */
-    setRowStyle: function (value) {
-        this.control.set('rowStyle', value);
+    setRowStyle: function( value ) {
+        this.control.set( 'rowStyle', value );
     },
 
-    getRowStyle: function () {
-        return this.control.get('rowStyle');
+    getRowStyle: function() {
+        return this.control.get( 'rowStyle' );
     },
 
-    setGrid: function (grid) {
-        this.control.set('grid', grid);
+    setGrid: function( grid ) {
+        this.control.set( 'grid', grid );
     },
 
-    _transformRowProperties: function (properties) {
+    _transformRowProperties: function( properties ) {
 
-        for(var name in properties) {
-            if (!properties.hasOwnProperty(name)) {
+        for( var name in properties ) {
+            if ( !properties.hasOwnProperty( name ) ) {
                 continue;
             }
 
-            this.setProperty(properties[name], this.getProperty(name));
+            this.setProperty( properties[ name ], this.getProperty( name ) );
 
-            this.onPropertyChanged(name, (function (row, prop) {
-                return function (context, args) {
-                    row.setProperty(prop, args.newValue);
-                }
-            })(this, properties[name]));
+            this.onPropertyChanged( name, ( function( row, prop ) {
+                return function( context, args ) {
+                    row.setProperty( prop, args.newValue );
+                };
+            } )( this, properties[ name ] ) );
         }
 
     }
 
-});
+} );
 

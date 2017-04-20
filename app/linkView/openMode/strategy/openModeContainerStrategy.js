@@ -1,26 +1,26 @@
-var OpenModeContainerStrategy = function () {
+var OpenModeContainerStrategy = function() {
 };
 
-_.extend(OpenModeContainerStrategy.prototype, {
-    setView: function(view){
+_.extend( OpenModeContainerStrategy.prototype, {
+    setView: function( view ) {
         this.view = view;
     },
 
-    setContainer: function(container){
+    setContainer: function( container ) {
         this.container = container;
     },
 
-    open: function(){
+    open: function() {
         var logger = InfinniUI.global.logger;
-        if(!this.container){
-            logger.error('OpenModeContainerStrategy.open: не задан контейнер, в который должо быть помещено приложение');
+        if( !this.container ) {
+            logger.error( 'OpenModeContainerStrategy.open: не задан контейнер, в который должо быть помещено приложение' );
         }
 
-        this.container.setLayout(this.view);
+        this.container.setLayout( this.view );
     },
 
-    close: function () {
-        this.container.setLayout(null);
+    close: function() {
+        this.container.setLayout( null );
         this.view.remove();
     }
-});
+} );

@@ -4,21 +4,21 @@
  * @augments Control
  * @mixes editorBaseControlMixin
  */
-var FrameControl = function () {
-    _.superClass(FrameControl, this);
+var FrameControl = function() {
+    _.superClass( FrameControl, this );
     this.initialize_editorBaseControl();
 };
 
-_.inherit(FrameControl, Control);
+_.inherit( FrameControl, Control );
 
-_.extend(FrameControl.prototype, {
+_.extend( FrameControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new FrameModel();
     },
 
-    createControlView: function (model) {
-        return new FrameView({model: model});
+    createControlView: function( model ) {
+        return new FrameView( { model: model } );
     }
 
-}, editorBaseControlMixin);
+}, editorBaseControlMixin );

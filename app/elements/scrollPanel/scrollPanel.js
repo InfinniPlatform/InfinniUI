@@ -3,29 +3,29 @@
  * @constructor
  * @augments Container
  */
-function ScrollPanel(parent) {
-    _.superClass(ScrollPanel, this, parent);
+function ScrollPanel( parent ) {
+    _.superClass( ScrollPanel, this, parent );
 }
 
 window.InfinniUI.ScrollPanel = ScrollPanel;
 
-_.inherit(ScrollPanel, Container);
+_.inherit( ScrollPanel, Container );
 
 /**
  * @description Возвращает видимость полосы прокрутки по горизонтали
  * @returns {*}
  */
-ScrollPanel.prototype.getHorizontalScroll = function () {
-    return this.control.get('horizontalScroll');
+ScrollPanel.prototype.getHorizontalScroll = function() {
+    return this.control.get( 'horizontalScroll' );
 };
 
 /**
  * @description Устанавливает видимость полосы прокрутки по горизонтали
  * @param value
  */
-ScrollPanel.prototype.setHorizontalScroll = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.ScrollVisibility)) {
-        this.control.set('horizontalScroll', value);
+ScrollPanel.prototype.setHorizontalScroll = function( value ) {
+    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
+        this.control.set( 'horizontalScroll', value );
     }
 };
 
@@ -33,17 +33,17 @@ ScrollPanel.prototype.setHorizontalScroll = function (value) {
  * @description Возвращает видимость полосы прокрутки по вертикали
  * @returns {*}
  */
-ScrollPanel.prototype.getVerticalScroll = function () {
-    return this.control.get('verticalScroll');
+ScrollPanel.prototype.getVerticalScroll = function() {
+    return this.control.get( 'verticalScroll' );
 };
 
 /**
  * @description Устанавливает видимость полосы прокрутки по вертикали
  * @param value
  */
-ScrollPanel.prototype.setVerticalScroll = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.ScrollVisibility)) {
-        this.control.set('verticalScroll', value);
+ScrollPanel.prototype.setVerticalScroll = function( value ) {
+    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
+        this.control.set( 'verticalScroll', value );
     }
 };
 
@@ -51,6 +51,6 @@ ScrollPanel.prototype.setVerticalScroll = function (value) {
  * @protected
  * @returns {PanelControl}
  */
-ScrollPanel.prototype.createControl = function () {
+ScrollPanel.prototype.createControl = function() {
     return new ScrollPanelControl();
 };

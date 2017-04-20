@@ -1,47 +1,47 @@
-function StackPanelViewGroupStrategy(stackPanel) {
+function StackPanelViewGroupStrategy( stackPanel ) {
     this.stackPanel = stackPanel;
 }
 
-_.extend(StackPanelViewGroupStrategy.prototype, {
+_.extend( StackPanelViewGroupStrategy.prototype, {
 
-    groupTemplate: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanelGroup.tpl.html"],
+    groupTemplate: InfinniUI.Template[ 'controls/stackPanel/baseView/template/stackPanelGroup.tpl.html' ],
 
-    prepareItemsForRendering: function(){
-        var items = this.stackPanel.getItems(),
-            inputName = 'listbox-' + guid(),
-            result = {
-                inputName: inputName,
-                groups: []
-            },
-            groups = {},
-            groupingFunction = this.stackPanel.getGroupValueSelector();
+    prepareItemsForRendering: function() {
+        var items = this.stackPanel.getItems();
+        var inputName = 'listbox-' + guid();
+        var result = {
+            inputName: inputName,
+            groups: []
+        };
+        var groups = {};
+        var groupingFunction = this.stackPanel.getGroupValueSelector();
 
-        items.forEach(function(item, index){
-            var groupKey = groupingFunction(undefined, {value:item});
+        items.forEach( function( item, index ) {
+            var groupKey = groupingFunction( undefined, { value: item } );
 
-            if(! (groupKey in groups)){
-                groups[groupKey] = [];
+            if( !( groupKey in groups ) ) {
+                groups[ groupKey ] = [];
             }
 
-            groups[groupKey].push(item);
-        });
+            groups[ groupKey ].push( item );
+        } );
 
-        for(var k in groups){
-            if (!groups.hasOwnProperty(k)) {
+        for( var k in groups ) {
+            if( !groups.hasOwnProperty( k ) ) {
                 continue;
             }
-            result.groups.push({
-                items: groups[k],
-                indices: groups[k].map(function (item) {
-                    return items.indexOf(item);
-                })
-            });
+            result.groups.push( {
+                items: groups[ k ],
+                indices: groups[ k ].map( function( item ) {
+                    return items.indexOf( item );
+                } )
+            } );
         }
 
         return result;
     },
 
-    getTemplate: function(){
+    getTemplate: function() {
         return this.stackPanel.template.grouped;
     },
 
@@ -50,45 +50,44 @@ _.extend(StackPanelViewGroupStrategy.prototype, {
      * @param {Object} preparedItems
      * @param {Array} preparedItems.groups
      */
-    appendItemsContent: function (preparedItems) {
-        var
-            stackPanel = this.stackPanel,
-            $stackPanel = stackPanel.$el,
-            groupTemplate = this.groupTemplate,
-            groupHeaderTemplate = this.stackPanel.getGroupItemTemplate(),
-            itemTemplate = this.stackPanel.getItemTemplate(),
-            $groups,
-            groups = preparedItems.groups;
+    appendItemsContent: function( preparedItems ) {
+        var stackPanel = this.stackPanel;
+        var $stackPanel = stackPanel.$el;
+        var groupTemplate = this.groupTemplate;
+        var groupHeaderTemplate = this.stackPanel.getGroupItemTemplate();
+        var itemTemplate = this.stackPanel.getItemTemplate();
+        var $groups;
+        var groups = preparedItems.groups;
 
-        $groups = groups.map(function (group, groupIndex) {
+        $groups = groups.map( function( group, groupIndex ) {
 
-            var $items,
-                items = group.items || [],
-                indices = group.indices || [],
-                $group = $(groupTemplate({items: items})),
-                groupHeader = groupHeaderTemplate(null, {
-                    index: indices[0],  //Индекс любого элемента в этой группе
-                    item: group
-                });
+            var $items;
+            var items = group.items || [];
+            var indices = group.indices || [];
+            var $group = $( groupTemplate( { items: items } ) );
+            var groupHeader = groupHeaderTemplate( null, {
+                index: indices[ 0 ],  //Индекс любого элемента в этой группе
+                item: group
+            } );
 
-            stackPanel.addChildElement(groupHeader);
+            stackPanel.addChildElement( groupHeader );
 
-            $items = items.map(function (item, itemIndex) {
-                var element = itemTemplate(null, {index: indices[itemIndex], item: item});
-                stackPanel.addChildElement(element);
+            $items = items.map( function( item, itemIndex ) {
+                var element = itemTemplate( null, { index: indices[ itemIndex ], item: item } );
+                stackPanel.addChildElement( element );
                 return element.render();
-            });
+            } );
 
-            $('.pl-stack-panel-group__header', $group).append(groupHeader.render());
+            $( '.pl-stack-panel-group__header', $group ).append( groupHeader.render() );
 
-            $('.pl-stack-panel-list__item', $group).each(function (i, el) {
-                $(el).append($items[i]);
-            });
+            $( '.pl-stack-panel-list__item', $group ).each( function( i, el ) {
+                $( el ).append( $items[ i ] );
+            } );
 
             return $group;
+        } );
 
-        });
-
-        $stackPanel.append($groups);
+        $stackPanel.append( $groups );
     }
-});
+
+} );

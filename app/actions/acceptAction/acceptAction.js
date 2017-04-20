@@ -1,25 +1,25 @@
-function AcceptAction(parentView){
-    _.superClass(AcceptAction, this, parentView);
+function AcceptAction( parentView ) {
+    _.superClass( AcceptAction, this, parentView );
 }
 
-_.inherit(AcceptAction, BaseAction);
+_.inherit( AcceptAction, BaseAction );
 
 
-_.extend(AcceptAction.prototype, {
-    execute: function(callback){
+_.extend( AcceptAction.prototype, {
+    execute: function( callback ) {
         var that = this;
 
-        this.parentView.onClosed(function () {
+        this.parentView.onClosed( function() {
             that.onExecutedHandler();
 
-            if (callback) {
+            if( callback ) {
                 callback();
             }
-        });
+        } );
 
-        this.parentView.setDialogResult(DialogResult.accepted);
+        this.parentView.setDialogResult( DialogResult.accepted );
         this.parentView.close();
     }
-});
+} );
 
 window.InfinniUI.AcceptAction = AcceptAction;

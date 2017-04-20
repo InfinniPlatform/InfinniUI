@@ -1,34 +1,33 @@
-var ComboBoxGroupView = Backbone.View.extend({
+var ComboBoxGroupView = Backbone.View.extend( {
 
-    template: InfinniUI.Template["controls/comboBox/dropdown/group/template/template.tpl.html"],
+    template: InfinniUI.Template[ 'controls/comboBox/dropdown/group/template/template.tpl.html' ],
 
     UI: {
         header: '.pl-combobox-group__header',
         items: '.pl-combobox-group__items'
     },
 
-    initialize: function (options) {
+    initialize: function( options ) {
         this.options = {
             header: options.header,
             items: options.items
         };
-
     },
 
-    render: function () {
+    render: function() {
         var options = this.options;
-        this.$el.html(this.template());
-        this.bindUIElements()
-        this.ui.header.append(options.header);
-        this.ui.items.append(options.items);
+        this.$el.html( this.template() );
+        this.bindUIElements();
+        this.ui.header.append( options.header );
+        this.ui.items.append( options.items );
 
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
 
         return this.$el;
     }
 
-});
+} );
 
-_.extend(ComboBoxGroupView.prototype, bindUIElementsMixin);
+_.extend( ComboBoxGroupView.prototype, bindUIElementsMixin );

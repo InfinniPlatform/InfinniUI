@@ -4,21 +4,21 @@
  * @constructor
  * @augments ContainerControl
  */
-function CellControl(parent) {
-    _.superClass(CellControl, this, parent);
+function CellControl( parent ) {
+    _.superClass( CellControl, this, parent );
 }
 
-_.inherit(CellControl, ContainerControl);
+_.inherit( CellControl, ContainerControl );
 
-_.extend(CellControl.prototype,
+_.extend( CellControl.prototype,
     /** @lends CellControl.prototype */
     {
-        createControlModel: function () {
+        createControlModel: function() {
             return new CellModel();
         },
 
-        createControlView: function (model) {
-            return new CellView({model: model});
+        createControlView: function( model ) {
+            return new CellView( { model: model } );
         }
     }
 );

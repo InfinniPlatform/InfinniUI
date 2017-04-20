@@ -29,9 +29,8 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
                 continue;
             }
 
-            dataSource.suspendUpdate( suspended[name] );
+            dataSource.suspendUpdate( suspended[ name ] );
         }
-
     },
 
     applyMetadata: function( builder, parentView, metadata, dataSource ) {
@@ -41,36 +40,36 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
         }
 
         if( 'SuspendUpdate' in metadata ) {
-            dataSource.suspendUpdate( metadata['SuspendUpdate'] );
+            dataSource.suspendUpdate( metadata[ 'SuspendUpdate' ] );
         }
 
-        dataSource.setName(metadata.Name);
-        dataSource.setFillCreatedItem(metadata.FillCreatedItem);
+        dataSource.setName( metadata.Name );
+        dataSource.setFillCreatedItem( metadata.FillCreatedItem );
 
-        if('IsLazy' in metadata){
-            dataSource.setIsLazy(metadata['IsLazy']);
+        if( 'IsLazy' in metadata ) {
+            dataSource.setIsLazy( metadata[ 'IsLazy' ] );
         }
 
         if( 'Search' in metadata ) {
-            dataSource.setSearch( metadata['Search'] );
+            dataSource.setSearch( metadata[ 'Search' ] );
         }
 
         if( 'Filter' in metadata ) {
-            dataSource.setFilter( metadata['Filter'] );
+            dataSource.setFilter( metadata[ 'Filter' ] );
         }
         if( 'FilterParams' in metadata ) {
-            var params = metadata['FilterParams'];
+            var params = metadata[ 'FilterParams' ];
             for( var k in params ) {
-                this.initBindingToProperty( params[k], dataSource, parentView, '.filterParams.' + k, builder );
+                this.initBindingToProperty( params[ k ], dataSource, parentView, '.filterParams.' + k, builder );
             }
         }
 
         if( 'IsLazy' in metadata ) {
-            dataSource.setIsLazy( metadata['IsLazy'] );
+            dataSource.setIsLazy( metadata[ 'IsLazy' ] );
         }
 
         if( 'ResolvePriority' in metadata ) {
-            dataSource.setResolvePriority( metadata['ResolvePriority'] );
+            dataSource.setResolvePriority( metadata[ 'ResolvePriority' ] );
         }
 
         if( _.isObject( metadata.CustomProperties ) ) {
@@ -86,9 +85,9 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
 
     createDataSource: function( parent ) {
         // throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
-        return new BaseDataSource({
+        return new BaseDataSource( {
             view: parent
-        });
+        } );
     },
 
     initCustomProperties: function( dataSource, customProperties ) {
@@ -114,7 +113,6 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
 
     //Скриптовые обработчики на события
     initScriptsHandlers: function( parentView, metadata, dataSource ) {
-
         if( !parentView ) {
             return;
         }
@@ -157,7 +155,6 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
     },
 
     buildBindingBuilder: function( params ) {
-
         return function( bindingMetadata ) {
             return params.builder.buildBinding( bindingMetadata, {
                 parentView: params.parentView,
@@ -167,11 +164,8 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
     },
 
     initFileProvider: function( dataSource ) {
-
         var host = InfinniUI.config.serverUrl;
-
         var fileUrlConstructor = new DocumentUploadQueryConstructor( host );
-
         var fileProvider = new DocumentFileProvider( fileUrlConstructor );
 
         dataSource.setFileProvider( fileProvider );
@@ -196,7 +190,6 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
             dataBinding.bindElement( dataSource, pathForBinding );
         }
     }
-
 } );
 
 _.extend( BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin );

@@ -3,24 +3,24 @@
  * @constructor
  * @augments Container
  */
-function StackPanel(parent, viewMode) {
-    _.superClass(StackPanel, this, parent, viewMode);
+function StackPanel( parent, viewMode ) {
+    _.superClass( StackPanel, this, parent, viewMode );
 }
 
 window.InfinniUI.StackPanel = StackPanel;
 
-_.inherit(StackPanel, Container);
+_.inherit( StackPanel, Container );
 
-StackPanel.prototype.getOrientation = function () {
-    return this.control.get('orientation');
+StackPanel.prototype.getOrientation = function() {
+    return this.control.get( 'orientation' );
 };
 
-StackPanel.prototype.setOrientation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.StackPanelOrientation)) {
-        this.control.set('orientation', value)
+StackPanel.prototype.setOrientation = function( value ) {
+    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.StackPanelOrientation ) ) {
+        this.control.set( 'orientation', value );
     }
 };
 
-StackPanel.prototype.createControl = function (viewMode) {
-    return new StackPanelControl(viewMode);
+StackPanel.prototype.createControl = function( viewMode ) {
+    return new StackPanelControl( viewMode );
 };

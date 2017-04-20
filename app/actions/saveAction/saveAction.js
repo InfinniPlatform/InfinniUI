@@ -1,45 +1,44 @@
 function SaveAction( parentView ) {
-	_.superClass( SaveAction, this, parentView );
+    _.superClass( SaveAction, this, parentView );
 }
 
 _.inherit( SaveAction, BaseAction );
 
-_.extend( SaveAction.prototype,
-	BaseFallibleActionMixin,
-	{
-		execute: function( callback ) {
-			var parentView = this.parentView;
-			var dataSource = this.getProperty( 'dataSource' );
-			var canClose = this.getProperty( 'canClose' );
-			var that = this;
+_.extend( SaveAction.prototype, BaseFallibleActionMixin, {
 
-			var onSuccessSave = function( context, args ) {
-				parentView.setDialogResult( DialogResult.accepted );
+    execute: function( callback ) {
+        var parentView = this.parentView;
+        var dataSource = this.getProperty( 'dataSource' );
+        var canClose = this.getProperty( 'canClose' );
+        var that = this;
 
-				if( canClose !== false ) {
-					parentView.close();
-				}
+        var onSuccessSave = function( context, args ) {
+            parentView.setDialogResult( DialogResult.accepted );
 
-				that.onExecutedHandler( args );
-				that.onSuccessHandler( args );
+            if( canClose !== false ) {
+                parentView.close();
+            }
 
-				if( _.isFunction( callback ) ) {
-					callback( context, args );
-				}
-			};
-			var onErrorSave = function( context, args ) {
-				that.onExecutedHandler( args );
-				that.onErrorHandler( args );
+            that.onExecutedHandler( args );
+            that.onSuccessHandler( args );
 
-				if( _.isFunction( callback ) ) {
-					callback( context, args );
-				}
-			};
+            if( _.isFunction( callback ) ) {
+                callback( context, args );
+            }
+        };
+        var onErrorSave = function( context, args ) {
+            that.onExecutedHandler( args );
+            that.onErrorHandler( args );
 
-			var selectedItem = dataSource.getSelectedItem();
-			dataSource.saveItem( selectedItem, onSuccessSave, onErrorSave );
-		}
-	}
-);
+            if( _.isFunction( callback ) ) {
+                callback( context, args );
+            }
+        };
+
+        var selectedItem = dataSource.getSelectedItem();
+        dataSource.saveItem( selectedItem, onSuccessSave, onErrorSave );
+    }
+
+} );
 
 window.InfinniUI.SaveAction = SaveAction;

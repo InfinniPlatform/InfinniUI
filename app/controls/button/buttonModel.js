@@ -2,17 +2,17 @@
  * @class
  * @augments ControlModel
  */
-var ButtonModel = ControlModel.extend({
+var ButtonModel = ControlModel.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         content: null,
         contentTemplate: null,
         horizontalAlignment: 'Left',
         type: 'button'
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
     }
 
-});
+} );

@@ -3,61 +3,61 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var FrameView = ControlView.extend(_.extend({}, editorBaseViewMixin, /** @lends FrameView.prototype */{
+var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /** @lends FrameView.prototype */{
 
     className: 'pl-frame',
 
-    template: InfinniUI.Template["controls/frame/template/frame.tpl.html"],
+    template: InfinniUI.Template[ 'controls/frame/template/frame.tpl.html' ],
 
-    UI: _.extend({}, editorBaseViewMixin.UI, {
+    UI: _.extend( {}, editorBaseViewMixin.UI, {
         iframe: 'iframe'
-    }),
+    } ),
 
-    initialize: function () {
-        ControlView.prototype.initialize.apply(this);
+    initialize: function() {
+        ControlView.prototype.initialize.apply( this );
     },
 
-    initHandlersForProperties: function(){
-        ControlView.prototype.initHandlersForProperties.call(this);
-        editorBaseViewMixin.initHandlersForProperties.call(this);
+    initHandlersForProperties: function() {
+        ControlView.prototype.initHandlersForProperties.call( this );
+        editorBaseViewMixin.initHandlersForProperties.call( this );
     },
 
-    updateProperties: function(){
-        ControlView.prototype.updateProperties.call(this);
-        editorBaseViewMixin.updateProperties.call(this);
+    updateProperties: function() {
+        ControlView.prototype.updateProperties.call( this );
+        editorBaseViewMixin.updateProperties.call( this );
     },
 
-    updateValue: function(){
-        var value = this.model.get('value');
+    updateValue: function() {
+        var value = this.model.get( 'value' );
 
-        this.ui.iframe.attr('src', value);
+        this.ui.iframe.attr( 'src', value );
     },
 
-    getData: function () {
+    getData: function() {
         return _.extend(
             {},
-            ControlView.prototype.getData.call(this),
-            editorBaseViewMixin.getData.call(this),
+            ControlView.prototype.getData.call( this ),
+            editorBaseViewMixin.getData.call( this ),
             {
 
             }
         );
     },
 
-    render: function () {
+    render: function() {
         var model = this.model;
 
         this.prerenderingActions();
-        this.renderTemplate(this.template);
+        this.renderTemplate( this.template );
 
         this.updateProperties();
 
-        this.trigger('render');
+        this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     }
 
-}));
+} ) );

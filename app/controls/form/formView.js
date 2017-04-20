@@ -2,77 +2,77 @@
  * @class FormView
  * @augments StackPanelView
  */
-var FormView = StackPanelView.extend({
+var FormView = StackPanelView.extend( {
 
-	className: 'pl-form',
+    className: 'pl-form',
 
-	tagName: 'form',
+    tagName: 'form',
 
-	template: {
-		plain: InfinniUI.Template["controls/form/template/form.tpl.html"]
-	},
+    template: {
+        plain: InfinniUI.Template[ 'controls/form/template/form.tpl.html' ]
+    },
 
-	events: {
-		'submit': 'onSubmit'
-	},
+    events: {
+        'submit': 'onSubmit'
+    },
 
-	onSubmit: function (e) {
-		e.preventDefault();
-	},
+    onSubmit: function( e ) {
+        e.preventDefault();
+    },
 
-	initialize: function (options) {
-		StackPanelView.prototype.initialize.call(this, options);
+    initialize: function( options ) {
+        StackPanelView.prototype.initialize.call( this, options );
 
-		this.listenTo(this.model, 'change:method', this.updateMethod);
-		this.listenTo(this.model, 'change:action', this.updateAction);
-	},
+        this.listenTo( this.model, 'change:method', this.updateMethod );
+        this.listenTo( this.model, 'change:action', this.updateAction );
+    },
 
-	updateGrouping: function(){
-		this.strategy = new StackPanelViewPlainStrategy(this);
-	},
+    updateGrouping: function() {
+        this.strategy = new StackPanelViewPlainStrategy( this );
+    },
 
-	render: function () {
-		this.prerenderingActions();
+    render: function() {
+        this.prerenderingActions();
 
-		this.removeChildElements();
+        this.removeChildElements();
 
-		var preparedItems = this.strategy.prepareItemsForRendering();
-		var template = this.strategy.getTemplate();
+        var preparedItems = this.strategy.prepareItemsForRendering();
+        var template = this.strategy.getTemplate();
 
-		this.$el.html(template(preparedItems));
+        this.$el.html( template( preparedItems ) );
 
-		this.strategy.appendItemsContent(preparedItems, '.pl-form-i');
+        this.strategy.appendItemsContent( preparedItems, '.pl-form-i' );
 
-		this.bindUIElements();
-		this.updateProperties();
-		this.trigger('render');
+        this.bindUIElements();
+        this.updateProperties();
+        this.trigger( 'render' );
 
-		this.postrenderingActions();
+        this.postrenderingActions();
 
-		//devblockstart
-    window.InfinniUI.global.messageBus.send('render', {element: this});
-    //devblockstop
-    
-		return this;
-	},
+        //devblockstart
+        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
 
-	updateProperties: function() {
-		StackPanelView.prototype.updateProperties.call(this);
+        return this;
+    },
 
-		this.updateMethod();
-		this.updateAction();
-	},
+    updateProperties: function() {
+        StackPanelView.prototype.updateProperties.call( this );
 
-	updateMethod: function() {
-		var method = this.model.get('method');
+        this.updateMethod();
+        this.updateAction();
+    },
 
-		this.$el.attr('method', method);
-	},
+    updateMethod: function() {
+        var method = this.model.get( 'method' );
 
-	updateAction: function() {
-		var action = this.model.get('action');
+        this.$el.attr( 'method', method );
+    },
 
-		this.$el.attr('action', action);
-	}
+    updateAction: function() {
+        var action = this.model.get( 'action' );
 
-});
+        this.$el.attr( 'action', action );
+    }
+
+} );

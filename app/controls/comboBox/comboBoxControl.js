@@ -1,21 +1,21 @@
-function ComboBoxControl(viewMode) {
-    _.superClass(ListBoxControl, this, viewMode);
+function ComboBoxControl( viewMode ) {
+    _.superClass( ListBoxControl, this, viewMode );
 }
 
-_.inherit(ComboBoxControl, ListEditorBaseControl);
+_.inherit( ComboBoxControl, ListEditorBaseControl );
 
-_.extend(ComboBoxControl.prototype, {
+_.extend( ComboBoxControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new ComboBoxModel();
     },
 
-    createControlView: function (model) {
-        return new ComboBoxView({model: model});
+    createControlView: function( model ) {
+        return new ComboBoxView( { model: model } );
     },
 
     setNoItemsMessage: function( message ) {
         this.controlModel.setNoItemsMessage( message );
     }
-});
+} );
 

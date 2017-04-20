@@ -5,8 +5,8 @@
 var RowModel = ContainerModel.extend(
     /** @lends RowModel.prototype */
     {
-        initialize: function () {
-            ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+        initialize: function() {
+            ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         }
     }
 );

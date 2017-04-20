@@ -1,26 +1,24 @@
-function EditAction(parentView){
-    _.superClass(EditAction, this, parentView);
+function EditAction( parentView ) {
+    _.superClass( EditAction, this, parentView );
 }
 
-_.inherit(EditAction, BaseEditAction);
+_.inherit( EditAction, BaseEditAction );
 
+_.extend( EditAction.prototype, {
+    setSelectedItem: function() {
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var destinationDataSource = this.getProperty( 'destinationDataSource' );
+        var destinationProperty = this.getProperty( 'destinationProperty' );
+        var selectedItem = destinationDataSource.getProperty( destinationProperty );
 
-_.extend(EditAction.prototype, {
-    setSelectedItem: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
-
-        var selectedItem = destinationDataSource.getProperty(destinationProperty);
-
-        if( selectedItem == null ){
+        if( selectedItem === null ) {
 
             // if selectedItem is empty and it is must be document
             // return error
-            if( this._isRootElementPath(destinationProperty) ){
+            if( this._isRootElementPath( destinationProperty ) ) {
                 var logger = window.InfinniUI.global.logger;
-                var message = stringUtils.format('EditAction: edit item has not been found. {0} does not have item by path "{1}"', [destinationDataSource.getName(), destinationProperty]);
-                logger.error(message);
+                var message = stringUtils.format( 'EditAction: edit item has not been found. {0} does not have item by path "{1}"', [ destinationDataSource.getName(), destinationProperty ] );
+                logger.error( message );
 
                 return false;
             }
@@ -30,55 +28,55 @@ _.extend(EditAction.prototype, {
             selectedItem = selectedItem || {};
         }
 
-        if( this._isObjectDataSource(editDataSource) ) {
-            this._setItem(editDataSource, selectedItem);
+        if( this._isObjectDataSource( editDataSource ) ) {
+            this._setItem( editDataSource, selectedItem );
         } else {
-            this._setDocument(editDataSource, selectedItem);
+            this._setDocument( editDataSource, selectedItem );
         }
 
         return true;
     },
 
-    _resumeUpdateEditDataSource: function () {
-        var editDataSource = this.getProperty('editDataSource');
-        editDataSource.resumeUpdate('BaseEditAction');
+    _resumeUpdateEditDataSource: function() {
+        var editDataSource = this.getProperty( 'editDataSource' );
+        editDataSource.resumeUpdate( 'BaseEditAction' );
     },
 
-    _setDocument: function (editDataSource, selectedItem){
+    _setDocument: function( editDataSource, selectedItem ) {
         var selectedItemId = editDataSource.idOfItem( selectedItem );
-        editDataSource.setIdFilter(selectedItemId);
+        editDataSource.setIdFilter( selectedItemId );
         editDataSource.tryInitData();
         this._resumeUpdateEditDataSource();
     },
 
-    _setItem: function(editDataSource, selectedItem){
+    _setItem: function( editDataSource, selectedItem ) {
         var item = _.clone( selectedItem );
 
-        if(item === undefined || item === null){
+        if( item === undefined || item === null ) {
             item = {};
         }
         this._resumeUpdateEditDataSource();
-        editDataSource.setItems( [item] );
+        editDataSource.setItems( [ item ] );
         editDataSource.setSelectedItem( item );
     },
 
-    save: function(){
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty');
+    save: function() {
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var destinationDataSource = this.getProperty( 'destinationDataSource' );
+        var destinationProperty = this.getProperty( 'destinationProperty' );
 
-        if( this._isObjectDataSource(editDataSource) ) {
-            var editedItem = editDataSource.getSelectedItem(),
-                originItem = destinationDataSource.getProperty(destinationProperty);
+        if( this._isObjectDataSource( editDataSource ) ) {
+            var editedItem = editDataSource.getSelectedItem();
+            var originItem = destinationDataSource.getProperty( destinationProperty );
 
-            if( this._isRootElementPath(destinationProperty) ) {
-                this._overrideOriginItem(originItem, editedItem);
-                destinationDataSource._includeItemToModifiedSet(originItem);
-                destinationDataSource.saveItem(originItem, function(){
+            if( this._isRootElementPath( destinationProperty ) ) {
+                this._overrideOriginItem( originItem, editedItem );
+                destinationDataSource._includeItemToModifiedSet( originItem );
+                destinationDataSource.saveItem( originItem, function() {
                     destinationDataSource.updateItems();
-                });
+                } );
             } else {
-                destinationDataSource.setProperty(destinationProperty, editedItem);
+                destinationDataSource.setProperty( destinationProperty, editedItem );
             }
 
         } else {
@@ -86,15 +84,18 @@ _.extend(EditAction.prototype, {
         }
     },
 
-    _overrideOriginItem: function(originItem, newItem) {
-        for(var property in originItem) {
-            delete originItem[property];
+    _overrideOriginItem: function( originItem, newItem ) {
+        var property;
+
+        for( property in originItem ) {
+            delete originItem[ property ];
         }
 
-        for(var property in newItem) {
-          originItem[property] = _.clone(newItem[property]);
+        for( property in newItem ) {
+            originItem[ property ] = _.clone( newItem[ property ] );
         }
     }
-});
+
+} );
 
 window.InfinniUI.EditAction = EditAction;

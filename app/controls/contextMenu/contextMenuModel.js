@@ -1,3 +1,3 @@
-var ContextMenuModel = ContainerModel.extend({
+var ContextMenuModel = ContainerModel.extend( {
 
-});
+} );

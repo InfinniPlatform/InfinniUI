@@ -1,26 +1,26 @@
-var ViewPanelModel = ControlModel.extend({
-    defaults: _.defaults({
+var ViewPanelModel = ControlModel.extend( {
+    defaults: _.defaults( {
         layout: null
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function(){
+    initialize: function() {
         var that = this;
 
-        ControlModel.prototype.initialize.apply(this);
+        ControlModel.prototype.initialize.apply( this );
 
-        this.once('change:layout', function (model, layout) {
-            if(layout && layout.onLoaded){
+        this.once( 'change:layout', function( model, layout ) {
+            if( layout && layout.onLoaded ) {
                 that.subscribeOnLoaded();
             }
-        });
+        } );
     },
 
-    subscribeOnLoaded: function(){
+    subscribeOnLoaded: function() {
         var that = this;
-        var layout = this.get('layout');
+        var layout = this.get( 'layout' );
 
-        layout.onLoaded(function(){
-            that.set('isLoaded', true);
-        });
+        layout.onLoaded( function() {
+            that.set( 'isLoaded', true );
+        } );
     }
-});
+} );

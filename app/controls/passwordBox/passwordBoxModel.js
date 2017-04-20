@@ -3,7 +3,7 @@
  * @augments ControlModel
  * @mixes editorBaseModelMixin
  */
-var PasswordBoxModel = ControlModel.extend(_.extend({
+var PasswordBoxModel = ControlModel.extend( _.extend( {
 
     defaults: _.defaults(
         {
@@ -13,9 +13,9 @@ var PasswordBoxModel = ControlModel.extend(_.extend({
         ControlModel.prototype.defaults
     ),
 
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
 
-}, editorBaseModelMixin));
+}, editorBaseModelMixin ) );

@@ -131,9 +131,9 @@ _.extend( LocalStorageDataProvider.prototype, {
 
     createIdFilter: function( id ) {
         return [ {
-            "Property": "_id",
-            "Value": id,
-            "CriteriaType": 1
+            'Property': '_id',
+            'Value': id,
+            'CriteriaType': 1
         } ];
     },
 

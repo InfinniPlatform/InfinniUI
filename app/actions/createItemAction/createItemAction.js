@@ -8,7 +8,7 @@ _.extend( CreateItemAction.prototype, {
 
     execute: function( callback ) {
         var destinationDataSource = this.getProperty( 'destinationDataSource' );
-        var destinationProperty = this.getProperty( 'destinationProperty' ) || "";
+        var destinationProperty = this.getProperty( 'destinationProperty' ) || '';
 
         if( !destinationDataSource ) {
             return;

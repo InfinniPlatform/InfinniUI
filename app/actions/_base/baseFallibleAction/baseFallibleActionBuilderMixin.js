@@ -1,5 +1,5 @@
 var BaseFallibleActionBuilderMixin = {
-    applyBaseFallibleActionMetadata: function(action, params) {
+    applyBaseFallibleActionMetadata: function( action, params ) {
         var metadata = params.metadata;
 
         var executorBuilderParams = {
@@ -8,14 +8,14 @@ var BaseFallibleActionBuilderMixin = {
             basePathOfProperty: params.basePathOfProperty
         };
 
-        if('OnSuccess' in metadata) {
-            var onSuccessExecutor = Executor(metadata.OnSuccess, params.builder, executorBuilderParams);
-            action.setProperty('onSuccessHandler', onSuccessExecutor);
+        if( 'OnSuccess' in metadata ) {
+            var onSuccessExecutor = Executor( metadata.OnSuccess, params.builder, executorBuilderParams );
+            action.setProperty( 'onSuccessHandler', onSuccessExecutor );
         }
 
-        if('OnError' in metadata) {
-            var onErrorExecutor = Executor(metadata.OnError, params.builder, executorBuilderParams);
-            action.setProperty('onErrorHandler', onErrorExecutor);
+        if( 'OnError' in metadata ) {
+            var onErrorExecutor = Executor( metadata.OnError, params.builder, executorBuilderParams );
+            action.setProperty( 'onErrorHandler', onErrorExecutor );
         }
     }
 };

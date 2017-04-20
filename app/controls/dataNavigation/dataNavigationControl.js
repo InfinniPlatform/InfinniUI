@@ -1,25 +1,25 @@
-function DataNavigationControl (parent) {
-    _.superClass(DataNavigationControl, this, parent);
+function DataNavigationControl( parent ) {
+    _.superClass( DataNavigationControl, this, parent );
 }
 
-_.inherit(DataNavigationControl, Control);
+_.inherit( DataNavigationControl, Control );
 
-_.extend(DataNavigationControl.prototype, {
+_.extend( DataNavigationControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new DataNavigationModel();
     },
 
-    createControlView: function (model) {
-        return new DataNavigationView({model: model});
+    createControlView: function( model ) {
+        return new DataNavigationView( { model: model } );
     },
 
-    onPageNumberChanged: function (handler) {
-        this.controlModel.onPageNumberChanged(handler);
+    onPageNumberChanged: function( handler ) {
+        this.controlModel.onPageNumberChanged( handler );
     },
 
-    onPageSizeChanged: function (handler) {
-        this.controlModel.onPageSizeChanged(handler);
+    onPageSizeChanged: function( handler ) {
+        this.controlModel.onPageSizeChanged( handler );
     }
 
-});
+} );

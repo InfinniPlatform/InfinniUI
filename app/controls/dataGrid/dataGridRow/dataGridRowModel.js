@@ -1,3 +1,3 @@
-var DataGridRowModel = ControlModel.extend({
+var DataGridRowModel = ControlModel.extend( {
 
-});
+} );

@@ -4,19 +4,19 @@
  * @augments Container
  * @augments Button
  */
-function PopupButton(parent, viewMode) {
-    _.superClass(PopupButton, this, parent, viewMode);
+function PopupButton( parent, viewMode ) {
+    _.superClass( PopupButton, this, parent, viewMode );
     this.buttonInit();
 }
 
 window.InfinniUI.PopupButton = PopupButton;
 
-_.inherit(PopupButton, Container);
+_.inherit( PopupButton, Container );
 
-_.extend(PopupButton.prototype, {
+_.extend( PopupButton.prototype, {
 
-    createControl: function (viewMode) {
-        return new PopupButtonControl(viewMode);
+    createControl: function( viewMode ) {
+        return new PopupButtonControl( viewMode );
     }
 
-}, buttonMixin);
+}, buttonMixin );

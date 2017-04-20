@@ -1,3 +1,3 @@
-var DatePickerView = DateTimePickerView .extend({
-    
-});
+var DatePickerView = DateTimePickerView .extend( {
+
+} );

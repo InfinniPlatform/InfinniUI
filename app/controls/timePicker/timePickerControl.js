@@ -1,17 +1,17 @@
-function TimePickerControl(parent) {
-    _.superClass(TimePickerControl, this, parent);
+function TimePickerControl( parent ) {
+    _.superClass( TimePickerControl, this, parent );
 }
 
-_.inherit(TimePickerControl, DateTimePickerControl);
+_.inherit( TimePickerControl, DateTimePickerControl );
 
-_.extend(TimePickerControl.prototype, {
+_.extend( TimePickerControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new TimePickerModel();
     },
 
-    createControlView: function (model) {
-        return new TimePickerView({model: model});
+    createControlView: function( model ) {
+        return new TimePickerView( { model: model } );
     }
-});
+} );
 

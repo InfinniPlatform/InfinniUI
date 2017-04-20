@@ -1,9 +1,7 @@
-var DatePickerModel = DateTimePickerModel.extend({
+var DatePickerModel = DateTimePickerModel.extend( {
 
-    initialize: function () {
-        DateTimePickerModel.prototype.initialize.apply(this, arguments);
-
-
+    initialize: function() {
+        DateTimePickerModel.prototype.initialize.apply( this, arguments );
     }
 
-});
+} );

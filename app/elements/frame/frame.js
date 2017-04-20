@@ -5,20 +5,20 @@
  * @mixes editorBaseMixin
  */
 function Frame() {
-    _.superClass(Frame, this);
+    _.superClass( Frame, this );
     this.initialize_editorBase();
 }
 
 window.InfinniUI.Frame = Frame;
 
-_.inherit(Frame, Element);
+_.inherit( Frame, Element );
 
-_.extend(Frame.prototype, {
+_.extend( Frame.prototype, {
 
-        createControl: function () {
-            return new FrameControl();
-        }
+    createControl: function() {
+        return new FrameControl();
+    }
 
-    },
+},
     editorBaseMixin
 );

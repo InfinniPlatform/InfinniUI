@@ -3,11 +3,11 @@
  * @class BooleanFormat
  * @mixes formatMixin
  */
-var BooleanFormat = function () {};
+var BooleanFormat = function() {};
 
 window.InfinniUI.BooleanFormat = BooleanFormat;
 
-_.extend(BooleanFormat.prototype, {
+_.extend( BooleanFormat.prototype, {
 
     /**
      * @description Текст для отображения истинного значения
@@ -26,8 +26,8 @@ _.extend(BooleanFormat.prototype, {
      * @memberOf BooleanFormat.prototype
      * @returns {String}
      */
-    getFalseText: function () {
-        return this.getPropertyValue('falseText', this.defaultFalseText);
+    getFalseText: function() {
+        return this.getPropertyValue( 'falseText', this.defaultFalseText );
     },
 
     /**
@@ -35,7 +35,7 @@ _.extend(BooleanFormat.prototype, {
      * @memberOf BooleanFormat.prototype
      * @param {String} value
      */
-    setFalseText: function (value) {
+    setFalseText: function( value ) {
         this.falseText = value;
     },
 
@@ -44,8 +44,8 @@ _.extend(BooleanFormat.prototype, {
      * @memberOf BooleanFormat.prototype
      * @returns {String}
      */
-    getTrueText: function () {
-        return this.getPropertyValue('trueText', this.defaultTrueText);
+    getTrueText: function() {
+        return this.getPropertyValue( 'trueText', this.defaultTrueText );
     },
 
     /**
@@ -53,7 +53,7 @@ _.extend(BooleanFormat.prototype, {
      * @memberOf BooleanFormat.prototype
      * @param {String} value
      */
-    setTrueText: function (value) {
+    setTrueText: function( value ) {
         this.trueText = value;
     },
 
@@ -63,12 +63,12 @@ _.extend(BooleanFormat.prototype, {
      * @param {Boolean} originalValue
      * @returns {String}
      */
-    formatValue: function (originalValue) {
-        if (originalValue === false || originalValue === null || typeof originalValue === 'undefined') {
+    formatValue: function( originalValue ) {
+        if ( originalValue === false || originalValue === null || typeof originalValue === 'undefined' ) {
             return this.getFalseText();
         } else {
             return this.getTrueText();
         }
     }
 
-}, formatMixin);
+}, formatMixin );

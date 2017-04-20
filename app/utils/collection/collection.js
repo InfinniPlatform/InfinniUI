@@ -5,8 +5,8 @@
  * @param {function} [comparator]
  * @constructor
  */
-function Collection (items, idProperty, comparator) {
-    if (!Array.isArray(items)) {
+function Collection( items, idProperty, comparator ) {
+    if( !Array.isArray( items ) ) {
         items = [];
     }
 
@@ -14,9 +14,9 @@ function Collection (items, idProperty, comparator) {
      * @type {Array.<Object>}
      * @protected
      */
-    this._items = items.map(function (value, index) {
-        return this.createCollectionItem(value, index);
-    }, this);
+    this._items = items.map( function( value, index ) {
+        return this.createCollectionItem( value, index );
+    }, this );
 
     /**
      * @type {string|null}
@@ -30,10 +30,10 @@ function Collection (items, idProperty, comparator) {
      */
     this._comparator = comparator || defaultComparator;
 
-    function defaultComparator (a, b) {
-        if (a < b) {
+    function defaultComparator( a, b ) {
+        if( a < b ) {
             return -1;
-        } else if (a > b) {
+        } else if( a > b ) {
             return 1;
         }
         return 0;
@@ -49,12 +49,12 @@ function Collection (items, idProperty, comparator) {
 window.InfinniUI.Collection = Collection;
 
 
-Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */{
+Object.defineProperties( Collection.prototype, /** @lends Collection.prototype */{
     /**
      * @type {string|null}
      */
     idProperty: {
-        get: function () {
+        get: function() {
             return this._idProperty;
         },
         enumerable: false
@@ -63,7 +63,7 @@ Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */
      * @type {function}
      */
     comparator: {
-        get: function () {
+        get: function() {
             return this._comparator;
         },
         enumerable: false
@@ -72,7 +72,7 @@ Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */
      * @type {number}
      */
     length: {
-        get: function () {
+        get: function() {
             return this._items.length;
         },
         enumerable: false
@@ -81,12 +81,12 @@ Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */
      * @type {boolean}
      */
     hasIdProperty: {
-        get: function () {
+        get: function() {
             return typeof this._idProperty !== 'undefined';
         },
         enumerable: false
     }
-});
+} );
 
 /**
  *
@@ -95,11 +95,11 @@ Object.defineProperties(Collection.prototype, /** @lends Collection.prototype */
  * @param {*} value
  * @returns {Collection}
  */
-Collection.prototype.setProperty = function (index, propertyName, value) {
-    var item = this._items[index];
+Collection.prototype.setProperty = function( index, propertyName, value ) {
+    var item = this._items[ index ];
 
-    if (item) {
-        item[propertyName] = value;
+    if( item ) {
+        item[ propertyName ] = value;
     }
     return this;
 };
@@ -110,11 +110,11 @@ Collection.prototype.setProperty = function (index, propertyName, value) {
  * @param {string} propertyName
  * @returns {*}
  */
-Collection.prototype.getProperty = function (index, propertyName) {
-    var item = this._items[index];
+Collection.prototype.getProperty = function( index, propertyName ) {
+    var item = this._items[ index ];
 
-    if (item) {
-        return item[propertyName];
+    if( item ) {
+        return item[ propertyName ];
     }
 };
 
@@ -122,7 +122,7 @@ Collection.prototype.getProperty = function (index, propertyName) {
  * @description Возвращает количество элементов в коллекции
  * @returns {number} Количество элементов в коллекции
  */
-Collection.prototype.size = function () {
+Collection.prototype.size = function() {
     return this.length;
 };
 
@@ -131,13 +131,13 @@ Collection.prototype.size = function () {
  * @param {*} value
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.push = function (value) {
+Collection.prototype.push = function( value ) {
     var items = this._items;
-    var item = this.createCollectionItem(value, items.length);
+    var item = this.createCollectionItem( value, items.length );
 
-    items.push(item);
+    items.push( item );
 
-    this.events.onAdd([value]);
+    this.events.onAdd( [ value ] );
     return true;
 };
 
@@ -151,21 +151,21 @@ Collection.prototype.add = Collection.prototype.push;
  * @param {Array} values
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.addAll = function (values) {
-    if (!Array.isArray(values)) {
+Collection.prototype.addAll = function( values ) {
+    if( !Array.isArray( values ) ) {
         return false;
     }
 
     var items = this._items;
     var changed = values.length > 0;
 
-    values.forEach(function (value) {
-        var item = this.createCollectionItem(value, items.length);
-        items.push(item);
-    }, this);
+    values.forEach( function( value ) {
+        var item = this.createCollectionItem( value, items.length );
+        items.push( item );
+    }, this );
 
-    if (changed) {
-        this.events.onAdd(values);
+    if( changed ) {
+        this.events.onAdd( values );
     }
     return changed;
 };
@@ -176,11 +176,11 @@ Collection.prototype.addAll = function (values) {
  * @param {*} newItem
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.insert = function (index, newItem) {
-    var item = this.createCollectionItem(newItem, index);
-    this._items.splice(index, 0, item);
+Collection.prototype.insert = function( index, newItem ) {
+    var item = this.createCollectionItem( newItem, index );
+    this._items.splice( index, 0, item );
 
-    this.events.onAdd([newItem], index);
+    this.events.onAdd( [ newItem ], index );
     return true;
 };
 
@@ -190,22 +190,22 @@ Collection.prototype.insert = function (index, newItem) {
  * @param {Array} newItems
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.insertAll = function (index, newItems) {
-    if (!Array.isArray(newItems)) {
+Collection.prototype.insertAll = function( index, newItems ) {
+    if( !Array.isArray( newItems ) ) {
         return false;
     }
 
     var items = this._items;
     var changed = newItems.length > 0;
 
-    newItems.forEach(function(value, i) {
+    newItems.forEach( function( value, i ) {
         var start = index + i;
-        var item = this.createCollectionItem(value, start);
-        items.splice(start, 0, item);
-    }, this);
+        var item = this.createCollectionItem( value, start );
+        items.splice( start, 0, item );
+    }, this );
 
-    if (changed) {
-        this.events.onAdd(newItems, index);
+    if( changed ) {
+        this.events.onAdd( newItems, index );
     }
     return changed;
 };
@@ -215,23 +215,23 @@ Collection.prototype.insertAll = function (index, newItems) {
  * @param {Array} newItems
  * @return {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.reset = function (newItems) {
+Collection.prototype.reset = function( newItems ) {
     var changed, items;
 
-    if (!Array.isArray(newItems)) {
+    if( !Array.isArray( newItems ) ) {
         return false;
     }
 
     changed = this._items !== newItems;
 
-    items = newItems.map(function (value, index) {
-        return this.createCollectionItem(value, index);
-    }, this);
+    items = newItems.map( function( value, index ) {
+        return this.createCollectionItem( value, index );
+    }, this );
 
     this._items.length = 0;
 
-    Array.prototype.push.apply(this._items, items);
-    if (changed) {
+    Array.prototype.push.apply( this._items, items );
+    if( changed ) {
         this.events.onReset();
     }
     return changed;
@@ -241,39 +241,38 @@ Collection.prototype.reset = function (newItems) {
 /**
  * @description Заменяет элемент коллекции на указанный
  * @param {Array} newItems
+ * @param {*} silent
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.set = function (newItems, silent) {
+Collection.prototype.set = function( newItems, silent ) {
     var items = this._items;
 
-    if (!Array.isArray(newItems)) {
+    if( !Array.isArray( newItems ) ) {
         return false;
     }
 
-    var changed = this._items !== newItems;;
+    var changed = this._items !== newItems;
     var _newItems = newItems.slice();
     var matched, i = 0;
     var itemValue, newValue = null, newValueIndex;
 
-
-
-    _newItems.forEach(function(newItem, index){
-        if (index < items.length) {
-            if (changed) {
-                this.updateCollectionItem(items[index], newItem);
+    _newItems.forEach( function( newItem, index ) {
+        if( index < items.length ) {
+            if( changed ) {
+                this.updateCollectionItem( items[ index ], newItem );
             }
         } else {
             //Новые элементы
             changed = true;
-            items.push(this.createCollectionItem(newItem, items.length));
+            items.push( this.createCollectionItem( newItem, items.length ) );
         }
-    }, this);
+    }, this );
 
-    if (newItems.length < items.length) {
-        items.splice(newItems.length)
+    if( newItems.length < items.length ) {
+        items.splice( newItems.length );
     }
 
-    if (changed && !silent) {
+    if( changed && !silent ) {
         this.events.onReset();
     }
     return changed;
@@ -285,20 +284,20 @@ Collection.prototype.set = function (newItems, silent) {
  * @param {*} newItem
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.replace = function (oldItem, newItem) {
+Collection.prototype.replace = function( oldItem, newItem ) {
     var itemValue;
     var changed = false;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        if (this.isEqual(oldItem, itemValue)) {
-            this.updateCollectionItem(this._items[i], newItem);
+    for( var i = 0; i < this._items.length; i = i + 1 ) {
+        itemValue = this.getCollectionItemValue( i );
+        if( this.isEqual( oldItem, itemValue ) ) {
+            this.updateCollectionItem( this._items[ i ], newItem );
             changed = true;
             break;
         }
     }
 
-    if (changed) {
-        this.events.onReplace([oldItem], [newItem]);
+    if( changed ) {
+        this.events.onReplace( [ oldItem ], [ newItem ] );
     }
     return changed;
 };
@@ -307,14 +306,14 @@ Collection.prototype.replace = function (oldItem, newItem) {
  * @description Удаляет последний элемент из коллекции
  * @returns {*|undefined} Возвращает последний элемент коллекции, который был удален
  */
-Collection.prototype.pop = function () {
-    if (this._items.length === 0) {
+Collection.prototype.pop = function() {
+    if( this._items.length === 0 ) {
         return;
     }
 
-    var itemValue = this.getCollectionItemValue(this.length - 1);
+    var itemValue = this.getCollectionItemValue( this.length - 1 );
     this._items.pop();
-    this.events.onRemove([itemValue], this._items.length);
+    this.events.onRemove( [ itemValue ], this._items.length );
     return itemValue;
 };
 
@@ -323,23 +322,23 @@ Collection.prototype.pop = function () {
  * @param {*} item
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.remove = function (item) {
+Collection.prototype.remove = function( item ) {
     var itemValue;
     var itemIndex;
 
     var changed = true;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
+    for( var i = 0; i < this._items.length; i = i + 1 ) {
+        itemValue = this.getCollectionItemValue( i );
         itemIndex = i;
-        if (this.isEqual(item, itemValue)) {
-            this._items.splice(i, 1);
+        if( this.isEqual( item, itemValue ) ) {
+            this._items.splice( i, 1 );
             changed = true;
             break;
         }
     }
 
-    if (changed) {
-        this.events.onRemove([item], itemIndex);
+    if( changed ) {
+        this.events.onRemove( [ item ], itemIndex );
     }
     return changed;
 };
@@ -349,8 +348,8 @@ Collection.prototype.remove = function (item) {
  * @param {number|string} id
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.removeById = function (id) {
-    if (!this.hasIdProperty) {
+Collection.prototype.removeById = function( id ) {
+    if( !this.hasIdProperty ) {
         return false;
     }
 
@@ -358,18 +357,18 @@ Collection.prototype.removeById = function (id) {
     var itemIndex;
 
     var changed = true;
-    for (var i = 0; i < this._items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
+    for( var i = 0; i < this._items.length; i = i + 1 ) {
+        itemValue = this.getCollectionItemValue( i );
         itemIndex = i;
-        if (this.getValueId(itemValue) === id) {
-            this._items.splice(i, 1);
+        if( this.getValueId( itemValue ) === id ) {
+            this._items.splice( i, 1 );
             changed = true;
             break;
         }
     }
 
-    if (changed) {
-        this.events.onRemove([itemValue], itemIndex);
+    if( changed ) {
+        this.events.onRemove( [ itemValue ], itemIndex );
     }
     return changed;
 };
@@ -379,15 +378,15 @@ Collection.prototype.removeById = function (id) {
  * @param {number} index
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.removeAt = function (index) {
-    if (index >= this._items.length) {
+Collection.prototype.removeAt = function( index ) {
+    if( index >= this._items.length ) {
         return false;
     }
 
-    var item = this.getCollectionItemValue(index);
-    this._items.splice(index, 1);
+    var item = this.getCollectionItemValue( index );
+    this._items.splice( index, 1 );
 
-    this.events.onRemove([item], index);
+    this.events.onRemove( [ item ], index );
     return true;
 };
 
@@ -397,8 +396,8 @@ Collection.prototype.removeAt = function (index) {
  * @param {Array} items
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.removeAll = function (items) {
-    if (!Array.isArray(items)) {
+Collection.prototype.removeAll = function( items ) {
+    if( !Array.isArray( items ) ) {
         return false;
     }
 
@@ -406,26 +405,26 @@ Collection.prototype.removeAll = function (items) {
     var deletedItems = [];
     var changed;
 
-    items.forEach(function (value) {
+    items.forEach( function( value ) {
 
-        deletedItems = collectionItems.filter(function (item) {
-            return this.isEqual(value, this.getItemValue(item));
-        }, this);
+        deletedItems = collectionItems.filter( function( item ) {
+            return this.isEqual( value, this.getItemValue( item ) );
+        }, this );
 
-        deletedItems.forEach(function (item) {
-            var index = collectionItems.indexOf(item);
-            collectionItems.splice(index, 1);
-        });
-    }, this);
+        deletedItems.forEach( function( item ) {
+            var index = collectionItems.indexOf( item );
+            collectionItems.splice( index, 1 );
+        } );
+    }, this );
 
     changed = deletedItems.length > 0;
 
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
+    if( changed ) {
+        var values = deletedItems.map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
         //@TODO Добавить параметр oldStartingIndex для события
-        this.events.onRemove(values);
+        this.events.onRemove( values );
     }
     return changed;
 };
@@ -437,27 +436,27 @@ Collection.prototype.removeAll = function (items) {
  * @param {number} [count]
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.removeRange = function (fromIndex, count) {
+Collection.prototype.removeRange = function( fromIndex, count ) {
     var items = this._items;
     var changed;
 
-    if (fromIndex >= items.length) {
+    if( fromIndex >= items.length ) {
         return false;
     }
 
-    if (typeof count === 'undefined') {
+    if( typeof count === 'undefined' ) {
         count = items.length - fromIndex;
     }
 
-    var deletedItems = items.splice(fromIndex, count);
+    var deletedItems = items.splice( fromIndex, count );
     changed = deletedItems.length > 0;
 
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
+    if( changed ) {
+        var values = deletedItems.map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
 
-        this.events.onRemove(values, fromIndex);
+        this.events.onRemove( values, fromIndex );
     }
     return changed;
 };
@@ -469,30 +468,30 @@ Collection.prototype.removeRange = function (fromIndex, count) {
  * @param [thisArg]
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.removeEvery = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
+Collection.prototype.removeEvery = function( predicate, thisArg ) {
+    if( typeof predicate !== 'function' ) {
         return false;
     }
 
     var items = this._items;
     var changed;
-    var deletedItems = items.filter(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
+    var deletedItems = items.filter( function( item, index ) {
+        var itemValue = this.getItemValue( item );
+        return predicate.call( thisArg, itemValue, index, this );
+    }, this );
 
-    deletedItems.forEach(function (deletedItem) {
-        var index = items.indexOf(deletedItem);
-        items.splice(index, 1);
-    });
+    deletedItems.forEach( function( deletedItem ) {
+        var index = items.indexOf( deletedItem );
+        items.splice( index, 1 );
+    } );
 
     changed = deletedItems.length > 0;
-    if (changed) {
-        var values = deletedItems.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
+    if( changed ) {
+        var values = deletedItems.map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
 
-        this.events.onRemove(values);
+        this.events.onRemove( values );
     }
     return changed;
 };
@@ -502,19 +501,19 @@ Collection.prototype.removeEvery = function (predicate, thisArg) {
  * @description Удаляет все элементы из коллекции
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.clear = function () {
+Collection.prototype.clear = function() {
     var
         items = this._items,
         changed = items.length > 0,
-        values = items.map(function (item) {
-            return this.getItemValue(item);
-        }, this);
+        values = items.map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
 
 
     items.length = 0;
 
-    if (changed) {
-        this.events.onRemove(values, 0);
+    if( changed ) {
+        this.events.onRemove( values, 0 );
     }
 
     return changed;
@@ -525,17 +524,17 @@ Collection.prototype.clear = function () {
  * @param {number|string} id
  * @returns {*|undefined} Элемент коллекции с заданным идентификатором
  */
-Collection.prototype.getById = function (id) {
-    if (!this.hasIdProperty) {
+Collection.prototype.getById = function( id ) {
+    if( !this.hasIdProperty ) {
         return false;
     }
 
     var items = this._items;
     var itemValue, result;
 
-    for (var i = 0; i < items.length; i = i + 1) {
-        itemValue = this.getCollectionItemValue(i);
-        if (this.getValueId(itemValue) === id) {
+    for( var i = 0; i < items.length; i = i + 1 ) {
+        itemValue = this.getCollectionItemValue( i );
+        if( this.getValueId( itemValue ) === id ) {
             result = itemValue;
             break;
         }
@@ -549,8 +548,8 @@ Collection.prototype.getById = function (id) {
  * @param {number} index
  * @returns {*|undefined}
  */
-Collection.prototype.getByIndex = function (index) {
-    return this.getCollectionItemValue(index);
+Collection.prototype.getByIndex = function( index ) {
+    return this.getCollectionItemValue( index );
 };
 
 /**
@@ -559,21 +558,21 @@ Collection.prototype.getByIndex = function (index) {
  * @param [thisArg]
  * @returns {*|undefined} Первый найденный элемент коллекции, удовлетворяющий указанному условию.
  */
-Collection.prototype.find = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
+Collection.prototype.find = function( predicate, thisArg ) {
+    if( typeof predicate !== 'function' ) {
         return false;
     }
 
     var items = this._items;
     var itemIndex;
-    var matched = items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
+    var matched = items.some( function( item, index ) {
+        var itemValue = this.getItemValue( item );
         itemIndex = index;
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
+        return predicate.call( thisArg, itemValue, index, this );
+    }, this );
 
-    if (matched) {
-        return this.getCollectionItemValue(itemIndex);
+    if( matched ) {
+        return this.getCollectionItemValue( itemIndex );
     }
 };
 
@@ -581,20 +580,20 @@ Collection.prototype.find = function (predicate, thisArg) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с начала
  * @param {*} item
  * @param {number} [fromIndex = 0]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} индекс первого найденного элемента коллекции или -1, если элемент не найден
  */
-Collection.prototype.indexOf = function (item, fromIndex) {
+Collection.prototype.indexOf = function( item, fromIndex ) {
     var
         items = this._items,
         index = -1;
 
-    if (typeof fromIndex === 'undefined') {
+    if( typeof fromIndex === 'undefined' ) {
         fromIndex = 0;
     }
 
-    for (var i = fromIndex;  i < items.length; i = i + 1) {
-        var itemValue = this.getItemValue(items[i]);
-        if (this.isEqual(item, itemValue)) {
+    for( var i = fromIndex; i < items.length; i = i + 1 ) {
+        var itemValue = this.getItemValue( items[ i ] );
+        if( this.isEqual( item, itemValue ) ) {
             index = i;
             break;
         }
@@ -608,24 +607,24 @@ Collection.prototype.indexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
  * @param {*} item
  * @param {number} [fromIndex]
- * @returns {number} �?ндекс первого найденного элемента коллекции или -1, если элемент не найден
+ * @returns {number} индекс первого найденного элемента коллекции или -1, если элемент не найден
  */
-Collection.prototype.lastIndexOf = function (item, fromIndex) {
+Collection.prototype.lastIndexOf = function( item, fromIndex ) {
     var
         items = this._items,
         index = -1;
 
-    if (typeof fromIndex === 'undefined') {
+    if( typeof fromIndex === 'undefined' ) {
         fromIndex = items.length - 1;
     }
 
-    if (items.length === 0 || fromIndex >= items.length) {
+    if( items.length === 0 || fromIndex >= items.length ) {
         return -1;
     }
 
-    for (var i = fromIndex;  i > 0; i = i - 1) {
-        var itemValue = this.getItemValue(items[i]);
-        if (this.isEqual(item, itemValue)) {
+    for( var i = fromIndex; i > 0; i = i - 1 ) {
+        var itemValue = this.getItemValue( items[ i ] );
+        if( this.isEqual( item, itemValue ) ) {
             index = i;
             break;
         }
@@ -638,20 +637,20 @@ Collection.prototype.lastIndexOf = function (item, fromIndex) {
  * @description Возвращает индекс первого найденного элемента коллекции, удовлетворяющего условию
  * @param {function} predicate
  * @param [thisArg]
- * @returns {*} �?ндекс первого найденного элемента коллекции, удовлетворяющего указанному условию
+ * @returns {*} индекс первого найденного элемента коллекции, удовлетворяющего указанному условию
  */
-Collection.prototype.findIndex = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
+Collection.prototype.findIndex = function( predicate, thisArg ) {
+    if( typeof predicate !== 'function' ) {
         return false;
     }
 
     var items = this._items;
     var itemIndex = -1;
-    var matched = items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
+    var matched = items.some( function( item, index ) {
+        var itemValue = this.getItemValue( item );
         itemIndex = index;
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
+        return predicate.call( thisArg, itemValue, index, this );
+    }, this );
 
     return matched ? itemIndex : -1;
 };
@@ -662,17 +661,17 @@ Collection.prototype.findIndex = function (predicate, thisArg) {
  * @param {number} [fromIndex = 0]
  * @returns {boolean} Возвращает true, если указанный элемент содержится в коллекции, иначе - false
  */
-Collection.prototype.contains = function (item, fromIndex) {
+Collection.prototype.contains = function( item, fromIndex ) {
     fromIndex = fromIndex || 0;
 
     var
         found = false,
         items = this._items;
 
-    for (var i = fromIndex; i < items.length; i = i + 1) {
-        var itemValue = this.getItemValue(items[i]);
-        found = this.isEqual(itemValue, item);
-        if (found) {
+    for( var i = fromIndex; i < items.length; i = i + 1 ) {
+        var itemValue = this.getItemValue( items[ i ] );
+        found = this.isEqual( itemValue, item );
+        if( found ) {
             break;
         }
     }
@@ -687,18 +686,18 @@ Collection.prototype.contains = function (item, fromIndex) {
  * @param [thisArg]
  * @returns {boolean} Возвращает true, если каждый элемент удовлетворяют указанному условию, иначе - false
  */
-Collection.prototype.every = function (predicate, thisArg) {
+Collection.prototype.every = function( predicate, thisArg ) {
 
-    if (typeof predicate !== 'function') {
+    if( typeof predicate !== 'function' ) {
         return false;
     }
 
     var items = this._items;
 
-    return items.every(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
+    return items.every( function( item, index ) {
+        var itemValue = this.getItemValue( item );
+        return predicate.call( thisArg, itemValue, index, this );
+    }, this );
 };
 
 
@@ -708,17 +707,17 @@ Collection.prototype.every = function (predicate, thisArg) {
  * @param [thisArg]
  * @returns {boolean} Возвращает true, если есть элемент, удовлетворяющий указанному условию, иначе - false
  */
-Collection.prototype.some = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
+Collection.prototype.some = function( predicate, thisArg ) {
+    if( typeof predicate !== 'function' ) {
         return false;
     }
 
     var items = this._items;
 
-    return items.some(function (item, index) {
-        var itemValue = this.getItemValue(item);
-        return predicate.call(thisArg, itemValue, index, this);
-    }, this);
+    return items.some( function( item, index ) {
+        var itemValue = this.getItemValue( item );
+        return predicate.call( thisArg, itemValue, index, this );
+    }, this );
 };
 
 /**
@@ -726,18 +725,18 @@ Collection.prototype.some = function (predicate, thisArg) {
  * @param {function} callback
  * @param [thisArg]
  */
-Collection.prototype.forEach = function (callback, thisArg) {
-    if (typeof callback !== 'function') {
+Collection.prototype.forEach = function( callback, thisArg ) {
+    if( typeof callback !== 'function' ) {
         return;
     }
 
     var items = this._items;
 
-    items.forEach(function (item, index) {
-        var itemValue = this.getItemValue(item);
+    items.forEach( function( item, index ) {
+        var itemValue = this.getItemValue( item );
 
-        callback.call(thisArg, itemValue, index, this);
-    }, this);
+        callback.call( thisArg, itemValue, index, this );
+    }, this );
 };
 
 /**
@@ -746,21 +745,21 @@ Collection.prototype.forEach = function (callback, thisArg) {
  * @param [thisArg]
  * @returns {Array}
  */
-Collection.prototype.filter = function (predicate, thisArg) {
-    if (typeof predicate !== 'function') {
+Collection.prototype.filter = function( predicate, thisArg ) {
+    if( typeof predicate !== 'function' ) {
         return [];
     }
 
     var items = this._items;
 
     return items
-        .filter(function (item, index) {
-            var itemValue = this.getItemValue(item);
-            return predicate.call(thisArg, itemValue, index, this);
-        }, this)
-        .map(function (item) {
-            return this.getItemValue(item);
-        }, this);
+        .filter( function( item, index ) {
+            var itemValue = this.getItemValue( item );
+            return predicate.call( thisArg, itemValue, index, this );
+        }, this )
+        .map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
 };
 
 /**
@@ -769,28 +768,28 @@ Collection.prototype.filter = function (predicate, thisArg) {
  * @param {number} [count]
  * @returns {Array}
  */
-Collection.prototype.take = function (fromIndex, count) {
+Collection.prototype.take = function( fromIndex, count ) {
     var items = this._items;
 
-    if (typeof count == 'undefined') {
+    if( typeof count == 'undefined' ) {
         count = items.length;
     }
 
     return items
-        .slice(fromIndex, fromIndex + count)
-        .map(function(item) {
-            return this.getItemValue(item);
-        }, this);
+        .slice( fromIndex, fromIndex + count )
+        .map( function( item ) {
+            return this.getItemValue( item );
+        }, this );
 };
 
 /**
  * @description Возвращает массив всех элементов коллекции
  * @returns {Array} Массив, содержащий все элементы коллекции
  */
-Collection.prototype.toArray = function () {
-    return this._items.map(function (item) {
-        return this.getItemValue(item);
-    }, this);
+Collection.prototype.toArray = function() {
+    return this._items.map( function( item ) {
+        return this.getItemValue( item );
+    }, this );
 };
 
 /**
@@ -799,27 +798,27 @@ Collection.prototype.toArray = function () {
  * @param {number} newIndex
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.move = function (oldIndex, newIndex) {
+Collection.prototype.move = function( oldIndex, newIndex ) {
     var items = this._items,
         item;
 
-    if (oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex) {
+    if( oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex ) {
         return false;
     }
 
-    item = items.splice(oldIndex, 1).pop();
+    item = items.splice( oldIndex, 1 ).pop();
 
-    if (oldIndex > newIndex) {
-        items.splice(newIndex, 0, item);
+    if( oldIndex > newIndex ) {
+        items.splice( newIndex, 0, item );
     } else {
-        items.splice(newIndex - 1, 0, item);
+        items.splice( newIndex - 1, 0, item );
     }
 
-    var changed = items[oldIndex] !== item;
+    var changed = items[ oldIndex ] !== item;
 
-    if (changed) {
-        var value = this.getItemValue(item);
-        this.events.onMove([value], [value], oldIndex, newIndex);
+    if( changed ) {
+        var value = this.getItemValue( item );
+        this.events.onMove( [ value ], [ value ], oldIndex, newIndex );
     }
     return changed;
 };
@@ -829,29 +828,29 @@ Collection.prototype.move = function (oldIndex, newIndex) {
  * @param {function} comparator
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
-Collection.prototype.sort = function (comparator) {
-    if (typeof comparator !== 'function') {
+Collection.prototype.sort = function( comparator ) {
+    if( typeof comparator !== 'function' ) {
         comparator = this._comparator;
     }
 
     var
         items = this._items,
         collection = this,
-        _items= items.slice(),
+        _items = items.slice(),
         changed = false;
 
-    items.sort(function(item1, item2) {
-        return comparator(collection.getItemValue(item1), collection.getItemValue(item2));
-    });
+    items.sort( function( item1, item2 ) {
+        return comparator( collection.getItemValue( item1 ), collection.getItemValue( item2 ) );
+    } );
 
-    for (var i = 0; i < items.length; i = i + 1) {
-        if (items[i] !== _items[i]) {
+    for( var i = 0; i < items.length; i = i + 1 ) {
+        if( items[ i ] !== _items[ i ] ) {
             changed = true;
             break;
         }
     }
 
-    if (changed) {
+    if( changed ) {
         this.events.onReset();
     }
     return changed;
@@ -861,41 +860,41 @@ Collection.prototype.sort = function (comparator) {
  * @description Создает копию коллекции элементов
  * @returns {Collection} Новый экземпляр коллекции элементов, который является копией исходной коллекции
  */
-Collection.prototype.clone = function () {
-    return new this.constructor(this.toArray(), this._idProperty, this.comparator);
+Collection.prototype.clone = function() {
+    return new this.constructor( this.toArray(), this._idProperty, this.comparator );
 };
 
 
-Collection.prototype.onAdd = function (handler) {
-    this.events.on('add', handler);
+Collection.prototype.onAdd = function( handler ) {
+    this.events.on( 'add', handler );
 };
 
-Collection.prototype.onReplace = function (handler) {
-    this.events.on('replace', handler);
+Collection.prototype.onReplace = function( handler ) {
+    this.events.on( 'replace', handler );
 };
 
-Collection.prototype.onRemove = function (handler) {
-    this.events.on('remove', handler);
+Collection.prototype.onRemove = function( handler ) {
+    this.events.on( 'remove', handler );
 };
 
-Collection.prototype.onMove = function (handler) {
-    this.events.on('move', handler);
+Collection.prototype.onMove = function( handler ) {
+    this.events.on( 'move', handler );
 };
 
-Collection.prototype.onReset = function (handler) {
-    this.events.on('reset', handler);
+Collection.prototype.onReset = function( handler ) {
+    this.events.on( 'reset', handler );
 };
 
-Collection.prototype.onChange = function (handler) {
-    this.events.on('change', handler);
+Collection.prototype.onChange = function( handler ) {
+    this.events.on( 'change', handler );
 };
 
-Collection.prototype.toString = function () {
+Collection.prototype.toString = function() {
     return this._items
-        .map(function (item) {
-            return JSON.stringify(this.getItemValue(item));
-        }, this)
-        .join(',');
+        .map( function( item ) {
+            return JSON.stringify( this.getItemValue( item ) );
+        }, this )
+        .join( ',' );
 };
 
 /**
@@ -903,9 +902,9 @@ Collection.prototype.toString = function () {
  * @param value
  * @returns {*}
  */
-Collection.prototype.getValueId = function (value) {
-    if (this.hasIdProperty && typeof  value !== 'undefined' && value !== null) {
-        return value[this._idProperty]
+Collection.prototype.getValueId = function( value ) {
+    if( this.hasIdProperty && typeof  value !== 'undefined' && value !== null ) {
+        return value[ this._idProperty ];
     }
 };
 
@@ -915,12 +914,12 @@ Collection.prototype.getValueId = function (value) {
  * @param value2
  * @returns {boolean}
  */
-Collection.prototype.isEqual = function (value1, value2) {
+Collection.prototype.isEqual = function( value1, value2 ) {
     var idProperty = this.idProperty;
 
-    if (this.hasIdProperty) {
-        if(isNotEmpty(value1, value2)) {
-            return value1[idProperty] === value2[idProperty];
+    if( this.hasIdProperty ) {
+        if( isNotEmpty( value1, value2 ) ) {
+            return value1[ idProperty ] === value2[ idProperty ];
         } else {
             return false;
         }
@@ -929,10 +928,10 @@ Collection.prototype.isEqual = function (value1, value2) {
     }
 
     function isNotEmpty() {
-        var values = Array.prototype.slice.call(arguments);
-        return values.every(function (value) {
+        var values = Array.prototype.slice.call( arguments );
+        return values.every( function( value ) {
             return typeof value !== 'undefined' && value !== null;
-        });
+        } );
     }
 };
 
@@ -942,8 +941,8 @@ Collection.prototype.isEqual = function (value1, value2) {
  * @param {number} [index]
  * @returns {CollectionItem}
  */
-Collection.prototype.createCollectionItem = function (value, index) {
-    var item = Object.create(null);
+Collection.prototype.createCollectionItem = function( value, index ) {
+    var item = Object.create( null );
 
     item.__value = value;
     item.__index = index;
@@ -957,7 +956,7 @@ Collection.prototype.createCollectionItem = function (value, index) {
  * @param value
  * @returns {*}
  */
-Collection.prototype.updateCollectionItem = function (item, value) {
+Collection.prototype.updateCollectionItem = function( item, value ) {
     item.__value = value;
     return item;
 };
@@ -967,14 +966,14 @@ Collection.prototype.updateCollectionItem = function (item, value) {
  * @param {number} index
  * @return {*}
  */
-Collection.prototype.getCollectionItemValue = function (index) {
-    var item = this._items[index];
+Collection.prototype.getCollectionItemValue = function( index ) {
+    var item = this._items[ index ];
 
-    return this.getItemValue(item);
+    return this.getItemValue( item );
 };
 
-Collection.prototype.getItemValue = function (item) {
-    if (item) {
+Collection.prototype.getItemValue = function( item ) {
+    if( item ) {
         return item.__value;
     }
 };

@@ -1,17 +1,17 @@
-function DatePickerControl(parent) {
-    _.superClass(DatePickerControl, this, parent);
+function DatePickerControl( parent ) {
+    _.superClass( DatePickerControl, this, parent );
 }
 
-_.inherit(DatePickerControl, DateTimePickerControl);
+_.inherit( DatePickerControl, DateTimePickerControl );
 
-_.extend(DatePickerControl.prototype, {
+_.extend( DatePickerControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new DatePickerModel();
     },
 
-    createControlView: function (model) {
-        return new DatePickerView({model: model});
+    createControlView: function( model ) {
+        return new DatePickerView( { model: model } );
     }
-});
+} );
 

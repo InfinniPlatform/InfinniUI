@@ -2,8 +2,7 @@
  * @description Билдер DateTimeFormat
  * @class DateTimeFormatBuilder
  */
-function DateTimeFormatBuilder () {
-
+function DateTimeFormatBuilder() {
     /**
      * @description Создает и инициализирует экземпляр {@link DateTimeFormat}
      * @memberOf DateTimeFormatBuilder
@@ -11,18 +10,17 @@ function DateTimeFormatBuilder () {
      * @param args
      * @returns {DateTimeFormat}
      */
-    this.build = function (context, args) {
+    this.build = function( context, args ) {
         var format = new DateTimeFormat();
 
-        format.setFormat(args.metadata.Format);
+        format.setFormat( args.metadata.Format );
 
-        if (_.isNumber(args.metadata.TimeZone)) {
-            format.setOptions({ TimeZone: args.metadata.TimeZone });
+        if( _.isNumber( args.metadata.TimeZone ) ) {
+            format.setOptions( { TimeZone: args.metadata.TimeZone } );
         }
 
         return format;
-    }
-
+    };
 }
 
 window.InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;

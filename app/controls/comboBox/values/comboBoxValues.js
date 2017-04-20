@@ -1,20 +1,20 @@
-var ComboBoxValuesModel = Backbone.Model.extend({
+var ComboBoxValuesModel = Backbone.Model.extend( {
     defaults: {
         enabled: true
     },
 
-    initialize: function () {
+    initialize: function() {
         this.items = [];
     }
-});
+} );
 
-var ComboBoxValues = Backbone.View.extend({
+var ComboBoxValues = Backbone.View.extend( {
 
     tagName: 'ul',
 
     className: 'pl-combobox-values',
 
-    template: InfinniUI.Template["controls/comboBox/values/template/values.tpl.html"],
+    template: InfinniUI.Template[ 'controls/comboBox/values/template/values.tpl.html' ],
 
     events: {
         'keypress .pl-combobox-search-text': 'onKeyPressHandler',
@@ -24,35 +24,33 @@ var ComboBoxValues = Backbone.View.extend({
     },
 
     UI: {
-        search: ".pl-combobox-search",
-        text: ".pl-combobox-search-text"
+        search: '.pl-combobox-search',
+        text: '.pl-combobox-search-text'
     },
 
-    initialize: function (options) {
-        this.model = new ComboBoxValuesModel(options);
+    initialize: function( options ) {
+        this.model = new ComboBoxValuesModel( options );
     },
 
-    render: function () {
-
+    render: function() {
         this.$el.empty();
-
-        this.$el.html(this.template());
+        this.$el.html( this.template() );
         this.bindUIElements();
 
         var model = this.model;
         var $items =
-            model.get('items')
-                .map(function(item) {
-                    var view = new ComboBoxValue({
-                        "$value": item.$value,
-                        "value": item.value
-                    });
+            model.get( 'items' )
+                .map( function( item ) {
+                    var view = new ComboBoxValue( {
+                        '$value': item.$value,
+                        'value': item.value
+                    } );
 
-                    this.listenTo(view, 'remove', this.onRemoveValueHandler);
+                    this.listenTo( view, 'remove', this.onRemoveValueHandler );
                     return view.render();
-                }, this);
+                }, this );
 
-        this.ui.search.before($items);
+        this.ui.search.before( $items );
 
         return this.$el;
     },
@@ -67,45 +65,45 @@ var ComboBoxValues = Backbone.View.extend({
         tab: 9
     },
 
-    setFocus: function () {
+    setFocus: function() {
         this.ui.text.focus();
     },
 
-    onKeyPressHandler: function (event) {
+    onKeyPressHandler: function( event ) {
         var key = event.which;
 
-        if (key === this.KeyCode.enter) {
+        if( key === this.KeyCode.enter ) {
 
         }
 
-        console.log('onKeyPressHandler', event.which, this.ui.text.val());
+        console.log( 'onKeyPressHandler', event.which, this.ui.text.val() );
     },
 
-    onKeyDownHandler: function (event) {
+    onKeyDownHandler: function( event ) {
         //handle left/right/tab/Shift-tab/backspace/end/home
         var key = event.which;
-        if (key === this.KeyCode.left) {
+        if( key === this.KeyCode.left ) {
 
         } else {
 
         }
-        console.log('onKeyDownHandler', event.which, this.ui.text.val());
+        console.log( 'onKeyDownHandler', event.which, this.ui.text.val() );
     },
 
-    onKeyUpHandler: function (event) {
+    onKeyUpHandler: function( event ) {
         //@TODO grow input
         var text = this.ui.text.val();
-        this.trigger('search', text);
+        this.trigger( 'search', text );
     },
 
-    onRemoveValueHandler: function (value) {
-        this.trigger('remove', value);
+    onRemoveValueHandler: function( value ) {
+        this.trigger( 'remove', value );
     },
 
-    onClickHandler: function (event) {
+    onClickHandler: function( event ) {
         this.setFocus();
     }
 
-});
+} );
 
-_.extend(ComboBoxValues.prototype, bindUIElementsMixin);
+_.extend( ComboBoxValues.prototype, bindUIElementsMixin );

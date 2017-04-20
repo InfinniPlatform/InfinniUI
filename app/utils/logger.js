@@ -4,91 +4,91 @@ var LOG_LEVEL = {
     warn: 3,
     error: 4,
     trace: 5
-}
+};
 
-function Logger(level){
+function Logger( level ) {
     this.messages = [];
-    this.setLevel(level || LOG_LEVEL.debug);
+    this.setLevel( level || LOG_LEVEL.debug );
 
 
     this.showMessages = true;
-};
+}
 
-_.extend(Logger.prototype, {
-    getLevel: function(){
+_.extend( Logger.prototype, {
+    getLevel: function() {
         return this.level;
     },
 
-    setLevel: function(level){
+    setLevel: function( level ) {
         this.level = level;
     },
 
-    addMessage: function(messageType, message){
-        this.messages.push({
+    addMessage: function( messageType, message ) {
+        this.messages.push( {
             type: messageType,
             message: message
-        });
+        } );
     },
 
-    debug: function(message){
-        if(this.level > LOG_LEVEL.debug){
+    debug: function( message ) {
+        if( this.level > LOG_LEVEL.debug ) {
             return;
         }
 
-        if(this.showMessages){
-            console.debug(message.message || message);
+        if( this.showMessages ) {
+            console.debug( message.message || message );
         }
 
-        this.addMessage(LOG_LEVEL.debug, message);
+        this.addMessage( LOG_LEVEL.debug, message );
     },
 
-    info: function(message){
-        if(this.level > LOG_LEVEL.info){
+    info: function( message ) {
+        if( this.level > LOG_LEVEL.info ) {
             return;
         }
 
-        if(this.showMessages){
-            console.info(message.message || message);
+        if( this.showMessages ) {
+            console.info( message.message || message );
         }
 
-        this.addMessage(LOG_LEVEL.info, message);
+        this.addMessage( LOG_LEVEL.info, message );
     },
 
-    warn: function(message){
-        if(this.level > LOG_LEVEL.warn){
+    warn: function( message ) {
+        if( this.level > LOG_LEVEL.warn ) {
             return;
         }
 
-        if(this.showMessages){
-            console.warn(message.message || message);
+        if( this.showMessages ) {
+            console.warn( message.message || message );
         }
 
-        this.addMessage(LOG_LEVEL.warn, message);
+        this.addMessage( LOG_LEVEL.warn, message );
     },
 
-    error: function(message){
-        if(this.level > LOG_LEVEL.error){
+    error: function( message ) {
+        if( this.level > LOG_LEVEL.error ) {
             return;
         }
 
-        if(this.showMessages){
-            console.error(message.message || message);
+        if( this.showMessages ) {
+            console.error( message.message || message );
         }
 
-        this.addMessage(LOG_LEVEL.error, message);
+        this.addMessage( LOG_LEVEL.error, message );
     },
 
-    trace: function(message){
-        if(this.level > LOG_LEVEL.trace){
+    trace: function( message ) {
+        if( this.level > LOG_LEVEL.trace ) {
             return;
         }
 
-        if(this.showMessages){
-            console.error(message.message || message);
+        if( this.showMessages ) {
+            console.error( message.message || message );
         }
 
-        this.addMessage(LOG_LEVEL.trace, message);
+        this.addMessage( LOG_LEVEL.trace, message );
     }
-})
+} );
 
 window.InfinniUI.global.logger = new Logger();

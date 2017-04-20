@@ -1,23 +1,23 @@
 function SpecialApplicationView() {
     this.isView = true;
 
-    this.getContainer = function () {
+    this.getContainer = function() {
         return this.$container;
     };
 
-    this.open = function ($el) {
+    this.open = function( $el ) {
         this.$container = $el;
 
         if( $el ) {
-            $el.addClass('special-application-view');
+            $el.addClass( 'special-application-view' );
         }
     };
 
-    this.getApplicationView = function () {
+    this.getApplicationView = function() {
         return this;
     };
 
-    this.getContext = function(){
+    this.getContext = function() {
         return null;
     };
 }

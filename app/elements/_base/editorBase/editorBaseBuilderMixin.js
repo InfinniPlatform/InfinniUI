@@ -1,5 +1,6 @@
 var editorBaseBuilderMixin = {
-    initialize_editorBaseBuilder: function () {
+
+    initialize_editorBaseBuilder: function() {
 
     },
 
@@ -19,20 +20,20 @@ var editorBaseBuilderMixin = {
      * @param bindingOptions
      * @returns {{valueBinding: {DataBinding}}}
      */
-    applyMetadata_editorBaseBuilder: function (params, bindingOptions) {
+    applyMetadata_editorBaseBuilder: function( params, bindingOptions ) {
         var metadata = params.metadata;
         var element = params.element;
 
         bindingOptions = bindingOptions || {};
         bindingOptions.valueProperty = bindingOptions.valueProperty || 'value';
 
-        element.setLabelFloating(metadata.LabelFloating);
-        this.initBindingToProperty(params, 'HintText');
-        this.resolveExpressionInText(params, 'HintText');
-        this.initBindingToProperty(params, 'ErrorText');
-        this.resolveExpressionInText(params, 'ErrorText');
-        this.initBindingToProperty(params, 'WarningText');
-        this.resolveExpressionInText(params, 'WarningText');
+        element.setLabelFloating( metadata.LabelFloating );
+        this.initBindingToProperty( params, 'HintText' );
+        this.resolveExpressionInText( params, 'HintText' );
+        this.initBindingToProperty( params, 'ErrorText' );
+        this.resolveExpressionInText( params, 'ErrorText' );
+        this.initBindingToProperty( params, 'WarningText' );
+        this.resolveExpressionInText( params, 'WarningText' );
 
         var executorBuilderParams = {
             parentView: params.parentView,
@@ -40,55 +41,55 @@ var editorBaseBuilderMixin = {
             basePathOfProperty: params.basePathOfProperty
         };
 
-        if (metadata.OnValueChanging) {
-            var onValueChangingExecutor = Executor(metadata.OnValueChanging, params.builder, executorBuilderParams);
+        if( metadata.OnValueChanging ) {
+            var onValueChangingExecutor = Executor( metadata.OnValueChanging, params.builder, executorBuilderParams );
 
-            element.onValueChanging(function (context, args) {
-                return onValueChangingExecutor(args);
-            });
+            element.onValueChanging( function( context, args ) {
+                return onValueChangingExecutor( args );
+            } );
         }
-        if (metadata.OnValueChanged) {
-            var onValueChangedExecutor = Executor(metadata.OnValueChanged, params.builder, executorBuilderParams);
+        if( metadata.OnValueChanged ) {
+            var onValueChangedExecutor = Executor( metadata.OnValueChanged, params.builder, executorBuilderParams );
 
-            element.onValueChanged(function (context, args) {
-                onValueChangedExecutor(args);
-            });
+            element.onValueChanged( function( context, args ) {
+                onValueChangedExecutor( args );
+            } );
         }
 
-        if (metadata.Value !== undefined) {
-            if (InfinniUI.Metadata.isBindingMetadata(metadata.Value)) {
+        if( metadata.Value !== undefined ) {
+            if( InfinniUI.Metadata.isBindingMetadata( metadata.Value ) ) {
                 var buildParams = {
                     parentView: params.parentView,
                     basePathOfProperty: params.basePathOfProperty
                 };
 
-                var dataBinding = params.builder.buildBinding(metadata.Value, buildParams);
-                var mergedConverter = mergeConverters(dataBinding.getConverter(), bindingOptions.converter);
+                var dataBinding = params.builder.buildBinding( metadata.Value, buildParams );
+                var mergedConverter = mergeConverters( dataBinding.getConverter(), bindingOptions.converter );
 
-                if (mergedConverter) {
-                    dataBinding.setConverter(mergedConverter);
+                if( mergedConverter ) {
+                    dataBinding.setConverter( mergedConverter );
                 }
-                if (bindingOptions.mode) {
-                    dataBinding.setMode(bindingOptions.mode);
+                if( bindingOptions.mode ) {
+                    dataBinding.setMode( bindingOptions.mode );
                 }
-                dataBinding.bindElement(params.element, bindingOptions.valueProperty);
+                dataBinding.bindElement( params.element, bindingOptions.valueProperty );
 
-                this.initValidationResultText(element, dataBinding);
+                this.initValidationResultText( element, dataBinding );
 
             } else {
-                params.element.setValue(metadata.Value);
+                params.element.setValue( metadata.Value );
             }
         }
 
-        function mergeConverters(topPriority, nonPriority) {
+        function mergeConverters( topPriority, nonPriority ) {
             topPriority = topPriority || {};
             nonPriority = nonPriority || {};
 
-            if(!topPriority.toElement && nonPriority.toElement) {
+            if( !topPriority.toElement && nonPriority.toElement ) {
                 topPriority.toElement = nonPriority.toElement;
             }
 
-            if(!topPriority.toSource && nonPriority.toSource) {
+            if( !topPriority.toSource && nonPriority.toSource ) {
                 topPriority.toSource = nonPriority.toSource;
             }
 
@@ -96,7 +97,7 @@ var editorBaseBuilderMixin = {
                 topPriority._element = nonPriority._element;
             }
 
-            return !_.isEmpty(topPriority) ? topPriority : null;
+            return !_.isEmpty( topPriority ) ? topPriority : null;
         }
 
         return {
@@ -106,40 +107,39 @@ var editorBaseBuilderMixin = {
 
     /**
      * @description Инициализация подписки на события валидации для оповещения элемента
+     * @param element
      * @param binding
      */
-    initValidationResultText: function (element, binding) {
+    initValidationResultText: function( element, binding ) {
         var source = binding.getSource();
         var property = binding.getSourceProperty();
 
-        if (typeof source.onErrorValidator == 'function') {
-            source.onErrorValidator(function (context, args) {
+        if( typeof source.onErrorValidator == 'function' ) {
+            source.onErrorValidator( function( context, args ) {
                 var result = args.value,
                     text = '';
 
-                if (!result.IsValid && Array.isArray(result.Items)) {
-                    text = getTextForItems(result.Items);
+                if( !result.IsValid && Array.isArray( result.Items ) ) {
+                    text = getTextForItems( result.Items );
                 }
-                element.setErrorText(text);
-            }, element);
+                element.setErrorText( text );
+            }, element );
 
-            element.onRemove(function(context, args) {
-                source.offErrorValidator(element);
-            });
+            element.onRemove( function( context, args ) {
+                source.offErrorValidator( element );
+            } );
         }
 
-
-        function getTextForItems(items, callback) {
+        function getTextForItems( items, callback ) {
             return items
-                .filter(function (item) {
+                .filter( function( item ) {
                     return property === item.Property;
-                })
-                .map(function (item) {
+                } )
+                .map( function( item ) {
                     return item.Message;
-                })
-                .join(' ');
+                } )
+                .join( ' ' );
         }
     }
-
 
 };

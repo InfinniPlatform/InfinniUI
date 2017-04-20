@@ -10,68 +10,68 @@ var GridPanelView = ContainerView.extend(
         columnCount: 12,
 
         template: {
-            row: InfinniUI.Template["controls/gridPanel/template/row.tpl.html"]
+            row: InfinniUI.Template[ 'controls/gridPanel/template/row.tpl.html' ]
         },
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
+        initialize: function( options ) {
+            ContainerView.prototype.initialize.call( this, options );
         },
 
-        render: function () {
+        render: function() {
             this.prerenderingActions();
 
             this.removeChildElements();
 
             this.renderItemsContents();
             this.updateProperties();
-            this.trigger('render');
+            this.trigger( 'render' );
 
             this.postrenderingActions();
             //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
+            window.InfinniUI.global.messageBus.send( 'render', { element: this } );
             //devblockstop
             return this;
         },
 
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
+        renderItemsContents: function() {
+            var items = this.model.get( 'items' ),
+                itemTemplate = this.model.get( 'itemTemplate' ),
                 view = this,
                 row = [],
                 rowSize = 0,
                 element, item;
 
             //this.$el.hide();
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
+            items.forEach( function( item, i ) {
+                element = itemTemplate( undefined, { item: item, index: i } );
                 var span = element.getColumnSpan();
-                if (rowSize + span > view.columnCount) {
-                    view.renderRow(row);
+                if ( rowSize + span > view.columnCount ) {
+                    view.renderRow( row );
                     row.length = 0;
                     rowSize = 0;
                 }
 
-                row.push(element);
+                row.push( element );
                 rowSize += span;
-            });
+            } );
 
-            if (row.length) {
-                view.renderRow(row);
+            if ( row.length ) {
+                view.renderRow( row );
             }
             //this.$el.show();
         },
 
-        renderRow: function (row) {
+        renderRow: function( row ) {
             var view = this;
             // var $row = $(this.template.row());
-            var $row = $('<div class="pl-clearfix"></div>');
-            $row.append(row.map(function(element) {
-                view.addChildElement(element);
+            var $row = $( '<div class="pl-clearfix"></div>' );
+            $row.append( row.map( function( element ) {
+                view.addChildElement( element );
                 return element.render();
-            }));
-            this.$el.append($row);
+            } ) );
+            this.$el.append( $row );
         },
 
-        updateGrouping: function(){}
+        updateGrouping: function() {}
     }
 );

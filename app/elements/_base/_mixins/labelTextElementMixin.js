@@ -1,8 +1,8 @@
 var labelTextElementMixin = {
-    getLabelText: function () {
-        return this.control.get('labelText');
+    getLabelText: function() {
+        return this.control.get( 'labelText' );
     },
-    setLabelText: function (value) {
-        this.control.set('labelText', value);
+    setLabelText: function( value ) {
+        this.control.set( 'labelText', value );
     }
 };

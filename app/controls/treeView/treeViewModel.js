@@ -1,19 +1,19 @@
-var TreeViewModel = ListEditorBaseModel.extend({
+var TreeViewModel = ListEditorBaseModel.extend( {
 
-    defaults: _.defaults({
-            onExpand: null,
-            onCollapse: null
-        },
+    defaults: _.defaults( {
+        onExpand: null,
+        onCollapse: null
+    },
         ListEditorBaseModel.prototype.defaults
     ),
 
-    initialize: function () {
-        ListEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    initialize: function() {
+        ListEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
-    toggleItem: function (item, toggle) {
-        var value = this.valueByItem(item);
-        this.toggleValue(value, toggle);
-        this.trigger('toggle');
+    toggleItem: function( item, toggle ) {
+        var value = this.valueByItem( item );
+        this.toggleValue( value, toggle );
+        this.trigger( 'toggle' );
     }
-});
+} );

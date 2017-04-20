@@ -7,11 +7,11 @@ var RowView = ContainerView.extend(
     {
         className: 'pl-row row',
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
+        initialize: function( options ) {
+            ContainerView.prototype.initialize.call( this, options );
         },
 
-        render: function () {
+        render: function() {
             this.prerenderingActions();
 
             this.removeChildElements();
@@ -19,29 +19,29 @@ var RowView = ContainerView.extend(
             this.renderItemsContents();
 
             this.updateProperties();
-            this.trigger('render');
+            this.trigger( 'render' );
 
             this.postrenderingActions();
             //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
+            window.InfinniUI.global.messageBus.send( 'render', { element: this } );
             //devblockstop
             return this;
         },
 
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
+        renderItemsContents: function() {
+            var items = this.model.get( 'items' ),
+                itemTemplate = this.model.get( 'itemTemplate' ),
                 that = this,
                 element, item;
 
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
+            items.forEach( function( item, i ) {
+                element = itemTemplate( undefined, { item: item, index: i } );
+                that.addChildElement( element );
                 that.$el
-                    .append(element.render());
-            });
+                    .append( element.render() );
+            } );
         },
 
-        updateGrouping: function(){}
+        updateGrouping: function() {}
     }
 );

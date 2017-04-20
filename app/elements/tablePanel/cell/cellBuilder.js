@@ -3,16 +3,16 @@
  * @augments ContainerBuilder
  */
 function CellBuilder() {
-    _.superClass(CellBuilder, this);
+    _.superClass( CellBuilder, this );
 }
 
-_.inherit(CellBuilder, ContainerBuilder);
+_.inherit( CellBuilder, ContainerBuilder );
 
-_.extend(CellBuilder.prototype,
+_.extend( CellBuilder.prototype,
     /** @lends CellBuilder.prototype*/
     {
-        createElement: function (params) {
-            return new Cell(params.parent);
+        createElement: function( params ) {
+            return new Cell( params.parent );
         },
 
         /**
@@ -20,14 +20,14 @@ _.extend(CellBuilder.prototype,
          * @param {CellBuilder} params.element
          * @param {Object} params.metadata
          */
-        applyMetadata: function (params) {
+        applyMetadata: function( params ) {
             var
                 metadata = params.metadata,
                 element = params.element;
 
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
+            ContainerBuilder.prototype.applyMetadata.call( this, params );
 
-            params.element.setColumnSpan(metadata.ColumnSpan);
+            params.element.setColumnSpan( metadata.ColumnSpan );
         }
 
-    });
+    } );

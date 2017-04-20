@@ -1,4 +1,4 @@
-var dateTimePickerStrategy = (function () {
+var dateTimePickerStrategy = ( function() {
 
     return {
         Date: dateTimePickerModeDate,
@@ -6,5 +6,5 @@ var dateTimePickerStrategy = (function () {
         Time: dateTimePickerModeTime
     };
 
-})();
+} )();
 

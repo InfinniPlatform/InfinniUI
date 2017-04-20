@@ -1,6 +1,6 @@
 var buttonControlMixin = {
 
-    click: function () {
+    click: function() {
         this.controlView.$el.click();
     }
 

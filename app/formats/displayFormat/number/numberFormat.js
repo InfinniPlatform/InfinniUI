@@ -4,20 +4,20 @@
  * @class NumberFormat
  * @mixes formatMixin
  */
-function NumberFormat(format){
-    this.setFormat(format);
+function NumberFormat( format ) {
+    this.setFormat( format );
 }
 
 window.InfinniUI.NumberFormat = NumberFormat;
 
 
-_.extend(NumberFormat.prototype, {
+_.extend( NumberFormat.prototype, {
 
     /**
      * @description Строка форматирования числового значения по умолчанию
      * @memberOf NumberFormat.prototype
      */
-    defaultFormat: "n",
+    defaultFormat: 'n',
 
     /**
      * @description Форматирует числовое значение
@@ -27,83 +27,83 @@ _.extend(NumberFormat.prototype, {
      * @param {String} [format] Строка форматирования
      * @returns {String}
      */
-    formatValue: function(originalValue, culture, format){
-        if (typeof originalValue === 'undefined' || originalValue === null) {
+    formatValue: function( originalValue, culture, format ) {
+        if ( typeof originalValue === 'undefined' || originalValue === null ) {
             return '';
         }
         var self = this;
 
         culture = culture || localized;
 
-        format = format||this.getFormat();
+        format = format || this.getFormat();
 
-        return format.replace(this.rg, function(s, formatName, formatParam){
-            if(formatParam !== undefined && formatParam != ''){
-                formatParam = parseInt(formatParam);
+        return format.replace( this.rg, function( s, formatName, formatParam ) {
+            if( formatParam !== undefined && formatParam != '' ) {
+                formatParam = parseInt( formatParam );
             }else{
                 formatParam = undefined;
             }
-            return self.rules[formatName].call(self, originalValue, formatParam, culture);
-        });
+            return self.rules[ formatName ].call( self, originalValue, formatParam, culture );
+        } );
     },
 
     rg: /^([pnc])(\d*)$/ig,
 
     rules: {
-        'P': function(val, param, culture){
-            param = (param !== undefined) ? param : culture.numberFormatInfo.percentDecimalDigits;
+        'P': function( val, param, culture ) {
+            param = ( param !== undefined ) ? param : culture.numberFormatInfo.percentDecimalDigits;
             var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.percentGroupSeparator, culture.numberFormatInfo.percentDecimalSeparator),
+                formattedNumber = this.formatNumber( Math.abs( val ), param, culture.numberFormatInfo.percentGroupSeparator, culture.numberFormatInfo.percentDecimalSeparator ),
                 result;
 
-            if(isPositive){
-                result = culture.numberFormatInfo.percentPositivePattern.replace('p', formattedNumber);
+            if( isPositive ) {
+                result = culture.numberFormatInfo.percentPositivePattern.replace( 'p', formattedNumber );
             }else{
-                result = culture.numberFormatInfo.percentNegativePattern.replace('p', formattedNumber);
+                result = culture.numberFormatInfo.percentNegativePattern.replace( 'p', formattedNumber );
             }
 
-            result = result.replace('%', culture.numberFormatInfo.percentSymbol);
+            result = result.replace( '%', culture.numberFormatInfo.percentSymbol );
 
             return result;
         },
-        'p': function(val, param, culture){
+        'p': function( val, param, culture ) {
             val *= 100;
-            return this.rules.P.call(this, val, param, culture);
+            return this.rules.P.call( this, val, param, culture );
         },
-        'n': function (val, param, culture) {
-            param = (param !== undefined) ? param : culture.numberFormatInfo.numberDecimalDigits;
+        'n': function( val, param, culture ) {
+            param = ( param !== undefined ) ? param : culture.numberFormatInfo.numberDecimalDigits;
             var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.numberGroupSeparator, culture.numberFormatInfo.numberDecimalSeparator),
+                formattedNumber = this.formatNumber( Math.abs( val ), param, culture.numberFormatInfo.numberGroupSeparator, culture.numberFormatInfo.numberDecimalSeparator ),
                 result;
 
-            if(isPositive){
-                result = culture.numberFormatInfo.numberPositivePattern.replace('n', formattedNumber);
+            if( isPositive ) {
+                result = culture.numberFormatInfo.numberPositivePattern.replace( 'n', formattedNumber );
             }else{
-                result = culture.numberFormatInfo.numberNegativePattern.replace('n', formattedNumber);
+                result = culture.numberFormatInfo.numberNegativePattern.replace( 'n', formattedNumber );
             }
 
             return result;
         },
-        'N': function () {
-            return this.rules.n.apply(this, arguments);
+        'N': function() {
+            return this.rules.n.apply( this, arguments );
         },
-        'c': function (val, param, culture) {
-            param = (param !== undefined) ? param : culture.numberFormatInfo.currencyDecimalDigits;
+        'c': function( val, param, culture ) {
+            param = ( param !== undefined ) ? param : culture.numberFormatInfo.currencyDecimalDigits;
             var isPositive = val >= 0,
-                formattedNumber = this.formatNumber(Math.abs(val), param, culture.numberFormatInfo.currencyGroupSeparator, culture.numberFormatInfo.currencyDecimalSeparator),
+                formattedNumber = this.formatNumber( Math.abs( val ), param, culture.numberFormatInfo.currencyGroupSeparator, culture.numberFormatInfo.currencyDecimalSeparator ),
                 result;
 
-            if(isPositive){
-                result = culture.numberFormatInfo.currencyPositivePattern.replace('c', formattedNumber);
+            if( isPositive ) {
+                result = culture.numberFormatInfo.currencyPositivePattern.replace( 'c', formattedNumber );
             }else{
-                result = culture.numberFormatInfo.currencyNegativePattern.replace('c', formattedNumber);
+                result = culture.numberFormatInfo.currencyNegativePattern.replace( 'c', formattedNumber );
             }
-            result = result.replace('$', culture.numberFormatInfo.currencySymbol);
+            result = result.replace( '$', culture.numberFormatInfo.currencySymbol );
 
             return result;
         },
-        'C': function () {
-            return this.rules.c.apply(this, arguments);
+        'C': function() {
+            return this.rules.c.apply( this, arguments );
         }
     },
 
@@ -117,13 +117,13 @@ _.extend(NumberFormat.prototype, {
      * @param {String} decimalSeparator Разделитель между целой и дробной частью
      * @returns {String}
      */
-    formatNumber: function(val, capacity, groupSeparator, decimalSeparator){
-        val = val.toFixed(capacity);
+    formatNumber: function( val, capacity, groupSeparator, decimalSeparator ) {
+        val = val.toFixed( capacity );
 
         var stringOfVal = val.toString(),
-            splittedVal = stringOfVal.split('.'),
-            intPath = this.formatIntPath(splittedVal[0], groupSeparator),
-            fractPath = this.formatFractPath(splittedVal[1], decimalSeparator, capacity);
+            splittedVal = stringOfVal.split( '.' ),
+            intPath = this.formatIntPath( splittedVal[ 0 ], groupSeparator ),
+            fractPath = this.formatFractPath( splittedVal[ 1 ], decimalSeparator, capacity );
 
         return intPath + fractPath;
     },
@@ -136,8 +136,8 @@ _.extend(NumberFormat.prototype, {
      * @param {String} splitter Разделитель между группами
      * @returns {String}
      */
-    formatIntPath: function(intPath, splitter){
-        return intPath.replace(/(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g, '$1' + splitter);
+    formatIntPath: function( intPath, splitter ) {
+        return intPath.replace( /(\d{1,3}(?=(\d{3})+(?:\.\d|\b)))/g, '$1' + splitter );
     },
 
     /**
@@ -149,20 +149,20 @@ _.extend(NumberFormat.prototype, {
      * @param {Number} capacity Количество знаков в дробной части
      * @returns {string}
      */
-    formatFractPath: function(fractPath, splitter, capacity){
+    formatFractPath: function( fractPath, splitter, capacity ) {
         var result = fractPath ? fractPath : '',
             postfix;
 
-        if(capacity == 0){
+        if( capacity == 0 ) {
             return '';
         }
 
-        if(result.length >= capacity){
-            return splitter + result.substr(0, capacity)
+        if( result.length >= capacity ) {
+            return splitter + result.substr( 0, capacity );
         }
 
-        postfix = Math.pow(10, capacity - result.length);
-        postfix = postfix.toString().substr(1);
+        postfix = Math.pow( 10, capacity - result.length );
+        postfix = postfix.toString().substr( 1 );
         return splitter + result + postfix;
     }
-}, formatMixin);
+}, formatMixin );

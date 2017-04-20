@@ -1,24 +1,24 @@
 function SelectActionBuilder() {}
 
-_.extend(SelectActionBuilder.prototype,
+_.extend( SelectActionBuilder.prototype,
     BaseActionBuilderMixin,
     {
-        build: function (context, args) {
+        build: function( context, args ) {
             var builder = args.builder,
                 metadata = args.metadata,
                 parentView = args.parentView;
 
-            var action = new SelectAction(parentView);
+            var action = new SelectAction( parentView );
 
-            this.applyBaseActionMetadata(action, args);
+            this.applyBaseActionMetadata( action, args );
 
-            var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+            var linkView = builder.build( metadata[ 'LinkView' ], { parentView: parentView } );
 
-            action.setProperty('linkView', linkView);
-            action.setProperty('sourceSource', metadata.SourceValue.Source);
-            action.setProperty('sourceProperty', metadata.SourceValue.Property);
-            action.setProperty('destinationSource', metadata.DestinationValue.Source);
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+            action.setProperty( 'linkView', linkView );
+            action.setProperty( 'sourceSource', metadata.SourceValue.Source );
+            action.setProperty( 'sourceProperty', metadata.SourceValue.Property );
+            action.setProperty( 'destinationSource', metadata.DestinationValue.Source );
+            action.setProperty( 'destinationProperty', metadata.DestinationValue.Property );
 
             return action;
         }

@@ -1,6 +1,6 @@
-var SelectComponentModel = Backbone.Model.extend({
+var SelectComponentModel = Backbone.Model.extend( {
 
-    defaults: function () {
+    defaults: function() {
         var today = new Date();
 
         return {
@@ -12,19 +12,19 @@ var SelectComponentModel = Backbone.Model.extend({
             minute: today.getMinutes(),
             second: today.getSeconds(),
             millisecond: today.getMilliseconds()
-        }
+        };
     },
 
-    initialize: function () {
+    initialize: function() {
         this.updateDateParts();
-        this.on('change:date', this.onChangeDateHandler, this);
+        this.on( 'change:date', this.onChangeDateHandler, this );
     },
 
-    updateDateParts: function () {
-        var date = this.get('date');
+    updateDateParts: function() {
+        var date = this.get( 'date' );
 
-        if (date instanceof Date) {
-            this.set({
+        if( date instanceof Date ) {
+            this.set( {
                 year: date.getFullYear(),
                 month: date.getMonth(),
                 day: date.getDate(),
@@ -32,9 +32,9 @@ var SelectComponentModel = Backbone.Model.extend({
                 minute: date.getMinutes(),
                 second: date.getSeconds(),
                 millisecond: date.getMilliseconds()
-            });
+            } );
         } else {
-            this.set({
+            this.set( {
                 year: null,
                 month: null,
                 day: null,
@@ -42,24 +42,24 @@ var SelectComponentModel = Backbone.Model.extend({
                 minute: null,
                 second: null,
                 millisecond: null
-            });
+            } );
         }
 
     },
 
-    onChangeDateHandler: function (model, value) {
-        if (typeof value !== 'undefined' && value !== null) {
-            model.set({
-                year: moment(value).year(),
-                month: moment(value).month(),
-                day: moment(value).date(),
-                hour: moment(value).hour(),
-                minute: moment(value).minute(),
-                second: moment(value).second(),
-                millisecond: moment(value).millisecond()
-            })
+    onChangeDateHandler: function( model, value ) {
+        if( typeof value !== 'undefined' && value !== null ) {
+            model.set( {
+                year: moment( value ).year(),
+                month: moment( value ).month(),
+                day: moment( value ).date(),
+                hour: moment( value ).hour(),
+                minute: moment( value ).minute(),
+                second: moment( value ).second(),
+                millisecond: moment( value ).millisecond()
+            } );
         } else {
-            model.set({
+            model.set( {
                 year: null,
                 month: null,
                 day: null,
@@ -67,46 +67,48 @@ var SelectComponentModel = Backbone.Model.extend({
                 minute: null,
                 second: null,
                 millisecond: null
-            });
+            } );
         }
     },
 
-    updateDatePart: function (datePart, model, value) {
+    updateDatePart: function( datePart, model, value ) {
         var
-            d = this.get('date'),
-            date = InfinniUI.DateUtils.createDate(d) ||  this.get('today'),
+            d = this.get( 'date' ),
+            date = InfinniUI.DateUtils.createDate( d ) || this.get( 'today' ),
             data = this.toJSON();
 
 
-        switch (datePart) {
+        switch( datePart ) {
             case 'hour':
             case 'minute':
             case 'second':
-                date.setHours(data.hour, data.minute, data.second);
+                date.setHours( data.hour, data.minute, data.second );
                 break;
             case 'year':
             case 'month':
             case 'day':
-                date.setFullYear(data.year, data.month, data.day);
+                date.setFullYear( data.year, data.month, data.day );
+                break;
+            default:
                 break;
         }
 
-        this.set('date', date);
+        this.set( 'date', date );
     },
 
-    checkRange: function (date, precision) {
-        var min = this.get('min'),
-            max = this.get('max');
+    checkRange: function( date, precision ) {
+        var min = this.get( 'min' );
+        var max = this.get( 'max' );
 
-        return InfinniUI.DateUtils.checkRangeDate(date, min, max, precision);
+        return InfinniUI.DateUtils.checkRangeDate( date, min, max, precision );
     },
 
-    keepDateInRange: function () {
-        if (this.isValid()) {
+    keepDateInRange: function() {
+        if( this.isValid() ) {
             return;
         }
-        var date = InfinniUI.DateUtils.getNearestDate(this.get('date'), this.get('min'), this.get('max'));
-        this.set('date', date);
+        var date = InfinniUI.DateUtils.getNearestDate( this.get( 'date' ), this.get( 'min' ), this.get( 'max' ) );
+        this.set( 'date', date );
     },
 
     /**
@@ -114,20 +116,19 @@ var SelectComponentModel = Backbone.Model.extend({
      * Если устанавливается недействительная дата - используется текущая
      * @param date
      */
-    setDate: function (date) {
-        if (typeof date === 'undefined' || date === null){
-            var value = this.get('value'),
-                today = this.get('date');
+    setDate: function( date ) {
+        if( typeof date === 'undefined' || date === null ) {
+            var value = this.get( 'value' );
+            var today = this.get( 'date' );
 
             date = value || today;
         }
 
-        if (date instanceof Date) {
-            date = new Date(date.getTime());
+        if( date instanceof Date ) {
+            date = new Date( date.getTime() );
         }
-        this.set('date', date);
+        this.set( 'date', date );
     }
 
-
-});
+} );
 

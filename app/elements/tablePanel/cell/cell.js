@@ -3,22 +3,22 @@
  * @constructor
  * @augments Container
  */
-function Cell(parent) {
-    _.superClass(Cell, this, parent);
+function Cell( parent ) {
+    _.superClass( Cell, this, parent );
 }
 
-_.inherit(Cell, Container);
+_.inherit( Cell, Container );
 
-_.extend(Cell.prototype, {
-    createControl: function () {
+_.extend( Cell.prototype, {
+    createControl: function() {
         return new CellControl();
     },
 
-    getColumnSpan: function(){
-        return this.control.get('columnSpan');
+    getColumnSpan: function() {
+        return this.control.get( 'columnSpan' );
     },
 
-    setColumnSpan: function(newColumnSpan){
-        this.control.set('columnSpan', newColumnSpan);
+    setColumnSpan: function( newColumnSpan ) {
+        this.control.set( 'columnSpan', newColumnSpan );
     }
-});
+} );

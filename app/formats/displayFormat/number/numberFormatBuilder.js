@@ -2,8 +2,7 @@
  * @description Билдер NumberFormat
  * @class NumberFormatBuilder
  */
-function NumberFormatBuilder () {
-
+function NumberFormatBuilder() {
     /**
      * @description Создает и инициализирует экземпляр {@link NumberFormat}
      * @memberOf NumberFormatBuilder
@@ -11,13 +10,14 @@ function NumberFormatBuilder () {
      * @param args
      * @returns {NumberFormat}
      */
-    this.build = function (context, args) {
+    this.build = function( context, args ) {
         var format = new NumberFormat();
 
-        format.setFormat(args.metadata.Format);
+        format.setFormat( args.metadata.Format );
 
         return format;
-    }
+    };
+
 }
 
 window.InfinniUI.NumberFormatBuilder = NumberFormatBuilder;

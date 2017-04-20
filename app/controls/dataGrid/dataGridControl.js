@@ -4,35 +4,35 @@
  * @augments ListEditorBaseControl
  */
 function DataGridControl() {
-    _.superClass(DataGridControl, this);
+    _.superClass( DataGridControl, this );
 }
 
-_.inherit(DataGridControl, ListEditorBaseControl);
+_.inherit( DataGridControl, ListEditorBaseControl );
 
-_.extend(DataGridControl.prototype, {
+_.extend( DataGridControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new DataGridModel();
     },
 
-    createControlView: function (model) {
-        return new DataGridView({model: model});
+    createControlView: function( model ) {
+        return new DataGridView( { model: model } );
     },
 
-    onCheckAllChanged: function (handler) {
-        this.controlModel.onCheckAllChanged(handler);
+    onCheckAllChanged: function( handler ) {
+        this.controlModel.onCheckAllChanged( handler );
     },
 
-    setEnabled: function(value) {
-        this.controlModel.set('enabled', value);
+    setEnabled: function( value ) {
+        this.controlModel.set( 'enabled', value );
     },
 
-    onRowClick: function(callback) {
-        this.controlView.$el.on('click', 'tbody .pl-datagrid-row', callback);
+    onRowClick: function( callback ) {
+        this.controlView.$el.on( 'click', 'tbody .pl-datagrid-row', callback );
     },
 
-    onRowDoubleClick: function(callback) {
-        this.controlView.$el.on('dblclick', 'tbody .pl-datagrid-row', callback);
+    onRowDoubleClick: function( callback ) {
+        this.controlView.$el.on( 'dblclick', 'tbody .pl-datagrid-row', callback );
     }
-});
+} );
 

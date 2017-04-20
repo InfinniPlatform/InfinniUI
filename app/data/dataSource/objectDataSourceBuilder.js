@@ -1,40 +1,39 @@
 function ObjectDataSourceBuilder() {
 }
 
-_.inherit(ObjectDataSourceBuilder, BaseDataSourceBuilder);
+_.inherit( ObjectDataSourceBuilder, BaseDataSourceBuilder );
 
-_.extend(ObjectDataSourceBuilder.prototype, {
-    createDataSource: function(parent){
-        return new ObjectDataSource({
+_.extend( ObjectDataSourceBuilder.prototype, {
+
+    createDataSource: function( parent ) {
+        return new ObjectDataSource( {
             view: parent
-        });
+        } );
     },
 
-    applyMetadata: function(builder, parent, metadata, dataSource){
-        BaseDataSourceBuilder.prototype.applyMetadata.call(this, builder, parent, metadata, dataSource);
+    applyMetadata: function( builder, parent, metadata, dataSource ) {
+        BaseDataSourceBuilder.prototype.applyMetadata.call( this, builder, parent, metadata, dataSource );
 
-        if(!'IsLazy' in metadata){
-            dataSource.setIsLazy(false);
+        if( !'IsLazy' in metadata ) {
+            dataSource.setIsLazy( false );
         }
 
-        if(metadata.Items){
-            if($.isArray(metadata.Items)){
-                dataSource.setItems(metadata.Items);
+        if( metadata.Items ) {
+            if( $.isArray( metadata.Items ) ) {
+                dataSource.setItems( metadata.Items );
             }
 
-            if($.isPlainObject(metadata.Items)){
-                var binding = builder.buildBinding(metadata.Items, {
+            if( $.isPlainObject( metadata.Items ) ) {
+                var binding = builder.buildBinding( metadata.Items, {
                     parentView: parent
-                });
+                } );
 
-                binding.setMode(InfinniUI.BindingModes.toElement);
-
-                binding.bindElement(dataSource, '');
+                binding.setMode( InfinniUI.BindingModes.toElement );
+                binding.bindElement( dataSource, '' );
             }
-
         }
-
     }
-});
+
+} );
 
 window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;

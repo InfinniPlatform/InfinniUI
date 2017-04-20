@@ -1,7 +1,7 @@
-var IndeterminateCheckBoxModel = CheckBoxModel.extend({
+var IndeterminateCheckBoxModel = CheckBoxModel.extend( {
 
-	defaults: _.defaults({
-		value: 'unchecked'
-	}, CheckBoxModel.prototype.defaults)
+    defaults: _.defaults( {
+        value: 'unchecked'
+    }, CheckBoxModel.prototype.defaults )
 
-});
+} );

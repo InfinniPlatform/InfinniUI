@@ -1,16 +1,16 @@
-var LabelModel = ControlModel.extend(_.extend({
+var LabelModel = ControlModel.extend( _.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         horizontalTextAlignment: 'Left',
         verticalAlignment: 'Top',
         textWrapping: true,
         textTrimming: true,
         escapeHtml: true,
         focusable: false
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function(){
-        ControlModel.prototype.initialize.apply(this, arguments);
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
-}, editorBaseModelMixin));
+}, editorBaseModelMixin ) );

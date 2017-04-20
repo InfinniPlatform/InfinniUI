@@ -3,18 +3,18 @@
  * @augments ContainerBuilder
  */
 function TablePanelBuilder() {
-    _.superClass(TablePanelBuilder, this);
+    _.superClass( TablePanelBuilder, this );
 }
 
 window.InfinniUI.TablePanelBuilder = TablePanelBuilder;
 
-_.inherit(TablePanelBuilder, ContainerBuilder);
+_.inherit( TablePanelBuilder, ContainerBuilder );
 
-_.extend(TablePanelBuilder.prototype,
+_.extend( TablePanelBuilder.prototype,
     /** @lends TablePanelBuilder.prototype*/
     {
-        createElement: function (params) {
-            return new TablePanel(params.parent);
+        createElement: function( params ) {
+            return new TablePanel( params.parent );
         },
 
         /**
@@ -22,12 +22,12 @@ _.extend(TablePanelBuilder.prototype,
          * @param {TablePanel} params.element
          * @param {Object} params.metadata
          */
-        applyMetadata: function (params) {
+        applyMetadata: function( params ) {
             var
                 metadata = params.metadata,
                 element = params.element;
 
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
+            ContainerBuilder.prototype.applyMetadata.call( this, params );
         }
 
-    });
+    } );

@@ -1,14 +1,13 @@
-var RestDataSource = BaseDataSource.extend({
+var RestDataSource = BaseDataSource.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         updatingItemsConverter: null
+    }, BaseDataSource.prototype.defaults ),
 
-    }, BaseDataSource.prototype.defaults),
+    initialize: function() {
+        BaseDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
 
-    initialize: function(){
-        BaseDataSource.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
-
-        var model = this.get('model');
+        var model = this.get( 'model' );
         model.urlParams = {
             get: {
                 method: 'get',
@@ -38,162 +37,155 @@ var RestDataSource = BaseDataSource.extend({
         this.initUrlParamsHandlers();
     },
 
-    initDataProvider: function(){
-        var dataProvider = window.InfinniUI.providerRegister.build('RestDataSource');
-        this.set('dataProvider', dataProvider);
+    initDataProvider: function() {
+        var dataProvider = window.InfinniUI.providerRegister.build( 'RestDataSource' );
+        this.set( 'dataProvider', dataProvider );
     },
 
-    getGettingUrlParams: function(propertyName){
-        if(arguments.length == 0){
+    getGettingUrlParams: function( propertyName ) {
+        if( arguments.length == 0 ) {
             propertyName = 'urlParams.get';
-
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.get';
-            }else{
+            } else {
                 propertyName = 'urlParams.get.' + propertyName;
             }
         }
-        return this.get('model').getProperty(propertyName);
+        return this.get( 'model' ).getProperty( propertyName );
     },
 
-    setGettingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
+    setGettingUrlParams: function( propertyName, value ) {
+        if( arguments.length == 1 ) {
             value = propertyName;
             propertyName = 'urlParams.get';
 
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.get';
-            }else{
+            } else {
                 propertyName = 'urlParams.get.' + propertyName;
             }
         }
 
-        this.get('model').setProperty(propertyName, value);
+        this.get( 'model' ).setProperty( propertyName, value );
     },
 
-    initUrlParamsHandlers: function(){
+    initUrlParamsHandlers: function() {
         var that = this;
 
-        this.get('model').onPropertyChanged('urlParams.get.*', function(context, args){
-            var dataProvider = that.get('dataProvider');
+        this.get( 'model' ).onPropertyChanged( 'urlParams.get.*', function( context, args ) {
+            var dataProvider = that.get( 'dataProvider' );
             var urlParams = that.getGettingUrlParams();
             var templated;
 
-            dataProvider.setOrigin('get', urlParams.origin);
-            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
-            dataProvider.setPath('get', templated);
-            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
-            dataProvider.setData('get', templated);
-            dataProvider.setMethod('get', urlParams.method);
+            dataProvider.setOrigin( 'get', urlParams.origin );
+            templated = that._templateParamsInStr( urlParams.path, urlParams.params );
+            dataProvider.setPath( 'get', templated );
+            templated = that._templateParamsInObject( urlParams.data, urlParams.params );
+            dataProvider.setData( 'get', templated );
+            dataProvider.setMethod( 'get', urlParams.method );
 
-            if( that.get('isDataReady') || that.get('isRequestInProcess') || that.get('waitingOnUpdateItemsHandlers').length > 0 ){ // ds was resolved or waiting resolving
+            if( that.get( 'isDataReady' ) || that.get( 'isRequestInProcess' ) || that.get( 'waitingOnUpdateItemsHandlers' ).length > 0 ) { // ds was resolved or waiting resolving
                 that.updateItems();
             }
-        });
+        } );
 
-        this.get('model').onPropertyChanged('urlParams.set.*', function(context, args){
-            var dataProvider = that.get('dataProvider');
+        this.get( 'model' ).onPropertyChanged( 'urlParams.set.*', function( context, args ) {
+            var dataProvider = that.get( 'dataProvider' );
             var urlParams = that.getSettingUrlParams();
             var templated;
 
-            dataProvider.setOrigin('set', urlParams.origin);
-            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
-            dataProvider.setPath('set', templated);
-            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
-            dataProvider.setData('set', templated);
-            dataProvider.setMethod('set', urlParams.method);
-        });
+            dataProvider.setOrigin( 'set', urlParams.origin );
+            templated = that._templateParamsInStr( urlParams.path, urlParams.params );
+            dataProvider.setPath( 'set', templated );
+            templated = that._templateParamsInObject( urlParams.data, urlParams.params );
+            dataProvider.setData( 'set', templated );
+            dataProvider.setMethod( 'set', urlParams.method );
+        } );
 
-        this.get('model').onPropertyChanged('urlParams.delete.*', function(context, args){
-            var dataProvider = that.get('dataProvider');
+        this.get( 'model' ).onPropertyChanged( 'urlParams.delete.*', function( context, args ) {
+            var dataProvider = that.get( 'dataProvider' );
             var urlParams = that.getDeletingUrlParams();
             var templated;
 
-            dataProvider.setOrigin('delete', urlParams.origin);
-            templated = that._templateParamsInStr(urlParams.path, urlParams.params);
-            dataProvider.setPath('delete', templated);
-            templated = that._templateParamsInObject(urlParams.data, urlParams.params);
-            dataProvider.setData('delete', templated);
-            dataProvider.setMethod('delete', urlParams.method);
-        });
+            dataProvider.setOrigin( 'delete', urlParams.origin );
+            templated = that._templateParamsInStr( urlParams.path, urlParams.params );
+            dataProvider.setPath( 'delete', templated );
+            templated = that._templateParamsInObject( urlParams.data, urlParams.params );
+            dataProvider.setData( 'delete', templated );
+            dataProvider.setMethod( 'delete', urlParams.method );
+        } );
     },
 
-    updateItems: function(){
+    updateItems: function() {
+        if( this._checkGettingUrlParamsReady() ) {
+            BaseDataSource.prototype.updateItems.apply( this, Array.prototype.slice.call( arguments ) );
+            this.resumeUpdate( 'urlGettingParamsNotReady' );
 
-        if(this._checkGettingUrlParamsReady()){
-            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
-            this.resumeUpdate('urlGettingParamsNotReady');
-
-        }else{
-            this.suspendUpdate('urlGettingParamsNotReady');
-            BaseDataSource.prototype.updateItems.apply(this, Array.prototype.slice.call(arguments));
+        } else {
+            this.suspendUpdate( 'urlGettingParamsNotReady' );
+            BaseDataSource.prototype.updateItems.apply( this, Array.prototype.slice.call( arguments ) );
         }
-
     },
 
-    getSettingUrlParams: function(propertyName){
-        if(arguments.length == 0){
+    getSettingUrlParams: function( propertyName ) {
+        if( arguments.length == 0 ) {
             propertyName = 'urlParams.set';
-
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.set';
-            }else{
+            } else {
                 propertyName = 'urlParams.set.' + propertyName;
             }
         }
-        return this.get('model').getProperty(propertyName);
+        return this.get( 'model' ).getProperty( propertyName );
     },
 
-    setSettingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
+    setSettingUrlParams: function( propertyName, value ) {
+        if( arguments.length == 1 ) {
             value = propertyName;
             propertyName = 'urlParams.set';
-
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.set';
-            }else{
+            } else {
                 propertyName = 'urlParams.set.' + propertyName;
             }
         }
 
-        this.get('model').setProperty(propertyName, value);
+        this.get( 'model' ).setProperty( propertyName, value );
     },
 
-    getDeletingUrlParams: function(propertyName){
-        if(arguments.length == 0){
+    getDeletingUrlParams: function( propertyName ) {
+        if( arguments.length == 0 ) {
             propertyName = 'urlParams.delete';
-
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.delete';
-            }else{
+            } else {
                 propertyName = 'urlParams.delete.' + propertyName;
             }
         }
-        return this.get('model').getProperty(propertyName);
+        return this.get( 'model' ).getProperty( propertyName );
     },
 
-    setDeletingUrlParams: function(propertyName, value){
-        if(arguments.length == 1){
+    setDeletingUrlParams: function( propertyName, value ) {
+        if( arguments.length == 1 ) {
             value = propertyName;
             propertyName = 'urlParams.delete';
-
-        }else{
-            if(propertyName == ''){
+        } else {
+            if( propertyName == '' ) {
                 propertyName = 'urlParams.delete';
-            }else{
+            } else {
                 propertyName = 'urlParams.delete.' + propertyName;
             }
         }
 
-        this.get('model').setProperty(propertyName, value);
+        this.get( 'model' ).setProperty( propertyName, value );
     },
 
-    _checkGettingUrlParamsReady: function(){
+    _checkGettingUrlParamsReady: function() {
         var allParams = [];
         var strWithParams;
         var params;
@@ -201,23 +193,23 @@ var RestDataSource = BaseDataSource.extend({
         var definedParams;
         var param;
 
-        if(!this._checkUrlParamsReady(this.getGettingUrlParams())){
+        if( !this._checkUrlParamsReady( this.getGettingUrlParams() ) ) {
             return false;
         }
 
-        strWithParams = this.getGettingUrlParams('path');
-        params = this._findSubstitutionParams(strWithParams);
-        allParams = allParams.concat(params);
+        strWithParams = this.getGettingUrlParams( 'path' );
+        params = this._findSubstitutionParams( strWithParams );
+        allParams = allParams.concat( params );
 
-        data = this.getGettingUrlParams('data');
-        strWithParams = JSON.stringify(data);
-        params = this._findSubstitutionParams(strWithParams);
-        allParams = allParams.concat(params);
+        data = this.getGettingUrlParams( 'data' );
+        strWithParams = JSON.stringify( data );
+        params = this._findSubstitutionParams( strWithParams );
+        allParams = allParams.concat( params );
 
-        definedParams = this.getGettingUrlParams('params');
-        for(var i = 0, ii = allParams.length; i<ii; i++){
-            param = allParams[i];
-            if(definedParams[param] === undefined){
+        definedParams = this.getGettingUrlParams( 'params' );
+        for( var i = 0, ii = allParams.length; i < ii; i++ ) {
+            param = allParams[ i ];
+            if( definedParams[ param ] === undefined ) {
                 return false;
             }
         }
@@ -225,68 +217,68 @@ var RestDataSource = BaseDataSource.extend({
         return true;
     },
 
-    _checkUrlParamsReady: function(params){
+    _checkUrlParamsReady: function( params ) {
         return params && typeof params.origin == 'string'// && params.origin.lentgh > 0
-                && typeof params.path == 'string'
-                && typeof params.data == 'object'
-                && typeof params.params == 'object';
+            && typeof params.path == 'string'
+            && typeof params.data == 'object'
+            && typeof params.params == 'object';
     },
 
-    _findSubstitutionParams: function(str){
-        if(!str){
+    _findSubstitutionParams: function( str ) {
+        if( !str ) {
             return [];
         }
 
         var result = [];
-        str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
-            result.push(p2);
+        str.replace( /<%([\s\S]+?)%>/g, function( p1, p2 ) {
+            result.push( p2 );
             return p1;
-        });
+        } );
 
         return result;
     },
 
-    _templateParamsInStr: function(str, params){
-        if(!str || !params){
+    _templateParamsInStr: function( str, params ) {
+        if( !str || !params ) {
             return str;
         }
 
-        return str.replace(/<%([\s\S]+?)%>/g, function(p1, p2){
-            return params[p2];
-        });
+        return str.replace( /<%([\s\S]+?)%>/g, function( p1, p2 ) {
+            return params[ p2 ];
+        } );
     },
 
-    _templateParamsInObject: function(obj, params){
-        if(!obj || !params){
+    _templateParamsInObject: function( obj, params ) {
+        if( !obj || !params ) {
             return obj;
         }
 
-        var str = JSON.stringify(obj);
-        var tmpTemplated = this._templateParamsInStr(str, params);
-        return JSON.parse(tmpTemplated);
+        var str = JSON.stringify( obj );
+        var tmpTemplated = this._templateParamsInStr( str, params );
+        return JSON.parse( tmpTemplated );
     },
 
-    getUpdatingItemsConverter: function(){
-        return this.get('updatingItemsConverter');
+    getUpdatingItemsConverter: function() {
+        return this.get( 'updatingItemsConverter' );
     },
 
-    setUpdatingItemsConverter: function(converter){
-        this.set('updatingItemsConverter', converter);
+    setUpdatingItemsConverter: function( converter ) {
+        this.set( 'updatingItemsConverter', converter );
     },
 
-    _handleUpdatedItemsData: function (itemsData, successHandler, errorHandler) {
+    _handleUpdatedItemsData: function( itemsData, successHandler, errorHandler ) {
         var converter = this.getUpdatingItemsConverter();
         var items;
 
-        if(converter){
-            items = converter(itemsData);
-        }else{
+        if( converter ) {
+            items = converter( itemsData );
+        } else {
             items = itemsData;
         }
 
-        BaseDataSource.prototype._handleUpdatedItemsData.call(this, items, successHandler, errorHandler);
+        BaseDataSource.prototype._handleUpdatedItemsData.call( this, items, successHandler, errorHandler );
     }
 
-});
+} );
 
 window.InfinniUI.RestDataSource = RestDataSource;

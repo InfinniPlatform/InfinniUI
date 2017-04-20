@@ -1,18 +1,18 @@
-var DataNavigationPrevButton = DataNavigationBaseButton.extend({
+var DataNavigationPrevButton = DataNavigationBaseButton.extend( {
 
-    template: InfinniUI.Template["controls/dataNavigation/buttons/template/prev.tpl.html"],
+    template: InfinniUI.Template[ 'controls/dataNavigation/buttons/template/prev.tpl.html' ],
 
     events: {
-        "click": "onClickHandler"
+        'click': 'onClickHandler'
     },
 
-    initialize: function (options) {
+    initialize: function( options ) {
         this.model = new DataNavigationBaseButtonModel();
-        DataNavigationBaseButton.prototype.initialize.call(this, options);
+        DataNavigationBaseButton.prototype.initialize.call( this, options );
     },
 
-    onClickHandler: function (event) {
-        this.trigger('command', "prev");
+    onClickHandler: function( event ) {
+        this.trigger( 'command', 'prev' );
     }
 
-});
+} );

@@ -2,57 +2,57 @@
  * @constructor
  * @augments ContainerView
  */
-var ToolBarView = ContainerView.extend({
+var ToolBarView = ContainerView.extend( {
 
     className: 'pl-tool-bar',
 
-    template: InfinniUI.Template["controls/toolBar/template/toolBar.tpl.html"],
+    template: InfinniUI.Template[ 'controls/toolBar/template/toolBar.tpl.html' ],
 
-    itemTemplate: InfinniUI.Template["controls/toolBar/template/toolBarItem.tpl.html"],
+    itemTemplate: InfinniUI.Template[ 'controls/toolBar/template/toolBarItem.tpl.html' ],
 
     UI: {
         container: '.pl-tool-bar__container'
     },
 
-    render: function () {
+    render: function() {
         this.prerenderingActions();
 
-        this.renderTemplate(this.template);
-        this.ui.container.append(this.renderItems());
+        this.renderTemplate( this.template );
+        this.ui.container.append( this.renderItems() );
         this.updateProperties();
-        this.trigger('render');
+        this.trigger( 'render' );
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
-    renderItems: function () {
+    renderItems: function() {
         var model = this.model;
-        var items = model.get('items');
-        var itemTemplate = model.get('itemTemplate');
+        var items = model.get( 'items' );
+        var itemTemplate = model.get( 'itemTemplate' );
 
         this.removeChildElements();
 
         var $elements = [];
 
-        items.forEach(function (item, index) {
+        items.forEach( function( item, index ) {
             var template = this.itemTemplate();
-            var $template = $(template);
+            var $template = $( template );
 
-            var element = itemTemplate(null, {
+            var element = itemTemplate( null, {
                 index: index,
                 item: item
-            });
-            this.addChildElement(element);
-            $template.append(element.render());
-            $elements.push($template);
-        }, this);
+            } );
+            this.addChildElement( element );
+            $template.append( element.render() );
+            $elements.push( $template );
+        }, this );
 
         return $elements;
     },
 
-    updateGrouping: function(){}
-});
+    updateGrouping: function() {}
+} );

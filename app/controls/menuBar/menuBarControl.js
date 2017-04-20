@@ -4,21 +4,21 @@
  * @constructor
  * @augments ContainerControl
  */
-function MenuBarControl(parent) {
-    _.superClass(MenuBarControl, this, parent);
+function MenuBarControl( parent ) {
+    _.superClass( MenuBarControl, this, parent );
 }
 
-_.inherit(MenuBarControl, ContainerControl);
+_.inherit( MenuBarControl, ContainerControl );
 
-_.extend(MenuBarControl.prototype,
+_.extend( MenuBarControl.prototype,
     /** @lends MenuBarControl.prototype */
     {
-        createControlModel: function () {
+        createControlModel: function() {
             return new MenuBarModel();
         },
 
-        createControlView: function (model) {
-            return new MenuBarView({model: model});
+        createControlView: function( model ) {
+            return new MenuBarView( { model: model } );
         }
     }
 );
