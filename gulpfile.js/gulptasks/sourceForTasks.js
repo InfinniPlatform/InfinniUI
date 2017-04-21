@@ -30,7 +30,7 @@ var sourceForTasks = {
 		taskPath: "./gulptasks/buildJsProd"
 	},
 	'clean': {
-		src: sourceForFiles.platformOutputFolder,
+		src: [ sourceForFiles.platformOutputFolder, sourceForFiles.testOutputFolder],
 		taskPath: "./gulptasks/clean"
 	},
 	'concat:vendor-js': {
@@ -49,7 +49,7 @@ var sourceForTasks = {
 	'concat:unit-tests': {
 		src: sourceForFiles.unitTestFiles,
 		finalName: "unitTest.js",
-		dest: "./test/unit/dist/",
+		dest: sourceForFiles.testOutputFolder,
 		taskPath: "./gulptasks/concatFiles"
 	},
 	'copy:fonts': {
