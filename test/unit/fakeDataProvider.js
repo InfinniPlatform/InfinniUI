@@ -53,7 +53,7 @@ function FakeDataProvider( mode ) {
     ];
 
     this.getItems = function( resultCallback ) {
-        if ( mode === undefined || mode() === 'Created' ) {
+        if ( typeof mode === 'undefined' || mode() === 'Created' ) {
 
             var result = items;
 

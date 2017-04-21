@@ -1,33 +1,33 @@
-function PdfViewer(parentView) {
-		_.superClass(PdfViewer, this, parentView);
+function PdfViewer( parentView ) {
+    _.superClass( PdfViewer, this, parentView );
 }
 
-_.inherit(PdfViewer, Element);
+_.inherit( PdfViewer, Element );
 
-_.extend(PdfViewer.prototype, {
+_.extend( PdfViewer.prototype, {
 
-	createControl: function () {
-		return new PdfViewerControl();
-	},
+    createControl: function() {
+        return new PdfViewerControl();
+    },
 
-	setUrl: function (url) {
-		return this.control.set('url', url);
-	},
+    setUrl: function( url ) {
+        return this.control.set( 'url', url );
+    },
 
-	setWidth: function(width) {
-		this.control.setWidth(width);
-	},
+    setWidth: function( width ) {
+        this.control.setWidth( width );
+    },
 
-	getWidth: function() {
-		return this.control.getWidth();
-	},
+    getWidth: function() {
+        return this.control.getWidth();
+    },
 
-	setHeight: function(height) {
-		this.control.setHeight(height);
-	},
+    setHeight: function( height ) {
+        this.control.setHeight( height );
+    },
 
-	getHeight: function() {
-		return this.control.getHeight();
-	}
+    getHeight: function() {
+        return this.control.getHeight();
+    }
 
-}, valuePropertyMixin);
+}, valuePropertyMixin );

@@ -63,7 +63,7 @@ describe( 'TreeModel', function() {
             treeModel.onPropertyChanged( 'p1.p11', function( context, args ) {
                 result = result + '1';
 
-                assert.isTrue( args.oldValue == undefined || args.oldValue == 1, 'old value is right' );
+                assert.isTrue( typeof args.oldValue === 'undefined' || args.oldValue == 1, 'old value is right' );
                 assert.isTrue( args.newValue == 1 || args.newValue == 4, 'new value is right' );
 
                 assert.isTrue( treeModel.getProperty( 'p1.p11' ) == 1 || treeModel.getProperty( 'p1.p11' ) == 4, 'value was saved before handling' );
@@ -156,7 +156,7 @@ describe( 'TreeModel', function() {
             treeModel.onPropertyChanged( 'p1.p11', function( context, args ) {
                 result = result + '1';
 
-                assert.isTrue( args.oldValue == undefined || args.oldValue == 1 || args.oldValue == 2, 'old value is right' );
+                assert.isTrue( typeof args.oldValue === 'undefined' || args.oldValue == 1 || args.oldValue == 2, 'old value is right' );
                 assert.isTrue( args.newValue == 1 || args.newValue == 4 || args.newValue == 2 || args.newValue == 8, 'new value is right' );
 
             }, { owner: owner1 } );

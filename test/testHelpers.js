@@ -1,5 +1,5 @@
 function fakeView( view ) {
-    if ( view === undefined ) {
+    if ( typeof view === 'undefined' ) {
         view = {};
     }
 
