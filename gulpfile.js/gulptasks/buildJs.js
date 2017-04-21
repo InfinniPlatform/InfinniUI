@@ -1,9 +1,10 @@
 'use strict';
 
-var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
-    streamqueue = require('streamqueue');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var concatStream = require('streamqueue');
 
+var sourceForFiles = require('./sourceForFiles');
 var templateNamespaceInitString = 'window["InfinniUI"] = window["InfinniUI"] || {};\nwindow["InfinniUI"]["Template"] = window["InfinniUI"]["Template"] || {};\n';
 
 function getTemplateStream(src) {
@@ -25,17 +26,12 @@ function getJsStream(src) {
         }));
 }
 
-module.exports = function (options) {
-    return function () {
-        return streamqueue({ objectMode: true }, getTemplateStream(options.templateSrc), getJsStream(options.src))
-            .pipe($.concat(options.finalName))
-            .pipe($.wrapper({
-                    header: ';(function(){\n' + templateNamespaceInitString,
-                    footer: '})();'
-                }))
-            .pipe(gulp.dest(options.dest))
-            .on('error',$.notify.onError({
-                title: options.taskName
-            }));
-    };
-};
+gulp.task('build:js', function () {
+    return concatStream({ objectMode: true }, getTemplateStream(sourceForFiles.templateFiles), getJsStream(sourceForFiles.jsFiles))
+        .pipe($.concat(sourceForFiles.platformJsOutputFile))
+        .pipe($.wrapper({
+                header: ';(function(){\n' + templateNamespaceInitString,
+                footer: '})();'
+            }))
+        .pipe(gulp.dest(sourceForFiles.platformOutputFolder));
+});

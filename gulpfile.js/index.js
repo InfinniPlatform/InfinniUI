@@ -1,21 +1,13 @@
 'use strict';
-var help = '';
-var gulp = require('gulp'),
-			watch = require('gulp-watch'),
-			sourceForTasks = require('./gulptasks/sourceForTasks'),
-			lazyRequireTask = function(taskName, path, options) {
-				options = options || {};
-				options.taskName = taskName;
-				gulp.task(taskName, function(callback) {
-					var task = require(path).call(this, options);
-					return task(callback);
-				});
-			};
 
-for(var key in sourceForTasks) {
-	help += ('- gulp ' + key + '\n');
-	lazyRequireTask(key, sourceForTasks[key].taskPath, sourceForTasks[key]);
-}
+var gulp = require('gulp');
+var watch = require('gulp-watch');
+var taskListing = require('gulp-task-listing');
+var requireDir = require('require-dir');
+
+var sourceForFiles = require('./gulptasks/sourceForFiles');
+
+requireDir('./gulptasks'); // подключаем задачи из папки gulptasks
 
 gulp.task('build', gulp.parallel(
 	'build:js',
@@ -31,13 +23,13 @@ gulp.task('build:prod', gulp.series(
 ));
 
 gulp.task('watch', function() {
-	watch(sourceForTasks['build:less'].srcForWatch, gulp.series('build:less'));
-	watch(sourceForTasks['build:js'].src, gulp.series('build:js'));
-	watch(sourceForTasks['build:js'].templateSrc, gulp.series('build:js'));
-	watch(sourceForTasks['concat:vendor-styles'].src, gulp.series('concat:vendor-styles'));
-	watch(sourceForTasks['concat:vendor-js'].src, gulp.series('concat:vendor-js'));
-	watch(sourceForTasks['concat:unit-tests'].src, gulp.series('concat:unit-tests'));
-	watch(sourceForTasks['copy:fonts'].src, gulp.series('copy:fonts'));
+	watch( sourceForFiles.stylesFilesForWatch, gulp.series('build:less') );
+	watch( sourceForFiles.jsFiles, gulp.series('build:js') );
+	watch( sourceForFiles.templateFiles, gulp.series('build:js') );
+	watch( sourceForFiles.vendorStylesFiles, gulp.series('concat:vendor-styles') );
+	watch( sourceForFiles.vendorJsFiles, gulp.series('concat:vendor-js') );
+	watch( sourceForFiles.unitTestFiles, gulp.series('concat:unit-tests') );
+	watch( sourceForFiles.fonts.src, gulp.series('copy:fonts') );
 });
 
 gulp.task('run:tests', gulp.series(
