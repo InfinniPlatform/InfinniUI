@@ -72,7 +72,7 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
             dataSource.setResolvePriority( metadata[ 'ResolvePriority' ] );
         }
 
-        if( _.isObject( metadata.CustomProperties ) ) {
+        if( typeof metadata.CustomProperties === 'object' ) {
             this.initCustomProperties( dataSource, metadata.CustomProperties );
         }
 
@@ -91,9 +91,12 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
     },
 
     initCustomProperties: function( dataSource, customProperties ) {
-        _.each( customProperties, function( value, key ) {
-            dataSource.setProperty( '.' + key, value );
-        } );
+        for( var key in customProperties ) {
+            if( customProperties.hasOwnProperty( key ) ) {
+                var value = customProperties[ key ];
+                dataSource.setProperty( '.' + key, value );
+            }
+        }
     },
 
     /**
@@ -172,8 +175,8 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
     },
 
     initBindingToProperty: function( valueMetadata, dataSource, parentView, pathForBinding, builder ) {
-        if( typeof valueMetadata != 'object' ) {
-            if( valueMetadata !== undefined ) {
+        if( typeof valueMetadata !== 'object' ) {
+            if( typeof valueMetadata !== 'undefined' ) {
                 dataSource.setProperty( pathForBinding, valueMetadata );
             }
 

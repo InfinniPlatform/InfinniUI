@@ -19,11 +19,11 @@ ServerActionProvider.prototype.request = function( requestData, resultCallback, 
                 data: data
             };
 
-            if( _.isFunction( resultCallback ) ) {
+            if( typeof resultCallback === 'function' ) {
                 resultCallback( args );
             }
 
-            if( _.isFunction( onSuccess ) ) {
+            if( typeof onSuccess === 'function' ) {
                 onSuccess( args );
             }
         },
@@ -33,11 +33,11 @@ ServerActionProvider.prototype.request = function( requestData, resultCallback, 
                 data: data
             };
 
-            if( _.isFunction( resultCallback ) ) {
+            if( typeof resultCallback === 'function' ) {
                 resultCallback( args );
             }
 
-            if( _.isFunction( onError ) ) {
+            if( typeof onError === 'function' ) {
                 onError( args );
             }
         }

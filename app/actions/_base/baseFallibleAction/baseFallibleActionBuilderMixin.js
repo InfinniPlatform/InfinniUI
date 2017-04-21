@@ -1,7 +1,7 @@
 var BaseFallibleActionBuilderMixin = {
+
     applyBaseFallibleActionMetadata: function( action, params ) {
         var metadata = params.metadata;
-
         var executorBuilderParams = {
             parentView: params.parentView,
             parent: params.parent,
@@ -18,4 +18,5 @@ var BaseFallibleActionBuilderMixin = {
             action.setProperty( 'onErrorHandler', onErrorExecutor );
         }
     }
+
 };

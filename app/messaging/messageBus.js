@@ -8,7 +8,7 @@ function MessageBus( view ) {
             if( view && view.getContext ) {
                 context = view.getContext();
             }
-            _.each( subscriptions[ messageType ], function( handler ) {
+            subscriptions[ messageType ].forEach( function( handler ) {
                 handler( context, { value: messageBody } );
             } );
         }
@@ -35,7 +35,6 @@ function MessageBus( view ) {
     };
 
     function patchMessageType( messageType ) {
-
         if( typeof messageType === 'object' && typeof messageType.name !== 'undefined' ) {
             messageType = messageType.name;
         }

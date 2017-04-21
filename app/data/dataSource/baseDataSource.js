@@ -1,9 +1,9 @@
 ﻿/**
  * @constructor
  * @augments Backbone.Model
- * @mixes dataSourceFindItemMixin
  */
 var BaseDataSource = Backbone.Model.extend( {
+
     defaults: {
         name: null,
         idProperty: '_id',
@@ -87,7 +87,7 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     getFilterParams: function( propertyName ) {
-        if( arguments.length == 0 ) {
+        if( arguments.length === 0 ) {
             propertyName = 'filterParams';
         } else {
             if( propertyName == '' ) {
@@ -101,7 +101,7 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     setFilterParams: function( propertyName, value ) {
-        if( arguments.length == 1 ) {
+        if( arguments.length === 1 ) {
             value = propertyName;
             propertyName = 'filterParams';
         } else {
@@ -116,8 +116,7 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     onPropertyChanged: function( property, handler, owner ) {
-
-        if( typeof property == 'function' ) {
+        if( typeof property === 'function' ) {
             owner = handler;
             handler = property;
             property = '*';
@@ -136,9 +135,9 @@ var BaseDataSource = Backbone.Model.extend( {
         return this.get( 'model' ).onPropertyChanged( property, function( context, args ) {
             var property = args.property;
 
-            if( property.substr( 0, 6 ) == 'items.' ) {
+            if( property.substr( 0, 6 ) === 'items.' ) {
                 property = property.substr( 6 );
-            } else if( property == 'items' ) {
+            } else if( property === 'items' ) {
                 property = '';
             } else {
                 property = '.' + property;
@@ -152,7 +151,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     offPropertyChanged: function( propertyName, bindId ) {
 
-        if( propertyName.charAt( 0 ) == '.' ) {
+        if( propertyName.charAt( 0 ) === '.' ) {
             propertyName = propertyName.substr( 1 );
         } else {
             if( propertyName == '' ) {
@@ -236,13 +235,13 @@ var BaseDataSource = Backbone.Model.extend( {
             property = 'items.' + property;
         } else if( firstChar == '' ) {
             property = 'items';
-        } else if( firstChar == '$' ) {
+        } else if( firstChar === '$' ) {
             indexOfSelectedItem = this._indexOfSelectedItem();
             if( indexOfSelectedItem == -1 ) {
                 return undefined;
             }
             property = 'items.' + indexOfSelectedItem + property.substr( 1 );
-        } else if( firstChar == '.' ) {
+        } else if( firstChar === '.' ) {
             property = property.substr( 1 );
         } else {
             indexOfSelectedItem = this._indexOfSelectedItem();
@@ -273,7 +272,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         firstChar = property.charAt( 0 );
 
-        if( propertyPaths.length == 1 ) {
+        if( propertyPaths.length === 1 ) {
             if( propertyPaths[ 0 ] == '' ) {
                 this._setItems( value );
             } else if( this.get( 'isNumRegEx' ).test( propertyPaths[ 0 ] ) ) {
@@ -291,7 +290,7 @@ var BaseDataSource = Backbone.Model.extend( {
                 }
             }
         } else {
-            if( firstChar == '.' ) {
+            if( firstChar === '.' ) {
                 property = property.substr( 1 );
                 this.get( 'model' ).setProperty( property, value );
 
@@ -325,6 +324,7 @@ var BaseDataSource = Backbone.Model.extend( {
         this.set( 'isDataReady', true );
         this.get( 'model' ).setProperty( 'items', items );
         this._clearModifiedSet();
+
         if( items && items.length > 0 ) {
             indexOfItemsById = this._indexItemsById( items );
             this.set( 'itemsById', indexOfItemsById );
@@ -332,7 +332,6 @@ var BaseDataSource = Backbone.Model.extend( {
             if( !this._restoreSelectedItem() ) {
                 this.setSelectedItem( items[ 0 ] );
             }
-
         } else {
             this.setSelectedItem( null );
         }
@@ -361,8 +360,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutSelectedItem: function( item, successHandler ) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var context = this.getContext();
+        var argument = this._getArgumentTemplate();
 
         argument.value = item;
 
@@ -397,8 +396,8 @@ var BaseDataSource = Backbone.Model.extend( {
 
     suspendUpdate: function( name ) {
         var reason = name || 'default';
-
         var suspended = this.get( 'suspendingList' );
+
         if( suspended.indexOf( reason ) === -1 ) {
             suspended = suspended.slice( 0 );
             suspended.push( reason );
@@ -408,7 +407,6 @@ var BaseDataSource = Backbone.Model.extend( {
 
     resumeUpdate: function( name ) {
         var reason = name || 'default';
-
         var suspended = this.get( 'suspendingList' );
         var index = suspended.indexOf( reason );
 
@@ -437,11 +435,11 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     isModified: function( item ) {
-        if( arguments.length == 0 ) {
+        if( arguments.length === 0 ) {
             return _.size( this.get( 'modifiedItems' ) ) > 0;
         }
 
-        if( item === null || item === undefined ) {
+        if( item === null || typeof item === 'undefined' ) {
             return false;
         }
         else {
@@ -486,6 +484,7 @@ var BaseDataSource = Backbone.Model.extend( {
      */
     _checkPropertyName: function( propertyName ) {
         var result = true;
+
         try {
             if( propertyName && propertyName.length > 0 ) {
                 result = propertyName.match( /^[\$#@\d]+/ );
@@ -499,10 +498,10 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _changeItem: function( index, value ) {
-        var item = this.get( 'model' ).getProperty( 'items.' + index ),
-            isSelectedItem = ( item == this.getSelectedItem() ),
-            idProperty = this.get( 'idProperty' ),
-            indexedItemsById = this.get( 'itemsById' );
+        var item = this.get( 'model' ).getProperty( 'items.' + index );
+        var isSelectedItem = ( item == this.getSelectedItem() );
+        var idProperty = this.get( 'idProperty' );
+        var indexedItemsById = this.get( 'itemsById' );
 
         if( value == item ) {
             return;
@@ -529,9 +528,9 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     saveItem: function( item, success, error ) {
-        var dataProvider = this.get( 'dataProvider' ),
-            that = this,
-            validateResult;
+        var dataProvider = this.get( 'dataProvider' );
+        var that = this;
+        var validateResult;
 
         if( !this.isModified( item ) ) {
             this._notifyAboutItemSaved( { item: item, result: null }, 'notModified' );
@@ -581,8 +580,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutItemSaved: function( data, result ) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var context = this.getContext();
+        var argument = this._getArgumentTemplate();
 
         argument.value = data;
         argument.result = result;
@@ -591,12 +590,12 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     deleteItem: function( item, success, error ) {
-        var dataProvider = this.get( 'dataProvider' ),
-            that = this,
-            itemId = this.idOfItem( item ),
-            isItemInSet = this.get( 'itemsById' )[ itemId ] !== undefined;
+        var dataProvider = this.get( 'dataProvider' );
+        var that = this;
+        var itemId = this.idOfItem( item );
+        var isItemInSet = typeof this.get( 'itemsById' )[ itemId ] !== 'undefined';
 
-        if( item === null || ( itemId !== undefined && !isItemInSet ) ) {
+        if( ( item === null || typeof item === 'undefined' ) || ( typeof itemId !== 'undefined' && !isItemInSet ) ) {
             this._notifyAboutMissingDeletedItem( item, error );
             return;
         }
@@ -623,8 +622,9 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _onServerErrorHandler: function( params ) {
-        var validationResult = params.validationResult,
-            context = this.getContext();
+        var validationResult = params.validationResult;
+        var context = this.getContext();
+
         if( validationResult && validationResult.Items ) {
             this._notifyAboutValidation( validationResult );
         } else {
@@ -645,8 +645,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutItemDeleted: function( item, successHandler ) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var context = this.getContext();
+        var argument = this._getArgumentTemplate();
 
         argument.value = item;
 
@@ -654,8 +654,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutMissingDeletedItem: function( item, errorHandler ) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var context = this.getContext();
+        var argument = this._getArgumentTemplate();
 
         argument.value = item;
         argument.error = {
@@ -686,8 +686,8 @@ var BaseDataSource = Backbone.Model.extend( {
 
     updateItems: function( onSuccess, onError ) {
         if( !this.isUpdateSuspended() ) {
-            var dataProvider = this.get( 'dataProvider' ),
-                that = this;
+            var dataProvider = this.get( 'dataProvider' );
+            var that = this;
 
             this.set( 'isRequestInProcess', true );
             dataProvider.getItems(
@@ -714,12 +714,12 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _handleSuccessUpdateItemsInProvider: function( data, callback ) {
-        var that = this,
-            isWaiting = that.get( 'isWaiting' ),
-            finishUpdating = function() {
-                that.set( 'isRequestInProcess', false );
-                that._handleUpdatedItemsData( data.data, callback );
-            };
+        var that = this;
+        var isWaiting = that.get( 'isWaiting' );
+        var finishUpdating = function() {
+            that.set( 'isRequestInProcess', false );
+            that._handleUpdatedItemsData( data.data, callback );
+        };
 
         if( isWaiting ) {
             that.once( 'change:isWaiting', function() {
@@ -731,8 +731,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _onErrorProviderUpdateItemsHandle: function( data, callback ) {
-        var handlers = this.get( 'waitingOnUpdateItemsHandlers' ),
-            context = this.getContext();
+        var handlers = this.get( 'waitingOnUpdateItemsHandlers' );
+        var context = this.getContext();
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из-за замороженного источника)
         for( var i = 0, ii = handlers.length; i < ii; i++ ) {
@@ -743,7 +743,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         this.set( 'waitingOnUpdateItemsHandlers', [] );
 
-        if( _.isFunction( callback ) ) {
+        if( typeof callback === 'function' ) {
             callback( context, data );
         }
     },
@@ -770,6 +770,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
         // вызываем обработчики которые были переданы на отложенных updateItems (из за замороженного источника)
         var handlers = this.get( 'waitingOnUpdateItemsHandlers' );
+
         for( var i = 0, ii = handlers.length; i < ii; i++ ) {
             if( handlers[ i ].onSuccess ) {
                 handlers[ i ].onSuccess( context, argument );
@@ -786,8 +787,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutItemsUpdatedAsPropertyChanged: function( itemsData ) {
-        var context = this.getContext(),
-            argument = this._getArgumentTemplate();
+        var context = this.getContext();
+        var argument = this._getArgumentTemplate();
 
         argument.property = '';
         argument.newValue = itemsData;
@@ -798,10 +799,10 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     createItem: function( success, error ) {
-        var dataProvider = this.get( 'dataProvider' ),
-            idProperty = this.get( 'idProperty' ),
-            that = this,
-            localItem;
+        var dataProvider = this.get( 'dataProvider' );
+        var idProperty = this.get( 'idProperty' );
+        var that = this;
+        var localItem;
 
         if( this.get( 'fillCreatedItem' ) ) {
             dataProvider.createItem(
@@ -833,10 +834,10 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _notifyAboutItemCreated: function( createdItem, successHandler ) {
-        var context = this.getContext(),
-            argument = {
-                value: createdItem
-            };
+        var context = this.getContext();
+        var argument = {
+            value: createdItem
+        };
 
         if( successHandler ) {
             successHandler( context, argument );
@@ -850,8 +851,8 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     setIdFilter: function( itemId ) {
-        var dataProvider = this.get( 'dataProvider' ),
-            idFilter = dataProvider.createIdFilter( itemId );
+        var dataProvider = this.get( 'dataProvider' );
+        var idFilter = dataProvider.createIdFilter( itemId );
 
         this.setFilter( idFilter );
     },
@@ -919,10 +920,10 @@ var BaseDataSource = Backbone.Model.extend( {
             return;
         }
 
-        var context = this.getContext(),
-            argument = {
-                value: validationResult
-            };
+        var context = this.getContext();
+        var argument = {
+            value: validationResult
+        };
 
         this.trigger( 'onErrorValidator', context, argument );
     },
@@ -932,9 +933,10 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _indexItemsById: function( items ) {
-        var idProperty = this.get( 'idProperty' ),
-            result = {},
-            idValue;
+        var idProperty = this.get( 'idProperty' );
+        var result = {};
+        var idValue;
+
         for( var i = 0, ii = items.length; i < ii; i++ ) {
             idValue = items[ i ][ idProperty ];
             result[ idValue ] = items[ i ];
@@ -945,6 +947,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     _indexOfItem: function( item ) {
         var items = this.getItems();
+
         if( !items ) {
             return -1;
         }
@@ -959,6 +962,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     idOfItem: function( item ) {
         var idProperty = this.get( 'idProperty' );
+
         if( !item ) {
             return undefined;
         }
@@ -1031,7 +1035,7 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     _detectIdentifyingMode: function( items ) {
-        if( $.isArray( items ) && items.length > 0 ) {
+        if( Array.isArray( items ) && items.length > 0 ) {
             if( !$.isPlainObject( items[ 0 ] ) || this.getIdProperty() in items[ 0 ] ) {
                 this.set( 'identifyingMode', 'byId' );
                 _.extend( this, BaseDataSource.identifyingStrategy.byId );
@@ -1055,15 +1059,14 @@ BaseDataSource.identifyingStrategy = {
 
     byId: {
         _restoreSelectedItem: function() {
+            var selectedItem = this.getSelectedItem();
+            var selectedItemId = this.idOfItem( selectedItem );
 
-            var selectedItem = this.getSelectedItem(),
-                selectedItemId = this.idOfItem( selectedItem );
-
-            if( selectedItemId !== null ) {
+            if( selectedItemId !== null && typeof selectedItemId !== 'undefined' ) {
                 var items = this.get( 'itemsById' );
                 var newSelectedItem = items[ selectedItemId ];
 
-                if( newSelectedItem !== null ) {
+                if( newSelectedItem !== null && typeof newSelectedItem !== 'undefined' ) {
                     this.setSelectedItem( newSelectedItem );
                     return true;
                 }
@@ -1073,10 +1076,10 @@ BaseDataSource.identifyingStrategy = {
         },
 
         setSelectedItem: function( item, success, error ) {
-            var currentSelectedItem = this.getSelectedItem(),
-                items = this.get( 'itemsById' ),
-                itemId = this.idOfItem( item ),
-                index;
+            var currentSelectedItem = this.getSelectedItem();
+            var items = this.get( 'itemsById' );
+            var itemId = this.idOfItem( item );
+            var index;
 
             if( typeof item == 'undefined' ) {
                 item = null;
@@ -1116,10 +1119,10 @@ BaseDataSource.identifyingStrategy = {
         },
 
         _handleDeletedItem: function( item ) {
-            var items = this.getItems(),
-                idProperty = this.get( 'idProperty' ),
-                itemId = this.idOfItem( item ),
-                selectedItem = this.getSelectedItem();
+            var items = this.getItems();
+            var idProperty = this.get( 'idProperty' );
+            var itemId = this.idOfItem( item );
+            var selectedItem = this.getSelectedItem();
 
             for( var i = 0, ii = items.length, needExit = false; i < ii && !needExit; i++ ) {
                 if( items[ i ][ idProperty ] == itemId ) {
@@ -1140,7 +1143,6 @@ BaseDataSource.identifyingStrategy = {
 
     byLink: {
         _restoreSelectedItem: function() {
-
             var selectedItem = this.getSelectedItem();
             var items = this.getItems();
 
@@ -1152,9 +1154,8 @@ BaseDataSource.identifyingStrategy = {
         },
 
         setSelectedItem: function( item, success, error ) {
-            var currentSelectedItem = this.getSelectedItem(),
-                items = this.getItems(),
-                index = this._indexOfItem( item );
+            var currentSelectedItem = this.getSelectedItem();
+            var index = this._indexOfItem( item );
 
             if( typeof item == 'undefined' ) {
                 item = null;
@@ -1191,9 +1192,9 @@ BaseDataSource.identifyingStrategy = {
         },
 
         _handleDeletedItem: function( item ) {
-            var items = this.getItems(),
-                selectedItem = this.getSelectedItem(),
-                index = items.indexOf( item );
+            var items = this.getItems();
+            var selectedItem = this.getSelectedItem();
+            var index = items.indexOf( item );
 
             if( index >= 0 ) {
                 items.splice( index, 1 );

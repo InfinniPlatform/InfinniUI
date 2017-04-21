@@ -6,9 +6,10 @@ _.inherit( AddAction, BaseEditAction );
 
 
 _.extend( AddAction.prototype, {
+
     setSelectedItem: function() {
-        var editDataSource = this.getProperty( 'editDataSource' ),
-            editView = editDataSource.getView();
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var editView = editDataSource.getView();
 
         editView.onBeforeLoaded( function() {
             editDataSource.createItem();
@@ -18,9 +19,9 @@ _.extend( AddAction.prototype, {
     },
 
     save: function() {
-        var editDataSource = this.getProperty( 'editDataSource' ),
-            destinationDataSource = this.getProperty( 'destinationDataSource' ),
-            destinationProperty = this.getProperty( 'destinationProperty' ) || '';
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var destinationDataSource = this.getProperty( 'destinationDataSource' );
+        var destinationProperty = this.getProperty( 'destinationProperty' ) || '';
 
         if( !destinationDataSource ) {
             return;
@@ -46,6 +47,7 @@ _.extend( AddAction.prototype, {
             destinationDataSource.updateItems();
         }
     }
+
 } );
 
 window.InfinniUI.AddAction = AddAction;

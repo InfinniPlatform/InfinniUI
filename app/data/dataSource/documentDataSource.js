@@ -191,7 +191,8 @@ var DocumentDataSource = RestDataSource.extend( {
 
     beforeDeleteItem: function( item ) {
         var itemId = this.idOfItem( item );
-        if( itemId !== undefined ) {
+
+        if( typeof itemId !== 'undefined' ) {
             this.setDeletingUrlParams( 'params.id', itemId );
         }
     },

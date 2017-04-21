@@ -3,7 +3,7 @@ var domHelper = {
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 
-        if( n === undefined ) {
+        if( typeof n === 'undefined' ) {
             n = 100;
         }
 

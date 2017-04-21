@@ -22,7 +22,7 @@ _.extend( SaveAction.prototype, BaseFallibleActionMixin, {
             that.onExecutedHandler( args );
             that.onSuccessHandler( args );
 
-            if( _.isFunction( callback ) ) {
+            if( typeof callback === 'function' ) {
                 callback( context, args );
             }
         };
@@ -30,7 +30,7 @@ _.extend( SaveAction.prototype, BaseFallibleActionMixin, {
             that.onExecutedHandler( args );
             that.onErrorHandler( args );
 
-            if( _.isFunction( callback ) ) {
+            if( typeof callback === 'function' ) {
                 callback( context, args );
             }
         };

@@ -131,7 +131,7 @@ var DataGridView = ListEditorBaseView.extend( {
         var indices = [];
         var items = model.get( 'items' );
 
-        if( !model.get( 'multiSelect' ) && value !== undefined && value !== null ) {
+        if( !model.get( 'multiSelect' ) && typeof value !== 'undefined' && value !== null ) {
             value = [ value ];
         }
 

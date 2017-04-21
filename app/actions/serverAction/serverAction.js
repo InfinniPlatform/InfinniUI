@@ -32,7 +32,7 @@ _.extend( ServerAction.prototype, BaseFallibleActionMixin, {
         var onExecuted = function( args ) {
             that.onExecutedHandler( args );
 
-            if( _.isFunction( callback ) ) {
+            if( typeof callback === 'function' ) {
                 callback( args );
             }
         };
@@ -104,17 +104,19 @@ _.extend( ServerAction.prototype, BaseFallibleActionMixin, {
 
         if( Array.isArray( data ) ) {
             res = Array.map( function( item ) {
-                if( _.isObject( item ) || Array.isArray( item ) ) {
+                if( typeof item === 'object' || Array.isArray( item ) ) {
                     this._compileData( item );
                 }
             }, this );
-        } else if( _.isObject( data ) ) {
+        } else if( typeof data === 'object' ) {
             res = {};
-            Object.keys( data ).forEach( function( name ) {
+
+            for( var key in Object.keys( data ) ) {
+                var name = Object.keys( data )[ key ];
                 var parsedName = this._replaceParamsInStr( name );
 
                 res[ parsedName ] = this._compileData( data[ name ] );
-            }, this );
+            }
         } else {
             res = this._replaceParamsInStr( data, true );
         }
@@ -126,9 +128,9 @@ _.extend( ServerAction.prototype, BaseFallibleActionMixin, {
             return obj;
         }
 
-
         return this._compileData( obj );
     }
+
 } );
 
 window.InfinniUI.ServerAction = ServerAction;

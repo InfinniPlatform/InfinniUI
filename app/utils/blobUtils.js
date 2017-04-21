@@ -1,8 +1,6 @@
 /**
  * Набор утилит для работы с BlobData объектами
  **/
-
-
 window.InfinniUI.BlobUtils = ( function() {
     var blobUtils = {
         isFileInfo: isFileInfo,
@@ -20,6 +18,6 @@ window.InfinniUI.BlobUtils = ( function() {
     }
 
     function getContentByName( name, data, defaultValue ) {
-        return _.isObject( data ) ? data[ name ] : defaultValue;
+        return typeof data === 'object' ? data[ name ] : defaultValue;
     }
 } )();

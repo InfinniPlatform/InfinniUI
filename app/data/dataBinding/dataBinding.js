@@ -4,8 +4,8 @@ InfinniUI.BindingModes = {
     toElement: 'ToElement'
 };
 
-
 var DataBinding = Backbone.Model.extend( {
+
     defaults: {
         mode: InfinniUI.BindingModes.twoWay,
         converter: null,
@@ -45,8 +45,9 @@ var DataBinding = Backbone.Model.extend( {
         var logger = window.InfinniUI.global.logger;
         var element = this.getElement();
 
-        if( this.get( 'source' ) !== null ) {
+        if( this.get( 'source' ) !== null && typeof this.get( 'source' ) !== 'undefined' ) {
             var message = stringUtils.format( 'DataBinding. bindSource: повторная инициализация. {0} заменен на {1}', [ this.get( 'source' ).getName(), source.getName() ] );
+
             logger.warn( message );
         }
 
@@ -71,7 +72,7 @@ var DataBinding = Backbone.Model.extend( {
     },
 
     _isWorkingWithSelectedItems: function( source ) {
-        return typeof source.onSelectedItemChanged == 'function';
+        return typeof source.onSelectedItemChanged === 'function';
     },
 
     _initBehaviorWithSelectedItem: function() {
@@ -107,8 +108,9 @@ var DataBinding = Backbone.Model.extend( {
         var that = this;
         var logger = window.InfinniUI.global.logger;
 
-        if( this.get( 'element' ) !== null ) {
+        if( this.get( 'element' ) !== null && typeof this.get( 'element' ) !== 'undefined' ) {
             var message = stringUtils.format( 'DataBinding. bindElement: повторная инициализация. {0} заменен на {1}', [ this.get( 'element' ).getName(), element.getName() ] );
+
             logger.warn( message );
         }
 
@@ -146,9 +148,9 @@ var DataBinding = Backbone.Model.extend( {
         var value;
 
         if( this._shouldRefreshElement() && source ) {
-            if( typeof source.isDataReady == 'function' && !source.isDataReady() ) {
-                if( typeof source.tryInitData == 'function' ) {
-                    if( this.getDefaultValue() !== null ) {
+            if( typeof source.isDataReady === 'function' && !source.isDataReady() ) {
+                if( typeof source.tryInitData === 'function' ) {
+                    if( this.getDefaultValue() !== null && typeof this.getDefaultValue() !== 'undefined' ) {
                         this._setValueToElement( this.getDefaultValue(), true );
                     }
                     source.tryInitData();
@@ -184,8 +186,9 @@ var DataBinding = Backbone.Model.extend( {
         var sourceProperty = this.get( 'sourceProperty' );
         var converter = this.get( 'converter' );
 
-        if( converter !== null
-            && converter.hasOwnProperty( 'toSource' ) //Mozilla's Object.prototype has method "toSource"!!
+        if( converter !== null &&
+            typeof converter !== 'undefined' &&
+            converter.hasOwnProperty( 'toSource' ) //Mozilla's Object.prototype has method "toSource"!!
         ) {
             value = converter.toSource( context, { value: value, binding: this, source: element } );
         }
@@ -210,7 +213,9 @@ var DataBinding = Backbone.Model.extend( {
         var converter = this.get( 'converter' );
         var context = this._getContext();
 
-        if( converter !== null && converter.toElement !== null && !notConverting ) {
+        if( converter !== null && typeof converter !== 'undefined' &&
+            converter.toElement !== null && typeof converter.toElement !== 'undefined' &&
+            !notConverting ) {
             value = converter.toElement( context, { value: value, binding: this, source: source } );
         }
 
@@ -218,8 +223,9 @@ var DataBinding = Backbone.Model.extend( {
     },
 
     _getContext: function() {
-        var source = this.getSource(),
-            context;
+        var source = this.getSource();
+        var context;
+
         if( source.getView && source.getView() ) {
             context = source.getView().getContext();
         }
@@ -236,6 +242,7 @@ var DataBinding = Backbone.Model.extend( {
         var mode = this.get( 'mode' );
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;
     }
+
 } );
 
 window.InfinniUI.DataBinding = DataBinding;

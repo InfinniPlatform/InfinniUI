@@ -15,7 +15,7 @@ TextEditorModelDisplayModeStrategy.prototype.updateText = function( model ) {
 
     var text;
 
-    if ( _.isFunction( displayFormat ) ) {
+    if ( typeof displayFormat === 'function' ) {
         text = displayFormat.call( null, null, { value: value } );
     } else {
         text = value;

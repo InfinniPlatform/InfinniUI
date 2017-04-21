@@ -6,7 +6,7 @@ function BasePathOfProperty( basePathOfProperty, baseIndex, parentBasePath ) {
     }
 
     if( !parentBasePath ) {
-        if( baseIndex !== undefined && baseIndex !== null ) {
+        if( typeof baseIndex !== 'undefined' && baseIndex !== null ) {
             this.indexesInParentLists = [ baseIndex ];
             this.basePathOfProperty += baseIndex;
         }
@@ -23,7 +23,7 @@ window.InfinniUI.BasePathOfProperty = BasePathOfProperty;
 _.extend( BasePathOfProperty.prototype, {
     /*возвращает полный путь к свойству элемента в коллекции*/
     resolveProperty: function( property ) {
-        if( property === undefined || property === null ) {
+        if( typeof property === 'undefined' || property === null ) {
             property = '';
         }
 

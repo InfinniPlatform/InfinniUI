@@ -11,11 +11,10 @@ var Parameter = Backbone.Model.extend( {
     },
 
     initialize: function() {
-
     },
 
     onPropertyChanged: function( property, handler ) {
-        if( typeof property == 'function' ) {
+        if( typeof property === 'function' ) {
             handler = property;
             this.on( 'onPropertyChanged', handler );
         } else {
@@ -48,7 +47,7 @@ var Parameter = Backbone.Model.extend( {
     getProperty: function( property ) {
         var value = this.get( 'value' );
 
-        if( property == '' ) {
+        if( property === '' ) {
             return value;
         } else {
             return this._nullToUndefined( InfinniUI.ObjectUtils.getPropertyValue( value, property ) );
@@ -56,14 +55,14 @@ var Parameter = Backbone.Model.extend( {
     },
 
     setProperty: function( property, value ) {
-        var fullParameterValue = this.getValue(),
-            oldValue = this.getProperty( property );
+        var fullParameterValue = this.getValue();
+        var oldValue = this.getProperty( property );
 
         if( value == oldValue ) {
             return;
         }
 
-        if( property == '' ) {
+        if( property === '' ) {
             this.set( 'value', value );
 
         } else {
@@ -87,6 +86,7 @@ var Parameter = Backbone.Model.extend( {
 
     _getContext: function() {
         var view = this.getView();
+
         if( view ) {
             return view.getContext();
         } else {
@@ -101,6 +101,7 @@ var Parameter = Backbone.Model.extend( {
             return val;
         }
     }
+
 } );
 
 window.InfinniUI.Parameter = Parameter;

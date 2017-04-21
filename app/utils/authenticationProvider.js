@@ -144,7 +144,7 @@ _.extend( AuthenticationProvider.prototype, {
                 failureUrlElement.attr( 'value', failureUrl );
                 formElement.append( failureUrlElement );
 
-                if( result !== null && result !== undefined ) {
+                if( result !== null && typeof result !== 'undefined' ) {
                     for( var i = 0; i < result.length; ++i ) {
                         var providerInfo = result[ i ];
                         var providerType = providerInfo.Type;
@@ -216,13 +216,13 @@ _.extend( AuthenticationProvider.prototype, {
             if( serviceResult[ 'Success' ] ) {
                 args[ 0 ] = serviceResult[ 'Result' ];
 
-                if( _.isFunction( successCallback ) ) {
+                if( typeof successCallback === 'function' ) {
                     successCallback.apply( this, args );
                 }
             } else {
                 args[ 0 ] = serviceResult[ 'Error' ];
 
-                if( _.isFunction( errorCallback ) ) {
+                if( typeof errorCallback === 'function' ) {
                     errorCallback.apply( this, args );
                 }
             }

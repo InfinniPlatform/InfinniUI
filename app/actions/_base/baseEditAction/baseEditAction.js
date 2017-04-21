@@ -7,6 +7,7 @@ window.InfinniUI.BaseEditAction = BaseEditAction;
 _.inherit( BaseEditAction, BaseAction );
 
 _.extend( BaseEditAction.prototype, {
+
     execute: function( callback ) {
         var that = this;
         var linkView = this.getProperty( 'linkView' );
@@ -19,11 +20,11 @@ _.extend( BaseEditAction.prototype, {
     },
 
     handleViewReady: function( editView ) {
-        var editSourceName = this.getProperty( 'sourceSource' ),
-            editDataSource = editView.getContext().dataSources[ editSourceName ],
-            destinationSourceName = this.getProperty( 'destinationSource' ),
-            destinationDataSource = this.parentView.getContext().dataSources[ destinationSourceName ],
-            that = this;
+        var editSourceName = this.getProperty( 'sourceSource' );
+        var editDataSource = editView.getContext().dataSources[ editSourceName ];
+        var destinationSourceName = this.getProperty( 'destinationSource' );
+        var destinationDataSource = this.parentView.getContext().dataSources[ destinationSourceName ];
+        var that = this;
 
         this.setProperty( 'editDataSource', editDataSource );
         this.setProperty( 'destinationDataSource', destinationDataSource );
@@ -49,10 +50,9 @@ _.extend( BaseEditAction.prototype, {
         var callback = this.getProperty( 'callback' );
 
         this.save();
-
         this.onExecutedHandler();
 
-        if ( _.isFunction( callback ) ) {
+        if ( typeof callback === 'function' ) {
             callback();
         }
     },
@@ -60,4 +60,5 @@ _.extend( BaseEditAction.prototype, {
     _isObjectDataSource: function( source ) {
         return 'setItems' in source;
     }
+
 } );

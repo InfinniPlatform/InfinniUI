@@ -38,7 +38,7 @@ _.extend( TreeModel.prototype, {
         var bindId = this.counter + '-bindId';
         this.counter++;
 
-        if( _.isFunction( propertyName ) ) {
+        if( typeof propertyName === 'function' ) {
             params = handler;
             handler = propertyName;
 
@@ -113,7 +113,7 @@ _.extend( TreeModel.prototype, {
         var handler;
 
         for( var k in handlersSubTree ) {
-            if( $.isFunction( handlersSubTree[ k ] ) ) {
+            if( typeof handlersSubTree[ k ] === 'function' ) {
                 handler = handlersSubTree[ k ];
                 if( this._isOwnerAlive( handler ) ) {
                     this._callHandlerAboutPropertyChanged( handler, propertyName, oldValue );
@@ -172,7 +172,7 @@ _.extend( TreeModel.prototype, {
     _isOwnerAlive: function( handler ) {
         if( handler._owner && 'isRemoved' in handler._owner ) {
 
-            if( typeof handler._owner.isRemoved == 'function' ) {
+            if( typeof handler._owner.isRemoved === 'function' ) {
                 return handler._owner.isRemoved();
             } else {
                 return !handler._owner.isRemoved;

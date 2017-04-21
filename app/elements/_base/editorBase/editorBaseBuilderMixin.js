@@ -56,13 +56,12 @@ var editorBaseBuilderMixin = {
             } );
         }
 
-        if( metadata.Value !== undefined ) {
+        if( typeof metadata.Value !== 'undefined' ) {
             if( InfinniUI.Metadata.isBindingMetadata( metadata.Value ) ) {
                 var buildParams = {
                     parentView: params.parentView,
                     basePathOfProperty: params.basePathOfProperty
                 };
-
                 var dataBinding = params.builder.buildBinding( metadata.Value, buildParams );
                 var mergedConverter = mergeConverters( dataBinding.getConverter(), bindingOptions.converter );
 
@@ -114,7 +113,7 @@ var editorBaseBuilderMixin = {
         var source = binding.getSource();
         var property = binding.getSourceProperty();
 
-        if( typeof source.onErrorValidator == 'function' ) {
+        if( typeof source.onErrorValidator === 'function' ) {
             source.onErrorValidator( function( context, args ) {
                 var result = args.value,
                     text = '';

@@ -98,7 +98,7 @@ window.InfinniUI.AutoHeightService = {
             //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
             return;
         } else if( node.$element.hasClass( 'tab-content' ) ) {
-            _.each( node.child, function( node ) {
+            node.child.forEach( function( node ) {
                 manager.defineWay( node, nodeHeight );
             } );
         } else if( node.child.length > 0 ) {
@@ -123,9 +123,9 @@ window.InfinniUI.AutoHeightService = {
             .value();
         var heights = [];
 
-        _.each( grid, function( row, i ) {
+        grid.forEach( function( row, i ) {
             var nodes = [];
-            _.each( row, function( e ) {
+            row.forEach( function( e ) {
                 var n = _.find( node.child, function( c ) {
                     return c.element === e;
                 } );
@@ -139,18 +139,18 @@ window.InfinniUI.AutoHeightService = {
             grid[ i ] = nodes;
         }, this );
 
-        var fixedHeight = _.reduce( heights, function( total, height ) {
+        var fixedHeight = heights.reduce( function( total, height ) {
                 return total + height;
             }, 0 ),
-            count = _.reduce( grid, function( count, row ) {
+            count = grid.reduce( function( count, row ) {
                 return row.length ? count + 1 : count;
             }, 0 ),
 
             heightForNode = Math.floor( ( height - fixedHeight ) / count );
 
-        _.each( grid, function( row ) {
+        grid.forEach( function( row ) {
             if( row.length === 0 ) return;
-            _.each( row, function( node ) {
+            row.forEach( function( node ) {
                 manager.defineWay( node, heightForNode );
             }, this );
         }, this );
@@ -158,8 +158,8 @@ window.InfinniUI.AutoHeightService = {
 
     resize: function( el, pageHeight ) {
         var startTime = Date.now(); //start time
-        var $el = $( el ),
-            elements = $el.find( this.getSelector() );
+        var $el = $( el );
+        var elements = $el.find( this.getSelector() );
 
         if( elements.length === 0 ) {
             return;
@@ -183,7 +183,6 @@ window.InfinniUI.AutoHeightService = {
 
     resizeView: function( container, clientHeight ) {
         var $page = $( container || document );
-
         var contentHeight = this.setOuterHeight( $page, clientHeight );
 
         this.resize( $page.get( 0 ), contentHeight );
@@ -201,10 +200,8 @@ window.InfinniUI.AutoHeightService = {
 
         if( $modal.children() ) {
             var $container = $modal.children();
-
             var $header = $( '.modal-header', $container );
             var $body = $( '.modal-body', $container );
-
             var $el = $( this.getSelector(), $modal );
 
             $el.parentsUntil( '.modal' ).css( 'height', 'auto' );
@@ -218,26 +215,24 @@ window.InfinniUI.AutoHeightService = {
 
     _resizeDialog: function( $modal ) {
         var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
-
         var $container = $modal.children();
 
         $container.css( 'margin-top', 0 );
 
         var $header = $( '.modal-header', $container );
         var $body = $( '.modal-body', $container );
-
         var headerHeight = $header.outerHeight( true );
         $body.css( 'max-height', this.windowHeight - headerHeight );
 
         $container.css( 'margin-top', 0 );
 
         var el = $( this.getSelector(), $modal );
+
         if( el.length !== 0 ) {
             // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%
             // пересчитываем высоту
 
             var containerHeight = this.setOuterHeight( $modal, this.windowHeight - space * 2 );
-
             //Высота для содержимого окна диалога
             var clientHeight = this.setOuterHeight( $container, containerHeight ) - $header.outerHeight();
 
@@ -260,6 +255,7 @@ window.InfinniUI.AutoHeightService = {
 
     slidingRecalculation: function( container ) {
         var that = this;
+
         for( var i = 3; i >= 0; i-- ) {
             setTimeout( function() {
                 that.recalculation( container );

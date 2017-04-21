@@ -1,4 +1,5 @@
 var BaseActionBuilderMixin = {
+
     applyBaseActionMetadata: function( action, params ) {
         var metadata = params.metadata;
         var executorBuilderParams = {
@@ -17,4 +18,5 @@ var BaseActionBuilderMixin = {
             action.setProperty( 'canExecute', canExecute );
         }
     }
+
 };

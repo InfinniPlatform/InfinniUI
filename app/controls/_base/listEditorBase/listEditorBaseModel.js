@@ -25,10 +25,8 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
     },
 
     toggleValue: function( value, toggle ) {
-        var
-            currentValue = this.get( 'value' ),
-            multiSelect = this.get( 'multiSelect' ),
-            index, clonedValue;
+        var currentValue = this.get( 'value' );
+        var multiSelect = this.get( 'multiSelect' );
 
         if( multiSelect ) {
             currentValue = Array.isArray( currentValue ) ? currentValue : [];
@@ -141,12 +139,14 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
 
     isDisabledItem: function( item ) {
         var disabledItemCondition = this.get( 'disabledItemCondition' );
-        return ( disabledItemCondition !== null ) && disabledItemCondition( undefined, { value: item } );
+        return ( disabledItemCondition !== null && typeof disabledItemCondition !== 'undefined' ) &&
+            disabledItemCondition( undefined, { value: item } );
     },
 
     updateHashValueByItem: function() {
         var items = this.get( 'items' );
         var value;
+
         this.hashValueByItem.clear();
         items.forEach( function( item ) {
             value = this.valueByItem( item );

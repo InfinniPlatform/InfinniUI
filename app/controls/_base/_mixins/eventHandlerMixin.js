@@ -55,8 +55,9 @@ var eventHandlerMixin = {
         }
         params = args.pop();
 
-        _.each( handlers, function( handler ) {
+        handlers.forEach( function( handler ) {
             var result = handler.apply( undefined, params );
+
             if( typeof callback !== 'undefined' ) {
                 callback( result );
             }

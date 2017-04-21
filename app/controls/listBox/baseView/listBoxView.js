@@ -22,7 +22,8 @@ var BaseListBoxView = ListEditorBaseView.extend( {
     },
 
     updateGrouping: function() {
-        var isGrouped = this.model.get( 'groupValueSelector' ) !== null;
+        var groupValueSelector = this.model.get( 'groupValueSelector' );
+        var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
 
         if( isGrouped ) {
             this.strategy = new ListBoxViewGroupStrategy( this );
@@ -38,11 +39,11 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         var value = this.model.get( 'value' );
         var choosingItem, $choosingItem;
 
-        if( !this.isMultiselect() && value !== undefined && value !== null ) {
+        if( !this.isMultiselect() && typeof value !== 'undefined' && value !== null ) {
             value = [ value ];
         }
 
-        if( $.isArray( value ) ) {
+        if( Array.isArray( value ) ) {
             for( var i = 0, ii = value.length; i < ii; i++ ) {
                 choosingItem = this.model.itemByValue( value[ i ] );
                 $choosingItem = this._getElementByItem( choosingItem );
@@ -62,8 +63,8 @@ var BaseListBoxView = ListEditorBaseView.extend( {
 
         this.ui.items.removeClass( 'pl-listbox-i-selected' );
 
-        var selectedItem = this.model.get( 'selectedItem' ),
-            $selectedItem = this._getElementByItem( selectedItem );
+        var selectedItem = this.model.get( 'selectedItem' );
+        var $selectedItem = this._getElementByItem( selectedItem );
 
         if( $selectedItem && !$selectedItem.hasClass( 'pl-disabled-list-item' ) ) {
             $selectedItem.addClass( 'pl-listbox-i-selected' );
@@ -155,7 +156,9 @@ var BaseListBoxView = ListEditorBaseView.extend( {
             };
         }
 
-        if( disabledItemCondition !== null ) {
+        if( disabledItemCondition !== null && typeof disabledItemCondition !== 'undefined' ) {
+            var that = this;
+
             this.ui.items.each( function( i, el ) {
                 var $el = $( el );
                 var item = $el.data( 'pl-data-item' );
@@ -163,7 +166,7 @@ var BaseListBoxView = ListEditorBaseView.extend( {
 
                 if( isDisabled || !enabled ) {
                     if( $el.hasClass( 'pl-listbox-i-selected' ) ) {
-                        this.model.set( 'selectedItem', null );
+                        that.model.set( 'selectedItem', null );
                     }
                     $el.toggleClass( 'pl-disabled-list-item', true );
                     $el.find( 'input' ).attr( 'disabled', 'disabled' );

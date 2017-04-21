@@ -11,7 +11,7 @@ _.extend( EditAction.prototype, {
         var destinationProperty = this.getProperty( 'destinationProperty' );
         var selectedItem = destinationDataSource.getProperty( destinationProperty );
 
-        if( selectedItem === null ) {
+        if( selectedItem === null || typeof selectedItem === 'undefined' ) {
 
             // if selectedItem is empty and it is must be document
             // return error
@@ -52,7 +52,7 @@ _.extend( EditAction.prototype, {
     _setItem: function( editDataSource, selectedItem ) {
         var item = _.clone( selectedItem );
 
-        if( item === undefined || item === null ) {
+        if( typeof item === 'undefined' || item === null ) {
             item = {};
         }
         this._resumeUpdateEditDataSource();

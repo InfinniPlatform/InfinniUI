@@ -107,7 +107,7 @@ _.extend( Element.prototype, {
 
     getProperty: function( name ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( name );
-        if( typeof this[ getterMethodName ] == 'function' ) {
+        if( typeof this[ getterMethodName ] === 'function' ) {
             return this[ getterMethodName ]();
         } else {
             throw 'expect that ' + getterMethodName + ' is getter function';
@@ -118,7 +118,7 @@ _.extend( Element.prototype, {
         var setterMethodName = 'set' + this._upperFirstSymbol( name ),
             getterMethodName;
 
-        if( typeof this[ setterMethodName ] == 'function' ) {
+        if( typeof this[ setterMethodName ] === 'function' ) {
             this[ setterMethodName ]( value );
         } else {
             if( this._isCollectionProperty( name ) ) {
@@ -132,12 +132,12 @@ _.extend( Element.prototype, {
 
     _isCollectionProperty: function( propertyName ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( propertyName );
-        return ( typeof this[ getterMethodName ] == 'function' ) && this[ getterMethodName ]() instanceof Collection;
+        return ( typeof this[ getterMethodName ] === 'function' ) && this[ getterMethodName ]() instanceof Collection;
     },
 
     onPropertyChanged: function( propertyName, handler ) {
         var subscribingMethodName = 'on' + this._upperFirstSymbol( propertyName ) + 'Changed';
-        if( typeof this[ subscribingMethodName ] == 'function' ) {
+        if( typeof this[ subscribingMethodName ] === 'function' ) {
             this[ subscribingMethodName ]( handler );
         } else {
             this.control.on( 'change:' + propertyName, function( model, value ) {
@@ -592,8 +592,9 @@ _.extend( Element.prototype, {
 
     renderTree: function( textIndentOld ) {
         var textIndent = textIndentOld || '';
+
         console.log( textIndent + 'Name: ' + this.getName(), this );
-        if( this.childElements !== undefined ) {
+        if( typeof this.childElements !== 'undefined' ) {
             if( textIndent !== '' ) {
                 textIndent += '_____';
             } else {
@@ -607,7 +608,8 @@ _.extend( Element.prototype, {
 
     renderFullTree: function() {
         var parent = this.parent;
-        while( parent.parent && parent.parent.parent !== undefined ) {
+
+        while( parent.parent && typeof parent.parent.parent !== 'undefined' ) {
             parent = parent.parent;
         }
         this.renderTree.call( parent );

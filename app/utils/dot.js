@@ -13,16 +13,15 @@ window.InfinniUI.ObjectUtils = ( function() {
      * @returns {*} Значение свойства.
      */
     function getPropertyByPath( target, propertyPathTerms ) {
-        if( target !== null && target !== undefined
-            && propertyPathTerms !== null && propertyPathTerms !== undefined ) {
+        if( target !== null && typeof target !== 'undefined'
+            && propertyPathTerms !== null && typeof propertyPathTerms !== 'undefined' ) {
 
             var parent = target;
             var length = propertyPathTerms.length;
 
             for( var i = 0; i < length; ++i ) {
-                if( parent !== null && parent !== undefined ) {
+                if( parent !== null && typeof parent !== 'undefined' ) {
                     var term = propertyPathTerms[ i ];
-
                     var termCollectionIndex = parseCollectionIndex( term );
 
                     if( termCollectionIndex >= 0 ) {
@@ -67,7 +66,7 @@ window.InfinniUI.ObjectUtils = ( function() {
             var nextTermCollectionIndex = parseCollectionIndex( nextTerm );
 
             if( nextTermCollectionIndex >= 0 ) {
-                if( !$.isArray( termValue ) ) {
+                if( !Array.isArray( termValue ) ) {
                     termValue = [];
                 }
 
@@ -142,7 +141,7 @@ window.InfinniUI.ObjectUtils = ( function() {
      * @returns {*} Элемент коллекции.
      */
     function getCollectionItem( target, index ) {
-        if( target !== null && target !== undefined
+        if( target !== null && typeof target !== 'undefined'
             && Object.prototype.toString.call( target ) === '[object Array]'
             && index >= 0 && index < target.length ) {
 
@@ -161,7 +160,7 @@ window.InfinniUI.ObjectUtils = ( function() {
      * @param {*} item Элемент коллекции.
      */
     function setCollectionItem( target, index, item ) {
-        if( target !== null && target !== undefined
+        if( target !== null && typeof target !== 'undefined'
             && Object.prototype.toString.call( target ) === '[object Array]'
             && index >= 0 && index < target.length ) {
 
@@ -179,9 +178,9 @@ window.InfinniUI.ObjectUtils = ( function() {
      * @returns {*} Значение свойства.
      */
     function getObjectProperty( target, propertyName ) {
-        if( target !== null && target !== undefined
+        if( target !== null && typeof target !== 'undefined'
             && Object.prototype.toString.call( target ) === '[object Object]'
-            && propertyName !== null && propertyName !== undefined ) {
+            && propertyName !== null && typeof propertyName !== 'undefined' ) {
 
             return target[ propertyName ];
         }
@@ -198,9 +197,9 @@ window.InfinniUI.ObjectUtils = ( function() {
      * @param {*} propertyValue Значение свойства.
      */
     function setObjectProperty( target, propertyName, propertyValue ) {
-        if( target !== null && target !== undefined
+        if( target !== null && typeof target !== 'undefined'
             && Object.prototype.toString.call( target ) === '[object Object]'
-            && propertyName !== null && propertyName !== undefined ) {
+            && propertyName !== null && typeof propertyName !== 'undefined' ) {
 
             target[ propertyName ] = propertyValue;
         }
@@ -218,18 +217,21 @@ window.InfinniUI.ObjectUtils = ( function() {
          */
         getPropertyValue: function( target, propertyPath ) {
             var result;
-
             var getPropertyValue = function( target, propertyPath ) {
                 var propertyPathTerms = splitPropertyPath( propertyPath );
                 var result = getPropertyByPath( target, propertyPathTerms );
+
                 return typeof result === 'undefined' ? null : result;
             };
 
-            if( _.isObject( propertyPath ) ) {
+            if( typeof propertyPath === 'object' ) {
                 result = {};
-                _.each( propertyPath, function( v, n ) {
-                    result[ n ] = getPropertyValue( target, v );
-                } );
+                for( var key in propertyPath ) {
+                    if( propertyPath.hasOwnProperty( key ) ) {
+                        var value = propertyPath[ key ];
+                        result[ key ] = getPropertyValue( target, value );
+                    }
+                }
             } else {
                 result = getPropertyValue( target, propertyPath );
             }
@@ -245,7 +247,7 @@ window.InfinniUI.ObjectUtils = ( function() {
          * @param {*} propertyValue Значение свойства.
          */
         setPropertyValue: function( target, propertyPath, propertyValue ) {
-            if( target !== null && target !== undefined && !_.isEmpty( propertyPath ) ) {
+            if( target !== null && typeof target !== 'undefined' && !_.isEmpty( propertyPath ) ) {
                 var propertyPathTerms = splitPropertyPath( propertyPath );
 
                 if( propertyValue instanceof Date ) {
@@ -259,12 +261,13 @@ window.InfinniUI.ObjectUtils = ( function() {
         },
 
         setPropertyValueDirect: function( target, propertyPath, propertyValue ) {
-            if( target !== null && target !== undefined && !_.isEmpty( propertyPath ) ) {
+            if( target !== null && typeof target !== 'undefined' && !_.isEmpty( propertyPath ) ) {
                 var propertyPathTerms = splitPropertyPath( propertyPath );
                 setPropertyByPath( target, propertyPathTerms, propertyValue );
             }
         }
     };
+
 } )();
 
 

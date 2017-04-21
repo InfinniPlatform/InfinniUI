@@ -1,29 +1,28 @@
 function CreateItemActionBuilder() {
 }
 
-_.extend( CreateItemActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function( context, args ) {
-            var action = new CreateItemAction( args.parentView );
-            var metadata = args.metadata;
+_.extend( CreateItemActionBuilder.prototype, BaseActionBuilderMixin, {
 
-            this.applyBaseActionMetadata( action, args );
+    build: function( context, args ) {
+        var action = new CreateItemAction( args.parentView );
+        var metadata = args.metadata;
 
-            if( metadata.DestinationValue && metadata.DestinationValue.Source ) {
-                action.setProperty( 'destinationSource', metadata.DestinationValue.Source );
-                action.setProperty( 'destinationDataSource', context.dataSources[ metadata.DestinationValue.Source ] );
+        this.applyBaseActionMetadata( action, args );
 
-                var destinationProperty = ( args.basePathOfProperty !== null ) ?
-                    args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
-                    metadata.DestinationValue.Property;
+        if( metadata.DestinationValue && metadata.DestinationValue.Source ) {
+            action.setProperty( 'destinationSource', metadata.DestinationValue.Source );
+            action.setProperty( 'destinationDataSource', context.dataSources[ metadata.DestinationValue.Source ] );
 
-                action.setProperty( 'destinationProperty', destinationProperty );
-            }
+            var destinationProperty = ( args.basePathOfProperty !== null && typeof args.basePathOfProperty !== 'undefined' ) ?
+                args.basePathOfProperty.resolveProperty( metadata.DestinationValue.Property ) :
+                metadata.DestinationValue.Property;
 
-            return action;
+            action.setProperty( 'destinationProperty', destinationProperty );
         }
+
+        return action;
     }
-);
+
+} );
 
 window.InfinniUI.CreateItemActionBuilder = CreateItemActionBuilder;

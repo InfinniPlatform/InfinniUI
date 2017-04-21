@@ -46,7 +46,7 @@ var CommonButtonView = ControlView.extend( {
             contentElement = contentTemplate( null, args );
             $button.html( contentElement.render() );
 
-        } else if( content !== undefined && content !== null ) {
+        } else if( typeof content !== 'undefined' && content !== null ) {
             $button.html( content );
         }
     },

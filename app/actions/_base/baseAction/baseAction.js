@@ -8,6 +8,7 @@ function BaseAction( parentView ) {
 window.InfinniUI.BaseAction = BaseAction;
 
 _.extend( BaseAction.prototype, {
+
     defaults: {
         canExecute: null
     },
@@ -25,13 +26,12 @@ _.extend( BaseAction.prototype, {
     },
 
     initDefaultValues: function() {
-
     },
 
     onExecutedHandler: function( args ) {
         var onExecutedHandler = this.getProperty( 'onExecutedHandler' );
 
-        if( _.isFunction( onExecutedHandler ) ) {
+        if( typeof onExecutedHandler === 'function' ) {
             onExecutedHandler( args );
         }
     },

@@ -154,7 +154,7 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
         var converter;
 
         if( !propertyMetadata || typeof propertyMetadata != 'object' ) {
-            if( propertyMetadata !== undefined ) {
+            if( typeof propertyMetadata !== 'undefined' ) {
                 params.element[ 'set' + propertyName ]( propertyMetadata );
             }
             return null;
@@ -165,8 +165,8 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
                 basePathOfProperty: params.basePathOfProperty
             };
             var dataBinding = params.builder.buildBinding( metadata[ propertyName ], args );
-
             var oldConverter;
+
             if( isBooleanBinding ) {
                 dataBinding.setMode( InfinniUI.BindingModes.toElement );
 
@@ -200,16 +200,20 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
     resolveExpressionInText: function( params, propertyName ) {
         var valueToResolve = params.metadata[ propertyName ];
 
-        if( valueToResolve && typeof valueToResolve === 'string' && valueToResolve.slice( 0, 2 ) === '{=' && valueToResolve.slice( -1 ) === '}' ) {
+        if( valueToResolve &&
+            typeof valueToResolve === 'string' &&
+            valueToResolve.slice( 0, 2 ) === '{=' &&
+            valueToResolve.slice( -1 ) === '}' ) {
+
             var args = {
                 parent: params.parent,
                 parentView: params.parentView,
                 basePathOfProperty: params.basePathOfProperty
             };
-
             var expression = '{return ' + valueToResolve.slice( 2, -1 ) + ';}';
             var newValue = new ScriptExecutor( params.element.getScriptsStorage() ).executeScript( expression, args );
-            if( newValue !== undefined ) {
+
+            if( typeof newValue !== 'undefined' ) {
                 params.element[ 'set' + propertyName ]( newValue );
             }
         }
@@ -229,12 +233,11 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
     },
 
     initContextMenu: function( params ) {
-        var exchange = window.InfinniUI.global.messageBus,
-            builder = params.builder,
-            element = params.element,
-            metadata = params.metadata,
-            contextMenu;
-
+        var exchange = window.InfinniUI.global.messageBus;
+        var builder = params.builder;
+        var element = params.element;
+        var metadata = params.metadata;
+        var contextMenu;
         var argumentForBuilder = {
             parent: element,
             parentView: params.parentView,

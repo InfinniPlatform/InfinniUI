@@ -115,7 +115,7 @@ var TextEditorModel = Backbone.Model.extend( {
         var validateValue = this.get( 'validateValue' );
         var value = this.getValue();
 
-        if( _.isFunction( validateValue ) ) {
+        if( typeof validateValue === 'function' ) {
             return validateValue.call( null, value );
         }
     },

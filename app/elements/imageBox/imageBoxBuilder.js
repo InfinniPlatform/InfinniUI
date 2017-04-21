@@ -44,6 +44,7 @@ _.extend( ImageBoxBuilder.prototype, {
             converter: converter
         } );
 
+
         var binding = data.valueBinding;
         if( binding ) {
             var ds = binding.getSource();

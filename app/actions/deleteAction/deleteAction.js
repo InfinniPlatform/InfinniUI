@@ -69,7 +69,7 @@ _.extend( DeleteAction.prototype,
                     that.onExecutedHandler( args );
                     that.onSuccessHandler( args );
 
-                    if ( _.isFunction( callback ) ) {
+                    if ( typeof callback === 'function' ) {
                         callback();
                     }
                 },
@@ -77,7 +77,7 @@ _.extend( DeleteAction.prototype,
                     that.onExecutedHandler( args );
                     that.onErrorHandler( args );
 
-                    if ( _.isFunction( callback ) ) {
+                    if ( typeof callback === 'function' ) {
                         callback();
                     }
                 };
@@ -99,7 +99,7 @@ _.extend( DeleteAction.prototype,
             this.onExecutedHandler();
             this.onSuccessHandler();
 
-            if ( _.isFunction( callback ) ) {
+            if ( typeof callback === 'function' ) {
                 callback();
             }
         }

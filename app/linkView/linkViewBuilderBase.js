@@ -34,7 +34,7 @@ _.extend( LinkViewBuilderBase.prototype, {
         var builder = params.builder;
         var parameters = this.buildParameters( params );
 
-        if( viewMetadata !== null ) {
+        if( viewMetadata !== null && typeof viewMetadata !== 'undefined' ) {
             var view = builder.buildType( 'View', viewMetadata, {
                 parentView: parentView,
                 parent: parentView,
@@ -58,7 +58,7 @@ _.extend( LinkViewBuilderBase.prototype, {
 
         if( typeof parametersMetadata !== 'undefined' && parametersMetadata !== null ) {
             for( var i = 0; i < parametersMetadata.length; i++ ) {
-                if( parametersMetadata[ i ].Value !== undefined ) {
+                if( typeof parametersMetadata[ i ].Value !== 'undefined' ) {
                     parameter = builder.buildType( 'Parameter', parametersMetadata[ i ], {
                         parentView: parentView,
                         basePathOfProperty: params.basePathOfProperty
@@ -71,7 +71,7 @@ _.extend( LinkViewBuilderBase.prototype, {
     },
 
     getParentViewByOpenMode: function( params, mode ) {
-        if( mode === null || mode == 'Default' ) {
+        if( mode === null || typeof mode === 'undefined' || mode == 'Default' ) {
             return params.parentView.getApplicationView();
         }
 

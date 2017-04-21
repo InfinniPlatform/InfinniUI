@@ -19,7 +19,7 @@ _.extend( ObjectDataSourceBuilder.prototype, {
         }
 
         if( metadata.Items ) {
-            if( $.isArray( metadata.Items ) ) {
+            if( Array.isArray( metadata.Items ) ) {
                 dataSource.setItems( metadata.Items );
             }
 

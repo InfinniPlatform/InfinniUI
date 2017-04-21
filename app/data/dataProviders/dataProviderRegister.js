@@ -7,7 +7,8 @@ function DataProviderRegister() {
 
     this.build = function( metadataType, props ) {
         var dataProvider = dataProviders[ metadataType ];
-        if ( dataProvider !== undefined && dataProvider !== null ) {
+
+        if ( typeof dataProvider !== 'undefined' && dataProvider !== null ) {
             return new dataProviders[ metadataType ]( props );
         }
         return null;

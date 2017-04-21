@@ -15,7 +15,8 @@ var ComboBoxDropdownView = Backbone.View.extend( {
     },
 
     initialize: function() {
-        var isGrouped = this.model.get( 'groupValueSelector' ) !== null;
+        var groupValueSelector = this.model.get( 'groupValueSelector' );
+        var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
 
         if( isGrouped ) {
             this.strategy = new ComboBoxGroupViewStrategy( this );

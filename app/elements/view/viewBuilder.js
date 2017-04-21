@@ -158,7 +158,6 @@ _.extend( ViewBuilder.prototype, {
         var onStartCreating = metadata.OnStartCreating;
 
         if( onStartCreating ) {
-
             var executorBuilderParams = {
                 parentView: params.parentView,
                 parent: element,
@@ -177,13 +176,13 @@ _.extend( ViewBuilder.prototype, {
 
         var updateTopPriorityDataSources = function( priorityGroups ) {
             if( _.keys( priorityGroups ).length ) {
-                var maxPriority = _.chain( priorityGroups ).keys().max().value(),
-                    topPriorityDataSources = priorityGroups[ maxPriority ],
-                    topPriorityDataSourcesCount = topPriorityDataSources.length,
-                    nonPriorityDataSourceGroups = _.omit( priorityGroups, maxPriority ),
-                    count = 0;
+                var maxPriority = _.chain( priorityGroups ).keys().max().value();
+                var topPriorityDataSources = priorityGroups[ maxPriority ];
+                var topPriorityDataSourcesCount = topPriorityDataSources.length;
+                var nonPriorityDataSourceGroups = _.omit( priorityGroups, maxPriority );
+                var count = 0;
 
-                _.each( topPriorityDataSources, function( ds ) {
+                topPriorityDataSources.forEach( function( ds ) {
                     ds.onItemsUpdatedOnce( function( context, args ) {
                         if( ++count == topPriorityDataSourcesCount ) {
                             setTimeout( function() {
@@ -198,7 +197,7 @@ _.extend( ViewBuilder.prototype, {
         };
 
         if( _.keys( dataSourcesByPriority ).length > 1 ) {
-            _.each( dataSources, function( ds ) {
+            dataSources.forEach( function( ds ) {
                 ds.setIsWaiting( true );
             } );
 

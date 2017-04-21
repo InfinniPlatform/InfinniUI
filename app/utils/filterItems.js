@@ -1,13 +1,12 @@
 var filterItems = ( function() {
-
     return function( items, filter ) {
         if( !filter ) {
             return items;
         }
 
-        var itemsForFilter = JSON.parse( JSON.stringify( items ) ),
-            filterMethods = filterItems.filterMethods,
-            filterTree = filterItems.filterTreeBuilder.buildUpFilterTree( filter );
+        var itemsForFilter = JSON.parse( JSON.stringify( items ) );
+        var filterMethods = filterItems.filterMethods;
+        var filterTree = filterItems.filterTreeBuilder.buildUpFilterTree( filter );
 
         function stringToNum( value ) {
             if( typeof value === 'string' && !isNaN( value ) ) {
@@ -84,168 +83,178 @@ var filterItems = ( function() {
 
         return filterExec( filterTree, itemsForFilter );
     };
+
 } )( filterItems );
 
 window.InfinniUI.FilterItems = filterItems;
 
 filterItems.filterTreeBuilder = ( function() {
-    var that = {},
-        splitStringToArray = function( filter ) { //filter is string
-            var tmpArr,
-                tmpNum,
-                tmpString,
-                tmpString2,
-                tmpRE,
-                reForDates = /date\(\'[\d\wа-яёА-ЯЁ\:\-\+\.\s]+\'\)/g,
-                reForParamAsArray = /\,[\d\wа-яёА-ЯЁ\'\,\_\.]+\)/g,
-                reForArrayFromOneElem = /\[[\d\w\'\_\.]+\]/g,
-                reForElemsOfTree = /[\w]+[(]|\[[\d\wа-яёА-ЯЁ\S]+\]|[-\']{0,1}[\d\wа-яёА-ЯЁ_\.]+[\']{0,1}[,)$]/g,
-                reForClosingBrackets = /[)]/g,
-                reForRegExp = /\'([\d\w\S\W\D]+\s*)+\'/g,
-                reForSpaces = /\s+/g,
-                reForFewWordsInQuotes = /\'([\d\wа-яёА-ЯЁ\s]+\s*)+\'/g,
-                arr = [];
-            while( tmpArr = reForDates.exec( filter ) ) { // search all dates and convert it to number of s [0.000]
-                tmpNum = Date.parse( tmpArr[ 0 ].slice( 6, -2 ) ) / 1000 + '';
-                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
-                reForDates.lastIndex = tmpArr.index + tmpNum.length;
+    var that = {};
+
+    var splitStringToArray = function( filter ) { //filter is string
+        var tmpArr;
+        var tmpNum;
+        var tmpString;
+        var tmpString2;
+        var tmpRE;
+        var reForDates = /date\(\'[\d\wа-яёА-ЯЁ\:\-\+\.\s]+\'\)/g;
+        var reForParamAsArray = /\,[\d\wа-яёА-ЯЁ\'\,\_\.]+\)/g;
+        var reForArrayFromOneElem = /\[[\d\w\'\_\.]+\]/g;
+        var reForElemsOfTree = /[\w]+[(]|\[[\d\wа-яёА-ЯЁ\S]+\]|[-\']{0,1}[\d\wа-яёА-ЯЁ_\.]+[\']{0,1}[,)$]/g;
+        var reForClosingBrackets = /[)]/g;
+        var reForRegExp = /\'([\d\w\S\W\D]+\s*)+\'/g;
+        var reForSpaces = /\s+/g;
+        var reForFewWordsInQuotes = /\'([\d\wа-яёА-ЯЁ\s]+\s*)+\'/g;
+        var arr = [];
+
+        while( tmpArr = reForDates.exec( filter ) ) { // search all dates and convert it to number of s [0.000]
+            tmpNum = Date.parse( tmpArr[ 0 ].slice( 6, -2 ) ) / 1000 + '';
+            filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
+            reForDates.lastIndex = tmpArr.index + tmpNum.length;
+        }
+        while( tmpArr = reForRegExp.exec( filter ) ) { // search for regexp
+            tmpNum = tmpArr[ 0 ];
+            if( tmpNum.search( reForSpaces ) !== -1 || tmpNum.search( reForFewWordsInQuotes ) !== -1 ) {
+                while( tmpString = reForFewWordsInQuotes.exec( tmpNum ) ) {
+                    tmpString2 = tmpString[ 0 ].replace( reForSpaces, '_' );
+                    tmpNum = tmpNum.slice( 0, tmpString.index ) + tmpString2 + tmpNum.slice( tmpString.index + tmpString[ 0 ].length );
+                }
+            } else {
+                tmpRE = tmpNum.slice( 1, -1 );
+                tmpNum = 'tmpRE';
             }
-            while( tmpArr = reForRegExp.exec( filter ) ) { // search for regexp
-                tmpNum = tmpArr[ 0 ];
-                if( tmpNum.search( reForSpaces ) !== -1 || tmpNum.search( reForFewWordsInQuotes ) !== -1 ) {
-                    while( tmpString = reForFewWordsInQuotes.exec( tmpNum ) ) {
-                        tmpString2 = tmpString[ 0 ].replace( reForSpaces, '_' );
-                        tmpNum = tmpNum.slice( 0, tmpString.index ) + tmpString2 + tmpNum.slice( tmpString.index + tmpString[ 0 ].length );
+            filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
+            reForRegExp.lastIndex = tmpArr.index + tmpNum.length;
+        }
+        filter = filter.replace( /\s+/g, '' );
+        while( tmpArr = reForParamAsArray.exec( filter ) ) { // search second param
+            tmpNum = '[' + tmpArr[ 0 ].slice( 1, -1 ) + '])';
+            filter = filter.slice( 0, tmpArr.index + 1 ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
+            reForParamAsArray.lastIndex = tmpArr.index + tmpNum.length;
+        }
+        while( tmpArr = reForArrayFromOneElem.exec( filter ) ) { // convert array from 1 element to number or string or boolean
+            tmpNum = tmpArr[ 0 ].slice( 1, -1 );
+            filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
+            reForArrayFromOneElem.lastIndex = tmpArr.index + tmpNum.length;
+        }
+        while( tmpArr = reForElemsOfTree.exec( filter ) ) { // search all functions and values with their index
+            if( tmpArr[ 0 ].length > 1 && ( tmpArr[ 0 ].slice( -1 ) === ',' || tmpArr[ 0 ].slice( -1 ) === ')' ) ) {
+                tmpArr[ 0 ] = tmpArr[ 0 ].slice( 0, -1 );
+            }
+            if( tmpArr[ 0 ].length > 1 && tmpArr[ 0 ].slice( 0, 1 ) === '\'' ) {
+                if( isNaN( tmpArr[ 0 ].slice( 1, -1 ) ) ) {
+                    tmpArr[ 0 ] = tmpArr[ 0 ].slice( 1, -1 );
+                }
+            }
+            if( tmpArr[ 0 ].search( /tmpRE/ ) !== -1 ) {
+                tmpArr[ 0 ] = tmpArr[ 0 ].slice( 1, -1 ).split( ',' );
+                tmpArr[ 0 ][ 0 ] = tmpRE;
+            }
+            arr.push( tmpArr );
+        }
+        while( tmpArr = reForClosingBrackets.exec( filter ) ) { // search all closing brackets with their index
+            arr.push( tmpArr );
+        }
+        arr.sort( function( a, b ) { // sort arr by indexes to put all data in right order
+            return a.index - b.index;
+        } );
+        return arr;
+    };
+
+    var divideToFunctionsAndValues = function( arrayToDivide ) { //arrayToDivide is array
+        var tmpArr = [];
+        var values = [];
+        var filterArr = [];
+        var counter = 0;
+        var that;
+        var tmpSymbol;
+        var thatValue;
+        var firstPart;
+
+        // split all data to different functions
+        for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
+            if( typeof arrayToDivide[ i ][ 0 ] === 'string' ) {
+                tmpSymbol = arrayToDivide[ i ][ 0 ].slice( -1 );
+            } else {
+                tmpSymbol = ']';
+            }
+            if( tmpSymbol === '(' ) { // define functions from string
+                that = {};
+                that.type = 'function';
+                that.functionName = arrayToDivide[ i ][ 0 ].slice( 0, -1 );
+                that.index = arrayToDivide[ i ].index;
+                tmpArr.push( that );
+            } else if( tmpSymbol === ')' ) { // define where end of function
+                filterArr[ counter ] = [];
+                firstPart = tmpArr.pop();
+                firstPart.range = [];
+                firstPart.range.push( firstPart.index );
+                firstPart.children = [];
+                firstPart.range.push( arrayToDivide[ i ].index );
+                filterArr[ counter ] = firstPart;
+                counter += 1;
+            } else { // define params that are values
+                thatValue = {};
+                thatValue.type = 'value';
+                thatValue.valueName = arrayToDivide[ i ][ 0 ];
+                thatValue.index = arrayToDivide[ i ].index;
+                values.push( thatValue );
+            }
+        }
+        return [ filterArr, values ];
+    };
+
+    var addValuesAsChildren = function( filterArr, values ) { // filterArr, values are arrays
+        //add values to right place as children for functions
+        //define right place by range of index property
+        for( var i = 0, ii = values.length; i < ii; i += 1 ) {
+            for( var j = 0, jj = filterArr.length; j < jj; j += 1 ) {
+                if( values[ i ] !== null && typeof values[ i ] !== 'undefined' ) {
+                    if( values[ i ].index > filterArr[ j ].range[ 0 ] && values[ i ].index < filterArr[ j ].range[ 1 ] ) {
+                        filterArr[ j ].children.push( values[ i ] );
+                        values[ i ] = null;
                     }
-                } else {
-                    tmpRE = tmpNum.slice( 1, -1 );
-                    tmpNum = 'tmpRE';
-                }
-                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
-                reForRegExp.lastIndex = tmpArr.index + tmpNum.length;
-            }
-            filter = filter.replace( /\s+/g, '' );
-            while( tmpArr = reForParamAsArray.exec( filter ) ) { // search second param
-                tmpNum = '[' + tmpArr[ 0 ].slice( 1, -1 ) + '])';
-                filter = filter.slice( 0, tmpArr.index + 1 ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
-                reForParamAsArray.lastIndex = tmpArr.index + tmpNum.length;
-            }
-            while( tmpArr = reForArrayFromOneElem.exec( filter ) ) { // convert array from 1 element to number or string or boolean
-                tmpNum = tmpArr[ 0 ].slice( 1, -1 );
-                filter = filter.slice( 0, tmpArr.index ) + tmpNum + filter.slice( tmpArr.index + tmpArr[ 0 ].length );
-                reForArrayFromOneElem.lastIndex = tmpArr.index + tmpNum.length;
-            }
-            while( tmpArr = reForElemsOfTree.exec( filter ) ) { // search all functions and values with their index
-                if( tmpArr[ 0 ].length > 1 && ( tmpArr[ 0 ].slice( -1 ) === ',' || tmpArr[ 0 ].slice( -1 ) === ')' ) ) {
-                    tmpArr[ 0 ] = tmpArr[ 0 ].slice( 0, -1 );
-                }
-                if( tmpArr[ 0 ].length > 1 && tmpArr[ 0 ].slice( 0, 1 ) === '\'' ) {
-                    if( isNaN( tmpArr[ 0 ].slice( 1, -1 ) ) ) {
-                        tmpArr[ 0 ] = tmpArr[ 0 ].slice( 1, -1 );
-                    }
-                }
-                if( tmpArr[ 0 ].search( /tmpRE/ ) !== -1 ) {
-                    tmpArr[ 0 ] = tmpArr[ 0 ].slice( 1, -1 ).split( ',' );
-                    tmpArr[ 0 ][ 0 ] = tmpRE;
-                }
-                arr.push( tmpArr );
-            }
-            while( tmpArr = reForClosingBrackets.exec( filter ) ) { // search all closing brackets with their index
-                arr.push( tmpArr );
-            }
-            arr.sort( function( a, b ) { // sort arr by indexes to put all data in right order
-                return a.index - b.index;
-            } );
-            return arr;
-        },
-        divideToFunctionsAndValues = function( arrayToDivide ) { //arrayToDivide is array
-            var tmpArr = [],
-                values = [],
-                filterArr = [],
-                counter = 0,
-                that,
-                tmpSymbol,
-                thatValue,
-                firstPart;
-            // split all data to different functions
-            for( var i = 0, ii = arrayToDivide.length; i < ii; i += 1 ) {
-                if( typeof arrayToDivide[ i ][ 0 ] === 'string' ) {
-                    tmpSymbol = arrayToDivide[ i ][ 0 ].slice( -1 );
-                } else {
-                    tmpSymbol = ']';
-                }
-                if( tmpSymbol === '(' ) { // define functions from string
-                    that = {};
-                    that.type = 'function';
-                    that.functionName = arrayToDivide[ i ][ 0 ].slice( 0, -1 );
-                    that.index = arrayToDivide[ i ].index;
-                    tmpArr.push( that );
-                } else if( tmpSymbol === ')' ) { // define where end of function
-                    filterArr[ counter ] = [];
-                    firstPart = tmpArr.pop();
-                    firstPart.range = [];
-                    firstPart.range.push( firstPart.index );
-                    firstPart.children = [];
-                    firstPart.range.push( arrayToDivide[ i ].index );
-                    filterArr[ counter ] = firstPart;
-                    counter += 1;
-                } else { // define params that are values
-                    thatValue = {};
-                    thatValue.type = 'value';
-                    thatValue.valueName = arrayToDivide[ i ][ 0 ];
-                    thatValue.index = arrayToDivide[ i ].index;
-                    values.push( thatValue );
                 }
             }
-            return [ filterArr, values ];
-        },
-        addValuesAsChildren = function( filterArr, values ) { // filterArr, values are arrays
-            //add values to right place as children for functions
-            //define right place by range of index property
-            for( var i = 0, ii = values.length; i < ii; i += 1 ) {
-                for( var j = 0, jj = filterArr.length; j < jj; j += 1 ) {
-                    if( values[ i ] !== null ) {
-                        if( values[ i ].index > filterArr[ j ].range[ 0 ] && values[ i ].index < filterArr[ j ].range[ 1 ] ) {
-                            filterArr[ j ].children.push( values[ i ] );
-                            values[ i ] = null;
+        }
+        return filterArr;
+    };
+
+    var filterArrToTree = function( filterArr ) { // filterArr is array
+        // build up a filter tree
+        // by putting some functions as children for other
+        for( var i = 0; i < filterArr.length; i += 1 ) {
+            for( var j = 0; j < filterArr.length; j += 1 ) {
+                if( ( filterArr[ j ] !== null && typeof filterArr[ j ] !== 'undefined' ) ||
+                    ( filterArr[ i ] !== null && typeof filterArr[ i ] !== 'undefined' ) ) {
+                    //search for first result[j] where we can put result[i] as his child
+                    //if find, put it and remove result[i]
+                    if( filterArr[ i ].range[ 0 ] > filterArr[ j ].range[ 0 ] && filterArr[ i ].range[ 1 ] < filterArr[ j ].range[ 1 ] ) {
+                        //if result[j] already have any children, check their indexes to define where put new child
+                        if( typeof filterArr[ j ].children[ 0 ] !== 'undefined' && filterArr[ j ].children[ 0 ].index > filterArr[ i ].range[ 0 ] ) {
+                            filterArr[ j ].children.unshift( filterArr[ i ] );
+                            filterArr.splice( i, 1 );
+                            i -= 1;
+                            break;
+                        } else {
+                            filterArr[ j ].children.push( filterArr[ i ] );
+                            filterArr.splice( i, 1 );
+                            i -= 1;
+                            break;
                         }
                     }
                 }
             }
-            return filterArr;
-        },
-        filterArrToTree = function( filterArr ) { // filterArr is array
-            // build up a filter tree
-            // by putting some functions as children for other
-            for( var i = 0; i < filterArr.length; i += 1 ) {
-                for( var j = 0; j < filterArr.length; j += 1 ) {
-                    if( filterArr[ j ] !== null || filterArr[ i ] !== null ) {
-                        //search for first result[j] where we can put result[i] as his child
-                        //if find, put it and remove result[i]
-                        if( filterArr[ i ].range[ 0 ] > filterArr[ j ].range[ 0 ] && filterArr[ i ].range[ 1 ] < filterArr[ j ].range[ 1 ] ) {
-                            //if result[j] already have any children, check their indexes to define where put new child
-                            if( filterArr[ j ].children[ 0 ] !== undefined && filterArr[ j ].children[ 0 ].index > filterArr[ i ].range[ 0 ] ) {
-                                filterArr[ j ].children.unshift( filterArr[ i ] );
-                                filterArr.splice( i, 1 );
-                                i -= 1;
-                                break;
-                            } else {
-                                filterArr[ j ].children.push( filterArr[ i ] );
-                                filterArr.splice( i, 1 );
-                                i -= 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            return filterArr[ 0 ];
-        };
+        }
+        return filterArr[ 0 ];
+    };
     that.buildUpFilterTree = function( filter ) { // filter is string
         var tmpArr;
+
         tmpArr = splitStringToArray( filter );
         tmpArr = divideToFunctionsAndValues( tmpArr );
         tmpArr = addValuesAsChildren( tmpArr[ 0 ], tmpArr[ 1 ] );
+
         return filterArrToTree( tmpArr );
     };
     return that;
@@ -264,7 +273,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -308,7 +317,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -339,7 +348,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -370,7 +379,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof [ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -401,7 +410,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -432,7 +441,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -463,7 +472,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -494,7 +503,7 @@ filterItems.filterMethods = ( function() {
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             if( context ) {
                 tmpResult2 = [];
-                if( items[ i ][ context ] === undefined ) {
+                if( typeof items[ i ][ context ] === 'undefined' ) {
                     length = -1;
                 } else {
                     length = items[ i ][ context ].length;
@@ -521,17 +530,17 @@ filterItems.filterMethods = ( function() {
         var tmpValue;
         var globalUI = InfinniUI.ObjectUtils;
 
-        if( value[ 1 ] === undefined ) {
+        if( typeof value[ 1 ] === 'undefined' ) {
             value[ 1 ] = true;
         }
         for( var i = 0, ii = items.length; i < ii; i += 1 ) {
             tmpValue = globalUI.getPropertyValue( items[ i ], value[ 0 ] );
             if( value[ 1 ] === true ) {
-                if( !_.isUndefined( tmpValue ) && !_.isNull( tmpValue ) ) {
+                if( typeof tmpValue !== 'undefined' && tmpValue !== null ) {
                     tmpResult.push( items[ i ] );
                 }
             } else {
-                if( _.isUndefined( tmpValue ) || _.isNull( tmpValue ) ) {
+                if( typeof tmpValue === 'undefined' || tmpValue === null ) {
                     tmpResult.push( items[ i ] );
                 }
             }
@@ -543,7 +552,7 @@ filterItems.filterMethods = ( function() {
         var tmpResult = [];
         var globalUI = InfinniUI.ObjectUtils;
         for( var i = 0, ii = values[ 1 ].length; i < ii; i += 1 ) {
-            if( globalUI.getPropertyValue( values[ 1 ][ i ], values[ 0 ] ) !== undefined ) {
+            if( typeof globalUI.getPropertyValue( values[ 1 ][ i ], values[ 0 ] ) !== 'undefined' ) {
                 tmpResult.push( values[ 1 ][ i ] );
             }
         }

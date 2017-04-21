@@ -161,7 +161,7 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 
-        if( _.isUndefined( n ) ) {
+        if( n === null || typeof n === 'undefined' ) {
             n = 100;
         }
 

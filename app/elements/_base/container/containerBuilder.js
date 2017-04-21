@@ -17,8 +17,6 @@ _.extend( ContainerBuilder.prototype, {
      * @returns {{itemsBinding: {DataBinding}}}
      */
     applyMetadata: function( params ) {
-        var metadata = params.metadata;
-        var element = params.element;
         var itemsBinding;
 
         ElementBuilder.prototype.applyMetadata.call( this, params );
@@ -35,9 +33,11 @@ _.extend( ContainerBuilder.prototype, {
         var metadata = params.metadata;
         var itemsBinding = null;
 
-        if( Array.isArray( metadata.Items ) ) {  // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
+        if( Array.isArray( metadata.Items ) ) {
+            // отдельные не шаблонизируемые items, в metadata.Items - список методанных item'ов
             this.initNotTemplatingItems( params );
-        } else if( metadata.Items ) {                          // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
+        } else if( metadata.Items ) {
+            // шаблонизируемые однотипные items, в metadata.Items - биндинг на данные item'ов
             itemsBinding = this.initTemplatingItems( params );
         }
 
@@ -58,12 +58,7 @@ _.extend( ContainerBuilder.prototype, {
 
         binding.setMode( InfinniUI.BindingModes.toElement );
 
-        //if ('ItemComparator' in metadata) {
         this.bindElementItemsWithSorting( binding, params );
-        //} else {
-        //    binding.bindElement(element, 'items');
-        //}
-
 
         if( 'ItemTemplate' in metadata ) {
             itemTemplate = this.buildItemTemplate( metadata.ItemTemplate, params );
@@ -88,8 +83,9 @@ _.extend( ContainerBuilder.prototype, {
     initNotTemplatingItems: function( params ) {
         var itemsMetadata = params.metadata.Items;
         var element = params.element;
-        //var fakeItems = (new Array(itemsMetadata.length + 1)).join(' ').split('');
         var items = itemsMetadata.slice( 0 );
+        //var fakeItems = (new Array(itemsMetadata.length + 1)).join(' ').split('');
+
         element.getItems().set( items );
         var itemTemplate = this.buildItemTemplateForUniqueItem( items, params );
         element.setItemTemplate( itemTemplate );
@@ -97,7 +93,8 @@ _.extend( ContainerBuilder.prototype, {
 
     tuneItemsBinding: function( itemsBinding ) {
         var source = itemsBinding.getSource();
-        if( typeof source.tryInitData == 'function' ) {
+
+        if( typeof source.tryInitData === 'function' ) {
             source.tryInitData();
         }
     },
@@ -114,21 +111,9 @@ _.extend( ContainerBuilder.prototype, {
     },
 
     initGroupValueSelector: function( params ) {
-        var metadata = params.metadata,
-            element = params.element,
-            groupValueSelector;
-
-        /* element.setGroupItemComparator(function(a, b) {
-         if (a < b) {
-         return -1;
-         }
-
-         if (a > b) {
-         return 1;
-         }
-
-         return 0;
-         });*/
+        var metadata = params.metadata;
+        var element = params.element;
+        var groupValueSelector;
 
         if( metadata.GroupValueSelector ) {
             groupValueSelector = function( context, args ) {
@@ -150,7 +135,6 @@ _.extend( ContainerBuilder.prototype, {
         var metadata = params.metadata;
         var element = params.element;
         var itemTemplate;
-        var property;
 
         if( metadata.GroupItemTemplate ) {
             itemTemplate = this.buildItemTemplate( metadata.GroupItemTemplate, params );
@@ -196,7 +180,6 @@ _.extend( ContainerBuilder.prototype, {
         return function( context, args ) {
             var index = args.index;
             var label = new Label( this );
-
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
             var binding = new DataBinding();
@@ -220,13 +203,13 @@ _.extend( ContainerBuilder.prototype, {
             var index = args.index;
             var label = new Label( this );
             var scriptExecutor = new ScriptExecutor( params.parentView );
-
             var sourceProperty = itemsBinding.getSourceProperty();
             var source = itemsBinding.getSource();
             var binding = new DataBinding();
-            binding.setMode( InfinniUI.BindingModes.toElement );
 
+            binding.setMode( InfinniUI.BindingModes.toElement );
             sourceProperty = index.toString();
+
             if( itemsBinding.getSourceProperty() != '' ) {
                 sourceProperty = itemsBinding.getSourceProperty() + '.' + sourceProperty;
             }
@@ -245,7 +228,6 @@ _.extend( ContainerBuilder.prototype, {
     },
 
     buildItemTemplate: function( templateMetadata, params ) {
-        var element = params.element;
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
         var propertyForSource = params.metadata[ 'Items' ][ 'Property' ] || '';
@@ -259,10 +241,10 @@ _.extend( ContainerBuilder.prototype, {
                 parentView: params.parentView
             };
 
-            if( index !== undefined && index !== null ) {
+            if( typeof index !== 'undefined' && index !== null ) {
                 bindingIndex = that.bindingIndexByItemsIndex( index, params );
 
-                if( bindingIndex !== undefined && bindingIndex !== null ) {
+                if( typeof bindingIndex !== 'undefined' && bindingIndex !== null ) {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild( propertyForSource, bindingIndex );
                 } else {
                     argumentForBuilder.basePathOfProperty = basePathOfProperty.buildChild( propertyForSource, index );
@@ -277,7 +259,7 @@ _.extend( ContainerBuilder.prototype, {
      * @public
      * @memberOf ContainerBuilder
      * @description Возвращает функцию itemTemplate для не шаблонизируемого item'а.
-     * @param {Object} itemMetadata метаданные.
+     * @param {Object} itemsMetadata метаданные.
      * @param {Object} params стандартные params, передаваемые внутри билдеров.
      **/
     buildItemTemplateForUniqueItem: function( itemsMetadata, params ) {
@@ -286,15 +268,13 @@ _.extend( ContainerBuilder.prototype, {
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
 
         return function( context, args ) {
-
-            var
-                index = args.index,
-                item = element.getItems().getByIndex( index ),
-                argumentForBuilder = {
-                    parent: params.element,
-                    parentView: params.parentView,
-                    basePathOfProperty: basePathOfProperty
-                };
+            var index = args.index;
+            var item = element.getItems().getByIndex( index );
+            var argumentForBuilder = {
+                parent: params.element,
+                parentView: params.parentView,
+                basePathOfProperty: basePathOfProperty
+            };
 
             return builder.build( item, argumentForBuilder );
         };
@@ -309,7 +289,6 @@ _.extend( ContainerBuilder.prototype, {
 
     bindElementItemsWithSorting: function( binding, params ) {
         // нетривиальный биндинг элементов нужен для того, чтобы правильно учитывались индексы при сортировке элементов
-
         var metadata = params.metadata;
         var element = params.element;
         var scriptExecutor = new ScriptExecutor( params.parent );

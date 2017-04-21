@@ -17,7 +17,7 @@ _.extend( DeleteActionBuilder.prototype,
 
             var accept = ( metadata[ 'Accept' ] !== false );
             var dataSource = parentView.getContext().dataSources[ sourceName ];
-            var destinationProperty = ( args.basePathOfProperty !== null ) ?
+            var destinationProperty = ( args.basePathOfProperty !== null && typeof args.basePathOfProperty !== 'undefined' ) ?
                 args.basePathOfProperty.resolveProperty( propertyName ) :
                 propertyName;
 
