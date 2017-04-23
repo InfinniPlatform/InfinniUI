@@ -2,7 +2,7 @@ function BaseEditAction( parentView ) {
     _.superClass( BaseEditAction, this, parentView );
 }
 
-window.InfinniUI.BaseEditAction = BaseEditAction;
+InfinniUI.BaseEditAction = BaseEditAction;
 
 _.inherit( BaseEditAction, BaseAction );
 

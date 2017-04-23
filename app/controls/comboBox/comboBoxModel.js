@@ -29,6 +29,7 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
 
         var selectedItem = this.getSelectedItem();
         var value = this.valueByItem( selectedItem );
+
         this.set( 'value', value );
     },
 
@@ -121,4 +122,7 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
     setNoItemsMessage: function( message ) {
         this.set( 'noItemsMessage', message );
     }
+
 } );
+
+InfinniUI.ComboBoxModel = ComboBoxModel;

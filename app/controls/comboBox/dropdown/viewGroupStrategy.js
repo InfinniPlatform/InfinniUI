@@ -75,3 +75,5 @@ ComboBoxGroupViewStrategy.prototype.getTemplate = function() {
     return this.template;
 };
 
+InfinniUI.ComboBoxGroupViewStrategy = ComboBoxGroupViewStrategy;
+

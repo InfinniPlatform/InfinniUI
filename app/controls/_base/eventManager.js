@@ -13,6 +13,7 @@ EventManager.prototype.on = function( name, handler ) {
 EventManager.prototype.trigger = function( name, message, context ) {
     var eventHandlers = this.handlers[ name ];
     var response = true;
+
     if ( Array.isArray( eventHandlers ) ) {
         response = eventHandlers
             .map( function( handler ) {
@@ -24,3 +25,5 @@ EventManager.prototype.trigger = function( name, message, context ) {
     }
     return response;
 };
+
+InfinniUI.EventManager = EventManager;

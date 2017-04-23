@@ -2,29 +2,29 @@
  * @class
  * @arguments ControlView
  */
-var DividerView = ControlView.extend(
-    /** @lends DividerView.prototype */
-    {
-        tagName: 'hr',
+var DividerView = ControlView.extend( {
 
-        className: 'pl-divider',
+    tagName: 'hr',
 
-        initialize: function( options ) {
-            ControlView.prototype.initialize.call( this, options );
-        },
+    className: 'pl-divider',
 
-        render: function() {
-            this.prerenderingActions();
+    initialize: function( options ) {
+        ControlView.prototype.initialize.call( this, options );
+    },
 
-            this.updateProperties();
-            this.trigger( 'render' );
+    render: function() {
+        this.prerenderingActions();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send( 'render', { element: this } );
-            //devblockstop
-            return this;
-        }
+        this.updateProperties();
+        this.trigger( 'render' );
+
+        this.postrenderingActions();
+        //devblockstart
+        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
     }
 
-);
+} );
+
+InfinniUI.DividerView = DividerView;

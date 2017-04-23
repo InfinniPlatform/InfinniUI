@@ -4,7 +4,7 @@ function UpdateAction( parentView ) {
 
 _.inherit( UpdateAction, BaseAction );
 
-_.extend( UpdateAction.prototype, BaseFallibleActionMixin, {
+_.extend( UpdateAction.prototype, baseFallibleActionMixin, {
 
     execute: function( callback ) {
         var that = this;
@@ -28,6 +28,7 @@ _.extend( UpdateAction.prototype, BaseFallibleActionMixin, {
 
         dataSource.updateItems( onSuccessUpdate, onErrorUpdate );
     }
+
 } );
 
 window.InfinniUI.UpdateAction = UpdateAction;

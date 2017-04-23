@@ -2,7 +2,6 @@
  * @mixin
  */
 var displayFormatBuilderMixin = {
-
     /**
      * Возвращает функцию форматирования значения
      * @see {@link http://docs.infinnity.ru/docs/Specifications/UserInterface/Components/TextEditorBase/TextEditorBase.setDisplayFormat/}
@@ -15,6 +14,7 @@ var displayFormatBuilderMixin = {
         var formatOptions = params.formatOptions;
         var builder = params.builder;
         var formatter, format = defaultFormat;
+
         if ( typeof displayFormat === 'string' ) {
             formatter = builder.buildType( 'ObjectFormat', { Format: displayFormat } );
             format = function( context, args ) {
@@ -42,3 +42,5 @@ var displayFormatBuilderMixin = {
         }
     }
 };
+
+InfinniUI.Mixins.displayFormatBuilderMixin = displayFormatBuilderMixin;

@@ -5,6 +5,7 @@ function EditAction( parentView ) {
 _.inherit( EditAction, BaseEditAction );
 
 _.extend( EditAction.prototype, {
+
     setSelectedItem: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
         var destinationDataSource = this.getProperty( 'destinationDataSource' );
@@ -12,7 +13,6 @@ _.extend( EditAction.prototype, {
         var selectedItem = destinationDataSource.getProperty( destinationProperty );
 
         if( selectedItem === null || typeof selectedItem === 'undefined' ) {
-
             // if selectedItem is empty and it is must be document
             // return error
             if( this._isRootElementPath( destinationProperty ) ) {
@@ -39,11 +39,13 @@ _.extend( EditAction.prototype, {
 
     _resumeUpdateEditDataSource: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
+
         editDataSource.resumeUpdate( 'BaseEditAction' );
     },
 
     _setDocument: function( editDataSource, selectedItem ) {
         var selectedItemId = editDataSource.idOfItem( selectedItem );
+
         editDataSource.setIdFilter( selectedItemId );
         editDataSource.tryInitData();
         this._resumeUpdateEditDataSource();

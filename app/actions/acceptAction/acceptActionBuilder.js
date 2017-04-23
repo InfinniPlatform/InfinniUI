@@ -1,17 +1,16 @@
 function AcceptActionBuilder() {
 }
 
-_.extend( AcceptActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function( context, args ) {
-            var action = new AcceptAction( args.parentView );
+_.extend( AcceptActionBuilder.prototype, baseActionBuilderMixin, {
 
-            this.applyBaseActionMetadata( action, args );
+    build: function( context, args ) {
+        var action = new AcceptAction( args.parentView );
 
-            return action;
-        }
+        this.applyBaseActionMetadata( action, args );
+
+        return action;
     }
-);
+
+} );
 
 window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;

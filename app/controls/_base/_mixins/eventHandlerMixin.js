@@ -1,5 +1,4 @@
 var eventHandlerMixin = {
-
     /**
      *
      * @param {String} name
@@ -33,7 +32,6 @@ var eventHandlerMixin = {
      * @description Вызывает обработчики указанного события.
      * Формат вызова callEventHandler(name, [data],[handler])
      * @param {string} name Название события
-     * @param {Array} [data] Параметры, которые будут переданы в обработчик
      * @callback [callback] Функцию в которую будут переданы результат вызова каждого обработчика
      */
     callEventHandler: function( name ) {
@@ -74,3 +72,5 @@ var eventHandlerMixin = {
     }
 
 };
+
+InfinniUI.Mixins.eventHandlerMixin = eventHandlerMixin;

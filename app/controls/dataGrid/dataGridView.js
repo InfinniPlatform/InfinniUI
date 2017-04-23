@@ -47,7 +47,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
         /** Update hash item => element when item changed **/
         var rowElements = this.rowElements;
-        var model = this.model;
+
         this.model.get( 'items' ).onChange( function( event ) {
             if( event.action === 'replace' ) {
                 event.oldItems.forEach( function( oldItem, index ) {
@@ -69,6 +69,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
     updateShowSelectors: function() {
         var showSelectors = this.model.get( 'showSelectors' );
+
         this.$el.toggleClass( 'pl-datagrid_selectors_show', showSelectors );
         this.$el.toggleClass( 'pl-datagrid_selectors_hide', !showSelectors );
     },
@@ -83,6 +84,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
     updateCheckAll: function() {
         var checkAll = this.model.get( 'checkAll' );
+
         this.ui.checkAll.prop( 'checked', checkAll );
     },
 
@@ -114,6 +116,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
     updateCheckAllVisible: function() {
         var checkAllVisible = this.model.get( 'checkAllVisible' );
+
         this.ui.checkAll.toggleClass( 'hidden', !checkAllVisible );
     },
 
@@ -148,6 +151,7 @@ var DataGridView = ListEditorBaseView.extend( {
         this.rowElements.forEach( function( rowElement, item ) {
             var index = items.indexOf( item );
             var toggle = indices.indexOf( index ) !== -1;
+
             rowElement.toggle( toggle );
         } );
     },
@@ -268,13 +272,11 @@ var DataGridView = ListEditorBaseView.extend( {
         var columns = this.model.get( 'columns' );
         var sizeCells = [];
         var templateSizeCells = this.template.sizeCell();
-
         var $headers = columns.toArray().map( function( column ) {
             sizeCells.push( templateSizeCells );
             // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
             // bug related to task JK-4516
             var $th = $( '<th class="pl-datagrid-row__cell"></th>' );
-
             var headerTemplate = column.getHeaderTemplate();
             var header = column.getHeader();
 
@@ -323,13 +325,14 @@ var DataGridView = ListEditorBaseView.extend( {
                     var items = model.get( 'items' );
                     var item = items.getByIndex( index );
                     var rowItem = that.rowElements.get( item );
+
                     if( rowItem.getEnabled() !== false ) {
                         model.set( 'selectedItem', item );
                     }
                 } );
 
                 element.onToggle( function() {
-                    var enabled = this.model.get( 'enabled' );
+                    var enabled = model.get( 'enabled' );
                     var items = model.get( 'items' );
 
                     if( enabled ) {
@@ -339,6 +342,7 @@ var DataGridView = ListEditorBaseView.extend( {
                 that.addRowElement( item, element );
 
                 var $element = element.render();
+
                 $items.append( $element );
             }, 0 );
         }, this );
@@ -408,6 +412,7 @@ var DataGridView = ListEditorBaseView.extend( {
             $sortableCell = this.$el.find( '.sorted' );
             $sortableCell.removeClass( 'sorted headerTemplate-sorted-asc headerTemplate-sorted-desc sorted-asc sorted-desc' );
             var sortedCell = this.model.get( 'sortedColumn' );
+
             if( sortedCell ) {
                 sortedCell.setSortDirection( null );
             }
@@ -418,5 +423,7 @@ var DataGridView = ListEditorBaseView.extend( {
     }
 
 } );
+
+InfinniUI.DataGridView = DataGridView;
 
 

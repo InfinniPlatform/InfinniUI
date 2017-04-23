@@ -7,6 +7,8 @@ var SelectHoursModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectHoursModel = SelectHoursModel;
+
 var SelectHours = SelectComponent.extend( {
 
     modelClass: SelectHoursModel,
@@ -31,8 +33,7 @@ var SelectHours = SelectComponent.extend( {
 
     fillHoursTable: function() {
         //@TODO Заполнять в зависимости от формата 12/24
-        var
-            model = this.model;
+        var model = this.model;
         var date = model.get( 'date' ) || model.get( 'today' );
         var now = new Date();
 
@@ -67,13 +68,12 @@ var SelectHours = SelectComponent.extend( {
     },
 
     useHour: function( event ) {
-        var
-            $el = $( event.target ),
-            model = this.model,
-            date = model.get( 'date' ),
-            hour = parseInt( $el.attr( 'data-hour' ), 10 );
-
+        var $el = $( event.target );
+        var model = this.model;
+        var date = model.get( 'date' );
+        var hour = parseInt( $el.attr( 'data-hour' ), 10 );
         var newDate = InfinniUI.DateUtils.cloneDate( date );
+
         newDate.setHours( hour );
         model.set( 'date', newDate );
 
@@ -81,3 +81,5 @@ var SelectHours = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectHours = SelectHours;

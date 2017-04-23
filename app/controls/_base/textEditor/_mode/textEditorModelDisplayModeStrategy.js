@@ -12,7 +12,6 @@ TextEditorModelDisplayModeStrategy.prototype.constructor = TextEditorModelDispla
 TextEditorModelDisplayModeStrategy.prototype.updateText = function( model ) {
     var displayFormat = model.getDisplayFormat();
     var value = model.get( 'value' );
-
     var text;
 
     if ( typeof displayFormat === 'function' ) {
@@ -38,3 +37,5 @@ TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function( mod
     }
     model.applyChanges();
 };
+
+InfinniUI.TextEditorModelDisplayModeStrategy = TextEditorModelDisplayModeStrategy;

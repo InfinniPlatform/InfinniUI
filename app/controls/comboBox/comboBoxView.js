@@ -46,10 +46,8 @@ var ComboBoxView = ListEditorBaseView.extend( {
 
     initialize: function( options ) {
         ListEditorBaseView.prototype.initialize.call( this, options );
-        var model = this.model,
-            view = this;
-
-        //this.on('beforeClick', this.activateControl);
+        var model = this.model;
+        var view = this;
 
         this.on( 'render', function() {
             view.renderValue();
@@ -100,13 +98,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
     render: function() {
         this.prerenderingActions();
 
-        //var preparedItems = this.strategy.prepareItemsForRendering();
-        //var template = this.strategy.getTemplate();
-
-        //this.removeChildElements();
-
         this.renderTemplate( this.getTemplate() );
-
         this.updateProperties();
 
         this.trigger( 'render' );
@@ -150,6 +142,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
 
     onClickClearHandler: function() {
         var enabled = this.model.get( 'enabled' );
+
         if( enabled ) {
             this.model.set( 'value', null );
             this.ui.control.focus();
@@ -158,6 +151,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
 
     onClickGripHandler: function() {
         var enabled = this.model.get( 'enabled' );
+
         if( enabled ) {
             this.toggleDropdown();
         }
@@ -176,6 +170,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
 
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
+
         if( labelText && labelText !== '' ) {
             this.ui.label.toggleClass( 'hidden', false );
         } else {
@@ -213,7 +208,6 @@ var ComboBoxView = ListEditorBaseView.extend( {
     },
 
     updateSelectedItem: function() {
-
     },
 
     updateDisabledItem: function() {
@@ -238,7 +232,6 @@ var ComboBoxView = ListEditorBaseView.extend( {
     },
 
     rerender: function() {
-
     },
 
     renderValue: function() {
@@ -293,3 +286,5 @@ var ComboBoxView = ListEditorBaseView.extend( {
     }
 
 } );
+
+InfinniUI.ComboBoxView = ComboBoxView;

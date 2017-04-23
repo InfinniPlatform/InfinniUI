@@ -8,6 +8,7 @@ var SelectMonthsModel = SelectComponentModel.extend( {
 
     nextYear: function() {
         var year = this.get( 'year' );
+
         this.set( 'year', year + 1 );
         this.keepDateInRange();
     },
@@ -26,6 +27,8 @@ var SelectMonthsModel = SelectComponentModel.extend( {
     }
 
 } );
+
+InfinniUI.SelectMonthsModel = SelectMonthsModel;
 
 var SelectMonths = SelectComponent.extend( {
 
@@ -127,3 +130,5 @@ var SelectMonths = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectMonths = SelectMonths;

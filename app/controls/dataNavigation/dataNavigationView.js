@@ -135,3 +135,5 @@ var DataNavigationView = ControlView.extend( {
     }
 
 } );
+
+InfinniUI.DataNavigationView = DataNavigationView;

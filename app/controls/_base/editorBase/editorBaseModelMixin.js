@@ -48,6 +48,7 @@ var editorBaseModelMixin = {
 
     set: function( key, value, options ) {
         var attributes;
+
         if( key === null || typeof key === 'undefined' ) {
             return this;
         }
@@ -97,3 +98,5 @@ var editorBaseModelMixin = {
     }
 
 };
+
+InfinniUI.Mixins.editorBaseModelMixin = editorBaseModelMixin;

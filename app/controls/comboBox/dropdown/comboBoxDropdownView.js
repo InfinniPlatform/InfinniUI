@@ -1,6 +1,7 @@
 var ComboBoxDropdownView = Backbone.View.extend( {
 
     className: 'pl-dropdown-container',
+
     events: {
         'click .backdrop': 'onClickBackdropHandler',
         'keyup .pl-combobox-filter-text': 'onKeyUpHandler',
@@ -312,3 +313,5 @@ var ComboBoxDropdownView = Backbone.View.extend( {
 } );
 
 _.extend( ComboBoxDropdownView.prototype, bindUIElementsMixin );
+
+InfinniUI.ComboBoxDropdownView = ComboBoxDropdownView;

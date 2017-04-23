@@ -1,4 +1,5 @@
 var ExtensionPanelModel = ContainerModel.extend( {
+
     defaults: _.defaults( {
         extensionName: null,
         context: null
@@ -7,4 +8,7 @@ var ExtensionPanelModel = ContainerModel.extend( {
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this );
     }
+
 } );
+
+InfinniUI.ExtensionPanelModel = ExtensionPanelModel;

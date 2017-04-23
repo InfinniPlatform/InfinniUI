@@ -2,46 +2,47 @@
  * @class
  * @augments ControlView
  */
-var ContainerView = ControlView.extend(
-    /** @lends ContainerView.prototype */
-    {
-        initialize: function( options ) {
-            ControlView.prototype.initialize.call( this, options );
+var ContainerView = ControlView.extend( {
 
-            this.childElements = [];
+    initialize: function( options ) {
+        ControlView.prototype.initialize.call( this, options );
 
-            this.listenTo( this.model, 'change:groupValueSelector', this.updateGrouping );
-            this.updateGrouping();
-        },
+        this.childElements = [];
 
-        updateGrouping: function() {
-            throw 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.';
-        },
+        this.listenTo( this.model, 'change:groupValueSelector', this.updateGrouping );
+        this.updateGrouping();
+    },
 
-        initHandlersForProperties: function() {
-            ControlView.prototype.initHandlersForProperties.call( this );
+    updateGrouping: function() {
+        throw 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.';
+    },
 
-            var that = this;
-            this.model.get( 'items' ).onChange( function( event ) {
-                switch( event.action ) {
-                    case 'replace':
-                        break;
-                    default:
-                        that.rerender();
-                }
-            } );
-        },
+    initHandlersForProperties: function() {
+        ControlView.prototype.initHandlersForProperties.call( this );
 
-        removeChildElements: function() {
-            for( var i = 0, ii = this.childElements.length; i < ii; i++ ) {
-                this.childElements[ i ].remove();
+        var that = this;
+        this.model.get( 'items' ).onChange( function( event ) {
+            switch( event.action ) {
+                case 'replace':
+                    break;
+                default:
+                    that.rerender();
             }
+        } );
+    },
 
-            this.childElements = [];
-        },
-
-        addChildElement: function( child ) {
-            this.childElements.push( child );
+    removeChildElements: function() {
+        for( var i = 0, ii = this.childElements.length; i < ii; i++ ) {
+            this.childElements[ i ].remove();
         }
+
+        this.childElements = [];
+    },
+
+    addChildElement: function( child ) {
+        this.childElements.push( child );
     }
-);
+
+} );
+
+InfinniUI.ContainerView = ContainerView;

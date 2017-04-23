@@ -5,3 +5,5 @@ var DatePickerModel = DateTimePickerModel.extend( {
     }
 
 } );
+
+InfinniUI.DatePickerModel = DatePickerModel;

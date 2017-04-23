@@ -7,6 +7,8 @@ var SelectMinutesModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectMinutesModel = SelectMinutesModel;
+
 var SelectMinutes = SelectComponent.extend( {
 
     modelClass: SelectMinutesModel,
@@ -30,9 +32,8 @@ var SelectMinutes = SelectComponent.extend( {
     },
 
     fillMinutesTable: function() {
-        var
-            model = this.model,
-            minute = model.get( 'minute' );
+        var model = this.model;
+        var minute = model.get( 'minute' );
 
         this.ui.minute.each( function( i, el ) {
             var $el = $( el );
@@ -56,15 +57,16 @@ var SelectMinutes = SelectComponent.extend( {
     },
 
     useMinute: function( event ) {
-        var
-            $el = $( event.target ),
-            model = this.model,
-            date = model.get( 'date' ),
-            minute = parseInt( $el.attr( 'data-minute' ), 10 );
-
+        var $el = $( event.target );
+        var model = this.model;
+        var date = model.get( 'date' );
+        var minute = parseInt( $el.attr( 'data-minute' ), 10 );
         var newDate = InfinniUI.DateUtils.cloneDate( date );
+
         newDate.setMinutes( minute );
         this.trigger( 'minute', newDate );
     }
 
 } );
+
+InfinniUI.SelectMinutes = SelectMinutes;

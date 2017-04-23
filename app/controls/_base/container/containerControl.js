@@ -1,6 +1,6 @@
 /**
  *
- * @param parent
+ * @param viewMode
  * @constructor
  * @augments Control
  */
@@ -11,3 +11,5 @@ function ContainerControl( viewMode ) {
 _.inherit( ContainerControl, Control );
 
 _.extend( ContainerControl.prototype, {} );
+
+InfinniUI.ContainerControl = ContainerControl;

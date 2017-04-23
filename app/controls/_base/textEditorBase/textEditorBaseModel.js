@@ -20,3 +20,5 @@ var TextEditorBaseModel = ControlModel.extend( /** @lends TextEditorBaseModel.pr
 
 _.extend( TextEditorBaseModel.prototype, editorBaseModelMixin );
 
+InfinniUI.TextEditorBaseControl = TextEditorBaseControl;
+

@@ -1,7 +1,7 @@
 function ServerActionBuilder() {
 }
 
-_.extend( ServerActionBuilder.prototype, BaseActionBuilderMixin, BaseFallibleActionBuilderMixin, {
+_.extend( ServerActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
     build: function( context, args ) {
         var builder = args.builder;
@@ -29,7 +29,6 @@ _.extend( ServerActionBuilder.prototype, BaseActionBuilderMixin, BaseFallibleAct
 
         if( metadata.Params ) {
             for( var name in metadata.Params ) {
-
                 var value = metadata.Params[ name ];
 
                 if( Array.isArray( value ) || value === null || typeof value !== 'object' ) {
@@ -64,6 +63,7 @@ _.extend( ServerActionBuilder.prototype, BaseActionBuilderMixin, BaseFallibleAct
             }
         }, paramName );
     }
+
 } );
 
 window.InfinniUI.ServerActionBuilder = ServerActionBuilder;

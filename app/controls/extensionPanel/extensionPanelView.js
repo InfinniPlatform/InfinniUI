@@ -1,4 +1,5 @@
 ﻿var ExtensionPanelView = ContainerView.extend( {
+
     className: 'pl-extension-panel',
 
     initialize: function() {
@@ -30,13 +31,16 @@
     },
 
     initExtensionObject: function() {
-        var extensionName = this.model.get( 'extensionName' ),
-            context = this.model.get( 'context' ),
-            itemTemplate = this.model.get( 'itemTemplate' ),
-            parameters = this.model.get( 'parameters' ),
-            items = this.model.get( 'items' ),
-            builder = this.model.get( 'builder' );
+        var extensionName = this.model.get( 'extensionName' );
+        var context = this.model.get( 'context' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var parameters = this.model.get( 'parameters' );
+        var items = this.model.get( 'items' );
+        var builder = this.model.get( 'builder' );
 
         this.extensionObject = new window[ extensionName ]( context, { $el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder } );
     }
+
 } );
+
+InfinniUI.ExtensionPanelView = ExtensionPanelView;

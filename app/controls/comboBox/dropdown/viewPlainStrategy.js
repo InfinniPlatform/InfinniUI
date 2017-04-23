@@ -12,9 +12,8 @@ ComboBoxPlainViewStrategy.prototype = Object.create( ComboBoxBaseViewStrategy.pr
 ComboBoxPlainViewStrategy.prototype.constructor = ComboBoxPlainViewStrategy;
 
 ComboBoxPlainViewStrategy.prototype.renderItems = function() {
-    var
-        $items = [],
-        items = this.getModelAttribute( 'items' );
+    var $items = [];
+    var items = this.getModelAttribute( 'items' );
 
     if ( items ) {
         $items = this._renderItems( items.toArray() );
@@ -30,3 +29,5 @@ ComboBoxPlainViewStrategy.prototype.template = InfinniUI.Template[ 'controls/com
 ComboBoxPlainViewStrategy.prototype.getTemplate = function() {
     return this.template;
 };
+
+InfinniUI.ComboBoxPlainViewStrategy = ComboBoxPlainViewStrategy;

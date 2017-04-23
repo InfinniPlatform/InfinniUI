@@ -1,4 +1,5 @@
-var BaseFallibleActionMixin = {
+var baseFallibleActionMixin = {
+
     onSuccessHandler: function( args ) {
         var onSuccessHandler = this.getProperty( 'onSuccessHandler' );
 
@@ -13,4 +14,7 @@ var BaseFallibleActionMixin = {
             onErrorHandler( args );
         }
     }
+
 };
+
+InfinniUI.Mixins.baseFallibleActionMixin = baseFallibleActionMixin;

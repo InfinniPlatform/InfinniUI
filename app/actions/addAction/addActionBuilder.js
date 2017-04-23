@@ -1,7 +1,7 @@
 function AddActionBuilder() {
 }
 
-_.extend( AddActionBuilder.prototype, BaseActionBuilderMixin, BaseEditActionBuilderMixin, {
+_.extend( AddActionBuilder.prototype, baseActionBuilderMixin, baseEditActionBuilderMixin, {
 
     build: function( context, args ) {
         var action = new AddAction( args.parentView );

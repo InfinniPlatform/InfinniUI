@@ -3,11 +3,10 @@
  * @augments ControlView
  * @mixed editorBaseViewMixin
  */
-var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.prototype */ _.extend( {}, editorBaseViewMixin, {
+var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     UI: _.extend( {}, editorBaseViewMixin.UI, {
         control: '.pl-control',
-        //editor: '.pl-control-editor',
         editor: '.pl-editor',
         label: '.pl-control-label',
         textbox: '.pl-text-box-input'
@@ -122,3 +121,5 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
     }
 
 } ) );
+
+InfinniUI.TextEditorBaseView = TextEditorBaseView;

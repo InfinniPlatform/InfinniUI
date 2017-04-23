@@ -3,7 +3,7 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var CheckBoxView = ControlView.extend( /** @lends CheckBoxView.prototype */ _.extend( {}, editorBaseViewMixin, {
+var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     template: InfinniUI.Template[ 'controls/checkBox/template/checkBox.tpl.html' ],
 
@@ -78,4 +78,7 @@ var CheckBoxView = ControlView.extend( /** @lends CheckBoxView.prototype */ _.ex
     setFocus: function() {
         this.ui.input.focus();
     }
+
 } ) );
+
+InfinniUI.CheckBoxView = CheckBoxView;

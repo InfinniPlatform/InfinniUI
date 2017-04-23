@@ -4,7 +4,7 @@ function ContextMenuControl() {
 
 _.inherit( ContextMenuControl, ContainerControl );
 
-_.extend( ContextMenuControl.prototype, /** @lends ContextMenuControl.prototype */ {
+_.extend( ContextMenuControl.prototype, {
 
     createControlModel: function() {
         return new ContextMenuModel();
@@ -15,4 +15,6 @@ _.extend( ContextMenuControl.prototype, /** @lends ContextMenuControl.prototype 
     }
 
 } );
+
+InfinniUI.ContextMenuControl = ContextMenuControl;
 

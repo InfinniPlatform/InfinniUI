@@ -1,4 +1,5 @@
 var DataNavigationPageButton = DataNavigationBaseButton.extend( {
+
     template: InfinniUI.Template[ 'controls/dataNavigation/buttons/template/page.tpl.html' ],
 
     events: {
@@ -31,6 +32,7 @@ var DataNavigationPageButton = DataNavigationBaseButton.extend( {
 
 } );
 
+InfinniUI.DataNavigationPageButton = DataNavigationPageButton;
 
 var DataNavigationPageButtonModel = DataNavigationBaseButtonModel.extend( {
 
@@ -42,6 +44,7 @@ var DataNavigationPageButtonModel = DataNavigationBaseButtonModel.extend( {
         DataNavigationBaseButtonModel.prototype.subscribeToParent.call( this );
 
         var parent = this.get( 'parent' );
+
         this.listenTo( parent.model, 'change:pageNumber', function() {
             this.updateIsCurrent();
         } );
@@ -51,7 +54,10 @@ var DataNavigationPageButtonModel = DataNavigationBaseButtonModel.extend( {
     updateIsCurrent: function() {
         var parent = this.get( 'parent' );
         var isCurrent = parent.model.get( 'pageNumber' ) === this.get( 'pageNumber' );
+
         this.set( 'isCurrent', isCurrent );
     }
 
 } );
+
+InfinniUI.DataNavigationPageButtonModel = DataNavigationPageButtonModel;

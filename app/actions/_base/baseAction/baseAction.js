@@ -5,7 +5,7 @@ function BaseAction( parentView ) {
     this.initDefaultValues();
 }
 
-window.InfinniUI.BaseAction = BaseAction;
+InfinniUI.BaseAction = BaseAction;
 
 _.extend( BaseAction.prototype, {
 

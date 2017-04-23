@@ -40,6 +40,8 @@ var SelectDaysModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectDaysModel = SelectDaysModel;
+
 var SelectDays = SelectComponent.extend( {
 
     modelClass: SelectDaysModel,
@@ -229,3 +231,5 @@ var SelectDays = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectDays = SelectDays;

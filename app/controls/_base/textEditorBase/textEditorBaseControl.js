@@ -13,3 +13,5 @@ function TextEditorBaseControl( parent ) {
 _.inherit( TextEditorBaseControl, Control );
 
 _.extend( TextEditorBaseControl.prototype, editorBaseControlMixin );
+
+InfinniUI.TextEditorBaseControl = TextEditorBaseControl;

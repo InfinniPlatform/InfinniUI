@@ -1,15 +1,13 @@
 function ServerAction( parentView ) {
     _.superClass( ServerAction, this, parentView );
-
     this.provider = window.InfinniUI.providerRegister.build( 'ServerActionProvider' );
-
     this.updateContentTypeStrategy();
     this.on( 'change:contentType', this.updateContentTypeStrategy );
 }
 
 _.inherit( ServerAction, BaseAction );
 
-_.extend( ServerAction.prototype, BaseFallibleActionMixin, {
+_.extend( ServerAction.prototype, baseFallibleActionMixin, {
 
     defaults: {
         contentType: 'application/x-www-form-urlencoded; charset=utf-8',

@@ -10,3 +10,5 @@ var CheckBoxModel = ControlModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.CheckBoxModel = CheckBoxModel;

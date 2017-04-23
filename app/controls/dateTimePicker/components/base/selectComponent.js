@@ -35,5 +35,6 @@ var SelectComponent = Backbone.View.extend( {
 
 } );
 
-
 _.extend( SelectComponent.prototype, bindUIElementsMixin );
+
+InfinniUI.SelectComponent = SelectComponent;

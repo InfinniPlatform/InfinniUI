@@ -5,7 +5,6 @@
 var Control = function( viewMode ) {
     this.controlModel = this.createControlModel();
     this.controlView = this.createControlView( this.controlModel, viewMode );
-
     this.initHandlers();
 };
 

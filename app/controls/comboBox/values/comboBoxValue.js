@@ -1,6 +1,7 @@
 var ComboBoxValueModel = Backbone.Model.extend( {
-
 } );
+
+InfinniUI.ComboBoxValueModel = ComboBoxValueModel;
 
 var ComboBoxValue = Backbone.View.extend( {
 
@@ -39,3 +40,5 @@ var ComboBoxValue = Backbone.View.extend( {
 } );
 
 _.extend( ComboBoxValue.prototype, bindUIElementsMixin );
+
+InfinniUI.ComboBoxValue = ComboBoxValue;

@@ -13,4 +13,7 @@ _.extend( ExtensionPanelControl.prototype, {
     createControlView: function( model ) {
         return new ExtensionPanelView( { model: model } );
     }
+
 } );
+
+InfinniUI.ExtensionPanelControl = ExtensionPanelControl;

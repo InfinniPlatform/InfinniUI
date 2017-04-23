@@ -31,3 +31,5 @@ var ComboBoxGroupView = Backbone.View.extend( {
 } );
 
 _.extend( ComboBoxGroupView.prototype, bindUIElementsMixin );
+
+InfinniUI.ComboBoxGroupView = ComboBoxGroupView;

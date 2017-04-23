@@ -186,3 +186,5 @@ var SelectDate = Backbone.View.extend( {
 } );
 
 _.extend( SelectDate.prototype, bindUIElementsMixin );
+
+InfinniUI.SelectDate = SelectDate;

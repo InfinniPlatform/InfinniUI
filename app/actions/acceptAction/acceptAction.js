@@ -4,8 +4,8 @@ function AcceptAction( parentView ) {
 
 _.inherit( AcceptAction, BaseAction );
 
-
 _.extend( AcceptAction.prototype, {
+
     execute: function( callback ) {
         var that = this;
 
@@ -20,6 +20,7 @@ _.extend( AcceptAction.prototype, {
         this.parentView.setDialogResult( DialogResult.accepted );
         this.parentView.close();
     }
+
 } );
 
 window.InfinniUI.AcceptAction = AcceptAction;

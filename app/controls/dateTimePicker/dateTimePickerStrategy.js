@@ -8,3 +8,4 @@ var dateTimePickerStrategy = ( function() {
 
 } )();
 
+InfinniUI.dateTimePickerStrategy = dateTimePickerStrategy;

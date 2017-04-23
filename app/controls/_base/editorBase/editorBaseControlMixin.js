@@ -18,4 +18,7 @@ var editorBaseControlMixin = {
     onValueChanged: function( handler ) {
         this.controlModel.onValueChanged( handler );
     }
+
 };
+
+InfinniUI.Mixins.editorBaseControlMixin = editorBaseControlMixin;

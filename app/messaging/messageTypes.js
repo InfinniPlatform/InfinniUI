@@ -1,4 +1,4 @@
-window.messageTypes = {
+var messageTypes = {
 
     onViewBuildError: { name: 'onViewBuildError' },
     onViewCreated: { name: 'onViewCreated' },
@@ -18,4 +18,6 @@ window.messageTypes = {
     onToolTipInit: { name: 'onToolTipInit' }
 
 };
+
+InfinniUI.messageTypes = messageTypes;
 

@@ -23,3 +23,5 @@ _.extend( DataNavigationControl.prototype, {
     }
 
 } );
+
+InfinniUI.DataNavigationControl = DataNavigationControl;

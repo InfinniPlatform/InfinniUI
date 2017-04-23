@@ -21,3 +21,5 @@ DataNavigationButtonFactory.prototype.createButton = function( type, options ) {
 
     return button;
 };
+
+InfinniUI.DataNavigationButtonFactory = DataNavigationButtonFactory;

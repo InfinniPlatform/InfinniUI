@@ -25,6 +25,7 @@ var TextEditorModel = Backbone.Model.extend( {
     convertValue: function( value ) {
         var getConverter = this.get( 'valueConverter' );
         var converter = getConverter.call( null );
+
         return ( typeof converter === 'function' ) ? converter.call( this, value ) : value;
     },
 
@@ -44,6 +45,7 @@ var TextEditorModel = Backbone.Model.extend( {
 
     updateEditModeStrategy: function() {
         var mode = this.get( 'mode' );
+
         this.set( 'modeStrategy', this.modeStrategies[ mode ] );
     },
 
@@ -136,3 +138,5 @@ var TextEditorModel = Backbone.Model.extend( {
     }
 
 } );
+
+InfinniUI.TextEditorModel = TextEditorModel;

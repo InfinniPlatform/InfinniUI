@@ -1,7 +1,7 @@
 function UpdateActionBuilder() {
 }
 
-_.extend( UpdateActionBuilder.prototype, BaseActionBuilderMixin, BaseFallibleActionBuilderMixin, {
+_.extend( UpdateActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
     build: function( context, args ) {
         var dataSource = args.parentView.getContext().dataSources[ args.metadata.DestinationValue.Source ];

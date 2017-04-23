@@ -21,5 +21,7 @@ _.extend( DateTimePickerControl.prototype, {
     createControlView: function( model ) {
         return new DateTimePickerView( { model: model } );
     }
+
 } );
 
+InfinniUI.DateTimePickerControl = DateTimePickerControl;

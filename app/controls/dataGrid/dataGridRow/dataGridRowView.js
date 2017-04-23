@@ -42,16 +42,15 @@ var DataGridRowView = ControlView.extend( {
     },
 
     updateVerticalAlignment: function() {
-        //Use Vertical alignment for DataGrid
     },
 
     render: function() {
         this.prerenderingActions();
-        var $el = this.$el;
-        var row = this;
 
+        var $el = this.$el;
         var templateName = this.model.get( 'multiSelect' ) ? 'multiSelect' : 'singleSelect';
         var template = this.template[ templateName ];
+
         $el.html( template() );
         this.bindUIElements();
 
@@ -76,16 +75,19 @@ var DataGridRowView = ControlView.extend( {
 
     updateShowSelectors: function() {
         var showSelectors = this.model.get( 'showSelectors' );
+
         this.ui.toggleCell.toggleClass( 'hidden', !showSelectors );
     },
 
     updateToggle: function() {
         var toggle = this.model.get( 'toggle' );
+
         this.ui.toggleControl.prop( 'checked', !!toggle );
     },
 
     updateSelected: function() {
         var selected = this.model.get( 'selected' );
+
         this.$el.toggleClass( this.classNameSelected, !!selected );
     },
 
@@ -93,6 +95,7 @@ var DataGridRowView = ControlView.extend( {
         ControlView.prototype.updateEnabled.call( this );
 
         var enabled = this.model.get( 'enabled' );
+
         this.ui.toggleControl.attr( 'disabled', enabled ? null : 'disabled' );
     },
 
@@ -100,6 +103,6 @@ var DataGridRowView = ControlView.extend( {
         this.trigger( 'toggle' );
     }
 
-
 } );
 
+InfinniUI.DataGridRowView = DataGridRowView;

@@ -23,5 +23,8 @@ _.extend( ButtonEditControl.prototype, {
     onButtonClick: function( handler ) {
         this.controlView.on( 'buttonClick', handler );
     }
+
 } );
+
+InfinniUI.ButtonEditControl = ButtonEditControl;
 

@@ -7,6 +7,8 @@ var SelectSecondsModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectSecondsModel = SelectSecondsModel;
+
 var SelectSeconds = SelectComponent.extend( {
 
     modelClass: SelectSecondsModel,
@@ -30,9 +32,8 @@ var SelectSeconds = SelectComponent.extend( {
     },
 
     fillSecondsTable: function() {
-        var
-            model = this.model,
-            second = model.get( 'second' );
+        var model = this.model;
+        var second = model.get( 'second' );
 
         this.ui.second.each( function( i, el ) {
             var $el = $( el );
@@ -56,12 +57,10 @@ var SelectSeconds = SelectComponent.extend( {
     },
 
     useSecond: function( event ) {
-        var
-            $el = $( event.target ),
-            model = this.model,
-            date = model.get( 'date' ),
-            second = parseInt( $el.attr( 'data-second' ), 10 );
-
+        var $el = $( event.target );
+        var model = this.model;
+        var date = model.get( 'date' );
+        var second = parseInt( $el.attr( 'data-second' ), 10 );
         var newDate = InfinniUI.DateUtils.cloneDate( date );
 
         newDate.setSeconds( second );
@@ -69,3 +68,5 @@ var SelectSeconds = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectSeconds = SelectSeconds;

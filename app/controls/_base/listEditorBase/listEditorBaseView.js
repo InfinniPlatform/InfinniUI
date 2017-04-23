@@ -19,7 +19,8 @@ var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin
     },
 
     updateMultiSelect: function() {
-
     }
 
 } ) );
+
+InfinniUI.ListEditorBaseView = ListEditorBaseView;

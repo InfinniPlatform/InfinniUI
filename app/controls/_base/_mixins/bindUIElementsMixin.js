@@ -17,4 +17,7 @@ var bindUIElementsMixin = {
             this.ui[ i ] = this.$( this.UI[ i ] );
         }
     }
+
 };
+
+InfinniUI.Mixins.bindUIElementsMixin = bindUIElementsMixin;

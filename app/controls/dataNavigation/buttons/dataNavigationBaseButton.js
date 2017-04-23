@@ -5,9 +5,11 @@ var DataNavigationBaseButtonModel = Backbone.Model.extend( {
     },
 
     subscribeToParent: function() {
-
     }
+
 } );
+
+InfinniUI.DataNavigationBaseButtonModel = DataNavigationBaseButtonModel;
 
 var DataNavigationBaseButton = Backbone.View.extend( {
 
@@ -21,11 +23,9 @@ var DataNavigationBaseButton = Backbone.View.extend( {
     },
 
     initHandlersForProperties: function() {
-
     },
 
     updateProperties: function() {
-
     },
 
     getData: function() {
@@ -39,15 +39,18 @@ var DataNavigationBaseButton = Backbone.View.extend( {
 
     render: function() {
         var template = this.template( this.getData() );
+
         this.$el.html( template );
         this.trigger( 'render' );
         this.updateProperties();
+
         return this;
     },
 
     subscribeForParent: function( parent ) {
-
     }
 
 } );
+
+InfinniUI.DataNavigationBaseButton = DataNavigationBaseButton;
 

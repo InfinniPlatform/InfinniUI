@@ -10,6 +10,9 @@ var dateTimePickerModeDatePicker = _.extend( {}, dateTimePickerModeDate, {
 
         return _value;
     }
+
 } );
 
 dateTimePickerStrategy[ 'DatePicker' ] = dateTimePickerModeDatePicker;
+
+InfinniUI.dateTimePickerModeDatePicker = dateTimePickerModeDatePicker;

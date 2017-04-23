@@ -10,4 +10,7 @@ _.extend( ListEditorBaseControl.prototype, {
     onSelectedItemChanged: function( handler ) {
         this.controlModel.onSelectedItemChanged( handler );
     }
+
 }, editorBaseControlMixin );
+
+InfinniUI.ListEditorBaseControl = ListEditorBaseControl;

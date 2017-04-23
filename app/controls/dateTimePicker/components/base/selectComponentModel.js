@@ -132,3 +132,4 @@ var SelectComponentModel = Backbone.Model.extend( {
 
 } );
 
+InfinniUI.SelectComponentModel = SelectComponentModel;

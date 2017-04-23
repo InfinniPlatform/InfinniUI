@@ -4,14 +4,13 @@ function SaveAction( parentView ) {
 
 _.inherit( SaveAction, BaseAction );
 
-_.extend( SaveAction.prototype, BaseFallibleActionMixin, {
+_.extend( SaveAction.prototype, baseFallibleActionMixin, {
 
     execute: function( callback ) {
         var parentView = this.parentView;
         var dataSource = this.getProperty( 'dataSource' );
         var canClose = this.getProperty( 'canClose' );
         var that = this;
-
         var onSuccessSave = function( context, args ) {
             parentView.setDialogResult( DialogResult.accepted );
 
@@ -36,6 +35,7 @@ _.extend( SaveAction.prototype, BaseFallibleActionMixin, {
         };
 
         var selectedItem = dataSource.getSelectedItem();
+
         dataSource.saveItem( selectedItem, onSuccessSave, onErrorSave );
     }
 

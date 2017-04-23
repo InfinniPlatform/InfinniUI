@@ -4,7 +4,6 @@ function SelectAction( parentView ) {
 
 _.inherit( SelectAction, BaseAction );
 
-
 _.extend( SelectAction.prototype, {
 
     execute: function( callback ) {
@@ -23,8 +22,8 @@ _.extend( SelectAction.prototype, {
                 if( dialogResult == DialogResult.accepted ) {
                     var srcDataSource = createdView.getContext().dataSources[ srcDataSourceName ];
                     var dstDataSource = parentView.getContext().dataSources[ dstDataSourceName ];
-
                     var value = srcDataSource.getProperty( srcPropertyName );
+
                     dstDataSource.setProperty( dstPropertyName, value );
                 }
 

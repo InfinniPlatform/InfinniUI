@@ -8,6 +8,7 @@
 }
 
 _.extend( ApplicationBuilder.prototype, {
+
     builder: null,
 
     registerElementBuilders: function() {
@@ -66,13 +67,11 @@ _.extend( ApplicationBuilder.prototype, {
         builder.register( 'Frame', new FrameBuilder() );
         builder.register( 'ButtonEdit', new ButtonEditBuilder() );
 
-
         builder.register( 'RestDataSource', new RestDataSourceBuilder() );
         builder.register( 'DocumentDataSource', new DocumentDataSourceBuilder() );
         builder.register( 'PropertyBinding', new DataBindingBuilder() );
         builder.register( 'ObjectDataSource', new ObjectDataSourceBuilder() );
         builder.register( 'Parameter', new ParameterBuilder() );
-
 
         builder.register( 'AcceptAction', new AcceptActionBuilder() );
         builder.register( 'AddAction', new AddActionBuilder() );
@@ -87,7 +86,6 @@ _.extend( ApplicationBuilder.prototype, {
         builder.register( 'ServerAction', new ServerActionBuilder() );
 
         builder.register( 'RouteToAction', new RouteToActionBuilder() );
-
 
         builder.register( 'BooleanFormat', new BooleanFormatBuilder() );
         builder.register( 'DateTimeFormat', new DateTimeFormatBuilder() );
@@ -107,8 +105,8 @@ _.extend( ApplicationBuilder.prototype, {
         // служебный элемент, в документировании не нуждается
         builder.register( 'ToolTip', new InfinniUI.TooltipBuilder() );
 
-
         var registerQueue = ApplicationBuilder.registerQueue;
+
         for( var i = 0, ii = registerQueue.length; i < ii; i++ ) {
             builder.register( registerQueue[ i ].name, registerQueue[ i ].builder );
         }

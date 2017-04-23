@@ -23,7 +23,6 @@ var DataNavigationPageSizes = Backbone.View.extend( {
     renderButtons: function() {
         var collection = this.model.get( 'availablePageSizes' );
         var pageSize = this.model.get( 'pageSize' );
-
         var html = collection.toArray().map( function( size ) {
             return this.template( { size: size, active: pageSize === size } );
         }, this );
@@ -37,9 +36,11 @@ var DataNavigationPageSizes = Backbone.View.extend( {
 
     onClickButtonHandler: function( event ) {
         var $el = $( event.target );
-
         var pageSize = parseInt( $el.attr( 'data-size' ), 10 );
+
         this.model.set( 'pageSize', pageSize );
     }
 
 } );
+
+InfinniUI.DataNavigationPageSizes = DataNavigationPageSizes;

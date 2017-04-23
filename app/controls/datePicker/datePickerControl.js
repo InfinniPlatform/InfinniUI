@@ -13,5 +13,7 @@ _.extend( DatePickerControl.prototype, {
     createControlView: function( model ) {
         return new DatePickerView( { model: model } );
     }
+
 } );
 
+InfinniUI.DatePickerControl = DatePickerControl;

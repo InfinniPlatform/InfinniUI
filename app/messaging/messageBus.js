@@ -43,4 +43,4 @@ function MessageBus( view ) {
     }
 }
 
-window.InfinniUI.global.messageBus = new MessageBus();
+InfinniUI.global.messageBus = new MessageBus();

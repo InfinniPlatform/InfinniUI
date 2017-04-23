@@ -1,4 +1,4 @@
-var BaseActionBuilderMixin = {
+var baseActionBuilderMixin = {
 
     applyBaseActionMetadata: function( action, params ) {
         var metadata = params.metadata;
@@ -20,3 +20,5 @@ var BaseActionBuilderMixin = {
     }
 
 };
+
+InfinniUI.Mixins.baseActionBuilderMixin = baseActionBuilderMixin;

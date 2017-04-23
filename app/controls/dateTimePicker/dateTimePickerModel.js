@@ -2,7 +2,8 @@
  * @class
  * @augments TextEditorBaseModel
  */
-var DateTimePickerModel = TextEditorBaseModel.extend( /** @lends DateTimePickerModel.prototype */{
+var DateTimePickerModel = TextEditorBaseModel.extend( {
+
     defaults: _.extend(
         {},
         TextEditorBaseModel.prototype.defaults,
@@ -26,5 +27,6 @@ var DateTimePickerModel = TextEditorBaseModel.extend( /** @lends DateTimePickerM
         return InfinniUI.DateUtils.checkRangeDate( attributes.value, attributes.minValue, attributes.maxValue );
     }
 
-
 } );
+
+InfinniUI.DateTimePickerModel = DateTimePickerModel;

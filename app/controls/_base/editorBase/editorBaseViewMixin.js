@@ -35,6 +35,7 @@ var editorBaseViewMixin = {
     updateValueState: function() {
         var value = this.model.get( 'value' );
         var isEmpty = _.isEmpty( value ) && !( _.isNumber( value ) );
+
         this.$el.toggleClass( 'pl-empty-text-editor', isEmpty );
     },
 
@@ -97,9 +98,10 @@ var editorBaseViewMixin = {
     onInvalidHandler: function( model, error ) {
         // что ита???
         // вот ето -  @see {@link http://backbonejs.org/#Model-validate} !!!
-
-
         //@TODO Можно ли использовать поля из API или реализовывать вывод ошибок отдельно?
         //this.model.set('errorText', error);
     }
+
 };
+
+InfinniUI.Mixins.editorBaseViewMixin = editorBaseViewMixin;

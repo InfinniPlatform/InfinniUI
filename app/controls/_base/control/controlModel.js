@@ -26,9 +26,8 @@ var ControlModel = Backbone.Model.extend( {
     },
 
     set: function( key, val, options ) {
-        var
-            defaults = this.defaults,
-            attrs;
+        var defaults = this.defaults;
+        var attrs;
 
         if( key === null || typeof key === 'undefined' ) return this;
         if( typeof key === 'object' ) {

@@ -34,5 +34,7 @@ _.extend( DataGridControl.prototype, {
     onRowDoubleClick: function( callback ) {
         this.controlView.$el.on( 'dblclick', 'tbody .pl-datagrid-row', callback );
     }
+
 } );
 
+InfinniUI.DataGridControl = DataGridControl;

@@ -54,6 +54,7 @@ var TextEditorView = Backbone.View.extend( {
         }
 
         var editMask = this.model.getEditMask();
+
         if( !editMask ) {
             //model.text будет изменено в обработчике onInputHandler
             return;
@@ -206,6 +207,7 @@ var TextEditorView = Backbone.View.extend( {
 
     OnDragstartHandler: function( event ) {
         var originalEvent = event.originalEvent;
+
         originalEvent.dataTransfer.effectAllowed = 'copy';
         this.$el.attr( 'data-dragged', true );
     },
@@ -288,6 +290,7 @@ var TextEditorView = Backbone.View.extend( {
             return;
         }
         var editMask = this.model.getEditMask();
+
         if( !editMask ) {
             return;
         }
@@ -405,3 +408,5 @@ var TextEditorView = Backbone.View.extend( {
     }
 
 } );
+
+InfinniUI.TextEditorView = TextEditorView;

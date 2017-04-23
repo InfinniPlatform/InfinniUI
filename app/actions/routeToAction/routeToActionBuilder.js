@@ -1,7 +1,7 @@
 function RouteToActionBuilder() {
 }
 
-_.extend( RouteToActionBuilder.prototype, BaseActionBuilderMixin, routerServiceMixin, {
+_.extend( RouteToActionBuilder.prototype, baseActionBuilderMixin, routerServiceMixin, {
 
     build: function( context, args ) {
         var action = new RouteToAction();

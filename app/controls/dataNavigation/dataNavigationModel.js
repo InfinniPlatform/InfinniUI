@@ -19,10 +19,9 @@ var DataNavigationModel = ControlModel.extend( {
     },
 
     updatePageStart: function() {
-        var
-            pageNumber = this.get( 'pageNumber' ),
-            pageStart = this.get( 'pageStart' ),
-            buttonsCount = this.get( '_buttonsCount' );
+        var pageNumber = this.get( 'pageNumber' );
+        var pageStart = this.get( 'pageStart' );
+        var buttonsCount = this.get( '_buttonsCount' );
 
         if ( pageNumber + 1 >= pageStart + buttonsCount ) {
             //Выбрана последняя страница по кнопкам навигации. переместить ее в центр
@@ -43,11 +42,13 @@ var DataNavigationModel = ControlModel.extend( {
 
     nextPage: function() {
         var pageNumber = this.get( 'pageNumber' );
+
         this.set( 'pageNumber', pageNumber + 1 );
     },
 
     prevPage: function() {
         var pageNumber = this.get( 'pageNumber' );
+
         if ( pageNumber > 0 ) {
             this.set( 'pageNumber', pageNumber - 1 );
         }
@@ -66,3 +67,5 @@ var DataNavigationModel = ControlModel.extend( {
     }
 
 } );
+
+InfinniUI.DataNavigationModel = DataNavigationModel;

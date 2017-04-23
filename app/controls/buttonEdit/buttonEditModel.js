@@ -18,3 +18,5 @@ var ButtonEditModel = TextBoxModel.extend( {
     }
 
 } );
+
+InfinniUI.ButtonEditModel = ButtonEditModel;

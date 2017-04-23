@@ -1,4 +1,4 @@
-var ButtonEditView = TextBoxView.extend( /** @lends ButtonEditView.prototype */{
+var ButtonEditView = TextBoxView.extend( {
 
     template: {
         oneline: InfinniUI.Template[ 'controls/buttonEdit/template/textBoxInput.tpl.html' ],
@@ -34,6 +34,7 @@ var ButtonEditView = TextBoxView.extend( /** @lends ButtonEditView.prototype */{
 
     updateIcon: function() {
         var icon = this.model.get( 'icon' );
+
         this.switchClass( 'fa', icon, this.ui.iconAction );
     },
 
@@ -52,6 +53,7 @@ var ButtonEditView = TextBoxView.extend( /** @lends ButtonEditView.prototype */{
 
     updateEnabled: function() {
         var enabled = this.model.get( 'enabled' );
+
         TextBoxView.prototype.updateEnabled.call( this );
 
         //@TODO Update button states
@@ -76,3 +78,5 @@ var ButtonEditView = TextBoxView.extend( /** @lends ButtonEditView.prototype */{
     }
 
 } );
+
+InfinniUI.ButtonEditView = ButtonEditView;

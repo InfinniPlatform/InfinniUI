@@ -30,6 +30,7 @@ var CommonButtonView = ControlView.extend( {
 
     updateType: function() {
         var type = this.model.get( 'type' );
+
         this.getButtonElement().attr( 'type', type );
     },
 
@@ -118,6 +119,5 @@ var CommonButtonView = ControlView.extend( {
 } );
 
 _.extend( CommonButtonView.prototype, highlightMixin.controlView );
-
 
 InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.Button.common', CommonButtonView );

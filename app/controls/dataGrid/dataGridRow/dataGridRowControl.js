@@ -22,5 +22,8 @@ _.extend( DataGridRowControl.prototype, {
     createControlView: function( model ) {
         return new DataGridRowView( { model: model } );
     }
+
 } );
+
+InfinniUI.DataGridRowControl = DataGridRowControl;
 

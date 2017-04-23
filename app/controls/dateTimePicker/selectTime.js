@@ -25,9 +25,6 @@ var SelectTime = SelectDate.extend( {
         }
 
         value = InfinniUI.DateUtils.changeTimezoneOffset( value, timeZone );
-        //if (value === null || typeof value === 'undefined') {
-        //    value = today;
-        //}
 
         var options = {
             value: value,
@@ -128,3 +125,5 @@ var SelectTime = SelectDate.extend( {
     }
 
 } );
+
+InfinniUI.SelectTime = SelectTime;

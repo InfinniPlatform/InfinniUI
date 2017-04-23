@@ -16,3 +16,5 @@ var DataNavigationPrevButton = DataNavigationBaseButton.extend( {
     }
 
 } );
+
+InfinniUI.DataNavigationPrevButton = DataNavigationPrevButton;

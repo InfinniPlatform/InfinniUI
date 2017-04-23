@@ -35,6 +35,9 @@ TextEditorModelEditModeStrategy.prototype.setText = function( model, text, ui ) 
 TextEditorModelEditModeStrategy.prototype.onChangeTextHandler = function( model, newValue, options ) {
     var editMask = model.getEditMask();
     var value = editMask ? editMask.getData() : newValue;
+
     model.set( 'value', model.convertValue( value ), { silent: !!editMask, ui: options.ui } );
 };
+
+InfinniUI.TextEditorModelEditModeStrategy = TextEditorModelEditModeStrategy;
 

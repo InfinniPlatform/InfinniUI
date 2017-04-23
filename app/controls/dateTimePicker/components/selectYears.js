@@ -36,6 +36,8 @@ var SelectYearsModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectYearsModel = SelectYearsModel;
+
 var SelectYears = SelectComponent.extend( {
 
     modelClass: SelectYearsModel,
@@ -75,7 +77,6 @@ var SelectYears = SelectComponent.extend( {
         var pageSize = model.get( 'pageSize' );
         var year = model.get( 'year' );
         var todayYear = model.get( 'todayYear' );
-        // var startYear = Math.ceil((year || todayYear) - pageSize / 2) + page * pageSize;
         var startYear = Math.ceil( year - pageSize / 2 ) + page * pageSize;
 
         this.ui.years.each( function( i, el ) {
@@ -133,3 +134,5 @@ var SelectYears = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectYears = SelectYears;

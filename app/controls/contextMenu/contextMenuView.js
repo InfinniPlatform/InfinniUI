@@ -26,8 +26,8 @@ var ContextMenuView = ContainerView.extend( {
     },
 
     render: function() {
-        var exchange = window.InfinniUI.global.messageBus,
-            that = this;
+        var exchange = window.InfinniUI.global.messageBus;
+        var that = this;
 
         this.prerenderingActions();
 
@@ -70,9 +70,9 @@ var ContextMenuView = ContainerView.extend( {
     },
 
     appendItemsContent: function( $dropdown, items ) {
-        var that = this,
-            itemTemplate = this.model.get( 'itemTemplate' ),
-            itemEl, $el;
+        var that = this;
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var itemEl, $el;
 
         $dropdown.find( '.pl-popup-button__item' ).each( function( i, el ) {
             $el = $( el );
@@ -107,13 +107,13 @@ var ContextMenuView = ContainerView.extend( {
     },
 
     alignDropdown: function( rightclickCoords ) {
-        var horizontalAlignment = this.model.get( 'horizontalAlignment' ),
-            $parent = this.$el.parent(),
-            parentDimentions = { width: $parent.width(), height: $parent.height() },
-            elDimentions = {
-                width: this.$el[ 0 ].children[ 0 ].clientWidth,
-                height: this.$el[ 0 ].children[ 0 ].clientHeight
-            };
+        var horizontalAlignment = this.model.get( 'horizontalAlignment' );
+        var $parent = this.$el.parent();
+        var parentDimentions = { width: $parent.width(), height: $parent.height() };
+        var elDimentions = {
+            width: this.$el[ 0 ].children[ 0 ].clientWidth,
+            height: this.$el[ 0 ].children[ 0 ].clientHeight
+        };
 
         if( rightclickCoords.x + elDimentions.width > parentDimentions.width ) {
             rightclickCoords.x -= elDimentions.width;
@@ -134,7 +134,7 @@ var ContextMenuView = ContainerView.extend( {
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 
-        if( n === undefined ) {
+        if( typeof n === 'undefined' ) {
             n = 100;
         }
 
@@ -150,3 +150,5 @@ var ContextMenuView = ContainerView.extend( {
     }
 
 } );
+
+InfinniUI.ContextMenuView = ContextMenuView;

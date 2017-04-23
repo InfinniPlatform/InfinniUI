@@ -1,4 +1,5 @@
 var dateTimePickerModeDate = {
+
     getTemplate: function() {
         return InfinniUI.Template[ 'controls/dateTimePicker/template/date.tpl.html' ];
     },
@@ -8,6 +9,7 @@ var dateTimePickerModeDate = {
         var calendar = new SelectDate( {
             model: model
         } );
+
         calendar.render();
         $( 'body' ).append( calendar.$el );
 
@@ -21,4 +23,7 @@ var dateTimePickerModeDate = {
     convertValue: function( value ) {
         return InfinniUI.DateUtils.toISO8601( value, { timezoneOffset: this.model.get( 'timeZone' ) } );
     }
+
 };
+
+InfinniUI.dateTimePickerModeDate = dateTimePickerModeDate;

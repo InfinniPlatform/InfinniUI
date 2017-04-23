@@ -22,3 +22,4 @@ _.extend( DividerControl.prototype, {
 
 } );
 
+InfinniUI.DividerControl = DividerControl;

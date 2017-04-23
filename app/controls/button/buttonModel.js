@@ -16,3 +16,5 @@ var ButtonModel = ControlModel.extend( {
     }
 
 } );
+
+InfinniUI.ButtonModel = ButtonModel;

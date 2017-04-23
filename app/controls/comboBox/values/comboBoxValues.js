@@ -6,7 +6,10 @@ var ComboBoxValuesModel = Backbone.Model.extend( {
     initialize: function() {
         this.items = [];
     }
+
 } );
+
+InfinniUI.ComboBoxValuesModel = ComboBoxValuesModel;
 
 var ComboBoxValues = Backbone.View.extend( {
 
@@ -38,17 +41,16 @@ var ComboBoxValues = Backbone.View.extend( {
         this.bindUIElements();
 
         var model = this.model;
-        var $items =
-            model.get( 'items' )
-                .map( function( item ) {
-                    var view = new ComboBoxValue( {
-                        '$value': item.$value,
-                        'value': item.value
-                    } );
+        var $items = model.get( 'items' )
+            .map( function( item ) {
+                var view = new ComboBoxValue( {
+                    '$value': item.$value,
+                    'value': item.value
+                } );
 
-                    this.listenTo( view, 'remove', this.onRemoveValueHandler );
-                    return view.render();
-                }, this );
+                this.listenTo( view, 'remove', this.onRemoveValueHandler );
+                return view.render();
+            }, this );
 
         this.ui.search.before( $items );
 
@@ -107,3 +109,5 @@ var ComboBoxValues = Backbone.View.extend( {
 } );
 
 _.extend( ComboBoxValues.prototype, bindUIElementsMixin );
+
+InfinniUI.ComboBoxValues = ComboBoxValues;

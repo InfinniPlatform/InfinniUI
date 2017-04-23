@@ -1,4 +1,4 @@
-var BaseFallibleActionBuilderMixin = {
+var baseFallibleActionBuilderMixin = {
 
     applyBaseFallibleActionMetadata: function( action, params ) {
         var metadata = params.metadata;
@@ -20,3 +20,5 @@ var BaseFallibleActionBuilderMixin = {
     }
 
 };
+
+InfinniUI.Mixins.baseFallibleActionBuilderMixin = baseFallibleActionBuilderMixin;

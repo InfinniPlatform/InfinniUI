@@ -54,27 +54,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
 
     bindSelectedItemsWithValue: function() {
         return;
-        //this.on('change:selectedItem', function (model, newSelectedItem) {
-        //    var value = this.get('value'),
-        //        newItemValue = this.valueByItem(newSelectedItem);
-        //
-        //    if(!this.get('multiSelect') && !this.isStringifyEqualValues(newItemValue, value)){
-        //        this.set('value', newItemValue);
-        //    }
-        //}, this);
-        //
-        //this.on('change:value', function (model, newValue) {
-        //    var selectedItem = this.get('selectedItem'),
-        //        newSelectedItem = this.itemByValue(newValue);
-        //
-        //    if(!this.get('multiSelect') && selectedItem != newSelectedItem){
-        //        this.set('selectedItem', newSelectedItem);
-        //    }
-        //}, this);
     },
 
     valueByItem: function( item ) {
         var valueSelector = this.get( 'valueSelector' );
+
         if( !valueSelector ) {
             return item;
         } else {
@@ -134,11 +118,13 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
 
     itemIndexByItem: function( item ) {
         var value = this.valueByItem( item );
+
         return this.itemIndexByValue( value );
     },
 
     isDisabledItem: function( item ) {
         var disabledItemCondition = this.get( 'disabledItemCondition' );
+
         return ( disabledItemCondition !== null && typeof disabledItemCondition !== 'undefined' ) &&
             disabledItemCondition( undefined, { value: item } );
     },
@@ -155,3 +141,5 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.ListEditorBaseModel = ListEditorBaseModel;

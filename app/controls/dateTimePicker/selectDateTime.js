@@ -176,3 +176,5 @@ var SelectDateTime = SelectDate.extend( {
     }
 
 } );
+
+InfinniUI.SelectDateTime = SelectDateTime;

@@ -4,8 +4,8 @@ function CancelAction( parentView ) {
 
 _.inherit( CancelAction, BaseAction );
 
-
 _.extend( CancelAction.prototype, {
+
     execute: function( callback ) {
         var that = this;
 
@@ -20,6 +20,7 @@ _.extend( CancelAction.prototype, {
         this.parentView.setDialogResult( DialogResult.canceled );
         this.parentView.close();
     }
+
 } );
 
 window.InfinniUI.CancelAction = CancelAction;

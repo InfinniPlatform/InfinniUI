@@ -27,5 +27,8 @@ var highlightMixin = {
         }
 
     }
+
 };
+
+InfinniUI.Mixins.highlightMixin = highlightMixin;
 

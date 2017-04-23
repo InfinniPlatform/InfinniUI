@@ -92,6 +92,8 @@ var SelectTimesModel = SelectComponentModel.extend( {
 
 } );
 
+InfinniUI.SelectTimesModel = SelectTimesModel;
+
 var SelectTimes = SelectComponent.extend( {
 
     modelClass: SelectTimesModel,
@@ -224,3 +226,5 @@ var SelectTimes = SelectComponent.extend( {
     }
 
 } );
+
+InfinniUI.SelectTimes = SelectTimes;

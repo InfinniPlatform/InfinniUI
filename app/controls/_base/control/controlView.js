@@ -2,7 +2,7 @@
  * @class
  * @augments Backbone.View
  */
-var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
+var ControlView = Backbone.View.extend( {
 
     initialize: function() {
         this.wasRendered = false;
@@ -29,14 +29,10 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
         this.listenTo( this.model, 'change:name', this.updateName );
         this.listenTo( this.model, 'change:style', this.updateStyle );
         this.listenTo( this.model, 'change:text', this.updateText );
-
         this.listenTo( this.model, 'change:textStyle', this.updateTextStyle );
         this.listenTo( this.model, 'change:background', this.updateBackground );
         this.listenTo( this.model, 'change:foreground', this.updateForeground );
-
         this.listenTo( this.model, 'change:validationState', this.updateValidationState );
-
-
         this.listenTo( this.model, 'change:focusable', this.updateFocusable );
         this.listenTo( this.model, 'change:focused', this.updateFocused );
 
@@ -79,16 +75,12 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
         this.updateName();
         this.updateText();
         this.updateStyle();
-
         this.updateTextStyle();
         this.updateBackground();
         this.updateForeground();
-
         this.updateValidationState();
-
         this.updateFocusable();
         this.updateFocused();
-
         this.updateViewMode();
     },
 
@@ -96,7 +88,6 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
      * @description Изменяет контрол в соответсвии со значением focusable. Напр. добавить tabindex="0"
      */
     updateFocusable: function() {
-
     },
 
     /**
@@ -120,7 +111,6 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
 
 
     onFocusHandler: function( event ) {
-        //console.log('onFocus');
     },
 
 
@@ -163,29 +153,32 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
     },
 
     updateText: function() {
-
     },
 
     updateTextStyle: function() {
         var customStyle = this.model.get( 'textStyle' );
+
         this.changeElementClass( this.valueToTextClassName( this.currentTextStyle ), this.valueToTextClassName( customStyle ) );
         this.currentTextStyle = customStyle;
     },
 
     updateBackground: function() {
         var customStyle = this.model.get( 'background' );
+
         this.changeElementClass( this.valueToBackgroundClassName( this.currentBackground ), this.valueToBackgroundClassName( customStyle ) );
         this.currentBackground = customStyle;
     },
 
     updateForeground: function() {
         var customStyle = this.model.get( 'foreground' );
+
         this.changeElementClass( this.valueToForegroundClassName( this.currentForeground ), this.valueToForegroundClassName( customStyle ) );
         this.currentForeground = customStyle;
     },
 
     updateStyle: function() {
         var customStyle = this.model.get( 'style' );
+
         this.changeElementClass( this.currentStyle, customStyle );
         this.currentStyle = customStyle;
     },
@@ -314,12 +307,14 @@ var ControlView = Backbone.View.extend( /** @lends ControlView.prototype */{
 
     renderTemplate: function( template ) {
         var data = this.getData();
+
         this.$el.html( template( data ) );
         this.bindUIElements();
     },
 
     getData: function() {
         var model = this.model;
+
         return {
             name: model.get( 'name' ),
             text: model.get( 'text' ),

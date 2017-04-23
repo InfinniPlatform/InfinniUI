@@ -1,7 +1,7 @@
 function CreateItemActionBuilder() {
 }
 
-_.extend( CreateItemActionBuilder.prototype, BaseActionBuilderMixin, {
+_.extend( CreateItemActionBuilder.prototype, baseActionBuilderMixin, {
 
     build: function( context, args ) {
         var action = new CreateItemAction( args.parentView );

@@ -1,18 +1,17 @@
-function EditActionBuilder() {}
+function EditActionBuilder() {
+}
 
-_.extend( EditActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function( context, args ) {
-            var action = new EditAction( args.parentView );
+_.extend( EditActionBuilder.prototype, baseActionBuilderMixin, baseEditActionBuilderMixin, {
 
-            this.applyBaseActionMetadata( action, args );
-            this.applyBaseEditActionMetadata( action, args );
+    build: function( context, args ) {
+        var action = new EditAction( args.parentView );
 
-            return action;
-        }
+        this.applyBaseActionMetadata( action, args );
+        this.applyBaseEditActionMetadata( action, args );
+
+        return action;
     }
-);
+
+} );
 
 window.InfinniUI.EditActionBuilder = EditActionBuilder;

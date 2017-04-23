@@ -3,6 +3,7 @@
  * @augments ListEditorBaseModel
  */
 var DataGridModel = ListEditorBaseModel.extend( {
+
     defaults: _.defaults( {
         showSelectors: true,
         checkAllVisible: false,
@@ -33,4 +34,7 @@ var DataGridModel = ListEditorBaseModel.extend( {
     initColumns: function() {
         this.set( 'columns', new Collection() );
     }
+
 } );
+
+InfinniUI.DataGridModel = DataGridModel;

@@ -1,4 +1,4 @@
-var BaseEditActionBuilderMixin = {
+var baseEditActionBuilderMixin = {
 
     applyBaseEditActionMetadata: function( action, args ) {
         var metadata = args.metadata;
@@ -30,3 +30,5 @@ var BaseEditActionBuilderMixin = {
     }
 
 };
+
+InfinniUI.Mixins.baseEditActionBuilderMixin = baseEditActionBuilderMixin;

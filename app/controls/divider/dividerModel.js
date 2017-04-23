@@ -9,3 +9,5 @@ var DividerModel = ControlModel.extend( /** @lends DividerModel.prototype */{
     }
 
 } );
+
+InfinniUI.DividerModel = DividerModel;

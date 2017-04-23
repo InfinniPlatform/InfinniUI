@@ -17,5 +17,7 @@ _.extend( ComboBoxControl.prototype, {
     setNoItemsMessage: function( message ) {
         this.controlModel.setNoItemsMessage( message );
     }
+
 } );
 
+InfinniUI.ComboBoxControl = ComboBoxControl;

@@ -26,20 +26,17 @@ DownloadExecutor.prototype.config = function( options ) {
 
 DownloadExecutor.prototype.run = function( requestData ) {
     var cleanup = this.cleanup.bind( this );
-
     var onResult = function() {
         if( typeof this.resultCallback === 'function' ) {
             this.resultCallback.apply( this, arguments );
         }
     }.bind( this );
-
     var onSuccess = function( data ) {
         if( typeof this.successCallback === 'function' ) {
             this.successCallback.call( this, data );
         }
         onResult( data );
     }.bind( this );
-
     var onError = function( err ) {
         if( typeof this.successCallback === 'function' ) {
             this.successCallback.call( this, data );
@@ -60,6 +57,7 @@ DownloadExecutor.prototype.run = function( requestData ) {
 DownloadExecutor.prototype.openWindow = function( requestData ) {
     var windowName = this.getName( 'window' );
     var form = document.createElement( 'form' );
+
     this.form = form;
 
     form.setAttribute( 'method', requestData.method );

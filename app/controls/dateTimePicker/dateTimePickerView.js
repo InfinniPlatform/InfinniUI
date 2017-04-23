@@ -2,7 +2,7 @@
  * @class
  * @augments TextEditorBaseView
  */
-var DateTimePickerView = TextEditorBaseView.extend( /** @lends DateTimePickerView.prototype */{
+var DateTimePickerView = TextEditorBaseView.extend( {
 
     className: 'pl-datepicker form-group',
 
@@ -81,8 +81,7 @@ var DateTimePickerView = TextEditorBaseView.extend( /** @lends DateTimePickerVie
     },
 
     getData: function() {
-        var
-            model = this.model;
+        var model = this.model;
 
         return _.extend( {},
             TextEditorBaseView.prototype.getData.call( this ), {
@@ -93,7 +92,6 @@ var DateTimePickerView = TextEditorBaseView.extend( /** @lends DateTimePickerVie
     },
 
     renderDateTimePickerEditor: function() {
-        var model = this.model;
         this.renderControlEditor();
         return this;
     },
@@ -102,13 +100,17 @@ var DateTimePickerView = TextEditorBaseView.extend( /** @lends DateTimePickerVie
         throw new Error( 'Не перекрыт getTemplate' );
     },
 
-    onClickDropdownHandler: function( event ) {},
+    onClickDropdownHandler: function( event ) {
+    },
 
     onFocusinHandler: function() {
         var editor = this.model.get( 'editor' );
+
         setTimeout( function() {
-		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        editor.setCaretPosition( 0 );
+            editor.setCaretPosition( 0 );
         }, 4 );
     }
 
 } );
+
+InfinniUI.DateTimePickerView = DateTimePickerView;

@@ -4,7 +4,6 @@ function AddAction( parentView ) {
 
 _.inherit( AddAction, BaseEditAction );
 
-
 _.extend( AddAction.prototype, {
 
     setSelectedItem: function() {
