@@ -6,4 +6,4 @@ var buttonControlMixin = {
 
 };
 
-InfinniUI.Mixins.buttonControlMixin = buttonControlMixin;
+InfinniUI.buttonControlMixin = buttonControlMixin;

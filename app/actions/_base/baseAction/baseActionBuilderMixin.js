@@ -21,4 +21,4 @@ var baseActionBuilderMixin = {
 
 };
 
-InfinniUI.Mixins.baseActionBuilderMixin = baseActionBuilderMixin;
+InfinniUI.baseActionBuilderMixin = baseActionBuilderMixin;

@@ -31,4 +31,4 @@ var baseEditActionBuilderMixin = {
 
 };
 
-InfinniUI.Mixins.baseEditActionBuilderMixin = baseEditActionBuilderMixin;
+InfinniUI.baseEditActionBuilderMixin = baseEditActionBuilderMixin;

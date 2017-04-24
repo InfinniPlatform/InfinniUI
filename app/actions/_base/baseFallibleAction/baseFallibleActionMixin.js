@@ -17,4 +17,4 @@ var baseFallibleActionMixin = {
 
 };
 
-InfinniUI.Mixins.baseFallibleActionMixin = baseFallibleActionMixin;
+InfinniUI.baseFallibleActionMixin = baseFallibleActionMixin;

@@ -43,4 +43,4 @@ var displayFormatBuilderMixin = {
     }
 };
 
-InfinniUIdisplayFormatBuilderMixin = displayFormatBuilderMixin;
+InfinniUI.displayFormatBuilderMixin = displayFormatBuilderMixin;

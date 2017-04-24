@@ -104,4 +104,4 @@ var editorBaseViewMixin = {
 
 };
 
-InfinniUI.Mixins.editorBaseViewMixin = editorBaseViewMixin;
+InfinniUI.editorBaseViewMixin = editorBaseViewMixin;

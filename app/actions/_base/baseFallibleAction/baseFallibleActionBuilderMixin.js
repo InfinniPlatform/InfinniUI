@@ -21,4 +21,4 @@ var baseFallibleActionBuilderMixin = {
 
 };
 
-InfinniUI.Mixins.baseFallibleActionBuilderMixin = baseFallibleActionBuilderMixin;
+InfinniUI.baseFallibleActionBuilderMixin = baseFallibleActionBuilderMixin;

@@ -164,7 +164,7 @@ var TreeViewView = ListEditorBaseView.extend( {
     },
 
     isDisabledItem: function( item ) {
-        if( item === null && typeof item === 'undefined' ) {
+        if( item === null || typeof item === 'undefined' ) {
             return false;
         }
 

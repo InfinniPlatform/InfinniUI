@@ -73,4 +73,4 @@ var eventHandlerMixin = {
 
 };
 
-InfinniUI.Mixins.eventHandlerMixin = eventHandlerMixin;
+InfinniUI.eventHandlerMixin = eventHandlerMixin;

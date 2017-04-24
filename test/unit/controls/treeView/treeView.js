@@ -234,7 +234,6 @@ describe( 'TreeView', function() {
             // When
             testHelper.applyViewMetadata( metadata, function( view, $view ) {
 
-                var treeView = view.context.controls[ 'TreeView3' ];
                 var buttons = $view.find( '.pl-treeview-node__button' );
                 var firstBtn;
 

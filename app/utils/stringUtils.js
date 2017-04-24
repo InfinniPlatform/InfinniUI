@@ -8,7 +8,7 @@ var stringUtils = {
 
     format: function( value, args ) {
         return value.replace( /{(\d+)}/g, function( match, number ) {
-            return typeof args[ number ] != 'undefined'
+            return typeof args[ number ] !== 'undefined'
                 ? args[ number ]
                 : match
                 ;
@@ -37,7 +37,7 @@ var stringUtils = {
     },
 
     padLeft: function a( value, len, char ) {
-        if ( typeof char == 'undefined' || char === null ) {
+        if ( typeof char === 'undefined' || char === null ) {
             char = ' ';
         }
 

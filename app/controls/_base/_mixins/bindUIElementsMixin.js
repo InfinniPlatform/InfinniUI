@@ -20,4 +20,4 @@ var bindUIElementsMixin = {
 
 };
 
-InfinniUI.Mixins.bindUIElementsMixin = bindUIElementsMixin;
+InfinniUI.bindUIElementsMixin = bindUIElementsMixin;

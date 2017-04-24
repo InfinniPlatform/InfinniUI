@@ -15,7 +15,7 @@ describe( 'ObjectDataProvider', function() {
 
     it( 'should check ValidationResult', function( done ) {
 
-        InfinniUI.global.messageBus.subscribe( messageTypes.onNotifyUser, function( context, args ) {
+        InfinniUI.global.messageBus.subscribe( InfinniUI.messageTypes.onNotifyUser, function( context, args ) {
             assert.equal( args.value.messageText, 'Удаляемый элемент не найден' );
             done();
         } );

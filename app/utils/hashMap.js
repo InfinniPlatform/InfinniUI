@@ -9,7 +9,7 @@ function HashMap() {
 
 InfinniUI.HashMap = HashMap;
 
-Object.defineProperties( HashMap.prototype, /** @lends HashMap.prototype **/{
+Object.defineProperties( HashMap.prototype, {
     length: {
         get: function() {
             return this._keys.length;

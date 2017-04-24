@@ -30,5 +30,5 @@ var highlightMixin = {
 
 };
 
-InfinniUI.Mixins.highlightMixin = highlightMixin;
+InfinniUI.highlightMixin = highlightMixin;
 

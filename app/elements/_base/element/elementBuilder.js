@@ -5,7 +5,7 @@
 var ElementBuilder = function() {
 };
 
-_.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
+_.extend( ElementBuilder.prototype, {
 
     build: function( context, args ) {
         args = args || {};

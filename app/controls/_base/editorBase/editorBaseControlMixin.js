@@ -21,4 +21,4 @@ var editorBaseControlMixin = {
 
 };
 
-InfinniUI.Mixins.editorBaseControlMixin = editorBaseControlMixin;
+InfinniUI.editorBaseControlMixin = editorBaseControlMixin;

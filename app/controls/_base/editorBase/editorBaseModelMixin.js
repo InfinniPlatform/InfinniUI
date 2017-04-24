@@ -99,4 +99,4 @@ var editorBaseModelMixin = {
 
 };
 
-InfinniUI.Mixins.editorBaseModelMixin = editorBaseModelMixin;
+InfinniUI.editorBaseModelMixin = editorBaseModelMixin;
