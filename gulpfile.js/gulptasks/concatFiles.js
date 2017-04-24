@@ -11,7 +11,12 @@ function concat(options) {
 	.pipe( gulp.dest( options.dest ) );
 }
 
-
+/**
+ * Concat vendor.js
+ *
+ * @task {concat:vendor-js}
+ * @group {Sub-tasks}
+ */
 gulp.task('concat:vendor-js', function () {
 	return concat({
 		src: config.vendorJsFiles,
@@ -21,6 +26,12 @@ gulp.task('concat:vendor-js', function () {
 	});
 });
 
+/**
+ * Concat vendor.css
+ *
+ * @task {concat:vendor-styles}
+ * @group {Sub-tasks}
+ */
 gulp.task('concat:vendor-styles', function () {
 	return concat({
 		src: config.vendorStylesFiles,
@@ -29,6 +40,12 @@ gulp.task('concat:vendor-styles', function () {
 	});
 });
 
+/**
+ * Concat all unit tests in one file.
+ *
+ * @task {concat:unit-tests}
+ * @group {Sub-tasks}
+ */
 gulp.task('concat:unit-tests', function () {
 	return concat({
 		src: config.unitTestFiles,

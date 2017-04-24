@@ -14,6 +14,12 @@ function startServer(options) {
 	browserSync.watch(options.watch).on('change', browserSync.reload);
 }
 
+/**
+ * Start server for unit tests
+ *
+ * @task {server:tests}
+ * @group {Sub-tasks}
+ */
 gulp.task('server:tests', function () {
 	return startServer({
 		src: '.',

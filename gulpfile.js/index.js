@@ -2,12 +2,20 @@
 
 var gulp = require('gulp');
 var watch = require('gulp-watch');
+var docHelper = require('gulp-help-doc');
 var requireDir = require('require-dir');
 
 var config = require('./gulptasks/config');
 
 requireDir('./gulptasks'); // подключаем задачи из папки gulptasks
 
+/**
+ * Build platform (not minified)
+ *
+ * @task {build}
+ * @group {Main}
+ * @order {1}
+ */
 gulp.task('build', gulp.parallel(
 	'build:js',
 	'build:less',
@@ -16,11 +24,25 @@ gulp.task('build', gulp.parallel(
 	'copy:fonts'
 ));
 
+/**
+ * Build production version of platform
+ *
+ * @task {build:prod}
+ * @group {Main}
+ * @order {2}
+ */
 gulp.task('build:prod', gulp.series(
 		'build',
 		'build:prod-js'
 ));
 
+/**
+ * Watch for changes and rebuild changed part
+ *
+ * @task {watch}
+ * @group {Main}
+ * @order {3}
+ */
 gulp.task('watch', function() {
 	watch( config.stylesFilesForWatch, gulp.series('build:less') );
 	watch( config.jsFiles, gulp.series('build:js') );
@@ -31,18 +53,22 @@ gulp.task('watch', function() {
 	watch( config.fonts.src, gulp.series('copy:fonts') );
 });
 
+
+/**
+ * Build and run unit tests
+ *
+ * @task {run:tests}
+ * @group {Main}
+ * @order {4}
+ */
 gulp.task('run:tests', gulp.series(
 	'build',
 	'concat:unit-tests',
 	gulp.parallel('watch', 'server:tests')
 ));
 
-gulp.task('default', function(cb) {
-	console.log('####Task is not defined!\n' +
-							'####Use any of defined tasks:\n' +
-							'- gulp build\n' +
-							'- gulp build:prod\n' +
-							'- gulp run:tests'
-							);
-	cb();
+gulp.task('help', function() {
+	return docHelper(gulp);
 });
+
+gulp.task('default', gulp.parallel('help') );

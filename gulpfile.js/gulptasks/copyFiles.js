@@ -10,6 +10,12 @@ function copy(options) {
 		.pipe(gulp.dest(options.dest))
 }
 
+/**
+ * Copy used in platform fonts to output directory
+ *
+ * @task {copy:fonts}
+ * @group {Sub-tasks}
+ */
 gulp.task('copy:fonts', function () {
 	return copy({
 		src: config.fonts.src,
@@ -18,6 +24,12 @@ gulp.task('copy:fonts', function () {
 	});
 });
 
+/**
+ * Assemble all necessary for package to one directory
+ *
+ * @task {assemble:package}
+ * @group {Sub-tasks}
+ */
 gulp.task('assemble:package', function () {
 	return copy({
 		src: config.package.src,

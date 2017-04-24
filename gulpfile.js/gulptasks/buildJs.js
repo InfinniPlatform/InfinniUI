@@ -26,6 +26,12 @@ function getJsStream(src) {
         }));
 }
 
+/**
+ * Build platform.js
+ *
+ * @task {build:js}
+ * @group {Sub-tasks}
+ */
 gulp.task('build:js', function () {
     return concatStream({ objectMode: true }, getTemplateStream(config.templateFiles), getJsStream(config.jsFiles))
         .pipe($.concat(config.platformJsOutputFile))

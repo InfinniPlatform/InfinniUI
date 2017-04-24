@@ -8,6 +8,13 @@ function clean(folderPath) {
 	return del(folderPath);
 }
 
+/**
+ * Delete compiled files
+ *
+ * @task {clean}
+ * @group {Main}
+ * @order {0}
+ */
 gulp.task('clean', function() {
 	return clean( [ config.platformOutputFolder, config.testOutputFolder] );
 });
