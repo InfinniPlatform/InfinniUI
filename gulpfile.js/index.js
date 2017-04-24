@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var watch = require('gulp-watch');
 var requireDir = require('require-dir');
 
-var sourceForFiles = require('./gulptasks/sourceForFiles');
+var config = require('./gulptasks/config');
 
 requireDir('./gulptasks'); // подключаем задачи из папки gulptasks
 
@@ -22,13 +22,13 @@ gulp.task('build:prod', gulp.series(
 ));
 
 gulp.task('watch', function() {
-	watch( sourceForFiles.stylesFilesForWatch, gulp.series('build:less') );
-	watch( sourceForFiles.jsFiles, gulp.series('build:js') );
-	watch( sourceForFiles.templateFiles, gulp.series('build:js') );
-	watch( sourceForFiles.vendorStylesFiles, gulp.series('concat:vendor-styles') );
-	watch( sourceForFiles.vendorJsFiles, gulp.series('concat:vendor-js') );
-	watch( sourceForFiles.unitTestFiles, gulp.series('concat:unit-tests') );
-	watch( sourceForFiles.fonts.src, gulp.series('copy:fonts') );
+	watch( config.stylesFilesForWatch, gulp.series('build:less') );
+	watch( config.jsFiles, gulp.series('build:js') );
+	watch( config.templateFiles, gulp.series('build:js') );
+	watch( config.vendorStylesFiles, gulp.series('concat:vendor-styles') );
+	watch( config.vendorJsFiles, gulp.series('concat:vendor-js') );
+	watch( config.unitTestFiles, gulp.series('concat:unit-tests') );
+	watch( config.fonts.src, gulp.series('copy:fonts') );
 });
 
 gulp.task('run:tests', gulp.series(

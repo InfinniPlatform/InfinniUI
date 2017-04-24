@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 
 function concat(options) {
 	return gulp.src(options.src)
@@ -14,25 +14,25 @@ function concat(options) {
 
 gulp.task('concat:vendor-js', function () {
 	return concat({
-		src: sourceForFiles.vendorJsFiles,
+		src: config.vendorJsFiles,
 		finalName: 'vendor.js',
-		dest: sourceForFiles.platformOutputFolder,
+		dest: config.platformOutputFolder,
 		isNeedUglifyJs: true
 	});
 });
 
 gulp.task('concat:vendor-styles', function () {
 	return concat({
-		src: sourceForFiles.vendorStylesFiles,
+		src: config.vendorStylesFiles,
 		finalName: 'vendor.css',
-		dest: sourceForFiles.platformOutputFolder + 'css'
+		dest: config.platformOutputFolder + 'css'
 	});
 });
 
 gulp.task('concat:unit-tests', function () {
 	return concat({
-		src: sourceForFiles.unitTestFiles,
+		src: config.unitTestFiles,
 		finalName: 'unitTest.js',
-		dest: sourceForFiles.testOutputFolder
+		dest: config.testOutputFolder
 	});
 });

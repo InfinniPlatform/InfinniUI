@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create('server:tests');
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 
 function startServer(options) {
 	browserSync.init({
@@ -17,7 +17,7 @@ function startServer(options) {
 gulp.task('server:tests', function () {
 	return startServer({
 		src: '.',
-		watch: sourceForFiles.platformOutputFolder + '**/*.*',
+		watch: config.platformOutputFolder + '**/*.*',
 		port: 5555,
 		startPath: '/test/unit/'
 	});

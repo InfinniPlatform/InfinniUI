@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var concatStream = require('streamqueue');
 
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 var templateNamespaceInitString = 'window["InfinniUI"] = window["InfinniUI"] || {};\nwindow["InfinniUI"]["Template"] = window["InfinniUI"]["Template"] || {};\n';
 
 function getTemplateStream(src) {
@@ -27,11 +27,11 @@ function getJsStream(src) {
 }
 
 gulp.task('build:js', function () {
-    return concatStream({ objectMode: true }, getTemplateStream(sourceForFiles.templateFiles), getJsStream(sourceForFiles.jsFiles))
-        .pipe($.concat(sourceForFiles.platformJsOutputFile))
+    return concatStream({ objectMode: true }, getTemplateStream(config.templateFiles), getJsStream(config.jsFiles))
+        .pipe($.concat(config.platformJsOutputFile))
         .pipe($.wrapper({
                 header: ';(function(){\n' + templateNamespaceInitString,
                 footer: '})();'
             }))
-        .pipe(gulp.dest(sourceForFiles.platformOutputFolder));
+        .pipe(gulp.dest(config.platformOutputFolder));
 });

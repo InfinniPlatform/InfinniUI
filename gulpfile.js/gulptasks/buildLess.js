@@ -2,12 +2,12 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 
 gulp.task('build:less',  function() {
-		return gulp.src( sourceForFiles.stylesFiles )
+		return gulp.src( config.stylesFiles )
 		.pipe( $.less() )
 		.pipe( $.csso() ) // minify css
 		.pipe( $.autoprefixer({browsers: ['last 2 versions']}) )
-		.pipe( gulp.dest( sourceForFiles.platformOutputFolder + "css/" ) )
+		.pipe( gulp.dest( config.platformOutputFolder + "css/" ) )
 	});

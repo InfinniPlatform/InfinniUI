@@ -2,12 +2,12 @@
 
 var gulp = require('gulp');
 var del = require('del');
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 
 function clean(folderPath) {
 	return del(folderPath);
 }
 
 gulp.task('clean', function() {
-	return clean( [ sourceForFiles.platformOutputFolder, sourceForFiles.testOutputFolder] );
+	return clean( [ config.platformOutputFolder, config.testOutputFolder] );
 });

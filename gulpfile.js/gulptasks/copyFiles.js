@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var sourceForFiles = require('./sourceForFiles');
+var config = require('./config');
 
 function copy(options) {
 	return gulp.src(options.src, {base: options.base})
@@ -12,16 +12,16 @@ function copy(options) {
 
 gulp.task('copy:fonts', function () {
 	return copy({
-		src: sourceForFiles.fonts.src,
-		base: sourceForFiles.fonts.base,
-		dest: sourceForFiles.platformOutputFolder + 'fonts/'
+		src: config.fonts.src,
+		base: config.fonts.base,
+		dest: config.platformOutputFolder + 'fonts/'
 	});
 });
 
 gulp.task('assemble:package', function () {
 	return copy({
-		src: sourceForFiles.package.src,
-		base: sourceForFiles.package.base,
+		src: config.package.src,
+		base: config.package.base,
 		dest: 'package/'
 	});
 });
