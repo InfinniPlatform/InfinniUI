@@ -66,4 +66,4 @@ function Builder() {
     };
 }
 
-window.InfinniUI.Builder = Builder;
+InfinniUI.Builder = Builder;

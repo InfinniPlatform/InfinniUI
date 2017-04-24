@@ -1,4 +1,4 @@
-window.InfinniUI.AutoHeightService = {
+InfinniUI.AutoHeightService = {
     windowHeight: 0,
     clientHeight: 0,
     exchange: null,
@@ -44,10 +44,11 @@ window.InfinniUI.AutoHeightService = {
     },
 
     formTree: function( elements, el, $el ) {
-        var $parent,
-            list = [],
-            $element,
-            element;
+        var $parent;
+        var list = [];
+        var $element;
+        var element;
+
         //Строим дерево элементов: от концевых элементов поднимается к корневому элементу
         for( var i = 0, ln = elements.length; i < ln; i = i + 1 ) {
             element = elements[ i ];
@@ -241,12 +242,12 @@ window.InfinniUI.AutoHeightService = {
     },
 
     recalculation: function( container ) {
-        if( window.InfinniUI.config.enableAutoHeightService ) {
+        if( InfinniUI.config.enableAutoHeightService ) {
             $( container ).addClass( 'page-content-overflow-hidden' );
             this.windowHeight = $( window ).height();
             this.onChangeLayout( container );
             if( this.exchange === null ) {
-                this.exchange = window.InfinniUI.global.messageBus;
+                this.exchange = InfinniUI.global.messageBus;
                 this.exchange
                     .subscribe( 'OnChangeLayout', _.debounce( this.onChangeLayout.bind( this, container ), 42 ) );
             }
@@ -268,4 +269,5 @@ window.InfinniUI.AutoHeightService = {
         this.resizeView( container, clientHeight );
         this.resizeDialog();
     }
+
 };

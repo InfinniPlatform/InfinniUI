@@ -2,11 +2,12 @@ function ExtensionPanel( parent ) {
     _.superClass( ExtensionPanel, this, parent );
 }
 
-window.InfinniUI.ExtensionPanel = ExtensionPanel;
+InfinniUI.ExtensionPanel = ExtensionPanel;
 
 _.inherit( ExtensionPanel, Container );
 
 _.extend( ExtensionPanel.prototype, {
+
     createControl: function() {
         var control = new ExtensionPanelControl();
         return control;
@@ -31,4 +32,5 @@ _.extend( ExtensionPanel.prototype, {
     setBuilder: function( builder ) {
         this.control.set( 'builder', builder );
     }
+
 } );

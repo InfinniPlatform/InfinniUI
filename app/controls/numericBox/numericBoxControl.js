@@ -19,5 +19,7 @@ _.extend( NumericBoxControl.prototype, {
     createControlView: function( model ) {
         return new NumericBoxView( { model: model } );
     }
+
 } );
 
+InfinniUI.NumericBoxControl = NumericBoxControl;

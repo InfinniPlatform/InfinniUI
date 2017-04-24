@@ -3,6 +3,7 @@
  * @constructor
  */
 function NumberEditMaskBuilder() {
+
     this.build = function( context, args ) {
         var editMask = new NumberEditMask();
 
@@ -11,6 +12,7 @@ function NumberEditMaskBuilder() {
 
         return editMask;
     };
+
 }
 
-window.InfinniUI.NumberEditMaskBuilder = NumberEditMaskBuilder;
+InfinniUI.NumberEditMaskBuilder = NumberEditMaskBuilder;

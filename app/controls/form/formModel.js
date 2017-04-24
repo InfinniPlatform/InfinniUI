@@ -7,3 +7,5 @@ var FormModel = StackPanelModel.extend( {
     }, StackPanelModel.prototype.defaults )
 
 } );
+
+InfinniUI.FormModel = FormModel;

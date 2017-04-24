@@ -1,4 +1,5 @@
 var DocumentDataSource = RestDataSource.extend( {
+
     defaults: _.defaults( {
         documentId: null
 
@@ -8,6 +9,7 @@ var DocumentDataSource = RestDataSource.extend( {
         RestDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
 
         var model = this.get( 'model' );
+
         model.setProperty( 'pageNumber', 0 );
         model.setProperty( 'pageSize', 15 );
         this.setUpdatingItemsConverter( function( data ) {
@@ -57,22 +59,22 @@ var DocumentDataSource = RestDataSource.extend( {
     },
 
     updateGettingUrlParams: function() {
-        var model = this.get( 'model' ),
-            params = {
-                method: 'get',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ),
-                data: {},
-                params: {}
-            },
-            filter = model.getProperty( 'filter' ),
-            filterParams = model.getProperty( 'filterParams' ),
-            pageNumber = model.getProperty( 'pageNumber' ),
-            pageSize = model.getProperty( 'pageSize' ),
-            searchStr = model.getProperty( 'search' ),
-            select = model.getProperty( 'select' ),
-            order = model.getProperty( 'order' ),
-            needTotalCount = model.getProperty( 'needTotalCount' );
+        var model = this.get( 'model' );
+        var params = {
+            method: 'get',
+            origin: InfinniUI.config.serverUrl,
+            path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ),
+            data: {},
+            params: {}
+        };
+        var filter = model.getProperty( 'filter' );
+        var filterParams = model.getProperty( 'filterParams' );
+        var pageNumber = model.getProperty( 'pageNumber' );
+        var pageSize = model.getProperty( 'pageSize' );
+        var searchStr = model.getProperty( 'search' );
+        var select = model.getProperty( 'select' );
+        var order = model.getProperty( 'order' );
+        var needTotalCount = model.getProperty( 'needTotalCount' );
 
         if( filter ) {
             params.data.filter = filter;
@@ -107,33 +109,33 @@ var DocumentDataSource = RestDataSource.extend( {
     },
 
     updateSettingUrlParams: function() {
-        var model = this.get( 'model' ),
-            params = {
-                method: 'post',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ),
-                data: {},
-                params: {}
-            };
+        var model = this.get( 'model' );
+        var params = {
+            method: 'post',
+            origin: InfinniUI.config.serverUrl,
+            path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ),
+            data: {},
+            params: {}
+        };
 
         this.setSettingUrlParams( params );
     },
 
     updateDeletingUrlParams: function() {
-        var model = this.get( 'model' ),
-            params = {
-                method: 'delete',
-                origin: InfinniUI.config.serverUrl,
-                path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ) + '/<%id%>',
-                data: {},
-                params: {}
-            };
+        var model = this.get( 'model' );
+        var params = {
+            method: 'delete',
+            origin: InfinniUI.config.serverUrl,
+            path: '/documents/' + this.get( 'model' ).getProperty( 'documentId' ) + '/<%id%>',
+            data: {},
+            params: {}
+        };
 
         this.setDeletingUrlParams( params );
     },
 
     initDataProvider: function() {
-        var dataProvider = window.InfinniUI.providerRegister.build( 'DocumentDataSource' );
+        var dataProvider = InfinniUI.providerRegister.build( 'DocumentDataSource' );
         this.set( 'dataProvider', dataProvider );
     },
 
@@ -204,7 +206,7 @@ var DocumentDataSource = RestDataSource.extend( {
     quoteValue: function( value ) {
         var VALUE_QUOTE_CHAR = '\'';
 
-        if ( _.isString( value ) ) {
+        if( _.isString( value ) ) {
             return VALUE_QUOTE_CHAR + value + VALUE_QUOTE_CHAR;
         } else {
             return value;
@@ -213,4 +215,4 @@ var DocumentDataSource = RestDataSource.extend( {
 
 } );
 
-window.InfinniUI.DocumentDataSource = DocumentDataSource;
+InfinniUI.DocumentDataSource = DocumentDataSource;

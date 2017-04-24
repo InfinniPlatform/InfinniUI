@@ -4,11 +4,14 @@
  * @mixes editorBaseViewMixin
  */
 var SimpleLabelView = CommonLabelView.extend( {
+
     tagName: 'span',
 
-    template: function() {return '';},
-    UI: _.extend( {}, editorBaseViewMixin.UI, {
+    template: function() {
+        return '';
+    },
 
+    UI: _.extend( {}, editorBaseViewMixin.UI, {
     } ),
 
     updateFocusable: function() {
@@ -27,4 +30,4 @@ var SimpleLabelView = CommonLabelView.extend( {
 
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.Label.simple', SimpleLabelView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.Label.simple', SimpleLabelView );

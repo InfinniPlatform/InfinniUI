@@ -20,4 +20,4 @@ function ObjectFormatBuilder() {
 
 }
 
-window.InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;
+InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;

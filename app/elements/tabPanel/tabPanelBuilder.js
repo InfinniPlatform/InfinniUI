@@ -6,7 +6,7 @@ function TabPanelBuilder() {
     _.superClass( TabPanelBuilder, this );
 }
 
-window.InfinniUI.TabPanelBuilder = TabPanelBuilder;
+InfinniUI.TabPanelBuilder = TabPanelBuilder;
 
 _.inherit( TabPanelBuilder, ContainerBuilder );
 
@@ -22,10 +22,8 @@ _.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
      * @param {Object} params.metadata
      */
     applyMetadata: function( params ) {
-        var
-            metadata = params.metadata,
-            element = params.element;
-
+        var metadata = params.metadata;
+        var element = params.element;
         var data = ContainerBuilder.prototype.applyMetadata.call( this, params );
 
         element.setHeaderLocation( metadata.HeaderLocation );
@@ -36,12 +34,11 @@ _.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
     },
 
     initScriptHandlers: function( params ) {
-        var
-            metadata = params.metadata,
-            element = params.element;
+        var metadata = params.metadata;
+        var element = params.element;
 
         element.onSelectedItemChanged( function( context, args ) {
-            var exchange = window.InfinniUI.global.messageBus;
+            var exchange = InfinniUI.global.messageBus;
             exchange.send( 'OnChangeLayout', {} );
         } );
 
@@ -51,13 +48,12 @@ _.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
             basePathOfProperty: params.basePathOfProperty
         };
 
-        if ( metadata.OnSelectedItemChanged ) {
+        if( metadata.OnSelectedItemChanged ) {
             var onSelectedItemChangedExecutor = Executor( metadata.OnSelectedItemChanged, params.builder, executorBuilderParams );
             element.onSelectedItemChanged( function( context, args ) {
                 onSelectedItemChangedExecutor( args );
             } );
         }
     }
-
 
 } );

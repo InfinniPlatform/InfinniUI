@@ -3,13 +3,11 @@
  * Используется плдагин http://codeseven.github.io/toastr/
  */
 InfinniUI.NotifyService = ( function() {
-    var exchange = window.InfinniUI.global.messageBus;
+    var exchange = InfinniUI.global.messageBus;
 
     exchange.subscribe( messageTypes.onNotifyUser, function( context, args ) {
-        var
-            messageText = args.value.messageText,
-            messageType = args.value.messageType || 'info';
-
+        var messageText = args.value.messageText;
+        var messageType = args.value.messageType || 'info';
         var type;
 
         switch( messageType ) {
@@ -28,4 +26,5 @@ InfinniUI.NotifyService = ( function() {
         }
 
     } );
+
 } )();

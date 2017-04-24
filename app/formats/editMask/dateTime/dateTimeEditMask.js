@@ -3,7 +3,7 @@ function DateTimeEditMask() {
     this.format = null;
 }
 
-window.InfinniUI.DateTimeEditMask = DateTimeEditMask;
+InfinniUI.DateTimeEditMask = DateTimeEditMask;
 
 _.extend( DateTimeEditMask.prototype, editMaskMixin );
 
@@ -165,6 +165,7 @@ _.extend( DateTimeEditMask.prototype, {
                 item = data.item;
                 text = item.text.slice( 0, data.index ) + item.text.slice( data.index + 1 );
                 item.text = text;
+
                 if( item.text.length == 0 ) {
                     position = this.getNextItemMask( position );
                 }
@@ -184,11 +185,10 @@ _.extend( DateTimeEditMask.prototype, {
         clipboardText = clipboardText.replace( /\D/gi, '' );
 
         var arraySymbols = clipboardText.split( '' );
-
         var firstItem = this.getItemTemplate( position );
         var firstIndexItem = this.template.indexOf( firstItem.item ), lastIndexItem = 0;
-
         var lastItem = getLastTemplate( this.template );
+
         if( lastItem ) {
             lastIndexItem = this.template.indexOf( lastItem );
         } else {
@@ -204,8 +204,8 @@ _.extend( DateTimeEditMask.prototype, {
                     tLength = maxLength - ( position - this.template[ i ].position );
 
                     var first = this.template[ i ].text.slice( 0, position - this.template[ i ].position );
-
                     var zero = '';
+
                     if( !first ) {
                         for( var d = 0; d < position - this.template[ i ].position; d++ ) {
                             zero = zero + '0';
@@ -237,6 +237,7 @@ _.extend( DateTimeEditMask.prototype, {
         function getLastTemplate( template ) {
             var dotLength = 0;
             var arr = [];
+
             for( var i = firstIndexItem; i < template.length; i++ ) {
                 if( typeof template[ i ] == 'object' ) {
                     if( clipboardText.length > template[ i ].position - dotLength - position ) {
@@ -466,6 +467,7 @@ _.extend( DateTimeEditMask.prototype, {
         var usedMasks = [];
         var maskLength;
         var position;
+
         for( i = 0, ln = masks.length; i < ln; i = i + 1 ) {
             position = mask.indexOf( masks[ i ] );
             if( position === -1 ) continue;
@@ -485,6 +487,7 @@ _.extend( DateTimeEditMask.prototype, {
         var template = [];
         var lastPosition = 0;
         var usedMask;
+
         for( i = 0, ln = usedMasks.length; i < ln; i = i + 1 ) {
             usedMask = usedMasks[ i ];
             if( lastPosition < usedMask.position ) {

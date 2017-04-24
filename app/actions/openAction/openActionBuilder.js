@@ -21,4 +21,4 @@ _.extend( OpenActionBuilder.prototype, baseActionBuilderMixin, {
 
 } );
 
-window.InfinniUI.OpenActionBuilder = OpenActionBuilder;
+InfinniUI.OpenActionBuilder = OpenActionBuilder;

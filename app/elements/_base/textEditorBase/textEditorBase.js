@@ -11,7 +11,7 @@ function TextEditorBase( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.TextEditorBase = TextEditorBase;
+InfinniUI.TextEditorBase = TextEditorBase;
 
 _.inherit( TextEditorBase, Element );
 
@@ -42,8 +42,8 @@ _.extend( TextEditorBase.prototype, {
      * @returns {*}
      */
     getRawValue: function() {
-        var value = this.control.get( 'editor' ).getValue(),
-            editMask = this.getEditMask();
+        var value = this.control.get( 'editor' ).getValue();
+        var editMask = this.getEditMask();
 
         if ( editMask ) {
             var val = editMask.getValue();

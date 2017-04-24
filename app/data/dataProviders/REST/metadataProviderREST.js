@@ -5,4 +5,4 @@ function MetadataProviderREST( metadataUrlConstructor, successCallback, failCall
     };
 }
 
-window.InfinniUI.Providers.MetadataProviderREST = MetadataProviderREST;
+InfinniUI.Providers.MetadataProviderREST = MetadataProviderREST;

@@ -5,13 +5,13 @@
  * @argument Element
  */
 function Divider( parent ) {
-	                                                                                                                                                                                                                                                                                        _.superClass( Divider, this, parent );
+    _.superClass( Divider, this, parent );
 }
 
-window.InfinniUI.Divider = Divider;
+InfinniUI.Divider = Divider;
 
 _.inherit( Divider, Element );
 
 Divider.prototype.createControl = function( parent ) {
-	                                                                                                                                                                                                                                                                                        return new DividerControl( parent );
+    return new DividerControl( parent );
 };

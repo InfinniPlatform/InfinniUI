@@ -2,7 +2,7 @@
  * Синглтон для работы с путями построенными по dot-notation
  **/
 
-window.InfinniUI.ObjectUtils = ( function() {
+InfinniUI.ObjectUtils = ( function() {
 
     /**
      * Возвращает значение свойства.

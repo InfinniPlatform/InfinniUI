@@ -23,4 +23,4 @@ _.extend( AcceptAction.prototype, {
 
 } );
 
-window.InfinniUI.AcceptAction = AcceptAction;
+InfinniUI.AcceptAction = AcceptAction;

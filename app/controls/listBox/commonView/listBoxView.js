@@ -41,4 +41,4 @@ var CommonListBoxView = BaseListBoxView.extend( {
 
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.ListBox.common', CommonListBoxView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.ListBox.common', CommonListBoxView );

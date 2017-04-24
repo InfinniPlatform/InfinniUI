@@ -10,7 +10,7 @@ function ScrollPanelControl( parent ) {
 
 _.inherit( ScrollPanelControl, ContainerControl );
 
-_.extend( ScrollPanelControl.prototype, /** @lends ScrollPanelControl.prototype */ {
+_.extend( ScrollPanelControl.prototype, {
 
     createControlModel: function() {
         return new ScrollPanelModel();
@@ -22,3 +22,4 @@ _.extend( ScrollPanelControl.prototype, /** @lends ScrollPanelControl.prototype 
 
 } );
 
+InfinniUI.ScrollPanelControl = ScrollPanelControl;

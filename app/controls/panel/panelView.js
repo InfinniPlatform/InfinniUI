@@ -2,7 +2,7 @@
  * @class
  * @augments ControlView
  */
-var PanelView = ContainerView.extend( /** @lends PanelView.prototype */ {
+var PanelView = ContainerView.extend( {
 
     className: 'pl-panel panel panel-default',
 
@@ -39,7 +39,7 @@ var PanelView = ContainerView.extend( /** @lends PanelView.prototype */ {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -72,6 +72,7 @@ var PanelView = ContainerView.extend( /** @lends PanelView.prototype */ {
 
         this.ui.header.empty();
         var headerTemplate = model.get( 'headerTemplate' );
+
         if( typeof headerTemplate === 'function' ) {
             var header = model.get( 'header' ),
                 $header = headerTemplate( null, { value: header } ).render();
@@ -101,7 +102,6 @@ var PanelView = ContainerView.extend( /** @lends PanelView.prototype */ {
     },
 
     updateGrouping: function() {
-
     },
 
     onEventCallback: function() {
@@ -127,3 +127,5 @@ var PanelView = ContainerView.extend( /** @lends PanelView.prototype */ {
     }
 
 } );
+
+InfinniUI.PanelView = PanelView;

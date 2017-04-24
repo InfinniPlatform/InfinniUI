@@ -14,3 +14,5 @@ var dateTimePickerModeTimePicker = _.extend( {}, dateTimePickerModeTime, {
 } );
 
 dateTimePickerStrategy[ 'TimePicker' ] = dateTimePickerModeTimePicker;
+
+InfinniUI.dateTimePickerModeTimePicker = dateTimePickerModeTimePicker;

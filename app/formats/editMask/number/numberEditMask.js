@@ -3,11 +3,9 @@ function NumberEditMask() {
     this.format = null;
 }
 
-window.InfinniUI.NumberEditMask = NumberEditMask;
+InfinniUI.NumberEditMask = NumberEditMask;
 
-_.extend( NumberEditMask.prototype, editMaskMixin );
-
-_.extend( NumberEditMask.prototype, {
+_.extend( NumberEditMask.prototype, editMaskMixin, {
 
     placeholder: '_',
 

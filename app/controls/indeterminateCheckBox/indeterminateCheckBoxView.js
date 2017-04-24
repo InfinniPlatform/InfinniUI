@@ -34,3 +34,5 @@ var IndeterminateCheckBoxView = CheckBoxView.extend( {
     }
 
 } );
+
+InfinniUI.IndeterminateCheckBoxView = IndeterminateCheckBoxView;

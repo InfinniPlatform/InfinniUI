@@ -29,6 +29,7 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
     },
 
     updateContent: CommonButtonView.prototype.updateContent,
+
     updateText: CommonButtonView.prototype.updateText,
 
     updateHorizontalAlignment: function() {
@@ -77,7 +78,7 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -178,4 +179,4 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
 
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.PopupButton.forMenu', ForMenuPopupButtonView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.PopupButton.forMenu', ForMenuPopupButtonView );

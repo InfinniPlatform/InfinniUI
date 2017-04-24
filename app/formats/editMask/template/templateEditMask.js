@@ -4,11 +4,9 @@ function TemplateEditMask() {
     this.maskPlaceHolder = '_';
 }
 
-window.InfinniUI.TemplateEditMask = TemplateEditMask;
+InfinniUI.TemplateEditMask = TemplateEditMask;
 
-_.extend( TemplateEditMask.prototype, editMaskMixin );
-
-_.extend( TemplateEditMask.prototype, {
+_.extend( TemplateEditMask.prototype, editMaskMixin, {
     /**
      * @private
      * @description Построение объекта для форматирования значения

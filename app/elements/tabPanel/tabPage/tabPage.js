@@ -53,10 +53,9 @@ TabPage.prototype.setCanClose = function( value ) {
  * @param {Function} [error] Необязательный. Обработчик события о том, что при закрытии произошла ошибка
  */
 TabPage.prototype.close = function( success, error ) {
-    var
-        canClose = this.getCanClose(),
-        element = this,
-        events = this.events;
+    var canClose = this.getCanClose();
+    var element = this;
+    var events = this.events;
 
     if ( canClose ) {
         this.events.trigger( 'closing' )
@@ -110,3 +109,4 @@ TabPage.prototype.createControl = function() {
     return new TabPageControl();
 };
 
+InfinniUI.TabPage = TabPage;

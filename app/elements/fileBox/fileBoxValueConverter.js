@@ -2,7 +2,7 @@ function FileBoxValueConverter( element ) {
     this._element = element;
 }
 
-window.InfinniUI.FileBoxValueConverter = FileBoxValueConverter;
+InfinniUI.FileBoxValueConverter = FileBoxValueConverter;
 
 FileBoxValueConverter.prototype.toElement = function( context, args ) {
     var value = args.value;

@@ -5,10 +5,10 @@ function StackPanelViewPlainStrategy( stackPanel ) {
 _.extend( StackPanelViewPlainStrategy.prototype, {
 
     prepareItemsForRendering: function() {
-        var items = this.stackPanel.getItems(),
-            result = {
-                items: items.toArray()
-            };
+        var items = this.stackPanel.getItems();
+        var result = {
+            items: items.toArray()
+        };
 
         return result;
     },
@@ -18,11 +18,11 @@ _.extend( StackPanelViewPlainStrategy.prototype, {
     },
 
     appendItemsContent: function( preparedItems, childElementsClass ) {
-        var $stackPanel = this.stackPanel.$el,
-            itemTemplate = this.stackPanel.getItemTemplate(),
-            items = preparedItems.items,
-            stackPanel = this.stackPanel,
-            itemEl, $el;
+        var $stackPanel = this.stackPanel.$el;
+        var itemTemplate = this.stackPanel.getItemTemplate();
+        var items = preparedItems.items;
+        var stackPanel = this.stackPanel;
+        var itemEl, $el;
 
         childElementsClass = childElementsClass || '.pl-stack-panel-i';
 
@@ -35,4 +35,7 @@ _.extend( StackPanelViewPlainStrategy.prototype, {
             $el.parent().data( 'pl-data-item', items[ i ] );
         } );
     }
+
 } );
+
+InfinniUI.StackPanelViewPlainStrategy = StackPanelViewPlainStrategy;

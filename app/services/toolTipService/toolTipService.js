@@ -3,7 +3,7 @@ InfinniUI.ToolTipService = ( function() {
     var TOOLTIP_PLACEMENT = 'auto top';
     var TOOLTIP_CONTAINER = 'body';
     var TOOLTIP_TRIGGER = 'hover';
-    var exchange = window.InfinniUI.global.messageBus;
+    var exchange = InfinniUI.global.messageBus;
 
     exchange.subscribe( messageTypes.onToolTipInit.name, initToolTip );
 

@@ -24,3 +24,4 @@ _.extend( ImageBoxControl.prototype, {
 
 }, editorBaseControlMixin );
 
+InfinniUI.ImageBoxControl = ImageBoxControl;

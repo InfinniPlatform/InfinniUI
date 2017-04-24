@@ -3,6 +3,7 @@
  * @constructor
  */
 function DateTimeEditMaskBuilder() {
+
     this.build = function( context, args ) {
         var formatOptions = args.formatOptions;
         var editMask = new DateTimeEditMask();
@@ -21,6 +22,7 @@ function DateTimeEditMaskBuilder() {
 
         return editMask;
     };
+
 }
 
-window.InfinniUI.DateTimeEditMaskBuilder = DateTimeEditMaskBuilder;
+InfinniUI.DateTimeEditMaskBuilder = DateTimeEditMaskBuilder;

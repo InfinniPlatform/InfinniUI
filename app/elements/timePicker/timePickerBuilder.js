@@ -2,7 +2,7 @@ function TimePickerBuilder() {
     _.superClass( TimePickerBuilder, this );
 }
 
-window.InfinniUI.TimePickerBuilder = TimePickerBuilder;
+InfinniUI.TimePickerBuilder = TimePickerBuilder;
 
 _.inherit( TimePickerBuilder, DateTimePickerBuilder );
 

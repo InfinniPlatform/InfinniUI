@@ -2,7 +2,7 @@ function LinkBuilder() {
     _.superClass( LinkBuilder, this );
 }
 
-window.InfinniUI.LinkBuilder = LinkBuilder;
+InfinniUI.LinkBuilder = LinkBuilder;
 
 _.inherit( LinkBuilder, ButtonBuilder );
 
@@ -28,6 +28,7 @@ _.extend( LinkBuilder.prototype, routerServiceMixin, {
             var newHref = href;
 
             element.setHref( newHref );
+
             if( hrefParams ) {
                 for( var i = 0, ii = hrefParams.length; i < ii; i += 1 ) {
                     if( typeof hrefParams[ i ].Value === 'string' ) {

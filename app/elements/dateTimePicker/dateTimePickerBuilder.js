@@ -7,7 +7,7 @@ function DateTimePickerBuilder() {
     _.superClass( DateTimePickerBuilder, this );
 }
 
-window.InfinniUI.DateTimePickerBuilder = DateTimePickerBuilder;
+InfinniUI.DateTimePickerBuilder = DateTimePickerBuilder;
 
 _.inherit( DateTimePickerBuilder, TextEditorBaseBuilder );
 
@@ -17,9 +17,9 @@ DateTimePickerBuilder.prototype.createElement = function( params ) {
 
 DateTimePickerBuilder.prototype.applyMetadata = function( params ) {
     var element = params.element;
+    var metadata = params.metadata;
 
     this.applyDefaultMetadata( params );
-    var metadata = params.metadata;
 
     TextEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
@@ -44,15 +44,15 @@ DateTimePickerBuilder.prototype.applyMaxValue = function( element, maxValue ) {
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
     var metadata = params.metadata;
     var defaultFormat = {
-            Date: '${:d}',
-            DateTime: '${:g}',
-            Time: '${:T}'
-        },
-        defaultEditMask = {
-            Date: { DateTimeEditMask: { Mask: 'd' } },
-            DateTime: { DateTimeEditMask: { Mask: 'g' } },
-            Time: { DateTimeEditMask: { Mask: 'T' } }
-        };
+        Date: '${:d}',
+        DateTime: '${:g}',
+        Time: '${:T}'
+    };
+    var defaultEditMask = {
+        Date: { DateTimeEditMask: { Mask: 'd' } },
+        DateTime: { DateTimeEditMask: { Mask: 'g' } },
+        Time: { DateTimeEditMask: { Mask: 'T' } }
+    };
 
     params.metadata = _.extend( {}, metadata );
 
@@ -76,7 +76,7 @@ DateTimePickerBuilder.prototype.applyTimeZone = function( params ) {
     var _params = {};
     var formatOptions = {};
 
-    if ( typeof metadata.TimeZone !== 'undefined' && metadata.TimeZone !== null ) {
+    if( typeof metadata.TimeZone !== 'undefined' && metadata.TimeZone !== null ) {
         formatOptions.TimeZone = metadata.TimeZone;
     }
 

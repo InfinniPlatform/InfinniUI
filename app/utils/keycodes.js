@@ -1,4 +1,4 @@
-window.InfinniUI.Keyboard = {
+InfinniUI.Keyboard = {
 
     KeyCode: {
         ESCAPE: 27,

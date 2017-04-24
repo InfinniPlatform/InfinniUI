@@ -90,7 +90,7 @@ var BaseListBoxView = ListEditorBaseView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -186,4 +186,4 @@ var BaseListBoxView = ListEditorBaseView.extend( {
 
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.ListBox.base', BaseListBoxView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.ListBox.base', BaseListBoxView );

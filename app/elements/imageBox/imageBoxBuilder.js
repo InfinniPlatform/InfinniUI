@@ -9,7 +9,7 @@ function ImageBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.ImageBoxBuilder = ImageBoxBuilder;
+InfinniUI.ImageBoxBuilder = ImageBoxBuilder;
 
 _.inherit( ImageBoxBuilder, ElementBuilder );
 
@@ -38,14 +38,12 @@ _.extend( ImageBoxBuilder.prototype, {
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
 
         var converter = new ImageBoxValueConverter( element );
-
         var data = this.applyMetadata_editorBaseBuilder( params, {
             mode: InfinniUI.BindingModes.toElement,
             converter: converter
         } );
-
-
         var binding = data.valueBinding;
+
         if( binding ) {
             var ds = binding.getSource();
 

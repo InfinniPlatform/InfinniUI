@@ -10,6 +10,7 @@ function Cell( parent ) {
 _.inherit( Cell, Container );
 
 _.extend( Cell.prototype, {
+
     createControl: function() {
         return new CellControl();
     },
@@ -21,4 +22,7 @@ _.extend( Cell.prototype, {
     setColumnSpan: function( newColumnSpan ) {
         this.control.set( 'columnSpan', newColumnSpan );
     }
+
 } );
+
+InfinniUI.Cell = Cell;

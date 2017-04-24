@@ -1,8 +1,8 @@
 var OpenModeDefaultStrategy = function() {
-
 };
 
 _.extend( OpenModeDefaultStrategy.prototype, {
+
     setView: function( view ) {
         this.view = view;
     },
@@ -27,3 +27,5 @@ _.extend( OpenModeDefaultStrategy.prototype, {
     }
 
 }, openModeAutoFocusMixin );
+
+InfinniUI.OpenModeDefaultStrategy = OpenModeDefaultStrategy;

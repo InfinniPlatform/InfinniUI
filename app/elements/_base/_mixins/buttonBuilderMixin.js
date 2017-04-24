@@ -1,4 +1,5 @@
 var buttonBuilderMixin = {
+
     applyButtonMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -54,3 +55,5 @@ var buttonBuilderMixin = {
         };
     }
 };
+
+InfinniUI.buttonBuilderMixin = buttonBuilderMixin;

@@ -32,5 +32,5 @@ var OpenedViewCollection = function() {
 
 };
 
-window.InfinniUI.views = new OpenedViewCollection();
+InfinniUI.views = new OpenedViewCollection();
 

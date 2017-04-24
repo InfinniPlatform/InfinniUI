@@ -7,3 +7,5 @@ function ActionFactory( actionMetadata, builder, builderParams ) {
         return builder.build( actionMetadata, builderParams );
     }
 }
+
+InfinniUI.ActionFactory = ActionFactory;

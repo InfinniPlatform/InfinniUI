@@ -339,7 +339,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     _restoreSelectedItem: function() {
         // override by strategy
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         logger.warn( {
             message: 'BaseDataSource._restoreSelectedItem: not overrided by strategy',
             source: this
@@ -352,7 +352,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     setSelectedItem: function( item, success, error ) {
         // override by strategy
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         logger.warn( {
             message: 'BaseDataSource.setSelectedItem: not overrided by strategy',
             source: this
@@ -457,7 +457,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     _includeItemToModifiedSet: function( item ) {
         // override by strategy
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         logger.warn( {
             message: 'BaseDataSource._includeItemToModifiedSet: not overrided by strategy',
             source: this
@@ -466,7 +466,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     _excludeItemFromModifiedSet: function( item ) {
         // override by strategy
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         logger.warn( {
             message: 'BaseDataSource._excludeItemFromModifiedSet: not overrided by strategy',
             source: this
@@ -637,7 +637,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     _handleDeletedItem: function( item ) {
         // override by strategy
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         logger.warn( {
             message: 'BaseDataSource._handleDeletedItem: not overrided by strategy',
             source: this
@@ -672,7 +672,7 @@ var BaseDataSource = Backbone.Model.extend( {
     },
 
     getItems: function() {
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
 
         if( !this.isDataReady() ) {
             logger.warn( {
@@ -709,7 +709,7 @@ var BaseDataSource = Backbone.Model.extend( {
             } );
         }
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'updateItems', { dataSource: this } );
+        InfinniUI.global.messageBus.send( 'updateItems', { dataSource: this } );
         //devblockstop
     },
 
@@ -971,7 +971,7 @@ var BaseDataSource = Backbone.Model.extend( {
 
     getCurrentRequestPromise: function() {
         var promise = $.Deferred();
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
 
         if( this.get( 'isRequestInProcess' ) ) {
             this.onItemsUpdatedOnce( function() {
@@ -1210,4 +1210,4 @@ BaseDataSource.identifyingStrategy = {
     }
 };
 
-window.InfinniUI.BaseDataSource = BaseDataSource;
+InfinniUI.BaseDataSource = BaseDataSource;

@@ -7,7 +7,7 @@ function HashMap() {
     this._values = [];
 }
 
-window.InfinniUI.HashMap = HashMap;
+InfinniUI.HashMap = HashMap;
 
 Object.defineProperties( HashMap.prototype, /** @lends HashMap.prototype **/{
     length: {
@@ -62,7 +62,7 @@ HashMap.prototype.getKeyByValue = function( value ) {
  *
  * @param {Function} predicate
  * @param thisArg
- * @returns {numeric}
+ * @returns {number}
  */
 HashMap.prototype.findIndex = function( predicate, thisArg ) {
     var key, value, index = -1;

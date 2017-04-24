@@ -9,4 +9,4 @@ function QueryConstructorMetadata( host, metadata ) {
 
 }
 
-window.InfinniUI.Providers.QueryConstructorMetadata = QueryConstructorMetadata;
+InfinniUI.Providers.QueryConstructorMetadata = QueryConstructorMetadata;

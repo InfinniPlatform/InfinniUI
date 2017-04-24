@@ -11,3 +11,5 @@ ViewPanelControl.prototype.createControlModel = function() {
 ViewPanelControl.prototype.createControlView = function( model ) {
     return new ViewPanelView( { model: model } );
 };
+
+InfinniUI.ViewPanelControl = ViewPanelControl;

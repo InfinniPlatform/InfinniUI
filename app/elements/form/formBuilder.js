@@ -7,7 +7,7 @@ function FormBuilder() {
     _.superClass( FormBuilder, this );
 }
 
-window.InfinniUI.FormBuilder = FormBuilder;
+InfinniUI.FormBuilder = FormBuilder;
 
 _.inherit( FormBuilder, StackPanelBuilder );
 

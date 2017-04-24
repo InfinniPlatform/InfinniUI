@@ -13,3 +13,5 @@ var valuePropertyMixin = {
     }
 
 };
+
+InfinniUI.valuePropertyMixin = valuePropertyMixin;

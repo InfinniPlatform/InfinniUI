@@ -45,7 +45,7 @@ _.extend( LinkViewBuilderBase.prototype, {
             onViewReadyHandler( view );
 
         } else {
-            window.InfinniUI.global.logger.error( 'LinkViewBuilderBase.buildViewByMetadata: view metadata for ' + params.metadata + ' not found.' );
+            InfinniUI.global.logger.error( 'LinkViewBuilderBase.buildViewByMetadata: view metadata for ' + params.metadata + ' not found.' );
         }
     },
 
@@ -90,3 +90,5 @@ _.extend( LinkViewBuilderBase.prototype, {
     }
 
 } );
+
+InfinniUI.LinkViewBuilderBase = LinkViewBuilderBase;

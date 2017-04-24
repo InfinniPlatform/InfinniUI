@@ -29,3 +29,5 @@ var openModeAutoFocusMixin = {
     }
 
 };
+
+InfinniUI.openModeAutoFocusMixin = openModeAutoFocusMixin;

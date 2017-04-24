@@ -5,7 +5,8 @@
 var BaseDataSourceBuilder = function() {
 };
 
-_.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prototype */ {
+_.extend( BaseDataSourceBuilder.prototype, {
+
     build: function( context, args ) {
         var dataSource = this.createDataSource( args.parentView );
         dataSource.suspendUpdate( 'tuningInSourceBuilder' );
@@ -193,8 +194,9 @@ _.extend( BaseDataSourceBuilder.prototype, /** @lends BaseDataSourceBuilder.prot
             dataBinding.bindElement( dataSource, pathForBinding );
         }
     }
+
 } );
 
-_.extend( BaseDataSourceBuilder.prototype, DataSourceValidationNotifierMixin );
+_.extend( BaseDataSourceBuilder.prototype, dataSourceValidationNotifierMixin );
 
-window.InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;
+InfinniUI.BaseDataSourceBuilder = BaseDataSourceBuilder;

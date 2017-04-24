@@ -2,14 +2,13 @@
  * @class
  * @augments ControlView
  */
-var TabPageView = ContainerView.extend( /** @lends TabPageView.prototype */ {
+var TabPageView = ContainerView.extend( {
 
     className: 'pl-tabpage hidden',
 
     template: InfinniUI.Template[ 'controls/tabPanel/tabPage/template/tabPage.tpl.html' ],
 
     UI: {
-
     },
 
     initHandlersForProperties: function() {
@@ -39,17 +38,17 @@ var TabPageView = ContainerView.extend( /** @lends TabPageView.prototype */ {
         this.trigger( 'render' );
         this.updateProperties();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
     renderItemsContents: function() {
-        var $items = this.$el.find( '.pl-tabpage-i' ),
-            items = this.model.get( 'items' ),
-            itemTemplate = this.model.get( 'itemTemplate' ),
-            that = this,
-            element, item;
+        var $items = this.$el.find( '.pl-tabpage-i' );
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var that = this;
+        var element, item;
 
         $items.each( function( i, el ) {
             item = items.getByIndex( i );
@@ -69,7 +68,8 @@ var TabPageView = ContainerView.extend( /** @lends TabPageView.prototype */ {
      * @protected
      */
     updateGrouping: function() {
-
     }
 
 } );
+
+InfinniUI.TabPageView = TabPageView;

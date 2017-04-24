@@ -25,4 +25,4 @@ _.extend( OpenAction.prototype, {
 
 } );
 
-window.InfinniUI.OpenAction = OpenAction;
+InfinniUI.OpenAction = OpenAction;

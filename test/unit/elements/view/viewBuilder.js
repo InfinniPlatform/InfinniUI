@@ -106,8 +106,8 @@ describe( 'ViewBuilder', function() {
 
     it( 'should build DataSources', function() {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
-        window.InfinniUI.providerRegister.register( 'ObjectDataSource', InfinniUI.Providers.ObjectDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+        InfinniUI.providerRegister.register( 'ObjectDataSource', InfinniUI.Providers.ObjectDataProvider );
 
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
@@ -124,7 +124,7 @@ describe( 'ViewBuilder', function() {
 
     it( 'should sort DataSources by priority', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = {

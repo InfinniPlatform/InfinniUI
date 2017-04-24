@@ -69,3 +69,5 @@ _.extend( ListBoxViewGroupStrategy.prototype, {
     }
 
 } );
+
+InfinniUI.ListBoxViewGroupStrategy = ListBoxViewGroupStrategy;

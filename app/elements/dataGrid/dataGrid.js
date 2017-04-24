@@ -2,7 +2,7 @@ function DataGrid( parent ) {
     _.superClass( DataGrid, this, parent );
 }
 
-window.InfinniUI.DataGrid = DataGrid;
+InfinniUI.DataGrid = DataGrid;
 
 _.inherit( DataGrid, ListEditorBase );
 
@@ -15,7 +15,7 @@ DataGrid.prototype.getColumns = function() {
 };
 
 DataGrid.prototype.setShowSelectors = function( value ) {
-    if ( typeof value !== 'undefined' && value !== null ) {
+    if( typeof value !== 'undefined' && value !== null ) {
         this.control.set( 'showSelectors', !!value );
     }
 };
@@ -39,7 +39,7 @@ DataGrid.prototype.setEnabled = function( value ) {
  * @param {boolean} value
  */
 DataGrid.prototype.setCheckAllVisible = function( value ) {
-    if ( _.isBoolean( value ) ) {
+    if( _.isBoolean( value ) ) {
         this.control.set( 'checkAllVisible', value );
     }
 };
@@ -82,20 +82,20 @@ DataGrid.prototype.createControl = function() {
 
 
 DataGrid.prototype.onRowClick = function( handler ) {
-    var that = this,
-        callback = function( nativeEventData ) {
-            var eventData = that._getHandlingMouseEventData( nativeEventData );
-            handler( eventData );
-        };
+    var that = this;
+    var callback = function( nativeEventData ) {
+        var eventData = that._getHandlingMouseEventData( nativeEventData );
+        handler( eventData );
+    };
     return this.control.onRowClick( callback );
 };
 
 DataGrid.prototype.onRowDoubleClick = function( handler ) {
-    var that = this,
-        callback = function( nativeEventData ) {
-            var eventData = that._getHandlingMouseEventData( nativeEventData );
-            handler( eventData );
-        };
+    var that = this;
+    var callback = function( nativeEventData ) {
+        var eventData = that._getHandlingMouseEventData( nativeEventData );
+        handler( eventData );
+    };
     return this.control.onRowDoubleClick( callback );
 };
 
@@ -104,7 +104,7 @@ DataGrid.prototype.getVerticalAlignment = function() {
 };
 
 DataGrid.prototype.setVerticalAlignment = function( verticalAlignment ) {
-    if ( typeof verticalAlignment == 'string' ) {
+    if( typeof verticalAlignment == 'string' ) {
         this.control.set( 'verticalAlignment', verticalAlignment );
     }
 };

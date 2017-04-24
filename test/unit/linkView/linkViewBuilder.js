@@ -41,14 +41,14 @@ describe( 'LinkViewBuilderBase', function() {
         linkView.createView( function( view ) {
             // Then
             assert.equal( view.name, 'InlineViewBuilderTest' );
-            assert.instanceOf( view, window.InfinniUI.View );
+            assert.instanceOf( view, InfinniUI.View );
             done();
         } );
     } );
 
     it( 'metadataViewBuilder', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'MetadataDataSource', function() {
+        InfinniUI.providerRegister.register( 'MetadataDataSource', function() {
             return {
                 'getMetadata': function( callback ) {
                     var metadata = {
@@ -70,7 +70,7 @@ describe( 'LinkViewBuilderBase', function() {
         linkView.createView( function( view ) {
             // Then
             assert.equal( view.name, 'MetadataViewBuilderTest' );
-            assert.instanceOf( view, window.InfinniUI.View );
+            assert.instanceOf( view, InfinniUI.View );
             done();
         } );
     } );

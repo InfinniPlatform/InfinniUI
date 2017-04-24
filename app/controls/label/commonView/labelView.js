@@ -3,7 +3,7 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /** @lends LabelView.prototype */{
+var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     className: 'pl-label',
 
@@ -94,7 +94,7 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /**
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -123,4 +123,4 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /**
 
 } ) );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.Label.common', CommonLabelView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.Label.common', CommonLabelView );

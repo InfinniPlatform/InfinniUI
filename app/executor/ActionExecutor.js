@@ -34,3 +34,5 @@ function ActionExecutor( actionFactory ) {
         }
     };
 }
+
+InfinniUI.ActionExecutor = ActionExecutor;

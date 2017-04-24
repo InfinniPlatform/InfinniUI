@@ -12,7 +12,9 @@ var DataProviderReplaceItemQueue = function( attributes ) {
     var getQueueItemCriteria = function( data ) {
         var criteria = _.pick( data, _attributes );
         var idProperty = _.isEmpty( data[ requestIdProperty ] ) ? 'Id' : requestIdProperty;
+
         criteria[ idProperty ] = data[ idProperty ];
+
         return criteria;
     };
 
@@ -73,4 +75,4 @@ var DataProviderReplaceItemQueue = function( attributes ) {
 };
 
 
-window.InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;
+InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;

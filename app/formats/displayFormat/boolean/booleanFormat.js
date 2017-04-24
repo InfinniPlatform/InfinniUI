@@ -3,9 +3,10 @@
  * @class BooleanFormat
  * @mixes formatMixin
  */
-var BooleanFormat = function() {};
+var BooleanFormat = function() {
+};
 
-window.InfinniUI.BooleanFormat = BooleanFormat;
+InfinniUI.BooleanFormat = BooleanFormat;
 
 _.extend( BooleanFormat.prototype, {
 
@@ -64,7 +65,7 @@ _.extend( BooleanFormat.prototype, {
      * @returns {String}
      */
     formatValue: function( originalValue ) {
-        if ( originalValue === false || originalValue === null || typeof originalValue === 'undefined' ) {
+        if( originalValue === false || originalValue === null || typeof originalValue === 'undefined' ) {
             return this.getFalseText();
         } else {
             return this.getTrueText();

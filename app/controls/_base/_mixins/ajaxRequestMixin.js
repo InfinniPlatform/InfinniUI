@@ -31,6 +31,6 @@ var ajaxRequestMixin = ( function( bus ) {
         }
     };
 
-} )( window.InfinniUI.global.messageBus );
+} )( InfinniUI.global.messageBus );
 
 InfinniUI.Mixins.ajaxRequestMixin = ajaxRequestMixin;

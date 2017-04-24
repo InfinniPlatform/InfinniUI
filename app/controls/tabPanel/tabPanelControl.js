@@ -10,17 +10,16 @@ function TabPanelControl( parent ) {
 
 _.inherit( TabPanelControl, ContainerControl );
 
-_.extend( TabPanelControl.prototype, /** @lends TabPanelControl.prototype */ {
+_.extend( TabPanelControl.prototype, {
 
     setSelectedItem: function( value ) {
         /**
          * @TODO Отрефакторить! Временное решение т.к. коллекция model.items содержит не экземпляры страниц а метаданные! см. templating в Container
          */
-        var
-            selectedItem = null,
-            model = this.controlModel,
-            elements = this.controlView.childElements,
-            items = model.get( 'items' );
+        var selectedItem = null;
+        var model = this.controlModel;
+        var elements = this.controlView.childElements;
+        var items = model.get( 'items' );
 
         if ( value instanceof TabPage ) {
             model.set( 'selectedItem', value );
@@ -43,3 +42,4 @@ _.extend( TabPanelControl.prototype, /** @lends TabPanelControl.prototype */ {
 
 } );
 
+InfinniUI.TabPanelControl = TabPanelControl;

@@ -16,3 +16,5 @@ var IconModel = ControlModel.extend( {
     }
 
 } );
+
+InfinniUI.IconModel = IconModel;

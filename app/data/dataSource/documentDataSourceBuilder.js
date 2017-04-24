@@ -5,6 +5,7 @@ var DocumentDataSourceBuilder = function() {
 _.inherit( DocumentDataSourceBuilder, BaseDataSourceBuilder );
 
 _.extend( DocumentDataSourceBuilder.prototype, {
+
     applyMetadata: function( builder, parent, metadata, dataSource ) {
         BaseDataSourceBuilder.prototype.applyMetadata.call( this, builder, parent, metadata, dataSource );
 
@@ -27,4 +28,4 @@ _.extend( DocumentDataSourceBuilder.prototype, {
 
 } );
 
-window.InfinniUI.DocumentDataSourceBuilder = DocumentDataSourceBuilder;
+InfinniUI.DocumentDataSourceBuilder = DocumentDataSourceBuilder;

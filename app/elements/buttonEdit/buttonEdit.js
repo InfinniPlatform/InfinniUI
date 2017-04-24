@@ -8,7 +8,7 @@ function ButtonEdit( parent ) {
     _.superClass( ButtonEdit, this, parent );
 }
 
-window.InfinniUI.ButtonEdit = ButtonEdit;
+InfinniUI.ButtonEdit = ButtonEdit;
 
 _.inherit( ButtonEdit, TextBox );
 
@@ -21,7 +21,7 @@ ButtonEdit.prototype.createControl = function( parent ) {
  * @param {String} icon
  */
 ButtonEdit.prototype.setIcon = function( icon ) {
-    if ( icon && icon.toLowerCase ) {
+    if( icon && icon.toLowerCase ) {
         icon = icon.toLowerCase();
     }
     this.control.set( 'icon', icon );
@@ -40,7 +40,7 @@ ButtonEdit.prototype.getIcon = function() {
  * @param {boolean} readOnly
  */
 ButtonEdit.prototype.setReadOnly = function( readOnly ) {
-    if ( typeof  readOnly !== 'undefined' && readOnly !== null ) {
+    if( typeof  readOnly !== 'undefined' && readOnly !== null ) {
         this.control.set( 'readOnly', !!readOnly );
     }
 };
@@ -58,7 +58,7 @@ ButtonEdit.prototype.getReadOnly = function() {
  * @param {boolean} showClear
  */
 ButtonEdit.prototype.setShowClear = function( showClear ) {
-    if ( typeof showClear !== 'undefined' && showClear !== null ) {
+    if( typeof showClear !== 'undefined' && showClear !== null ) {
         this.control.set( 'showClear', !!showClear );
     }
 };

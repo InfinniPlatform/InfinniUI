@@ -33,7 +33,7 @@ InfinniUI.ModalWindowService = ( function() {
     };
 
     function notifyLayoutChange() {
-        var exchange = window.InfinniUI.global.messageBus;
+        var exchange = InfinniUI.global.messageBus;
         exchange.send( 'OnChangeLayout', {} );
     }
 } )();

@@ -49,4 +49,4 @@ _.extend( AddAction.prototype, {
 
 } );
 
-window.InfinniUI.AddAction = AddAction;
+InfinniUI.AddAction = AddAction;

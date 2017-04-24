@@ -10,7 +10,11 @@ function Row( parent ) {
 _.inherit( Row, Container );
 
 _.extend( Row.prototype, {
+
     createControl: function() {
         return new RowControl();
     }
+
 } );
+
+InfinniUI.Row = Row;

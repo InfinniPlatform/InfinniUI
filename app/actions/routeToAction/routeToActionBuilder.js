@@ -46,4 +46,4 @@ _.extend( RouteToActionBuilder.prototype, baseActionBuilderMixin, routerServiceM
 
 } );
 
-window.InfinniUI.RouteToActionBuilder = RouteToActionBuilder;
+InfinniUI.RouteToActionBuilder = RouteToActionBuilder;

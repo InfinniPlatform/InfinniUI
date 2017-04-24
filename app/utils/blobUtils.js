@@ -1,7 +1,7 @@
 /**
  * Набор утилит для работы с BlobData объектами
  **/
-window.InfinniUI.BlobUtils = ( function() {
+InfinniUI.BlobUtils = ( function() {
     var blobUtils = {
         isFileInfo: isFileInfo,
         getContentId: getContentByName.bind( null, 'Id' ),

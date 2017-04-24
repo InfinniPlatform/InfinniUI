@@ -19,3 +19,5 @@ var PasswordBoxModel = ControlModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.PasswordBoxModel = PasswordBoxModel;

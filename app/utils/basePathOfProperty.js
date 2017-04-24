@@ -18,9 +18,10 @@ function BasePathOfProperty( basePathOfProperty, baseIndex, parentBasePath ) {
     }
 }
 
-window.InfinniUI.BasePathOfProperty = BasePathOfProperty;
+InfinniUI.BasePathOfProperty = BasePathOfProperty;
 
 _.extend( BasePathOfProperty.prototype, {
+
     /*возвращает полный путь к свойству элемента в коллекции*/
     resolveProperty: function( property ) {
         if( typeof property === 'undefined' || property === null ) {
@@ -38,11 +39,13 @@ _.extend( BasePathOfProperty.prototype, {
     /*возвращает полный путь к свойству элемента в коллекции по заданному относительному пути*/
     resolveRelativeProperty: function( relativeProperty ) {
         var property;
+
         if( this.basePathOfProperty != '' ) {
             property = this.basePathOfProperty + '.' + relativeProperty;
         } else {
             property = relativeProperty;
         }
+
         return this.resolveProperty( property );
     },
 
@@ -63,4 +66,5 @@ _.extend( BasePathOfProperty.prototype, {
     excludeFirstChar: function( str ) {
         return str.substr( 1, str.length - 1 );
     }
+
 } );

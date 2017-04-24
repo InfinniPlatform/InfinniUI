@@ -6,7 +6,7 @@ function ViewBuilder() {
     _.superClass( ViewBuilder, this );
 }
 
-window.InfinniUI.ViewBuilder = ViewBuilder;
+InfinniUI.ViewBuilder = ViewBuilder;
 
 _.inherit( ViewBuilder, ContainerBuilder );
 
@@ -99,7 +99,7 @@ _.extend( ViewBuilder.prototype, {
             var subscriptor = InfinniUI.global.notificationSubscription;
 
             for( var key in metadata.NotificationSubscriptions ) {
-                ( function() {
+                (function() {
                     var script = metadata.NotificationSubscriptions[ key ];
                     subscriptor.subscribe( key, function( context, args ) {
                         new ScriptExecutor( element ).executeScript( script, {
@@ -107,7 +107,7 @@ _.extend( ViewBuilder.prototype, {
                             message: args.message
                         } );
                     }, this );
-                } )();
+                })();
             }
 
             element.onClosing( function() {

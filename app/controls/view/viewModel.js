@@ -4,7 +4,7 @@ var DialogResult = {
     canceled: 2
 };
 
-window.InfinniUI.DialogResult = DialogResult;
+InfinniUI.DialogResult = DialogResult;
 
 var ViewModel = ContainerModel.extend( {
 
@@ -21,4 +21,7 @@ var ViewModel = ContainerModel.extend( {
         this.set( 'parameters', new Collection( [], 'name' ) );
         this.set( 'dataSources', new Collection( [], 'name' ) );
     }
+
 } );
+
+InfinniUI.ViewModel = ViewModel;

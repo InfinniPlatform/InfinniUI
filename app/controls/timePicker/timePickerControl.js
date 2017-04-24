@@ -13,5 +13,7 @@ _.extend( TimePickerControl.prototype, {
     createControlView: function( model ) {
         return new TimePickerView( { model: model } );
     }
+
 } );
 
+InfinniUI.TimePickerControl = TimePickerControl;

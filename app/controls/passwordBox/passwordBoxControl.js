@@ -11,7 +11,7 @@ var PasswordBoxControl = function() {
 
 _.inherit( PasswordBoxControl, Control );
 
-_.extend( PasswordBoxControl.prototype, /** @lends PasswordBoxControl.prototype */ {
+_.extend( PasswordBoxControl.prototype, {
 
     createControlModel: function() {
         return new PasswordBoxModel();
@@ -22,3 +22,5 @@ _.extend( PasswordBoxControl.prototype, /** @lends PasswordBoxControl.prototype 
     }
 
 }, editorBaseControlMixin );
+
+InfinniUI.PasswordBoxControl = PasswordBoxControl;

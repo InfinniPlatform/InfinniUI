@@ -1,4 +1,5 @@
 var ViewPanelModel = ControlModel.extend( {
+
     defaults: _.defaults( {
         layout: null
     }, ControlModel.prototype.defaults ),
@@ -23,4 +24,7 @@ var ViewPanelModel = ControlModel.extend( {
             that.set( 'isLoaded', true );
         } );
     }
+
 } );
+
+InfinniUI.ViewPanelModel = ViewPanelModel;

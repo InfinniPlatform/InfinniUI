@@ -8,3 +8,5 @@ var TimePickerModel = DateTimePickerModel.extend( {
     }
 
 } );
+
+InfinniUI.TimePickerModel = TimePickerModel;

@@ -10,7 +10,8 @@ function PanelControl( parent ) {
 
 _.inherit( PanelControl, ContainerControl );
 
-_.extend( PanelControl.prototype, /** @lends PanelControl.prototype */ {
+_.extend( PanelControl.prototype, {
+
     createControlModel: function() {
         return new PanelModel();
     },
@@ -21,3 +22,4 @@ _.extend( PanelControl.prototype, /** @lends PanelControl.prototype */ {
 
 } );
 
+InfinniUI.PanelControl = PanelControl;

@@ -3,6 +3,7 @@
  * @mixin editorBaseMixin
  */
 var editorBaseMixin = {
+
     initialize_editorBase: function() {
     },
 
@@ -67,3 +68,5 @@ var editorBaseMixin = {
     }
 
 };
+
+InfinniUI.editorBaseMixin = editorBaseMixin;

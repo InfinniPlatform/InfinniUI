@@ -1,7 +1,7 @@
-window.InfinniUI = window.InfinniUI || {};
-window.InfinniUI.format = window.InfinniUI.format || {};
+InfinniUI = InfinniUI || {};
+InfinniUI.format = InfinniUI.format || {};
 
-window.InfinniUI.format.humanFileSize = function( size ) {
+InfinniUI.format.humanFileSize = function( size ) {
     /**
      * @see {@link http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable}
      */

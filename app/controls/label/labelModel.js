@@ -13,4 +13,7 @@ var LabelModel = ControlModel.extend( _.extend( {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
+
 }, editorBaseModelMixin ) );
+
+InfinniUI.LabelModel = LabelModel;

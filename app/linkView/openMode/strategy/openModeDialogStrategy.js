@@ -2,7 +2,10 @@ var OpenModeDialogStrategy = function() {
     this.dialogWidth = 'default';
 };
 
+InfinniUI.OpenModeDialogStrategy = OpenModeDialogStrategy;
+
 _.extend( OpenModeDialogStrategy.prototype, {
+
     template: InfinniUI.Template[ 'linkView/template/dialog.tpl.html' ],
 
     setView: function( view ) {
@@ -22,9 +25,8 @@ _.extend( OpenModeDialogStrategy.prototype, {
         var modalParams = { dialogWidth: this.dialogWidth };
         var $template = $( this.template( modalParams ) );
         var $closeButton = $( 'button', $template );
-        var $header =  $( 'h4', $template );
+        var $header = $( 'h4', $template );
         var view = this.view;
-
         var $modal = $template.appendTo( $( 'body' ) );
 
         this.$modal = $modal;
@@ -56,7 +58,6 @@ _.extend( OpenModeDialogStrategy.prototype, {
         updateCloseButtonVisibility();
 
         view.control.controlView.listenTo( view.control.controlModel, 'change:closeButtonVisibility', updateCloseButtonVisibility );
-
 
         var headerTemplate = view.getHeaderTemplate();
 
@@ -91,7 +92,7 @@ _.extend( OpenModeDialogStrategy.prototype, {
     },
 
     close: function() {
-        if ( this.$modal ) {
+        if( this.$modal ) {
             this.$modal.modal( 'hide' );
         }
     },
@@ -101,4 +102,5 @@ _.extend( OpenModeDialogStrategy.prototype, {
         this.$modal.remove();
         InfinniUI.ModalWindowService.modalWasClosed( this.$modal );
     }
+
 } );

@@ -8,7 +8,7 @@ function DateTimePicker( parent ) {
     _.superClass( DateTimePicker, this, parent );
 }
 
-window.InfinniUI.DateTimePicker = DateTimePicker;
+InfinniUI.DateTimePicker = DateTimePicker;
 
 _.inherit( DateTimePicker, TextEditorBase );
 
@@ -45,7 +45,7 @@ DateTimePicker.prototype.getTimeZone = function() {
 };
 
 DateTimePicker.prototype.setTimeZone = function( value ) {
-    if ( _.isNumber( value ) ) {
+    if( _.isNumber( value ) ) {
         this.control.set( 'timeZone', value );
     }
 };
@@ -55,16 +55,15 @@ DateTimePicker.prototype.setDateFormat = function( value ) {
 };
 
 DateTimePicker.prototype.validateValue = function( value ) {
-    if ( value === null || value === '' || typeof value === 'undefined' ) {
+    if( value === null || value === '' || typeof value === 'undefined' ) {
         return;
     }
 
     var minValue = InfinniUI.DateUtils.restoreTimezoneOffset( this.getMinValue(), this.getTimeZone() );
     var maxValue = InfinniUI.DateUtils.restoreTimezoneOffset( this.getMaxValue(), this.getTimeZone() );
-
     var isValid = InfinniUI.DateUtils.checkRangeDate( value, minValue, maxValue );
 
-    if ( !isValid ) {
+    if( !isValid ) {
         return 'Неверное значение';
     }
 };

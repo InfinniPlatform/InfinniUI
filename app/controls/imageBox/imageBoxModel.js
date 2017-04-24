@@ -16,7 +16,6 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
-
         this.set( 'acceptTypes', new Collection() );
 
         this.on( 'invalid', function( model, error ) {
@@ -28,6 +27,7 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
         var file = attrs.file;
         var maxSize = this.get( 'maxSize' );
         var acceptTypes = this.get( 'acceptTypes' );
+
         if ( file ) {
             if ( maxSize ) {
                 if ( file.size > maxSize ) {
@@ -54,3 +54,5 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.ImageBoxModel = ImageBoxModel;

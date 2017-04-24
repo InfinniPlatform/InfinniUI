@@ -31,4 +31,4 @@ _.extend( UpdateAction.prototype, baseFallibleActionMixin, {
 
 } );
 
-window.InfinniUI.UpdateAction = UpdateAction;
+InfinniUI.UpdateAction = UpdateAction;

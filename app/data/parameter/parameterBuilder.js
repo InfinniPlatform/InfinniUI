@@ -34,4 +34,4 @@ function ParameterBuilder() {
 
 }
 
-window.InfinniUI.ParameterBuilder = ParameterBuilder;
+InfinniUI.ParameterBuilder = ParameterBuilder;

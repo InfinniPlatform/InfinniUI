@@ -22,3 +22,5 @@ var AjaxLoaderIndicatorView = Backbone.View.extend( {
     }
 
 } );
+
+InfinniUI.AjaxLoaderIndicatorView = AjaxLoaderIndicatorView;

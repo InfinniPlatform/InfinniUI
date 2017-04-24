@@ -2,7 +2,7 @@ function DataNavigationBuilder() {
     _.superClass( DataNavigationBuilder, this );
 }
 
-window.InfinniUI.DataNavigationBuilder = DataNavigationBuilder;
+InfinniUI.DataNavigationBuilder = DataNavigationBuilder;
 
 _.inherit( DataNavigationBuilder, ElementBuilder );
 

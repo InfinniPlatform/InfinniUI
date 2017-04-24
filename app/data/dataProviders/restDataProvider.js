@@ -155,6 +155,7 @@ _.extend( RestDataProvider.prototype, {
 
     createItem: function( resultCallback, idProperty ) {
         var that = this;
+
         setTimeout( function() {
             resultCallback( that.createLocalItem( idProperty ) );
         }, 10 );
@@ -183,6 +184,7 @@ _.extend( RestDataProvider.prototype, {
 
         function extractFilesFromNode( node, path ) {
             var value, result = Array.isArray( node ) ? [] : {}, currentPath;
+
             for( var i in node ) {
                 if( !node.hasOwnProperty( i ) ) {
                     continue;
@@ -214,4 +216,4 @@ _.extend( RestDataProvider.prototype, {
 
 } );
 
-window.InfinniUI.Providers.RestDataProvider = RestDataProvider;
+InfinniUI.Providers.RestDataProvider = RestDataProvider;

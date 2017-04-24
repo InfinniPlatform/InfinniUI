@@ -74,7 +74,7 @@ describe( 'DeleteAction', function() {
 
     it( 'should delete selected item from DocumentDataSource', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();

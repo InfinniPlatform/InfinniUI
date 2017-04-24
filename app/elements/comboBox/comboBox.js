@@ -8,7 +8,7 @@ function ComboBox( parent ) {
     _.superClass( ComboBox, this, parent );
 }
 
-window.InfinniUI.ComboBox = ComboBox;
+InfinniUI.ComboBox = ComboBox;
 
 _.inherit( ComboBox, ListEditorBase );
 
@@ -57,4 +57,3 @@ ComboBox.prototype.setAutocompleteValue = function( value ) {
 ComboBox.prototype.setNoItemsMessage = function( value ) {
     this.control.setNoItemsMessage( value );
 };
-

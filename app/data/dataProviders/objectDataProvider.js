@@ -31,6 +31,7 @@ _.extend( ObjectDataProvider.prototype, {
             while( param = re.exec( filterPattern ) ) {
                 var paramName = param[ 0 ].replace( /\s+/, '' ).slice( 2, -2 );
                 var paramValue = filterParams[ paramName ] || '';
+
                 if( paramValue.length ) {
                     correctFilter = true;
                 }
@@ -56,8 +57,8 @@ _.extend( ObjectDataProvider.prototype, {
     },
 
     saveItem: function( item, successCallback ) {
-        var items = this.items,
-            itemIndex = this._getIndexOfItem( item );
+        var items = this.items;
+        var itemIndex = this._getIndexOfItem( item );
 
         if ( itemIndex == -1 ) {
             items.push( item );
@@ -113,4 +114,4 @@ _.extend( ObjectDataProvider.prototype, {
     }
 } );
 
-window.InfinniUI.Providers.ObjectDataProvider = ObjectDataProvider;
+InfinniUI.Providers.ObjectDataProvider = ObjectDataProvider;

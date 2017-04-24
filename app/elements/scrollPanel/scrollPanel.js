@@ -7,7 +7,7 @@ function ScrollPanel( parent ) {
     _.superClass( ScrollPanel, this, parent );
 }
 
-window.InfinniUI.ScrollPanel = ScrollPanel;
+InfinniUI.ScrollPanel = ScrollPanel;
 
 _.inherit( ScrollPanel, Container );
 
@@ -24,7 +24,7 @@ ScrollPanel.prototype.getHorizontalScroll = function() {
  * @param value
  */
 ScrollPanel.prototype.setHorizontalScroll = function( value ) {
-    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
         this.control.set( 'horizontalScroll', value );
     }
 };
@@ -42,7 +42,7 @@ ScrollPanel.prototype.getVerticalScroll = function() {
  * @param value
  */
 ScrollPanel.prototype.setVerticalScroll = function( value ) {
-    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.ScrollVisibility ) ) {
         this.control.set( 'verticalScroll', value );
     }
 };

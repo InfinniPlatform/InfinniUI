@@ -91,3 +91,5 @@ _.extend( StackPanelViewGroupStrategy.prototype, {
     }
 
 } );
+
+InfinniUI.StackPanelViewGroupStrategy = StackPanelViewGroupStrategy;

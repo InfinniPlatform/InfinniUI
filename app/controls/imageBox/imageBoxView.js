@@ -3,7 +3,7 @@
  * @mixes editorBaseViewMixin
  * @constructor
  */
-var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.extend( {}, editorBaseViewMixin, exifRotate, {
+var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRotate, {
 
     className: 'pl-imagebox',
 
@@ -53,12 +53,14 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
 
     updateText: function() {
         var text = this.model.get( 'text' );
+
         this.ui.uploadButton.text( text );
     },
 
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
         var isEnabled = this.model.get( 'enabled' );
+
         this.ui.input.prop( 'disabled', !isEnabled );
     },
 
@@ -90,6 +92,7 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
 
     updateUrl: function( url ) {
         var that = this;
+
         this.ui.img.get( 0 ).onload = function() {
             that.updateRotation( function() {
                 that.setPerfectPosition();
@@ -97,6 +100,7 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
         };
 
         this.ui.img.attr( 'src', url );
+
         var none = url === null || typeof url === 'undefined';
 
         this.$el.toggleClass( 'pl-empty', none );
@@ -135,6 +139,7 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
 
     stopLoadingFile: function() {
         var fileLoader = this.fileLoader;
+
         if( fileLoader && fileLoader.state() === 'pending' ) {
             fileLoader.reject();
         }
@@ -143,6 +148,7 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
     loadPreview: function( file ) {
         var defer = $.Deferred();
         var reader = new FileReader();
+
         reader.onload = ( function( file ) {
             return function( event ) {
                 defer.resolve( file, event.target.result );
@@ -180,9 +186,11 @@ var ImageBoxView = ControlView.extend( /** @lends ImageBoxView.prototype */ _.ex
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     }
 
 } ) );
+
+InfinniUI.ImageBoxView = ImageBoxView;

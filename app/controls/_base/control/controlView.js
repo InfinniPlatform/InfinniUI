@@ -126,7 +126,7 @@ var ControlView = Backbone.View.extend( {
     },
 
     updateLayout: function() {
-        var exchange = window.InfinniUI.global.messageBus;
+        var exchange = InfinniUI.global.messageBus;
         exchange.send( 'OnChangeLayout', {} );
     },
 

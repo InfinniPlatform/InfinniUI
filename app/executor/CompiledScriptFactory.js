@@ -5,9 +5,10 @@ function CompiledScriptFactory( scriptName, parentView ) {
 
     function get() {
         var scriptsStorage = parentView.getScriptsStorage();
-
         var script = scriptsStorage.getScripts().getById( scriptName );
 
         return script ? script.func : undefined;
     }
 }
+
+InfinniUI.CompiledScriptFactory = CompiledScriptFactory;

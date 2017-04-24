@@ -8,7 +8,7 @@ function Form( parent ) {
     _.superClass( Form, this, parent );
 }
 
-window.InfinniUI.Form = Form;
+InfinniUI.Form = Form;
 
 _.inherit( Form, StackPanel );
 
@@ -17,10 +17,10 @@ Form.prototype.createControl = function( parent ) {
 };
 
 Form.prototype.onSubmit = function( handler ) {
-    var that = this;
     var callback = function( nativeEventData ) {
         handler( nativeEventData );
     };
+
     return this.control.onSubmit( callback );
 };
 

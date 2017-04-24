@@ -2,7 +2,7 @@ function EventsManager() {
     this.handlers = {};
 }
 
-window.InfinniUI.EventsManager = EventsManager;
+InfinniUI.EventsManager = EventsManager;
 
 EventsManager.prototype.on = function( event, handler ) {
     if ( typeof this.handlers[ event ] === 'undefined' ) {
@@ -10,7 +10,6 @@ EventsManager.prototype.on = function( event, handler ) {
     }
 
     var handlers = this.handlers[ event ];
-    var manager = this;
     handlers.push( handler );
 
     return {
@@ -34,9 +33,9 @@ EventsManager.prototype.off = function( event, handler ) {
 };
 
 EventsManager.prototype.trigger = function( event ) {
-    var handlers = this.handlers[ event ],
-        args = Array.prototype.slice.call( arguments, 1 ),
-        deferred = $.Deferred();
+    var handlers = this.handlers[ event ];
+    var args = Array.prototype.slice.call( arguments, 1 );
+    var deferred = $.Deferred();
 
     if ( Array.isArray( handlers ) ) {
         var results = handlers.map( function( handler ) {

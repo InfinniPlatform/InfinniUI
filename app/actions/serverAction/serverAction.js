@@ -1,6 +1,6 @@
 function ServerAction( parentView ) {
     _.superClass( ServerAction, this, parentView );
-    this.provider = window.InfinniUI.providerRegister.build( 'ServerActionProvider' );
+    this.provider = InfinniUI.providerRegister.build( 'ServerActionProvider' );
     this.updateContentTypeStrategy();
     this.on( 'change:contentType', this.updateContentTypeStrategy );
 }
@@ -131,4 +131,4 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
 
 } );
 
-window.InfinniUI.ServerAction = ServerAction;
+InfinniUI.ServerAction = ServerAction;

@@ -12,11 +12,12 @@ function FileBox( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.FileBox = FileBox;
+InfinniUI.FileBox = FileBox;
 
 _.inherit( FileBox, Element );
 
 _.extend( FileBox.prototype, {
+
     getFile: function() {
         return this.control.get( 'file' );
     },
@@ -66,7 +67,7 @@ _.extend( FileBox.prototype, {
         }
     },
 
-    // НЕдокументированные методы
+    // Недокументированные методы
     setFile: function( value ) {
         this.control.set( 'file', value );
     },
@@ -91,16 +92,4 @@ _.extend( FileBox.prototype, {
         return this;
     }
 
-    //
-    //setUrl: function (value) {
-    //    this.control.set('url', value);
-    //},
-    //
-    //getUrl: function () {
-    //    return this.control.get('url');
-    //}
-
-},
-    editorBaseMixin,
-    labelTextElementMixin
-);
+}, editorBaseMixin, labelTextElementMixin );

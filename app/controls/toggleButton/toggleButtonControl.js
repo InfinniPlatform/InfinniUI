@@ -14,5 +14,7 @@ _.extend( ToggleButtonControl.prototype, {
     createControlView: function( model ) {
         return new ToggleButtonView( { model: model } );
     }
+
 }, editorBaseControlMixin );
 
+InfinniUI.ToggleButtonControl = ToggleButtonControl;

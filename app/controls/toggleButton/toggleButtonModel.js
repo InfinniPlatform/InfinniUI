@@ -13,3 +13,5 @@ var ToggleButtonModel = ControlModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.ToggleButtonModel = ToggleButtonModel;

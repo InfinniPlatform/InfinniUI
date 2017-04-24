@@ -9,6 +9,7 @@ function AuthenticationProvider( baseAddress ) {
 
 
 _.extend( AuthenticationProvider.prototype, {
+
     handlers: {
         onActiveRoleChanged: $.Callbacks(),
         onSignInInternal: $.Callbacks(),
@@ -126,6 +127,7 @@ _.extend( AuthenticationProvider.prototype, {
 
     getExternalLoginForm: function( requestUri, successUrl, failureUrl, resultCallback, errorCallback ) {
         var url = this.baseAddress + requestUri;
+
         this.sendPostRequest( '/Auth/GetExternalProviders', {},
             function( result ) {
                 var formElement = $( document.createElement( 'form' ) );

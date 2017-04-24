@@ -17,3 +17,4 @@ _.extend( IndeterminateCheckBoxControl.prototype, {
 
 }, editorBaseControlMixin );
 
+InfinniUI.IndeterminateCheckBoxControl = IndeterminateCheckBoxControl;

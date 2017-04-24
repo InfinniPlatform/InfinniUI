@@ -8,8 +8,7 @@ function NumberFormat( format ) {
     this.setFormat( format );
 }
 
-window.InfinniUI.NumberFormat = NumberFormat;
-
+InfinniUI.NumberFormat = NumberFormat;
 
 _.extend( NumberFormat.prototype, {
 
@@ -120,10 +119,10 @@ _.extend( NumberFormat.prototype, {
     formatNumber: function( val, capacity, groupSeparator, decimalSeparator ) {
         val = val.toFixed( capacity );
 
-        var stringOfVal = val.toString(),
-            splittedVal = stringOfVal.split( '.' ),
-            intPath = this.formatIntPath( splittedVal[ 0 ], groupSeparator ),
-            fractPath = this.formatFractPath( splittedVal[ 1 ], decimalSeparator, capacity );
+        var stringOfVal = val.toString();
+        var splittedVal = stringOfVal.split( '.' );
+        var intPath = this.formatIntPath( splittedVal[ 0 ], groupSeparator );
+        var fractPath = this.formatFractPath( splittedVal[ 1 ], decimalSeparator, capacity );
 
         return intPath + fractPath;
     },
@@ -150,8 +149,8 @@ _.extend( NumberFormat.prototype, {
      * @returns {string}
      */
     formatFractPath: function( fractPath, splitter, capacity ) {
-        var result = fractPath ? fractPath : '',
-            postfix;
+        var result = fractPath ? fractPath : '';
+        var postfix;
 
         if( capacity == 0 ) {
             return '';
@@ -165,4 +164,5 @@ _.extend( NumberFormat.prototype, {
         postfix = postfix.toString().substr( 1 );
         return splitter + result + postfix;
     }
+
 }, formatMixin );

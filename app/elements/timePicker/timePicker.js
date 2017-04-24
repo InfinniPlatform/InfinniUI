@@ -5,7 +5,7 @@ function TimePicker( parent ) {
     this.setTimeZone();
 }
 
-window.InfinniUI.TimePicker = TimePicker;
+InfinniUI.TimePicker = TimePicker;
 
 _.inherit( TimePicker, DateTimePicker );
 

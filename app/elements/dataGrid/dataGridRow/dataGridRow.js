@@ -11,7 +11,6 @@ function DataGridRow() {
 
 _.inherit( DataGridRow, Element );
 
-
 _.extend( DataGridRow.prototype, {
 
     createControl: function() {
@@ -46,7 +45,6 @@ _.extend( DataGridRow.prototype, {
         this.control.onToggle( handler );
     },
 
-    /** RowBackground **/
     setRowBackground: function( value ) {
         this.control.set( 'rowBackground', value );
     },
@@ -55,7 +53,6 @@ _.extend( DataGridRow.prototype, {
         return this.control.get( 'rowBackground' );
     },
 
-    /** RowForeground **/
     setRowForeground: function( value ) {
         this.control.set( 'rowForeground', value );
     },
@@ -64,7 +61,6 @@ _.extend( DataGridRow.prototype, {
         return this.control.get( 'rowForeground' );
     },
 
-    /** RowTextStyle */
     setRowTextStyle: function( value ) {
         this.control.set( 'rowTextStyle', value );
     },
@@ -73,7 +69,6 @@ _.extend( DataGridRow.prototype, {
         return this.control.get( 'rowTextStyle' );
     },
 
-    /** RowStyle */
     setRowStyle: function( value ) {
         this.control.set( 'rowStyle', value );
     },
@@ -87,9 +82,8 @@ _.extend( DataGridRow.prototype, {
     },
 
     _transformRowProperties: function( properties ) {
-
         for( var name in properties ) {
-            if ( !properties.hasOwnProperty( name ) ) {
+            if( !properties.hasOwnProperty( name ) ) {
                 continue;
             }
 

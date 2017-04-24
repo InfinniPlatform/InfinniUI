@@ -60,13 +60,12 @@ DataGridColumnBuilder.prototype.buildWidth = function( column, metadata ) {
 DataGridColumnBuilder.prototype.buildHeader = function( column, metadata, params ) {
     if( metadata.Header && typeof metadata.Header === 'object' ) {
         //Header указывает на DataBinding
-        var
-            builder = params.builder,
-            binding = builder.buildType( 'PropertyBinding', metadata.Header, {
-                parent: params.element,
-                parentView: params.parentView,
-                basePathOfProperty: params.basePathOfProperty
-            } );
+        var builder = params.builder;
+        var binding = builder.buildType( 'PropertyBinding', metadata.Header, {
+            parent: params.element,
+            parentView: params.parentView,
+            basePathOfProperty: params.basePathOfProperty
+        } );
 
         binding.bindElement( column, 'header' );
     } else {
@@ -103,7 +102,6 @@ DataGridColumnBuilder.prototype.buildCellTemplate = function( column, metadata, 
 };
 
 DataGridColumnBuilder.prototype.buildCellTemplateByTemplate = function( params, cellTemplateMetadata ) {
-    var dataGrid = params.element;
     var builder = params.builder;
     var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
 
@@ -307,3 +305,5 @@ DataGridColumnBuilder.prototype.buildHeaderTemplateByDefault = function( params 
         return label;
     };
 };
+
+InfinniUI.DataGridColumnBuilder = DataGridColumnBuilder;

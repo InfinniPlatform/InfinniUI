@@ -24,4 +24,4 @@ _.extend( SelectActionBuilder.prototype, baseActionBuilderMixin, {
 
 } );
 
-window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
+InfinniUI.SelectActionBuilder = SelectActionBuilder;

@@ -6,11 +6,11 @@ function PanelBuilder() {
     _.superClass( PanelBuilder, this );
 }
 
-window.InfinniUI.PanelBuilder = PanelBuilder;
+InfinniUI.PanelBuilder = PanelBuilder;
 
 _.inherit( PanelBuilder, ContainerBuilder );
 
-_.extend( PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
+_.extend( PanelBuilder.prototype, {
 
     createElement: function( params ) {
         return new Panel( params.parent );
@@ -32,13 +32,12 @@ _.extend( PanelBuilder.prototype, /** @lends PanelBuilder.prototype*/ {
 
         if( metadata.Header && typeof metadata.Header === 'object' ) {
             //Header указывает на DataBinding
-            var
-                builder = params.builder,
-                binding = builder.buildType( 'PropertyBinding', metadata.Header, {
-                    parent: element,
-                    parentView: params.parentView,
-                    basePathOfProperty: params.basePathOfProperty
-                } );
+            var builder = params.builder;
+            var binding = builder.buildType( 'PropertyBinding', metadata.Header, {
+                parent: element,
+                parentView: params.parentView,
+                basePathOfProperty: params.basePathOfProperty
+            } );
 
             binding.bindElement( element, 'header' );
         } else {

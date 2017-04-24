@@ -24,3 +24,5 @@ function InlineScriptFactory( scriptBody, builder, builderParams ) {
     }
 
 }
+
+InfinniUI.InlineScriptFactory = InlineScriptFactory;

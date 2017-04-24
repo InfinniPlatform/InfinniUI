@@ -24,3 +24,4 @@ _.extend( FileBoxControl.prototype, {
 
 }, editorBaseControlMixin );
 
+InfinniUI.FileBoxControl = FileBoxControl;

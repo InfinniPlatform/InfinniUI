@@ -9,6 +9,7 @@ var FileBoxModel = ControlModel.extend( _.extend( {
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults
     ),
+
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
@@ -80,3 +81,5 @@ var FileBoxModel = ControlModel.extend( _.extend( {
     }
 
 }, editorBaseModelMixin ) );
+
+InfinniUI.FileBoxModel = FileBoxModel;

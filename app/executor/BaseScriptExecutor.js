@@ -11,3 +11,5 @@ function BaseScriptExecutor( view, scriptFactory ) {
         return script.call( null, context, args );
     };
 }
+
+InfinniUI.BaseScriptExecutor = BaseScriptExecutor;

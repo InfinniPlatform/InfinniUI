@@ -2,7 +2,7 @@ function ViewPanel( parent ) {
     _.superClass( ViewPanel, this, parent );
 }
 
-window.InfinniUI.ViewPanel = ViewPanel;
+InfinniUI.ViewPanel = ViewPanel;
 
 _.inherit( ViewPanel, Element );
 

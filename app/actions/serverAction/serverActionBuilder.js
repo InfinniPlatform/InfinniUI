@@ -66,4 +66,4 @@ _.extend( ServerActionBuilder.prototype, baseActionBuilderMixin, baseFallibleAct
 
 } );
 
-window.InfinniUI.ServerActionBuilder = ServerActionBuilder;
+InfinniUI.ServerActionBuilder = ServerActionBuilder;

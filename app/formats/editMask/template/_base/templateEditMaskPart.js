@@ -94,10 +94,13 @@ var TemplateMaskPartStrategy = ( function() {
 
 } )();
 
+InfinniUI.TemplateMaskPartStrategy = TemplateMaskPartStrategy;
 
 var TemplateMaskPart = function( mask ) {
     _.extend( this, TemplateMaskPartStrategy[ mask ] );
 };
+
+InfinniUI.TemplateMaskPart = TemplateMaskPart;
 
 _.extend( TemplateMaskPart.prototype, {
 
@@ -120,5 +123,3 @@ _.extend( TemplateMaskPart.prototype, {
     }
 
 } );
-
-

@@ -14,7 +14,7 @@ var IconView = ControlView.extend( {
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -66,3 +66,5 @@ var IconView = ControlView.extend( {
     }
 
 } );
+
+InfinniUI.IconView = IconView;

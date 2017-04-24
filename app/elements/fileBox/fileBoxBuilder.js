@@ -9,7 +9,7 @@ function FileBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.FileBoxBuilder = FileBoxBuilder;
+InfinniUI.FileBoxBuilder = FileBoxBuilder;
 
 _.inherit( FileBoxBuilder, ElementBuilder );
 

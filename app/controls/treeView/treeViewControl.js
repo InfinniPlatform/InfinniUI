@@ -26,6 +26,6 @@ _.extend( TreeViewControl.prototype, {
         this.controlView.toggleNode( key );
     }
 
-
 } );
 
+InfinniUI.TreeViewControl = TreeViewControl;

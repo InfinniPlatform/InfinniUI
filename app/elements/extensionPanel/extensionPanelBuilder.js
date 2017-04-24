@@ -1,6 +1,7 @@
-﻿function ExtensionPanelBuilder() {}
+﻿function ExtensionPanelBuilder() {
+}
 
-window.InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
+InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
 
 _.inherit( ExtensionPanelBuilder, ContainerBuilder );
 
@@ -18,7 +19,10 @@ _.extend( ExtensionPanelBuilder.prototype, {
 
         var parameters = {};
         metadata.Parameters.forEach( function( parameterMetadata ) {
-            var param = builder.buildType( 'Parameter', parameterMetadata, { parentView: parentView, basePathOfProperty: params.basePathOfProperty } );
+            var param = builder.buildType( 'Parameter', parameterMetadata, {
+                parentView: parentView,
+                basePathOfProperty: params.basePathOfProperty
+            } );
             parameters[ param.getName() ] = param;
         } );
 
@@ -32,4 +36,5 @@ _.extend( ExtensionPanelBuilder.prototype, {
 
         return element;
     }
+
 } );

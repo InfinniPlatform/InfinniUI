@@ -3,7 +3,7 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var ToggleButtonView = ControlView.extend( /** @lends ToggleButtonView.prototype */ _.extend( {}, editorBaseViewMixin, {
+var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     template: InfinniUI.Template[ 'controls/toggleButton/template/toggleButton.tpl.html' ],
 
@@ -36,7 +36,7 @@ var ToggleButtonView = ControlView.extend( /** @lends ToggleButtonView.prototype
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
-        if ( focusable ) {
+        if( focusable ) {
             this.ui.container.attr( 'tabindex', 0 );
         } else {
             this.ui.container.removeAttr( 'tabindex' );
@@ -45,11 +45,13 @@ var ToggleButtonView = ControlView.extend( /** @lends ToggleButtonView.prototype
 
     updateTextOn: function() {
         var textOn = this.model.get( 'textOn' );
+
         this.ui.textOn.html( textOn || '&nbsp;' );
     },
 
     updateTextOff: function() {
         var textOff = this.model.get( 'textOff' );
+
         this.ui.textOff.html( textOff || '&nbsp;' );
     },
 
@@ -61,7 +63,7 @@ var ToggleButtonView = ControlView.extend( /** @lends ToggleButtonView.prototype
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -82,11 +84,16 @@ var ToggleButtonView = ControlView.extend( /** @lends ToggleButtonView.prototype
 
     onClickHandler: function( event ) {
         var model = this.model;
+
         model.set( 'value', !model.get( 'value' ) );
     },
 
     updateValue: function() {
         var value = this.model.get( 'value' );
+
         this.switchClass( 'toggle', value ? 'on' : 'off', this.$el );
     }
+
 } ) );
+
+InfinniUI.ToggleButtonView = ToggleButtonView;

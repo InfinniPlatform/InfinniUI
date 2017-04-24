@@ -42,4 +42,4 @@ _.extend( RouteToAction.prototype, {
 
 } );
 
-window.InfinniUI.RouteToAction = RouteToAction;
+InfinniUI.RouteToAction = RouteToAction;

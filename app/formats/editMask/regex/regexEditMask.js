@@ -2,12 +2,9 @@ function RegexEditMask() {
     this.mask = null;
 }
 
-window.InfinniUI.RegexEditMask = RegexEditMask;
+InfinniUI.RegexEditMask = RegexEditMask;
 
-
-_.extend( RegexEditMask.prototype, editMaskMixin );
-
-_.extend( RegexEditMask.prototype, {
+_.extend( RegexEditMask.prototype, editMaskMixin, {
 
     /**
      * Проверка что маска была полностью заполнена
@@ -15,13 +12,12 @@ _.extend( RegexEditMask.prototype, {
     getIsComplete: function( value ) {
         var regExp;
         this.value = value;
-        if ( this.mask !== null ) {
+        if( this.mask !== null ) {
             regExp = new RegExp( this.mask );
             return regExp.test( value );
         }
         return false;
     }
-
 
 } );
 

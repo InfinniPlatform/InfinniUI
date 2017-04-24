@@ -65,4 +65,4 @@ var formatMixin = {
 
 };
 
-window.InfinniUI.FormatMixin = formatMixin;
+InfinniUI.formatMixin = formatMixin;

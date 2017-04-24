@@ -9,10 +9,9 @@ function ToggleButton( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.ToggleButton = ToggleButton;
+InfinniUI.ToggleButton = ToggleButton;
 
 _.inherit( ToggleButton, Element );
-
 
 _.extend( ToggleButton.prototype, {
 
@@ -35,4 +34,5 @@ _.extend( ToggleButton.prototype, {
     setTextOff: function( value ) {
         return this.control.set( 'textOff', value ? value : '' );
     }
+
 }, editorBaseMixin );

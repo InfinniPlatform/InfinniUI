@@ -1,6 +1,5 @@
 /**
  *
- * @param parent
  * @constructor
  * @augments Control
  */
@@ -21,3 +20,5 @@ _.extend( IconControl.prototype, {
     }
 
 } );
+
+InfinniUI.IconControl = IconControl;

@@ -1,5 +1,6 @@
 /**
  * @param parent
+ * @param viewMode
  * @constructor
  * @augments Element
  */
@@ -7,7 +8,7 @@ function Container( parent, viewMode ) {
     _.superClass( Container, this, parent, viewMode );
 }
 
-window.InfinniUI.Container = Container;
+InfinniUI.Container = Container;
 
 _.inherit( Container, Element );
 

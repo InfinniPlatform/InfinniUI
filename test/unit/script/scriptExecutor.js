@@ -45,7 +45,7 @@ describe( 'ScriptExecutor', function() {
             window.testScriptWasExecuted = false;
 
             //When
-            new window.InfinniUI.ScriptExecutor( view ).executeScript( 'TestScript' );
+            new InfinniUI.ScriptExecutor( view ).executeScript( 'TestScript' );
 
             //Then
             assert.isTrue( window.testScriptWasExecuted );

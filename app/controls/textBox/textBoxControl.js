@@ -19,5 +19,7 @@ _.extend( TextBoxControl.prototype, {
     createControlView: function( model ) {
         return new TextBoxView( { model: model } );
     }
+
 } );
 
+InfinniUI.TextBoxControl = TextBoxControl;

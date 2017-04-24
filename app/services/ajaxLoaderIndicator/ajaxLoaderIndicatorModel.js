@@ -6,7 +6,7 @@ var AjaxLoaderIndicatorModel = Backbone.Model.extend( {
     },
 
     initialize: function( attributes, options ) {
-        var exchange = window.InfinniUI.global.messageBus;
+        var exchange = InfinniUI.global.messageBus;
 
         exchange.subscribe( messageTypes.onDataLoaded, this.onDataLoaded.bind( this ) );
         exchange.subscribe( messageTypes.onDataLoading, this.onDataLoading.bind( this ) );
@@ -32,3 +32,5 @@ var AjaxLoaderIndicatorModel = Backbone.Model.extend( {
     }
 
 } );
+
+InfinniUI.AjaxLoaderIndicatorModel = AjaxLoaderIndicatorModel;

@@ -4,7 +4,7 @@ function ListEditorBaseBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.ListEditorBaseBuilder = ListEditorBaseBuilder;
+InfinniUI.ListEditorBaseBuilder = ListEditorBaseBuilder;
 
 _.inherit( ListEditorBaseBuilder, ContainerBuilder );
 

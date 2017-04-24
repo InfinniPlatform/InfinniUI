@@ -2,7 +2,7 @@ function ButtonBuilder() {
     _.superClass( ButtonBuilder, this );
 }
 
-window.InfinniUI.ButtonBuilder = ButtonBuilder;
+InfinniUI.ButtonBuilder = ButtonBuilder;
 
 _.inherit( ButtonBuilder, ElementBuilder );
 
@@ -10,6 +10,7 @@ _.extend( ButtonBuilder.prototype, {
 
     createElement: function( params ) {
         var viewMode = this.detectViewMode( params );
+
         return new Button( params.parent, viewMode );
     },
 

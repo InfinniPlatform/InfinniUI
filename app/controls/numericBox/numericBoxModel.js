@@ -2,7 +2,7 @@
  * @class
  * @augments TextEditorBaseModel
  */
-var NumericBoxModel = TextEditorBaseModel.extend( /** @lends TextBoxModel.prototype */{
+var NumericBoxModel = TextEditorBaseModel.extend( {
 
     defaults: _.defaults(
         {
@@ -27,7 +27,6 @@ var NumericBoxModel = TextEditorBaseModel.extend( /** @lends TextBoxModel.protot
         var startValue = this.get( 'startValue' );
         var minValue = this.get( 'minValue' );
         var maxValue = this.get( 'maxValue' );
-
         var newValue = _.isNumber( value ) ? value : +value;
 
         if ( this.isSetValue( value ) && _.isNumber( value ) ) {
@@ -72,3 +71,5 @@ var NumericBoxModel = TextEditorBaseModel.extend( /** @lends TextBoxModel.protot
     }
 
 } );
+
+InfinniUI.NumericBoxModel = NumericBoxModel;

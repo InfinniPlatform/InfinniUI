@@ -6,11 +6,11 @@ function ComboBoxBuilder() {
     _.superClass( ComboBoxBuilder, this );
 }
 
-window.InfinniUI.ComboBoxBuilder = ComboBoxBuilder;
+InfinniUI.ComboBoxBuilder = ComboBoxBuilder;
 
 _.inherit( ComboBoxBuilder, ListEditorBaseBuilder );
 
-_.extend( ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
+_.extend( ComboBoxBuilder.prototype, {
 
     createElement: function( params ) {
         return new ComboBox( params.parent );
@@ -110,4 +110,5 @@ _.extend( ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     generateName: function() {
         return 'combobox-' + guid();
     }
+
 } );

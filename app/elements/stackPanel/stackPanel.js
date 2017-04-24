@@ -1,5 +1,6 @@
 /**
  * @param parent
+ * @param viewMode
  * @constructor
  * @augments Container
  */
@@ -7,7 +8,7 @@ function StackPanel( parent, viewMode ) {
     _.superClass( StackPanel, this, parent, viewMode );
 }
 
-window.InfinniUI.StackPanel = StackPanel;
+InfinniUI.StackPanel = StackPanel;
 
 _.inherit( StackPanel, Container );
 
@@ -16,7 +17,7 @@ StackPanel.prototype.getOrientation = function() {
 };
 
 StackPanel.prototype.setOrientation = function( value ) {
-    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.StackPanelOrientation ) ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.StackPanelOrientation ) ) {
         this.control.set( 'orientation', value );
     }
 };

@@ -19,7 +19,7 @@ _.extend( FakeRestDataProvider.prototype, {
         var queryString;
 
         if( type == 'get' && _.size( params.data ) > 0 ) {
-            queryString = InfinniUI.StringUtils.joinDataForQuery( params.data );
+            queryString = InfinniUI.stringUtils.joinDataForQuery( params.data );
             urlString = urlString + '?' + queryString;
         }
 

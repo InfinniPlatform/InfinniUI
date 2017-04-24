@@ -103,7 +103,7 @@ var CommonButtonView = ControlView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -120,4 +120,4 @@ var CommonButtonView = ControlView.extend( {
 
 _.extend( CommonButtonView.prototype, highlightMixin.controlView );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.Button.common', CommonButtonView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.Button.common', CommonButtonView );

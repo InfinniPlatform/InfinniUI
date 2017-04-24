@@ -22,4 +22,4 @@ function BooleanFormatBuilder() {
     };
 }
 
-window.InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;
+InfinniUI.BooleanFormatBuilder = BooleanFormatBuilder;

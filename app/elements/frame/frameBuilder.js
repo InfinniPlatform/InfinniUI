@@ -10,11 +10,12 @@ function FrameBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.FrameBuilder = FrameBuilder;
+InfinniUI.FrameBuilder = FrameBuilder;
 
 _.inherit( FrameBuilder, TextEditorBaseBuilder );
 
 _.extend( FrameBuilder.prototype, {
+
     applyMetadata: function( params ) {
         var element = params.element;
         ElementBuilder.prototype.applyMetadata.call( this, params );
@@ -23,9 +24,8 @@ _.extend( FrameBuilder.prototype, {
 
     createElement: function( params ) {
         var element = new Frame( params.parent );
+
         return element;
     }
 
-},
-    editorBaseBuilderMixin
-);
+}, editorBaseBuilderMixin );

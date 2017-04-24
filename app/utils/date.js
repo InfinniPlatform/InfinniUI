@@ -1,4 +1,4 @@
-window.InfinniUI.DateUtils = ( function() {
+InfinniUI.DateUtils = ( function() {
     init();
 
     var _defaultTimeZone;
@@ -46,7 +46,6 @@ window.InfinniUI.DateUtils = ( function() {
         var mMax = moment( max || null );
         var mVal = moment( date );
 
-
         if( mMin.isValid() && mVal.isBefore( mMin ) ) {
             nearest = mMin.toDate();
         } else if( mMax.isValid() && mVal.isAfter( mMax ) ) {
@@ -71,7 +70,6 @@ window.InfinniUI.DateUtils = ( function() {
         var mMin = moment( minDate || null );
         var mMax = moment( maxDate || null );
         var mVal = moment( date );
-
 
         if( mMin.isValid() && mMax.isValid() ) {
             success = mVal.isSameOrBefore( mMax, precision ) && mVal.isSameOrAfter( mMin, precision );
@@ -169,9 +167,8 @@ window.InfinniUI.DateUtils = ( function() {
         ].join( ':' );
 
         var sssPart = padInt( _date.getMilliseconds(), 3 ) + '0';// '000' + '0'
-
-
         var timezoneOffset = config.timezoneOffset;
+
         if( typeof timezoneOffset === 'undefined' || timezoneOffset === null ) {
             timezoneOffset = date.getTimezoneOffset();
         }
@@ -249,8 +246,9 @@ window.InfinniUI.DateUtils = ( function() {
     function padInt( value, size ) {
         var str = '' + value;
         var pad = '';
+
         if( str.length < size ) {
-            pad = Array( size - str.length + 1 ).join( '0' );
+            pad = new Array( size - str.length + 1 ).join( '0' );
         }
         return pad + str;
     }

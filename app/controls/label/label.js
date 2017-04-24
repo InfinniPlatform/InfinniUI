@@ -12,11 +12,11 @@ _.extend( LabelControl.prototype, {
     },
 
     createControlView: function( model, viewMode ) {
-        if( !viewMode || ! ( viewMode in window.InfinniUI.viewModes.Label ) ) {
+        if( !viewMode || ! ( viewMode in InfinniUI.viewModes.Label ) ) {
             viewMode = 'simple';
         }
 
-        var ViewClass = window.InfinniUI.viewModes.Label[ viewMode ];
+        var ViewClass = InfinniUI.viewModes.Label[ viewMode ];
 
         return new ViewClass( { model: model } );
     },
@@ -26,3 +26,5 @@ _.extend( LabelControl.prototype, {
     }
 
 }, editorBaseControlMixin );
+
+InfinniUI.LabelControl = LabelControl;

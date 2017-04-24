@@ -1,6 +1,5 @@
 InfinniUI.ContextMenuService = ( function() {
-
-    var exchange = window.InfinniUI.global.messageBus;
+    var exchange = InfinniUI.global.messageBus;
 
     exchange.subscribe( messageTypes.onContextMenu.name, function( context, args ) {
         var message = args.value;

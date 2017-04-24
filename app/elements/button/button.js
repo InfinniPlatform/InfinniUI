@@ -9,7 +9,7 @@ function Button( parent, viewMode ) {
     this.buttonInit();
 }
 
-window.InfinniUI.Button = Button;
+InfinniUI.Button = Button;
 
 _.inherit( Button, Element );
 

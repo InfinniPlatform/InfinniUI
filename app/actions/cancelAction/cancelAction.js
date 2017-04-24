@@ -23,4 +23,4 @@ _.extend( CancelAction.prototype, {
 
 } );
 
-window.InfinniUI.CancelAction = CancelAction;
+InfinniUI.CancelAction = CancelAction;

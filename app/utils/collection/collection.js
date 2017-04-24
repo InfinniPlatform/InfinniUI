@@ -46,10 +46,10 @@ function Collection( items, idProperty, comparator ) {
     this.events = new CollectionEventManager();
 }
 
-window.InfinniUI.Collection = Collection;
+InfinniUI.Collection = Collection;
 
 
-Object.defineProperties( Collection.prototype, /** @lends Collection.prototype */{
+Object.defineProperties( Collection.prototype, {
     /**
      * @type {string|null}
      */
@@ -86,6 +86,7 @@ Object.defineProperties( Collection.prototype, /** @lends Collection.prototype *
         },
         enumerable: false
     }
+
 } );
 
 /**
@@ -253,8 +254,6 @@ Collection.prototype.set = function( newItems, silent ) {
 
     var changed = this._items !== newItems;
     var _newItems = newItems.slice();
-    var matched, i = 0;
-    var itemValue, newValue = null, newValueIndex;
 
     _newItems.forEach( function( newItem, index ) {
         if( index < items.length ) {
@@ -287,6 +286,7 @@ Collection.prototype.set = function( newItems, silent ) {
 Collection.prototype.replace = function( oldItem, newItem ) {
     var itemValue;
     var changed = false;
+
     for( var i = 0; i < this._items.length; i = i + 1 ) {
         itemValue = this.getCollectionItemValue( i );
         if( this.isEqual( oldItem, itemValue ) ) {
@@ -312,8 +312,10 @@ Collection.prototype.pop = function() {
     }
 
     var itemValue = this.getCollectionItemValue( this.length - 1 );
+
     this._items.pop();
     this.events.onRemove( [ itemValue ], this._items.length );
+
     return itemValue;
 };
 
@@ -325,8 +327,8 @@ Collection.prototype.pop = function() {
 Collection.prototype.remove = function( item ) {
     var itemValue;
     var itemIndex;
-
     var changed = true;
+
     for( var i = 0; i < this._items.length; i = i + 1 ) {
         itemValue = this.getCollectionItemValue( i );
         itemIndex = i;
@@ -355,8 +357,8 @@ Collection.prototype.removeById = function( id ) {
 
     var itemValue;
     var itemIndex;
-
     var changed = true;
+
     for( var i = 0; i < this._items.length; i = i + 1 ) {
         itemValue = this.getCollectionItemValue( i );
         itemIndex = i;
@@ -384,9 +386,10 @@ Collection.prototype.removeAt = function( index ) {
     }
 
     var item = this.getCollectionItemValue( index );
-    this._items.splice( index, 1 );
 
+    this._items.splice( index, 1 );
     this.events.onRemove( [ item ], index );
+
     return true;
 };
 
@@ -502,12 +505,11 @@ Collection.prototype.removeEvery = function( predicate, thisArg ) {
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
 Collection.prototype.clear = function() {
-    var
-        items = this._items,
-        changed = items.length > 0,
-        values = items.map( function( item ) {
-            return this.getItemValue( item );
-        }, this );
+    var items = this._items;
+    var changed = items.length > 0;
+    var values = items.map( function( item ) {
+        return this.getItemValue( item );
+    }, this );
 
 
     items.length = 0;
@@ -583,9 +585,8 @@ Collection.prototype.find = function( predicate, thisArg ) {
  * @returns {number} индекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.indexOf = function( item, fromIndex ) {
-    var
-        items = this._items,
-        index = -1;
+    var items = this._items;
+    var index = -1;
 
     if( typeof fromIndex === 'undefined' ) {
         fromIndex = 0;
@@ -610,9 +611,8 @@ Collection.prototype.indexOf = function( item, fromIndex ) {
  * @returns {number} индекс первого найденного элемента коллекции или -1, если элемент не найден
  */
 Collection.prototype.lastIndexOf = function( item, fromIndex ) {
-    var
-        items = this._items,
-        index = -1;
+    var items = this._items;
+    var index = -1;
 
     if( typeof fromIndex === 'undefined' ) {
         fromIndex = items.length - 1;
@@ -624,6 +624,7 @@ Collection.prototype.lastIndexOf = function( item, fromIndex ) {
 
     for( var i = fromIndex; i > 0; i = i - 1 ) {
         var itemValue = this.getItemValue( items[ i ] );
+
         if( this.isEqual( item, itemValue ) ) {
             index = i;
             break;
@@ -664,9 +665,8 @@ Collection.prototype.findIndex = function( predicate, thisArg ) {
 Collection.prototype.contains = function( item, fromIndex ) {
     fromIndex = fromIndex || 0;
 
-    var
-        found = false,
-        items = this._items;
+    var found = false;
+    var items = this._items;
 
     for( var i = fromIndex; i < items.length; i = i + 1 ) {
         var itemValue = this.getItemValue( items[ i ] );
@@ -799,8 +799,8 @@ Collection.prototype.toArray = function() {
  * @returns {boolean} Возвращает true, если коллекция была изменена, иначе - false
  */
 Collection.prototype.move = function( oldIndex, newIndex ) {
-    var items = this._items,
-        item;
+    var items = this._items;
+    var item;
 
     if( oldIndex < 0 || oldIndex >= items.length || oldIndex === newIndex ) {
         return false;
@@ -833,11 +833,10 @@ Collection.prototype.sort = function( comparator ) {
         comparator = this._comparator;
     }
 
-    var
-        items = this._items,
-        collection = this,
-        _items = items.slice(),
-        changed = false;
+    var items = this._items;
+    var collection = this;
+    var _items = items.slice();
+    var changed = false;
 
     items.sort( function( item1, item2 ) {
         return comparator( collection.getItemValue( item1 ), collection.getItemValue( item2 ) );
@@ -977,9 +976,3 @@ Collection.prototype.getItemValue = function( item ) {
         return item.__value;
     }
 };
-
-/**
- * @typedef {Object} CollectionItem
- * @property {*} __value
- * @property {number} __index
- */

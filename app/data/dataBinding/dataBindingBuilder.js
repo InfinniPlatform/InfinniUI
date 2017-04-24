@@ -1,11 +1,11 @@
 var DataBindingBuilder = function() {};
 
-window.InfinniUI.DataBindingBuilder = DataBindingBuilder;
+InfinniUI.DataBindingBuilder = DataBindingBuilder;
 
 DataBindingBuilder.prototype.build = function( context, args ) {
     var result = new DataBinding();
     var metadata = args.metadata;
-    var logger = window.InfinniUI.global.logger;
+    var logger = InfinniUI.global.logger;
     var converter = {};
     var that = this;
     var property;

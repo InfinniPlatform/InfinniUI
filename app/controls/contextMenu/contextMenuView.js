@@ -26,7 +26,7 @@ var ContextMenuView = ContainerView.extend( {
     },
 
     render: function() {
-        var exchange = window.InfinniUI.global.messageBus;
+        var exchange = InfinniUI.global.messageBus;
         var that = this;
 
         this.prerenderingActions();
@@ -48,7 +48,7 @@ var ContextMenuView = ContainerView.extend( {
         } );
 
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
 
         return this;

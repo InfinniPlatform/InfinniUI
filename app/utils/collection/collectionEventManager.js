@@ -5,8 +5,7 @@
 function CollectionEventManager() {
 }
 
-window.InfinniUI.CollectionEventManager = CollectionEventManager;
-
+InfinniUI.CollectionEventManager = CollectionEventManager;
 
 _.extend( CollectionEventManager.prototype, Backbone.Events );
 

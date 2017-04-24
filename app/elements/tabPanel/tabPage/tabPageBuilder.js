@@ -20,10 +20,8 @@ _.extend( TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
      * @param {Object} params.metadata
      */
     applyMetadata: function( params ) {
-        var
-            metadata = params.metadata,
-            element = params.element;
-
+        var metadata = params.metadata;
+        var element = params.element;
         var data = ContainerBuilder.prototype.applyMetadata.call( this, params );
 
         element.setIcon( metadata.Icon );
@@ -39,10 +37,8 @@ _.extend( TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
      * @param params
      */
     initScriptHandlers: function( params ) {
-        var
-            metadata = params.metadata,
-            element = params.element;
-
+        var metadata = params.metadata;
+        var element = params.element;
         var executorBuilderParams = {
             parentView: params.parentView,
             parent: element,
@@ -61,3 +57,5 @@ _.extend( TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
     }
 
 } );
+
+InfinniUI.TabPageBuilder = TabPageBuilder;

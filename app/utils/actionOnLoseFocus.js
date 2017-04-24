@@ -14,4 +14,4 @@ ActionOnLoseFocus.prototype.checkNeedToAction = function( e ) {
     }
 };
 
-window.InfinniUI.ActionOnLoseFocus = ActionOnLoseFocus;
+InfinniUI.ActionOnLoseFocus = ActionOnLoseFocus;

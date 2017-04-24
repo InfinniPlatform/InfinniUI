@@ -23,4 +23,4 @@ function DateTimeFormatBuilder() {
     };
 }
 
-window.InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;
+InfinniUI.DateTimeFormatBuilder = DateTimeFormatBuilder;

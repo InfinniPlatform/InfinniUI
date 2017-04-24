@@ -5,6 +5,7 @@ if ( !String.prototype.includes ) {
 }
 
 var stringUtils = {
+
     format: function( value, args ) {
         return value.replace( /{(\d+)}/g, function( match, number ) {
             return typeof args[ number ] != 'undefined'
@@ -72,8 +73,8 @@ var stringUtils = {
     }
 };
 
-window.InfinniUI.StringUtils = stringUtils;
-window.InfinniUI.guid = guid;
+InfinniUI.stringUtils = stringUtils;
+InfinniUI.guid = guid;
 
 function guid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace( /[xy]/g, function( c ) {

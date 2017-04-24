@@ -41,7 +41,7 @@ function View( parent ) {
     } );
 }
 
-window.InfinniUI.View = View;
+InfinniUI.View = View;
 
 _.inherit( View, Container );
 
@@ -304,7 +304,7 @@ _.extend( View.prototype, {
 
     getDeferredOfMember: function( memberName ) {
         if( memberName === 'LocalStorageDS' ) {
-            return $.Deferred().resolve( window.InfinniUI.localStorageDataSource );
+            return $.Deferred().resolve( InfinniUI.localStorageDataSource );
         }
 
         if( !( memberName in this.membersDeferreds ) ) {
@@ -334,4 +334,5 @@ _.extend( View.prototype, {
     getFocusOnControl: function() {
         return this.control.get( 'focusOnControl' );
     }
+
 } );

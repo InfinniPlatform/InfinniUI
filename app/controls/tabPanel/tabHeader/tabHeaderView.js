@@ -5,7 +5,10 @@ var TabHeaderModel = Backbone.Model.extend( {
         enabled: true,
         canClose: false
     }
+
 } );
+
+InfinniUI.TabHeaderModel = TabHeaderModel;
 
 var TabHeaderView = Backbone.View.extend( {
 
@@ -36,7 +39,7 @@ var TabHeaderView = Backbone.View.extend( {
         this.bindUIElements();
         this.trigger( 'rendered' );
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -95,6 +98,7 @@ var TabHeaderView = Backbone.View.extend( {
      */
     updateTextHandler: function() {
         var text = this.model.get( 'text' );
+
         this.ui.label.text( text );
     },
 
@@ -103,6 +107,7 @@ var TabHeaderView = Backbone.View.extend( {
      */
     updateCanClose: function() {
         var canClose = this.model.get( 'canClose' );
+
         this.ui.close.toggleClass( 'hidden', !canClose );
     },
 
@@ -111,11 +116,13 @@ var TabHeaderView = Backbone.View.extend( {
      */
     updateSelectedHandler: function() {
         var selected = this.model.get( 'selected' );
+
         this.$el.toggleClass( 'pl-active active', selected );
     },
 
     updateEnabled: function() {
         var isEnabled = this.model.get( 'enabled' );
+
         this.$el.toggleClass( 'pl-disabled', !isEnabled );
     },
 
@@ -131,3 +138,5 @@ var TabHeaderView = Backbone.View.extend( {
 } );
 
 _.extend( TabHeaderView.prototype, bindUIElementsMixin );
+
+InfinniUI.TabHeaderView = TabHeaderView;

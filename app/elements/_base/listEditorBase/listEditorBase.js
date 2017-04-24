@@ -4,7 +4,7 @@ function ListEditorBase( parent, viewMode ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.ListEditorBase = ListEditorBase;
+InfinniUI.ListEditorBase = ListEditorBase;
 
 _.inherit( ListEditorBase, Container );
 

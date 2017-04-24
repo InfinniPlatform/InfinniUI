@@ -9,4 +9,7 @@ var FrameModel = ControlModel.extend( _.extend( {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
+
 }, editorBaseModelMixin ) );
+
+InfinniUI.FrameModel = FrameModel;

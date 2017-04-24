@@ -8,21 +8,21 @@ function PasswordBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
+InfinniUI.PasswordBoxBuilder = PasswordBoxBuilder;
 
 _.inherit( PasswordBoxBuilder, ElementBuilder );
 
-_.extend( PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype */ {
+_.extend( PasswordBoxBuilder.prototype, {
 
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
         this.applyMetadata_editorBaseBuilder( params );
 
-        var metadata = params.metadata,
-            element = params.element;
+        var metadata = params.metadata;
+        var element = params.element;
 
         this.initBindingToProperty( params, 'LabelText' );
-	                                                                                                                                                                                                                                                                                                                                              this.resolveExpressionInText( params, 'LabelText' );
+        this.resolveExpressionInText( params, 'LabelText' );
         element.setAutocomplete( metadata.Autocomplete );
     },
 
@@ -31,6 +31,4 @@ _.extend( PasswordBoxBuilder.prototype, /** @lends PasswordBoxBuilder.prototype 
         return element;
     }
 
-},
-    editorBaseBuilderMixin
-);
+}, editorBaseBuilderMixin );

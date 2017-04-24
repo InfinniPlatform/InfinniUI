@@ -33,21 +33,22 @@ var LinkElementView = CommonButtonView.extend( {
     },
 
     updateHref: function() {
-        var newHref = this.model.get( 'href' ),
-            $link = this.getButtonElement();
+        var newHref = this.model.get( 'href' );
+        var $link = this.getButtonElement();
 
         $link.attr( 'href', newHref );
     },
 
     updateTarget: function() {
-        var newTarget = this.model.get( 'target' ),
-            $link = this.getButtonElement();
+        var newTarget = this.model.get( 'target' );
+        var $link = this.getButtonElement();
 
         $link.attr( 'target', '_' + newTarget );
     },
 
     onClickHandler: function( e ) {
         var href = this.model.get( 'href' );
+
         if( href.indexOf( 'http://' ) === -1 ) {
             InfinniUI.AppRouter.navigate( href, { trigger: true } );
             if( e.which !== 2 ) {
@@ -57,3 +58,5 @@ var LinkElementView = CommonButtonView.extend( {
     }
 
 } );
+
+InfinniUI.LinkElementView = LinkElementView;

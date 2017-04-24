@@ -60,3 +60,5 @@ var exifRotate = {
     }
 
 };
+
+InfinniUI.exifRotate = exifRotate;

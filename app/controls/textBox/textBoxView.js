@@ -36,6 +36,7 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
 
     updateLineCount: function() {
         var lineCount = this.model.get( 'lineCount' );
+
         this.ui.editor.attr( 'rows', lineCount );
     },
 
@@ -53,7 +54,7 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -61,6 +62,7 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
     getData: function() {
         var data = TextEditorBaseView.prototype.getData.call( this );
         var model = this.model;
+
         return _.extend(
             data,
             {
@@ -75,3 +77,5 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
     }
 
 } );
+
+InfinniUI.TextBoxView = TextBoxView;

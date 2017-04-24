@@ -119,7 +119,7 @@ describe( 'AddAction', function() {
 
     it( 'should add item to DocumentDataSource', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
 
         var metadata = {
             'Text': 'Parent View',
@@ -219,7 +219,7 @@ describe( 'AddAction', function() {
 
     it( 'should suspend SourceValue', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
 
         var metadata = {
             'Text': 'Parent View',
@@ -288,7 +288,7 @@ describe( 'AddAction', function() {
 
     it( 'should call onExecuted', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
 
         var metadata = {
             'Text': 'Parent View',
@@ -373,7 +373,7 @@ describe( 'AddAction', function() {
 
     it( 'should open add view without destination source', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
+        InfinniUI.providerRegister.register( 'DocumentDataSource', StaticFakeDataProvider );
 
         var metadata = {
             Name: 'ParentView',

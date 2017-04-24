@@ -13,7 +13,7 @@ var TextEditor = function() {
     this._model = model;
 };
 
-window.InfinniUI.TextEditor = TextEditor;
+InfinniUI.TextEditor = TextEditor;
 
 TextEditor.prototype.setDisplayFormat = function( displayFormat ) {
     this._model.set( 'displayFormat', displayFormat );

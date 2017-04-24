@@ -1,4 +1,5 @@
 var ViewPanelView = ControlView.extend( {
+
     className: 'pl-view-panel',
 
     initialize: function() {
@@ -27,8 +28,11 @@ var ViewPanelView = ControlView.extend( {
 
         this.postrenderingActions( false );
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     }
+
 } );
+
+InfinniUI.ViewPanelView = ViewPanelView;

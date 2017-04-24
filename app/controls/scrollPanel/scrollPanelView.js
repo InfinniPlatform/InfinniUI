@@ -2,7 +2,7 @@
  * @class
  * @augments ControlView
  */
-var ScrollPanelView = ContainerView.extend( /** @lends ScrollPanelView.prototype */ {
+var ScrollPanelView = ContainerView.extend( {
 
     className: 'pl-scrollpanel panel panel-default',
 
@@ -37,7 +37,7 @@ var ScrollPanelView = ContainerView.extend( /** @lends ScrollPanelView.prototype
             }, 0 );
         } )( this.$el );
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -115,7 +115,8 @@ var ScrollPanelView = ContainerView.extend( /** @lends ScrollPanelView.prototype
     },
 
     updateGrouping: function() {
-
     }
 
 } );
+
+InfinniUI.ScrollPanelView = ScrollPanelView;

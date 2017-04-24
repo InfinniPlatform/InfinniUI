@@ -28,3 +28,5 @@ function Executor( metadata, builder, builderParams ) {
 
     return handler ? handler : function() {};
 }
+
+InfinniUI.Executor = Executor;

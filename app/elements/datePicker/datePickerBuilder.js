@@ -2,7 +2,7 @@ function DatePickerBuilder() {
     _.superClass( DatePickerBuilder, this );
 }
 
-window.InfinniUI.DatePickerBuilder = DatePickerBuilder;
+InfinniUI.DatePickerBuilder = DatePickerBuilder;
 
 _.inherit( DatePickerBuilder, DateTimePickerBuilder );
 

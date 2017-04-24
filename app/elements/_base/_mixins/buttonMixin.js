@@ -61,3 +61,5 @@ var buttonMixin = {
     }
 
 };
+
+InfinniUI.buttonMixin = buttonMixin;

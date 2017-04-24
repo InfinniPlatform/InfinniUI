@@ -146,9 +146,10 @@ var editMaskMixin = {
 
     getNextIntValue: function( options, value ) {
         options = options || {};
-        var minValue = null,
-            maxValue = null,
-            step = ( typeof options.step !== 'undefined' ) ? step : 1;
+        var minValue = null;
+        var maxValue = null;
+        var step = ( typeof options.step !== 'undefined' ) ? step : 1;
+
         if( typeof options.min !== 'undefined' ) {
             minValue = options.min;
         }
@@ -156,6 +157,7 @@ var editMaskMixin = {
             maxValue = options.max;
         }
         value = parseInt( value, 10 );
+
         if( isNaN( value ) ) {
             value = ( minValue === null ) ? 0 : minValue;
         } else {
@@ -169,12 +171,14 @@ var editMaskMixin = {
 
     getPrevIntValue: function( options, value ) {
         options = options || {};
-        var minValue = null,
-            step = ( typeof options.step !== 'undefined' ) ? step : 1;
+        var minValue = null;
+        var step = ( typeof options.step !== 'undefined' ) ? step : 1;
+
         if( typeof options.min !== 'undefined' ) {
             minValue = options.min;
         }
         value = parseInt( value, 10 );
+
         if( isNaN( value ) ) {
             value = ( minValue === null ) ? 0 : minValue;
         } else {
@@ -191,11 +195,13 @@ var editMaskMixin = {
 
         value = parseInt( value, 10 );
         var text, ln;
+
         if( isNaN( value ) ) {
             value = '';
         }
         text = value.toString();
         ln = text.length;
+
         if( width !== null && ln < width ) {
             text = Array( width - ln + 1 ).join( '0' ) + text;
         }
@@ -213,4 +219,4 @@ var editMaskMixin = {
 
 };
 
-window.InfinniUI.EditMaskMixin = editMaskMixin;
+InfinniUI.editMaskMixin = editMaskMixin;

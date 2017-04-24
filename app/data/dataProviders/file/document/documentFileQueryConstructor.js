@@ -6,7 +6,7 @@ var DocumentUploadQueryConstructor = function( host ) {
     this.host = host;
 };
 
-window.InfinniUI.DocumentUploadQueryConstructor = DocumentUploadQueryConstructor;
+InfinniUI.DocumentUploadQueryConstructor = DocumentUploadQueryConstructor;
 
 /**
  * @public

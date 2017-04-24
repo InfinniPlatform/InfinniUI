@@ -19,3 +19,5 @@ var domHelper = {
     }
 
 };
+
+InfinniUI.domHelper = domHelper;

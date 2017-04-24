@@ -13,6 +13,7 @@ var DateTimeMaskPartStrategy = ( function() {
         }
 
         var val = parseInt( value, 10 );
+
         return [ 4, 5, 6, 7, 8, 9 ].indexOf( val ) !== -1 || value.length === 2;
     }
 
@@ -22,6 +23,7 @@ var DateTimeMaskPartStrategy = ( function() {
         }
 
         var val = parseInt( value, 10 );
+
         return [ 2, 3, 4, 5, 6, 7, 8, 9 ].indexOf( val ) !== -1 || value.length === 2;
     }
 
@@ -213,6 +215,7 @@ var DateTimeMaskPartStrategy = ( function() {
             },
             apply: function( value, part ) {
                 var year = parseInt( part, 10 );
+
                 if( !isNaN( year ) ) {
                     year = '0000' + year;
                     var date = new Date();
@@ -533,10 +536,14 @@ var DateTimeMaskPartStrategy = ( function() {
 
 } )();
 
+InfinniUI.DateTimeMaskPartStrategy = DateTimeMaskPartStrategy;
+
 var DateTimeMaskPart = function( mask ) {
     _.extend( this, DateTimeMaskPartStrategy[ mask ] );
     this.init();
 };
+
+InfinniUI.DateTimeMaskPart = DateTimeMaskPart;
 
 _.extend( DateTimeMaskPart.prototype, {
 
@@ -595,9 +602,9 @@ _.extend( DateTimeMaskPart.prototype, {
     },
 
     getNextIntValue: function( value ) {
-        var minValue = ( typeof this.min !== 'undefined' ) ? this.min : null,
-            maxValue = ( typeof this.max !== 'undefined' ) ? this.max : null,
-            step = ( typeof this.step !== 'undefined' ) ? this.step : 1;
+        var minValue = ( typeof this.min !== 'undefined' ) ? this.min : null;
+        var maxValue = ( typeof this.max !== 'undefined' ) ? this.max : null;
+        var step = ( typeof this.step !== 'undefined' ) ? this.step : 1;
 
         value = parseInt( value, 10 );
         if( isNaN( value ) ) {
@@ -612,8 +619,8 @@ _.extend( DateTimeMaskPart.prototype, {
     },
 
     getPrevIntValue: function( value ) {
-        var minValue = ( typeof this.min !== 'undefined' ) ? this.min : null,
-            step = ( typeof this.step !== 'undefined' ) ? this.step : 1;
+        var minValue = ( typeof this.min !== 'undefined' ) ? this.min : null;
+        var step = ( typeof this.step !== 'undefined' ) ? this.step : 1;
 
         value = parseInt( value, 10 );
         if( isNaN( value ) ) {
@@ -636,7 +643,6 @@ _.extend( DateTimeMaskPart.prototype, {
         //@TODO Получать культуру из контекста!
         var culture = this.getCurrentCulture();
         var formatInfo = culture.dateTimeFormatInfo;
-
         var list;
 
         switch( mask ) {
@@ -665,24 +671,28 @@ _.extend( DateTimeMaskPart.prototype, {
     getNextListValueForMask: function( mask, value ) {
         var list = this.getListForMask( mask );
         var index = list.indexOf( value );
+
         if( typeof list === 'undefined' ) {
             return value;
         } else if( index === -1 ) {
             return list.length ? list[ 0 ] : '';
         }
         index = index + 1;
+
         return ( index < list.length ) ? list[ index ] : value;
     },
 
     getPrevListValueForMask: function( mask, value ) {
         var list = this.getListForMask( mask );
         var index = list.indexOf( value );
+
         if( typeof list === 'undefined' ) {
             return value;
         } else if( index === -1 ) {
             return list.length ? list[ list.length - 1 ] : '';
         }
         index = index - 1;
+
         return ( index >= 0 ) ? list[ index ] : value;
     },
 

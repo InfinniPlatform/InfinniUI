@@ -62,6 +62,7 @@ _.extend( Element.prototype, {
     _findAllChildren: function( predicate, getChildElements ) {
         var elements = this.getChildElements();
         var items = [];
+
         if( Array.isArray( elements ) ) {
             elements.forEach( function( element ) {
                 if( predicate.call( element ) ) {
@@ -107,6 +108,7 @@ _.extend( Element.prototype, {
 
     getProperty: function( name ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( name );
+
         if( typeof this[ getterMethodName ] === 'function' ) {
             return this[ getterMethodName ]();
         } else {
@@ -115,8 +117,8 @@ _.extend( Element.prototype, {
     },
 
     setProperty: function( name, value ) {
-        var setterMethodName = 'set' + this._upperFirstSymbol( name ),
-            getterMethodName;
+        var setterMethodName = 'set' + this._upperFirstSymbol( name );
+        var getterMethodName;
 
         if( typeof this[ setterMethodName ] === 'function' ) {
             this[ setterMethodName ]( value );
@@ -132,11 +134,13 @@ _.extend( Element.prototype, {
 
     _isCollectionProperty: function( propertyName ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( propertyName );
+
         return ( typeof this[ getterMethodName ] === 'function' ) && this[ getterMethodName ]() instanceof Collection;
     },
 
     onPropertyChanged: function( propertyName, handler ) {
         var subscribingMethodName = 'on' + this._upperFirstSymbol( propertyName ) + 'Changed';
+
         if( typeof this[ subscribingMethodName ] === 'function' ) {
             this[ subscribingMethodName ]( handler );
         } else {
@@ -189,6 +193,7 @@ _.extend( Element.prototype, {
 
     setParentEnabledOnChild: function( value ) {
         var elements = this.getChildElements();
+
         if( _.isEmpty( elements ) === false ) {
             for( var i = 0, ln = elements.length; i < ln; i = i + 1 ) {
                 if( typeof elements[ i ].setParentEnabled === 'undefined' ) {
@@ -205,6 +210,7 @@ _.extend( Element.prototype, {
         }
 
         var old = this.control.get( 'parentEnabled' );
+
         this.control.set( 'parentEnabled', value );
 
         if( old !== value ) {
@@ -396,92 +402,102 @@ _.extend( Element.prototype, {
     },
 
     onKeyDown: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingKeyEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingKeyEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onKeyDown( callback );
     },
 
     onKeyUp: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingKeyEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingKeyEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onKeyUp( callback );
     },
 
     onClick: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onClick( callback );
     },
 
     onDoubleClick: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onDoubleClick( callback );
     },
 
     onMouseDown: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseDown( callback );
     },
 
     onMouseUp: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseUp( callback );
     },
 
     onMouseEnter: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseEnter( callback );
     },
 
     onMouseLeave: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseLeave( callback );
     },
 
     onMouseMove: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseMove( callback );
     },
 
     onMouseWheel: function( handler ) {
-        var that = this,
-            callback = function( nativeEventData ) {
-                var eventData = that._getHandlingMouseEventData( nativeEventData );
-                handler( eventData );
-            };
+        var that = this;
+        var callback = function( nativeEventData ) {
+            var eventData = that._getHandlingMouseEventData( nativeEventData );
+            handler( eventData );
+        };
+
         return this.control.onMouseWheel( callback );
     },
 
@@ -490,7 +506,7 @@ _.extend( Element.prototype, {
     },
 
     remove: function( isInitiatedByParent, parent ) {
-        var logger = window.InfinniUI.global.logger;
+        var logger = InfinniUI.global.logger;
         if( this.isRemoved ) {
             logger.warn( 'Element.remove: Попытка удалить элемент, который уже был удален' );
             return;
@@ -523,6 +539,7 @@ _.extend( Element.prototype, {
 
     removeChild: function( child ) {
         var index = this.childElements.indexOf( child );
+
         if( index != -1 ) {
             this.childElements.splice( index, 1 );
         }
@@ -533,7 +550,7 @@ _.extend( Element.prototype, {
             this.childElements.push( child );
 
         } else {
-            var logger = window.InfinniUI.global.logger;
+            var logger = InfinniUI.global.logger;
             logger.warn( 'Element.addChild: Попытка добавить потомка в удаленный элемент' );
         }
 
@@ -617,4 +634,4 @@ _.extend( Element.prototype, {
 
 } );
 
-window.InfinniUI.Element = Element;
+InfinniUI.Element = Element;

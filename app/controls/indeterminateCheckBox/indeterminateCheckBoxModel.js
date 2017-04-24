@@ -5,3 +5,5 @@ var IndeterminateCheckBoxModel = CheckBoxModel.extend( {
     }, CheckBoxModel.prototype.defaults )
 
 } );
+
+InfinniUI.IndeterminateCheckBoxModel = IndeterminateCheckBoxModel;

@@ -13,4 +13,4 @@ _.extend( CancelActionBuilder.prototype, baseActionBuilderMixin, {
 
 } );
 
-window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
+InfinniUI.CancelActionBuilder = CancelActionBuilder;

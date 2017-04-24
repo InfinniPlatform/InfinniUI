@@ -44,3 +44,5 @@ var builderValuePropertyMixin = {
     }
 
 };
+
+InfinniUI.builderValuePropertyMixin = builderValuePropertyMixin;

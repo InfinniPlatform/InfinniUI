@@ -23,7 +23,7 @@ describe( 'ObjectDataProvider', function() {
         var metadata = {};
         var builder = new InfinniUI.ApplicationBuilder();
 
-        window.InfinniUI.providerRegister.register( 'ObjectDataSource', window.InfinniUI.Providers.ObjectDataProvider );
+        InfinniUI.providerRegister.register( 'ObjectDataSource', InfinniUI.Providers.ObjectDataProvider );
         var dataSource = builder.buildType( 'ObjectDataSource', metadata, { parentView: fakeView() } );
         dataSource._setItems( dataItems );
 

@@ -36,4 +36,4 @@ _.extend( ObjectDataSourceBuilder.prototype, {
 
 } );
 
-window.InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;
+InfinniUI.ObjectDataSourceBuilder = ObjectDataSourceBuilder;

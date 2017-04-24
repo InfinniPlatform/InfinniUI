@@ -1,4 +1,5 @@
 var CheckingListBoxView = BaseListBoxView.extend( {
+
     className: 'pl-listbox',
 
     template: {
@@ -24,13 +25,13 @@ var CheckingListBoxView = BaseListBoxView.extend( {
     },
 
     initDomHandlers: function() {
-        var $listBox = this.$el,
-            that = this;
+        var $listBox = this.$el;
+        var that = this;
 
         $listBox.get( 0 ).addEventListener( 'click', function( e ) {
             e = $.event.fix( e );
-            var $el = $( e.target ),
-                $currentListItem, item, isDisabledItem;
+            var $el = $( e.target );
+            var $currentListItem, item, isDisabledItem;
 
             if ( !that.model.get( 'enabled' ) ) {
                 return;
@@ -57,6 +58,7 @@ var CheckingListBoxView = BaseListBoxView.extend( {
 
         }, true );
     }
+
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.ListBox.checking', CheckingListBoxView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.ListBox.checking', CheckingListBoxView );

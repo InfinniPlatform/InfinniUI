@@ -1,18 +1,7 @@
 var editorBaseBuilderMixin = {
 
     initialize_editorBaseBuilder: function() {
-
     },
-
-    /**
-     *
-     * @param params
-     * @param {Object} [bindingOptions
-     * @param {Function} [bindingOptions.converter] Конвертер
-     * @param {string} [bindingOptions.valueProperty="value'] Имя атрибута значения
-     * @returns {*}
-     */
-
 
     /**
      *
@@ -142,3 +131,5 @@ var editorBaseBuilderMixin = {
     }
 
 };
+
+InfinniUI.editorBaseBuilderMixin = editorBaseBuilderMixin;

@@ -6,7 +6,7 @@ var RequestExecutorDataStrategy = function( type ) {
     }
 };
 
-window.InfinniUI.RequestExecutorDataStrategy = RequestExecutorDataStrategy;
+InfinniUI.RequestExecutorDataStrategy = RequestExecutorDataStrategy;
 
 RequestExecutorDataStrategy.prototype.request = function( requestData, successCallbackHandler, failCallbackHandler ) {
     return this.strategy.apply( this, Array.prototype.slice.call( arguments ) );
@@ -105,6 +105,7 @@ function RequestExecutor( resultCallback, successCallback, failCallback, cache )
 
     var request = function( type, requestData ) {
         var strategy = new RequestExecutorDataStrategy( type );
+
         return strategy.request( requestData, successCallbackHandler, failCallbackHandler );
     };
 

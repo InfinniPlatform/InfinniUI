@@ -2,7 +2,7 @@
  * @class
  * @augments ControlView
  */
-var TabPanelView = ContainerView.extend( /** @lends TabPanelView.prototype */ {
+var TabPanelView = ContainerView.extend( {
 
     className: 'pl-tabpanel',
 
@@ -39,7 +39,7 @@ var TabPanelView = ContainerView.extend( /** @lends TabPanelView.prototype */ {
         this.trigger( 'render' );
         this.updateProperties();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -284,7 +284,8 @@ var TabPanelView = ContainerView.extend( /** @lends TabPanelView.prototype */ {
      * @protected
      */
     updateGrouping: function() {
-
     }
 
 } );
+
+InfinniUI.TabPanelView = TabPanelView;

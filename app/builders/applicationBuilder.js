@@ -4,7 +4,7 @@
         this.registerElementBuilders();
     }
 
-    window.InfinniUI.global.factory = this;
+    InfinniUI.global.factory = this;
 }
 
 _.extend( ApplicationBuilder.prototype, {
@@ -134,4 +134,4 @@ ApplicationBuilder.addToRegisterQueue = function( name, builder ) {
     } );
 };
 
-window.InfinniUI.ApplicationBuilder = ApplicationBuilder;
+InfinniUI.ApplicationBuilder = ApplicationBuilder;

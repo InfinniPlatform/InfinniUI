@@ -9,4 +9,5 @@
         }
         return isEqual( a, b );
     };
+
 } )();

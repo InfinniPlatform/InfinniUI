@@ -1,4 +1,5 @@
 function SpecialApplicationView() {
+
     this.isView = true;
 
     this.getContainer = function() {
@@ -20,4 +21,5 @@ function SpecialApplicationView() {
     this.getContext = function() {
         return null;
     };
+
 }

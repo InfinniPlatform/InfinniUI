@@ -7,7 +7,7 @@ function TextBoxBuilder() {
     _.superClass( TextBoxBuilder, this );
 }
 
-window.InfinniUI.TextBoxBuilder = TextBoxBuilder;
+InfinniUI.TextBoxBuilder = TextBoxBuilder;
 
 _.inherit( TextBoxBuilder, TextEditorBaseBuilder );
 
@@ -21,6 +21,7 @@ TextBoxBuilder.prototype.applyMetadata = function( params ) {
     var element = params.element;
     var metadata = params.metadata;
     var lineCount = metadata.LineCount;
+
     element.setMultiline( metadata.Multiline );
     if ( metadata.Multiline && lineCount === null || typeof lineCount === 'undefined' ) {
         lineCount = 2;

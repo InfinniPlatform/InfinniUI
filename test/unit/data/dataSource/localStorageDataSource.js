@@ -38,7 +38,7 @@ describe( 'LocalStorageDataSource', function() {
         }
     ];
 
-    window.InfinniUI.localStorageDataSource = new window.InfinniUI.LocalStorageDataSource( {
+    InfinniUI.localStorageDataSource = new InfinniUI.LocalStorageDataSource( {
         view: fakeView()
     } );
 
@@ -46,7 +46,7 @@ describe( 'LocalStorageDataSource', function() {
         // clear LocalStorage
         localStorage.clear();
 
-        var dataSource = window.InfinniUI.localStorageDataSource;
+        var dataSource = InfinniUI.localStorageDataSource;
         var initItems = JSON.parse( JSON.stringify( items ) );
 
         if( onItemsUpdated ) {

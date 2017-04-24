@@ -4,7 +4,6 @@ var Tooltip = function( parent ) {
 
 _.inherit( Tooltip, Element );
 
-
 _.extend( Tooltip.prototype, {
 
     createControl: function() {
@@ -15,8 +14,6 @@ _.extend( Tooltip.prototype, {
         this.control.set( 'content', content );
     }
 
-
 } );
-
 
 InfinniUI.Tooltip = Tooltip;

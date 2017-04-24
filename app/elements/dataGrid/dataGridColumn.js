@@ -79,10 +79,10 @@ DataGridColumn.prototype.getIsHeaderTemplateEmpty = function() {
 };
 
 DataGridColumn.prototype.onSort = function( handler ) {
-    var that = this,
-        callback = function( nativeEventData ) {
-            handler( nativeEventData );
-        };
+    var that = this;
+    var callback = function( nativeEventData ) {
+        handler( nativeEventData );
+    };
     this.on( 'onSort', callback );
 };
 
@@ -104,7 +104,7 @@ DataGridColumn.prototype.setProperty = function( propertyName, propertyValue ) {
     var oldValue = this._values[ propertyName ];
 
     this._values[ propertyName ] = propertyValue;
-    if ( oldValue !== propertyValue ) {
+    if( oldValue !== propertyValue ) {
         this.trigger( 'change:' + propertyName, null, {
             property: propertyName,
             oldValue: oldValue,
@@ -118,3 +118,5 @@ DataGridColumn.prototype.getProperty = function( propertyName ) {
 };
 
 _.extend( DataGridColumn.prototype, Backbone.Events );
+
+InfinniUI.DataGridColumn = DataGridColumn;

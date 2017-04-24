@@ -1,14 +1,14 @@
 describe( 'ValidationResult', function() {
 
     it( 'should create ValidationResult object', function() {
-        var validationResult = new window.InfinniUI.ValidationResult();
+        var validationResult = new InfinniUI.ValidationResult();
 
         assert.equal( validationResult.IsValid, true );
         assert.equal( validationResult.Items.length, 0 );
     } );
 
     it( 'should set IsValid to false', function() {
-        var validationResult = new window.InfinniUI.ValidationResult();
+        var validationResult = new InfinniUI.ValidationResult();
 
         validationResult.error( 'some error happend', 'someProperty' );
 
@@ -24,7 +24,7 @@ describe( 'ValidationResult', function() {
                 {
                     'ObjectDataSource': {
                         'Name': 'ObjectDataSource',
-                        'ValidationErrors': '{ return window.InfinniUI.validateItems( context, args ) }',
+                        'ValidationErrors': '{ return InfinniUI.validateItems( context, args ) }',
                         'Items': []
                     }
                 }
@@ -32,8 +32,8 @@ describe( 'ValidationResult', function() {
         };
 
         testHelper.applyViewMetadata( metadata, function( view ) {
-            var validationResult = new window.InfinniUI.ValidationResult();
-            window.InfinniUI.validateItems = function( context, args ) {
+            var validationResult = new InfinniUI.ValidationResult();
+            InfinniUI.validateItems = function( context, args ) {
                 if( !args._id ) {
                     validationResult.error( '_id doesn\'t exist' );
                 }

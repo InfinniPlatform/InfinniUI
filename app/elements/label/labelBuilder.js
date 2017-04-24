@@ -10,13 +10,15 @@ function LabelBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.LabelBuilder = LabelBuilder;
+InfinniUI.LabelBuilder = LabelBuilder;
 
 _.inherit( LabelBuilder, ElementBuilder );
+
 _.extend( LabelBuilder.prototype, {
+
     applyMetadata: function( params ) {
-        /** @type Label **/
         var element = params.element;
+
         ElementBuilder.prototype.applyMetadata.call( this, params );
         this.applyMetadata_editorBaseBuilder( params );
 
@@ -30,18 +32,18 @@ _.extend( LabelBuilder.prototype, {
     initDisplayFormat: function( params ) {
         var metadata = params.metadata;
         var format = this.buildDisplayFormat( metadata.DisplayFormat, params );
+
         params.element.setDisplayFormat( format );
     },
 
     createElement: function( params ) {
         var label = new Label( params.parent, params.metadata[ 'ViewMode' ] );
+
         label.getHeight = function() {
             return 34;
         };
+
         return label;
     }
 
-},
-    editorBaseBuilderMixin,
-    displayFormatBuilderMixin
-);
+}, editorBaseBuilderMixin, displayFormatBuilderMixin );

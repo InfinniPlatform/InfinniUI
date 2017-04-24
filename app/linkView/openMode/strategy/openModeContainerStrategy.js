@@ -2,6 +2,7 @@ var OpenModeContainerStrategy = function() {
 };
 
 _.extend( OpenModeContainerStrategy.prototype, {
+
     setView: function( view ) {
         this.view = view;
     },
@@ -23,4 +24,7 @@ _.extend( OpenModeContainerStrategy.prototype, {
         this.container.setLayout( null );
         this.view.remove();
     }
+
 } );
+
+InfinniUI.OpenModeContainerStrategy = OpenModeContainerStrategy;

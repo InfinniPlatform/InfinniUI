@@ -223,7 +223,7 @@ var DataGridView = ListEditorBaseView.extend( {
         setTimeout( function() {
             that.updateProperties();
             //devblockstart
-            window.InfinniUI.global.messageBus.send( 'render', { element: that } );
+            InfinniUI.global.messageBus.send( 'render', { element: that } );
             //devblockstop
         }, 0 );
         return this;

@@ -20,6 +20,7 @@ function TemplateEditMaskBuilder() {
 
         return editMask;
     };
+
 }
 
-window.InfinniUI.TemplateEditMaskBuilder = TemplateEditMaskBuilder;
+InfinniUI.TemplateEditMaskBuilder = TemplateEditMaskBuilder;

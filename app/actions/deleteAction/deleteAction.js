@@ -105,4 +105,4 @@ _.extend( DeleteAction.prototype, baseFallibleActionMixin, {
 
 } );
 
-window.InfinniUI.DeleteAction = DeleteAction;
+InfinniUI.DeleteAction = DeleteAction;

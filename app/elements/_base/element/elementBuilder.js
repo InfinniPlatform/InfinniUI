@@ -31,7 +31,7 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
      * @param {Builder} params.builder
      * @param {View} params.parent
      * @param {Object} params.metadata
-     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     * @param {*} params.collectionProperty
      */
     createElement: function( params ) {
         throw ( 'Не перегружен абстрактный метод ElementBuilder.createElement()' );
@@ -43,7 +43,7 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
      * @param {Builder} params.builder
      * @param {View} params.parent
      * @param {Object} params.metadata
-     * @param {ListBoxItemCollectionProperty} params.collectionProperty
+     * @param {*} params.collectionProperty
      * @param {Element} params.element
      */
     applyMetadata: function( params ) {
@@ -233,7 +233,7 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
     },
 
     initContextMenu: function( params ) {
-        var exchange = window.InfinniUI.global.messageBus;
+        var exchange = InfinniUI.global.messageBus;
         var builder = params.builder;
         var element = params.element;
         var metadata = params.metadata;
@@ -258,4 +258,4 @@ _.extend( ElementBuilder.prototype, /** @lends ElementBuilder.prototype */ {
 
 } );
 
-window.InfinniUI.ElementBuilder = ElementBuilder;
+InfinniUI.ElementBuilder = ElementBuilder;

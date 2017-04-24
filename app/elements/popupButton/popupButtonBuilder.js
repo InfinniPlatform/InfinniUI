@@ -6,7 +6,7 @@ function PopupButtonBuilder() {
     _.superClass( PopupButtonBuilder, this );
 }
 
-window.InfinniUI.PopupButtonBuilder = PopupButtonBuilder;
+InfinniUI.PopupButtonBuilder = PopupButtonBuilder;
 
 _.inherit( PopupButtonBuilder, ContainerBuilder );
 

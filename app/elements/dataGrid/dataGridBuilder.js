@@ -3,7 +3,7 @@ function DataGridBuilder() {
     this.columnBuilder = new DataGridColumnBuilder();
 }
 
-window.InfinniUI.DataGridBuilder = DataGridBuilder;
+InfinniUI.DataGridBuilder = DataGridBuilder;
 
 _.inherit( DataGridBuilder, ListEditorBaseBuilder );
 
@@ -17,8 +17,8 @@ _.extend( DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         ListEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
         var metadata = params.metadata;
-        /** @type DataGrid **/
         var element = params.element;
+
         element.setShowSelectors( metadata.ShowSelectors );
         element.setCheckAllVisible( metadata.CheckAllVisible );
 
@@ -53,9 +53,9 @@ _.extend( DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
     },
 
     applyColumnsMetadata: function( params ) {
-        var metadata = params.metadata,
-            element = params.element,
-            collection = element.getColumns();
+        var metadata = params.metadata;
+        var element = params.element;
+        var collection = element.getColumns();
 
         if( Array.isArray( metadata.Columns ) ) {
             var columns = metadata.Columns.map( function( columnMetaData ) {

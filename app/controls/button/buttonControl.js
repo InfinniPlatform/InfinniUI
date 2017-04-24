@@ -17,11 +17,11 @@ _.extend( ButtonControl.prototype, highlightMixin.control, {
     },
 
     createControlView: function( model, viewMode ) {
-        if( !viewMode || !viewMode in window.InfinniUI.viewModes.Button ) {
+        if( !viewMode || !viewMode in InfinniUI.viewModes.Button ) {
             viewMode = 'common';
         }
 
-        var ViewClass = window.InfinniUI.viewModes.Button[ viewMode ];
+        var ViewClass = InfinniUI.viewModes.Button[ viewMode ];
 
         return new ViewClass( { model: model } );
     },

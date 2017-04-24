@@ -62,6 +62,7 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         ControlView.prototype.updateEnabled.call( this );
 
         var enabled = this.model.get( 'enabled' );
+
         this.ui.input.prop( 'disabled', !enabled );
     },
 
@@ -84,7 +85,7 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -102,6 +103,7 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
     updateModelValue: function() {
         var value = this.ui.input.val();
         var model = this.model;
+
         model.set( 'value', value );
         model.set( 'rawValue', value );
     },
@@ -119,3 +121,5 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
     }
 
 } ) );
+
+InfinniUI.PasswordBoxView = PasswordBoxView;

@@ -1,5 +1,5 @@
 describe( 'RestDataSource', function() {
-    window.InfinniUI.providerRegister.register( 'RestDataSource', FakeRestDataProvider );
+    InfinniUI.providerRegister.register( 'RestDataSource', FakeRestDataProvider );
 
     var items = [
         {

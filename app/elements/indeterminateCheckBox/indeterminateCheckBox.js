@@ -9,10 +9,9 @@ function IndeterminateCheckBox( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
+InfinniUI.IndeterminateCheckBox = IndeterminateCheckBox;
 
 _.inherit( IndeterminateCheckBox, CheckBox );
-
 
 _.extend( IndeterminateCheckBox.prototype, {
 

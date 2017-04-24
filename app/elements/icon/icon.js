@@ -2,7 +2,7 @@ function Icon( parent ) {
     _.superClass( Icon, this, parent );
 }
 
-window.InfinniUI.Icon = Icon;
+InfinniUI.Icon = Icon;
 
 _.inherit( Icon, Element );
 

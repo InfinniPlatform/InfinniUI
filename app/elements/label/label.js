@@ -3,10 +3,9 @@ function Label( parent, viewMode ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.Label = Label;
+InfinniUI.Label = Label;
 
 _.inherit( Label, Element );
-
 
 _.extend( Label.prototype, {
 
@@ -15,7 +14,7 @@ _.extend( Label.prototype, {
     },
 
     setTextWrapping: function( value ) {
-        if ( typeof value === 'boolean' ) {
+        if( typeof value === 'boolean' ) {
             this.control.set( 'textWrapping', value );
         }
     },
@@ -25,7 +24,7 @@ _.extend( Label.prototype, {
     },
 
     setTextTrimming: function( value ) {
-        if ( typeof value === 'boolean' ) {
+        if( typeof value === 'boolean' ) {
             this.control.set( 'textTrimming', value );
         }
     },
@@ -46,31 +45,22 @@ _.extend( Label.prototype, {
         return this.control.getDisplayValue();
     },
 
-        /**
-         * @description Возвращает режим отображения HTML разметки
-         * @returns {Boolean}
-         */
+    /**
+     * @description Возвращает режим отображения HTML разметки
+     * @returns {Boolean}
+     */
     getEscapeHtml: function() {
         return this.control.get( 'escapeHtml' );
     },
 
-        /**
-         * @description Устанавливает режим отображения HTML разметки
-         * @param {Boolean} value
-         */
+    /**
+     * @description Устанавливает режим отображения HTML разметки
+     * @param {Boolean} value
+     */
     setEscapeHtml: function( value ) {
-        if ( _.isBoolean( value ) ) {
+        if( _.isBoolean( value ) ) {
             this.control.set( 'escapeHtml', value );
         }
     }
-}
 
-    ,
-    editorBaseMixin
-    //formatPropertyMixin,
-    //elementHorizontalTextAlignmentMixin,
-    //@TODO TextTrimming
-    //elementBackgroundMixin,
-    //elementForegroundMixin,
-    //elementTextStyleMixin
-);
+}, editorBaseMixin );

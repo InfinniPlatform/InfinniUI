@@ -30,4 +30,4 @@ _.extend( DeleteActionBuilder.prototype, baseActionBuilderMixin, baseFallibleAct
 
 } );
 
-window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
+InfinniUI.DeleteActionBuilder = DeleteActionBuilder;

@@ -19,4 +19,4 @@ _.extend( SaveActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActio
 
 } );
 
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+InfinniUI.SaveActionBuilder = SaveActionBuilder;

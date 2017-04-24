@@ -17,4 +17,4 @@ _.extend( UpdateActionBuilder.prototype, baseActionBuilderMixin, baseFallibleAct
 
 } );
 
-window.InfinniUI.UpdateActionBuilder = UpdateActionBuilder;
+InfinniUI.UpdateActionBuilder = UpdateActionBuilder;

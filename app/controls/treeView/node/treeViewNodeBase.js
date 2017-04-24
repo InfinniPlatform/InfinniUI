@@ -129,3 +129,5 @@ var TreeViewNodeBase = Backbone.View.extend( {
 } );
 
 _.extend( TreeViewNodeBase.prototype, bindUIElementsMixin );
+
+InfinniUI.TreeViewNodeBase = TreeViewNodeBase;

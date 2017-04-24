@@ -16,7 +16,7 @@ _.extend( EditAction.prototype, {
             // if selectedItem is empty and it is must be document
             // return error
             if( this._isRootElementPath( destinationProperty ) ) {
-                var logger = window.InfinniUI.global.logger;
+                var logger = InfinniUI.global.logger;
                 var message = stringUtils.format( 'EditAction: edit item has not been found. {0} does not have item by path "{1}"', [ destinationDataSource.getName(), destinationProperty ] );
                 logger.error( message );
 
@@ -100,4 +100,4 @@ _.extend( EditAction.prototype, {
 
 } );
 
-window.InfinniUI.EditAction = EditAction;
+InfinniUI.EditAction = EditAction;

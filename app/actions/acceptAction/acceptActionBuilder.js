@@ -13,4 +13,4 @@ _.extend( AcceptActionBuilder.prototype, baseActionBuilderMixin, {
 
 } );
 
-window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
+InfinniUI.AcceptActionBuilder = AcceptActionBuilder;

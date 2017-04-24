@@ -1,5 +1,5 @@
 ﻿describe( 'DocumentDataSource', function() {
-    window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+    InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
     var dataItems = [
         {
@@ -147,7 +147,7 @@
 
         it( 'should set id filter', function( done ) {
             // Given
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
             FakeRestDataProvider.prototype.items = JSON.parse( JSON.stringify( dataItems ) );
 
             var builder = new InfinniUI.ApplicationBuilder();
@@ -175,7 +175,7 @@
 
         it( 'should update documents when pageNumber are changed', function( done ) {
             // Given
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
             FakeRestDataProvider.prototype.items = JSON.parse( JSON.stringify( dataItems ) );
 
             var dataSource = new InfinniUI.DocumentDataSource( {

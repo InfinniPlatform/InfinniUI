@@ -19,7 +19,6 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         fileDownloadUrl: '.pl-filebox-file-download-url',
         edit: '.pl-filebox-edit',
         control: '.form-control',
-
         input: 'input'
     } ),
 
@@ -97,6 +96,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     updateText: function() {
         var text = this.model.get( 'text' );
+
         this.ui.btnPick.attr( 'title', text );
     },
 
@@ -116,6 +116,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     updateErrorText: function() {
         var errorText = this.model.get( 'errorText' );
+
         if( errorText ) {
             this.ui.errorText
                 .text( errorText )
@@ -129,6 +130,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     updateWarningText: function() {
         var warningText = this.model.get( 'warningText' );
+
         if( warningText ) {
             this.ui.warningText
                 .text( warningText )
@@ -154,48 +156,25 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     updateFileName: function() {
         var fileName = this.model.get( 'fileName' );
+
         this.ui.fileUpload.text( fileName );
         this.ui.fileDownloadUrl.text( fileName );
     },
 
     updateFileSize: function() {
-        //var fileSize = this.model.get('fileSize');
-        //
-        //var text = '';
-        //if (typeof fileSize !== 'undefined' && fileSize !== null) {
-        //    text = InfinniUI.format.humanFileSize(fileSize);
-        //}
-        //this.ui.fileSize.text(text);
     },
 
     updateFileInfo: function() {
         return;
-        // var model = this.model;
-        // var value = model.get( 'value' );
-        // var fileName = model.get( 'fileName' );
-        //
-        // if( !value || value.length === 0 ) {
-        //     this.ui.info.toggleClass( 'hidden', true );
-        //     this.ui.empty.toggleClass( 'hidden', false );
-        // } else {
-        //     if( !fileName || fileName.length === 0 ) {
-        //         fileName = 'Скачать файл';
-        //     }
-        //     this.ui.download.text( fileName );
-        //     this.ui.info.toggleClass( 'hidden', false );
-        //     this.ui.empty.toggleClass( 'hidden', true );
-        // }
     },
 
     updateFileTime: function() {
-        var time = this.model.get( 'fileTime' );
-
+        // var time = this.model.get( 'fileTime' );
         //@TODO Update file's datetime on view
     },
 
     updateFileType: function() {
-        var fileType = this.model.get( 'fileType' );
-
+        // var fileType = this.model.get( 'fileType' );
         //@TODO Update file's mime type on view
     },
 
@@ -262,7 +241,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.postrenderingActions();
 
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
 
         return this;
@@ -273,3 +252,5 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
     }
 
 } ) );
+
+InfinniUI.FileBoxView = FileBoxView;

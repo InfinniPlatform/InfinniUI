@@ -22,3 +22,5 @@ _.extend( FrameControl.prototype, {
     }
 
 }, editorBaseControlMixin );
+
+InfinniUI.FrameControl = FrameControl;

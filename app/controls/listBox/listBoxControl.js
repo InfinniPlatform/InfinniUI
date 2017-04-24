@@ -11,14 +11,15 @@ _.extend( ListBoxControl.prototype, {
     },
 
     createControlView: function( model, viewMode ) {
-        if( !viewMode || ! viewMode in window.InfinniUI.viewModes.ListBox ) {
+        if( !viewMode || ! viewMode in InfinniUI.viewModes.ListBox ) {
             viewMode = 'common';
         }
 
-        var ViewClass = window.InfinniUI.viewModes.ListBox[ viewMode ];
+        var ViewClass = InfinniUI.viewModes.ListBox[ viewMode ];
 
         return new ViewClass( { model: model } );
     }
 
 } );
 
+InfinniUI.ListBoxControl = ListBoxControl;

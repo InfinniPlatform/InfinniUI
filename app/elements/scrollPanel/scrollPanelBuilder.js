@@ -6,11 +6,11 @@ function ScrollPanelBuilder() {
     _.superClass( ScrollPanelBuilder, this );
 }
 
-window.InfinniUI.ScrollPanelBuilder = ScrollPanelBuilder;
+InfinniUI.ScrollPanelBuilder = ScrollPanelBuilder;
 
 _.inherit( ScrollPanelBuilder, ContainerBuilder );
 
-_.extend( ScrollPanelBuilder.prototype, /** @lends ScrollPanelBuilder.prototype*/ {
+_.extend( ScrollPanelBuilder.prototype, {
 
     createElement: function( params ) {
         return new ScrollPanel( params.parent );
@@ -22,9 +22,8 @@ _.extend( ScrollPanelBuilder.prototype, /** @lends ScrollPanelBuilder.prototype*
      * @param {Object} params.metadata
      */
     applyMetadata: function( params ) {
-        var
-            metadata = params.metadata,
-            element = params.element;
+        var metadata = params.metadata;
+        var element = params.element;
 
         var data = ContainerBuilder.prototype.applyMetadata.call( this, params );
 

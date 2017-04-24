@@ -43,7 +43,7 @@ var TreeViewView = ListEditorBaseView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -102,8 +102,10 @@ var TreeViewView = ListEditorBaseView.extend( {
                     view.listenTo( node, 'collapse', view.onCollapseNodeHandler.bind( view, item ) );
 
                     node.setItemContent( $item );
-                    var key = keySelector( null, { value: item } ),
-                        $subitems = renderNodes( key );
+
+                    var key = keySelector( null, { value: item } );
+                    var $subitems = renderNodes( key );
+
                     node.setItemsContent( $subitems );
 
                     view.addChildElement( node, item );
@@ -299,3 +301,5 @@ var TreeViewView = ListEditorBaseView.extend( {
     }
 
 } );
+
+InfinniUI.TreeViewView = TreeViewView;

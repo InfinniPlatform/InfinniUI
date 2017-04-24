@@ -10,14 +10,14 @@ function PasswordBox( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.PasswordBox = PasswordBox;
+InfinniUI.PasswordBox = PasswordBox;
 
 _.inherit( PasswordBox, Element );
 
-_.extend( PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
+_.extend( PasswordBox.prototype, {
 
     setAutocomplete: function( value ) {
-        if ( typeof value === 'undefined' || value === null ) {
+        if( typeof value === 'undefined' || value === null ) {
             return;
         }
         this.control.set( 'autocomplete', !!value );
@@ -35,7 +35,4 @@ _.extend( PasswordBox.prototype, /* @lends PasswordBox.prototype */ {
         return this.control.get( 'rawValue' );
     }
 
-},
-    editorBaseMixin,
-    labelTextElementMixin
-);
+}, editorBaseMixin, labelTextElementMixin );

@@ -7,11 +7,12 @@ function MenuBar( parent ) {
     _.superClass( MenuBar, this, parent );
 }
 
-window.InfinniUI.MenuBar = MenuBar;
+InfinniUI.MenuBar = MenuBar;
 
 _.inherit( MenuBar, Container );
 
 _.extend( MenuBar.prototype, {
+
     createControl: function( viewMode ) {
         return new MenuBarControl( viewMode );
     },
@@ -27,7 +28,7 @@ _.extend( MenuBar.prototype, {
                 var highlight = _.isString( name ) && childElement.getName() === name;
                 var control = childElement.control;
 
-                if ( control ) {
+                if( control ) {
                     control.setHighlight( highlight );
                 }
             } );

@@ -4,7 +4,7 @@ function InlineViewBuilder() {
 
 _.inherit( InlineViewBuilder, LinkViewBuilderBase );
 
-window.InfinniUI.InlineViewBuilder = InlineViewBuilder;
+InfinniUI.InlineViewBuilder = InlineViewBuilder;
 
 _.extend( InlineViewBuilder.prototype, {
 

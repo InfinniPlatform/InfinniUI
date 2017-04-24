@@ -13,7 +13,8 @@ function DataProviderRegister() {
         }
         return null;
     };
+
 }
 
 
-window.InfinniUI.providerRegister = new DataProviderRegister();
+InfinniUI.providerRegister = new DataProviderRegister();

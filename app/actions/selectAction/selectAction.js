@@ -40,4 +40,4 @@ _.extend( SelectAction.prototype, {
 
 } );
 
-window.InfinniUI.SelectAction = SelectAction;
+InfinniUI.SelectAction = SelectAction;

@@ -24,7 +24,7 @@ var ToolBarView = ContainerView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -54,5 +54,9 @@ var ToolBarView = ContainerView.extend( {
         return $elements;
     },
 
-    updateGrouping: function() {}
+    updateGrouping: function() {
+    }
+
 } );
+
+InfinniUI.ToolBarView = ToolBarView;

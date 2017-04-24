@@ -59,7 +59,7 @@ describe( 'ImageBox', function() {
 
         //beforeEach(function () {
         //    //register fake upload provider
-        //    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+        //    InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
         //        return {
         //            uploadFile: function () {
         //                var deferred = $.Deferred();

@@ -3,7 +3,7 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /** @lends FrameView.prototype */{
+var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     className: 'pl-frame',
 
@@ -55,9 +55,11 @@ var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, /** @lend
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     }
 
 } ) );
+
+InfinniUI.FrameView = FrameView;

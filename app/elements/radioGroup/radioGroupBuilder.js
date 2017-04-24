@@ -2,7 +2,7 @@ function RadioGroupBuilder() {
     _.superClass( RadioGroupBuilder, this );
 }
 
-window.InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
+InfinniUI.RadioGroupBuilder = RadioGroupBuilder;
 
 _.inherit( RadioGroupBuilder, ListBoxBuilder );
 
@@ -10,6 +10,7 @@ _.extend( RadioGroupBuilder.prototype, {
 
     createElement: function( params ) {
         var viewMode = params.metadata[ 'ViewMode' ] || 'checking';
+
         return new ListBox( params.parent, viewMode );
     },
 

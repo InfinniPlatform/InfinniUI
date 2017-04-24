@@ -10,7 +10,7 @@ function TabPageControl( parent ) {
 
 _.inherit( TabPageControl, ContainerControl );
 
-_.extend( TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
+_.extend( TabPageControl.prototype, {
 
 
     createControlModel: function() {
@@ -21,6 +21,6 @@ _.extend( TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
         return new TabPageView( { model: model } );
     }
 
-
 } );
 
+InfinniUI.TabPageControl = TabPageControl;

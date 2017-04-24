@@ -10,16 +10,16 @@ function ViewControl( parent ) {
 
 _.inherit( ViewControl, ContainerControl );
 
-_.extend( ViewControl.prototype,
-    /** @lends ViewControl.prototype */
-    {
-        createControlModel: function() {
-            return new ViewModel();
-        },
+_.extend( ViewControl.prototype, {
 
-        createControlView: function( model ) {
-            return new ViewView( { model: model } );
-        }
+    createControlModel: function() {
+        return new ViewModel();
+    },
+
+    createControlView: function( model ) {
+        return new ViewView( { model: model } );
     }
-);
 
+} );
+
+InfinniUI.ViewControl = ViewControl;

@@ -10,7 +10,7 @@ function ToolBarControl( parent ) {
 
 _.inherit( ToolBarControl, ContainerControl );
 
-_.extend( ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
+_.extend( ToolBarControl.prototype, {
 
     createControlModel: function() {
         return new ToolBarModel();
@@ -19,5 +19,7 @@ _.extend( ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
     createControlView: function( model ) {
         return new ToolBarView( { model: model } );
     }
+
 } );
 
+InfinniUI.ToolBarControl = ToolBarControl;

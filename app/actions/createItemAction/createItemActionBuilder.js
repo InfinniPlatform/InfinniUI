@@ -25,4 +25,4 @@ _.extend( CreateItemActionBuilder.prototype, baseActionBuilderMixin, {
 
 } );
 
-window.InfinniUI.CreateItemActionBuilder = CreateItemActionBuilder;
+InfinniUI.CreateItemActionBuilder = CreateItemActionBuilder;

@@ -7,7 +7,7 @@ function LinkView( parent ) {
     };
 }
 
-window.InfinniUI.LinkView = LinkView;
+InfinniUI.LinkView = LinkView;
 
 _.extend( LinkView.prototype, {
 
@@ -59,7 +59,7 @@ _.extend( LinkView.prototype, {
             view.setParent( this.parent );
         }
 
-        window.InfinniUI.global.messageBus.send( 'onViewCreated', { openMode: openMode, view: view } );
+        InfinniUI.global.messageBus.send( 'onViewCreated', { openMode: openMode, view: view } );
 
         switch( openMode ) {
             case 'Container':

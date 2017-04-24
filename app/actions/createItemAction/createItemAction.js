@@ -36,4 +36,4 @@ _.extend( CreateItemAction.prototype, {
 
 } );
 
-window.InfinniUI.CreateItemAction = CreateItemAction;
+InfinniUI.CreateItemAction = CreateItemAction;

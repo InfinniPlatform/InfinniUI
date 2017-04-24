@@ -14,4 +14,4 @@ _.extend( AddActionBuilder.prototype, baseActionBuilderMixin, baseEditActionBuil
 
 } );
 
-window.InfinniUI.AddActionBuilder = AddActionBuilder;
+InfinniUI.AddActionBuilder = AddActionBuilder;

@@ -43,3 +43,5 @@ _.extend( FormControl.prototype, {
     }
 
 } );
+
+InfinniUI.FormControl = FormControl;

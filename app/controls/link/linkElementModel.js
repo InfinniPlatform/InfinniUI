@@ -14,3 +14,5 @@ var LinkElementModel = ButtonModel.extend( {
     }
 
 } );
+
+InfinniUI.LinkElementModel = LinkElementModel;

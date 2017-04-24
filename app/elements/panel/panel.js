@@ -7,7 +7,7 @@ function Panel( parent ) {
     _.superClass( Panel, this, parent );
 }
 
-window.InfinniUI.Panel = Panel;
+InfinniUI.Panel = Panel;
 
 _.inherit( Panel, Container );
 

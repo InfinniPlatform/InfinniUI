@@ -41,4 +41,4 @@ _.extend( SaveAction.prototype, baseFallibleActionMixin, {
 
 } );
 
-window.InfinniUI.SaveAction = SaveAction;
+InfinniUI.SaveAction = SaveAction;

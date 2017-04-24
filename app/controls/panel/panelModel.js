@@ -2,7 +2,7 @@
  * @constructor
  * @augments ContainerModel
  */
-var PanelModel = ContainerModel.extend( /** @lends PanelModel.prototype */ {
+var PanelModel = ContainerModel.extend( {
 
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
@@ -21,6 +21,7 @@ var PanelModel = ContainerModel.extend( /** @lends PanelModel.prototype */ {
         if( key === null || typeof key === 'undefined' ) return this;
 
         var attrs;
+
         if( typeof key === 'object' ) {
             attrs = key;
             options = val;
@@ -29,6 +30,7 @@ var PanelModel = ContainerModel.extend( /** @lends PanelModel.prototype */ {
         }
 
         var oldValue, newValue;
+
         if( 'collapsed' in attrs ) {
             //Вызов обработчиков перед collapsing/expanding
             oldValue = this.get( 'collapsed' );
@@ -84,3 +86,5 @@ var PanelModel = ContainerModel.extend( /** @lends PanelModel.prototype */ {
     }
 
 } );
+
+InfinniUI.PanelModel = PanelModel;

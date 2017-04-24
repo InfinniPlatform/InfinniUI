@@ -8,8 +8,7 @@ function DateTimeFormat( format ) {
     this.setFormat( format );
 }
 
-window.InfinniUI.DateTimeFormat = DateTimeFormat;
-
+InfinniUI.DateTimeFormat = DateTimeFormat;
 
 _.extend( DateTimeFormat.prototype, {
 
@@ -266,9 +265,9 @@ _.extend( DateTimeFormat.prototype, {
         },
 
         'zzz': function( date ) {
-            var offset = -date.getTimezoneOffset() / 60,
-                minutes,
-                sign;
+            var offset = -date.getTimezoneOffset() / 60;
+            var minutes;
+            var sign;
 
             minutes = ( offset - Math.floor( offset ) ) * 100;
             offset = Math.floor( offset );
@@ -293,8 +292,8 @@ _.extend( DateTimeFormat.prototype, {
             }
         },
         'zz': function( date ) {
-            var offset = -date.getTimezoneOffset() / 60,
-                sign;
+            var offset = -date.getTimezoneOffset() / 60;
+            var sign;
 
             offset = Math.floor( offset );
 
@@ -312,8 +311,8 @@ _.extend( DateTimeFormat.prototype, {
             }
         },
         'z': function( date, culture ) {
-            var offset = -date.getTimezoneOffset() / 60,
-                sign;
+            var offset = -date.getTimezoneOffset() / 60;
+            var sign;
 
             offset = Math.floor( offset );
 
@@ -327,8 +326,8 @@ _.extend( DateTimeFormat.prototype, {
             return sign + offset.toString();
         },
         '%z': function( date, culture ) {
-            var offset = -date.getTimezoneOffset() / 60,
-                sign;
+            var offset = -date.getTimezoneOffset() / 60;
+            var sign;
 
             offset = Math.floor( offset );
 

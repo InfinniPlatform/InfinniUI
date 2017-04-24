@@ -2,11 +2,11 @@ function ListBoxBuilder() {
     _.superClass( ListBoxBuilder, this );
 }
 
-window.InfinniUI.ListBoxBuilder = ListBoxBuilder;
+InfinniUI.ListBoxBuilder = ListBoxBuilder;
 
 _.inherit( ListBoxBuilder, ListEditorBaseBuilder );
 
-_.extend( ListBoxBuilder.prototype, /** @lends ListBoxBuilder.prototype */{
+_.extend( ListBoxBuilder.prototype, {
 
     createElement: function( params ) {
         return new ListBox( params.parent, params.metadata[ 'ViewMode' ] );

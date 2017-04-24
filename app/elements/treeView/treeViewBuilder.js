@@ -2,11 +2,11 @@ function TreeViewBuilder() {
     _.superClass( TreeViewBuilder, this );
 }
 
-window.InfinniUI.TreeViewBuilder = TreeViewBuilder;
+InfinniUI.TreeViewBuilder = TreeViewBuilder;
 
 _.inherit( TreeViewBuilder, ListEditorBaseBuilder );
 
-_.extend( TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
+_.extend( TreeViewBuilder.prototype, {
 
     createElement: function( params ) {
         return new TreeView( params.parent );
@@ -15,7 +15,6 @@ _.extend( TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
     applyMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
-        var data = ListEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
         this._initKeySelector( params );
         this._initParentSelector( params );
@@ -40,12 +39,12 @@ _.extend( TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         var metadata = params.metadata;
         var keySelector;
 
-        if ( metadata.KeySelector ) {
+        if( metadata.KeySelector ) {
             keySelector = function( context, args ) {
                 var scriptExecutor = new ScriptExecutor( element.getScriptsStorage() );
                 return scriptExecutor.executeScript( metadata.KeySelector, args );
             };
-        } else if ( metadata.KeyProperty ) {
+        } else if( metadata.KeyProperty ) {
             keySelector = function( context, args ) {
                 return InfinniUI.ObjectUtils.getPropertyValue( args.value, metadata.KeyProperty );
             };
@@ -62,12 +61,12 @@ _.extend( TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         var metadata = params.metadata;
         var parentSelector;
 
-        if ( metadata.ParentSelector ) {
+        if( metadata.ParentSelector ) {
             parentSelector = function( context, args ) {
                 var scriptExecutor = new ScriptExecutor( element.getScriptsStorage() );
                 return scriptExecutor.executeScript( metadata.ParentSelector, args );
             };
-        } else if ( metadata.ParentProperty ) {
+        } else if( metadata.ParentProperty ) {
             parentSelector = function( context, args ) {
                 return InfinniUI.ObjectUtils.getPropertyValue( args.value, metadata.ParentProperty );
             };
@@ -78,4 +77,5 @@ _.extend( TreeViewBuilder.prototype, /** @lends TreeViewBuilder.prototype */{
         }
         element.setParentSelector( parentSelector );
     }
+
 } );

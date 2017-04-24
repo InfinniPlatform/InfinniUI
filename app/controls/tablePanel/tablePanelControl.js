@@ -10,16 +10,16 @@ function TablePanelControl( parent ) {
 
 _.inherit( TablePanelControl, ContainerControl );
 
-_.extend( TablePanelControl.prototype,
-    /** @lends TablePanelControl.prototype */
-    {
-        createControlModel: function() {
-            return new TablePanelModel();
-        },
+_.extend( TablePanelControl.prototype, {
 
-        createControlView: function( model ) {
-            return new TablePanelView( { model: model } );
-        }
+    createControlModel: function() {
+        return new TablePanelModel();
+    },
+
+    createControlView: function( model ) {
+        return new TablePanelView( { model: model } );
     }
-);
 
+} );
+
+InfinniUI.TablePanelControl = TablePanelControl;

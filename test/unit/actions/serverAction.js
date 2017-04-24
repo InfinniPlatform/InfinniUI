@@ -69,7 +69,7 @@ describe( 'ServerAction', function() {
     describe( 'should constract correct url', function() {
         it( 'get', function() {
             // Given
-            window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+            InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
                 return {
                     request: function( requestData ) {
                         window.serverActionTestUrlParams = requestData;
@@ -107,7 +107,7 @@ describe( 'ServerAction', function() {
 
         it( 'post', function() {
             // Given
-            window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+            InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
                 return {
                     request: function( requestData ) {
                         window.serverActionTestUrlParams = requestData;
@@ -147,7 +147,7 @@ describe( 'ServerAction', function() {
 
         it( 'should convert data to string JSON if contentType is application/json', function() {
             // Given
-            window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+            InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
                 return {
                     request: function( requestData ) {
                         window.serverActionTestUrlParams = requestData;
@@ -183,7 +183,7 @@ describe( 'ServerAction', function() {
     it( 'should escape quote in Data', function() {
         var data;
         // Given
-        window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+        InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
             return {
                 request: function( requestData ) {
                     data = requestData;
@@ -219,7 +219,7 @@ describe( 'ServerAction', function() {
     it( 'should keep data type', function() {
         var data;
         // Given
-        window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+        InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
             return {
                 request: function( requestData ) {
                     data = requestData;
@@ -259,11 +259,11 @@ describe( 'ServerAction', function() {
     it( 'should use "config.serverUrl" as "Origin" by default', function() {
         var data;
         // Given
-        var oldServerUrl = window.InfinniUI.config.serverUrl;
+        var oldServerUrl = InfinniUI.config.serverUrl;
 
-        window.InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
+        InfinniUI.config.serverUrl = 'ftp://ftp.site.org/';
 
-        window.InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
+        InfinniUI.providerRegister.register( 'ServerActionProvider', function() {
             return {
                 request: function( requestData ) {
                     data = requestData;

@@ -69,7 +69,7 @@ describe( 'DataSourceBuilder', function() {
 
         it( 'should subscribe documentDataSource on changeProperty', function( done ) {
             // Given
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
             var metadata = {
                 Name: 'PatientDataSource',
@@ -109,7 +109,7 @@ describe( 'DataSourceBuilder', function() {
 
         it( 'should create ds from metadata', function( done ) {
             // Given
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
             var metadata = {
                 Text: 'Пациенты',
@@ -147,7 +147,7 @@ describe( 'DataSourceBuilder', function() {
 
         it( 'should update items on filter changing', function( done ) {
             // Given
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
             var metadata = {
                 Text: 'Пациенты',
@@ -202,7 +202,7 @@ describe( 'DataSourceBuilder', function() {
         it( 'should bind filter', function( done ) {
             // Given
             FakeRestDataProvider.prototype.items = _.clone( items );
-            window.InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+            InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
             var metadata = {
                 Text: 'Пациенты',

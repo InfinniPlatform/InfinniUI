@@ -94,4 +94,4 @@ var routerService = ( function( myRoutes ) {
     return routerService;
 } )( InfinniUI.config.Routes );
 
-window.InfinniUI.RouterService = routerService;
+InfinniUI.RouterService = routerService;

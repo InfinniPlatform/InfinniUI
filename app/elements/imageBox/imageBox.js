@@ -11,11 +11,12 @@ function ImageBox( parent ) {
     this.initialize_editorBase();
 }
 
-window.InfinniUI.ImageBox = ImageBox;
+InfinniUI.ImageBox = ImageBox;
 
 _.inherit( ImageBox, Element );
 
 _.extend( ImageBox.prototype, {
+
     getFile: function() {
         return this.control.get( 'file' );
     },
@@ -54,7 +55,7 @@ _.extend( ImageBox.prototype, {
      */
     setAcceptTypes: function( types ) {
         var collection = this.getAcceptTypes();
-        if ( Array.isArray( types ) ) {
+        if( Array.isArray( types ) ) {
             collection.set( types );
         }
     }

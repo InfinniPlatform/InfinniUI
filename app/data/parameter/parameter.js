@@ -104,4 +104,4 @@ var Parameter = Backbone.Model.extend( {
 
 } );
 
-window.InfinniUI.Parameter = Parameter;
+InfinniUI.Parameter = Parameter;

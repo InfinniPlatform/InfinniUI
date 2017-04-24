@@ -23,3 +23,5 @@ ImageBoxValueConverter.prototype.toElement = function( context, args ) {
     }
     return url;
 };
+
+InfinniUI.ImageBoxValueConverter = ImageBoxValueConverter;

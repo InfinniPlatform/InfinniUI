@@ -11,12 +11,13 @@ var DocumentFileProvider = function( urlConstructor, successCallback, failCallba
     this.failCallback = failCallback;
 };
 
-window.InfinniUI.Providers.DocumentFileProvider = DocumentFileProvider;
+InfinniUI.Providers.DocumentFileProvider = DocumentFileProvider;
 
 /**
  * Возвращает URL ранее загруженного файла
  * @param {string} fieldName
  * @param {string} instanceId
+ * @param {string} contentId
  * @returns {String}
  */
 DocumentFileProvider.prototype.getFileUrl = function( fieldName, instanceId, contentId ) {

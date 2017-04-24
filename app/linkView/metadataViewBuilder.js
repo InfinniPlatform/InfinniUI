@@ -4,7 +4,7 @@ function MetadataViewBuilder() {
 
 _.inherit( MetadataViewBuilder, LinkViewBuilderBase );
 
-window.InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
+InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 
 _.extend( MetadataViewBuilder.prototype, {
 
@@ -16,7 +16,7 @@ _.extend( MetadataViewBuilder.prototype, {
         };
 
         return function( onViewReadyHandler ) {
-            var metadataProvider = window.InfinniUI.providerRegister.build( 'MetadataDataSource', metadataDataSourceBuildProps );
+            var metadataProvider = InfinniUI.providerRegister.build( 'MetadataDataSource', metadataDataSourceBuildProps );
 
             metadataProvider.getMetadata( function( viewMetadata ) {
                 if( viewMetadata === null || typeof viewMetadata === 'undefined' ) {

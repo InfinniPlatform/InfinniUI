@@ -1,6 +1,5 @@
 /**
  *
- * @param parent
  * @constructor
  * @augments Control
  */
@@ -10,15 +9,16 @@ function LinkElementControl() {
 
 _.inherit( LinkElementControl, ButtonControl );
 
-_.extend(
-    LinkElementControl.prototype, {
+_.extend( LinkElementControl.prototype, {
 
-        createControlModel: function() {
-            return new LinkElementModel();
-        },
+    createControlModel: function() {
+        return new LinkElementModel();
+    },
 
-        createControlView: function( model ) {
-            return new LinkElementView( { model: model } );
-        }
+    createControlView: function( model ) {
+        return new LinkElementView( { model: model } );
+    }
 
-    } );
+} );
+
+InfinniUI.LinkElementControl = LinkElementControl;

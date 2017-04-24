@@ -4,19 +4,17 @@
  */
 function ScriptBuilder() {}
 
-window.InfinniUI.ScriptBuilder = ScriptBuilder;
-
+InfinniUI.ScriptBuilder = ScriptBuilder;
 
 ScriptBuilder.prototype.build = function( context, args ) {
-    var
-        metadata = args.metadata,
-        name = metadata.Name,
-        body = metadata.Body;
-
+    var metadata = args.metadata;
+    var name = metadata.Name;
+    var body = metadata.Body;
     var func = new Function( 'context', 'args', body );
 
     return function( context, args ) {
         var result;
+
         try {
             result = func.call( undefined, context, args );
         } catch ( err ) {
@@ -24,6 +22,7 @@ ScriptBuilder.prototype.build = function( context, args ) {
             console.error( body );
             console.groupEnd();
         }
+
         return result;
     };
 };

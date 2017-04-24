@@ -11,7 +11,7 @@ var notificationSubscription = ( function() {
         onSuccessCb = onSuccess || onSuccessCb;
         onErrorCb = onError || onErrorCb;
         hubName = newHubName || hubName;
-        connection = $.hubConnection( window.InfinniUI.config.serverUrl );
+        connection = $.hubConnection( InfinniUI.config.serverUrl );
         hubProxy = connection.createHubProxy( hubName );
 
         if( _.size( subscription ) > 0 ) {

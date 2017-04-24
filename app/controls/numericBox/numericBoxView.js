@@ -2,7 +2,7 @@
  * @class
  * @augments TextEditorBaseView
  */
-var NumericBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */{
+var NumericBoxView = TextEditorBaseView.extend( {
 
     className: 'pl-numericbox form-group',
 
@@ -28,7 +28,7 @@ var NumericBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype
         this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -102,3 +102,5 @@ var NumericBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype
     }
 
 } );
+
+InfinniUI.NumericBoxView = NumericBoxView;

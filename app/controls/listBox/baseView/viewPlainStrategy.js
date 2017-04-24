@@ -5,14 +5,14 @@ function ListBoxViewPlainStrategy( listbox ) {
 _.extend( ListBoxViewPlainStrategy.prototype, {
 
     prepareItemsForRendering: function() {
-        var items = this.listbox.getItems(),
-            inputName = 'listbox-' + guid(),
-            result = {
-                isMultiselect: this.listbox.isMultiselect(),
-                focusable: this.listbox.isFocusable(),
-                inputName: inputName,
-                items: items.toArray()
-            };
+        var items = this.listbox.getItems();
+        var inputName = 'listbox-' + guid();
+        var result = {
+            isMultiselect: this.listbox.isMultiselect(),
+            focusable: this.listbox.isFocusable(),
+            inputName: inputName,
+            items: items.toArray()
+        };
 
         return result;
     },
@@ -22,11 +22,11 @@ _.extend( ListBoxViewPlainStrategy.prototype, {
     },
 
     appendItemsContent: function( preparedItems ) {
-        var $listbox = this.listbox.$el,
-            itemTemplate = this.listbox.getItemTemplate(),
-            items = preparedItems.items,
-            listbox = this.listbox,
-            itemEl, $el;
+        var $listbox = this.listbox.$el;
+        var itemTemplate = this.listbox.getItemTemplate();
+        var items = preparedItems.items;
+        var listbox = this.listbox;
+        var itemEl, $el;
 
         $listbox.find( '.pl-listbox-body' ).each( function( i, el ) {
             $el = $( el );
@@ -37,4 +37,7 @@ _.extend( ListBoxViewPlainStrategy.prototype, {
             $el.parent().data( 'pl-data-item', items[ i ] );
         } );
     }
+
 } );
+
+InfinniUI.ListBoxViewPlainStrategy = ListBoxViewPlainStrategy;

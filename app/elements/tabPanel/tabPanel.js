@@ -7,7 +7,7 @@ function TabPanel( parent ) {
     _.superClass( TabPanel, this, parent );
 }
 
-window.InfinniUI.TabPanel = TabPanel;
+InfinniUI.TabPanel = TabPanel;
 
 _.inherit( TabPanel, Container );
 
@@ -25,7 +25,7 @@ TabPanel.prototype.getHeaderLocation = function() {
  * @param value
  */
 TabPanel.prototype.setHeaderLocation = function( value ) {
-    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderLocation ) ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderLocation ) ) {
         this.control.set( 'headerLocation', value );
     }
 };
@@ -43,7 +43,7 @@ TabPanel.prototype.getHeaderOrientation = function() {
  * @param value
  */
 TabPanel.prototype.setHeaderOrientation = function( value ) {
-    if ( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderOrientation ) ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderOrientation ) ) {
         this.control.set( 'headerOrientation', value );
     }
 };
@@ -94,10 +94,9 @@ TabPanel.prototype.onSelectedItemChanged = function( handler ) {
  * @param {TabPage} element
  */
 TabPanel.prototype.closeTab = function( element ) {
-    var
-        index = this.childElements.indexOf( element );
+    var index = this.childElements.indexOf( element );
 
-    if ( index === -1 ) {
+    if( index === -1 ) {
         throw new Error( 'TabPage not found in TabPanel.childElements' );
     } else {
         this.getItems().removeAt( index );

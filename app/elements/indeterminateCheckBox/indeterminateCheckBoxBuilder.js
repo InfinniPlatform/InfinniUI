@@ -8,7 +8,7 @@ function IndeterminateCheckBoxBuilder() {
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
+InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
 
 _.inherit( IndeterminateCheckBoxBuilder, CheckBoxBuilder );
 

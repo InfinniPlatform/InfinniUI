@@ -21,6 +21,7 @@ var CommonPopupButtonView = ContainerView.extend( {
     },
 
     updateContent: CommonButtonView.prototype.updateContent,
+
     updateText: CommonButtonView.prototype.updateText,
 
     getButtonElement: function() {
@@ -48,7 +49,7 @@ var CommonPopupButtonView = ContainerView.extend( {
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send( 'render', { element: this } );
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -64,9 +65,9 @@ var CommonPopupButtonView = ContainerView.extend( {
     },
 
     appendItemsContent: function( $dropdown, items ) {
-        var that = this,
-            itemTemplate = this.model.get( 'itemTemplate' ),
-            itemEl, $el;
+        var that = this;
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var itemEl, $el;
 
         $dropdown.find( '.pl-popup-button__item' ).each( function( i, el ) {
             $el = $( el );
@@ -93,14 +94,14 @@ var CommonPopupButtonView = ContainerView.extend( {
     },
 
     alignDropdown: function() {
-        var offset = this.$el.offset(),
-            $elHeight = this.$el.height(),
-            $elWidth = this.$el.width(),
-            dropdownList = this.$dropdown.find( '.pl-popup-button__items' )[ 0 ],
-            $dropdownHeight = dropdownList.offsetHeight,
-            $dropdownWidth = dropdownList.offsetWidth,
-            left = offset.left,
-            top = offset.top + $elHeight;
+        var offset = this.$el.offset();
+        var $elHeight = this.$el.height();
+        var $elWidth = this.$el.width();
+        var dropdownList = this.$dropdown.find( '.pl-popup-button__items' )[ 0 ];
+        var $dropdownHeight = dropdownList.offsetHeight;
+        var $dropdownWidth = dropdownList.offsetWidth;
+        var left = offset.left;
+        var top = offset.top + $elHeight;
 
         if( ( offset.left + $dropdownWidth ) >= window.innerWidth ) {
             left += ( $elWidth - $dropdownWidth );
@@ -132,4 +133,4 @@ var CommonPopupButtonView = ContainerView.extend( {
 
 } );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect( window.InfinniUI, 'viewModes.PopupButton.common', CommonPopupButtonView );
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.PopupButton.common', CommonPopupButtonView );

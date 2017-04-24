@@ -10,16 +10,16 @@ function MenuBarControl( parent ) {
 
 _.inherit( MenuBarControl, ContainerControl );
 
-_.extend( MenuBarControl.prototype,
-    /** @lends MenuBarControl.prototype */
-    {
-        createControlModel: function() {
-            return new MenuBarModel();
-        },
+_.extend( MenuBarControl.prototype, {
 
-        createControlView: function( model ) {
-            return new MenuBarView( { model: model } );
-        }
+    createControlModel: function() {
+        return new MenuBarModel();
+    },
+
+    createControlView: function( model ) {
+        return new MenuBarView( { model: model } );
     }
-);
 
+} );
+
+InfinniUI.MenuBarControl = MenuBarControl;

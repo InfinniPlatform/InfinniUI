@@ -59,7 +59,6 @@ var routerServiceMixin = {
             parentView: params.parentView,
             basePathOfProperty: params.basePathOfProperty
         };
-
         var dataBinding = builder.buildBinding( paramValue, args );
 
         dataBinding.bindElement( {
@@ -84,7 +83,6 @@ var routerServiceMixin = {
             parentView: params.parentView,
             basePathOfProperty: params.basePathOfProperty
         };
-
         var dataBinding = builder.buildBinding( queryValue, args );
 
         dataBinding.bindElement( {
@@ -99,4 +97,7 @@ var routerServiceMixin = {
             }
         }, '' );
     }
+
 };
+
+InfinniUI.routerServiceMixin = routerServiceMixin;

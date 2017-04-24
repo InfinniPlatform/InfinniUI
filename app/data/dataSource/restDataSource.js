@@ -8,6 +8,7 @@ var RestDataSource = BaseDataSource.extend( {
         BaseDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
 
         var model = this.get( 'model' );
+
         model.urlParams = {
             get: {
                 method: 'get',
@@ -38,7 +39,7 @@ var RestDataSource = BaseDataSource.extend( {
     },
 
     initDataProvider: function() {
-        var dataProvider = window.InfinniUI.providerRegister.build( 'RestDataSource' );
+        var dataProvider = InfinniUI.providerRegister.build( 'RestDataSource' );
         this.set( 'dataProvider', dataProvider );
     },
 
@@ -255,6 +256,7 @@ var RestDataSource = BaseDataSource.extend( {
 
         var str = JSON.stringify( obj );
         var tmpTemplated = this._templateParamsInStr( str, params );
+
         return JSON.parse( tmpTemplated );
     },
 
@@ -281,4 +283,4 @@ var RestDataSource = BaseDataSource.extend( {
 
 } );
 
-window.InfinniUI.RestDataSource = RestDataSource;
+InfinniUI.RestDataSource = RestDataSource;

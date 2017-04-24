@@ -2,7 +2,7 @@
  *
  * @mixin
  */
-var DataSourceValidationNotifierMixin = {
+var dataSourceValidationNotifierMixin = {
     /**
      * @param dataSource
      */
@@ -22,8 +22,11 @@ var DataSourceValidationNotifierMixin = {
         }
 
         result[ 'Items' ].forEach( function( item ) {
-            var exchange = window.InfinniUI.global.messageBus;
+            var exchange = InfinniUI.global.messageBus;
             exchange.send( messageTypes.onNotifyUser, { item: item, messageText: item.Message, messageType: 'error' } );
         } );
     }
+
 };
+
+InfinniUI.dataSourceValidationNotifierMixin = dataSourceValidationNotifierMixin;

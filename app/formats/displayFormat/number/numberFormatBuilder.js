@@ -20,4 +20,4 @@ function NumberFormatBuilder() {
 
 }
 
-window.InfinniUI.NumberFormatBuilder = NumberFormatBuilder;
+InfinniUI.NumberFormatBuilder = NumberFormatBuilder;
