@@ -2,7 +2,6 @@
 
 var gulp = require('gulp');
 var watch = require('gulp-watch');
-var taskListing = require('gulp-task-listing');
 var requireDir = require('require-dir');
 
 var sourceForFiles = require('./gulptasks/sourceForFiles');
@@ -41,7 +40,6 @@ gulp.task('run:tests', gulp.series(
 gulp.task('default', function(cb) {
 	console.log('####Task is not defined!\n' +
 							'####Use any of defined tasks:\n' +
-							help +
 							'- gulp build\n' +
 							'- gulp build:prod\n' +
 							'- gulp run:tests'
