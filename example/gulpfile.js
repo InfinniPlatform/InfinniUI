@@ -1,12 +1,6 @@
 ﻿'use strict';
 
-var gulp = require('gulp');
-var $ = require('gulp-load-plugins')();
-var del = require('del');
-var concatStream = require('streamqueue');
-var browserSync = require('browser-sync').create('server:example');
-var historyApiFallback = require('connect-history-api-fallback');
-var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
+/*         Настраиваемые параметры              */
 
 // Необходимо указать путь до платфомы в node_modules
 var infinniUIpath = './node_modules/infinni-ui/';
@@ -17,21 +11,30 @@ var projectRootFolder = './www/';
 var projectFolderForPlatform = './www/compiled/platform/';
 // куда собирать прикладную часть?
 var projectFolderForExtensions = './www/compiled/js/';
-
-
-// Платформенные перменные (не рекомендуется менять)
-var platformOutputFolder = '/dist/';
-var stylesFile = '/app/styles/main.less';
-
+// куда собирать стили?
+var projectFolderForStyles = './www/compiled/style/';
+// где хранятся прикладные скрипты?
 var jsFiles = ['./js/**/*.js'];
+// где хранятся прикладные шаблоны?
 var templateFiles = ['./js/**/*.tpl.html'];
+
+
+/*                 Сборка                       */
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var del = require('del');
+var concatStream = require('streamqueue');
+var browserSync = require('browser-sync').create('server:example');
+var historyApiFallback = require('connect-history-api-fallback');
+
+var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
+
 
 function buildLess( options ) {
 	return gulp.src( options.src )
 		   .pipe( $.less() )
-		   .pipe( $.myth() )
-		   .pipe( $.csso() )
-		   .pipe( $.autoprefixer({browsers: ['last 2 versions']}) )
+		   .pipe( $.csso() ) // minify css
+		   .pipe( $.autoprefixer({browsers: ['last 2 versions']}) )  // add prefixes for browsers (-webkit, -moz etc)
 		   .pipe( gulp.dest( options.dest ) );
 }
 
@@ -63,14 +66,14 @@ gulp.task('clean', function() {
 gulp.task('build:less', function() {
 	return buildLess( {
 		src: './styles/main.less',
-		dest: './www/compiled/style'
+		dest: projectFolderForStyles
 	} );
 });
 
 gulp.task('build:platform-less', function() {
 	return buildLess( {
 		src: './styles/platform/overridden-platform.less',
-		dest: './www/compiled/style'
+		dest: projectFolderForStyles
 	} );
 });
 
@@ -81,10 +84,8 @@ gulp.task('build:js', function() {
             .pipe( gulp.dest( projectFolderForExtensions ) );
 });
 
-var platformSrc = [
-				infinniUIpath + platformOutputFolder + '**/*.*', 
-				'!' + infinniUIpath + platformOutputFolder + 'unitTest.js'
-			];
+var platformSrc = infinniUIpath + '/dist/**/*.*';
+
 gulp.task('copy:platform', function() {
 	return gulp.src(platformSrc)
 		   .pipe(gulp.dest( projectFolderForPlatform ));
