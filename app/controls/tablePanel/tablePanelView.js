@@ -44,3 +44,5 @@ var TablePanelView = ContainerView.extend( {
     }
 
 } );
+
+InfinniUI.TablePanelView = TablePanelView;

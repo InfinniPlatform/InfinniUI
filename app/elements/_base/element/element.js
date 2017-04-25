@@ -304,7 +304,7 @@ _.extend( Element.prototype, {
     },
 
     setFocusable: function( value ) {
-        if( _.isBoolean( value ) ) {
+        if( typeof value === 'boolean' ) {
             this.control.set( 'focusable', value );
         }
     },

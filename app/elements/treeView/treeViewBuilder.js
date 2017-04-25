@@ -15,6 +15,7 @@ _.extend( TreeViewBuilder.prototype, {
     applyMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
+        var data = ListEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
         this._initKeySelector( params );
         this._initParentSelector( params );

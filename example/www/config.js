@@ -1,4 +1,4 @@
-InfinniUI = InfinniUI || {};
+window.InfinniUI = window.InfinniUI || {};
 InfinniUI.config = InfinniUI.config || {};
 InfinniUI.config.lang = 'en-US';
 

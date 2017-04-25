@@ -142,7 +142,7 @@ _.extend( View.prototype, {
     isApplication: function( param ) {
         var result = this.control.get( 'isApplication' );
 
-        if( _.isBoolean( param ) ) {
+        if( typeof param === 'boolean' ) {
             this.control.set( 'isApplication', param );
         }
 

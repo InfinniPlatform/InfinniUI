@@ -58,7 +58,7 @@ _.extend( Label.prototype, {
      * @param {Boolean} value
      */
     setEscapeHtml: function( value ) {
-        if( _.isBoolean( value ) ) {
+        if( typeof value === 'boolean' ) {
             this.control.set( 'escapeHtml', value );
         }
     }

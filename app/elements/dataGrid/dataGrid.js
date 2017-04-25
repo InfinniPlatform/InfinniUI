@@ -29,7 +29,7 @@ DataGrid.prototype.createRow = function() {
 };
 
 DataGrid.prototype.setEnabled = function( value ) {
-    if( _.isBoolean( value ) ) {
+    if( typeof value === 'boolean' ) {
         this.control.setEnabled( value );
     }
 };
@@ -39,7 +39,7 @@ DataGrid.prototype.setEnabled = function( value ) {
  * @param {boolean} value
  */
 DataGrid.prototype.setCheckAllVisible = function( value ) {
-    if( _.isBoolean( value ) ) {
+    if( typeof value === 'boolean' ) {
         this.control.set( 'checkAllVisible', value );
     }
 };
@@ -104,7 +104,7 @@ DataGrid.prototype.getVerticalAlignment = function() {
 };
 
 DataGrid.prototype.setVerticalAlignment = function( verticalAlignment ) {
-    if( typeof verticalAlignment == 'string' ) {
+    if( typeof verticalAlignment === 'string' ) {
         this.control.set( 'verticalAlignment', verticalAlignment );
     }
 };
