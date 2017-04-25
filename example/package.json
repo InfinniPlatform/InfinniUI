@@ -17,7 +17,6 @@
     "gulp-less": "^3.1.0",
     "gulp-load-plugins": "^1.2.x",
     "gulp-myth": "^1.1.0",
-    "gulp-newer": "^1.1.0",
     "gulp-notify": "^1.7.x",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",

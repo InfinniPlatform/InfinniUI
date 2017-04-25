@@ -6,7 +6,6 @@ var config = require('./config');
 
 function copy(options) {
 	return gulp.src(options.src, {base: options.base})
-		.pipe($.newer(options.dest))
 		.pipe(gulp.dest(options.dest))
 }
 
