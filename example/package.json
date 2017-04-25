@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "gulp example",
-    "build": "npm i && gulp cleanFolder && gulp build"
+    "build": "npm i && gulp clean && gulp build"
   },
   "engines": {
     "node": "4.x",
