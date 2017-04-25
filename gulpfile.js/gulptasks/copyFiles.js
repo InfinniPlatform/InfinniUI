@@ -11,7 +11,7 @@ function copy(options) {
 }
 
 /**
- * Copy used in platform fonts to output directory
+ * The copy used in platform fonts to output directory
  *
  * @task {copy:fonts}
  * @group {Sub-tasks}
@@ -25,7 +25,7 @@ gulp.task('copy:fonts', function () {
 });
 
 /**
- * Assemble all necessary for package to one directory
+ * Assembles everything that is necessary for package to one directory
  *
  * @task {assemble:package}
  * @group {Sub-tasks}

@@ -25,7 +25,7 @@ gulp.task('build', gulp.parallel(
 ));
 
 /**
- * Build production version of platform
+ * Build the production version of platform
  *
  * @task {build:prod}
  * @group {Main}
@@ -37,7 +37,7 @@ gulp.task('build:prod', gulp.series(
 ));
 
 /**
- * Watch for changes and rebuild changed part
+ * Monitore the changes and rebuild changed part
  *
  * @task {watch}
  * @group {Main}
