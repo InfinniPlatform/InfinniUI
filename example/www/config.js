@@ -11,10 +11,10 @@ window.InfinniUI.config.configName = 'test';
 window.InfinniUI.config.homePage = '/viewExample/homePage.json';
 
 // when enableAutoHeightService = false, body will have full height and will scrollable
-window.InfinniUI.config.enableAutoHeightService = false;
+window.InfinniUI.config.enableAutoHeightService = true;
 
 // when need to use GetCurrentUser
-window.InfinniUI.config.enableGetCurrentUser = true;
+//window.InfinniUI.config.enableGetCurrentUser = true;
 
 
 
