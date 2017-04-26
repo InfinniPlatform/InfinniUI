@@ -40,6 +40,11 @@ window.InfinniUI.config.Routes = [
 		Name: "dataBinding",
 		Path: "/data_binding",
 		Action: "{ openDataBindingPage(context, args); }"
+	},
+	{
+		Name: "custom",
+		Path: "/custom",
+		Action: "{ openCustomElementsPage(context, args); }"
 	}
 ];
 

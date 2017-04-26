@@ -1,0 +1,40 @@
+{
+	"DataSources": [
+		{
+			"ObjectDataSource": {
+				"Name": "ObjectDataSource",
+				"Items": [
+					{
+						"Id": 1,
+						"Text": "Hello world!"
+					}
+				]
+			}
+		}
+	],
+	"Items": [
+		{
+			"TestElement": {
+				"TestProperty": "Test Element"
+			}
+		},
+		{
+			"ExtensionPanel": {
+				"ExtensionName": "TestExtension",
+				"Parameters": [
+					{
+						"Name": "color",
+						"Value": "accent3"
+					}
+				],
+				"Items": [
+					{
+						"Icon": {
+							"Value": "star"
+						}
+					}
+				]
+			}
+		}
+	]
+}

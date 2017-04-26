@@ -1,11 +1,11 @@
 var TestView = InfinniUI.ControlView.extend({
     tagName: 'div',
-    className: 'pl-test-view',
+    className: 'test-view',
 
     template: InfinniUI.Template["elements/testElement/template/testElement.tpl.html"],
 
     UI: {
-        control: '.pl-test-element-in'
+        control: '.test-element-in'
     },
 
 

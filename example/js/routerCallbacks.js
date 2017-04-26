@@ -45,3 +45,17 @@ function openDataBindingPage( context, args ) {
         }
     } );
 }
+
+function openCustomElementsPage( context, args ) {
+    context.global.executeAction( context, {
+        OpenAction: {
+            LinkView: {
+                AutoView: {
+                    Path: "viewExample/customElements.json",
+                    OpenMode: "Container",
+                    Container: "MainContent"
+                }
+            }
+        }
+    } );
+}
