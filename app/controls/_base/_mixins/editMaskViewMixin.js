@@ -11,6 +11,8 @@ var editMaskViewMixin = (function (global) {
         iso8601: new ISO8601Strategy()
     };
 
+    var editMaskLibraryInitialized = false;
+
     return {
 
         editMaskStrategies: {
@@ -27,7 +29,7 @@ var editMaskViewMixin = (function (global) {
         },
 
         initialize: function() {
-
+            init();
         },
 
         initHandlersForProperties: function(){
@@ -114,6 +116,14 @@ var editMaskViewMixin = (function (global) {
         }
 
     };
+
+    function init() {
+        if (editMaskLibraryInitialized) {
+            return;
+        }
+        editMaskLibraryInitialized = true;
+        getEditMaskLibrary().Mask.api.init({locale: InfinniUI.localized.name});
+    }
 
     function createEditMask(  ) {
         var metadata = this.model.get('editMask');
