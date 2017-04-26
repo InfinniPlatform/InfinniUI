@@ -93,11 +93,6 @@ _.extend(ApplicationBuilder.prototype, {
         builder.register('NumberFormat', new NumberFormatBuilder());
         builder.register('ObjectFormat', new ObjectFormatBuilder());
 
-        builder.register('DateTimeEditMask', new DateTimeEditMaskBuilder());
-        builder.register('NumberEditMask', new NumberEditMaskBuilder());
-        builder.register('TemplateEditMask', new TemplateEditMaskBuilder());
-        builder.register('RegexEditMask', new RegexEditMaskBuilder());
-
         builder.register('Script', new ScriptBuilder());
 
         builder.register('Divider', new DividerBuilder());
