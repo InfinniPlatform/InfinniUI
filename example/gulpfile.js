@@ -27,6 +27,7 @@ var concatStream = require('streamqueue');
 var browserSync = require('browser-sync').create('server:example');
 var historyApiFallback = require('connect-history-api-fallback');
 
+// если нужно минимизировать app.js, то установите NODE_ENV (под виндой вызвать SET NODE_ENV=production перед вызовом билда)
 var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
 
@@ -38,12 +39,12 @@ function buildLess( options ) {
 		   .pipe( gulp.dest( options.dest ) );
 }
 
-var templateNamespaceInitString = 'window["InfinniUI"] = window["InfinniUI"] || {};\nwindow["InfinniUI"]["Template"] = window["InfinniUI"]["Template"] || {};\n';
+var templateNamespaceInitString = 'window["Example"] = window["Example"] || {};\nwindow["Example"]["Template"] = window["Example"]["Template"] || {};\n';
 
 function getTemplateStream(src) {
     return gulp.src(src)
         .pipe( $.templateCompile({
-            namespace: 'InfinniUI.Template',
+            namespace: 'Example.Template',
             IIFE: false
         }) )
         .pipe( $.replace(templateNamespaceInitString, '') )
@@ -80,6 +81,9 @@ gulp.task('build:platform-less', function() {
 gulp.task('build:js', function() {
 	return concatStream( {objectMode: true}, getTemplateStream( templateFiles ), getJsStream( jsFiles ) )
             .pipe( $.concat( 'app.js' ) )
+			.pipe($.wrapper({
+				header: templateNamespaceInitString
+			}))
             .pipe( $.if( !isDevelopment, $.uglify() ) )
             .pipe( gulp.dest( projectFolderForExtensions ) );
 });
