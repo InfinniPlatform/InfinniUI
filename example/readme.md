@@ -1,38 +1,68 @@
-В папке example расположен вариант использования фреймворка InfinniUI в качестве части вашего веб-приложения.
+# Пример использования фреймворка InfinniUI
+В папке example расположен вариант использования фреймворка InfinniUI в качестве части Вашего веб-приложения.
 
-Если вы только что скачали InfinniUI, необходимо настроить сборку конфигурации.
-Для этого в ./gulpfile.js проверьте/исправтье значения переменных infinniUIpath, projectRootFolder, projectFolderForPlatform, projectFolderForExtensions, projectFolderForStyles.
+Если Вы только что скачали InfinniUI, необходимо настроить сборку конфигурации.
+Для этого в *./gulpfile.js* проверьте/исправтье значения переменных *infinniUIpath*, *projectRootFolder*, *projectFolderForPlatform*, *projectFolderForExtensions*, *projectFolderForStyles*.
 
-Файл runExample.bat делает полную сборку платформы и конфигурации, а также запуск сервера. Результат сборки можно посмотреть по адресу http://localhost:4444.
+Файл runExample.bat делает полную сборку платформы и конфигурации, а также запуск сервера.
+Результат сборки можно посмотреть по адресу http://localhost:4444.
 
-Для корректной работы необходимо добавить путь './node_modules/.bin' в переменную Path окружения Windows, чтобы npm мог использовать локальные пакеты при сборке.
+## Переопределение и расширение конфигурационных переменных
 
-# Переопределение и расширение конфигурационных переменных
-
-Формат конфигурации платформы можно посмотреть в документации (http://infinniui-en.readthedocs.io/en/latest/Core/Config/).
+Формат конфигурации платформы можно посмотреть в [документации](http://infinniui-en.readthedocs.io/en/latest/Core/Config/).
 Чтобы перекрыть требуемые поля, нужно задать их до подключения основного js-файла с платформой.
-В примере, это происходит в файле ./www/config.js (обратите внимание, что config.js подключается до platform.js)
+В примере, это происходит в файле *./www/config.js* (обратите внимание, что *config.js* подключается до *platform.js*)
 
 
-# Переопределение и расширение стилей
+## Переопределение и расширение стилей
 
-Для полноценного переопределения и расширения стилей, требуется подменять less файлы платформы. Это нужно чтобы иметь доступ к переменным стилей.
-В примере эти файлы находятся в папке ./styles (путь до папки должен быть указан в перменной fromInfinniToNewStylesPath, см. выше)
+В InfinniUI есть возможность изменить стилизацию элементов.
+В папке *./styles/platform* Вы можете посмотреть пример переопределения платформенных стилей.
 
-Переопределить можно 4 файла:
-platform-variables - переменные стилей самой платформы. Оригинальный файл находится в проекте в InfinniUI/bootstrap-framework/pl-variables.less
-bootstrap-variables - переменные стилей фреймворка bootstrap. Оригинальный файл находится в проекте в InfinniUI/bootstrap-framework/variables.less
-bootstrap-theme - стили перекрывающие/дополняющие стили фреймворка bootstrap. Оригинальный файл находится в проекте в InfinniUI/bootstrap-framework/theme.less
-extensions - стили перекрывающие/дополняющие стили платформы. Оригинального файла нет.
+Стили и переменные распределены по файлам следующим образом:
+platform-variables - переменные стилей самой платформы.
+bootstrap-variables - переменные стилей фреймворка bootstrap.
+bootstrap-theme - стили перекрывающие/дополняющие стили фреймворка bootstrap.
 
+Все эти файлы подключаются в *./styles/platform/overridden-platform.less* после подключения стилей платформы.
+Важно подключать их именно после платформеных стилей, иначе при сборке будут использованны дефолтные значения.
+Итак, скорвертировав *./styles/platform/overridden-platform.less* в css, Вы получите стили платформы с желаемыми значениями переменных и переопределенными стилями.
 
-# Расширение функциональности
+## Расширение функциональности
 Новая функциональность добавляется проще всего, достаточно просто подключить файлы с ее реализацией на страницу.
 Желательно сделать это ниже подключения InfinniUI, чтобы был доступ к глобальным переменным платформы.
 
-Кроме того, вы можете задавать новые элементы (см пример  папке ./js/elements/).
-Либо использовать возможности ExtensionPanel(http://docs.infinnity.ru/docs/API/Elements/ExtensionPanel/), пример можно глянуть в папке ./js/extentionPanels/.
+Кроме того, вы можете задавать новые элементы (см пример  папке *./js/elements/*).
+Либо использовать возможности [ExtensionPanel](http://infinniui-en.readthedocs.io/en/latest/Elements/ExtensionPanel/),
+пример можно глянуть в папке *./js/extentionPanels/*.
+Примеры метаданных, есть в файле *./www/viewExample/customElements.json*.
 
-Так же обратите внимание, что многие важные настроики происходят в файле ./www/js/main.js
+Так же обратите внимание, что многие важные настроики происходят в файле *./www/js/main.js*.
+Например, в нем Вы можете переопределить провайдеры источников данных.
+```js
+InfinniUI.providerRegister.register('MetadataDataSource',
+    function(metadataValue) {
+      var $pageContent = $('body');
+      for (var i = 3; i >= 0; i--) {
+        window.setTimeout(function() {
+          InfinniUI.LayoutManager.init();
+        }, 500 + i * 300);
+      }
+      return new InfinniUI.Providers.MetadataProviderREST(
+        new QueryConstructorMetadata(host, metadataValue)
+      );
 
-#
+function QueryConstructorMetadata(host, metadata) {
+  this.constructMetadataRequest = function() {
+    return {
+      requestUrl: host + '/viewExample/' + metadata.Path + '.json',
+      method: 'GET'
+    };
+  };
+}
+```
+
+## Разработка
+Если Вы хотите запускать gulp задачи самостоятельно, а не только через npm run, то установите gulp и gulp-cli глобально.
+Если Вы не хотите, чтобы приложение работало как SPA-приложение, то в файле *./gulpfile.js* в задаче *server:example*, уберите поле middleware и
+верните хэш-формат адресов: в файле *./www/config.js* уберите инициализацию *InfinniUI.config.HistoryAPI* или измените значение *pushState* на *false*(нужно для корректной работы роутинга).

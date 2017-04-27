@@ -131,6 +131,10 @@ gulp.task('copy:platform', function() {
 		   .pipe(gulp.dest( projectFolderForPlatform ));
 });
 
+/**
+ * Запускает сервер
+ * если Вы не хотите, чтобы приложение работало как SPA-приложение, см выше инструкцию, как это изменить
+ */
 gulp.task('server:example', function() {
 	browserSync.init({
 			server: { 
