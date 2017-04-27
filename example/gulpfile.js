@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-/*         Настраиваемые параметры              */
+/*=============Настраиваемые параметры=============*/
 
 // Необходимо указать путь до платфомы в node_modules
 var infinniUIpath = './node_modules/infinni-ui/';
@@ -19,23 +19,24 @@ var jsFiles = ['./js/**/*.js'];
 var templateFiles = ['./js/**/*.tpl.html'];
 
 
-/*                 Сборка                       */
+/*===================Сборка===================*/
 
-/*  Возможные модификации сборки:
-* 1) если Вы не используете шаблоны в своих элементах, то
-*    метод getTemplateStream можно вырезать, так же как и переменные templateFiles и templateNamespaceInitString
-*    убрать watch для шаблонов
-*    в build:js вместо concatStream(...) использовать действия из getJsStream (выносить в отдельную функцию тоже в таком случае смысла нет)
-*    избавиться от gulp-template-compile и streamqueue
-* 2) если Вы не переопределяете платформенные стили, то
-*    от метода build:platform-less и его watch'ов можно избавиться
-*    от папки ./styles/platform/ тоже
-*    стили можно подключить из /compiled/platform/css/
-* 3) если Вы не хотите, чтобы приложение работало как SPA-приложение
-*    в задаче 'server:example' в поле server вместо объекта просто укажите строку './www'
-*    connect-history-api-fallback больше не нужен, от него можно избавиться
-*    если Вы используйте роутинг, то проследите, чтобы pushState был отключен
-*/
+/**
+ *  Возможные модификации сборки:
+ *  1) если Вы не используете шаблоны в своих элементах, то
+ *     метод getTemplateStream можно вырезать, так же как и переменные templateFiles и templateNamespaceInitString
+ *     убрать watch для шаблонов
+ *     в build:js вместо concatStream(...) использовать действия из getJsStream (выносить в отдельную функцию тоже в таком случае смысла нет)
+ *     избавиться от gulp-template-compile и streamqueue
+ *  2) если Вы не переопределяете платформенные стили, то
+ *     от метода build:platform-less и его watch'ов можно избавиться
+ *     от папки ./styles/platform/ тоже
+ *     стили можно подключить из /compiled/platform/css/
+ *  3) если Вы не хотите, чтобы приложение работало как SPA-приложение
+ *     в задаче 'server:example' в поле server вместо объекта просто укажите строку './www'
+ *     connect-history-api-fallback больше не нужен, от него можно избавиться
+ *     если Вы используйте роутинг, то проследите, чтобы pushState был отключен
+ */
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
@@ -56,7 +57,7 @@ function buildLess( options ) {
 
 var templateNamespaceInitString = 'window["Example"] = window["Example"] || {};\nwindow["Example"]["Template"] = window["Example"]["Template"] || {};\n';
 
-// собирает шаблоны кастомных (здесь и далее под словом кастомные подразумеваются не относящие к платформе) элементов [если Вам это ни к чему, см выше, как избавиться]
+/* собирает шаблоны кастомных (здесь и далее под словом кастомные подразумеваются не относящие к платформе) элементов [если Вам это ни к чему, см выше, как избавиться] */
 function getTemplateStream(src) {
     return gulp.src(src)
         .pipe( $.templateCompile({
@@ -67,7 +68,7 @@ function getTemplateStream(src) {
         .pipe( $.replace(/\r*\n/g, '') );
 }
 
-// объединяет кастомные скрипты
+/* объединяет кастомные скрипты */
 function getJsStream(src) {
     return gulp.src( src, {base: '.'} )
         .pipe( $.wrapper({
@@ -77,12 +78,12 @@ function getJsStream(src) {
         }) );
 }
 
-// удаляет папки-результаты
+/* удаляет папки-результаты */
 gulp.task('clean', function() {
 	return del( [ projectFolderForPlatform, projectFolderForExtensions, projectFolderForStyles ] );
 });
 
-// собирает кастомные стили
+/* собирает кастомные стили */
 gulp.task('build:less', function() {
 	return buildLess( {
 		src: './styles/main.less',
@@ -90,7 +91,7 @@ gulp.task('build:less', function() {
 	} );
 });
 
-// переопределяет платформенные стили с новыми значениями переменных [если Вам это ни к чему, см выше, как избавиться]
+/* переопределяет платформенные стили с новыми значениями переменных [если Вам это ни к чему, см выше, как избавиться] */
 gulp.task('build:platform-less', function() {
 	return buildLess( {
 		src: './styles/platform/overridden-platform.less',
@@ -98,7 +99,7 @@ gulp.task('build:platform-less', function() {
 	} );
 });
 
-// собирает в один файл все кастомные скрипты, если указан не режим разработки, то минимизирует этот файл
+/* собирает в один файл все кастомные скрипты, если указан не режим разработки, то минимизирует этот файл */
 gulp.task('build:js', function() {
 	return concatStream( {objectMode: true}, getTemplateStream( templateFiles ), getJsStream( jsFiles ) )
             .pipe( $.concat( 'app.js' ) )
@@ -111,7 +112,7 @@ gulp.task('build:js', function() {
 
 var platformSrc = infinniUIpath + '/dist/**/*.*';
 
-// копирует из пакета платформы необходимые файлы в папку-результат
+/* копирует из пакета платформы необходимые файлы в папку-результат */
 gulp.task('copy:platform', function() {
 	return gulp.src(platformSrc)
 		   .pipe(gulp.dest( projectFolderForPlatform ));
