@@ -1,12 +1,28 @@
+/**
+ *
+ * @constructor
+ */
 function Builder() {
     var objectBuilders = [];
 
     this.appView = null;
 
+    /**
+     *
+     * @param metadataType
+     * @param objectBuilder
+     */
     this.register = function( metadataType, objectBuilder ) {
         objectBuilders[ metadataType ] = objectBuilder;
     };
 
+    /**
+     *
+     * @param metadataType
+     * @param metadataValue
+     * @param args
+     * @returns {*|null}
+     */
     this.buildType = function( metadataType, metadataValue, args ) {
         args = args || {};
         if( typeof objectBuilders[ metadataType ] === 'undefined' ) {
@@ -22,6 +38,12 @@ function Builder() {
         return objectBuilders[ metadataType ].build( context, resultArgs );
     };
 
+    /**
+     *
+     * @param metadataValue
+     * @param args
+     * @returns {*}
+     */
     this.build = function( metadataValue, args ) {
         var key;
         var value;
@@ -43,6 +65,12 @@ function Builder() {
         return result;
     };
 
+    /**
+     *
+     * @param metadataValue
+     * @param args
+     * @returns {Array}
+     */
     this.buildMany = function( metadataValue, args ) {
         var items = [];
 
@@ -59,6 +87,12 @@ function Builder() {
         return items;
     };
 
+    /**
+     *
+     * @param bindingMetadata
+     * @param args
+     * @returns {*|null}
+     */
     this.buildBinding = function( bindingMetadata, args ) {
         var dataBinding = this.buildType( 'PropertyBinding', bindingMetadata, args );
 

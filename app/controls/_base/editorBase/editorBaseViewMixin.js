@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var editorBaseViewMixin = {
 
     UI: {
@@ -6,12 +10,19 @@ var editorBaseViewMixin = {
         errorText: '.pl-control-error-text'
     },
 
+    /**
+     *
+     * @returns {{guid}}
+     */
     getData: function() {
         return {
             guid: this.model.get( 'guid' )
         };
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         this.listenTo( this.model, 'onValueChanged', this.updateValue );
         this.listenTo( this.model, 'change:hintText', this.updateHintText );
@@ -19,6 +30,9 @@ var editorBaseViewMixin = {
         this.listenTo( this.model, 'change:warningText', this.updateWarningText );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         this.updateValue();
         this.updateLabelFloating();
@@ -27,7 +41,9 @@ var editorBaseViewMixin = {
         this.updateWarningText();
     },
 
-
+    /**
+     *
+     */
     updateValue: function() {
         throw 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.';
     },
@@ -39,11 +55,17 @@ var editorBaseViewMixin = {
         this.$el.toggleClass( 'pl-empty-text-editor', isEmpty );
     },
 
+    /**
+     *
+     */
     updateLabelFloating: function() {
         var labelFloating = this.model.get( 'labelFloating' );
         this.$el.toggleClass( 'pl-label-floating', labelFloating === true );
     },
 
+    /**
+     *
+     */
     updateHintText: function() {
         var hintText = this.model.get( 'hintText' );
 
@@ -58,6 +80,9 @@ var editorBaseViewMixin = {
         }
     },
 
+    /**
+     *
+     */
     updateErrorText: function() {
         var errorText = this.model.get( 'errorText' );
 
@@ -72,6 +97,9 @@ var editorBaseViewMixin = {
         }
     },
 
+    /**
+     *
+     */
     updateWarningText: function() {
         var warningText = this.model.get( 'warningText' );
 
@@ -86,6 +114,9 @@ var editorBaseViewMixin = {
         }
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
 
@@ -95,6 +126,11 @@ var editorBaseViewMixin = {
         }
     },
 
+    /**
+     *
+     * @param model
+     * @param error
+     */
     onInvalidHandler: function( model, error ) {
         // что ита???
         // вот ето -  @see {@link http://backbonejs.org/#Model-validate} !!!

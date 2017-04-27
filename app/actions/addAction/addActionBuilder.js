@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function AddActionBuilder() {
 }
 
 _.extend( AddActionBuilder.prototype, baseActionBuilderMixin, baseEditActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {AddAction}
+     */
     build: function( context, args ) {
         var action = new AddAction( args.parentView );
 

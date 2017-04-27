@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 function CreateItemAction() {
     _.superClass( CreateItemAction, this );
 }
@@ -6,6 +10,10 @@ _.inherit( CreateItemAction, BaseAction );
 
 _.extend( CreateItemAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var destinationDataSource = this.getProperty( 'destinationDataSource' );
         var destinationProperty = this.getProperty( 'destinationProperty' ) || '';

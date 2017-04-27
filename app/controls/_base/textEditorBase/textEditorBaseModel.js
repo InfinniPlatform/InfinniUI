@@ -3,15 +3,17 @@
  * @augments ControlModel
  * @mixes editorBaseModelMixin
  */
-var TextEditorBaseModel = ControlModel.extend( /** @lends TextEditorBaseModel.prototype */ {
+var TextEditorBaseModel = ControlModel.extend( {
+
     defaults: _.defaults( {
         labelText: null,
         displayFormat: null,
         editMask: null
-    },
-        editorBaseModelMixin.defaults_editorBaseModel,
-        ControlModel.prototype.defaults ),
+    }, editorBaseModelMixin.defaults_editorBaseModel, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();

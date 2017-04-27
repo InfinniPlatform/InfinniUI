@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function BaseAction( parentView ) {
     this.parentView = parentView;
     this._properties = Object.create( null );
@@ -13,6 +18,11 @@ _.extend( BaseAction.prototype, {
         canExecute: null
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     */
     setProperty: function( name, value ) {
         var props = this._properties;
         if ( props[ name ] !== value ) {
@@ -21,6 +31,11 @@ _.extend( BaseAction.prototype, {
         }
     },
 
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
     getProperty: function( name ) {
         return this._properties[ name ];
     },
@@ -28,6 +43,10 @@ _.extend( BaseAction.prototype, {
     initDefaultValues: function() {
     },
 
+    /**
+     *
+     * @param args
+     */
     onExecutedHandler: function( args ) {
         var onExecutedHandler = this.getProperty( 'onExecutedHandler' );
 
@@ -36,15 +55,26 @@ _.extend( BaseAction.prototype, {
         }
     },
 
+    /**
+     *
+     * @param path
+     * @returns {boolean}
+     * @private
+     */
     _isRootElementPath: function( path ) {
         return !path.includes( '.' );
     }
 
 }, Backbone.Events );
 
+/**
+ *
+ * @param context
+ * @param executeActionMetadata
+ * @param resultCallback
+ */
 InfinniUI.global.executeAction = function( context, executeActionMetadata, resultCallback ) {
     var builder = new ApplicationBuilder();
-
     var action = builder.build( executeActionMetadata, { parentView: context.view } );
 
     action.execute( resultCallback );

@@ -1,5 +1,14 @@
+/**
+ *
+ * @mixin
+ */
 var baseEditActionBuilderMixin = {
 
+    /**
+     *
+     * @param action
+     * @param args
+     */
     applyBaseEditActionMetadata: function( action, args ) {
         var metadata = args.metadata;
         var parentView = args.parentView;

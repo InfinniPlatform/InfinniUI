@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function ServerAction( parentView ) {
     _.superClass( ServerAction, this, parentView );
     this.provider = InfinniUI.providerRegister.build( 'ServerActionProvider' );
@@ -15,6 +20,9 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         data: {}
     },
 
+    /**
+     *
+     */
     updateContentTypeStrategy: function() {
         var contentType = this.getProperty( 'contentType' );
 
@@ -25,6 +33,10 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         }
     },
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var that = this;
         var onExecuted = function( args ) {
@@ -44,14 +56,29 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         this.contentTypeStrategy.run( this.provider, this._getRequestData(), onExecuted, onSuccess, onError );
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     */
     setParam: function( name, value ) {
         this.setProperty( 'params.' + name, value );
     },
 
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
     getParam: function( name ) {
         return this.getProperty( 'params.' + name );
     },
 
+    /**
+     *
+     * @returns {object}
+     * @private
+     */
     _getRequestData: function() {
         var origin = this._replaceParamsInStr( this.getProperty( 'origin' ) );
         var path = this._replaceParamsInStr( this.getProperty( 'path' ) );
@@ -75,6 +102,13 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         return result;
     },
 
+    /**
+     *
+     * @param str
+     * @param escape
+     * @returns {*}
+     * @private
+     */
     _replaceParamsInStr: function( str, escape ) {
         if( !str || !_.isString( str ) ) {
             return str;
@@ -97,6 +131,12 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         } );
     },
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     * @private
+     */
     _compileData: function( data ) {
         var res;
 
@@ -121,6 +161,13 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
 
         return res;
     },
+
+    /**
+     *
+     * @param obj
+     * @returns {*}
+     * @private
+     */
     _replaceParamsInObject: function( obj ) {
         if( _.isEmpty( obj ) ) {
             return obj;

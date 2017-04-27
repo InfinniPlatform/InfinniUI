@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var ajaxRequestMixin = ( function( bus ) {
     function invokeCallback( cb, args ) {
         var result;
@@ -9,6 +13,11 @@ var ajaxRequestMixin = ( function( bus ) {
 
     return {
 
+        /**
+         *
+         * @param callback
+         * @returns {Function}
+         */
         onBeforeRequest: function( callback ) {
             return function() {
                 bus.send( messageTypes.onDataLoading, {} );
@@ -16,6 +25,11 @@ var ajaxRequestMixin = ( function( bus ) {
             };
         },
 
+        /**
+         *
+         * @param callback
+         * @returns {Function}
+         */
         onSuccessRequest: function( callback ) {
             return function() {
                 bus.send( messageTypes.onDataLoaded, { success: true } );
@@ -23,6 +37,11 @@ var ajaxRequestMixin = ( function( bus ) {
             };
         },
 
+        /**
+         *
+         * @param callback
+         * @returns {Function}
+         */
         onErrorRequest: function( callback ) {
             return function() {
                 bus.send( messageTypes.onDataLoaded, { success: false } );

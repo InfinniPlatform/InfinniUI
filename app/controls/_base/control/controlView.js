@@ -1,9 +1,13 @@
 /**
  * @class
  * @augments Backbone.View
+ * @constructor
  */
 var ControlView = Backbone.View.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         this.wasRendered = false;
         this.once( 'render', this.initHandlersForProperties, this );
@@ -12,6 +16,10 @@ var ControlView = Backbone.View.extend( {
 
     classNameFocused: 'pl-focused',
 
+    /**
+     *
+     * @private
+     */
     _initDomHandlers: function() {
         var view = this;
         var $el = this.$el;
@@ -21,6 +29,9 @@ var ControlView = Backbone.View.extend( {
         }, true );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         this.listenTo( this.model, 'change:visible', this.updateVisible );
         this.listenTo( this.model, 'change:horizontalAlignment', this.updateHorizontalAlignment );
@@ -39,6 +50,9 @@ var ControlView = Backbone.View.extend( {
         this.initFocusHandlers();
     },
 
+    /**
+     *
+     */
     initFocusHandlers: function() {
         var $el = this.$el;
         var view = this;
@@ -63,10 +77,18 @@ var ControlView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param el
+     * @returns {boolean}
+     */
     isControlElement: function( el ) {
         return this.el === el || $.contains( this.el, el );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         this.updateVisible();
         this.updateTextHorizontalAlignment();
@@ -92,11 +114,15 @@ var ControlView = Backbone.View.extend( {
 
     /**
      * @description Возвращает элемент, который должен получить фокус
+     * @returns {jQuery}
      */
     getElementForFocus: function() {
         return this.$el;
     },
 
+    /**
+     *
+     */
     updateFocused: function() {
         var focused = this.model.get( 'focused' );
 
@@ -109,11 +135,16 @@ var ControlView = Backbone.View.extend( {
         this.$el.toggleClass( this.classNameFocused, focused );
     },
 
-
+    /**
+     *
+     * @param event
+     */
     onFocusHandler: function( event ) {
     },
 
-
+    /**
+     *
+     */
     updateVisible: function() {
         var isVisible = this.model.get( 'visible' );
         this.$el.toggleClass( 'hidden', !isVisible );
@@ -121,28 +152,46 @@ var ControlView = Backbone.View.extend( {
         this.onUpdateVisible();
     },
 
+    /**
+     *
+     */
     onUpdateVisible: function() {
         this.updateLayout();
     },
 
+    /**
+     *
+     */
     updateLayout: function() {
         var exchange = InfinniUI.global.messageBus;
         exchange.send( 'OnChangeLayout', {} );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         var isEnabled = this.model.get( 'enabled' );
         this.$el.toggleClass( 'pl-disabled', !isEnabled );
     },
 
+    /**
+     *
+     */
     updateTextHorizontalAlignment: function() {
         this.switchClass( 'pl-text-horizontal', this.model.get( 'textHorizontalAlignment' ) );
     },
 
+    /**
+     *
+     */
     updateHorizontalAlignment: function() {
         this.switchClass( 'pl-horizontal', this.model.get( 'horizontalAlignment' ) );
     },
 
+    /**
+     *
+     */
     updateName: function() {
         var newName = this.model.get( 'name' );
         var currentName = this.$el.attr( 'data-pl-name' );
@@ -152,9 +201,15 @@ var ControlView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
     },
 
+    /**
+     *
+     */
     updateTextStyle: function() {
         var customStyle = this.model.get( 'textStyle' );
 
@@ -162,6 +217,9 @@ var ControlView = Backbone.View.extend( {
         this.currentTextStyle = customStyle;
     },
 
+    /**
+     *
+     */
     updateBackground: function() {
         var customStyle = this.model.get( 'background' );
 
@@ -169,6 +227,9 @@ var ControlView = Backbone.View.extend( {
         this.currentBackground = customStyle;
     },
 
+    /**
+     *
+     */
     updateForeground: function() {
         var customStyle = this.model.get( 'foreground' );
 
@@ -176,6 +237,9 @@ var ControlView = Backbone.View.extend( {
         this.currentForeground = customStyle;
     },
 
+    /**
+     *
+     */
     updateStyle: function() {
         var customStyle = this.model.get( 'style' );
 
@@ -183,6 +247,11 @@ var ControlView = Backbone.View.extend( {
         this.currentStyle = customStyle;
     },
 
+    /**
+     *
+     * @param oldClass
+     * @param newClass
+     */
     changeElementClass: function( oldClass, newClass ) {
         if( oldClass ) {
             this.$el.removeClass( oldClass );
@@ -193,12 +262,18 @@ var ControlView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateViewMode: function() {
         if( this.viewMode == 'FormGroup' ) {
             this.$el.addClass( 'pl-form-group' );
         }
     },
 
+    /**
+     *
+     */
     updateValidationState: function() {
         var newState = this.model.get( 'validationState' );
         var message = this.model.get( 'validationMessage' );
@@ -229,6 +304,10 @@ var ControlView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param message
+     */
     showErrorMessage: function( message ) {
         var $errorIcn = $( _.template( '<i class="2 error-icn fa fa-warning" data-placement="left" title="<%-message%>"></i>' )( { message: message } ) );
 
@@ -240,18 +319,27 @@ var ControlView = Backbone.View.extend( {
         $errorIcn.tooltip( { 'container': 'body' } );
     },
 
+    /**
+     *
+     */
     hideErrorMessage: function() {
         this.$el
             .find( '.error-icn' )
             .remove();
     },
 
+    /**
+     *
+     */
     rerender: function() {
         if( this.wasRendered ) {
             this.render();
         }
     },
 
+    /**
+     *
+     */
     prerenderingActions: function() {
         this.wasRendered = true;
     },
@@ -270,11 +358,21 @@ var ControlView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     remove: function() {
         this.trigger( messageTypes.onRemove.name );
         Backbone.View.prototype.remove.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     * @param $el
+     * @param separator
+     */
     switchClass: function( name, value, $el, separator ) {
         if( typeof separator === 'undefined' ) {
             separator = '-';
@@ -290,21 +388,40 @@ var ControlView = Backbone.View.extend( {
         } ).addClass( startWith + value );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {string}
+     */
     valueToBackgroundClassName: function( value ) {
         if( value ) return 'pl-' + value.toLowerCase() + '-bg';
         else return '';
     },
 
+    /**
+     *
+     * @param value
+     * @returns {string}
+     */
     valueToForegroundClassName: function( value ) {
         if( value ) return 'pl-' + value.toLowerCase() + '-fg';
         else return '';
     },
 
+    /**
+     *
+     * @param value
+     * @returns {string}
+     */
     valueToTextClassName: function( value ) {
         if( value ) return 'pl-' + value.toLowerCase();
         else return '';
     },
 
+    /**
+     *
+     * @param template
+     */
     renderTemplate: function( template ) {
         var data = this.getData();
 
@@ -312,6 +429,10 @@ var ControlView = Backbone.View.extend( {
         this.bindUIElements();
     },
 
+    /**
+     *
+     * @returns {{name, text, focusable, focused, enabled, visible, horizontalAlignment, textHorizontalAlignment, textVerticalAlignment, textStyle, foreground, background}}
+     */
     getData: function() {
         var model = this.model;
 
@@ -331,6 +452,9 @@ var ControlView = Backbone.View.extend( {
         };
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.$el.focus();
     }

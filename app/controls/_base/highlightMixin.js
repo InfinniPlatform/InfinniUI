@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var highlightMixin = {
 
     attributeName: '_highlight',
@@ -6,10 +10,18 @@ var highlightMixin = {
 
     control: {
 
+        /**
+         *
+         * @param highlight
+         */
         setHighlight: function( highlight ) {
             this.controlModel.set( highlightMixin.attributeName, highlight );
         },
 
+        /**
+         *
+         * @returns {*}
+         */
         getHighlight: function() {
             return this.controlModel.get( highlightMixin.attributeName );
         }
@@ -18,6 +30,9 @@ var highlightMixin = {
 
     controlView: {
 
+        /**
+         *
+         */
         initHighlightMixin: function() {
             this.listenTo( this.model, 'change:' + highlightMixin.attributeName, function() {
                 var model = this.model;
@@ -31,4 +46,3 @@ var highlightMixin = {
 };
 
 InfinniUI.highlightMixin = highlightMixin;
-

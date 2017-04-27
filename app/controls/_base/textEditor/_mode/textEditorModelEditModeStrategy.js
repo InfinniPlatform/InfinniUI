@@ -9,6 +9,10 @@ function TextEditorModelEditModeStrategy() {
 TextEditorModelEditModeStrategy.prototype = Object.create( TextEditorModelBaseModeStrategy.prototype );
 TextEditorModelEditModeStrategy.prototype.constructor = TextEditorModelBaseModeStrategy;
 
+/**
+ *
+ * @param model
+ */
 TextEditorModelEditModeStrategy.prototype.updateText = function( model ) {
     var editMask = model.getEditMask();
     var value = model.get( 'value' );
@@ -28,10 +32,22 @@ TextEditorModelEditModeStrategy.prototype.updateText = function( model ) {
     }
 };
 
+/**
+ *
+ * @param model
+ * @param text
+ * @param ui
+ */
 TextEditorModelEditModeStrategy.prototype.setText = function( model, text, ui ) {
     model.set( 'text', text, { ui: ui } );
 };
 
+/**
+ *
+ * @param model
+ * @param newValue
+ * @param options
+ */
 TextEditorModelEditModeStrategy.prototype.onChangeTextHandler = function( model, newValue, options ) {
     var editMask = model.getEditMask();
     var value = editMask ? editMask.getData() : newValue;
@@ -40,4 +56,3 @@ TextEditorModelEditModeStrategy.prototype.onChangeTextHandler = function( model,
 };
 
 InfinniUI.TextEditorModelEditModeStrategy = TextEditorModelEditModeStrategy;
-

@@ -20,10 +20,18 @@ function DownloadExecutor( resultCallback, successCallback, failCallback ) {
 
 InfinniUI.DownloadExecutor = DownloadExecutor;
 
+/**
+ *
+ * @param options
+ */
 DownloadExecutor.prototype.config = function( options ) {
     _.extend( this.options, options );
 };
 
+/**
+ *
+ * @param requestData
+ */
 DownloadExecutor.prototype.run = function( requestData ) {
     var cleanup = this.cleanup.bind( this );
     var onResult = function() {
@@ -54,6 +62,10 @@ DownloadExecutor.prototype.run = function( requestData ) {
     this.openWindow( requestData );
 };
 
+/**
+ *
+ * @param requestData
+ */
 DownloadExecutor.prototype.openWindow = function( requestData ) {
     var windowName = this.getName( 'window' );
     var form = document.createElement( 'form' );
@@ -81,10 +93,18 @@ DownloadExecutor.prototype.openWindow = function( requestData ) {
     form.submit();
 };
 
+/**
+ *
+ * @param name
+ * @returns {*}
+ */
 DownloadExecutor.prototype.getName = function( name ) {
     return name + this.guid;
 };
 
+/**
+ *
+ */
 DownloadExecutor.prototype.cleanup = function() {
     clearInterval( this.intervalId );
     clearTimeout( this.timeout );
@@ -99,6 +119,11 @@ DownloadExecutor.prototype.cleanup = function() {
     }
 };
 
+/**
+ *
+ * @param beforeStart
+ * @returns {Promise}
+ */
 DownloadExecutor.prototype.waitResponse = function( beforeStart ) {
     var cookieName = this.getName( 'token' );
     var defer = $.Deferred( beforeStart );

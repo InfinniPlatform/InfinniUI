@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function CancelAction( parentView ) {
     _.superClass( CancelAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( CancelAction, BaseAction );
 
 _.extend( CancelAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var that = this;
 

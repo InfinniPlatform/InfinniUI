@@ -1,9 +1,19 @@
+/**
+ *
+ * @constructor
+ */
 function OpenActionBuilder() {
 }
 
 
 _.extend( OpenActionBuilder.prototype, baseActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {OpenAction}
+     */
     build: function( context, args ) {
         var action = new OpenAction( args.parentView );
 

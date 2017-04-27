@@ -2,6 +2,7 @@
  * @class TextEditorBaseView
  * @augments ControlView
  * @mixed editorBaseViewMixin
+ * @constructor
  */
 var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
@@ -14,10 +15,16 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
 
     events: {},
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
@@ -29,6 +36,9 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         this.listenTo( this.model, 'change:inputType', this.updateInputType );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
@@ -37,6 +47,9 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         this.updateInputType();
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -47,6 +60,9 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         }
     },
 
+    /**
+     *
+     */
     updateInputType: function() {
         var inputType = this.model.get( 'inputType' );
         var $editor = this.ui.editor;
@@ -57,19 +73,31 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         }
     },
 
+    /**
+     *
+     */
     updateEditMask: function() {
         this.updateValue();
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.ui.editor.focus();
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         editorBaseViewMixin.updateValueState.call( this );
         this.ui.control.val( this.getDisplayValue() );
     },
 
+    /**
+     *
+     */
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
@@ -84,6 +112,9 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         }
     },
 
+    /**
+     *
+     */
     updateDisplayFormat: function() {
         this.updateValue();
     },
@@ -100,6 +131,10 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         }
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getData: function() {
         var model = this.model;
 
@@ -112,6 +147,10 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
             } );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getDisplayValue: function() {
         var model = this.model;
         var value = model.get( 'value' );

@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function SelectActionBuilder() {
 }
 
 _.extend( SelectActionBuilder.prototype, baseActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {SelectAction}
+     */
     build: function( context, args ) {
         var builder = args.builder;
         var metadata = args.metadata;

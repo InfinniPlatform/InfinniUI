@@ -1,6 +1,7 @@
 /**
- * @class
+ *
  * @augments ControlModel
+ * @constructor
  */
 var ButtonModel = ControlModel.extend( {
 
@@ -11,6 +12,9 @@ var ButtonModel = ControlModel.extend( {
         type: 'button'
     }, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
     }

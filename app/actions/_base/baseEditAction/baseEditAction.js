@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function BaseEditAction( parentView ) {
     _.superClass( BaseEditAction, this, parentView );
 }
@@ -8,6 +13,10 @@ _.inherit( BaseEditAction, BaseAction );
 
 _.extend( BaseEditAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var that = this;
         var linkView = this.getProperty( 'linkView' );
@@ -19,6 +28,10 @@ _.extend( BaseEditAction.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param editView
+     */
     handleViewReady: function( editView ) {
         var editSourceName = this.getProperty( 'sourceSource' );
         var editDataSource = editView.getContext().dataSources[ editSourceName ];
@@ -57,6 +70,12 @@ _.extend( BaseEditAction.prototype, {
         }
     },
 
+    /**
+     *
+     * @param source
+     * @returns {boolean}
+     * @private
+     */
     _isObjectDataSource: function( source ) {
         return 'setItems' in source;
     }

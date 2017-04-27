@@ -1,5 +1,6 @@
 /**
  * @TODO Если маска заполнена не полностью - не выходить из режима редактирования
+ * @constructor
  */
 var TextEditorModel = Backbone.Model.extend( {
 
@@ -8,6 +9,9 @@ var TextEditorModel = Backbone.Model.extend( {
         Display: 'display'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         this.initEditMode();
 
@@ -17,11 +21,22 @@ var TextEditorModel = Backbone.Model.extend( {
         this.on( 'change:text', this.onChangeTextHandler );
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     * @param options
+     */
     onChangeTextHandler: function( model, value, options ) {
         var modeStrategy = this.get( 'modeStrategy' );
         modeStrategy.onChangeTextHandler( model, value, options );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     convertValue: function( value ) {
         var getConverter = this.get( 'valueConverter' );
         var converter = getConverter.call( null );
@@ -29,6 +44,9 @@ var TextEditorModel = Backbone.Model.extend( {
         return ( typeof converter === 'function' ) ? converter.call( this, value ) : value;
     },
 
+    /**
+     *
+     */
     initEditMode: function() {
         this.modeStrategies = {};
         this.modeStrategies[ this.Mode.Edit ] = new TextEditorModelEditModeStrategy();
@@ -37,18 +55,31 @@ var TextEditorModel = Backbone.Model.extend( {
         this.updateEditModeStrategy();
     },
 
+    /**
+     *
+     * @returns {{mode: string}}
+     */
     defaults: function() {
         return {
             mode: this.Mode.Display
         };
     },
 
+    /**
+     *
+     */
     updateEditModeStrategy: function() {
         var mode = this.get( 'mode' );
 
         this.set( 'modeStrategy', this.modeStrategies[ mode ] );
     },
 
+    /**
+     *
+     * @param model
+     * @param mode
+     * @param options
+     */
     onChangeModeHandler: function( model, mode, options ) {
         var prevMode = this.previous( 'mode' );
 
@@ -78,10 +109,16 @@ var TextEditorModel = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     */
     applyChanges: function() {
         this.set( 'originalValue', this.get( 'value' ) );
     },
 
+    /**
+     *
+     */
     cancelChanges: function() {
         this.set( 'value', this.get( 'originalValue' ) );
     },
@@ -96,22 +133,43 @@ var TextEditorModel = Backbone.Model.extend( {
         modeStrategy.setText( this, text, ui );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getEditMask: function() {
         return this.get( 'editMask' );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getValue: function() {
         return this.get( 'value' );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getDisplayFormat: function() {
         return this.get( 'displayFormat' );
     },
 
+    /**
+     *
+     */
     setEditMode: function() {
         this.set( 'mode', this.Mode.Edit );
     },
 
+    /**
+     *
+     * @param attrs
+     * @param options
+     * @returns {*}
+     */
     validate: function( attrs, options ) {
         //@TODO Если меняется Mode Edit => Display, проверить введенное значение!!!
         var validateValue = this.get( 'validateValue' );
@@ -122,17 +180,31 @@ var TextEditorModel = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
         var modeStrategy = this.get( 'modeStrategy' );
         modeStrategy.updateText( this );
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     * @param options
+     */
     onChangeValueHandler: function( model, value, options ) {
         if( !options.ui ) {
             this.updateText();
         }
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     onChangeOriginalValueHandler: function( model, value ) {
         model.set( 'value', value, { originalValue: true } );
     }

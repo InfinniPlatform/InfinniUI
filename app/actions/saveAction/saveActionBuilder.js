@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function SaveActionBuilder() {
 }
 
 _.extend( SaveActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {SaveAction}
+     */
     build: function( context, args ) {
         var parentView = args.parentView;
         var dataSource = parentView.getContext().dataSources[ args.metadata.DestinationValue.Source ];

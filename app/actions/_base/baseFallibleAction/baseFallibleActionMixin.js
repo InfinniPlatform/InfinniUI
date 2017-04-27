@@ -1,5 +1,13 @@
+/**
+ *
+ * @mixin
+ */
 var baseFallibleActionMixin = {
 
+    /**
+     *
+     * @param args
+     */
     onSuccessHandler: function( args ) {
         var onSuccessHandler = this.getProperty( 'onSuccessHandler' );
 
@@ -7,6 +15,11 @@ var baseFallibleActionMixin = {
             onSuccessHandler( args );
         }
     },
+
+    /**
+     *
+     * @param args
+     */
     onErrorHandler: function( args ) {
         var onErrorHandler = this.getProperty( 'onErrorHandler' );
 

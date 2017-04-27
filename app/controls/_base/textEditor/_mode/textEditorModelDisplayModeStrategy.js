@@ -9,6 +9,10 @@ function TextEditorModelDisplayModeStrategy() {
 TextEditorModelDisplayModeStrategy.prototype = Object.create( TextEditorModelBaseModeStrategy.prototype );
 TextEditorModelDisplayModeStrategy.prototype.constructor = TextEditorModelDisplayModeStrategy;
 
+/**
+ *
+ * @param model
+ */
 TextEditorModelDisplayModeStrategy.prototype.updateText = function( model ) {
     var displayFormat = model.getDisplayFormat();
     var value = model.get( 'value' );
@@ -23,6 +27,12 @@ TextEditorModelDisplayModeStrategy.prototype.updateText = function( model ) {
     model.set( 'text', text );
 };
 
+/**
+ *
+ * @param model
+ * @param text
+ * @param ui
+ */
 TextEditorModelDisplayModeStrategy.prototype.setText = function( model, text, ui ) {
     if ( ui ) {
         //Изменение значения в поле ввода для режима просмотра - результат срабатывания автозаполнения браузера
@@ -30,6 +40,12 @@ TextEditorModelDisplayModeStrategy.prototype.setText = function( model, text, ui
     }
 };
 
+/**
+ *
+ * @param model
+ * @param text
+ * @param options
+ */
 TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function( model, text, options ) {
     if ( options.ui ) {
         var value = model.convertValue( text );

@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var bindUIElementsMixin = {
     /**
      * Сохраняет в поле ui элементы по селектору в UI

@@ -1,4 +1,8 @@
-﻿function ApplicationBuilder() {
+﻿/**
+ *
+ * @constructor
+ */
+function ApplicationBuilder() {
     if( !this.builder ) {
         this.builder = new Builder();
         this.registerElementBuilders();
@@ -11,6 +15,9 @@ _.extend( ApplicationBuilder.prototype, {
 
     builder: null,
 
+    /**
+     * Registration for all builders
+     */
     registerElementBuilders: function() {
         var builder = this.builder;
 
@@ -112,14 +119,33 @@ _.extend( ApplicationBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param metadataValue
+     * @param args
+     * @returns {*}
+     */
     build: function( metadataValue, args ) {
         return this.builder.build( metadataValue, args );
     },
 
+    /**
+     *
+     * @param metadataType
+     * @param metadataValue
+     * @param args
+     * @returns {*}
+     */
     buildType: function( metadataType, metadataValue, args ) {
         return this.builder.buildType( metadataType, metadataValue, args );
     },
 
+    /**
+     *
+     * @param metadataValue
+     * @param args
+     * @returns {*}
+     */
     buildMany: function( metadataValue, args ) {
         return this.builder.buildMany( metadataValue, args );
     }
@@ -127,6 +153,11 @@ _.extend( ApplicationBuilder.prototype, {
 
 ApplicationBuilder.registerQueue = [];
 
+/**
+ *
+ * @param name
+ * @param builder
+ */
 ApplicationBuilder.addToRegisterQueue = function( name, builder ) {
     ApplicationBuilder.registerQueue.push( {
         name: name,

@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function AddAction( parentView ) {
     _.superClass( AddAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( AddAction, BaseEditAction );
 
 _.extend( AddAction.prototype, {
 
+    /**
+     *
+     * @returns {boolean}
+     */
     setSelectedItem: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
         var editView = editDataSource.getView();
@@ -17,6 +26,9 @@ _.extend( AddAction.prototype, {
         return true;
     },
 
+    /**
+     * Save item in destination data source
+     */
     save: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
         var destinationDataSource = this.getProperty( 'destinationDataSource' );

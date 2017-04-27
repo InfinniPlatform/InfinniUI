@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function SaveAction( parentView ) {
     _.superClass( SaveAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( SaveAction, BaseAction );
 
 _.extend( SaveAction.prototype, baseFallibleActionMixin, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var parentView = this.parentView;
         var dataSource = this.getProperty( 'dataSource' );

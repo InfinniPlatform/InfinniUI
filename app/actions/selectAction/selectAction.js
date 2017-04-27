@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function SelectAction( parentView ) {
     _.superClass( SelectAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( SelectAction, BaseAction );
 
 _.extend( SelectAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var that = this;
         var parentView = this.parentView;

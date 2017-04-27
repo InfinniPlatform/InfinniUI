@@ -1,12 +1,20 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function DeleteAction( parentView ) {
     _.superClass( DeleteAction, this, parentView );
 }
 
 _.inherit( DeleteAction, BaseAction );
 
-
 _.extend( DeleteAction.prototype, baseFallibleActionMixin, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var accept = this.getProperty( 'accept' );
         var that = this;
@@ -49,6 +57,10 @@ _.extend( DeleteAction.prototype, baseFallibleActionMixin, {
         }
     },
 
+    /**
+     *
+     * @param callback
+     */
     remove: function( callback ) {
         var dataSource = this.getProperty( 'destinationSource' );
         var property = this.getProperty( 'destinationProperty' );
@@ -60,6 +72,13 @@ _.extend( DeleteAction.prototype, baseFallibleActionMixin, {
         }
     },
 
+    /**
+     *
+     * @param dataSource
+     * @param property
+     * @param callback
+     * @private
+     */
     _deleteDocument: function( dataSource, property, callback ) {
         var that = this;
         var onSuccessDelete = function( context, args ) {
@@ -85,6 +104,13 @@ _.extend( DeleteAction.prototype, baseFallibleActionMixin, {
         dataSource.deleteItem( selectedItem, onSuccessDelete, onErrorDelete );
     },
 
+    /**
+     *
+     * @param dataSource
+     * @param {string} property
+     * @param callback
+     * @private
+     */
     _deleteArrayElement: function( dataSource, property, callback ) {
         var propertyPathList = property.split( '.' );
         var index = propertyPathList.pop();

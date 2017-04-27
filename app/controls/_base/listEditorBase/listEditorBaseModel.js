@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ListEditorBaseModel = ContainerModel.extend( _.extend( {
 
     defaults: _.defaults( {
@@ -5,6 +9,9 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         disabledItemCondition: null
     }, ContainerModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         var that = this;
         this.hashValueByItem = new HashMap();
@@ -18,12 +25,21 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         } );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onSelectedItemChanged: function( handler ) {
         this.on( 'change:selectedItem', function( source, newSelectedItem ) {
             handler( { value: newSelectedItem } );
         } );
     },
 
+    /**
+     *
+     * @param value
+     * @param toggle
+     */
     toggleValue: function( value, toggle ) {
         var currentValue = this.get( 'value' );
         var multiSelect = this.get( 'multiSelect' );
@@ -52,10 +68,18 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     */
     bindSelectedItemsWithValue: function() {
         return;
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*}
+     */
     valueByItem: function( item ) {
         var valueSelector = this.get( 'valueSelector' );
 
@@ -66,6 +90,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     itemInfoByValue: function( value ) {
         if( this.hashValueByItem.length === 0 ) {
             this.updateHashValueByItem();
@@ -96,6 +125,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         return info;
     },
 
+    /**
+     *
+     * @param value
+     * @returns {undefined|*}
+     */
     itemByValue: function( value ) {
         var itemInfo = this.itemInfoByValue( value );
 
@@ -106,6 +140,11 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     * @param value
+     * @returns {number}
+     */
     itemIndexByValue: function( value ) {
         var itemInfo = this.itemInfoByValue( value );
 
@@ -116,12 +155,22 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*|number}
+     */
     itemIndexByItem: function( item ) {
         var value = this.valueByItem( item );
 
         return this.itemIndexByValue( value );
     },
 
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     isDisabledItem: function( item ) {
         var disabledItemCondition = this.get( 'disabledItemCondition' );
 
@@ -129,6 +178,9 @@ var ListEditorBaseModel = ContainerModel.extend( _.extend( {
             disabledItemCondition( undefined, { value: item } );
     },
 
+    /**
+     *
+     */
     updateHashValueByItem: function() {
         var items = this.get( 'items' );
         var value;

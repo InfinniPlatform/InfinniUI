@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ControlModel = Backbone.Model.extend( {
 
     defaults: {
@@ -18,6 +22,9 @@ var ControlModel = Backbone.Model.extend( {
         focused: false
     },
 
+    /**
+     *
+     */
     initialize: function() {
         this.set( 'guid', guid(), { silent: true } );
         this.on( 'change:focused', function( model, value ) {
@@ -25,6 +32,13 @@ var ControlModel = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param key
+     * @param val
+     * @param options
+     * @returns {*}
+     */
     set: function( key, val, options ) {
         var defaults = this.defaults;
         var attrs;

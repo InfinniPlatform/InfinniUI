@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function EditAction( parentView ) {
     _.superClass( EditAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( EditAction, BaseEditAction );
 
 _.extend( EditAction.prototype, {
 
+    /**
+     *
+     * @returns {boolean}
+     */
     setSelectedItem: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
         var destinationDataSource = this.getProperty( 'destinationDataSource' );
@@ -37,12 +46,22 @@ _.extend( EditAction.prototype, {
         return true;
     },
 
+    /**
+     *
+     * @private
+     */
     _resumeUpdateEditDataSource: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
 
         editDataSource.resumeUpdate( 'BaseEditAction' );
     },
 
+    /**
+     *
+     * @param editDataSource
+     * @param selectedItem
+     * @private
+     */
     _setDocument: function( editDataSource, selectedItem ) {
         var selectedItemId = editDataSource.idOfItem( selectedItem );
 
@@ -51,6 +70,12 @@ _.extend( EditAction.prototype, {
         this._resumeUpdateEditDataSource();
     },
 
+    /**
+     *
+     * @param editDataSource
+     * @param selectedItem
+     * @private
+     */
     _setItem: function( editDataSource, selectedItem ) {
         var item = _.clone( selectedItem );
 
@@ -62,6 +87,9 @@ _.extend( EditAction.prototype, {
         editDataSource.setSelectedItem( item );
     },
 
+    /**
+     * save item in destination data source
+     */
     save: function() {
         var editDataSource = this.getProperty( 'editDataSource' );
         var destinationDataSource = this.getProperty( 'destinationDataSource' );
@@ -86,6 +114,12 @@ _.extend( EditAction.prototype, {
         }
     },
 
+    /**
+     *
+     * @param originItem
+     * @param newItem
+     * @private
+     */
     _overrideOriginItem: function( originItem, newItem ) {
         var property;
 

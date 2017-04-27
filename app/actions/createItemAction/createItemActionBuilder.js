@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function CreateItemActionBuilder() {
 }
 
 _.extend( CreateItemActionBuilder.prototype, baseActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {CreateItemAction}
+     */
     build: function( context, args ) {
         var action = new CreateItemAction( args.parentView );
         var metadata = args.metadata;

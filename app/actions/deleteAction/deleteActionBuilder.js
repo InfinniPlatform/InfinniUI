@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function DeleteActionBuilder() {
 }
 
 _.extend( DeleteActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {DeleteAction}
+     */
     build: function( context, args ) {
         var metadata = args.metadata;
         var parentView = args.parentView;

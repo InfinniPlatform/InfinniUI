@@ -1,6 +1,7 @@
 /**
- * @class ButtonView
+ *
  * @augments ControlView
+ * @constructor
  */
 var LinkButtonView = CommonButtonView.extend( {
 
@@ -16,11 +17,19 @@ var LinkButtonView = CommonButtonView.extend( {
         'click': 'onClickHandler'
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     template: function() {return '';},
 
     UI: {
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     getButtonElement: function() {
         return this.$el;
     }

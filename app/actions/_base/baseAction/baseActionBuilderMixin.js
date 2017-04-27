@@ -1,5 +1,14 @@
+/**
+ *
+ * @mixin
+ */
 var baseActionBuilderMixin = {
 
+    /**
+     *
+     * @param action
+     * @param params
+     */
     applyBaseActionMetadata: function( action, params ) {
         var metadata = params.metadata;
         var executorBuilderParams = {

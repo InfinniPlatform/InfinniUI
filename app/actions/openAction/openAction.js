@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function OpenAction( parentView ) {
     _.superClass( OpenAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( OpenAction, BaseAction );
 
 _.extend( OpenAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var linkView = this.getProperty( 'linkView' );
         var that = this;

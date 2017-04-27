@@ -1,10 +1,14 @@
+/**
+ *
+ * @mixin
+ */
 var eventHandlerMixin = {
     /**
      *
-     * @param {String} name
+     * @param {string} name
      * @param {*} handler
      * @callback handler
-     * @returns {boolean}
+     * @returns {boolean|*}
      */
     addEventHandler: function( name, handler ) {
         this.initEventHandlerMixin();
@@ -33,6 +37,7 @@ var eventHandlerMixin = {
      * Формат вызова callEventHandler(name, [data],[handler])
      * @param {string} name Название события
      * @callback [callback] Функцию в которую будут переданы результат вызова каждого обработчика
+     * @returns {*}
      */
     callEventHandler: function( name ) {
         if( typeof this.eventHandlers === 'undefined' || name === null || typeof name === 'undefined' ) {

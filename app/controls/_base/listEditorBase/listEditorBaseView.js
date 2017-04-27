@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin, {
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ContainerView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
@@ -9,6 +16,9 @@ var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin
         this.listenTo( this.model, 'change:disabledItemCondition', this.updateDisabledItem );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
@@ -18,6 +28,9 @@ var ListEditorBaseView = ContainerView.extend( _.extend( {}, editorBaseViewMixin
         this.updateDisabledItem();
     },
 
+    /**
+     *
+     */
     updateMultiSelect: function() {
     }
 

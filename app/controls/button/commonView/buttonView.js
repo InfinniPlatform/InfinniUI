@@ -1,6 +1,7 @@
 /**
- * @class ButtonView
+ *
  * @augments ControlView
+ * @constructor
  */
 var CommonButtonView = ControlView.extend( {
 
@@ -16,11 +17,17 @@ var CommonButtonView = ControlView.extend( {
         'click button': 'onClickHandler'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this, arguments );
         this.initHighlightMixin();
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
 
@@ -28,12 +35,18 @@ var CommonButtonView = ControlView.extend( {
         this.updateType();
     },
 
+    /**
+     *
+     */
     updateType: function() {
         var type = this.model.get( 'type' );
 
         this.getButtonElement().attr( 'type', type );
     },
 
+    /**
+     *
+     */
     updateContent: function() {
         var contentTemplate = this.model.get( 'contentTemplate' );
         var content = this.model.get( 'content' );
@@ -52,6 +65,9 @@ var CommonButtonView = ControlView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
         var textForButton = this.model.get( 'text' );
         var $button = this.getButtonElement();
@@ -61,6 +77,9 @@ var CommonButtonView = ControlView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -71,6 +90,9 @@ var CommonButtonView = ControlView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
 
@@ -78,6 +100,9 @@ var CommonButtonView = ControlView.extend( {
         this.getButtonElement().prop( 'disabled', !isEnabled );
     },
 
+    /**
+     *
+     */
     updateBackground: function() {
         var customStyle = this.model.get( 'background' );
 
@@ -94,6 +119,10 @@ var CommonButtonView = ControlView.extend( {
         this.currentBackground = customStyle;
     },
 
+    /**
+     * @description render view
+     * @returns {CommonButtonView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -108,10 +137,17 @@ var CommonButtonView = ControlView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     getButtonElement: function() {
         return this.ui.button;
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.getButtonElement().focus();
     }

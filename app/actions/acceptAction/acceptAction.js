@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
 function AcceptAction( parentView ) {
     _.superClass( AcceptAction, this, parentView );
 }
@@ -6,6 +11,10 @@ _.inherit( AcceptAction, BaseAction );
 
 _.extend( AcceptAction.prototype, {
 
+    /**
+     *
+     * @param callback
+     */
     execute: function( callback ) {
         var that = this;
 

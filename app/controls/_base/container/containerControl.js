@@ -2,7 +2,6 @@
  *
  * @param viewMode
  * @constructor
- * @augments Control
  */
 function ContainerControl( viewMode ) {
     _.superClass( ContainerControl, this, viewMode );

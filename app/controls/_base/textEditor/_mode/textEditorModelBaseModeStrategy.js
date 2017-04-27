@@ -31,4 +31,3 @@ TextEditorModelBaseModeStrategy.prototype.onChangeTextHandler = function( model,
 };
 
 InfinniUI.TextEditorModelBaseModeStrategy = TextEditorModelBaseModeStrategy;
-

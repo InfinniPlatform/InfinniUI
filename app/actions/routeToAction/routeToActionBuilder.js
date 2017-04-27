@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function RouteToActionBuilder() {
 }
 
 _.extend( RouteToActionBuilder.prototype, baseActionBuilderMixin, routerServiceMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {RouteToAction}
+     */
     build: function( context, args ) {
         var action = new RouteToAction();
         var newHref = routerService.getLinkByName( args.metadata.Name, 'no' );

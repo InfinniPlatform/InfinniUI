@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function ServerActionBuilder() {
 }
 
 _.extend( ServerActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {ServerAction}
+     */
     build: function( context, args ) {
         var builder = args.builder;
         var metadata = args.metadata;
@@ -50,6 +60,15 @@ _.extend( ServerActionBuilder.prototype, baseActionBuilderMixin, baseFallibleAct
         return action;
     },
 
+    /**
+     *
+     * @param paramName
+     * @param paramValue
+     * @param action
+     * @param buildParams
+     * @param builder
+     * @private
+     */
     _initBinding: function( paramName, paramValue, action, buildParams, builder ) {
         var dataBinding = builder.buildBinding( paramValue, buildParams );
 

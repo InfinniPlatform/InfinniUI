@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var TextEditorView = Backbone.View.extend( {
 
     classNameError: 'has-error',
@@ -11,14 +15,17 @@ var TextEditorView = Backbone.View.extend( {
         'keyup': 'onKeyupHandler',  //trigger OnKeyDown Event
         'click': 'onClickHandler',
         'drop': 'onDropHandler',
-        'dragstart': 'OnDragstartHandler',
-        'dragend': 'OnDragendHandler',
-        'dragover': 'OnDragoverHandler',
-        'dragleave': 'OnDragleaveHandler',
-        'dragenter': 'OnDragenterHandler',
+        'dragstart': 'onDragstartHandler',
+        'dragend': 'onDragendHandler',
+        'dragover': 'onDragoverHandler',
+        'dragleave': 'onDragleaveHandler',
+        'dragenter': 'onDragenterHandler',
         'paste': 'onPasteHandler'
     },
 
+    /**
+     *
+     */
     updateModelTextFromEditor: function() {
         var model = this.model;
         var editMask = model.getEditMask();
@@ -28,11 +35,17 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     onChangeHandler: function() {
         //Обработка для корректной обработки автозаполняемых полей
         this.updateModelTextFromEditor();
     },
 
+    /**
+     *
+     */
     onInputHandler: function() {
         var editMask = this.model.getEditMask();
 
@@ -41,6 +54,10 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeydownHandler: function( event ) {
         if( event.ctrlKey || event.altKey ) {
             return;
@@ -183,6 +200,10 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeyupHandler: function( event ) {
         this.trigger( 'onKeyDown', {
             keyCode: event.which,
@@ -190,10 +211,17 @@ var TextEditorView = Backbone.View.extend( {
         } );
     },
 
-    onClickHandler: function( event ) {
+    /**
+     *
+     */
+    onClickHandler: function() {
         this.checkCurrentPosition();
     },
 
+    /**
+     *
+     * @param event
+     */
     onPasteHandler: function( event ) {
         var originalEvent = event.originalEvent;
         var text = originalEvent.clipboardData.getData( 'text/plain' );
@@ -205,22 +233,36 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
-    OnDragstartHandler: function( event ) {
+    /**
+     *
+     * @param event
+     */
+    onDragstartHandler: function( event ) {
         var originalEvent = event.originalEvent;
 
         originalEvent.dataTransfer.effectAllowed = 'copy';
         this.$el.attr( 'data-dragged', true );
     },
 
-    OnDragendHandler: function( /*event*/ ) {
+    /**
+     *
+     */
+    onDragendHandler: function() {
         this.$el.removeAttr( 'data-dragged', false );
     },
 
-    OnDragoverHandler: function( event ) {
+    /**
+     *
+     * @param event
+     */
+    onDragoverHandler: function( event ) {
         event.preventDefault();
     },
 
-    OnDragenterHandler: function( event ) {
+    /**
+     *
+     */
+    onDragenterHandler: function() {
         var dragged = this.$el.attr( 'data-dragged' );
 
         if( !dragged && this.getCanChange() ) {
@@ -228,7 +270,10 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
-    OnDragleaveHandler: function( event ) {
+    /**
+     *
+     */
+    onDragleaveHandler: function() {
         var dragged = this.$el.attr( 'data-dragged' );
 
         if( !dragged ) {
@@ -236,6 +281,10 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onDropHandler: function( event ) {
         event.preventDefault();
         event.stopPropagation();
@@ -256,6 +305,10 @@ var TextEditorView = Backbone.View.extend( {
         this.$el.focus();
     },
 
+    /**
+     *
+     * @returns {boolean}
+     */
     getCanChange: function() {
         var disabled = this.$el.prop( 'disabled' );
 
@@ -285,6 +338,10 @@ var TextEditorView = Backbone.View.extend( {
         this.model.setText( newText );
     },
 
+    /**
+     *
+     * @param currentPosition
+     */
     checkCurrentPosition: function( currentPosition ) {
         if( !this.canCaretPosition() ) {
             return;
@@ -305,6 +362,10 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {number}
+     */
     getSelectionLength: function() {
         var el = this.el;
         var len = 0;
@@ -321,10 +382,18 @@ var TextEditorView = Backbone.View.extend( {
         return len;
     },
 
+    /**
+     *
+     * @returns {boolean}
+     */
     canCaretPosition: function() {
         return ( /text|password|search|tel|url/ ).test( this.el.type );
     },
 
+    /**
+     *
+     * @param caretPosition
+     */
     setCaretPosition: function( caretPosition ) {
         if( _.isNumber( caretPosition ) && this.canCaretPosition() ) {
             var el = this.el;
@@ -342,9 +411,7 @@ var TextEditorView = Backbone.View.extend( {
      * @returns {number}
      */
     getCaretPosition: function() {
-        /** @var {HTMLInputElement} **/
         var el = this.el;
-
         var position = 0;
 
         if( this.canCaretPosition() ) {
@@ -354,6 +421,9 @@ var TextEditorView = Backbone.View.extend( {
         return position;
     },
 
+    /**
+     *
+     */
     initialize: function() {
         this.applyAutocomplete();
         this.listenTo( this.model, 'change:mode', this.onChangeModeHandler );
@@ -372,22 +442,39 @@ var TextEditorView = Backbone.View.extend( {
         }
     },
 
-    onInvalidHandler: function( model, error ) {
+    /**
+     *
+     */
+    onInvalidHandler: function() {
         this.$el.toggleClass( this.classNameError, true );
     },
 
-    onFocusinHandler: function( /* event */ ) {
+    /**
+     *
+     */
+    onFocusinHandler: function() {
         this.model.setEditMode();
     },
 
-    onFocusoutHandler: function( /* event */ ) {
+    /**
+     *
+     */
+    onFocusoutHandler: function() {
         this.model.setDisplayMode();
     },
 
-    onChangeModeHandler: function( model, mode ) {
+    /**
+     *
+     */
+    onChangeModeHandler: function() {
         this.checkCurrentPosition();
     },
 
+    /**
+     *
+     * @param model
+     * @param text
+     */
     onChangeTextHandler: function( model, text ) {
         var $input = this.$el;
         var position = this.getCaretPosition();

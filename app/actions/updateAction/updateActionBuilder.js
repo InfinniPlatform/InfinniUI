@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function UpdateActionBuilder() {
 }
 
 _.extend( UpdateActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {UpdateAction}
+     */
     build: function( context, args ) {
         var dataSource = args.parentView.getContext().dataSources[ args.metadata.DestinationValue.Source ];
         var action = new UpdateAction( args.parentView );

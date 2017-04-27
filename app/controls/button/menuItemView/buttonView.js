@@ -1,9 +1,13 @@
 /**
- * @class ButtonView
+ *
  * @augments ControlView
+ * @constructor
  */
 var MenuItemButtonView = LinkButtonView.extend( {
 
+    /**
+     *
+     */
     updateHorizontalAlignment: function() {
         var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var that = this;

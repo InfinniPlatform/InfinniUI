@@ -1,5 +1,14 @@
+/**
+ *
+ * @mixin
+ */
 var baseFallibleActionBuilderMixin = {
 
+    /**
+     *
+     * @param action
+     * @param params
+     */
     applyBaseFallibleActionMetadata: function( action, params ) {
         var metadata = params.metadata;
         var executorBuilderParams = {
