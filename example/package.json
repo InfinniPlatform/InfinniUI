@@ -19,12 +19,14 @@
     "gulp-replace": "^0.5.4",
     "gulp-template-compile": "^1.2.0",
     "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.8",
     "gulp-watch": "^4.x",
     "gulp-wrapper": "^1.0.0"
   },
   "scripts": {
     "start": "gulp example",
-    "build": "npm i && gulp clean && gulp build"
+    "build": "npm i && gulp clean && gulp build",
+    "build-prod": "npm i && gulp clean && gulp build --production"
   },
   "engines": {
     "node": "4.x",

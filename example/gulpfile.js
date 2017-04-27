@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-/*=============Настраиваемые параметры=============*/
+/*============= Настраиваемые параметры =============*/
 
 // Необходимо указать путь до платфомы в node_modules
 var infinniUIpath = './node_modules/infinni-ui/';
@@ -19,7 +19,7 @@ var jsFiles = ['./js/**/*.js'];
 var templateFiles = ['./js/**/*.tpl.html'];
 
 
-/*===================Сборка===================*/
+/*=================== Сборка ===================*/
 
 /**
  *  Возможные модификации сборки:
@@ -43,9 +43,6 @@ var del = require('del');
 var concatStream = require('streamqueue');
 var browserSync = require('browser-sync').create('server:example');
 var historyApiFallback = require('connect-history-api-fallback');
-
-// если нужно минимизировать app.js, то установите NODE_ENV (под виндой вызвать SET NODE_ENV=production перед вызовом билда)
-var isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
 function buildLess( options ) {
 	return gulp.src( options.src )
@@ -112,12 +109,13 @@ gulp.task('build:platform-less', function() {
 });
 
 /**
- * Собирает в один файл все кастомные скрипты, если указан не режим разработки, то минимизирует этот файл
+ * Собирает в один файл все кастомные скрипты
+ * Если хотите минимизировать этот файл, укажите при запуске параметр --production
  */
 gulp.task('build:js', function() {
 	return concatStream( {objectMode: true}, getTemplateStream( templateFiles ), getJsStream( jsFiles ) )
             .pipe( $.concat( 'app.js' ) )
-            .pipe( $.if( !isDevelopment, $.uglify() ) )
+            .pipe( $.if( $.util.env.production, $.uglify() ) )
             .pipe( gulp.dest( projectFolderForExtensions ) );
 });
 
