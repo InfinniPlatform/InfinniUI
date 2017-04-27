@@ -1,6 +1,6 @@
 window.InfinniUI = window.InfinniUI || {};
 window.InfinniUI.config = window.InfinniUI.config || {};
-window.InfinniUI.config.lang = 'en-US';
+window.InfinniUI.config.lang = 'ru-RU';
 
 // override default configs located in InfinniUI/app/config.js
 // window.InfinniUI.config.cacheMetadata = true;

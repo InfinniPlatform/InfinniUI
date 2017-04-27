@@ -34,11 +34,7 @@ var editMaskViewMixin = (function (global) {
 
         initHandlersForProperties: function(){
             this.listenTo(this.model, 'change:editMode', this.onChangeEditModeHandler);
-        },
-
-        setEditMaskError: function( hasError/*, eventData */) {
-            //Override this for display custom error
-            this.ui.control.toggleClass('has-error', hasError);
+            this.listenTo(this.model, 'invalid', this.onInvalidValueHandler);
         },
 
         setEditMaskStrategy: function (strategyName) {
@@ -55,12 +51,24 @@ var editMaskViewMixin = (function (global) {
             return strategy;
         },
 
+        /**
+         * @description Отображает статус проверки значения. Перекрыть для изменения способа уведомления об ошибке в значении
+         * @param error
+         */
+        setValueValidationError: function( error ) {
+            this.model.set('errorText', error);
+        },
+
         getTimeZone: function(  ) {
             return this.model.get('timeZone');
         },
 
         setEditMode: function( editMode ) {
             this.model.set('editMode', editMode);
+        },
+
+        onInvalidValueHandler: function( model, error/*, options*/ ) {
+            this.setValueValidationError(error);
         },
 
         onFocusinEventHandler: function(  ) {
@@ -108,7 +116,6 @@ var editMaskViewMixin = (function (global) {
             } else {
                 //turn off edit-mask when it specified
                 destroyEditMask.call(this);
-                this.setEditMaskError(false);
                 //update display text
                 editorBaseViewMixin.updateValueState.call(this);
                 this.ui.control.val(this.getDisplayValue());
@@ -157,12 +164,6 @@ var editMaskViewMixin = (function (global) {
                 break;
         }
 
-        mask.onInvalidValue(function( eventName,  eventData) {
-            this.setEditMaskError(true, eventData);
-        }.bind(this));
-
-        mask.onChangeValue(this.setEditMaskError.bind(this, false));
-
         this[MASK_ATTRIBUTE] = mask;
     }
 
@@ -182,8 +183,6 @@ var editMaskViewMixin = (function (global) {
         }
 
         mask.setTimezoneOffset(offset);
-        mask.setMinValue(this.getEditMaskStrategy().valueToMask(model.get('minValue')));
-        mask.setMaxValue(this.getEditMaskStrategy().valueToMask(model.get('maxValue')));
 
         var that = this;
 
@@ -192,7 +191,10 @@ var editMaskViewMixin = (function (global) {
         mask.onChangeValue(function( event ) {
             var value = event.newValue;
             if (value !== null && typeof value !== 'undefined') {
-                model.set('value', that.getEditMaskStrategy().maskToValue(value), {validate: true});
+                model.set('value', that.getEditMaskStrategy().maskToValue(value));
+                if (model.isValid()) {  //reset error
+                    that.setValueValidationError(null);
+                }
             } else {
                 model.set('value', value);
             }
@@ -207,6 +209,9 @@ var editMaskViewMixin = (function (global) {
         mask.setValue(model.getValue());
         mask.onChangeValue(function( event ) {
             model.set('value', event.newValue);
+            if (model.isValid()) {  //reset error
+                model.set('errorText', null);
+            }
         });
 
         return mask;
