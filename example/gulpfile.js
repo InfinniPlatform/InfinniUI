@@ -55,7 +55,12 @@ function buildLess( options ) {
 		   .pipe( gulp.dest( options.dest ) );
 }
 
-/* собирает шаблоны кастомных (здесь и далее под словом кастомные подразумеваются не относящие к платформе) элементов [если Вам это ни к чему, см выше, как избавиться] */
+/**
+ * Собирает шаблоны кастомных (здесь и далее под словом кастомные подразумеваются не относящие к платформе) элементов
+ * [если Вам это ни к чему, см выше, как избавиться]
+ * @param {array} – массив путей с шаблонами
+ * @returns {stream} - поток с шаблонами
+ */
 function getTemplateStream(src) {
     return gulp.src(src)
         .pipe( $.templateCompile({
@@ -65,7 +70,11 @@ function getTemplateStream(src) {
         .pipe( $.replace(/\r*\n/g, '') );
 }
 
-/* объединяет кастомные скрипты */
+/**
+ * Объединяет кастомные скрипты
+ * @param {array} – массив путей кастомных скриптов
+ * @returns {stream} - поток с кастомными скриптами
+ */
 function getJsStream(src) {
     return gulp.src( src, {base: '.'} )
         .pipe( $.wrapper({
@@ -75,12 +84,16 @@ function getJsStream(src) {
         }) );
 }
 
-/* удаляет папки-результаты */
+/**
+ * Удаляет папки-результаты
+ */
 gulp.task('clean', function() {
 	return del( [ projectFolderForPlatform, projectFolderForExtensions, projectFolderForStyles ] );
 });
 
-/* собирает кастомные стили */
+/**
+ * Собирает кастомные стили
+ */
 gulp.task('build:less', function() {
 	return buildLess( {
 		src: './styles/main.less',
@@ -88,7 +101,9 @@ gulp.task('build:less', function() {
 	} );
 });
 
-/* переопределяет платформенные стили с новыми значениями переменных [если Вам это ни к чему, см выше, как избавиться] */
+/**
+ * Переопределяет платформенные стили с новыми значениями переменных [если Вам это ни к чему, см выше, как избавиться]
+ */
 gulp.task('build:platform-less', function() {
 	return buildLess( {
 		src: './styles/platform/overridden-platform.less',
@@ -96,7 +111,9 @@ gulp.task('build:platform-less', function() {
 	} );
 });
 
-/* собирает в один файл все кастомные скрипты, если указан не режим разработки, то минимизирует этот файл */
+/**
+ * Собирает в один файл все кастомные скрипты, если указан не режим разработки, то минимизирует этот файл
+ */
 gulp.task('build:js', function() {
 	return concatStream( {objectMode: true}, getTemplateStream( templateFiles ), getJsStream( jsFiles ) )
             .pipe( $.concat( 'app.js' ) )
@@ -106,7 +123,9 @@ gulp.task('build:js', function() {
 
 var platformSrc = infinniUIpath + '/dist/**/*.*';
 
-/* копирует из пакета платформы необходимые файлы в папку-результат */
+/**
+ * Копирует из пакета платформы необходимые файлы в папку-результат
+ */
 gulp.task('copy:platform', function() {
 	return gulp.src(platformSrc)
 		   .pipe(gulp.dest( projectFolderForPlatform ));
