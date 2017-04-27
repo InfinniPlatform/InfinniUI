@@ -54,19 +54,5 @@ DateTimePicker.prototype.setDateFormat = function (value) {
     this.control.set('format', value);
 };
 
-DateTimePicker.prototype.validateValue = function (value) {
-    if (value === null || value === '' || typeof value === 'undefined') {
-        return;
-    }
-
-    var minValue = InfinniUI.DateUtils.restoreTimezoneOffset(this.getMinValue(), this.getTimeZone());
-    var maxValue = InfinniUI.DateUtils.restoreTimezoneOffset(this.getMaxValue(), this.getTimeZone());
-
-    var isValid = InfinniUI.DateUtils.checkRangeDate(value, minValue, maxValue);
-
-    if (!isValid) {
-        return "Неверное значение";
-    }
-};
 
 
