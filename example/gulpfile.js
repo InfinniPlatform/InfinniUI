@@ -24,7 +24,7 @@ var templateFiles = ['./js/**/*.tpl.html'];
 /**
  *  Возможные модификации сборки:
  *  1) если Вы не используете шаблоны в своих элементах, то
- *     метод getTemplateStream можно вырезать, так же как и переменные templateFiles и templateNamespaceInitString
+ *     метод getTemplateStream можно вырезать, так же как и переменную templateFiles
  *     убрать watch для шаблонов
  *     в build:js вместо concatStream(...) использовать действия из getJsStream (выносить в отдельную функцию тоже в таком случае смысла нет)
  *     избавиться от gulp-template-compile и streamqueue
@@ -55,8 +55,6 @@ function buildLess( options ) {
 		   .pipe( gulp.dest( options.dest ) );
 }
 
-var templateNamespaceInitString = 'window["Example"] = window["Example"] || {};\nwindow["Example"]["Template"] = window["Example"]["Template"] || {};\n';
-
 /* собирает шаблоны кастомных (здесь и далее под словом кастомные подразумеваются не относящие к платформе) элементов [если Вам это ни к чему, см выше, как избавиться] */
 function getTemplateStream(src) {
     return gulp.src(src)
@@ -64,7 +62,6 @@ function getTemplateStream(src) {
             namespace: 'Example.Template',
             IIFE: false
         }) )
-        .pipe( $.replace(templateNamespaceInitString, '') )
         .pipe( $.replace(/\r*\n/g, '') );
 }
 
@@ -103,9 +100,6 @@ gulp.task('build:platform-less', function() {
 gulp.task('build:js', function() {
 	return concatStream( {objectMode: true}, getTemplateStream( templateFiles ), getJsStream( jsFiles ) )
             .pipe( $.concat( 'app.js' ) )
-			.pipe($.wrapper({
-				header: templateNamespaceInitString
-			}))
             .pipe( $.if( !isDevelopment, $.uglify() ) )
             .pipe( gulp.dest( projectFolderForExtensions ) );
 });
