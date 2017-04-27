@@ -64,5 +64,6 @@ function QueryConstructorMetadata(host, metadata) {
 
 ## Разработка
 Если Вы хотите запускать gulp задачи самостоятельно, а не только через npm run, то установите gulp и gulp-cli глобально.
+
 Если Вы не хотите, чтобы приложение работало как SPA-приложение, то в файле *./gulpfile.js* в задаче *server:example*, уберите поле middleware и
 верните хэш-формат адресов: в файле *./www/config.js* уберите инициализацию *InfinniUI.config.HistoryAPI* или измените значение *pushState* на *false*(нужно для корректной работы роутинга).
