@@ -18,6 +18,23 @@ describe('DateTimePickerControl', function () {
             dateTimePicker.control.controlView.setEditMode(true);
             assert.equal($('input', $el).val(), '26 04 2017');
         });
+
+        it( 'as DateTimeEditMask with timezone offset', function() {
+            var dateTimePicker = builder.buildType('DateTimePicker', {
+                TimeZone: -180,
+                EditMask: {
+                    DateTimeEditMask: {
+                        Mask: "dd.MM.yyyy HH:mm:ss"
+                    }
+                }
+            });
+
+            var $el = dateTimePicker.render();
+            dateTimePicker.setValue('2017-04-26T08:11:12+05:00');
+
+            dateTimePicker.control.controlView.setEditMode(true);
+            assert.equal($('input', $el).val(), '26.04.2017 06:11:12');
+        });
     });
 
     describe('render', function () {
