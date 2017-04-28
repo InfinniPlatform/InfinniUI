@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var ScrollPanelView = ContainerView.extend( {
 
@@ -10,10 +10,18 @@ var ScrollPanelView = ContainerView.extend( {
 
     UI: {},
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {ScrollPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -42,12 +50,18 @@ var ScrollPanelView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ContainerView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:horizontalScroll', this.updateHorizontalScroll );
         this.listenTo( this.model, 'change:verticalScroll', this.updateVerticalScroll );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
         this.updateHorizontalScroll();
@@ -56,7 +70,7 @@ var ScrollPanelView = ContainerView.extend( {
 
     /**
      * @protected
-     * @description Set one of CSS class: "pl-horizontal-scroll-(visible|hidden|auto)",
+     * @description Set one of CSS class: "pl-horizontal-scroll-(visible|hidden|auto)"
      */
     updateHorizontalScroll: function() {
         var name = '';
@@ -78,7 +92,9 @@ var ScrollPanelView = ContainerView.extend( {
 
     /**
      * @protected
-     * @description Set one of CSS class: "pl-vertical-scroll-(visible|hidden|auto)",
+     * @description Set one of CSS class: "pl-vertical-scroll-(visible|hidden|auto)"
+     * @param model
+     * @param value
      */
     updateVerticalScroll: function( model, value ) {
         var name = '';
@@ -98,6 +114,9 @@ var ScrollPanelView = ContainerView.extend( {
         this.switchClass( 'pl-vertical-scroll', name, this.$el );
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var $items = this.$el.find( '.pl-scrollpanel-i' );
         var items = this.model.get( 'items' );
@@ -114,6 +133,9 @@ var ScrollPanelView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

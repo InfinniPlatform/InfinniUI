@@ -1,5 +1,5 @@
 /**
- * @class ToggleButtonView
+ * @constructor
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
@@ -17,6 +17,9 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         'click .togglebutton-box': 'onClickHandler'
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
@@ -25,6 +28,9 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.listenTo( this.model, 'change:textOff', this.updateTextOff );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
@@ -33,6 +39,9 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.updateTextOff();
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -43,18 +52,28 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         }
     },
 
+    /**
+     *
+     */
     updateTextOn: function() {
         var textOn = this.model.get( 'textOn' );
 
         this.ui.textOn.html( textOn || '&nbsp;' );
     },
 
+    /**
+     *
+     */
     updateTextOff: function() {
         var textOff = this.model.get( 'textOff' );
 
         this.ui.textOff.html( textOff || '&nbsp;' );
     },
 
+    /**
+     *
+     * @returns {ToggleButtonView}
+     */
     render: function() {
         this.prerenderingActions();
         this.renderTemplate( this.template );
@@ -68,6 +87,9 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         return this;
     },
 
+    /**
+     * @returns {*}
+     */
     getData: function() {
         var model = this.model;
 
@@ -81,13 +103,19 @@ var ToggleButtonView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         );
     },
 
-
+    /**
+     *
+     * @param event
+     */
     onClickHandler: function( event ) {
         var model = this.model;
 
         model.set( 'value', !model.get( 'value' ) );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var value = this.model.get( 'value' );
 

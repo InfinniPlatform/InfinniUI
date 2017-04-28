@@ -1,9 +1,18 @@
+/**
+ *
+ * @param stackPanel
+ * @constructor
+ */
 function StackPanelViewPlainStrategy( stackPanel ) {
     this.stackPanel = stackPanel;
 }
 
 _.extend( StackPanelViewPlainStrategy.prototype, {
 
+    /**
+     *
+     * @returns {{items}}
+     */
     prepareItemsForRendering: function() {
         var items = this.stackPanel.getItems();
         var result = {
@@ -13,10 +22,19 @@ _.extend( StackPanelViewPlainStrategy.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.stackPanel.template.plain;
     },
 
+    /**
+     *
+     * @param preparedItems
+     * @param childElementsClass
+     */
     appendItemsContent: function( preparedItems, childElementsClass ) {
         var $stackPanel = this.stackPanel.$el;
         var itemTemplate = this.stackPanel.getItemTemplate();

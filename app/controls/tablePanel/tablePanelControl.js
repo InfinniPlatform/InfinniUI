@@ -12,10 +12,17 @@ _.inherit( TablePanelControl, ContainerControl );
 
 _.extend( TablePanelControl.prototype, {
 
+    /**
+     * @returns {TablePanelModel}
+     */
     createControlModel: function() {
         return new TablePanelModel();
     },
 
+    /**
+     * @returns {TablePanelView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new TablePanelView( { model: model } );
     }

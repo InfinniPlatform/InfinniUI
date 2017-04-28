@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments ListEditorBaseView
+ */
 var TreeViewView = ListEditorBaseView.extend( {
 
     className: 'pl-treeview',
@@ -12,6 +16,10 @@ var TreeViewView = ListEditorBaseView.extend( {
 
     UI: _.defaults( {}, ListEditorBaseView.prototype.UI ),
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ListEditorBaseView.prototype.initialize.call( this, options );
         this.itemsMap = new HashMap();
@@ -19,17 +27,29 @@ var TreeViewView = ListEditorBaseView.extend( {
 
     },
 
+    /**
+     *
+     * @param node
+     * @param item
+     */
     addChildElement: function( node, item ) {
         this.nodesMap.add( item, node );
         ListEditorBaseView.prototype.addChildElement.call( this, node );
     },
 
+    /**
+     *
+     */
     removeChildElements: function() {
         this.nodesMap.clear();
         this.itemsMap.clear();
         ListEditorBaseView.prototype.removeChildElements.call( this );
     },
 
+    /**
+     *
+     * @returns {TreeViewView}
+     */
     render: function() {
         this.prerenderingActions();
         this.removeChildElements();
@@ -48,6 +68,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @param parentId
+     */
     renderItems: function( parentId ) {
         var view = this;
         var $nodes;
@@ -124,12 +148,21 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getNodeConstructor: function() {
         var multiSelect = this.model.get( 'multiSelect' );
 
         return ( multiSelect === true ) ? TreeViewNodeCheckbox : TreeViewNodeRadio;
     },
 
+    /**
+     *
+     * @param item
+     * @param index
+     */
     onSelectNodeHandler: function( item, index ) {
         var model = this.model;
         var multiSelect = model.get( 'multiSelect' );
@@ -141,6 +174,11 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     * @param index
+     */
     onCheckNodeHandler: function( item, index ) {
         var model = this.model;
         var multiSelect = model.get( 'multiSelect' );
@@ -153,6 +191,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     */
     tryToggleValue: function( item ) {
         var model = this.model;
         var isDisabledItem = this.isDisabledItem( item );
@@ -163,6 +205,11 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*}
+     */
     isDisabledItem: function( item ) {
         if( item === null || typeof item === 'undefined' ) {
             return false;
@@ -171,6 +218,11 @@ var TreeViewView = ListEditorBaseView.extend( {
         return this.model.isDisabledItem( item ) || this.isDisabledItem( this.getParent( item ) );
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*}
+     */
     getParent: function( item ) {
         var parentSelector = this.model.get( 'parentSelector' );
         var parentId = parentSelector( null, { value: item } );
@@ -178,34 +230,59 @@ var TreeViewView = ListEditorBaseView.extend( {
         return parentId && this.itemsMap.get( parentId );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.template;
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ListEditorBaseView.prototype.updateProperties.call( this );
         this.updateMultiSelect();
     },
 
+    /**
+     *
+     */
     updateMultiSelect: function() {
         var multiSelect = this.model.get( 'multiSelect' );
         this.$el.toggleClass( this.classNameMultiSelect, !!multiSelect );
         this.$el.toggleClass( this.classNameSingleSelect, !multiSelect );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ListEditorBaseView.prototype.updateEnabled.call( this );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
     },
 
+    /**
+     *
+     */
     updateSelectedItem: function() {
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     },
 
+    /**
+     *
+     */
     updateDisabledItem: function() {
         var model = this.model;
         var disabledItemCondition = model.get( 'disabledItemCondition' );
@@ -225,6 +302,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param key
+     */
     collapseNode: function( key ) {
         var item = this.itemsMap.get( key );
 
@@ -238,6 +319,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param key
+     */
     toggleNode: function( key ) {
         var item = this.itemsMap.get( key );
 
@@ -254,6 +339,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param key
+     */
     expandNode: function( key ) {
         var model = this.model;
         var item = this.itemsMap.get( key );
@@ -282,6 +371,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     * @param item
+     */
     onExpandNodeHandler: function( item ) {
         var model = this.model;
         var onExpandNode = model.get( 'onExpand' );
@@ -291,6 +384,10 @@ var TreeViewView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     */
     onCollapseNodeHandler: function( item ) {
         var model = this.model;
         var onCollapseNode = model.get( 'onCollapse' );

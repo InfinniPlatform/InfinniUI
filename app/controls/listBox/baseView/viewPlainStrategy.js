@@ -1,9 +1,18 @@
+/**
+ *
+ * @param listbox
+ * @constructor
+ */
 function ListBoxViewPlainStrategy( listbox ) {
     this.listbox = listbox;
 }
 
 _.extend( ListBoxViewPlainStrategy.prototype, {
 
+    /**
+     *
+     * @returns {{isMultiselect: *, focusable: *, inputName: string, items}}
+     */
     prepareItemsForRendering: function() {
         var items = this.listbox.getItems();
         var inputName = 'listbox-' + guid();
@@ -17,10 +26,18 @@ _.extend( ListBoxViewPlainStrategy.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.listbox.template.plain;
     },
 
+    /**
+     *
+     * @param preparedItems
+     */
     appendItemsContent: function( preparedItems ) {
         var $listbox = this.listbox.$el;
         var itemTemplate = this.listbox.getItemTemplate();

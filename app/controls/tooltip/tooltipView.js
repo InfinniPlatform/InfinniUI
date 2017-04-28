@@ -1,5 +1,13 @@
+/**
+ * @constructor
+ * @augments ControlView
+ */
 var TooltipView = ControlView.extend( {
 
+    /**
+     *
+     * @returns {TooltipView}
+     */
     render: function() {
         this.prerenderingActions();
         this.renderContent();
@@ -11,12 +19,18 @@ var TooltipView = ControlView.extend( {
         return this;
     },
 
-    initHandlersForProperties: function(  ) {
+    /**
+     *
+     */
+    initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.apply( this, Array.prototype.slice.call( arguments ) );
 
         this.listenTo( this.model, 'change:content', this.updateContent );
     },
 
+    /**
+     *
+     */
     updateContent: function(  ) {
         this.renderContent();
     },

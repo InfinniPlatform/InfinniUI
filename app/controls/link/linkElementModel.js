@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments ButtonModel
  */
 var LinkElementModel = ButtonModel.extend( {
@@ -9,6 +9,9 @@ var LinkElementModel = ButtonModel.extend( {
         target: 'self'
     }, ButtonModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ButtonModel.prototype.initialize.apply( this, arguments );
     }

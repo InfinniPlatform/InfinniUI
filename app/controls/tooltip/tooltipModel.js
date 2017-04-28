@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments ControlModel
  */
 var TooltipModel = ControlModel.extend( {

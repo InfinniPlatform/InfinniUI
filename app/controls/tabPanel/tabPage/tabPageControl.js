@@ -12,11 +12,17 @@ _.inherit( TabPageControl, ContainerControl );
 
 _.extend( TabPageControl.prototype, {
 
-
+    /**
+     * @returns {TabPageModel}
+     */
     createControlModel: function() {
         return new TabPageModel();
     },
 
+    /**
+     * @returns {TabPageView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new TabPageView( { model: model } );
     }

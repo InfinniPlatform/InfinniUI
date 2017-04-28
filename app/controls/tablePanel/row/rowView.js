@@ -1,15 +1,23 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var RowView = ContainerView.extend( {
 
     className: 'pl-row row',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {RowView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -27,6 +35,9 @@ var RowView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var items = this.model.get( 'items' );
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -41,6 +52,9 @@ var RowView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

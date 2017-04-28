@@ -1,9 +1,16 @@
+/**
+ * @constructor
+ * @augments ControlModel
+ */
 var ViewPanelModel = ControlModel.extend( {
 
     defaults: _.defaults( {
         layout: null
     }, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         var that = this;
 
@@ -16,6 +23,9 @@ var ViewPanelModel = ControlModel.extend( {
         } );
     },
 
+    /**
+     *
+     */
     subscribeOnLoaded: function() {
         var that = this;
         var layout = this.get( 'layout' );

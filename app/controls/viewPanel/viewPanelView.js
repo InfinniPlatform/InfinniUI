@@ -1,12 +1,24 @@
+/**
+ * @constructor
+ * @augments ControlView
+ */
 var ViewPanelView = ControlView.extend( {
 
     className: 'pl-view-panel',
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this );
         this.listenTo( this.model, 'change:layout', this.onChangeLayoutHandler );
     },
 
+    /**
+     *
+     * @param model
+     * @param layout
+     */
     onChangeLayoutHandler: function( model, layout ) {
         this.$el.empty();
         if( layout ) {
@@ -14,6 +26,10 @@ var ViewPanelView = ControlView.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {ViewPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 

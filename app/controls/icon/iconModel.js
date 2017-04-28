@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments ControlModel
  */
 var IconModel = ControlModel.extend( {
@@ -11,6 +11,9 @@ var IconModel = ControlModel.extend( {
 
     }, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
     }

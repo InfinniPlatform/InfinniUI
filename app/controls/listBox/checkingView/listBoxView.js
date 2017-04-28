@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments BaseListBoxView
+ */
 var CheckingListBoxView = BaseListBoxView.extend( {
 
     className: 'pl-listbox',
@@ -11,11 +15,18 @@ var CheckingListBoxView = BaseListBoxView.extend( {
 
     }, BaseListBoxView.prototype.events ),
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         BaseListBoxView.prototype.initialize.call( this, options );
         this.initDomHandlers();
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ListEditorBaseView.prototype.updateEnabled.call( this );
 
@@ -24,6 +35,9 @@ var CheckingListBoxView = BaseListBoxView.extend( {
         this.ui.checkingInputs.attr( 'disabled', !enabled );
     },
 
+    /**
+     *
+     */
     initDomHandlers: function() {
         var $listBox = this.$el;
         var that = this;

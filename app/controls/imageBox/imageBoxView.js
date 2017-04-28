@@ -22,7 +22,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         'click .pl-image-remove': 'onClickRemoveImageHandler'
     },
 
-
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
 
@@ -32,6 +34,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.listenTo( this.model, 'change:warningText', this.updateWarningText );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
 
@@ -41,6 +46,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.updateWarningText();
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -51,12 +59,18 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
         var text = this.model.get( 'text' );
 
         this.ui.uploadButton.text( text );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
         var isEnabled = this.model.get( 'enabled' );
@@ -64,6 +78,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.ui.input.prop( 'disabled', !isEnabled );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var that = this;
         var model = this.model;
@@ -86,10 +103,18 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         }
     },
 
+    /**
+     *
+     * @param value
+     */
     rotate: function( value ) {
         this.ui.img.css( 'transform', this.rotation[ value ] );
     },
 
+    /**
+     *
+     * @param url
+     */
     updateUrl: function( url ) {
         var that = this;
 
@@ -106,6 +131,10 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.$el.toggleClass( 'pl-empty', none );
     },
 
+    /**
+     *
+     * @param callback
+     */
     updateRotation: function( callback ) {
         var that = this;
         var file = this.model.get( 'file' );
@@ -121,6 +150,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         }
     },
 
+    /**
+     *
+     */
     setPerfectPosition: function() {
         var img = this.ui.img;
         var width = img.width();
@@ -137,6 +169,9 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.model.set( 'currentWideSide', wideSide );
     },
 
+    /**
+     *
+     */
     stopLoadingFile: function() {
         var fileLoader = this.fileLoader;
 
@@ -145,6 +180,10 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         }
     },
 
+    /**
+     *
+     * @param file
+     */
     loadPreview: function( file ) {
         var defer = $.Deferred();
         var reader = new FileReader();
@@ -161,11 +200,17 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         return defer.promise();
     },
 
+    /**
+     *
+     */
     onClickRemoveImageHandler: function() {
         this.model.removeFile();
         this.ui.input.val( '' );
     },
 
+    /**
+     *
+     */
     onChangeFileHandler: function() {
         var file = null;
         var files = this.ui.input[ 0 ].files;
@@ -176,6 +221,10 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         this.model.setFile( file );
     },
 
+    /**
+     *
+     * @returns {render}
+     */
     render: function() {
         this.prerenderingActions();
 

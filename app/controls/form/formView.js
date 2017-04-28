@@ -1,5 +1,5 @@
 /**
- * @class FormView
+ * @constructor
  * @augments StackPanelView
  */
 var FormView = StackPanelView.extend( {
@@ -16,10 +16,18 @@ var FormView = StackPanelView.extend( {
         'submit': 'onSubmit'
     },
 
+    /**
+     *
+     * @param e
+     */
     onSubmit: function( e ) {
         e.preventDefault();
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         StackPanelView.prototype.initialize.call( this, options );
 
@@ -27,10 +35,17 @@ var FormView = StackPanelView.extend( {
         this.listenTo( this.model, 'change:action', this.updateAction );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
         this.strategy = new StackPanelViewPlainStrategy( this );
     },
 
+    /**
+     *
+     * @returns {FormView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -56,6 +71,9 @@ var FormView = StackPanelView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         StackPanelView.prototype.updateProperties.call( this );
 
@@ -63,12 +81,18 @@ var FormView = StackPanelView.extend( {
         this.updateAction();
     },
 
+    /**
+     *
+     */
     updateMethod: function() {
         var method = this.model.get( 'method' );
 
         this.$el.attr( 'method', method );
     },
 
+    /**
+     *
+     */
     updateAction: function() {
         var action = this.model.get( 'action' );
 

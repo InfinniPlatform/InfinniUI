@@ -10,6 +10,9 @@ var FileBoxModel = ControlModel.extend( _.extend( {
         ControlModel.prototype.defaults
     ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
@@ -27,6 +30,12 @@ var FileBoxModel = ControlModel.extend( _.extend( {
         } );
     },
 
+    /**
+     *
+     * @param attrs
+     * @param options
+     * @returns {*|string}
+     */
     validate: function( attrs, options ) {
         var file = attrs.file;
         var maxSize = this.get( 'maxSize' );
@@ -59,16 +68,28 @@ var FileBoxModel = ControlModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     * @param file
+     */
     setFile: function( file ) {
         if( this.set( 'file', file, { validate: true } ) ) {
             this.set( 'errorText', '' );
         }
     },
 
+    /**
+     *
+     */
     removeFile: function() {
         this.setFile( null );
     },
 
+    /**
+     *
+     * @param model
+     * @param file
+     */
     onChangeFileHandler: function( model, file ) {
         if( file ) {
             model.set( 'fileName', file.name );

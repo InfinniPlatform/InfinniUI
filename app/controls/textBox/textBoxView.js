@@ -1,8 +1,8 @@
 /**
- * @class
+ * @constructor
  * @augments TextEditorBaseView
  */
-var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */{
+var TextBoxView = TextEditorBaseView.extend( {
 
     template: {
         oneline: InfinniUI.Template[ 'controls/textBox/template/oneline.tpl.html' ],
@@ -17,6 +17,9 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
 
     } ),
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         TextEditorBaseView.prototype.initHandlersForProperties.call( this );
 
@@ -24,22 +27,35 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
         this.listenTo( this.model, 'change:lineCount', this.updateLineCount );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         TextEditorBaseView.prototype.updateProperties.call( this );
 
         this.updateLineCount();
     },
 
+    /**
+     *
+     */
     updateMultiline: function() {
         this.rerender();
     },
 
+    /**
+     *
+     */
     updateLineCount: function() {
         var lineCount = this.model.get( 'lineCount' );
 
         this.ui.editor.attr( 'rows', lineCount );
     },
 
+    /**
+     *
+     * @returns {TextBoxView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -59,6 +75,9 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
         return this;
     },
 
+    /**
+     * @returns {*}
+     */
     getData: function() {
         var data = TextEditorBaseView.prototype.getData.call( this );
         var model = this.model;
@@ -72,6 +91,9 @@ var TextBoxView = TextEditorBaseView.extend( /** @lends TextBoxView.prototype */
         );
     },
 
+    /**
+     *
+     */
     renderTextBoxEditor: function() {
         this.renderControlEditor();
     }

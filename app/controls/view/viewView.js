@@ -1,15 +1,23 @@
 /**
- * @class
+ * @constructor
  * @augments ContainerView
  */
 var ViewView = ContainerView.extend( {
 
     className: 'pl-view',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {ViewView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -27,6 +35,9 @@ var ViewView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var that = this;
         var items = this.model.get( 'items' );
@@ -42,6 +53,9 @@ var ViewView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

@@ -13,6 +13,9 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
         ControlModel.prototype.defaults
     ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
@@ -23,6 +26,12 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
         } );
     },
 
+    /**
+     *
+     * @param attrs
+     * @param options
+     * @returns {*}
+     */
     validate: function( attrs, options ) {
         var file = attrs.file;
         var maxSize = this.get( 'maxSize' );
@@ -43,12 +52,19 @@ var ImageBoxModel = ControlModel.extend( _.extend( {
         }
     },
 
+    /**
+     *
+     * @param file
+     */
     setFile: function( file ) {
         if ( this.set( 'file', file, { validate: true } ) ) {
             this.set( 'errorText', '' );
         }
     },
 
+    /**
+     *
+     */
     removeFile: function() {
         this.setFile( null );
     }
