@@ -1,53 +1,94 @@
-var DataNavigationBaseButtonModel = Backbone.Model.extend({
+/**
+ *
+ * @constructor
+ */
+var DataNavigationBaseButtonModel = Backbone.Model.extend( {
 
-    initialize: function () {
-        this.on('change:parent', this.subscribeToParent, this);
+    /**
+     *
+     */
+    initialize: function() {
+        this.on( 'change:parent', this.subscribeToParent, this );
     },
 
-    subscribeToParent: function () {
-
+    /**
+     *
+     */
+    subscribeToParent: function() {
     }
-});
 
-var DataNavigationBaseButton = Backbone.View.extend({
+} );
+
+InfinniUI.DataNavigationBaseButtonModel = DataNavigationBaseButtonModel;
+
+/**
+ *
+ * @constructor
+ */
+var DataNavigationBaseButton = Backbone.View.extend( {
 
     tagName: 'li',
 
-    initialize: function (options) {
-        Backbone.View.prototype.initialize.call(this, options);
-        this.once('render', function () {
-            this.initHandlersForProperties()
-        }, this);
+    /**
+     *
+     * @param options
+     */
+    initialize: function( options ) {
+        Backbone.View.prototype.initialize.call( this, options );
+        this.once( 'render', function() {
+            this.initHandlersForProperties();
+        }, this );
     },
 
-    initHandlersForProperties: function () {
-
+    /**
+     *
+     */
+    initHandlersForProperties: function() {
     },
 
-    updateProperties: function () {
-
+    /**
+     *
+     */
+    updateProperties: function() {
     },
 
-    getData: function () {
+    /**
+     *
+     * @returns {*}
+     */
+    getData: function() {
         return this.model.toJSON();
     },
 
-    setParent: function (parent) {
-        this.model.set('parent', parent);
-        this.subscribeForParent(parent);
+    /**
+     *
+     * @param parent
+     */
+    setParent: function( parent ) {
+        this.model.set( 'parent', parent );
+        this.subscribeForParent( parent );
     },
 
-    render: function () {
-        var template = this.template(this.getData());
-        this.$el.html(template);
-        this.trigger('render');
+    /**
+     *
+     * @returns {DataNavigationBaseButton}
+     */
+    render: function() {
+        var template = this.template( this.getData() );
+
+        this.$el.html( template );
+        this.trigger( 'render' );
         this.updateProperties();
+
         return this;
     },
 
-    subscribeForParent: function (parent) {
-
+    /**
+     *
+     */
+    subscribeForParent: function() {
     }
 
-});
+} );
 
+InfinniUI.DataNavigationBaseButton = DataNavigationBaseButton;

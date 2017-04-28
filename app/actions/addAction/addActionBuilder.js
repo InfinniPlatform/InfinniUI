@@ -1,18 +1,27 @@
-function AddActionBuilder(){}
+/**
+ *
+ * @constructor
+ */
+function AddActionBuilder() {
+}
 
-_.extend(AddActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseEditActionBuilderMixin,
-    {
-        build: function(context, args){
-            var action = new AddAction(args.parentView);
+_.extend( AddActionBuilder.prototype, baseActionBuilderMixin, baseEditActionBuilderMixin, {
 
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseEditActionMetadata(action, args);
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {AddAction}
+     */
+    build: function( context, args ) {
+        var action = new AddAction( args.parentView );
 
-            return action;
-        }
+        this.applyBaseActionMetadata( action, args );
+        this.applyBaseEditActionMetadata( action, args );
+
+        return action;
     }
-);
 
-window.InfinniUI.AddActionBuilder = AddActionBuilder;
+} );
+
+InfinniUI.AddActionBuilder = AddActionBuilder;

@@ -1,15 +1,17 @@
-var ToggleButtonModel = ControlModel.extend( _.extend({
+var ToggleButtonModel = ControlModel.extend( _.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         value: false,
         textOn: 'ON',
         textOff: 'OFF',
         horizontalAlignment: 'Left'
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
 
-}, editorBaseModelMixin));
+}, editorBaseModelMixin ) );
+
+InfinniUI.ToggleButtonModel = ToggleButtonModel;

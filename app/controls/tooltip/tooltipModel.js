@@ -2,7 +2,7 @@
  * @class
  * @augments ControlModel
  */
-InfinniUI.TooltipModel = ControlModel.extend( {
-
-
+var TooltipModel = ControlModel.extend( {
 } );
+
+InfinniUI.TooltipModel = TooltipModel;

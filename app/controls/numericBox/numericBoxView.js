@@ -2,105 +2,105 @@
  * @class
  * @augments TextEditorBaseView
  */
-var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
+var NumericBoxView = TextEditorBaseView.extend( {
 
-    className: "pl-numericbox form-group",
+    className: 'pl-numericbox form-group',
 
-    template: InfinniUI.Template["controls/numericBox/template/numericBox.tpl.html"],
+    template: InfinniUI.Template[ 'controls/numericBox/template/numericBox.tpl.html' ],
 
-    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
+    UI: _.extend( {}, TextEditorBaseView.prototype.UI, {
         min: '.pl-numeric-box-min',
         max: '.pl-numeric-box-max'
-    }),
+    } ),
 
-    events: _.extend({}, TextEditorBaseView.prototype.events, {
+    events: _.extend( {}, TextEditorBaseView.prototype.events, {
         'click .pl-numeric-box-min': 'onClickMinControlHandler',
         'click .pl-numeric-box-max': 'onClickMaxControlHandler',
         'mousedown .pl-numeric-box-min': 'onMousedownMinControlHandler',
         'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
-    }),
+    } ),
 
-    render: function () {
+    render: function() {
         this.prerenderingActions();
-        this.renderTemplate(this.template);
+        this.renderTemplate( this.template );
         this.renderNumericBoxEditor();
         this.updateProperties();
-        this.trigger('render');
+        this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
-    getData: function () {
-        var
-            model = this.model;
+    getData: function() {
+        var model = this.model;
 
-        return _.extend({},
-            TextEditorBaseView.prototype.getData.call(this), {
-                minValue: model.get('minValue'),
-                maxValue: model.get('maxValue'),
-                increment: model.get('increment')
-            });
+        return _.extend( {},
+            TextEditorBaseView.prototype.getData.call( this ), {
+                minValue: model.get( 'minValue' ),
+                maxValue: model.get( 'maxValue' ),
+                increment: model.get( 'increment' )
+            } );
     },
 
-    renderNumericBoxEditor: function () {
+    renderNumericBoxEditor: function() {
         this.renderControlEditor();
     },
 
-    onChangeEnabledHandler: function (model, value) {
-        this.ui.control.prop('disabled', !value);
-        this.ui.min.prop('disabled', !value);
-        this.ui.max.prop('disabled', !value);
+    onChangeEnabledHandler: function( model, value ) {
+        this.ui.control.prop( 'disabled', !value );
+        this.ui.min.prop( 'disabled', !value );
+        this.ui.max.prop( 'disabled', !value );
     },
 
-    onClickMinControlHandler: function () {
-        if (this.canChangeValue()) {
+    onClickMinControlHandler: function() {
+        if( this.canChangeValue() ) {
             this.model.decValue();
         }
     },
 
-    onClickMaxControlHandler: function () {
-        if (this.canChangeValue()) {
+    onClickMaxControlHandler: function() {
+        if( this.canChangeValue() ) {
             this.model.incValue();
         }
     },
 
-    onMousedownMinControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.decValue.bind(this.model));
+    onMousedownMinControlHandler: function( event ) {
+        if( this.canChangeValue() ) {
+            this.repeatUpdateValue( this.model.decValue.bind( this.model ) );
         }
     },
 
-    onMousedownMaxControlHandler: function (event) {
-        if (this.canChangeValue()) {
-            this.repeatUpdateValue(this.model.incValue.bind(this.model));
+    onMousedownMaxControlHandler: function( event ) {
+        if( this.canChangeValue() ) {
+            this.repeatUpdateValue( this.model.incValue.bind( this.model ) );
         }
     },
 
-    repeatUpdateValue: function (cb) {
+    repeatUpdateValue: function( cb ) {
         var intervalId;
 
-        window.document.addEventListener('mouseup', stopRepeat);
-
-        intervalId = setInterval(cb, 200);
+        window.document.addEventListener( 'mouseup', stopRepeat );
+        intervalId = setInterval( cb, 200 );
 
         function stopRepeat() {
-            if (intervalId) {
-                clearInterval(intervalId);
+            if( intervalId ) {
+                clearInterval( intervalId );
                 intervalId = null;
             }
-            window.document.removeEventListener('mouseup', stopRepeat);
+            window.document.removeEventListener( 'mouseup', stopRepeat );
         }
 
     },
 
-    canChangeValue: function () {
-        var model = this.model,
-            enabled = model.get('enabled');
+    canChangeValue: function() {
+        var model = this.model;
+        var enabled = model.get( 'enabled' );
 
         return enabled === true;
     }
 
-});
+} );
+
+InfinniUI.NumericBoxView = NumericBoxView;

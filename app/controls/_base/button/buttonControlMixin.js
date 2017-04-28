@@ -1,7 +1,16 @@
+/**
+ *
+ * @mixin
+ */
 var buttonControlMixin = {
 
-    click: function () {
+    /**
+     *
+     */
+    click: function() {
         this.controlView.$el.click();
     }
 
 };
+
+InfinniUI.buttonControlMixin = buttonControlMixin;

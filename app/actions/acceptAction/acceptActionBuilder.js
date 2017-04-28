@@ -1,17 +1,26 @@
+/**
+ *
+ * @constructor
+ */
 function AcceptActionBuilder() {
 }
 
-_.extend(AcceptActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new AcceptAction(args.parentView);
+_.extend( AcceptActionBuilder.prototype, baseActionBuilderMixin, {
 
-            this.applyBaseActionMetadata(action, args);
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {AcceptAction}
+     */
+    build: function( context, args ) {
+        var action = new AcceptAction( args.parentView );
 
-            return action;
-        }
+        this.applyBaseActionMetadata( action, args );
+
+        return action;
     }
-);
 
-window.InfinniUI.AcceptActionBuilder = AcceptActionBuilder;
+} );
+
+InfinniUI.AcceptActionBuilder = AcceptActionBuilder;

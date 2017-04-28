@@ -1,12 +1,21 @@
-var CheckBoxModel = ControlModel.extend( _.extend({
+/**
+ *
+ * @constructor
+ */
+var CheckBoxModel = ControlModel.extend( _.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         value: false
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
+    /**
+     *
+     */
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();
     }
 
-}, editorBaseModelMixin));
+}, editorBaseModelMixin ) );
+
+InfinniUI.CheckBoxModel = CheckBoxModel;

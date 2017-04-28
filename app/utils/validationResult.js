@@ -4,6 +4,7 @@ function ValidationResult() {
 }
 
 _.extend( ValidationResult.prototype, {
+
     error: function( message, propertyName ) {
         if( this.IsValid ) {
             this.IsValid = false;
@@ -14,6 +15,7 @@ _.extend( ValidationResult.prototype, {
             Property: propertyName || ''
         } );
     }
+
 } );
 
-window.InfinniUI.ValidationResult = ValidationResult;
+InfinniUI.ValidationResult = ValidationResult;

@@ -2,76 +2,76 @@
  * @class
  * @augments ControlView
  */
-var GridPanelView = ContainerView.extend(
-    /** @lends GridPanelView.prototype */
-    {
-        className: 'pl-grid-panel pl-clearfix',
+var GridPanelView = ContainerView.extend( {
 
-        columnCount: 12,
+    className: 'pl-grid-panel pl-clearfix',
 
-        template: {
-            row: InfinniUI.Template["controls/gridPanel/template/row.tpl.html"]
-        },
+    columnCount: 12,
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
+    template: {
+        row: InfinniUI.Template[ 'controls/gridPanel/template/row.tpl.html' ]
+    },
 
-        render: function () {
-            this.prerenderingActions();
+    initialize: function( options ) {
+        ContainerView.prototype.initialize.call( this, options );
+    },
 
-            this.removeChildElements();
+    render: function() {
+        this.prerenderingActions();
 
-            this.renderItemsContents();
-            this.updateProperties();
-            this.trigger('render');
+        this.removeChildElements();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.renderItemsContents();
+        this.updateProperties();
+        this.trigger( 'render' );
 
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                view = this,
-                row = [],
-                rowSize = 0,
-                element, item;
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-            //this.$el.hide();
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                var span = element.getColumnSpan();
-                if (rowSize + span > view.columnCount) {
-                    view.renderRow(row);
-                    row.length = 0;
-                    rowSize = 0;
-                }
+    renderItemsContents: function() {
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var view = this;
+        var row = [];
+        var rowSize = 0;
+        var element;
 
-                row.push(element);
-                rowSize += span;
-            });
-
-            if (row.length) {
-                view.renderRow(row);
+        items.forEach( function( item, i ) {
+            element = itemTemplate( undefined, { item: item, index: i } );
+            var span = element.getColumnSpan();
+            if( rowSize + span > view.columnCount ) {
+                view.renderRow( row );
+                row.length = 0;
+                rowSize = 0;
             }
-            //this.$el.show();
-        },
 
-        renderRow: function (row) {
-            var view = this;
-            // var $row = $(this.template.row());
-            var $row = $('<div class="pl-clearfix"></div>');
-            $row.append(row.map(function(element) {
-                view.addChildElement(element);
-                return element.render();
-            }));
-            this.$el.append($row);
-        },
+            row.push( element );
+            rowSize += span;
+        } );
 
-        updateGrouping: function(){}
+        if( row.length ) {
+            view.renderRow( row );
+        }
+    },
+
+    renderRow: function( row ) {
+        var view = this;
+        var $row = $( '<div class="pl-clearfix"></div>' );
+
+        $row.append( row.map( function( element ) {
+            view.addChildElement( element );
+            return element.render();
+        } ) );
+        this.$el.append( $row );
+    },
+
+    updateGrouping: function() {
     }
-);
+
+} );
+
+InfinniUI.GridPanelView = GridPanelView;

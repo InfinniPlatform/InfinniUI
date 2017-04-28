@@ -1,10 +1,11 @@
 function ExcelButton() {
-    this.render = function (target, parameters, context) {
-        var $button = $('<a>')
-            .attr('href', '#')
-            .append($('<img src="/launchers/main/excel.png" />').css('width', '34px'))
-            .click(function () {
-                context.Global.executeAction({
+
+    this.render = function( target, parameters, context ) {
+        var $button = $( '<a>' )
+            .attr( 'href', '#' )
+            .append( $( '<img src="/launchers/main/excel.png" />' ).css( 'width', '34px' ) )
+            .click( function() {
+                context.Global.executeAction( {
                     OpenViewAction: {
                         View: {
                             AutoView: {
@@ -15,11 +16,12 @@ function ExcelButton() {
                             }
                         }
                     }
-                });
+                } );
 
                 return false;
-            });
+            } );
 
-        target.append($button);
-    }
+        target.append( $button );
+    };
+
 }

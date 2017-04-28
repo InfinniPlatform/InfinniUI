@@ -1,20 +1,20 @@
-InfinniUI.TooltipView = ControlView.extend({
+var TooltipView = ControlView.extend( {
 
-    render: function(){
+    render: function() {
         this.prerenderingActions();
         this.renderContent();
-        this.trigger('render');
+        this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
     initHandlersForProperties: function(  ) {
-        ControlView.prototype.initHandlersForProperties.apply(this, Array.prototype.slice.call(arguments));
+        ControlView.prototype.initHandlersForProperties.apply( this, Array.prototype.slice.call( arguments ) );
 
-        this.listenTo(this.model, 'change:content', this.updateContent);
+        this.listenTo( this.model, 'change:content', this.updateContent );
     },
 
     updateContent: function(  ) {
@@ -26,8 +26,11 @@ InfinniUI.TooltipView = ControlView.extend({
      */
     renderContent: function() {
         var model = this.model;
-        var content = model.get('content');
-        this.$el.html(content.render());
+        var content = model.get( 'content' );
+
+        this.$el.html( content.render() );
     }
 
-});
+} );
+
+InfinniUI.TooltipView = TooltipView;

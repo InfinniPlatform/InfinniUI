@@ -4,14 +4,14 @@
  * @constructor
  * @argument Element
  */
-function Divider(parent) {
-	_.superClass(Divider, this, parent);
+function Divider( parent ) {
+    _.superClass( Divider, this, parent );
 }
 
-window.InfinniUI.Divider = Divider;
+InfinniUI.Divider = Divider;
 
-_.inherit(Divider, Element);
+_.inherit( Divider, Element );
 
-Divider.prototype.createControl = function (parent) {
-	return new DividerControl(parent);
-}
+Divider.prototype.createControl = function( parent ) {
+    return new DividerControl( parent );
+};

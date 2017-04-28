@@ -2,56 +2,57 @@
  * @class
  * @augments ControlView
  */
-var MenuBarView = ContainerView.extend(
-    /** @lends MenuBarView.prototype */
-    {
-        tagName: 'nav',
-        className: 'pl-menu-bar navbar navbar-default',
+var MenuBarView = ContainerView.extend( {
 
-        template: InfinniUI.Template["controls/menuBar/template/menuBar.tpl.html"],
+    tagName: 'nav',
 
-        UI: {
+    className: 'pl-menu-bar navbar navbar-default',
 
-        },
+    template: InfinniUI.Template[ 'controls/menuBar/template/menuBar.tpl.html' ],
 
-        render: function () {
-            this.prerenderingActions();
+    UI: {},
 
-            this.removeChildElements();
+    render: function() {
+        this.prerenderingActions();
 
-            this.$el.html(this.template({
-                items: this.model.get('items')
-            }));
-            this.renderItemsContents();
+        this.removeChildElements();
 
-            this.bindUIElements();
+        this.$el.html( this.template( {
+            items: this.model.get( 'items' )
+        } ) );
+        this.renderItemsContents();
 
-            this.updateProperties();
-            this.trigger('render');
+        this.bindUIElements();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.updateProperties();
+        this.trigger( 'render' );
 
-        renderItemsContents: function(){
-            var $items = this.$el.find('.pl-menu-bar-item'),
-                items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-            $items.each(function(i, el){
-                item = items.getByIndex(i);
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                $(el)
-                    .append(element.render());
-            });
-        },
+    renderItemsContents: function() {
+        var $items = this.$el.find( '.pl-menu-bar-item' );
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var that = this;
+        var element, item;
 
-        updateGrouping: function(){}
+        $items.each( function( i, el ) {
+            item = items.getByIndex( i );
+            element = itemTemplate( undefined, { item: item, index: i } );
+            that.addChildElement( element );
+            $( el )
+                .append( element.render() );
+        } );
+    },
+
+    updateGrouping: function() {
     }
-);
+
+} );
+
+InfinniUI.MenuBarView = MenuBarView;

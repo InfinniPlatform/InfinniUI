@@ -7,13 +7,13 @@ var formatMixin = {
      * @memberOf formatMixin.prototype
      * @description Разделитель для форматирования коллекций
      */
-    separator: ", ",
+    separator: ', ',
 
-    setOptions: function (options) {
-        this.options = _.extend({}, this.options || {}, options);
+    setOptions: function( options ) {
+        this.options = _.extend( {}, this.options || {}, options );
     },
 
-    getOptions: function () {
+    getOptions: function() {
         return this.options || {};
     },
 
@@ -26,27 +26,27 @@ var formatMixin = {
      * @param {String} format Строка форматирования
      * @returns {String}
      */
-    format: function (originalValue, culture, format) {
+    format: function( originalValue, culture, format ) {
         var result;
 
-        if (originalValue !== null && typeof originalValue !== 'undefined' && originalValue.constructor === Array) {
+        if ( originalValue !== null && typeof originalValue !== 'undefined' && originalValue.constructor === Array ) {
             var values = [];
-            for (var i = 0, ln = originalValue.length; i < ln; i = i + 1) {
-                values.push(this.formatValue(originalValue[i], culture, format));
+            for ( var i = 0, ln = originalValue.length; i < ln; i = i + 1 ) {
+                values.push( this.formatValue( originalValue[ i ], culture, format ) );
             }
-            result = values.join(this.separator);
+            result = values.join( this.separator );
         } else {
-            result = this.formatValue.apply(this, arguments);
+            result = this.formatValue.apply( this, arguments );
         }
 
         return result;
     },
 
-    getFormat: function () {
-        return this.getPropertyValue('formatRule', this.defaultFormat);
+    getFormat: function() {
+        return this.getPropertyValue( 'formatRule', this.defaultFormat );
     },
 
-    setFormat: function (value) {
+    setFormat: function( value ) {
         this.formatRule = value;
     },
 
@@ -57,12 +57,12 @@ var formatMixin = {
      * @param defaultValue
      * @returns {*}
      */
-    getPropertyValue: function (name, defaultValue) {
-        var value = this[name];
+    getPropertyValue: function( name, defaultValue ) {
+        var value = this[ name ];
 
-        return (typeof value === 'undefined' || value === null) ? defaultValue : value;
+        return ( typeof value === 'undefined' || value === null ) ? defaultValue : value;
     }
 
 };
 
-window.InfinniUI.FormatMixin = formatMixin;
+InfinniUI.formatMixin = formatMixin;

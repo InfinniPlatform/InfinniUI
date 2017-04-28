@@ -2,45 +2,47 @@
  * @class
  * @augments ControlView
  */
-var TablePanelView = ContainerView.extend(
-    /** @lends TablePanelView.prototype */
-    {
-        className: 'pl-table-panel',
+var TablePanelView = ContainerView.extend( {
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
+    className: 'pl-table-panel',
 
-        render: function () {
-            this.prerenderingActions();
+    initialize: function( options ) {
+        ContainerView.prototype.initialize.call( this, options );
+    },
 
-            this.removeChildElements();
+    render: function() {
+        this.prerenderingActions();
 
-            this.renderItemsContents();
-            this.updateProperties();
-            this.trigger('render');
+        this.removeChildElements();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.renderItemsContents();
+        this.updateProperties();
+        this.trigger( 'render' );
 
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
-            });
-        },
+    renderItemsContents: function() {
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var that = this;
+        var element;
 
-        updateGrouping: function(){}
+        items.forEach( function( item, i ) {
+            element = itemTemplate( undefined, { item: item, index: i } );
+            that.addChildElement( element );
+            that.$el
+                .append( element.render() );
+        } );
+    },
+
+    updateGrouping: function() {
     }
-);
+
+} );
+
+InfinniUI.TablePanelView = TablePanelView;

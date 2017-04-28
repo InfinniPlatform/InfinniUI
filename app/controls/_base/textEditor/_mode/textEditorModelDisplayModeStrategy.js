@@ -3,38 +3,55 @@
  * @constructor
  */
 function TextEditorModelDisplayModeStrategy() {
-    TextEditorModelBaseModeStrategy.call(this);
+    TextEditorModelBaseModeStrategy.call( this );
 }
 
-TextEditorModelDisplayModeStrategy.prototype = Object.create(TextEditorModelBaseModeStrategy.prototype);
+TextEditorModelDisplayModeStrategy.prototype = Object.create( TextEditorModelBaseModeStrategy.prototype );
 TextEditorModelDisplayModeStrategy.prototype.constructor = TextEditorModelDisplayModeStrategy;
 
-TextEditorModelDisplayModeStrategy.prototype.updateText = function (model) {
+/**
+ *
+ * @param model
+ */
+TextEditorModelDisplayModeStrategy.prototype.updateText = function( model ) {
     var displayFormat = model.getDisplayFormat();
-    var value = model.get('value');
-
+    var value = model.get( 'value' );
     var text;
 
-    if (_.isFunction(displayFormat)) {
-        text = displayFormat.call(null, null, {value: value});
+    if ( typeof displayFormat === 'function' ) {
+        text = displayFormat.call( null, null, { value: value } );
     } else {
         text = value;
     }
 
-    model.set('text', text);
+    model.set( 'text', text );
 };
 
-TextEditorModelDisplayModeStrategy.prototype.setText = function (model, text, ui) {
-    if (ui) {
+/**
+ *
+ * @param model
+ * @param text
+ * @param ui
+ */
+TextEditorModelDisplayModeStrategy.prototype.setText = function( model, text, ui ) {
+    if ( ui ) {
         //Изменение значения в поле ввода для режима просмотра - результат срабатывания автозаполнения браузера
-        model.set('text', text, {ui: ui});
+        model.set( 'text', text, { ui: ui } );
     }
 };
 
-TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function (model, text, options) {
-    if (options.ui) {
-        var value = model.convertValue(text);
-        model.set('value', value, {ui: options.ui});
+/**
+ *
+ * @param model
+ * @param text
+ * @param options
+ */
+TextEditorModelDisplayModeStrategy.prototype.onChangeTextHandler = function( model, text, options ) {
+    if ( options.ui ) {
+        var value = model.convertValue( text );
+        model.set( 'value', value, { ui: options.ui } );
     }
     model.applyChanges();
 };
+
+InfinniUI.TextEditorModelDisplayModeStrategy = TextEditorModelDisplayModeStrategy;

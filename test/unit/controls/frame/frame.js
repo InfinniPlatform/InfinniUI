@@ -1,28 +1,28 @@
-describe('Frame', function () {
+describe( 'Frame', function() {
     var frame;
 
-    beforeEach(function () {
+    beforeEach( function() {
         frame = new InfinniUI.Frame();
-    });
+    } );
 
-    describe('Render', function () {
+    describe( 'Render', function() {
 
-        describe('Setting the properties', function () {
+        describe( 'Setting the properties', function() {
 
-            it('Setting property: value', function () {
+            it( 'Setting property: value', function() {
                 //Given
                 var $el = frame.render();
 
                 //When
-                frame.setValue('http://docs.infinnity.ru/');
+                frame.setValue( 'http://docs.infinnity.ru/' );
 
                 //Then
-                assert.equal($el.find('iframe').attr('src'), 'http://docs.infinnity.ru/');
-            });
+                assert.equal( $el.find( 'iframe' ).attr( 'src' ), 'http://docs.infinnity.ru/' );
+            } );
 
 
-        });
+        } );
 
-    });
+    } );
 
-});
+} );

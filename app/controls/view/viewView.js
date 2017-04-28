@@ -2,47 +2,49 @@
  * @class
  * @augments ContainerView
  */
-var ViewView = ContainerView.extend(
-    /** @lends ViewView.prototype */
-    {
-        className: 'pl-view',
+var ViewView = ContainerView.extend( {
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
-        },
+    className: 'pl-view',
 
-        render: function () {
-            this.prerenderingActions();
+    initialize: function( options ) {
+        ContainerView.prototype.initialize.call( this, options );
+    },
 
-            this.$el.empty();
+    render: function() {
+        this.prerenderingActions();
 
-            this.renderItemsContents();
+        this.$el.empty();
 
-            this.updateProperties();
-            this.trigger('render');
+        this.renderItemsContents();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.updateProperties();
+        this.trigger( 'render' );
 
-        renderItemsContents: function(){
-            var that = this,
-                items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                element;
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                if (element) {
-                    that.$el
-                        .append(element.render());
-                }
-            });
-        },
+    renderItemsContents: function() {
+        var that = this;
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var element;
 
-        updateGrouping: function(){}
+        items.forEach( function( item, i ) {
+            element = itemTemplate( undefined, { item: item, index: i } );
+            if( element ) {
+                that.$el
+                    .append( element.render() );
+            }
+        } );
+    },
+
+    updateGrouping: function() {
     }
-);
+
+} );
+
+InfinniUI.ViewView = ViewView;

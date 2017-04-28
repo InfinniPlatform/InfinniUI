@@ -1,10 +1,10 @@
-describe('PopupButtonBuilder', function () {
-    describe('build', function () {
-        it('successful build', function () {
+describe( 'PopupButtonBuilder', function() {
+    describe( 'build', function() {
+        it( 'successful build', function() {
             // Given
 
             var metadata = {
-                Text: "Click me",
+                Text: 'Click me',
                 Action: {
                     OpenAction: {
                         LinkView: {
@@ -12,13 +12,13 @@ describe('PopupButtonBuilder', function () {
                         }
                     }
                 },
-                OnClick:{
-                    Name:"A"
+                OnClick: {
+                    Name: 'A'
                 },
                 Items: [
                     {
                         Button: {
-                            Text: "Click me",
+                            Text: 'Click me',
                             Visible: true,
                             HorizontalAlignment: 'Left',
                             Action: {
@@ -28,7 +28,7 @@ describe('PopupButtonBuilder', function () {
                     },
                     {
                         Button: {
-                            Text: "Административная информация",
+                            Text: 'Административная информация',
                             Visible: true,
                             Action: {
 
@@ -41,12 +41,12 @@ describe('PopupButtonBuilder', function () {
 
             // When
             var builder = new InfinniUI.PopupButtonBuilder();
-            var button = builder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View()});
+            var button = builder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, parentView: new InfinniUI.View() } );
             // Then
-            assert.isNotNull(button);
-            assert.equal(button.getText(), 'Click me');
-            assert.equal(2,button.getItems().length);
+            assert.isNotNull( button );
+            assert.equal( button.getText(), 'Click me' );
+            assert.equal( 2, button.getItems().length );
 
-        });
-    });
-});
+        } );
+    } );
+} );

@@ -1,17 +1,33 @@
-function DatePickerControl(parent) {
-    _.superClass(DatePickerControl, this, parent);
+/**
+ *
+ * @param parent
+ * @constructor
+ */
+function DatePickerControl( parent ) {
+    _.superClass( DatePickerControl, this, parent );
 }
 
-_.inherit(DatePickerControl, DateTimePickerControl);
+_.inherit( DatePickerControl, DateTimePickerControl );
 
-_.extend(DatePickerControl.prototype, {
+_.extend( DatePickerControl.prototype, {
 
-    createControlModel: function () {
+    /**
+     *
+     * @returns {DatePickerModel}
+     */
+    createControlModel: function() {
         return new DatePickerModel();
     },
 
-    createControlView: function (model) {
-        return new DatePickerView({model: model});
+    /**
+     *
+     * @param model
+     * @returns {DatePickerView}
+     */
+    createControlView: function( model ) {
+        return new DatePickerView( { model: model } );
     }
-});
 
+} );
+
+InfinniUI.DatePickerControl = DatePickerControl;

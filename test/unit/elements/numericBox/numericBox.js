@@ -1,24 +1,24 @@
-describe('NumericBox', function () {
-    describe('render', function () {
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+describe( 'NumericBox', function() {
+    describe( 'render', function() {
+        it( 'Setting the properties: value, name, enabled, visible, horizontalAlignment', function() {
             // Given
             var numericBox = new InfinniUI.NumericBox(),
                 $el, $control;
 
             // When
             $el = numericBox.render();
-            $control = $el.find('input');
+            $control = $el.find( 'input' );
 
             // Then
-            assert.equal($control.val(), 0);
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($control.prop('disabled'));
-            assert.isFalse($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isFalse($el.hasClass('center-block'));
-        });
+            assert.equal( $control.val(), 0 );
+            assert.isUndefined( $el.attr( 'data-pl-name' ) );
+            assert.isFalse( $control.prop( 'disabled' ) );
+            assert.isFalse( $el.hasClass( 'hidden' ) );
+            assert.isFalse( $el.hasClass( 'pl-horizontal-Left' ) );
+            assert.isFalse( $el.hasClass( 'center-block' ) );
+        } );
 
-        it('Change the properties: value, name, enabled, visible, horizontalAlignment', function () {
+        it( 'Change the properties: value, name, enabled, visible, horizontalAlignment', function() {
             // Given
             var numericBox = new InfinniUI.NumericBox(),
                 $el, $control;
@@ -29,70 +29,70 @@ describe('NumericBox', function () {
 
             // When
             $el = numericBox.render();
-            $control = $el.find('input');
+            $control = $el.find( 'input' );
             numericBox1.render();
             numericBox2.render();
 
-            numericBox.setValue(15);
-            numericBox.setMinValue(10);
-            numericBox.setMaxValue(50);
-            numericBox.setIncrement(5);
-            numericBox.setName('newName');
-            numericBox.setEnabled(false);
-            numericBox.setVisible(false);
-            numericBox.setHorizontalAlignment('Center');
+            numericBox.setValue( 15 );
+            numericBox.setMinValue( 10 );
+            numericBox.setMaxValue( 50 );
+            numericBox.setIncrement( 5 );
+            numericBox.setName( 'newName' );
+            numericBox.setEnabled( false );
+            numericBox.setVisible( false );
+            numericBox.setHorizontalAlignment( 'Center' );
 
-            numericBox1.setMaxValue(20);
-            numericBox1.setValue(50);
-            numericBox2.setMinValue(20);
-            numericBox2.setValue(5);
+            numericBox1.setMaxValue( 20 );
+            numericBox1.setValue( 50 );
+            numericBox2.setMinValue( 20 );
+            numericBox2.setValue( 5 );
 
             // Then
-            assert.equal(numericBox1.getValue(), 50);
-            assert.equal(numericBox2.getValue(), 5);
+            assert.equal( numericBox1.getValue(), 50 );
+            assert.equal( numericBox2.getValue(), 5 );
 
-            assert.equal(numericBox.getValue(), 15);
-            assert.equal(numericBox.getMinValue(), 10);
-            assert.equal(numericBox.getMaxValue(), 50);
-            assert.equal(numericBox.getIncrement(), 5);
-            assert.equal($el.attr('data-pl-name'), 'newName');
-            assert.isTrue($control.prop('disabled'));
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pl-horizontal-Left'));
-            assert.isTrue($el.hasClass('pl-horizontal-Center'));
-        });
+            assert.equal( numericBox.getValue(), 15 );
+            assert.equal( numericBox.getMinValue(), 10 );
+            assert.equal( numericBox.getMaxValue(), 50 );
+            assert.equal( numericBox.getIncrement(), 5 );
+            assert.equal( $el.attr( 'data-pl-name' ), 'newName' );
+            assert.isTrue( $control.prop( 'disabled' ) );
+            assert.isTrue( $el.hasClass( 'hidden' ) );
+            assert.isFalse( $el.hasClass( 'pl-horizontal-Left' ) );
+            assert.isTrue( $el.hasClass( 'pl-horizontal-Center' ) );
+        } );
 
-        it('Events onLoad, onValueChanged', function () {
+        it( 'Events onLoad, onValueChanged', function() {
             // Given
             var numericBox = new InfinniUI.NumericBox(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
-            numericBox.onLoaded(function () {
+            numericBox.onLoaded( function() {
                 onLoadFlag++;
-            });
-            numericBox.onValueChanged(function () {
+            } );
+            numericBox.onValueChanged( function() {
                 onValueChanged++;
-            });
+            } );
 
-            assert.equal(onLoadFlag, 0);
-            assert.equal(onValueChanged, 0);
+            assert.equal( onLoadFlag, 0 );
+            assert.equal( onValueChanged, 0 );
 
             // When
             numericBox.render();
-            numericBox.setValue(1);
+            numericBox.setValue( 1 );
 
             // Then
-            assert.equal(onLoadFlag, 1);
-            assert.equal(onValueChanged, 1);
-        });
+            assert.equal( onLoadFlag, 1 );
+            assert.equal( onValueChanged, 1 );
+        } );
 
-        it('should be triggered events: OnValueChanged, OnLoaded', function () {
+        it( 'should be triggered events: OnValueChanged, OnLoaded', function() {
             //Given
             var builder = new InfinniUI.ApplicationBuilder();
             var view = new InfinniUI.View();
             var metadata = {
-                "NumericBox": {
+                'NumericBox': {
                     OnValueChanged: 'OnValueChanged',
                     OnLoaded: 'OnLoaded'
                 }
@@ -103,28 +103,28 @@ describe('NumericBox', function () {
                 OnLoaded: 0
             };
 
-            scripts.add({
-                name: "OnValueChanged",
-                func: function () {
+            scripts.add( {
+                name: 'OnValueChanged',
+                func: function() {
                     events.OnValueChanged++;
                 }
-            });
+            } );
 
-            scripts.add({
-                name: "OnLoaded",
-                func: function () {
+            scripts.add( {
+                name: 'OnLoaded',
+                func: function() {
                     events.OnLoaded++;
                 }
-            });
+            } );
 
             //When
-            var element = builder.build(metadata, {parentView: view, parent: view, builder: builder});
-            element.setValue(true);
+            var element = builder.build( metadata, { parentView: view, parent: view, builder: builder } );
+            element.setValue( true );
             element.render();
 
             // Then
-            assert.equal(events.OnValueChanged, 1, 'OnValueChanged');
-            assert.equal(events.OnLoaded, 1, 'OnLoaded');
-        });
-    });
-});
+            assert.equal( events.OnValueChanged, 1, 'OnValueChanged' );
+            assert.equal( events.OnLoaded, 1, 'OnLoaded' );
+        } );
+    } );
+} );

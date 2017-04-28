@@ -1,42 +1,42 @@
-describe('ImageBox', function () {
+describe( 'ImageBox', function() {
 
-    function delay(min, max) {
-        if (typeof min === 'undefined') {
+    function delay( min, max ) {
+        if ( typeof min === 'undefined' ) {
             min = 100;
         }
-        if (typeof  max === 'undefined') {
+        if ( typeof  max === 'undefined' ) {
             max = 200;
         }
 
-        return Math.ceil(Math.random() * (max - min) + min);
+        return Math.ceil( Math.random() * ( max - min ) + min );
     }
 
-    describe('API', function () {
+    describe( 'API', function() {
         var builder = new InfinniUI.ApplicationBuilder();
-        var element = builder.buildType('ImageBox', {});
+        var element = builder.buildType( 'ImageBox', {} );
 
-        describe('Implementing ImageBox Methods', function () {
+        describe( 'Implementing ImageBox Methods', function() {
             ['getMaxSize', 'setMaxSize', 'getAcceptTypes']
-                .forEach(function (methodName) {
-                    it(methodName, function () {
-                        testHelper.checkMethod(element, methodName);
-                    });
+                .forEach( function( methodName ) {
+                    it( methodName, function() {
+                        testHelper.checkMethod( element, methodName );
+                    } );
 
-                });
-        });
+                } );
+        } );
 
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
+        describe( 'Implementing EditorBase Methods', function() {
+            testHelper.checkEditorBaseMethods( element );
+        } );
 
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
+        describe( 'Implementing Element Methods', function() {
+            testHelper.checkElementMethods( element );
+        } );
+    } );
 
-    describe('debug', function () {
+    describe( 'debug', function() {
 
-        it('render', function () {
+        it( 'render', function() {
             var builder = new InfinniUI.ApplicationBuilder();
             var view = new InfinniUI.View();
             var metadata = {
@@ -46,20 +46,20 @@ describe('ImageBox', function () {
                 ]
             };
 
-            var element = builder.buildType("ImageBox", metadata, {parent: view, parentView: view, builder: builder});
+            var element = builder.buildType( 'ImageBox', metadata, { parent: view, parentView: view, builder: builder } );
 
             var $el = element.render();
             //$('body').append($el);
-        });
+        } );
 
 
-    });
+    } );
 
-    describe('Upload new file', function () {
+    describe( 'Upload new file', function() {
 
         //beforeEach(function () {
         //    //register fake upload provider
-        //    window.InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
+        //    InfinniUI.providerRegister.register('DocumentFileProvider', function (metadata) {
         //        return {
         //            uploadFile: function () {
         //                var deferred = $.Deferred();
@@ -123,30 +123,30 @@ describe('ImageBox', function () {
         //
         //});
 
-    });
+    } );
 
-    describe('Render', function () {
+    describe( 'Render', function() {
         var element;
 
-        beforeEach(function () {
+        beforeEach( function() {
             element = new InfinniUI.ImageBox();
-        });
+        } );
 
-        it('Setting properties', function () {
+        it( 'Setting properties', function() {
 
             // Given
-            element.setEnabled(true);
-            element.setAcceptTypes(['video/*']);
-            element.setMaxSize(50000);
+            element.setEnabled( true );
+            element.setAcceptTypes( ['video/*'] );
+            element.setMaxSize( 50000 );
             //element.setValue({Info: {}});
 
-            assert.equal(element.getEnabled(), true);
-            assert.deepEqual(element.getAcceptTypes().toArray(), ['video/*']);
+            assert.equal( element.getEnabled(), true );
+            assert.deepEqual( element.getAcceptTypes().toArray(), ['video/*'] );
             //assert.deepEqual(element.getValue(), {Info: {}});
-            assert.equal(element.getMaxSize(), 50000);
-        });
+            assert.equal( element.getMaxSize(), 50000 );
+        } );
 
-    });
+    } );
 
 
 //    describe('ImageBox data binding', function () {
@@ -230,4 +230,4 @@ describe('ImageBox', function () {
 //    });
 
 
-});
+} );

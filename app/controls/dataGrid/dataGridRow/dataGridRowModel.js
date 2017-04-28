@@ -1,3 +1,8 @@
-var DataGridRowModel = ControlModel.extend({
+/**
+ *
+ * @constructor
+ */
+var DataGridRowModel = ControlModel.extend( {
+} );
 
-});
+InfinniUI.DataGridRowModel = DataGridRowModel;

@@ -1,52 +1,64 @@
-function AddAction(parentView) {
-    _.superClass(AddAction, this, parentView);
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
+function AddAction( parentView ) {
+    _.superClass( AddAction, this, parentView );
 }
 
-_.inherit(AddAction, BaseEditAction);
+_.inherit( AddAction, BaseEditAction );
 
+_.extend( AddAction.prototype, {
 
-_.extend(AddAction.prototype, {
+    /**
+     *
+     * @returns {boolean}
+     */
     setSelectedItem: function() {
-        var editDataSource = this.getProperty('editDataSource'),
-            editView = editDataSource.getView();
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var editView = editDataSource.getView();
 
-        editView.onBeforeLoaded(function() {
+        editView.onBeforeLoaded( function() {
             editDataSource.createItem();
-        });
+        } );
 
         return true;
     },
 
+    /**
+     * Save item in destination data source
+     */
     save: function() {
-        var editDataSource = this.getProperty('editDataSource'),
-            destinationDataSource = this.getProperty('destinationDataSource'),
-            destinationProperty = this.getProperty('destinationProperty') || "";
+        var editDataSource = this.getProperty( 'editDataSource' );
+        var destinationDataSource = this.getProperty( 'destinationDataSource' );
+        var destinationProperty = this.getProperty( 'destinationProperty' ) || '';
 
-        if (!destinationDataSource) {
+        if( !destinationDataSource ) {
             return;
         }
 
-        if (this._isObjectDataSource(editDataSource)) {
+        if( this._isObjectDataSource( editDataSource ) ) {
             var newItem = editDataSource.getSelectedItem();
 
-            if( this._isRootElementPath(destinationProperty) ){
-                destinationDataSource._includeItemToModifiedSet(newItem);
-                destinationDataSource.saveItem(newItem, function(){
+            if( this._isRootElementPath( destinationProperty ) ) {
+                destinationDataSource._includeItemToModifiedSet( newItem );
+                destinationDataSource.saveItem( newItem, function() {
                     destinationDataSource.updateItems();
-                });
+                } );
             } else {
-                var items = destinationDataSource.getProperty(destinationProperty) || [];
+                var items = destinationDataSource.getProperty( destinationProperty ) || [];
 
-                items = _.clone(items);
-                items.push(newItem);
+                items = _.clone( items );
+                items.push( newItem );
 
-                destinationDataSource.setProperty(destinationProperty, items);
+                destinationDataSource.setProperty( destinationProperty, items );
             }
-
         } else {
             destinationDataSource.updateItems();
         }
     }
-});
 
-window.InfinniUI.AddAction = AddAction;
+} );
+
+InfinniUI.AddAction = AddAction;

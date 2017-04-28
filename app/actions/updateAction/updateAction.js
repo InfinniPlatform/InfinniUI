@@ -1,37 +1,43 @@
-function UpdateAction(parentView){
-    _.superClass(UpdateAction, this, parentView);
+/**
+ *
+ * @param parentView
+ * @constructor
+ */
+function UpdateAction( parentView ) {
+    _.superClass( UpdateAction, this, parentView );
 }
 
-_.inherit(UpdateAction, BaseAction);
+_.inherit( UpdateAction, BaseAction );
 
-_.extend(UpdateAction.prototype,
-    BaseFallibleActionMixin,
-    {
-        execute: function(callback){
+_.extend( UpdateAction.prototype, baseFallibleActionMixin, {
 
-            var dataSource = this.getProperty('dataSource');
+    /**
+     *
+     * @param callback
+     */
+    execute: function( callback ) {
+        var that = this;
+        var dataSource = this.getProperty( 'dataSource' );
+        var onSuccessUpdate = function( context, args ) {
+            that.onExecutedHandler( args );
+            that.onSuccessHandler( args );
 
-            var that = this,
-                onSuccessUpdate = function (context, args) {
-                    that.onExecutedHandler(args);
-                    that.onSuccessHandler(args);
+            if( typeof callback === 'function' ) {
+                callback( context, args );
+            }
+        };
+        var onErrorUpdate = function( context, args ) {
+            that.onExecutedHandler( args );
+            that.onErrorHandler( args );
 
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                },
-                onErrorUpdate = function (context, args) {
-                    that.onExecutedHandler(args);
-                    that.onErrorHandler(args);
+            if( typeof callback === 'function' ) {
+                callback( context, args );
+            }
+        };
 
-                    if (_.isFunction(callback)) {
-                        callback(context, args);
-                    }
-                };
-
-            dataSource.updateItems(onSuccessUpdate, onErrorUpdate);
-        }
+        dataSource.updateItems( onSuccessUpdate, onErrorUpdate );
     }
-);
 
-window.InfinniUI.UpdateAction = UpdateAction;
+} );
+
+InfinniUI.UpdateAction = UpdateAction;

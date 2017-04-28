@@ -3,15 +3,15 @@ var editMaskMixin = {
      * Установка начального значения
      * @param value
      */
-    reset: function (value) {
+    reset: function( value ) {
         this.value = value;
-        this.buildTemplate(value);
+        this.buildTemplate( value );
     },
 
     /**
      * Генерация шаблона ввода текста для текущей маски
      */
-    buildTemplate: function () {
+    buildTemplate: function() {
 
     },
 
@@ -19,11 +19,11 @@ var editMaskMixin = {
      * Получить редактируемое значение
      * @returns {*}
      */
-    getValue: function () {
+    getValue: function() {
         return this.value;
     },
 
-    getData: function () {
+    getData: function() {
         return this.getValue();
     },
 
@@ -32,8 +32,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    moveToPrevChar: function (position) {
-
+    moveToPrevChar: function( position ) {
         return false;
     },
 
@@ -42,8 +41,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    moveToNextChar: function (position) {
-
+    moveToNextChar: function( position ) {
         return false;
     },
 
@@ -52,8 +50,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    setNextValue: function (position) {
-
+    setNextValue: function( position ) {
         return false;
     },
 
@@ -62,8 +59,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    setPrevValue: function (position) {
-
+    setPrevValue: function( position ) {
         return false;
     },
 
@@ -73,7 +69,7 @@ var editMaskMixin = {
      * @oaram {Number} len
      * @returns {boolean|number}
      */
-    deleteSelectedText: function(position, len){
+    deleteSelectedText: function( position, len ) {
         return false;
     },
 
@@ -82,8 +78,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    deleteCharRight: function (position) {
-
+    deleteCharRight: function( position ) {
         return false;
     },
 
@@ -92,8 +87,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    deleteCharLeft: function (position) {
-
+    deleteCharLeft: function( position ) {
         return false;
     },
 
@@ -103,8 +97,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    setCharAt: function (char, position) {
-
+    setCharAt: function( char, position ) {
         return false;
     },
 
@@ -114,8 +107,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean}
      */
-    pasteStringToMask: function(clipboardText, position){
-
+    pasteStringToMask: function( clipboardText, position ) {
         return false;
     },
 
@@ -124,7 +116,7 @@ var editMaskMixin = {
      * @param position
      * @returns {boolean|number}
      */
-    getNextItemMask: function (position) {
+    getNextItemMask: function( position ) {
         return false;
     },
 
@@ -132,11 +124,11 @@ var editMaskMixin = {
      * Получить текст для отображения в элементе
      * @returns {string}
      */
-    getText: function () {
+    getText: function() {
         var text;
 
-        if (this.value !== null && typeof this.value !== 'undefined') {
-            text = String(this.value);
+        if( this.value !== null && typeof this.value !== 'undefined' ) {
+            text = String( this.value );
         }
 
         return text;
@@ -148,64 +140,70 @@ var editMaskMixin = {
      * @param {String} mask Маска для фоматтера this.format
      * @returns {String}
      */
-    formatMask: function (value, mask) {
-        return (value === null || typeof value === 'undefined') ? '' : value;
+    formatMask: function( value, mask ) {
+        return ( value === null || typeof value === 'undefined' ) ? '' : value;
     },
 
-    getNextIntValue: function (options, value) {
+    getNextIntValue: function( options, value ) {
         options = options || {};
-        var minValue = null,
-            maxValue = null,
-            step = (typeof options.step !== 'undefined') ? step : 1;
-        if (typeof options.min !== 'undefined') {
+        var minValue = null;
+        var maxValue = null;
+        var step = ( typeof options.step !== 'undefined' ) ? step : 1;
+
+        if( typeof options.min !== 'undefined' ) {
             minValue = options.min;
         }
-        if (typeof options.max !== 'undefined') {
+        if( typeof options.max !== 'undefined' ) {
             maxValue = options.max;
         }
-        value = parseInt(value, 10);
-        if (isNaN(value)) {
-            value = (minValue === null) ? 0 : minValue;
+        value = parseInt( value, 10 );
+
+        if( isNaN( value ) ) {
+            value = ( minValue === null ) ? 0 : minValue;
         } else {
             value = value + step;
-            if (maxValue !== null && value > maxValue) {
+            if( maxValue !== null && value > maxValue ) {
                 value = maxValue;
             }
         }
         return value;
     },
-    
-    getPrevIntValue: function (options, value) {
+
+    getPrevIntValue: function( options, value ) {
         options = options || {};
-        var minValue = null,
-            step = (typeof options.step !== 'undefined') ? step : 1;
-        if (typeof options.min !== 'undefined') {
+        var minValue = null;
+        var step = ( typeof options.step !== 'undefined' ) ? step : 1;
+
+        if( typeof options.min !== 'undefined' ) {
             minValue = options.min;
         }
-        value = parseInt(value, 10);
-        if (isNaN(value)) {
-            value = (minValue === null) ? 0 : minValue;
+        value = parseInt( value, 10 );
+
+        if( isNaN( value ) ) {
+            value = ( minValue === null ) ? 0 : minValue;
         } else {
             value = value - step;
-            if (minValue !== null && value < minValue) {
+            if( minValue !== null && value < minValue ) {
                 value = minValue;
             }
         }
         return value;
     },
 
-    formatInt: function (options, value) {
-        var width = (typeof options.width !== 'undefined') ? options.width : null;
+    formatInt: function( options, value ) {
+        var width = ( typeof options.width !== 'undefined' ) ? options.width : null;
 
-        value = parseInt(value, 10);
+        value = parseInt( value, 10 );
         var text, ln;
-        if (isNaN(value)) {
+
+        if( isNaN( value ) ) {
             value = '';
         }
         text = value.toString();
         ln = text.length;
-        if (width !== null && ln < width) {
-            text = Array(width - ln +1).join('0') + text;
+
+        if( width !== null && ln < width ) {
+            text = Array( width - ln + 1 ).join( '0' ) + text;
         }
         return text;
     },
@@ -215,11 +213,10 @@ var editMaskMixin = {
      * @param value
      * @returns {boolean}
      */
-    getIsComplete: function (value) {
-
+    getIsComplete: function( value ) {
         return false;
     }
 
 };
 
-window.InfinniUI.EditMaskMixin = editMaskMixin;
+InfinniUI.editMaskMixin = editMaskMixin;

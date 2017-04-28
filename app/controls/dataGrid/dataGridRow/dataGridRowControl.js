@@ -1,26 +1,41 @@
 /**
  *
  * @constructor
- * @augments ListEditorBaseControl
+ * @augments Control
  */
 function DataGridRowControl() {
-    _.superClass(DataGridRowControl, this);
+    _.superClass( DataGridRowControl, this );
 }
 
-_.inherit(DataGridRowControl, Control);
+_.inherit( DataGridRowControl, Control );
 
-_.extend(DataGridRowControl.prototype, {
+_.extend( DataGridRowControl.prototype, {
 
-    onToggle: function (handler) {
-        this.controlView.on('toggle', handler);
+    /**
+     *
+     * @param handler
+     */
+    onToggle: function( handler ) {
+        this.controlView.on( 'toggle', handler );
     },
 
-    createControlModel: function () {
+    /**
+     *
+     * @returns {DataGridModel}
+     */
+    createControlModel: function() {
         return new DataGridRowModel();
     },
 
-    createControlView: function (model) {
-        return new DataGridRowView({model: model});
+    /**
+     *
+     * @param model
+     * @returns {DataGridRowView}
+     */
+    createControlView: function( model ) {
+        return new DataGridRowView( { model: model } );
     }
-});
 
+} );
+
+InfinniUI.DataGridRowControl = DataGridRowControl;

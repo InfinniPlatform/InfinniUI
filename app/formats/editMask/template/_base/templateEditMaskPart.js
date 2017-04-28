@@ -1,13 +1,11 @@
-var TemplateMaskPartStrategy = (function () {
-
+var TemplateMaskPartStrategy = ( function() {
     var regexpAnyLetter = /^[a-zA-Zа-яА-ЯёЁ]$/;
     var regexpAnyNumber = /^\d$/;
     var regexpSign = /^[-+]$/;
 
-    function isEmptyValue(value) {
+    function isEmptyValue( value ) {
         return typeof value === 'undefined' || value === '' || value === null;
     }
-
 
     return {
         //Используемые метасимволы маски ввода
@@ -15,7 +13,7 @@ var TemplateMaskPartStrategy = (function () {
         'c': {  //Необязательный ввод любого символа.
             required: false,    //Признак обязательности элемента маски ввода
             width: 1,   //Ширина для заполнителя маски ввода
-            validator: function (value) {   //Проверка на допустимость значения для текущего метасимвола
+            validator: function( value ) {   //Проверка на допустимость значения для текущего метасимвола
                 return true;
             },
             regexp: '.?'    //Регулярное выражение для выделения символа соответствующего метасимволу из общей строки значения
@@ -24,8 +22,8 @@ var TemplateMaskPartStrategy = (function () {
         'C': {  //Обязательный ввод любого символа.
             required: true,
             width: 1,
-            validator: function (value) {
-                return !isEmptyValue(value);
+            validator: function( value ) {
+                return !isEmptyValue( value );
             },
             regexp: '.'
         },
@@ -33,8 +31,8 @@ var TemplateMaskPartStrategy = (function () {
         'l': {  //Необязательный ввод буквы.
             required: false,
             width: 1,
-            validator: function (value) {
-                return isEmptyValue(value) || regexpAnyLetter.test(value);
+            validator: function( value ) {
+                return isEmptyValue( value ) || regexpAnyLetter.test( value );
             },
             regexp: '[a-zA-Zа-яА-ЯёЁ]?'
         },
@@ -42,8 +40,8 @@ var TemplateMaskPartStrategy = (function () {
         'L': {  //Обязательный ввод буквы.
             required: true,
             width: 1,
-            validator: function (value) {
-                return !isEmptyValue(value) && regexpAnyLetter.test(value);
+            validator: function( value ) {
+                return !isEmptyValue( value ) && regexpAnyLetter.test( value );
             },
             regexp: '[a-zA-Zа-яА-ЯёЁ]'
         },
@@ -51,8 +49,8 @@ var TemplateMaskPartStrategy = (function () {
         'a': {  //Необязательный ввод буквы или цифры.
             required: false,
             width: 1,
-            validator: function (value) {
-                return isEmptyValue(value) || regexpAnyLetter.test(value) || regexpAnyNumber.test(value);
+            validator: function( value ) {
+                return isEmptyValue( value ) || regexpAnyLetter.test( value ) || regexpAnyNumber.test( value );
             },
             regexp: '[a-zA-Zа-яА-ЯёЁ0-9]?'
         },
@@ -60,8 +58,8 @@ var TemplateMaskPartStrategy = (function () {
         'A': {  //Обязательный ввод буквы или цифры.
             required: true,
             width: 1,
-            validator: function (value) {
-                return !isEmptyValue(value) && (regexpAnyLetter.test(value) || regexpAnyNumber.test(value));
+            validator: function( value ) {
+                return !isEmptyValue( value ) && ( regexpAnyLetter.test( value ) || regexpAnyNumber.test( value ) );
             },
             regexp: '[a-zA-Zа-яА-ЯёЁ0-9]?'
         },
@@ -69,8 +67,8 @@ var TemplateMaskPartStrategy = (function () {
         '#': {  //Необязательный ввод цифры, знака "-" или "+".
             required: false,
             width: 1,
-            validator: function (value) {
-                return isEmptyValue(value) || regexpSign.test(value);
+            validator: function( value ) {
+                return isEmptyValue( value ) || regexpSign.test( value );
             },
             regexp: '[-+]?'
         },
@@ -78,8 +76,8 @@ var TemplateMaskPartStrategy = (function () {
         '9': {  //Необязательный ввод цифры.
             required: false,
             width: 1,
-            validator: function (value) {
-                return isEmptyValue(value) || regexpAnyNumber.test(value);
+            validator: function( value ) {
+                return isEmptyValue( value ) || regexpAnyNumber.test( value );
             },
             regexp: '[0-9]?'
         },
@@ -87,30 +85,32 @@ var TemplateMaskPartStrategy = (function () {
         '0': {  //Обязательный ввод цифры.
             required: true,
             width: 1,
-            validator: function (value) {
-                return !isEmptyValue(value) && regexpAnyNumber.test(value);
+            validator: function( value ) {
+                return !isEmptyValue( value ) && regexpAnyNumber.test( value );
             },
             regexp: '[0-9]'
         }
-    }
+    };
 
-})();
+} )();
 
+InfinniUI.TemplateMaskPartStrategy = TemplateMaskPartStrategy;
 
-var TemplateMaskPart = function (mask) {
-    _.extend(this, TemplateMaskPartStrategy[mask]);
-
+var TemplateMaskPart = function( mask ) {
+    _.extend( this, TemplateMaskPartStrategy[ mask ] );
 };
 
-_.extend(TemplateMaskPart.prototype, {
+InfinniUI.TemplateMaskPart = TemplateMaskPart;
+
+_.extend( TemplateMaskPart.prototype, {
 
     /**
      * Проверка символа на допустимость для метасимвола маски
      * @param {string} value
      * @returns {boolean}
      */
-    validate: function (value) {
-        return this.validator(value);
+    validate: function( value ) {
+        return this.validator( value );
     },
 
     /**
@@ -118,10 +118,8 @@ _.extend(TemplateMaskPart.prototype, {
      * @param {string} value
      * @returns {boolean}
      */
-    getIsComplete: function (value) {
-        return !this.required || (value !== '' && typeof value !== 'undefined' && value !== null);
+    getIsComplete: function( value ) {
+        return !this.required || ( value !== '' && typeof value !== 'undefined' && value !== null );
     }
 
-});
-
-
+} );

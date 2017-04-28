@@ -1,4 +1,4 @@
-InfinniUI.localizations['ru-RU'].numberFormatInfo = {
+InfinniUI.localizations[ 'ru-RU' ].numberFormatInfo = {
     numberDecimalDigits: 2,
     numberDecimalSeparator: ',',
     numberGroupSeparator: ' ',
@@ -24,7 +24,7 @@ InfinniUI.localizations['ru-RU'].numberFormatInfo = {
     NaNSymbol: 'NaN'
 };
 
-InfinniUI.localizations['en-US'].numberFormatInfo = {
+InfinniUI.localizations[ 'en-US' ].numberFormatInfo = {
     numberDecimalDigits: 2,
     numberDecimalSeparator: '.',
     numberGroupSeparator: ',',

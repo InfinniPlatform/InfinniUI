@@ -1,16 +1,26 @@
-function CancelActionBuilder() {}
+/**
+ *
+ * @constructor
+ */
+function CancelActionBuilder() {
+}
 
-_.extend(CancelActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var action = new CancelAction(args.parentView);
+_.extend( CancelActionBuilder.prototype, baseActionBuilderMixin, {
 
-            this.applyBaseActionMetadata(action, args);
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {CancelAction}
+     */
+    build: function( context, args ) {
+        var action = new CancelAction( args.parentView );
 
-            return action;
-        }
+        this.applyBaseActionMetadata( action, args );
+
+        return action;
     }
-);
 
-window.InfinniUI.CancelActionBuilder = CancelActionBuilder;
+} );
+
+InfinniUI.CancelActionBuilder = CancelActionBuilder;

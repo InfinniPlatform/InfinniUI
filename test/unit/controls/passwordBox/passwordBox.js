@@ -1,114 +1,114 @@
-describe('PasswordBox', function () {
+describe( 'PasswordBox', function() {
 
     var element;
 
-    beforeEach(function () {
+    beforeEach( function() {
         element = new InfinniUI.PasswordBox();
-    });
+    } );
 
-    describe('Render', function () {
+    describe( 'Render', function() {
 
-        describe('Setting the properties', function () {
+        describe( 'Setting the properties', function() {
 
-            it('Setting property: name', function () {
+            it( 'Setting property: name', function() {
                 //Given
                 var $el = element.render();
-                assert.isUndefined($el.attr('pl-data-pl-name'));
+                assert.isUndefined( $el.attr( 'pl-data-pl-name' ) );
 
                 //When
-                element.setName('UserPassword');
+                element.setName( 'UserPassword' );
 
                 //Then
-                assert.equal($el.attr('data-pl-name'), 'UserPassword');
-            });
+                assert.equal( $el.attr( 'data-pl-name' ), 'UserPassword' );
+            } );
 
-            it('Setting property: visible', function () {
+            it( 'Setting property: visible', function() {
                 //Given
                 var $el = element.render();
-                assert.isFalse($el.hasClass('hidden'));
+                assert.isFalse( $el.hasClass( 'hidden' ) );
 
                 //When
-                element.setVisible(false);
+                element.setVisible( false );
 
                 //Then
-                assert.isTrue($el.hasClass('hidden'));
-            });
+                assert.isTrue( $el.hasClass( 'hidden' ) );
+            } );
 
-            it('Setting property: labelText', function () {
+            it( 'Setting property: labelText', function() {
                 //Given
                 var
-                    label = "User's password",
+                    label = 'User\'s password',
                     $el = element.render(),
-                    $label = $('label', $el);
+                    $label = $( 'label', $el );
 
                 //When
-                element.setLabelText(label);
+                element.setLabelText( label );
 
                 //Then
-                assert.equal($label.html(), label);
-            });
+                assert.equal( $label.html(), label );
+            } );
 
-            it('Setting property: hintText', function () {
+            it( 'Setting property: hintText', function() {
                 //Given
                 var
-                    hint = "my hint",
+                    hint = 'my hint',
                     $el = element.render(),
-                    $hint = $('.pl-control-hint-text ', $el);
+                    $hint = $( '.pl-control-hint-text ', $el );
 
                 //When
-                element.setHintText(hint);
+                element.setHintText( hint );
 
                 //Then
-                assert.equal($hint.html(), hint);
-                assert.isFalse($hint.hasClass('hidden'));
-            });
+                assert.equal( $hint.html(), hint );
+                assert.isFalse( $hint.hasClass( 'hidden' ) );
+            } );
 
-            it('Setting property: errorText', function () {
+            it( 'Setting property: errorText', function() {
                 //Given
                 var
-                    text = "error",
+                    text = 'error',
                     $el = element.render(),
-                    $text = $('.pl-control-error-text ', $el);
+                    $text = $( '.pl-control-error-text ', $el );
 
                 //When
-                element.setErrorText(text);
+                element.setErrorText( text );
 
                 //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
+                assert.equal( $text.html(), text );
+                assert.isFalse( $text.hasClass( 'hidden' ) );
+            } );
 
-            it('Setting property: warningText', function () {
+            it( 'Setting property: warningText', function() {
                 //Given
                 var
-                    text = "warning",
+                    text = 'warning',
                     $el = element.render(),
-                    $text = $('.pl-control-warning-text ', $el);
+                    $text = $( '.pl-control-warning-text ', $el );
 
                 //When
-                element.setWarningText(text);
+                element.setWarningText( text );
 
                 //Then
-                assert.equal($text.html(), text);
-                assert.isFalse($text.hasClass('hidden'));
-            });
+                assert.equal( $text.html(), text );
+                assert.isFalse( $text.hasClass( 'hidden' ) );
+            } );
 
-            it('Setting property: enabled', function () {
+            it( 'Setting property: enabled', function() {
                 //Given
                 var
                     $el = element.render(),
-                    $input = $('input', $el);
+                    $input = $( 'input', $el );
 
                 //When
-                element.setEnabled(false);
+                element.setEnabled( false );
 
                 //Then
-                assert.isTrue($input.prop('disabled'));
-                assert.isTrue($el.hasClass('pl-disabled'));
-            });
+                assert.isTrue( $input.prop( 'disabled' ) );
+                assert.isTrue( $el.hasClass( 'pl-disabled' ) );
+            } );
 
-        });
+        } );
 
-    });
+    } );
 
-});
+} );

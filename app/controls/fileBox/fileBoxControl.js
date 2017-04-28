@@ -5,22 +5,23 @@
  * @augments Control
  * @mixes editorBaseControlMixin
  */
-function FileBoxControl(parent) {
-    _.superClass(FileBoxControl, this, parent);
+function FileBoxControl( parent ) {
+    _.superClass( FileBoxControl, this, parent );
     this.initialize_editorBaseControl();
 }
 
-_.inherit(FileBoxControl, Control);
+_.inherit( FileBoxControl, Control );
 
-_.extend(FileBoxControl.prototype, {
+_.extend( FileBoxControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new FileBoxModel();
     },
 
-    createControlView: function (model) {
-        return new FileBoxView({model: model});
+    createControlView: function( model ) {
+        return new FileBoxView( { model: model } );
     }
 
-}, editorBaseControlMixin);
+}, editorBaseControlMixin );
 
+InfinniUI.FileBoxControl = FileBoxControl;

@@ -1,29 +1,29 @@
 /**
  *
- * @param parent
+ * @param viewMode
  * @constructor
  * @augments ContainerControl
  */
-function StackPanelControl(viewMode) {
-    _.superClass(StackPanelControl, this, viewMode);
+function StackPanelControl( viewMode ) {
+    _.superClass( StackPanelControl, this, viewMode );
 }
 
-_.inherit(StackPanelControl, ContainerControl);
+_.inherit( StackPanelControl, ContainerControl );
 
-_.extend(StackPanelControl.prototype,
-    /** @lends StackPanelControl.prototype */
-    {
-        createControlModel: function () {
-            return new StackPanelModel();
-        },
+_.extend( StackPanelControl.prototype, {
 
-        createControlView: function (model, viewMode) {
-            var view = new StackPanelView({model: model});
+    createControlModel: function() {
+        return new StackPanelModel();
+    },
 
-            view.viewMode = viewMode;
+    createControlView: function( model, viewMode ) {
+        var view = new StackPanelView( { model: model } );
 
-            return view;
-        }
+        view.viewMode = viewMode;
+
+        return view;
     }
-);
 
+} );
+
+InfinniUI.StackPanelControl = StackPanelControl;

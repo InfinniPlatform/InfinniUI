@@ -1,20 +1,32 @@
-var ButtonEditModel = TextBoxModel.extend({
+/**
+ *
+ * @constructor
+ */
+var ButtonEditModel = TextBoxModel.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         showClear: true,
         readOnly: true
-    }, TextBoxModel.prototype.defaults),
+    }, TextBoxModel.prototype.defaults ),
 
-    initialize: function () {
-        TextBoxModel.prototype.initialize.apply(this, arguments);
+    /**
+     *
+     */
+    initialize: function() {
+        TextBoxModel.prototype.initialize.apply( this, arguments );
     },
 
-    clearValue: function () {
-        var enabled = this.get('enabled');
+    /**
+     *
+     */
+    clearValue: function() {
+        var enabled = this.get( 'enabled' );
 
-        if (enabled) {
-            this.set('value', null);
+        if ( enabled ) {
+            this.set( 'value', null );
         }
     }
 
-});
+} );
+
+InfinniUI.ButtonEditModel = ButtonEditModel;

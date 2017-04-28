@@ -1,29 +1,31 @@
-var OpenModeDefaultStrategy = function () {
-
+var OpenModeDefaultStrategy = function() {
 };
 
-_.extend(OpenModeDefaultStrategy.prototype, {
-    setView: function(view){
+_.extend( OpenModeDefaultStrategy.prototype, {
+
+    setView: function( view ) {
         this.view = view;
     },
 
-    open: function(){
-        var $container = InfinniUI.config.$rootContainer || $('body');
-        var oldView = $container.data('view');
+    open: function() {
+        var $container = InfinniUI.config.$rootContainer || $( 'body' );
+        var oldView = $container.data( 'view' );
 
-        if(oldView){
+        if( oldView ) {
             oldView.close();
         }
 
         $container
-            .append(this.view.render())
-            .data('view', this.view);
+            .append( this.view.render() )
+            .data( 'view', this.view );
 
         this.applyAutoFocus();
     },
 
-    close: function () {
+    close: function() {
         this.view.remove();
     }
 
-}, openModeAutoFocusMixin);
+}, openModeAutoFocusMixin );
+
+InfinniUI.OpenModeDefaultStrategy = OpenModeDefaultStrategy;

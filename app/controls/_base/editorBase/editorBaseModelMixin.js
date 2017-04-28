@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var editorBaseModelMixin = {
 
     defaults_editorBaseModel: {
@@ -8,94 +12,138 @@ var editorBaseModelMixin = {
         labelFloating: false
     },
 
-    initialize_editorBaseModel: function(){
-       this.eventManager = new EventManager();
+    /**
+     *
+     */
+    initialize_editorBaseModel: function() {
+        this.eventManager = new EventManager();
         this.isInited = true;
     },
 
-    transformValue: function (value) {
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
+    transformValue: function( value ) {
         return value;
     },
 
-    _applyDefaultValue: function (value) {
-        var defaults = _.result(this, 'defaults');
-        return typeof value === 'undefined' ? defaults['value'] : value;
+    /**
+     *
+     * @param value
+     * @returns {*}
+     * @private
+     */
+    _applyDefaultValue: function( value ) {
+        var defaults = _.result( this, 'defaults' );
+        return typeof value === 'undefined' ? defaults[ 'value' ] : value;
     },
 
-    _setValue: function(value, options) {
-        value = this.transformValue(value);
+    /**
+     *
+     * @param value
+     * @param options
+     * @private
+     */
+    _setValue: function( value, options ) {
+        value = this.transformValue( value );
+        value = this._applyDefaultValue( value );
 
-        value = this._applyDefaultValue(value);
+        var oldValue = this.get( 'value' );
+        var message = {
+            oldValue: oldValue,
+            newValue: value
+        };
 
-        var
-            oldValue = this.get('value'),
-            message = {
-                oldValue: oldValue,
-                newValue: value
-            };
-
-        if (value === oldValue) {
+        if( value === oldValue ) {
             return;
         }
 
-        if(this.isInited){
-            if (this.eventManager.trigger('onValueChanging', message)) {
-                ContainerModel.prototype.set.call(this, 'value', value, options || {});
-                this.trigger('onValueChanged', message);
+        if( this.isInited ) {
+            if( this.eventManager.trigger( 'onValueChanging', message ) ) {
+                ContainerModel.prototype.set.call( this, 'value', value, options || {} );
+                this.trigger( 'onValueChanged', message );
             }
-        }else{
-            ContainerModel.prototype.set.call(this, 'value', value, options || {});
+        } else {
+            ContainerModel.prototype.set.call( this, 'value', value, options || {} );
         }
-
     },
 
-    set: function (key, value, options) {
-        var attributes, options;
-        if (key === null) {
+    /**
+     *
+     * @param key
+     * @param value
+     * @param options
+     * @returns {*}
+     */
+    set: function( key, value, options ) {
+        var attributes;
+
+        if( key === null || typeof key === 'undefined' ) {
             return this;
         }
 
-        if (typeof key === 'object') {
+        if( typeof key === 'object' ) {
             attributes = key;
             options = value;
         } else {
-            (attributes = {})[key] = value;
+            ( attributes = {} )[ key ] = value;
         }
 
         options = options || {};
 
-        if ('value' in attributes) {
-            this._setValue(attributes.value, options);
+        if( 'value' in attributes ) {
+            this._setValue( attributes.value, options );
             delete attributes.value;
         }
 
         var hasAttributes = false;
 
-        for (var i in attributes) {
+        for( var i in attributes ) {
             hasAttributes = true;
             break;
         }
 
-        if (hasAttributes) {
-            return ContainerModel.prototype.set.call(this, attributes, options);
+        if( hasAttributes ) {
+            return ContainerModel.prototype.set.call( this, attributes, options );
         }
 
         return false;
     },
 
-    getValue: function () {
-        return this.get('value');
+    /**
+     *
+     */
+    getValue: function() {
+        return this.get( 'value' );
     },
 
-    isSetValue: function (value) {
+    /**
+     *
+     * @param value
+     * @returns {boolean}
+     */
+    isSetValue: function( value ) {
         return value !== null && typeof value !== 'undefined' && value !== '';
     },
 
-    onValueChanging: function (handler) {
-        this.eventManager.on('onValueChanging', handler);
+    /**
+     *
+     * @param handler
+     */
+    onValueChanging: function( handler ) {
+        this.eventManager.on( 'onValueChanging', handler );
     },
 
-    onValueChanged: function (handler) {
-        this.on('onValueChanged', handler);
+    /**
+     *
+     * @param handler
+     */
+    onValueChanged: function( handler ) {
+        this.on( 'onValueChanged', handler );
     }
+
 };
+
+InfinniUI.editorBaseModelMixin = editorBaseModelMixin;

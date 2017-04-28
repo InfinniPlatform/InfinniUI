@@ -4,17 +4,17 @@
  * @augments ContainerBuilder
  */
 function ToolBarBuilder() {
-    _.superClass(ToolBarBuilder, this);
+    _.superClass( ToolBarBuilder, this );
 }
 
-window.InfinniUI.ToolBarBuilder = ToolBarBuilder;
+InfinniUI.ToolBarBuilder = ToolBarBuilder;
 
-_.inherit(ToolBarBuilder, ContainerBuilder);
+_.inherit( ToolBarBuilder, ContainerBuilder );
 
-_.extend(ToolBarBuilder.prototype, /** @lends ToolBarBuilder.prototype */{
+_.extend( ToolBarBuilder.prototype, {
 
-    createElement: function (params) {
-        return new ToolBar(params.parent);
+    createElement: function( params ) {
+        return new ToolBar( params.parent );
     }
 
-});
+} );

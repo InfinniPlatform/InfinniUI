@@ -1,4 +1,4 @@
-InfinniUI.localizations['ru-RU'].patternDateFormats = {
+InfinniUI.localizations[ 'ru-RU' ].patternDateFormats = {
     f: 'dd MMMM yyyy г. HH:mm',
     F: 'dd MMMM yyyy г. HH:mm:ss',
 
@@ -18,7 +18,7 @@ InfinniUI.localizations['ru-RU'].patternDateFormats = {
     u: 'yyyy-MM-dd HH:mm:ssZ'
 };
 
-InfinniUI.localizations['en-US'].patternDateFormats = {
+InfinniUI.localizations[ 'en-US' ].patternDateFormats = {
     f: 'dddd, MMMM dd, yyyy h:%m tt',
     F: 'dddd, MMMM dd, yyyy h:%m:%s tt',
 

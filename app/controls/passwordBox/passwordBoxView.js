@@ -3,19 +3,19 @@
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
-var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
+var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
     className: 'pl-password-box form-group',
 
     template: {
-        "autocomplete": InfinniUI.Template["controls/passwordBox/template/passwordBox.on.tpl.html"],
-        "noautocomplete": InfinniUI.Template["controls/passwordBox/template/passwordBox.off.tpl.html"]
+        'autocomplete': InfinniUI.Template[ 'controls/passwordBox/template/passwordBox.on.tpl.html' ],
+        'noautocomplete': InfinniUI.Template[ 'controls/passwordBox/template/passwordBox.off.tpl.html' ]
     },
 
-    UI: _.extend({}, editorBaseViewMixin.UI, {
+    UI: _.extend( {}, editorBaseViewMixin.UI, {
         label: '.pl-control-label',
         input: '.pl-control'
-    }),
+    } ),
 
     events: {
         'blur .pl-control': 'onBlurHandler',
@@ -23,100 +23,103 @@ var PasswordBoxView = ControlView.extend(_.extend({}, editorBaseViewMixin, {
         'change .pl-control': 'onChangeHandler'
     },
 
-    initialize: function () {
-        ControlView.prototype.initialize.apply(this);
+    initialize: function() {
+        ControlView.prototype.initialize.apply( this );
     },
 
-    initHandlersForProperties: function(){
-        ControlView.prototype.initHandlersForProperties.call(this);
-        editorBaseViewMixin.initHandlersForProperties.call(this);
+    initHandlersForProperties: function() {
+        ControlView.prototype.initHandlersForProperties.call( this );
+        editorBaseViewMixin.initHandlersForProperties.call( this );
 
-        this.listenTo(this.model, 'change:labelText', this.updateLabelText);
-        this.listenTo(this.model, 'change:labelFloating', this.updateLabelFloating);
-        this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
-
+        this.listenTo( this.model, 'change:labelText', this.updateLabelText );
+        this.listenTo( this.model, 'change:labelFloating', this.updateLabelFloating );
+        this.listenTo( this.model, 'change:autocomplete', this.updateAutocomplete );
     },
 
-    updateProperties: function(){
-        ControlView.prototype.updateProperties.call(this);
-        editorBaseViewMixin.updateProperties.call(this);
+    updateProperties: function() {
+        ControlView.prototype.updateProperties.call( this );
+        editorBaseViewMixin.updateProperties.call( this );
         this.updateLabelText();
     },
 
-    updateLabelText: function () {
-        var labelText = this.model.get('labelText');
-        this.ui.label.text(labelText);
+    updateLabelText: function() {
+        var labelText = this.model.get( 'labelText' );
+        this.ui.label.text( labelText );
     },
 
-    updateAutocomplete: function () {
+    updateAutocomplete: function() {
         this.rerender();
     },
 
-    updateValue: function(){
-        editorBaseViewMixin.updateValueState.call(this);
+    updateValue: function() {
+        editorBaseViewMixin.updateValueState.call( this );
 
-        var value = this.model.get('value');
-        this.ui.input.val(value);
+        var value = this.model.get( 'value' );
+        this.ui.input.val( value );
     },
 
-    updateEnabled: function () {
-        ControlView.prototype.updateEnabled.call(this);
+    updateEnabled: function() {
+        ControlView.prototype.updateEnabled.call( this );
 
-        var enabled = this.model.get('enabled');
-        this.ui.input.prop('disabled', !enabled);
+        var enabled = this.model.get( 'enabled' );
+
+        this.ui.input.prop( 'disabled', !enabled );
     },
 
-    getData: function () {
+    getData: function() {
         return _.extend(
             {},
-            ControlView.prototype.getData.call(this),
-            editorBaseViewMixin.getData.call(this)
+            ControlView.prototype.getData.call( this ),
+            editorBaseViewMixin.getData.call( this )
         );
     },
 
-    render: function () {
+    render: function() {
         var model = this.model;
 
         this.prerenderingActions();
-        this.renderTemplate(this.getTemplate());
+        this.renderTemplate( this.getTemplate() );
 
         this.updateProperties();
 
-        this.trigger('render');
+        this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
-    remove: function () {
-        ControlView.prototype.remove.call(this);
+    remove: function() {
+        ControlView.prototype.remove.call( this );
     },
 
-    getTemplate: function () {
+    getTemplate: function() {
         var model = this.model;
 
-        return model.get('autocomplete') ? this.template.autocomplete : this.template.noautocomplete;
+        return model.get( 'autocomplete' ) ? this.template.autocomplete : this.template.noautocomplete;
     },
 
-    updateModelValue: function () {
+    updateModelValue: function() {
         var value = this.ui.input.val();
         var model = this.model;
-        model.set('value', value);
-        model.set('rawValue', value);
+
+        model.set( 'value', value );
+        model.set( 'rawValue', value );
     },
 
-    onBlurHandler: function () {
+    onBlurHandler: function() {
         this.updateModelValue();
     },
 
-    onChangeHandler: function () {
+    onChangeHandler: function() {
         this.updateModelValue();
     },
 
-    onInputHandler: function () {
+    onInputHandler: function() {
         this.updateModelValue();
     }
 
-}));
+} ) );
+
+InfinniUI.PasswordBoxView = PasswordBoxView;

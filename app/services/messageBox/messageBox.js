@@ -2,7 +2,7 @@
  * @constructor
  * @mixes bindUIElementsMixin
  */
-var MessageBox = Backbone.View.extend({
+var MessageBox = Backbone.View.extend( {
 
     tagName: 'div',
 
@@ -19,129 +19,109 @@ var MessageBox = Backbone.View.extend({
         'keydown': 'onKeydownHandler'
     },
 
-    template: InfinniUI.Template["services/messageBox/template/default.tpl.html"],
+    template: InfinniUI.Template[ 'services/messageBox/template/default.tpl.html' ],
 
-    initialize: function (options) {
-
-        this.setOptions(options);
+    initialize: function( options ) {
+        this.setOptions( options );
 
         // чтобы пользователь случайно не обратился к элементу в фокусе,
         // пока диалоговое окно создается и ещё не перехватило фокус,
         // необходимо старую фокусировку снять
-        $(document.activeElement).blur();
+        $( document.activeElement ).blur();
         this.render();
         this.bindUIElements();
         this.$el
-            .modal({show: true});
+            .modal( { show: true } );
     },
 
-    setOptions: function (config) {
-        this.options = this.applyDefaultOptions(config);
+    setOptions: function( config ) {
+        this.options = this.applyDefaultOptions( config );
     },
 
-    onFocusinLastElement: function () {
+    onFocusinLastElement: function() {
         this.ui.firstfocuselementinmodal.focus();
     },
 
-    onKeydownHandler: function (event) {
-        if(document.activeElement === this.ui.lastfocuselementinmodal[0] && (event.which || event.keyCode) == 9) {
+    onKeydownHandler: function( event ) {
+        if( document.activeElement === this.ui.lastfocuselementinmodal[ 0 ] && ( event.which || event.keyCode ) == 9 ) {
             event.preventDefault();
             this.ui.firstfocuselementinmodal.focus();
         }
 
-        if(document.activeElement === this.ui.firstfocuselementinmodal[0] && (event.which || event.keyCode) == 9 && event.shiftKey){
+        if( document.activeElement === this.ui.firstfocuselementinmodal[ 0 ] && ( event.which || event.keyCode ) == 9 && event.shiftKey ) {
             event.preventDefault();
             this.ui.lastfocuselementinmodal.focus();
         }
     },
 
-    render: function () {
-        var $parent = this.options.$parent || $('body');
+    render: function() {
+        var $parent = this.options.$parent || $( 'body' );
+        var html = this.template( this.options );
 
-        var html = this.template(this.options);
-        this.$el.html(html);
+        this.$el.html( html );
 
         this.subscribeToDialog();
-        $parent.append(this.$el);
+        $parent.append( this.$el );
 
         return this;
     },
 
-    subscribeToDialog: function (){
+    subscribeToDialog: function() {
         var view = this;
-        this.$el.on('shown.bs.modal', function (e) {
-            view.ui.firstfocuselementinmodal.focus();
-        });
 
-        this.$el.on('hidden.bs.modal', function () {
+        this.$el.on( 'shown.bs.modal', function( e ) {
+            view.ui.firstfocuselementinmodal.focus();
+        } );
+
+        this.$el.on( 'hidden.bs.modal', function() {
             view.remove();
-        });
+        } );
     },
 
-    onClickButtonHandler: function (event) {
+    onClickButtonHandler: function( event ) {
         event.preventDefault();
 
-        var $el = $(event.target),
-            i = parseInt( $el.data('index'), 10),
-            handler = this.options.buttons[i].onClick;
+        var $el = $( event.target );
+        var i = parseInt( $el.data( 'index' ), 10 );
+        var handler = this.options.buttons[ i ].onClick;
 
-        if(handler){
-            handler.apply(null);
+        if( handler ) {
+            handler.apply( null );
         }
 
         this.close();
     },
 
-    close: function () {
-        if (typeof this.options.onClose === 'function') {
-            this.options.onClose.call(null);
+    close: function() {
+        if( typeof this.options.onClose === 'function' ) {
+            this.options.onClose.call( null );
         }
 
-        this.$el.modal('hide');
+        this.$el.modal( 'hide' );
     },
 
-    applyDefaultOptions: function (config) {
-        var options = _.defaults({}, config, {
+    applyDefaultOptions: function( config ) {
+        var options = _.defaults( {}, config, {
             buttons: []
-        });
-        this.applyDefaultButtonsOptions(options);
+        } );
+        this.applyDefaultButtonsOptions( options );
 
         return options;
     },
 
-    applyDefaultButtonsOptions: function (options) {
+    applyDefaultButtonsOptions: function( options ) {
         options.buttons
-            .filter(function (button) {
+            .filter( function( button ) {
                 return typeof button.type === 'undefined';
-            })
-            .forEach(function (button) {
+            } )
+            .forEach( function( button ) {
                 button.type = 'default';
-            });
+            } );
 
         return options;
     }
-});
+} );
 
-_.extend(MessageBox.prototype, bindUIElementsMixin);
+_.extend( MessageBox.prototype, bindUIElementsMixin );
 
 InfinniUI.MessageBox = MessageBox;
-
-/*new MessageBox({
-    type: 'error',
-    text:'asdasd',
-    buttons:[
-        {
-            name:'Ok',
-            onClick: function(){
-                alert('ckicked');
-            }
-        },
-        {
-            name:'Error btn',
-            type: 'action',
-            onClick: function(){
-                alert('error ckicked');
-            }
-        }
-    ]
-});*/

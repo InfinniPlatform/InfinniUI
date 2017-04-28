@@ -7,53 +7,53 @@ function HashMap() {
     this._values = [];
 }
 
-window.InfinniUI.HashMap = HashMap;
+InfinniUI.HashMap = HashMap;
 
-Object.defineProperties(HashMap.prototype, /** @lends HashMap.prototype **/{
+Object.defineProperties( HashMap.prototype, {
     length: {
-        get: function () {
+        get: function() {
             return this._keys.length;
         }
     },
     keys: {
-        get: function () {
+        get: function() {
             return this._keys;
         }
     },
 
     values: {
-        get: function () {
+        get: function() {
             return this._values;
         }
     }
-});
+} );
 
-HashMap.prototype.add = function (key, value) {
-    var i = this._getIndexOfKey(key);
+HashMap.prototype.add = function( key, value ) {
+    var i = this._getIndexOfKey( key );
 
-    if (i === -1) {
-        this._keys.push(key);
-        this._values.push(value);
+    if ( i === -1 ) {
+        this._keys.push( key );
+        this._values.push( value );
     } else {
-        this._values[i] = value;
+        this._values[ i ] = value;
     }
 };
 
-HashMap.prototype.remove = function (key) {
-    var i = this._getIndexOfKey(key);
+HashMap.prototype.remove = function( key ) {
+    var i = this._getIndexOfKey( key );
 
-    if (i !== -1) {
-        this._keys.splice(i, 1);
-        this._values.splice(i, 1);
+    if ( i !== -1 ) {
+        this._keys.splice( i, 1 );
+        this._values.splice( i, 1 );
     }
 };
 
-HashMap.prototype.getKeyByValue = function (value) {
+HashMap.prototype.getKeyByValue = function( value ) {
     var key,
-        i = this._getIndexOfValue(value);
+        i = this._getIndexOfValue( value );
 
-    if (i !== -1) {
-        key = this._keys[i];
+    if ( i !== -1 ) {
+        key = this._keys[ i ];
     }
     return key;
 };
@@ -62,14 +62,14 @@ HashMap.prototype.getKeyByValue = function (value) {
  *
  * @param {Function} predicate
  * @param thisArg
- * @returns {numeric}
+ * @returns {number}
  */
-HashMap.prototype.findIndex = function (predicate, thisArg) {
+HashMap.prototype.findIndex = function( predicate, thisArg ) {
     var key, value, index = -1;
-    for (var i = 0; i < this._keys.length; i = i + 1) {
-        key = this._keys[i];
-        value = this._values[i];
-        if (predicate.call(thisArg, key, value)) {
+    for ( var i = 0; i < this._keys.length; i = i + 1 ) {
+        key = this._keys[ i ];
+        value = this._values[ i ];
+        if ( predicate.call( thisArg, key, value ) ) {
             index =  i;
             break;
         }
@@ -78,26 +78,26 @@ HashMap.prototype.findIndex = function (predicate, thisArg) {
     return index;
 };
 
-HashMap.prototype.get = function (key) {
+HashMap.prototype.get = function( key ) {
     var value,
-        i = this._getIndexOfKey(key);
+        i = this._getIndexOfKey( key );
 
-    if (i !== -1) {
-        value = this._values[i];
+    if ( i !== -1 ) {
+        value = this._values[ i ];
     }
 
     return value;
 };
 
-HashMap.prototype.forEach = function (callback, thisArg) {
-    this._keys.forEach(function (key, index) {
-        callback.call(thisArg, this._values[index], key, index);
-    }, this);
+HashMap.prototype.forEach = function( callback, thisArg ) {
+    this._keys.forEach( function( key, index ) {
+        callback.call( thisArg, this._values[ index ], key, index );
+    }, this );
 };
 
-HashMap.prototype.clear = function (callback) {
-    if (typeof callback === 'function') {
-        this.forEach(callback);
+HashMap.prototype.clear = function( callback ) {
+    if ( typeof callback === 'function' ) {
+        this.forEach( callback );
     }
     this._keys.length = 0;
     this._values.length = 0;
@@ -108,8 +108,8 @@ HashMap.prototype.clear = function (callback) {
  * @returns {number}
  * @private
  */
-HashMap.prototype._getIndexOfKey = function (key) {
-    return this._keys.indexOf(key);
+HashMap.prototype._getIndexOfKey = function( key ) {
+    return this._keys.indexOf( key );
 };
 
 /**
@@ -117,6 +117,6 @@ HashMap.prototype._getIndexOfKey = function (key) {
  * @returns {number}
  * @private
  */
-HashMap.prototype._getIndexOfValue = function (value) {
-    return this._values.indexOf(value);
+HashMap.prototype._getIndexOfValue = function( value ) {
+    return this._values.indexOf( value );
 };

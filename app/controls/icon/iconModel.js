@@ -2,17 +2,19 @@
  * @class
  * @augments ControlModel
  */
-var IconModel = ControlModel.extend({
+var IconModel = ControlModel.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         value: null,
         size: '',
         focusable: false
 
-    }, ControlModel.prototype.defaults),
+    }, ControlModel.prototype.defaults ),
 
-    initialize: function () {
-        ControlModel.prototype.initialize.apply(this, arguments);
+    initialize: function() {
+        ControlModel.prototype.initialize.apply( this, arguments );
     }
 
-});
+} );
+
+InfinniUI.IconModel = IconModel;

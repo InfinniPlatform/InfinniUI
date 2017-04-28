@@ -1,51 +1,49 @@
 function ListEditorBaseBuilder() {
-    _.superClass(ListEditorBaseBuilder, this);
+    _.superClass( ListEditorBaseBuilder, this );
 
     this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.ListEditorBaseBuilder = ListEditorBaseBuilder;
+InfinniUI.ListEditorBaseBuilder = ListEditorBaseBuilder;
 
-_.inherit(ListEditorBaseBuilder, ContainerBuilder);
+_.inherit( ListEditorBaseBuilder, ContainerBuilder );
 
+_.extend( ListEditorBaseBuilder.prototype, {
 
-_.extend(ListEditorBaseBuilder.prototype, {
+    applyMetadata: function( params ) {
+        var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call( this, params );
+        var itemsBinding = applyingMetadataResult.itemsBinding;
+        var applyingMetadataResult2;
 
-    applyMetadata: function (params) {
+        this.initSelecting( params, itemsBinding );
+        this.initDisabledItemCondition( params );
 
-        var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call(this, params),
-            itemsBinding = applyingMetadataResult.itemsBinding,
-            applyingMetadataResult2;
+        this.initValueFeatures( params );
 
-        this.initSelecting(params, itemsBinding);
-        this.initDisabledItemCondition(params);
-
-        this.initValueFeatures(params);
-
-        applyingMetadataResult2 = this.applyMetadata_editorBaseBuilder(params);
-        return _.extend(applyingMetadataResult, applyingMetadataResult2);
+        applyingMetadataResult2 = this.applyMetadata_editorBaseBuilder( params );
+        return _.extend( applyingMetadataResult, applyingMetadataResult2 );
     },
 
 
-    initSelecting: function(params, itemsBinding){
+    initSelecting: function( params, itemsBinding ) {
         var metadata = params.metadata;
         var element = params.element;
         var source = itemsBinding.getSource();
         var sourceProperty = itemsBinding.getSourceProperty();
-        var isBindingOnWholeDS = sourceProperty == '',
-            sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
+        var isBindingOnWholeDS = sourceProperty == '';
+        var sourceIsDataSource = source instanceof InfinniUI.BaseDataSource;
 
-        if(sourceIsDataSource && isBindingOnWholeDS){
-            source.setSelectedItem(null);
+        if( sourceIsDataSource && isBindingOnWholeDS ) {
+            source.setSelectedItem( null );
 
-            source.onSelectedItemChanged(function(context, args){
+            source.onSelectedItemChanged( function( context, args ) {
                 var currentSelectedItem = element.getSelectedItem(),
                     newSelectedItem = args.value;
 
-                if(newSelectedItem != currentSelectedItem){
-                    element.setSelectedItem(newSelectedItem);
+                if( newSelectedItem != currentSelectedItem ) {
+                    element.setSelectedItem( newSelectedItem );
                 }
-            });
+            } );
         }
 
         var executorBuilderParams = {
@@ -54,68 +52,69 @@ _.extend(ListEditorBaseBuilder.prototype, {
             basePathOfProperty: params.basePathOfProperty
         };
 
-        var onSelectedItemExecutor = Executor(metadata.OnSelectedItemChanged, params.builder, executorBuilderParams);
+        var onSelectedItemExecutor = Executor( metadata.OnSelectedItemChanged, params.builder, executorBuilderParams );
 
-        element.onSelectedItemChanged(function(context, args){
+        element.onSelectedItemChanged( function( context, args ) {
 
-            if(sourceIsDataSource && isBindingOnWholeDS) {
+            if( sourceIsDataSource && isBindingOnWholeDS ) {
                 var currentSelectedItem = source.getSelectedItem(),
                     newSelectedItem = args.value;
 
-                if (newSelectedItem != currentSelectedItem) {
-                    source.setSelectedItem(newSelectedItem);
+                if ( newSelectedItem != currentSelectedItem ) {
+                    source.setSelectedItem( newSelectedItem );
                 }
             }
 
-            onSelectedItemExecutor(args);
-        });
+            onSelectedItemExecutor( args );
+        } );
     },
 
-    initValueFeatures: function(params){
+    initValueFeatures: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
 
-        if (typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null) {
-            element.setMultiSelect(metadata.MultiSelect);
+        if ( typeof metadata.MultiSelect !== 'undefined' && metadata.MultiSelect !== null ) {
+            element.setMultiSelect( metadata.MultiSelect );
         }
 
-        this.initValueSelector(params);
+        this.initValueSelector( params );
     },
 
-    initValueSelector: function (params) {
-        var metadata = params.metadata,
-            element = params.element,
-            valueSelector;
+    initValueSelector: function( params ) {
+        var metadata = params.metadata;
+        var element = params.element;
+        var valueSelector;
 
-        if (metadata.ValueSelector) {
-            valueSelector = function (context, args) {
-                var scriptExecutor = new ScriptExecutor(params.element.getScriptsStorage());
+        if ( metadata.ValueSelector ) {
+            valueSelector = function( context, args ) {
+                var scriptExecutor = new ScriptExecutor( params.element.getScriptsStorage() );
                 return scriptExecutor.executeScript( metadata.ValueSelector, args );
             };
-        } else if (metadata.ValueProperty) {
-            valueSelector = function (context, args) {
-                return InfinniUI.ObjectUtils.getPropertyValue(args.value, metadata.ValueProperty);
-            }
+        } else if ( metadata.ValueProperty ) {
+            valueSelector = function( context, args ) {
+                return InfinniUI.ObjectUtils.getPropertyValue( args.value, metadata.ValueProperty );
+            };
         } else {
-            valueSelector = function (context, args) {
+            valueSelector = function( context, args ) {
                 return args.value;
-            }
+            };
         }
-        element.setValueSelector(valueSelector);
+        element.setValueSelector( valueSelector );
     },
 
-    initDisabledItemCondition: function (params) {
-        var metadata = params.metadata,
-            element = params.element,
-            disabledItemCondition;
+    initDisabledItemCondition: function( params ) {
+        var metadata = params.metadata;
+        var element = params.element;
+        var disabledItemCondition;
 
-        if (metadata.DisabledItemCondition) {
-            disabledItemCondition = function (context, args) {
-                var scriptExecutor = new ScriptExecutor(element.getScriptsStorage());
+        if ( metadata.DisabledItemCondition ) {
+            disabledItemCondition = function( context, args ) {
+                var scriptExecutor = new ScriptExecutor( element.getScriptsStorage() );
                 return scriptExecutor.executeScript( metadata.DisabledItemCondition, args );
             };
         }
 
-        element.setDisabledItemCondition(disabledItemCondition);
+        element.setDisabledItemCondition( disabledItemCondition );
     }
-}, editorBaseBuilderMixin);
+
+}, editorBaseBuilderMixin );

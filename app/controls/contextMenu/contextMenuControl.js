@@ -1,18 +1,32 @@
+/**
+ *
+ * @constructor
+ */
 function ContextMenuControl() {
-    _.superClass(ContextMenuControl, this);
+    _.superClass( ContextMenuControl, this );
 }
 
-_.inherit(ContextMenuControl, ContainerControl);
+_.inherit( ContextMenuControl, ContainerControl );
 
-_.extend(ContextMenuControl.prototype, /** @lends ContextMenuControl.prototype */ {
+_.extend( ContextMenuControl.prototype, {
 
-    createControlModel: function () {
+    /**
+     *
+     * @returns {ContextMenuModel}
+     */
+    createControlModel: function() {
         return new ContextMenuModel();
     },
 
-    createControlView: function (model) {
-        return new ContextMenuView({model: model});
+    /**
+     *
+     * @param model
+     * @returns {ContextMenuView}
+     */
+    createControlView: function( model ) {
+        return new ContextMenuView( { model: model } );
     }
 
-});
+} );
 
+InfinniUI.ContextMenuControl = ContextMenuControl;

@@ -1,109 +1,109 @@
-describe('Label', function () {
+describe( 'Label', function() {
     var builder = new InfinniUI.ApplicationBuilder();
 
-    describe('API', function () {
-        var element = builder.buildType('Label', {});
+    describe( 'API', function() {
+        var element = builder.buildType( 'Label', {} );
 
-        describe('Implementing Label Methods', function () {
+        describe( 'Implementing Label Methods', function() {
             ['getDisplayFormat', 'setDisplayFormat', 'getTextTrimming', 'setTextTrimming',
                 'getTextWrapping', 'setTextWrapping']
-                .forEach(function (methodName) {
-                    it(methodName, function () {
-                        testHelper.checkMethod(element, methodName);
-                    });
+                .forEach( function( methodName ) {
+                    it( methodName, function() {
+                        testHelper.checkMethod( element, methodName );
+                    } );
 
-                });
-        });
+                } );
+        } );
 
-        describe('Implementing EditorBase Methods', function () {
-            testHelper.checkEditorBaseMethods(element);
-        });
+        describe( 'Implementing EditorBase Methods', function() {
+            testHelper.checkEditorBaseMethods( element );
+        } );
 
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
-    });
+        describe( 'Implementing Element Methods', function() {
+            testHelper.checkElementMethods( element );
+        } );
+    } );
 
-    describe('Metadata', function () {
+    describe( 'Metadata', function() {
 
-        it('Using default value', function () {
+        it( 'Using default value', function() {
             var metadata = {
-                "Label": {}
+                'Label': {}
             };
 
-            var element = builder.build(metadata, {});
+            var element = builder.build( metadata, {} );
 
-            assert.equal(element.getTextTrimming(), true, 'TextTrimming');
-            assert.equal(element.getTextWrapping(), true, 'TextWrapping');
+            assert.equal( element.getTextTrimming(), true, 'TextTrimming' );
+            assert.equal( element.getTextWrapping(), true, 'TextWrapping' );
 
-            assert.equal(element.getVisible(), true, 'Visible');
-            assert.equal(element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment');
+            assert.equal( element.getVisible(), true, 'Visible' );
+            assert.equal( element.getHorizontalAlignment(), 'Stretch', 'HorizontalAlignment' );
             var displayFormat = element.getDisplayFormat();
             var value = {};
-            assert.isTrue(displayFormat(null, {value: value}) === value, 'DisplayFormat');
-        });
+            assert.isTrue( displayFormat( null, { value: value } ) === value, 'DisplayFormat' );
+        } );
 
-        it('Apply metadata', function () {
+        it( 'Apply metadata', function() {
             var metadata = {
-                "Label": {
-                    "TextWrapping": false,
+                'Label': {
+                    'TextWrapping': false,
 
-                    "Text": "Label",
-                    "LabelFloating": true,
-                    "DisplayFormat": "d",
-                    "HintText": "Hint",
-                    "ErrorText": "Error",
-                    "WarningText": "Warning",
+                    'Text': 'Label',
+                    'LabelFloating': true,
+                    'DisplayFormat': 'd',
+                    'HintText': 'Hint',
+                    'ErrorText': 'Error',
+                    'WarningText': 'Warning',
 
-                    "Name": "Label1",
-                    "Enabled": false,
-                    "Visible": false,
-                    "HorizontalAlignment": "Right",
-                    "TextStyle": "Display4",
-                    "Foreground": "Primary1",
-                    "Background": "Accent1"
+                    'Name': 'Label1',
+                    'Enabled': false,
+                    'Visible': false,
+                    'HorizontalAlignment': 'Right',
+                    'TextStyle': 'Display4',
+                    'Foreground': 'Primary1',
+                    'Background': 'Accent1'
                 }
             };
 
-            var element = builder.build(metadata, {});
+            var element = builder.build( metadata, {} );
 
-            assert.equal(element.getTextWrapping(), false, 'TextWrapping');
-            assert.isFunction(element.getDisplayFormat(), 'DisplayFormat');
+            assert.equal( element.getTextWrapping(), false, 'TextWrapping' );
+            assert.isFunction( element.getDisplayFormat(), 'DisplayFormat' );
 
-            assert.equal(element.getHintText(), "Hint", 'HintText');
-            assert.equal(element.getErrorText(), "Error", 'ErrorText');
-            assert.equal(element.getWarningText(), "Warning", 'WarningText');
+            assert.equal( element.getHintText(), 'Hint', 'HintText' );
+            assert.equal( element.getErrorText(), 'Error', 'ErrorText' );
+            assert.equal( element.getWarningText(), 'Warning', 'WarningText' );
 
-            assert.equal(element.getName(), "Label1", 'Name');
-            assert.equal(element.getText(), "Label", 'LabelText');
-            assert.equal(element.getEnabled(), false, 'Enabled');
-            assert.equal(element.getVisible(), false, 'Visible');
-            assert.equal(element.getTextStyle(), 'Display4', 'TextStyle');
-            assert.equal(element.getForeground(), 'Primary1', 'Foreground');
-            assert.equal(element.getBackground(), 'Accent1', 'Background');
+            assert.equal( element.getName(), 'Label1', 'Name' );
+            assert.equal( element.getText(), 'Label', 'LabelText' );
+            assert.equal( element.getEnabled(), false, 'Enabled' );
+            assert.equal( element.getVisible(), false, 'Visible' );
+            assert.equal( element.getTextStyle(), 'Display4', 'TextStyle' );
+            assert.equal( element.getForeground(), 'Primary1', 'Foreground' );
+            assert.equal( element.getBackground(), 'Accent1', 'Background' );
 
-        });
+        } );
 
-        it('event OnValueChanged', function () {
+        it( 'event OnValueChanged', function() {
             // Given
             var label = new InfinniUI.Label(),
                 onValueChangedFlag = 0;
 
             label.render();
 
-            label.onValueChanged(function () {
+            label.onValueChanged( function() {
                 onValueChangedFlag++;
-            });
+            } );
 
-            assert.equal(onValueChangedFlag, 0);
+            assert.equal( onValueChangedFlag, 0 );
 
             // When
-            label.setValue('2014-07-29');
-            label.setValue('2014-07-30');
+            label.setValue( '2014-07-29' );
+            label.setValue( '2014-07-30' );
 
             // Then
-            assert.equal(onValueChangedFlag, 2);
-        });
+            assert.equal( onValueChangedFlag, 2 );
+        } );
 
-    });
-});
+    } );
+} );

@@ -2,17 +2,16 @@
  * Билдер RegexEditMask
  * @constructor
  */
-function RegexEditMaskBuilder () {
+function RegexEditMaskBuilder() {
 
-    this.build = function (context, args) {
-
+    this.build = function( context, args ) {
         var editMask = new RegexEditMask();
 
         editMask.mask = args.metadata.Mask;
 
         return editMask;
-    }
+    };
 
 }
 
-window.InfinniUI.RegexEditMaskBuilder = RegexEditMaskBuilder;
+InfinniUI.RegexEditMaskBuilder = RegexEditMaskBuilder;

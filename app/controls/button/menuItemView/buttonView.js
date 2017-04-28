@@ -1,33 +1,36 @@
 /**
- * @class ButtonView
+ *
  * @augments ControlView
+ * @constructor
  */
-var MenuItemButtonView = LinkButtonView.extend({
+var MenuItemButtonView = LinkButtonView.extend( {
 
-    updateHorizontalAlignment: function(){
-        var horizontalAlignment = this.model.get('horizontalAlignment');
+    /**
+     *
+     */
+    updateHorizontalAlignment: function() {
+        var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var that = this;
         var $el;
 
         domHelper.whenReady(
-            function(){
+            function() {
                 $el = that.$el.parent().parent();
                 return $el.length > 0;
             },
 
-            function(){
-                if(horizontalAlignment == 'Right'){
+            function() {
+                if( horizontalAlignment == 'Right' ) {
                     $el
-                        .addClass('pull-right');
-                }else{
+                        .addClass( 'pull-right' );
+                } else {
                     $el
-                        .removeClass('pull-right');
+                        .removeClass( 'pull-right' );
                 }
             }
         );
-
     }
 
-});
+} );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.menuItem', MenuItemButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.Button.menuItem', MenuItemButtonView );

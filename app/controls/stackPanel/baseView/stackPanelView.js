@@ -2,85 +2,88 @@
  * @class
  * @augments ControlView
  */
-var StackPanelView = ContainerView.extend(
-    /** @lends StackPanelView.prototype */
-    {
-        tagName: 'ul',
-        className: 'pl-stack-panel pl-clearfix',
+var StackPanelView = ContainerView.extend( {
 
-        template: {
-            plain: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanel.tpl.html"],
-            grouped: InfinniUI.Template["controls/stackPanel/baseView/template/stackPanelGrouped.tpl.html"]
-        },
+    tagName: 'ul',
 
-        UI: {
-            items: '.stackpanel-items'
-        },
+    className: 'pl-stack-panel pl-clearfix',
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
+    template: {
+        plain: InfinniUI.Template[ 'controls/stackPanel/baseView/template/stackPanel.tpl.html' ],
+        grouped: InfinniUI.Template[ 'controls/stackPanel/baseView/template/stackPanelGrouped.tpl.html' ]
+    },
 
-            this.initOrientation();
-        },
+    UI: {
+        items: '.stackpanel-items'
+    },
 
-        updateGrouping: function(){
-            var isGrouped = this.model.get('groupValueSelector') != null;
+    initialize: function( options ) {
+        ContainerView.prototype.initialize.call( this, options );
 
-            if(isGrouped){
-                this.strategy = new StackPanelViewGroupStrategy(this);
-            }else{
-                this.strategy = new StackPanelViewPlainStrategy(this);
-            }
-        },
+        this.initOrientation();
+    },
 
-        render: function () {
-            this.prerenderingActions();
+    updateGrouping: function() {
+        var groupValueSelector = this.model.get( 'groupValueSelector' );
+        var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
 
-            this.removeChildElements();
+        if( isGrouped ) {
+            this.strategy = new StackPanelViewGroupStrategy( this );
+        } else {
+            this.strategy = new StackPanelViewPlainStrategy( this );
+        }
+    },
 
-            var preparedItems = this.strategy.prepareItemsForRendering();
-            var template = this.strategy.getTemplate();
+    render: function() {
+        this.prerenderingActions();
 
-            this.$el.html(template(preparedItems));
+        this.removeChildElements();
 
-            this.strategy.appendItemsContent(preparedItems);
+        var preparedItems = this.strategy.prepareItemsForRendering();
+        var template = this.strategy.getTemplate();
 
-            this.bindUIElements();
-            this.updateProperties();
+        this.$el.html( template( preparedItems ) );
 
-            this.trigger('render');
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.strategy.appendItemsContent( preparedItems );
 
-        initOrientation: function () {
-            this.listenTo(this.model, 'change:orientation', this.updateOrientation);
-            this.updateOrientation();
-        },
+        this.bindUIElements();
+        this.updateProperties();
 
-        updateOrientation: function () {
-            var orientation = this.model.get('orientation');
-            this.$el.toggleClass('horizontal-orientation', orientation == 'Horizontal');
-            this.$el.toggleClass('pl-stack-panel_horizontal', orientation == 'Horizontal');
-        },
+        this.trigger( 'render' );
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-        getItems: function(){
-            return this.model.get('items');
-        },
+    initOrientation: function() {
+        this.listenTo( this.model, 'change:orientation', this.updateOrientation );
+        this.updateOrientation();
+    },
 
-        getItemTemplate: function(){
-            return this.model.get('itemTemplate');
-        },
+    updateOrientation: function() {
+        var orientation = this.model.get( 'orientation' );
+        this.$el.toggleClass( 'horizontal-orientation', orientation == 'Horizontal' );
+        this.$el.toggleClass( 'pl-stack-panel_horizontal', orientation == 'Horizontal' );
+    },
 
-        getGroupValueSelector: function(){
-            return this.model.get('groupValueSelector');
-        },
+    getItems: function() {
+        return this.model.get( 'items' );
+    },
 
-        getGroupItemTemplate: function(){
-            return this.model.get('groupItemTemplate');
-        },
+    getItemTemplate: function() {
+        return this.model.get( 'itemTemplate' );
+    },
+
+    getGroupValueSelector: function() {
+        return this.model.get( 'groupValueSelector' );
+    },
+
+    getGroupItemTemplate: function() {
+        return this.model.get( 'groupItemTemplate' );
     }
-);
+
+} );
+
+InfinniUI.StackPanelView = StackPanelView;

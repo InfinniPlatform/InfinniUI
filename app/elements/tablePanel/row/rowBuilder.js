@@ -3,29 +3,26 @@
  * @augments ContainerBuilder
  */
 function RowBuilder() {
-    _.superClass(RowBuilder, this);
+    _.superClass( RowBuilder, this );
 }
 
-_.inherit(RowBuilder, ContainerBuilder);
+_.inherit( RowBuilder, ContainerBuilder );
 
-_.extend(RowBuilder.prototype,
-    /** @lends RowBuilder.prototype*/
-    {
-        createElement: function (params) {
-            return new Row(params.parent);
-        },
+_.extend( RowBuilder.prototype, {
 
-        /**
-         * @param {Object} params
-         * @param {RowBuilder} params.element
-         * @param {Object} params.metadata
-         */
-        applyMetadata: function (params) {
-            var
-                metadata = params.metadata,
-                element = params.element;
+    createElement: function( params ) {
+        return new Row( params.parent );
+    },
 
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
-        }
+    /**
+     * @param {Object} params
+     * @param {RowBuilder} params.element
+     * @param {Object} params.metadata
+     */
+    applyMetadata: function( params ) {
+        ContainerBuilder.prototype.applyMetadata.call( this, params );
+    }
 
-    });
+} );
+
+InfinniUI.RowBuilder = RowBuilder;

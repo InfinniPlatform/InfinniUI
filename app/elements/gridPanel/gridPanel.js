@@ -3,16 +3,18 @@
  * @constructor
  * @augments Container
  */
-function GridPanel(parent) {
-    _.superClass(GridPanel, this, parent);
+function GridPanel( parent ) {
+    _.superClass( GridPanel, this, parent );
 }
 
-window.InfinniUI.GridPanel = GridPanel;
+InfinniUI.GridPanel = GridPanel;
 
-_.inherit(GridPanel, Container);
+_.inherit( GridPanel, Container );
 
-_.extend(GridPanel.prototype, {
-    createControl: function () {
+_.extend( GridPanel.prototype, {
+
+    createControl: function() {
         return new GridPanelControl();
     }
-});
+
+} );

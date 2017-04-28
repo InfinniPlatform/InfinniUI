@@ -1,3 +1,8 @@
-var DatePickerView = DateTimePickerView .extend({
-    
-});
+/**
+ *
+ * @constructor
+ */
+var DatePickerView = DateTimePickerView .extend( {
+} );
+
+InfinniUI.DatePickerView = DatePickerView;

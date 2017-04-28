@@ -1,6 +1,6 @@
-describe('baseDataSourceBuilder', function () {
+describe( 'baseDataSourceBuilder', function() {
 
-    it('should init CustomProperties', function () {
+    it( 'should init CustomProperties', function() {
         // Given
         var builder = new InfinniUI.ApplicationBuilder(),
             metadata = {
@@ -11,10 +11,10 @@ describe('baseDataSourceBuilder', function () {
             };
 
         // When
-        var dataSource = builder.buildType('ObjectDataSource', metadata, {parentView: fakeView()});
+        var dataSource = builder.buildType( 'ObjectDataSource', metadata, { parentView: fakeView() } );
 
         // Then
-        assert.equal(dataSource.getProperty('.pageNumber'), 0);
-        assert.equal(dataSource.getProperty('.pageSize'), 10);
-    });
-});
+        assert.equal( dataSource.getProperty( '.pageNumber' ), 0 );
+        assert.equal( dataSource.getProperty( '.pageSize' ), 10 );
+    } );
+} );

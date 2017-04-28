@@ -1,11 +1,11 @@
-describe('DeleteAction', function () {
-    it('successful build', function () {
+describe( 'DeleteAction', function() {
+    it( 'successful build', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
+        var dataSource = new InfinniUI.ObjectDataSource( { name: 'SomeDS', view: view } );
 
-        view.getDataSources().push(dataSource);
+        view.getDataSources().push( dataSource );
 
         var metadata = {
             DeleteAction: {
@@ -17,18 +17,18 @@ describe('DeleteAction', function () {
         };
 
         // When
-        var deleteAction = builder.build(metadata, {parentView: view});
+        var deleteAction = builder.build( metadata, { parentView: view } );
 
         // Then
         assert.isNotNull( deleteAction );
         assert.isNotNull( deleteAction.execute, 'action should have execute' );
-    });
+    } );
 
-    it('should delete selected item from ObjectDataSource', function () {
+    it( 'should delete selected item from ObjectDataSource', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
+        var dataSource = new InfinniUI.ObjectDataSource( { name: 'SomeDS', view: view } );
 
         var items = [
             {
@@ -46,9 +46,9 @@ describe('DeleteAction', function () {
         ];
         var index = 1;
 
-        dataSource.setItems(_.clone(items));
+        dataSource.setItems( _.clone( items ) );
 
-        view.getDataSources().push(dataSource);
+        view.getDataSources().push( dataSource );
 
         var metadata = {
             DeleteAction: {
@@ -60,27 +60,27 @@ describe('DeleteAction', function () {
             }
         };
 
-        var deleteAction = builder.build(metadata, {parentView: view});
+        var deleteAction = builder.build( metadata, { parentView: view } );
 
-        assert.equal(dataSource.getItems().length, 3);
+        assert.equal( dataSource.getItems().length, 3 );
 
         // When
         deleteAction.execute();
 
         // Then
-        assert.equal(dataSource.getItems().length, 2);
-        assert.notInclude(dataSource.getItems(), items[index]);
-    });
+        assert.equal( dataSource.getItems().length, 2 );
+        assert.notInclude( dataSource.getItems(), items[ index ] );
+    } );
 
-    it('should delete selected item from DocumentDataSource', function (done) {
+    it( 'should delete selected item from DocumentDataSource', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = builder.buildType('DocumentDataSource', {}, {parent: view, parentView: view, builder: builder});
+        var dataSource = builder.buildType( 'DocumentDataSource', {}, { parent: view, parentView: view, builder: builder } );
 
-        view.getContext().dataSources['DocumentDataSource'] = dataSource;
+        view.getContext().dataSources[ 'DocumentDataSource' ] = dataSource;
 
         var metadata = {
             DeleteAction: {
@@ -92,10 +92,10 @@ describe('DeleteAction', function () {
             }
         };
 
-        var deleteAction = builder.build(metadata, {parentView: view});
+        var deleteAction = builder.build( metadata, { parentView: view } );
 
         dataSource.updateItems(
-            function(){
+            function() {
                 var initCount = dataSource.getItems().length;
                 var initSelectedItem = dataSource.getSelectedItem();
 
@@ -103,34 +103,34 @@ describe('DeleteAction', function () {
                 deleteAction.execute();
 
                 // Then
-                dataSource.onItemDeleted( function(){
-                        assert.equal(dataSource.getItems().length, (initCount - 1) );
-                        assert.notInclude(dataSource.getItems(), initSelectedItem);
-                        done();
-                });
+                dataSource.onItemDeleted( function() {
+                    assert.equal( dataSource.getItems().length, ( initCount - 1 ) );
+                    assert.notInclude( dataSource.getItems(), initSelectedItem );
+                    done();
+                } );
 
             }
         );
-    });
+    } );
 
-    it('should call onExecuted', function () {
+    it( 'should call onExecuted', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource({ name: 'SomeDS', view: view });
+        var dataSource = new InfinniUI.ObjectDataSource( { name: 'SomeDS', view: view } );
 
-        dataSource.setItems([
-                                {
-                                    _id: 0,
-                                    Name: 'First'
-                                }
-                            ]);
+        dataSource.setItems( [
+            {
+                _id: 0,
+                Name: 'First'
+            }
+        ] );
 
-        view.getDataSources().push(dataSource);
+        view.getDataSources().push( dataSource );
 
         var metadata = {
             DeleteAction: {
-                OnExecuted: "{ window.onExecutedWasCalled = true; }",
+                OnExecuted: '{ window.onExecutedWasCalled = true; }',
                 Accept: false,
                 DestinationValue: {
                     Source: 'SomeDS',
@@ -139,17 +139,17 @@ describe('DeleteAction', function () {
             }
         };
 
-        var deleteAction = builder.build(metadata, {parentView: view});
+        var deleteAction = builder.build( metadata, { parentView: view } );
 
-        assert.isUndefined(window.onExecutedWasCalled);
+        assert.isUndefined( window.onExecutedWasCalled );
 
         // When
         deleteAction.execute();
 
         // Then
-        assert.isTrue(window.onExecutedWasCalled);
+        assert.isTrue( window.onExecutedWasCalled );
 
         // cleanup
         window.onExecutedWasCalled = undefined;
-    });
-});
+    } );
+} );
