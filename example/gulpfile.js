@@ -162,6 +162,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('example', gulp.series(
+	'clean',
 	'build',
 	gulp.parallel('watch', 'server:example')
 ));
