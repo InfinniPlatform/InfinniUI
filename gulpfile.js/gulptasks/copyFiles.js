@@ -1,12 +1,11 @@
 'use strict';
 
-var gulp = require('gulp');
-var $ = require('gulp-load-plugins')();
-var config = require('./config');
+var gulp = require( 'gulp' );
+var config = require( './config' );
 
-function copy(options) {
-	return gulp.src(options.src, {base: options.base})
-		.pipe(gulp.dest(options.dest))
+function copy( options ) {
+    return gulp.src( options.src, { base: options.base } )
+        .pipe( gulp.dest( options.dest ) );
 }
 
 /**
@@ -15,13 +14,13 @@ function copy(options) {
  * @task {copy:fonts}
  * @group {Sub-tasks}
  */
-gulp.task('copy:fonts', function () {
-	return copy({
-		src: config.fonts.src,
-		base: config.fonts.base,
-		dest: config.platformOutputFolder + 'fonts/'
-	});
-});
+gulp.task( 'copy:fonts', function() {
+    return copy( {
+        src: config.fonts.src,
+        base: config.fonts.base,
+        dest: config.platformOutputFolder + 'fonts/'
+    } );
+} );
 
 /**
  * Assembles everything that is necessary for package to one directory
@@ -29,10 +28,10 @@ gulp.task('copy:fonts', function () {
  * @task {assemble:package}
  * @group {Sub-tasks}
  */
-gulp.task('assemble:package', function () {
-	return copy({
-		src: config.package.src,
-		base: config.package.base,
-		dest: 'package/'
-	});
-});
+gulp.task( 'assemble:package', function() {
+    return copy( {
+        src: config.package.src,
+        base: config.package.base,
+        dest: 'package/'
+    } );
+} );

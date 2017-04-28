@@ -1,9 +1,3 @@
-function openHomePage( context, args ) {
-    if( context.controls["MainContent"] != null ) {
-        context.controls["MainContent"].setLayout( null );
-    }
-}
-
 function openDatagridPage( context, args ) {
     context.global.executeAction( context, {
         OpenAction: {

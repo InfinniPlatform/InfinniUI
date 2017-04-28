@@ -1,4 +1,4 @@
-InfinniUI.localizations['ru-RU'].strings.customMessage = {
+InfinniUI.localizations[ 'ru-RU' ].strings.customMessage = {
     filterLabels: {
         name: 'Различные фильтры',
         byName: 'Фильтр по имени',
@@ -7,7 +7,7 @@ InfinniUI.localizations['ru-RU'].strings.customMessage = {
     }
 };
 
-InfinniUI.localizations['en-US'].strings.customMessage = {
+InfinniUI.localizations[ 'en-US' ].strings.customMessage = {
     filterLabels: {
         name: 'Different Filters',
         byName: 'Filter by name',
