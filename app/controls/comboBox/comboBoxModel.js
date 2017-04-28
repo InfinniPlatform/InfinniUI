@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxModel = ListEditorBaseModel.extend( {
 
     defaults: _.defaults( {
@@ -14,11 +18,17 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         }
     }, ListEditorBaseModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ListEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.on( 'change:value', this.syncSelectedItem );
     },
 
+    /**
+     *
+     */
     setSelectedItemToValue: function() {
         var autocomplete = this.get( 'autocomplete' );
         var multiSelect = this.get( 'multiSelect' );
@@ -33,22 +43,37 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         this.set( 'value', value );
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     syncSelectedItem: function( model, value ) {
-        //var value = this.getValue();
         var selectedItem = this.itemByValue( value );
         this.setSelectedItem( selectedItem );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getSelectedItem: function() {
         var selectedItem = this.get( 'selectedItem' );
 
         return selectedItem;
     },
 
+    /**
+     *
+     * @param item
+     */
     setSelectedItem: function( item ) {
         this.set( 'selectedItem', item );
     },
 
+    /**
+     *
+     */
     selectNextItem: function() {
         var items = this.get( 'items' );
         var selectedItem = this.getSelectedItem();
@@ -71,6 +96,9 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         this.setSelectedItemToValue();
     },
 
+    /**
+     *
+     */
     selectPrevItem: function() {
         var items = this.get( 'items' );
         var selectedItem = this.getSelectedItem();
@@ -91,6 +119,9 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         this.setSelectedItemToValue();
     },
 
+    /**
+     *
+     */
     selectFirstItem: function() {
         var items = this.get( 'items' );
         var selectedItem = null;
@@ -102,6 +133,9 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         this.setSelectedItemToValue();
     },
 
+    /**
+     *
+     */
     selectLastItem: function() {
         var items = this.get( 'items' );
         var selectedItem = null;
@@ -113,12 +147,21 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         this.setSelectedItemToValue();
     },
 
+    /**
+     *
+     * @param item
+     * @param toggle
+     */
     toggleItem: function( item, toggle ) {
         var value = this.valueByItem( item );
         this.toggleValue( value, toggle );
         this.trigger( 'toggle' );
     },
 
+    /**
+     *
+     * @param message
+     */
     setNoItemsMessage: function( message ) {
         this.set( 'noItemsMessage', message );
     }

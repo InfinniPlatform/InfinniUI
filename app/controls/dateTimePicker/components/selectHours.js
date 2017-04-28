@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var SelectHoursModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:hour', this.updateDatePart.bind( this, 'hour' ) );
@@ -9,6 +16,10 @@ var SelectHoursModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectHoursModel = SelectHoursModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectHours = SelectComponent.extend( {
 
     modelClass: SelectHoursModel,
@@ -23,6 +34,9 @@ var SelectHours = SelectComponent.extend( {
         hour: '.hour'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -31,6 +45,9 @@ var SelectHours = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     fillHoursTable: function() {
         //@TODO Заполнять в зависимости от формата 12/24
         var model = this.model;
@@ -63,10 +80,17 @@ var SelectHours = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:date', this.fillHoursTable );
     },
 
+    /**
+     *
+     * @param event
+     */
     useHour: function( event ) {
         var $el = $( event.target );
         var model = this.model;

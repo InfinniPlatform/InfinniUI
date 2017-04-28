@@ -1,5 +1,13 @@
+/**
+ *
+ * @constructor
+ */
 var SelectYearsModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     * @returns {*}
+     */
     defaults: function() {
         var defaults = SelectComponentModel.prototype.defaults.call( this );
 
@@ -9,27 +17,43 @@ var SelectYearsModel = SelectComponentModel.extend( {
         }, defaults );
     },
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:year', this.updateDatePart.bind( this, 'year' ) );
         this.on( 'change:year', this.onChangeYearHandler );
     },
 
+    /**
+     *
+     */
     prevPage: function() {
         var page = this.get( 'page' );
         this.set( 'page', page - 1 );
     },
 
+    /**
+     *
+     */
     nextPage: function() {
         var page = this.get( 'page' );
         this.set( 'page', page + 1 );
     },
 
+    /**
+     *
+     */
     resetPage: function() {
         this.set( 'page', 0 );
     },
 
-    onChangeYearHandler: function( model, value ) {
+    /**
+     *
+     * @param model
+     */
+    onChangeYearHandler: function( model ) {
         this.keepDateInRange();
         model.set( 'page', 0 );
     }
@@ -38,6 +62,10 @@ var SelectYearsModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectYearsModel = SelectYearsModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectYears = SelectComponent.extend( {
 
     modelClass: SelectYearsModel,
@@ -57,11 +85,17 @@ var SelectYears = SelectComponent.extend( {
         yearEnd: '.year-end'
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:page', this.fillYearsTable );
         this.listenTo( this.model, 'change:year', this.fillYearsTable );
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -71,6 +105,9 @@ var SelectYears = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     fillYearsTable: function() {
         var model = this.model;
         var page = model.get( 'page' );
@@ -106,22 +143,38 @@ var SelectYears = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     prevPage: function() {
         this.model.prevPage();
     },
 
+    /**
+     *
+     */
     nextPage: function() {
         this.model.nextPage();
     },
 
+    /**
+     *
+     */
     showTodayYear: function() {
         this.today();
     },
 
+    /**
+     *
+     */
     today: function() {
         this.model.resetPage();
     },
 
+    /**
+     *
+     * @param event
+     */
     useYear: function( event ) {
         var $el = $( event.target );
         var model = this.model;

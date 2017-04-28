@@ -1,9 +1,19 @@
+/**
+ *
+ * @constructor
+ */
 var DataNavigationBaseButtonModel = Backbone.Model.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         this.on( 'change:parent', this.subscribeToParent, this );
     },
 
+    /**
+     *
+     */
     subscribeToParent: function() {
     }
 
@@ -11,10 +21,18 @@ var DataNavigationBaseButtonModel = Backbone.Model.extend( {
 
 InfinniUI.DataNavigationBaseButtonModel = DataNavigationBaseButtonModel;
 
+/**
+ *
+ * @constructor
+ */
 var DataNavigationBaseButton = Backbone.View.extend( {
 
     tagName: 'li',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         Backbone.View.prototype.initialize.call( this, options );
         this.once( 'render', function() {
@@ -22,21 +40,39 @@ var DataNavigationBaseButton = Backbone.View.extend( {
         }, this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getData: function() {
         return this.model.toJSON();
     },
 
+    /**
+     *
+     * @param parent
+     */
     setParent: function( parent ) {
         this.model.set( 'parent', parent );
         this.subscribeForParent( parent );
     },
 
+    /**
+     *
+     * @returns {DataNavigationBaseButton}
+     */
     render: function() {
         var template = this.template( this.getData() );
 
@@ -47,10 +83,12 @@ var DataNavigationBaseButton = Backbone.View.extend( {
         return this;
     },
 
-    subscribeForParent: function( parent ) {
+    /**
+     *
+     */
+    subscribeForParent: function() {
     }
 
 } );
 
 InfinniUI.DataNavigationBaseButton = DataNavigationBaseButton;
-

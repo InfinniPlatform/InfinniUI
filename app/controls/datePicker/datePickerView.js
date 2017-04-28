@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DatePickerView = DateTimePickerView .extend( {
 } );
 

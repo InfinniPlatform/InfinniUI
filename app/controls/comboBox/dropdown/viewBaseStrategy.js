@@ -18,6 +18,11 @@ ComboBoxBaseViewStrategy.prototype.getModelAttribute = function( attributeName )
     return model.get( attributeName );
 };
 
+/**
+ *
+ * @param item
+ * @returns {boolean}
+ */
 ComboBoxBaseViewStrategy.prototype.isEnabledItem = function( item ) {
     return !this.dropdownView.model.isDisabledItem( item );
 };
@@ -84,9 +89,11 @@ ComboBoxBaseViewStrategy.prototype.addOnClickEventListener = function( $el ) {
     } );
 };
 
-
+/**
+ *
+ * @param $el
+ */
 ComboBoxBaseViewStrategy.prototype.addOnHoverEventListener = function( $el ) {
-    var el = $el[ 0 ];
     var params = Array.prototype.slice.call( arguments, 1 );
     var handler = this.trigger.bind( this, 'mouseenter' );
 

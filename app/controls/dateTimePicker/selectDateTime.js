@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var SelectDateTime = SelectDate.extend( {
 
     className: 'pl-datepicker-dropdown pl-dropdown-container',
@@ -13,14 +17,23 @@ var SelectDateTime = SelectDate.extend( {
         minutes: '.minutes'
     },
 
+    /**
+     *
+     */
     onClickToggleDateHandler: function() {
         this.trigger( 'days' );
     },
 
+    /**
+     *
+     */
     onClickToggleTimeHandler: function() {
         this.trigger( 'time' );
     },
 
+    /**
+     *
+     */
     renderComponents: function() {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate( model.get( 'value' ) );
@@ -66,6 +79,11 @@ var SelectDateTime = SelectDate.extend( {
         this.workflow( days, months, years, time, hours, minutes )( value );
     },
 
+    /**
+     *
+     * @param date
+     * @returns {*}
+     */
     useTime: function( date ) {
         var model = this.model;
         var timeZone = model.get( 'timeZone' );
@@ -81,6 +99,16 @@ var SelectDateTime = SelectDate.extend( {
         return date;
     },
 
+    /**
+     *
+     * @param days
+     * @param months
+     * @param years
+     * @param time
+     * @param hours
+     * @param minutes
+     * @returns {showDays}
+     */
     workflow: function( days, months, years, time, hours, minutes ) {
         var useTime = this.useTime.bind( this );
         var components = Array.prototype.slice.call( arguments );

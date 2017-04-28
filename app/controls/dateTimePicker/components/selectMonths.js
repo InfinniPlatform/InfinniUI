@@ -1,11 +1,21 @@
+/**
+ *
+ * @constructor
+ */
 var SelectMonthsModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:month', this.updateDatePart.bind( this, 'month' ) );
         this.on( 'change:year', this.updateDatePart.bind( this, 'year' ) );
     },
 
+    /**
+     *
+     */
     nextYear: function() {
         var year = this.get( 'year' );
 
@@ -13,12 +23,18 @@ var SelectMonthsModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     prevYear: function() {
         var year = this.get( 'year' );
         this.set( 'year', year - 1 );
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     today: function() {
         this.set( {
             month: this.get( 'todayMonth' ),
@@ -30,6 +46,10 @@ var SelectMonthsModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectMonthsModel = SelectMonthsModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectMonths = SelectComponent.extend( {
 
     modelClass: SelectMonthsModel,
@@ -49,6 +69,9 @@ var SelectMonths = SelectComponent.extend( {
         year: '.year'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -57,6 +80,9 @@ var SelectMonths = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     fillMonthsTable: function() {
         this.ui.year.text( this.model.get( 'year' ) );
 
@@ -94,18 +120,31 @@ var SelectMonths = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:year', this.fillMonthsTable );
     },
 
+    /**
+     *
+     */
     prevYear: function() {
         this.model.prevYear();
     },
 
+    /**
+     *
+     */
     nextYear: function() {
         this.model.nextYear();
     },
 
+    /**
+     *
+     * @param event
+     */
     useMonth: function( event ) {
         var $el = $( event.target );
         var model = this.model;
@@ -117,14 +156,23 @@ var SelectMonths = SelectComponent.extend( {
         this.trigger( 'month', model.get( 'date' ) );
     },
 
+    /**
+     *
+     */
     selectYear: function() {
         this.trigger( 'year', this.model.get( 'data' ) );
     },
 
+    /**
+     *
+     */
     showToday: function() {
         this.today();
     },
 
+    /**
+     *
+     */
     today: function() {
         this.model.today();
     }

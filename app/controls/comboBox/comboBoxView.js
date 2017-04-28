@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxView = ListEditorBaseView.extend( {
 
     className: 'pl-combobox form-group',
@@ -19,6 +23,11 @@ var ComboBoxView = ListEditorBaseView.extend( {
         clear: '.pl-combobox__clear'
     }, ListEditorBaseView.prototype.UI ),
 
+    /**
+     *
+     * @param el
+     * @returns {*}
+     */
     isControlElement: function( el ) {
         var res = ListEditorBaseView.prototype.isControlElement.call( this, el );
 
@@ -33,6 +42,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
         return $.contains( this.dropDownView.el, el );
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
         var enabled = this.model.get( 'enabled' );
@@ -44,6 +56,10 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ListEditorBaseView.prototype.initialize.call( this, options );
         var model = this.model;
@@ -89,12 +105,19 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }, this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ListEditorBaseView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:showClear', this.updateShowClear );
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
     },
 
+    /**
+     *
+     * @returns {ComboBoxView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -110,10 +133,19 @@ var ComboBoxView = ListEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.template;
     },
 
+    /**
+     *
+     * @param event
+     * @returns {*}
+     */
     onKeyDownControlHandler: function( event ) {
         var enabled = this.model.get( 'enabled' );
 
@@ -140,6 +172,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     onClickClearHandler: function() {
         var enabled = this.model.get( 'enabled' );
 
@@ -149,6 +184,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     onClickGripHandler: function() {
         var enabled = this.model.get( 'enabled' );
 
@@ -157,6 +195,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ListEditorBaseView.prototype.updateProperties.call( this );
 
@@ -164,10 +205,16 @@ var ComboBoxView = ListEditorBaseView.extend( {
         this.updateShowClear();
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
         this.toggleDropdown( false );
     },
 
+    /**
+     *
+     */
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
@@ -180,6 +227,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
         this.ui.label.text( labelText );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ListEditorBaseView.prototype.updateEnabled.call( this );
 
@@ -194,10 +244,16 @@ var ComboBoxView = ListEditorBaseView.extend( {
 
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         this.updateShowClear();
     },
 
+    /**
+     *
+     */
     updateShowClear: function() {
         var model = this.model;
         var showClear = model.get( 'showClear' );
@@ -207,18 +263,32 @@ var ComboBoxView = ListEditorBaseView.extend( {
         this.ui.clear.toggleClass( 'hidden', !showClear || noValue );
     },
 
+    /**
+     *
+     */
     updateSelectedItem: function() {
     },
 
+    /**
+     *
+     */
     updateDisabledItem: function() {
         this.toggleDropdown( false );
     },
 
+    /**
+     *
+     * @returns {boolean}
+     */
     isDropdown: function() {
         var model = this.model;
         return !!model.get( 'dropdown' );
     },
 
+    /**
+     *
+     * @param toggle
+     */
     toggleDropdown: function( toggle ) {
         var model = this.model;
         if( typeof toggle === 'undefined' ) {
@@ -227,13 +297,22 @@ var ComboBoxView = ListEditorBaseView.extend( {
         model.set( 'dropdown', toggle );
     },
 
+    /**
+     *
+     */
     onChangeValueHandler: function() {
         this.renderValue();
     },
 
+    /**
+     *
+     */
     rerender: function() {
     },
 
+    /**
+     *
+     */
     renderValue: function() {
         var model = this.model;
         var multiSelect = model.get( 'multiSelect' );
@@ -264,6 +343,10 @@ var ComboBoxView = ListEditorBaseView.extend( {
         editorBaseViewMixin.updateValueState.call( this );
     },
 
+    /**
+     *
+     * @param value
+     */
     onRemoveValueHandler: function( value ) {
         this.model.toggleValue( value, false );
     },
@@ -277,6 +360,10 @@ var ComboBoxView = ListEditorBaseView.extend( {
         this.model.set( 'autocompleteValue', text );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickValueHandler: function( event ) {
         var enabled = this.model.get( 'enabled' );
 

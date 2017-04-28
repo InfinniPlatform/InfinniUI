@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxGroupView = Backbone.View.extend( {
 
     template: InfinniUI.Template[ 'controls/comboBox/dropdown/group/template/template.tpl.html' ],
@@ -7,6 +11,10 @@ var ComboBoxGroupView = Backbone.View.extend( {
         items: '.pl-combobox-group__items'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.options = {
             header: options.header,
@@ -14,6 +22,10 @@ var ComboBoxGroupView = Backbone.View.extend( {
         };
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     render: function() {
         var options = this.options;
         this.$el.html( this.template() );

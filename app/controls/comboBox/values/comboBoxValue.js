@@ -1,8 +1,16 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxValueModel = Backbone.Model.extend( {
 } );
 
 InfinniUI.ComboBoxValueModel = ComboBoxValueModel;
 
+/**
+ *
+ * @constructor
+ */
 var ComboBoxValue = Backbone.View.extend( {
 
     template: InfinniUI.Template[ 'controls/comboBox/values/template/value.tpl.html' ],
@@ -19,10 +27,18 @@ var ComboBoxValue = Backbone.View.extend( {
         item: '.pl-combobox-value-item'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.model = new ComboBoxValueModel( options );
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     render: function() {
         this.$el.html( this.template() );
 
@@ -32,6 +48,9 @@ var ComboBoxValue = Backbone.View.extend( {
         return this.$el;
     },
 
+    /**
+     *
+     */
     onClickRemoveHandler: function() {
         var value = this.model.get( 'value' );
         this.trigger( 'remove', value );

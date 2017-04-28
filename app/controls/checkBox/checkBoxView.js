@@ -1,7 +1,8 @@
 /**
- * @class CheckBoxView
+ *
  * @augments ControlView
  * @mixes editorBaseViewMixin
+ * @constructor
  */
 var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
@@ -16,16 +17,25 @@ var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         'click input': 'onClickHandler'
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -36,18 +46,28 @@ var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
         var text = this.model.get( 'text' );
 
         this.ui.text.text( text ? text : '' );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
         var enabled = this.model.get( 'enabled' );
         this.ui.input.prop( 'disabled', !enabled );
     },
 
+    /**
+     *
+     * @returns {CheckBoxView}
+     */
     render: function() {
         this.prerenderingActions();
         this.renderTemplate( this.template );
@@ -61,6 +81,9 @@ var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         return this;
     },
 
+    /**
+     *
+     */
     onClickHandler: function() {
         var model = this.model;
 
@@ -70,11 +93,17 @@ var CheckBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         }
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var value = this.model.get( 'value' );
         this.ui.input.prop( 'checked', !!value );
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.ui.input.focus();
     }

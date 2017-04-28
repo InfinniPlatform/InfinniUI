@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var SelectDaysModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:year', this.updateDatePart.bind( this, 'year' ) );
@@ -7,6 +14,9 @@ var SelectDaysModel = SelectComponentModel.extend( {
         this.on( 'change:day', this.updateDatePart.bind( this, 'day' ) );
     },
 
+    /**
+     *
+     */
     today: function() {
         this.set( {
             year: this.get( 'todayYear' ),
@@ -14,6 +24,9 @@ var SelectDaysModel = SelectComponentModel.extend( {
         } );
     },
 
+    /**
+     *
+     */
     nextMonth: function() {
         var month = this.get( 'month' );
         var year = this.get( 'year' );
@@ -26,6 +39,9 @@ var SelectDaysModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     prevMonth: function() {
         var month = this.get( 'month' );
         var year = this.get( 'year' );
@@ -42,6 +58,10 @@ var SelectDaysModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectDaysModel = SelectDaysModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectDays = SelectComponent.extend( {
 
     modelClass: SelectDaysModel,
@@ -64,6 +84,9 @@ var SelectDays = SelectComponent.extend( {
         'click .time': 'showTime'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -75,18 +98,27 @@ var SelectDays = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:month', this.onChangeMonthHandler );
         this.listenTo( this.model, 'change:year', this.onChangeYearHandler );
         this.listenTo( this.model, 'change:day', this.onChangeDayHandler );
     },
 
+    /**
+     *
+     */
     renderMonth: function() {
         var month = this.model.get( 'month' );
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         this.ui.month.text( dateTimeFormatInfo.monthNames[ month ] );
     },
 
+    /**
+     *
+     */
     renderYear: function() {
         var year = this.model.get( 'year' );
         this.ui.year.text( year );
@@ -97,11 +129,19 @@ var SelectDays = SelectComponent.extend( {
         this.fillCalendar();
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     onChangeYearHandler: function( model, value ) {
         this.renderYear();
         this.fillCalendar();
     },
 
+    /**
+     *
+     */
     fillLegend: function() {
         var dateTimeFormatInfo = localized.dateTimeFormatInfo;
         var firstDayOfWeek = dateTimeFormatInfo.firstDayOfWeek;
@@ -131,6 +171,9 @@ var SelectDays = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     fillCalendar: function() {
         var model = this.model;
         var valueDate = model.get( 'value' );
@@ -191,32 +234,54 @@ var SelectDays = SelectComponent.extend( {
         }
     },
 
-    onYearsClickHandler: function( event ) {
+    /**
+     *
+     */
+    onYearsClickHandler: function() {
         var date = this.model.get( 'date' );
 
         this.trigger( 'year', date );
     },
 
+    /**
+     *
+     */
     prevMonth: function() {
         this.model.prevMonth();
     },
 
+    /**
+     *
+     */
     nextMonth: function() {
         this.model.nextMonth();
     },
 
+    /**
+     *
+     */
     showToday: function() {
         this.today();
     },
 
+    /**
+     *
+     */
     today: function() {
         this.model.today();
     },
 
+    /**
+     *
+     */
     showTime: function() {
         this.trigger( 'time', this.model.get( 'date' ) );
     },
 
+    /**
+     *
+     * @param event
+     */
     useDay: function( event ) {
         var $el = $( event.target );
         var date = new Date( $el.attr( 'data-date' ) );

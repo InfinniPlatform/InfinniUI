@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DataNavigationView = ControlView.extend( {
 
     template: InfinniUI.Template[ 'controls/dataNavigation/template/dataNavigation.tpl.html' ],
@@ -9,6 +13,10 @@ var DataNavigationView = ControlView.extend( {
         sizes: '.pl-page-size'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ControlView.prototype.initialize.call( this, options );
         this._childViews = [];
@@ -17,6 +25,9 @@ var DataNavigationView = ControlView.extend( {
         this._pageSizes.setParent( this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:pageStart', this.updateButtons );
@@ -24,11 +35,18 @@ var DataNavigationView = ControlView.extend( {
         this.listenTo( this.model, 'change:isDataReady', this.updateButtons );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         this.updateButtons();
     },
 
+    /**
+     *
+     * @returns {DataNavigationView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -44,10 +62,16 @@ var DataNavigationView = ControlView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderPageSizes: function() {
         this.ui.sizes.append( this._pageSizes.render().$el );
     },
 
+    /**
+     *
+     */
     renderButtons: function() {
         var model = this.model;
         var template = model.get( '_buttonsTemplate' );
@@ -102,10 +126,18 @@ var DataNavigationView = ControlView.extend( {
         this.ui.buttons.append( $buttons );
     },
 
+    /**
+     *
+     */
     updateButtons: function() {
         this.renderButtons();
     },
 
+    /**
+     *
+     * @param name
+     * @param options
+     */
     onCommandHandler: function( name, options ) {
         switch( name ) {
             case 'prev':
@@ -122,6 +154,10 @@ var DataNavigationView = ControlView.extend( {
         }
     },
 
+    /**
+     *
+     * @private
+     */
     _removeChildViews: function() {
         this._childViews.forEach( function( view ) {
             this.stopListening( view );
@@ -130,6 +166,11 @@ var DataNavigationView = ControlView.extend( {
         this._childViews.length = 0;
     },
 
+    /**
+     *
+     * @param view
+     * @private
+     */
     _appendChildView: function( view ) {
         this._childViews.push( view );
     }

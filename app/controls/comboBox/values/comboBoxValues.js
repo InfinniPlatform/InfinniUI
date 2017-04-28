@@ -1,4 +1,9 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxValuesModel = Backbone.Model.extend( {
+
     defaults: {
         enabled: true
     },
@@ -11,6 +16,10 @@ var ComboBoxValuesModel = Backbone.Model.extend( {
 
 InfinniUI.ComboBoxValuesModel = ComboBoxValuesModel;
 
+/**
+ *
+ * @constructor
+ */
 var ComboBoxValues = Backbone.View.extend( {
 
     tagName: 'ul',
@@ -31,10 +40,18 @@ var ComboBoxValues = Backbone.View.extend( {
         text: '.pl-combobox-search-text'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.model = new ComboBoxValuesModel( options );
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     render: function() {
         this.$el.empty();
         this.$el.html( this.template() );
@@ -67,10 +84,17 @@ var ComboBoxValues = Backbone.View.extend( {
         tab: 9
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.ui.text.focus();
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeyPressHandler: function( event ) {
         var key = event.which;
 
@@ -81,6 +105,10 @@ var ComboBoxValues = Backbone.View.extend( {
         console.log( 'onKeyPressHandler', event.which, this.ui.text.val() );
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeyDownHandler: function( event ) {
         //handle left/right/tab/Shift-tab/backspace/end/home
         var key = event.which;
@@ -92,17 +120,27 @@ var ComboBoxValues = Backbone.View.extend( {
         console.log( 'onKeyDownHandler', event.which, this.ui.text.val() );
     },
 
-    onKeyUpHandler: function( event ) {
+    /**
+     *
+     */
+    onKeyUpHandler: function() {
         //@TODO grow input
         var text = this.ui.text.val();
         this.trigger( 'search', text );
     },
 
+    /**
+     *
+     * @param value
+     */
     onRemoveValueHandler: function( value ) {
         this.trigger( 'remove', value );
     },
 
-    onClickHandler: function( event ) {
+    /**
+     *
+     */
+    onClickHandler: function() {
         this.setFocus();
     }
 

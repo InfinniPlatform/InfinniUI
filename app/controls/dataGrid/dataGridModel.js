@@ -13,15 +13,25 @@ var DataGridModel = ListEditorBaseModel.extend( {
         sortedColumn: null
     }, ListEditorBaseModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ListEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.initColumns();
     },
 
+    /**
+     *
+     */
     toggleCheckAll: function() {
         this.set( 'checkAll', !this.get( 'checkAll' ) );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onCheckAllChanged: function( handler ) {
         this.on( 'change:checkAll', function( model, checkAll ) {
             handler.call( null, { value: checkAll } );

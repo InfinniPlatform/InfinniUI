@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ButtonEditView = TextBoxView.extend( {
 
     template: {
@@ -18,6 +22,9 @@ var ButtonEditView = TextBoxView.extend( {
         'click .pl-button-edit-button_clear': 'onClickClearHandler'
     } ),
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         TextBoxView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:icon', this.updateIcon );
@@ -25,6 +32,9 @@ var ButtonEditView = TextBoxView.extend( {
         this.listenTo( this.model, 'change:readOnly', this.updateReadOnly );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         TextBoxView.prototype.updateProperties.call( this );
         this.updateIcon();
@@ -32,12 +42,18 @@ var ButtonEditView = TextBoxView.extend( {
         this.updateReadOnly();
     },
 
+    /**
+     *
+     */
     updateIcon: function() {
         var icon = this.model.get( 'icon' );
 
         this.switchClass( 'fa', icon, this.ui.iconAction );
     },
 
+    /**
+     *
+     */
     updateShowClear: function() {
         var showClear = this.model.get( 'showClear' );
         var value = this.model.get( 'value' );
@@ -45,12 +61,18 @@ var ButtonEditView = TextBoxView.extend( {
         this.ui.buttonClear.toggleClass( 'hidden',  !showClear || _.isEmpty( value ) );
     },
 
+    /**
+     *
+     */
     updateReadOnly: function() {
         var readOnly = this.model.get( 'readOnly' );
 
         this.ui.control.prop( 'readonly', readOnly );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         var enabled = this.model.get( 'enabled' );
 
@@ -60,11 +82,18 @@ var ButtonEditView = TextBoxView.extend( {
         this.ui.buttons.toggleClass( 'pl-button-edit-button_disabled', !enabled );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         TextBoxView.prototype.updateValue.call( this );
         this.updateShowClear();
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickButtonHandler: function( event ) {
         var enabled = this.model.get( 'enabled' );
 
@@ -73,7 +102,10 @@ var ButtonEditView = TextBoxView.extend( {
         }
     },
 
-    onClickClearHandler: function( event ) {
+    /**
+     *
+     */
+    onClickClearHandler: function() {
         this.model.clearValue();
     }
 

@@ -1,6 +1,7 @@
 /**
  * @class
  * @augments TextEditorBaseModel
+ * @constructor
  */
 var DateTimePickerModel = TextEditorBaseModel.extend( {
 
@@ -13,16 +14,23 @@ var DateTimePickerModel = TextEditorBaseModel.extend( {
         }
     ),
 
+    /**
+     *
+     */
     initialize: function() {
         TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.set( 'today', new Date() );
         this.set( 'timeZone', InfinniUI.DateUtils.getDefaultTimeZone() );
     },
 
-    validate: function( attributes, options ) {
-        var
-            min = attributes.minValue,
-            max = attributes.maxValue;
+    /**
+     *
+     * @param attributes
+     * @returns {boolean}
+     */
+    validate: function( attributes ) {
+        var min = attributes.minValue;
+        var max = attributes.maxValue;
 
         return InfinniUI.DateUtils.checkRangeDate( attributes.value, attributes.minValue, attributes.maxValue );
     }

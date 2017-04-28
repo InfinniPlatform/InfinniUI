@@ -1,5 +1,5 @@
-
-window.InfinniUI = window.InfinniUI || {};
+var InfinniUI = window.InfinniUI || {};
+window.InfinniUI = InfinniUI;
 
 InfinniUI.Utils = InfinniUI.Utils || {};
 

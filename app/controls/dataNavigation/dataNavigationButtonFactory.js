@@ -1,3 +1,8 @@
+/**
+ *
+ * @param dataNavigation
+ * @constructor
+ */
 function DataNavigationButtonFactory( dataNavigation ) {
     this._dataNavigation = dataNavigation;
 }
@@ -8,6 +13,12 @@ DataNavigationButtonFactory.prototype.buttons = {
     'next': DataNavigationNextButton
 };
 
+/**
+ *
+ * @param type
+ * @param options
+ * @returns {*}
+ */
 DataNavigationButtonFactory.prototype.createButton = function( type, options ) {
     var buttonConstructor = this.buttons[ type ];
 

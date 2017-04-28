@@ -13,6 +13,10 @@ ComboBoxGroupViewStrategy.prototype.constructor = ComboBoxGroupViewStrategy;
 
 ComboBoxGroupViewStrategy.prototype.template = InfinniUI.Template[ 'controls/comboBox/dropdown/template/group/template.tpl.html' ];
 
+/**
+ *
+ * @returns {Array.<jQuery>|*}
+ */
 ComboBoxGroupViewStrategy.prototype.renderItems = function() {
     var collection = this.getModelAttribute( 'items' );
     var groupingFunction = this.getModelAttribute( 'groupValueSelector' );
@@ -70,10 +74,12 @@ ComboBoxGroupViewStrategy.prototype.renderGroups = function( groups ) {
     return $items;
 };
 
-
+/**
+ *
+ * @returns {*}
+ */
 ComboBoxGroupViewStrategy.prototype.getTemplate = function() {
     return this.template;
 };
 
 InfinniUI.ComboBoxGroupViewStrategy = ComboBoxGroupViewStrategy;
-

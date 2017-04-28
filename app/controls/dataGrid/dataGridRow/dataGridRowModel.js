@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DataGridRowModel = ControlModel.extend( {
 } );
 

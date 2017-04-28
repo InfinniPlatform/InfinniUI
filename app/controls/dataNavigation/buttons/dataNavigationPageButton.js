@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DataNavigationPageButton = DataNavigationBaseButton.extend( {
 
     template: InfinniUI.Template[ 'controls/dataNavigation/buttons/template/page.tpl.html' ],
@@ -6,27 +10,43 @@ var DataNavigationPageButton = DataNavigationBaseButton.extend( {
         'click': 'onClickHandler'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.model = new DataNavigationPageButtonModel();
         DataNavigationBaseButton.prototype.initialize.call( this, options );
         this.model.set( 'pageNumber', options.pageNumber );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         DataNavigationBaseButton.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:isCurrent', this.updateIsCurrent );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         DataNavigationBaseButton.prototype.updateProperties.call( this );
         this.updateIsCurrent();
     },
 
+    /**
+     *
+     */
     updateIsCurrent: function() {
         this.$el.toggleClass( 'active', this.model.get( 'isCurrent' ) );
     },
 
-    onClickHandler: function( event ) {
+    /**
+     *
+     */
+    onClickHandler: function() {
         this.trigger( 'command', 'page', { pageNumber: this.model.get( 'pageNumber' ) } );
     }
 
@@ -34,12 +54,19 @@ var DataNavigationPageButton = DataNavigationBaseButton.extend( {
 
 InfinniUI.DataNavigationPageButton = DataNavigationPageButton;
 
+/**
+ *
+ * @constructor
+ */
 var DataNavigationPageButtonModel = DataNavigationBaseButtonModel.extend( {
 
     defaults: {
         isCurrent: false
     },
 
+    /**
+     *
+     */
     subscribeToParent: function() {
         DataNavigationBaseButtonModel.prototype.subscribeToParent.call( this );
 
@@ -51,6 +78,9 @@ var DataNavigationPageButtonModel = DataNavigationBaseButtonModel.extend( {
         this.updateIsCurrent();
     },
 
+    /**
+     *
+     */
     updateIsCurrent: function() {
         var parent = this.get( 'parent' );
         var isCurrent = parent.model.get( 'pageNumber' ) === this.get( 'pageNumber' );

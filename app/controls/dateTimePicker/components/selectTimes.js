@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var SelectTimesModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:hour', this.updateDatePart.bind( this, 'hour' ) );
@@ -8,6 +15,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.on( 'change:millisecond', this.updateDatePart.bind( this, 'millisecond' ) );
     },
 
+    /**
+     *
+     */
     nextHour: function() {
         var hour = this.get( 'hour' );
         hour += 1;
@@ -21,6 +31,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     prevHour: function() {
         var hour = this.get( 'hour' );
         hour -= 1;
@@ -33,6 +46,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     nextMinute: function() {
         var minute = this.get( 'minute' );
         minute += 1;
@@ -45,6 +61,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     prevMinute: function() {
         var minute = this.get( 'minute' );
         minute -= 1;
@@ -57,6 +76,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     nextSecond: function() {
         var second = this.get( 'second' );
         second += 1;
@@ -69,6 +91,9 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
+    /**
+     *
+     */
     prevSecond: function() {
         var second = this.get( 'second' );
         second -= 1;
@@ -81,7 +106,12 @@ var SelectTimesModel = SelectComponentModel.extend( {
         this.keepDateInRange();
     },
 
-    validate: function( attr, options ) {
+    /**
+     *
+     * @param attr
+     * @returns {string|*}
+     */
+    validate: function( attr ) {
         var value = InfinniUI.DateUtils.cloneDate( attr.date );
         value.setHours( attr.hour, attr.minute, attr.second, attr.millisecond );
 
@@ -94,6 +124,10 @@ var SelectTimesModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectTimesModel = SelectTimesModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectTimes = SelectComponent.extend( {
 
     modelClass: SelectTimesModel,
@@ -124,6 +158,9 @@ var SelectTimes = SelectComponent.extend( {
         second: '.time-segment-second'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -134,6 +171,9 @@ var SelectTimes = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     selectHour: function() {
         var model = this.model;
         var date = model.get( 'date' );
@@ -145,6 +185,9 @@ var SelectTimes = SelectComponent.extend( {
         this.trigger( 'hour', date );
     },
 
+    /**
+     *
+     */
     selectMinute: function() {
         var model = this.model;
         var date = model.get( 'date' );
@@ -156,6 +199,9 @@ var SelectTimes = SelectComponent.extend( {
         this.trigger( 'minute', date );
     },
 
+    /**
+     *
+     */
     selectSecond: function() {
         var model = this.model;
         var date = model.get( 'date' );
@@ -167,6 +213,9 @@ var SelectTimes = SelectComponent.extend( {
         this.trigger( 'second', date );
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:hour', this.updateHour );
         this.listenTo( this.model, 'change:minute', this.updateMinute );
@@ -174,51 +223,84 @@ var SelectTimes = SelectComponent.extend( {
         this.listenTo( this.model, 'change:date', this.useTime );
     },
 
+    /**
+     *
+     */
     updateHour: function() {
         var hour = this.model.get( 'hour' );
         this.ui.hour.text( stringUtils.padLeft( hour, 2, '0' ) );
     },
 
+    /**
+     *
+     */
     updateMinute: function() {
         var minute = this.model.get( 'minute' );
         this.ui.minute.text( stringUtils.padLeft( minute, 2, '0' ) );
     },
 
+    /**
+     *
+     */
     updateSecond: function() {
         var second = this.model.get( 'second' );
         this.ui.second.text( stringUtils.padLeft( second, 2, '0' ) );
     },
 
+    /**
+     *
+     */
     prevHour: function() {
         this.model.prevHour();
     },
 
+    /**
+     *
+     */
     nextHour: function() {
         this.model.nextHour();
     },
 
+    /**
+     *
+     */
     prevMinute: function() {
         this.model.prevMinute();
     },
 
+    /**
+     *
+     */
     nextMinute: function() {
         this.model.nextMinute();
     },
 
+    /**
+     *
+     */
     prevSecond: function() {
         this.model.prevSecond();
     },
 
+    /**
+     *
+     */
     nextSecond: function() {
         this.model.nextSecond();
     },
 
+    /**
+     *
+     */
     useTime: function() {
         var date = this.model.get( 'date' );
 
         this.trigger( 'date', date );
     },
 
+    /**
+     *
+     */
     selectDay: function() {
         var date = this.model.get( 'date' );
 

@@ -1,6 +1,7 @@
 /**
  * @class
  * @augments TextEditorBaseView
+ * @constructor
  */
 var DateTimePickerView = TextEditorBaseView.extend( {
 
@@ -19,12 +20,18 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         'focusin': 'onFocusinHandler'
     } ),
 
+    /**
+     *
+     */
     initialize: function() {
         TextEditorBaseView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.updateMode();
         this.listenTo( this.model, 'change:mode', this.updateMode );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         TextEditorBaseView.prototype.initHandlersForProperties.call( this );
 
@@ -32,10 +39,16 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         this.listenTo( this.model, 'change:maxValue', this.updateMaxValue );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         TextEditorBaseView.prototype.updateProperties.call( this );
     },
 
+    /**
+     *
+     */
     updateMode: function() {
         var mode = this.model.get( 'mode' );
         _.extend( this, dateTimePickerStrategy[ mode ] );
@@ -43,6 +56,9 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         this.rerender();
     },
 
+    /**
+     *
+     */
     updateMinValue: function() {
         var mode = this.model.get( 'mode' );
         _.extend( this, dateTimePickerStrategy[ mode ] );
@@ -50,6 +66,9 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         this.rerender();
     },
 
+    /**
+     *
+     */
     updateMaxValue: function() {
         var mode = this.model.get( 'mode' );
         _.extend( this, dateTimePickerStrategy[ mode ] );
@@ -57,6 +76,9 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         this.rerender();
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         TextEditorBaseView.prototype.updateEnabled.call( this );
 
@@ -64,6 +86,10 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         this.ui.dropdownButton.prop( 'disabled', !isEnabled );
     },
 
+    /**
+     *
+     * @returns {DateTimePickerView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -80,6 +106,10 @@ var DateTimePickerView = TextEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getData: function() {
         var model = this.model;
 
@@ -91,18 +121,31 @@ var DateTimePickerView = TextEditorBaseView.extend( {
             } );
     },
 
+    /**
+     *
+     * @returns {DateTimePickerView}
+     */
     renderDateTimePickerEditor: function() {
         this.renderControlEditor();
         return this;
     },
 
+    /**
+     *
+     */
     getTemplate: function() {
         throw new Error( 'Не перекрыт getTemplate' );
     },
 
-    onClickDropdownHandler: function( event ) {
+    /**
+     *
+     */
+    onClickDropdownHandler: function() {
     },
 
+    /**
+     *
+     */
     onFocusinHandler: function() {
         var editor = this.model.get( 'editor' );
 

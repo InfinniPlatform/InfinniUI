@@ -1,7 +1,14 @@
+/**
+ *
+ * @constructor
+ */
 var ContextMenuView = ContainerView.extend( {
 
     contextMenuTemplate: InfinniUI.Template[ 'controls/contextMenu/template/contextMenu.tpl.html' ],
 
+    /**
+     *
+     */
     updateHorizontalAlignment: function() {
         var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var that = this;
@@ -25,6 +32,10 @@ var ContextMenuView = ContainerView.extend( {
         );
     },
 
+    /**
+     *
+     * @returns {ContextMenuView}
+     */
     render: function() {
         var exchange = InfinniUI.global.messageBus;
         var that = this;
@@ -54,6 +65,10 @@ var ContextMenuView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {jQuery|HTMLElement}
+     */
     renderDropdown: function() {
         var template = this.contextMenuTemplate;
         var items = this.model.get( 'items' ).toArray();
@@ -69,6 +84,11 @@ var ContextMenuView = ContainerView.extend( {
         return $result;
     },
 
+    /**
+     *
+     * @param $dropdown
+     * @param items
+     */
     appendItemsContent: function( $dropdown, items ) {
         var that = this;
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -82,6 +102,10 @@ var ContextMenuView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     * @param rightclickCoords
+     */
     open: function( rightclickCoords ) {
         var that = this;
 
@@ -100,12 +124,19 @@ var ContextMenuView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     close: function() {
         this.$el.removeClass( 'open' );
         this.$el.parent().removeClass( 'open' );
         this.$el.detach();
     },
 
+    /**
+     *
+     * @param rightclickCoords
+     */
     alignDropdown: function( rightclickCoords ) {
         var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var $parent = this.$el.parent();
@@ -128,9 +159,18 @@ var ContextMenuView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     },
 
+    /**
+     *
+     * @param conditionFunction
+     * @param onConditionFunction
+     * @param n
+     */
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 

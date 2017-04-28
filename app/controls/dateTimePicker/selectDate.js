@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var SelectDate = Backbone.View.extend( {
 
     className: 'pl-datepicker-dropdown pl-dropdown-container',
@@ -16,6 +20,9 @@ var SelectDate = Backbone.View.extend( {
         'click .today-date': 'onClickTodayHandler'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -23,6 +30,9 @@ var SelectDate = Backbone.View.extend( {
         this.renderComponents();
     },
 
+    /**
+     *
+     */
     renderComponents: function() {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate( model.get( 'value' ) );
@@ -62,18 +72,31 @@ var SelectDate = Backbone.View.extend( {
         this.workflow( days, months, years, value )( value );
     },
 
-    onClickBackdropHandler: function( event ) {
+    /**
+     *
+     */
+    onClickBackdropHandler: function() {
         this.remove();
     },
 
+    /**
+     *
+     */
     onClickClearValueHandler: function() {
         this.clearValue();
     },
 
+    /**
+     *
+     */
     clearValue: function() {
         this.useValue( null );
     },
 
+    /**
+     *
+     * @param date
+     */
     useValue: function( date ) {
         var model = this.model;
         var timeZone = model.get( 'timeZone' );
@@ -88,6 +111,13 @@ var SelectDate = Backbone.View.extend( {
         this.remove();
     },
 
+    /**
+     *
+     * @param days
+     * @param months
+     * @param years
+     * @returns {showDays}
+     */
     workflow: function( days, months, years ) {
         this
             .listenTo( days, 'date', this.useValue )
@@ -131,15 +161,27 @@ var SelectDate = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     onClickTodayHandler: function() {
         this.useValue( new Date() );
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     */
     updatePosition: function( parentDOMElement ) {
         var direction = this.getDropdownDirection( parentDOMElement );
         this.setPositionFor( parentDOMElement, direction );
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
     setPositionFor: function( parentDOMElement, direction ) {
         clearInterval( this._intervalId );
 
@@ -147,11 +189,20 @@ var SelectDate = Backbone.View.extend( {
         this._intervalId = setInterval( this.applyStyle.bind( this, parentDOMElement, direction ), 100 );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     remove: function() {
         clearInterval( this._intervalId );
         return Backbone.View.prototype.remove.apply( this, arguments );
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @returns {string}
+     */
     getDropdownDirection: function( parentDOMElement ) {
         var windowHeight = $( window ).height();
         var rect = parentDOMElement.getBoundingClientRect();
@@ -165,6 +216,11 @@ var SelectDate = Backbone.View.extend( {
         return direction;
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
     applyStyle: function( parentDOMElement, direction ) {
         var rect = parentDOMElement.getBoundingClientRect();
         var rectDropdown = this.el.getBoundingClientRect();

@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var SelectMinutesModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:minute', this.updateDatePart.bind( this, 'minute' ) );
@@ -9,6 +16,10 @@ var SelectMinutesModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectMinutesModel = SelectMinutesModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectMinutes = SelectComponent.extend( {
 
     modelClass: SelectMinutesModel,
@@ -23,6 +34,9 @@ var SelectMinutes = SelectComponent.extend( {
         minute: '.minute'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -31,6 +45,9 @@ var SelectMinutes = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     fillMinutesTable: function() {
         var model = this.model;
         var minute = model.get( 'minute' );
@@ -52,10 +69,17 @@ var SelectMinutes = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:date', this.fillMinutesTable );
     },
 
+    /**
+     *
+     * @param event
+     */
     useMinute: function( event ) {
         var $el = $( event.target );
         var model = this.model;

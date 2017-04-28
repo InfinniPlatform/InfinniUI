@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DataGridRowView = ControlView.extend( {
 
     className: 'pl-datagrid-row pl-datagrid-row_data',
@@ -20,6 +24,9 @@ var DataGridRowView = ControlView.extend( {
         toggleControl: '.pl-datagrid-toggle input'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.call( this );
 
@@ -28,12 +35,18 @@ var DataGridRowView = ControlView.extend( {
         }, this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:toggle', this.updateToggle );
         this.listenTo( this.model, 'change:selected', this.updateSelected );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         this.updateToggle();
@@ -41,9 +54,16 @@ var DataGridRowView = ControlView.extend( {
         this.updateShowSelectors();
     },
 
+    /**
+     *
+     */
     updateVerticalAlignment: function() {
     },
 
+    /**
+     *
+     * @returns {DataGridRowView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -56,10 +76,10 @@ var DataGridRowView = ControlView.extend( {
 
         var cellElements = this.model.get( 'cellElements' );
         // var templateDataCell = this.template.dataCell();
-        if ( Array.isArray( cellElements ) ) {
+        if( Array.isArray( cellElements ) ) {
             cellElements.forEach( function( cellElement, index ) {
-	            // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
-	            // bug related to task JK-4516
+                // @TODO remove hardcoded template when the memory leaks of dataBindings would have fixed
+                // bug related to task JK-4516
                 var $cell = $( '<td class="pl-datagrid-row__cell"></td>' );
                 $cell.append( cellElement.render() );
                 $el.append( $cell );
@@ -73,24 +93,36 @@ var DataGridRowView = ControlView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     updateShowSelectors: function() {
         var showSelectors = this.model.get( 'showSelectors' );
 
         this.ui.toggleCell.toggleClass( 'hidden', !showSelectors );
     },
 
+    /**
+     *
+     */
     updateToggle: function() {
         var toggle = this.model.get( 'toggle' );
 
         this.ui.toggleControl.prop( 'checked', !!toggle );
     },
 
+    /**
+     *
+     */
     updateSelected: function() {
         var selected = this.model.get( 'selected' );
 
         this.$el.toggleClass( this.classNameSelected, !!selected );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
 
@@ -99,7 +131,10 @@ var DataGridRowView = ControlView.extend( {
         this.ui.toggleControl.attr( 'disabled', enabled ? null : 'disabled' );
     },
 
-    onToggleHandler: function( event ) {
+    /**
+     *
+     */
+    onToggleHandler: function() {
         this.trigger( 'toggle' );
     }
 

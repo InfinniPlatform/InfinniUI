@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ButtonEditModel = TextBoxModel.extend( {
 
     defaults: _.defaults( {
@@ -5,10 +9,16 @@ var ButtonEditModel = TextBoxModel.extend( {
         readOnly: true
     }, TextBoxModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         TextBoxModel.prototype.initialize.apply( this, arguments );
     },
 
+    /**
+     *
+     */
     clearValue: function() {
         var enabled = this.get( 'enabled' );
 

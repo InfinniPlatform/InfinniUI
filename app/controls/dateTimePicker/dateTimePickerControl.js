@@ -14,10 +14,19 @@ _.inherit( DateTimePickerControl, TextEditorBaseControl );
 
 _.extend( DateTimePickerControl.prototype, {
 
+    /**
+     *
+     * @returns {DateTimePickerModel}
+     */
     createControlModel: function() {
         return new DateTimePickerModel();
     },
 
+    /**
+     *
+     * @param model
+     * @returns {DateTimePickerView}
+     */
     createControlView: function( model ) {
         return new DateTimePickerView( { model: model } );
     }

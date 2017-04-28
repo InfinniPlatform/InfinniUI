@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DataNavigationPageSizes = Backbone.View.extend( {
 
     className: 'btn-group',
@@ -8,6 +12,10 @@ var DataNavigationPageSizes = Backbone.View.extend( {
         'click button': 'onClickButtonHandler'
     },
 
+    /**
+     *
+     * @param parent
+     */
     setParent: function( parent ) {
         this.model = parent.model;
         var collection = this.model.get( 'availablePageSizes' );
@@ -15,11 +23,18 @@ var DataNavigationPageSizes = Backbone.View.extend( {
         this.model.on( 'change:pageSize', this.renderButtons, this );
     },
 
+    /**
+     *
+     * @returns {DataNavigationPageSizes}
+     */
     render: function() {
         this.renderButtons();
         return this;
     },
 
+    /**
+     *
+     */
     renderButtons: function() {
         var collection = this.model.get( 'availablePageSizes' );
         var pageSize = this.model.get( 'pageSize' );
@@ -30,10 +45,17 @@ var DataNavigationPageSizes = Backbone.View.extend( {
         this.$el.html( html );
     },
 
+    /**
+     *
+     */
     onAvailablePageSizesChanged: function() {
         this.renderButtons();
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickButtonHandler: function( event ) {
         var $el = $( event.target );
         var pageSize = parseInt( $el.attr( 'data-size' ), 10 );

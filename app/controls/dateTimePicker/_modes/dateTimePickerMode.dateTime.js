@@ -1,10 +1,21 @@
+/**
+ *
+ * @mixin
+ */
 var dateTimePickerModeDateTime = {
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return InfinniUI.Template[ 'controls/dateTimePicker/template/dateTime.tpl.html' ];
     },
 
-    onClickDropdownHandler: function( event ) {
+    /**
+     *
+     */
+    onClickDropdownHandler: function() {
         var model = this.model;
         var calendar = new SelectDateTime( {
             model: model
@@ -20,6 +31,11 @@ var dateTimePickerModeDateTime = {
         } );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {string|null}
+     */
     convertValue: function( value ) {
         return InfinniUI.DateUtils.toISO8601( value, { timezoneOffset: this.model.get( 'timeZone' ) } );
     }

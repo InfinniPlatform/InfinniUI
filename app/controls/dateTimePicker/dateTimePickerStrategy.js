@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{Date, DateTime, Time}}
+ */
 var dateTimePickerStrategy = ( function() {
 
     return {

@@ -1,5 +1,12 @@
+/**
+ *
+ * @constructor
+ */
 var SelectSecondsModel = SelectComponentModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         SelectComponentModel.prototype.initialize.call( this );
         this.on( 'change:second', this.updateDatePart.bind( this, 'second' ) );
@@ -9,6 +16,10 @@ var SelectSecondsModel = SelectComponentModel.extend( {
 
 InfinniUI.SelectSecondsModel = SelectSecondsModel;
 
+/**
+ *
+ * @constructor
+ */
 var SelectSeconds = SelectComponent.extend( {
 
     modelClass: SelectSecondsModel,
@@ -23,6 +34,9 @@ var SelectSeconds = SelectComponent.extend( {
         second: '.second'
     },
 
+    /**
+     *
+     */
     render: function() {
         var template = this.template();
         this.$el.html( template );
@@ -31,6 +45,9 @@ var SelectSeconds = SelectComponent.extend( {
         this.initOnChangeHandlers();
     },
 
+    /**
+     *
+     */
     fillSecondsTable: function() {
         var model = this.model;
         var second = model.get( 'second' );
@@ -52,10 +69,17 @@ var SelectSeconds = SelectComponent.extend( {
         }
     },
 
+    /**
+     *
+     */
     initOnChangeHandlers: function() {
         this.listenTo( this.model, 'change:date', this.fillSecondsTable );
     },
 
+    /**
+     *
+     * @param event
+     */
     useSecond: function( event ) {
         var $el = $( event.target );
         var model = this.model;

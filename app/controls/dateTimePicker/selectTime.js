@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var SelectTime = SelectDate.extend( {
 
     className: 'pl-timepicker-dropdown pl-dropdown-container',
@@ -11,6 +15,9 @@ var SelectTime = SelectDate.extend( {
         seconds: '.seconds'
     },
 
+    /**
+     *
+     */
     renderComponents: function() {
         var model = this.model;
         var value = InfinniUI.DateUtils.createDate( model.get( 'value' ) );
@@ -49,6 +56,11 @@ var SelectTime = SelectDate.extend( {
         this.workflow( time, hours, minutes, seconds )( value );
     },
 
+    /**
+     *
+     * @param date
+     * @returns {*}
+     */
     useTime: function( date ) {
         var model = this.model;
         var timeZone = model.get( 'timeZone' );
@@ -63,6 +75,14 @@ var SelectTime = SelectDate.extend( {
         return date;
     },
 
+    /**
+     *
+     * @param time
+     * @param hours
+     * @param minutes
+     * @param seconds
+     * @returns {showTime}
+     */
     workflow: function( time, hours, minutes, seconds ) {
         var useTime = this.useTime.bind( this );
         var components = Array.prototype.slice.call( arguments );

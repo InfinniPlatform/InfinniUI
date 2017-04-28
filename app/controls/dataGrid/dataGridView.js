@@ -32,11 +32,18 @@ var DataGridView = ListEditorBaseView.extend( {
         items: 'tbody'
     }, ListEditorBaseView.prototype.UI ),
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ListEditorBaseView.prototype.initialize.call( this, options );
         this.rowElements = new HashMap();
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ListEditorBaseView.prototype.initHandlersForProperties.call( this );
 
@@ -58,6 +65,9 @@ var DataGridView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ListEditorBaseView.prototype.updateProperties.call( this );
         this.updateShowSelectors();
@@ -67,6 +77,9 @@ var DataGridView = ListEditorBaseView.extend( {
         this.updateVerticalAlignment();
     },
 
+    /**
+     *
+     */
     updateShowSelectors: function() {
         var showSelectors = this.model.get( 'showSelectors' );
 
@@ -74,20 +87,33 @@ var DataGridView = ListEditorBaseView.extend( {
         this.$el.toggleClass( 'pl-datagrid_selectors_hide', !showSelectors );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     },
 
+    /**
+     *
+     */
     updateVerticalAlignment: function() {
         this.switchClass( 'verticalAlignment', this.model.get( 'verticalAlignment' ), this.$el, false );
         this.switchClass( 'verticalAlignment', this.model.get( 'verticalAlignment' ), this.ui.body, false );
     },
 
+    /**
+     *
+     */
     updateCheckAll: function() {
         var checkAll = this.model.get( 'checkAll' );
 
         this.ui.checkAll.prop( 'checked', checkAll );
     },
 
+    /**
+     *
+     * @returns {number|*}
+     */
     getHorizontalScrollBarWidth: function() {
         if( typeof DataGridView.scrollbarWidth === 'undefined' ) {
             var scrollDiv = document.createElement( 'div' );
@@ -114,12 +140,18 @@ var DataGridView = ListEditorBaseView.extend( {
         return DataGridView.scrollbarWidth;
     },
 
+    /**
+     *
+     */
     updateCheckAllVisible: function() {
         var checkAllVisible = this.model.get( 'checkAllVisible' );
 
         this.ui.checkAll.toggleClass( 'hidden', !checkAllVisible );
     },
 
+    /**
+     *
+     */
     updateMultiSelect: function() {
         ListEditorBaseView.prototype.updateMultiSelect.call( this );
 
@@ -128,6 +160,9 @@ var DataGridView = ListEditorBaseView.extend( {
         this.$el.toggleClass( 'pl-datagrid_select_single', multiSelect !== true );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var model = this.model;
         var value = model.get( 'value' );
@@ -156,6 +191,9 @@ var DataGridView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateSelectedItem: function() {
         var model = this.model;
         var selectedItem = model.get( 'selectedItem' );
@@ -165,6 +203,9 @@ var DataGridView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateDisabledItem: function() {
         var model = this.model;
         var disabledItemCondition = model.get( 'disabledItemCondition' );
@@ -185,6 +226,9 @@ var DataGridView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         var isEnabled = this.model.get( 'enabled' );
 
@@ -195,6 +239,9 @@ var DataGridView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     disableDataGridItems: function() {
         this.model.set( 'selectedItem', null );
         this.rowElements.forEach( function( rowElement, item ) {
@@ -202,6 +249,10 @@ var DataGridView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     * @returns {DataGridView}
+     */
     render: function() {
         var that = this;
         this.prerenderingActions();
@@ -229,6 +280,9 @@ var DataGridView = ListEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     applyColumnWidth: function() {
         var columns = this.model.get( 'columns' );
         var fixedTableLayout = false;
@@ -253,6 +307,9 @@ var DataGridView = ListEditorBaseView.extend( {
         this.$el.toggleClass( 'pl-datagrid_layout_fixed', fixedTableLayout );
     },
 
+    /**
+     *
+     */
     syncBodyAndHead: function() {
         var $head = this.ui.head;
 
@@ -263,10 +320,16 @@ var DataGridView = ListEditorBaseView.extend( {
             .on( 'scroll', this.onScrollBodyHandler.bind( this ) );
     },
 
+    /**
+     *
+     */
     onScrollBodyHandler: function() {
         this.ui.headContainer.scrollLeft( this.ui.body.scrollLeft() );
     },
 
+    /**
+     *
+     */
     renderHeaders: function() {
         var that = this;
         var columns = this.model.get( 'columns' );
@@ -307,6 +370,9 @@ var DataGridView = ListEditorBaseView.extend( {
         this.ui.firstRows.append( sizeCells );
     },
 
+    /**
+     *
+     */
     renderItems: function() {
         var model = this.model;
         var valueSelector = model.get( 'valueSelector' );
@@ -348,6 +414,9 @@ var DataGridView = ListEditorBaseView.extend( {
         }, this );
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -360,20 +429,35 @@ var DataGridView = ListEditorBaseView.extend( {
         } );
     },
 
+    /**
+     *
+     * @param item
+     * @param element
+     */
     addRowElement: function( item, element ) {
         this.addChildElement( element );
         this.rowElements.add( item, element );
     },
 
+    /**
+     *
+     */
     removeRowElements: function() {
         this.removeChildElements();
         this.rowElements.clear();
     },
 
+    /**
+     *
+     */
     onClickCheckAllHandler: function() {
         this.model.toggleCheckAll();
     },
 
+    /**
+     *
+     * @param e
+     */
     onClickToHeaderCellHandler: function( e ) {
         var $th = $( e.currentTarget );
         var column = $th.data( 'pl-column' );
@@ -392,6 +476,13 @@ var DataGridView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param column
+     * @param $th
+     * @param direction
+     * @param triggerEvent
+     */
     setUpColumnSort: function( column, $th, direction, triggerEvent ) {
         column.setSortDirection( direction );
         this.model.set( 'sortedColumn', column );
@@ -405,6 +496,10 @@ var DataGridView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param direction
+     */
     resetSort: function( direction ) {
         var $sortableCell;
 
@@ -425,5 +520,3 @@ var DataGridView = ListEditorBaseView.extend( {
 } );
 
 InfinniUI.DataGridView = DataGridView;
-
-

@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var ComboBoxDropdownView = Backbone.View.extend( {
 
     className: 'pl-dropdown-container',
@@ -15,6 +19,9 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         noItems: '.pl-combobox-items-empty'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         var groupValueSelector = this.model.get( 'groupValueSelector' );
         var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
@@ -42,17 +49,27 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         this.updateAutocomplete();
         this.updateNoItemsMessage();
     },
 
+    /**
+     *
+     */
     updateNoItemsMessage: function() {
         var model = this.model;
         var noItemsMessage = model.get( 'noItemsMessage' ) || localized.strings.ComboBox.noItemsMessage;
         this.ui.noItems.html( noItemsMessage );
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     render: function() {
         var template = this.strategy.getTemplate();
         this.$el.html( template( {
@@ -67,6 +84,9 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         return this.$el;
     },
 
+    /**
+     *
+     */
     renderItems: function() {
         this.$el.hide();
         this.$items = this.strategy.renderItems();
@@ -82,28 +102,47 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         this.$el.show();
     },
 
+    /**
+     *
+     * @param content
+     */
     setItemsContent: function( content ) {
         var $items = this.ui.items;
         $items.empty();
         $items.append( content );
     },
 
+    /**
+     *
+     */
     close: function() {
         this.model.set( 'dropdown', false );
     },
 
+    /**
+     *
+     */
     setSearchFocus: function() {
         this.ui.text.focus();
     },
 
+    /**
+     *
+     */
     onClickBackdropHandler: function() {
         this.close();
     },
 
+    /**
+     *
+     */
     onChangeValueHandler: function() {
         this.markCheckedItems();
     },
 
+    /**
+     *
+     */
     markSelectedItems: function() {
         var model = this.model;
         if( !Array.isArray( this.$items ) ) {
@@ -121,15 +160,17 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         this.ensureVisibleSelectedItem();
     },
 
+    /**
+     *
+     */
     ensureVisibleSelectedItem: function() {
-        var model = this.model;
         if( !Array.isArray( this.$items ) ) {
             return;
         }
 
         var $container = this.ui.items;
         var $items = this.$items;
-        var selectedItem = model.getSelectedItem();
+        var selectedItem = this.model.getSelectedItem();
 
         $items.some( function( $item ) {
             var selected = selectedItem === $item.data( 'pl-data-item' );
@@ -158,7 +199,9 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         }
     },
 
-
+    /**
+     *
+     */
     markCheckedItems: function() {
         var model = this.model;
         var value = model.getValue();
@@ -185,21 +228,37 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         } );
     },
 
+    /**
+     *
+     * @param model
+     * @param dropdown
+     */
     onChangeDropdownHandler: function( model, dropdown ) {
         if( !dropdown ) {
             this.remove();
         }
     },
 
+    /**
+     *
+     */
     updateAutocomplete: function() {
         var autocomplete = this.model.get( 'autocomplete' );
         this.ui.filter.toggleClass( 'hidden', !autocomplete );
     },
 
+    /**
+     *
+     * @param item
+     */
     onMouseEnterItemHandler: function( item ) {
         this.model.setSelectedItem( item );
     },
 
+    /**
+     *
+     * @param item
+     */
     onClickItemHandler: function( item ) {
         var isEnabled = !this.model.isDisabledItem( item );
 
@@ -209,18 +268,29 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         }
     },
 
-    onKeyUpHandler: function( event ) {
+    /**
+     *
+     */
+    onKeyUpHandler: function() {
         //@TODO grow input
         var text = this.ui.text.val();
         this.trigger( 'search', text );
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeyDownHandler: function( event ) {
         var model = this.model;
         event.preventDefault();
         this.onFilterKeyDownHandler( event );
     },
 
+    /**
+     *
+     * @param event
+     */
     onFilterKeyDownHandler: function( event ) {
         var model = this.model;
 
@@ -252,6 +322,11 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     onChangeSearchHandler: function( model, value ) {
         var search = this.ui.noItems.find( '.search-message' );
 
@@ -260,15 +335,27 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         }
     },
 
-    onChangeSelectedItem: function( model, value ) {
+    /**
+     *
+     */
+    onChangeSelectedItem: function() {
         this.markSelectedItems();
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     */
     updatePosition: function( parentDOMElement ) {
         var direction = this.getDropdownDirection( parentDOMElement );
         this.setPositionFor( parentDOMElement, direction );
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
     setPositionFor: function( parentDOMElement, direction ) {
         clearInterval( this._intervalId );
 
@@ -276,11 +363,20 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         this._intervalId = setInterval( this.applyStyle.bind( this, parentDOMElement, direction ), 100 );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     remove: function() {
         clearInterval( this._intervalId );
         return Backbone.View.prototype.remove.apply( this, arguments );
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @returns {string}
+     */
     getDropdownDirection: function( parentDOMElement ) {
         var windowHeight = $( window ).height();
         var rect = parentDOMElement.getBoundingClientRect();
@@ -294,6 +390,11 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         return direction;
     },
 
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
     applyStyle: function( parentDOMElement, direction ) {
         var rect = parentDOMElement.getBoundingClientRect();
         var style = {

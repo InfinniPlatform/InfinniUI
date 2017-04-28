@@ -12,14 +12,27 @@ _.inherit( ButtonEditControl, TextBoxControl );
 
 _.extend( ButtonEditControl.prototype, {
 
+    /**
+     *
+     * @returns {ButtonEditModel}
+     */
     createControlModel: function() {
         return new ButtonEditModel();
     },
 
+    /**
+     *
+     * @param model
+     * @returns {ButtonEditView}
+     */
     createControlView: function( model ) {
         return new ButtonEditView( { model: model } );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onButtonClick: function( handler ) {
         this.controlView.on( 'buttonClick', handler );
     }
@@ -27,4 +40,3 @@ _.extend( ButtonEditControl.prototype, {
 } );
 
 InfinniUI.ButtonEditControl = ButtonEditControl;
-

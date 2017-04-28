@@ -11,6 +11,10 @@ function ComboBoxPlainViewStrategy( dropdownView ) {
 ComboBoxPlainViewStrategy.prototype = Object.create( ComboBoxBaseViewStrategy.prototype );
 ComboBoxPlainViewStrategy.prototype.constructor = ComboBoxPlainViewStrategy;
 
+/**
+ *
+ * @returns {Array}
+ */
 ComboBoxPlainViewStrategy.prototype.renderItems = function() {
     var $items = [];
     var items = this.getModelAttribute( 'items' );
@@ -26,6 +30,10 @@ ComboBoxPlainViewStrategy.prototype.renderItems = function() {
 
 ComboBoxPlainViewStrategy.prototype.template = InfinniUI.Template[ 'controls/comboBox/dropdown/template/plain/template.tpl.html' ];
 
+/**
+ *
+ * @returns {*}
+ */
 ComboBoxPlainViewStrategy.prototype.getTemplate = function() {
     return this.template;
 };

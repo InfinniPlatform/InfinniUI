@@ -1,5 +1,13 @@
+/**
+ *
+ * @constructor
+ */
 var SelectComponentModel = Backbone.Model.extend( {
 
+    /**
+     *
+     * @returns {{today: Date, todayMonth: number, todayDay: number, todayYear: number, hour: number, minute: number, second: number, millisecond: number}}
+     */
     defaults: function() {
         var today = new Date();
 
@@ -15,11 +23,17 @@ var SelectComponentModel = Backbone.Model.extend( {
         };
     },
 
+    /**
+     *
+     */
     initialize: function() {
         this.updateDateParts();
         this.on( 'change:date', this.onChangeDateHandler, this );
     },
 
+    /**
+     *
+     */
     updateDateParts: function() {
         var date = this.get( 'date' );
 
@@ -47,6 +61,11 @@ var SelectComponentModel = Backbone.Model.extend( {
 
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     onChangeDateHandler: function( model, value ) {
         if( typeof value !== 'undefined' && value !== null ) {
             model.set( {
@@ -71,12 +90,16 @@ var SelectComponentModel = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param datePart
+     * @param model
+     * @param value
+     */
     updateDatePart: function( datePart, model, value ) {
-        var
-            d = this.get( 'date' ),
-            date = InfinniUI.DateUtils.createDate( d ) || this.get( 'today' ),
-            data = this.toJSON();
-
+        var d = this.get( 'date' );
+        var date = InfinniUI.DateUtils.createDate( d ) || this.get( 'today' );
+        var data = this.toJSON();
 
         switch( datePart ) {
             case 'hour':
@@ -96,6 +119,12 @@ var SelectComponentModel = Backbone.Model.extend( {
         this.set( 'date', date );
     },
 
+    /**
+     *
+     * @param date
+     * @param precision
+     * @returns {boolean}
+     */
     checkRange: function( date, precision ) {
         var min = this.get( 'min' );
         var max = this.get( 'max' );
@@ -103,6 +132,9 @@ var SelectComponentModel = Backbone.Model.extend( {
         return InfinniUI.DateUtils.checkRangeDate( date, min, max, precision );
     },
 
+    /**
+     *
+     */
     keepDateInRange: function() {
         if( this.isValid() ) {
             return;

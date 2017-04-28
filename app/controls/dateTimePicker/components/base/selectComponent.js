@@ -1,7 +1,16 @@
+/**
+ *
+ * @constructor
+ */
 var SelectComponent = Backbone.View.extend( {
 
     modelClass: Backbone.Model,
 
+    /**
+     *
+     * @param options
+     * @returns {SelectComponent}
+     */
     initialize: function( options ) {
         var modelClass = this.modelClass;
 
@@ -16,10 +25,16 @@ var SelectComponent = Backbone.View.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     show: function() {
         this.$el.css( 'display', 'block' );
     },
 
+    /**
+     *
+     */
     hide: function() {
         this.$el.css( 'display', 'none' );
     },
