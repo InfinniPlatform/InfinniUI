@@ -35,7 +35,7 @@ describe('TextEditorBase (Control)', function () {
             }]
         };
 
-        it('metadata', function () {
+        it('metadata', function (done) {
             // Given
             var metadata = metadata_1;
 
@@ -50,9 +50,12 @@ describe('TextEditorBase (Control)', function () {
                 assert.equal($input.val(), '2,22', 'binding and formatting is right');
 
                 $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
-                assert.equal($input.val(), '2,222', 'mask is right');
+                setTimeout(function () {
+                    assert.equal($input.val(), '2,222', 'mask is right');
+                    $layout.detach();
+                    done();
+                }, 10);
 
-                $layout.detach();
             }
         });
 

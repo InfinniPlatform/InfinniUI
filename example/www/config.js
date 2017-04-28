@@ -1,13 +1,13 @@
 window.InfinniUI = window.InfinniUI || {};
 window.InfinniUI.config = window.InfinniUI.config || {};
-window.InfinniUI.config.lang = 'en-US';
+window.InfinniUI.config.lang = 'ru-RU';
 
 // override default configs located in InfinniUI/app/config.js
 // window.InfinniUI.config.cacheMetadata = true;
 window.InfinniUI.config.serverUrl = 'http://' + window.location.host;
 window.InfinniUI.config.configName = 'test';
 
-window.InfinniUI.config.homePage = '/viewExample/homePage.json';
+window.InfinniUI.config.homePage = '/testConfigurations/stab.json';
 
 // when enableAutoHeightService = false, body will have full height and will scrollable
 window.InfinniUI.config.enableAutoHeightService = false;

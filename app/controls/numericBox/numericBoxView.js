@@ -20,10 +20,13 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
         'mousedown .pl-numeric-box-max': 'onMousedownMaxControlHandler'
     }),
 
+    editMaskStrategies: {
+        NumberEditMask: 'default'
+    },
+
     render: function () {
         this.prerenderingActions();
         this.renderTemplate(this.template);
-        this.renderNumericBoxEditor();
         this.updateProperties();
         this.trigger('render');
         this.postrenderingActions();
@@ -43,10 +46,6 @@ var NumericBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype 
                 maxValue: model.get('maxValue'),
                 increment: model.get('increment')
             });
-    },
-
-    renderNumericBoxEditor: function () {
-        this.renderControlEditor();
     },
 
     onChangeEnabledHandler: function (model, value) {

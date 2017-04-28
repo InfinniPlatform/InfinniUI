@@ -133,7 +133,8 @@ var sourceForFiles = {
 		'bower_components/jquery.cookie/jquery.cookie.js',
 		'bower_components/hammerjs/hammer.min.js',
 		'bootstrap-framework/js/*.js',
-		'bower_components/signalr/jquery.signalR.min.js'
+		'bower_components/signalr/jquery.signalR.min.js',
+        'bower_components/edit-mask/dist/edit-mask.js'
 	],
 	templateFiles: [
 		"app/**/*.tpl.html",

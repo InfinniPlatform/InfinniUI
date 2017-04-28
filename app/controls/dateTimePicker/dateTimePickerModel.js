@@ -18,12 +18,14 @@ var DateTimePickerModel = TextEditorBaseModel.extend(/** @lends DateTimePickerMo
         this.set('timeZone', InfinniUI.DateUtils.getDefaultTimeZone());
     },
 
-    validate: function (attributes, options) {
+    validate: function (attributes/*, options*/) {
         var
             min = attributes.minValue,
             max = attributes.maxValue;
 
-        return InfinniUI.DateUtils.checkRangeDate(attributes.value, attributes.minValue, attributes.maxValue);
+        var isValid = InfinniUI.DateUtils.checkRangeDate(attributes.value, attributes.minValue, attributes.maxValue);
+
+        return isValid ? void 0 : 'Значение выходит за пределы допустимого диапазона';
     }
 
 

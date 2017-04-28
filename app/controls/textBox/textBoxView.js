@@ -46,7 +46,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
         var template = model.get('multiline') ? this.template.multiline : this.template.oneline;
 
         this.renderTemplate(template);
-        this.renderTextBoxEditor();
 
         this.updateProperties();
 
@@ -68,10 +67,6 @@ var TextBoxView = TextEditorBaseView.extend(/** @lends TextBoxView.prototype */{
                 lineCount: model.get('lineCount')
             }
         );
-    },
-
-    renderTextBoxEditor: function () {
-        this.renderControlEditor();
     }
 
 });
