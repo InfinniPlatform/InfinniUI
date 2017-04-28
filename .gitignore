@@ -22,6 +22,7 @@ coverage
 # Build
 app/styles/*.css
 dist/
+out/
 package/
 
 # Dependency directory
@@ -31,6 +32,9 @@ node_modules
 # Idea
 .idea/*
 
+# Bower
+bower_components/*
+bower_cache/*
+
 # Example
 example/www/compiled/*
-example/node_modules/*
