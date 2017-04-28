@@ -39,8 +39,7 @@ InfinniUI.config.Routes = [
     {
         Name: 'dataBinding',
         Path: '/data_binding',
-        Action: '{ openDataBindingPage(context, args); }
-        '    	},},
+        Action: '{ openDataBindingPage(context, args); }'
     },
     {
         Name: 'custom',
