@@ -1,32 +1,33 @@
 var openModeAutoFocusMixin = {
 
-    applyAutoFocus: function () {
+    applyAutoFocus: function() {
         var view = this.view;
         var focusOnControl = view && view.getFocusOnControl();
 
-        if (!focusOnControl) {
+        if( !focusOnControl ) {
             return;
         }
 
-        var focusInterval = setInterval(function () {
-            var elements = view.findAllChildrenByName(focusOnControl);
-            if (Array.isArray(elements) && elements.length > 0) {
-                var element = elements[0];
-                if (!jQuery.contains(document, element.control.controlView.el)) {
+        var focusInterval = setInterval( function() {
+            var elements = view.findAllChildrenByName( focusOnControl );
+            if( Array.isArray( elements ) && elements.length > 0 ) {
+                var element = elements[ 0 ];
+                if( !jQuery.contains( document, element.control.controlView.el ) ) {
                     return;
                 }
 
                 element.setFocus && element.setFocus();
                 clearFocusInterval();
             }
-        }, 1000 / 3);
+        }, 1000 / 3 );
 
-        setTimeout(clearFocusInterval, 3000);
+        setTimeout( clearFocusInterval, 3000 );
 
         function clearFocusInterval() {
-            clearInterval(focusInterval);
+            clearInterval( focusInterval );
         }
-
     }
 
 };
+
+InfinniUI.openModeAutoFocusMixin = openModeAutoFocusMixin;

@@ -4,23 +4,23 @@
  * @constructor
  * @augments ContainerControl
  */
-function TabPageControl(parent) {
-    _.superClass(TabPageControl, this, parent);
+function TabPageControl( parent ) {
+    _.superClass( TabPageControl, this, parent );
 }
 
-_.inherit(TabPageControl, ContainerControl);
+_.inherit( TabPageControl, ContainerControl );
 
-_.extend(TabPageControl.prototype, /** @lends TabPageControl.prototype */ {
+_.extend( TabPageControl.prototype, {
 
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new TabPageModel();
     },
 
-    createControlView: function (model) {
-        return new TabPageView({model: model});
+    createControlView: function( model ) {
+        return new TabPageView( { model: model } );
     }
 
+} );
 
-});
-
+InfinniUI.TabPageControl = TabPageControl;

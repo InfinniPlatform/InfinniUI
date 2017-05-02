@@ -2,7 +2,8 @@
  * @class
  * @augments TextEditorBaseModel
  */
-var TextBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
+var TextBoxModel = TextEditorBaseModel.extend( {
+
     defaults: _.extend(
         {},
         TextEditorBaseModel.prototype.defaults,
@@ -12,8 +13,10 @@ var TextBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype 
         }
     ),
 
-    initialize: function () {
-        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    initialize: function() {
+        TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     }
 
-});
+} );
+
+InfinniUI.TextBoxModel = TextBoxModel;

@@ -3,30 +3,30 @@
  * @constructor
  * @augments Container
  */
-function TabPanel(parent) {
-    _.superClass(TabPanel, this, parent);
+function TabPanel( parent ) {
+    _.superClass( TabPanel, this, parent );
 }
 
-window.InfinniUI.TabPanel = TabPanel;
+InfinniUI.TabPanel = TabPanel;
 
-_.inherit(TabPanel, Container);
+_.inherit( TabPanel, Container );
 
 
 /**
  * @description Возвращает расположение закладок
  * @returns {*}
  */
-TabPanel.prototype.getHeaderLocation = function () {
-    return this.control.get('headerLocation');
+TabPanel.prototype.getHeaderLocation = function() {
+    return this.control.get( 'headerLocation' );
 };
 
 /**
  * @description Устанавливает расположение закладок
  * @param value
  */
-TabPanel.prototype.setHeaderLocation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.TabHeaderLocation)) {
-        this.control.set('headerLocation', value);
+TabPanel.prototype.setHeaderLocation = function( value ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderLocation ) ) {
+        this.control.set( 'headerLocation', value );
     }
 };
 
@@ -34,17 +34,17 @@ TabPanel.prototype.setHeaderLocation = function (value) {
  * @description Возвращает ориентацию закладок.
  * @returns {*}
  */
-TabPanel.prototype.getHeaderOrientation = function () {
-    return this.control.get('headerOrientation');
+TabPanel.prototype.getHeaderOrientation = function() {
+    return this.control.get( 'headerOrientation' );
 };
 
 /**
  * @description Устанавливает ориентацию закладок
  * @param value
  */
-TabPanel.prototype.setHeaderOrientation = function (value) {
-    if (InfinniUI.Metadata.isValidValue(value, InfinniUI.TabHeaderOrientation)) {
-        this.control.set('headerOrientation', value);
+TabPanel.prototype.setHeaderOrientation = function( value ) {
+    if( InfinniUI.Metadata.isValidValue( value, InfinniUI.TabHeaderOrientation ) ) {
+        this.control.set( 'headerOrientation', value );
     }
 };
 
@@ -52,16 +52,16 @@ TabPanel.prototype.setHeaderOrientation = function (value) {
  * @description Устанавливает функцию шаблонизации закладок дочерних элементов панели
  * @param {Function} value
  */
-TabPanel.prototype.setHeaderTemplate = function (value) {
-    this.control.set('headerTemplate', value);
+TabPanel.prototype.setHeaderTemplate = function( value ) {
+    this.control.set( 'headerTemplate', value );
 };
 
 /**
  * @description Возвращает функцию шаблонизации закладок дочерних элементов панели
  * @returns {Function}
  */
-TabPanel.prototype.getHeaderTemplate = function () {
-    return this.control.get('headerTemplate');
+TabPanel.prototype.getHeaderTemplate = function() {
+    return this.control.get( 'headerTemplate' );
 };
 
 /**
@@ -69,38 +69,37 @@ TabPanel.prototype.getHeaderTemplate = function () {
  * @param {TabPage} value
  * @returns {boolean} успешность выделения дочернего элемента панели. false - элемент не был выделен, true - элемент успешно выделен
  */
-TabPanel.prototype.setSelectedItem = function (value) {
-    return this.control.setSelectedItem(value);
+TabPanel.prototype.setSelectedItem = function( value ) {
+    return this.control.setSelectedItem( value );
 };
 
 /**
  * @description Возвращает выделенный дочерний элемент панели
  * @returns {TabPage}
  */
-TabPanel.prototype.getSelectedItem = function () {
-    return this.control.get('selectedItem');
+TabPanel.prototype.getSelectedItem = function() {
+    return this.control.get( 'selectedItem' );
 };
 
 /**
  * @description Устанавливает обработчик события о том, что выделенный элемент изменился
  * @param {Function} handler
  */
-TabPanel.prototype.onSelectedItemChanged = function (handler) {
-    this.control.on('change:selectedItem', handler);
+TabPanel.prototype.onSelectedItemChanged = function( handler ) {
+    this.control.on( 'change:selectedItem', handler );
 };
 
 /**
  * @description Недокументированный метод. Закрывает заданную вкладку
  * @param {TabPage} element
  */
-TabPanel.prototype.closeTab = function (element) {
-    var
-        index = this.childElements.indexOf(element);
+TabPanel.prototype.closeTab = function( element ) {
+    var index = this.childElements.indexOf( element );
 
-    if (index === -1 ) {
-        throw new Error('TabPage not found in TabPanel.childElements');
+    if( index === -1 ) {
+        throw new Error( 'TabPage not found in TabPanel.childElements' );
     } else {
-        this.getItems().removeAt(index);
+        this.getItems().removeAt( index );
     }
 };
 
@@ -108,6 +107,6 @@ TabPanel.prototype.closeTab = function (element) {
  * @protected
  * @returns {PanelControl}
  */
-TabPanel.prototype.createControl = function () {
+TabPanel.prototype.createControl = function() {
     return new TabPanelControl();
 };

@@ -1,5 +1,5 @@
-describe('TabPanelBuilder', function () {
-    it('should build', function () {
+describe( 'TabPanelBuilder', function() {
+    it( 'should build', function() {
 
         //Given
         var metadata = {
@@ -11,10 +11,10 @@ describe('TabPanelBuilder', function () {
         var applicationBuilder = new InfinniUI.ApplicationBuilder();
 
         //When
-        var element = applicationBuilder.build(metadata, {});
+        var element = applicationBuilder.build( metadata, {} );
 
         //Then
-        assert.isObject(element, 'TabPanel');
-    });
+        assert.isObject( element, 'TabPanel' );
+    } );
 
-});
+} );

@@ -1,9 +1,3 @@
-function openHomePage( context, args ) {
-    if( context.controls["MainContent"] != null ) {
-        context.controls["MainContent"].setLayout( null );
-    }
-}
-
 function openDatagridPage( context, args ) {
     context.global.executeAction( context, {
         OpenAction: {
@@ -38,6 +32,20 @@ function openDataBindingPage( context, args ) {
             LinkView: {
                 AutoView: {
                     Path: "viewExample/binding.json",
+                    OpenMode: "Container",
+                    Container: "MainContent"
+                }
+            }
+        }
+    } );
+}
+
+function openCustomElementsPage( context, args ) {
+    context.global.executeAction( context, {
+        OpenAction: {
+            LinkView: {
+                AutoView: {
+                    Path: "viewExample/customElements.json",
                     OpenMode: "Container",
                     Container: "MainContent"
                 }

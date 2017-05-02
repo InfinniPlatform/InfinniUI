@@ -1,4 +1,5 @@
-window.InfinniUI.Keyboard = {
+InfinniUI.Keyboard = {
+
     KeyCode: {
         ESCAPE: 27,
         HOME: 36,
@@ -37,18 +38,18 @@ window.InfinniUI.Keyboard = {
         9: 57
     },
 
-    getCharByKeyCode: function (keyCode) {
+    getCharByKeyCode: function( keyCode ) {
         var char, code;
 
-        if (keyCode < 32) {
+        if( keyCode < 32 ) {
             //Спецсимвол
             char = null;
         } else {
             //@see http://unixpapa.com/js/key.html
-            if (keyCode >= this.KeyCode.NUMPAD_0 && keyCode <= this.KeyCode.NUMPAD_9) {
+            if( keyCode >= this.KeyCode.NUMPAD_0 && keyCode <= this.KeyCode.NUMPAD_9 ) {
                 code = keyCode - 48;
             } else {
-                switch (keyCode) {
+                switch( keyCode ) {
                     //convert numpad key codes
                     case 110:
                         code = this.KeyCode.DELETE;  //.Del
@@ -97,8 +98,9 @@ window.InfinniUI.Keyboard = {
                         code = keyCode;
                 }
             }
-            char = String.fromCharCode(code);
+            char = String.fromCharCode( code );
         }
         return char;
     }
+
 };

@@ -1,5 +1,5 @@
-describe('PanelBuilder', function () {
-    it('should build', function () {
+describe( 'PanelBuilder', function() {
+    it( 'should build', function() {
 
         //Given
         var metadata = {
@@ -16,10 +16,10 @@ describe('PanelBuilder', function () {
         };
 
         var builder = new InfinniUI.ApplicationBuilder();
-        var panel = builder.build(metadata, {parentView: fakeView()});
+        var panel = builder.build( metadata, { parentView: fakeView() } );
 
         //When
-        assert.equal(panel.getText(), 'panel');
-    });
+        assert.equal( panel.getText(), 'panel' );
+    } );
 
-});
+} );

@@ -6,13 +6,13 @@ describe('DatePickerControl', function () {
             var dateTimePicker = builder.buildType( 'DatePicker', {
                 EditMask: {
                     DateTimeEditMask: {
-                        Mask: "dd MM yyyy"
+                        Mask: 'dd MM yyyy'
                     }
                 }
             } );
 
             var $el = dateTimePicker.render();
-            var unixtime = Date.UTC(2017, 3, 26) / 1000;
+            var unixtime = Date.UTC( 2017, 3, 26 ) / 1000;
 
             dateTimePicker.setValue( unixtime );
 
@@ -21,4 +21,4 @@ describe('DatePickerControl', function () {
         } );
     } );
 
-});
+} );

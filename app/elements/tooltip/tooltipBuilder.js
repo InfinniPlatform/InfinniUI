@@ -16,7 +16,7 @@ _.extend( TooltipBuilder.prototype, {
         if( typeof metadata === 'string' ) {
             metadata = {
                 Text: metadata
-            }
+            };
         }
 
         return metadata;
@@ -32,21 +32,21 @@ _.extend( TooltipBuilder.prototype, {
 
         var exchange = InfinniUI.global.messageBus;
 
-        exchange.send(messageTypes.onToolTipInit, {element: params.parent, content: tooltip});
-        params.parent.onRemove(function () {
-            exchange.send(messageTypes.onToolTipDestroy, {element: params.parent});
-        });
+        exchange.send( messageTypes.onToolTipInit, { element: params.parent, content: tooltip } );
+        params.parent.onRemove( function() {
+            exchange.send( messageTypes.onToolTipDestroy, { element: params.parent } );
+        } );
 
     },
 
     buildContent: function( metadata, params ) {
         var builder = params.builder;
+        var content;
         var builderParams = {
             parent: params.element,
             parentView: params.parentView,
             basePathOfProperty: params.basePathOfProperty
         };
-        var content;
 
         if( 'Text' in metadata ) {
             content = this.buildTextContent( metadata[ 'Text' ], builder, builderParams );
@@ -65,9 +65,9 @@ _.extend( TooltipBuilder.prototype, {
      * @return {*}
      */
     buildTextContent: function( text, builder, builderParams ) {
-        return builder.buildType( "Label", {
-            "Text": text
-        }, builderParams )
+        return builder.buildType( 'Label', {
+            'Text': text
+        }, builderParams );
     },
 
     /**

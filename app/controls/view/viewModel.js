@@ -4,21 +4,24 @@ var DialogResult = {
     canceled: 2
 };
 
-window.InfinniUI.DialogResult = DialogResult;
+InfinniUI.DialogResult = DialogResult;
 
-var ViewModel = ContainerModel.extend({
+var ViewModel = ContainerModel.extend( {
 
-    defaults: _.defaults({
+    defaults: _.defaults( {
         dialogResult: DialogResult.none,
         isApplication: false,
         closeButtonVisibility: true
-    }, ContainerModel.prototype.defaults),
+    }, ContainerModel.prototype.defaults ),
 
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this);
+    initialize: function() {
+        ContainerModel.prototype.initialize.apply( this );
 
-        this.set('scripts', new Collection([], 'name'));
-        this.set('parameters', new Collection([], 'name'));
-        this.set('dataSources', new Collection([], 'name'));
+        this.set( 'scripts', new Collection( [], 'name' ) );
+        this.set( 'parameters', new Collection( [], 'name' ) );
+        this.set( 'dataSources', new Collection( [], 'name' ) );
     }
-});
+
+} );
+
+InfinniUI.ViewModel = ViewModel;

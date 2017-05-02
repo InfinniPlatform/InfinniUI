@@ -1,63 +1,65 @@
 var buttonMixin = {
 
-    buttonInit: function () {
+    buttonInit: function() {
         this.isFirstAction = true;
     },
 
-    getContent: function () {
-        return this.control.get('content');
+    getContent: function() {
+        return this.control.get( 'content' );
     },
 
-    setContent: function (value) {
-        this.control.set('content', value);
+    setContent: function( value ) {
+        this.control.set( 'content', value );
     },
 
-    getContentTemplate: function () {
-        return this.control.get('contentTemplate');
+    getContentTemplate: function() {
+        return this.control.get( 'contentTemplate' );
     },
 
-    setContentTemplate: function (value) {
-        this.control.set('contentTemplate', value);
+    setContentTemplate: function( value ) {
+        this.control.set( 'contentTemplate', value );
     },
 
-    setAction: function (value) {
+    setAction: function( value ) {
         var control = this.control;
 
-        control.set('action', value);
+        control.set( 'action', value );
 
-        if (this.isFirstAction) {
+        if ( this.isFirstAction ) {
             this.isFirstAction = false;
 
-            this.onClick(function () {
-                var action = control.get('action');
+            this.onClick( function() {
+                var action = control.get( 'action' );
 
-                if (action ) {
+                if ( action ) {
                     action.execute();
                 }
-            });
+            } );
         }
     },
 
-    getAction: function () {
-        return this.control.get('action');
+    getAction: function() {
+        return this.control.get( 'action' );
     },
 
-    click: function () {
+    click: function() {
         this.control.click();
     },
 
-    onClick: function(handler){
+    onClick: function( handler ) {
         var that = this;
 
-        Element.prototype.onClick.call(this, onClickHandlerWrap);
+        Element.prototype.onClick.call( this, onClickHandlerWrap );
 
-        function onClickHandlerWrap(args){
+        function onClickHandlerWrap( args ) {
             var enabled = that.getEnabled();
 
-            if(enabled){
-                handler(args);
+            if( enabled ) {
+                handler( args );
             }
         }
     }
 
 };
+
+InfinniUI.buttonMixin = buttonMixin;

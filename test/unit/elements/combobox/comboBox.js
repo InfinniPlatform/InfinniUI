@@ -1,106 +1,106 @@
-describe('ComboBox', function () {
-    describe('render', function () {
+describe( 'ComboBox', function() {
+    describe( 'render', function() {
 
-        it('Setting the properties: value, name, enabled, visible, horizontalAlignment', function () {
+        it( 'Setting the properties: value, name, enabled, visible, horizontalAlignment', function() {
             // Given
             var comboBox = new InfinniUI.ComboBox(), $el, $control;
 
             $el = comboBox.render();
 
-            assert.isUndefined($el.attr('data-pl-name'));
-            assert.isFalse($el.hasClass('hidden'), 'hidden');
-            assert.isFalse($el.hasClass('pull-left'), 'pull-left');
+            assert.isUndefined( $el.attr( 'data-pl-name' ) );
+            assert.isFalse( $el.hasClass( 'hidden' ), 'hidden' );
+            assert.isFalse( $el.hasClass( 'pull-left' ), 'pull-left' );
 
             // When
-            comboBox.setName('newName');
-            comboBox.setEnabled(false);
-            comboBox.setVisible(false);
-            
+            comboBox.setName( 'newName' );
+            comboBox.setEnabled( false );
+            comboBox.setVisible( false );
+
             // Then
 
-            assert.equal($el.attr('data-pl-name'), 'newName');
+            assert.equal( $el.attr( 'data-pl-name' ), 'newName' );
 
-            assert.isTrue($el.hasClass('hidden'));
-            assert.isFalse($el.hasClass('pull-left'));
-        });
+            assert.isTrue( $el.hasClass( 'hidden' ) );
+            assert.isFalse( $el.hasClass( 'pull-left' ) );
+        } );
 
-        it('Events onLoad, onValueChanged', function () {
+        it( 'Events onLoad, onValueChanged', function() {
             // Given
             var comboBox = new InfinniUI.ComboBox(),
                 onLoadFlag = 0,
                 onValueChanged = 0;
 
-            comboBox.onLoaded(function(){
+            comboBox.onLoaded( function() {
                 onLoadFlag++;
-            });
-            comboBox.onValueChanged(function(){
+            } );
+            comboBox.onValueChanged( function() {
                 onValueChanged++;
-            });
+            } );
 
-            assert.equal(onLoadFlag, 0);
-            assert.equal(onValueChanged, 0);
+            assert.equal( onLoadFlag, 0 );
+            assert.equal( onValueChanged, 0 );
 
             // When
             comboBox.render();
-            comboBox.setValue('new');
+            comboBox.setValue( 'new' );
 
             // Then
-            assert.equal(onLoadFlag, 1);
-            assert.equal(onValueChanged, 1);
-        });
+            assert.equal( onLoadFlag, 1 );
+            assert.equal( onValueChanged, 1 );
+        } );
 
-        it('ValueSelector', function () {
+        it( 'ValueSelector', function() {
             // Given
             var metadata = {
-                "Text": 'Пациенты',
-                "Scripts": [
+                'Text': 'Пациенты',
+                'Scripts': [
                     {
-                        "Name": "ValueSelector1",
-                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                        'Name': 'ValueSelector1',
+                        'Body': 'return {Id: args.value.Id, DisplayName: args.value.Display};'
                     }
                 ],
-                "DataSources": [
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            'Name': 'ObjectDataSource1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'State': 'New' },
+                                { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
                             ]
                         }
                     }, {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": {"Id": 2, "DisplayName": "2G"}}
+                            'Name': 'ObjectDataSource2',
+                            'Items': [
+                                { 'Value': { 'Id': 2, 'DisplayName': '2G' } }
                             ]
                         }
                     }
                 ],
-                "Items": [{
+                'Items': [{
 
                     ComboBox: {
-                        "LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
+                        'LabelText': 'Combobox Label',
+                        'ItemTemplate': {
+                            'Label': {
+                                'Name': 'TextBox1',
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Display'
                                 }
                             }
                         },
-                        "Items": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+                        'Items': {
+                            'Source': 'ObjectDataSource1',
+                            'Property': ''
                         },
-                        "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "${Id} - ${DisplayName}",
-                        "MultiSelect": false,
-                        "Value": {
-                            "Source": "ObjectDataSource2",
-                            "Property": "Value"
+                        'ValueSelector': 'ValueSelector1',
+                        'ValueFormat': '${Id} - ${DisplayName}',
+                        'MultiSelect': false,
+                        'Value': {
+                            'Source': 'ObjectDataSource2',
+                            'Property': 'Value'
                         }
                     }
                 }]
@@ -108,54 +108,54 @@ describe('ComboBox', function () {
 
 
             // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata( metadata, onViewReady );
 
             // Then
-            function onViewReady(view, $layout) {
+            function onViewReady( view, $layout ) {
                 $layout.detach();
-                var $label = $layout.find('.pl-combobox > .pl-control-label'),
-                    $value = $layout.find('.pl-combobox__value');
+                var $label = $layout.find( '.pl-combobox > .pl-control-label' ),
+                    $value = $layout.find( '.pl-combobox__value' );
 
 
-                assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.length, 1);
-                assert.equal($value.find('.pl-label').text(), '2 - 2G');
+                assert.equal( $label.text(), 'Combobox Label' );
+                assert.equal( $value.length, 1 );
+                assert.equal( $value.find( '.pl-label' ).text(), '2 - 2G' );
             }
-        });
+        } );
 
-        it('Set info message in dropdown', function () {
+        it( 'Set info message in dropdown', function() {
             // Given
             var metadata = {
-                "DataSources": [
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDS1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            'Name': 'ObjectDS1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'State': 'New' },
+                                { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
                             ]
                         }
                     },
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDS2",
-                            "Items": []
+                            'Name': 'ObjectDS2',
+                            'Items': []
                         }
                     }
                 ],
-                "Items": [
+                'Items': [
                     {
-                        "ComboBox": {
-                            "Name": "ComboBoxInfoMessage",
-                            "Autocomplete": true,
-                            "Value": {
-                                "Source": "ObjectDS1",
-                                "Property": "$.State"
+                        'ComboBox': {
+                            'Name': 'ComboBoxInfoMessage',
+                            'Autocomplete': true,
+                            'Value': {
+                                'Source': 'ObjectDS1',
+                                'Property': '$.State'
                             },
-                            "Items": {
-                                "Source": "ObjectDS2",
-                                "Property": ""
+                            'Items': {
+                                'Source': 'ObjectDS2',
+                                'Property': ''
                             }
                         }
                     }
@@ -175,7 +175,7 @@ describe('ComboBox', function () {
                 $gripBtn.click();
                 var $noItemsMesage = $( '.pl-combobox-items-empty' );
 
-                assert.equal( $noItemsMesage.find( '.search-message' ).length, 1);
+                assert.equal( $noItemsMesage.find( '.search-message' ).length, 1 );
 
                 comboBox.setNoItemsMessage( 'Ask something' );
                 assert.equal( $noItemsMesage.text(), 'Ask something' );
@@ -183,63 +183,63 @@ describe('ComboBox', function () {
                 comboBox.setNoItemsMessage( 'Ask something else' );
                 assert.equal( $noItemsMesage.text(), 'Ask something else' );
             }
-        });
+        } );
 
-        it('ValueSelector multiselect', function () {
+        it( 'ValueSelector multiselect', function() {
             // Given
             var metadata = {
-                "Text": 'Пациенты',
-                "Scripts": [
+                'Text': 'Пациенты',
+                'Scripts': [
                     {
-                        "Name": "ValueSelector1",
-                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                        'Name': 'ValueSelector1',
+                        'Body': 'return {Id: args.value.Id, DisplayName: args.value.Display};'
                     }
                 ],
-                "DataSources": [
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            'Name': 'ObjectDataSource1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'State': 'New' },
+                                { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
                             ]
                         }
                     }, {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": [
-                                    {"Id": 2, "DisplayName": "2G"},
-                                    {"Id": 3, "DisplayName": "3G"}
-                                ]}
+                            'Name': 'ObjectDataSource2',
+                            'Items': [
+                                { 'Value': [
+                                    { 'Id': 2, 'DisplayName': '2G' },
+                                    { 'Id': 3, 'DisplayName': '3G' }
+                                ] }
                             ]
                         }
                     }
                 ],
-                "Items": [{
+                'Items': [{
 
                     ComboBox: {
-                        "LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
+                        'LabelText': 'Combobox Label',
+                        'ItemTemplate': {
+                            'Label': {
+                                'Name': 'TextBox1',
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Display'
                                 }
                             }
                         },
-                        "Items": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+                        'Items': {
+                            'Source': 'ObjectDataSource1',
+                            'Property': ''
                         },
-                        "ValueSelector": "ValueSelector1",
-                        "ValueFormat": "${Id} - ${DisplayName}",
-                        "MultiSelect": true,
-                        "Value": {
-                            "Source": "ObjectDataSource2",
-                            "Property": "Value"
+                        'ValueSelector': 'ValueSelector1',
+                        'ValueFormat': '${Id} - ${DisplayName}',
+                        'MultiSelect': true,
+                        'Value': {
+                            'Source': 'ObjectDataSource2',
+                            'Property': 'Value'
                         }
                     }
                 }]
@@ -247,78 +247,78 @@ describe('ComboBox', function () {
 
 
             // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata( metadata, onViewReady );
 
             // Then
-            function onViewReady(view, $layout) {
+            function onViewReady( view, $layout ) {
                 $layout.detach();
-                var $label = $layout.find('.pl-combobox > .pl-control-label'),
-                    $value = $layout.find('.pl-combobox__value');
+                var $label = $layout.find( '.pl-combobox > .pl-control-label' ),
+                    $value = $layout.find( '.pl-combobox__value' );
 
-                assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.pl-label').text(), '2 - 2G3 - 3G');
+                assert.equal( $label.text(), 'Combobox Label' );
+                assert.equal( $value.find( '.pl-label' ).text(), '2 - 2G3 - 3G' );
             }
-        });
+        } );
 
-        it('ValueTemplate', function () {
+        it( 'ValueTemplate', function() {
             // Given
             var metadata = {
-                "Text": 'Пациенты',
-                "DataSources": [
+                'Text': 'Пациенты',
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            'Name': 'ObjectDataSource1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'State': 'New' },
+                                { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
                             ]
                         }
                     }, {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": {"Id": 2, "Display": "2G","State": "Deprecated"}}
+                            'Name': 'ObjectDataSource2',
+                            'Items': [
+                                { 'Value': { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' } }
                             ]
                         }
                     }
                 ],
-                "Items": [{
+                'Items': [{
 
                     ComboBox: {
-                        "LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
+                        'LabelText': 'Combobox Label',
+                        'ItemTemplate': {
+                            'Label': {
+                                'Name': 'TextBox1',
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Display'
                                 }
                             }
                         },
-                        "Items": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+                        'Items': {
+                            'Source': 'ObjectDataSource1',
+                            'Property': ''
                         },
-                        "ValueTemplate": {
-                            "StackPanel": {
-                                "Orientation": "Horizontal",
-                                "Items": [
+                        'ValueTemplate': {
+                            'StackPanel': {
+                                'Orientation': 'Horizontal',
+                                'Items': [
                                     {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "Source": "ObjectDataSource2",
-                                                "Property": "$.Value.Display"
+                                        'Label': {
+                                            'HorizontalAlignment': 'Left',
+                                            'Value': {
+                                                'Source': 'ObjectDataSource2',
+                                                'Property': '$.Value.Display'
                                             }
                                         }
                                     },
                                     {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "Source": "ObjectDataSource2",
-                                                "Property": "$.Value.Id"
+                                        'Label': {
+                                            'HorizontalAlignment': 'Left',
+                                            'Value': {
+                                                'Source': 'ObjectDataSource2',
+                                                'Property': '$.Value.Id'
                                             }
                                         }
                                     }
@@ -326,10 +326,10 @@ describe('ComboBox', function () {
                             }
 
                         },
-                        "MultiSelect": false,
-                        "Value": {
-                            "Source": "ObjectDataSource2",
-                            "Property": "$.Value"
+                        'MultiSelect': false,
+                        'Value': {
+                            'Source': 'ObjectDataSource2',
+                            'Property': '$.Value'
                         }
                     }
                 }]
@@ -337,81 +337,81 @@ describe('ComboBox', function () {
 
 
             // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata( metadata, onViewReady );
 
             // Then
-            function onViewReady(view, $layout) {
+            function onViewReady( view, $layout ) {
                 $layout.detach();
-                var $label = $layout.find('.pl-combobox > .pl-control-label'),
-                    $value = $layout.find('.pl-combobox__value');
+                var $label = $layout.find( '.pl-combobox > .pl-control-label' ),
+                    $value = $layout.find( '.pl-combobox__value' );
 
-                assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.pl-label').text(), '2G2');
+                assert.equal( $label.text(), 'Combobox Label' );
+                assert.equal( $value.find( '.pl-label' ).text(), '2G2' );
             }
-        });
+        } );
 
-        it('ValueTemplate multiselect', function () {
+        it( 'ValueTemplate multiselect', function() {
             // Given
             var metadata = {
-                "Text": 'Пациенты',
-                "DataSources": [
+                'Text': 'Пациенты',
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "State": "New"},
-                                {"Id": 2, "Display": "2G", "State": "Deprecated"},
-                                {"Id": 3, "Display": "3G", "State": "Deprecated"}
+                            'Name': 'ObjectDataSource1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'State': 'New' },
+                                { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
                             ]
                         }
                     }, {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": [
-                                    {"Id": 2, "Display": "2G","State": "Deprecated"},
-                                    {"Id": 3, "Display": "3G", "State": "Deprecated"}
-                                ]}
+                            'Name': 'ObjectDataSource2',
+                            'Items': [
+                                { 'Value': [
+                                    { 'Id': 2, 'Display': '2G', 'State': 'Deprecated' },
+                                    { 'Id': 3, 'Display': '3G', 'State': 'Deprecated' }
+                                ] }
                             ]
                         }
                     }
                 ],
-                "Items": [{
+                'Items': [{
 
                     ComboBox: {
-                        "LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
+                        'LabelText': 'Combobox Label',
+                        'ItemTemplate': {
+                            'Label': {
+                                'Name': 'TextBox1',
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Display'
                                 }
                             }
                         },
-                        "Items": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+                        'Items': {
+                            'Source': 'ObjectDataSource1',
+                            'Property': ''
                         },
-                        "ValueTemplate": {
-                            "StackPanel": {
-                                "Orientation": "Horizontal",
-                                "Items": [
+                        'ValueTemplate': {
+                            'StackPanel': {
+                                'Orientation': 'Horizontal',
+                                'Items': [
                                     {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "Source": "ObjectDataSource2",
-                                                "Property": "Value.#.Display"
+                                        'Label': {
+                                            'HorizontalAlignment': 'Left',
+                                            'Value': {
+                                                'Source': 'ObjectDataSource2',
+                                                'Property': 'Value.#.Display'
                                             }
                                         }
                                     },
                                     {
-                                        "Label": {
-                                            "HorizontalAlignment": "Left",
-                                            "Value": {
-                                                "Source": "ObjectDataSource2",
-                                                "Property": "Value.#.Id"
+                                        'Label': {
+                                            'HorizontalAlignment': 'Left',
+                                            'Value': {
+                                                'Source': 'ObjectDataSource2',
+                                                'Property': 'Value.#.Id'
                                             }
                                         }
                                     }
@@ -419,10 +419,10 @@ describe('ComboBox', function () {
                             }
 
                         },
-                        "MultiSelect": true,
-                        "Value": {
-                            "Source": "ObjectDataSource2",
-                            "Property": "$.Value"
+                        'MultiSelect': true,
+                        'Value': {
+                            'Source': 'ObjectDataSource2',
+                            'Property': '$.Value'
                         }
                     }
                 }]
@@ -430,84 +430,84 @@ describe('ComboBox', function () {
 
 
             // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata( metadata, onViewReady );
 
             // Then
-            function onViewReady(view, $layout) {
+            function onViewReady( view, $layout ) {
                 $layout.detach();
-                var $label = $layout.find('.pl-combobox > .pl-control-label'),
-                    $value = $layout.find('.pl-combobox__value');
+                var $label = $layout.find( '.pl-combobox > .pl-control-label' ),
+                    $value = $layout.find( '.pl-combobox__value' );
 
-                assert.equal($label.text(), 'Combobox Label');
-                assert.equal($value.find('.pl-label').text(), '2G23G3');
+                assert.equal( $label.text(), 'Combobox Label' );
+                assert.equal( $value.find( '.pl-label' ).text(), '2G23G3' );
             }
-        });
+        } );
 
-    });
+    } );
 
-    describe('api', function () {
-        it('should update DisabledItemCondition', function (done) {
+    describe( 'api', function() {
+        it( 'should update DisabledItemCondition', function( done ) {
             // Given
             var metadata = {
-                "Text": 'Пациенты',
-                "Scripts": [
+                'Text': 'Пациенты',
+                'Scripts': [
                     {
-                        "Name": "ValueSelector1",
-                        "Body": "return {Id: args.value.Id, DisplayName: args.value.Display};"
+                        'Name': 'ValueSelector1',
+                        'Body': 'return {Id: args.value.Id, DisplayName: args.value.Display};'
                     }
                 ],
-                "DataSources": [
+                'DataSources': [
                     {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource1",
-                            "Items": [
-                                {"Id": 1, "Display": "LTE", "Type": 1},
-                                {"Id": 2, "Display": "2G", "Type": 2},
-                                {"Id": 3, "Display": "3G", "Type": 2}
+                            'Name': 'ObjectDataSource1',
+                            'Items': [
+                                { 'Id': 1, 'Display': 'LTE', 'Type': 1 },
+                                { 'Id': 2, 'Display': '2G', 'Type': 2 },
+                                { 'Id': 3, 'Display': '3G', 'Type': 2 }
                             ]
                         }
                     }, {
                         ObjectDataSource: {
-                            "Name": "ObjectDataSource2",
-                            "Items": [
-                                {"Value": {"Id": 2, "DisplayName": "2G"}}
+                            'Name': 'ObjectDataSource2',
+                            'Items': [
+                                { 'Value': { 'Id': 2, 'DisplayName': '2G' } }
                             ]
                         }
                     }
                 ],
-                "Items": [{
+                'Items': [{
 
                     ComboBox: {
-                        "Name": "ComboBox1",
-                        "LabelText": "Combobox Label",
-                        "ItemTemplate": {
-                            "Label": {
-                                "Name": "TextBox1",
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Display"
+                        'Name': 'ComboBox1',
+                        'LabelText': 'Combobox Label',
+                        'ItemTemplate': {
+                            'Label': {
+                                'Name': 'TextBox1',
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Display'
                                 }
                             }
                         },
-                        "ValueProperty": "Display",
-                        "Items": {
-                            "Source": "ObjectDataSource1",
-                            "Property": ""
+                        'ValueProperty': 'Display',
+                        'Items': {
+                            'Source': 'ObjectDataSource1',
+                            'Property': ''
                         },
-                        "GroupItemTemplate": {
-                            "Label": {
-                                "Value": {
-                                    "Source": "ObjectDataSource1",
-                                    "Property": "#.Type"
+                        'GroupItemTemplate': {
+                            'Label': {
+                                'Value': {
+                                    'Source': 'ObjectDataSource1',
+                                    'Property': '#.Type'
                                 },
-                                "TextHorizontalAlignment": "Center"
+                                'TextHorizontalAlignment': 'Center'
                             }
                         },
-                        "GroupValueProperty": "Type",
-                        "DisabledItemCondition": "{ return (args.value.Id == 2); }",
-                        "Value": {
-                            "Source": "ObjectDataSource2",
-                            "Property": "Value"
+                        'GroupValueProperty': 'Type',
+                        'DisabledItemCondition': '{ return (args.value.Id == 2); }',
+                        'Value': {
+                            'Source': 'ObjectDataSource2',
+                            'Property': 'Value'
                         }
                     }
                 }]
@@ -515,37 +515,37 @@ describe('ComboBox', function () {
 
 
             // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
+            testHelper.applyViewMetadata( metadata, onViewReady );
 
             // Then
-            function onViewReady(view, $layout) {
-                var combobox = view.context.controls['ComboBox1'];
-                var $value = $layout.find('.pl-combobox__value');
+            function onViewReady( view, $layout ) {
+                var combobox = view.context.controls[ 'ComboBox1' ];
+                var $value = $layout.find( '.pl-combobox__value' );
 
                 $value.click();
 
-                var items = $('.pl-combobox-group__items .pl-label');
-                assert.isFalse(items.eq(0).hasClass('pl-disabled'), 'bad render for enabled item');
-                assert.isTrue(items.eq(1).hasClass('pl-disabled'), 'bad render for disabled item');
+                var items = $( '.pl-combobox-group__items .pl-label' );
+                assert.isFalse( items.eq( 0 ).hasClass( 'pl-disabled' ), 'bad render for enabled item' );
+                assert.isTrue( items.eq( 1 ).hasClass( 'pl-disabled' ), 'bad render for disabled item' );
 
                 // When
-                combobox.setDisabledItemCondition(function (context, args) {
-                        return args.value.Id == 1;
-                });
+                combobox.setDisabledItemCondition( function( context, args ) {
+                    return args.value.Id == 1;
+                } );
                 $value.click();
 
                 // Then
-                items = $('.pl-combobox-group__items .pl-label');
-                assert.isTrue(items.eq(0).hasClass('pl-disabled'), 'items not updated');
-                assert.isFalse(items.eq(1).hasClass('pl-disabled'), 'items not updated');
+                items = $( '.pl-combobox-group__items .pl-label' );
+                assert.isTrue( items.eq( 0 ).hasClass( 'pl-disabled' ), 'items not updated' );
+                assert.isFalse( items.eq( 1 ).hasClass( 'pl-disabled' ), 'items not updated' );
 
                 done();
                 view.close();
-                
-                $('body').find('.pl-dropdown-container').detach();
+
+                $( 'body' ).find( '.pl-dropdown-container' ).detach();
             }
-        });
-    });
+        } );
+    } );
 
 
-});
+} );

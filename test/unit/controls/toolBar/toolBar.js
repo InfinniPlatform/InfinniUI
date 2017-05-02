@@ -1,10 +1,10 @@
-describe('ToolBarControl', function () {
-    describe('render', function () {
+describe( 'ToolBarControl', function() {
+    describe( 'render', function() {
         var builder = new InfinniUI.ApplicationBuilder()
             , toolbar;
 
-        beforeEach(function () {
-            toolbar = builder.buildType('ToolBar', {
+        beforeEach( function() {
+            toolbar = builder.buildType( 'ToolBar', {
                 Items: [
                     {
                         Button: {
@@ -17,10 +17,10 @@ describe('ToolBarControl', function () {
                         }
                     }
                 ]
-            });
-        });
+            } );
+        } );
 
-        it('should render button with correct class', function () {
+        it( 'should render button with correct class', function() {
             //Given
 
 
@@ -28,7 +28,7 @@ describe('ToolBarControl', function () {
             var $el = toolbar.render();
 
             //Then
-            assert.isTrue($el.hasClass('pl-tool-bar'));
-        });
-    });
-});
+            assert.isTrue( $el.hasClass( 'pl-tool-bar' ) );
+        } );
+    } );
+} );

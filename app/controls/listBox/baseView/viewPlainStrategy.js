@@ -1,40 +1,43 @@
-function ListBoxViewPlainStrategy(listbox) {
+function ListBoxViewPlainStrategy( listbox ) {
     this.listbox = listbox;
-};
+}
 
-_.extend(ListBoxViewPlainStrategy.prototype, {
+_.extend( ListBoxViewPlainStrategy.prototype, {
 
-    prepareItemsForRendering: function(){
-        var items = this.listbox.getItems(),
-            inputName = 'listbox-' + guid(),
-            result = {
-                isMultiselect: this.listbox.isMultiselect(),
-                focusable: this.listbox.isFocusable(),
-                inputName: inputName,
-                items: items.toArray()
-            };
+    prepareItemsForRendering: function() {
+        var items = this.listbox.getItems();
+        var inputName = 'listbox-' + guid();
+        var result = {
+            isMultiselect: this.listbox.isMultiselect(),
+            focusable: this.listbox.isFocusable(),
+            inputName: inputName,
+            items: items.toArray()
+        };
 
         return result;
     },
 
-    getTemplate: function(){
+    getTemplate: function() {
         return this.listbox.template.plain;
     },
 
-    appendItemsContent: function(preparedItems){
-        var $listbox = this.listbox.$el,
-            itemTemplate = this.listbox.getItemTemplate(),
-            items = preparedItems.items,
-            listbox = this.listbox,
-            itemEl, $el;
+    appendItemsContent: function( preparedItems ) {
+        var $listbox = this.listbox.$el;
+        var itemTemplate = this.listbox.getItemTemplate();
+        var items = preparedItems.items;
+        var listbox = this.listbox;
+        var itemEl, $el;
 
-        $listbox.find('.pl-listbox-body').each(function(i, el){
-            $el = $(el);
-            itemEl = itemTemplate(undefined, {index: i, item: items[i]});
-            listbox.addChildElement(itemEl);
-            $el.append(itemEl.render());
+        $listbox.find( '.pl-listbox-body' ).each( function( i, el ) {
+            $el = $( el );
+            itemEl = itemTemplate( undefined, { index: i, item: items[ i ] } );
+            listbox.addChildElement( itemEl );
+            $el.append( itemEl.render() );
 
-            $el.parent().data('pl-data-item', items[i]);
-        });
+            $el.parent().data( 'pl-data-item', items[ i ] );
+        } );
     }
-});
+
+} );
+
+InfinniUI.ListBoxViewPlainStrategy = ListBoxViewPlainStrategy;

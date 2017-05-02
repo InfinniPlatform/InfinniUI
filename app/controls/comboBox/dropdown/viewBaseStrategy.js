@@ -3,7 +3,7 @@
  * @param dropdownView
  * @constructor
  */
-function ComboBoxBaseViewStrategy(dropdownView) {
+function ComboBoxBaseViewStrategy( dropdownView ) {
     this.dropdownView = dropdownView;
 }
 
@@ -12,14 +12,19 @@ function ComboBoxBaseViewStrategy(dropdownView) {
  * @param {string} attributeName
  * @returns {*}
  */
-ComboBoxBaseViewStrategy.prototype.getModelAttribute = function (attributeName) {
+ComboBoxBaseViewStrategy.prototype.getModelAttribute = function( attributeName ) {
     var model = this.dropdownView.model;
 
-    return model.get(attributeName);
+    return model.get( attributeName );
 };
 
-ComboBoxBaseViewStrategy.prototype.isEnabledItem = function (item) {
-    return !this.dropdownView.model.isDisabledItem(item);
+/**
+ *
+ * @param item
+ * @returns {boolean}
+ */
+ComboBoxBaseViewStrategy.prototype.isEnabledItem = function( item ) {
+    return !this.dropdownView.model.isDisabledItem( item );
 };
 
 /**
@@ -27,15 +32,14 @@ ComboBoxBaseViewStrategy.prototype.isEnabledItem = function (item) {
  * @abstract
  * @returns {Array.<jQuery>} Элементы списка
  */
-ComboBoxBaseViewStrategy.prototype.renderItems = function () {
-    throw new Error('Method renderItems not implemented');
+ComboBoxBaseViewStrategy.prototype.renderItems = function() {
+    throw new Error( 'Method renderItems not implemented' );
 };
 
 /**
  * @abstract
  */
-ComboBoxBaseViewStrategy.prototype.getTemplate = function () {
-
+ComboBoxBaseViewStrategy.prototype.getTemplate = function() {
 };
 
 /**
@@ -44,30 +48,29 @@ ComboBoxBaseViewStrategy.prototype.getTemplate = function () {
  * @returns {Array.<jQuery>}
  * @private
  */
-ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
-    var
-        $items,
-        collection = this.getModelAttribute('items'),
-        itemTemplate = this.getModelAttribute('itemTemplate');
+ComboBoxBaseViewStrategy.prototype._renderItems = function( items ) {
+    var $items;
+    var collection = this.getModelAttribute( 'items' );
+    var itemTemplate = this.getModelAttribute( 'itemTemplate' );
 
-    $items = items.map(function (item) {
-        var itemEl = itemTemplate(undefined, {
+    $items = items.map( function( item ) {
+        var itemEl = itemTemplate( undefined, {
             value: item,
-            index: collection.indexOf(item)
-        });
+            index: collection.indexOf( item )
+        } );
         var $item = itemEl.render();
 
-        if (typeof item !== 'undefined') {
-            $item.data('pl-data-item', item);
+        if ( typeof item !== 'undefined' ) {
+            $item.data( 'pl-data-item', item );
         }
 
-        this.addOnClickEventListener($item, item);
-        this.addOnHoverEventListener($item, item);
+        this.addOnClickEventListener( $item, item );
+        this.addOnHoverEventListener( $item, item );
 
-        itemEl.setEnabled( this.isEnabledItem(item) );
+        itemEl.setEnabled( this.isEnabledItem( item ) );
 
         return $item;
-    }, this);
+    }, this );
 
     return $items;
 };
@@ -76,23 +79,29 @@ ComboBoxBaseViewStrategy.prototype._renderItems = function (items) {
  *
  * @param {jQuery} $el
  */
-ComboBoxBaseViewStrategy.prototype.addOnClickEventListener = function ($el) {
-    var el = $el[0];
-    var params = Array.prototype.slice.call(arguments, 1);
-    var handler = this.trigger.bind(this, 'click');
-    el.addEventListener('click', function () {
-        handler.apply(this, params);
-    });
+ComboBoxBaseViewStrategy.prototype.addOnClickEventListener = function( $el ) {
+    var el = $el[ 0 ];
+    var params = Array.prototype.slice.call( arguments, 1 );
+    var handler = this.trigger.bind( this, 'click' );
+
+    el.addEventListener( 'click', function() {
+        handler.apply( this, params );
+    } );
 };
 
+/**
+ *
+ * @param $el
+ */
+ComboBoxBaseViewStrategy.prototype.addOnHoverEventListener = function( $el ) {
+    var params = Array.prototype.slice.call( arguments, 1 );
+    var handler = this.trigger.bind( this, 'mouseenter' );
 
-ComboBoxBaseViewStrategy.prototype.addOnHoverEventListener = function ($el) {
-    var el = $el[0];
-    var params = Array.prototype.slice.call(arguments, 1);
-    var handler = this.trigger.bind(this, 'mouseenter');
-    $el.on('mouseenter', function () {
-        handler.apply(this, params);
-    });
+    $el.on( 'mouseenter', function() {
+        handler.apply( this, params );
+    } );
 };
 
-_.extend(ComboBoxBaseViewStrategy.prototype, Backbone.Events);
+_.extend( ComboBoxBaseViewStrategy.prototype, Backbone.Events );
+
+InfinniUI.ComboBoxBaseViewStrategy = ComboBoxBaseViewStrategy;

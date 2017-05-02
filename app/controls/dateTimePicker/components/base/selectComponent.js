@@ -1,27 +1,42 @@
-var SelectComponent = Backbone.View.extend({
+/**
+ *
+ * @constructor
+ */
+var SelectComponent = Backbone.View.extend( {
 
     modelClass: Backbone.Model,
 
-    initialize: function (options) {
+    /**
+     *
+     * @param options
+     * @returns {SelectComponent}
+     */
+    initialize: function( options ) {
         var modelClass = this.modelClass;
 
-        this.model = new modelClass({
+        this.model = new modelClass( {
             today: options.today || new Date(),
             value: options.value,
             date: options.value || options.today,
             max: options.max,
             min: options.min
-        });
+        } );
         this.render();
         return this;
     },
 
-    show: function () {
-        this.$el.css('display', 'block');
+    /**
+     *
+     */
+    show: function() {
+        this.$el.css( 'display', 'block' );
     },
 
-    hide: function () {
-        this.$el.css('display', 'none');
+    /**
+     *
+     */
+    hide: function() {
+        this.$el.css( 'display', 'none' );
     },
 
     /**
@@ -29,11 +44,12 @@ var SelectComponent = Backbone.View.extend({
      * Если устанавливается недействительная дата - используется текущая
      * @param date
      */
-    setDate: function (date) {
-        this.model.setDate(date);
+    setDate: function( date ) {
+        this.model.setDate( date );
     }
 
-});
+} );
 
+_.extend( SelectComponent.prototype, bindUIElementsMixin );
 
-_.extend(SelectComponent.prototype, bindUIElementsMixin);
+InfinniUI.SelectComponent = SelectComponent;

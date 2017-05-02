@@ -1,35 +1,43 @@
-function DeleteActionBuilder(){}
+/**
+ *
+ * @constructor
+ */
+function DeleteActionBuilder() {
+}
 
-_.extend(DeleteActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function(context, args){
-            var metadata = args.metadata,
-                parentView = args.parentView,
-                sourceName = metadata.DestinationValue.Source,
-                propertyName = metadata.DestinationValue.Property || '$';
+_.extend( DeleteActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
-            var action = new DeleteAction(parentView);
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {DeleteAction}
+     */
+    build: function( context, args ) {
+        var metadata = args.metadata;
+        var parentView = args.parentView;
+        var sourceName = metadata.DestinationValue.Source;
+        var propertyName = metadata.DestinationValue.Property || '$';
+        var action = new DeleteAction( parentView );
 
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
+        this.applyBaseActionMetadata( action, args );
+        this.applyBaseFallibleActionMetadata( action, args );
 
-            var accept = (metadata['Accept'] !== false),
-                dataSource = parentView.getContext().dataSources[sourceName],
-                destinationProperty = (args.basePathOfProperty != null) ?
-                                        args.basePathOfProperty.resolveProperty( propertyName ) :
-                                        propertyName;
+        var accept = ( metadata[ 'Accept' ] !== false );
+        var dataSource = parentView.getContext().dataSources[ sourceName ];
+        var destinationProperty = ( args.basePathOfProperty !== null && typeof args.basePathOfProperty !== 'undefined' ) ?
+            args.basePathOfProperty.resolveProperty( propertyName ) :
+            propertyName;
 
-            action.setProperty('accept', accept);
-            action.setProperty('acceptMessage', metadata.AcceptMessage);
-            action.setProperty('acceptMessageType', metadata.AcceptMessageType);
-            action.setProperty('destinationSource', dataSource);
-            action.setProperty('destinationProperty', destinationProperty);
+        action.setProperty( 'accept', accept );
+        action.setProperty( 'acceptMessage', metadata.AcceptMessage );
+        action.setProperty( 'acceptMessageType', metadata.AcceptMessageType );
+        action.setProperty( 'destinationSource', dataSource );
+        action.setProperty( 'destinationProperty', destinationProperty );
 
-            return action;
-        }
+        return action;
     }
-);
 
-window.InfinniUI.DeleteActionBuilder = DeleteActionBuilder;
+} );
+
+InfinniUI.DeleteActionBuilder = DeleteActionBuilder;

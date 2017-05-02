@@ -3,21 +3,21 @@
  * @arguments ContainerBuilder
  */
 function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
+    _.superClass( ContextMenuBuilder, this );
 }
 
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
 
-_.inherit(ContextMenuBuilder, ContainerBuilder);
+_.inherit( ContextMenuBuilder, ContainerBuilder );
 
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+_.extend( ContextMenuBuilder.prototype, {
 
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
+    createElement: function( params ) {
+        return new ContextMenu( params.parent );
+    },
 
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
+    applyMetadata: function( params ) {
+        ContainerBuilder.prototype.applyMetadata.call( this, params );
+    }
 
-});
+} );

@@ -1,40 +1,40 @@
-describe('Button', function () {
+describe( 'Button', function() {
     var builder = new InfinniUI.ApplicationBuilder();
 
-    describe('API', function () {
-        var element = builder.buildType('Button', {});
+    describe( 'API', function() {
+        var element = builder.buildType( 'Button', {} );
 
-        describe('Implementing Element Methods', function () {
-            testHelper.checkElementMethods(element);
-        });
+        describe( 'Implementing Element Methods', function() {
+            testHelper.checkElementMethods( element );
+        } );
 
-        it('should set getContent', function () {
+        it( 'should set getContent', function() {
 
             var element = new InfinniUI.Button();
-            assert.isNull(element.getContent());
+            assert.isNull( element.getContent() );
 
             // when
-            element.setContent(content);
+            element.setContent( content );
 
             // then
-            assert.isTrue(element.getContent() === content);
+            assert.isTrue( element.getContent() === content );
 
-            function content(context, args) {
+            function content( context, args ) {
                 return 'button content';
             }
-        });
+        } );
 
-    });
+    } );
 
 
-    describe('render', function () {
+    describe( 'render', function() {
         var button;
 
-        beforeEach(function () {
-            button = builder.buildType('Button', {});
-        });
+        beforeEach( function() {
+            button = builder.buildType( 'Button', {} );
+        } );
 
-        it('should create', function () {
+        it( 'should create', function() {
             // Given
             //var button = new InfinniUI.Button();
 
@@ -42,121 +42,121 @@ describe('Button', function () {
             var $el = button.render();
 
             // Then
-            assert.equal($el.find('button').length, 1);
-        });
+            assert.equal( $el.find( 'button' ).length, 1 );
+        } );
 
-        it('should set enabled', function () {
+        it( 'should set enabled', function() {
             // Given
             //var button = new InfinniUI.Button();
-            button.setText('button');
+            button.setText( 'button' );
             var $el = button.render();
 
-            assert.equal(button.getEnabled(), true);
+            assert.equal( button.getEnabled(), true );
             // When
-            button.setEnabled(false);
+            button.setEnabled( false );
 
             // Then
-            assert.equal(button.getEnabled(), false);
-        });
+            assert.equal( button.getEnabled(), false );
+        } );
 
-        it('should set text', function () {
+        it( 'should set text', function() {
             // Given
             //var button = new InfinniUI.Button();
-            button.setText('button');
+            button.setText( 'button' );
             var $el = button.render();
 
             // When
-            button.setText('other button');
+            button.setText( 'other button' );
 
             // Then
-            assert.equal($el.find('.btntext').text(), 'other button');
-        });
+            assert.equal( $el.find( '.btntext' ).text(), 'other button' );
+        } );
 
 
-        it('should execute action on click', function () {
+        it( 'should execute action on click', function() {
             // Given
             var
                 //button = new InfinniUI.Button(),
                 onLastActionExecute = 0,
                 onNewActionExecute = 0;
 
-            button.setAction(new function(){
-                this.execute = function () {
+            button.setAction( new function() {
+                this.execute = function() {
                     onLastActionExecute++;
                 };
-            });
+            } );
 
-            button.setAction(new function(){
-                this.execute = function () {
+            button.setAction( new function() {
+                this.execute = function() {
                     onNewActionExecute++;
                 };
-            });
+            } );
 
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 0);
+            assert.equal( onLastActionExecute, 0 );
+            assert.equal( onNewActionExecute, 0 );
 
             // When
             button.render();
             button.click();
 
             // Then
-            assert.equal(onLastActionExecute, 0);
-            assert.equal(onNewActionExecute, 1);
-        });
+            assert.equal( onLastActionExecute, 0 );
+            assert.equal( onNewActionExecute, 1 );
+        } );
 
-        it('event onClick', function () {
+        it( 'event onClick', function() {
             // Given
             var
                 //button = new InfinniUI.Button(),
                 onClickFlag = 0;
 
-            button.onClick(function(){
-                    onClickFlag++;
-            });
+            button.onClick( function() {
+                onClickFlag++;
+            } );
 
-            assert.equal(onClickFlag, 0);
+            assert.equal( onClickFlag, 0 );
 
             // When
             button.render();
             button.click();
 
             // Then
-            assert.equal(onClickFlag, 1);
-        });
+            assert.equal( onClickFlag, 1 );
+        } );
 
-        it('should be true if scriptsHandlers call', function () {
+        it( 'should be true if scriptsHandlers call', function() {
             //Given
             var view = new InfinniUI.View();
             var scripts = view.getScripts();
-            scripts.add({
+            scripts.add( {
                 name: 'OnClick',
-                func: function (context, args) {
+                func: function( context, args ) {
                     window.Test.button = 5;
                 }
-            });
+            } );
 
-            scripts.add({
+            scripts.add( {
                 name: 'OnLoaded',
-                func: function (context, args) {
+                func: function( context, args ) {
                     window.Test.buttonLoaded = true;
                 }
-            });
+            } );
 
             var buttonBuilder = new InfinniUI.ButtonBuilder();
             var metadata = {
                 OnClick: 'OnClick',
                 OnLoaded: 'OnLoaded'
             };
-            window.Test = {button:1, buttonLoaded: false};
+            window.Test = { button: 1, buttonLoaded: false };
 
             //When
-            var button = buttonBuilder.build(null, {builder: builder, parent: view, parentView: view, metadata: metadata});
+            var button = buttonBuilder.build( null, { builder: builder, parent: view, parentView: view, metadata: metadata } );
             button.render();
             button.click();
 
             // Then
-            assert.equal(window.Test.button, 5);
-            assert.isTrue(window.Test.buttonLoaded);
-        });
-    });
-});
+            assert.equal( window.Test.button, 5 );
+            assert.isTrue( window.Test.buttonLoaded );
+        } );
+    } );
+} );

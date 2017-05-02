@@ -4,24 +4,39 @@
  * @constructor
  * @augments TextBoxControl
  */
-function ButtonEditControl(parent) {
-    _.superClass(ButtonEditControl, this, parent);
+function ButtonEditControl( parent ) {
+    _.superClass( ButtonEditControl, this, parent );
 }
 
-_.inherit(ButtonEditControl, TextBoxControl);
+_.inherit( ButtonEditControl, TextBoxControl );
 
-_.extend(ButtonEditControl.prototype, {
+_.extend( ButtonEditControl.prototype, {
 
-    createControlModel: function () {
+    /**
+     *
+     * @returns {ButtonEditModel}
+     */
+    createControlModel: function() {
         return new ButtonEditModel();
     },
 
-    createControlView: function (model) {
-        return new ButtonEditView({model: model});
+    /**
+     *
+     * @param model
+     * @returns {ButtonEditView}
+     */
+    createControlView: function( model ) {
+        return new ButtonEditView( { model: model } );
     },
 
-    onButtonClick: function (handler) {
-        this.controlView.on('buttonClick', handler);
+    /**
+     *
+     * @param handler
+     */
+    onButtonClick: function( handler ) {
+        this.controlView.on( 'buttonClick', handler );
     }
-});
 
+} );
+
+InfinniUI.ButtonEditControl = ButtonEditControl;

@@ -1,61 +1,61 @@
-describe('PopupButtonControl', function () {
-    describe('render', function () {
+describe( 'PopupButtonControl', function() {
+    describe( 'render', function() {
         var builder = new InfinniUI.ApplicationBuilder(),
             button;
 
-        beforeEach(function () {
-            button = builder.buildType('PopupButton', {
+        beforeEach( function() {
+            button = builder.buildType( 'PopupButton', {
                 Items: [
                     {
-                        "Button": {
-                            "Name": "AddButton",
-                            "Text": "Add"
+                        'Button': {
+                            'Name': 'AddButton',
+                            'Text': 'Add'
                         }
                     },
                     {
-                        "Button": {
-                            "Name": "DropButton",
-                            "Text": "Drop"
+                        'Button': {
+                            'Name': 'DropButton',
+                            'Text': 'Drop'
                         }
                     },
                     {
-                        "Button": {
-                            "Name": "BackButton",
-                            "Text": "Back"
+                        'Button': {
+                            'Name': 'BackButton',
+                            'Text': 'Back'
                         }
                     }
                 ]
-            });
-        });
+            } );
+        } );
 
 
-        it('should render button with correct class', function () {
+        it( 'should render button with correct class', function() {
             //Given
-            button.setText('Click me!');
+            button.setText( 'Click me!' );
             //When
             var $el = button.render();
             //Then
-            var $button = $el.find('.pl-popup-button__button');
-            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
-            assert.equal($button.length, 1, 'button render');
-            assert.equal($button.text(), 'Click me!', 'button text');
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
+            var $button = $el.find( '.pl-popup-button__button' );
+            assert.isTrue( $el.hasClass( 'pl-popup-button' ), 'control class' );
+            assert.equal( $button.length, 1, 'button render' );
+            assert.equal( $button.text(), 'Click me!', 'button text' );
+            $( 'body' ).find( '.pl-popup-button__dropdown' ).detach();
+        } );
 
-        it('should handle onClick', function () {
+        it( 'should handle onClick', function() {
             //Given
             var click = 0;
-            button.setText('Click me!');
-            button.onClick(function () {
+            button.setText( 'Click me!' );
+            button.onClick( function() {
                 click++;
-            });
+            } );
             //When
             var $el = button.render();
             button.click();
             //Then
-            assert.isTrue(click === 1);
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
+            assert.isTrue( click === 1 );
+            $( 'body' ).find( '.pl-popup-button__dropdown' ).detach();
+        } );
 
-    });
-});
+    } );
+} );

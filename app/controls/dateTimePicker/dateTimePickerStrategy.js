@@ -1,4 +1,8 @@
-var dateTimePickerStrategy = (function () {
+/**
+ *
+ * @type {{Date, DateTime, Time}}
+ */
+var dateTimePickerStrategy = ( function() {
 
     return {
         Date: dateTimePickerModeDate,
@@ -6,5 +10,6 @@ var dateTimePickerStrategy = (function () {
         Time: dateTimePickerModeTime
     };
 
-})();
+} )();
 
+InfinniUI.dateTimePickerStrategy = dateTimePickerStrategy;

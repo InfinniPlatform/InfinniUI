@@ -1,103 +1,145 @@
 /**
  * @class
  * @augments TextEditorBaseView
+ * @constructor
  */
-var DateTimePickerView = TextEditorBaseView.extend(/** @lends DateTimePickerView.prototype */{
+var DateTimePickerView = TextEditorBaseView.extend( {
 
-    className: "pl-datepicker form-group",
+    className: 'pl-datepicker form-group',
 
-    template: InfinniUI.Template["controls/dateTimePicker/template/date.tpl.html"],
+    template: InfinniUI.Template[ 'controls/dateTimePicker/template/date.tpl.html' ],
 
-    UI: _.extend({}, TextEditorBaseView.prototype.UI, {
+    UI: _.extend( {}, TextEditorBaseView.prototype.UI, {
         dropdownButton: '.pl-datepicker-calendar',
         controlWrap: '.control-wrap',
         editorWrap: '.editor-wrap'
-    }),
+    } ),
 
-    events: _.extend({}, TextEditorBaseView.prototype.events, {
+    events: _.extend( {}, TextEditorBaseView.prototype.events, {
         'click .pl-datepicker-calendar': 'onClickDropdownHandler'
-    }),
+    } ),
 
     editMaskStrategies: {
         DateTimeEditMask: 'iso8601'
     },
-
-    initialize: function () {
-        TextEditorBaseView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    
+    /**
+     *
+     */
+    initialize: function() {
+        TextEditorBaseView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.updateMode();
-        this.listenTo(this.model, 'change:mode', this.updateMode);
+        this.listenTo( this.model, 'change:mode', this.updateMode );
     },
 
-    initHandlersForProperties: function(){
-        TextEditorBaseView.prototype.initHandlersForProperties.call(this);
+    /**
+     *
+     */
+    initHandlersForProperties: function() {
+        TextEditorBaseView.prototype.initHandlersForProperties.call( this );
 
-        this.listenTo(this.model, 'change:minValue', this.updateMinValue);
-        this.listenTo(this.model, 'change:maxValue', this.updateMaxValue);
+        this.listenTo( this.model, 'change:minValue', this.updateMinValue );
+        this.listenTo( this.model, 'change:maxValue', this.updateMaxValue );
     },
 
-    updateProperties: function(){
-        TextEditorBaseView.prototype.updateProperties.call(this);
+    /**
+     *
+     */
+    updateProperties: function() {
+        TextEditorBaseView.prototype.updateProperties.call( this );
     },
 
-    updateMode: function(){
-        var mode = this.model.get('mode');
-        _.extend(this, dateTimePickerStrategy[mode]);
+    /**
+     *
+     */
+    updateMode: function() {
+        var mode = this.model.get( 'mode' );
+        _.extend( this, dateTimePickerStrategy[ mode ] );
 
         this.rerender();
     },
 
-    updateMinValue: function(){
-        var mode = this.model.get('mode');
-        _.extend(this, dateTimePickerStrategy[mode]);
+    /**
+     *
+     */
+    updateMinValue: function() {
+        var mode = this.model.get( 'mode' );
+        _.extend( this, dateTimePickerStrategy[ mode ] );
 
         this.rerender();
     },
 
-    updateMaxValue: function(){
-        var mode = this.model.get('mode');
-        _.extend(this, dateTimePickerStrategy[mode]);
+    /**
+     *
+     */
+    updateMaxValue: function() {
+        var mode = this.model.get( 'mode' );
+        _.extend( this, dateTimePickerStrategy[ mode ] );
 
         this.rerender();
     },
 
-    updateEnabled: function(){
-        TextEditorBaseView.prototype.updateEnabled.call(this);
+    /**
+     *
+     */
+    updateEnabled: function() {
+        TextEditorBaseView.prototype.updateEnabled.call( this );
 
-        var isEnabled = this.model.get('enabled');
-        this.ui.dropdownButton.prop('disabled', !isEnabled);
+        var isEnabled = this.model.get( 'enabled' );
+        this.ui.dropdownButton.prop( 'disabled', !isEnabled );
     },
 
-    render: function () {
+    /**
+     *
+     * @returns {DateTimePickerView}
+     */
+    render: function() {
         this.prerenderingActions();
 
-        this.renderTemplate(this.getTemplate());
+        this.renderTemplate( this.getTemplate() );
         this.updateProperties();
 
-        this.trigger('render');
+        this.trigger( 'render' );
 
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
-    getData: function () {
-        var
-            model = this.model;
+    /**
+     *
+     * @returns {*}
+     */
+    getData: function() {
+        var model = this.model;
 
-        return _.extend({},
-            TextEditorBaseView.prototype.getData.call(this), {
-                minValue: model.get('minValue'),
-                maxValue: model.get('maxValue'),
-                mode: model.get('mode')
-            });
+        return _.extend( {},
+            TextEditorBaseView.prototype.getData.call( this ), {
+                minValue: model.get( 'minValue' ),
+                maxValue: model.get( 'maxValue' ),
+                mode: model.get( 'mode' )
+            } );
     },
 
-    getTemplate: function () {
-        throw new Error('Не перекрыт getTemplate');
+    /**
+     *
+     */
+    getTemplate: function() {
+        throw new Error( 'Не перекрыт getTemplate' );
     },
 
-    onClickDropdownHandler: function (event) {}
+    /**
+     *
+     */
+    onClickDropdownHandler: function() {
+    },
+    /**
+     *
+     */
 
-});
+
+} );
+
+InfinniUI.DateTimePickerView = DateTimePickerView;

@@ -3,15 +3,15 @@
  * @augments ContainerBuilder
  */
 function TabPageBuilder() {
-    _.superClass(TabPageBuilder, this);
+    _.superClass( TabPageBuilder, this );
 }
 
-_.inherit(TabPageBuilder, ContainerBuilder);
+_.inherit( TabPageBuilder, ContainerBuilder );
 
-_.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
+_.extend( TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
 
-    createElement: function (params) {
-        return new TabPage(params.parent);
+    createElement: function( params ) {
+        return new TabPage( params.parent );
     },
 
     /**
@@ -19,17 +19,15 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
      * @param {Panel} params.element
      * @param {Object} params.metadata
      */
-    applyMetadata: function (params) {
-        var
-            metadata = params.metadata,
-            element = params.element;
+    applyMetadata: function( params ) {
+        var metadata = params.metadata;
+        var element = params.element;
+        var data = ContainerBuilder.prototype.applyMetadata.call( this, params );
 
-        var data = ContainerBuilder.prototype.applyMetadata.call(this, params);
+        element.setIcon( metadata.Icon );
+        element.setCanClose( metadata.CanClose );
 
-        element.setIcon(metadata.Icon);
-        element.setCanClose(metadata.CanClose);
-
-        this.initScriptHandlers(params);
+        this.initScriptHandlers( params );
 
         return data;
     },
@@ -38,26 +36,26 @@ _.extend(TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
      * @protected
      * @param params
      */
-    initScriptHandlers: function (params) {
-        var
-            metadata = params.metadata,
-            element = params.element;
-
+    initScriptHandlers: function( params ) {
+        var metadata = params.metadata;
+        var element = params.element;
         var executorBuilderParams = {
             parentView: params.parentView,
             parent: element,
             basePathOfProperty: params.basePathOfProperty
         };
 
-        if (metadata.OnClosing) {
-            var onClosingExecutor = Executor(metadata.OnClosing, params.builder, executorBuilderParams);
-            element.onClosing(onClosingExecutor.bind(null, {}));
+        if ( metadata.OnClosing ) {
+            var onClosingExecutor = Executor( metadata.OnClosing, params.builder, executorBuilderParams );
+            element.onClosing( onClosingExecutor.bind( null, {} ) );
         }
 
-        if (metadata.OnClosed) {
-            var onClosedExecutor = Executor(metadata.OnClosed, params.builder, executorBuilderParams);
-            element.onClosed(onClosedExecutor.bind(null, {}));
+        if ( metadata.OnClosed ) {
+            var onClosedExecutor = Executor( metadata.OnClosed, params.builder, executorBuilderParams );
+            element.onClosed( onClosedExecutor.bind( null, {} ) );
         }
     }
 
-});
+} );
+
+InfinniUI.TabPageBuilder = TabPageBuilder;

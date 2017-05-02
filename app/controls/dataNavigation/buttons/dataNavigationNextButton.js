@@ -1,18 +1,31 @@
-var DataNavigationNextButton = DataNavigationBaseButton.extend({
+/**
+ *
+ * @constructor
+ */
+var DataNavigationNextButton = DataNavigationBaseButton.extend( {
 
-    template: InfinniUI.Template["controls/dataNavigation/buttons/template/next.tpl.html"],
+    template: InfinniUI.Template[ 'controls/dataNavigation/buttons/template/next.tpl.html' ],
 
     events: {
-        "click": "onClickHandler"
+        'click': 'onClickHandler'
     },
 
-    initialize: function (options) {
+    /**
+     *
+     * @param options
+     */
+    initialize: function( options ) {
         this.model = new DataNavigationBaseButtonModel();
-        DataNavigationBaseButton.prototype.initialize.call(this, options);
+        DataNavigationBaseButton.prototype.initialize.call( this, options );
     },
 
-    onClickHandler: function (event) {
-        this.trigger('command', "next");
+    /**
+     *
+     */
+    onClickHandler: function() {
+        this.trigger( 'command', 'next' );
     }
 
-});
+} );
+
+InfinniUI.DataNavigationNextButton = DataNavigationNextButton;

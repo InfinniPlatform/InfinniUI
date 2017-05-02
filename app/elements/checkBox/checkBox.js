@@ -4,20 +4,19 @@
  * @constructor
  * @augment Element
  */
-function CheckBox(parent) {
-    _.superClass(CheckBox, this, parent);
+function CheckBox( parent ) {
+    _.superClass( CheckBox, this, parent );
     this.initialize_editorBase();
 }
 
-window.InfinniUI.CheckBox = CheckBox;
+InfinniUI.CheckBox = CheckBox;
 
-_.inherit(CheckBox, Element);
+_.inherit( CheckBox, Element );
 
+_.extend( CheckBox.prototype, {
 
-_.extend(CheckBox.prototype, {
-
-    createControl: function (parent) {
-        return new CheckBoxControl(parent);
+    createControl: function( parent ) {
+        return new CheckBoxControl( parent );
     }
 
-}, editorBaseMixin);
+}, editorBaseMixin );

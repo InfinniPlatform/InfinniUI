@@ -2,7 +2,8 @@
  * @class
  * @augments TextEditorBaseModel
  */
-var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototype */{
+var NumericBoxModel = TextEditorBaseModel.extend( {
+
     defaults: _.defaults(
         {
             increment: 1,
@@ -11,42 +12,40 @@ var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototy
         TextEditorBaseModel.prototype.defaults
     ),
 
-    incValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(delta);
+    incValue: function() {
+        var delta = this.get( 'increment' );
+        this.addToValue( delta );
     },
 
-    decValue: function () {
-        var delta = this.get('increment');
-        this.addToValue(-delta);
+    decValue: function() {
+        var delta = this.get( 'increment' );
+        this.addToValue( -delta );
     },
 
-    addToValue: function (delta) {
+    addToValue: function( delta ) {
+        var value = this.get( 'value' );
+        var startValue = this.get( 'startValue' );
+        var minValue = this.get( 'minValue' );
+        var maxValue = this.get( 'maxValue' );
+        var newValue = _.isNumber( value ) ? value : +value;
 
-        var value = this.get('value');
-        var startValue = this.get('startValue');
-        var minValue = this.get('minValue');
-        var maxValue = this.get('maxValue');
-
-        var newValue = _.isNumber(value) ? value : +value;
-
-        if (this.isSetValue(value) && _.isNumber(value)) {
+        if ( this.isSetValue( value ) && _.isNumber( value ) ) {
             newValue += delta;
         } else {
-            newValue = (_.isNumber(startValue)) ? startValue : 0;
+            newValue = ( _.isNumber( startValue ) ) ? startValue : 0;
         }
 
-        if (_.isNumber(minValue) && newValue < minValue) {
+        if ( _.isNumber( minValue ) && newValue < minValue ) {
             newValue = minValue;
-        } else if (_.isNumber(maxValue) && newValue > maxValue) {
+        } else if ( _.isNumber( maxValue ) && newValue > maxValue ) {
             newValue = maxValue;
         }
 
-        this.set('value', newValue);
+        this.set( 'value', newValue );
     },
 
-    initialize: function () {
-        TextEditorBaseModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    initialize: function() {
+        TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
     validate: function( attributes/*, options */) {
@@ -71,5 +70,6 @@ var NumericBoxModel = TextEditorBaseModel.extend(/** @lends TextBoxModel.prototy
     }
 
 
+} );
 
-});
+InfinniUI.NumericBoxModel = NumericBoxModel;

@@ -1,24 +1,32 @@
-function SaveActionBuilder() {}
+/**
+ *
+ * @constructor
+ */
+function SaveActionBuilder() {
+}
 
-_.extend(SaveActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    BaseFallibleActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var parentView = args.parentView;
-            var dataSource = parentView.getContext().dataSources[args.metadata.DestinationValue.Source];
+_.extend( SaveActionBuilder.prototype, baseActionBuilderMixin, baseFallibleActionBuilderMixin, {
 
-            var action = new SaveAction(parentView);
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {SaveAction}
+     */
+    build: function( context, args ) {
+        var parentView = args.parentView;
+        var dataSource = parentView.getContext().dataSources[ args.metadata.DestinationValue.Source ];
+        var action = new SaveAction( parentView );
 
-            this.applyBaseActionMetadata(action, args);
-            this.applyBaseFallibleActionMetadata(action, args);
+        this.applyBaseActionMetadata( action, args );
+        this.applyBaseFallibleActionMetadata( action, args );
 
-            action.setProperty('dataSource', dataSource);
-            action.setProperty('canClose', args.metadata.CanClose);
+        action.setProperty( 'dataSource', dataSource );
+        action.setProperty( 'canClose', args.metadata.CanClose );
 
-            return action;
-        }
+        return action;
     }
-);
 
-window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
+} );
+
+InfinniUI.SaveActionBuilder = SaveActionBuilder;

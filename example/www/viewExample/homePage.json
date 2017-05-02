@@ -38,6 +38,17 @@
 											}
 										}
 									}
+								},
+								{
+									"Button": {
+										"Name": "View4",
+										"Text": "To Custom Elements",
+										"Action": {
+											"RouteToAction": {
+												"Name": "custom"
+											}
+										}
+									}
 								}
 							]
 						}

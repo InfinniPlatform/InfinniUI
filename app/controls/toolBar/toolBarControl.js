@@ -4,20 +4,22 @@
  * @constructor
  * @augments ContainerControl
  */
-function ToolBarControl(parent) {
-    _.superClass(ToolBarControl, this, parent);
+function ToolBarControl( parent ) {
+    _.superClass( ToolBarControl, this, parent );
 }
 
-_.inherit(ToolBarControl, ContainerControl);
+_.inherit( ToolBarControl, ContainerControl );
 
-_.extend(ToolBarControl.prototype, /** @lends ToolBarControl.prototype */ {
+_.extend( ToolBarControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new ToolBarModel();
     },
 
-    createControlView: function (model) {
-        return new ToolBarView({model: model});
+    createControlView: function( model ) {
+        return new ToolBarView( { model: model } );
     }
-});
 
+} );
+
+InfinniUI.ToolBarControl = ToolBarControl;

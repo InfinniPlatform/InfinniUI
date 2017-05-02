@@ -4,20 +4,22 @@
  * @constructor
  * @augments TextEditorBaseControl
  */
-function NumericBoxControl(parent) {
-    _.superClass(NumericBoxControl, this, parent);
+function NumericBoxControl( parent ) {
+    _.superClass( NumericBoxControl, this, parent );
 }
 
-_.inherit(NumericBoxControl, TextEditorBaseControl);
+_.inherit( NumericBoxControl, TextEditorBaseControl );
 
-_.extend(NumericBoxControl.prototype, {
+_.extend( NumericBoxControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new NumericBoxModel();
     },
 
-    createControlView: function (model) {
-        return new NumericBoxView({model: model});
+    createControlView: function( model ) {
+        return new NumericBoxView( { model: model } );
     }
-});
 
+} );
+
+InfinniUI.NumericBoxControl = NumericBoxControl;

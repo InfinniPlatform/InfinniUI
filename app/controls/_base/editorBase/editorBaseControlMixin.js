@@ -1,22 +1,43 @@
+/**
+ *
+ * @mixin
+ */
 var editorBaseControlMixin = {
 
-    initialize_editorBaseControl: function(){
-
+    initialize_editorBaseControl: function() {
     },
 
-    setValue: function (value) {
-        this.controlModel.set('value', value);
+    /**
+     *
+     * @param value
+     */
+    setValue: function( value ) {
+        this.controlModel.set( 'value', value );
     },
 
-    getValue: function () {
-        return this.controlModel.get('value');
+    /**
+     *
+     */
+    getValue: function() {
+        return this.controlModel.get( 'value' );
     },
 
-    onValueChanging: function (handler) {
-        this.controlModel.onValueChanging(handler);
+    /**
+     *
+     * @param handler
+     */
+    onValueChanging: function( handler ) {
+        this.controlModel.onValueChanging( handler );
     },
 
-    onValueChanged: function (handler) {
-        this.controlModel.onValueChanged(handler);
+    /**
+     *
+     * @param handler
+     */
+    onValueChanged: function( handler ) {
+        this.controlModel.onValueChanged( handler );
     }
+
 };
+
+InfinniUI.editorBaseControlMixin = editorBaseControlMixin;

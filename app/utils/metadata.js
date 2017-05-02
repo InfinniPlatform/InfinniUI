@@ -1,9 +1,10 @@
 InfinniUI.Metadata = InfinniUI.Metadata || {};
 
-InfinniUI.Metadata.isValidValue = function (value, metadata) {
+InfinniUI.Metadata.isValidValue = function( value, metadata ) {
     var result = false;
-    for (var i in metadata) {
-        if (metadata[i] === value) {
+
+    for ( var i in metadata ) {
+        if ( metadata[ i ] === value ) {
             result = true;
             break;
         }
@@ -12,6 +13,6 @@ InfinniUI.Metadata.isValidValue = function (value, metadata) {
     return result;
 };
 
-InfinniUI.Metadata.isBindingMetadata = function(metadata){
-    return $.isPlainObject(metadata) && 'Source' in metadata;
+InfinniUI.Metadata.isBindingMetadata = function( metadata ) {
+    return $.isPlainObject( metadata ) && 'Source' in metadata;
 };

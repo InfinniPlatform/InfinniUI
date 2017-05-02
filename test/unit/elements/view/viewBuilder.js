@@ -1,4 +1,4 @@
-describe('ViewBuilder', function () {
+describe( 'ViewBuilder', function() {
     var viewMetadata = {
         Text: 'TestView',
         DataSources: [
@@ -21,11 +21,11 @@ describe('ViewBuilder', function () {
         ],
 
         Items: [{
-            "TextBox": {
-                "Name": "TextBox1",
-                "Value": {
-                    "Source": "objectDataSource1",
-                    "Property": "$.Display"
+            'TextBox': {
+                'Name': 'TextBox1',
+                'Value': {
+                    'Source': 'objectDataSource1',
+                    'Property': '$.Display'
                 }
             }
         }],
@@ -49,7 +49,7 @@ describe('ViewBuilder', function () {
         ]
     };
 
-    it('should build Container and Element metadata', function () {
+    it( 'should build Container and Element metadata', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = {
@@ -66,65 +66,65 @@ describe('ViewBuilder', function () {
         };
 
         // When
-        var view = viewBuilder.build(null, {metadata: metadata});
+        var view = viewBuilder.build( null, { metadata: metadata } );
 
         // Then
-        assert.equal(view.getName(), 'my_view');
-        assert.instanceOf(view.getItems(), InfinniUI.Collection);
-    });
+        assert.equal( view.getName(), 'my_view' );
+        assert.instanceOf( view.getItems(), InfinniUI.Collection );
+    } );
 
-    it('should build Scripts', function () {
+    it( 'should build Scripts', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
 
         // Then
-        assert.equal(view.getScripts().length, 2);
+        assert.equal( view.getScripts().length, 2 );
 
         var script = view.getScripts().pop();
-        assert.property(script, 'name');
-        assert.property(script, 'func');
-        assert.instanceOf(script.func, Function);
-    });
+        assert.property( script, 'name' );
+        assert.property( script, 'func' );
+        assert.instanceOf( script.func, Function );
+    } );
 
-    it('should build Parameters', function () {
+    it( 'should build Parameters', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
-        var param = new InfinniUI.Parameter({name: 'param1'});
+        var param = new InfinniUI.Parameter( { name: 'param1' } );
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, params: {param1: param}});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata, params: { param1: param } } );
 
         // Then
-        assert.equal(view.getParameters().length, 1);
-        assert.instanceOf(view.getParameters().pop(), InfinniUI.Parameter);
-    });
+        assert.equal( view.getParameters().length, 1 );
+        assert.instanceOf( view.getParameters().pop(), InfinniUI.Parameter );
+    } );
 
-    it('should build DataSources', function () {
+    it( 'should build DataSources', function() {
         // Given
-        window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
-        window.InfinniUI.providerRegister.register('ObjectDataSource', InfinniUI.Providers.ObjectDataProvider);
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
+        InfinniUI.providerRegister.register( 'ObjectDataSource', InfinniUI.Providers.ObjectDataProvider );
 
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = viewMetadata;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
         var dataSources = view.getDataSources();
 
         // Then
-        assert.equal(dataSources.length, 2);
-        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'documentDataSource1'; }), InfinniUI.DocumentDataSource, 'wrong build for DocumentDataSource');
-        assert.instanceOf(dataSources.find(function(item){ return item.getName() == 'objectDataSource1'; }), InfinniUI.ObjectDataSource, 'wrong build for ObjectDataSource');
-    });
+        assert.equal( dataSources.length, 2 );
+        assert.instanceOf( dataSources.find( function( item ) { return item.getName() == 'documentDataSource1'; } ), InfinniUI.DocumentDataSource, 'wrong build for DocumentDataSource' );
+        assert.instanceOf( dataSources.find( function( item ) { return item.getName() == 'objectDataSource1'; } ), InfinniUI.ObjectDataSource, 'wrong build for ObjectDataSource' );
+    } );
 
-    it('should sort DataSources by priority', function (done) {
+    it( 'should sort DataSources by priority', function( done ) {
         // Given
-        window.InfinniUI.providerRegister.register('DocumentDataSource', FakeRestDataProvider);
+        InfinniUI.providerRegister.register( 'DocumentDataSource', FakeRestDataProvider );
 
         var viewBuilder = new InfinniUI.ViewBuilder();
         var metadata = {
@@ -172,34 +172,34 @@ describe('ViewBuilder', function () {
         };
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
 
-        var dataSources = view.getDataSources()._items.map(function(obj){return obj.__value;}),
-            ds4 = dataSources.find(function(item){ return item.name == 'ds4'; }),
+        var dataSources = view.getDataSources()._items.map( function( obj ) {return obj.__value;} ),
+            ds4 = dataSources.find( function( item ) { return item.name == 'ds4'; } ),
             updatedDataSources = [];
 
-        dataSources.forEach(function(ds){
-            ds.onItemsUpdated(function(context, args){ updatedDataSources.push(args.source.name); });
-        });
+        dataSources.forEach( function( ds ) {
+            ds.onItemsUpdated( function( context, args ) { updatedDataSources.push( args.source.name ); } );
+        } );
 
-        ds4.onItemsUpdated(onDataSourcesReady);
+        ds4.onItemsUpdated( onDataSourcesReady );
 
-        dataSources.forEach(function(ds){
+        dataSources.forEach( function( ds ) {
             ds.updateItems();
-        });
+        } );
 
         // Then
-        function onDataSourcesReady(){
-            assert.deepEqual(updatedDataSources, ['ds3', 'ds2', 'ds5', 'ds1', 'ds4'], 'priority ds must be resolved before nonpriority');
+        function onDataSourcesReady() {
+            assert.deepEqual( updatedDataSources, ['ds3', 'ds2', 'ds5', 'ds1', 'ds4'], 'priority ds must be resolved before nonpriority' );
             done();
         }
-    });
+    } );
 
 
-    it('should build OnOpening', function () {
+    it( 'should build OnOpening', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             Scripts: [
                 {
                     Name: 'onOpening',
@@ -207,25 +207,25 @@ describe('ViewBuilder', function () {
                 }
             ],
             OnOpening: 'onOpening'
-        });
+        } );
 
         window.EventOnOpeningWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
         view.open();
 
         // Then
-        assert.isTrue(window.EventOnOpeningWasCall);
+        assert.isTrue( window.EventOnOpeningWasCall );
 
         // cleaning
         view.close();
-    });
+    } );
 
-    it('should build OnOpened', function () {
+    it( 'should build OnOpened', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             Scripts: [
                 {
                     Name: 'onOpened',
@@ -233,25 +233,25 @@ describe('ViewBuilder', function () {
                 }
             ],
             OnOpened: 'onOpened'
-        });
+        } );
 
         window.EventOnOpenedWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
         view.open();
 
         // Then
-        assert.isTrue(window.EventOnOpenedWasCall);
+        assert.isTrue( window.EventOnOpenedWasCall );
 
         // cleaning
         view.close();
-    });
+    } );
 
-    it('should build OnClosing', function () {
+    it( 'should build OnClosing', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             Scripts: [
                 {
                     Name: 'onClosing',
@@ -259,22 +259,22 @@ describe('ViewBuilder', function () {
                 }
             ],
             OnClosing: 'onClosing'
-        });
+        } );
 
         window.EventOnClosingWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
         view.close();
 
         // Then
-        assert.isTrue(window.EventOnClosingWasCall);
-    });
+        assert.isTrue( window.EventOnClosingWasCall );
+    } );
 
-    it('should build OnClosed', function () {
+    it( 'should build OnClosed', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             Scripts: [
                 {
                     Name: 'onClosed',
@@ -282,71 +282,71 @@ describe('ViewBuilder', function () {
                 }
             ],
             OnClosed: 'onClosed'
-        });
+        } );
 
         window.EventOnClosedWasCall = false;
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
         view.close();
 
         // Then
-        assert.isTrue(window.EventOnClosedWasCall);
-    });
+        assert.isTrue( window.EventOnClosedWasCall );
+    } );
 
-    it('should build CloseButtonVisibility', function () {
+    it( 'should build CloseButtonVisibility', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
         var builder = new InfinniUI.ApplicationBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             CloseButtonVisibility: false
-        });
+        } );
 
         // When
-        var view = viewBuilder.build(null, {metadata: metadata, builder: builder});
+        var view = viewBuilder.build( null, { metadata: metadata, builder: builder } );
 
         // Then
-        assert.isFalse(view.getCloseButtonVisibility());
-    });
+        assert.isFalse( view.getCloseButtonVisibility() );
+    } );
 
-    it('should build HeaderTemplate', function () {
+    it( 'should build HeaderTemplate', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
-        var metadata = _.extend({}, viewMetadata, {
+        var metadata = _.extend( {}, viewMetadata, {
             HeaderTemplate: {
                 Icon: {
                 }
             }
-        });
+        } );
 
         // When
-        var view = viewBuilder.build(null, {builder: new InfinniUI.ApplicationBuilder(), metadata: metadata});
+        var view = viewBuilder.build( null, { builder: new InfinniUI.ApplicationBuilder(), metadata: metadata } );
 
         // Then
         var headerTemplate = view.getHeaderTemplate();
         var header = headerTemplate();
 
-        assert.instanceOf(header, InfinniUI.Icon);
-    });
+        assert.instanceOf( header, InfinniUI.Icon );
+    } );
 
-    it('should build default value', function () {
+    it( 'should build default value', function() {
         // Given
         var viewBuilder = new InfinniUI.ViewBuilder();
         var builder = new InfinniUI.ApplicationBuilder();
         var metadata = viewMetadata;
 
         // When
-        var view = viewBuilder.build(null, {metadata: metadata, builder: builder});
+        var view = viewBuilder.build( null, { metadata: metadata, builder: builder } );
 
         // Then
         var headerTemplate = view.getHeaderTemplate();
         var header = headerTemplate();
 
         // Header
-        assert.instanceOf(header, InfinniUI.Label);
-        assert.equal(header.getValue(), 'TestView');
+        assert.instanceOf( header, InfinniUI.Label );
+        assert.equal( header.getValue(), 'TestView' );
 
         // CloseButtonVisibility
-        assert.isTrue(view.getCloseButtonVisibility());
-    });
-});
+        assert.isTrue( view.getCloseButtonVisibility() );
+    } );
+} );

@@ -4,40 +4,40 @@
  * @constructor
  * @augments TextEditorBase
  */
-function NumericBox(parent) {
-    _.superClass(NumericBox, this, parent);
+function NumericBox( parent ) {
+    _.superClass( NumericBox, this, parent );
 }
 
-window.InfinniUI.NumericBox = NumericBox;
+InfinniUI.NumericBox = NumericBox;
 
-_.inherit(NumericBox, TextEditorBase);
+_.inherit( NumericBox, TextEditorBase );
 
-NumericBox.prototype.createControl = function (parent) {
-    return new NumericBoxControl(parent);
+NumericBox.prototype.createControl = function( parent ) {
+    return new NumericBoxControl( parent );
 };
 
-NumericBox.prototype.getMinValue = function () {
-    return this.control.get('minValue');
+NumericBox.prototype.getMinValue = function() {
+    return this.control.get( 'minValue' );
 };
 
-NumericBox.prototype.setMinValue = function (value) {
-    this.control.set('minValue', value);
+NumericBox.prototype.setMinValue = function( value ) {
+    this.control.set( 'minValue', value );
 };
 
-NumericBox.prototype.getMaxValue = function () {
-    return this.control.get('maxValue');
+NumericBox.prototype.getMaxValue = function() {
+    return this.control.get( 'maxValue' );
 };
 
-NumericBox.prototype.setMaxValue = function (value) {
-    this.control.set('maxValue', value);
+NumericBox.prototype.setMaxValue = function( value ) {
+    this.control.set( 'maxValue', value );
 };
 
-NumericBox.prototype.getIncrement = function () {
-    return this.control.get('increment');
+NumericBox.prototype.getIncrement = function() {
+    return this.control.get( 'increment' );
 };
 
-NumericBox.prototype.setIncrement = function (value) {
-    this.control.set('increment', value);
+NumericBox.prototype.setIncrement = function( value ) {
+    this.control.set( 'increment', value );
 };
 
 /**
@@ -45,14 +45,14 @@ NumericBox.prototype.setIncrement = function (value) {
  * @description Устанваливает начальное значение
  * @param {Number} value
  */
-NumericBox.prototype.setStartValue = function (value) {
-    this.control.set('startValue', value);
+NumericBox.prototype.setStartValue = function( value ) {
+    this.control.set( 'startValue', value );
 };
 
-NumericBox.prototype.convertValue = function (value) {
-    var val = (value === null || value === '' || typeof value === 'undefined') ? null : +value;
+NumericBox.prototype.convertValue = function( value ) {
+    var val = ( value === null || value === '' || typeof value === 'undefined' ) ? null : +value;
 
-    return _.isNumber(val) ? val : null;
+    return _.isNumber( val ) ? val : null;
 };
 
 /**
@@ -60,6 +60,6 @@ NumericBox.prototype.convertValue = function (value) {
  * @description Возвращает начальное значение
  * @returns {Number}
  */
-NumericBox.prototype.getStartValue = function () {
-    return this.control.get('startValue');
+NumericBox.prototype.getStartValue = function() {
+    return this.control.get( 'startValue' );
 };

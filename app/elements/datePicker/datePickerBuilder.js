@@ -1,25 +1,25 @@
 function DatePickerBuilder() {
-    _.superClass(DatePickerBuilder, this);
+    _.superClass( DatePickerBuilder, this );
 }
 
-window.InfinniUI.DatePickerBuilder = DatePickerBuilder;
+InfinniUI.DatePickerBuilder = DatePickerBuilder;
 
-_.inherit(DatePickerBuilder, DateTimePickerBuilder);
+_.inherit( DatePickerBuilder, DateTimePickerBuilder );
 
-DatePickerBuilder.prototype.createElement = function (params) {
-    return new DatePicker(params.parent);
+DatePickerBuilder.prototype.createElement = function( params ) {
+    return new DatePicker( params.parent );
 };
 
+DatePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
 
-DatePickerBuilder.prototype.applyDefaultMetadata = function (params) {
-
-    params.metadata = _.extend({}, params.metadata, {
+    params.metadata = _.extend( {}, params.metadata, {
         Mode: 'DatePicker',
         TimeZone: 0
-    });
+    } );
 
-    _.defaults(params.metadata, {
+    _.defaults( params.metadata, {
         DisplayFormat: '${:d}',
-        EditMask: {DateTimeEditMask: {Mask: 'd'}}
-    });
+        EditMask: { DateTimeEditMask: { Mask: 'd' } }
+    } );
+
 };

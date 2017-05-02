@@ -1,58 +1,57 @@
-describe('BooleanFormat', function () {
-    describe('format', function () {
+describe( 'BooleanFormat', function() {
+    describe( 'format', function() {
 
-        it('successful build', function () {
+        it( 'successful build', function() {
             //Given
-            var metadata = {TrueText: "+", FalseText: "-"};
+            var metadata = { TrueText: '+', FalseText: '-' };
             var builder = new InfinniUI.BooleanFormatBuilder();
             //When
-            var format = builder.build(null, {metadata: metadata} );
+            var format = builder.build( null, { metadata: metadata } );
             //Then
-            assert.isFunction(format.format);
-            assert.isFunction(format.getTrueText);
-            assert.isFunction(format.getFalseText);
-            assert.isFunction(format.setFalseText);
-            assert.isFunction(format.setTrueText);
-            assert.equal(format.format(true), '+');
-            assert.equal(format.format(false), '-');
-        });
+            assert.isFunction( format.format );
+            assert.isFunction( format.getTrueText );
+            assert.isFunction( format.getFalseText );
+            assert.isFunction( format.setFalseText );
+            assert.isFunction( format.setTrueText );
+            assert.equal( format.format( true ), '+' );
+            assert.equal( format.format( false ), '-' );
+        } );
 
-        it('should have default value', function () {
+        it( 'should have default value', function() {
             //Given
             var format = new InfinniUI.BooleanFormat();
             //When
             var value = true;
             //Then
-            assert.equal(format.getFalseText(), 'False');
-            assert.equal(format.getTrueText(), 'True');
-            assert.equal(format.format(value), 'True');
-        });
+            assert.equal( format.getFalseText(), 'False' );
+            assert.equal( format.getTrueText(), 'True' );
+            assert.equal( format.format( value ), 'True' );
+        } );
 
-        it('should format boolean', function () {
+        it( 'should format boolean', function() {
             //Given
             var format = new InfinniUI.BooleanFormat();
             //When
-            var value_1 = false;
-            var value_2 = true;
-            format.setFalseText('Нет');
-            format.setTrueText('Да');
+            var value1 = false;
+            var value2 = true;
+            format.setFalseText( 'Нет' );
+            format.setTrueText( 'Да' );
             //Then
-            assert.equal(format.format(value_1), 'Нет');
-            assert.equal(format.format(value_2), 'Да');
-        });
+            assert.equal( format.format( value1 ), 'Нет' );
+            assert.equal( format.format( value2 ), 'Да' );
+        } );
 
-        it('should format collection', function () {
+        it( 'should format collection', function() {
             //Given
             var format = new InfinniUI.BooleanFormat();
             //When
             var value = [true, true, false, true];
-            format.setFalseText('Нет');
-            format.setTrueText('Да');
+            format.setFalseText( 'Нет' );
+            format.setTrueText( 'Да' );
             //Then
-            assert.equal(format.format(value), 'Да, Да, Нет, Да');
-        });
+            assert.equal( format.format( value ), 'Да, Да, Нет, Да' );
+        } );
 
-    });
+    } );
 
-
-});
+} );

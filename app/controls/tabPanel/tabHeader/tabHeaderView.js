@@ -1,23 +1,26 @@
-var TabHeaderModel = Backbone.Model.extend({
+var TabHeaderModel = Backbone.Model.extend( {
 
     defaults: {
         text: '',
         enabled: true,
         canClose: false
     }
-});
 
-var TabHeaderView = Backbone.View.extend({
+} );
 
-    className: "pl-tabheader",
+InfinniUI.TabHeaderModel = TabHeaderModel;
 
-    tagName: "li",
+var TabHeaderView = Backbone.View.extend( {
 
-    template: InfinniUI.Template["controls/tabPanel/tabHeader/template/tabHeader.tpl.html"],
+    className: 'pl-tabheader',
+
+    tagName: 'li',
+
+    template: InfinniUI.Template[ 'controls/tabPanel/tabHeader/template/tabHeader.tpl.html' ],
 
     events: {
-        "click": "onClickHandler",
-        "click .pl-close": "onClickCloseHandler"
+        'click': 'onClickHandler',
+        'click .pl-close': 'onClickCloseHandler'
     },
 
     UI: {
@@ -25,18 +28,18 @@ var TabHeaderView = Backbone.View.extend({
         close: '.pl-close'
     },
 
-    initialize: function (options) {
-        this.model = new TabHeaderModel(options);
+    initialize: function( options ) {
+        this.model = new TabHeaderModel( options );
 
-        this.on('rendered', this.onRenderedHandler);
+        this.on( 'rendered', this.onRenderedHandler );
     },
 
-    render: function () {
-        this.$el.html(this.template);
+    render: function() {
+        this.$el.html( this.template );
         this.bindUIElements();
-        this.trigger('rendered');
+        this.trigger( 'rendered' );
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
@@ -45,34 +48,34 @@ var TabHeaderView = Backbone.View.extend({
      *
      * @param {string} value
      */
-    setText: function (value) {
-        this.model.set('text', value);
+    setText: function( value ) {
+        this.model.set( 'text', value );
     },
 
     /**
      *
      * @param {boolean} value
      */
-    setCanClose: function (value) {
-        this.model.set('canClose', value);
+    setCanClose: function( value ) {
+        this.model.set( 'canClose', value );
     },
 
     /**
      *
      * @param {boolean} value
      */
-    setSelected: function (value) {
-        this.model.set('selected', value);
+    setSelected: function( value ) {
+        this.model.set( 'selected', value );
     },
 
-    setEnabled: function (value) {
-        this.model.set('enabled', value);
+    setEnabled: function( value ) {
+        this.model.set( 'enabled', value );
     },
 
     /**
      * @protected
      */
-    updateProperties: function () {
+    updateProperties: function() {
         this.updateTextHandler();
         this.updateCanClose();
         this.updateSelectedHandler();
@@ -82,52 +85,58 @@ var TabHeaderView = Backbone.View.extend({
     /**
      * @protected
      */
-    onRenderedHandler: function () {
+    onRenderedHandler: function() {
         this.updateProperties();
-        this.listenTo(this.model, 'change:text', this.updateTextHandler);
-        this.listenTo(this.model, 'change:selected', this.updateSelectedHandler);
-        this.listenTo(this.model, 'change:canClose', this.updateCanClose);
-        this.listenTo(this.model, 'change:enabled', this.updateProperties); // нужно обновлять все свойства
+        this.listenTo( this.model, 'change:text', this.updateTextHandler );
+        this.listenTo( this.model, 'change:selected', this.updateSelectedHandler );
+        this.listenTo( this.model, 'change:canClose', this.updateCanClose );
+        this.listenTo( this.model, 'change:enabled', this.updateProperties ); // нужно обновлять все свойства
     },
 
     /**
      * @protected
      */
-    updateTextHandler: function () {
-        var text = this.model.get('text');
-        this.ui.label.text(text);
+    updateTextHandler: function() {
+        var text = this.model.get( 'text' );
+
+        this.ui.label.text( text );
     },
 
     /**
      * @protected
      */
-    updateCanClose: function () {
-        var canClose = this.model.get('canClose');
-        this.ui.close.toggleClass('hidden', !canClose);
+    updateCanClose: function() {
+        var canClose = this.model.get( 'canClose' );
+
+        this.ui.close.toggleClass( 'hidden', !canClose );
     },
 
     /**
      * @protected
      */
-    updateSelectedHandler: function () {
-        var selected = this.model.get('selected');
-        this.$el.toggleClass('pl-active active', selected);
+    updateSelectedHandler: function() {
+        var selected = this.model.get( 'selected' );
+
+        this.$el.toggleClass( 'pl-active active', selected );
     },
 
-    updateEnabled: function () {
-        var isEnabled = this.model.get('enabled');
-        this.$el.toggleClass('pl-disabled', !isEnabled);
+    updateEnabled: function() {
+        var isEnabled = this.model.get( 'enabled' );
+
+        this.$el.toggleClass( 'pl-disabled', !isEnabled );
     },
 
-    onClickHandler: function (event) {
-        this.trigger('selected');
+    onClickHandler: function( event ) {
+        this.trigger( 'selected' );
     },
 
-    onClickCloseHandler: function (event) {
+    onClickCloseHandler: function( event ) {
         event.stopPropagation();
-        this.trigger('close');
+        this.trigger( 'close' );
     }
 
-});
+} );
 
-_.extend(TabHeaderView.prototype, bindUIElementsMixin);
+_.extend( TabHeaderView.prototype, bindUIElementsMixin );
+
+InfinniUI.TabHeaderView = TabHeaderView;

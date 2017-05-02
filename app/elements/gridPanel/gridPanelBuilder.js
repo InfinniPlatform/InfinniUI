@@ -3,31 +3,26 @@
  * @augments ContainerBuilder
  */
 function GridPanelBuilder() {
-    _.superClass(GridPanelBuilder, this);
+    _.superClass( GridPanelBuilder, this );
 }
 
-window.InfinniUI.GridPanelBuilder = GridPanelBuilder;
+InfinniUI.GridPanelBuilder = GridPanelBuilder;
 
-_.inherit(GridPanelBuilder, ContainerBuilder);
+_.inherit( GridPanelBuilder, ContainerBuilder );
 
-_.extend(GridPanelBuilder.prototype,
-    /** @lends GridPanelBuilder.prototype*/
-    {
-        createElement: function (params) {
-            return new GridPanel(params.parent);
-        },
+_.extend( GridPanelBuilder.prototype, {
 
-        /**
-         * @param {Object} params
-         * @param {TablePanel} params.element
-         * @param {Object} params.metadata
-         */
-        applyMetadata: function (params) {
-            var
-                metadata = params.metadata,
-                element = params.element;
+    createElement: function( params ) {
+        return new GridPanel( params.parent );
+    },
 
-            ContainerBuilder.prototype.applyMetadata.call(this, params);
-        }
+    /**
+     * @param {Object} params
+     * @param {TablePanel} params.element
+     * @param {Object} params.metadata
+     */
+    applyMetadata: function( params ) {
+        ContainerBuilder.prototype.applyMetadata.call( this, params );
+    }
 
-    });
+} );

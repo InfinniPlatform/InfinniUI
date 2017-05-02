@@ -6,71 +6,71 @@
  * @mixes editorBaseMixin
  * @mixes labelTextElementMixin
  */
-function TextEditorBase(parent) {
-    _.superClass(TextEditorBase, this, parent);
+function TextEditorBase( parent ) {
+    _.superClass( TextEditorBase, this, parent );
     this.initialize_editorBase();
 }
 
-window.InfinniUI.TextEditorBase = TextEditorBase;
+InfinniUI.TextEditorBase = TextEditorBase;
 
-_.inherit(TextEditorBase, Element);
+_.inherit( TextEditorBase, Element );
 
-_.extend(TextEditorBase.prototype, {
+_.extend( TextEditorBase.prototype, {
 
-    setEditor: function (editor) {
-        this.control.set('editor', editor);
+    setEditor: function( editor ) {
+        this.control.set( 'editor', editor );
     },
 
-    setDisplayFormat: function (value) {
-        this.control.set('displayFormat', value);
+    setDisplayFormat: function( value ) {
+        this.control.set( 'displayFormat', value );
     },
 
-    getDisplayFormat: function () {
-        return this.control.get('displayFormat');
+    getDisplayFormat: function() {
+        return this.control.get( 'displayFormat' );
     },
 
-    setEditMask: function (value) {
-        this.control.set('editMask', value);
+    setEditMask: function( value ) {
+        this.control.set( 'editMask', value );
     },
 
-    getEditMask: function () {
-        return this.control.get('editMask');
+    getEditMask: function() {
+        return this.control.get( 'editMask' );
     },
 
     /**
      * @description Возвращает значение, которое введено в поле редактирования в данный момент
      * @returns {*}
      */
-    getRawValue: function () {
-        var value = this.control.get('editor').getValue(),
-            editMask = this.getEditMask();
+    getRawValue: function() {
+        var value = this.control.get( 'editor' ).getValue();
+        var editMask = this.getEditMask();
 
-        if (editMask) {
+        if ( editMask ) {
             var val = editMask.getValue();
             var txt = editMask.getText();
 
-            if (isNotEmpty(val)) {
+            if ( isNotEmpty( val ) ) {
                 value = val;
-            } else if (isNotEmpty(txt)) {
+            } else if ( isNotEmpty( txt ) ) {
                 value = txt;
             }
         }
 
         return value;
 
-        function isNotEmpty(val) {
+        function isNotEmpty( val ) {
             return val !== null && typeof val !== 'undefined';
         }
     },
 
-    getInputType: function () {
-        return this.control.get('inputType');
+    getInputType: function() {
+        return this.control.get( 'inputType' );
     },
 
-    setInputType: function (inputType) {
-        if (inputType) {
-            this.control.set('inputType', inputType);
+    setInputType: function( inputType ) {
+        if ( inputType ) {
+            this.control.set( 'inputType', inputType );
         }
     }
 
-}, editorBaseMixin, labelTextElementMixin);
+}, editorBaseMixin, labelTextElementMixin );

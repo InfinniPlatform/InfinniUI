@@ -1,17 +1,19 @@
+var InfinniUI = window.InfinniUI || {};
+window.InfinniUI = InfinniUI;
 
-window.InfinniUI = window.InfinniUI || {};
+InfinniUI.Utils = InfinniUI.Utils || {};
 
-window.InfinniUI.Utils = window.InfinniUI.Utils || {};
+InfinniUI.Template = InfinniUI.Template || {};
 
-window.InfinniUI.Template = window.InfinniUI.Template || {};
+InfinniUI.config = InfinniUI.config || {};
 
-window.InfinniUI.config = window.InfinniUI.config || {};
+InfinniUI.global = InfinniUI.global || {};
 
-window.InfinniUI.global = window.InfinniUI.global || {};
+InfinniUI.Mixins = InfinniUI.Mixins || {};
 
-window.InfinniUI.Metadata = window.InfinniUI.Metadata || {};
+InfinniUI.Metadata = InfinniUI.Metadata || {};
 
-window.InfinniUI.localizations = window.InfinniUI.localizations || {
+InfinniUI.localizations = InfinniUI.localizations || {
     'ru-RU': {
         caption: 'Русский',
         name: 'ru-RU'
@@ -22,4 +24,4 @@ window.InfinniUI.localizations = window.InfinniUI.localizations || {
     }
 };
 
-window.InfinniUI.Providers = {};
+InfinniUI.Providers = {};

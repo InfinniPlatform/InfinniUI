@@ -1,29 +1,30 @@
 /**
  * @param parent
+ * @param viewMode
  * @augments Element
  * @constructor
  */
-function Button(parent, viewMode) {
-	_.superClass(Button, this, parent, viewMode);
-	this.buttonInit();
+function Button( parent, viewMode ) {
+    _.superClass( Button, this, parent, viewMode );
+    this.buttonInit();
 }
 
-window.InfinniUI.Button = Button;
+InfinniUI.Button = Button;
 
-_.inherit(Button, Element);
+_.inherit( Button, Element );
 
-_.extend(Button.prototype, {
+_.extend( Button.prototype, {
 
-	createControl: function (viewMode) {
-		return new ButtonControl(viewMode);
-	},
+    createControl: function( viewMode ) {
+        return new ButtonControl( viewMode );
+    },
 
-	setType: function(type) {
-		this.control.setType(type);
-	},
+    setType: function( type ) {
+        this.control.setType( type );
+    },
 
-	getType: function() {
-		return this.control.getType();
-	}
+    getType: function() {
+        return this.control.getType();
+    }
 
-}, buttonMixin);
+}, buttonMixin );

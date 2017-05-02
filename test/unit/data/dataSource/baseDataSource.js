@@ -1,21 +1,21 @@
-describe('baseDataSource', function () {
+describe( 'baseDataSource', function() {
 
-    it('should check ErrorValidator before save', function (done) {
+    it( 'should check ErrorValidator before save', function( done ) {
         // Given
-        var dataSource = new InfinniUI.ObjectDataSource( {view: fakeView()} );
+        var dataSource = new InfinniUI.ObjectDataSource( { view: fakeView() } );
 
-        dataSource.setErrorValidator(function(context, args) {
+        dataSource.setErrorValidator( function( context, args ) {
             done();
             return {
                 IsValid: true
             };
-        });
+        } );
 
-        dataSource.createItem(function(context, args){
+        dataSource.createItem( function( context, args ) {
             //When
             var item = args.value;
 
-            dataSource.saveItem(item)
-        });
-    });
-});
+            dataSource.saveItem( item );
+        } );
+    } );
+} );

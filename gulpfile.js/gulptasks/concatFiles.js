@@ -1,20 +1,57 @@
 'use strict';
 
-var gulp = require('gulp'),
-			$ = require('gulp-load-plugins')(),
-			through2 = require('through2').obj,
-			combiner = require('stream-combiner2').obj;
+var gulp = require( 'gulp' );
+var $ = require( 'gulp-load-plugins' )();
+var config = require( './config' );
 
-module.exports = function(options) {
-	return function() {
-		return combiner(
-			gulp.src(options.src),
-			$.if(function(file) { return file.relative.indexOf('min\.') === -1 && options.uglifyJs; }, $.uglify()),
-			$.concat(options.finalName),
-			gulp.dest(options.dest)
-		).on('error', $.notify.onError({
-				title: options.taskName
-		}));
-		
-	};
-};
+function concat( options ) {
+    return gulp.src( options.src )
+        .pipe( $.if( function( file ) {
+            return file.relative.indexOf( 'min\.' ) === -1 && options.isNeedUglifyJs;
+        }, $.uglify() ) )
+        .pipe( $.concat( options.finalName ) )
+        .pipe( gulp.dest( options.dest ) );
+}
+
+/**
+ * Concat vendor.js
+ *
+ * @task {concat:vendor-js}
+ * @group {Sub-tasks}
+ */
+gulp.task( 'concat:vendor-js', function() {
+    return concat( {
+        src: config.vendorJsFiles,
+        finalName: 'vendor.js',
+        dest: config.platformOutputFolder,
+        isNeedUglifyJs: true
+    } );
+} );
+
+/**
+ * Concat vendor.css
+ *
+ * @task {concat:vendor-styles}
+ * @group {Sub-tasks}
+ */
+gulp.task( 'concat:vendor-styles', function() {
+    return concat( {
+        src: config.vendorStylesFiles,
+        finalName: 'vendor.css',
+        dest: config.platformOutputFolder + 'css'
+    } );
+} );
+
+/**
+ * Concat all unit tests in one file.
+ *
+ * @task {concat:unit-tests}
+ * @group {Sub-tasks}
+ */
+gulp.task( 'concat:unit-tests', function() {
+    return concat( {
+        src: config.unitTestFiles,
+        finalName: 'unitTest.js',
+        dest: config.testOutputFolder
+    } );
+} );

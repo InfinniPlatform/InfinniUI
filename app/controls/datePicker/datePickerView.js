@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var DatePickerView = DateTimePickerView.extend({
     editMaskStrategies: {
         DateTimeEditMask: 'timestamp'
@@ -6,4 +10,6 @@ var DatePickerView = DateTimePickerView.extend({
     initialize: function () {
         DateTimePickerView.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
     }
-});
+} );
+
+InfinniUI.DatePickerView = DatePickerView;

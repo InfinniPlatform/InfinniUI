@@ -1,8 +1,9 @@
 /**
- * @class ButtonView
+ *
  * @augments ControlView
+ * @constructor
  */
-var LinkButtonView = CommonButtonView.extend({
+var LinkButtonView = CommonButtonView.extend( {
 
     tagName: 'a',
 
@@ -16,15 +17,23 @@ var LinkButtonView = CommonButtonView.extend({
         'click': 'onClickHandler'
     },
 
-    template: function(){return '';},
+    /**
+     *
+     * @returns {string}
+     */
+    template: function() {return '';},
 
     UI: {
     },
 
-    getButtonElement: function(){
+    /**
+     *
+     * @returns {jQuery}
+     */
+    getButtonElement: function() {
         return this.$el;
     }
 
-});
+} );
 
-InfinniUI.ObjectUtils.setPropertyValueDirect(window.InfinniUI, 'viewModes.Button.link', LinkButtonView);
+InfinniUI.ObjectUtils.setPropertyValueDirect( InfinniUI, 'viewModes.Button.link', LinkButtonView );

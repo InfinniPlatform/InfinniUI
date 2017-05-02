@@ -4,22 +4,33 @@
  * @constructor
  * @augments TextEditorBaseControl
  */
-function DateTimePickerControl(parent) {
-    _.superClass(DateTimePickerControl, this, parent);
+function DateTimePickerControl( parent ) {
+    _.superClass( DateTimePickerControl, this, parent );
 }
 
-window.InfinniUI.DateTimePickerControl = DateTimePickerControl;
+InfinniUI.DateTimePickerControl = DateTimePickerControl;
 
-_.inherit(DateTimePickerControl, TextEditorBaseControl);
+_.inherit( DateTimePickerControl, TextEditorBaseControl );
 
-_.extend(DateTimePickerControl.prototype, {
+_.extend( DateTimePickerControl.prototype, {
 
-    createControlModel: function () {
+    /**
+     *
+     * @returns {DateTimePickerModel}
+     */
+    createControlModel: function() {
         return new DateTimePickerModel();
     },
 
-    createControlView: function (model) {
-        return new DateTimePickerView({model: model});
+    /**
+     *
+     * @param model
+     * @returns {DateTimePickerView}
+     */
+    createControlView: function( model ) {
+        return new DateTimePickerView( { model: model } );
     }
-});
 
+} );
+
+InfinniUI.DateTimePickerControl = DateTimePickerControl;

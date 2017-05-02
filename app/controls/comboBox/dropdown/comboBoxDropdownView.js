@@ -1,6 +1,11 @@
-var ComboBoxDropdownView = Backbone.View.extend({
+/**
+ *
+ * @constructor
+ */
+var ComboBoxDropdownView = Backbone.View.extend( {
 
-    className: "pl-dropdown-container",
+    className: 'pl-dropdown-container',
+
     events: {
         'click .backdrop': 'onClickBackdropHandler',
         'keyup .pl-combobox-filter-text': 'onKeyUpHandler',
@@ -14,216 +19,282 @@ var ComboBoxDropdownView = Backbone.View.extend({
         noItems: '.pl-combobox-items-empty'
     },
 
-    initialize: function () {
-        var isGrouped = this.model.get('groupValueSelector') != null;
+    /**
+     *
+     */
+    initialize: function() {
+        var groupValueSelector = this.model.get( 'groupValueSelector' );
+        var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
 
-        if (isGrouped) {
-            this.strategy = new ComboBoxGroupViewStrategy(this);
+        if( isGrouped ) {
+            this.strategy = new ComboBoxGroupViewStrategy( this );
         } else {
-            this.strategy = new ComboBoxPlainViewStrategy(this);
+            this.strategy = new ComboBoxPlainViewStrategy( this );
         }
 
         this.listenTo( this.model, 'change:noItemsMessage', this.updateNoItemsMessage );
-        this.listenTo(this.model, 'change:dropdown', this.onChangeDropdownHandler);
-        this.listenTo(this.model, 'change:autocompleteValue', this.onChangeSearchHandler);
-        this.listenTo(this.model, 'change:autocomplete', this.updateAutocomplete);
-        this.listenTo(this.model, 'change:selectedItem', this.onChangeSelectedItem);
-        this.listenTo(this.strategy, 'click', this.onClickItemHandler);
-        this.listenTo(this.strategy, 'mouseenter', this.onMouseEnterItemHandler);
-        this.model.onValueChanged(this.onChangeValueHandler.bind(this));
+        this.listenTo( this.model, 'change:dropdown', this.onChangeDropdownHandler );
+        this.listenTo( this.model, 'change:autocompleteValue', this.onChangeSearchHandler );
+        this.listenTo( this.model, 'change:autocomplete', this.updateAutocomplete );
+        this.listenTo( this.model, 'change:selectedItem', this.onChangeSelectedItem );
+        this.listenTo( this.strategy, 'click', this.onClickItemHandler );
+        this.listenTo( this.strategy, 'mouseenter', this.onMouseEnterItemHandler );
+        this.model.onValueChanged( this.onChangeValueHandler.bind( this ) );
 
-        var items = this.model.get('items');
+        var items = this.model.get( 'items' );
 
         var view = this;
-        items.onChange(function () {
+        items.onChange( function() {
             view.renderItems();
-        });
+        } );
     },
 
-    updateProperties: function () {
+    /**
+     *
+     */
+    updateProperties: function() {
         this.updateAutocomplete();
         this.updateNoItemsMessage();
     },
 
+    /**
+     *
+     */
     updateNoItemsMessage: function() {
         var model = this.model;
         var noItemsMessage = model.get( 'noItemsMessage' ) || localized.strings.ComboBox.noItemsMessage;
         this.ui.noItems.html( noItemsMessage );
     },
 
-    render: function () {
+    /**
+     *
+     * @returns {jQuery}
+     */
+    render: function() {
         var template = this.strategy.getTemplate();
-        this.$el.html(template({
-            multiSelect: this.model.get('multiSelect')
-        }));
+        this.$el.html( template( {
+            multiSelect: this.model.get( 'multiSelect' )
+        } ) );
         this.bindUIElements();
         this.updateProperties();
         this.renderItems();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this.$el;
     },
 
-    renderItems: function () {
+    /**
+     *
+     */
+    renderItems: function() {
         this.$el.hide();
-        var $items = this.strategy.renderItems();
-        this.$items = $items;
-        var items = this.model.get('items');
+        this.$items = this.strategy.renderItems();
+        var items = this.model.get( 'items' );
 
-        var noItems = (items && items.length == 0);
-        this.ui.noItems.toggleClass('hidden', !noItems);
+        var noItems = ( items && items.length == 0 );
+        this.ui.noItems.toggleClass( 'hidden', !noItems );
 
         this.markSelectedItems();
         this.markCheckedItems();
 
-        this.trigger('itemsRendered2');
+        this.trigger( 'itemsRendered2' );
         this.$el.show();
     },
 
-    setItemsContent: function (content) {
+    /**
+     *
+     * @param content
+     */
+    setItemsContent: function( content ) {
         var $items = this.ui.items;
         $items.empty();
-        $items.append(content);
+        $items.append( content );
     },
 
-    close: function () {
-        this.model.set('dropdown', false);
+    /**
+     *
+     */
+    close: function() {
+        this.model.set( 'dropdown', false );
     },
 
-    setSearchFocus: function () {
+    /**
+     *
+     */
+    setSearchFocus: function() {
         this.ui.text.focus();
     },
 
-    onClickBackdropHandler: function () {
+    /**
+     *
+     */
+    onClickBackdropHandler: function() {
         this.close();
     },
 
-    onChangeValueHandler: function () {
+    /**
+     *
+     */
+    onChangeValueHandler: function() {
         this.markCheckedItems();
     },
 
-    markSelectedItems: function () {
+    /**
+     *
+     */
+    markSelectedItems: function() {
         var model = this.model;
-        if (!Array.isArray(this.$items)) {
+        if( !Array.isArray( this.$items ) ) {
             return;
         }
 
-        var $container = this.ui.items;
         var $items = this.$items;
         var selectedItem = model.getSelectedItem();
 
-        $items.forEach(function ($item) {
-            var selected = selectedItem === $item.data('pl-data-item');
-            $item.toggleClass('pl-combobox-selected', selected);
-        });
+        $items.forEach( function( $item ) {
+            var selected = selectedItem === $item.data( 'pl-data-item' );
+            $item.toggleClass( 'pl-combobox-selected', selected );
+        } );
 
         this.ensureVisibleSelectedItem();
-
     },
 
-    ensureVisibleSelectedItem: function () {
-        var model = this.model;
-        if (!Array.isArray(this.$items)) {
+    /**
+     *
+     */
+    ensureVisibleSelectedItem: function() {
+        if( !Array.isArray( this.$items ) ) {
             return;
         }
 
         var $container = this.ui.items;
         var $items = this.$items;
-        var selectedItem = model.getSelectedItem();
+        var selectedItem = this.model.getSelectedItem();
 
-        $items.some(function ($item) {
-            var selected = selectedItem === $item.data('pl-data-item');
-            if (selected) {
-                ensureItem($container, $item);
+        $items.some( function( $item ) {
+            var selected = selectedItem === $item.data( 'pl-data-item' );
+            if( selected ) {
+                ensureItem( $container, $item );
             }
             return selected;
-        });
+        } );
 
-        function ensureItem($container, $item) {
+        function ensureItem( $container, $item ) {
             var newScrollTop;
-
             var scrollTop = $container.scrollTop();
             var itemTop = $item.position().top;
             var itemHeight = $item.outerHeight();
             var viewHeight = $container.innerHeight();
-            if (itemTop + itemHeight > viewHeight) {
+
+            if( itemTop + itemHeight > viewHeight ) {
                 newScrollTop = scrollTop + itemTop + itemHeight - viewHeight;
-            } else if (itemTop < 0) {
+            } else if( itemTop < 0 ) {
                 newScrollTop = scrollTop + itemTop;
             }
 
-            if (typeof newScrollTop !== 'undefined') {
-                $container.scrollTop(newScrollTop);
+            if( typeof newScrollTop !== 'undefined' ) {
+                $container.scrollTop( newScrollTop );
             }
         }
     },
 
-
-    markCheckedItems: function () {
+    /**
+     *
+     */
+    markCheckedItems: function() {
         var model = this.model;
         var value = model.getValue();
 
-        if (!Array.isArray(this.$items)) {
+        if( !Array.isArray( this.$items ) ) {
             return;
         }
 
         var $items = this.$items;
-        var isMultiSelect = !!model.get('multiSelect');
+        var isMultiSelect = !!model.get( 'multiSelect' );
         var items = [];
 
-        if (isMultiSelect && Array.isArray(value)) {
-            items = value.map(function (val) {
-                return model.itemByValue(val);
-            });
+        if( isMultiSelect && Array.isArray( value ) ) {
+            items = value.map( function( val ) {
+                return model.itemByValue( val );
+            } );
         } else {
-            items = [model.itemByValue(value)];
+            items = [ model.itemByValue( value ) ];
         }
 
-        $items.forEach(function ($item) {
-            var selected = items.indexOf($item.data('pl-data-item')) !== -1;
-            $item.toggleClass('pl-combobox-checked', selected);
-        });
+        $items.forEach( function( $item ) {
+            var selected = items.indexOf( $item.data( 'pl-data-item' ) ) !== -1;
+            $item.toggleClass( 'pl-combobox-checked', selected );
+        } );
     },
 
-    onChangeDropdownHandler: function (model, dropdown) {
-        if (!dropdown) {
+    /**
+     *
+     * @param model
+     * @param dropdown
+     */
+    onChangeDropdownHandler: function( model, dropdown ) {
+        if( !dropdown ) {
             this.remove();
         }
     },
 
-    updateAutocomplete: function () {
-        var autocomplete = this.model.get('autocomplete');
-        this.ui.filter.toggleClass('hidden', !autocomplete);
+    /**
+     *
+     */
+    updateAutocomplete: function() {
+        var autocomplete = this.model.get( 'autocomplete' );
+        this.ui.filter.toggleClass( 'hidden', !autocomplete );
     },
 
-    onMouseEnterItemHandler: function (item) {
-        this.model.setSelectedItem(item);
+    /**
+     *
+     * @param item
+     */
+    onMouseEnterItemHandler: function( item ) {
+        this.model.setSelectedItem( item );
     },
 
-    onClickItemHandler: function (item) {
-        var isEnabled = !this.model.isDisabledItem(item);
-        if(isEnabled) {
-            this.model.toggleItem(item);
+    /**
+     *
+     * @param item
+     */
+    onClickItemHandler: function( item ) {
+        var isEnabled = !this.model.isDisabledItem( item );
+
+        if( isEnabled ) {
+            this.model.toggleItem( item );
             this.close();
         }
     },
 
-    onKeyUpHandler: function (event) {
+    /**
+     *
+     */
+    onKeyUpHandler: function() {
         //@TODO grow input
         var text = this.ui.text.val();
-        this.trigger('search', text);
+        this.trigger( 'search', text );
     },
 
-    onKeyDownHandler: function (event) {
+    /**
+     *
+     * @param event
+     */
+    onKeyDownHandler: function( event ) {
         var model = this.model;
         event.preventDefault();
-        this.onFilterKeyDownHandler(event);
+        this.onFilterKeyDownHandler( event );
     },
 
-    onFilterKeyDownHandler: function (event) {
+    /**
+     *
+     * @param event
+     */
+    onFilterKeyDownHandler: function( event ) {
         var model = this.model;
-        switch (event.which) {
+
+        switch( event.which ) {
             case 36://Home;
                 model.selectFirstItem();
                 break;
@@ -237,7 +308,7 @@ var ComboBoxDropdownView = Backbone.View.extend({
                 model.selectNextItem();
                 break;
             case 13:
-                this.onClickItemHandler(model.getSelectedItem());
+                this.onClickItemHandler( model.getSelectedItem() );
                 break;
             case 9:
                 this.close();
@@ -246,68 +317,102 @@ var ComboBoxDropdownView = Backbone.View.extend({
                 this.close();
                 event.stopPropagation();
                 break;
+            default:
+                break;
         }
     },
 
-    onChangeSearchHandler: function ( model, value ) {
+    /**
+     *
+     * @param model
+     * @param value
+     */
+    onChangeSearchHandler: function( model, value ) {
         var search = this.ui.noItems.find( '.search-message' );
+
         if( search.length ) {
             search.text( value );
         }
     },
 
-    onChangeSelectedItem: function (model, value) {
+    /**
+     *
+     */
+    onChangeSelectedItem: function() {
         this.markSelectedItems();
     },
 
-    updatePosition: function (parentDOMElement) {
-        var direction = this.getDropdownDirection(parentDOMElement);
-        this.setPositionFor(parentDOMElement, direction );
+    /**
+     *
+     * @param parentDOMElement
+     */
+    updatePosition: function( parentDOMElement ) {
+        var direction = this.getDropdownDirection( parentDOMElement );
+        this.setPositionFor( parentDOMElement, direction );
     },
 
-    setPositionFor: function (parentDOMElement, direction) {
-        clearInterval(this._intervalId);
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
+    setPositionFor: function( parentDOMElement, direction ) {
+        clearInterval( this._intervalId );
 
-        this.applyStyle(parentDOMElement, direction);
-        this._intervalId = setInterval(this.applyStyle.bind(this, parentDOMElement, direction), 100);
+        this.applyStyle( parentDOMElement, direction );
+        this._intervalId = setInterval( this.applyStyle.bind( this, parentDOMElement, direction ), 100 );
     },
 
-    remove: function () {
-        clearInterval(this._intervalId);
-        return Backbone.View.prototype.remove.apply(this, arguments);
+    /**
+     *
+     * @returns {*}
+     */
+    remove: function() {
+        clearInterval( this._intervalId );
+        return Backbone.View.prototype.remove.apply( this, arguments );
     },
 
-    getDropdownDirection: function (parentDOMElement) {
-
-        var windowHeight = $(window).height();
+    /**
+     *
+     * @param parentDOMElement
+     * @returns {string}
+     */
+    getDropdownDirection: function( parentDOMElement ) {
+        var windowHeight = $( window ).height();
         var rect = parentDOMElement.getBoundingClientRect();
         var height = this.$el.height();
-
         var direction = 'bottom';
-        if (rect.bottom + height + 30 > windowHeight && rect.bottom > windowHeight / 2) {
+
+        if( rect.bottom + height + 30 > windowHeight && rect.bottom > windowHeight / 2 ) {
             direction = 'top';
         }
 
         return direction;
     },
 
-    applyStyle: function (parentDOMElement, direction) {
+    /**
+     *
+     * @param parentDOMElement
+     * @param direction
+     */
+    applyStyle: function( parentDOMElement, direction ) {
         var rect = parentDOMElement.getBoundingClientRect();
-
         var style = {
             left: window.pageXOffset + rect.left,
-            width: Math.round(rect.width) - 1
+            width: Math.round( rect.width ) - 1
         };
 
-        if (direction === 'bottom') {
+        if( direction === 'bottom' ) {
             style.top = window.pageYOffset + rect.bottom;
         } else {
             style.top = window.pageYOffset + rect.top - this.$el.height();
         }
 
-        this.$el.css(style);
+        this.$el.css( style );
     }
 
-});
+} );
 
-_.extend(ComboBoxDropdownView.prototype, bindUIElementsMixin);
+_.extend( ComboBoxDropdownView.prototype, bindUIElementsMixin );
+
+InfinniUI.ComboBoxDropdownView = ComboBoxDropdownView;

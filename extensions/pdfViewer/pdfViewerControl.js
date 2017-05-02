@@ -1,36 +1,37 @@
-var PdfViewerControl = function () {
-    _.superClass(PdfViewerControl, this);
+var PdfViewerControl = function() {
+    _.superClass( PdfViewerControl, this );
 };
 
-_.inherit(PdfViewerControl, Control);
+_.inherit( PdfViewerControl, Control );
 
-_.extend(PdfViewerControl.prototype, {
-    createControlModel: function () {
+_.extend( PdfViewerControl.prototype, {
+
+    createControlModel: function() {
         return new PdfViewerModel();
     },
 
-    createControlView: function (model) {
-        return new PdfViewerView({model: model});
+    createControlView: function( model ) {
+        return new PdfViewerView( { model: model } );
     },
 
-    onValueChanged: function(handler){
-        this.controlModel.on('change:value', handler);
+    onValueChanged: function( handler ) {
+        this.controlModel.on( 'change:value', handler );
     },
 
-    setWidth: function(width) {
-        this.controlModel.setWidth(width);
+    setWidth: function( width ) {
+        this.controlModel.setWidth( width );
     },
 
     getWidth: function() {
         return this.controlModel.getWidth();
     },
 
-    setHeight: function(height) {
-        this.controlModel.setHeight(height);
+    setHeight: function( height ) {
+        this.controlModel.setHeight( height );
     },
 
     getHeight: function() {
         return this.controlModel.getHeight();
     }
 
-});
+} );

@@ -3,29 +3,29 @@
  * @constructor
  * @augments Container
  */
-function Panel(parent) {
-    _.superClass(Panel, this, parent);
+function Panel( parent ) {
+    _.superClass( Panel, this, parent );
 }
 
-window.InfinniUI.Panel = Panel;
+InfinniUI.Panel = Panel;
 
-_.inherit(Panel, Container);
+_.inherit( Panel, Container );
 
 /**
  * @description Возвращает значение, определяющее, свернута ли панель
  * @returns {boolean}
  */
-Panel.prototype.getCollapsible = function () {
-    return this.control.get('collapsible');
+Panel.prototype.getCollapsible = function() {
+    return this.control.get( 'collapsible' );
 };
 
 /**
  * @description Устанавливает значение, определяющее, разрешено ли сворачивание панели
  * @param {boolean} value
  */
-Panel.prototype.setCollapsible = function (value) {
-    if (typeof value !== 'undefined') {
-        this.control.set('collapsible', !!value);
+Panel.prototype.setCollapsible = function( value ) {
+    if ( typeof value !== 'undefined' ) {
+        this.control.set( 'collapsible', !!value );
     }
 };
 
@@ -33,17 +33,17 @@ Panel.prototype.setCollapsible = function (value) {
  * @description Возвращает значение, определяющее, свернута ли панель
  * @returns {boolean}
  */
-Panel.prototype.getCollapsed = function () {
-    return this.control.get('collapsed');
+Panel.prototype.getCollapsed = function() {
+    return this.control.get( 'collapsed' );
 };
 
 /**
  * @description Устанавливает значение, определяющее, свернута ли панель
  * @param {boolean} value
  */
-Panel.prototype.setCollapsed = function (value) {
-    if (typeof value !== 'undefined') {
-        this.control.set('collapsed', !!value);
+Panel.prototype.setCollapsed = function( value ) {
+    if ( typeof value !== 'undefined' ) {
+        this.control.set( 'collapsed', !!value );
     }
 };
 
@@ -51,86 +51,86 @@ Panel.prototype.setCollapsed = function (value) {
  * @description Возвращает функцию шаблонизации заголовка панели
  * @returns {Function}
  */
-Panel.prototype.getHeaderTemplate = function () {
-    return this.control.get('headerTemplate');
+Panel.prototype.getHeaderTemplate = function() {
+    return this.control.get( 'headerTemplate' );
 };
 
 /**
  * @description Устанавливает функцию шаблонизации заголовка панели
  * @param {Function} value
  */
-Panel.prototype.setHeaderTemplate = function (value) {
-    this.control.set('headerTemplate', value);
+Panel.prototype.setHeaderTemplate = function( value ) {
+    this.control.set( 'headerTemplate', value );
 };
 
 /**
  * @description Возвращает заголовок панели
  * @returns {*}
  */
-Panel.prototype.getHeader = function () {
-    return this.control.get('header');
+Panel.prototype.getHeader = function() {
+    return this.control.get( 'header' );
 };
 
 /**
  * @description Устанавливает заголовок панели
  * @param {*} value
  */
-Panel.prototype.setHeader = function (value) {
-    this.control.set('header', value);
+Panel.prototype.setHeader = function( value ) {
+    this.control.set( 'header', value );
 };
 
 /**
  * @description Возвращает элемент для открытия панели
  * @returns {string}
  */
-Panel.prototype.getCollapseChanger = function () {
-    return this.control.get('collapseChanger');
+Panel.prototype.getCollapseChanger = function() {
+    return this.control.get( 'collapseChanger' );
 };
 
 /**
  * @description Устанавливает элемент при клике на который раскрывается панель
  * @param {string} value
  */
-Panel.prototype.setCollapseChanger = function (value) {
-    this.control.set('collapseChanger', value);
+Panel.prototype.setCollapseChanger = function( value ) {
+    this.control.set( 'collapseChanger', value );
 };
 
 /**
  * @description Устанавливает обработчик события о том, что панель разворачивается
  * @param {Function} handler
  */
-Panel.prototype.onExpanding = function (handler) {
-    this.control.on('expanding', handler);
+Panel.prototype.onExpanding = function( handler ) {
+    this.control.on( 'expanding', handler );
 };
 
 /**
  * @description Устанавливает обработчик события о том, что панель была развернута
  * @param {Function} handler
  */
-Panel.prototype.onExpanded = function (handler) {
-    this.control.on('expanded', handler);
+Panel.prototype.onExpanded = function( handler ) {
+    this.control.on( 'expanded', handler );
 };
 
 /**
  * @description Устанавливает обработчик события о том, что панель сворачивается
  * @param {Function} handler
  */
-Panel.prototype.onCollapsing = function (handler) {
-    this.control.on('collapsing', handler);
+Panel.prototype.onCollapsing = function( handler ) {
+    this.control.on( 'collapsing', handler );
 };
 
 /**
  * @description Устанавливает обработчик события о том, что панель была свернута
  * @param {Function} handler
  */
-Panel.prototype.onCollapsed = function (handler) {
-    this.control.on('collapsed', handler);
+Panel.prototype.onCollapsed = function( handler ) {
+    this.control.on( 'collapsed', handler );
 };
 
 /**
  *
  * @returns {PanelControl}
  */
-Panel.prototype.createControl = function () {
+Panel.prototype.createControl = function() {
     return new PanelControl();
 };

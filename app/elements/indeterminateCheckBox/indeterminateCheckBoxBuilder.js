@@ -4,18 +4,19 @@
  * @augments ElementBuilder
  */
 function IndeterminateCheckBoxBuilder() {
-	_.superClass(IndeterminateCheckBoxBuilder, this);
-	this.initialize_editorBaseBuilder();
+    _.superClass( IndeterminateCheckBoxBuilder, this );
+    this.initialize_editorBaseBuilder();
 }
 
-window.InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
+InfinniUI.IndeterminateCheckBoxBuilder = IndeterminateCheckBoxBuilder;
 
-_.inherit(IndeterminateCheckBoxBuilder, CheckBoxBuilder);
+_.inherit( IndeterminateCheckBoxBuilder, CheckBoxBuilder );
 
+_.extend( IndeterminateCheckBoxBuilder.prototype, {
 
-_.extend(IndeterminateCheckBoxBuilder.prototype, {
-	createElement: function (params) {
-		return new IndeterminateCheckBox(params.parent);
-	}
-});
+    createElement: function( params ) {
+        return new IndeterminateCheckBox( params.parent );
+    }
+
+} );
 

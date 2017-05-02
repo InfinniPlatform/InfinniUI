@@ -1,24 +1,25 @@
-function ListBoxControl(viewMode) {
-    _.superClass(ListBoxControl, this, viewMode);
+function ListBoxControl( viewMode ) {
+    _.superClass( ListBoxControl, this, viewMode );
 }
 
-_.inherit(ListBoxControl, ListEditorBaseControl);
+_.inherit( ListBoxControl, ListEditorBaseControl );
 
-_.extend(ListBoxControl.prototype, {
+_.extend( ListBoxControl.prototype, {
 
-    createControlModel: function () {
+    createControlModel: function() {
         return new ListBoxModel();
     },
 
-    createControlView: function (model, viewMode) {
-        if(!viewMode || ! viewMode in window.InfinniUI.viewModes.ListBox){
+    createControlView: function( model, viewMode ) {
+        if( !viewMode || ! viewMode in InfinniUI.viewModes.ListBox ) {
             viewMode = 'common';
         }
 
-        var ViewClass = window.InfinniUI.viewModes.ListBox[viewMode];
+        var ViewClass = InfinniUI.viewModes.ListBox[ viewMode ];
 
-        return new ViewClass({model: model});
+        return new ViewClass( { model: model } );
     }
 
-});
+} );
 
+InfinniUI.ListBoxControl = ListBoxControl;

@@ -2,67 +2,69 @@
  * @class IconView
  * @arguments ControlView
  */
-var IconView = ControlView.extend({
+var IconView = ControlView.extend( {
 
     className: 'pl-icon fa',
 
     tagName: 'i',
 
-    render: function(){
+    render: function() {
         this.prerenderingActions();
         this.updateProperties();
-        this.trigger('render');
+        this.trigger( 'render' );
         this.postrenderingActions();
         //devblockstart
-        window.InfinniUI.global.messageBus.send('render', {element: this});
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
         //devblockstop
         return this;
     },
 
-    renderIcon: function () {
-        var value = this.model.get('value');
-        this.switchClass('fa', value);
+    renderIcon: function() {
+        var value = this.model.get( 'value' );
+        this.switchClass( 'fa', value );
     },
 
-    initHandlersForProperties: function () {
-        ControlView.prototype.initHandlersForProperties.call(this);
-        this.listenTo(this.model, 'change:value', this.updateValue);
-        this.listenTo(this.model, 'change:size', this.updateSize);
+    initHandlersForProperties: function() {
+        ControlView.prototype.initHandlersForProperties.call( this );
+        this.listenTo( this.model, 'change:value', this.updateValue );
+        this.listenTo( this.model, 'change:size', this.updateSize );
     },
 
     updateSize: function() {
-      var newSize = this.model.get('size');
-      this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
-      this.currentSize = newSize;
+        var newSize = this.model.get( 'size' );
+        this.changeElementClass( this.valueToSizeClassName( this.currentSize ), this.valueToSizeClassName( newSize ) );
+        this.currentSize = newSize;
     },
 
-    valueToSizeClassName: function ( value ) {
+    valueToSizeClassName: function( value ) {
         if( value ) return 'pl-iconSize-' + value.toLowerCase();
         else return '';
     },
 
-    updateProperties: function () {
-        ControlView.prototype.updateProperties.call(this);
+    updateProperties: function() {
+        ControlView.prototype.updateProperties.call( this );
         this.updateValue();
         this.updateSize();
     },
 
-    updateFocusable: function () {
-        var focusable = this.model.get('focusable');
+    updateFocusable: function() {
+        var focusable = this.model.get( 'focusable' );
 
-        if (focusable) {
-            this.$el.attr('tabindex', 0);
+        if ( focusable ) {
+            this.$el.attr( 'tabindex', 0 );
         } else {
-            this.$el.removeAttr('tabindex');
+            this.$el.removeAttr( 'tabindex' );
         }
     },
 
-    updateValue: function () {
+    updateValue: function() {
         this.renderIcon();
     },
 
-    updateTextStyle: function () {
+    updateTextStyle: function() {
         // do nothing, because icon don't have text
     }
 
-});
+} );
+
+InfinniUI.IconView = IconView;

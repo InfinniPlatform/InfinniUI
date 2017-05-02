@@ -1,45 +1,69 @@
+/**
+ *
+ * @constructor
+ */
 function RouteToAction() {
-	_.superClass( RouteToAction, this );
-	this.href = '';
-	this.replace = false;
+    _.superClass( RouteToAction, this );
+    this.href = '';
+    this.replace = false;
 }
 
 _.inherit( RouteToAction, BaseAction );
 
 _.extend( RouteToAction.prototype, {
 
-	execute: function( callback ) {
-		var router = InfinniUI.AppRouter;
-		var href = this.getHref();
-		var replace = this.getReplace();
-		var options = {
-			trigger: true
-		};
+    /**
+     *
+     * @param callback
+     */
+    execute: function( callback ) {
+        var router = InfinniUI.AppRouter;
+        var href = this.getHref();
+        var replace = this.getReplace();
+        var options = {
+            trigger: true
+        };
 
-		if( replace ) {
-			options.replace = true;
-		}
-		router.navigate( href, options );
-	},
+        if( replace ) {
+            options.replace = true;
+        }
+        router.navigate( href, options );
+    },
 
-	getHref: function() {
-		return this.href;
-	},
+    /**
+     *
+     * @returns {string}
+     */
+    getHref: function() {
+        return this.href;
+    },
 
-	setHref: function( href ) {
-		this.href = href;
-	},
+    /**
+     *
+     * @param {string} href
+     */
+    setHref: function( href ) {
+        this.href = href;
+    },
 
-	getReplace: function() {
-		return this.replace;
-	},
+    /**
+     *
+     * @returns {boolean}
+     */
+    getReplace: function() {
+        return this.replace;
+    },
 
-	setReplace: function( replace ) {
-		if( replace !== undefined ) {
-			this.replace = replace;
-		}
-	}
+    /**
+     *
+     * @param {boolean} replace
+     */
+    setReplace: function( replace ) {
+        if( typeof replace === 'boolean' ) {
+            this.replace = replace;
+        }
+    }
 
 } );
 
-window.InfinniUI.RouteToAction = RouteToAction;
+InfinniUI.RouteToAction = RouteToAction;

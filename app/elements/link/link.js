@@ -3,30 +3,30 @@
  * @augments Button
  * @constructor
  */
-function Link(parent) {
-    _.superClass(Link, this, parent);
+function Link( parent ) {
+    _.superClass( Link, this, parent );
 }
 
-window.InfinniUI.Link = Link;
+InfinniUI.Link = Link;
 
-_.inherit(Link, Button);
+_.inherit( Link, Button );
 
-Link.prototype.createControl = function () {
+Link.prototype.createControl = function() {
     return new LinkElementControl();
 };
 
-Link.prototype.setHref = function (value) {
-    this.control.set('href', value);
+Link.prototype.setHref = function( value ) {
+    this.control.set( 'href', value );
 };
 
-Link.prototype.getHref = function () {
-    return this.control.get('href');
+Link.prototype.getHref = function() {
+    return this.control.get( 'href' );
 };
 
-Link.prototype.setTarget = function (value) {
-    this.control.set('target', value);
+Link.prototype.setTarget = function( value ) {
+    this.control.set( 'target', value );
 };
 
-Link.prototype.getTarget = function () {
-    return this.control.get('target');
+Link.prototype.getTarget = function() {
+    return this.control.get( 'target' );
 };

@@ -1,10 +1,10 @@
-function InlineScriptFactory(scriptBody, builder, builderParams) {
-    
+function InlineScriptFactory( scriptBody, builder, builderParams ) {
+
     return {
         get: get
     };
 
-    function get(  ) {
+    function get() {
         var scriptBuilderParams = {
             parentView: builderParams.parentView,
             parent: builderParams.parent,
@@ -16,11 +16,13 @@ function InlineScriptFactory(scriptBody, builder, builderParams) {
             Name: 'InlineScript'
         };
 
-        var script = builder.buildType('Script', scriptMetadata, scriptBuilderParams);
+        var script = builder.buildType( 'Script', scriptMetadata, scriptBuilderParams );
 
-        return function (context, args) {
-            return script.call(null, context, args);
-        }
+        return function( context, args ) {
+            return script.call( null, context, args );
+        };
     }
-    
+
 }
+
+InfinniUI.InlineScriptFactory = InlineScriptFactory;

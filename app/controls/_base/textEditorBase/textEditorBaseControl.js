@@ -5,11 +5,13 @@
  * @augments Control
  * @mixes editorBaseControlMixin
  */
-function TextEditorBaseControl(parent) {
-    _.superClass(TextEditorBaseControl, this, parent);
+function TextEditorBaseControl( parent ) {
+    _.superClass( TextEditorBaseControl, this, parent );
     this.initialize_editorBaseControl();
 }
 
-_.inherit(TextEditorBaseControl, Control);
+_.inherit( TextEditorBaseControl, Control );
 
-_.extend(TextEditorBaseControl.prototype, editorBaseControlMixin);
+_.extend( TextEditorBaseControl.prototype, editorBaseControlMixin );
+
+InfinniUI.TextEditorBaseControl = TextEditorBaseControl;

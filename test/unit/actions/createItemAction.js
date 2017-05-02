@@ -4,7 +4,7 @@ describe( 'CreateItemAction', function() {
         // Given
         var view = new InfinniUI.View();
         var builder = new InfinniUI.ApplicationBuilder();
-        var dataSource = new InfinniUI.ObjectDataSource( {name: 'SomeDS', view: view} );
+        var dataSource = new InfinniUI.ObjectDataSource( { name: 'SomeDS', view: view } );
 
         view.getDataSources().push( dataSource );
 
@@ -17,7 +17,7 @@ describe( 'CreateItemAction', function() {
         };
 
         // When
-        var createItemAction = builder.build( metadata, {parentView: view} );
+        var createItemAction = builder.build( metadata, { parentView: view } );
 
         // Then
         assert.isNotNull( createItemAction );
@@ -27,23 +27,23 @@ describe( 'CreateItemAction', function() {
     it( 'should create item in ObjectDataSource', function( done ) {
         // Given
         var metadata = {
-            "Text": 'Parent View',
-            "DataSources": [
+            'Text': 'Parent View',
+            'DataSources': [
                 {
-                    "ObjectDataSource": {
-                        "Name": "ObjectDataSource",
-                        "Items": []
+                    'ObjectDataSource': {
+                        'Name': 'ObjectDataSource',
+                        'Items': []
                     }
                 }
             ],
-            "Items": [
+            'Items': [
                 {
-                    "Button": {
-                        "Name": "CreateItemButton",
-                        "Action": {
-                            "CreateItemAction": {
-                                "DestinationValue": {
-                                    "Source": "ObjectDataSource"
+                    'Button': {
+                        'Name': 'CreateItemButton',
+                        'Action': {
+                            'CreateItemAction': {
+                                'DestinationValue': {
+                                    'Source': 'ObjectDataSource'
                                 }
                             }
                         }
@@ -53,8 +53,8 @@ describe( 'CreateItemAction', function() {
         };
 
         testHelper.applyViewMetadata( metadata, function( view ) {
-            var createItemBtn = view.context.controls['CreateItemButton'];
-            var destinationDS = view.context.dataSources['ObjectDataSource'];
+            var createItemBtn = view.context.controls[ 'CreateItemButton' ];
+            var destinationDS = view.context.dataSources[ 'ObjectDataSource' ];
 
             assert.equal( destinationDS.getItems().length, 0 );
 
@@ -76,29 +76,29 @@ describe( 'CreateItemAction', function() {
     it( 'should create item in ObjectDataSource\'s item property', function( done ) {
         // Given
         var metadata = {
-            "Text": 'Parent View',
-            "DataSources": [
+            'Text': 'Parent View',
+            'DataSources': [
                 {
-                    "ObjectDataSource": {
-                        "Name": "ObjectDataSource",
-                        "Items": [
+                    'ObjectDataSource': {
+                        'Name': 'ObjectDataSource',
+                        'Items': [
                             {
-                                "_id": 1,
-                                "name": "Name",
-                                "items": []
+                                '_id': 1,
+                                'name': 'Name',
+                                'items': []
                             }
                         ]
                     }
                 }
             ],
-            "Items": [{
-                "Button": {
-                    "Name": "CreateItemButton",
-                    "Action": {
-                        "CreateItemAction": {
-                            "DestinationValue": {
-                                "Source": "ObjectDataSource",
-                                "Property": "0.items"
+            'Items': [{
+                'Button': {
+                    'Name': 'CreateItemButton',
+                    'Action': {
+                        'CreateItemAction': {
+                            'DestinationValue': {
+                                'Source': 'ObjectDataSource',
+                                'Property': '0.items'
                             }
                         }
                     }
@@ -107,16 +107,16 @@ describe( 'CreateItemAction', function() {
         };
 
         testHelper.applyViewMetadata( metadata, function( view ) {
-            var createItemBtn = view.context.controls['CreateItemButton'];
-            var destinationDS = view.context.dataSources['ObjectDataSource'];
+            var createItemBtn = view.context.controls[ 'CreateItemButton' ];
+            var destinationDS = view.context.dataSources[ 'ObjectDataSource' ];
 
-            assert.equal( destinationDS.getItems()[0].items.length, 0 );
+            assert.equal( destinationDS.getItems()[ 0 ].items.length, 0 );
 
             // When
             createItemBtn.click();
 
             // Then
-            assert.equal( destinationDS.getItems()[0].items.length, 1 );
+            assert.equal( destinationDS.getItems()[ 0 ].items.length, 1 );
 
             done();
 

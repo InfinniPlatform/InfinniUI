@@ -2,15 +2,15 @@
  * @param parent
  * @constructor
  */
-function TreeView(parent) {
-    _.superClass(TreeView, this, parent);
+function TreeView( parent ) {
+    _.superClass( TreeView, this, parent );
 }
 
-window.InfinniUI.TreeView = TreeView;
+InfinniUI.TreeView = TreeView;
 
-_.inherit(TreeView, ListEditorBase);
+_.inherit( TreeView, ListEditorBase );
 
-TreeView.prototype.createControl = function () {
+TreeView.prototype.createControl = function() {
     return new TreeViewControl();
 };
 
@@ -18,32 +18,32 @@ TreeView.prototype.createControl = function () {
  *
  * @returns Function}
  */
-TreeView.prototype.getKeySelector = function () {
-    return this.control.get('keySelector');
+TreeView.prototype.getKeySelector = function() {
+    return this.control.get( 'keySelector' );
 };
 
 /**
  *
  * @param {Function} value
  */
-TreeView.prototype.setKeySelector = function (value) {
-    this.control.set('keySelector', value);
+TreeView.prototype.setKeySelector = function( value ) {
+    this.control.set( 'keySelector', value );
 };
 
 /**
  *
  * @returns {Function}
  */
-TreeView.prototype.getParentSelector = function () {
-    return this.control.get('parentSelector');
+TreeView.prototype.getParentSelector = function() {
+    return this.control.get( 'parentSelector' );
 };
 
 /**
  *
  * @param {Function} value
  */
-TreeView.prototype.setParentSelector = function (value) {
-    this.control.set('parentSelector', value);
+TreeView.prototype.setParentSelector = function( value ) {
+    this.control.set( 'parentSelector', value );
 };
 
 /**
@@ -51,7 +51,7 @@ TreeView.prototype.setParentSelector = function (value) {
  * @param key
  */
 TreeView.prototype.expand = function( key ) {
-    this.control.expand(key);
+    this.control.expand( key );
 };
 
 /**
@@ -59,7 +59,7 @@ TreeView.prototype.expand = function( key ) {
  * @param key
  */
 TreeView.prototype.collapse = function( key ) {
-    this.control.collapse(key);
+    this.control.collapse( key );
 };
 
 /**
@@ -67,41 +67,37 @@ TreeView.prototype.collapse = function( key ) {
  * @param key
  */
 TreeView.prototype.toggle = function( key ) {
-    this.control.toggle(key);
+    this.control.toggle( key );
 };
 
 /**
  *
  * @returns {Function}
  */
-TreeView.prototype.getOnExpand = function () {
-    return this.control.get('onExpand');
+TreeView.prototype.getOnExpand = function() {
+    return this.control.get( 'onExpand' );
 };
 
 /**
  *
  * @param {Function} callback
  */
-TreeView.prototype.setOnExpand = function (callback) {
-    this.control.set('onExpand', callback);
+TreeView.prototype.setOnExpand = function( callback ) {
+    this.control.set( 'onExpand', callback );
 };
 
 /**
  *
  * @returns {Function}
  */
-TreeView.prototype.getOnCollapse = function () {
-    return this.control.get('onCollapse');
+TreeView.prototype.getOnCollapse = function() {
+    return this.control.get( 'onCollapse' );
 };
 
 /**
  *
  * @param {Function} callback
  */
-TreeView.prototype.setOnCollapse = function (callback) {
-    this.control.set('onCollapse', callback);
+TreeView.prototype.setOnCollapse = function( callback ) {
+    this.control.set( 'onCollapse', callback );
 };
-
-
-
-

@@ -2,8 +2,7 @@
  * @description Билдер ObjectFormat
  * @class ObjectFormatBuilder
  */
-function ObjectFormatBuilder () {
-
+function ObjectFormatBuilder() {
     /**
      * @description Создает и инициализирует экземпляр {@link ObjectFormat}
      * @memberOf ObjectFormatBuilder
@@ -11,13 +10,14 @@ function ObjectFormatBuilder () {
      * @param args
      * @returns {ObjectFormat}
      */
-    this.build = function (context, args) {
+    this.build = function( context, args ) {
         var format = new ObjectFormat();
 
-        format.setFormat(args.metadata.Format);
+        format.setFormat( args.metadata.Format );
 
         return format;
-    }
+    };
+
 }
 
-window.InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;
+InfinniUI.ObjectFormatBuilder = ObjectFormatBuilder;

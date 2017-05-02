@@ -1,5 +1,7 @@
-var TreeViewNodeCheckbox = TreeViewNodeBase.extend({
+var TreeViewNodeCheckbox = TreeViewNodeBase.extend( {
 
-    template: InfinniUI.Template["controls/treeView/template/node-checkbox.tpl.html"]
+    template: InfinniUI.Template[ 'controls/treeView/template/node-checkbox.tpl.html' ]
 
-});
+} );
+
+InfinniUI.TreeViewNodeCheckbox = TreeViewNodeCheckbox;

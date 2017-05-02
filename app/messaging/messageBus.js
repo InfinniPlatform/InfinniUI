@@ -1,42 +1,41 @@
-function MessageBus(view) {
+function MessageBus( view ) {
     var subscriptions = {};
 
-    this.send = function (messageType, messageBody) {
-        messageType = patchMessageType(messageType);
-        if (subscriptions[messageType]) {
+    this.send = function( messageType, messageBody ) {
+        messageType = patchMessageType( messageType );
+        if( subscriptions[ messageType ] ) {
             var context;
-            if (view && view.getContext) {
+            if( view && view.getContext ) {
                 context = view.getContext();
             }
-            _.each(subscriptions[messageType], function (handler) {
-                handler(context, { value: messageBody });
-            });
+            subscriptions[ messageType ].forEach( function( handler ) {
+                handler( context, { value: messageBody } );
+            } );
         }
     };
 
-    this.subscribe = function (messageType, messageHandler) {
-        messageType = patchMessageType(messageType);
-        if (!subscriptions[messageType]) {
-            subscriptions[messageType] = [];
+    this.subscribe = function( messageType, messageHandler ) {
+        messageType = patchMessageType( messageType );
+        if( !subscriptions[ messageType ] ) {
+            subscriptions[ messageType ] = [];
         }
-        
-        subscriptions[messageType].push(messageHandler);
+
+        subscriptions[ messageType ].push( messageHandler );
     };
 
-    this.unsubscribeByType = function (messageType) {
-        messageType = patchMessageType(messageType);
-        if (subscriptions[messageType]) {
-            delete subscriptions[messageType];
+    this.unsubscribeByType = function( messageType ) {
+        messageType = patchMessageType( messageType );
+        if( subscriptions[ messageType ] ) {
+            delete subscriptions[ messageType ];
         }
     };
 
-    this.getView = function () {
+    this.getView = function() {
         return view;
     };
 
-    function patchMessageType(messageType) {
-
-        if (typeof messageType === 'object' && typeof messageType.name !== 'undefined') {
+    function patchMessageType( messageType ) {
+        if( typeof messageType === 'object' && typeof messageType.name !== 'undefined' ) {
             messageType = messageType.name;
         }
 
@@ -44,4 +43,4 @@ function MessageBus(view) {
     }
 }
 
-window.InfinniUI.global.messageBus = new MessageBus();
+InfinniUI.global.messageBus = new MessageBus();

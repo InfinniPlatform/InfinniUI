@@ -2,72 +2,73 @@
  * @class
  * @augments ControlView
  */
-var CellView = ContainerView.extend(
-    /** @lends CellView.prototype */
-    {
-        className: 'pl-cell',
+var CellView = ContainerView.extend( {
 
-        initialize: function (options) {
-            ContainerView.prototype.initialize.call(this, options);
+    className: 'pl-cell',
 
-            this.initColumnSpan();
-        },
+    initialize: function( options ) {
+        ContainerView.prototype.initialize.call( this, options );
 
-        render: function () {
-            this.prerenderingActions();
+        this.initColumnSpan();
+    },
 
-            this.removeChildElements();
+    render: function() {
+        this.prerenderingActions();
 
-            this.renderItemsContents();
+        this.removeChildElements();
 
-            this.updateProperties();
-            this.trigger('render');
+        this.renderItemsContents();
 
-            this.postrenderingActions();
-            //devblockstart
-            window.InfinniUI.global.messageBus.send('render', {element: this});
-            //devblockstop
-            return this;
-        },
+        this.updateProperties();
+        this.trigger( 'render' );
 
-        renderItemsContents: function(){
-            var items = this.model.get('items'),
-                itemTemplate = this.model.get('itemTemplate'),
-                that = this,
-                element, item;
+        this.postrenderingActions();
+        //devblockstart
+        InfinniUI.global.messageBus.send( 'render', { element: this } );
+        //devblockstop
+        return this;
+    },
 
-            items.forEach(function(item, i){
-                element = itemTemplate(undefined, {item: item, index: i});
-                that.addChildElement(element);
-                that.$el
-                    .append(element.render());
-            });
-        },
+    renderItemsContents: function() {
+        var items = this.model.get( 'items' );
+        var itemTemplate = this.model.get( 'itemTemplate' );
+        var that = this;
+        var element, item;
 
-        initColumnSpan: function () {
-            this.listenTo(this.model, 'change:columnSpan', this.updateColumnSpan);
-            this.updateColumnSpan();
-        },
+        items.forEach( function( item, i ) {
+            element = itemTemplate( undefined, { item: item, index: i } );
+            that.addChildElement( element );
+            that.$el
+                .append( element.render() );
+        } );
+    },
 
-        updateColumnSpan: function () {
-            var columnSpan = this.model.get('columnSpan'),
-                currentColumnSpan = this.columnSpan;
+    initColumnSpan: function() {
+        this.listenTo( this.model, 'change:columnSpan', this.updateColumnSpan );
+        this.updateColumnSpan();
+    },
 
-            if(columnSpan != currentColumnSpan){
+    updateColumnSpan: function() {
+        var columnSpan = this.model.get( 'columnSpan' );
+        var currentColumnSpan = this.columnSpan;
 
-                if(currentColumnSpan){
-                    this.$el
-                        .removeClass('col-xs-' + currentColumnSpan);
-                }
+        if( columnSpan != currentColumnSpan ) {
 
+            if( currentColumnSpan ) {
                 this.$el
-                    .addClass('col-xs-' + columnSpan);
-
-                this.columnSpan = columnSpan;
+                    .removeClass( 'col-xs-' + currentColumnSpan );
             }
 
-        },
+            this.$el
+                .addClass( 'col-xs-' + columnSpan );
 
-        updateGrouping: function(){}
+            this.columnSpan = columnSpan;
+        }
+    },
+
+    updateGrouping: function() {
     }
-);
+
+} );
+
+InfinniUI.CellView = CellView;

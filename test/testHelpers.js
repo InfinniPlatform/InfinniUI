@@ -1,27 +1,27 @@
-function fakeView(view) {
-    if (view === undefined) {
+function fakeView( view ) {
+    if ( typeof view === 'undefined' ) {
         view = {};
     }
 
     view.isView = true;
 
-    view.getContext = function () {
+    view.getContext = function() {
         return {};
     };
 
-    view.getScript = function (name) {
-        return view.scripts[name];
+    view.getScript = function( name ) {
+        return view.scripts[ name ];
     };
 
     return view;
 }
 
-function fakeApplicationView(){
+function fakeApplicationView() {
     var view = fakeView();
-    var $container = InfinniUI.config.$rootContainer || $('body');
-    $container.data('view', null);
+    var $container = InfinniUI.config.$rootContainer || $( 'body' );
+    $container.data( 'view', null );
 
-    view.getApplicationView = function () {
+    view.getApplicationView = function() {
         return this;
     };
 

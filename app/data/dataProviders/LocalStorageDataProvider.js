@@ -62,23 +62,27 @@ _.extend( LocalStorageDataProvider.prototype, {
 
     createItem: function( resultCallback ) {
         var item = this.createLocalItem( this.idProperty );
+
         resultCallback( item );
     },
 
     addLSItem: function( item ) {
         var items = this.getLSItems();
+
         items.push( item );
         this.setLSItems( items );
     },
 
     updateLSItem: function( itemIndex, item ) {
         var items = this.getLSItems();
+
         items[ itemIndex ] = item;
         this.setLSItems( items );
     },
 
     deleteLSItem: function( itemIndex ) {
         var items = this.getLSItems();
+
         items.splice( itemIndex, 1 );
         this.setLSItems( items );
     },
@@ -121,6 +125,7 @@ _.extend( LocalStorageDataProvider.prototype, {
 
     _getIndexOfItem: function( item ) {
         var items = this.getLSItems();
+
         for( var i = 0; i < items.length; i += 1 ) {
             if( items[ i ][ this.idProperty ] === item[ this.idProperty ] ) {
                 return i;
@@ -131,14 +136,15 @@ _.extend( LocalStorageDataProvider.prototype, {
 
     createIdFilter: function( id ) {
         return [ {
-            "Property": "_id",
-            "Value": id,
-            "CriteriaType": 1
+            'Property': '_id',
+            'Value': id,
+            'CriteriaType': 1
         } ];
     },
 
     createLocalItem: function( idProperty ) {
         var result = {};
+
         result[ idProperty ] = this._generateLocalId();
         return result;
     },
@@ -149,4 +155,4 @@ _.extend( LocalStorageDataProvider.prototype, {
 
 } );
 
-window.InfinniUI.Providers.LocalStorageDataProvider = LocalStorageDataProvider;
+InfinniUI.Providers.LocalStorageDataProvider = LocalStorageDataProvider;

@@ -2,10 +2,10 @@
  * @constructor
  * @augments ContainerModel
  */
-var TabPanelModel = ContainerModel.extend(/** @lends TabPanelModel.prototype */ {
+var TabPanelModel = ContainerModel.extend( {
 
-    initialize: function () {
-        ContainerModel.prototype.initialize.apply(this, Array.prototype.slice.call(arguments));
+    initialize: function() {
+        ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
     defaults: _.defaults(
@@ -16,4 +16,6 @@ var TabPanelModel = ContainerModel.extend(/** @lends TabPanelModel.prototype */ 
         ContainerModel.prototype.defaults
     )
 
-});
+} );
+
+InfinniUI.TabPanelModel = TabPanelModel;

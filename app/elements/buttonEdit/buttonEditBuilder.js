@@ -4,26 +4,26 @@
  * @augments TextBoxBuilder
  */
 function ButtonEditBuilder() {
-    _.superClass(ButtonEditBuilder, this);
+    _.superClass( ButtonEditBuilder, this );
 }
 
-window.InfinniUI.ButtonEditBuilder = ButtonEditBuilder;
+InfinniUI.ButtonEditBuilder = ButtonEditBuilder;
 
-_.inherit(ButtonEditBuilder, TextBoxBuilder);
+_.inherit( ButtonEditBuilder, TextBoxBuilder );
 
-ButtonEditBuilder.prototype.createElement = function (params) {
-    return new ButtonEdit(params.parent);
+ButtonEditBuilder.prototype.createElement = function( params ) {
+    return new ButtonEdit( params.parent );
 };
 
-ButtonEditBuilder.prototype.applyMetadata = function (params) {
-    TextBoxBuilder.prototype.applyMetadata.call(this, params);
+ButtonEditBuilder.prototype.applyMetadata = function( params ) {
+    TextBoxBuilder.prototype.applyMetadata.call( this, params );
 
-    this.initBindingToProperty(params, 'Icon');
-    this.initBindingToProperty(params, 'ReadOnly', true);
-    this.initBindingToProperty(params, 'ShowClear', true);
+    this.initBindingToProperty( params, 'Icon' );
+    this.initBindingToProperty( params, 'ReadOnly', true );
+    this.initBindingToProperty( params, 'ShowClear', true );
 
-    this.buildOnButtonClick(params);
-    this.buildButtonAction(params);
+    this.buildOnButtonClick( params );
+    this.buildButtonAction( params );
 };
 
 
@@ -31,13 +31,13 @@ ButtonEditBuilder.prototype.applyMetadata = function (params) {
  * @protected
  * @param params
  */
-ButtonEditBuilder.prototype.buildButtonAction = function (params) {
+ButtonEditBuilder.prototype.buildButtonAction = function( params ) {
     /** @type {ButtonEdit} **/
     var element = params.element;
     var metadata = params.metadata;
     var builder = params.builder;
 
-    if (!metadata.Action) {
+    if( !metadata.Action ) {
         return;
     }
 
@@ -46,23 +46,22 @@ ButtonEditBuilder.prototype.buildButtonAction = function (params) {
         parent: element,
         basePathOfProperty: params.basePathOfProperty
     };
-    var action = builder.build(metadata.Action, args);
-    element.onButtonClick(function(){
+    var action = builder.build( metadata.Action, args );
+    element.onButtonClick( function() {
         action.execute();
-    });
+    } );
 };
 
 /**
  * @protected
  * @param params
  */
-ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
-    /** @type {ButtonEdit} **/
+ButtonEditBuilder.prototype.buildOnButtonClick = function( params ) {
     var element = params.element;
     var metadata = params.metadata;
 
     var onButtonClick = metadata.OnButtonClick;
-    if (!onButtonClick) {
+    if( !onButtonClick ) {
         return;
     }
 
@@ -72,10 +71,9 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function (params) {
         basePathOfProperty: params.basePathOfProperty
     };
 
-    var executor = Executor(onButtonClick, params.builder, executorBuilderParams);
+    var executor = Executor( onButtonClick, params.builder, executorBuilderParams );
 
-    element.onButtonClick(executor);
-
+    element.onButtonClick( executor );
 };
 
 

@@ -1,59 +1,74 @@
 'use strict';
-var help = '';
-var gulp = require('gulp'),
-			watch = require('gulp-watch'),
-			sourceForTasks = require('./gulptasks/sourceForTasks'),
-			lazyRequireTask = function(taskName, path, options) {
-				options = options || {};
-				options.taskName = taskName;
-				gulp.task(taskName, function(callback) {
-					var task = require(path).call(this, options);
-					return task(callback);
-				});
-			};
 
-for(var key in sourceForTasks) {
-	help += ('- gulp ' + key + '\n');
-	lazyRequireTask(key, sourceForTasks[key].taskPath, sourceForTasks[key]);
-}
+var gulp = require( 'gulp' );
+var watch = require( 'gulp-watch' );
+var docHelper = require( 'gulp-help-doc' );
+var requireDir = require( 'require-dir' );
 
-gulp.task('build', gulp.series(
-	gulp.parallel('concatJs', 'concatJsProd'),
-	'buildLess',
-	'vendorJs',
-	'concatTemplates',
-	'unitTest',
-	'vendorStyles',
-	'fonts'
-));
+var config = require( './gulptasks/config' );
 
-gulp.task('fullWatch', function() {
-	watch(sourceForTasks.buildLess.srcForWatch, gulp.series('buildLess'));
-	watch(sourceForTasks.vendorStyles.src, gulp.series('vendorStyles'));
-	watch(sourceForTasks.concatJs.src, gulp.series('concatJs'));
-	watch(sourceForTasks.vendorJs.src, gulp.series('vendorJs'));
-	watch(sourceForTasks.unitTest.src, gulp.series('unitTest'));
-	watch(sourceForTasks.concatTemplates.src, gulp.series('concatTemplates'));
-	watch(sourceForTasks.fonts.src, gulp.series('fonts'));
-});
+requireDir( './gulptasks' ); // подключаем задачи из папки gulptasks
 
-gulp.task('run:tests', gulp.series(
-	'build',
-	'server:tests'
-));
+/**
+ * Build platform (not minified)
+ *
+ * @task {build}
+ * @group {Main}
+ * @order {1}
+ */
+gulp.task( 'build', gulp.parallel(
+    'build:js',
+    'build:less',
+    'concat:vendor-js',
+    'concat:vendor-styles',
+    'copy:fonts'
+) );
 
-gulp.task('run:dev', gulp.series(
-	'build',
-	gulp.parallel('fullWatch', 'server:tests')
-));
+/**
+ * Build the production version of platform
+ *
+ * @task {build:prod}
+ * @group {Main}
+ * @order {2}
+ */
+gulp.task( 'build:prod', gulp.series(
+    'build',
+    'build:prod-js'
+) );
 
-gulp.task('default', function(cb) {
-	console.log('####Task is not defined!\n' +
-							'####Use any of defined tasks:\n' +
-							help +
-							'- gulp build\n' +
-							'- gulp run:tests\n' +
-							'- gulp run:dev'
-							);
-	cb();
-});
+/**
+ * Monitor the changes and rebuild changed part
+ *
+ * @task {watch}
+ * @group {Main}
+ * @order {3}
+ */
+gulp.task( 'watch', function() {
+    watch( config.stylesFilesForWatch, gulp.series( 'build:less' ) );
+    watch( config.jsFiles, gulp.series( 'build:js' ) );
+    watch( config.templateFiles, gulp.series( 'build:js' ) );
+    watch( config.vendorStylesFiles, gulp.series( 'concat:vendor-styles' ) );
+    watch( config.vendorJsFiles, gulp.series( 'concat:vendor-js' ) );
+    watch( config.unitTestFiles, gulp.series( 'concat:unit-tests' ) );
+    watch( config.fonts.src, gulp.series( 'copy:fonts' ) );
+} );
+
+
+/**
+ * Build and run unit tests
+ *
+ * @task {run:tests}
+ * @group {Main}
+ * @order {4}
+ */
+gulp.task( 'run:tests', gulp.series(
+    'build',
+    'concat:unit-tests',
+    gulp.parallel( 'watch', 'server:tests' )
+) );
+
+gulp.task( 'help', function() {
+    return docHelper( gulp );
+} );
+
+gulp.task( 'default', gulp.parallel( 'help' ) );
