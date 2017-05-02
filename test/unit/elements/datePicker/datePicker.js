@@ -84,7 +84,6 @@ describe( 'DateTimePicker', function() {
             assert.equal( element.getLabelText(), 'Datepicker\'s label', 'LabelText' );
             assert.equal( element.getLabelFloating(), true, 'LabelFloating' );
             assert.isFunction( element.getDisplayFormat(), 'DateTimeFormat' );
-            assert.instanceOf( element.getEditMask(), InfinniUI.DateTimeEditMask, 'EditMask' );
 
             assert.equal( element.getHintText(), 'Hint', 'HintText' );
             assert.equal( element.getErrorText(), 'Error', 'ErrorText' );

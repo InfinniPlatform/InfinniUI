@@ -16,10 +16,13 @@ var DateTimePickerView = TextEditorBaseView.extend( {
     } ),
 
     events: _.extend( {}, TextEditorBaseView.prototype.events, {
-        'click .pl-datepicker-calendar': 'onClickDropdownHandler',
-        'focusin': 'onFocusinHandler'
+        'click .pl-datepicker-calendar': 'onClickDropdownHandler'
     } ),
 
+    editMaskStrategies: {
+        DateTimeEditMask: 'iso8601'
+    },
+    
     /**
      *
      */
@@ -95,7 +98,6 @@ var DateTimePickerView = TextEditorBaseView.extend( {
 
         this.renderTemplate( this.getTemplate() );
         this.updateProperties();
-        this.renderDateTimePickerEditor();
 
         this.trigger( 'render' );
 
@@ -123,15 +125,6 @@ var DateTimePickerView = TextEditorBaseView.extend( {
 
     /**
      *
-     * @returns {DateTimePickerView}
-     */
-    renderDateTimePickerEditor: function() {
-        this.renderControlEditor();
-        return this;
-    },
-
-    /**
-     *
      */
     getTemplate: function() {
         throw new Error( 'Не перекрыт getTemplate' );
@@ -142,17 +135,10 @@ var DateTimePickerView = TextEditorBaseView.extend( {
      */
     onClickDropdownHandler: function() {
     },
-
     /**
      *
      */
-    onFocusinHandler: function() {
-        var editor = this.model.get( 'editor' );
 
-        setTimeout( function() {
-            editor.setCaretPosition( 0 );
-        }, 4 );
-    }
 
 } );
 

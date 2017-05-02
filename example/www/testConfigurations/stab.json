@@ -113,7 +113,7 @@
 														{
 															"DateTimePicker": {
 																"Mode": "DateTime",
-																"DisplayFormat": "{:g}",
+																"DisplayFormat": "${:g}",
 																"MinValue": "2015-01-01T00:00",
 																"EditMask": {
 																	"DateTimeEditMask": {
@@ -194,7 +194,7 @@
 															"TextBox": {
 																"LabelText": "One line input[type=text]",
 																"Multiline": false,
-																"DisplayFormat": "{:F}",
+																"DisplayFormat": "${:F}",
 																"Focusable": false,
 																"EditMask": {
 																	"DateTimeEditMask": {
@@ -239,7 +239,7 @@
 															"TextBox": {
 																"LabelText": "One line input[type=text]",
 																"Multiline": false,
-																"DisplayFormat": "{:n4}",
+																"DisplayFormat": "${:n4}",
 																"EditMask": {
 																	"NumberEditMask": {
 																		"Mask": "n3"

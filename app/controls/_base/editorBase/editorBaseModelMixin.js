@@ -9,7 +9,8 @@ var editorBaseModelMixin = {
         hintText: null,
         errorText: null,
         warningText: null,
-        labelFloating: false
+        labelFloating: false,
+        editMode: false //Текущий редим работы (редактор/отображение)
     },
 
     /**

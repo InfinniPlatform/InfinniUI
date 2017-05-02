@@ -29,8 +29,7 @@ _.extend( TextEditorBaseBuilder.prototype, {
         element.setInputType( this.getCompatibleInputType( params ) );
         this
             .initDisplayFormat( params )
-            .initEditMask( params )
-            .initEditor( params );
+            .initEditMask( params );
     },
 
     getCompatibleInputType: function( params ) {
@@ -49,33 +48,6 @@ _.extend( TextEditorBaseBuilder.prototype, {
         return inputType;
     },
 
-    initEditor: function( params ) {
-        var element = params.element;
-        var editor = new TextEditor();
-
-        editor
-            .setDisplayFormat( element.getDisplayFormat() )
-            .setEditMask( element.getEditMask() )
-            .setValueConverter( function() {
-                return element.convertValue.bind( element );
-            } )
-            .setValidatorValue( element.validateValue.bind( element ) );
-
-        element.setEditor( editor );
-
-        editor.onValueChanged( function( value ) {
-            //element.setValue(element.convertValue(value));
-            element.setValue( value );
-        } );
-
-        element.onValueChanged( function( context, args ) {
-            editor.setValue( args.newValue );
-        } );
-
-        editor.setValue( element.getValue() );
-
-        return this;
-    },
 
     initDisplayFormat: function( params ) {
         var metadata = params.metadata;
@@ -88,16 +60,9 @@ _.extend( TextEditorBaseBuilder.prototype, {
 
     initEditMask: function( params ) {
         var metadata = params.metadata;
-        var builder = params.builder;
-        var editMask;
+            metadata = params.metadata;
 
-        if( metadata.EditMask ) {
-            editMask = builder.build( metadata.EditMask, {
-                parentView: params.parentView,
-                formatOptions: params.formatOptions
-            } );
-        }
-        params.element.setEditMask( editMask );
+        params.element.setEditMask(metadata.EditMask);
         return this;
     }
 

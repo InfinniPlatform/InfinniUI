@@ -40,7 +40,6 @@ describe( 'TextEditorBase (Element)', function() {
                 var format = new InfinniUI.ObjectFormat();
                 return format.format( args.value );
             };
-            var mask = new InfinniUI.DateTimeEditMask();
 
             assert.isNull( textBox.getLabelText(), 'default label text is null' );
             assert.isFalse( textBox.getLabelFloating(), 'default label floating is false' );
@@ -52,14 +51,12 @@ describe( 'TextEditorBase (Element)', function() {
             textBox.setLabelText( 'label' );
             textBox.setLabelFloating( true );
             textBox.setDisplayFormat( format );
-            textBox.setEditMask( mask );
 
 
             // Then
             assert.equal( textBox.getLabelText(), 'label', 'new label text is right' );
             assert.isTrue( textBox.getLabelFloating(), 'new label floating is true' );
             assert.equal( textBox.getDisplayFormat(), format, 'new display format is right' );
-            assert.equal( textBox.getEditMask(), mask, 'new edit mask is right' );
         } );
 
 
@@ -76,10 +73,8 @@ describe( 'TextEditorBase (Element)', function() {
 
                 var textbox = view.getContext().controls[ 'TextBox1' ];
                 var formatter = textbox.getDisplayFormat();
-                var mask = textbox.getEditMask();
 
                 assert.equal( formatter( null, { value: 2.22222 } ), '2,22', 'applied format is right (n2)' );
-                assert.equal( mask.mask, 'n3', 'applied mask is right (n3)' );
             }
         } );
 

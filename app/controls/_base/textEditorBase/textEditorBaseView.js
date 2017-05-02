@@ -1,11 +1,12 @@
 /**
  * @class TextEditorBaseView
  * @augments ControlView
- * @mixed editorBaseViewMixin
- * @constructor
+ * @mixes editorBaseViewMixin
+ * @mixes editMaskViewMixin
  */
 var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
 
+var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */ _.extend({}, editorBaseViewMixin, editMaskViewMixin, {
     UI: _.extend( {}, editorBaseViewMixin.UI, {
         control: '.pl-control',
         editor: '.pl-editor',
@@ -13,13 +14,18 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
         textbox: '.pl-text-box-input'
     } ),
 
-    events: {},
+    events: _.extend(
+        {},
+        ControlView.prototype.events,
+        editMaskViewMixin.events
+    ),
 
     /**
      *
      */
     initialize: function() {
         ControlView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
+        editMaskViewMixin.initialize.call(this);
     },
 
     /**
@@ -28,9 +34,9 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
+        editMaskViewMixin.initHandlersForProperties.call(this);
 
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
-        this.listenTo( this.model, 'change:labelFloating', this.updateLabelFloating );
         this.listenTo( this.model, 'change:displayFormat', this.updateDisplayFormat );
         this.listenTo( this.model, 'change:editMask', this.updateEditMask );
         this.listenTo( this.model, 'change:inputType', this.updateInputType );
@@ -65,19 +71,15 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
      */
     updateInputType: function() {
         var inputType = this.model.get( 'inputType' );
-        var $editor = this.ui.editor;
-        var tagName = $editor.prop( 'tagName' );
+        this.ui.editor.attr( 'type', inputType );
 
-        if( inputType && tagName.toLowerCase() === 'input' ) {
-            $editor.attr( 'type', inputType );
-        }
     },
 
     /**
      *
      */
     updateEditMask: function() {
-        this.updateValue();
+        // this.updateValue();
     },
 
     /**
@@ -117,18 +119,6 @@ var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, 
      */
     updateDisplayFormat: function() {
         this.updateValue();
-    },
-
-    /**
-     * Рендеринг редактора значений
-     *
-     */
-    renderControlEditor: function() {
-        var model = this.model;
-        var editor = model.get( 'editor' );
-        if( editor ) {
-            editor.render( this.ui.editor );
-        }
     },
 
     /**

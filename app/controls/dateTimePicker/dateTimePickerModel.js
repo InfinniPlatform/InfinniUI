@@ -28,11 +28,13 @@ var DateTimePickerModel = TextEditorBaseModel.extend( {
      * @param attributes
      * @returns {boolean}
      */
-    validate: function( attributes ) {
+    validate: function( attributes/*, options*/ ) {
         var min = attributes.minValue;
         var max = attributes.maxValue;
 
-        return InfinniUI.DateUtils.checkRangeDate( attributes.value, attributes.minValue, attributes.maxValue );
+        var isValid = InfinniUI.DateUtils.checkRangeDate(attributes.value, attributes.minValue, attributes.maxValue);
+
+        return isValid ? void 0 : 'Значение выходит за пределы допустимого диапазона';
     }
 
 } );

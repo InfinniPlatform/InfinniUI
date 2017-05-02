@@ -1,6 +1,45 @@
 describe( 'TextBoxControl', function() {
     var builder = new InfinniUI.ApplicationBuilder();
 
+    describe('use edit mask', function () {
+        it('as DateTimeEditMask', function () {
+            // Given
+            var element = builder.buildType('TextBox', {
+                EditMask: {
+                    DateTimeEditMask: {
+                        Mask: "dd MM yyyy"
+                    }
+                }
+            });
+
+            // When
+            var $el = element.render();
+            element.setValue('2017-04-26T16:46:00+05:00');
+            element.control.controlView.setEditMode(true);
+
+            //Then
+            assert.equal($('input', $el).val(), '26 04 2017');
+        });
+
+        it('as TemplateEditMask', function () {
+            // Given
+            var element = builder.buildType('TextBox', {
+                EditMask: {
+                    TemplateEditMask: {
+                        Mask: "(000)000-00-00",
+                        MaskSaveLiteral: false
+                    }
+                }
+            });
+
+            // When
+            var $el = element.render();
+            element.control.controlView.setEditMode(true);
+
+            //Then
+            assert.equal($('input', $el).val(), '(___)___-__-__');
+        });
+    });
 
     describe( 'render', function() {
         it( 'Setting the properties: value, name, enabled, visible, horizontalAlignment', function() {
