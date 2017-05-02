@@ -13,6 +13,9 @@ describe( 'ObjectDataProvider', function() {
         }
     ];
 
+    beforeEach(cleanup);
+    afterEach(cleanup);
+
     it( 'should check ValidationResult', function( done ) {
 
         InfinniUI.global.messageBus.subscribe( InfinniUI.messageTypes.onNotifyUser, function( context, args ) {
@@ -33,5 +36,9 @@ describe( 'ObjectDataProvider', function() {
             }
         );
     } );
+
+    function cleanup() {
+        InfinniUI.global.messageBus.dispose();
+    }
 
 } );
