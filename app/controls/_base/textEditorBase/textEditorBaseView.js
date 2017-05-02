@@ -4,8 +4,6 @@
  * @mixes editorBaseViewMixin
  * @mixes editMaskViewMixin
  */
-var TextEditorBaseView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
-
 var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */ _.extend({}, editorBaseViewMixin, editMaskViewMixin, {
     UI: _.extend( {}, editorBaseViewMixin.UI, {
         control: '.pl-control',

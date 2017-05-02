@@ -7,6 +7,7 @@
         "browser-sync": "^2.12.x",
         "chai": "1.x",
         "del": "^2.2.0",
+        "edit-mask": "https://bitbucket.org/puritania74/edit-mask.git",
         "eslint": "^3.19.0",
         "font-awesome": "latest",
         "gulp": "github:gulpjs/gulp#4.0",

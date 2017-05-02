@@ -132,7 +132,8 @@ var sourceForFiles = {
         'bootstrap-framework/js/tooltip.js',
         'node_modules/jquery.cookie/jquery.cookie.js',
         'bootstrap-framework/js/*.js',
-        'node_modules/signalr/jquery.signalR.min.js'
+        'node_modules/signalr/jquery.signalR.min.js',
+        'node_modules/edit-mask/dist/edit-mask.js'
     ],
     templateFiles: [
         'app/**/*.tpl.html'
