@@ -6630,6 +6630,29 @@ describe("ObjectUtils", function () {
         });
     });
 });
+describe('ButtonControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder()
+            , button;
+
+        beforeEach(function () {
+            button = builder.buildType('Button', {});
+        });
+
+        it('should render button with correct class', function () {
+            //Given
+            button.setText('Click me!');
+
+            //When
+            var $el = button.render();
+
+            //Then
+            assert.isTrue($el.hasClass('pl-button'));
+            assert.equal($.trim($el.text()), 'Click me!');
+        });
+    });
+});
+
 describe('CheckBox', function () {
     var checkbox;
 
@@ -6704,29 +6727,6 @@ describe('CheckBox', function () {
 
     });
 
-});
-
-describe('ButtonControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder()
-            , button;
-
-        beforeEach(function () {
-            button = builder.buildType('Button', {});
-        });
-
-        it('should render button with correct class', function () {
-            //Given
-            button.setText('Click me!');
-
-            //When
-            var $el = button.render();
-
-            //Then
-            assert.isTrue($el.hasClass('pl-button'));
-            assert.equal($.trim($el.text()), 'Click me!');
-        });
-    });
 });
 
 describe('Container (Control)', function () {
@@ -7757,13 +7757,14 @@ describe('Form (Control)', function () {
 
 			// Then
 			function onViewReady(view, $layout){
-				$layout.detach();
 
 				assert.equal($layout.find('.pl-form').attr('method'), 'get', 'attribute method is right');
 				
 				$layout.find('.pl-button button').click();
 
 				assert.equal($layout.find('.pl-form').attr('method'), 'post', 'attribute method is right');
+
+        $layout.detach();
 			}
 		});
 	});
@@ -8498,6 +8499,68 @@ describe('PasswordBox', function () {
 
 });
 
+describe('PopupButtonControl', function () {
+    describe('render', function () {
+        var builder = new InfinniUI.ApplicationBuilder(),
+            button;
+
+        beforeEach(function () {
+            button = builder.buildType('PopupButton', {
+                Items: [
+                    {
+                        "Button": {
+                            "Name": "AddButton",
+                            "Text": "Add"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "DropButton",
+                            "Text": "Drop"
+                        }
+                    },
+                    {
+                        "Button": {
+                            "Name": "BackButton",
+                            "Text": "Back"
+                        }
+                    }
+                ]
+            });
+        });
+
+
+        it('should render button with correct class', function () {
+            //Given
+            button.setText('Click me!');
+            //When
+            var $el = button.render();
+            //Then
+            var $button = $el.find('.pl-popup-button__button');
+            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
+            assert.equal($button.length, 1, 'button render');
+            assert.equal($button.text(), 'Click me!', 'button text');
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+        it('should handle onClick', function () {
+            //Given
+            var click = 0;
+            button.setText('Click me!');
+            button.onClick(function () {
+                click++;
+            });
+            //When
+            var $el = button.render();
+            button.click();
+            //Then
+            assert.isTrue(click === 1);
+            $('body').find('.pl-popup-button__dropdown').detach();
+        });
+
+    });
+});
+
 describe('ScrollPanelControl', function () {
 
     describe('render', function () {
@@ -8606,128 +8669,137 @@ describe('ScrollPanelControl', function () {
         });
     });
 });
-describe('PopupButtonControl', function () {
-    describe('render', function () {
-        var builder = new InfinniUI.ApplicationBuilder(),
-            button;
+describe('TabPanelControl', function () {
 
-        beforeEach(function () {
-            button = builder.buildType('PopupButton', {
-                Items: [
+    describe('render', function () {
+        it('Should render TabPanel with 3 TabPages', function () {
+
+            // Given
+            var metadata = {
+                "DataSources": [
                     {
-                        "Button": {
-                            "Name": "AddButton",
-                            "Text": "Add"
+                        "ObjectDataSource": {
+                            "Name": "BloodGroupDataSource",
+                            "Items": [
+                                {
+                                    "Id": 1,
+                                    "DisplayName": "I",
+                                    "SomeField": ""
+                                },
+                                {
+                                    "Id": 2,
+                                    "DisplayName": "II",
+                                    "SomeField": "val"
+                                },
+                                {
+                                    "Id": 3,
+                                    "DisplayName": "III",
+                                    "SomeField": 3
+                                },
+                                {
+                                    "Id": 4,
+                                    "DisplayName": "IV",
+                                    "SomeField": null
+                                }
+                            ]
                         }
+                    }
+                ],
+                "Items": [
+                    {
+                        "TabPanel": {
+                            "OnSelectedItemChanged": {
+                                "Name": "OnSelectedItemChanged"
+                            },
+                            "HeaderLocation": "Left",
+                            "Items": [
+                                {
+                                    "TabPage": {
+                                        "Text": "Header of Page1",
+                                        "Items": [
+                                            {
+                                                "Label": {
+                                                    "Text": "Content of Page1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "TabPage": {
+                                        "Text": "Header of Page2",
+                                        "CanClose": true,
+                                        "OnClosing": {
+                                            "Name": "OnClosing"
+                                        },
+                                        "OnClosed": {
+                                            "Name": "OnClosed2"
+                                        },
+                                        "Items": [
+                                            {
+                                                "Label": {
+                                                    "Text": "Content of Page2"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "TabPage": {
+                                        "Text": "Header of Page3",
+                                        "CanClose": true,
+                                        "Items": [
+                                            {
+                                                "Label": {
+                                                    "Text": "Content of Page3"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Scripts": [
+                    {
+                        "Name": "OnClosing",
+                        "Body": "var defer = $.Deferred(); setTimeout(function () {defer.resolve('ok');}, 3000); return defer.promise();"
                     },
                     {
-                        "Button": {
-                            "Name": "DropButton",
-                            "Text": "Drop"
-                        }
+                        "Name": "OnClosed2",
+                        "Body": "console.log('OnClosed2');"
                     },
                     {
-                        "Button": {
-                            "Name": "BackButton",
-                            "Text": "Back"
-                        }
+                        "Name": "OnSelectedItemChanged",
+                        "Body": "console.log('OnSelectedItemChanged');"
                     }
                 ]
-            });
-        });
+            };
 
-
-        it('should render button with correct class', function () {
-            //Given
-            button.setText('Click me!');
-            //When
-            var $el = button.render();
-            //Then
-            var $button = $el.find('.pl-popup-button__button');
-            assert.isTrue($el.hasClass('pl-popup-button'), 'control class');
-            assert.equal($button.length, 1, 'button render');
-            assert.equal($button.text(), 'Click me!', 'button text');
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-        it('should handle onClick', function () {
-            //Given
-            var click = 0;
-            button.setText('Click me!');
-            button.onClick(function () {
-                click++;
-            });
-            //When
-            var $el = button.render();
-            button.click();
-            //Then
-            assert.isTrue(click === 1);
-            $('body').find('.pl-popup-button__dropdown').detach();
-        });
-
-    });
-});
-
-describe('TextEditorBase (Control)', function () {
-    describe('Textbox as exemplar of TextEditorBase', function () {
-        var metadata_1 = {
-            DataSources : [
-                {
-                    ObjectDataSource: {
-                        "Name": "ObjectDataSource1",
-                        "Items": [
-                            { "Id": 1, "Display": "2.2222" },
-                            { "Id": 2, "Display": "3.2222" },
-                            { "Id": 3, "Display": "4.2222" }
-                        ]
-                    }
-                }
-            ],
-            Items: [{
-
-                "TextBox": {
-                    "Name": "TextBox1",
-                    "Value": {
-                        "Source": "ObjectDataSource1",
-                        "Property": "$.Display"
-                    },
-                    "DisplayFormat": {
-                        "NumberFormat": {
-                            "Format": "n2"
-                        }
-                    },
-                    "EditMask": {
-                        "NumberEditMask": {
-                            "Mask": "n3"
-                        }
-                    }
-                }
-            }]
-        };
-
-        it('metadata', function () {
-            // Given
-            var metadata = metadata_1;
 
             // When
             testHelper.applyViewMetadata(metadata, onViewReady);
 
             // Then
-            function onViewReady(view, $layout){
-
-                var $input = $layout.find('.pl-text-box-input');
-
-                assert.equal($input.val(), '2,22', 'binding and formatting is right');
-
-                $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
-                assert.equal($input.val(), '2,222', 'mask is right');
-
+            function onViewReady(view, $layout) {
                 $layout.detach();
+                var
+                    $panel = $layout.find('.pl-tabpanel'),
+                    $header = $layout.find('.pl-tabpanel-header'),
+                    $content = $layout.find('.pl-tabpanel-content'),
+
+                    $headers = $header.find('.pl-tabheader'),
+                    $pages = $content.find('.pl-tabpage');
+
+                assert.equal($panel.length, 1, 'container');
+                assert.equal($header.length, 1, 'header');
+                assert.equal($content.length, 1, 'content');
+                assert.equal($headers.length, 3, 'headers');
+                assert.equal($pages.length, 3, 'pages');
             }
         });
-
     });
-
 });
 describe('TextBoxControl', function () {
     var builder = new InfinniUI.ApplicationBuilder();
@@ -8963,6 +9035,67 @@ describe('TextBoxControl', function () {
     })
 });
 
+describe('TextEditorBase (Control)', function () {
+    describe('Textbox as exemplar of TextEditorBase', function () {
+        var metadata_1 = {
+            DataSources : [
+                {
+                    ObjectDataSource: {
+                        "Name": "ObjectDataSource1",
+                        "Items": [
+                            { "Id": 1, "Display": "2.2222" },
+                            { "Id": 2, "Display": "3.2222" },
+                            { "Id": 3, "Display": "4.2222" }
+                        ]
+                    }
+                }
+            ],
+            Items: [{
+
+                "TextBox": {
+                    "Name": "TextBox1",
+                    "Value": {
+                        "Source": "ObjectDataSource1",
+                        "Property": "$.Display"
+                    },
+                    "DisplayFormat": {
+                        "NumberFormat": {
+                            "Format": "n2"
+                        }
+                    },
+                    "EditMask": {
+                        "NumberEditMask": {
+                            "Mask": "n3"
+                        }
+                    }
+                }
+            }]
+        };
+
+        it('metadata', function () {
+            // Given
+            var metadata = metadata_1;
+
+            // When
+            testHelper.applyViewMetadata(metadata, onViewReady);
+
+            // Then
+            function onViewReady(view, $layout){
+
+                var $input = $layout.find('.pl-text-box-input');
+
+                assert.equal($input.val(), '2,22', 'binding and formatting is right');
+
+                $input.focus(); // тест иногда не срабатывает, потому что фокус находится вне окна => .focus() выполниться не может
+                assert.equal($input.val(), '2,222', 'mask is right');
+
+                $layout.detach();
+            }
+        });
+
+    });
+
+});
 describe('ToolBarControl', function () {
     describe('render', function () {
         var builder = new InfinniUI.ApplicationBuilder()
@@ -8998,138 +9131,6 @@ describe('ToolBarControl', function () {
     });
 });
 
-describe('TabPanelControl', function () {
-
-    describe('render', function () {
-        it('Should render TabPanel with 3 TabPages', function () {
-
-            // Given
-            var metadata = {
-                "DataSources": [
-                    {
-                        "ObjectDataSource": {
-                            "Name": "BloodGroupDataSource",
-                            "Items": [
-                                {
-                                    "Id": 1,
-                                    "DisplayName": "I",
-                                    "SomeField": ""
-                                },
-                                {
-                                    "Id": 2,
-                                    "DisplayName": "II",
-                                    "SomeField": "val"
-                                },
-                                {
-                                    "Id": 3,
-                                    "DisplayName": "III",
-                                    "SomeField": 3
-                                },
-                                {
-                                    "Id": 4,
-                                    "DisplayName": "IV",
-                                    "SomeField": null
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "Items": [
-                    {
-                        "TabPanel": {
-                            "OnSelectedItemChanged": {
-                                "Name": "OnSelectedItemChanged"
-                            },
-                            "HeaderLocation": "Left",
-                            "Items": [
-                                {
-                                    "TabPage": {
-                                        "Text": "Header of Page1",
-                                        "Items": [
-                                            {
-                                                "Label": {
-                                                    "Text": "Content of Page1"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "TabPage": {
-                                        "Text": "Header of Page2",
-                                        "CanClose": true,
-                                        "OnClosing": {
-                                            "Name": "OnClosing"
-                                        },
-                                        "OnClosed": {
-                                            "Name": "OnClosed2"
-                                        },
-                                        "Items": [
-                                            {
-                                                "Label": {
-                                                    "Text": "Content of Page2"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    "TabPage": {
-                                        "Text": "Header of Page3",
-                                        "CanClose": true,
-                                        "Items": [
-                                            {
-                                                "Label": {
-                                                    "Text": "Content of Page3"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "Scripts": [
-                    {
-                        "Name": "OnClosing",
-                        "Body": "var defer = $.Deferred(); setTimeout(function () {defer.resolve('ok');}, 3000); return defer.promise();"
-                    },
-                    {
-                        "Name": "OnClosed2",
-                        "Body": "console.log('OnClosed2');"
-                    },
-                    {
-                        "Name": "OnSelectedItemChanged",
-                        "Body": "console.log('OnSelectedItemChanged');"
-                    }
-                ]
-            };
-
-
-            // When
-            testHelper.applyViewMetadata(metadata, onViewReady);
-
-            // Then
-            function onViewReady(view, $layout) {
-                $layout.detach();
-                var
-                    $panel = $layout.find('.pl-tabpanel'),
-                    $header = $layout.find('.pl-tabpanel-header'),
-                    $content = $layout.find('.pl-tabpanel-content'),
-
-                    $headers = $header.find('.pl-tabheader'),
-                    $pages = $content.find('.pl-tabpage');
-
-                assert.equal($panel.length, 1, 'container');
-                assert.equal($header.length, 1, 'header');
-                assert.equal($content.length, 1, 'content');
-                assert.equal($headers.length, 3, 'headers');
-                assert.equal($pages.length, 3, 'pages');
-            }
-        });
-    });
-});
 describe('TreeView', function () {
 
     describe('render', function () {
@@ -10099,21 +10100,49 @@ describe('DocumentDataSource', function () {
             );
         });
 
-        it('should return default list of data', function (done) {
+        it('should suspend DocumentDataSource from metadata', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
             // Given
             var builder = new InfinniUI.ApplicationBuilder();
-            var defaultItems = [{"Id": "0000"}];
             var metadata = {
-                "DefaultItems": defaultItems
+                "SuspendUpdate": 'testSuspend'
             };
 
             // When
             var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
 
+            documentDataSource.updateItems();
+
             // Then
-            var items = documentDataSource.getItems();
-            assert.equal(items, defaultItems);
-            done();
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), false);
+                done();
+            }, 10 );
+        });
+
+        it('should resume DocumentDataSource from metadata suspend', function (done) {
+
+            FakeRestDataProvider.prototype.items = JSON.parse(JSON.stringify(dataItems));
+
+            // Given
+            var builder = new InfinniUI.ApplicationBuilder();
+            var metadata = {
+                "SuspendUpdate": 'testSuspend'
+            };
+
+            // When
+            var documentDataSource = builder.buildType('DocumentDataSource', metadata, {parentView: fakeView()});
+            documentDataSource.updateItems();
+
+            // Then
+            documentDataSource.resumeUpdate( 'testSuspend' );
+
+            setTimeout( function() {
+                assert.equal(documentDataSource.isDataReady(), true);
+                done();
+            }, 10 );
         });
 
         it('should subscribe to property of selectedItem', function (done) {

@@ -34,6 +34,10 @@ function MessageBus(view) {
         return view;
     };
 
+    this.dispose = function() {
+        subscriptions = {};
+    };
+
     function patchMessageType(messageType) {
 
         if (typeof messageType === 'object' && typeof messageType.name !== 'undefined') {
