@@ -83,7 +83,6 @@
         "pack": "npm run build-full && gulp assemble:package",
         "pack-for-teamcity": "gulp assemble:package",
         "test": "karma start my.conf.js",
-        "test:tc": "karma start my.conf.js --single-run  --reporters teamcity --colors false --browsers Chrome",
-        "tests": "npm run build && npm run test:tc"
+        "test:tc": "karma start my.conf.js --single-run  --reporters teamcity --colors false --browsers Firefox"
     }
 }
