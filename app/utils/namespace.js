@@ -13,6 +13,8 @@ InfinniUI.Mixins = InfinniUI.Mixins || {};
 
 InfinniUI.Metadata = InfinniUI.Metadata || {};
 
+InfinniUI.Theme = InfinniUI.Theme || {};
+
 InfinniUI.localizations = InfinniUI.localizations || {
     'ru-RU': {
         caption: 'Русский',
