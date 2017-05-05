@@ -18,8 +18,7 @@ module.exports = function( config ) {
             'dist/vendor.js',
             'dist/platform.js',
             'test/*.js',
-            'test/unit/*.js',
-            'test/unit/**/*.js'
+            'test/**/*.js'
         ],
 
 
