@@ -41,17 +41,3 @@ gulp.task( 'concat:vendor-styles', function() {
         dest: config.platformOutputFolder + 'css'
     } );
 } );
-
-/**
- * Concat all unit tests in one file.
- *
- * @task {concat:unit-tests}
- * @group {Sub-tasks}
- */
-gulp.task( 'concat:unit-tests', function() {
-    return concat( {
-        src: config.unitTestFiles,
-        finalName: 'unitTest.js',
-        dest: config.testOutputFolder
-    } );
-} );

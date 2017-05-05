@@ -17,5 +17,5 @@ function clean( folderPath ) {
  *
  */
 gulp.task( 'clean', function() {
-    return clean( [ config.platformOutputFolder, config.testOutputFolder ] );
+    return clean( [ config.platformOutputFolder ] );
 } );

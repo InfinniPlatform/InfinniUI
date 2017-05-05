@@ -49,23 +49,8 @@ gulp.task( 'watch', function() {
     watch( config.templateFiles, gulp.series( 'build:js' ) );
     watch( config.vendorStylesFiles, gulp.series( 'concat:vendor-styles' ) );
     watch( config.vendorJsFiles, gulp.series( 'concat:vendor-js' ) );
-    watch( config.unitTestFiles, gulp.series( 'concat:unit-tests' ) );
     watch( config.fonts.src, gulp.series( 'copy:fonts' ) );
 } );
-
-
-/**
- * Build and run unit tests
- *
- * @task {run:tests}
- * @group {Main}
- * @order {4}
- */
-gulp.task( 'run:tests', gulp.series(
-    'build',
-    'concat:unit-tests',
-    gulp.parallel( 'watch', 'server:tests' )
-) );
 
 gulp.task( 'help', function() {
     return docHelper( gulp );

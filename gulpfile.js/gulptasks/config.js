@@ -1,7 +1,6 @@
 'use strict';
 
 var platformOutputFolder = './dist/';
-var testOutputFolder = './test/unit/dist/';
 
 var sourceForFiles = {
     platformOutputFolder: platformOutputFolder,
@@ -137,13 +136,6 @@ var sourceForFiles = {
     ],
     templateFiles: [
         'app/**/*.tpl.html'
-    ],
-    testOutputFolder: testOutputFolder,
-    unitTestFiles: [
-        'app/utils/strict.js',
-        'test/unit/fakeRestDataProvider.js',
-        'test/unit/**/*.js',
-        '!' + testOutputFolder + '**/*.*'
     ],
     fonts: {
         base: 'node_modules/font-awesome/fonts/',
