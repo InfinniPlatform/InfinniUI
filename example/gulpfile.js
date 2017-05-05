@@ -44,7 +44,7 @@ var vendorJsFiles = [
  *  2) если Вы не переопределяете платформенные стили, то
  *     от метода build:platform-less и его watch'ов можно избавиться
  *     от папки ./styles/platform/ тоже
- *     стили можно подключить из /node_modules/infinni-ui/dist/css/
+ *     стили можно подключить из /node_modules/infinni-ui/dist/css/, node_modules/font-awesome/css/font-awesome.min.css, node_modules/toastr/build/toastr.min.css
  *  3) если Вы не хотите, чтобы приложение работало как SPA-приложение
  *     в задаче 'server:example' в поле server вместо объекта просто укажите строку './www'
  *     connect-history-api-fallback больше не нужен, от него можно избавиться

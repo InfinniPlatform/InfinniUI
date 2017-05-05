@@ -38,3 +38,6 @@ bower_cache/*
 
 # Example
 example/www/compiled/*
+example/www/fonts/
+example/www/js/
+example/www/style/

@@ -137,12 +137,13 @@ var sourceForFiles = {
             'example/styles/**/*',
             'example/www/*.*',
             'example/www/img/**/*.*',
-            'example/www/js/**/*.*',
             'example/www/testConfigurations/**/*.*',
             'example/www/viewExample/**/*.*',
 
             platformOutputFolder + '**/*.*',
             'LICENSE',
+            'README.md',
+            'CONTRIBUTING.md',
             'package.json'
         ],
         dest: 'package/'
