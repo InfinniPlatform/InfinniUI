@@ -24,7 +24,7 @@ module.exports = function( config ) {
             'node_modules/jquery.cookie/jquery.cookie.js',
             'node_modules/signalr/jquery.signalR.min.js',
             'node_modules/edit-mask/dist/edit-mask.js',
-            'dist/platform.js',
+            'dist/infinni-ui.js',
             'test/*.js',
             'test/**/*.js'
         ],

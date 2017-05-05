@@ -4,8 +4,8 @@ var platformOutputFolder = './dist/';
 
 var sourceForFiles = {
     platformOutputFolder: platformOutputFolder,
-    platformJsOutputFile: 'platform.js',
-    stylesFiles: [ 'app/styles/main.less' ],
+    platformJsOutputFile: 'infinni-ui.js',
+    stylesFiles: [ 'app/styles/infinni-ui.less' ],
     stylesFilesForWatch: [ './app/styles/**/*.less' ],
     jsFiles: [
         'app/utils/strict.js',
@@ -144,7 +144,8 @@ var sourceForFiles = {
             platformOutputFolder + '**/*.*',
             'LICENSE',
             'package.json'
-        ]
+        ],
+        dest: 'package/'
     }
 };
 

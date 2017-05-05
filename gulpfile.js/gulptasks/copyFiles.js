@@ -32,6 +32,6 @@ gulp.task( 'assemble:package', function() {
     return copy( {
         src: config.package.src,
         base: config.package.base,
-        dest: 'package/'
+        dest: config.package.dest
     } );
 } );

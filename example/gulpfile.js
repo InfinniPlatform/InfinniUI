@@ -28,7 +28,7 @@ var vendorJsFiles = [
     'node_modules/jquery.cookie/jquery.cookie.js',
     'node_modules/signalr/jquery.signalR.min.js',
     'node_modules/edit-mask/dist/edit-mask.js',
-    'node_modules/infinni-ui/dist/platform.min.js'
+    'node_modules/infinni-ui/dist/infinni-ui.min.js'
 ];
 
 
@@ -44,7 +44,7 @@ var vendorJsFiles = [
  *  2) если Вы не переопределяете платформенные стили, то
  *     от метода build:platform-less и его watch'ов можно избавиться
  *     от папки ./styles/platform/ тоже
- *     стили можно подключить из /compiled/platform/css/
+ *     стили можно подключить из /node_modules/infinni-ui/dist/css/
  *  3) если Вы не хотите, чтобы приложение работало как SPA-приложение
  *     в задаче 'server:example' в поле server вместо объекта просто укажите строку './www'
  *     connect-history-api-fallback больше не нужен, от него можно избавиться
@@ -154,6 +154,7 @@ gulp.task( 'concat:vendor-js', function() {
 
 /**
  * Копирует шрифты
+ * шрифты должны быть на уровень выше стилей font-awesome(у нас эти стили включены в overridden-platform) в папке fonts
  */
 gulp.task( 'copy:fonts', function() {
     return gulp.src( 'node_modules/font-awesome/fonts/*.*' )
