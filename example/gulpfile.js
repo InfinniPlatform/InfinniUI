@@ -8,9 +8,11 @@ var infinniUIpath = './node_modules/infinni-ui/';
 // Путь до папки-результата
 var projectRootFolder = './www/';
 // куда собирать прикладную часть?
-var projectFolderForExtensions = './www/compiled/js/';
+var projectFolderForExtensions = './www/js/';
 // куда собирать стили?
-var projectFolderForStyles = './www/compiled/style/';
+var projectFolderForStyles = './www/style/';
+// где хранятся шрифты?
+var projectFolderForFonts = './www/fonts/';
 // где хранятся прикладные скрипты?
 var jsFiles = [ './js/**/*.js' ];
 // где хранятся прикладные шаблоны?
@@ -27,10 +29,6 @@ var vendorJsFiles = [
     'node_modules/signalr/jquery.signalR.min.js',
     'node_modules/edit-mask/dist/edit-mask.js',
     'node_modules/infinni-ui/dist/platform.min.js'
-];
-var vendorStylesFiles = [
-    'node_modules/font-awesome/css/font-awesome.min.css',
-    'node_modules/toastr/build/toastr.min.css'
 ];
 
 
@@ -109,7 +107,7 @@ function getJsStream( src ) {
  * Удаляет папки-результаты
  */
 gulp.task( 'clean', function() {
-    return del( [ projectFolderForExtensions, projectFolderForStyles ] );
+    return del( [ projectFolderForExtensions, projectFolderForStyles, projectFolderForFonts ] );
 } );
 
 /**
@@ -155,22 +153,11 @@ gulp.task( 'concat:vendor-js', function() {
 } );
 
 /**
- * Собирает в один файл стили всех внешних зависимостей
- */
-gulp.task( 'concat:vendor-styles', function() {
-    return concat( {
-        src: vendorStylesFiles,
-        finalName: 'vendor.css',
-        dest: projectFolderForStyles
-    } );
-} );
-
-/**
  * Копирует шрифты
  */
 gulp.task( 'copy:fonts', function() {
     return gulp.src( 'node_modules/font-awesome/fonts/*.*' )
-        .pipe( gulp.dest( './www/compiled/fonts/' ) );
+        .pipe( gulp.dest( projectFolderForFonts ) );
 } );
 
 /**
@@ -193,7 +180,6 @@ gulp.task( 'server:example', function() {
 
 gulp.task( 'build', gulp.parallel(
     'concat:vendor-js',
-    'concat:vendor-styles',
     'copy:fonts',
     'build:platform-less',
     'build:js',
