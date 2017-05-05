@@ -19,8 +19,6 @@ requireDir( './gulptasks' ); // подключаем задачи из папк�
 gulp.task( 'build', gulp.parallel(
     'build:js',
     'build:less',
-    'concat:vendor-js',
-    'concat:vendor-styles',
     'copy:fonts'
 ) );
 
@@ -47,8 +45,6 @@ gulp.task( 'watch', function() {
     watch( config.stylesFilesForWatch, gulp.series( 'build:less' ) );
     watch( config.jsFiles, gulp.series( 'build:js' ) );
     watch( config.templateFiles, gulp.series( 'build:js' ) );
-    watch( config.vendorStylesFiles, gulp.series( 'concat:vendor-styles' ) );
-    watch( config.vendorJsFiles, gulp.series( 'concat:vendor-js' ) );
     watch( config.fonts.src, gulp.series( 'copy:fonts' ) );
 } );
 

@@ -115,24 +115,9 @@ var sourceForFiles = {
         'app/launching/specialApplicationView.js',
         'app/launching/*.js',
 
-        'app/**/*.js'
-    ],
-    vendorStylesFiles: [
-        'node_modules/font-awesome/css/font-awesome.min.css',
-        'node_modules/toastr/build/toastr.min.css'
-    ],
-    vendorJsFiles: [
-        'node_modules/jquery/dist/jquery.min.js',
-        'node_modules/underscore/underscore-min.js',
-        'node_modules/backbone/backbone.js',
-        'node_modules/moment/min/moment.min.js',
-        'node_modules/block-ui/jquery.blockUI.js',
-        'node_modules/toastr/build/toastr.min.js',
+        'app/**/*.js',
         'bootstrap-framework/js/tooltip.js',
-        'node_modules/jquery.cookie/jquery.cookie.js',
-        'bootstrap-framework/js/*.js',
-        'node_modules/signalr/jquery.signalR.min.js',
-        'node_modules/edit-mask/dist/edit-mask.js'
+        'bootstrap-framework/js/*.js'
     ],
     templateFiles: [
         'app/**/*.tpl.html'

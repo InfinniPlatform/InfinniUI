@@ -7,8 +7,6 @@ var infinniUIpath = './node_modules/infinni-ui/';
 
 // Путь до папки-результата
 var projectRootFolder = './www/';
-// куда собирать платформу?
-var projectFolderForPlatform = './www/compiled/platform/';
 // куда собирать прикладную часть?
 var projectFolderForExtensions = './www/compiled/js/';
 // куда собирать стили?
@@ -17,6 +15,23 @@ var projectFolderForStyles = './www/compiled/style/';
 var jsFiles = [ './js/**/*.js' ];
 // где хранятся прикладные шаблоны?
 var templateFiles = [ './js/**/*.tpl.html' ];
+// внешние зависимости
+var vendorJsFiles = [
+    'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/underscore/underscore-min.js',
+    'node_modules/backbone/backbone.js',
+    'node_modules/moment/min/moment.min.js',
+    'node_modules/block-ui/jquery.blockUI.js',
+    'node_modules/toastr/build/toastr.min.js',
+    'node_modules/jquery.cookie/jquery.cookie.js',
+    'node_modules/signalr/jquery.signalR.min.js',
+    'node_modules/edit-mask/dist/edit-mask.js',
+    'node_modules/infinni-ui/dist/platform.min.js'
+];
+var vendorStylesFiles = [
+    'node_modules/font-awesome/css/font-awesome.min.css',
+    'node_modules/toastr/build/toastr.min.css'
+];
 
 
 /*=================== Сборка ===================*/
@@ -49,6 +64,15 @@ function buildLess( options ) {
         .pipe( $.less() )
         .pipe( $.csso() ) // minify css
         .pipe( $.autoprefixer( { browsers: [ 'last 2 versions' ] } ) )  // add prefixes for browsers (-webkit, -moz etc)
+        .pipe( gulp.dest( options.dest ) );
+}
+
+function concat( options ) {
+    return gulp.src( options.src )
+        .pipe( $.if( function( file ) {
+            return file.extname == '.js' && file.relative.indexOf( 'min\.' ) === -1;
+        }, $.uglify() ) )
+        .pipe( $.concat( options.finalName ) )
         .pipe( gulp.dest( options.dest ) );
 }
 
@@ -85,7 +109,7 @@ function getJsStream( src ) {
  * Удаляет папки-результаты
  */
 gulp.task( 'clean', function() {
-    return del( [ projectFolderForPlatform, projectFolderForExtensions, projectFolderForStyles ] );
+    return del( [ projectFolderForExtensions, projectFolderForStyles ] );
 } );
 
 /**
@@ -119,14 +143,34 @@ gulp.task( 'build:js', function() {
         .pipe( gulp.dest( projectFolderForExtensions ) );
 } );
 
-var platformSrc = infinniUIpath + '/dist/**/*.*';
+/**
+ * Собирает в один файл все внешние зависимости
+ */
+gulp.task( 'concat:vendor-js', function() {
+    return concat( {
+        src: vendorJsFiles,
+        finalName: 'vendor.js',
+        dest: projectFolderForExtensions
+    } );
+} );
 
 /**
- * Копирует из пакета платформы необходимые файлы в папку-результат
+ * Собирает в один файл стили всех внешних зависимостей
  */
-gulp.task( 'copy:platform', function() {
-    return gulp.src( platformSrc )
-        .pipe( gulp.dest( projectFolderForPlatform ) );
+gulp.task( 'concat:vendor-styles', function() {
+    return concat( {
+        src: vendorStylesFiles,
+        finalName: 'vendor.css',
+        dest: projectFolderForStyles
+    } );
+} );
+
+/**
+ * Копирует шрифты
+ */
+gulp.task( 'copy:fonts', function() {
+    return gulp.src( 'node_modules/font-awesome/fonts/*.*' )
+        .pipe( gulp.dest( './www/compiled/fonts/' ) );
 } );
 
 /**
@@ -148,13 +192,15 @@ gulp.task( 'server:example', function() {
 } );
 
 gulp.task( 'build', gulp.parallel(
-    gulp.series( 'copy:platform', 'build:platform-less' ),
+    'concat:vendor-js',
+    'concat:vendor-styles',
+    'copy:fonts',
+    'build:platform-less',
     'build:js',
     'build:less'
 ) );
 
 gulp.task( 'watch', function() {
-    $.watch( platformSrc, gulp.series( 'copy:platform', 'build:platform-less' ) );
     $.watch( './styles/platform/', gulp.series( 'build:platform-less' ) );
     $.watch( jsFiles, gulp.series( 'build:js' ) );
     $.watch( templateFiles, gulp.series( 'build:js' ) );

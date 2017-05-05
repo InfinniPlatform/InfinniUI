@@ -15,7 +15,15 @@ module.exports = function( config ) {
 
         // list of files / patterns to load in the browser
         files: [
-            'dist/vendor.js',
+            'node_modules/jquery/dist/jquery.min.js',
+            'node_modules/underscore/underscore-min.js',
+            'node_modules/backbone/backbone.js',
+            'node_modules/moment/min/moment.min.js',
+            'node_modules/block-ui/jquery.blockUI.js',
+            'node_modules/toastr/build/toastr.min.js',
+            'node_modules/jquery.cookie/jquery.cookie.js',
+            'node_modules/signalr/jquery.signalR.min.js',
+            'node_modules/edit-mask/dist/edit-mask.js',
             'dist/platform.js',
             'test/*.js',
             'test/**/*.js'
