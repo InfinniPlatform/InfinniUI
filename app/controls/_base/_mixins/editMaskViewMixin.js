@@ -1,4 +1,4 @@
-var editMaskViewMixin = (function (global) {
+var editMaskViewMixin = ( function( global ) {
 
     var MASK_ATTRIBUTE = '_mask';
     var LIBRARY_NAME = 'editMask';
@@ -32,20 +32,20 @@ var editMaskViewMixin = (function (global) {
             init();
         },
 
-        initHandlersForProperties: function(){
-            this.listenTo(this.model, 'change:editMode', this.onChangeEditModeHandler);
-            this.listenTo(this.model, 'invalid', this.onInvalidValueHandler);
+        initHandlersForProperties: function() {
+            this.listenTo( this.model, 'change:editMode', this.onChangeEditModeHandler );
+            this.listenTo( this.model, 'invalid', this.onInvalidValueHandler );
         },
 
-        setEditMaskStrategy: function (strategyName) {
-            this.editMaskStrategy = strategies[strategyName]
+        setEditMaskStrategy: function( strategyName ) {
+            this.editMaskStrategy = strategies[ strategyName ];
         },
 
         getEditMaskStrategy: function() {
             var strategy = this.editMaskStrategy;
 
-            if (!strategy) {
-                strategy = strategies[DEFAULT_STRATEGY];
+            if ( !strategy ) {
+                strategy = strategies[ DEFAULT_STRATEGY ];
             }
 
             return strategy;
@@ -56,201 +56,201 @@ var editMaskViewMixin = (function (global) {
          * @param error
          */
         setValueValidationError: function( error ) {
-            this.model.set('errorText', error);
+            this.model.set( 'errorText', error );
         },
 
         getTimeZone: function(  ) {
-            return this.model.get('timeZone');
+            return this.model.get( 'timeZone' );
         },
 
         setEditMode: function( editMode ) {
-            this.model.set('editMode', editMode);
+            this.model.set( 'editMode', editMode );
         },
 
         onInvalidValueHandler: function( model, error/*, options*/ ) {
-            this.setValueValidationError(error);
+            this.setValueValidationError( error );
         },
 
-        onFocusinEventHandler: function(  ) {
+        onFocusinEventHandler: function() {
 
-            var el =  this.ui.control[0];
+            var el =  this.ui.control[ 0 ];
             var view = this;
-            setTimeout(function(  ) {
+            setTimeout( function(  ) {
                 var pos = el.selectionStart;
-                view.setEditMode(true);
-                el.setSelectionRange(pos, pos);
-            }, 4);
+                view.setEditMode( true );
+                el.setSelectionRange( pos, pos );
+            }, 4 );
 
         },
 
-        onFocusoutEventHandler: function(  ) {
-            this.setEditMode(false);
+        onFocusoutEventHandler: function() {
+            this.setEditMode( false );
         },
 
-        onInputEventHandler: function( ) {
+        onInputEventHandler: function() {
             this.updateModelValue();
         },
 
-        onChangeEventHandler: function(  ) {
+        onChangeEventHandler: function() {
             this.updateModelValue();
         },
 
-        updateModelValue: function () {
-            if (this[MASK_ATTRIBUTE]) {
+        updateModelValue: function() {
+            if ( this[ MASK_ATTRIBUTE ] ) {
 
             } else {
                 var text = this.ui.control.val();
 
-                this.model.set({
+                this.model.set( {
                     value: text,
                     rawValue: text
-                });
+                } );
             }
 
         },
 
         onChangeEditModeHandler: function( model, editMode ) {
-            if (editMode) {
+            if ( editMode ) {
                 //turn on edit-mask when it specified
-                createEditMask.call(this)
+                createEditMask.call( this );
             } else {
                 //turn off edit-mask when it specified
-                destroyEditMask.call(this);
+                destroyEditMask.call( this );
                 //update display text
-                editorBaseViewMixin.updateValueState.call(this);
-                this.ui.control.val(this.getDisplayValue());
+                editorBaseViewMixin.updateValueState.call( this );
+                this.ui.control.val( this.getDisplayValue() );
             }
         }
 
     };
 
     function init() {
-        if (editMaskLibraryInitialized) {
+        if ( editMaskLibraryInitialized ) {
             return;
         }
         editMaskLibraryInitialized = true;
-        getEditMaskLibrary().Mask.api.init({locale: InfinniUI.localized.name});
+        getEditMaskLibrary().Mask.api.init( { locale: InfinniUI.localized.name } );
     }
 
     function createEditMask(  ) {
-        var metadata = this.model.get('editMask');
+        var metadata = this.model.get( 'editMask' );
 
-        if (!metadata) {
+        if ( !metadata ) {
             return;
         }
 
         var editMaskType = Object.keys( metadata ).pop();
         var config = metadata[ editMaskType ];
-        var maskTemplate = normalizeMaskTemplate(config[ 'Mask' ]);
+        var maskTemplate = normalizeMaskTemplate( config[ 'Mask' ] );
         var mask;
 
-        var usedStrategy = this.editMaskStrategies[editMaskType];
-        if (typeof usedStrategy === 'undefined' || usedStrategy === null) {
-            console.log('Не задано преобразование значения маски ввода');
+        var usedStrategy = this.editMaskStrategies[ editMaskType ];
+        if ( typeof usedStrategy === 'undefined' || usedStrategy === null ) {
+            console.log( 'Не задано преобразование значения маски ввода' );
             usedStrategy = DEFAULT_STRATEGY;
         }
 
-        this.setEditMaskStrategy(usedStrategy);
+        this.setEditMaskStrategy( usedStrategy );
 
-        switch(editMaskType) {
+        switch( editMaskType ) {
             case 'DateTimeEditMask':
-                mask = initDateTimeEditMask.call(this, maskTemplate);
+                mask = initDateTimeEditMask.call( this, maskTemplate );
                 break;
             case 'NumberEditMask':
-                mask = initNumberEditMask.call(this, maskTemplate);
+                mask = initNumberEditMask.call( this, maskTemplate );
                 break;
             case 'TemplateEditMask':
-                mask = initTemplateEditMask.call(this, maskTemplate, config);
+                mask = initTemplateEditMask.call( this, maskTemplate, config );
                 break;
         }
 
-        this[MASK_ATTRIBUTE] = mask;
+        this[ MASK_ATTRIBUTE ] = mask;
     }
 
     function destroyEditMask() {
-        if(this[MASK_ATTRIBUTE]) {
-            this[MASK_ATTRIBUTE].destroy();
+        if( this[ MASK_ATTRIBUTE ] ) {
+            this[ MASK_ATTRIBUTE ].destroy();
         }
     }
 
     function initDateTimeEditMask( maskTemplate ) {
         var model = this.model;
-        var mask = getEditMaskLibrary().Mask.dateTime(this.ui.control[0], maskTemplate);
+        var mask = getEditMaskLibrary().Mask.dateTime( this.ui.control[ 0 ], maskTemplate );
 
-        var offset = model.get('timeZone');
-        if (typeof offset === 'undefined' || offset === null) {
+        var offset = model.get( 'timeZone' );
+        if ( typeof offset === 'undefined' || offset === null ) {
             offset = InfinniUI.DateUtils.getDefaultTimeZone();
         }
 
-        mask.setTimezoneOffset(offset);
+        mask.setTimezoneOffset( offset );
 
         var that = this;
 
-        mask.setValue(this.getEditMaskStrategy().valueToMask(model.getValue()));
+        mask.setValue( this.getEditMaskStrategy().valueToMask( model.getValue() ) );
 
-        mask.onChangeValue(function( event ) {
+        mask.onChangeValue( function( event ) {
             var value = event.newValue;
-            if (value !== null && typeof value !== 'undefined') {
-                model.set('value', that.getEditMaskStrategy().maskToValue(value));
-                if (model.isValid()) {  //reset error
-                    that.setValueValidationError(null);
+            if ( value !== null && typeof value !== 'undefined' ) {
+                model.set( 'value', that.getEditMaskStrategy().maskToValue( value ) );
+                if ( model.isValid() ) {  //reset error
+                    that.setValueValidationError( null );
                 }
             } else {
-                model.set('value', value);
+                model.set( 'value', value );
             }
-        });
+        } );
 
         return mask;
     }
 
     function initNumberEditMask( maskTemplate ) {
         var model = this.model;
-        var mask = getEditMaskLibrary().Mask.number(this.ui.control[0], maskTemplate);
-        mask.setValue(model.getValue());
-        mask.onChangeValue(function( event ) {
-            model.set('value', event.newValue);
-            if (model.isValid()) {  //reset error
-                model.set('errorText', null);
+        var mask = getEditMaskLibrary().Mask.number( this.ui.control[ 0 ], maskTemplate );
+        mask.setValue( model.getValue() );
+        mask.onChangeValue( function( event ) {
+            model.set( 'value', event.newValue );
+            if ( model.isValid() ) {  //reset error
+                model.set( 'errorText', null );
             }
-        });
+        } );
 
         return mask;
     }
 
     function initTemplateEditMask( maskTemplate, config ) {
         var model = this.model;
-        var mask = getEditMaskLibrary().Mask.template(this.ui.control[0], maskTemplate);
+        var mask = getEditMaskLibrary().Mask.template( this.ui.control[ 0 ], maskTemplate );
 
-        var maskSaveLiteral = config['MaskSaveLiteral'];
-        if (typeof maskSaveLiteral === 'boolean') {
-            mask.setMaskSaveLiteral(maskSaveLiteral);
+        var maskSaveLiteral = config[ 'MaskSaveLiteral' ];
+        if ( typeof maskSaveLiteral === 'boolean' ) {
+            mask.setMaskSaveLiteral( maskSaveLiteral );
         }
 
-        mask.setValue(model.getValue());
+        mask.setValue( model.getValue() );
 
-        mask.onChangeValue(function( event ) {
-            model.set('value', event.newValue);
-        });
+        mask.onChangeValue( function( event ) {
+            model.set( 'value', event.newValue );
+        } );
 
         return mask;
     }
 
     function normalizeMaskTemplate( maskTemplate ) {
-        var template = InfinniUI.localized.patternDateFormats[maskTemplate];
+        var template = InfinniUI.localized.patternDateFormats[ maskTemplate ];
 
 
-        if(typeof template !== 'undefined') {
+        if( typeof template !== 'undefined' ) {
             maskTemplate = template;
         }
 
-        maskTemplate = maskTemplate.replace(/%([msd])/g, '$1');
+        maskTemplate = maskTemplate.replace( /%([msd])/g, '$1' );
 
         return maskTemplate;
     }
 
     function DefaultStrategy(  ) {
 
-        this.valueToMask = function(value) {
+        this.valueToMask = function( value ) {
             return value;
         };
 
@@ -261,7 +261,7 @@ var editMaskViewMixin = (function (global) {
          */
         this.maskToValue = function( maskValue ) {
             return maskValue;
-        }
+        };
     }
 
     function UnixTimestampStrategy() {
@@ -271,11 +271,11 @@ var editMaskViewMixin = (function (global) {
          * @param {number} value unix timestamp
          * @returns {number} milleseconds
          */
-        this.valueToMask = function(value) {
+        this.valueToMask = function( value ) {
             var maskValue = null;
 
-            if (value !== null && !isNaN(value) && isFinite(value)) {
-                maskValue = Math.round(value * 1000);
+            if ( value !== null && !isNaN( value ) && isFinite( value ) ) {
+                maskValue = Math.round( value * 1000 );
             }
 
             return maskValue;
@@ -289,12 +289,12 @@ var editMaskViewMixin = (function (global) {
         this.maskToValue = function( maskValue ) {
             var value = null;
 
-            if (maskValue !== null && !isNaN(maskValue) && isFinite(maskValue)) {
-                value = +(maskValue / 1000).toFixed(3)
+            if ( maskValue !== null && !isNaN( maskValue ) && isFinite( maskValue ) ) {
+                value = +( maskValue / 1000 ).toFixed( 3 );
             }
 
             return value;
-        }
+        };
     }
 
     function ISO8601Strategy() {
@@ -306,8 +306,8 @@ var editMaskViewMixin = (function (global) {
          */
         this.valueToMask = function( value ) {
             var maskValue = null;
-            if (value !== null && typeof value !== 'undefined') {
-                maskValue = new Date(value).getTime();
+            if ( value !== null && typeof value !== 'undefined' ) {
+                maskValue = new Date( value ).getTime();
             }
             return maskValue;
         };
@@ -318,20 +318,20 @@ var editMaskViewMixin = (function (global) {
          * @returns {string} ISO 8601
          */
         this.maskToValue = function( maskValue ) {
-            var date = new Date(maskValue);
-            return InfinniUI.DateUtils.toISO8601(date);
+            var date = new Date( maskValue );
+            return InfinniUI.DateUtils.toISO8601( date );
         };
     }
 
     function getEditMaskLibrary() {
-        var editMask = global[LIBRARY_NAME];
+        var editMask = global[ LIBRARY_NAME ];
 
-        if (!editMask) {
-            console.error('edit-mask library "' + LIBRARY_NAME + '" not loaded!');
+        if ( !editMask ) {
+            console.error( 'edit-mask library "' + LIBRARY_NAME + '" not loaded!' );
         }
 
         return editMask;
     }
 
 
-})(window);
+} )( window );

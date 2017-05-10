@@ -48,20 +48,20 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
-    validate: function( attributes/*, options */) {
+    validate: function( attributes/*, options */ ) {
         var value = attributes.value;
         var min = attributes.minValue;
         var max = attributes.maxValue;
         var error = void 0;
 
-        if (value !== null && typeof value !== 'undefined') {
-            if (_.isNumber(min) && _.isNumber(max)) {
-                if (value < min || value > max) {
+        if ( value !== null && typeof value !== 'undefined' ) {
+            if ( _.isNumber( min ) && _.isNumber( max ) ) {
+                if ( value < min || value > max ) {
                     error = 'Значение должно быть в диапазоне от ' + min + ' до ' + max + '.';
                 }
-            } else if (_.isNumber(min) && value < min) {
+            } else if ( _.isNumber( min ) && value < min ) {
                 error = 'Значение должно быть не меньше ' + min + '.';
-            } else if (_.isNumber(max) && value > max) {
+            } else if ( _.isNumber( max ) && value > max ) {
                 error = 'Значение должно быть не больше ' + max + '.';
             }
         }

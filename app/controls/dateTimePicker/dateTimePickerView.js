@@ -22,7 +22,7 @@ var DateTimePickerView = TextEditorBaseView.extend( {
     editMaskStrategies: {
         DateTimeEditMask: 'iso8601'
     },
-    
+
     /**
      *
      */
@@ -134,7 +134,7 @@ var DateTimePickerView = TextEditorBaseView.extend( {
      *
      */
     onClickDropdownHandler: function() {
-    },
+    }
     /**
      *
      */

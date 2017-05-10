@@ -4,7 +4,7 @@
  * @mixes editorBaseViewMixin
  * @mixes editMaskViewMixin
  */
-var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.prototype */ _.extend({}, editorBaseViewMixin, editMaskViewMixin, {
+var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.prototype */ _.extend( {}, editorBaseViewMixin, editMaskViewMixin, {
     UI: _.extend( {}, editorBaseViewMixin.UI, {
         control: '.pl-control',
         editor: '.pl-editor',
@@ -23,7 +23,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
      */
     initialize: function() {
         ControlView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
-        editMaskViewMixin.initialize.call(this);
+        editMaskViewMixin.initialize.call( this );
     },
 
     /**
@@ -32,7 +32,7 @@ var TextEditorBaseView = ControlView.extend(/** @lends TextEditorBaseView.protot
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
-        editMaskViewMixin.initHandlersForProperties.call(this);
+        editMaskViewMixin.initHandlersForProperties.call( this );
 
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
         this.listenTo( this.model, 'change:displayFormat', this.updateDisplayFormat );

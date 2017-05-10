@@ -68,21 +68,21 @@ var editorBaseViewMixin = {
      *
      */
     updateHintText: function() {
-        this.toggleHintText(this.ui.hintText, this.model.get( 'hintText' ));
+        this.toggleHintText( this.ui.hintText, this.model.get( 'hintText' ) );
     },
 
     /**
      *
      */
     updateErrorText: function() {
-        this.toggleHintText(this.ui.errorText, this.model.get( 'errorText' ), InfinniUI.Theme.default.classes.inputError);
+        this.toggleHintText( this.ui.errorText, this.model.get( 'errorText' ), InfinniUI.Theme.default.classes.inputError );
     },
 
     /**
      *
      */
     updateWarningText: function() {
-        this.toggleHintText(this.ui.warningText, this.model.get( 'warningText' ), InfinniUI.Theme.default.classes.inputWarning);
+        this.toggleHintText( this.ui.warningText, this.model.get( 'warningText' ), InfinniUI.Theme.default.classes.inputWarning );
     },
 
     /**
@@ -118,11 +118,11 @@ var editorBaseViewMixin = {
     toggleHintText: function( $element, text, inputClass ) {
         var hideText = !text;
         $element
-            .text(hideText ? '' : text)
-            .toggleClass(InfinniUI.Theme.default.classes.hidden, hideText);
+            .text( hideText ? '' : text )
+            .toggleClass( InfinniUI.Theme.default.classes.hidden, hideText );
 
-        if (inputClass) {
-            this.$el.toggleClass(inputClass, !hideText);
+        if ( inputClass ) {
+            this.$el.toggleClass( inputClass, !hideText );
         }
     }
 

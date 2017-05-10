@@ -32,7 +32,7 @@ var DateTimePickerModel = TextEditorBaseModel.extend( {
         var min = attributes.minValue;
         var max = attributes.maxValue;
 
-        var isValid = InfinniUI.DateUtils.checkRangeDate(attributes.value, attributes.minValue, attributes.maxValue);
+        var isValid = InfinniUI.DateUtils.checkRangeDate( attributes.value, attributes.minValue, attributes.maxValue );
 
         return isValid ? void 0 : 'Значение выходит за пределы допустимого диапазона';
     }

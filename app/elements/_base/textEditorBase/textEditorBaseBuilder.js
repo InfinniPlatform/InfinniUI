@@ -60,9 +60,8 @@ _.extend( TextEditorBaseBuilder.prototype, {
 
     initEditMask: function( params ) {
         var metadata = params.metadata;
-            metadata = params.metadata;
 
-        params.element.setEditMask(metadata.EditMask);
+        params.element.setEditMask( metadata.EditMask );
         return this;
     }
 

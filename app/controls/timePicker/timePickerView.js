@@ -6,7 +6,7 @@ var TimePickerView = DateTimePickerView .extend( {
         DateTimeEditMask: 'timestamp'
     },
 
-    initialize: function () {
+    initialize: function() {
         DateTimePickerView.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     }
 
