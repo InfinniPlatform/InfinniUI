@@ -1,4 +1,4 @@
-describe('DatePickerControl', function () {
+describe( 'DatePickerControl', function() {
     var builder = new InfinniUI.ApplicationBuilder();
 
     describe( 'use edit mask', function() {

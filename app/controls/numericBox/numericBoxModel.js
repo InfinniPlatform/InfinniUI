@@ -52,7 +52,7 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         var value = attributes.value;
         var min = attributes.minValue;
         var max = attributes.maxValue;
-        var error = void 0;
+        var error;
 
         if ( value !== null && typeof value !== 'undefined' ) {
             if ( _.isNumber( min ) && _.isNumber( max ) ) {

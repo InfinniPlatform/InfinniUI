@@ -13,8 +13,8 @@ describe( 'ObjectDataProvider', function() {
         }
     ];
 
-    beforeEach(cleanup);
-    afterEach(cleanup);
+    beforeEach( cleanup );
+    afterEach( cleanup );
 
     it( 'should check ValidationResult', function( done ) {
 

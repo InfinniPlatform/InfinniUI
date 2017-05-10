@@ -162,6 +162,8 @@ var editMaskViewMixin = ( function( global ) {
             case 'TemplateEditMask':
                 mask = initTemplateEditMask.call( this, maskTemplate, config );
                 break;
+            default:
+                throw new Error( 'Incorrect edit mask type' );
         }
 
         this[ MASK_ATTRIBUTE ] = mask;

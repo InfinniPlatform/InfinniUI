@@ -1,4 +1,4 @@
-describe('TimePickerControl', function () {
+describe( 'TimePickerControl', function() {
     var builder = new InfinniUI.ApplicationBuilder();
 
     describe( 'use edit mask', function() {
@@ -6,7 +6,7 @@ describe('TimePickerControl', function () {
             var dateTimePicker = builder.buildType( 'TimePicker', {
                 EditMask: {
                     DateTimeEditMask: {
-                        Mask: "HH:mm:ss"
+                        Mask: 'HH:mm:ss'
                     }
                 }
             } );
@@ -21,4 +21,4 @@ describe('TimePickerControl', function () {
         } );
     } );
 
-});
+} );
