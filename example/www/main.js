@@ -1,4 +1,4 @@
-﻿(function() {
+﻿( function() {
 
     var $target = $( 'body' );
 
@@ -11,4 +11,4 @@
 
     InfinniUI.openHomePage( $target );
 
-})();
+} )();
