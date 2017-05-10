@@ -3,7 +3,7 @@ function openDatagridPage( context, args ) {
         OpenAction: {
             LinkView: {
                 AutoView: {
-                    Path: "viewExample/dataGrid.json",
+                    Path: "views/dataGrid.json",
                     OpenMode: "Container",
                     Container: "MainContent"
                 }
@@ -17,7 +17,7 @@ function openLoginPage( context, args ) {
         OpenAction: {
             LinkView: {
                 AutoView: {
-                    Path: "viewExample/loginPage.json",
+                    Path: "views/loginPage.json",
                     OpenMode: "Container",
                     Container: "MainContent"
                 }
@@ -31,7 +31,7 @@ function openDataBindingPage( context, args ) {
         OpenAction: {
             LinkView: {
                 AutoView: {
-                    Path: "viewExample/binding.json",
+                    Path: "views/binding.json",
                     OpenMode: "Container",
                     Container: "MainContent"
                 }
@@ -45,7 +45,7 @@ function openCustomElementsPage( context, args ) {
         OpenAction: {
             LinkView: {
                 AutoView: {
-                    Path: "viewExample/customElements.json",
+                    Path: "views/customElements.json",
                     OpenMode: "Container",
                     Container: "MainContent"
                 }

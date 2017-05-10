@@ -138,7 +138,7 @@ var sourceForFiles = {
             'example/www/*.*',
             'example/www/img/**/*.*',
             'example/www/testConfigurations/**/*.*',
-            'example/www/viewExample/**/*.*',
+            'example/www/views/**/*.*',
 
             platformOutputFolder + '**/*.*',
             'LICENSE',

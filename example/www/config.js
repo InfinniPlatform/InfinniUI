@@ -9,7 +9,7 @@ InfinniUI.config.lang = 'en-US';
 InfinniUI.config.serverUrl = 'http://' + window.location.host;
 InfinniUI.config.configName = 'test';
 
-InfinniUI.config.homePage = '/viewExample/homePage.json';
+InfinniUI.config.homePage = '/views/homePage.json';
 
 // when enableAutoHeightService = false, body will have full height and will scrollable
 InfinniUI.config.enableAutoHeightService = true;

@@ -145,7 +145,7 @@
 																			"AutoView": {
 																				"OpenMode": "Dialog",
 																				"DialogWidth": "Middle",
-																				"Path": "viewExample/addItem.json"
+																				"Path": "views/addItem.json"
 																			}
 																		}
 																	}
@@ -245,7 +245,7 @@
 																										"AutoView": {
 																											"OpenMode": "Dialog",
 																											"DialogWidth": "Middle",
-																											"Path": "viewExample/editItem.json"
+																											"Path": "views/editItem.json"
 																										}
 																									}
 																								}

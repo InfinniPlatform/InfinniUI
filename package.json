@@ -65,6 +65,8 @@
         "karma-mocha-reporter": "^2.2.3",
         "karma-teamcity-reporter": "^1.0.0",
         "mocha": "2.x",
+        "npm": "^4.5.0",
+        "npm-install-peers": "^1.1.0",
         "require-dir": "^0.3.1",
         "streamqueue": "^1.1.1"
     },
@@ -85,7 +87,7 @@
         "build": "gulp clean && gulp build:prod",
         "pack": "npm run build-full && gulp assemble:package",
         "pack-for-teamcity": "gulp assemble:package",
-        "test": "karma start my.conf.js",
-        "test:tc": "karma start my.conf.js --single-run  --reporters teamcity --colors false --browsers Firefox"
+        "test": "npm-install-peers && karma start my.conf.js",
+        "test:tc": "npm run test -- --single-run  --reporters teamcity --colors false --browsers Firefox"
     }
 }

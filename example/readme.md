@@ -35,7 +35,7 @@ bootstrap-theme - стили перекрывающие/дополняющие �
 Кроме того, вы можете задавать новые элементы (см пример  папке *./js/elements/*).
 Либо использовать возможности [ExtensionPanel](http://infinniui-en.readthedocs.io/en/latest/Elements/ExtensionPanel/),
 пример можно глянуть в папке *./js/extentionPanels/*.
-Примеры метаданных, есть в файле *./www/viewExample/customElements.json*.
+Примеры метаданных, есть в файле *./www/views/customElements.json*.
 
 Так же обратите внимание, что многие важные настройки происходят в файле *./www/js/main.js*.
 Например, в нем Вы можете переопределить провайдеры источников данных.
@@ -55,7 +55,7 @@ InfinniUI.providerRegister.register('MetadataDataSource',
 function QueryConstructorMetadata(host, metadata) {
   this.constructMetadataRequest = function() {
     return {
-      requestUrl: host + '/viewExample/' + metadata.Path + '.json',
+      requestUrl: host + '/views/' + metadata.Path + '.json',
       method: 'GET'
     };
   };
