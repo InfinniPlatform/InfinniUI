@@ -27,7 +27,7 @@ _.extend( LinkViewBuilderBase.prototype, {
     },
 
     getViewTemplate: function() {
-        throw 'LinkViewBuilderBase.getViewTemplate: В потомке LinkViewBuilderBase не переопределен метод getViewTemplate.';
+        throw new Error( 'LinkViewBuilderBase.getViewTemplate: В потомке LinkViewBuilderBase не переопределен метод getViewTemplate.' );
     },
 
     buildViewByMetadata: function( params, viewMetadata, parentView, onViewReadyHandler ) {

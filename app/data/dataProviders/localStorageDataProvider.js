@@ -89,7 +89,7 @@ _.extend( LocalStorageDataProvider.prototype, {
 
     saveItem: function( item, successCallback ) {
         if( !item[ this.idProperty ] ) {
-            throw( 'У элемента отсутствует свойство "' + this.idProperty + '"' );
+            throw new Error( 'У элемента отсутствует свойство "' + this.idProperty + '"' );
         }
         var items = JSON.parse( localStorage.getItem( 'items' ) );
         var itemIndex = this._getIndexOfItem( item );

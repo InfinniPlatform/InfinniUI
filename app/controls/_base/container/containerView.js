@@ -21,7 +21,7 @@ var ContainerView = ControlView.extend( {
      *
      */
     updateGrouping: function() {
-        throw 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.';
+        throw new Error( 'ContainerView.updateGrouping В потомке ContainerView не реализовано обновление группировок.' );
     },
 
     /**

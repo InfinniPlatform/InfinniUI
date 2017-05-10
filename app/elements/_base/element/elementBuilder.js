@@ -34,7 +34,7 @@ _.extend( ElementBuilder.prototype, {
      * @param {*} params.collectionProperty
      */
     createElement: function( params ) {
-        throw ( 'Не перегружен абстрактный метод ElementBuilder.createElement()' );
+        throw new Error( 'Не перегружен абстрактный метод ElementBuilder.createElement()' );
     },
 
     /**

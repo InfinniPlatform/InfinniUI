@@ -85,7 +85,6 @@ _.extend( BaseDataSourceBuilder.prototype, {
     },
 
     createDataSource: function( parent ) {
-        // throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
         return new BaseDataSource( {
             view: parent
         } );

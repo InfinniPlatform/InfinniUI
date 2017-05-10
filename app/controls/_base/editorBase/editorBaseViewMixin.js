@@ -46,7 +46,7 @@ var editorBaseViewMixin = {
      *
      */
     updateValue: function() {
-        throw 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.';
+        throw new Error( 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.' );
     },
 
     updateValueState: function() {
