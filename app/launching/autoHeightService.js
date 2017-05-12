@@ -123,10 +123,12 @@ InfinniUI.AutoHeightService = {
             .groupBy( 'offsetTop' )
             .value();
         var heights = [];
+        var row;
 
-        _.each( grid, function( row, i ) {
+        for( var i in grid ) {
             var nodes = [];
-            _.each( row, function( e ) {
+            row = grid[ i ];
+            row.forEach( function( e ) {
                 var n = _.find( node.child, function( c ) {
                     return c.element === e;
                 } );
@@ -138,7 +140,7 @@ InfinniUI.AutoHeightService = {
             }, 0 ) );
 
             grid[ i ] = nodes;
-        }, this );
+        }
 
         var fixedHeight = heights.reduce( function( total, height ) {
                 return total + height;
@@ -149,12 +151,13 @@ InfinniUI.AutoHeightService = {
 
             heightForNode = Math.floor( ( height - fixedHeight ) / count );
 
-        _.each( grid, function( row ) {
+        for( var j in grid ) {
+            row = grid[ j ];
             if( row.length === 0 ) return;
             row.forEach( function( node ) {
                 manager.defineWay( node, heightForNode );
             }, this );
-        }, this );
+        }
     },
 
     resize: function( el, pageHeight ) {
