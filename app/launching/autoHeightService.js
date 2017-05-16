@@ -6,8 +6,7 @@ InfinniUI.AutoHeightService = {
 
     setOuterHeight: function( $el, height, fix ) {
         var delta = 0;
-        'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
-            .split( ',' )
+        [ 'border-top-width', 'border-bottom-width', 'padding-top', 'padding-bottom', 'margin-top', 'margin-bottom' ]
             .forEach( function( name ) {
                 delta += parseInt( $el.css( name ) );
             } );
@@ -99,7 +98,7 @@ InfinniUI.AutoHeightService = {
             //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
             return;
         } else if( node.$element.hasClass( 'tab-content' ) ) {
-            node.child.forEach( function( node ) {
+            _.each( node.child, function( node ) {
                 manager.defineWay( node, nodeHeight );
             } );
         } else if( node.child.length > 0 ) {
@@ -125,10 +124,9 @@ InfinniUI.AutoHeightService = {
         var heights = [];
         var row;
 
-        for( var i in grid ) {
+        _.each( grid, function( row, i ) {
             var nodes = [];
-            row = grid[ i ];
-            row.forEach( function( e ) {
+            _.each( row, function( e ) {
                 var n = _.find( node.child, function( c ) {
                     return c.element === e;
                 } );
@@ -140,7 +138,7 @@ InfinniUI.AutoHeightService = {
             }, 0 ) );
 
             grid[ i ] = nodes;
-        }
+        } );
 
         var fixedHeight = heights.reduce( function( total, height ) {
                 return total + height;
@@ -151,13 +149,12 @@ InfinniUI.AutoHeightService = {
 
             heightForNode = Math.floor( ( height - fixedHeight ) / count );
 
-        for( var j in grid ) {
-            row = grid[ j ];
+        _.each( grid, function( row ) {
             if( row.length === 0 ) return;
-            row.forEach( function( node ) {
+            _.each( row, function( node ) {
                 manager.defineWay( node, heightForNode );
             }, this );
-        }
+        } );
     },
 
     resize: function( el, pageHeight ) {
