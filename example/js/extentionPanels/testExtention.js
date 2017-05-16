@@ -1,18 +1,16 @@
-function TestExtension( context, args ) {
-    this.context = args.context;
+InfinniUI.extensionPanels.register( {
+    name: 'TestExtension',
+    initialize: function( context, args ) {
+        this.context = args.context;
 
-    this.$el = args.$el;
-    this.parameters = args.parameters;
-    this.itemTemplate = args.itemTemplate;
-}
-
-_.extend( TestExtension.prototype, {
+        this.$el = args.$el;
+        this.parameters = args.parameters;
+        this.itemTemplate = args.itemTemplate;
+    },
     render: function() {
         this.$el.addClass( 'test-extension' );
 
-        if( this.parameters && this.parameters[ 'color' ] ) {
-            this.$el.addClass( 'pl-' + this.parameters[ 'color' ].getValue() + '-fg' );
-        }
+        this.setColor();
 
         if( this.itemTemplate ) {
             this.$el
@@ -21,6 +19,10 @@ _.extend( TestExtension.prototype, {
 
         this.$el
             .append( '<div>TestExtension</div> ' );
-
+    },
+    setColor: function() {
+        if( this.parameters && this.parameters[ 'color' ] ) {
+            this.$el.addClass( 'pl-' + this.parameters[ 'color' ].getValue() + '-fg' );
+        }
     }
 } );

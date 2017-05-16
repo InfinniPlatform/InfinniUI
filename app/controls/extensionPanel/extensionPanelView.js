@@ -37,8 +37,13 @@
         var parameters = this.model.get( 'parameters' );
         var items = this.model.get( 'items' );
         var builder = this.model.get( 'builder' );
+        var initializer = InfinniUI.extensionPanels.getByName( extensionName ) || window[ extensionName ];
 
-        this.extensionObject = new window[ extensionName ]( context, { $el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder } );
+        if( _.isFunction( initializer ) ) {
+            this.extensionObject = new initializer( context, { $el: this.$el, parameters: parameters, itemTemplate: itemTemplate, items: items, builder: builder } );
+        } else {
+            throw new Error( 'invalid extensionPanel name' );
+        }
     }
 
 } );
