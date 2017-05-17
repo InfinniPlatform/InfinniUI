@@ -21,11 +21,11 @@ InfinniUI.config.enableAutoHeightService = true;
 // Example for routing, launch with router.json config file
 
 // History API settings for routing, read Backbone.history for possible options
-InfinniUI.config.HistoryAPI = {
+InfinniUI.config.historyAPI = {
     pushState: true
 };
 
-InfinniUI.config.Routes = [
+InfinniUI.config.routes = [
     {
         Name: 'main',
         Path: '/',

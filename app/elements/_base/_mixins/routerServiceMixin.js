@@ -8,7 +8,7 @@ var routerServiceMixin = {
             var index = tmpArr.indexOf( ':' + param );
 
             if( index === -1 ) {
-                throw new Error( 'Different param names in metadata and InfinniUI.config.Routes' );
+                throw new Error( 'Different param names in metadata and InfinniUI.config.routes' );
             }
             tmpArr = oldHref.split( '/' );
             tmpArr[ index ] = newValue;
@@ -37,7 +37,7 @@ var routerServiceMixin = {
             }
 
             if( index === -1 ) {
-                throw new Error( 'Different query names in metadata and InfinniUI.config.Routes' );
+                throw new Error( 'Different query names in metadata and InfinniUI.config.routes' );
             }
             tmpArr = query.split( '&' );
             var tmpValue = tmpArr[ index ].split( '=' );

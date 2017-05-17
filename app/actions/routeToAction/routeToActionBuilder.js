@@ -15,7 +15,7 @@ _.extend( RouteToActionBuilder.prototype, baseActionBuilderMixin, routerServiceM
      */
     build: function( context, args ) {
         var action = new RouteToAction();
-        var newHref = routerService.getLinkByName( args.metadata.Name, 'no' );
+        var newHref = InfinniUI.routerService.getLinkByName( args.metadata.Name, 'no' );
         var hrefParams = args.metadata.Params;
         var query = args.metadata.Query;
         var replace = args.metadata.Replace; // when true, can delete url from history

@@ -1,4 +1,4 @@
-var routerService = ( function( myRoutes ) {
+function RouterService( myRoutes ) {
     if( !myRoutes ) {
         return null;
     }
@@ -65,7 +65,7 @@ var routerService = ( function( myRoutes ) {
             InfinniUI.AppRouter = new Router();
 
             Backbone.history = Backbone.history || new Backbone.History( {} );
-            Backbone.history.start( InfinniUI.config.HistoryAPI );
+            Backbone.history.start( InfinniUI.config.historyAPI );
         } else {
             console.log( 'Попытка повторно запустить routerService' );
         }
@@ -92,6 +92,6 @@ var routerService = ( function( myRoutes ) {
     };
 
     return routerService;
-} )( InfinniUI.config.Routes );
+}
 
-InfinniUI.RouterService = routerService;
+InfinniUI.routerService = new RouterService( InfinniUI.config.routes );
