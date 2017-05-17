@@ -1,3 +1,4 @@
+/*===============InfinniUI config===============*/
 var InfinniUI = window.InfinniUI || {};
 window.InfinniUI = InfinniUI;
 
@@ -13,10 +14,6 @@ InfinniUI.config.homePage = '/views/homePage.json';
 
 // when enableAutoHeightService = false, body will have full height and will scrollable
 InfinniUI.config.enableAutoHeightService = true;
-
-// when need to use GetCurrentUser
-//InfinniUI.config.enableGetCurrentUser = true;
-
 
 // Example for routing, launch with router.json config file
 
@@ -47,3 +44,12 @@ InfinniUI.config.routes = [
         Action: '{ openCustomElementsPage(context, args); }'
     }
 ];
+
+/*===============ApplicationExample config===============*/
+window.ApplicationExample = {
+    user: null,
+    config: {}
+};
+
+// when need to use GetCurrentUser
+//ApplicationExample.config.enableGetCurrentUser = true;
