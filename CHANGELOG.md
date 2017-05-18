@@ -1,47 +1,36 @@
 Changelog
 =========
 
-### 2.2
-* imageBox rotate portrait images from mobile phones in right position (UI-2775)
-* imageBox fit images in frame by smaller side automatically (UI-2775)
-* Добавлены события OnExpand и OnCollapse в TreeView(UI-2776)
-* контекст параметра текущая вьюха вместо вызывающей(UI-2684)
-* добавлено VerticalAlignment в DataGrid(UI-2753)
-* добавлено SuspendUpdate в метаданные источников данных (UI-2676)
-* fix bug: после удаления элемента удаляется тултип(UI-2482)
-* ValidationResult для всех источников данных имеет единый формат(раньше обжект и документ отличаслись)(UI-2658)
-* починен баг: роутинг корректно работает с DataNavigation(UI-2677)
-* добавлены методы expand, collapse, toggle в TreeView(UI-2635)
-* починено отображение treeView, не отображать переключатель, если нет дочерних элементов(UI-2661)
-* result заменен на validationResult, мб формат ответов изменился? добавилось originalResponse?(4d8efdde707f6e73232e4d002c855f48e733904e, c1982a5511d93680a733e4a2bf3f6c24cf26eac4)
-* добавлен параметр Size в Icon[возможность изменения размера] (UI-2632)
-* починен баг с некорректным положением диалоговых окон(UI-2619)
-* починен баг UI-2621 SaveAction с параметром CanClose: false не обновляет DestinationValue
-* UI-2574 При выборе TextBox курсор перемещается в начало
-* UI-2615 Добавить в систему роутинга возможность не включать пути в history браузера (добавились метаданные Replace)
-* UI-2516 Не работает Enabled для ListBox (!!!!!!!!)
-* вынесена из прикланой части работа с провайдерами и регистрация апликайшен вью( f825c6ca4a6d029151adf06e13974644524c256a, )
-* добавлена возможность вызывать addAction без destinationValue (635cf6ee9e869dbfb63d3221192b43e7f4681b26)
-* UI-2586: При больших объемах данных заметно подвисание представления (???)
-* UI-2579: В обработчик OnProviderError RestDataSource приходят неверые аргументы
-* UI-2569: Консолидировать дефолтные цвета элементов Button и PopupButton(???)
-* добавлен Enabled для TabPage(UI-2544)
-* добавлено свойство CollapseChanger(UI-2519)
-* UI-2542: ListEditorBase нельзя забиндить на параметр (???)
-* UI-2530: Добавить возможность работать с полем AdditionalResult (актуально????)
-* UI-2521: Не работает Binding (#) в ServerAction (???)
-* добавлена возможность указывать onProviderError (UI-2506, UI-2417)
-* UI-2406 Фильтр не правильно парсит число в кавычках
-* UI-2203: В текстовом поле с маской не всегда вводится текст
-* UI-2467: Не работает setFocused
-* UI-2460: Сделать свойство Origin у ServerAction необязательным
-* UI-2481: При подстановке параметров в Data ServerAction теряется тип данных (???)
-* UI-2478: Не получается передать JSON в параметрах ServerAction
-* UI-2448: DeleteAction удаляет всё содержимое источника данных (???)
-* UI-2472 Реализовать возможность изменения текста в диалоговых окнах при изменении локали (мб не сообщать о локалях до 3 релиза?)
-* UI-2398: Дополнить список фильтров (startsWith, endsWith, endsWith)(это влияло на функционал?)
-* UI-2449 Доработать routerService ( а когда появился роутинг?)
-* переименован LinkElement в Link (в метаданных изначально был Link) (UI-2273)
-* добавлена возможность обрезать фотографии в ImageBox (UI-2413)
-* добавилась возможность подписки signalR(UI-2251)
+## 2.2
+* 'ImageBox' rotate portrait images from mobile phones in right position
+* 'ImageBox' fit images in frame by smaller side automatically
+* added events 'OnExpand' and 'OnCollapse' to 'TreeView'
+* now converter of 'DataBinding' get correct context in case of 'ObjectDataSource Parameter' binding
+* added 'VerticalAlignment' property to 'DataGrid' metadata
+* added 'SuspendUpdate' property to 'DataSources' metadata
+* fixed tooltip: if you remove element, connected tooltip will be removed too
+* fixed: 'ObjectDataSource' methods return correct 'ValidationResult' ('IsValid' instead of 'isValid', 'Items' instead of 'items')
+* fixed: now you can use 'Routing' and 'DataNavigation' together
+* added 'expand', 'collapse', 'toggle' methods to 'TreeView'
+* fixed: 'TreeView' doesn't add checker to nodes without childs
+* DataSources methods 'saveItem' and 'deleteItem' pass to callback standart params with such properties as 'item', 'validationResult' and 'originalResponse'
+* added 'Size' property to 'Icon' metadata
+* fixed: 'SaveAction' update 'DestinationValue' even when property 'CanClose': false
+* fixed: When click on any 'TextBox' point, cursor doesn't jump to the begin of the input field
+* added 'Replace' property to 'RouteToAction' metadata
+* fixed: 'ListBox' correctly work when 'Enabled' property is set
+* 'ObjectDataSource', 'MetadataDataSource', 'DocumentDataSource', 'RestDataSource', 'ServerActionProvider' have default providers, you can override them with InfinniUI.providerRegister
+* 'AddAction' can work without 'DestinationValue' property ('DestinationValue' is not required now)
+* 'PopupButton' default color is changed
+* added 'Enabled' property to 'TabPage' metadata
+* added 'CollapseChanger' property to 'Panel' metadata
+* removed 'CollapsibleArea' property from 'Panel' metadata
+* Parameter can be DataBinding's source for 'ListEditorBase'
+* added 'AdditionalResult' property to 'DocumentDataSource'
+* added 'OnProviderError' property to 'DataSources' metadata
+* added 'onProviderError' method to 'DataSources'
+* fixed 'setFocused' method of 'TextBox'
+* 'ServerAction' can work without 'Origin' property('Origin' is not required now)
+* added 'setContext', 'setParams', 'addParams' methods to InfinniUI.routerService
+* renamed 'LinkElement' to 'Link' (only for API, it was always called 'Link' in metadata)
 
