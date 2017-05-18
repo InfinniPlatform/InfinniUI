@@ -1,6 +1,34 @@
 Changelog
 =========
 
+## 3.0
+* historyApi, routes, routerService
+* добавлен InfinniUI.extensionPanels
+* переименованы файлы platform.js в infinni-ui.js (templates.js ), main.css в infinni-ui.css, зависимости вынесены в peerDependence
+* починили Background у PopupButton (UI-2580)
+* добавлена стилизация для error text(UI-2683)
+* добавлены правила eslint
+* fix UI-2531 DatePicker на Android (и других платформах) работает как TextBox.
+* UI-2737 Реализовать возможность запрещать кэширование метаданных #fix
+* UI-2791 Перенести messageTypes и все миксины в InfinniUI
+* нужно ли писать об изменении схемы переопределения стилей?
+* UI-2648 При клике по кнопке условно показывать форму или выполнять любой другой экшн (сохранение, удаление и т.п.) #resolved
+* UI-2511 ComboBox с autocomplete привязанным к RestDataSource должен дожидаться ответа сервера перед показом результатов #resolved
+* UI-2587 Реализовать возможность отписываться от байдинга #resolved
+* UI-2670 Реализовать глобальный DS который работает с localStorage #resolved
+* UI-2675: Убрать возможность указывать скрипты объектом #resolved
+* UI-2753 Рефакторинг функционала вертикального выравнивания #resolved
+* UI-2749 Реализовать ValidationResult и написать тесты для него #resolved
+* UI-2746 Реализовать и написать тесты для CreateItemAction #resolved
+* UI-2644 Реализовать фильтры в ObjectDataSource #fix
+* UI-2645: Дублирование логики открытия элемента списка (на редактирование) при двойном нажатии на кнопку#resolve
+* UI-2669 Перенести функционал культуры в localized #resolved
+* UI-2664 Реализовать возможность задавать не сложные js-выражения в текстовые поля #resolved
+* UI-2650: Дополнить функционал “Выбрать всё” в DataGrid#resolve
+* UI-2652 Изменение или удаление запроса на подтверждение удаления (DeleteAction) #resolved
+* UI-2634: Некорректная работа TreeView c DocumentDataSource#resolve
+* UI-2518: Невозможно установить Label в HeaderTemplate элемента Panel #resolved
+
 ## 2.2
 * 'ImageBox' rotate portrait images from mobile phones in right position
 * 'ImageBox' fit images in frame by smaller side automatically
