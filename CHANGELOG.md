@@ -2,40 +2,36 @@ Changelog
 =========
 
 ## 3.0
-* historyApi, routes, routerService
-* добавлен InfinniUI.extensionPanels
-* переименованы файлы platform.js в infinni-ui.js (templates.js ), main.css в infinni-ui.css, зависимости вынесены в peerDependence
-* починили Background у PopupButton (UI-2580)
-* добавлена стилизация для error text(UI-2683)
-* добавлены правила eslint
-* fix UI-2531 DatePicker на Android (и других платформах) работает как TextBox.
-* UI-2737 Реализовать возможность запрещать кэширование метаданных #fix
-* UI-2791 Перенести messageTypes и все миксины в InfinniUI
-* нужно ли писать об изменении схемы переопределения стилей?
-* UI-2648 При клике по кнопке условно показывать форму или выполнять любой другой экшн (сохранение, удаление и т.п.) #resolved
-* UI-2511 ComboBox с autocomplete привязанным к RestDataSource должен дожидаться ответа сервера перед показом результатов #resolved
-* UI-2587 Реализовать возможность отписываться от байдинга #resolved
-* UI-2670 Реализовать глобальный DS который работает с localStorage #resolved
-* UI-2675: Убрать возможность указывать скрипты объектом #resolved
-* UI-2753 Рефакторинг функционала вертикального выравнивания #resolved
-* UI-2749 Реализовать ValidationResult и написать тесты для него #resolved
-* UI-2746 Реализовать и написать тесты для CreateItemAction #resolved
-* UI-2644 Реализовать фильтры в ObjectDataSource #fix
-* UI-2645: Дублирование логики открытия элемента списка (на редактирование) при двойном нажатии на кнопку#resolve
-* UI-2669 Перенести функционал культуры в localized #resolved
-* UI-2664 Реализовать возможность задавать не сложные js-выражения в текстовые поля #resolved
-* UI-2650: Дополнить функционал “Выбрать всё” в DataGrid#resolve
-* UI-2652 Изменение или удаление запроса на подтверждение удаления (DeleteAction) #resolved
-* UI-2634: Некорректная работа TreeView c DocumentDataSource#resolve
-* UI-2518: Невозможно установить Label в HeaderTemplate элемента Panel #resolved
+* InfinniUI.historyApi, InfinniUI.routes, InfinniUI.routerService renamed to InfinniUI.HistoryApi, InfinniUI.Routes, InfinniUI.RouterService
+* added InfinniUI.extensionPanels service, which help to register ExtensionPanels
+* renamed platform.js to infinni-ui.js (now templates.js is includeed to infinni-ui.js), main.css to infinni-ui.css
+* removed vendor.js and vendor.css, for correct work you need to set peerDependences
+* fixed: 'Background' for 'PopupButton' really change background
+* added styles for error text(http://infinniui-en.readthedocs.io/en/latest/Elements/EditorBase/EditorBase.setErrorText.html)
+* fixed 'DatePicker' for mobile version.
+* added InfinniUI.config.cacheMetadata property, which can force requested pages not to be cached by the browser
+* added 'CanExecute' property to Actions metadata (для задачи UI-2648 этого описания достаточно?)
+* 'ComboBox' wait for source result before show values
+* added 'offErrorValidator', 'offPropertyChanged' methods to DataSources (что ещё было выполнено в рамках UI-2587? эти методы документированы?)
+* added 'LocalStorageDataSource'
+* now 'Script' property can be only string, syntax with object not supported
+* added InfinniUI.ValidationResult
+* added 'CreateItemAction'
+* added 'Filter' and 'FilterParams' properties to 'ObjectDataSource' metadata
+* 'Action' can be set instead of 'Script'
+* added (ability to work with?) 'Localizations'
+* changed display format syntax, use '${format}' instead of '{format}'
+* added ability to use expressions (http://infinniui-en.readthedocs.io/en/latest/Core/JSExpression/index.html)
+* added 'OnCheckAllChanged' property to 'DataGrid' metadata
+* added 'AcceptMessage', 'AcceptMessageType' properties to 'DeleteAction' metadata
 
 ## 2.2
 * 'ImageBox' rotate portrait images from mobile phones in right position
 * 'ImageBox' fit images in frame by smaller side automatically
-* added events 'OnExpand' and 'OnCollapse' to 'TreeView'
+* added 'OnExpand' and 'OnCollapse' events to 'TreeView'
 * now converter of 'DataBinding' get correct context in case of 'ObjectDataSource Parameter' binding
 * added 'VerticalAlignment' property to 'DataGrid' metadata
-* added 'SuspendUpdate' property to 'DataSources' metadata
+* added 'SuspendUpdate' property to DataSources metadata
 * fixed tooltip: if you remove element, connected tooltip will be removed too
 * fixed: 'ObjectDataSource' methods return correct 'ValidationResult' ('IsValid' instead of 'isValid', 'Items' instead of 'items')
 * fixed: now you can use 'Routing' and 'DataNavigation' together
@@ -53,10 +49,10 @@ Changelog
 * added 'Enabled' property to 'TabPage' metadata
 * added 'CollapseChanger' property to 'Panel' metadata
 * removed 'CollapsibleArea' property from 'Panel' metadata
-* Parameter can be DataBinding's source for 'ListEditorBase'
+* 'Parameter' can be DataBinding's source for 'ListEditorBase'
 * added 'AdditionalResult' property to 'DocumentDataSource'
-* added 'OnProviderError' property to 'DataSources' metadata
-* added 'onProviderError' method to 'DataSources'
+* added 'OnProviderError' property to DataSources metadata
+* added 'onProviderError' method to DataSources
 * fixed 'setFocused' method of 'TextBox'
 * 'ServerAction' can work without 'Origin' property('Origin' is not required now)
 * added 'setContext', 'setParams', 'addParams' methods to InfinniUI.routerService
