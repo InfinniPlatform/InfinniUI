@@ -181,7 +181,7 @@ gulp.task( 'server:example', function() {
 
 gulp.task( 'copyLauncher', function() {
     return gulp.src( 'launcher/**/*.*' )
-        .pipe( $.versionAppend( ['html', 'js', 'css'], { appendType: 'version', versionFile: 'package.json' } ) )
+        .pipe( $.versionAppend( ['html', 'js', 'css'], { appendType: 'version' } ) )
         .pipe( gulp.dest( projectRootFolder ) );
 } );
 
