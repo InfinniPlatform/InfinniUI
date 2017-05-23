@@ -179,12 +179,18 @@ gulp.task( 'server:example', function() {
     browserSync.watch( projectRootFolder + '**/*.*' ).on( 'change', browserSync.reload );
 } );
 
+gulp.task( 'copyLauncher', function() {
+    return gulp.src( 'launcher/**/*.*' )
+        .pipe( gulp.dest( projectRootFolder ) );
+} );
+
 gulp.task( 'build', gulp.parallel(
     'concat:vendor-js',
     'copy:fonts',
     'build:platform-less',
     'build:js',
-    'build:less'
+    'build:less',
+    'copyLauncher'
 ) );
 
 gulp.task( 'watch', function() {
