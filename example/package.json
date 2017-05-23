@@ -1,5 +1,6 @@
 {
     "name": "infinni-ui-example",
+    "version": "0.0.1",
     "dependencies": {
         "infinni-ui": "^3.0.0",
         "backbone": "1.1.2",
@@ -30,6 +31,7 @@
         "gulp-template-compile": "^1.2.0",
         "gulp-uglify": "^1.5.3",
         "gulp-util": "^3.0.8",
+        "gulp-version-append": "^0.2.0",
         "gulp-watch": "^4.x",
         "gulp-wrapper": "^1.0.0"
     },
