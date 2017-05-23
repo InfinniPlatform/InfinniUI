@@ -143,6 +143,7 @@ var sourceForFiles = {
             platformOutputFolder + '**/*.*',
             'LICENSE',
             'README.md',
+            'CHANGELOG.md',
             'CONTRIBUTING.md',
             'package.json'
         ],
