@@ -2,7 +2,7 @@ Changelog
 =========
 
 ## 3.0
-* renamed: InfinniUI.config.HistoryAPI, InfinniUI.config.Routes, InfinniUI.RouterService to InfinniUI.config.historyApi, InfinniUI.config.routes, InfinniUI.routerService
+* renamed: InfinniUI.config.HistoryAPI, InfinniUI.config.Routes, InfinniUI.RouterService, InfinniUI.StringUtils to InfinniUI.config.historyApi, InfinniUI.config.routes, InfinniUI.routerService, InfinniUI.stringUtils
 * added: InfinniUI.extensionPanels service, which help to register ExtensionPanels
 * renamed: platform.js to infinni-ui.js (now templates.js is includeed into infinni-ui.js), main.css to infinni-ui.css
 * removed: vendor.js and vendor.css, for correct work you need to set peerDependences
@@ -23,6 +23,8 @@ Changelog
 * added: ability to use expressions (http://infinniui-en.readthedocs.io/en/latest/Core/JSExpression/index.html)
 * added: 'OnCheckAllChanged' property to 'DataGrid' metadata
 * added: 'AcceptMessage', 'AcceptMessageType' properties to 'DeleteAction' metadata
+* removed: 'disableAutoHeightService', 'disableGetCurrentUser', 'disableSignInExternalForm' from InfinniUI.config
+* added: 'enableAutoHeightService' property to InfinniUI.config
 
 ## 2.2
 * changed: 'ImageBox' rotate portrait images from mobile phones in right position
