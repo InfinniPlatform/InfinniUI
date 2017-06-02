@@ -1,5 +1,17 @@
+/**
+ *
+ * @mixin
+ */
 var routerServiceMixin = {
 
+    /**
+     *
+     * @param oldHref
+     * @param param
+     * @param newValue
+     * @param hrefPattern
+     * @returns {*}
+     */
     replaceParamsInHref: function( oldHref, param, newValue, hrefPattern ) {
         if( hrefPattern ) {
             var newHref = hrefPattern.split( '?' )[ 0 ];
@@ -22,6 +34,14 @@ var routerServiceMixin = {
         }
     },
 
+    /**
+     *
+     * @param oldHref
+     * @param queryParam
+     * @param newValue
+     * @param queryPattern
+     * @returns {*}
+     */
     replaceParamsInQuery: function( oldHref, queryParam, newValue, queryPattern ) {
         if( queryPattern ) {
             var newHref = oldHref.split( '?' )[ 0 ];
@@ -50,6 +70,13 @@ var routerServiceMixin = {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @param paramName
+     * @param paramValue
+     * @param hrefPattern
+     */
     bindParams: function( params, paramName, paramValue, hrefPattern ) {
         var element = params.element;
         var builder = params.builder;
@@ -74,6 +101,13 @@ var routerServiceMixin = {
         }, '' );
     },
 
+    /**
+     *
+     * @param params
+     * @param queryName
+     * @param queryValue
+     * @param queryPattern
+     */
     bindQuery: function( params, queryName, queryValue, queryPattern ) {
         var element = params.element;
         var builder = params.builder;

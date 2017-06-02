@@ -1,3 +1,8 @@
+/**
+ *
+ * @param idProperty
+ * @constructor
+ */
 var LocalStorageDataProvider = function( idProperty ) {
     this.idProperty = idProperty || '_id';
     this.filter = '';
@@ -5,6 +10,10 @@ var LocalStorageDataProvider = function( idProperty ) {
 
 _.extend( LocalStorageDataProvider.prototype, {
 
+    /**
+     *
+     * @param items
+     */
     setItems: function( items ) {
         localStorage.clear();
         if( items && items.length > 0 ) {
@@ -12,6 +21,10 @@ _.extend( LocalStorageDataProvider.prototype, {
         }
     },
 
+    /**
+     *
+     * @param resultCallback
+     */
     getItems: function( resultCallback ) {
         var items = this.getLSItems();
         var filter = this.getFilter();
@@ -22,14 +35,27 @@ _.extend( LocalStorageDataProvider.prototype, {
         resultCallback( { data: items } );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getLSItems: function() {
         return JSON.parse( localStorage.getItem( 'items' ) );
     },
 
+    /**
+     *
+     * @param items
+     */
     setLSItems: function( items ) {
         localStorage.setItem( 'items', JSON.stringify( items ) );
     },
 
+    /**
+     *
+     * @param filterPattern
+     * @param filterParams
+     */
     setFilter: function( filterPattern, filterParams ) {
         var param;
         var correctFilter = false;
@@ -56,16 +82,28 @@ _.extend( LocalStorageDataProvider.prototype, {
         }
     },
 
+    /**
+     *
+     * @returns {string|*}
+     */
     getFilter: function() {
         return this.filter;
     },
 
+    /**
+     *
+     * @param resultCallback
+     */
     createItem: function( resultCallback ) {
         var item = this.createLocalItem( this.idProperty );
 
         resultCallback( item );
     },
 
+    /**
+     *
+     * @param item
+     */
     addLSItem: function( item ) {
         var items = this.getLSItems();
 
@@ -73,6 +111,11 @@ _.extend( LocalStorageDataProvider.prototype, {
         this.setLSItems( items );
     },
 
+    /**
+     *
+     * @param itemIndex
+     * @param item
+     */
     updateLSItem: function( itemIndex, item ) {
         var items = this.getLSItems();
 
@@ -80,6 +123,10 @@ _.extend( LocalStorageDataProvider.prototype, {
         this.setLSItems( items );
     },
 
+    /**
+     *
+     * @param itemIndex
+     */
     deleteLSItem: function( itemIndex ) {
         var items = this.getLSItems();
 
@@ -87,6 +134,11 @@ _.extend( LocalStorageDataProvider.prototype, {
         this.setLSItems( items );
     },
 
+    /**
+     *
+     * @param item
+     * @param successCallback
+     */
     saveItem: function( item, successCallback ) {
         if( !item[ this.idProperty ] ) {
             throw( 'У элемента отсутствует свойство "' + this.idProperty + '"' );
@@ -103,6 +155,12 @@ _.extend( LocalStorageDataProvider.prototype, {
         successCallback( {} );
     },
 
+    /**
+     *
+     * @param item
+     * @param successCallback
+     * @param errorCallback
+     */
     deleteItem: function( item, successCallback, errorCallback ) {
         var items = this.getLSItems();
         var itemIndex = this._getIndexOfItem( item );
@@ -123,6 +181,12 @@ _.extend( LocalStorageDataProvider.prototype, {
         }
     },
 
+    /**
+     *
+     * @param item
+     * @returns {number}
+     * @private
+     */
     _getIndexOfItem: function( item ) {
         var items = this.getLSItems();
 
@@ -134,6 +198,11 @@ _.extend( LocalStorageDataProvider.prototype, {
         return -1;
     },
 
+    /**
+     *
+     * @param id
+     * @returns {[*]}
+     */
     createIdFilter: function( id ) {
         return [ {
             'Property': '_id',
@@ -142,6 +211,11 @@ _.extend( LocalStorageDataProvider.prototype, {
         } ];
     },
 
+    /**
+     *
+     * @param idProperty
+     * @returns {*}
+     */
     createLocalItem: function( idProperty ) {
         var result = {};
 
@@ -149,6 +223,11 @@ _.extend( LocalStorageDataProvider.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     * @private
+     */
     _generateLocalId: function() {
         return guid();
     }

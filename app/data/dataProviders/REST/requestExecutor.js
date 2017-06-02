@@ -1,3 +1,8 @@
+/**
+ *
+ * @param type
+ * @constructor
+ */
 var RequestExecutorDataStrategy = function( type ) {
     if( typeof this.strategies[ type ] === 'undefined' ) {
         this.strategy = this.strategies.json;
@@ -8,12 +13,30 @@ var RequestExecutorDataStrategy = function( type ) {
 
 InfinniUI.RequestExecutorDataStrategy = RequestExecutorDataStrategy;
 
+/**
+ *
+ * @param requestData
+ * @param successCallbackHandler
+ * @param failCallbackHandler
+ * @returns {*}
+ */
 RequestExecutorDataStrategy.prototype.request = function( requestData, successCallbackHandler, failCallbackHandler ) {
     return this.strategy.apply( this, Array.prototype.slice.call( arguments ) );
 };
 
+/**
+ *
+ * @type {{json: RequestExecutorDataStrategy.strategies.json, raw: RequestExecutorDataStrategy.strategies.raw}}
+ */
 RequestExecutorDataStrategy.prototype.strategies = {
 
+    /**
+     *
+     * @param requestData
+     * @param onSuccess
+     * @param onFail
+     * @returns {*}
+     */
     json: function( requestData, onSuccess, onFail ) {
         return $.ajax( {
             type: requestData.method || 'post',
@@ -36,6 +59,13 @@ RequestExecutorDataStrategy.prototype.strategies = {
         } );
     },
 
+    /**
+     *
+     * @param requestData
+     * @param onSuccess
+     * @param onFail
+     * @returns {*}
+     */
     raw: function( requestData, onSuccess, onFail ) {
         var method = requestData.method || 'post';
         var processData = method.toUpperCase() === 'GET';
@@ -65,8 +95,20 @@ RequestExecutorDataStrategy.prototype.strategies = {
 
 _.extend( RequestExecutorDataStrategy.prototype, ajaxRequestMixin );
 
+/**
+ *
+ * @param resultCallback
+ * @param successCallback
+ * @param failCallback
+ * @param cache
+ * @constructor
+ */
 function RequestExecutor( resultCallback, successCallback, failCallback, cache ) {
 
+    /**
+     *
+     * @param data
+     */
     var successCallbackHandler = function( data ) {
         if( successCallback ) {
             successCallback( data );
@@ -76,6 +118,10 @@ function RequestExecutor( resultCallback, successCallback, failCallback, cache )
         }
     };
 
+    /**
+     *
+     * @param err
+     */
     var failCallbackHandler = function( err ) {
         if( failCallback ) {
             failCallback( err );
@@ -85,6 +131,12 @@ function RequestExecutor( resultCallback, successCallback, failCallback, cache )
         }
     };
 
+    /**
+     *
+     * @param requestData
+     * @param request
+     * @returns {*}
+     */
     var cacheRequest = function( requestData, request ) {
         if( typeof cache === 'undefined' || cache === null ) {
             return request( requestData );
@@ -103,16 +155,32 @@ function RequestExecutor( resultCallback, successCallback, failCallback, cache )
         }
     };
 
+    /**
+     *
+     * @param type
+     * @param requestData
+     * @returns {*}
+     */
     var request = function( type, requestData ) {
         var strategy = new RequestExecutorDataStrategy( type );
 
         return strategy.request( requestData, successCallbackHandler, failCallbackHandler );
     };
 
+    /**
+     *
+     * @param requestData
+     * @returns {*}
+     */
     this.makeRequest = function( requestData ) {
         return cacheRequest( requestData, request.bind( undefined, 'json' ) );
     };
 
+    /**
+     *
+     * @param requestData
+     * @returns {*}
+     */
     this.makeRequestRaw = function( requestData ) {
         return cacheRequest( requestData, request.bind( undefined, 'raw' ) );
     };

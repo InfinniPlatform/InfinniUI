@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments RestDataSource
+ */
 var DocumentDataSource = RestDataSource.extend( {
 
     defaults: _.defaults( {
@@ -5,6 +9,9 @@ var DocumentDataSource = RestDataSource.extend( {
 
     }, RestDataSource.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         RestDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
 
@@ -21,6 +28,9 @@ var DocumentDataSource = RestDataSource.extend( {
         this.initHandlers();
     },
 
+    /**
+     *
+     */
     initHandlers: function() {
         var model = this.get( 'model' );
         var that = this;
@@ -51,6 +61,9 @@ var DocumentDataSource = RestDataSource.extend( {
         this.updateDeletingUrlParams();
     },
 
+    /**
+     *
+     */
     updateGettingUrlParamsWithReset: function() {
         this.suspendUpdate( 'updateGettingUrlParams' );
         this.get( 'model' ).setProperty( 'pageNumber', 0 );
@@ -58,6 +71,9 @@ var DocumentDataSource = RestDataSource.extend( {
         this.resumeUpdate( 'updateGettingUrlParams' );
     },
 
+    /**
+     *
+     */
     updateGettingUrlParams: function() {
         var model = this.get( 'model' );
         var params = {
@@ -108,6 +124,9 @@ var DocumentDataSource = RestDataSource.extend( {
         this.setGettingUrlParams( params );
     },
 
+    /**
+     *
+     */
     updateSettingUrlParams: function() {
         var model = this.get( 'model' );
         var params = {
@@ -121,6 +140,9 @@ var DocumentDataSource = RestDataSource.extend( {
         this.setSettingUrlParams( params );
     },
 
+    /**
+     *
+     */
     updateDeletingUrlParams: function() {
         var model = this.get( 'model' );
         var params = {
@@ -134,63 +156,122 @@ var DocumentDataSource = RestDataSource.extend( {
         this.setDeletingUrlParams( params );
     },
 
+    /**
+     *
+     */
     initDataProvider: function() {
         var dataProvider = InfinniUI.providerRegister.build( 'DocumentDataSource' );
         this.set( 'dataProvider', dataProvider );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getDocumentId: function() {
         return this.get( 'model' ).getProperty( 'documentId' );
     },
 
+    /**
+     *
+     * @param documentId
+     */
     setDocumentId: function( documentId ) {
         this.get( 'model' ).setProperty( 'documentId', documentId );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getPageNumber: function() {
         return this.get( 'model' ).getProperty( 'pageNumber' );
     },
 
+    /**
+     *
+     * @param pageNumber
+     */
     setPageNumber: function( pageNumber ) {
         this.get( 'model' ).setProperty( 'pageNumber', pageNumber );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getPageSize: function() {
         return this.get( 'model' ).getProperty( 'pageSize' );
     },
 
+    /**
+     *
+     * @param pageSize
+     */
     setPageSize: function( pageSize ) {
         this.get( 'model' ).setProperty( 'pageSize', pageSize );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getSelect: function() {
         return this.get( 'model' ).getProperty( 'select' );
     },
 
+    /**
+     *
+     * @param selectStr
+     */
     setSelect: function( selectStr ) {
         this.get( 'model' ).setProperty( 'select', selectStr );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getOrder: function() {
         return this.get( 'model' ).getProperty( 'order' );
     },
 
+    /**
+     *
+     * @param orderConditionStr
+     */
     setOrder: function( orderConditionStr ) {
         this.get( 'model' ).setProperty( 'order', orderConditionStr );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTotalCount: function() {
         return this.get( 'model' ).getProperty( 'totalCount' );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getNeedTotalCount: function() {
         return this.get( 'model' ).getProperty( 'needTotalCount' );
     },
 
+    /**
+     *
+     * @param needTotalCount
+     */
     setNeedTotalCount: function( needTotalCount ) {
         this.get( 'model' ).setProperty( 'needTotalCount', needTotalCount );
     },
 
+    /**
+     *
+     * @param item
+     */
     beforeDeleteItem: function( item ) {
         var itemId = this.idOfItem( item );
 
@@ -199,10 +280,19 @@ var DocumentDataSource = RestDataSource.extend( {
         }
     },
 
+    /**
+     *
+     * @param itemId
+     */
     setIdFilter: function( itemId ) {
         this.setFilter( 'eq(' + this.getIdProperty() + ',' + this.quoteValue( itemId ) + ')' );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     quoteValue: function( value ) {
         var VALUE_QUOTE_CHAR = '\'';
 

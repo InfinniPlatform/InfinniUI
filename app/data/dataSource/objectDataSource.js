@@ -1,15 +1,28 @@
+/**
+ * @augments BaseDataSource
+ * @constructor
+ */
 var ObjectDataSource = BaseDataSource.extend( {
 
+    /**
+     *
+     */
     initDataProvider: function() {
         var dataProvider = InfinniUI.providerRegister.build( 'ObjectDataSource' );
         this.set( 'dataProvider', dataProvider );
     },
 
+    /**
+     *
+     */
     initialize: function() {
         BaseDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.initHandlers();
     },
 
+    /**
+     *
+     */
     initHandlers: function() {
         var model = this.get( 'model' );
         var updateFilter = _.bind( this.updateFilter, this );
@@ -19,6 +32,9 @@ var ObjectDataSource = BaseDataSource.extend( {
         model.onPropertyChanged( 'filterParams.*', updateFilter );
     },
 
+    /**
+     *
+     */
     updateFilter: function() {
         var dataProvider = this.get( 'dataProvider' );
         var filterPattern = this.getFilter();
@@ -28,6 +44,10 @@ var ObjectDataSource = BaseDataSource.extend( {
     },
 
     // в отличии от _setItems должен установить элементы "насовсем", т.е. изменить в провайдере тоже
+    /**
+     *
+     * @param items
+     */
     setItems: function( items ) {
         this.get( 'dataProvider' ).setItems( items );
         this.updateItems();

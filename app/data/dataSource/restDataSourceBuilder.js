@@ -1,3 +1,7 @@
+/**
+ * @augments BaseDataSourceBuilder
+ * @constructor
+ */
 var RestDataSourceBuilder = function() {
     _.superClass( RestDataSourceBuilder, this );
 };
@@ -6,12 +10,23 @@ _.inherit( RestDataSourceBuilder, BaseDataSourceBuilder );
 
 _.extend( RestDataSourceBuilder.prototype, {
 
+    /**
+     * @returns {RestDataSource}
+     * @param parent
+     */
     createDataSource: function( parent ) {
         return new RestDataSource( {
             view: parent
         } );
     },
 
+    /**
+     *
+     * @param builder
+     * @param parent
+     * @param metadata
+     * @param dataSource
+     */
     applyMetadata: function( builder, parent, metadata, dataSource ) {
         BaseDataSourceBuilder.prototype.applyMetadata.call( this, builder, parent, metadata, dataSource );
 
@@ -49,6 +64,12 @@ _.extend( RestDataSourceBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param urlParamsMetadata
+     * @param pathForBinding
+     * @returns {*}
+     */
     extractUrlParams: function( urlParamsMetadata, pathForBinding ) {
         var result = {};
 
@@ -75,6 +96,14 @@ _.extend( RestDataSourceBuilder.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @param methodMetadata
+     * @param dataSource
+     * @param parentView
+     * @param pathForBinding
+     * @param builder
+     */
     bindParams: function( methodMetadata, dataSource, parentView, pathForBinding, builder ) {
         if( 'Params' in methodMetadata ) {
             var params = methodMetadata[ 'Params' ];
@@ -84,12 +113,19 @@ _.extend( RestDataSourceBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param dataSource
+     * @returns {Function}
+     * @private
+     */
     _getCompensateProviderErrorHandler: function( dataSource ) {
         return function( context, args ) {
             var exchange = InfinniUI.global.messageBus;
             exchange.send( messageTypes.onNotifyUser, { messageText: 'Ошибка на сервере', messageType: 'error' } );
         };
     }
+
 } );
 
 InfinniUI.RestDataSourceBuilder = RestDataSourceBuilder;

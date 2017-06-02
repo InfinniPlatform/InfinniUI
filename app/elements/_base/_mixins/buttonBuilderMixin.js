@@ -1,5 +1,13 @@
+/**
+ *
+ * @mixin
+ */
 var buttonBuilderMixin = {
 
+    /**
+     *
+     * @param params
+     */
     applyButtonMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -18,6 +26,10 @@ var buttonBuilderMixin = {
         }
     },
 
+    /**
+     *
+     * @param params
+     */
     initTemplatingContent: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -39,6 +51,12 @@ var buttonBuilderMixin = {
         }
     },
 
+    /**
+     *
+     * @param templateMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildContentTemplate: function( templateMetadata, params ) {
         var element = params.element;
         var builder = params.builder;

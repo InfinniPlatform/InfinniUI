@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param parent
+ * @param viewMode
+ * @constructor
+ */
 function ListEditorBase( parent, viewMode ) {
     _.superClass( ListEditorBase, this, parent, viewMode );
 

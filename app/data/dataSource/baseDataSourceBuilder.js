@@ -1,18 +1,24 @@
 /**
  * @constructor
- * @mixes DataSourceValidationNotifierMixin
+ * @mixes dataSourceValidationNotifierMixin
  */
 var BaseDataSourceBuilder = function() {
 };
 
 _.extend( BaseDataSourceBuilder.prototype, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {*}
+     */
     build: function( context, args ) {
         var dataSource = this.createDataSource( args.parentView );
+
         dataSource.suspendUpdate( 'tuningInSourceBuilder' );
 
         this.applyMetadata( args.builder, args.parentView, args.metadata, dataSource );
-
         this.applySuspended( dataSource, args.suspended );
 
         dataSource.resumeUpdate( 'tuningInSourceBuilder' );
@@ -20,6 +26,11 @@ _.extend( BaseDataSourceBuilder.prototype, {
         return dataSource;
     },
 
+    /**
+     *
+     * @param dataSource
+     * @param suspended
+     */
     applySuspended: function( dataSource, suspended ) {
         if( !suspended ) {
             return;
@@ -34,6 +45,13 @@ _.extend( BaseDataSourceBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param builder
+     * @param parentView
+     * @param metadata
+     * @param dataSource
+     */
     applyMetadata: function( builder, parentView, metadata, dataSource ) {
         var idProperty = metadata.IdProperty;
         if( idProperty ) {
@@ -80,10 +98,14 @@ _.extend( BaseDataSourceBuilder.prototype, {
         this.initValidation( parentView, dataSource, metadata );
         this.initNotifyValidation( dataSource );
         this.initScriptsHandlers( parentView, metadata, dataSource );
-
         this.initFileProvider( dataSource );
     },
 
+    /**
+     *
+     * @param parent
+     * @returns {BaseDataSource}
+     */
     createDataSource: function( parent ) {
         // throw 'BaseDataSourceBuilder.createDataSource В потомке BaseDataSourceBuilder не переопределен метод createDataSource.';
         return new BaseDataSource( {
@@ -91,6 +113,11 @@ _.extend( BaseDataSourceBuilder.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param dataSource
+     * @param customProperties
+     */
     initCustomProperties: function( dataSource, customProperties ) {
         for( var key in customProperties ) {
             if( customProperties.hasOwnProperty( key ) ) {
@@ -115,7 +142,12 @@ _.extend( BaseDataSourceBuilder.prototype, {
         }
     },
 
-    //Скриптовые обработчики на события
+    /**
+     * @description Скриптовые обработчики на события
+     * @param parentView
+     * @param metadata
+     * @param dataSource
+     */
     initScriptsHandlers: function( parentView, metadata, dataSource ) {
         if( !parentView ) {
             return;
@@ -158,6 +190,11 @@ _.extend( BaseDataSourceBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @returns {Function}
+     */
     buildBindingBuilder: function( params ) {
         return function( bindingMetadata ) {
             return params.builder.buildBinding( bindingMetadata, {
@@ -167,6 +204,10 @@ _.extend( BaseDataSourceBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param dataSource
+     */
     initFileProvider: function( dataSource ) {
         var host = InfinniUI.config.serverUrl;
         var fileUrlConstructor = new DocumentUploadQueryConstructor( host );
@@ -175,6 +216,14 @@ _.extend( BaseDataSourceBuilder.prototype, {
         dataSource.setFileProvider( fileProvider );
     },
 
+    /**
+     *
+     * @param valueMetadata
+     * @param dataSource
+     * @param parentView
+     * @param pathForBinding
+     * @param builder
+     */
     initBindingToProperty: function( valueMetadata, dataSource, parentView, pathForBinding, builder ) {
         if( typeof valueMetadata !== 'object' ) {
             if( typeof valueMetadata !== 'undefined' ) {
@@ -186,11 +235,9 @@ _.extend( BaseDataSourceBuilder.prototype, {
                 parent: parentView,
                 parentView: parentView
             };
-
             var dataBinding = builder.buildBinding( valueMetadata, args );
 
             dataBinding.setMode( InfinniUI.BindingModes.toElement );
-
             dataBinding.bindElement( dataSource, pathForBinding );
         }
     }

@@ -1,9 +1,16 @@
+/**
+ * @constructor
+ * @augments BaseDataSource
+ */
 var RestDataSource = BaseDataSource.extend( {
 
     defaults: _.defaults( {
         updatingItemsConverter: null
     }, BaseDataSource.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         BaseDataSource.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
 
@@ -38,11 +45,19 @@ var RestDataSource = BaseDataSource.extend( {
         this.initUrlParamsHandlers();
     },
 
+    /**
+     *
+     */
     initDataProvider: function() {
         var dataProvider = InfinniUI.providerRegister.build( 'RestDataSource' );
         this.set( 'dataProvider', dataProvider );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @returns {*}
+     */
     getGettingUrlParams: function( propertyName ) {
         if( arguments.length == 0 ) {
             propertyName = 'urlParams.get';
@@ -56,6 +71,11 @@ var RestDataSource = BaseDataSource.extend( {
         return this.get( 'model' ).getProperty( propertyName );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param value
+     */
     setGettingUrlParams: function( propertyName, value ) {
         if( arguments.length == 1 ) {
             value = propertyName;
@@ -72,6 +92,9 @@ var RestDataSource = BaseDataSource.extend( {
         this.get( 'model' ).setProperty( propertyName, value );
     },
 
+    /**
+     *
+     */
     initUrlParamsHandlers: function() {
         var that = this;
 
@@ -119,6 +142,9 @@ var RestDataSource = BaseDataSource.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateItems: function() {
         if( this._checkGettingUrlParamsReady() ) {
             BaseDataSource.prototype.updateItems.apply( this, Array.prototype.slice.call( arguments ) );
@@ -130,6 +156,11 @@ var RestDataSource = BaseDataSource.extend( {
         }
     },
 
+    /**
+     *
+     * @param propertyName
+     * @returns {*}
+     */
     getSettingUrlParams: function( propertyName ) {
         if( arguments.length == 0 ) {
             propertyName = 'urlParams.set';
@@ -143,6 +174,11 @@ var RestDataSource = BaseDataSource.extend( {
         return this.get( 'model' ).getProperty( propertyName );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param value
+     */
     setSettingUrlParams: function( propertyName, value ) {
         if( arguments.length == 1 ) {
             value = propertyName;
@@ -158,6 +194,11 @@ var RestDataSource = BaseDataSource.extend( {
         this.get( 'model' ).setProperty( propertyName, value );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @returns {*}
+     */
     getDeletingUrlParams: function( propertyName ) {
         if( arguments.length == 0 ) {
             propertyName = 'urlParams.delete';
@@ -171,6 +212,11 @@ var RestDataSource = BaseDataSource.extend( {
         return this.get( 'model' ).getProperty( propertyName );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param value
+     */
     setDeletingUrlParams: function( propertyName, value ) {
         if( arguments.length == 1 ) {
             value = propertyName;
@@ -186,6 +232,11 @@ var RestDataSource = BaseDataSource.extend( {
         this.get( 'model' ).setProperty( propertyName, value );
     },
 
+    /**
+     *
+     * @returns {boolean}
+     * @private
+     */
     _checkGettingUrlParamsReady: function() {
         var allParams = [];
         var strWithParams;
@@ -218,6 +269,12 @@ var RestDataSource = BaseDataSource.extend( {
         return true;
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*|boolean}
+     * @private
+     */
     _checkUrlParamsReady: function( params ) {
         return params && typeof params.origin == 'string'// && params.origin.lentgh > 0
             && typeof params.path == 'string'
@@ -225,6 +282,12 @@ var RestDataSource = BaseDataSource.extend( {
             && typeof params.params == 'object';
     },
 
+    /**
+     *
+     * @param str
+     * @returns {Array}
+     * @private
+     */
     _findSubstitutionParams: function( str ) {
         if( !str ) {
             return [];
@@ -239,6 +302,13 @@ var RestDataSource = BaseDataSource.extend( {
         return result;
     },
 
+    /**
+     *
+     * @param str
+     * @param params
+     * @returns {*}
+     * @private
+     */
     _templateParamsInStr: function( str, params ) {
         if( !str || !params ) {
             return str;
@@ -249,6 +319,13 @@ var RestDataSource = BaseDataSource.extend( {
         } );
     },
 
+    /**
+     *
+     * @param obj
+     * @param params
+     * @returns {*}
+     * @private
+     */
     _templateParamsInObject: function( obj, params ) {
         if( !obj || !params ) {
             return obj;
@@ -260,14 +337,28 @@ var RestDataSource = BaseDataSource.extend( {
         return JSON.parse( tmpTemplated );
     },
 
+    /**
+     * @returns {*}
+     */
     getUpdatingItemsConverter: function() {
         return this.get( 'updatingItemsConverter' );
     },
 
+    /**
+     *
+     * @param converter
+     */
     setUpdatingItemsConverter: function( converter ) {
         this.set( 'updatingItemsConverter', converter );
     },
 
+    /**
+     *
+     * @param itemsData
+     * @param successHandler
+     * @param errorHandler
+     * @private
+     */
     _handleUpdatedItemsData: function( itemsData, successHandler, errorHandler ) {
         var converter = this.getUpdatingItemsConverter();
         var items;

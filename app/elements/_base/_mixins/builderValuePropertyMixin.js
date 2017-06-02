@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var builderValuePropertyMixin = {
 
     /**

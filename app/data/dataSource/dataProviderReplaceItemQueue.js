@@ -1,6 +1,6 @@
 /**
  * @description Организация очереди запросов на создание/изменение документа.
- * Признак одного и того же документа по атрибутам Id или __Id (@see {@link EditDataSourceStrategy.getItems})
+ * Признак одного и того же документа по атрибутам Id или __Id
  * @param attributes
  * @constructor
  */
@@ -9,6 +9,11 @@ var DataProviderReplaceItemQueue = function( attributes ) {
     var _queue = [];
     var requestIdProperty = '__Id';
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     */
     var getQueueItemCriteria = function( data ) {
         var criteria = _.pick( data, _attributes );
         var idProperty = _.isEmpty( data[ requestIdProperty ] ) ? 'Id' : requestIdProperty;
@@ -18,14 +23,29 @@ var DataProviderReplaceItemQueue = function( attributes ) {
         return criteria;
     };
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     */
     var getQueueItem = function( data ) {
         return _.findWhere( _queue, getQueueItemCriteria( data ) );
     };
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     */
     var getQueueItems = function( data ) {
         return _.where( _queue, getQueueItemCriteria( data ) );
     };
 
+    /**
+     *
+     * @param data
+     * @param response
+     */
     var updateInstanceId = function( data, response ) {
         var items = getQueueItems( data );
         items.forEach( function( item ) {
@@ -34,6 +54,10 @@ var DataProviderReplaceItemQueue = function( attributes ) {
         } );
     };
 
+    /**
+     *
+     * @param data
+     */
     var next = function( data ) {
         var index = _queue.indexOf( data );
         if( index === -1 ) {
@@ -44,6 +68,10 @@ var DataProviderReplaceItemQueue = function( attributes ) {
         run( item );
     };
 
+    /**
+     *
+     * @param data
+     */
     var run = function( data ) {
         if( typeof data === 'undefined' || data === null ) {
             return;
@@ -54,6 +82,11 @@ var DataProviderReplaceItemQueue = function( attributes ) {
     };
 
 
+    /**
+     *
+     * @param data
+     * @param request
+     */
     this.append = function( data, request ) {
         var item = _.defaults( data, _.pick( data.value, [ 'Id', requestIdProperty ] ) );
         item.request = request;
@@ -73,6 +106,5 @@ var DataProviderReplaceItemQueue = function( attributes ) {
         }
     };
 };
-
 
 InfinniUI.Providers.DataProviderReplaceItemQueue = DataProviderReplaceItemQueue;

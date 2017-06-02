@@ -1,3 +1,9 @@
+/**
+ *
+ * @param items
+ * @param idProperty
+ * @constructor
+ */
 var ObjectDataProvider = function( items, idProperty ) {
     this.items = items || [];
     this.idProperty = idProperty || '_id';
@@ -6,10 +12,18 @@ var ObjectDataProvider = function( items, idProperty ) {
 
 _.extend( ObjectDataProvider.prototype, {
 
+    /**
+     *
+     * @param items
+     */
     setItems: function( items ) {
         this.items = items;
     },
 
+    /**
+     *
+     * @param resultCallback
+     */
     getItems: function( resultCallback ) {
         var items = this.items.slice();
         var filter = this.getFilter();
@@ -20,6 +34,11 @@ _.extend( ObjectDataProvider.prototype, {
         resultCallback( { data: items } );
     },
 
+    /**
+     *
+     * @param filterPattern
+     * @param filterParams
+     */
     setFilter: function( filterPattern, filterParams ) {
         var param;
         var correctFilter = false;
@@ -47,15 +66,28 @@ _.extend( ObjectDataProvider.prototype, {
         }
     },
 
+    /**
+     *
+     * @returns {*|string}
+     */
     getFilter: function() {
         return this.filter;
     },
 
+    /**
+     *
+     * @param resultCallback
+     */
     createItem: function( resultCallback ) {
         var item = this.createLocalItem( this.idProperty );
         resultCallback( item );
     },
 
+    /**
+     *
+     * @param item
+     * @param successCallback
+     */
     saveItem: function( item, successCallback ) {
         var items = this.items;
         var itemIndex = this._getIndexOfItem( item );
@@ -69,6 +101,12 @@ _.extend( ObjectDataProvider.prototype, {
         successCallback( {} );
     },
 
+    /**
+     *
+     * @param item
+     * @param successCallback
+     * @param errorCallback
+     */
     deleteItem: function( item, successCallback, errorCallback ) {
         var items = this.items;
         var itemIndex = this._getIndexOfItem( item );
@@ -89,6 +127,11 @@ _.extend( ObjectDataProvider.prototype, {
         }
     },
 
+    /**
+     *
+     * @param id
+     * @returns {[*]}
+     */
     createIdFilter: function( id ) {
         return [{
             'Property': '_id',
@@ -97,10 +140,21 @@ _.extend( ObjectDataProvider.prototype, {
         }];
     },
 
+    /**
+     *
+     * @param item
+     * @returns {number}
+     * @private
+     */
     _getIndexOfItem: function( item ) {
         return  _.indexOf( this.items, item );
     },
 
+    /**
+     *
+     * @param idProperty
+     * @returns {*}
+     */
     createLocalItem: function( idProperty ) {
         var result = {};
 
@@ -109,6 +163,11 @@ _.extend( ObjectDataProvider.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     * @private
+     */
     _generateLocalId: function() {
         return guid();
     }

@@ -1,3 +1,8 @@
+/**
+ * @augments ElementBuilder
+ * @constructor
+ * @mixes displayFormatBuilderMixin
+ */
 function ContainerBuilder() {
     _.superClass( ContainerBuilder, this );
 }
@@ -29,6 +34,11 @@ _.extend( ContainerBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*}
+     */
     initItems: function( params ) {
         var metadata = params.metadata;
         var itemsBinding = null;
@@ -44,6 +54,11 @@ _.extend( ContainerBuilder.prototype, {
         return itemsBinding;
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*|null}
+     */
     initTemplatingItems: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -80,6 +95,10 @@ _.extend( ContainerBuilder.prototype, {
         return binding;
     },
 
+    /**
+     *
+     * @param params
+     */
     initNotTemplatingItems: function( params ) {
         var itemsMetadata = params.metadata.Items;
         var element = params.element;
@@ -91,6 +110,10 @@ _.extend( ContainerBuilder.prototype, {
         element.setItemTemplate( itemTemplate );
     },
 
+    /**
+     *
+     * @param itemsBinding
+     */
     tuneItemsBinding: function( itemsBinding ) {
         var source = itemsBinding.getSource();
 
@@ -99,6 +122,11 @@ _.extend( ContainerBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @param itemsBinding
+     */
     initGroup: function( params, itemsBinding ) {
         if( this.hasGrouping( params ) ) {
             this.initGroupValueSelector( params );
@@ -106,10 +134,19 @@ _.extend( ContainerBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*|string|string}
+     */
     hasGrouping: function( params ) {
         return params.metadata.GroupValueSelector || params.metadata.GroupValueProperty;
     },
 
+    /**
+     *
+     * @param params
+     */
     initGroupValueSelector: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -131,6 +168,11 @@ _.extend( ContainerBuilder.prototype, {
         element.setGroupValueSelector( groupValueSelector );
     },
 
+    /**
+     *
+     * @param params
+     * @param itemsBinding
+     */
     initGroupItemTemplate: function( params, itemsBinding ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -151,6 +193,13 @@ _.extend( ContainerBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param itemsBinding
+     * @param itemPropertyMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildItemProperty: function( itemsBinding, itemPropertyMetadata, params ) {
         return function( context, args ) {
             var index = args.index;
@@ -174,6 +223,13 @@ _.extend( ContainerBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param itemsBinding
+     * @param itemFormatMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildItemFormat: function( itemsBinding, itemFormatMetadata, params ) {
         var format = this.buildDisplayFormat( itemFormatMetadata, params );
 
@@ -198,6 +254,13 @@ _.extend( ContainerBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param itemsBinding
+     * @param itemSelectorMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildItemSelector: function( itemsBinding, itemSelectorMetadata, params ) {
         return function( context, args ) {
             var index = args.index;
@@ -227,6 +290,12 @@ _.extend( ContainerBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param templateMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildItemTemplate: function( templateMetadata, params ) {
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
@@ -280,6 +349,12 @@ _.extend( ContainerBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param index
+     * @param params
+     * @returns {*}
+     */
     bindingIndexByItemsIndex: function( index, params ) {
         var element = params.element;
         var items = element.getItems();
@@ -287,6 +362,11 @@ _.extend( ContainerBuilder.prototype, {
         return items.getProperty( index, 'bindingIndex' );
     },
 
+    /**
+     *
+     * @param binding
+     * @param params
+     */
     bindElementItemsWithSorting: function( binding, params ) {
         // нетривиальный биндинг элементов нужен для того, чтобы правильно учитывались индексы при сортировке элементов
         var metadata = params.metadata;
@@ -300,6 +380,9 @@ _.extend( ContainerBuilder.prototype, {
             };
         }
 
+        /**
+         *
+         */
         var source = binding.getSource();
         source.onPropertyChanged( '*', function( context, args ) {
             var items = element.getItems();
