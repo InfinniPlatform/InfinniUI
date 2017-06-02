@@ -1,4 +1,8 @@
-﻿function ExtensionPanelBuilder() {
+﻿/**
+ * @augments ContainerBuilder
+ * @constructor
+ */
+function ExtensionPanelBuilder() {
 }
 
 InfinniUI.ExtensionPanelBuilder = ExtensionPanelBuilder;
@@ -7,6 +11,10 @@ _.inherit( ExtensionPanelBuilder, ContainerBuilder );
 
 _.extend( ExtensionPanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -31,6 +39,11 @@ _.extend( ExtensionPanelBuilder.prototype, {
         element.setBuilder( builder );
     },
 
+    /**
+     *
+     * @param params
+     * @returns {ExtensionPanel}
+     */
     createElement: function( params ) {
         var element = new ExtensionPanel( params.parent );
 

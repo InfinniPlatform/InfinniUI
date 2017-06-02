@@ -17,6 +17,10 @@ _.inherit( TextEditorBaseBuilder, ElementBuilder );
 
 _.extend( TextEditorBaseBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
         this.applyMetadata_editorBaseBuilder( params );
@@ -33,6 +37,11 @@ _.extend( TextEditorBaseBuilder.prototype, {
             .initEditor( params );
     },
 
+    /**
+     *
+     * @param params
+     * @returns {number|string}
+     */
     getCompatibleInputType: function( params ) {
         var inputType = params.metadata.Type;
         var editMask = params.metadata.EditMask;
@@ -49,6 +58,11 @@ _.extend( TextEditorBaseBuilder.prototype, {
         return inputType;
     },
 
+    /**
+     *
+     * @param params
+     * @returns {TextEditorBaseBuilder}
+     */
     initEditor: function( params ) {
         var element = params.element;
         var editor = new TextEditor();
@@ -77,6 +91,11 @@ _.extend( TextEditorBaseBuilder.prototype, {
         return this;
     },
 
+    /**
+     *
+     * @param params
+     * @returns {TextEditorBaseBuilder}
+     */
     initDisplayFormat: function( params ) {
         var metadata = params.metadata;
         var format = this.buildDisplayFormat( metadata.DisplayFormat, params );
@@ -86,6 +105,11 @@ _.extend( TextEditorBaseBuilder.prototype, {
         return this;
     },
 
+    /**
+     *
+     * @param params
+     * @returns {TextEditorBaseBuilder}
+     */
     initEditMask: function( params ) {
         var metadata = params.metadata;
         var builder = params.builder;

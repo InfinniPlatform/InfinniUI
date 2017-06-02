@@ -1,3 +1,7 @@
+/**
+ * @augments ElementBuilder
+ * @constructor
+ */
 function DataNavigationBuilder() {
     _.superClass( DataNavigationBuilder, this );
 }
@@ -8,10 +12,19 @@ _.inherit( DataNavigationBuilder, ElementBuilder );
 
 _.extend( DataNavigationBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {DataNavigation}
+     */
     createElement: function( params ) {
         return new DataNavigation( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
 
@@ -51,6 +64,11 @@ _.extend( DataNavigationBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param element
+     * @param dataSource
+     */
     onDataUpdated: function( element, dataSource ) {
         var dsTotalCount = dataSource.getProperty( '.totalCount' );
         var pageSize = dataSource.getProperty( '.pageSize' );
@@ -66,6 +84,11 @@ _.extend( DataNavigationBuilder.prototype, {
         element.setIsDataReady( true );
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*}
+     */
     findDataSource: function( params ) {
         var name = params.metadata.DataSource;
         var view = params.parentView;

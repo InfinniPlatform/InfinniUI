@@ -1,9 +1,20 @@
+/**
+ *
+ * @param element
+ * @constructor
+ */
 function FileBoxValueConverter( element ) {
     this._element = element;
 }
 
 InfinniUI.FileBoxValueConverter = FileBoxValueConverter;
 
+/**
+ *
+ * @param context
+ * @param args
+ * @returns {*}
+ */
 FileBoxValueConverter.prototype.toElement = function( context, args ) {
     var value = args.value;
     var binding = args.binding;

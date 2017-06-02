@@ -12,6 +12,11 @@ InfinniUI.ButtonEdit = ButtonEdit;
 
 _.inherit( ButtonEdit, TextBox );
 
+/**
+ *
+ * @param parent
+ * @returns {ButtonEditControl}
+ */
 ButtonEdit.prototype.createControl = function( parent ) {
     return new ButtonEditControl( parent );
 };
@@ -71,7 +76,11 @@ ButtonEdit.prototype.getShowClear = function() {
     return this.control.get( 'showClear' );
 };
 
-
+/**
+ *
+ * @param handler
+ * @returns {*}
+ */
 ButtonEdit.prototype.onButtonClick = function( handler ) {
     var element = this;
     var callback = function( nativeEventData ) {

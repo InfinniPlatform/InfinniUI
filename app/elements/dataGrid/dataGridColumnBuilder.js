@@ -1,6 +1,7 @@
 /**
  *
  * @constructor
+ * @mixes displayFormatBuilderMixin
  */
 function DataGridColumnBuilder() {
 }
@@ -40,6 +41,12 @@ DataGridColumnBuilder.prototype.build = function( element, metadata, params ) {
     return column;
 };
 
+/**
+ *
+ * @param column
+ * @param metadata
+ * @returns {DataGridColumnBuilder}
+ */
 DataGridColumnBuilder.prototype.buildWidth = function( column, metadata ) {
     var width = metadata.Width;
 
@@ -101,6 +108,12 @@ DataGridColumnBuilder.prototype.buildCellTemplate = function( column, metadata, 
     return this;
 };
 
+/**
+ *
+ * @param params
+ * @param cellTemplateMetadata
+ * @returns {Function}
+ */
 DataGridColumnBuilder.prototype.buildCellTemplateByTemplate = function( params, cellTemplateMetadata ) {
     var builder = params.builder;
     var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
@@ -119,6 +132,12 @@ DataGridColumnBuilder.prototype.buildCellTemplateByTemplate = function( params, 
     };
 };
 
+/**
+ *
+ * @param params
+ * @param cellFormatMetadata
+ * @returns {Function}
+ */
 DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function( params, cellFormatMetadata ) {
     var format = this.buildDisplayFormat( cellFormatMetadata, params );
 
@@ -152,6 +171,12 @@ DataGridColumnBuilder.prototype.buildCellTemplateByFormat = function( params, ce
     };
 };
 
+/**
+ *
+ * @param params
+ * @param cellSelectorMetadata
+ * @returns {Function}
+ */
 DataGridColumnBuilder.prototype.buildCellTemplateBySelector = function( params, cellSelectorMetadata ) {
     var column = params.element;
     var grid = column.parent;
@@ -176,6 +201,12 @@ DataGridColumnBuilder.prototype.buildCellTemplateBySelector = function( params, 
     };
 };
 
+/**
+ *
+ * @param params
+ * @param cellProperty
+ * @returns {Function}
+ */
 DataGridColumnBuilder.prototype.buildCellTemplateByDefault = function( params, cellProperty ) {
     return function( itemsBinding, row ) {
         return function( context, args ) {

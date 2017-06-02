@@ -13,10 +13,19 @@ _.inherit( FormBuilder, StackPanelBuilder );
 
 _.extend( FormBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Form}
+     */
     createElement: function( params ) {
         return new Form( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;

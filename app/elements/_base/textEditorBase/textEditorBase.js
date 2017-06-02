@@ -17,22 +17,40 @@ _.inherit( TextEditorBase, Element );
 
 _.extend( TextEditorBase.prototype, {
 
+    /**
+     *
+     * @param editor
+     */
     setEditor: function( editor ) {
         this.control.set( 'editor', editor );
     },
 
+    /**
+     *
+     * @param value
+     */
     setDisplayFormat: function( value ) {
         this.control.set( 'displayFormat', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getDisplayFormat: function() {
         return this.control.get( 'displayFormat' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setEditMask: function( value ) {
         this.control.set( 'editMask', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getEditMask: function() {
         return this.control.get( 'editMask' );
     },
@@ -63,10 +81,17 @@ _.extend( TextEditorBase.prototype, {
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getInputType: function() {
         return this.control.get( 'inputType' );
     },
 
+    /**
+     *
+     * @param inputType
+     */
     setInputType: function( inputType ) {
         if ( inputType ) {
             this.control.set( 'inputType', inputType );
