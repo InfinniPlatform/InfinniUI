@@ -1,3 +1,7 @@
+/**
+ * @augments DateTimePickerBuilder
+ * @constructor
+ */
 function TimePickerBuilder() {
     _.superClass( TimePickerBuilder, this );
 }
@@ -6,12 +10,20 @@ InfinniUI.TimePickerBuilder = TimePickerBuilder;
 
 _.inherit( TimePickerBuilder, DateTimePickerBuilder );
 
+/**
+ *
+ * @param params
+ * @returns {TimePicker}
+ */
 TimePickerBuilder.prototype.createElement = function( params ) {
     return new TimePicker( params.parent );
 };
 
+/**
+ *
+ * @param params
+ */
 TimePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
-
     params.metadata = _.extend( {}, params.metadata, {
         Mode: 'TimePicker',
         TimeZone: 0
@@ -25,9 +37,13 @@ TimePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
             }
         }
     } );
-
 };
 
+/**
+ *
+ * @param element
+ * @param minValue
+ */
 TimePickerBuilder.prototype.applyMinValue = function( element, minValue ) {
     var date = InfinniUI.DateUtils.parseTimeISO8601toDate( minValue, 0 );
 
@@ -36,6 +52,11 @@ TimePickerBuilder.prototype.applyMinValue = function( element, minValue ) {
     }
 };
 
+/**
+ *
+ * @param element
+ * @param maxValue
+ */
 TimePickerBuilder.prototype.applyMaxValue = function( element, maxValue ) {
     var date = InfinniUI.DateUtils.parseTimeISO8601toDate( maxValue, 0 );
 

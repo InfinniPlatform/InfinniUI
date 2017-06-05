@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{d, dd, M, MM, y, yy, yyyy, H, h, HH, m, mm, s, ss, MMM, MMMM, tt}}
+ */
 var DateTimeMaskPartStrategy = ( function() {
     var regExpDay = /^(?:3[0-1]|[012]?[0-9]?)$/;
     var regExpMonth = /^(?:1[0-2]|0?[1-9]?)$/;

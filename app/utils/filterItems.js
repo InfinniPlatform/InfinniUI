@@ -1,3 +1,6 @@
+/**
+ *
+ */
 var filterItems = ( function() {
     return function( items, filter ) {
         if( !filter ) {
@@ -8,6 +11,11 @@ var filterItems = ( function() {
         var filterMethods = filterItems.filterMethods;
         var filterTree = filterItems.filterTreeBuilder.buildUpFilterTree( filter );
 
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
         function stringToNum( value ) {
             if( typeof value === 'string' && !isNaN( value ) ) {
                 value = +value;
@@ -15,6 +23,11 @@ var filterItems = ( function() {
             return value;
         }
 
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
         function stringToNumAsString( value ) {
             if( typeof value === 'string' && value.slice( 0, 1 ) === '\'' ) {
                 value = value.slice( 1, -1 );
@@ -22,6 +35,11 @@ var filterItems = ( function() {
             return value;
         }
 
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
         function stringToBoolean( value ) {
             if( value === 'true' ) {
                 value = true;
@@ -33,6 +51,11 @@ var filterItems = ( function() {
             return value;
         }
 
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
         function stringToArr( value ) {
             if( typeof value === 'string' && value.search( /\[[\'a-zA-Z0-9,]+\]/ ) !== -1 ) {
                 value = value.slice( 1, -1 ).split( ',' );
@@ -48,6 +71,12 @@ var filterItems = ( function() {
             return value;
         }
 
+        /**
+         *
+         * @param currentContext
+         * @param currentFunc
+         * @returns {*}
+         */
         function findContext( currentContext, currentFunc ) {
             if( currentFunc.functionName === 'match' ) {
                 currentContext = currentFunc.children[ 0 ].valueName;
@@ -55,6 +84,13 @@ var filterItems = ( function() {
             return currentContext;
         }
 
+        /**
+         *
+         * @param filterTree
+         * @param items
+         * @param context
+         * @returns {*}
+         */
         function filterExec( filterTree, items, context ) { // filterTree is object, items is array
             var tmpChild1, tmpChild2 = [];
             // find context
@@ -88,9 +124,17 @@ var filterItems = ( function() {
 
 InfinniUI.FilterItems = filterItems;
 
+/**
+ *
+ */
 filterItems.filterTreeBuilder = ( function() {
     var that = {};
 
+    /**
+     *
+     * @param filter
+     * @returns {Array}
+     */
     var splitStringToArray = function( filter ) { //filter is string
         var tmpArr;
         var tmpNum;
@@ -161,6 +205,11 @@ filterItems.filterTreeBuilder = ( function() {
         return arr;
     };
 
+    /**
+     *
+     * @param arrayToDivide
+     * @returns {[*,*]}
+     */
     var divideToFunctionsAndValues = function( arrayToDivide ) { //arrayToDivide is array
         var tmpArr = [];
         var values = [];
@@ -204,6 +253,12 @@ filterItems.filterTreeBuilder = ( function() {
         return [ filterArr, values ];
     };
 
+    /**
+     *
+     * @param filterArr
+     * @param values
+     * @returns {*}
+     */
     var addValuesAsChildren = function( filterArr, values ) { // filterArr, values are arrays
         //add values to right place as children for functions
         //define right place by range of index property
@@ -220,6 +275,11 @@ filterItems.filterTreeBuilder = ( function() {
         return filterArr;
     };
 
+    /**
+     *
+     * @param filterArr
+     * @returns {*}
+     */
     var filterArrToTree = function( filterArr ) { // filterArr is array
         // build up a filter tree
         // by putting some functions as children for other
@@ -264,6 +324,13 @@ filterItems.filterTreeBuilder = ( function() {
 filterItems.filterMethods = ( function() {
     var that = {};
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.eq = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
         var tmpResult = [];
         var tmpResult2;
@@ -295,19 +362,46 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {*}
+     */
     that.and = function( values, items, context ) {
         return _.intersection.apply( _, values );
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {*}
+     */
     that.or = function( values, items, context ) {
         return _.union.apply( _, values );
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     */
     that.not = function( values, items, context ) { // values[0] is array
         var tmpResult = items.slice();
         return _.difference( tmpResult, values[ 0 ] );
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.notEq = function( value, items, context ) {
         var tmpResult = [];
         var tmpResult2;
@@ -338,7 +432,15 @@ filterItems.filterMethods = ( function() {
         }
         return tmpResult;
     };
+
     // compare for numbers and dates
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.gt = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
         var tmpResult = [];
         var tmpResult2;
@@ -369,7 +471,15 @@ filterItems.filterMethods = ( function() {
         }
         return tmpResult;
     };
+
     // compare for numbers and dates
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.gte = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
         var tmpResult = [];
         var tmpResult2;
@@ -400,7 +510,15 @@ filterItems.filterMethods = ( function() {
         }
         return tmpResult;
     };
+
     // compare for numbers and dates
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.lt = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
         var tmpResult = [];
         var tmpResult2;
@@ -431,7 +549,15 @@ filterItems.filterMethods = ( function() {
         }
         return tmpResult;
     };
+
     // compare for numbers and dates
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.lte = function( value, items, context ) { // value is array: value[0] - param, value[1] - value
         var tmpResult = [];
         var tmpResult2;
@@ -463,6 +589,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.in = function( values, items, context ) { // values[1] is array
         var tmpResult = [];
         var tmpResult2;
@@ -494,6 +627,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.notIn = function( values, items, context ) { // values[1] is array
         var tmpResult = [];
         var tmpResult2;
@@ -525,6 +665,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.exists = function( value, items, context ) { // value[1] is string
         var tmpResult = [];
         var tmpValue;
@@ -548,6 +695,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.match = function( values, items, context ) {
         var tmpResult = [];
         var globalUI = InfinniUI.ObjectUtils;
@@ -559,6 +713,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.all = function( values, items, context ) { // value[1] is array
         var tmpResult = [];
         var counter;
@@ -580,6 +741,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyIn = function( values, items, context ) { // value[1] is array
         var tmpResult = [];
         var tmpArr;
@@ -597,6 +765,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyNotIn = function( values, items, context ) { // value[1] is array
         var tmpResult = [];
         var counter;
@@ -618,6 +793,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyEq = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -632,6 +814,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyNotEq = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -649,6 +838,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyGt = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -666,6 +862,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyGte = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -683,6 +886,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyLt = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -700,6 +910,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.anyLte = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -717,6 +934,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeEq = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -731,6 +955,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeNotEq = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -745,6 +976,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeGt = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -759,6 +997,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeGte = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -773,6 +1018,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeLt = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -787,6 +1039,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.sizeLte = function( value, items, context ) {
         var tmpResult = [];
         var tmpArr;
@@ -801,6 +1060,13 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param values
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.regexp = function( values, items, context ) { // value[1] is array
         var tmpResult = [];
         var tmpObjValue;
@@ -821,6 +1087,13 @@ filterItems.filterMethods = ( function() {
     };
 
     // ToDo: добавить обработку параметров caseSensitive и diacriticSensitive
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     * @returns {Array}
+     */
     that.text = function( value, items, context ) {
         var tmpResult = [];
         var tmpString;
@@ -834,6 +1107,12 @@ filterItems.filterMethods = ( function() {
         return tmpResult;
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     */
     that.startsWith = function( value, items, context ) {
         var propertyName = value[ 0 ];
         var expectedStartValue = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
@@ -846,6 +1125,12 @@ filterItems.filterMethods = ( function() {
         } );
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     */
     that.endsWith = function( value, items, context ) {
         var propertyName = value[ 0 ];
         var expectedEndValue = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
@@ -858,6 +1143,12 @@ filterItems.filterMethods = ( function() {
         } );
     };
 
+    /**
+     *
+     * @param value
+     * @param items
+     * @param context
+     */
     that.contains = function( value, items, context ) {
         var propertyName = value[ 0 ];
         var searchString = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ] || '';

@@ -1,3 +1,7 @@
+/**
+ * @mixes editMaskMixin
+ * @constructor
+ */
 function TemplateEditMask() {
     this.mask = null;
     this.maskSaveLiteral = true;
@@ -147,6 +151,11 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return result.join( '' );
     },
 
+    /**
+     *
+     * @param position
+     * @returns {number}
+     */
     moveToNextChar: function( position ) {
         position = Math.max( position, 0 );
         var template = this.template;
@@ -177,6 +186,11 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return ( index === null ) ? 0 : index + 1;
     },
 
+    /**
+     *
+     * @param position
+     * @returns {number}
+     */
     moveToPrevChar: function( position ) {
         position = Math.max( position, 0 );
         var template = this.template;
@@ -250,6 +264,12 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return result;
     },
 
+    /**
+     *
+     * @param position
+     * @param len
+     * @returns {*}
+     */
     deleteCharRight: function( position, len ) {
         var template;
         var i, ln;
@@ -272,6 +292,12 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @param position
+     * @param len
+     * @returns {*}
+     */
     deleteCharLeft: function( position, len ) {
         var template;
         var i;
@@ -370,6 +396,12 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         }
     },
 
+    /**
+     *
+     * @param position
+     * @param len
+     * @returns {*}
+     */
     clearText: function( position, len ) {
         var tmpl;
         var startFrom;
@@ -432,6 +464,13 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @param position
+     * @param len
+     * @param char
+     * @returns {*}
+     */
     deleteSelectedText: function( position, len, char ) {
         var startFrom = this.clearText( position, len );
 
@@ -442,6 +481,11 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return startFrom;
     },
 
+    /**
+     *
+     * @param position
+     * @returns {*}
+     */
     getNextItemMask: function( position ) {
         var template;
         var i;
@@ -462,6 +506,10 @@ _.extend( TemplateEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     getText: function() {
         var template = this.template;
         var result = [];

@@ -1,6 +1,7 @@
 /**
  * @constructor
  * @augments ContainerBuilder
+ * @mixes viewBuilderHeaderTemplateMixin
  */
 function ViewBuilder() {
     _.superClass( ViewBuilder, this );
@@ -12,10 +13,19 @@ _.inherit( ViewBuilder, ContainerBuilder );
 
 _.extend( ViewBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {View}
+     */
     createElement: function( params ) {
         return new View( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var parentView = params.parentView;
 
@@ -99,7 +109,7 @@ _.extend( ViewBuilder.prototype, {
             var subscriptor = InfinniUI.global.notificationSubscription;
 
             for( var key in metadata.NotificationSubscriptions ) {
-                (function() {
+                ( function() {
                     var script = metadata.NotificationSubscriptions[ key ];
                     subscriptor.subscribe( key, function( context, args ) {
                         new ScriptExecutor( element ).executeScript( script, {
@@ -107,7 +117,7 @@ _.extend( ViewBuilder.prototype, {
                             message: args.message
                         } );
                     }, this );
-                })();
+                } )();
             }
 
             element.onClosing( function() {
@@ -152,6 +162,10 @@ _.extend( ViewBuilder.prototype, {
         element.setFocusOnControl( metadata.FocusOnControl );
     },
 
+    /**
+     *
+     * @param params
+     */
     triggerStartCreatingEvent: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -169,6 +183,10 @@ _.extend( ViewBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param dataSources
+     */
     changeDataSourcesReadinessByPriority: function( dataSources ) {
         var dataSourcesByPriority = _.groupBy( dataSources, function( ds ) {
             return ds.getResolvePriority();

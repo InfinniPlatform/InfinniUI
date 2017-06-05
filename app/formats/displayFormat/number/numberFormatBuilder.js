@@ -1,6 +1,6 @@
 /**
  * @description Билдер NumberFormat
- * @class NumberFormatBuilder
+ * @constructor
  */
 function NumberFormatBuilder() {
     /**

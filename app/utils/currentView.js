@@ -1,6 +1,16 @@
+/**
+ *
+ * @constructor
+ */
 var OpenedViewCollection = function() {
     var list = [];
 
+    /**
+     *
+     * @param metadata
+     * @param viewMetadata
+     * @param view
+     */
     this.appendView = function( metadata, viewMetadata, view ) {
         list.push( {
             metadata: metadata,
@@ -9,6 +19,10 @@ var OpenedViewCollection = function() {
         } );
     };
 
+    /**
+     *
+     * @param view
+     */
     this.removeView = function( view ) {
         for( var i = 0, ln = list.length; i < ln; i = i + 1 ) {
             if( view === list[ i ].view ) {
@@ -18,6 +32,10 @@ var OpenedViewCollection = function() {
         }
     };
 
+    /**
+     *
+     * @returns {*}
+     */
     this.getLastView = function() {
         if( list.length === 0 ) {
             return;
@@ -26,6 +44,10 @@ var OpenedViewCollection = function() {
         return list[ list.length - 1 ];
     };
 
+    /**
+     *
+     * @returns {Array}
+     */
     this.getList = function() {
         return list;
     };

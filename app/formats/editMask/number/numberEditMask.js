@@ -1,3 +1,7 @@
+/**
+ * @mixes editMaskMixin
+ * @constructor
+ */
 function NumberEditMask() {
     this.mask = null;
     this.format = null;
@@ -42,6 +46,10 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return separator;
     },
 
+    /**
+     *
+     * @returns {number}
+     */
     getDecimalDigits: function() {
         var itemTemplate = this.getItemTemplate();
         var item = itemTemplate.item;
@@ -93,6 +101,11 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         this.template = this.buildTemplate( value );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {Array}
+     */
     buildTemplate: function( value ) {
         var r = /([npc])(\d*)/i;
         var mask = this.mask;
@@ -115,6 +128,10 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return this.template = template;
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     getText: function() {
         var result = [];
         var item;
@@ -141,6 +158,12 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return result.join( '' );
     },
 
+    /**
+     *
+     * @param value
+     * @param mask
+     * @returns {string}
+     */
     formatMask: function( value, mask ) {
         return ( value === null || typeof value === 'undefined' ) ? '' : this.format.format( value, undefined, mask );
     },
@@ -305,10 +328,20 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @param position
+     * @returns {*}
+     */
     setNextValue: function( position ) {
         return this.updateDigitValue( position, 1 );
     },
 
+    /**
+     *
+     * @param position
+     * @returns {*}
+     */
     setPrevValue: function( position ) {
         return this.updateDigitValue( position, -1 );
     },
@@ -416,6 +449,11 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @param item
+     * @returns {number}
+     */
     clearValue: function( item ) {
         item.value = null;
         item.text = this.formatMask( item.value, item.mask );
@@ -423,6 +461,12 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return 0;
     },
 
+    /**
+     *
+     * @param position
+     * @param len
+     * @returns {*}
+     */
     deleteCharLeft: function( position, len ) {
         var itemTemplate = this.getItemTemplate();
         var left = itemTemplate.left;
@@ -475,6 +519,10 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
         return position;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getValue: function() {
         var value;
         var itemTemplate = this.getItemTemplate();
@@ -568,7 +616,8 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
     },
 
     /**
-     * Проверка что маска была полностью заполнена
+     * @description Проверка что маска была полностью заполнена
+     * @returns {boolean}
      */
     getIsComplete: function() {
 
@@ -576,4 +625,3 @@ _.extend( NumberEditMask.prototype, editMaskMixin, {
     }
 
 } );
-

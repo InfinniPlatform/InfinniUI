@@ -6,6 +6,11 @@ var LOG_LEVEL = {
     trace: 5
 };
 
+/**
+ *
+ * @param level
+ * @constructor
+ */
 function Logger( level ) {
     this.messages = [];
     this.setLevel( level || LOG_LEVEL.debug );
@@ -15,14 +20,28 @@ function Logger( level ) {
 }
 
 _.extend( Logger.prototype, {
+
+    /**
+     *
+     * @returns {*}
+     */
     getLevel: function() {
         return this.level;
     },
 
+    /**
+     *
+     * @param level
+     */
     setLevel: function( level ) {
         this.level = level;
     },
 
+    /**
+     *
+     * @param messageType
+     * @param message
+     */
     addMessage: function( messageType, message ) {
         this.messages.push( {
             type: messageType,
@@ -30,6 +49,10 @@ _.extend( Logger.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param message
+     */
     debug: function( message ) {
         if( this.level > LOG_LEVEL.debug ) {
             return;
@@ -42,6 +65,10 @@ _.extend( Logger.prototype, {
         this.addMessage( LOG_LEVEL.debug, message );
     },
 
+    /**
+     *
+     * @param message
+     */
     info: function( message ) {
         if( this.level > LOG_LEVEL.info ) {
             return;
@@ -54,6 +81,10 @@ _.extend( Logger.prototype, {
         this.addMessage( LOG_LEVEL.info, message );
     },
 
+    /**
+     *
+     * @param message
+     */
     warn: function( message ) {
         if( this.level > LOG_LEVEL.warn ) {
             return;
@@ -66,6 +97,10 @@ _.extend( Logger.prototype, {
         this.addMessage( LOG_LEVEL.warn, message );
     },
 
+    /**
+     *
+     * @param message
+     */
     error: function( message ) {
         if( this.level > LOG_LEVEL.error ) {
             return;
@@ -78,6 +113,10 @@ _.extend( Logger.prototype, {
         this.addMessage( LOG_LEVEL.error, message );
     },
 
+    /**
+     *
+     * @param message
+     */
     trace: function( message ) {
         if( this.level > LOG_LEVEL.trace ) {
             return;
@@ -89,6 +128,7 @@ _.extend( Logger.prototype, {
 
         this.addMessage( LOG_LEVEL.trace, message );
     }
+
 } );
 
 InfinniUI.global.logger = new Logger();

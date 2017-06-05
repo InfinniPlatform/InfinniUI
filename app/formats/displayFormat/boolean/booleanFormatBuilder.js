@@ -1,6 +1,6 @@
 /**
  * @description Билдер BooleanFormat
- * @class BooleanFormatBuilder
+ * @constructor
  */
 function BooleanFormatBuilder() {
     /**
@@ -11,7 +11,6 @@ function BooleanFormatBuilder() {
      * @param args
      * @returns {BooleanFormat}
      */
-
     this.build = function( context, args ) {
         var format = new BooleanFormat();
 

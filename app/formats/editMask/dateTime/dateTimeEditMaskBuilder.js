@@ -4,6 +4,12 @@
  */
 function DateTimeEditMaskBuilder() {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {DateTimeEditMask}
+     */
     this.build = function( context, args ) {
         var formatOptions = args.formatOptions;
         var editMask = new DateTimeEditMask();

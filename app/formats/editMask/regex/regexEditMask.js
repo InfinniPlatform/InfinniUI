@@ -1,3 +1,7 @@
+/**
+ * @mixes editMaskMixin
+ * @constructor
+ */
 function RegexEditMask() {
     this.mask = null;
 }
@@ -7,7 +11,9 @@ InfinniUI.RegexEditMask = RegexEditMask;
 _.extend( RegexEditMask.prototype, editMaskMixin, {
 
     /**
-     * Проверка что маска была полностью заполнена
+     * @description Проверка что маска была полностью заполнена
+     * @param value
+     * @returns {boolean}
      */
     getIsComplete: function( value ) {
         var regExp;

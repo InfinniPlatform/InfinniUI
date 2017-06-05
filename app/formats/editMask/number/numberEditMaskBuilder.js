@@ -4,6 +4,12 @@
  */
 function NumberEditMaskBuilder() {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {NumberEditMask}
+     */
     this.build = function( context, args ) {
         var editMask = new NumberEditMask();
 

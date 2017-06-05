@@ -12,6 +12,11 @@ _.inherit( TablePanelBuilder, ContainerBuilder );
 
 _.extend( TablePanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {TablePanel}
+     */
     createElement: function( params ) {
         return new TablePanel( params.parent );
     },

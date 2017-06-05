@@ -12,6 +12,11 @@ _.inherit( PanelBuilder, ContainerBuilder );
 
 _.extend( PanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Panel}
+     */
     createElement: function( params ) {
         return new Panel( params.parent );
     },

@@ -1,7 +1,7 @@
 /**
  * @description Формат отображения даты/времени.
  * @param format
- * @class DateTimeFormat
+ * @constructor
  * @mixes formatMixin
  */
 function DateTimeFormat( format ) {
@@ -22,7 +22,7 @@ _.extend( DateTimeFormat.prototype, {
      * @description Форматирует дату
      * @memberOf DateTimeFormat.prototype
      * @param {Date} originalDate
-     * @param {Culture} [culture]
+     * @param {*} [culture]
      * @param {String} [format]
      * @returns {String}
      */
@@ -54,6 +54,11 @@ _.extend( DateTimeFormat.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param originalDate
+     * @returns {*}
+     */
     createDate: function( originalDate ) {
         var date;
         var options = this.getOptions();

@@ -15,10 +15,19 @@ _.inherit( ImageBoxBuilder, ElementBuilder );
 
 _.extend( ImageBoxBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {ImageBox}
+     */
     createElement: function( params ) {
         return new ImageBox( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
 

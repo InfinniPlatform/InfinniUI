@@ -11,6 +11,10 @@ _.inherit( Row, Container );
 
 _.extend( Row.prototype, {
 
+    /**
+     *
+     * @returns {RowControl}
+     */
     createControl: function() {
         return new RowControl();
     }

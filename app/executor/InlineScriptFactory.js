@@ -1,3 +1,11 @@
+/**
+ *
+ * @param scriptBody
+ * @param builder
+ * @param builderParams
+ * @returns {{get: get}}
+ * @constructor
+ */
 function InlineScriptFactory( scriptBody, builder, builderParams ) {
 
     return {

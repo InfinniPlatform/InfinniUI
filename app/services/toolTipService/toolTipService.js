@@ -1,3 +1,6 @@
+/**
+ *
+ */
 InfinniUI.ToolTipService = ( function() {
 
     var TOOLTIP_PLACEMENT = 'auto top';
@@ -9,6 +12,11 @@ InfinniUI.ToolTipService = ( function() {
 
     exchange.subscribe( messageTypes.onToolTipDestroy.name, destroyToolTip );
 
+    /**
+     *
+     * @param context
+     * @param args
+     */
     function destroyToolTip( context, args ) {
         var element = extractElementFromArgs( args );
         var $element = element.control.controlView.$el;
@@ -16,6 +24,11 @@ InfinniUI.ToolTipService = ( function() {
         $element.tooltip( 'destroy' );
     }
 
+    /**
+     *
+     * @param context
+     * @param args
+     */
     function initToolTip( context, args ) {
         var element = extractElementFromArgs( args );
         var content = extractContentFromArgs( args );

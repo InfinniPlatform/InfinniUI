@@ -1,3 +1,7 @@
+/**
+ * @augments ListEditorBaseBuilder
+ * @constructor
+ */
 function TreeViewBuilder() {
     _.superClass( TreeViewBuilder, this );
 }
@@ -8,10 +12,19 @@ _.inherit( TreeViewBuilder, ListEditorBaseBuilder );
 
 _.extend( TreeViewBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {TreeView}
+     */
     createElement: function( params ) {
         return new TreeView( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -35,6 +48,11 @@ _.extend( TreeViewBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @private
+     */
     _initKeySelector: function( params ) {
         var element = params.element;
         var metadata = params.metadata;
@@ -57,6 +75,11 @@ _.extend( TreeViewBuilder.prototype, {
         element.setKeySelector( keySelector );
     },
 
+    /**
+     *
+     * @param params
+     * @private
+     */
     _initParentSelector: function( params ) {
         var element = params.element;
         var metadata = params.metadata;

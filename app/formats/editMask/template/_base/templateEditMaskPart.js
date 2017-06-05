@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{c, C, l, L, a, A, #, 9, 0}}
+ */
 var TemplateMaskPartStrategy = ( function() {
     var regexpAnyLetter = /^[a-zA-Zа-яА-ЯёЁ]$/;
     var regexpAnyNumber = /^\d$/;

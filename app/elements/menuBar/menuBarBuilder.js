@@ -12,6 +12,11 @@ _.inherit( MenuBarBuilder, ContainerBuilder );
 
 _.extend( MenuBarBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {MenuBar}
+     */
     createElement: function( params ) {
         return new MenuBar( params.parent );
     }

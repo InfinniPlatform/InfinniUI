@@ -8,8 +8,13 @@ function TabPageBuilder() {
 
 _.inherit( TabPageBuilder, ContainerBuilder );
 
-_.extend( TabPageBuilder.prototype, /** @lends TabPageBuilder.prototype*/ {
+_.extend( TabPageBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {TabPage}
+     */
     createElement: function( params ) {
         return new TabPage( params.parent );
     },

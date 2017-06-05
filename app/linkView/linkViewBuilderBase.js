@@ -1,8 +1,18 @@
+/**
+ *
+ * @constructor
+ */
 function LinkViewBuilderBase() {
 }
 
 _.extend( LinkViewBuilderBase.prototype, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {LinkView}
+     */
     build: function( context, args ) {
         var metadata = args.metadata;
         var parentView = this.getParentViewByOpenMode( args, metadata.OpenMode );
@@ -26,10 +36,20 @@ _.extend( LinkViewBuilderBase.prototype, {
         return linkView;
     },
 
+    /**
+     *
+     */
     getViewTemplate: function() {
         throw 'LinkViewBuilderBase.getViewTemplate: В потомке LinkViewBuilderBase не переопределен метод getViewTemplate.';
     },
 
+    /**
+     *
+     * @param params
+     * @param viewMetadata
+     * @param parentView
+     * @param onViewReadyHandler
+     */
     buildViewByMetadata: function( params, viewMetadata, parentView, onViewReadyHandler ) {
         var builder = params.builder;
         var parameters = this.buildParameters( params );
@@ -49,6 +69,11 @@ _.extend( LinkViewBuilderBase.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @returns {*}
+     */
     buildParameters: function( params ) {
         var parametersMetadata = params.metadata[ 'Parameters' ];
         var builder = params.builder;
@@ -70,6 +95,12 @@ _.extend( LinkViewBuilderBase.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @param params
+     * @param mode
+     * @returns {*}
+     */
     getParentViewByOpenMode: function( params, mode ) {
         if( mode === null || typeof mode === 'undefined' || mode == 'Default' ) {
             return params.parentView.getApplicationView();

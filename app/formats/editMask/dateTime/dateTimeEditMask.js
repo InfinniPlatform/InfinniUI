@@ -1,3 +1,7 @@
+/**
+ * @mixes editMaskMixin
+ * @constructor
+ */
 function DateTimeEditMask() {
     this.mask = null;
     this.format = null;
@@ -254,7 +258,7 @@ _.extend( DateTimeEditMask.prototype, {
     /**
      * @private
      * @description Получить элемент шаблона в заданной позиции
-     * @param {Integer} position
+     * @param {Number} position
      * @returns {*}
      */
     getItemTemplate: function( position ) {
@@ -296,6 +300,12 @@ _.extend( DateTimeEditMask.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @param char
+     * @param position
+     * @returns {*}
+     */
     setCharAt: function( char, position ) {
         var data = this.getItemTemplate( position );
         var text;
@@ -339,7 +349,9 @@ _.extend( DateTimeEditMask.prototype, {
     },
 
     /**
-     * Получить предыдущую позицию, в которой возможен ввод
+     * @description Получить предыдущую позицию, в которой возможен ввод
+     * @param position
+     * @returns {number|*}
      */
     moveToPrevChar: function( position ) {
         position = position - 1;
@@ -379,7 +391,9 @@ _.extend( DateTimeEditMask.prototype, {
     },
 
     /**
-     * Получить следущую позицию, в которой возможен ввод
+     * @description Получить следущую позицию, в которой возможен ввод
+     * @param position
+     * @returns {*}
      */
     moveToNextChar: function( position ) {
         position = position + 1;

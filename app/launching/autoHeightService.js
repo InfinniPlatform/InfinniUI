@@ -4,6 +4,13 @@ InfinniUI.AutoHeightService = {
     exchange: null,
     times: [],
 
+    /**
+     *
+     * @param $el
+     * @param height
+     * @param fix
+     * @returns {number}
+     */
     setOuterHeight: function( $el, height, fix ) {
         var delta = 0;
         'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
@@ -21,14 +28,31 @@ InfinniUI.AutoHeightService = {
         return contentHeight;
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     getModalSelector: function() {
         return '.modal-scrollable';
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     getSelector: function() {
         return '.verticalAlignmentStretch:not(:hidden)';
     },
 
+    /**
+     *
+     * @param items
+     * @param parentEl
+     * @param $parentEl
+     * @param elements
+     * @param list
+     * @returns {{isElement: boolean, element: *, $element: *, child}}
+     */
     buildTree: function( items, parentEl, $parentEl, elements, list ) {
         var manager = this;
         items = _.where( list, { parent: parentEl } );
@@ -43,6 +67,13 @@ InfinniUI.AutoHeightService = {
         };
     },
 
+    /**
+     *
+     * @param elements
+     * @param el
+     * @param $el
+     * @returns {*|{isElement: boolean, element: *, $element: *, child}}
+     */
     formTree: function( elements, el, $el ) {
         var $parent;
         var list = [];
@@ -76,6 +107,12 @@ InfinniUI.AutoHeightService = {
         return this.buildTree( list, el, $el, elements, list );
     },
 
+    /**
+     *
+     * @param node
+     * @param height
+     * @returns {*|number}
+     */
     setHeight: function( node, height ) {
         var originalHeight = node.$element.attr( 'data-height-original' );
         if( originalHeight === '' ) {
@@ -107,6 +144,11 @@ InfinniUI.AutoHeightService = {
         }
     },
 
+    /**
+     *
+     * @param node
+     * @param height
+     */
     goThroughTree: function( node, height ) {
         var manager = this;
         if( node.$element.parentsUntil( '.modal' ).length ) {
@@ -157,6 +199,11 @@ InfinniUI.AutoHeightService = {
         }, this );
     },
 
+    /**
+     *
+     * @param el
+     * @param pageHeight
+     */
     resize: function( el, pageHeight ) {
         var startTime = Date.now(); //start time
         var $el = $( el );
@@ -172,16 +219,29 @@ InfinniUI.AutoHeightService = {
         this.timeWatcher( endTime - startTime );
     },
 
+    /**
+     *
+     * @param time
+     */
     timeWatcher: function( time ) {
         if( time >= 20 ) {
             this.times.push( time );
         }
     },
 
+    /**
+     *
+     * @returns {Array}
+     */
     getTimes: function() {
         return this.times;
     },
 
+    /**
+     *
+     * @param container
+     * @param clientHeight
+     */
     resizeView: function( container, clientHeight ) {
         var $page = $( container || document );
         var contentHeight = this.setOuterHeight( $page, clientHeight );
@@ -189,6 +249,9 @@ InfinniUI.AutoHeightService = {
         this.resize( $page.get( 0 ), contentHeight );
     },
 
+    /**
+     *
+     */
     resizeDialog: function() {
         var $currentDialog = $( this.getModalSelector() ).last();
 
@@ -196,6 +259,10 @@ InfinniUI.AutoHeightService = {
         this.resetDialogHeight( $currentDialog );
     },
 
+    /**
+     *
+     * @param $modal
+     */
     resetDialogHeight: function( $modal ) {
         var space = 10;
 
@@ -214,6 +281,11 @@ InfinniUI.AutoHeightService = {
         }
     },
 
+    /**
+     *
+     * @param $modal
+     * @private
+     */
     _resizeDialog: function( $modal ) {
         var space = 10;//Высота отступа от вертикальных границ диалога до границ экрана
         var $container = $modal.children();
@@ -241,6 +313,10 @@ InfinniUI.AutoHeightService = {
         }
     },
 
+    /**
+     *
+     * @param container
+     */
     recalculation: function( container ) {
         if( InfinniUI.config.enableAutoHeightService ) {
             $( container ).addClass( 'page-content-overflow-hidden' );
@@ -254,6 +330,10 @@ InfinniUI.AutoHeightService = {
         }
     },
 
+    /**
+     *
+     * @param container
+     */
     slidingRecalculation: function( container ) {
         var that = this;
 
@@ -264,6 +344,10 @@ InfinniUI.AutoHeightService = {
         }
     },
 
+    /**
+     *
+     * @param container
+     */
     onChangeLayout: function( container ) {
         var clientHeight = this.windowHeight;
         this.resizeView( container, clientHeight );

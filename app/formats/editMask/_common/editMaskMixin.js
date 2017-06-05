@@ -1,3 +1,7 @@
+/**
+ *
+ * @mixin
+ */
 var editMaskMixin = {
     /**
      * Установка начального значения
@@ -23,6 +27,10 @@ var editMaskMixin = {
         return this.value;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getData: function() {
         return this.getValue();
     },
@@ -66,7 +74,7 @@ var editMaskMixin = {
     /**
      * Удалить выделенный текст
      * @param position
-     * @oaram {Number} len
+     * @param {Number} len
      * @returns {boolean|number}
      */
     deleteSelectedText: function( position, len ) {
@@ -144,6 +152,12 @@ var editMaskMixin = {
         return ( value === null || typeof value === 'undefined' ) ? '' : value;
     },
 
+    /**
+     *
+     * @param options
+     * @param value
+     * @returns {Number|*}
+     */
     getNextIntValue: function( options, value ) {
         options = options || {};
         var minValue = null;
@@ -169,6 +183,12 @@ var editMaskMixin = {
         return value;
     },
 
+    /**
+     *
+     * @param options
+     * @param value
+     * @returns {Number|*}
+     */
     getPrevIntValue: function( options, value ) {
         options = options || {};
         var minValue = null;
@@ -190,6 +210,12 @@ var editMaskMixin = {
         return value;
     },
 
+    /**
+     *
+     * @param options
+     * @param value
+     * @returns {string|*}
+     */
     formatInt: function( options, value ) {
         var width = ( typeof options.width !== 'undefined' ) ? options.width : null;
 

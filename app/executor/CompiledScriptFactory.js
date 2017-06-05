@@ -1,3 +1,10 @@
+/**
+ *
+ * @param scriptName
+ * @param parentView
+ * @returns {{get: get}}
+ * @constructor
+ */
 function CompiledScriptFactory( scriptName, parentView ) {
     return {
         get: get

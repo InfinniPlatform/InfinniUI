@@ -1,5 +1,6 @@
 /**
  * @constructor
+ * @augments Backbone.View
  * @mixes bindUIElementsMixin
  */
 var MessageBox = Backbone.View.extend( {
@@ -21,6 +22,10 @@ var MessageBox = Backbone.View.extend( {
 
     template: InfinniUI.Template[ 'services/messageBox/template/default.tpl.html' ],
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.setOptions( options );
 
@@ -34,14 +39,25 @@ var MessageBox = Backbone.View.extend( {
             .modal( { show: true } );
     },
 
+    /**
+     *
+     * @param config
+     */
     setOptions: function( config ) {
         this.options = this.applyDefaultOptions( config );
     },
 
+    /**
+     *
+     */
     onFocusinLastElement: function() {
         this.ui.firstfocuselementinmodal.focus();
     },
 
+    /**
+     *
+     * @param event
+     */
     onKeydownHandler: function( event ) {
         if( document.activeElement === this.ui.lastfocuselementinmodal[ 0 ] && ( event.which || event.keyCode ) == 9 ) {
             event.preventDefault();
@@ -54,6 +70,10 @@ var MessageBox = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {MessageBox}
+     */
     render: function() {
         var $parent = this.options.$parent || $( 'body' );
         var html = this.template( this.options );
@@ -66,6 +86,9 @@ var MessageBox = Backbone.View.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     subscribeToDialog: function() {
         var view = this;
 
@@ -78,6 +101,10 @@ var MessageBox = Backbone.View.extend( {
         } );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickButtonHandler: function( event ) {
         event.preventDefault();
 
@@ -92,6 +119,9 @@ var MessageBox = Backbone.View.extend( {
         this.close();
     },
 
+    /**
+     *
+     */
     close: function() {
         if( typeof this.options.onClose === 'function' ) {
             this.options.onClose.call( null );
@@ -100,6 +130,10 @@ var MessageBox = Backbone.View.extend( {
         this.$el.modal( 'hide' );
     },
 
+    /**
+     *
+     * @param config
+     */
     applyDefaultOptions: function( config ) {
         var options = _.defaults( {}, config, {
             buttons: []
@@ -109,6 +143,11 @@ var MessageBox = Backbone.View.extend( {
         return options;
     },
 
+    /**
+     *
+     * @param options
+     * @returns {*}
+     */
     applyDefaultButtonsOptions: function( options ) {
         options.buttons
             .filter( function( button ) {

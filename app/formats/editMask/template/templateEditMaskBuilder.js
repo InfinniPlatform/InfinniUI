@@ -4,6 +4,12 @@
  */
 function TemplateEditMaskBuilder() {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {TemplateEditMask}
+     */
     this.build = function( context, args ) {
         var editMask = new TemplateEditMask();
 

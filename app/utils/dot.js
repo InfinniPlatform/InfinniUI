@@ -1,12 +1,11 @@
 /**
- * Синглтон для работы с путями построенными по dot-notation
- **/
-
+ * @description Синглтон для работы с путями построенными по dot-notation
+ * @type {{getPropertyValue, setPropertyValue, setPropertyValueDirect}}
+ */
 InfinniUI.ObjectUtils = ( function() {
 
     /**
-     * Возвращает значение свойства.
-     *
+     * @description Возвращает значение свойства.
      * @private
      * @param {*} target Исходный объект.
      * @param {array} propertyPathTerms Путь к свойству объекта в виде коллекции термов.
@@ -43,8 +42,7 @@ InfinniUI.ObjectUtils = ( function() {
     }
 
     /**
-     * Возвращает значение свойства.
-     *
+     * @description Возвращает значение свойства.
      * @private
      * @param {*} target Исходный объект.
      * @param {array} propertyPathTerms Путь к свойству объекта в виде коллекции термов.
@@ -94,8 +92,7 @@ InfinniUI.ObjectUtils = ( function() {
 
 
     /**
-     * Разбивает путь к свойству, записанному в dot-notation, на термы.
-     *
+     * @description Разбивает путь к свойству, записанному в dot-notation, на термы.
      * @private
      * @param {string} propertyPath Имя свойства.
      */
@@ -108,8 +105,7 @@ InfinniUI.ObjectUtils = ( function() {
     }
 
     /**
-     * Пытается интерпретировать имя свойства, как индекс элемента коллекции.
-     *
+     * @description Пытается интерпретировать имя свойства, как индекс элемента коллекции.
      * @private
      * @param {string} propertyName Имя свойства.
      * @returns {number} Индекс элемента коллекции или -1.
@@ -133,8 +129,7 @@ InfinniUI.ObjectUtils = ( function() {
 
 
     /**
-     * Возвращает элемент коллекции.
-     *
+     * @description Возвращает элемент коллекции.
      * @private
      * @param {array} target Исходная коллекция.
      * @param {number} index Индекс элемента.
@@ -152,8 +147,7 @@ InfinniUI.ObjectUtils = ( function() {
     }
 
     /**
-     * Устанавливает элемент коллекции.
-     *
+     * @description Устанавливает элемент коллекции.
      * @private
      * @param {array} target Исходная коллекция.
      * @param {number} index Индекс элемента.
@@ -170,8 +164,7 @@ InfinniUI.ObjectUtils = ( function() {
 
 
     /**
-     * Возвращает значение свойства объекта.
-     *
+     * @description Возвращает значение свойства объекта.
      * @private
      * @param {object} target Исходный объект.
      * @param {string} propertyName Наименование свойства.
@@ -189,8 +182,7 @@ InfinniUI.ObjectUtils = ( function() {
     }
 
     /**
-     * Устанавливает значение свойства объекта.
-     *
+     * @description Устанавливает значение свойства объекта.
      * @private
      * @param {object} target Исходный объект.
      * @param {string} propertyName Наименование свойства.
@@ -208,8 +200,7 @@ InfinniUI.ObjectUtils = ( function() {
     return {
 
         /**
-         * Возвращает значение свойства.
-         *
+         * @description Возвращает значение свойства.
          * @public
          * @param {*} target Исходный объект.
          * @param {string|Object} propertyPath Путь к свойству или объект для построения значения.
@@ -239,8 +230,7 @@ InfinniUI.ObjectUtils = ( function() {
         },
 
         /**
-         * Устанавливает значение свойства.
-         *
+         * @description Устанавливает значение свойства.
          * @public
          * @param {*} target Исходный объект.
          * @param {string} propertyPath Путь к свойству.
@@ -260,6 +250,12 @@ InfinniUI.ObjectUtils = ( function() {
             }
         },
 
+        /**
+         *
+         * @param target
+         * @param propertyPath
+         * @param propertyValue
+         */
         setPropertyValueDirect: function( target, propertyPath, propertyValue ) {
             if( target !== null && typeof target !== 'undefined' && !_.isEmpty( propertyPath ) ) {
                 var propertyPathTerms = splitPropertyPath( propertyPath );

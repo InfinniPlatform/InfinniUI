@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 var OpenModeDialogStrategy = function() {
     this.dialogWidth = 'default';
 };
@@ -8,14 +12,25 @@ _.extend( OpenModeDialogStrategy.prototype, {
 
     template: InfinniUI.Template[ 'linkView/template/dialog.tpl.html' ],
 
+    /**
+     *
+     * @param view
+     */
     setView: function( view ) {
         this.view = view;
     },
 
+    /**
+     *
+     * @param dialogWidth
+     */
     setDialogWidth: function( dialogWidth ) {
         this.dialogWidth = dialogWidth;
     },
 
+    /**
+     *
+     */
     open: function() {
         // чтобы пользователь случайно не обратился к элементу в фокусе,
         // пока диалоговое окно создается и ещё не перехватило фокус,
@@ -73,6 +88,12 @@ _.extend( OpenModeDialogStrategy.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param $modal
+     * @param $modalBody
+     * @private
+     */
     _initBehaviorFocusingInModal: function( $modal, $modalBody ) {
         $modalBody.append( '<div class="lastfocuselementinmodal" tabindex="0">' );
         $modal.find( '.lastfocuselementinmodal' ).on( 'focusin', function() {
@@ -91,12 +112,18 @@ _.extend( OpenModeDialogStrategy.prototype, {
         } );
     },
 
+    /**
+     *
+     */
     close: function() {
         if( this.$modal ) {
             this.$modal.modal( 'hide' );
         }
     },
 
+    /**
+     *
+     */
     cleanup: function() {
         this.view.remove();
         this.$modal.remove();

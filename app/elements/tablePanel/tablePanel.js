@@ -13,6 +13,10 @@ _.inherit( TablePanel, Container );
 
 _.extend( TablePanel.prototype, {
 
+    /**
+     *
+     * @returns {TablePanelControl}
+     */
     createControl: function() {
         return new TablePanelControl();
     }
