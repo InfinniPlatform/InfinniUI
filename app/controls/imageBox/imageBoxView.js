@@ -1,6 +1,7 @@
 /**
  * @augments ControlView
  * @mixes editorBaseViewMixin
+ * @mixes exifRotate
  * @constructor
  */
 var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRotate, {
@@ -188,11 +189,11 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         var defer = $.Deferred();
         var reader = new FileReader();
 
-        reader.onload = (function( file ) {
+        reader.onload = ( function( file ) {
             return function( event ) {
                 defer.resolve( file, event.target.result );
             };
-        }( file ));
+        }( file ) );
         reader.onerror = function( event ) {
             defer.reject( event );
         };
