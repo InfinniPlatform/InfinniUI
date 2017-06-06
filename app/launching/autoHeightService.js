@@ -3,6 +3,7 @@ InfinniUI.AutoHeightService = {
     clientHeight: 0,
     exchange: null,
     times: [],
+    adaptableByHeightSelector: '.pl-adaptable-by-height:not(:hidden)',
 
     setOuterHeight: function( $el, height, fix ) {
         var delta = 0;
@@ -22,10 +23,6 @@ InfinniUI.AutoHeightService = {
 
     getModalSelector: function() {
         return '.modal-scrollable';
-    },
-
-    getStretchSelector: function() {
-        return '.pl-scrollpanel:not(.pl-vertical-scroll-hidden):not(:hidden)';
     },
 
     buildTree: function( items, parentEl, $parentEl, elements, list ) {
@@ -160,7 +157,7 @@ InfinniUI.AutoHeightService = {
     resize: function( el, pageHeight ) {
         var startTime = Date.now(); //start time
         var $el = $( el );
-        var elements = $el.find( this.getStretchSelector() );
+        var elements = $el.find( this.adaptableByHeightSelector );
 
         if( elements.length === 0 ) {
             return;
@@ -203,7 +200,7 @@ InfinniUI.AutoHeightService = {
             var $container = $modal.children();
             var $header = $( '.modal-header', $container );
             var $body = $( '.modal-body', $container );
-            var $el = $( this.getStretchSelector(), $modal );
+            var $el = $( this.adaptableByHeightSelector, $modal );
 
             $el.parentsUntil( '.modal' ).css( 'height', 'auto' );
             $container
@@ -227,7 +224,7 @@ InfinniUI.AutoHeightService = {
 
         $container.css( 'margin-top', 0 );
 
-        var el = $( this.getStretchSelector(), $modal );
+        var el = $( this.adaptableByHeightSelector, $modal );
 
         if( el.length !== 0 ) {
             // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%

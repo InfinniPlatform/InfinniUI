@@ -51,7 +51,7 @@ var ScrollPanelView = ContainerView.extend( {
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
         this.updateHorizontalScroll();
-        this.updateVerticalScroll();
+        this.initVerticalScroll();
     },
 
     /**
@@ -80,22 +80,25 @@ var ScrollPanelView = ContainerView.extend( {
      * @protected
      * @description Set one of CSS class: "pl-vertical-scroll-(visible|hidden|auto)",
      */
-    updateVerticalScroll: function( model, value ) {
-        var name = '';
+    initVerticalScroll: function() {
+        var verticalScrollType = this.model.get( 'verticalScroll' );
 
-        switch( this.model.get( 'verticalScroll' ) ) {
-            case InfinniUI.ScrollVisibility.visible:
-                name = 'visible';
-                break;
-            case InfinniUI.ScrollVisibility.hidden:
-                name = 'hidden';
-                break;
-            case InfinniUI.ScrollVisibility.auto:
-            default:
-                name = 'auto';
-                break;
+        if( verticalScrollType !== InfinniUI.ScrollVisibility.hidden ) {
+            this.$el.addClass( 'pl-adaptable-by-height' );
         }
-        this.switchClass( 'pl-vertical-scroll', name, this.$el );
+
+        // setVerticalScroll уже проверил, что значение валидно
+        this.switchClass( 'pl-vertical-scroll', verticalScrollType.toLowerCase(), this.$el );
+    },
+
+    updateVerticalScroll: function() {
+        this.$el.height( '' );
+        this.$el.removeClass( 'pl-adaptable-by-height' );
+
+        this.initVerticalScroll();
+
+        var $parentView = this.$el.closest( '.pl-view' );
+        InfinniUI.AutoHeightService.recalculation( $parentView );
     },
 
     renderItemsContents: function() {
