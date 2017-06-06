@@ -14,10 +14,17 @@ _.inherit( ImageBoxControl, Control );
 
 _.extend( ImageBoxControl.prototype, {
 
+    /**
+     * @returns {ImageBoxModel}
+     */
     createControlModel: function() {
         return new ImageBoxModel();
     },
 
+    /**
+     * @returns {ImageBoxView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new ImageBoxView( { model: model } );
     }

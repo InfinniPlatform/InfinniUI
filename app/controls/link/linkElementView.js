@@ -1,5 +1,5 @@
 /**
- * @class LinkElementView
+ * @constructor
  * @augments CommonButtonView
  */
 var LinkElementView = CommonButtonView.extend( {
@@ -12,8 +12,17 @@ var LinkElementView = CommonButtonView.extend( {
         'click': 'onClickHandler'
     },
 
-    template: function() {return '';},
+    /**
+     *
+     * @returns {string}
+     */
+    template: function() {
+        return '';
+    },
 
+    /**
+     *
+     */
     updateProperties: function() {
         CommonButtonView.prototype.updateProperties.call( this );
 
@@ -21,10 +30,17 @@ var LinkElementView = CommonButtonView.extend( {
         this.updateTarget();
     },
 
+    /**
+     *
+     * @returns {jQuery}
+     */
     getButtonElement: function() {
         return this.$el;
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         CommonButtonView.prototype.initHandlersForProperties.call( this );
 
@@ -32,6 +48,9 @@ var LinkElementView = CommonButtonView.extend( {
         this.listenTo( this.model, 'change:target', this.updateTarget );
     },
 
+    /**
+     *
+     */
     updateHref: function() {
         var newHref = this.model.get( 'href' );
         var $link = this.getButtonElement();
@@ -39,6 +58,9 @@ var LinkElementView = CommonButtonView.extend( {
         $link.attr( 'href', newHref );
     },
 
+    /**
+     *
+     */
     updateTarget: function() {
         var newTarget = this.model.get( 'target' );
         var $link = this.getButtonElement();
@@ -46,6 +68,10 @@ var LinkElementView = CommonButtonView.extend( {
         $link.attr( 'target', '_' + newTarget );
     },
 
+    /**
+     *
+     * @param e
+     */
     onClickHandler: function( e ) {
         var href = this.model.get( 'href' );
 

@@ -13,6 +13,11 @@ _.inherit( ToolBarBuilder, ContainerBuilder );
 
 _.extend( ToolBarBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {ToolBar}
+     */
     createElement: function( params ) {
         return new ToolBar( params.parent );
     }

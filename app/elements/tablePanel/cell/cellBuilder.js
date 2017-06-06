@@ -10,6 +10,11 @@ _.inherit( CellBuilder, ContainerBuilder );
 
 _.extend( CellBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Cell}
+     */
     createElement: function( params ) {
         return new Cell( params.parent );
     },

@@ -1,7 +1,16 @@
+/**
+ *
+ * @type {{modalWasOpened, modalWasClosed}}
+ */
 InfinniUI.ModalWindowService = ( function() {
     var modalQueue = [];
 
     return {
+
+        /**
+         *
+         * @param obj
+         */
         modalWasOpened: function( obj ) {
             if( modalQueue.length != 0 ) {
                 var previous = modalQueue[ modalQueue.length - 1 ];
@@ -13,6 +22,10 @@ InfinniUI.ModalWindowService = ( function() {
             modalQueue.push( obj );
         },
 
+        /**
+         *
+         * @param modal
+         */
         modalWasClosed: function( modal ) {
             for( var i = 0, length = modalQueue.length; i < length; i++ ) {
                 if( modalQueue[ i ].modal == modal ) {
@@ -36,4 +49,5 @@ InfinniUI.ModalWindowService = ( function() {
         var exchange = InfinniUI.global.messageBus;
         exchange.send( 'OnChangeLayout', {} );
     }
+
 } )();

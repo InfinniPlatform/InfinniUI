@@ -1,3 +1,7 @@
+/**
+ * @augments ListEditorBaseBuilder
+ * @constructor
+ */
 function DataGridBuilder() {
     _.superClass( DataGridBuilder, this );
     this.columnBuilder = new DataGridColumnBuilder();
@@ -7,12 +11,21 @@ InfinniUI.DataGridBuilder = DataGridBuilder;
 
 _.inherit( DataGridBuilder, ListEditorBaseBuilder );
 
-_.extend( DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
+_.extend( DataGridBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {DataGrid}
+     */
     createElement: function( params ) {
         return new DataGrid( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ListEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
@@ -52,6 +65,10 @@ _.extend( DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         this.applyColumnsMetadata( params );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyColumnsMetadata: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -66,10 +83,23 @@ _.extend( DataGridBuilder.prototype, /** @lends DataGridBuilder.prototype */{
         }
     },
 
+    /**
+     *
+     * @param metadata
+     * @param params
+     * @returns {DataGridColumn}
+     */
     buildColumn: function( metadata, params ) {
         return this.columnBuilder.build( params.element, metadata, params );
     },
 
+    /**
+     *
+     * @param itemsBinding
+     * @param itemPropertyMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildItemProperty: function( itemsBinding, itemPropertyMetadata, params ) {
         var dataGrid = params.element;
         var builder = this;
@@ -174,6 +204,10 @@ function setDefaultCheckAllBehavior( element ) {
         } );
     }
 
+    /**
+     *
+     * @param state
+     */
     function setCheckAll( state ) {
         checkAll = state;
         element.setCheckAll( state );

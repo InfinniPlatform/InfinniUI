@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var MenuBarView = ContainerView.extend( {
 
@@ -12,6 +12,10 @@ var MenuBarView = ContainerView.extend( {
 
     UI: {},
 
+    /**
+     *
+     * @returns {MenuBarView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -34,6 +38,9 @@ var MenuBarView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var $items = this.$el.find( '.pl-menu-bar-item' );
         var items = this.model.get( 'items' );
@@ -50,6 +57,9 @@ var MenuBarView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

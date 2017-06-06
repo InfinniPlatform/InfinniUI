@@ -1,5 +1,13 @@
+/**
+ *
+ * @type {{getParams: urlManager.getParams, clearUrlSearchPath: urlManager.clearUrlSearchPath, setParameter: urlManager.setParameter, deleteParameter: urlManager.deleteParameter}}
+ */
 var urlManager = {
 
+    /**
+     *
+     * @returns {*}
+     */
     getParams: function() {
         var getPath = location.search;
         var result = {};
@@ -20,6 +28,9 @@ var urlManager = {
         return result;
     },
 
+    /**
+     *
+     */
     clearUrlSearchPath: function() {
         var searchPath = location.search;
         var index, newUrl;
@@ -36,6 +47,11 @@ var urlManager = {
         }
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     */
     setParameter: function( name, value ) {
         var oldSearch = location.search;
         var newSearch = _.isEmpty( oldSearch ) ?
@@ -46,6 +62,10 @@ var urlManager = {
         history.pushState( null, null, newUrl );
     },
 
+    /**
+     *
+     * @param name
+     */
     deleteParameter: function( name ) {
         var params = urlManager.getParams();
         delete params[ name ];
@@ -54,6 +74,11 @@ var urlManager = {
         var newUrl = stringUtils.format( '{0}//{1}{2}{3}{4}', [ location.protocol, location.host, location.pathname, newSearch, location.hash ] );
         history.pushState( null, null, newUrl );
 
+        /**
+         *
+         * @param params
+         * @returns {string}
+         */
         function generateSearch( params ) {
             var paramsArray = [];
             _.mapObject( params, function( val, key ) {
@@ -66,6 +91,7 @@ var urlManager = {
             '?' + paramsArray.join( '&' );
         }
     }
+
 };
 
 InfinniUI.urlManager = urlManager;

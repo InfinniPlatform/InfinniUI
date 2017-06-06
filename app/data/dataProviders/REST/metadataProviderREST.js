@@ -1,3 +1,10 @@
+/**
+ *
+ * @param metadataUrlConstructor
+ * @param successCallback
+ * @param failCallback
+ * @constructor
+ */
 function MetadataProviderREST( metadataUrlConstructor, successCallback, failCallback ) {
     this.getMetadata = function( resultCallback ) {
         var data = metadataUrlConstructor.constructMetadataRequest();

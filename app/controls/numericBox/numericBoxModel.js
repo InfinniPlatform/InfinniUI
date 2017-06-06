@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments TextEditorBaseModel
  */
 var NumericBoxModel = TextEditorBaseModel.extend( {
@@ -12,16 +12,26 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         TextEditorBaseModel.prototype.defaults
     ),
 
+    /**
+     *
+     */
     incValue: function() {
         var delta = this.get( 'increment' );
         this.addToValue( delta );
     },
 
+    /**
+     *
+     */
     decValue: function() {
         var delta = this.get( 'increment' );
         this.addToValue( -delta );
     },
 
+    /**
+     *
+     * @param delta
+     */
     addToValue: function( delta ) {
         var value = this.get( 'value' );
         var startValue = this.get( 'startValue' );
@@ -44,6 +54,9 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         this.set( 'value', newValue );
     },
 
+    /**
+     *
+     */
     initialize: function() {
         TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },

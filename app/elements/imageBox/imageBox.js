@@ -17,10 +17,17 @@ _.inherit( ImageBox, Element );
 
 _.extend( ImageBox.prototype, {
 
+    /**
+     * @returns {*}
+     */
     getFile: function() {
         return this.control.get( 'file' );
     },
 
+    /**
+     *
+     * @returns {ImageBoxControl}
+     */
     createControl: function() {
         return new ImageBoxControl();
     },

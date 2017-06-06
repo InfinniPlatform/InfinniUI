@@ -11,10 +11,19 @@ InfinniUI.ButtonEditBuilder = ButtonEditBuilder;
 
 _.inherit( ButtonEditBuilder, TextBoxBuilder );
 
+/**
+ *
+ * @param params
+ * @returns {ButtonEdit}
+ */
 ButtonEditBuilder.prototype.createElement = function( params ) {
     return new ButtonEdit( params.parent );
 };
 
+/**
+ *
+ * @param params
+ */
 ButtonEditBuilder.prototype.applyMetadata = function( params ) {
     TextBoxBuilder.prototype.applyMetadata.call( this, params );
 
@@ -47,6 +56,7 @@ ButtonEditBuilder.prototype.buildButtonAction = function( params ) {
         basePathOfProperty: params.basePathOfProperty
     };
     var action = builder.build( metadata.Action, args );
+
     element.onButtonClick( function() {
         action.execute();
     } );
@@ -59,8 +69,8 @@ ButtonEditBuilder.prototype.buildButtonAction = function( params ) {
 ButtonEditBuilder.prototype.buildOnButtonClick = function( params ) {
     var element = params.element;
     var metadata = params.metadata;
-
     var onButtonClick = metadata.OnButtonClick;
+
     if( !onButtonClick ) {
         return;
     }
@@ -70,7 +80,6 @@ ButtonEditBuilder.prototype.buildOnButtonClick = function( params ) {
         parent: element,
         basePathOfProperty: params.basePathOfProperty
     };
-
     var executor = Executor( onButtonClick, params.builder, executorBuilderParams );
 
     element.onButtonClick( executor );

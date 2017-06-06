@@ -1,25 +1,50 @@
+/**
+ *
+ * @mixin
+ */
 var buttonMixin = {
 
+    /**
+     *
+     */
     buttonInit: function() {
         this.isFirstAction = true;
     },
 
+    /**
+     * @returns {*}
+     */
     getContent: function() {
         return this.control.get( 'content' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setContent: function( value ) {
         this.control.set( 'content', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getContentTemplate: function() {
         return this.control.get( 'contentTemplate' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setContentTemplate: function( value ) {
         this.control.set( 'contentTemplate', value );
     },
 
+    /**
+     *
+     * @param value
+     */
     setAction: function( value ) {
         var control = this.control;
 
@@ -38,14 +63,24 @@ var buttonMixin = {
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getAction: function() {
         return this.control.get( 'action' );
     },
 
+    /**
+     *
+     */
     click: function() {
         this.control.click();
     },
 
+    /**
+     *
+     * @param handler
+     */
     onClick: function( handler ) {
         var that = this;
 

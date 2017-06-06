@@ -40,6 +40,11 @@ ScriptExecutor.prototype.executeScript = function( scriptName, args ) {
     return result;
 };
 
+/**
+ *
+ * @param scriptBody
+ * @returns {Function}
+ */
 ScriptExecutor.prototype.buildScriptByBody = function( scriptBody ) {
     var context = this.parent.getContext();
     var args = {

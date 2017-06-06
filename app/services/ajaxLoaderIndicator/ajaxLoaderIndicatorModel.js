@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments Backbone.Model
+ */
 var AjaxLoaderIndicatorModel = Backbone.Model.extend( {
 
     defaults: {
@@ -5,6 +9,11 @@ var AjaxLoaderIndicatorModel = Backbone.Model.extend( {
         progress: false
     },
 
+    /**
+     *
+     * @param attributes
+     * @param options
+     */
     initialize: function( attributes, options ) {
         var exchange = InfinniUI.global.messageBus;
 
@@ -17,16 +26,27 @@ var AjaxLoaderIndicatorModel = Backbone.Model.extend( {
         this.on( 'change:requests', onRequestsChanged );
     },
 
+    /**
+     *
+     */
     onDataLoading: function() {
         var requests = this.get( 'requests' );
         this.set( 'requests', requests + 1 );
     },
 
+    /**
+     *
+     */
     onDataLoaded: function() {
         var requests = this.get( 'requests' );
         this.set( 'requests', requests - 1 );
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     onRequestsChanged: function( model, value ) {
         this.set( 'progress', value > 0 );
     }

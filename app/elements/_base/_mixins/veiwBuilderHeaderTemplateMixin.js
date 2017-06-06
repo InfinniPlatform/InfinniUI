@@ -1,9 +1,14 @@
+/**
+ *
+ * @mixin
+ */
 var viewBuilderHeaderTemplateMixin = {
 
     /**
      * @protected
      * @param view
      * @param params
+     * @returns {*}
      */
     buildHeaderTemplate: function( view, params ) {
         var builder = params.builder;

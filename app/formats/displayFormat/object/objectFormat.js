@@ -1,7 +1,7 @@
 /**
  * @description Формат отображения объекта
  * @param {String} format Строка форматирования
- * @class ObjectFormat
+ * @constructor
  * @mixes formatMixin
  */
 function ObjectFormat( format ) {

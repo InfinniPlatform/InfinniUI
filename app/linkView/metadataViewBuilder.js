@@ -1,3 +1,7 @@
+/**
+ * @augments LinkViewBuilderBase
+ * @constructor
+ */
 function MetadataViewBuilder() {
     _.superClass( MetadataViewBuilder, this );
 }
@@ -8,6 +12,12 @@ InfinniUI.MetadataViewBuilder = MetadataViewBuilder;
 
 _.extend( MetadataViewBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @param parentView
+     * @returns {Function}
+     */
     getViewTemplate: function( params, parentView ) {
         var that = this;
         var metadataDataSourceBuildProps = {

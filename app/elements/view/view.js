@@ -49,6 +49,10 @@ _.extend( View.prototype, {
 
     isView: true,
 
+    /**
+     *
+     * @private
+     */
     _initDataSourceHandlers: function() {
         var that = this;
         var dataSources = this.getContext().dataSources;
@@ -70,15 +74,27 @@ _.extend( View.prototype, {
         } );
     },
 
+    /**
+     *
+     * @private
+     */
     _notifyAboutDsReady: function() {
         this.handlers.onBeforeLoaded.resolve();
         this.handlers.onLoaded.resolve();
     },
 
+    /**
+     *
+     * @returns {ViewControl}
+     */
     createControl: function() {
         return new ViewControl();
     },
 
+    /**
+     *
+     * @private
+     */
     _initContext: function() {
         this.context = {
             view: this,
@@ -128,6 +144,10 @@ _.extend( View.prototype, {
         } );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getApplicationView: function() {
         var isApplication = this.control.get( 'isApplication' );
         var parent = this.parent;
@@ -139,6 +159,10 @@ _.extend( View.prototype, {
         }
     },
 
+    /**
+     *
+     * @param param
+     */
     isApplication: function( param ) {
         var result = this.control.get( 'isApplication' );
 
@@ -149,35 +173,64 @@ _.extend( View.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @param element
+     */
     registerElement: function( element ) {
         this.context.controls[ element.name ] = element;
         this.registerMember( element.name, element );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getContext: function() {
         return this.context;
     },
 
+    /**
+     * @returns {*}
+     */
     getScripts: function() {
         return this.control.get( 'scripts' );
     },
 
+    /**
+     * @returns {*}
+     */
     getParameters: function() {
         return this.control.get( 'parameters' );
     },
 
+    /**
+     * @returns {*}
+     */
     getDataSources: function() {
         return this.control.get( 'dataSources' );
     },
 
+    /**
+     * @returns {*}
+     */
     getDialogResult: function() {
         return this.control.get( 'dialogResult' );
     },
 
+    /**
+     * @returns {*}
+     * @param value
+     */
     setDialogResult: function( value ) {
         return this.control.set( 'dialogResult', value );
     },
 
+    /**
+     *
+     * @param success
+     * @param error
+     */
     open: function( success, error ) {
         var context = this.getContext();
         var scriptArgs = this._getScriptArgs();
@@ -194,6 +247,12 @@ _.extend( View.prototype, {
         }
     },
 
+    /**
+     *
+     * @param success
+     * @param error
+     * @param notCallOnClosing
+     */
     close: function( success, error, notCallOnClosing ) {
         if( this.isClosing ) {
             return;
@@ -218,38 +277,74 @@ _.extend( View.prototype, {
         }
     },
 
+    /**
+     *
+     * @returns {View}
+     */
     getScriptsStorage: function() {
         return this;
     },
 
+    /**
+     *
+     * @param openStrategy
+     */
     setOpenStrategy: function( openStrategy ) {
         this.openStrategy = openStrategy;
     },
 
+    /**
+     *
+     * @param handler
+     */
     onBeforeLoaded: function( handler ) {
         this.handlers.onBeforeLoaded.done( handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onLoaded: function( handler ) {
         this.handlers.onLoaded.done( handler );
     },
-
+    /**
+     *
+     * @param callback
+     */
     onOpening: function( callback ) {
         this.eventManager.on( 'onOpening', callback );
     },
 
+    /**
+     *
+     * @param callback
+     */
     onOpened: function( callback ) {
         this.eventManager.on( 'onOpened', callback );
     },
 
+    /**
+     *
+     * @param callback
+     */
     onClosing: function( callback ) {
         this.eventManager.on( 'onClosing', callback );
     },
 
+    /**
+     *
+     * @param callback
+     */
     onClosed: function( callback ) {
         this.eventManager.on( 'onClosed', callback );
     },
 
+    /**
+     *
+     * @returns {{source: View}}
+     * @private
+     */
     _getScriptArgs: function() {
         return {
             source: this
@@ -290,10 +385,18 @@ _.extend( View.prototype, {
         return this.control.get( 'closeButtonVisibility' );
     },
 
+    /**
+     *
+     */
     noDataSourceOnView: function() {
         this._initDataSourceHandlers();
     },
 
+    /**
+     *
+     * @param memberName
+     * @param member
+     */
     registerMember: function( memberName, member ) {
         this.members[ memberName ] = member;
 
@@ -302,6 +405,11 @@ _.extend( View.prototype, {
         }
     },
 
+    /**
+     *
+     * @param memberName
+     * @returns {*}
+     */
     getDeferredOfMember: function( memberName ) {
         if( memberName === 'LocalStorageDS' ) {
             return $.Deferred().resolve( InfinniUI.localStorageDataSource );

@@ -59,6 +59,7 @@ Object.defineProperties( Collection.prototype, {
         },
         enumerable: false
     },
+
     /**
      * @type {function}
      */
@@ -68,6 +69,7 @@ Object.defineProperties( Collection.prototype, {
         },
         enumerable: false
     },
+
     /**
      * @type {number}
      */
@@ -77,6 +79,7 @@ Object.defineProperties( Collection.prototype, {
         },
         enumerable: false
     },
+
     /**
      * @type {boolean}
      */
@@ -238,7 +241,6 @@ Collection.prototype.reset = function( newItems ) {
     return changed;
 };
 
-
 /**
  * @description Заменяет элемент коллекции на указанный
  * @param {Array} newItems
@@ -393,7 +395,6 @@ Collection.prototype.removeAt = function( index ) {
     return true;
 };
 
-
 /**
  * @description Удаляет указанные элементы из коллекции
  * @param {Array} items
@@ -432,7 +433,6 @@ Collection.prototype.removeAll = function( items ) {
     return changed;
 };
 
-
 /**
  * @description Удаляет диапазон элементов из коллекции
  * @param {number} fromIndex
@@ -463,7 +463,6 @@ Collection.prototype.removeRange = function( fromIndex, count ) {
     }
     return changed;
 };
-
 
 /**
  * @description Удаляет все элементы из коллекции, удовлетворяющие указанному условию
@@ -498,7 +497,6 @@ Collection.prototype.removeEvery = function( predicate, thisArg ) {
     }
     return changed;
 };
-
 
 /**
  * @description Удаляет все элементы из коллекции
@@ -603,7 +601,6 @@ Collection.prototype.indexOf = function( item, fromIndex ) {
     return index;
 };
 
-
 /**
  * @description Возвращает индекс первого найденного элемента коллекции при поиске с конца
  * @param {*} item
@@ -679,7 +676,6 @@ Collection.prototype.contains = function( item, fromIndex ) {
     return found;
 };
 
-
 /**
  * @description Проверяет, что каждый элемент коллекции удовлетворяет указанному условию
  * @param {function} predicate
@@ -699,7 +695,6 @@ Collection.prototype.every = function( predicate, thisArg ) {
         return predicate.call( thisArg, itemValue, index, this );
     }, this );
 };
-
 
 /**
  * @description Проверяет, что некоторый элемент коллекции удовлетворяет указанному условию
@@ -863,31 +858,58 @@ Collection.prototype.clone = function() {
     return new this.constructor( this.toArray(), this._idProperty, this.comparator );
 };
 
-
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onAdd = function( handler ) {
     this.events.on( 'add', handler );
 };
 
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onReplace = function( handler ) {
     this.events.on( 'replace', handler );
 };
 
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onRemove = function( handler ) {
     this.events.on( 'remove', handler );
 };
 
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onMove = function( handler ) {
     this.events.on( 'move', handler );
 };
 
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onReset = function( handler ) {
     this.events.on( 'reset', handler );
 };
 
+/**
+ *
+ * @param handler
+ */
 Collection.prototype.onChange = function( handler ) {
     this.events.on( 'change', handler );
 };
 
+/**
+ *
+ * @returns {string}
+ */
 Collection.prototype.toString = function() {
     return this._items
         .map( function( item ) {
@@ -938,7 +960,7 @@ Collection.prototype.isEqual = function( value1, value2 ) {
  * @protected
  * @param {*} value
  * @param {number} [index]
- * @returns {CollectionItem}
+ * @returns {*}
  */
 Collection.prototype.createCollectionItem = function( value, index ) {
     var item = Object.create( null );
@@ -971,6 +993,11 @@ Collection.prototype.getCollectionItemValue = function( index ) {
     return this.getItemValue( item );
 };
 
+/**
+ *
+ * @param item
+ * @returns {*}
+ */
 Collection.prototype.getItemValue = function( item ) {
     if( item ) {
         return item.__value;

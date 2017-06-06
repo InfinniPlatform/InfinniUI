@@ -13,6 +13,10 @@ _.inherit( GridPanel, Container );
 
 _.extend( GridPanel.prototype, {
 
+    /**
+     *
+     * @returns {GridPanelControl}
+     */
     createControl: function() {
         return new GridPanelControl();
     }

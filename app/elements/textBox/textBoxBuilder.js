@@ -11,10 +11,19 @@ InfinniUI.TextBoxBuilder = TextBoxBuilder;
 
 _.inherit( TextBoxBuilder, TextEditorBaseBuilder );
 
+/**
+ *
+ * @param params
+ * @returns {TextBox}
+ */
 TextBoxBuilder.prototype.createElement = function( params ) {
     return new TextBox( params.parent );
 };
 
+/**
+ *
+ * @param params
+ */
 TextBoxBuilder.prototype.applyMetadata = function( params ) {
     TextEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 

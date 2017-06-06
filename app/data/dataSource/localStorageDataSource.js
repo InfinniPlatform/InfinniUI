@@ -1,5 +1,12 @@
+/**
+ * @constructor
+ * @augments ObjectDataSource
+ */
 var LocalStorageDataSource = ObjectDataSource.extend( {
 
+    /**
+     *
+     */
     initDataProvider: function() {
         var dataProvider = InfinniUI.providerRegister.build( 'LocalStorageDataSource' );
         this.set( 'dataProvider', dataProvider );

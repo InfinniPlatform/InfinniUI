@@ -1,3 +1,7 @@
+/**
+ *
+ * @constructor
+ */
 function ValidationResult() {
     this.IsValid = true;
     this.Items = [];
@@ -5,6 +9,11 @@ function ValidationResult() {
 
 _.extend( ValidationResult.prototype, {
 
+    /**
+     *
+     * @param message
+     * @param propertyName
+     */
     error: function( message, propertyName ) {
         if( this.IsValid ) {
             this.IsValid = false;

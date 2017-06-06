@@ -1,3 +1,9 @@
+/**
+ *
+ * @param parent
+ * @constructor
+ * @augments Element
+ */
 function ViewPanel( parent ) {
     _.superClass( ViewPanel, this, parent );
 }
@@ -8,6 +14,10 @@ _.inherit( ViewPanel, Element );
 
 _.extend( ViewPanel.prototype, {
 
+    /**
+     *
+     * @param layout
+     */
     setLayout: function( layout ) {
         var oldLayout = this.getLayout();
 
@@ -18,10 +28,17 @@ _.extend( ViewPanel.prototype, {
         this.control.set( 'layout', layout );
     },
 
+    /**
+     * @returns {*}
+     */
     getLayout: function() {
         return this.control.get( 'layout' );
     },
 
+    /**
+     *
+     * @returns {ViewPanelControl}
+     */
     createControl: function() {
         return new ViewPanelControl();
     }

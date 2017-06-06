@@ -3,6 +3,11 @@ function RouterService( myRoutes ) {
         return null;
     }
 
+    /**
+     *
+     * @param myRoutes
+     * @returns {*}
+     */
     var parseRouteForBackbone = function( myRoutes ) {
         var routerObj = {};
         routerObj.routes = {};
@@ -26,6 +31,12 @@ function RouterService( myRoutes ) {
         return routerObj;
     };
 
+    /**
+     *
+     * @param name
+     * @param originalPath
+     * @returns {*}
+     */
     var getLinkByName = function( name, originalPath ) {
         var original = originalPath || 'yes';
 
@@ -40,6 +51,12 @@ function RouterService( myRoutes ) {
         }
     };
 
+    /**
+     *
+     * @param name
+     * @param script
+     * @returns {Function}
+     */
     var onRouteSelectHandler = function( name, script ) {
         return function() {
             var params = {
@@ -56,9 +73,15 @@ function RouterService( myRoutes ) {
         };
     };
 
+    /**
+     *
+     * @type {*}
+     */
     var routerObj = parseRouteForBackbone( myRoutes );
 
-
+    /**
+     *
+     */
     var startRouter = function() {
         if( !InfinniUI.AppRouter ) {
             var Router = Backbone.Router.extend( routerObj );
@@ -71,14 +94,26 @@ function RouterService( myRoutes ) {
         }
     };
 
+    /**
+     *
+     * @param context
+     */
     var setContext = function( context ) {
         this._context = context;
     };
 
+    /**
+     *
+     * @param params
+     */
     var setParams = function( params ) {
         this._params = params;
     };
 
+    /**
+     *
+     * @param params
+     */
     var addParams = function( params ) {
         this._params = _.extend( this._params || {}, params );
     };

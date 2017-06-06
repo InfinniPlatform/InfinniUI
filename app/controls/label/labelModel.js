@@ -1,3 +1,8 @@
+/**
+ * @constructor
+ * @augments ControlModel
+ * @mixes editorBaseModelMixin
+ */
 var LabelModel = ControlModel.extend( _.extend( {
 
     defaults: _.defaults( {
@@ -8,6 +13,9 @@ var LabelModel = ControlModel.extend( _.extend( {
         focusable: false
     }, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();

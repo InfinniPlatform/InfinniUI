@@ -1,3 +1,8 @@
+/**
+ * @constructor
+ * @augments ControlModel
+ * @mixes editorBaseModelMixin
+ */
 var ToggleButtonModel = ControlModel.extend( _.extend( {
 
     defaults: _.defaults( {
@@ -7,6 +12,9 @@ var ToggleButtonModel = ControlModel.extend( _.extend( {
         horizontalAlignment: 'Left'
     }, ControlModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, arguments );
         this.initialize_editorBaseModel();

@@ -10,24 +10,43 @@ function HashMap() {
 InfinniUI.HashMap = HashMap;
 
 Object.defineProperties( HashMap.prototype, {
+
     length: {
+        /**
+         *
+         * @returns {Number}
+         */
         get: function() {
             return this._keys.length;
         }
     },
+
     keys: {
+        /**
+         *
+         * @returns {Array}
+         */
         get: function() {
             return this._keys;
         }
     },
 
     values: {
+        /**
+         *
+         * @returns {Array|*}
+         */
         get: function() {
             return this._values;
         }
     }
 } );
 
+/**
+ *
+ * @param key
+ * @param value
+ */
 HashMap.prototype.add = function( key, value ) {
     var i = this._getIndexOfKey( key );
 
@@ -39,6 +58,10 @@ HashMap.prototype.add = function( key, value ) {
     }
 };
 
+/**
+ *
+ * @param key
+ */
 HashMap.prototype.remove = function( key ) {
     var i = this._getIndexOfKey( key );
 
@@ -48,6 +71,11 @@ HashMap.prototype.remove = function( key ) {
     }
 };
 
+/**
+ *
+ * @param value
+ * @returns {*}
+ */
 HashMap.prototype.getKeyByValue = function( value ) {
     var key,
         i = this._getIndexOfValue( value );
@@ -78,6 +106,11 @@ HashMap.prototype.findIndex = function( predicate, thisArg ) {
     return index;
 };
 
+/**
+ *
+ * @param key
+ * @returns {*}
+ */
 HashMap.prototype.get = function( key ) {
     var value,
         i = this._getIndexOfKey( key );
@@ -89,12 +122,21 @@ HashMap.prototype.get = function( key ) {
     return value;
 };
 
+/**
+ *
+ * @param callback
+ * @param thisArg
+ */
 HashMap.prototype.forEach = function( callback, thisArg ) {
     this._keys.forEach( function( key, index ) {
         callback.call( thisArg, this._values[ index ], key, index );
     }, this );
 };
 
+/**
+ *
+ * @param callback
+ */
 HashMap.prototype.clear = function( callback ) {
     if ( typeof callback === 'function' ) {
         this.forEach( callback );

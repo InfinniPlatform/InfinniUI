@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{toISO8601, dateToTimestamp, dateToTimestampTime, changeTimezoneOffset, restoreTimezoneOffset, toDate, createDate, parseTimeISO8601toDate, parseISO8601toDate, checkRangeDate, getNearestDate, cloneDate, getDefaultTimeZone}}
+ */
 InfinniUI.DateUtils = ( function() {
     init();
 
@@ -19,6 +23,11 @@ InfinniUI.DateUtils = ( function() {
         getDefaultTimeZone: getDefaultTimezone
     };
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     function parseISO8601toDate( value ) {
         if( value === null || typeof value === 'undefined' ) {
             return value;
@@ -26,6 +35,11 @@ InfinniUI.DateUtils = ( function() {
         return moment( value ).toDate();
     }
 
+    /**
+     *
+     * @param date
+     * @returns {*}
+     */
     function cloneDate( date ) {
         if( date instanceof Date ) {
             return new Date( date.getTime() );
@@ -82,6 +96,11 @@ InfinniUI.DateUtils = ( function() {
         return success;
     }
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     function parseTimeISO8601toDate( value ) {
         var date;
         var formats = [ 'HH:mm', 'HH:mm:ss', 'HH:mm:ss.SSS', 'HHmm', 'HHmmss', 'HHmmss.SSS' ];
@@ -95,6 +114,11 @@ InfinniUI.DateUtils = ( function() {
         return date;
     }
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     function toDate( value ) {
         var m = moment( value );
         var date = null;
@@ -106,6 +130,12 @@ InfinniUI.DateUtils = ( function() {
         return date;
     }
 
+    /**
+     *
+     * @param date
+     * @param timezoneOffset
+     * @returns {*}
+     */
     function changeTimezoneOffset( date, timezoneOffset ) {
         var newDate = date;
 
@@ -120,6 +150,12 @@ InfinniUI.DateUtils = ( function() {
         return newDate;
     }
 
+    /**
+     *
+     * @param date
+     * @param timezoneOffset
+     * @returns {*}
+     */
     function restoreTimezoneOffset( date, timezoneOffset ) {
         var newDate = date;
 
@@ -204,6 +240,11 @@ InfinniUI.DateUtils = ( function() {
         return datetime;
     }
 
+    /**
+     *
+     * @param date
+     * @returns {*}
+     */
     function dateToTimestampTime( date ) {
         var time = null, _date, datetime;
 
@@ -222,6 +263,11 @@ InfinniUI.DateUtils = ( function() {
         return time;
     }
 
+    /**
+     *
+     * @param d
+     * @returns {*}
+     */
     function createDate( d ) {
         var date;
 
@@ -239,10 +285,20 @@ InfinniUI.DateUtils = ( function() {
         return date;
     }
 
+    /**
+     *
+     * @returns {*}
+     */
     function getDefaultTimezone() {
         return _defaultTimeZone;
     }
 
+    /**
+     *
+     * @param value
+     * @param size
+     * @returns {string}
+     */
     function padInt( value, size ) {
         var str = '' + value;
         var pad = '';
@@ -253,6 +309,9 @@ InfinniUI.DateUtils = ( function() {
         return pad + str;
     }
 
+    /**
+     *
+     */
     function init() {
         var date = new Date();
         _defaultTimeZone = date.getTimezoneOffset();

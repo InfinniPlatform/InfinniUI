@@ -1,6 +1,7 @@
 /**
- * @class
+ *
  * @arguments ControlView
+ * @constructor
  */
 var DividerView = ControlView.extend( {
 
@@ -8,10 +9,18 @@ var DividerView = ControlView.extend( {
 
     className: 'pl-divider',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ControlView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {DividerView}
+     */
     render: function() {
         this.prerenderingActions();
 

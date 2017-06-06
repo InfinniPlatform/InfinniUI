@@ -1,6 +1,11 @@
 InfinniUI = InfinniUI || {};
 InfinniUI.format = InfinniUI.format || {};
 
+/**
+ *
+ * @param size
+ * @returns {string}
+ */
 InfinniUI.format.humanFileSize = function( size ) {
     /**
      * @see {@link http://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable}

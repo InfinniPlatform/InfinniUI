@@ -4,6 +4,9 @@
  */
 var PanelModel = ContainerModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.on( 'change:collapsed', function( model, value ) {
@@ -17,6 +20,13 @@ var PanelModel = ContainerModel.extend( {
         collapseChanger: ''
     }, ContainerModel.prototype.defaults ),
 
+    /**
+     *
+     * @param key
+     * @param val
+     * @param options
+     * @returns {*}
+     */
     set: function( key, val, options ) {
         if( key === null || typeof key === 'undefined' ) return this;
 
@@ -56,8 +66,14 @@ var PanelModel = ContainerModel.extend( {
         return ContainerModel.prototype.set.call( this, attrs, options );
     },
 
-    //@TODO Add support an event map syntax
+    /**
+     *
+     * @param name
+     * @param callback
+     * @param context
+     */
     on: function( name, callback, context ) {
+        //@TODO Add support an event map syntax
         var handler;
         var model = this;
 

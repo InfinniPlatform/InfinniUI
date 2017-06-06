@@ -1,5 +1,5 @@
 /**
- * @class LabelView
+ * @constructor
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
@@ -13,10 +13,16 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         control: '.label-control'
     } ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
@@ -26,6 +32,9 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.listenTo( this.model, 'change:textTrimming', this.updateTextTrimming );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
@@ -35,6 +44,9 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.updateTextTrimming();
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -45,6 +57,9 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         }
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var escapeHtml = this.model.get( 'escapeHtml' );
         var setContent = escapeHtml ? 'text' : 'html';
@@ -56,24 +71,39 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         $label.attr( 'title', title.replace( /<\/?[^>]+>/g, '' ) ); //strip html tags
     },
 
+    /**
+     *
+     */
     updateDisplayFormat: function() {
         this.updateValue();
     },
 
+    /**
+     *
+     */
     updateTextWrapping: function() {
         var textWrapping = this.model.get( 'textWrapping' );
         this.getLabelElement().toggleClass( 'pl-text-wrapping', textWrapping );
     },
 
+    /**
+     *
+     */
     updateTextTrimming: function() {
         var textTrimming = this.model.get( 'textTrimming' );
         this.getLabelElement().toggleClass( 'pl-text-trimming', textTrimming );
     },
 
+    /**
+     *
+     */
     updateText: function() {
         this.updateValue();
     },
 
+    /**
+     * @returns {*}
+     */
     getData: function() {
         return _.extend(
             {},
@@ -85,6 +115,10 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         );
     },
 
+    /**
+     *
+     * @returns {CommonLabelView}
+     */
     render: function() {
         this.prerenderingActions();
         this.renderTemplate( this.template );
@@ -99,6 +133,10 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         return this;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getLabelText: function() {
         var model = this.model;
         var value = model.get( 'value' );
@@ -117,6 +155,9 @@ var CommonLabelView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         return text;
     },
 
+    /**
+     * @returns {*}
+     */
     getLabelElement: function() {
         return this.ui.control;
     }

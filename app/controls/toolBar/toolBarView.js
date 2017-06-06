@@ -14,6 +14,10 @@ var ToolBarView = ContainerView.extend( {
         container: '.pl-tool-bar__container'
     },
 
+    /**
+     *
+     * @return {ToolBarView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -29,6 +33,10 @@ var ToolBarView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @return {Array}
+     */
     renderItems: function() {
         var model = this.model;
         var items = model.get( 'items' );
@@ -54,6 +62,9 @@ var ToolBarView = ContainerView.extend( {
         return $elements;
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

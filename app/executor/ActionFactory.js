@@ -1,3 +1,11 @@
+/**
+ *
+ * @param actionMetadata
+ * @param builder
+ * @param builderParams
+ * @returns {{get: get}}
+ * @constructor
+ */
 function ActionFactory( actionMetadata, builder, builderParams ) {
     return {
         get: get

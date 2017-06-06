@@ -1,5 +1,12 @@
+/**
+ * @mixin
+ * @type {{applyAutoFocus: openModeAutoFocusMixin.applyAutoFocus}}
+ */
 var openModeAutoFocusMixin = {
 
+    /**
+     *
+     */
     applyAutoFocus: function() {
         var view = this.view;
         var focusOnControl = view && view.getFocusOnControl();

@@ -12,6 +12,10 @@ InfinniUI.ToolBar = ToolBar;
 
 _.inherit( ToolBar, Container );
 
+/**
+ *
+ * @returns {ToolBarControl}
+ */
 ToolBar.prototype.createControl = function() {
     return new ToolBarControl();
 };

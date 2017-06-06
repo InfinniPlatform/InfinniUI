@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments ListEditorBaseView
+ */
 var BaseListBoxView = ListEditorBaseView.extend( {
 
     template: {
@@ -16,11 +20,18 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         checkingInputs: '.pl-listbox-input input'
     }, ListEditorBaseView.prototype.UI ),
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         //@TODO Реализовать обработку значений по умолчанию!
         ListEditorBaseView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
         var groupValueSelector = this.model.get( 'groupValueSelector' );
         var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
@@ -32,6 +43,9 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         this.ui.items.removeClass( 'pl-listbox-i-chosen' );
         this.ui.checkingInputs.prop( 'checked', false );
@@ -56,6 +70,10 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param ignoreWasRendered
+     */
     updateSelectedItem: function( ignoreWasRendered ) {
         if( !this.wasRendered && ignoreWasRendered != true ) {
             return;
@@ -71,6 +89,10 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {BaseListBoxView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -95,30 +117,51 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     * @returns {*}
+     */
     getItems: function() {
         return this.model.get( 'items' );
     },
 
+    /**
+     * @returns {*}
+     */
     getItemTemplate: function() {
         return this.model.get( 'itemTemplate' );
     },
 
+    /**
+     * @returns {*}
+     */
     getGroupValueSelector: function() {
         return this.model.get( 'groupValueSelector' );
     },
 
+    /**
+     * @returns {*}
+     */
     isMultiselect: function() {
         return this.model.get( 'multiSelect' );
     },
 
+    /**
+     * @returns {*}
+     */
     isFocusable: function() {
         return this.model.get( 'focusable' );
     },
 
+    /**
+     * @returns {*}
+     */
     getGroupItemTemplate: function() {
         return this.model.get( 'groupItemTemplate' );
     },
 
+    /**
+     *
+     */
     onChangeHandler: function() {
         var $checked = this.ui.checkingInputs.filter( ':checked' ).parent().parent();
         var valueForModel = null;
@@ -142,6 +185,9 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         this.model.set( 'value', valueForModel );
     },
 
+    /**
+     *
+     */
     updateDisabledItem: function() {
         var model = this.model;
         var enabled = model.get( 'enabled' );
@@ -176,6 +222,12 @@ var BaseListBoxView = ListEditorBaseView.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     * @returns {jQuery|HTMLElement}
+     * @private
+     */
     _getElementByItem: function( item ) {
         var element = _.find( this.ui.items, function( listboxItem ) {
             return $( listboxItem ).data( 'pl-data-item' ) == item;

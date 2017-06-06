@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments TextEditorBaseModel
  */
 var TextBoxModel = TextEditorBaseModel.extend( {
@@ -13,6 +13,9 @@ var TextBoxModel = TextEditorBaseModel.extend( {
         }
     ),
 
+    /**
+     *
+     */
     initialize: function() {
         TextEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     }

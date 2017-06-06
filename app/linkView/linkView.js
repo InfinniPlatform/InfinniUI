@@ -1,3 +1,8 @@
+/**
+ *
+ * @param parent
+ * @constructor
+ */
 function LinkView( parent ) {
     this.openMode = 'Default';
     this.parent = parent;
@@ -11,23 +16,43 @@ InfinniUI.LinkView = LinkView;
 
 _.extend( LinkView.prototype, {
 
+    /**
+     *
+     * @param mode
+     */
     setOpenMode: function( mode ) {
         if( _.isEmpty( mode ) ) return;
         this.openMode = mode;
     },
 
+    /**
+     *
+     * @returns {string|*}
+     */
     getOpenMode: function() {
         return this.openMode;
     },
 
+    /**
+     *
+     * @param containerName
+     */
     setContainer: function( containerName ) {
         this.containerName = containerName;
     },
 
+    /**
+     *
+     * @param viewTemplate
+     */
     setViewTemplate: function( viewTemplate ) {
         this.viewTemplate = viewTemplate;
     },
 
+    /**
+     *
+     * @param dialogWidth
+     */
     setDialogWidth: function( dialogWidth ) {
         dialogWidth = dialogWidth.toLowerCase();
         if( dialogWidth == 'extralarge' ) {
@@ -36,6 +61,10 @@ _.extend( LinkView.prototype, {
         this.dialogWidth = dialogWidth;
     },
 
+    /**
+     *
+     * @param resultCallback
+     */
     createView: function( resultCallback ) {
         var that = this;
 
@@ -49,6 +78,11 @@ _.extend( LinkView.prototype, {
         }
     },
 
+    /**
+     *
+     * @param view
+     * @private
+     */
     _initViewHandler: function( view ) {
         var that = this;
         var openMode = that.openMode;

@@ -1,15 +1,23 @@
 /**
- * @class
+ * @constructor
  * @augments ControlView
  */
 var TablePanelView = ContainerView.extend( {
 
     className: 'pl-table-panel',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {TablePanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -26,6 +34,9 @@ var TablePanelView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var items = this.model.get( 'items' );
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -40,6 +51,9 @@ var TablePanelView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

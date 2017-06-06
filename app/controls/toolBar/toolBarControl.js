@@ -12,10 +12,17 @@ _.inherit( ToolBarControl, ContainerControl );
 
 _.extend( ToolBarControl.prototype, {
 
+    /**
+     * @returns {ToolBarModel}
+     */
     createControlModel: function() {
         return new ToolBarModel();
     },
 
+    /**
+     * @returns {ToolBarView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new ToolBarView( { model: model } );
     }

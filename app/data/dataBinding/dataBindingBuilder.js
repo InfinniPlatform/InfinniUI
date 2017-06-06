@@ -1,7 +1,16 @@
+/**
+ *
+ * @constructor
+ */
 var DataBindingBuilder = function() {};
 
 InfinniUI.DataBindingBuilder = DataBindingBuilder;
 
+/**
+ *
+ * @param context
+ * @param args
+ */
 DataBindingBuilder.prototype.build = function( context, args ) {
     var result = new DataBinding();
     var metadata = args.metadata;
@@ -53,10 +62,21 @@ DataBindingBuilder.prototype.build = function( context, args ) {
     return result;
 };
 
+/**
+ *
+ * @param value
+ * @returns {boolean}
+ */
 DataBindingBuilder.prototype.isScriptBody = function( value ) {
     return value && value.substr( 0, 1 ) == '{';
 };
 
+/**
+ *
+ * @param nameOrBody
+ * @param context
+ * @returns {*}
+ */
 DataBindingBuilder.prototype.scriptByNameOrBody = function( nameOrBody, context ) {
     if( this.isScriptBody( nameOrBody ) ) {
         var scriptExecutor = new ScriptExecutor( context.view );

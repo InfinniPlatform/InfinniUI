@@ -6,6 +6,12 @@ if ( !String.prototype.includes ) {
 
 var stringUtils = {
 
+    /**
+     *
+     * @param value
+     * @param args
+     * @returns {boolean|void|string|XML|*}
+     */
     format: function( value, args ) {
         return value.replace( /{(\d+)}/g, function( match, number ) {
             return typeof args[ number ] !== 'undefined'
@@ -15,6 +21,12 @@ var stringUtils = {
         } );
     },
 
+    /**
+     *
+     * @param property
+     * @param indexes
+     * @returns {*}
+     */
     formatProperty: function( property, indexes ) {
         if( !indexes || indexes.length == 0 || property == '' ) {
             return property;
@@ -36,6 +48,13 @@ var stringUtils = {
         return propertyPaths.join( '.' );
     },
 
+    /**
+     *
+     * @param value
+     * @param len
+     * @param char
+     * @returns {string}
+     */
     padLeft: function a( value, len, char ) {
         if ( typeof char === 'undefined' || char === null ) {
             char = ' ';
@@ -49,6 +68,11 @@ var stringUtils = {
         return str;
     },
 
+    /**
+     *
+     * @param n
+     * @returns {boolean}
+     */
     isNumeric: function( n ) {
         return !isNaN( parseFloat( n ) ) && isFinite( n );
     },
@@ -57,6 +81,11 @@ var stringUtils = {
         '+': '%2B'
     },
 
+    /**
+     *
+     * @param data
+     * @returns {string}
+     */
     joinDataForQuery: function( data ) {
         var result = [];
         var that = this;
@@ -76,6 +105,10 @@ var stringUtils = {
 InfinniUI.stringUtils = stringUtils;
 InfinniUI.guid = guid;
 
+/**
+ *
+ * @returns {string}
+ */
 function guid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace( /[xy]/g, function( c ) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : ( r & 0x3 | 0x8 );

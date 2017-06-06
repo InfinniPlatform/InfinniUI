@@ -12,10 +12,17 @@ _.inherit( ScrollPanelControl, ContainerControl );
 
 _.extend( ScrollPanelControl.prototype, {
 
+    /**
+     * @returns {ScrollPanelModel}
+     */
     createControlModel: function() {
         return new ScrollPanelModel();
     },
 
+    /**
+     * @returns {ScrollPanelView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new ScrollPanelView( { model: model } );
     }

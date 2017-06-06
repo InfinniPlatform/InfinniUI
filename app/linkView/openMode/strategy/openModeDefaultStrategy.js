@@ -1,12 +1,23 @@
+/**
+ * @mixes openModeAutoFocusMixin
+ * @constructor
+ */
 var OpenModeDefaultStrategy = function() {
 };
 
 _.extend( OpenModeDefaultStrategy.prototype, {
 
+    /**
+     *
+     * @param view
+     */
     setView: function( view ) {
         this.view = view;
     },
 
+    /**
+     *
+     */
     open: function() {
         var $container = InfinniUI.config.$rootContainer || $( 'body' );
         var oldView = $container.data( 'view' );
@@ -22,6 +33,9 @@ _.extend( OpenModeDefaultStrategy.prototype, {
         this.applyAutoFocus();
     },
 
+    /**
+     *
+     */
     close: function() {
         this.view.remove();
     }

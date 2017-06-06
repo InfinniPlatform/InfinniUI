@@ -1,9 +1,13 @@
 /**
- * @class
+ *
  * @arguments ControlModel
+ * @constructor
  */
-var DividerModel = ControlModel.extend( /** @lends DividerModel.prototype */{
+var DividerModel = ControlModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         ControlModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     }

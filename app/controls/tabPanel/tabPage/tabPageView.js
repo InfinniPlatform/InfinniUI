@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var TabPageView = ContainerView.extend( {
 
@@ -11,16 +11,26 @@ var TabPageView = ContainerView.extend( {
     UI: {
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ContainerView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:selected', this.updateSelected );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
         this.updateSelected();
     },
 
+    /**
+     *
+     * @returns {TabPageView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -43,6 +53,9 @@ var TabPageView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var $items = this.$el.find( '.pl-tabpage-i' );
         var items = this.model.get( 'items' );
@@ -59,6 +72,9 @@ var TabPageView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateSelected: function() {
         var selected = this.model.get( 'selected' );
         this.$el.toggleClass( 'hidden', !selected );

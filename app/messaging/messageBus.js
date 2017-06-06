@@ -1,6 +1,16 @@
+/**
+ *
+ * @param view
+ * @constructor
+ */
 function MessageBus( view ) {
     var subscriptions = {};
 
+    /**
+     *
+     * @param messageType
+     * @param messageBody
+     */
     this.send = function( messageType, messageBody ) {
         messageType = patchMessageType( messageType );
         if( subscriptions[ messageType ] ) {
@@ -14,6 +24,11 @@ function MessageBus( view ) {
         }
     };
 
+    /**
+     *
+     * @param messageType
+     * @param messageHandler
+     */
     this.subscribe = function( messageType, messageHandler ) {
         messageType = patchMessageType( messageType );
         if( !subscriptions[ messageType ] ) {
@@ -23,6 +38,10 @@ function MessageBus( view ) {
         subscriptions[ messageType ].push( messageHandler );
     };
 
+    /**
+     *
+     * @param messageType
+     */
     this.unsubscribeByType = function( messageType ) {
         messageType = patchMessageType( messageType );
         if( subscriptions[ messageType ] ) {
@@ -30,6 +49,10 @@ function MessageBus( view ) {
         }
     };
 
+    /**
+     *
+     * @returns {*}
+     */
     this.getView = function() {
         return view;
     };

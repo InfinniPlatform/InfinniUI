@@ -7,6 +7,12 @@ var exifRotate = {
         8: 'rotate(270deg)'
     },
 
+    /**
+     *
+     * @param buffer
+     * @returns {string}
+     * @private
+     */
     _arrayBufferToBase64: function( buffer ) {
         var binary = '';
         var bytes = new Uint8Array( buffer );
@@ -17,6 +23,11 @@ var exifRotate = {
         return window.btoa( binary );
     },
 
+    /**
+     *
+     * @param file
+     * @param callback
+     */
     orientation: function( file, callback ) {
         var that = this;
         var fileReader = new FileReader();

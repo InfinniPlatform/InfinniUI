@@ -7,6 +7,12 @@ var ElementBuilder = function() {
 
 _.extend( ElementBuilder.prototype, {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {*}
+     */
     build: function( context, args ) {
         args = args || {};
         var element = this.createElement( args );
@@ -146,6 +152,13 @@ _.extend( ElementBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @param propertyName
+     * @param isBooleanBinding
+     * @returns {*}
+     */
     initBindingToProperty: function( params, propertyName, isBooleanBinding ) {
         var metadata = params.metadata;
         var propertyMetadata = metadata[ propertyName ];
@@ -197,6 +210,11 @@ _.extend( ElementBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @param propertyName
+     */
     resolveExpressionInText: function( params, propertyName ) {
         var valueToResolve = params.metadata[ propertyName ];
 
@@ -219,6 +237,10 @@ _.extend( ElementBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     */
     initToolTip: function( params ) {
         var builder = params.builder;
         var element = params.element;
@@ -232,6 +254,10 @@ _.extend( ElementBuilder.prototype, {
         element.setToolTip( builder.buildType( 'ToolTip', metadata[ 'ToolTip' ], tooltipBuilderParams ) );
     },
 
+    /**
+     *
+     * @param params
+     */
     initContextMenu: function( params ) {
         var exchange = InfinniUI.global.messageBus;
         var builder = params.builder;
@@ -252,6 +278,11 @@ _.extend( ElementBuilder.prototype, {
         exchange.send( messageTypes.onContextMenu.name, { source: element, content: contextMenu.render() } );
     },
 
+    /**
+     *
+     * @param s
+     * @returns {string}
+     */
     lowerFirstSymbol: function( s ) {
         return s[ 0 ].toLowerCase() + s.substr( 1 );
     }

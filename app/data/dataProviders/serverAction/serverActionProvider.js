@@ -1,8 +1,19 @@
+/**
+ *
+ * @constructor
+ */
 var ServerActionProvider = function() {
 };
 
+/**
+ *
+ * @param requestData
+ * @param resultCallback
+ * @param onSuccess
+ * @param onError
+ * @returns {number}
+ */
 ServerActionProvider.prototype.request = function( requestData, resultCallback, onSuccess, onError ) {
-    var that = this;
     var requestId = Math.round( ( Math.random() * 100000 ) );
 
     $.ajax( {
@@ -46,6 +57,13 @@ ServerActionProvider.prototype.request = function( requestData, resultCallback, 
     return requestId;
 };
 
+/**
+ *
+ * @param requestData
+ * @param resultCallback
+ * @param onSuccess
+ * @param onError
+ */
 ServerActionProvider.prototype.download = function( requestData, resultCallback, onSuccess, onError ) {
     new DownloadExecutor( resultCallback, onSuccess, onError )
         .run( requestData );

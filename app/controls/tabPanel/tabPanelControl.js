@@ -12,6 +12,10 @@ _.inherit( TabPanelControl, ContainerControl );
 
 _.extend( TabPanelControl.prototype, {
 
+    /**
+     *
+     * @param value
+     */
     setSelectedItem: function( value ) {
         /**
          * @TODO Отрефакторить! Временное решение т.к. коллекция model.items содержит не экземпляры страниц а метаданные! см. templating в Container
@@ -32,10 +36,17 @@ _.extend( TabPanelControl.prototype, {
         }
     },
 
+    /**
+     * @returns {TabPanelModel}
+     */
     createControlModel: function() {
         return new TabPanelModel();
     },
 
+    /**
+     * @returns {TabPanelView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new TabPanelView( { model: model } );
     }

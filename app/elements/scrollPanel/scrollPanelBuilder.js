@@ -12,6 +12,11 @@ _.inherit( ScrollPanelBuilder, ContainerBuilder );
 
 _.extend( ScrollPanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {ScrollPanel}
+     */
     createElement: function( params ) {
         return new ScrollPanel( params.parent );
     },
@@ -20,6 +25,7 @@ _.extend( ScrollPanelBuilder.prototype, {
      * @param {Object} params
      * @param {Panel} params.element
      * @param {Object} params.metadata
+     * @returns {*}
      */
     applyMetadata: function( params ) {
         var metadata = params.metadata;

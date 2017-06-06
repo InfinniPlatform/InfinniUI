@@ -1,3 +1,8 @@
+/**
+ *
+ * @param stackPanel
+ * @constructor
+ */
 function StackPanelViewGroupStrategy( stackPanel ) {
     this.stackPanel = stackPanel;
 }
@@ -6,6 +11,10 @@ _.extend( StackPanelViewGroupStrategy.prototype, {
 
     groupTemplate: InfinniUI.Template[ 'controls/stackPanel/baseView/template/stackPanelGroup.tpl.html' ],
 
+    /**
+     *
+     * @returns {{inputName: string, groups: Array}}
+     */
     prepareItemsForRendering: function() {
         var items = this.stackPanel.getItems();
         var inputName = 'listbox-' + guid();
@@ -41,6 +50,10 @@ _.extend( StackPanelViewGroupStrategy.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.stackPanel.template.grouped;
     },

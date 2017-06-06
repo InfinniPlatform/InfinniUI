@@ -1,5 +1,12 @@
+/**
+ *
+ * @mixin
+ */
 var editorBaseBuilderMixin = {
 
+    /**
+     *
+     */
     initialize_editorBaseBuilder: function() {
     },
 

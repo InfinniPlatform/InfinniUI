@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments ControlView
  */
 var StackPanelView = ContainerView.extend( {
@@ -17,12 +17,19 @@ var StackPanelView = ContainerView.extend( {
         items: '.stackpanel-items'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
 
         this.initOrientation();
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
         var groupValueSelector = this.model.get( 'groupValueSelector' );
         var isGrouped = groupValueSelector !== null && typeof groupValueSelector !== 'undefined';
@@ -34,6 +41,10 @@ var StackPanelView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {StackPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -57,29 +68,47 @@ var StackPanelView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     initOrientation: function() {
         this.listenTo( this.model, 'change:orientation', this.updateOrientation );
         this.updateOrientation();
     },
 
+    /**
+     *
+     */
     updateOrientation: function() {
         var orientation = this.model.get( 'orientation' );
         this.$el.toggleClass( 'horizontal-orientation', orientation == 'Horizontal' );
         this.$el.toggleClass( 'pl-stack-panel_horizontal', orientation == 'Horizontal' );
     },
 
+    /**
+     * @returns {*}
+     */
     getItems: function() {
         return this.model.get( 'items' );
     },
 
+    /**
+     * @returns {*}
+     */
     getItemTemplate: function() {
         return this.model.get( 'itemTemplate' );
     },
 
+    /**
+     * @returns {*}
+     */
     getGroupValueSelector: function() {
         return this.model.get( 'groupValueSelector' );
     },
 
+    /**
+     * @returns {*}
+     */
     getGroupItemTemplate: function() {
         return this.model.get( 'groupItemTemplate' );
     }

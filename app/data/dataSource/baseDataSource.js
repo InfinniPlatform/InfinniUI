@@ -47,6 +47,9 @@ var BaseDataSource = Backbone.Model.extend( {
 
     },
 
+    /**
+     *
+     */
     initialize: function() {
         var view = this.get( 'view' );
         var modelStartTree = {
@@ -66,26 +69,50 @@ var BaseDataSource = Backbone.Model.extend( {
         _.extend( this, BaseDataSource.identifyingStrategy.byId );
     },
 
+    /**
+     *
+     */
     initDataProvider: function() {
         throw new Error( 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.' );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getSearch: function() {
         return this.get( 'model' ).getProperty( 'search' );
     },
 
+    /**
+     *
+     * @param searchStr
+     */
     setSearch: function( searchStr ) {
         this.get( 'model' ).setProperty( 'search', searchStr );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getFilter: function() {
         return this.get( 'model' ).getProperty( 'filter' );
     },
 
+    /**
+     *
+     * @param filter
+     */
     setFilter: function( filter ) {
         this.get( 'model' ).setProperty( 'filter', filter );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @returns {*}
+     */
     getFilterParams: function( propertyName ) {
         if( arguments.length === 0 ) {
             propertyName = 'filterParams';
@@ -100,6 +127,11 @@ var BaseDataSource = Backbone.Model.extend( {
         return this.get( 'model' ).getProperty( propertyName );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param value
+     */
     setFilterParams: function( propertyName, value ) {
         if( arguments.length === 1 ) {
             value = propertyName;
@@ -115,6 +147,13 @@ var BaseDataSource = Backbone.Model.extend( {
         this.get( 'model' ).setProperty( propertyName, value );
     },
 
+    /**
+     *
+     * @param property
+     * @param handler
+     * @param owner
+     * @returns {*}
+     */
     onPropertyChanged: function( property, handler, owner ) {
         if( typeof property === 'function' ) {
             owner = handler;
@@ -149,6 +188,11 @@ var BaseDataSource = Backbone.Model.extend( {
         }, owner );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param bindId
+     */
     offPropertyChanged: function( propertyName, bindId ) {
 
         if( propertyName.charAt( 0 ) === '.' ) {
@@ -164,11 +208,19 @@ var BaseDataSource = Backbone.Model.extend( {
         this.get( 'model' ).offPropertyChanged( propertyName, bindId );
     },
 
+    /**
+     *
+     */
     remove: function() {
         this.off();
         this.clear();
     },
 
+    /**
+     *
+     * @param handler
+     * @param owner
+     */
     onSelectedItemChanged: function( handler, owner ) {
         var that = this;
 
@@ -180,33 +232,67 @@ var BaseDataSource = Backbone.Model.extend( {
         }, owner );
     },
 
+    /**
+     *
+     * @param handler
+     * @param subscriptionContext
+     */
     onErrorValidator: function( handler, subscriptionContext ) {
         this.on( 'onErrorValidator', handler, subscriptionContext );
     },
 
+    /**
+     *
+     * @param subscriptionContext
+     */
     offErrorValidator: function( subscriptionContext ) {
         this.off( null, null, subscriptionContext );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onItemSaved: function( handler ) {
         this.on( 'onItemSaved', handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onItemCreated: function( handler ) {
         this.on( 'onItemCreated', handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onItemsUpdated: function( handler ) {
         this.on( 'onItemsUpdated', handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onItemsUpdatedOnce: function( handler ) {
         this.once( 'onItemsUpdated', handler );
     },
+
+    /**
+     *
+     * @param handler
+     */
     onItemDeleted: function( handler ) {
         this.on( 'onItemDeleted', handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onProviderError: function( handler ) {
         this.off( 'onProviderError' );
         this.on( 'onProviderError', handler );
@@ -214,19 +300,36 @@ var BaseDataSource = Backbone.Model.extend( {
         this.onProviderErrorHandler = handler;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getName: function() {
         return this.get( 'name' );
     },
 
+    /**
+     *
+     * @param name
+     */
     setName: function( name ) {
         this.set( 'name', name );
         this.name = name;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getView: function() {
         return this.get( 'view' );
     },
 
+    /**
+     *
+     * @param property
+     * @returns {*}
+     */
     getProperty: function( property ) {
         var firstChar = property.charAt( 0 );
         var indexOfSelectedItem;
@@ -254,6 +357,11 @@ var BaseDataSource = Backbone.Model.extend( {
         return this.get( 'model' ).getProperty( property );
     },
 
+    /**
+     *
+     * @param property
+     * @param value
+     */
     setProperty: function( property, value ) {
         var propertyPaths = property.split( '.' );
         var firstChar;
@@ -316,6 +424,11 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param items
+     * @private
+     */
     _setItems: function( items ) {
         this._detectIdentifyingMode( items );
 
@@ -337,6 +450,10 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @private
+     */
     _restoreSelectedItem: function() {
         // override by strategy
         var logger = InfinniUI.global.logger;
@@ -346,10 +463,20 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getSelectedItem: function() {
         return this.get( 'model' ).getProperty( 'selectedItem' );
     },
 
+    /**
+     *
+     * @param item
+     * @param success
+     * @param error
+     */
     setSelectedItem: function( item, success, error ) {
         // override by strategy
         var logger = InfinniUI.global.logger;
@@ -359,6 +486,12 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param item
+     * @param successHandler
+     * @private
+     */
     _notifyAboutSelectedItem: function( item, successHandler ) {
         var context = this.getContext();
         var argument = this._getArgumentTemplate();
@@ -370,6 +503,11 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param index
+     * @private
+     */
     _tuneMirroringOfModel: function( index ) {
         if( index != -1 ) {
             this.get( 'model' ).setMirroring( 'items.$', 'items.' + index );
@@ -378,22 +516,42 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getIdProperty: function() {
         return this.get( 'idProperty' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setIdProperty: function( value ) {
         this.set( 'idProperty', value );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getFillCreatedItem: function() {
         return this.get( 'fillCreatedItem' );
     },
 
+    /**
+     *
+     * @param fillCreatedItem
+     */
     setFillCreatedItem: function( fillCreatedItem ) {
         this.set( 'fillCreatedItem', fillCreatedItem );
     },
 
+    /**
+     *
+     * @param name
+     */
     suspendUpdate: function( name ) {
         var reason = name || 'default';
         var suspended = this.get( 'suspendingList' );
@@ -405,6 +563,10 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param name
+     */
     resumeUpdate: function( name ) {
         var reason = name || 'default';
         var suspended = this.get( 'suspendingList' );
@@ -425,15 +587,28 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {boolean}
+     */
     isUpdateSuspended: function() {
         var suspended = this.get( 'suspendingList' );
         return suspended.length > 0;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     isModifiedItems: function() {
         return this.isModified();
     },
 
+    /**
+     *
+     * @param item
+     * @returns {boolean}
+     */
     isModified: function( item ) {
         if( arguments.length === 0 ) {
             return _.size( this.get( 'modifiedItems' ) ) > 0;
@@ -448,6 +623,11 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param index
+     * @private
+     */
     _includeItemToModifiedSetByIndex: function( index ) {
         var item;
 
@@ -455,6 +635,11 @@ var BaseDataSource = Backbone.Model.extend( {
         this._includeItemToModifiedSet( item );
     },
 
+    /**
+     *
+     * @param item
+     * @private
+     */
     _includeItemToModifiedSet: function( item ) {
         // override by strategy
         var logger = InfinniUI.global.logger;
@@ -464,6 +649,11 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param item
+     * @private
+     */
     _excludeItemFromModifiedSet: function( item ) {
         // override by strategy
         var logger = InfinniUI.global.logger;
@@ -473,6 +663,10 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @private
+     */
     _clearModifiedSet: function() {
         this.set( 'modifiedItems', {} );
     },
@@ -497,6 +691,12 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param index
+     * @param value
+     * @private
+     */
     _changeItem: function( index, value ) {
         var item = this.get( 'model' ).getProperty( 'items.' + index );
         var isSelectedItem = ( item == this.getSelectedItem() );
@@ -521,12 +721,21 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     */
     tryInitData: function() {
         if( !this.get( 'isDataReady' ) && !this.get( 'isRequestInProcess' ) ) {
             this.updateItems();
         }
     },
 
+    /**
+     *
+     * @param item
+     * @param success
+     * @param error
+     */
     saveItem: function( item, success, error ) {
         var dataProvider = this.get( 'dataProvider' );
         var that = this;
@@ -565,6 +774,12 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     * @private
+     */
     _extractValidationResult: function( data ) {
         if( data.data && data.data.responseJSON && data.data.responseJSON[ 'Result' ] ) {
             return data.data.responseJSON[ 'Result' ][ 'ValidationResult' ];
@@ -573,12 +788,24 @@ var BaseDataSource = Backbone.Model.extend( {
         return data.data && data.data[ 'Result' ] && data.data[ 'Result' ][ 'ValidationResult' ];
     },
 
+    /**
+     *
+     * @param callback
+     * @param args
+     * @private
+     */
     _executeCallback: function( callback, args ) {
         if( callback ) {
             callback( this.getContext(), args );
         }
     },
 
+    /**
+     *
+     * @param data
+     * @param result
+     * @private
+     */
     _notifyAboutItemSaved: function( data, result ) {
         var context = this.getContext();
         var argument = this._getArgumentTemplate();
@@ -589,6 +816,12 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onItemSaved', context, argument );
     },
 
+    /**
+     *
+     * @param item
+     * @param success
+     * @param error
+     */
     deleteItem: function( item, success, error ) {
         var dataProvider = this.get( 'dataProvider' );
         var that = this;
@@ -621,6 +854,11 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param params
+     * @private
+     */
     _onServerErrorHandler: function( params ) {
         var validationResult = params.validationResult;
         var context = this.getContext();
@@ -632,9 +870,18 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param item
+     */
     beforeDeleteItem: function( item ) {
     },
 
+    /**
+     *
+     * @param item
+     * @private
+     */
     _handleDeletedItem: function( item ) {
         // override by strategy
         var logger = InfinniUI.global.logger;
@@ -644,6 +891,12 @@ var BaseDataSource = Backbone.Model.extend( {
         } );
     },
 
+    /**
+     *
+     * @param item
+     * @param successHandler
+     * @private
+     */
     _notifyAboutItemDeleted: function( item, successHandler ) {
         var context = this.getContext();
         var argument = this._getArgumentTemplate();
@@ -653,6 +906,12 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onItemDeleted', context, argument );
     },
 
+    /**
+     *
+     * @param item
+     * @param errorHandler
+     * @private
+     */
     _notifyAboutMissingDeletedItem: function( item, errorHandler ) {
         var context = this.getContext();
         var argument = this._getArgumentTemplate();
@@ -667,10 +926,18 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     isDataReady: function() {
         return this.get( 'isDataReady' );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getItems: function() {
         var logger = InfinniUI.global.logger;
 
@@ -684,6 +951,11 @@ var BaseDataSource = Backbone.Model.extend( {
         return this.get( 'model' ).getProperty( 'items' );
     },
 
+    /**
+     *
+     * @param onSuccess
+     * @param onError
+     */
     updateItems: function( onSuccess, onError ) {
         if( !this.isUpdateSuspended() ) {
             var dataProvider = this.get( 'dataProvider' );
@@ -713,6 +985,12 @@ var BaseDataSource = Backbone.Model.extend( {
         //devblockstop
     },
 
+    /**
+     *
+     * @param data
+     * @param callback
+     * @private
+     */
     _handleSuccessUpdateItemsInProvider: function( data, callback ) {
         var that = this;
         var isWaiting = that.get( 'isWaiting' );
@@ -730,6 +1008,12 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param data
+     * @param callback
+     * @private
+     */
     _onErrorProviderUpdateItemsHandle: function( data, callback ) {
         var handlers = this.get( 'waitingOnUpdateItemsHandlers' );
         var context = this.getContext();
@@ -748,10 +1032,20 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param value
+     */
     setIsWaiting: function( value ) {
         this.set( 'isWaiting', value );
     },
 
+    /**
+     *
+     * @param itemsData
+     * @param callback
+     * @private
+     */
     _handleUpdatedItemsData: function( itemsData, callback ) {
         if( this.get( 'newItemsHandler' ) ) {
             itemsData = this.get( 'newItemsHandler' )( itemsData );
@@ -761,6 +1055,12 @@ var BaseDataSource = Backbone.Model.extend( {
         this._notifyAboutItemsUpdated( itemsData, callback );
     },
 
+    /**
+     *
+     * @param itemsData
+     * @param callback
+     * @private
+     */
     _notifyAboutItemsUpdated: function( itemsData, callback ) {
         var context = this.getContext();
         var argument = {
@@ -786,6 +1086,11 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onItemsUpdated', context, argument );
     },
 
+    /**
+     *
+     * @param itemsData
+     * @private
+     */
     _notifyAboutItemsUpdatedAsPropertyChanged: function( itemsData ) {
         var context = this.getContext();
         var argument = this._getArgumentTemplate();
@@ -798,6 +1103,11 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onPropertyChanged:', context, argument );
     },
 
+    /**
+     *
+     * @param success
+     * @param error
+     */
     createItem: function( success, error ) {
         var dataProvider = this.get( 'dataProvider' );
         var idProperty = this.get( 'idProperty' );
@@ -817,6 +1127,12 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param itemData
+     * @param successHandler
+     * @private
+     */
     _handleDataForCreatingItem: function( itemData, successHandler ) {
         var items = this.getItems();
 
@@ -833,6 +1149,12 @@ var BaseDataSource = Backbone.Model.extend( {
         this._notifyAboutItemCreated( itemData, successHandler );
     },
 
+    /**
+     *
+     * @param createdItem
+     * @param successHandler
+     * @private
+     */
     _notifyAboutItemCreated: function( createdItem, successHandler ) {
         var context = this.getContext();
         var argument = {
@@ -845,11 +1167,22 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onItemCreated', context, argument );
     },
 
+    /**
+     *
+     * @param criteriaList
+     * @param onSuccess
+     * @param onError
+     * @private
+     */
     _setCriteriaList: function( criteriaList, onSuccess, onError ) {
         this.set( 'criteriaList', criteriaList );
         this.updateItems( onSuccess, onError );
     },
 
+    /**
+     *
+     * @param itemId
+     */
     setIdFilter: function( itemId ) {
         var dataProvider = this.get( 'dataProvider' );
         var idFilter = dataProvider.createIdFilter( itemId );
@@ -857,18 +1190,35 @@ var BaseDataSource = Backbone.Model.extend( {
         this.setFilter( idFilter );
     },
 
+    /**
+     *
+     * @param handler
+     */
     setNewItemsHandler: function( handler ) {
         this.set( 'newItemsHandler', handler );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getErrorValidator: function() {
         return this.get( 'errorValidator' );
     },
 
+    /**
+     *
+     * @param validatingFunction
+     */
     setErrorValidator: function( validatingFunction ) {
         this.set( 'errorValidator', validatingFunction );
     },
 
+    /**
+     *
+     * @param item
+     * @returns {ValidationResult}
+     */
     getValidationResult: function( item ) {
         var validatingFunction = this.getErrorValidator();
         var result = new ValidationResult();
@@ -901,20 +1251,39 @@ var BaseDataSource = Backbone.Model.extend( {
         return result;
     },
 
+    /**
+     *
+     * @param fileProvider
+     */
     setFileProvider: function( fileProvider ) {
         this.set( 'fileProvider', fileProvider );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getFileProvider: function() {
         return this.get( 'fileProvider' );
     },
 
+    /**
+     *
+     * @param validationMessages
+     * @param index
+     * @private
+     */
     _addIndexToPropertiesOfValidationMessage: function( validationMessages, index ) {
         for( var i = 0, ii = validationMessages.length; i < ii; i++ ) {
             validationMessages[ i ].property = index + '.' + validationMessages[ i ].property;
         }
     },
 
+    /**
+     *
+     * @param validationResult
+     * @private
+     */
     _notifyAboutValidation: function( validationResult ) {
         if( !validationResult ) {
             return;
@@ -928,10 +1297,20 @@ var BaseDataSource = Backbone.Model.extend( {
         this.trigger( 'onErrorValidator', context, argument );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getContext: function() {
         return this.getView().getContext();
     },
 
+    /**
+     *
+     * @param items
+     * @returns {*}
+     * @private
+     */
     _indexItemsById: function( items ) {
         var idProperty = this.get( 'idProperty' );
         var result = {};
@@ -945,6 +1324,12 @@ var BaseDataSource = Backbone.Model.extend( {
         return result;
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*}
+     * @private
+     */
     _indexOfItem: function( item ) {
         var items = this.getItems();
 
@@ -954,12 +1339,22 @@ var BaseDataSource = Backbone.Model.extend( {
         return items.indexOf( item );
     },
 
+    /**
+     *
+     * @returns {*}
+     * @private
+     */
     _indexOfSelectedItem: function() {
         var selectedItem = this.getSelectedItem();
 
         return this._indexOfItem( selectedItem );
     },
 
+    /**
+     *
+     * @param item
+     * @returns {*}
+     */
     idOfItem: function( item ) {
         var idProperty = this.get( 'idProperty' );
 
@@ -969,6 +1364,10 @@ var BaseDataSource = Backbone.Model.extend( {
         return item[ idProperty ];
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getCurrentRequestPromise: function() {
         var promise = $.Deferred();
         var logger = InfinniUI.global.logger;
@@ -991,6 +1390,10 @@ var BaseDataSource = Backbone.Model.extend( {
         return promise;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getNearestRequestPromise: function() {
         var promise = $.Deferred();
 
@@ -1008,32 +1411,64 @@ var BaseDataSource = Backbone.Model.extend( {
         return promise;
     },
 
+    /**
+     *
+     * @param isLazy
+     */
     setIsLazy: function( isLazy ) {
         this.set( 'isLazy', isLazy );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     isLazy: function() {
         return this.get( 'isLazy' );
     },
 
+    /**
+     *
+     * @param priority
+     */
     setResolvePriority: function( priority ) {
         this.set( 'resolvePriority', priority );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getResolvePriority: function() {
         return this.get( 'resolvePriority' );
     },
 
+    /**
+     *
+     * @param currentObject
+     * @private
+     * @returns {*}
+     */
     _copyObject: function( currentObject ) {
         return JSON.parse( JSON.stringify( currentObject ) );
     },
 
+    /**
+     *
+     * @returns {{source: BaseDataSource}}
+     * @private
+     */
     _getArgumentTemplate: function() {
         return {
             source: this
         };
     },
 
+    /**
+     *
+     * @param items
+     * @private
+     */
     _detectIdentifyingMode: function( items ) {
         if( Array.isArray( items ) && items.length > 0 ) {
             if( !$.isPlainObject( items[ 0 ] ) || this.getIdProperty() in items[ 0 ] ) {
@@ -1049,6 +1484,11 @@ var BaseDataSource = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @private
+     * @returns {*}
+     */
     _getIdentifyingMode: function() {
         return this.get( 'identifyingMode' );
     }
@@ -1058,6 +1498,12 @@ var BaseDataSource = Backbone.Model.extend( {
 BaseDataSource.identifyingStrategy = {
 
     byId: {
+
+        /**
+         *
+         * @returns {boolean}
+         * @private
+         */
         _restoreSelectedItem: function() {
             var selectedItem = this.getSelectedItem();
             var selectedItemId = this.idOfItem( selectedItem );
@@ -1075,6 +1521,12 @@ BaseDataSource.identifyingStrategy = {
             return false;
         },
 
+        /**
+         *
+         * @param item
+         * @param success
+         * @param error
+         */
         setSelectedItem: function( item, success, error ) {
             var currentSelectedItem = this.getSelectedItem();
             var items = this.get( 'itemsById' );
@@ -1108,16 +1560,31 @@ BaseDataSource.identifyingStrategy = {
             this._notifyAboutSelectedItem( item, success );
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _includeItemToModifiedSet: function( item ) {
             var itemId = this.idOfItem( item );
             this.get( 'modifiedItems' )[ itemId ] = item;
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _excludeItemFromModifiedSet: function( item ) {
             var itemId = this.idOfItem( item );
             delete this.get( 'modifiedItems' )[ itemId ];
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _handleDeletedItem: function( item ) {
             var items = this.getItems();
             var idProperty = this.get( 'idProperty' );
@@ -1139,9 +1606,16 @@ BaseDataSource.identifyingStrategy = {
 
             this._notifyAboutItemDeleted( item );
         }
+
     },
 
     byLink: {
+
+        /**
+         *
+         * @returns {boolean}
+         * @private
+         */
         _restoreSelectedItem: function() {
             var selectedItem = this.getSelectedItem();
             var items = this.getItems();
@@ -1153,6 +1627,12 @@ BaseDataSource.identifyingStrategy = {
             }
         },
 
+        /**
+         *
+         * @param item
+         * @param success
+         * @param error
+         */
         setSelectedItem: function( item, success, error ) {
             var currentSelectedItem = this.getSelectedItem();
             var index = this._indexOfItem( item );
@@ -1177,20 +1657,33 @@ BaseDataSource.identifyingStrategy = {
             }
 
             this.get( 'model' ).setProperty( 'selectedItem', item );
-
             this._tuneMirroringOfModel( index );
-
             this._notifyAboutSelectedItem( item, success );
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _includeItemToModifiedSet: function( item ) {
             this.get( 'modifiedItems' )[ '-' ] = item;
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _excludeItemFromModifiedSet: function( item ) {
             delete this.get( 'modifiedItems' )[ '-' ];
         },
 
+        /**
+         *
+         * @param item
+         * @private
+         */
         _handleDeletedItem: function( item ) {
             var items = this.getItems();
             var selectedItem = this.getSelectedItem();
@@ -1208,6 +1701,7 @@ BaseDataSource.identifyingStrategy = {
             this._notifyAboutItemDeleted( item );
         }
     }
+
 };
 
 InfinniUI.BaseDataSource = BaseDataSource;

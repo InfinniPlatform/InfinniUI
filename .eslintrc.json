@@ -1,5 +1,9 @@
 {
+    "plugins": [
+        "filenames"
+    ],
     "rules": {
+        "filenames/match-regex": [2, "^[a-z_][a-zA-Z.]+$", true],
         "comma-dangle": [
             2,
             "never"

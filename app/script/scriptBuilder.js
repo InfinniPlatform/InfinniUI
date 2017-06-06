@@ -6,6 +6,12 @@ function ScriptBuilder() {}
 
 InfinniUI.ScriptBuilder = ScriptBuilder;
 
+/**
+ *
+ * @param context
+ * @param args
+ * @returns {Function}
+ */
 ScriptBuilder.prototype.build = function( context, args ) {
     var metadata = args.metadata;
     var name = metadata.Name;

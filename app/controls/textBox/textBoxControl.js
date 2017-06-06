@@ -12,10 +12,17 @@ _.inherit( TextBoxControl, TextEditorBaseControl );
 
 _.extend( TextBoxControl.prototype, {
 
+    /**
+     * @returns {TextBoxModel}
+     */
     createControlModel: function() {
         return new TextBoxModel();
     },
 
+    /**
+     * @returns {TextBoxView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new TextBoxView( { model: model } );
     }

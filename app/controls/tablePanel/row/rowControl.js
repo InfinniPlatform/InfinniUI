@@ -12,10 +12,17 @@ _.inherit( RowControl, ContainerControl );
 
 _.extend( RowControl.prototype, {
 
+    /**
+     * @returns {RowModel}
+     */
     createControlModel: function() {
         return new RowModel();
     },
 
+    /**
+     * @returns {RowView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new RowView( { model: model } );
     }

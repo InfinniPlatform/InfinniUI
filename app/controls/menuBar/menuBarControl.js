@@ -12,10 +12,17 @@ _.inherit( MenuBarControl, ContainerControl );
 
 _.extend( MenuBarControl.prototype, {
 
+    /**
+     * @returns {MenuBarModel}
+     */
     createControlModel: function() {
         return new MenuBarModel();
     },
 
+    /**
+     * @returns {MenuBarView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new MenuBarView( { model: model } );
     }

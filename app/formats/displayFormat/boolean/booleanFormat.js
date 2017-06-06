@@ -1,6 +1,6 @@
 /**
  * @description Формат отображения логического значения.
- * @class BooleanFormat
+ * @constructor
  * @mixes formatMixin
  */
 var BooleanFormat = function() {

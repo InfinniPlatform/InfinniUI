@@ -1,3 +1,7 @@
+/**
+ * @augments ElementBuilder
+ * @constructor
+ */
 function TooltipBuilder() {
     _.superClass( TooltipBuilder, this );
 }
@@ -8,10 +12,20 @@ _.inherit( TooltipBuilder, ElementBuilder );
 
 _.extend( TooltipBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Tooltip}
+     */
     createElement: function( params ) {
         return new InfinniUI.Tooltip();
     },
 
+    /**
+     *
+     * @param metadata
+     * @returns {*}
+     */
     normalizeMetadata: function( metadata ) {
         if( typeof metadata === 'string' ) {
             metadata = {
@@ -22,6 +36,10 @@ _.extend( TooltipBuilder.prototype, {
         return metadata;
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var tooltip = params.element;
 
@@ -39,6 +57,12 @@ _.extend( TooltipBuilder.prototype, {
 
     },
 
+    /**
+     *
+     * @param metadata
+     * @param params
+     * @returns {*}
+     */
     buildContent: function( metadata, params ) {
         var builder = params.builder;
         var content;

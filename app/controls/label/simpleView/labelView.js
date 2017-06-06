@@ -1,7 +1,6 @@
 /**
- * @class SimpleLabelView
+ * @constructor
  * @augments ControlView
- * @mixes editorBaseViewMixin
  */
 var SimpleLabelView = CommonLabelView.extend( {
 
@@ -11,9 +10,15 @@ var SimpleLabelView = CommonLabelView.extend( {
         return '';
     },
 
+    /**
+     * @mixes editorBaseViewMixin
+     */
     UI: _.extend( {}, editorBaseViewMixin.UI, {
     } ),
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -24,6 +29,10 @@ var SimpleLabelView = CommonLabelView.extend( {
         }
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getLabelElement: function() {
         return this.$el;
     }

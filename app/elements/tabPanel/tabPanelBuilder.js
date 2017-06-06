@@ -10,8 +10,13 @@ InfinniUI.TabPanelBuilder = TabPanelBuilder;
 
 _.inherit( TabPanelBuilder, ContainerBuilder );
 
-_.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
+_.extend( TabPanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {TabPanel}
+     */
     createElement: function( params ) {
         return new TabPanel( params.parent );
     },
@@ -33,6 +38,10 @@ _.extend( TabPanelBuilder.prototype, /** @lends TabPanelBuilder.prototype*/ {
         return data;
     },
 
+    /**
+     *
+     * @param params
+     */
     initScriptHandlers: function( params ) {
         var metadata = params.metadata;
         var element = params.element;

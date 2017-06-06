@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var TabPanelView = ContainerView.extend( {
 
@@ -19,6 +19,9 @@ var TabPanelView = ContainerView.extend( {
         content: '.pl-tabpanel-content'
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ContainerView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:headerLocation', this.onChangeHeaderLocation );
@@ -26,6 +29,10 @@ var TabPanelView = ContainerView.extend( {
         this.listenTo( this.model, 'change:selectedItem', this.updateSelectedItem );
     },
 
+    /**
+     *
+     * @returns {TabPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -142,6 +149,11 @@ var TabPanelView = ContainerView.extend( {
         return header;
     },
 
+    /**
+     *
+     * @param item
+     * @param index
+     */
     renderTabContent: function( item, index ) {
         var itemTemplate = this.model.get( 'itemTemplate' );
         var element = itemTemplate( undefined, { item: item, index: index } );
@@ -228,11 +240,19 @@ var TabPanelView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     */
     resetDefaultSelectedItem: function() {
         this.model.set( 'selectedItem', null );
         this.initSelectedItem();
     },
 
+    /**
+     *
+     * @returns {number}
+     * @private
+     */
     _getFirstEnabledPageIndex: function() {
         var tabPages = this.childElements;
 
