@@ -87,7 +87,7 @@
         "build": "gulp clean && gulp build:prod",
         "pack": "npm run build-full && gulp assemble:package",
         "pack-for-teamcity": "gulp assemble:package",
-        "test": "karma start my.conf.js",
+        "test": "karma start karma.conf.js",
         "test:tc": "npm run test -- --single-run --reporters teamcity --colors false --browsers Firefox"
     }
 }
