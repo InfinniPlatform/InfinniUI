@@ -169,7 +169,6 @@
 															"DataGrid": {
 																"Name": "DataGrid",
 																"MultiSelect": true,
-																"VerticalAlignment": "Stretch",
 																"CheckAllVisible": true,
 																"Columns": [
 																	{

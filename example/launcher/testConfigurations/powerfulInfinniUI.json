@@ -218,7 +218,6 @@
 														"DataGrid": {
 															"Name": "ItemsPanel",
 															"MultiSelect": true,
-															"VerticalAlignment": "Stretch",
 															"CheckAllVisible": true,
 															"Columns": [
 																{

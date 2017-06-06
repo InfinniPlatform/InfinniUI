@@ -143,7 +143,6 @@
 						"DataGrid": {
 							"Name": "HousesDataGrid",
 							"DisabledItemCondition": "{ return args.value.Age < 35; }",
-							"VerticalAlignment": "Stretch",
 							"Columns": [
 								{
 									"Header": "Вес",

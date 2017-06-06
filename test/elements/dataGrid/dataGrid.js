@@ -70,8 +70,8 @@ describe( 'DataGrid', function() {
 
                     var $rows = $grid.find( 'tbody .pl-datagrid-row' );
 
-                    assert.isFalse( $rows.eq( 0 ).hasClass( 'pl-disabled' ), 'bad render for enabled item' );
-                    assert.isTrue( $rows.eq( 1 ).hasClass( 'pl-disabled' ), 'bad render for disabled item' );
+                    assert.isFalse( $rows.eq( 1 ).hasClass( 'pl-disabled' ), 'bad render for enabled item' );
+                    assert.isTrue( $rows.eq( 2 ).hasClass( 'pl-disabled' ), 'bad render for disabled item' );
 
                     // When
                     grid.setDisabledItemCondition( function( context, args ) {
@@ -79,8 +79,8 @@ describe( 'DataGrid', function() {
                     } );
 
                     // Then
-                    assert.isTrue( $rows.eq( 0 ).hasClass( 'pl-disabled' ), 'items not updated' );
-                    assert.isFalse( $rows.eq( 1 ).hasClass( 'pl-disabled' ), 'items not updated' );
+                    assert.isTrue( $rows.eq( 1 ).hasClass( 'pl-disabled' ), 'items not updated' );
+                    assert.isFalse( $rows.eq( 2 ).hasClass( 'pl-disabled' ), 'items not updated' );
 
                     done();
                     view.close();
