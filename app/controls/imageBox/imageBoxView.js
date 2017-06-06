@@ -115,14 +115,12 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
             this.rotate( 1 );
             callback();
         }
-
-
     },
 
     setPerfectPosition: function() {
         var img = this.ui.img;
-        var width = img.width();
-        var height = img.height();
+        var width = img.get( 0 ).naturalWidth;
+        var height = img.get( 0 ).naturalHeight;
         var wideSide = 'limit-width';
         var currentWideSide = this.model.get( 'currentWideSide' );
 

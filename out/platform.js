@@ -15960,14 +15960,12 @@ var ImageBoxView = ControlView.extend(/** @lends ImageBoxView.prototype */ _.ext
             this.rotate( 1 );
             callback();
         }
-
-
     },
 
     setPerfectPosition: function() {
         var img = this.ui.img;
-        var width = img.width();
-        var height = img.height();
+        var width = img.get( 0 ).naturalWidth;
+        var height = img.get( 0 ).naturalHeight;
         var wideSide = 'limit-width';
         var currentWideSide = this.model.get( 'currentWideSide' );
 
@@ -22830,6 +22828,53 @@ _.extend(CheckBoxBuilder.prototype, {
 }, editorBaseBuilderMixin);
 
 
+//####app\elements\contextMenu\contextMenu.js
+/**
+ * @class
+ * @constructor
+ * @arguments Container
+ */
+function ContextMenu(parent) {
+    _.superClass(ContextMenu, this, parent);
+}
+
+window.InfinniUI.ContextMenu = ContextMenu;
+
+_.inherit(ContextMenu, Container);
+
+_.extend(ContextMenu.prototype, {
+
+    createControl: function () {
+        return new ContextMenuControl();
+    }
+
+});
+
+//####app\elements\contextMenu\contextMenuBuilder.js
+/**
+ * @constructor
+ * @arguments ContainerBuilder
+ */
+function ContextMenuBuilder() {
+	_.superClass(ContextMenuBuilder, this);
+}
+
+window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
+
+_.inherit(ContextMenuBuilder, ContainerBuilder);
+
+_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
+
+	createElement: function (params) {
+		return new ContextMenu(params.parent);
+	},
+
+	applyMetadata: function (params) {
+		ContainerBuilder.prototype.applyMetadata.call(this, params);
+	}
+
+});
+
 //####app\elements\comboBox\comboBox.js
 /**
  * @augments ListEditorBase
@@ -23007,53 +23052,6 @@ _.extend(ComboBoxBuilder.prototype, /** @lends ComboBoxBuilder.prototype */{
     generateName: function(){
         return 'combobox-' + guid();
     }
-});
-
-//####app\elements\contextMenu\contextMenu.js
-/**
- * @class
- * @constructor
- * @arguments Container
- */
-function ContextMenu(parent) {
-    _.superClass(ContextMenu, this, parent);
-}
-
-window.InfinniUI.ContextMenu = ContextMenu;
-
-_.inherit(ContextMenu, Container);
-
-_.extend(ContextMenu.prototype, {
-
-    createControl: function () {
-        return new ContextMenuControl();
-    }
-
-});
-
-//####app\elements\contextMenu\contextMenuBuilder.js
-/**
- * @constructor
- * @arguments ContainerBuilder
- */
-function ContextMenuBuilder() {
-	_.superClass(ContextMenuBuilder, this);
-}
-
-window.InfinniUI.ContextMenuBuilder = ContextMenuBuilder;
-
-_.inherit(ContextMenuBuilder, ContainerBuilder);
-
-_.extend(ContextMenuBuilder.prototype, /** @lends ContextMenuBuilder.prototype */{
-
-	createElement: function (params) {
-		return new ContextMenu(params.parent);
-	},
-
-	applyMetadata: function (params) {
-		ContainerBuilder.prototype.applyMetadata.call(this, params);
-	}
-
 });
 
 //####app\elements\dataGrid\dataGrid.js
@@ -28213,6 +28211,83 @@ _.extend(SaveActionBuilder.prototype,
 
 window.InfinniUI.SaveActionBuilder = SaveActionBuilder;
 
+//####app\actions\selectAction\selectAction.js
+function SelectAction(parentView){
+    _.superClass(SelectAction, this, parentView);
+}
+
+_.inherit(SelectAction, BaseAction);
+
+
+_.extend(SelectAction.prototype, {
+    execute: function(callback){
+        var parentView = this.parentView,
+            linkView = this.getProperty('linkView'),
+            that = this;
+
+        var srcDataSourceName = this.getProperty('sourceSource'),
+            srcPropertyName = this.getProperty('sourceProperty');
+
+        var dstDataSourceName = this.getProperty('destinationSource'),
+            dstPropertyName = this.getProperty('destinationProperty');
+
+        linkView.createView(function(createdView){
+
+            createdView.onClosed(function (context, args) {
+                var dialogResult = createdView.getDialogResult();
+
+                if (dialogResult == DialogResult.accepted) {
+                    var srcDataSource = createdView.getContext().dataSources[srcDataSourceName];
+                    var dstDataSource = parentView.getContext().dataSources[dstDataSourceName];
+
+                    var value = srcDataSource.getProperty(srcPropertyName);
+                    dstDataSource.setProperty(dstPropertyName, value);
+                }
+
+                that.onExecutedHandler(args);
+
+                if (callback) {
+                    callback(context, args);
+                }
+            });
+
+            createdView.open();
+        });
+    }
+});
+
+window.InfinniUI.SelectAction = SelectAction;
+
+//####app\actions\selectAction\selectActionBuilder.js
+function SelectActionBuilder() {}
+
+_.extend(SelectActionBuilder.prototype,
+    BaseActionBuilderMixin,
+    {
+        build: function (context, args) {
+            var builder = args.builder,
+                metadata = args.metadata,
+                parentView = args.parentView;
+
+            var action = new SelectAction(parentView);
+
+            this.applyBaseActionMetadata(action, args);
+
+            var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
+
+            action.setProperty('linkView', linkView);
+            action.setProperty('sourceSource', metadata.SourceValue.Source);
+            action.setProperty('sourceProperty', metadata.SourceValue.Property);
+            action.setProperty('destinationSource', metadata.DestinationValue.Source);
+            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
+
+            return action;
+        }
+    }
+);
+
+window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
+
 //####app\actions\serverAction\downloadExecutor.js
 /**
  * @description
@@ -28570,83 +28645,6 @@ var serverActionContentTypeStrategy = {
         }
     }
 };
-//####app\actions\selectAction\selectAction.js
-function SelectAction(parentView){
-    _.superClass(SelectAction, this, parentView);
-}
-
-_.inherit(SelectAction, BaseAction);
-
-
-_.extend(SelectAction.prototype, {
-    execute: function(callback){
-        var parentView = this.parentView,
-            linkView = this.getProperty('linkView'),
-            that = this;
-
-        var srcDataSourceName = this.getProperty('sourceSource'),
-            srcPropertyName = this.getProperty('sourceProperty');
-
-        var dstDataSourceName = this.getProperty('destinationSource'),
-            dstPropertyName = this.getProperty('destinationProperty');
-
-        linkView.createView(function(createdView){
-
-            createdView.onClosed(function (context, args) {
-                var dialogResult = createdView.getDialogResult();
-
-                if (dialogResult == DialogResult.accepted) {
-                    var srcDataSource = createdView.getContext().dataSources[srcDataSourceName];
-                    var dstDataSource = parentView.getContext().dataSources[dstDataSourceName];
-
-                    var value = srcDataSource.getProperty(srcPropertyName);
-                    dstDataSource.setProperty(dstPropertyName, value);
-                }
-
-                that.onExecutedHandler(args);
-
-                if (callback) {
-                    callback(context, args);
-                }
-            });
-
-            createdView.open();
-        });
-    }
-});
-
-window.InfinniUI.SelectAction = SelectAction;
-
-//####app\actions\selectAction\selectActionBuilder.js
-function SelectActionBuilder() {}
-
-_.extend(SelectActionBuilder.prototype,
-    BaseActionBuilderMixin,
-    {
-        build: function (context, args) {
-            var builder = args.builder,
-                metadata = args.metadata,
-                parentView = args.parentView;
-
-            var action = new SelectAction(parentView);
-
-            this.applyBaseActionMetadata(action, args);
-
-            var linkView = builder.build(metadata['LinkView'], {parentView: parentView});
-
-            action.setProperty('linkView', linkView);
-            action.setProperty('sourceSource', metadata.SourceValue.Source);
-            action.setProperty('sourceProperty', metadata.SourceValue.Property);
-            action.setProperty('destinationSource', metadata.DestinationValue.Source);
-            action.setProperty('destinationProperty', metadata.DestinationValue.Property);
-
-            return action;
-        }
-    }
-);
-
-window.InfinniUI.SelectActionBuilder = SelectActionBuilder;
-
 //####app\actions\updateAction\updateAction.js
 function UpdateAction(parentView){
     _.superClass(UpdateAction, this, parentView);
