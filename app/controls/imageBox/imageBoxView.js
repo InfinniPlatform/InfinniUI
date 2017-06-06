@@ -123,8 +123,8 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
 
     setPerfectPosition: function() {
         var img = this.ui.img;
-        var width = img.width();
-        var height = img.height();
+        var width = img.get( 0 ).naturalWidth;
+        var height = img.get( 0 ).naturalHeight;
         var wideSide = 'limit-width';
         var currentWideSide = this.model.get( 'currentWideSide' );
 
@@ -149,11 +149,11 @@ var ImageBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, exifRo
         var defer = $.Deferred();
         var reader = new FileReader();
 
-        reader.onload = ( function( file ) {
+        reader.onload = (function( file ) {
             return function( event ) {
                 defer.resolve( file, event.target.result );
             };
-        }( file ) );
+        }( file ));
         reader.onerror = function( event ) {
             defer.reject( event );
         };
