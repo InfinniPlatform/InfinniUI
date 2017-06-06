@@ -7,6 +7,10 @@ var sourceForFiles = {
     platformJsOutputFile: 'infinni-ui.js',
     stylesFiles: [ 'app/styles/infinni-ui.less' ],
     stylesFilesForWatch: [ './app/styles/**/*.less' ],
+    lintFiles: [
+        'app/**/*.js',
+        'test/**/*.js'
+    ],
     jsFiles: [
         'app/utils/strict.js',
         'app/utils/namespace.js',

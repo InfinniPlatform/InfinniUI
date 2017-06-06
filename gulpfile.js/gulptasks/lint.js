@@ -2,12 +2,16 @@
 
 var gulp = require( 'gulp' );
 var $ = require( 'gulp-load-plugins' )();
+var config = require( './config' );
 
-module.exports = function( options ) {
-    return function( callback ) {
-        return gulp.src( options.src )
-            .pipe( $.eslint() )
-            .pipe( $.eslint.format() )
-            .pipe( $.eslint.failAfterError() );
-    };
-};
+/**
+ * @description check code style
+ * @task lint
+ * @group {Sub-tasks}
+ */
+gulp.task( 'lint', function() {
+    return gulp.src( config.lintFiles )
+        .pipe( $.eslint() )
+        .pipe( $.eslint.format() )
+        .pipe( $.eslint.failAfterError() );
+} );
