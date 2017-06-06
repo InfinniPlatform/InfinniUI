@@ -29,7 +29,7 @@ _.extend( Element.prototype, {
      * @param viewMode
      */
     createControl: function( viewMode ) {
-        throw ( 'Не перегружен абстрактный метод Element.createControl' );
+        throw new Error( 'Не перегружен абстрактный метод Element.createControl' );
     },
 
     /**
@@ -148,7 +148,7 @@ _.extend( Element.prototype, {
      */
     setName: function( name ) {
         if( this.getName() ) {
-            throw 'name already exists';
+            throw new Error( 'name already exists' );
         }
 
         if( typeof name == 'string' ) {
@@ -167,7 +167,7 @@ _.extend( Element.prototype, {
         if( typeof this[ getterMethodName ] === 'function' ) {
             return this[ getterMethodName ]();
         } else {
-            throw 'expect that ' + getterMethodName + ' is getter function';
+            throw new Error( 'expect that ' + getterMethodName + ' is getter function' );
         }
     },
 
@@ -187,7 +187,7 @@ _.extend( Element.prototype, {
                 getterMethodName = 'get' + this._upperFirstSymbol( name );
                 this[ getterMethodName ]().set( value );
             } else {
-                throw 'expect that ' + setterMethodName + ' is setter function';
+                throw new Error( 'expect that ' + setterMethodName + ' is setter function' );
             }
         }
     },

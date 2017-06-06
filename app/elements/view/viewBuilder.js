@@ -200,7 +200,7 @@ _.extend( ViewBuilder.prototype, {
                 var nonPriorityDataSourceGroups = _.omit( priorityGroups, maxPriority );
                 var count = 0;
 
-                topPriorityDataSources.forEach( function( ds ) {
+                _.each( topPriorityDataSources, function( ds ) {
                     ds.onItemsUpdatedOnce( function( context, args ) {
                         if( ++count == topPriorityDataSourcesCount ) {
                             setTimeout( function() {
@@ -215,7 +215,7 @@ _.extend( ViewBuilder.prototype, {
         };
 
         if( _.keys( dataSourcesByPriority ).length > 1 ) {
-            dataSources.forEach( function( ds ) {
+            _.each( dataSources, function( ds ) {
                 ds.setIsWaiting( true );
             } );
 

@@ -57,11 +57,10 @@ function MessageBus( view ) {
         return view;
     };
 
-    /**
-     *
-     * @param messageType
-     * @returns {*}
-     */
+    this.dispose = function() {
+        subscriptions = {};
+    };
+
     function patchMessageType( messageType ) {
         if( typeof messageType === 'object' && typeof messageType.name !== 'undefined' ) {
             messageType = messageType.name;

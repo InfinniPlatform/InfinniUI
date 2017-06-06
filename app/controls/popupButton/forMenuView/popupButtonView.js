@@ -4,13 +4,9 @@
  */
 var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
 
-    tagName: 'a',
+    tagName: 'button',
 
-    className: 'pl-popup-button',
-
-    attributes: {
-        href: 'javascript:;'
-    },
+    className: 'pl-popup-button btn',
 
     template: InfinniUI.Template[ 'controls/popupButton/forMenuView/template/popupButton.tpl.html' ],
 

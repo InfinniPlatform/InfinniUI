@@ -85,18 +85,6 @@ var editorBaseMixin = {
         this.control.set( 'warningText', value );
     },
 
-    /**
-     *
-     * @param value
-     */
-    validateValue: function( value ) {
-    },
-
-    /**
-     *
-     * @param value
-     * @return {*}
-     */
     convertValue: function( value ) {
         return value;
     },

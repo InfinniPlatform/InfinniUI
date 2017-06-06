@@ -13,8 +13,7 @@ InfinniUI.AutoHeightService = {
      */
     setOuterHeight: function( $el, height, fix ) {
         var delta = 0;
-        'border-top-width,border-bottom-width,padding-top,padding-bottom,margin-top,margin-bottom'
-            .split( ',' )
+        [ 'border-top-width', 'border-bottom-width', 'padding-top', 'padding-bottom', 'margin-top', 'margin-bottom' ]
             .forEach( function( name ) {
                 delta += parseInt( $el.css( name ) );
             } );
@@ -40,8 +39,8 @@ InfinniUI.AutoHeightService = {
      *
      * @returns {string}
      */
-    getSelector: function() {
-        return '.verticalAlignmentStretch:not(:hidden)';
+    getStretchSelector: function() {
+        return '.pl-scrollpanel:not(.pl-vertical-scroll-hidden):not(:hidden)';
     },
 
     /**
@@ -136,7 +135,7 @@ InfinniUI.AutoHeightService = {
             //Т.к. скроллпанель бесконечная по высоте, контролы внутри нее по высоте не растягиваем
             return;
         } else if( node.$element.hasClass( 'tab-content' ) ) {
-            node.child.forEach( function( node ) {
+            _.each( node.child, function( node ) {
                 manager.defineWay( node, nodeHeight );
             } );
         } else if( node.child.length > 0 ) {
@@ -165,10 +164,11 @@ InfinniUI.AutoHeightService = {
             .groupBy( 'offsetTop' )
             .value();
         var heights = [];
+        var row;
 
-        grid.forEach( function( row, i ) {
+        _.each( grid, function( row, i ) {
             var nodes = [];
-            row.forEach( function( e ) {
+            _.each( row, function( e ) {
                 var n = _.find( node.child, function( c ) {
                     return c.element === e;
                 } );
@@ -180,23 +180,23 @@ InfinniUI.AutoHeightService = {
             }, 0 ) );
 
             grid[ i ] = nodes;
-        }, this );
+        } );
 
         var fixedHeight = heights.reduce( function( total, height ) {
                 return total + height;
             }, 0 ),
-            count = grid.reduce( function( count, row ) {
+            count = _.reduce( grid, function( count, row ) {
                 return row.length ? count + 1 : count;
             }, 0 ),
 
             heightForNode = Math.floor( ( height - fixedHeight ) / count );
 
-        grid.forEach( function( row ) {
+        _.each( grid, function( row ) {
             if( row.length === 0 ) return;
-            row.forEach( function( node ) {
+            _.each( row, function( node ) {
                 manager.defineWay( node, heightForNode );
             }, this );
-        }, this );
+        } );
     },
 
     /**
@@ -207,7 +207,7 @@ InfinniUI.AutoHeightService = {
     resize: function( el, pageHeight ) {
         var startTime = Date.now(); //start time
         var $el = $( el );
-        var elements = $el.find( this.getSelector() );
+        var elements = $el.find( this.getStretchSelector() );
 
         if( elements.length === 0 ) {
             return;
@@ -270,7 +270,7 @@ InfinniUI.AutoHeightService = {
             var $container = $modal.children();
             var $header = $( '.modal-header', $container );
             var $body = $( '.modal-body', $container );
-            var $el = $( this.getSelector(), $modal );
+            var $el = $( this.getStretchSelector(), $modal );
 
             $el.parentsUntil( '.modal' ).css( 'height', 'auto' );
             $container
@@ -299,7 +299,7 @@ InfinniUI.AutoHeightService = {
 
         $container.css( 'margin-top', 0 );
 
-        var el = $( this.getSelector(), $modal );
+        var el = $( this.getStretchSelector(), $modal );
 
         if( el.length !== 0 ) {
             // Если диалог содержит элементы которые должны растягиваться по вертикали на 100%

@@ -16,7 +16,7 @@ _.extend( Control.prototype, {
      *
      */
     createControlModel: function() {
-        throw ( 'Не перегружен абстрактный метод Control.createControlModel()' );
+        throw new Error( 'Не перегружен абстрактный метод Control.createControlModel()' );
     },
 
     /**
@@ -25,7 +25,7 @@ _.extend( Control.prototype, {
      * @param viewMode
      */
     createControlView: function( model, viewMode ) {
-        throw ( 'Не перегружен абстрактный метод Control.createControlView()' );
+        throw new Error( 'Не перегружен абстрактный метод Control.createControlView()' );
     },
 
     /**

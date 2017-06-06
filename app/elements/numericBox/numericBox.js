@@ -75,50 +75,6 @@ NumericBox.prototype.setStartValue = function( value ) {
     this.control.set( 'startValue', value );
 };
 
-/**
- *
- * @param value
- * @returns {*}
- */
-NumericBox.prototype.validateValue = function( value ) {
-    var error;
-    var min = this.getMinValue();
-    var max = this.getMaxValue();
-
-    value = this.convertValue( value );
-
-    if( value === null || typeof value === 'undefined' ) {
-        return error;
-    }
-
-    if( !_.isNumber( value ) ) {
-        error = 'Значение должно быть числом';
-    } else if( _.isNumber( min ) ) {
-        if( _.isNumber( max ) ) {
-            if( value < min || value > max ) {
-                error = 'Значение должно быть от ' + min + ' до ' + max;
-            }
-        } else {
-            if( value < min ) {
-                error = 'Значение должно быть больше ' + min;
-            }
-        }
-    } else {
-        if( _.isNumber( max ) ) {
-            if( value > max ) {
-                error = 'Значение должно быть меьше ' + max;
-            }
-        }
-    }
-
-    return error;
-};
-
-/**
- *
- * @param value
- * @returns {null|*}
- */
 NumericBox.prototype.convertValue = function( value ) {
     var val = ( value === null || value === '' || typeof value === 'undefined' ) ? null : +value;
 

@@ -28,6 +28,7 @@ var editorBaseViewMixin = {
         this.listenTo( this.model, 'change:hintText', this.updateHintText );
         this.listenTo( this.model, 'change:errorText', this.updateErrorText );
         this.listenTo( this.model, 'change:warningText', this.updateWarningText );
+        this.listenTo( this.model, 'change:labelFloating', this.updateLabelFloating );
     },
 
     /**
@@ -45,7 +46,7 @@ var editorBaseViewMixin = {
      *
      */
     updateValue: function() {
-        throw 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.';
+        throw new Error( 'editorBaseViewMixin.updateValue В потомке editorBaseViewMixin не реализовано обновление данных.' );
     },
 
     updateValueState: function() {
@@ -67,51 +68,21 @@ var editorBaseViewMixin = {
      *
      */
     updateHintText: function() {
-        var hintText = this.model.get( 'hintText' );
-
-        if( hintText ) {
-            this.ui.hintText
-                .text( hintText )
-                .removeClass( 'hidden' );
-        } else {
-            this.ui.hintText
-                .text( '' )
-                .addClass( 'hidden' );
-        }
+        this.toggleHintText( this.ui.hintText, this.model.get( 'hintText' ) );
     },
 
     /**
      *
      */
     updateErrorText: function() {
-        var errorText = this.model.get( 'errorText' );
-
-        if( errorText ) {
-            this.ui.errorText
-                .text( errorText )
-                .removeClass( 'hidden' );
-        } else {
-            this.ui.errorText
-                .text( '' )
-                .addClass( 'hidden' );
-        }
+        this.toggleHintText( this.ui.errorText, this.model.get( 'errorText' ), InfinniUI.Theme.default.classes.inputError );
     },
 
     /**
      *
      */
     updateWarningText: function() {
-        var warningText = this.model.get( 'warningText' );
-
-        if( warningText ) {
-            this.ui.warningText
-                .text( warningText )
-                .removeClass( 'hidden' );
-        } else {
-            this.ui.warningText
-                .text( '' )
-                .addClass( 'hidden' );
-        }
+        this.toggleHintText( this.ui.warningText, this.model.get( 'warningText' ), InfinniUI.Theme.default.classes.inputWarning );
     },
 
     /**
@@ -136,6 +107,23 @@ var editorBaseViewMixin = {
         // вот ето -  @see {@link http://backbonejs.org/#Model-validate} !!!
         //@TODO Можно ли использовать поля из API или реализовывать вывод ошибок отдельно?
         //this.model.set('errorText', error);
+    },
+
+    /**
+     * @protected
+     * @param {jQuery} $element
+     * @param {string} text
+     * @param {string} [inputClass]
+     */
+    toggleHintText: function( $element, text, inputClass ) {
+        var hideText = !text;
+        $element
+            .text( hideText ? '' : text )
+            .toggleClass( InfinniUI.Theme.default.classes.hidden, hideText );
+
+        if ( inputClass ) {
+            this.$el.toggleClass( inputClass, !hideText );
+        }
     }
 
 };

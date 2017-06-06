@@ -60,7 +60,7 @@ var BaseDataSource = Backbone.Model.extend( {
         this.initDataProvider();
 
         if( !view ) {
-            throw 'BaseDataSource.initialize: При создании объекта не была задана view.';
+            throw new Error( 'BaseDataSource.initialize: При создании объекта не была задана view.' );
         }
         this.set( 'suspendingList', [] );
         this.set( 'waitingOnUpdateItemsHandlers', [] );
@@ -73,7 +73,7 @@ var BaseDataSource = Backbone.Model.extend( {
      *
      */
     initDataProvider: function() {
-        throw 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.';
+        throw new Error( 'BaseDataSource.initDataProvider В потомке BaseDataSource не задан провайдер данных.' );
     },
 
     /**
@@ -1544,7 +1544,7 @@ BaseDataSource.identifyingStrategy = {
             if( item !== null ) {
                 if( !items[ itemId ] ) {
                     if( !error ) {
-                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                        throw new Error( 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.' );
                     } else {
                         error( this.getContext(), { error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.' } );
                         return;
@@ -1648,7 +1648,7 @@ BaseDataSource.identifyingStrategy = {
             if( item !== null ) {
                 if( index == -1 ) {
                     if( !error ) {
-                        throw 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.';
+                        throw new Error( 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.' );
                     } else {
                         error( this.getContext(), { error: 'BaseDataSource.setSelectedItem() Попытка выбрать элемент в источнике, которого нет среди элементов этого источника.' } );
                         return;
