@@ -1,3 +1,10 @@
+/**
+ *
+ * @param view
+ * @param scriptFactory
+ * @returns {Function}
+ * @constructor
+ */
 function BaseScriptExecutor( view, scriptFactory ) {
     var script = null;
 

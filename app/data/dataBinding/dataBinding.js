@@ -4,6 +4,10 @@ InfinniUI.BindingModes = {
     toElement: 'ToElement'
 };
 
+/**
+ * @constructor
+ * @augments Backbone.Model
+ */
 var DataBinding = Backbone.Model.extend( {
 
     defaults: {
@@ -16,31 +20,56 @@ var DataBinding = Backbone.Model.extend( {
         defaultValue: null
     },
 
+    /**
+     * @returns {*}
+     */
     getDefaultValue: function() {
         return this.get( 'defaultValue' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setDefaultValue: function( value ) {
         this.set( 'defaultValue', value );
     },
 
+    /**
+     *
+     * @param mode
+     */
     setMode: function( mode ) {
         this.set( 'mode', mode );
     },
 
+    /**
+     * @returns {*}
+     */
     getMode: function() {
         return this.get( 'mode' );
     },
 
+    /**
+     *
+     * @param converter
+     */
     setConverter: function( converter ) {
         this.set( 'converter', converter );
     },
 
+    /**
+     * @returns {*}
+     */
     getConverter: function() {
         return this.get( 'converter' );
     },
 
-
+    /**
+     *
+     * @param source
+     * @param property
+     */
     bindSource: function( source, property ) {
         var logger = InfinniUI.global.logger;
         var element = this.getElement();
@@ -71,10 +100,20 @@ var DataBinding = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param source
+     * @returns {boolean}
+     * @private
+     */
     _isWorkingWithSelectedItems: function( source ) {
         return typeof source.onSelectedItemChanged === 'function';
     },
 
+    /**
+     *
+     * @private
+     */
     _initBehaviorWithSelectedItem: function() {
         var sourceProperty = this.get( 'sourceProperty' );
         var source = this.get( 'source' );
@@ -91,19 +130,35 @@ var DataBinding = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param property
+     * @returns {boolean}
+     * @private
+     */
     _isRelativeProperty: function( property ) {
         return !/^\d/.test( property ) && property != '';
     },
 
+    /**
+     * @returns {*}
+     */
     getSource: function() {
         return this.get( 'source' );
     },
 
+    /**
+     * @returns {*}
+     */
     getSourceProperty: function() {
         return this.get( 'sourceProperty' );
     },
 
-
+    /**
+     *
+     * @param element
+     * @param property
+     */
     bindElement: function( element, property ) {
         var that = this;
         var logger = InfinniUI.global.logger;
@@ -137,11 +192,18 @@ var DataBinding = Backbone.Model.extend( {
         this._initPropertyOnElement();
     },
 
+    /**
+     * @description Делает полную отписку от всех событий
+     */
     remove: function() {
         this.off();
         this.clear();
     },
 
+    /**
+     *
+     * @private
+     */
     _initPropertyOnElement: function() {
         var sourceProperty = this.get( 'sourceProperty' );
         var source = this.get( 'source' );
@@ -163,16 +225,23 @@ var DataBinding = Backbone.Model.extend( {
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getElement: function() {
         return this.get( 'element' );
     },
 
+    /**
+     * @returns {*}
+     */
     getElementProperty: function() {
         return this.get( 'elementProperty' );
     },
 
     /**
      * @description Обработчик события изменения значения элемента
+     * @private
      */
     _onElementPropertyChangedHandler: function( context, argument ) {
         if( this._shouldRefreshSource() ) {
@@ -180,6 +249,12 @@ var DataBinding = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param value
+     * @param context
+     * @private
+     */
     _setValueToSource: function( value, context ) {
         var element = this.get( 'element' );
         var source = this.get( 'source' );
@@ -199,6 +274,7 @@ var DataBinding = Backbone.Model.extend( {
 
     /**
      * @description Обработчик события изменения значения источника
+     * @private
      */
     _onSourcePropertyChangedHandler: function( context, argument ) {
         if( this._shouldRefreshElement() ) {
@@ -206,6 +282,12 @@ var DataBinding = Backbone.Model.extend( {
         }
     },
 
+    /**
+     *
+     * @param value
+     * @param notConverting
+     * @private
+     */
     _setValueToElement: function( value, notConverting ) {
         var source = this.get( 'source' );
         var element = this.get( 'element' );
@@ -222,6 +304,11 @@ var DataBinding = Backbone.Model.extend( {
         element.setProperty( elementProperty, value );
     },
 
+    /**
+     *
+     * @returns {*}
+     * @private
+     */
     _getContext: function() {
         var source = this.getSource();
         var context;
@@ -233,11 +320,21 @@ var DataBinding = Backbone.Model.extend( {
         return context;
     },
 
+    /**
+     *
+     * @returns {boolean}
+     * @private
+     */
     _shouldRefreshSource: function() {
         var mode = this.get( 'mode' );
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toSource;
     },
 
+    /**
+     *
+     * @returns {boolean}
+     * @private
+     */
     _shouldRefreshElement: function() {
         var mode = this.get( 'mode' );
         return mode == InfinniUI.BindingModes.twoWay || mode == InfinniUI.BindingModes.toElement;

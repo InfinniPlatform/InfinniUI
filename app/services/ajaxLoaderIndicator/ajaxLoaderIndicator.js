@@ -1,3 +1,9 @@
+/**
+ *
+ * @param $target
+ * @param config
+ * @constructor
+ */
 var AjaxLoaderIndicator = function( $target, config ) {
     var defaults = {
         delay: 50

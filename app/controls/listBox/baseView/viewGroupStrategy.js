@@ -1,9 +1,17 @@
+/**
+ * @param listbox
+ * @constructor
+ */
 function ListBoxViewGroupStrategy( listbox ) {
     this.listbox = listbox;
 }
 
 _.extend( ListBoxViewGroupStrategy.prototype, {
 
+    /**
+     *
+     * @returns {*}
+     */
     prepareItemsForRendering: function() {
         var items = this.listbox.getItems();
         var inputName = 'listbox-' + guid();
@@ -35,10 +43,18 @@ _.extend( ListBoxViewGroupStrategy.prototype, {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         return this.listbox.template.grouped;
     },
 
+    /**
+     *
+     * @param preparedItems
+     */
     appendItemsContent: function( preparedItems ) {
         var $listbox = this.listbox.$el;
         var itemTemplate = this.listbox.getItemTemplate();

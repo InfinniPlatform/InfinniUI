@@ -36,6 +36,12 @@
         this._unsubscribe = [];
     }
 
+    /**
+     *
+     * @param element
+     * @param handler
+     * @returns {ClickManager}
+     */
     ClickManager.prototype.append = function( element, handler ) {
         var EVENT_NAME = 'contextmenu';
         this.clear();
@@ -50,6 +56,10 @@
         return this;
     };
 
+    /**
+     *
+     * @returns {ClickManager}
+     */
     ClickManager.prototype.clear = function() {
         this._unsubscribe.forEach( function( fn ) {
             fn.call();
@@ -57,12 +67,20 @@
         return this;
     };
 
+    /**
+     *
+     * @constructor
+     */
     function InfoElement() {
         this.marker = new Marker();
         this.$currentControl = null;
         this.clickManager = new ClickManager();
     }
 
+    /**
+     *
+     * @param el
+     */
     InfoElement.prototype.setElement = function( el ) {
         var $el = $( el );
         var $control = getControl( $el );
@@ -74,6 +92,11 @@
             this.showInfo( $control, viewName, _.isEmpty( name ) ? NO_NAME : name );
         }
 
+        /**
+         *
+         * @param $el
+         * @returns {*}
+         */
         function getControl( $el ) {
             var $control;
             var name = $el.attr( DATA_NAME_ATTRIBUTE );
@@ -86,12 +109,20 @@
             return $control;
         }
 
+        /**
+         *
+         * @param $el
+         */
         function getName( $el ) {
             if( $el.length ) {
                 return $el.attr( DATA_NAME_ATTRIBUTE );
             }
         }
 
+        /**
+         *
+         * @param $el
+         */
         function getViewName( $el ) {
             var $e = $el.parents( DATA_NAME_VIEW_SELECTOR );
 
@@ -101,12 +132,23 @@
         }
     };
 
+    /**
+     *
+     * @param viewName
+     * @param name
+     */
     InfoElement.prototype.copyInfo = function( viewName, name ) {
         if( viewName || name ) {
             window.prompt( 'Copy to clipboard: Ctrl+C', formatInfo( viewName, name ) );
         }
     };
 
+    /**
+     *
+     * @param $control
+     * @param viewName
+     * @param name
+     */
     InfoElement.prototype.showInfo = function( $control, viewName, name ) {
         if( this.$currentControl && this.$currentControl[ 0 ] !== $control[ 0 ] ) {
             this.marker.reset( this.$currentControl );
@@ -124,6 +166,9 @@
             .tooltip( 'show' );
     };
 
+    /**
+     *
+     */
     InfoElement.prototype.hideInfo = function() {
         this.clickManager.clear();
         if( this.$currentControl ) {
@@ -136,6 +181,10 @@
 
     /********************************************/
 
+    /**
+     *
+     * @constructor
+     */
     function Marker() {
         this.DATA_NAME = 'data-pl-original-style';
 
@@ -144,6 +193,11 @@
         };
     }
 
+    /**
+     *
+     * @param $el
+     * @returns {Marker}
+     */
     Marker.prototype.highlight = function( $el ) {
         var data;
 
@@ -161,6 +215,11 @@
         return this;
     };
 
+    /**
+     *
+     * @param $el
+     * @returns {Marker}
+     */
     Marker.prototype.reset = function( $el ) {
         var data;
         if( $el ) {
@@ -175,6 +234,12 @@
 
     /********************/
 
+    /**
+     *
+     * @param viewName
+     * @param name
+     * @returns {*|string}
+     */
     function formatInfo( viewName, name ) {
         var info = viewName ? [ viewName ] : [];
         info.push( name );

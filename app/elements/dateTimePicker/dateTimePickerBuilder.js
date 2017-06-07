@@ -11,10 +11,19 @@ InfinniUI.DateTimePickerBuilder = DateTimePickerBuilder;
 
 _.inherit( DateTimePickerBuilder, TextEditorBaseBuilder );
 
+/**
+ *
+ * @param params
+ * @returns {DateTimePicker}
+ */
 DateTimePickerBuilder.prototype.createElement = function( params ) {
     return new DateTimePicker( params.parent );
 };
 
+/**
+ *
+ * @param params
+ */
 DateTimePickerBuilder.prototype.applyMetadata = function( params ) {
     var element = params.element;
     var metadata = params.metadata;
@@ -33,14 +42,28 @@ DateTimePickerBuilder.prototype.applyMetadata = function( params ) {
     //element.setDateFormat(format);
 };
 
+/**
+ *
+ * @param element
+ * @param minValue
+ */
 DateTimePickerBuilder.prototype.applyMinValue = function( element, minValue ) {
     element.setMinValue( InfinniUI.DateUtils.parseISO8601toDate( minValue ) );
 };
 
+/**
+ *
+ * @param element
+ * @param maxValue
+ */
 DateTimePickerBuilder.prototype.applyMaxValue = function( element, maxValue ) {
     element.setMaxValue( InfinniUI.DateUtils.parseISO8601toDate( maxValue ) );
 };
 
+/**
+ *
+ * @param params
+ */
 DateTimePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
     var metadata = params.metadata;
     var defaultFormat = {
@@ -63,14 +86,29 @@ DateTimePickerBuilder.prototype.applyDefaultMetadata = function( params ) {
     } );
 };
 
+/**
+ *
+ * @param params
+ * @returns {*}
+ */
 DateTimePickerBuilder.prototype.initDisplayFormat = function( params ) {
     return TextEditorBaseBuilder.prototype.initDisplayFormat.call( this, this.applyTimeZone( params ) );
 };
 
+/**
+ *
+ * @param params
+ * @returns {*}
+ */
 DateTimePickerBuilder.prototype.initEditMask = function( params ) {
     return TextEditorBaseBuilder.prototype.initEditMask.call( this, this.applyTimeZone( params ) );
 };
 
+/**
+ *
+ * @param params
+ * @returns {{}}
+ */
 DateTimePickerBuilder.prototype.applyTimeZone = function( params ) {
     var metadata = params.metadata;
     var _params = {};

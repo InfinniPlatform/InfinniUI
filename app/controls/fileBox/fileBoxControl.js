@@ -14,10 +14,18 @@ _.inherit( FileBoxControl, Control );
 
 _.extend( FileBoxControl.prototype, {
 
+    /**
+     * @returns {FileBoxModel}
+     */
     createControlModel: function() {
         return new FileBoxModel();
     },
 
+    /**
+     *
+     * @param model
+     * @returns {FileBoxView}
+     */
     createControlView: function( model ) {
         return new FileBoxView( { model: model } );
     }

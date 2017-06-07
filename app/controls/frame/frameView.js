@@ -1,5 +1,5 @@
 /**
- * @class FrameView
+ * @constructor
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
@@ -13,26 +13,41 @@ var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         iframe: 'iframe'
     } ),
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var value = this.model.get( 'value' );
 
         this.ui.iframe.attr( 'src', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getData: function() {
         return _.extend(
             {},
@@ -44,6 +59,10 @@ var FrameView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         );
     },
 
+    /**
+     *
+     * @returns {FrameView}
+     */
     render: function() {
         var model = this.model;
 

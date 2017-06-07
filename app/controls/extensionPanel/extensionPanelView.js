@@ -1,12 +1,23 @@
-﻿var ExtensionPanelView = ContainerView.extend( {
+﻿/**
+ * @constructor
+ * @augments ContainerView
+ */
+var ExtensionPanelView = ContainerView.extend( {
 
     className: 'pl-extension-panel',
 
+    /**
+     *
+     */
     initialize: function() {
         ContainerView.prototype.initialize.apply( this );
         this.extensionObject = null;
     },
 
+    /**
+     *
+     * @returns {ExtensionPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -26,10 +37,15 @@
         return this;
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
-
     },
 
+    /**
+     *
+     */
     initExtensionObject: function() {
         var extensionName = this.model.get( 'extensionName' );
         var context = this.model.get( 'context' );

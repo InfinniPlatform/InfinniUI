@@ -12,10 +12,19 @@ _.inherit( ComboBoxBuilder, ListEditorBaseBuilder );
 
 _.extend( ComboBoxBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {ComboBox}
+     */
     createElement: function( params ) {
         return new ComboBox( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var element = params.element;
         var that = this;
@@ -37,6 +46,11 @@ _.extend( ComboBoxBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param binding
+     * @param params
+     */
     initValueTemplate: function( binding, params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -53,6 +67,12 @@ _.extend( ComboBoxBuilder.prototype, {
         element.setValueTemplate( valueTemplate );
     },
 
+    /**
+     *
+     * @param templateMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildValueTemplate: function( templateMetadata, params ) {
         var builder = params.builder;
         var basePathOfProperty = params.basePathOfProperty || new BasePathOfProperty( '' );
@@ -80,6 +100,13 @@ _.extend( ComboBoxBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param binding
+     * @param valueFormatMetadata
+     * @param params
+     * @returns {Function}
+     */
     buildValueTemplateByFormat: function( binding, valueFormatMetadata, params ) {
         var format = this.buildDisplayFormat( valueFormatMetadata, params );
 
@@ -95,6 +122,12 @@ _.extend( ComboBoxBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @param binding
+     * @param params
+     * @returns {Function}
+     */
     buildValueTemplateByDefault: function( binding, params ) {
         return function( context, args ) {
             var value = args.value;
@@ -107,6 +140,10 @@ _.extend( ComboBoxBuilder.prototype, {
         };
     },
 
+    /**
+     *
+     * @returns {string}
+     */
     generateName: function() {
         return 'combobox-' + guid();
     }

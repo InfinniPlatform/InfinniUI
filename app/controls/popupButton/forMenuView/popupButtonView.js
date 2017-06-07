@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments CommonPopupButtonView
+ */
 var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
 
     tagName: 'button',
@@ -18,6 +22,9 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         grip: '.pl-popup-button__grip'
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
 
@@ -28,6 +35,9 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
 
     updateText: CommonButtonView.prototype.updateText,
 
+    /**
+     *
+     */
     updateHorizontalAlignment: function() {
         var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var that = this;
@@ -51,10 +61,17 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         );
     },
 
+    /**
+     * @returns {jQuery}
+     */
     getButtonElement: function() {
         return this.ui.button;
     },
 
+    /**
+     *
+     * @returns {ForMenuPopupButtonView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -79,6 +96,10 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {jQuery|HTMLElement}
+     */
     renderDropdown: function() {
         var template = this.dropdownTemplate;
         var items = this.model.get( 'items' ).toArray();
@@ -92,6 +113,11 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         return $result;
     },
 
+    /**
+     *
+     * @param $dropdown
+     * @param items
+     */
     appendItemsContent: function( $dropdown, items ) {
         var that = this;
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -105,6 +131,9 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     open: function() {
         var that = this;
         var $parent = this.$el.parent();
@@ -122,12 +151,18 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     close: function() {
         this.$dropdown.removeClass( 'open' );
         this.$el.parent().removeClass( 'open' );
         this.$dropdown.detach();
     },
 
+    /**
+     *
+     */
     alignDropdown: function() {
         var horizontalAlignment = this.model.get( 'horizontalAlignment' );
         var $el = this.$el.parent();
@@ -148,13 +183,25 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     onClickGripHandler: function() {
         this.toggle();
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     },
 
+    /**
+     *
+     * @param conditionFunction
+     * @param onConditionFunction
+     * @param n
+     */
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 

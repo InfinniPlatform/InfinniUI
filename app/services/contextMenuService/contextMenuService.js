@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 InfinniUI.ContextMenuService = ( function() {
     var exchange = InfinniUI.global.messageBus;
 

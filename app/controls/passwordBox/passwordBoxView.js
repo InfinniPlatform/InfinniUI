@@ -1,5 +1,5 @@
 /**
- * @class PasswordBoxView
+ * @constructor
  * @augments ControlView
  * @mixes editorBaseViewMixin
  */
@@ -23,10 +23,16 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         'change .pl-control': 'onChangeHandler'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         ControlView.prototype.initialize.apply( this );
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         editorBaseViewMixin.initHandlersForProperties.call( this );
@@ -36,21 +42,33 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.listenTo( this.model, 'change:autocomplete', this.updateAutocomplete );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
         editorBaseViewMixin.updateProperties.call( this );
         this.updateLabelText();
     },
 
+    /**
+     *
+     */
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
         this.ui.label.text( labelText );
     },
 
+    /**
+     *
+     */
     updateAutocomplete: function() {
         this.rerender();
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         editorBaseViewMixin.updateValueState.call( this );
 
@@ -58,6 +76,9 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.ui.input.val( value );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
 
@@ -66,6 +87,9 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         this.ui.input.prop( 'disabled', !enabled );
     },
 
+    /**
+     * @returns {*}
+     */
     getData: function() {
         return _.extend(
             {},
@@ -74,6 +98,10 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         );
     },
 
+    /**
+     *
+     * @returns {PasswordBoxView}
+     */
     render: function() {
         var model = this.model;
 
@@ -90,16 +118,26 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         return this;
     },
 
+    /**
+     *
+     */
     remove: function() {
         ControlView.prototype.remove.call( this );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getTemplate: function() {
         var model = this.model;
 
         return model.get( 'autocomplete' ) ? this.template.autocomplete : this.template.noautocomplete;
     },
 
+    /**
+     *
+     */
     updateModelValue: function() {
         var value = this.ui.input.val();
         var model = this.model;
@@ -108,14 +146,23 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
         model.set( 'rawValue', value );
     },
 
+    /**
+     *
+     */
     onBlurHandler: function() {
         this.updateModelValue();
     },
 
+    /**
+     *
+     */
     onChangeHandler: function() {
         this.updateModelValue();
     },
 
+    /**
+     *
+     */
     onInputHandler: function() {
         this.updateModelValue();
     }

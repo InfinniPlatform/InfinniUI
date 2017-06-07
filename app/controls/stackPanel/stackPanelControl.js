@@ -12,10 +12,18 @@ _.inherit( StackPanelControl, ContainerControl );
 
 _.extend( StackPanelControl.prototype, {
 
+    /**
+     * @returns {StackPanelModel}
+     */
     createControlModel: function() {
         return new StackPanelModel();
     },
 
+    /**
+     * @returns {StackPanelView}
+     * @param model
+     * @param viewMode
+     */
     createControlView: function( model, viewMode ) {
         var view = new StackPanelView( { model: model } );
 

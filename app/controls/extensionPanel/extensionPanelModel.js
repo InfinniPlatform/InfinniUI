@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
 var ExtensionPanelModel = ContainerModel.extend( {
 
     defaults: _.defaults( {
@@ -5,6 +9,9 @@ var ExtensionPanelModel = ContainerModel.extend( {
         context: null
     }, ContainerModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this );
     }

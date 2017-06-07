@@ -12,10 +12,19 @@ _.inherit( DividerControl, Control );
 
 _.extend( DividerControl.prototype, {
 
+    /**
+     *
+     * @returns {DividerModel}
+     */
     createControlModel: function() {
         return new DividerModel();
     },
 
+    /**
+     *
+     * @param model
+     * @returns {DividerView}
+     */
     createControlView: function( model ) {
         return new DividerView( { model: model } );
     }

@@ -1,3 +1,7 @@
+/**
+ * @augments LinkViewBuilderBase
+ * @constructor
+ */
 function InlineViewBuilder() {
     _.superClass( InlineViewBuilder, this );
 }
@@ -8,6 +12,12 @@ InfinniUI.InlineViewBuilder = InlineViewBuilder;
 
 _.extend( InlineViewBuilder.prototype, {
 
+    /**
+     *
+     * @param args
+     * @param parentView
+     * @returns {Function}
+     */
     getViewTemplate: function( args, parentView ) {
         var that = this;
 

@@ -13,6 +13,10 @@ _.inherit( ContextMenu, Container );
 
 _.extend( ContextMenu.prototype, {
 
+    /**
+     *
+     * @returns {ContextMenuControl}
+     */
     createControl: function() {
         return new ContextMenuControl();
     }

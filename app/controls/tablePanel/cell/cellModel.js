@@ -8,6 +8,9 @@ var CellModel = ContainerModel.extend( {
         columnSpan: 1
     }, ContainerModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     }

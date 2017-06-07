@@ -1,5 +1,15 @@
+/**
+ *
+ * @constructor
+ */
 function ParameterBuilder() {
 
+    /**
+     *
+     * @param context
+     * @param args
+     * @returns {*}
+     */
     this.build = function( context, args ) {
         var metadata = args.metadata;
         var builder = args.builder;

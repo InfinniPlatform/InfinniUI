@@ -1,14 +1,25 @@
+/**
+ * @constructor
+ * @augments BaseListBoxView
+ */
 var CommonListBoxView = BaseListBoxView.extend( {
 
     className: 'pl-listbox pl-listbox-common-mode',
 
     events: _.extend( {}, BaseListBoxView.prototype.events ),
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         BaseListBoxView.prototype.initialize.call( this, options );
         this.initDomHandlers();
     },
 
+    /**
+     *
+     */
     initDomHandlers: function() {
         var $listBox = this.$el;
         var that = this;

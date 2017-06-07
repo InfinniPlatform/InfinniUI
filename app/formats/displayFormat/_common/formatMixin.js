@@ -9,10 +9,18 @@ var formatMixin = {
      */
     separator: ', ',
 
+    /**
+     *
+     * @param options
+     */
     setOptions: function( options ) {
         this.options = _.extend( {}, this.options || {}, options );
     },
 
+    /**
+     *
+     * @returns {*|{}}
+     */
     getOptions: function() {
         return this.options || {};
     },
@@ -22,7 +30,7 @@ var formatMixin = {
      * Для форматирования объекта вызывается метод formatValue
      *
      * @param {*} originalValue Форматируемое значение
-     * @param {Culture} culture Культура
+     * @param {*} culture Культура
      * @param {String} format Строка форматирования
      * @returns {String}
      */
@@ -42,10 +50,18 @@ var formatMixin = {
         return result;
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     getFormat: function() {
         return this.getPropertyValue( 'formatRule', this.defaultFormat );
     },
 
+    /**
+     *
+     * @param value
+     */
     setFormat: function( value ) {
         this.formatRule = value;
     },

@@ -16,10 +16,9 @@ requireDir( './gulptasks' ); // подключаем задачи из папк�
  * @group {Main}
  * @order {1}
  */
-gulp.task( 'build', gulp.parallel(
-    'build:js',
-    'build:less',
-    'copy:fonts'
+gulp.task( 'build', gulp.series(
+    'lint',
+    gulp.parallel( 'build:js', 'build:less', 'copy:fonts' )
 ) );
 
 /**

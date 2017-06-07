@@ -1,6 +1,6 @@
 /**
  * @description Билдер ObjectFormat
- * @class ObjectFormatBuilder
+ * @constructor
  */
 function ObjectFormatBuilder() {
     /**

@@ -15,10 +15,19 @@ _.inherit( FileBoxBuilder, ElementBuilder );
 
 _.extend( FileBoxBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {FileBox}
+     */
     createElement: function( params ) {
         return new FileBox( params.parent );
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
 
@@ -41,12 +50,10 @@ _.extend( FileBoxBuilder.prototype, {
         // 2. при выборе в элементе файла на загрузку - добавить выбранный файл в очередь на загрузку
 
         var converter = new FileBoxValueConverter( element );
-
         var data = this.applyMetadata_editorBaseBuilder( params, {
             mode: InfinniUI.BindingModes.toElement,
             converter: converter
         } );
-
         var binding = data.valueBinding;
 
         if( binding ) {

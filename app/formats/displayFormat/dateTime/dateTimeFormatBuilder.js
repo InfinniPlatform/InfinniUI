@@ -1,6 +1,6 @@
 /**
  * @description Билдер DateTimeFormat
- * @class DateTimeFormatBuilder
+ * @constructor
  */
 function DateTimeFormatBuilder() {
     /**

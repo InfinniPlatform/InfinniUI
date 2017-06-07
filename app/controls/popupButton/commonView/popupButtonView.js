@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments ContainerView
+ */
 var CommonPopupButtonView = ContainerView.extend( {
 
     className: 'pl-popup-button',
@@ -14,6 +18,9 @@ var CommonPopupButtonView = ContainerView.extend( {
         grip: '.pl-popup-button__grip'
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
 
@@ -24,10 +31,17 @@ var CommonPopupButtonView = ContainerView.extend( {
 
     updateText: CommonButtonView.prototype.updateText,
 
+    /**
+     *
+     */
     getButtonElement: function() {
         return this.ui.button;
     },
 
+    /**
+     *
+     * @returns {CommonPopupButtonView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -54,6 +68,10 @@ var CommonPopupButtonView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     * @returns {jQuery|HTMLElement}
+     */
     renderDropdown: function() {
         var template = this.dropdownTemplate;
         var items = this.model.get( 'items' ).toArray();
@@ -64,6 +82,11 @@ var CommonPopupButtonView = ContainerView.extend( {
         return $result;
     },
 
+    /**
+     *
+     * @param $dropdown
+     * @param items
+     */
     appendItemsContent: function( $dropdown, items ) {
         var that = this;
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -77,6 +100,9 @@ var CommonPopupButtonView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     open: function() {
         var that = this;
 
@@ -88,11 +114,17 @@ var CommonPopupButtonView = ContainerView.extend( {
         var $ignoredElements = this.$dropdown.add( this.ui.grip );
     },
 
+    /**
+     *
+     */
     close: function() {
         this.$dropdown.removeClass( 'open' );
         this.$dropdown.detach();
     },
 
+    /**
+     *
+     */
     alignDropdown: function() {
         var offset = this.$el.offset();
         var $elHeight = this.$el.height();
@@ -117,6 +149,9 @@ var CommonPopupButtonView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     toggle: function() {
         if( !this.$dropdown.hasClass( 'open' ) ) {
             this.open();
@@ -125,11 +160,18 @@ var CommonPopupButtonView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     */
     onClickHandler: function() {
         this.toggle();
     },
 
-    updateGrouping: function() {}
+    /**
+     *
+     */
+    updateGrouping: function() {
+    }
 
 } );
 

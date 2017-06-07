@@ -15,6 +15,10 @@ _.inherit( Frame, Element );
 
 _.extend( Frame.prototype, {
 
+    /**
+     *
+     * @returns {FrameControl}
+     */
     createControl: function() {
         return new FrameControl();
     }

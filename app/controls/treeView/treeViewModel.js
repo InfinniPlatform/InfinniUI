@@ -1,16 +1,26 @@
+/**
+ * @constructor
+ * @augments ListEditorBaseModel
+ */
 var TreeViewModel = ListEditorBaseModel.extend( {
 
     defaults: _.defaults( {
         onExpand: null,
         onCollapse: null
-    },
-        ListEditorBaseModel.prototype.defaults
-    ),
+    }, ListEditorBaseModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ListEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
     },
 
+    /**
+     *
+     * @param item
+     * @param toggle
+     */
     toggleItem: function( item, toggle ) {
         var value = this.valueByItem( item );
 

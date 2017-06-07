@@ -1,5 +1,15 @@
+/**
+ *
+ * @type {{whenReady: domHelper.whenReady}}
+ */
 var domHelper = {
 
+    /**
+     *
+     * @param conditionFunction
+     * @param onConditionFunction
+     * @param n
+     */
     whenReady: function( conditionFunction, onConditionFunction, n ) {
         var that = this;
 

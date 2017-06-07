@@ -1,3 +1,8 @@
+/**
+ * @augments ElementBuilder
+ * @constructor
+ * @mixes buttonBuilderMixin
+ */
 function ButtonBuilder() {
     _.superClass( ButtonBuilder, this );
 }
@@ -8,12 +13,21 @@ _.inherit( ButtonBuilder, ElementBuilder );
 
 _.extend( ButtonBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Button}
+     */
     createElement: function( params ) {
         var viewMode = this.detectViewMode( params );
 
         return new Button( params.parent, viewMode );
     },
 
+    /**
+     *
+     * @param params
+     */
     detectViewMode: function( params ) {
         var viewMode = params.metadata[ 'ViewMode' ];
         var el = params.parent;
@@ -46,6 +60,10 @@ _.extend( ButtonBuilder.prototype, {
         return viewMode;
     },
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
 

@@ -1,6 +1,7 @@
 /**
  * @param parent
  * @constructor
+ * @augments ListEditorBase
  */
 function TreeView( parent ) {
     _.superClass( TreeView, this, parent );
@@ -10,6 +11,10 @@ InfinniUI.TreeView = TreeView;
 
 _.inherit( TreeView, ListEditorBase );
 
+/**
+ *
+ * @returns {TreeViewControl}
+ */
 TreeView.prototype.createControl = function() {
     return new TreeViewControl();
 };

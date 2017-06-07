@@ -13,6 +13,11 @@ _.inherit( MenuBar, Container );
 
 _.extend( MenuBar.prototype, {
 
+    /**
+     *
+     * @param viewMode
+     * @returns {MenuBarControl}
+     */
     createControl: function( viewMode ) {
         return new MenuBarControl( viewMode );
     },

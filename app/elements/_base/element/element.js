@@ -1,3 +1,9 @@
+/**
+ *
+ * @param parent
+ * @param viewMode
+ * @constructor
+ */
 var Element = function( parent, viewMode ) {
     this.parent = parent;
     this.control = this.createControl( viewMode );
@@ -18,22 +24,43 @@ Object.defineProperties( Element.prototype, {
 
 _.extend( Element.prototype, {
 
+    /**
+     *
+     * @param viewMode
+     */
     createControl: function( viewMode ) {
         throw new Error( 'Не перегружен абстрактный метод Element.createControl' );
     },
 
+    /**
+     *
+     * @param parentElement
+     */
     setParent: function( parentElement ) {
         this.parent = parentElement;
     },
 
+    /**
+     *
+     * @return {*}
+     */
     getParent: function() {
         return this.parent;
     },
 
+    /**
+     *
+     * @return {undefined|*|Array}
+     */
     getChildElements: function() {
         return this.childElements;
     },
 
+    /**
+     *
+     * @param type
+     * @return {*}
+     */
     findAllChildrenByType: function( type ) {
         return this._findAllChildren( predicate, getChildElements );
 
@@ -46,6 +73,11 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param name
+     * @return {*}
+     */
     findAllChildrenByName: function( name ) {
         return this._findAllChildren( predicate, getChildElements );
 
@@ -59,6 +91,13 @@ _.extend( Element.prototype, {
 
     },
 
+    /**
+     *
+     * @param predicate
+     * @param getChildElements
+     * @return {Array}
+     * @private
+     */
     _findAllChildren: function( predicate, getChildElements ) {
         var elements = this.getChildElements();
         var items = [];
@@ -75,6 +114,10 @@ _.extend( Element.prototype, {
         return items;
     },
 
+    /**
+     *
+     * @return {*|null}
+     */
     getView: function() {
         if( !this.parentView ) {
             if( this.parent && this.parent.isView ) {
@@ -92,10 +135,17 @@ _.extend( Element.prototype, {
         return this.parentView;
     },
 
+    /**
+     * @returns {*}
+     */
     getName: function() {
         return this.control.get( 'name' );
     },
 
+    /**
+     *
+     * @param name
+     */
     setName: function( name ) {
         if( this.getName() ) {
             throw new Error( 'name already exists' );
@@ -106,6 +156,11 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param name
+     * @return {*}
+     */
     getProperty: function( name ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( name );
 
@@ -116,6 +171,11 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     */
     setProperty: function( name, value ) {
         var setterMethodName = 'set' + this._upperFirstSymbol( name );
         var getterMethodName;
@@ -132,12 +192,23 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param propertyName
+     * @return {boolean}
+     * @private
+     */
     _isCollectionProperty: function( propertyName ) {
         var getterMethodName = 'get' + this._upperFirstSymbol( propertyName );
 
         return ( typeof this[ getterMethodName ] === 'function' ) && this[ getterMethodName ]() instanceof Collection;
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param handler
+     */
     onPropertyChanged: function( propertyName, handler ) {
         var subscribingMethodName = 'on' + this._upperFirstSymbol( propertyName ) + 'Changed';
 
@@ -157,20 +228,34 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getText: function() {
         return this.control.get( 'text' );
     },
 
+    /**
+     *
+     * @param text
+     */
     setText: function( text ) {
         if( typeof text !== 'undefined' ) {
             this.control.set( 'text', text );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getEnabled: function() {
         return this.control.get( 'enabled' );
     },
 
+    /**
+     *
+     * @param isEnabled
+     */
     setEnabled: function( isEnabled ) {
         if( typeof isEnabled !== 'boolean' ) {
             return;
@@ -191,6 +276,10 @@ _.extend( Element.prototype, {
         this.setParentEnabledOnChild( isEnabled );
     },
 
+    /**
+     *
+     * @param value
+     */
     setParentEnabledOnChild: function( value ) {
         var elements = this.getChildElements();
 
@@ -204,6 +293,10 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param value
+     */
     setParentEnabled: function( value ) {
         if( typeof value !== 'boolean' ) {
             return;
@@ -221,152 +314,274 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getVisible: function() {
         return this.control.get( 'visible' );
     },
 
+    /**
+     *
+     * @param isVisible
+     */
     setVisible: function( isVisible ) {
         if( typeof isVisible == 'boolean' ) {
             this.control.set( 'visible', isVisible );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getStyle: function() {
         return this.control.get( 'style' );
     },
 
+    /**
+     *
+     * @param style
+     */
     setStyle: function( style ) {
         if( typeof style == 'string' ) {
             this.control.set( 'style', style );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getTextHorizontalAlignment: function() {
         return this.control.get( 'textHorizontalAlignment' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setTextHorizontalAlignment: function( value ) {
         if( InfinniUI.Metadata.isValidValue( value, InfinniUI.TextHorizontalAlignment ) ) {
             this.control.set( 'textHorizontalAlignment', value );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getHorizontalAlignment: function() {
         return this.control.get( 'horizontalAlignment' );
     },
 
+    /**
+     *
+     * @param horizontalAlignment
+     */
     setHorizontalAlignment: function( horizontalAlignment ) {
         if( typeof horizontalAlignment == 'string' ) {
             this.control.set( 'horizontalAlignment', horizontalAlignment );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getTextStyle: function() {
         return this.control.get( 'textStyle' );
     },
 
+    /**
+     *
+     * @param textStyle
+     */
     setTextStyle: function( textStyle ) {
         if( typeof textStyle == 'string' ) {
             this.control.set( 'textStyle', textStyle );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getBackground: function() {
         return this.control.get( 'background' );
     },
 
+    /**
+     *
+     * @param background
+     */
     setBackground: function( background ) {
         if( typeof background == 'string' ) {
             this.control.set( 'background', background );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getForeground: function() {
         return this.control.get( 'foreground' );
     },
 
+    /**
+     *
+     * @param foreground
+     */
     setForeground: function( foreground ) {
         if( typeof foreground == 'string' ) {
             this.control.set( 'foreground', foreground );
         }
     },
 
+    /**
+     *
+     * @param handler
+     */
     onLoaded: function( handler ) {
         this.control.onLoaded( handler );
     },
 
+    /**
+     *
+     * @returns {*}
+     */
     isLoaded: function() {
         return this.control.isLoaded();
     },
 
+    /**
+     * @returns {*}
+     */
     getFocusable: function() {
         return this.control.get( 'focusable' );
     },
 
+    /**
+     *
+     * @param value
+     */
     setFocusable: function( value ) {
         if( typeof value === 'boolean' ) {
             this.control.set( 'focusable', value );
         }
     },
 
+    /**
+     * @returns {*}
+     */
     getFocused: function() {
         return this.control.get( 'focused' );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     setFocused: function( value ) {
         //Установка фокуса вручную
         return this.control.setFocus();
     },
+
+    /**
+     *
+     * @param handler
+     */
     onLostFocus: function( handler ) {
         this.control.on( 'OnLostFocus', handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onGotFocus: function( handler ) {
         this.control.on( 'OnGotFocus', handler );
     },
 
+    /**
+     *
+     * @param value
+     */
     setToolTip: function( value ) {
         this.control.set( 'toolTip', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getToolTip: function() {
         return this.control.get( 'toolTip' );
     },
 
+    /**
+     *
+     * @param items
+     */
     setContextMenu: function( items ) {
         this.control.set( 'contextMenu', items );
     },
 
+    /**
+     * @returns {*}
+     * @param items
+     */
     getContextMenu: function( items ) {
         return this.control.get( 'contextMenu' );
     },
 
+    /**
+     * @returns {*}
+     */
     getIsLoaded: function() {
         return this.control.get( 'isLoaded' );
     },
 
+    /**
+     *
+     */
     setIsLoaded: function() {
         this.control.set( 'isLoaded', true );
     },
 
+    /**
+     *
+     * @param value
+     */
     setTag: function( value ) {
         this.control.set( 'tag', value );
     },
 
+    /**
+     * @returns {*}
+     */
     getTag: function() {
         return this.control.get( 'tag' );
     },
+
+    /**
+     * @returns {*}
+     */
 
     render: function() {
         return this.control.render();
     },
 
+    /**
+     *
+     */
     getWidth: function() {
     },
 
+    /**
+     *
+     */
     getHeight: function() {
     },
 
+    /**
+     * @returns {*}
+     */
     getScriptsStorage: function() {
         return this.getView();
     },
@@ -389,18 +604,38 @@ _.extend( Element.prototype, {
         return this.control.get( 'validationState' );
     },
 
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
     getState: function( name ) {
         return this.state[ name ];
     },
 
+    /**
+     *
+     * @param name
+     * @param value
+     */
     setState: function( name, value ) {
         this.state[ name ] = value;
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onBeforeClick: function( handler ) {
         return this.control.onBeforeClick( handler );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onKeyDown: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -411,6 +646,11 @@ _.extend( Element.prototype, {
         return this.control.onKeyDown( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onKeyUp: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -421,6 +661,11 @@ _.extend( Element.prototype, {
         return this.control.onKeyUp( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onClick: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -431,6 +676,11 @@ _.extend( Element.prototype, {
         return this.control.onClick( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onDoubleClick: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -441,6 +691,11 @@ _.extend( Element.prototype, {
         return this.control.onDoubleClick( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseDown: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -451,6 +706,11 @@ _.extend( Element.prototype, {
         return this.control.onMouseDown( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseUp: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -461,6 +721,11 @@ _.extend( Element.prototype, {
         return this.control.onMouseUp( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseEnter: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -471,6 +736,11 @@ _.extend( Element.prototype, {
         return this.control.onMouseEnter( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseLeave: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -481,6 +751,11 @@ _.extend( Element.prototype, {
         return this.control.onMouseLeave( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseMove: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -491,6 +766,11 @@ _.extend( Element.prototype, {
         return this.control.onMouseMove( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     */
     onMouseWheel: function( handler ) {
         var that = this;
         var callback = function( nativeEventData ) {
@@ -501,10 +781,20 @@ _.extend( Element.prototype, {
         return this.control.onMouseWheel( callback );
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*|CollectionEventManager|{name}}
+     */
     onRemove: function( handler ) {
         return this.control.onRemove( this.createControlEventHandler( this, handler ) );
     },
 
+    /**
+     *
+     * @param isInitiatedByParent
+     * @param parent
+     */
     remove: function( isInitiatedByParent, parent ) {
         var logger = InfinniUI.global.logger;
         if( this.isRemoved ) {
@@ -537,6 +827,10 @@ _.extend( Element.prototype, {
         this.childElements = undefined;
     },
 
+    /**
+     *
+     * @param child
+     */
     removeChild: function( child ) {
         var index = this.childElements.indexOf( child );
 
@@ -545,6 +839,10 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     * @param child
+     */
     addChild: function( child ) {
         if( !this.isRemoved ) {
             this.childElements.push( child );
@@ -556,6 +854,13 @@ _.extend( Element.prototype, {
 
     },
 
+    /**
+     *
+     * @param element
+     * @param handler
+     * @param additionParams
+     * @returns {Function}
+     */
     createControlEventHandler: function( element, handler, additionParams ) {
         var context;
         var parentView = element.getView();
@@ -577,6 +882,12 @@ _.extend( Element.prototype, {
         };
     },
 
+    /**
+     *
+     * @param nativeData
+     * @returns {{source: Element, key: (jQuery.which|*|Object), altKey: (*|boolean), ctrlKey: (*|boolean), shiftKey: (*|boolean), nativeEventData: *}}
+     * @private
+     */
     _getHandlingKeyEventData: function( nativeData ) {
         return {
             source: this,
@@ -588,6 +899,12 @@ _.extend( Element.prototype, {
         };
     },
 
+    /**
+     *
+     * @param nativeData
+     * @returns {{source: Element, button: (jQuery.which|*|Object), altKey: (*|boolean), ctrlKey: (*|boolean), shiftKey: (*|boolean), nativeEventData: *}}
+     * @private
+     */
     _getHandlingMouseEventData: function( nativeData ) {
         return {
             source: this,
@@ -599,14 +916,27 @@ _.extend( Element.prototype, {
         };
     },
 
+    /**
+     *
+     * @param s
+     * @returns {string}
+     * @private
+     */
     _upperFirstSymbol: function( s ) {
         return s[ 0 ].toUpperCase() + s.substr( 1 );
     },
 
+    /**
+     *
+     */
     setFocus: function() {
         this.control.setFocus();
     },
 
+    /**
+     *
+     * @param textIndentOld
+     */
     renderTree: function( textIndentOld ) {
         var textIndent = textIndentOld || '';
 
@@ -623,6 +953,9 @@ _.extend( Element.prototype, {
         }
     },
 
+    /**
+     *
+     */
     renderFullTree: function() {
         var parent = this.parent;
 

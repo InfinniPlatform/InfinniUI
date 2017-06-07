@@ -16,6 +16,10 @@ _.inherit( LabelBuilder, ElementBuilder );
 
 _.extend( LabelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         var element = params.element;
 
@@ -29,6 +33,10 @@ _.extend( LabelBuilder.prototype, {
         this.initDisplayFormat( params );
     },
 
+    /**
+     *
+     * @param params
+     */
     initDisplayFormat: function( params ) {
         var metadata = params.metadata;
         var format = this.buildDisplayFormat( metadata.DisplayFormat, params );
@@ -36,6 +44,11 @@ _.extend( LabelBuilder.prototype, {
         params.element.setDisplayFormat( format );
     },
 
+    /**
+     *
+     * @param params
+     * @returns {Label}
+     */
     createElement: function( params ) {
         var label = new Label( params.parent, params.metadata[ 'ViewMode' ] );
 

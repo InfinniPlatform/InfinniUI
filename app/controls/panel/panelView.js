@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var PanelView = ContainerView.extend( {
 
@@ -17,10 +17,18 @@ var PanelView = ContainerView.extend( {
         'click >.pl-panel-header': 'onClickHeaderHandler'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {PanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -44,6 +52,9 @@ var PanelView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ContainerView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:collapsed', this.updateCollapsed );
@@ -52,6 +63,9 @@ var PanelView = ContainerView.extend( {
         this.listenTo( this.model, 'change:headerTemplate', this.updateHeader );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ContainerView.prototype.updateProperties.call( this );
         this.updateCollapsed();
@@ -59,14 +73,25 @@ var PanelView = ContainerView.extend( {
         this.updateHeader();
     },
 
+    /**
+     *
+     */
     updateCollapsed: function() {
         this.ui.header.toggleClass( 'pl-collapsed', this.model.get( 'collapsed' ) );
     },
 
+    /**
+     *
+     * @param model
+     * @param value
+     */
     updateCollapsible: function( model, value ) {
         this.ui.header.toggleClass( 'pl-collapsible', this.model.get( 'collapsible' ) );
     },
 
+    /**
+     *
+     */
     updateHeader: function() {
         var model = this.model;
 
@@ -85,6 +110,9 @@ var PanelView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var $items = this.$el.find( '.pl-panel-i' );
         var items = this.model.get( 'items' );
@@ -101,9 +129,15 @@ var PanelView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     },
 
+    /**
+     *
+     */
     onEventCallback: function() {
         var collapsible = this.model.get( 'collapsible' );
 
@@ -114,6 +148,10 @@ var PanelView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickHeaderHandler: function( event ) {
         var collapseChanger = this.model.get( 'collapseChanger' );
 

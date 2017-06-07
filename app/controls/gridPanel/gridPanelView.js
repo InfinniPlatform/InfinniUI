@@ -1,6 +1,6 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var GridPanelView = ContainerView.extend( {
 
@@ -12,10 +12,18 @@ var GridPanelView = ContainerView.extend( {
         row: InfinniUI.Template[ 'controls/gridPanel/template/row.tpl.html' ]
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
     },
 
+    /**
+     *
+     * @returns {GridPanelView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -32,6 +40,9 @@ var GridPanelView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var items = this.model.get( 'items' );
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -58,6 +69,10 @@ var GridPanelView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     * @param row
+     */
     renderRow: function( row ) {
         var view = this;
         var $row = $( '<div class="pl-clearfix"></div>' );
@@ -69,6 +84,9 @@ var GridPanelView = ContainerView.extend( {
         this.$el.append( $row );
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

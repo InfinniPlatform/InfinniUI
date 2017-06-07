@@ -13,10 +13,22 @@ InfinniUI.BlobUtils = ( function() {
 
     return blobUtils;
 
+    /**
+     *
+     * @param data
+     * @returns {*}
+     */
     function isFileInfo( data ) {
         return data && blobUtils.getContentId( data );
     }
 
+    /**
+     *
+     * @param name
+     * @param data
+     * @param defaultValue
+     * @returns {*}
+     */
     function getContentByName( name, data, defaultValue ) {
         return typeof data === 'object' ? data[ name ] : defaultValue;
     }

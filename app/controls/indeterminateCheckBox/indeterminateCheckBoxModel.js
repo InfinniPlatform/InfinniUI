@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments CheckBoxModel
+ */
 var IndeterminateCheckBoxModel = CheckBoxModel.extend( {
 
     defaults: _.defaults( {

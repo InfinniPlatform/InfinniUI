@@ -1,5 +1,4 @@
 /**
- *
  * @constructor
  * @augments Control
  * @mixes editorBaseControlMixin
@@ -13,10 +12,17 @@ _.inherit( FrameControl, Control );
 
 _.extend( FrameControl.prototype, {
 
+    /**
+     * @returns {FrameModel}
+     */
     createControlModel: function() {
         return new FrameModel();
     },
 
+    /**
+     * @returns {FrameView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new FrameView( { model: model } );
     }

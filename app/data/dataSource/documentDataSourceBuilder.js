@@ -1,3 +1,8 @@
+/**
+ *
+ * @augments BaseDataSourceBuilder
+ * @constructor
+ */
 var DocumentDataSourceBuilder = function() {
     _.superClass( DocumentDataSourceBuilder, this );
 };
@@ -6,6 +11,13 @@ _.inherit( DocumentDataSourceBuilder, BaseDataSourceBuilder );
 
 _.extend( DocumentDataSourceBuilder.prototype, {
 
+    /**
+     *
+     * @param builder
+     * @param parent
+     * @param metadata
+     * @param dataSource
+     */
     applyMetadata: function( builder, parent, metadata, dataSource ) {
         BaseDataSourceBuilder.prototype.applyMetadata.call( this, builder, parent, metadata, dataSource );
 
@@ -20,6 +32,11 @@ _.extend( DocumentDataSourceBuilder.prototype, {
         if( 'PageNumber' in metadata ) { dataSource.setPageNumber( metadata[ 'PageNumber' ] ); }
     },
 
+    /**
+     *
+     * @param parent
+     * @returns {DocumentDataSource}
+     */
     createDataSource: function( parent ) {
         return new DocumentDataSource( {
             view: parent

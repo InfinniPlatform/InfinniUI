@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments Backbone.Model
+ */
 var TabHeaderModel = Backbone.Model.extend( {
 
     defaults: {
@@ -10,6 +14,11 @@ var TabHeaderModel = Backbone.Model.extend( {
 
 InfinniUI.TabHeaderModel = TabHeaderModel;
 
+/**
+ * @constructor
+ * @augments Backbone.View
+ * @mixes bindUIElementsMixin
+ */
 var TabHeaderView = Backbone.View.extend( {
 
     className: 'pl-tabheader',
@@ -28,12 +37,20 @@ var TabHeaderView = Backbone.View.extend( {
         close: '.pl-close'
     },
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         this.model = new TabHeaderModel( options );
 
         this.on( 'rendered', this.onRenderedHandler );
     },
 
+    /**
+     *
+     * @returns {TabHeaderView}
+     */
     render: function() {
         this.$el.html( this.template );
         this.bindUIElements();
@@ -68,6 +85,10 @@ var TabHeaderView = Backbone.View.extend( {
         this.model.set( 'selected', value );
     },
 
+    /**
+     *
+     * @param value
+     */
     setEnabled: function( value ) {
         this.model.set( 'enabled', value );
     },
@@ -120,16 +141,27 @@ var TabHeaderView = Backbone.View.extend( {
         this.$el.toggleClass( 'pl-active active', selected );
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         var isEnabled = this.model.get( 'enabled' );
 
         this.$el.toggleClass( 'pl-disabled', !isEnabled );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickHandler: function( event ) {
         this.trigger( 'selected' );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickCloseHandler: function( event ) {
         event.stopPropagation();
         this.trigger( 'close' );

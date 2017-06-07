@@ -1,3 +1,8 @@
+/**
+ * @augments ContainerBuilder
+ * @constructor
+ * @mixes editorBaseBuilderMixin
+ */
 function ListEditorBaseBuilder() {
     _.superClass( ListEditorBaseBuilder, this );
 
@@ -10,6 +15,10 @@ _.inherit( ListEditorBaseBuilder, ContainerBuilder );
 
 _.extend( ListEditorBaseBuilder.prototype, {
 
+    /**
+     * @returns {*}
+     * @param params
+     */
     applyMetadata: function( params ) {
         var applyingMetadataResult = ContainerBuilder.prototype.applyMetadata.call( this, params );
         var itemsBinding = applyingMetadataResult.itemsBinding;
@@ -24,7 +33,11 @@ _.extend( ListEditorBaseBuilder.prototype, {
         return _.extend( applyingMetadataResult, applyingMetadataResult2 );
     },
 
-
+    /**
+     *
+     * @param params
+     * @param itemsBinding
+     */
     initSelecting: function( params, itemsBinding ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -51,7 +64,6 @@ _.extend( ListEditorBaseBuilder.prototype, {
             parent: element,
             basePathOfProperty: params.basePathOfProperty
         };
-
         var onSelectedItemExecutor = Executor( metadata.OnSelectedItemChanged, params.builder, executorBuilderParams );
 
         element.onSelectedItemChanged( function( context, args ) {
@@ -69,6 +81,10 @@ _.extend( ListEditorBaseBuilder.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param params
+     */
     initValueFeatures: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -80,6 +96,10 @@ _.extend( ListEditorBaseBuilder.prototype, {
         this.initValueSelector( params );
     },
 
+    /**
+     *
+     * @param params
+     */
     initValueSelector: function( params ) {
         var metadata = params.metadata;
         var element = params.element;
@@ -102,6 +122,10 @@ _.extend( ListEditorBaseBuilder.prototype, {
         element.setValueSelector( valueSelector );
     },
 
+    /**
+     *
+     * @param params
+     */
     initDisabledItemCondition: function( params ) {
         var metadata = params.metadata;
         var element = params.element;

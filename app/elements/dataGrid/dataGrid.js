@@ -1,3 +1,8 @@
+/**
+ * @augments ListEditorBase
+ * @param parent
+ * @constructor
+ */
 function DataGrid( parent ) {
     _.superClass( DataGrid, this, parent );
 }
@@ -14,20 +19,35 @@ DataGrid.prototype.getColumns = function() {
     return this.control.get( 'columns' );
 };
 
+/**
+ *
+ * @param value
+ */
 DataGrid.prototype.setShowSelectors = function( value ) {
     if( typeof value !== 'undefined' && value !== null ) {
         this.control.set( 'showSelectors', !!value );
     }
 };
 
+/**
+ * @returns {*}
+ */
 DataGrid.prototype.getShowSelectors = function() {
     return this.control.get( 'showSelectors' );
 };
 
+/**
+ *
+ * @returns {DataGridRow}
+ */
 DataGrid.prototype.createRow = function() {
     return new DataGridRow( this );
 };
 
+/**
+ *
+ * @param value
+ */
 DataGrid.prototype.setEnabled = function( value ) {
     if( typeof value === 'boolean' ) {
         this.control.setEnabled( value );
@@ -76,11 +96,19 @@ DataGrid.prototype.onCheckAllChanged = function( handler ) {
     this.control.onCheckAllChanged( this.createControlEventHandler( this, handler ) );
 };
 
+/**
+ *
+ * @returns {DataGridControl}
+ */
 DataGrid.prototype.createControl = function() {
     return new DataGridControl();
 };
 
-
+/**
+ *
+ * @param handler
+ * @returns {*}
+ */
 DataGrid.prototype.onRowClick = function( handler ) {
     var that = this;
     var callback = function( nativeEventData ) {
@@ -90,6 +118,11 @@ DataGrid.prototype.onRowClick = function( handler ) {
     return this.control.onRowClick( callback );
 };
 
+/**
+ *
+ * @param handler
+ * @returns {*}
+ */
 DataGrid.prototype.onRowDoubleClick = function( handler ) {
     var that = this;
     var callback = function( nativeEventData ) {
@@ -99,10 +132,17 @@ DataGrid.prototype.onRowDoubleClick = function( handler ) {
     return this.control.onRowDoubleClick( callback );
 };
 
+/**
+ * @returns {*}
+ */
 DataGrid.prototype.getVerticalAlignment = function() {
     return this.control.get( 'verticalAlignment' );
 };
 
+/**
+ *
+ * @param verticalAlignment
+ */
 DataGrid.prototype.setVerticalAlignment = function( verticalAlignment ) {
     if( typeof verticalAlignment === 'string' ) {
         this.control.set( 'verticalAlignment', verticalAlignment );

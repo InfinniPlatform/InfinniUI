@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @auguments StackPanelModel
+ */
 var FormModel = StackPanelModel.extend( {
 
     defaults: _.defaults( {

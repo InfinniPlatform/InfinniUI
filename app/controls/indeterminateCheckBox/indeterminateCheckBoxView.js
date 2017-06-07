@@ -1,12 +1,14 @@
 /**
- * @class IndeterminateCheckBoxView
- * @augments ControlView
- * @mixes editorBaseViewMixin
+ * @constructor
+ * @augments CheckBoxView
  */
 var IndeterminateCheckBoxView = CheckBoxView.extend( {
 
     className: 'pl-indeterminate-checkbox',
 
+    /**
+     *
+     */
     onClickHandler: function() {
         var model = this.model;
         var enabled = model.get( 'enabled' );
@@ -18,6 +20,9 @@ var IndeterminateCheckBoxView = CheckBoxView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var value = this.model.get( 'value' );
 

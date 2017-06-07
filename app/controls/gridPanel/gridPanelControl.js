@@ -12,10 +12,17 @@ _.inherit( GridPanelControl, ContainerControl );
 
 _.extend( GridPanelControl.prototype, {
 
+    /**
+     * @returns {GridPanelModel}
+     */
     createControlModel: function() {
         return new GridPanelModel();
     },
 
+    /**
+     * @returns {GridPanelView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new GridPanelView( { model: model } );
     }

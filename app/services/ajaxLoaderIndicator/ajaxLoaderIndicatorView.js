@@ -1,3 +1,7 @@
+/**
+ * @constructor
+ * @augments Backbone.View
+ */
 var AjaxLoaderIndicatorView = Backbone.View.extend( {
 
     className: 'pl-ajaxloader',
@@ -6,16 +10,26 @@ var AjaxLoaderIndicatorView = Backbone.View.extend( {
 
     hiddenClassName: 'hidden',
 
+    /**
+     *
+     */
     initialize: function() {
         this.listenTo( this.model, 'change:progress', this.updateProgress );
     },
 
+    /**
+     *
+     * @returns {AjaxLoaderIndicatorView}
+     */
     render: function() {
         this.$el.html( this.template() );
         this.updateProgress();
         return this;
     },
 
+    /**
+     *
+     */
     updateProgress: function() {
         var progress = this.model.get( 'progress' );
         this.$el.toggleClass( this.hiddenClassName, !progress );

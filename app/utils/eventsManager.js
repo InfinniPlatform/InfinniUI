@@ -1,9 +1,19 @@
+/**
+ *
+ * @constructor
+ */
 function EventsManager() {
     this.handlers = {};
 }
 
 InfinniUI.EventsManager = EventsManager;
 
+/**
+ *
+ * @param event
+ * @param handler
+ * @returns {{off}}
+ */
 EventsManager.prototype.on = function( event, handler ) {
     if ( typeof this.handlers[ event ] === 'undefined' ) {
         this.handlers[ event ] = [];
@@ -17,6 +27,11 @@ EventsManager.prototype.on = function( event, handler ) {
     };
 };
 
+/**
+ *
+ * @param event
+ * @param handler
+ */
 EventsManager.prototype.off = function( event, handler ) {
     if ( typeof event !== 'undefined' ) {
         var handlers = this.handlers[ event ];
@@ -32,6 +47,10 @@ EventsManager.prototype.off = function( event, handler ) {
     }
 };
 
+/**
+ *
+ * @param event
+ */
 EventsManager.prototype.trigger = function( event ) {
     var handlers = this.handlers[ event ];
     var args = Array.prototype.slice.call( arguments, 1 );

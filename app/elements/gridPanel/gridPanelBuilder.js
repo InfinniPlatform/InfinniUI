@@ -12,6 +12,11 @@ _.inherit( GridPanelBuilder, ContainerBuilder );
 
 _.extend( GridPanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {GridPanel}
+     */
     createElement: function( params ) {
         return new GridPanel( params.parent );
     },

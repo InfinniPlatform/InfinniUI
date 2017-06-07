@@ -1,7 +1,7 @@
 /**
  *
  * @constructor
- * @augments ElementBuilder
+ * @augments CheckBoxBuilder
  */
 function IndeterminateCheckBoxBuilder() {
     _.superClass( IndeterminateCheckBoxBuilder, this );
@@ -14,6 +14,11 @@ _.inherit( IndeterminateCheckBoxBuilder, CheckBoxBuilder );
 
 _.extend( IndeterminateCheckBoxBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {IndeterminateCheckBox}
+     */
     createElement: function( params ) {
         return new IndeterminateCheckBox( params.parent );
     }

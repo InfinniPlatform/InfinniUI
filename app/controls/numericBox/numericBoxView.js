@@ -1,5 +1,5 @@
 /**
- * @class
+ * @constructor
  * @augments TextEditorBaseView
  */
 var NumericBoxView = TextEditorBaseView.extend( {
@@ -36,6 +36,9 @@ var NumericBoxView = TextEditorBaseView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     getData: function() {
         var model = this.model;
 
@@ -53,30 +56,48 @@ var NumericBoxView = TextEditorBaseView.extend( {
         this.ui.max.prop( 'disabled', !value );
     },
 
+    /**
+     *
+     */
     onClickMinControlHandler: function() {
         if( this.canChangeValue() ) {
             this.model.decValue();
         }
     },
 
+    /**
+     *
+     */
     onClickMaxControlHandler: function() {
         if( this.canChangeValue() ) {
             this.model.incValue();
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onMousedownMinControlHandler: function( event ) {
         if( this.canChangeValue() ) {
             this.repeatUpdateValue( this.model.decValue.bind( this.model ) );
         }
     },
 
+    /**
+     *
+     * @param event
+     */
     onMousedownMaxControlHandler: function( event ) {
         if( this.canChangeValue() ) {
             this.repeatUpdateValue( this.model.incValue.bind( this.model ) );
         }
     },
 
+    /**
+     *
+     * @param cb
+     */
     repeatUpdateValue: function( cb ) {
         var intervalId;
 
@@ -93,6 +114,10 @@ var NumericBoxView = TextEditorBaseView.extend( {
 
     },
 
+    /**
+     *
+     * @returns {boolean}
+     */
     canChangeValue: function() {
         var model = this.model;
         var enabled = model.get( 'enabled' );

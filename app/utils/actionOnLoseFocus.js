@@ -1,3 +1,9 @@
+/**
+ *
+ * @param $el
+ * @param action
+ * @constructor
+ */
 var ActionOnLoseFocus = function( $el, action ) {
     var that = this;
     this.$el = $el;
@@ -7,6 +13,10 @@ var ActionOnLoseFocus = function( $el, action ) {
     $( document ).on( 'mousedown', that.checkNeedToActionBinded );
 };
 
+/**
+ *
+ * @param e
+ */
 ActionOnLoseFocus.prototype.checkNeedToAction = function( e ) {
     if ( $( e.target ).closest( this.$el ).length == 0 ) {
         this.action();

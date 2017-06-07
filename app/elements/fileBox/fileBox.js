@@ -18,10 +18,17 @@ _.inherit( FileBox, Element );
 
 _.extend( FileBox.prototype, {
 
+    /**
+     * @returns {*}
+     */
     getFile: function() {
         return this.control.get( 'file' );
     },
 
+    /**
+     *
+     * @returns {FileBoxControl}
+     */
     createControl: function() {
         return new FileBoxControl();
     },
@@ -68,25 +75,49 @@ _.extend( FileBox.prototype, {
     },
 
     // Недокументированные методы
+    /**
+     *
+     * @param value
+     */
     setFile: function( value ) {
         this.control.set( 'file', value );
     },
 
+    /**
+     *
+     * @param value
+     * @returns {FileBox}
+     */
     setFileName: function( value ) {
         this.control.set( 'fileName', value );
         return this;
     },
 
+    /**
+     *
+     * @param value
+     * @returns {FileBox}
+     */
     setFileSize: function( value ) {
         this.control.set( 'fileSize', value );
         return this;
     },
 
+    /**
+     *
+     * @param value
+     * @returns {FileBox}
+     */
     setFileTime: function( value ) {
         this.control.set( 'fileTime', value );
         return this;
     },
 
+    /**
+     *
+     * @param value
+     * @returns {FileBox}
+     */
     setFileType: function( value ) {
         this.control.set( 'fileType', value );
         return this;

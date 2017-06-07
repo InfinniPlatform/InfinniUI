@@ -1,12 +1,11 @@
 /**
-  * Провайдер аутентификации.
-  *
-  * @constructor
-  */
+ * Провайдер аутентификации.
+ * @mixes ajaxRequestMixin
+ * @constructor
+ */
 function AuthenticationProvider( baseAddress ) {
     this.baseAddress = baseAddress;
 }
-
 
 _.extend( AuthenticationProvider.prototype, {
 
@@ -17,19 +16,23 @@ _.extend( AuthenticationProvider.prototype, {
     },
 
     /**
-          * Возвращает информацию о текущем пользователе.
-          *
-          * @public
-          */
+     * Возвращает информацию о текущем пользователе.
+     * @param resultCallback
+     * @param errorCallback
+     * @public
+     */
     getCurrentUser: function( resultCallback, errorCallback ) {
         this.sendPostRequestForServiceResult( '/Auth/GetCurrentUser', {}, resultCallback, errorCallback );
     },
 
     /**
-          * Изменяет пароль текущего пользователя.
-          *
-          * @public
-          */
+     * @public
+     * @description Изменяет пароль текущего пользователя.
+     * @param oldPassword
+     * @param newPassword
+     * @param resultCallback
+     * @param errorCallback
+     */
     changePassword: function( oldPassword, newPassword, resultCallback, errorCallback ) {
         var changePasswordForm = {
             OldPassword: oldPassword,
@@ -40,10 +43,13 @@ _.extend( AuthenticationProvider.prototype, {
     },
 
     /**
-          * Изменяет персональную информацию текущего пользователя.
-          *
-          * @public
-          */
+     * @public
+     * @description Изменяет персональную информацию текущего пользователя.
+     * @param displayName
+     * @param description
+     * @param resultCallback
+     * @param errorCallback
+     */
     changeProfile: function( displayName, description, resultCallback, errorCallback ) {
         var changeProfileForm = {
             DisplayName: displayName,
@@ -54,10 +60,14 @@ _.extend( AuthenticationProvider.prototype, {
     },
 
     /**
-          * Осуществляет вход пользователя в систему через внутренний провайдер.
-          *
-          * @public
-          */
+     * @public
+     * @description Осуществляет вход пользователя в систему через внутренний провайдер.
+     * @param userName
+     * @param password
+     * @param remember
+     * @param resultCallback
+     * @param errorCallback
+     */
     signInInternal: function( userName, password, remember, resultCallback, errorCallback ) {
         var signInInternalForm = {
             UserName: userName,
@@ -69,28 +79,37 @@ _.extend( AuthenticationProvider.prototype, {
     },
 
     /**
-          * Возвращает форму входа пользователя в систему через внешний провайдер.
-          *
-          * @public
-          */
+     * @public
+     * @description Возвращает форму входа пользователя в систему через внешний провайдер.
+     * @param successUrl
+     * @param failureUrl
+     * @param resultCallback
+     * @param errorCallback
+     */
     getSignInExternalForm: function( successUrl, failureUrl, resultCallback, errorCallback ) {
         this.getExternalLoginForm( '/Auth/SignInExternal', successUrl, failureUrl, resultCallback, errorCallback );
     },
 
     /**
-          * Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
-          *
-          * @public
-          */
+     * @public
+     * @description Возвращает форму добавления текущему пользователю имени входа у внешнего провайдера.
+     * @param successUrl
+     * @param failureUrl
+     * @param resultCallback
+     * @param errorCallback
+     */
     getLinkExternalLoginForm: function( successUrl, failureUrl, resultCallback, errorCallback ) {
         this.getExternalLoginForm( '/Auth/LinkExternalLogin', successUrl, failureUrl, resultCallback, errorCallback );
     },
 
     /**
-          * Удаляет у текущего пользователя имя входа у внешнего провайдера.
-          *
-          * @public
-          */
+     * @public
+     * @description Удаляет у текущего пользователя имя входа у внешнего провайдера.
+     * @param provider
+     * @param providerKey
+     * @param resultCallback
+     * @param errorCallback
+     */
     unlinkExternalLogin: function( provider, providerKey, resultCallback, errorCallback ) {
         var unlinkExternalLoginForm = {
             Provider: provider,
@@ -101,10 +120,11 @@ _.extend( AuthenticationProvider.prototype, {
     },
 
     /**
-          * Выход пользователя из системы.
-          *
-          * @public
-          */
+     * @public
+     * @description Выход пользователя из системы.
+     * @param resultCallback
+     * @param errorCallback
+     */
     signOut: function( resultCallback, errorCallback ) {
         var signOutInternalForm = {
             'id': null,
@@ -125,6 +145,14 @@ _.extend( AuthenticationProvider.prototype, {
         }.bind( this ), errorCallback );
     },
 
+    /**
+     * @public
+     * @param requestUri
+     * @param successUrl
+     * @param failureUrl
+     * @param resultCallback
+     * @param errorCallback
+     */
     getExternalLoginForm: function( requestUri, successUrl, failureUrl, resultCallback, errorCallback ) {
         var url = this.baseAddress + requestUri;
 
@@ -167,6 +195,12 @@ _.extend( AuthenticationProvider.prototype, {
         );
     },
 
+    /**
+     *
+     * @param requestUri
+     * @param resultCallback
+     * @param errorCallback
+     */
     sendGetRequest: function( requestUri, resultCallback, errorCallback ) {
         $.ajax( this.baseAddress + requestUri, {
             type: 'GET',
@@ -183,6 +217,13 @@ _.extend( AuthenticationProvider.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param requestUri
+     * @param requestData
+     * @param resultCallback
+     * @param errorCallback
+     */
     sendPostRequest: function( requestUri, requestData, resultCallback, errorCallback ) {
         var that = this;
 
@@ -210,6 +251,13 @@ _.extend( AuthenticationProvider.prototype, {
         } );
     },
 
+    /**
+     *
+     * @param requestUri
+     * @param requestData
+     * @param successCallback
+     * @param errorCallback
+     */
     sendPostRequestForServiceResult: function( requestUri, requestData, successCallback, errorCallback ) {
         var resultCallback = function() {
             var args = _.toArray( arguments ),
@@ -233,14 +281,26 @@ _.extend( AuthenticationProvider.prototype, {
         this.sendPostRequest( requestUri, requestData, resultCallback, errorCallback );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onActiveRoleChanged: function( handler ) {
         this.handlers.onActiveRoleChanged.add( handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onSignInInternal: function( handler ) {
         this.handlers.onSignInInternal.add( handler );
     },
 
+    /**
+     *
+     * @param handler
+     */
     onSignOut: function( handler ) {
         this.handlers.onSignOut.add( handler );
     }

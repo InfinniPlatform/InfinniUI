@@ -10,6 +10,11 @@ _.inherit( RowBuilder, ContainerBuilder );
 
 _.extend( RowBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     * @returns {Row}
+     */
     createElement: function( params ) {
         return new Row( params.parent );
     },

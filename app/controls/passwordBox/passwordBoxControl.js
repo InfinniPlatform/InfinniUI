@@ -1,5 +1,4 @@
 /**
- *
  * @constructor
  * @augments Control
  * @mixes editorBaseControlMixin
@@ -13,10 +12,17 @@ _.inherit( PasswordBoxControl, Control );
 
 _.extend( PasswordBoxControl.prototype, {
 
+    /**
+     * @returns {PasswordBoxModel}
+     */
     createControlModel: function() {
         return new PasswordBoxModel();
     },
 
+    /**
+     * @returns {PasswordBoxView}
+     * @param model
+     */
     createControlView: function( model ) {
         return new PasswordBoxView( { model: model } );
     }

@@ -6,6 +6,10 @@ var DialogResult = {
 
 InfinniUI.DialogResult = DialogResult;
 
+/**
+ * @constructor
+ * @augments ContainerModel
+ */
 var ViewModel = ContainerModel.extend( {
 
     defaults: _.defaults( {
@@ -14,6 +18,9 @@ var ViewModel = ContainerModel.extend( {
         closeButtonVisibility: true
     }, ContainerModel.prototype.defaults ),
 
+    /**
+     *
+     */
     initialize: function() {
         ContainerModel.prototype.initialize.apply( this );
 

@@ -1,3 +1,7 @@
+/**
+ * @augments ElementBuilder
+ * @constructor
+ */
 function ViewPanelBuilder() {
 }
 
@@ -7,6 +11,10 @@ _.inherit( ViewPanelBuilder, ElementBuilder );
 
 _.extend( ViewPanelBuilder.prototype, {
 
+    /**
+     *
+     * @param params
+     */
     applyMetadata: function( params ) {
         ElementBuilder.prototype.applyMetadata.call( this, params );
 
@@ -36,6 +44,11 @@ _.extend( ViewPanelBuilder.prototype, {
         }
     },
 
+    /**
+     *
+     * @param params
+     * @returns {ViewPanel}
+     */
     createElement: function( params ) {
         return new ViewPanel( params.parent );
     }

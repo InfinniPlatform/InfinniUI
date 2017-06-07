@@ -27,6 +27,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         'click .pl-filebox-btn-remove': 'onClickRemoveImageHandler'
     },
 
+    /**
+     *
+     */
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
@@ -46,6 +49,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         acceptTypes.onChange( this.updateAcceptTypes.bind( this ) );
     },
 
+    /**
+     *
+     */
     updateProperties: function() {
         ControlView.prototype.updateProperties.call( this );
 
@@ -62,6 +68,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.updateWarningText();
     },
 
+    /**
+     *
+     */
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
@@ -74,6 +83,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         }
     },
 
+    /**
+     *
+     */
     updateAcceptTypes: function() {
         var acceptTypes = this.model.get( 'acceptTypes' );
         if( acceptTypes.length === 0 ) {
@@ -84,6 +96,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         }
     },
 
+    /**
+     *
+     */
     updateFocusable: function() {
         var focusable = this.model.get( 'focusable' );
 
@@ -94,12 +109,18 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         }
     },
 
+    /**
+     *
+     */
     updateText: function() {
         var text = this.model.get( 'text' );
 
         this.ui.btnPick.attr( 'title', text );
     },
 
+    /**
+     *
+     */
     updateHintText: function() {
         var hintText = this.model.get( 'hintText' );
 
@@ -114,6 +135,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         }
     },
 
+    /**
+     *
+     */
     updateErrorText: function() {
         var errorText = this.model.get( 'errorText' );
 
@@ -128,6 +152,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         }
     },
 
+    /**
+     *
+     */
     updateWarningText: function() {
         var warningText = this.model.get( 'warningText' );
 
@@ -143,6 +170,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     },
 
+    /**
+     *
+     */
     updateEnabled: function() {
         ControlView.prototype.updateEnabled.call( this );
 
@@ -154,6 +184,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
 
     },
 
+    /**
+     *
+     */
     updateFileName: function() {
         var fileName = this.model.get( 'fileName' );
 
@@ -161,23 +194,38 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.ui.fileDownloadUrl.text( fileName );
     },
 
+    /**
+     *
+     */
     updateFileSize: function() {
     },
 
+    /**
+     *
+     */
     updateFileInfo: function() {
         return;
     },
 
+    /**
+     *
+     */
     updateFileTime: function() {
         // var time = this.model.get( 'fileTime' );
         //@TODO Update file's datetime on view
     },
 
+    /**
+     *
+     */
     updateFileType: function() {
         // var fileType = this.model.get( 'fileType' );
         //@TODO Update file's mime type on view
     },
 
+    /**
+     *
+     */
     updateValue: function() {
         var model = this.model;
         var value = model.get( 'value' );
@@ -208,6 +256,10 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.ui.btnPick.toggleClass( 'hidden', !fileEmpty );
     },
 
+    /**
+     *
+     * @param url
+     */
     updateUrl: function( url ) {
         this.ui.fileDownloadUrl.attr( 'href', url );
         var none = url === null || typeof url === 'undefined';
@@ -215,11 +267,17 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.updateFileInfo();
     },
 
+    /**
+     *
+     */
     onClickRemoveImageHandler: function() {
         this.model.removeFile();
         this.ui.input.val( '' );
     },
 
+    /**
+     *
+     */
     onChangeFileHandler: function() {
         var file = null;
         var files = this.ui.input[ 0 ].files;
@@ -230,6 +288,10 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         this.model.setFile( file );
     },
 
+    /**
+     *
+     * @returns {FileBoxView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -247,6 +309,9 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         return this;
     },
 
+    /**
+     *
+     */
     onInvalidHandler: function() {
         this.ui.input.val( null );
     }

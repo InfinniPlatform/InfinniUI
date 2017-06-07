@@ -1,3 +1,8 @@
+/**
+ * @mixes bindUIElementsMixin
+ * @constructor
+ * @augments Backbone.View
+ */
 var TreeViewNodeBase = Backbone.View.extend( {
 
     className: 'pl-treeview-node',
@@ -19,6 +24,9 @@ var TreeViewNodeBase = Backbone.View.extend( {
         button: '.pl-treeview-node__button'
     },
 
+    /**
+     *
+     */
     initialize: function() {
         var model = new Backbone.Model( { collapsed: true, isLeaf: true } );
         this.model = model;
@@ -28,17 +36,26 @@ var TreeViewNodeBase = Backbone.View.extend( {
         this.listenTo( model, 'change:isLeaf', this.updateCollapsed );
     },
 
+    /**
+     *
+     */
     updateChecked: function() {
         var checked = this.model.get( 'checked' );
         this.ui.checker.toggleClass( this.classNameCheckerChecked, checked === true );
         this.ui.checker.toggleClass( this.classNameCheckerUnchecked, checked !== true );
     },
 
+    /**
+     *
+     */
     updateSelected: function() {
         var selected = this.model.get( 'selected' );
         this.ui.content.toggleClass( this.classNameContentSelected, selected === true );
     },
 
+    /**
+     *
+     */
     updateCollapsed: function() {
         var isLeaf = this.model.get( 'isLeaf' );
         var collapsed = !!this.model.get( 'collapsed' );
@@ -51,12 +68,19 @@ var TreeViewNodeBase = Backbone.View.extend( {
         this.ui.button.toggleClass( this.classNameButtonNone, isLeaf );
     },
 
+    /**
+     *
+     */
     updateState: function() {
         this.updateCollapsed();
         this.updateSelected();
         this.updateChecked();
     },
 
+    /**
+     *
+     * @returns {TreeViewNodeBase}
+     */
     render: function() {
         this.$el.html( this.template );
         this.bindUIElements();
@@ -65,20 +89,34 @@ var TreeViewNodeBase = Backbone.View.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     initDomEventsHandlers: function() {
         this.ui.button.on( 'click', this.onClickEventHandler.bind( this ) );
         this.ui.content[ 0 ].addEventListener( 'click', this.onClickItemHandler.bind( this ), true );
         this.ui.checker[ 0 ].addEventListener( 'click', this.onClickCheckHandler.bind( this ), true );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickItemHandler: function( event ) {
         this.trigger( 'select' );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickCheckHandler: function( event ) {
         this.trigger( 'check' );
     },
 
+    /**
+     *
+     */
     toggle: function() {
         var model = this.model;
         var collapsed = model.get( 'collapsed' );
@@ -90,42 +128,72 @@ var TreeViewNodeBase = Backbone.View.extend( {
         }
     },
 
+    /**
+     *
+     */
     expand: function() {
         this.model.set( 'collapsed', false );
         this.trigger( 'expand' );
     },
 
+    /**
+     *
+     */
     collapse: function() {
         this.model.set( 'collapsed', true );
         this.trigger( 'collapse' );
     },
 
+    /**
+     * @returns {*}
+     */
     getCollapsed: function() {
         return this.model.get( 'collapsed' );
     },
 
+    /**
+     *
+     * @param $itemContent
+     */
     setItemContent: function( $itemContent ) {
         this.ui.content.empty();
         this.ui.content.append( $itemContent );
     },
 
+    /**
+     *
+     * @param $itemsContent
+     */
     setItemsContent: function( $itemsContent ) {
         this.ui.items.empty();
         this.model.set( 'isLeaf', !$itemsContent.length );
         this.ui.items.append( $itemsContent );
     },
 
+    /**
+     *
+     * @param event
+     */
     onClickEventHandler: function( event ) {
         this.toggle();
     },
 
+    /**
+     *
+     * @param selected
+     */
     setSelected: function( selected ) {
         this.model.set( 'selected', selected );
     },
 
+    /**
+     *
+     * @param checked
+     */
     setChecked: function( checked ) {
         this.model.set( 'checked', checked );
     }
+
 } );
 
 _.extend( TreeViewNodeBase.prototype, bindUIElementsMixin );

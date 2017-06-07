@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{startConnection, reconnection, subscribe, unsubscribe, stopConnection, on, isDisconnected}}
+ */
 var notificationSubscription = ( function() {
     var subscription = {};
     var hubProxy;
@@ -7,6 +11,12 @@ var notificationSubscription = ( function() {
     var onErrorCb;
     var isConnected = false;
 
+    /**
+     *
+     * @param newHubName
+     * @param onSuccess
+     * @param onError
+     */
     var setUpConnection = function( newHubName, onSuccess, onError ) {
         onSuccessCb = onSuccess || onSuccessCb;
         onErrorCb = onError || onErrorCb;
@@ -20,6 +30,12 @@ var notificationSubscription = ( function() {
         }
     };
 
+    /**
+     *
+     * @param routingKey
+     * @param callback
+     * @param context
+     */
     var subscribe = function( routingKey, callback, context ) {
         if( !subscription[ routingKey ] ) {
             subscription[ routingKey ] = [];
@@ -34,6 +50,10 @@ var notificationSubscription = ( function() {
         }
     };
 
+    /**
+     *
+     * @param state
+     */
     var eventSwitcher = function( state ) {
         for( var routingKey in subscription ) {
             if( state === 'on' ) {
@@ -44,6 +64,11 @@ var notificationSubscription = ( function() {
         }
     };
 
+    /**
+     *
+     * @param routingKey
+     * @param context
+     */
     var unsubscribe = function( routingKey, context ) {
         if( context ) {
             var routingKeyArr = subscription[ routingKey ];
@@ -66,6 +91,11 @@ var notificationSubscription = ( function() {
         checkHandlers();
     };
 
+    /**
+     *
+     * @param routingKey
+     * @returns {Function}
+     */
     var onReceived = function( routingKey ) {
         return function( message ) {
             var routingKeyArr = subscription[ routingKey ];
@@ -77,6 +107,9 @@ var notificationSubscription = ( function() {
         };
     };
 
+    /**
+     * @description start signalR connection
+     */
     var startConnection = function() {
         isConnected = true;
 
@@ -96,6 +129,9 @@ var notificationSubscription = ( function() {
             } );
     };
 
+    /**
+     * @description stop signalR connection
+     */
     var stopConnection = function() {
         if( hubProxy ) {
             isConnected = false;
@@ -106,6 +142,9 @@ var notificationSubscription = ( function() {
         }
     };
 
+    /**
+     * @description do reconnection
+     */
     var reconnection = function() {
         if( connection && hubProxy ) {
             stopConnection();
@@ -113,12 +152,20 @@ var notificationSubscription = ( function() {
         setUpConnection();
     };
 
+    /**
+     *
+     */
     var checkHandlers = function() {
         if( _.size( subscription ) === 0 ) {
             stopConnection();
         }
     };
 
+    /**
+     *
+     * @param eventName
+     * @param callback
+     */
     var on = function( eventName, callback ) {
         if( !connection ) {
             console.error( 'Необходимо сначала установить соединение с сервером' );
@@ -128,6 +175,10 @@ var notificationSubscription = ( function() {
         }
     };
 
+    /**
+     *
+     * @returns {boolean}
+     */
     var isDisconnected = function() {
         return $.connection.isDisconnecting( connection );
     };

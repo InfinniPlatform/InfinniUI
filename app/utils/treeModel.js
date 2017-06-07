@@ -1,3 +1,10 @@
+/**
+ *
+ * @param context
+ * @param source
+ * @param startTree
+ * @constructor
+ */
 var TreeModel = function( context, source, startTree ) {
     this.context = context;
     this.source = source;
@@ -13,6 +20,11 @@ _.extend( TreeModel.prototype, {
 
     counter: 1,
 
+    /**
+     *
+     * @param propertyName
+     * @returns {*}
+     */
     getProperty: function( propertyName ) {
         if( this.mirroringFrom ) {
             propertyName = propertyName.replace( this.mirroringFrom, this.mirroringTo );
@@ -20,6 +32,12 @@ _.extend( TreeModel.prototype, {
         return InfinniUI.ObjectUtils.getPropertyValue( this.dataTree, propertyName );
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param value
+     * @returns {boolean}
+     */
     setProperty: function( propertyName, value ) {
         var oldValue = this.getProperty( propertyName );
 
@@ -33,6 +51,13 @@ _.extend( TreeModel.prototype, {
         return true;
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param handler
+     * @param params
+     * @returns {string}
+     */
     onPropertyChanged: function( propertyName, handler, params ) {
         var handlersNode;
         var bindId = this.counter + '-bindId';
@@ -57,6 +82,11 @@ _.extend( TreeModel.prototype, {
         return bindId;
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param bindId
+     */
     offPropertyChanged: function( propertyName, bindId ) {
         var handlersNode = this._getHandlersSubTree( propertyName, true );
 
@@ -65,6 +95,13 @@ _.extend( TreeModel.prototype, {
         }
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param restoreIfNoProperty
+     * @returns {*}
+     * @private
+     */
     _getHandlersSubTree: function( propertyName, restoreIfNoProperty ) {
         if( propertyName == '' ) {
             return this.handlersTree;
@@ -89,6 +126,12 @@ _.extend( TreeModel.prototype, {
         return tmpResult;
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param oldValue
+     * @private
+     */
     _notifyAboutPropertyChanged: function( propertyName, oldValue ) {
         var handlers = this._getHandlersSubTree( propertyName );
         var needMirroring = this.mirroringTo !== null &&
@@ -107,6 +150,13 @@ _.extend( TreeModel.prototype, {
         }
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param oldValue
+     * @param handlersSubTree
+     * @private
+     */
     _notifyAboutPropertyChanged_capturingAction: function( propertyName, oldValue, handlersSubTree ) {
         var tmpValue;
         var tmpProperty;
@@ -133,6 +183,13 @@ _.extend( TreeModel.prototype, {
         }
     },
 
+    /**
+     *
+     * @param propertyName
+     * @param oldValue
+     * @param handlersSubTree
+     * @private
+     */
     _notifyAboutPropertyChanged_bubblingAction: function( propertyName, oldValue, handlersSubTree ) {
         var propertyNamePaths = propertyName.split( '.' );
         var tmpPropertyName;
@@ -153,6 +210,10 @@ _.extend( TreeModel.prototype, {
             }
         }
 
+        /**
+         *
+         * @param _handlersNode
+         */
         function checkAndCallAnyHandlers( _handlersNode ) {
             var handler;
 
@@ -169,6 +230,12 @@ _.extend( TreeModel.prototype, {
         }
     },
 
+    /**
+     *
+     * @param handler
+     * @returns {*}
+     * @private
+     */
     _isOwnerAlive: function( handler ) {
         if( handler._owner && 'isRemoved' in handler._owner ) {
 
@@ -183,6 +250,13 @@ _.extend( TreeModel.prototype, {
         }
     },
 
+    /**
+     *
+     * @param handler
+     * @param propertyName
+     * @param oldValue
+     * @private
+     */
     _callHandlerAboutPropertyChanged: function( handler, propertyName, oldValue ) {
         var args = {
             property: propertyName,
@@ -194,6 +268,11 @@ _.extend( TreeModel.prototype, {
         handler( this.context, args );
     },
 
+    /**
+     *
+     * @param mirroringFrom
+     * @param mirroringTo
+     */
     setMirroring: function( mirroringFrom, mirroringTo ) {
         this.mirroringFrom = mirroringFrom;
         this.mirroringTo = mirroringTo;

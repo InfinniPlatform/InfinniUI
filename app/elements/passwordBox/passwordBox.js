@@ -16,6 +16,10 @@ _.inherit( PasswordBox, Element );
 
 _.extend( PasswordBox.prototype, {
 
+    /**
+     *
+     * @param value
+     */
     setAutocomplete: function( value ) {
         if( typeof value === 'undefined' || value === null ) {
             return;
@@ -23,14 +27,24 @@ _.extend( PasswordBox.prototype, {
         this.control.set( 'autocomplete', !!value );
     },
 
+    /**
+     * @returns {*}
+     */
     getAutocomplete: function() {
         return this.control.get( 'autocomplete' );
     },
 
+    /**
+     *
+     * @returns {PasswordBoxControl}
+     */
     createControl: function() {
         return new PasswordBoxControl();
     },
 
+    /**
+     * @returns {*}
+     */
     getRawValue: function() {
         return this.control.get( 'rawValue' );
     }

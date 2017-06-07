@@ -1,5 +1,12 @@
+/**
+ * @constructor
+ * @augments DateTimePickerModel
+ */
 var TimePickerModel = DateTimePickerModel.extend( {
 
+    /**
+     *
+     */
     initialize: function() {
         DateTimePickerModel.prototype.initialize.apply( this, arguments );
         var date = new Date();

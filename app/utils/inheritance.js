@@ -1,5 +1,10 @@
 _.mixin( {
 
+    /**
+     *
+     * @param child
+     * @param parent
+     */
     'inherit': function( child, parent ) {
         var f = new Function();
         f.prototype = parent.prototype;
@@ -10,6 +15,12 @@ _.mixin( {
         child.superclass = parent.prototype;
     },
 
+    /**
+     *
+     * @param obj
+     * @param context
+     * @param values
+     */
     'superClass': function( obj, context, values ) {
         var args = _.toArray( arguments );
         args.splice( 0, 2 );

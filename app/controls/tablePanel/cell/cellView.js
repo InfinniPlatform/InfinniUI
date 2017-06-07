@@ -1,17 +1,25 @@
 /**
- * @class
- * @augments ControlView
+ * @constructor
+ * @augments ContainerView
  */
 var CellView = ContainerView.extend( {
 
     className: 'pl-cell',
 
+    /**
+     *
+     * @param options
+     */
     initialize: function( options ) {
         ContainerView.prototype.initialize.call( this, options );
 
         this.initColumnSpan();
     },
 
+    /**
+     *
+     * @returns {CellView}
+     */
     render: function() {
         this.prerenderingActions();
 
@@ -29,6 +37,9 @@ var CellView = ContainerView.extend( {
         return this;
     },
 
+    /**
+     *
+     */
     renderItemsContents: function() {
         var items = this.model.get( 'items' );
         var itemTemplate = this.model.get( 'itemTemplate' );
@@ -43,11 +54,17 @@ var CellView = ContainerView.extend( {
         } );
     },
 
+    /**
+     *
+     */
     initColumnSpan: function() {
         this.listenTo( this.model, 'change:columnSpan', this.updateColumnSpan );
         this.updateColumnSpan();
     },
 
+    /**
+     *
+     */
     updateColumnSpan: function() {
         var columnSpan = this.model.get( 'columnSpan' );
         var currentColumnSpan = this.columnSpan;
@@ -66,6 +83,9 @@ var CellView = ContainerView.extend( {
         }
     },
 
+    /**
+     *
+     */
     updateGrouping: function() {
     }
 

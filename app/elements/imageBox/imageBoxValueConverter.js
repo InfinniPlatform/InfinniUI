@@ -1,7 +1,18 @@
+/**
+ *
+ * @param element
+ * @constructor
+ */
 function ImageBoxValueConverter( element ) {
     this._element = element;
 }
 
+/**
+ *
+ * @param context
+ * @param args
+ * @returns {*}
+ */
 ImageBoxValueConverter.prototype.toElement = function( context, args ) {
     var value = args.value;
     var binding = args.binding;
