@@ -37,9 +37,11 @@
     "browser-sync": "^2.12.x",
     "chai": "^3.5.0",
     "del": "^2.2.0",
+    "edit-mask": "https://bitbucket.org/puritania74/edit-mask.git",
     "eslint": "^3.19.0",
     "eslint-plugin-filenames": "^1.2.0",
     "gulp": "git+https://git@github.com/gulpjs/gulp/#4.0",
+    "gulp-append-prepend": "^1.0.3",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-cli": "^1.2.2",
     "gulp-concat": "^2.6.0",
@@ -75,7 +77,6 @@
   "peerDependencies": {
     "backbone": "1.1.2",
     "block-ui": "2.70.1",
-    "edit-mask": "https://bitbucket.org/puritania74/edit-mask.git",
     "font-awesome": "latest",
     "jquery": "1.12.4",
     "jquery.cookie": "1.4.1",
@@ -91,17 +92,5 @@
     "pack-for-teamcity": "gulp assemble:package",
     "test": "karma start karma.conf.js",
     "test:tc": "npm run test -- --single-run --reporters teamcity --colors false --browsers Firefox"
-  },
-  "dependencies": {
-    "backbone": "^1.1.2",
-    "block-ui": "^2.70.1",
-    "edit-mask": "git+https://bitbucket.org/puritania74/edit-mask.git",
-    "font-awesome": "^4.7.0",
-    "jquery": "^1.12.4",
-    "jquery.cookie": "^1.4.1",
-    "moment": "^2.18.0",
-    "signalr": "^2.2.1",
-    "toastr": "^2.1.2",
-    "underscore": "^1.8.3"
   }
 }

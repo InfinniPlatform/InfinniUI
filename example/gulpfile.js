@@ -27,7 +27,6 @@ var vendorJsFiles = [
     'node_modules/toastr/build/toastr.min.js',
     'node_modules/jquery.cookie/jquery.cookie.js',
     'node_modules/signalr/jquery.signalR.min.js',
-    'node_modules/edit-mask/dist/edit-mask.js',
     'node_modules/infinni-ui/dist/infinni-ui.min.js'
 ];
 

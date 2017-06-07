@@ -7,6 +7,7 @@ var sourceForFiles = {
     platformJsOutputFile: 'infinni-ui.js',
     stylesFiles: [ 'app/styles/infinni-ui.less' ],
     stylesFilesForWatch: [ './app/styles/**/*.less' ],
+    jsDependence: 'node_modules/edit-mask/dist/edit-mask.js', // можно потом gulp-foreach подключить и массив сделать
     lintFiles: [
         'app/**/*.js',
         'test/**/*.js'
