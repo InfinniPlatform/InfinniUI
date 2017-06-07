@@ -39,5 +39,6 @@ gulp.task( 'build:js', function() {
             header: ';(function(){\n' + templateNamespaceInitString,
             footer: '})();'
         } ) )
+        .pipe( $.appendPrepend.prependFile( config.jsDependence ) ) // раз есть appendPrepend, то можно от wrapper избавиться
         .pipe( gulp.dest( config.platformOutputFolder ) );
 } );
