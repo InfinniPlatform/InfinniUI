@@ -91,8 +91,9 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         this.$el.hide();
         this.$items = this.strategy.renderItems();
         var items = this.model.get( 'items' );
+        var isInitialized = this.model.get( 'isInitialized' );
 
-        var noItems = ( items && items.length == 0 );
+        var noItems = ( isInitialized && items && items.length == 0 );
         this.ui.noItems.toggleClass( 'hidden', !noItems );
 
         this.markSelectedItems();
@@ -333,6 +334,9 @@ var ComboBoxDropdownView = Backbone.View.extend( {
         if( search.length ) {
             search.text( value );
         }
+
+        this.model.set( 'isInitialized', false );
+        this.renderItems();
     },
 
     /**

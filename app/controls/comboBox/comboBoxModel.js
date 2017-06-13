@@ -9,6 +9,7 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
         showClear: true,
         autocomplete: false,
         autocompleteValue: '',
+        isInitialized: false,
         valueTemplate: function( context, args ) {
             return {
                 render: function() {
@@ -22,8 +23,13 @@ var ComboBoxModel = ListEditorBaseModel.extend( {
      *
      */
     initialize: function() {
+        var that = this;
+
         ListEditorBaseModel.prototype.initialize.apply( this, Array.prototype.slice.call( arguments ) );
         this.on( 'change:value', this.syncSelectedItem );
+        this.get( 'items' ).onChange( function() {
+            that.set( 'isInitialized', true );
+        } );
     },
 
     /**
