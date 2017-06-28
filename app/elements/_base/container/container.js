@@ -66,18 +66,3 @@ Container.prototype.getGroupItemTemplate = function() {
 Container.prototype.setGroupItemTemplate = function( value ) {
     this.control.set( 'groupItemTemplate', value );
 };
-
-/**
- * @returns {*}
- */
-Container.prototype.getGroupItemComparator = function() {
-    return this.control.get( 'groupItemComparator' );
-};
-
-/**
- *
- * @param value
- */
-Container.prototype.setGroupItemComparator = function( value ) {
-    this.control.set( 'groupItemComparator', value );
-};
