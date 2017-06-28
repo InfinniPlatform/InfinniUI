@@ -2,8 +2,8 @@
  * @augments Element
  * @constructor
  */
-function DataGridRow() {
-    _.superClass( DataGridRow, this );
+function DataGridRow( parent ) {
+    _.superClass( DataGridRow, this, parent );
 
     this._transformRowProperties( {
         rowBackground: 'background',
