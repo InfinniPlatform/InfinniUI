@@ -26,7 +26,7 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
     updateContentTypeStrategy: function() {
         var contentType = this.getProperty( 'contentType' );
 
-        if( _.isString( contentType ) && contentType.includes( 'multipart' ) ) {
+        if( typeof contentType === 'string' && contentType.includes( 'multipart' ) ) {
             this.contentTypeStrategy = serverActionContentTypeStrategy[ 'File' ];
         } else {
             this.contentTypeStrategy = serverActionContentTypeStrategy[ 'Object' ];
@@ -95,7 +95,7 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
             if( method == 'GET' ) {
                 result.requestUrl = result.requestUrl + '?' + stringUtils.joinDataForQuery( data );
             } else {
-                result.args = ( _.isString( contentType ) && contentType.includes( 'application/json' ) ) ? JSON.stringify( data ) : data;
+                result.args = ( typeof contentType === 'string' && contentType.includes( 'application/json' ) ) ? JSON.stringify( data ) : data;
             }
         }
 
@@ -110,7 +110,7 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
      * @private
      */
     _replaceParamsInStr: function( str, escape ) {
-        if( !str || !_.isString( str ) ) {
+        if( !str || typeof str !== 'string' ) {
             return str;
         }
 
@@ -124,7 +124,7 @@ _.extend( ServerAction.prototype, baseFallibleActionMixin, {
         return str.replace( /<%([\s\S]+?)%>/g, function( p1, p2 ) {
             var val = that.getParam( p2 );
 
-            if( escape && _.isString( val ) ) {
+            if( escape && typeof val === 'string' ) {
                 val = val.replace( /"/g, '\\"' );
             }
             return val;
