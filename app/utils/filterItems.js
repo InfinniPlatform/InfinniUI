@@ -1115,8 +1115,8 @@ filterItems.filterMethods = ( function() {
      */
     that.startsWith = function( value, items, context ) {
         var propertyName = value[ 0 ];
-        var expectedStartValue = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
-        var ignoreCase = _.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
+        var expectedStartValue = Array.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
+        var ignoreCase = Array.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
         var regexpPattern = '^{expectedStartValue}'.replace( '{expectedStartValue}', expectedStartValue );
         var regexpFlag = ignoreCase ? 'i' : '';
 
@@ -1133,8 +1133,8 @@ filterItems.filterMethods = ( function() {
      */
     that.endsWith = function( value, items, context ) {
         var propertyName = value[ 0 ];
-        var expectedEndValue = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
-        var ignoreCase = _.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
+        var expectedEndValue = Array.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ];
+        var ignoreCase = Array.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
         var regexpPattern = '{expectedEndValue}$'.replace( '{expectedEndValue}', expectedEndValue );
         var regexpFlag = ignoreCase ? 'i' : '';
 
@@ -1151,8 +1151,8 @@ filterItems.filterMethods = ( function() {
      */
     that.contains = function( value, items, context ) {
         var propertyName = value[ 0 ];
-        var searchString = _.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ] || '';
-        var ignoreCase = _.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
+        var searchString = Array.isArray( value[ 1 ] ) ? value[ 1 ][ 0 ] : value[ 1 ] || '';
+        var ignoreCase = Array.isArray( value[ 1 ] ) ? ( value[ 1 ][ 1 ] !== false ) : true;
         var regexpFlag = ignoreCase ? 'i' : '';
 
         return _.filter( items, function( item ) {

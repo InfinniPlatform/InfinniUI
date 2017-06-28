@@ -276,10 +276,10 @@ var RestDataSource = BaseDataSource.extend( {
      * @private
      */
     _checkUrlParamsReady: function( params ) {
-        return params && typeof params.origin == 'string'// && params.origin.lentgh > 0
-            && typeof params.path == 'string'
-            && typeof params.data == 'object'
-            && typeof params.params == 'object';
+        return params && typeof params.origin === 'string'// && params.origin.lentgh > 0
+            && typeof params.path === 'string'
+            && typeof params.data === 'object'
+            && typeof params.params === 'object';
     },
 
     /**

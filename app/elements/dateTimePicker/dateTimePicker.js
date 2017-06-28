@@ -78,7 +78,7 @@ DateTimePicker.prototype.getTimeZone = function() {
  * @param value
  */
 DateTimePicker.prototype.setTimeZone = function( value ) {
-    if( _.isNumber( value ) ) {
+    if( typeof value === 'number' ) {
         this.control.set( 'timeZone', value );
     }
 };

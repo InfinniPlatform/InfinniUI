@@ -78,7 +78,7 @@ NumericBox.prototype.setStartValue = function( value ) {
 NumericBox.prototype.convertValue = function( value ) {
     var val = ( value === null || value === '' || typeof value === 'undefined' ) ? null : +value;
 
-    return _.isNumber( val ) ? val : null;
+    return typeof val === 'number' ? val : null;
 };
 
 /**

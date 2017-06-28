@@ -37,17 +37,17 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         var startValue = this.get( 'startValue' );
         var minValue = this.get( 'minValue' );
         var maxValue = this.get( 'maxValue' );
-        var newValue = _.isNumber( value ) ? value : +value;
+        var newValue = typeof value === 'number' ? value : +value;
 
-        if ( this.isSetValue( value ) && _.isNumber( value ) ) {
+        if ( this.isSetValue( value ) && typeof value === 'number' ) {
             newValue += delta;
         } else {
-            newValue = ( _.isNumber( startValue ) ) ? startValue : 0;
+            newValue = ( typeof startValue === 'number' ) ? startValue : 0;
         }
 
-        if ( _.isNumber( minValue ) && newValue < minValue ) {
+        if ( typeof minValue === 'number' && newValue < minValue ) {
             newValue = minValue;
-        } else if ( _.isNumber( maxValue ) && newValue > maxValue ) {
+        } else if ( typeof maxValue === 'number' && newValue > maxValue ) {
             newValue = maxValue;
         }
 
@@ -68,13 +68,13 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         var error;
 
         if ( value !== null && typeof value !== 'undefined' ) {
-            if ( _.isNumber( min ) && _.isNumber( max ) ) {
+            if ( typeof min === 'number' && typeof max === 'number' ) {
                 if ( value < min || value > max ) {
                     error = 'Значение должно быть в диапазоне от ' + min + ' до ' + max + '.';
                 }
-            } else if ( _.isNumber( min ) && value < min ) {
+            } else if ( typeof min === 'number' && value < min ) {
                 error = 'Значение должно быть не меньше ' + min + '.';
-            } else if ( _.isNumber( max ) && value > max ) {
+            } else if ( typeof max === 'number' && value > max ) {
                 error = 'Значение должно быть не больше ' + max + '.';
             }
         }
