@@ -51,7 +51,7 @@ var editorBaseViewMixin = {
 
     updateValueState: function() {
         var value = this.model.get( 'value' );
-        var isEmpty = _.isEmpty( value ) && !( _.isNumber( value ) );
+        var isEmpty = _.isEmpty( value ) && typeof value !== 'number';
 
         this.$el.toggleClass( 'pl-empty-text-editor', isEmpty );
     },

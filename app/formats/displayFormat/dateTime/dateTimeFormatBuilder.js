@@ -15,7 +15,7 @@ function DateTimeFormatBuilder() {
 
         format.setFormat( args.metadata.Format );
 
-        if( _.isNumber( args.metadata.TimeZone ) ) {
+        if( typeof args.metadata.TimeZone === 'number' ) {
             format.setOptions( { TimeZone: args.metadata.TimeZone } );
         }
 

@@ -196,7 +196,7 @@ var ControlView = Backbone.View.extend( {
         var newName = this.model.get( 'name' );
         var currentName = this.$el.attr( 'data-pl-name' );
 
-        if( newName != currentName && typeof newName == 'string' ) {
+        if( newName !== currentName && typeof newName === 'string' ) {
             this.$el.attr( 'data-pl-name', newName );
         }
     },
