@@ -30,7 +30,7 @@ _.extend( MenuBar.prototype, {
         ( function highlight( element ) {
             var childElements = element.getChildElements();
             childElements.forEach( function( childElement ) {
-                var highlight = _.isString( name ) && childElement.getName() === name;
+                var highlight = typeof name === 'string' && childElement.getName() === name;
                 var control = childElement.control;
 
                 if( control ) {

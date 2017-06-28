@@ -151,7 +151,7 @@ _.extend( Element.prototype, {
             throw new Error( 'name already exists' );
         }
 
-        if( typeof name == 'string' ) {
+        if( typeof name === 'string' ) {
             this.control.set( 'name', name );
         }
     },
@@ -343,7 +343,7 @@ _.extend( Element.prototype, {
      * @param style
      */
     setStyle: function( style ) {
-        if( typeof style == 'string' ) {
+        if( typeof style === 'string' ) {
             this.control.set( 'style', style );
         }
     },
@@ -377,7 +377,7 @@ _.extend( Element.prototype, {
      * @param horizontalAlignment
      */
     setHorizontalAlignment: function( horizontalAlignment ) {
-        if( typeof horizontalAlignment == 'string' ) {
+        if( typeof horizontalAlignment === 'string' ) {
             this.control.set( 'horizontalAlignment', horizontalAlignment );
         }
     },
@@ -394,7 +394,7 @@ _.extend( Element.prototype, {
      * @param textStyle
      */
     setTextStyle: function( textStyle ) {
-        if( typeof textStyle == 'string' ) {
+        if( typeof textStyle === 'string' ) {
             this.control.set( 'textStyle', textStyle );
         }
     },
@@ -411,7 +411,7 @@ _.extend( Element.prototype, {
      * @param background
      */
     setBackground: function( background ) {
-        if( typeof background == 'string' ) {
+        if( typeof background === 'string' ) {
             this.control.set( 'background', background );
         }
     },
@@ -428,7 +428,7 @@ _.extend( Element.prototype, {
      * @param foreground
      */
     setForeground: function( foreground ) {
-        if( typeof foreground == 'string' ) {
+        if( typeof foreground === 'string' ) {
             this.control.set( 'foreground', foreground );
         }
     },
@@ -834,7 +834,7 @@ _.extend( Element.prototype, {
     removeChild: function( child ) {
         var index = this.childElements.indexOf( child );
 
-        if( index != -1 ) {
+        if( index !== -1 ) {
             this.childElements.splice( index, 1 );
         }
     },

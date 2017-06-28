@@ -296,7 +296,7 @@ var DocumentDataSource = RestDataSource.extend( {
     quoteValue: function( value ) {
         var VALUE_QUOTE_CHAR = '\'';
 
-        if( _.isString( value ) ) {
+        if( typeof value === 'string' ) {
             return VALUE_QUOTE_CHAR + value + VALUE_QUOTE_CHAR;
         } else {
             return value;

@@ -1,6 +1,6 @@
 {
   "name": "infinni-ui",
-  "version": "",
+  "version": "3.0.0",
   "description": "Framework for lightning fast web apps creation",
   "keywords": [
     "infinniui"
@@ -92,5 +92,16 @@
     "pack-for-teamcity": "gulp assemble:package",
     "test": "karma start karma.conf.js",
     "test:tc": "npm run test -- --single-run --reporters teamcity --colors false --browsers Firefox"
+  },
+  "dependencies": {
+    "backbone": "^1.3.3",
+    "block-ui": "^2.70.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^1.12.4",
+    "jquery.cookie": "^1.4.1",
+    "moment": "^2.18.1",
+    "signalr": "^2.2.2",
+    "toastr": "^2.1.2",
+    "underscore": "^1.8.3"
   }
 }

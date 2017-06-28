@@ -48,7 +48,7 @@ _.extend( Icon.prototype, {
      * @param size
      */
     setSize: function( size ) {
-        if( typeof size == 'string' ) {
+        if( typeof size === 'string' ) {
             this.control.set( 'size', size );
         }
     },

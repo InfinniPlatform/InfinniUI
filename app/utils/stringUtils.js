@@ -91,7 +91,7 @@ var stringUtils = {
         var that = this;
 
         for( var k in data ) {
-            var p = _.isString( data[ k ] ) ? data[ k ].replace( /[\+]/g, function( c ) {
+            var p = typeof data[ k ] === 'string' ? data[ k ].replace( /[\+]/g, function( c ) {
                 return that.replaced[ c ] || c;
             } ) : data[ k ];
 
