@@ -22,7 +22,6 @@ coverage
 # Build
 app/styles/*.css
 dist/
-out/
 package/
 
 # Dependency directory
