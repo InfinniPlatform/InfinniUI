@@ -1,8 +1,4 @@
 function RouterService( myRoutes ) {
-    if( !myRoutes ) {
-        return null;
-    }
-
     /**
      *
      * @param myRoutes
@@ -129,4 +125,6 @@ function RouterService( myRoutes ) {
     return routerService;
 }
 
-InfinniUI.routerService = new RouterService( InfinniUI.config.routes );
+if( InfinniUI.config.routes ) {
+    InfinniUI.routerService = new RouterService( InfinniUI.config.routes );
+}
