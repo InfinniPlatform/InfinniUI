@@ -413,6 +413,8 @@ _.extend( ContainerBuilder.prototype, {
                     }
 
                 } else {
+                    items.set( value );
+
                     items.forEach( function( item, index, collection ) {
                         collection.setProperty( index, 'bindingIndex', index );
                     } );
