@@ -50,6 +50,7 @@ var DataGridView = ListEditorBaseView.extend( {
         this.listenTo( this.model, 'change:checkAllVisible', this.updateCheckAllVisible );
         this.listenTo( this.model, 'change:checkAll', this.updateCheckAll );
         this.listenTo( this.model, 'change:verticalAlignment', this.updateVerticalAlignment );
+        this.listenTo( this.model, 'change:scroll', this.updateScroll );
 
         /** Update hash item => element when item changed **/
         var rowElements = this.rowElements;
@@ -67,6 +68,24 @@ var DataGridView = ListEditorBaseView.extend( {
     /**
      *
      */
+    updateScroll: function() {
+        var model = this.model;
+        var scrollValue = model.get( 'scroll' );
+        var scrollableClass = 'pl-datagrid-scrollable';
+        var adaptiveBody = 'pl-adaptive-by-height';
+
+        if( scrollValue ) {
+            this.$el.addClass( scrollableClass );
+            this.ui.body.addClass( adaptiveBody );
+        } else {
+            this.$el.removeClass( scrollableClass );
+            this.ui.body.removeClass( adaptiveBody );
+        }
+    },
+
+    /**
+     *
+     */
     updateProperties: function() {
         ListEditorBaseView.prototype.updateProperties.call( this );
         this.updateShowSelectors();
@@ -74,6 +93,7 @@ var DataGridView = ListEditorBaseView.extend( {
         this.updateCheckAll();
         this.updateDisabledItem();
         this.updateVerticalAlignment();
+        this.updateScroll();
     },
 
     /**
