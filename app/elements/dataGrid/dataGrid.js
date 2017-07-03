@@ -148,3 +148,10 @@ DataGrid.prototype.setVerticalAlignment = function( verticalAlignment ) {
         this.control.set( 'verticalAlignment', verticalAlignment );
     }
 };
+
+/**
+ * @description dataGrid won't stretch to all free space
+ */
+DataGrid.prototype.makeUnscrollable = function() {
+    this.control.set( 'scroll', false );
+};

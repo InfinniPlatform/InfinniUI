@@ -62,6 +62,10 @@ _.extend( DataGridBuilder.prototype, {
             element.onRowDoubleClick( onRowDoubleClickExecutor );
         }
 
+        if( typeof metadata.Scroll !== 'undefined' && metadata.Scroll === false ) {
+            element.makeUnscrollable();
+        }
+
         this.applyColumnsMetadata( params );
     },
 

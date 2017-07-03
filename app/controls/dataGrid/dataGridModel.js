@@ -10,7 +10,8 @@ var DataGridModel = ListEditorBaseModel.extend( {
         checkAll: false,
         focusable: false,
         verticalAlignment: 'Top',
-        sortedColumn: null
+        sortedColumn: null,
+        scroll: true
     }, ListEditorBaseModel.prototype.defaults ),
 
     /**

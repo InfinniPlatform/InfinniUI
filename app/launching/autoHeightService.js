@@ -256,7 +256,7 @@ InfinniUI.AutoHeightService = {
             var $body = $( '.modal-body', $container );
             var $el = $( this.adaptableByHeightSelector, $modal );
 
-            $el.parentsUntil( '.modal' ).css( 'height', 'auto' );
+            $el.parentsUntil( '.modal', ':not(' + this.adaptableByHeightSelector + ')' ).css( 'height', 'auto' );
             $container
                 .css( 'top', ( this.windowHeight - $header.outerHeight( true ) - $body.outerHeight( true ) ) / 2 );
 
