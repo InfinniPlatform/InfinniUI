@@ -28,6 +28,10 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
         this.addToValue( -delta );
     },
 
+    transformValue: function( value ) {
+        return typeof value === 'string' ? +value : value;
+    },
+
     /**
      *
      * @param delta
