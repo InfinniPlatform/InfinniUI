@@ -368,9 +368,9 @@ var BaseDataSource = Backbone.Model.extend( {
         var indexOfSelectedItem;
         var resultOfSet;
 
-        if( propertyPaths[ 0 ] == '$' ) {
+        if( propertyPaths[ 0 ] === '$' ) {
             indexOfSelectedItem = this._indexOfSelectedItem();
-            if( indexOfSelectedItem == -1 ) {
+            if( indexOfSelectedItem === -1 ) {
                 return;
             }
 
@@ -381,13 +381,13 @@ var BaseDataSource = Backbone.Model.extend( {
         firstChar = property.charAt( 0 );
 
         if( propertyPaths.length === 1 ) {
-            if( propertyPaths[ 0 ] == '' ) {
+            if( propertyPaths[ 0 ] === '' ) {
                 this._setItems( value );
             } else if( this.get( 'isNumRegEx' ).test( propertyPaths[ 0 ] ) ) {
                 this._changeItem( propertyPaths[ 0 ], value );
             } else {
                 indexOfSelectedItem = this._indexOfSelectedItem();
-                if( indexOfSelectedItem == -1 ) {
+                if( indexOfSelectedItem === -1 ) {
                     return;
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
@@ -411,7 +411,7 @@ var BaseDataSource = Backbone.Model.extend( {
                 }
             } else {
                 indexOfSelectedItem = this._indexOfSelectedItem();
-                if( indexOfSelectedItem == -1 ) {
+                if( indexOfSelectedItem === -1 ) {
                     return;
                 }
                 property = 'items.' + indexOfSelectedItem + '.' + property;
