@@ -145,6 +145,14 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
         var displayFormat = model.get( 'displayFormat' );
 
         return displayFormat ? displayFormat( null, { value: value } ) : value;
+    },
+
+    /**
+     *
+     * @returns {*}
+     */
+    getRawValue: function() {
+        return this.ui.editor.val();
     }
 
 } ) );

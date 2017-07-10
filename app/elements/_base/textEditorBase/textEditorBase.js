@@ -60,7 +60,7 @@ _.extend( TextEditorBase.prototype, {
      * @returns {*}
      */
     getRawValue: function() {
-        var value = this.control.get( 'editor' ).getValue();
+        var value = this.control.getRawValue();
         var editMask = this.getEditMask();
 
         if ( editMask ) {
