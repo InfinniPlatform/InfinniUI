@@ -32,7 +32,11 @@ describe( 'ObjectDataProvider', function() {
 
         dataSource.updateItems(
             function() {
-                dataSource.deleteItem( dataItems[ 0 ] );
+                dataSource.deleteItem( {
+                    '_id': 2,
+                    'FirstName': 'Вася',
+                    'LastName': 'Петров'
+                } );
             }
         );
     } );

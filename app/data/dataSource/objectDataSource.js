@@ -60,25 +60,8 @@ var ObjectDataSource = BaseDataSource.extend( {
      * @private
      */
     _setItems: function( items ) {
-        this._detectIdentifyingMode( items );
-
-        var indexOfItemsById;
-
-        this.set( 'isDataReady', true );
-        this.get( 'model' ).setProperty( 'items', items );
         this.get( 'dataProvider' ).setItems( items );
-        this._clearModifiedSet();
-
-        if( items && items.length > 0 ) {
-            indexOfItemsById = this._indexItemsById( items );
-            this.set( 'itemsById', indexOfItemsById );
-
-            if( !this._restoreSelectedItem() ) {
-                this.setSelectedItem( items[ 0 ] );
-            }
-        } else {
-            this.setSelectedItem( null );
-        }
+        BaseDataSource.prototype._setItems.apply( this, [ items ] );
     }
 
 } );

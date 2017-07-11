@@ -182,7 +182,7 @@ var DataBinding = Backbone.Model.extend( {
                 var bindId = that.get( 'bindId' );
                 var propertyName = that.get( 'sourceProperty' );
 
-                if( source.offPropertyChanged ) {
+                if( source && source.offPropertyChanged ) {
                     source.offPropertyChanged( propertyName, bindId );
                 }
                 that.remove();
