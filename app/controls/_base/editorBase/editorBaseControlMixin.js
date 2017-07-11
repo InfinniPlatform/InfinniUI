@@ -36,6 +36,14 @@ var editorBaseControlMixin = {
      */
     onValueChanged: function( handler ) {
         this.controlModel.onValueChanged( handler );
+    },
+
+    /**
+     *
+     * @returns {*}
+     */
+    getRawValue: function() {
+        return this.controlView.getRawValue();
     }
 
 };

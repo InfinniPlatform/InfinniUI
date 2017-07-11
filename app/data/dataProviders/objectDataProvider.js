@@ -92,7 +92,7 @@ _.extend( ObjectDataProvider.prototype, {
         var items = this.items;
         var itemIndex = this._getIndexOfItem( item );
 
-        if ( itemIndex == -1 ) {
+        if ( itemIndex === -1 ) {
             items.push( item );
         } else {
             items[ itemIndex ] = item;
@@ -112,7 +112,7 @@ _.extend( ObjectDataProvider.prototype, {
         var itemIndex = this._getIndexOfItem( item );
         var validationResult = new ValidationResult();
 
-        if ( itemIndex != -1 ) {
+        if ( itemIndex !== -1 ) {
             items.splice( itemIndex, 1 );
             successCallback( {} );
         } else {
@@ -171,6 +171,7 @@ _.extend( ObjectDataProvider.prototype, {
     _generateLocalId: function() {
         return guid();
     }
+
 } );
 
 InfinniUI.Providers.ObjectDataProvider = ObjectDataProvider;

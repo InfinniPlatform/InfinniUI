@@ -509,7 +509,7 @@ var BaseDataSource = Backbone.Model.extend( {
      * @private
      */
     _tuneMirroringOfModel: function( index ) {
-        if( index != -1 ) {
+        if( index !== -1 ) {
             this.get( 'model' ).setMirroring( 'items.$', 'items.' + index );
         } else {
             this.get( 'model' ).setMirroring( null, null );
