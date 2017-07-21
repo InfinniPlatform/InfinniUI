@@ -282,6 +282,7 @@ _.extend( View.prototype, {
      *
      */
     removeParameters: function() {
+        var context = this.getContext();
         var parameters = this.control.get( 'parameters' );
 
         if( parameters._items.length ) {
@@ -290,6 +291,7 @@ _.extend( View.prototype, {
             } );
 
             parameters.removeAll();
+            context.parameters = {};
         }
     },
 
