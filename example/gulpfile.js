@@ -2,9 +2,6 @@
 
 /*============= Настраиваемые параметры =============*/
 
-// Необходимо указать путь до платфомы в node_modules
-var infinniUIpath = './node_modules/infinni-ui/';
-
 // Путь до папки-результата
 var projectRootFolder = './www/';
 // куда собирать прикладную часть?
@@ -67,7 +64,7 @@ function buildLess( options ) {
 function concat( options ) {
     return gulp.src( options.src )
         .pipe( $.if( function( file ) {
-            return file.extname == '.js' && file.relative.indexOf( 'min\.' ) === -1;
+            return file.extname === '.js' && file.relative.indexOf( 'min\.' ) === -1;
         }, $.uglify() ) )
         .pipe( $.concat( options.finalName ) )
         .pipe( gulp.dest( options.dest ) );

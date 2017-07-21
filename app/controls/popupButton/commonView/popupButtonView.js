@@ -31,6 +31,9 @@ var CommonPopupButtonView = ContainerView.extend( {
 
     updateText: CommonButtonView.prototype.updateText,
 
+    /**
+     *
+     */
     updateBackground: function() {
         var styleValue = this.model.get( 'background' );
         var newBackground = this.valueToBackgroundClassName( styleValue );

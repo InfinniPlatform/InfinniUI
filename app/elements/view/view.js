@@ -267,6 +267,7 @@ _.extend( View.prototype, {
             this.eventManager.trigger( 'onClosed', scriptArgs, context );
 
             this.openStrategy.close();
+            this.removeParameters();
 
             if( success ) {
                 success( context, scriptArgs );
@@ -274,6 +275,21 @@ _.extend( View.prototype, {
 
         } else if( error ) {
             error( context, scriptArgs );
+        }
+    },
+
+    /**
+     *
+     */
+    removeParameters: function() {
+        var parameters = this.control.get( 'parameters' );
+
+        if( parameters._items.length ) {
+            parameters.forEach( function( parameter ) {
+                parameter.remove();
+            } );
+
+            parameters.removeAll();
         }
     },
 

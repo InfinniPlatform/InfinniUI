@@ -11,12 +11,12 @@ var bindUIElementsMixin = {
     bindUIElements: function() {
         this.ui = {};
 
-        if ( typeof this.UI === 'undefined' ) {
+        if( typeof this.UI === 'undefined' ) {
             return;
         }
 
-        for ( var i in this.UI ) {
-            if ( !this.UI.hasOwnProperty( i ) ) continue;
+        for( var i in this.UI ) {
+            if( !this.UI.hasOwnProperty( i ) ) continue;
 
             this.ui[ i ] = this.$( this.UI[ i ] );
         }

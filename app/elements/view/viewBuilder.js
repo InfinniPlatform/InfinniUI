@@ -77,9 +77,10 @@ _.extend( ViewBuilder.prototype, {
 
                 param.set( 'view', params.element );
                 parameters.add( param );
-                if( metadata.Parameters[ j ][ 'OnPropertyChanged' ] ) {
+                if( typeof metadata.Parameters[ j ][ 'OnPropertyChanged' ] !== 'undefined' ) {
+                    var handler = metadata.Parameters[ j ][ 'OnPropertyChanged' ];
                     param.onPropertyChanged( function() {
-                        new ScriptExecutor( element ).executeScript( metadata.Parameters[ j ][ 'OnPropertyChanged' ] );
+                        new ScriptExecutor( element ).executeScript( handler );
                     } );
                 }
             }

@@ -39,11 +39,14 @@ _.extend( ObjectDataSourceBuilder.prototype, {
             }
 
             if( $.isPlainObject( metadata.Items ) ) {
+                if( typeof metadata.Items.Mode === 'undefined' ) {
+                    metadata.Items.Mode = InfinniUI.BindingModes.toElement;
+                }
+
                 var binding = builder.buildBinding( metadata.Items, {
                     parentView: parent
                 } );
 
-                binding.setMode( InfinniUI.BindingModes.toElement );
                 binding.bindElement( dataSource, '' );
             }
         }

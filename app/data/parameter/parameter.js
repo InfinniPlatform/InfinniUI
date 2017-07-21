@@ -152,6 +152,51 @@ var Parameter = Backbone.Model.extend( {
         } else {
             return val;
         }
+    },
+
+    /**
+     *
+     * @param element
+     * @param handler
+     * @param additionParams
+     * @returns {Function}
+     */
+    createControlEventHandler: function( element, handler, additionParams ) {
+        var context;
+        var parentView = element.getView();
+        additionParams = additionParams || {};
+
+        if( parentView ) {
+            context = parentView.context;
+        }
+
+        return function( message ) {
+            message = message || {};
+            _.extend(
+                message,
+                additionParams
+            );
+            message.source = element;
+
+            return handler.call( undefined, context, message );
+        };
+    },
+
+    /**
+     *
+     * @param handler
+     * @returns {*|CollectionEventManager|{name}}
+     */
+    onRemove: function( handler ) {
+        return this.on( messageTypes.onRemove.name, this.createControlEventHandler( this, handler ) );
+    },
+
+    /**
+     *
+     */
+    remove: function() {
+        this.off();
+        this.clear();
     }
 
 } );

@@ -51,17 +51,6 @@ var ObjectDataSource = BaseDataSource.extend( {
     setItems: function( items ) {
         this.get( 'dataProvider' ).setItems( items );
         this.updateItems();
-    },
-
-    // этот метод необходим чтобы данные попадали в провайдер когда они приходят через байдинг (UI-2881)
-    /**
-     *
-     * @param items
-     * @private
-     */
-    _setItems: function( items ) {
-        this.get( 'dataProvider' ).setItems( items );
-        BaseDataSource.prototype._setItems.apply( this, [ items ] );
     }
 
 } );

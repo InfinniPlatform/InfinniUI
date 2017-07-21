@@ -92,7 +92,7 @@ _.extend( ObjectDataProvider.prototype, {
         var items = this.items;
         var itemIndex = this._getIndexOfItem( item );
 
-        if ( itemIndex === -1 ) {
+        if( itemIndex === -1 ) {
             items.push( item );
         } else {
             items[ itemIndex ] = item;
@@ -112,7 +112,7 @@ _.extend( ObjectDataProvider.prototype, {
         var itemIndex = this._getIndexOfItem( item );
         var validationResult = new ValidationResult();
 
-        if ( itemIndex !== -1 ) {
+        if( itemIndex !== -1 ) {
             items.splice( itemIndex, 1 );
             successCallback( {} );
         } else {
@@ -133,11 +133,11 @@ _.extend( ObjectDataProvider.prototype, {
      * @returns {[*]}
      */
     createIdFilter: function( id ) {
-        return [{
+        return [ {
             'Property': '_id',
             'Value': id,
             'CriteriaType': 1
-        }];
+        } ];
     },
 
     /**
@@ -147,7 +147,7 @@ _.extend( ObjectDataProvider.prototype, {
      * @private
      */
     _getIndexOfItem: function( item ) {
-        return  _.indexOf( this.items, item );
+        return _.indexOf( this.items, item );
     },
 
     /**

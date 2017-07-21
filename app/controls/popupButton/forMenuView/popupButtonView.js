@@ -66,6 +66,21 @@ var ForMenuPopupButtonView = CommonPopupButtonView.extend( {
     },
 
     /**
+     *
+     */
+    updateBackground: function() {
+        var styleValue = this.model.get( 'background' );
+        var newBackground = this.valueToBackgroundClassName( styleValue );
+        var oldBackground = this.valueToBackgroundClassName( this.currentBackground );
+
+        if( newBackground !== '' ) {
+            this.$el.removeClass( oldBackground ).addClass( newBackground );
+        }
+
+        this.currentBackground = styleValue;
+    },
+
+    /**
      * @returns {jQuery}
      */
     getButtonElement: function() {
