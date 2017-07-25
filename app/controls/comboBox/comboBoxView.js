@@ -85,9 +85,9 @@ var ComboBoxView = ListEditorBaseView.extend( {
                     var $dropdown = dropdownView.render();
                     $( 'body' ).append( $dropdown );
 
-                    dropdownView.updatePosition( view.el );
+                    dropdownView.updatePosition( view.ui.control.get( 0 ) );
                     view.dropDownView.on( 'itemsRendered2', function() {
-                        dropdownView.updatePosition( view.el );
+                        dropdownView.updatePosition( view.ui.control.get( 0 ) );
                     } );
 
                     if( model.get( 'autocomplete' ) ) {
