@@ -37,7 +37,7 @@ var dateTimePickerModeDate = {
      * @returns {string|null}
      */
     convertValue: function( value ) {
-        return InfinniUI.DateUtils.dateToTimestamp( InfinniUI.DateUtils.changeTimezoneOffset( value, this.model.get( 'timeZone' ) ) );
+        return InfinniUI.DateUtils.dateToTimestamp( InfinniUI.DateUtils.changeTimezoneOffset( value ) );
     }
 
 };
