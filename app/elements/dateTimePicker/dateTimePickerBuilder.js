@@ -26,17 +26,17 @@ DateTimePickerBuilder.prototype.createElement = function( params ) {
  */
 DateTimePickerBuilder.prototype.applyMetadata = function( params ) {
     var element = params.element;
-    var metadata = params.metadata;
+    // var metadata = params.metadata;
 
     this.applyDefaultMetadata( params );
 
     TextEditorBaseBuilder.prototype.applyMetadata.call( this, params );
 
-    element.setTimeZone( metadata.TimeZone );
-    element.setMode( metadata.Mode );
+    element.setTimeZone( params.metadata.TimeZone );
+    element.setMode( params.metadata.Mode );
 
-    this.applyMinValue( element, metadata.MinValue );
-    this.applyMaxValue( element, metadata.MaxValue );
+    this.applyMinValue( element, params.metadata.MinValue );
+    this.applyMaxValue( element, params.metadata.MaxValue );
 
     //var format = params.builder.buildType(params.parent, 'DateFormat', {}, null);
     //element.setDateFormat(format);

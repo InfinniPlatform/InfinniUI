@@ -6,6 +6,10 @@ console.assert( dateTimePickerModeTime, 'dateTimePickerModeTime is undefined' );
  */
 var dateTimePickerModeTimePicker = _.extend( {}, dateTimePickerModeTime, {
 
+    getTemplate: function() {
+        return InfinniUI.Template[ 'controls/dateTimePicker/template/time.tpl.html' ];
+    },
+
     /**
      *
      * @param value
