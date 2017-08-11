@@ -5,6 +5,7 @@ var $ = require( 'gulp-load-plugins' )();
 var concatStream = require( 'streamqueue' );
 
 var config = require( './config' );
+var platformVersion = require( '../../package.json' ).version;
 var templateNamespaceInitString = 'window["InfinniUI"] = window["InfinniUI"] || {};\nwindow["InfinniUI"]["Template"] = window["InfinniUI"]["Template"] || {};\n';
 
 function getTemplateStream( src ) {
@@ -39,6 +40,7 @@ gulp.task( 'build:js', function() {
             header: ';(function(){\n' + templateNamespaceInitString,
             footer: '})();'
         } ) )
+        .pipe( $.replace( /<%infinniui_version%>/g, platformVersion ) )
         .pipe( $.appendPrepend.prependFile( config.jsDependence ) ) // раз есть appendPrepend, то можно от wrapper избавиться
         .pipe( gulp.dest( config.platformOutputFolder ) );
 } );
