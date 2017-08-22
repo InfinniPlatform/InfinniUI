@@ -33,4 +33,4 @@ Changelog
 * 'ServerAction' can work without 'Origin' property('Origin' is not required now)
 * added 'setContext', 'setParams', 'addParams' methods to InfinniUI.routerService
 * renamed 'LinkElement' to 'Link' (only for API, it was always called 'Link' in metadata)
-
+* added 'signalRServerUrl' url to InfinniUI.config
