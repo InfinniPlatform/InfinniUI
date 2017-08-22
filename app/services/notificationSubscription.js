@@ -5,13 +5,15 @@ var notificationSubscription = (function() {
 			connection,
 			onSuccessCb,
 			onErrorCb,
-			isConnected = false;
+			isConnected = false,
+			serverUrl;
 
 	var setUpConnection = function(newHubName, onSuccess, onError) {
 		onSuccessCb = onSuccess || onSuccessCb;
 		onErrorCb = onError || onErrorCb;
 		hubName = newHubName || hubName;
-		connection = $.hubConnection(window.InfinniUI.config.serverUrl);
+		serverUrl = serverUrl || window.InfinniUI.config.signalRServerUrl || window.InfinniUI.config.serverUrl;
+		connection = $.hubConnection(serverUrl);
 		hubProxy = connection.createHubProxy(hubName);
 
 		if( _.size(subscription) > 0 ) {
@@ -56,7 +58,7 @@ var notificationSubscription = (function() {
 				return;
 			}
 		}
-		
+
 		if( subscription[routingKey] ) {
 			delete subscription[routingKey];
 			if( hubProxy ) {
