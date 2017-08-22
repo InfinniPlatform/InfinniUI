@@ -10,6 +10,7 @@ var notificationSubscription = ( function() {
     var onSuccessCb;
     var onErrorCb;
     var isConnected = false;
+    var serverUrl;
 
     /**
      *
@@ -21,7 +22,8 @@ var notificationSubscription = ( function() {
         onSuccessCb = onSuccess || onSuccessCb;
         onErrorCb = onError || onErrorCb;
         hubName = newHubName || hubName;
-        connection = $.hubConnection( InfinniUI.config.serverUrl );
+        serverUrl = serverUrl || InfinniUI.config.signalRServerUrl || InfinniUI.config.serverUrl;
+        connection = $.hubConnection( serverUrl );
         hubProxy = connection.createHubProxy( hubName );
 
         if( _.size( subscription ) > 0 ) {
