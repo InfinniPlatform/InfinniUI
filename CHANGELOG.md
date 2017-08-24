@@ -1,5 +1,8 @@
 Changelog
 =========
+## (soon)
+* fixed: toggling sign in NumberMask by pressing backspace and delete keys
+
 ## 3.0.7
 * added 'signalRServerUrl' url to InfinniUI.config
 
