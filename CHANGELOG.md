@@ -1,6 +1,6 @@
 Changelog
 =========
-## (soon)
+## 3.0.8
 * fixed: toggling sign in NumberMask by pressing backspace and delete keys
 
 ## 3.0.7
