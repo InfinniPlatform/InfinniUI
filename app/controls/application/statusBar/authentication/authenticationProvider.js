@@ -89,6 +89,101 @@ _.extend(AuthenticationProvider.prototype, {
     },
 
     /**
+     * Осуществляет вход пользователя в систему по любому идентификатору
+     *
+     * @param {string} userKey - идентификатор (id, имя пользователя, email, номер телефона)
+     * @param {string} password - пароль
+     * @param {string} remember - запомнить
+     * @param {function} resultCallback - при успешном результате
+     * @param {function} errorCallback - при неудачном результате
+     */
+    signIn: function(userKey, password, remember, resultCallback, errorCallback) {
+        var signInForm = {
+            UserKey: userKey,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequest('/Auth/SignIn', signInForm, resultCallback, errorCallback);
+    },
+
+    /**
+     * Осуществляет вход пользователя в систему Id
+     *
+     * @param {string} userId - идентификатор пользователя
+     * @param {string} password - пароль
+     * @param {string} remember - запомнить
+     * @param {function} resultCallback - при успешном результате
+     * @param {function} errorCallback - при неудачном результате
+     */
+    signInById: function(userId, password, remember, resultCallback, errorCallback) {
+        var signInForm = {
+            Id: userId,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequest('/Auth/SignInById', signInForm, resultCallback, errorCallback);
+    },
+
+    /**
+     * Осуществляет вход пользователя в систему по имени
+     *
+     * @param {string] userName - имя пользователя
+     * @param {string} password - пароль
+     * @param {string} remember - запомнить
+     * @param {function} resultCallback - при успешном результате
+     * @param {function} errorCallback - при неудачном результате
+     */
+    signInByUserName: function(userName, password, remember, resultCallback, errorCallback) {
+        var signInForm = {
+            UserName: userName,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequest('/Auth/SignInByUserName', signInForm, resultCallback, errorCallback);
+    },
+
+    /**
+     * Осуществляет вход пользователя в систему по электронной почте
+     *
+     * @param {string} email - электронная почта
+     * @param {string} password - пароль
+     * @param {string} remember - запомнить
+     * @param {function} resultCallback - при успешном результате
+     * @param {function} errorCallback - при неудачном результате
+     */
+    signInByEmail: function(email, password, remember, resultCallback, errorCallback) {
+        var signInForm = {
+            Email: email,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequest('/Auth/SignInByEmail', signInForm, resultCallback, errorCallback);
+    },
+
+    /**
+     * Осуществляет вход пользователя в систему по номеру телефона
+     *
+     * @param {string} phoneNumber - номер телефона
+     * @param {string} password - пароль
+     * @param {string} remember - запомнить
+     * @param {function} resultCallback - при успешном результате
+     * @param {function} errorCallback - при неудачном результате
+     */
+    signInByPhoneNumber: function(phoneNumber, password, remember, resultCallback, errorCallback) {
+        var signInForm = {
+            PhoneNumber: phoneNumber,
+            Password: password,
+            Remember: remember
+        };
+
+        this.sendPostRequest('/Auth/SignInByPhoneNumber', signInForm, resultCallback, errorCallback);
+    },
+
+    /**
           * Возвращает форму входа пользователя в систему через внешний провайдер.
           *
           * @public
