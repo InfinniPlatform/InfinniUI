@@ -228,8 +228,10 @@ _.extend( AuthenticationProvider.prototype, {
         };
 
         this.sendPostRequestForServiceResult( '/Auth/SignOut', null, function() {
-            InfinniUI.user.onReadyDeferred = $.Deferred();
-            InfinniUI.user.onReadyDeferred.resolve( null );
+            if( typeof InfinniUI.user !== 'undefined' && InfinniUI.user !== null ) {
+                InfinniUI.user.onReadyDeferred = $.Deferred();
+                InfinniUI.user.onReadyDeferred.resolve( null );
+            }
 
             var args = _.toArray( arguments );
             if( resultCallback ) {
