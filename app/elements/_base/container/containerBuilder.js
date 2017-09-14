@@ -392,6 +392,11 @@ _.extend( ContainerBuilder.prototype, {
             }
         } );
 
+        element.onRemove( function( context, args ) {
+            binding.remove();
+        } );
+
+
         binding.bindElement( {
             setProperty: function( name, value ) {
                 var items = element.getItems();
