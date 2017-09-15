@@ -407,7 +407,7 @@ _.extend( ContainerBuilder.prototype, {
                 }
 
                 if( itemComparator ) {
-                    isCollectionChanged = items.set( value, true );
+                    isCollectionChanged = items.set( value || [], true );
 
                     items.forEach( function( item, index, collection ) {
                         collection.setProperty( index, 'bindingIndex', index );
@@ -418,7 +418,7 @@ _.extend( ContainerBuilder.prototype, {
                     }
 
                 } else {
-                    isCollectionChanged = items.set( value );
+                    isCollectionChanged = items.set( value || [] );
 
                     items.forEach( function( item, index, collection ) {
                         collection.setProperty( index, 'bindingIndex', index );
