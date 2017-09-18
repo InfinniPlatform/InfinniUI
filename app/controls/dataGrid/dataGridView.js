@@ -6,6 +6,7 @@ var DataGridView = ListEditorBaseView.extend( {
 
     template: {
         'grid': InfinniUI.Template[ 'controls/dataGrid/template/dataGrid.tpl.html' ],
+        'gridWithoutScroll': InfinniUI.Template[ 'controls/dataGrid/template/dataGridWithoutScroll.tpl.html' ],
         'headerCell': InfinniUI.Template[ 'controls/dataGrid/template/headerCell.tpl.html' ],
         'sizeCell': InfinniUI.Template[ 'controls/dataGrid/template/sizeCell.tpl.html' ]
     },
@@ -280,7 +281,13 @@ var DataGridView = ListEditorBaseView.extend( {
         this.prerenderingActions();
 
         var verticalAlignment = this.model.get( 'verticalAlignment' );
+        var scrollValue = this.model.get( 'scroll' );
         var template = this.template.grid;
+
+        if( !scrollValue ) {
+            template = this.template.gridWithoutScroll;
+        }
+
         this.$el.html( template() );
 
         this.bindUIElements();
