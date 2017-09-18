@@ -371,7 +371,7 @@ _.extend( ContainerBuilder.prototype, {
         // нетривиальный биндинг элементов нужен для того, чтобы правильно учитывались индексы при сортировке элементов
         var metadata = params.metadata;
         var element = params.element;
-        var scriptExecutor = new ScriptExecutor( params.parentView );
+        var scriptExecutor = new ScriptExecutor( params.parent );
         var itemComparator;
 
         if( metadata.ItemComparator ) {
@@ -407,7 +407,7 @@ _.extend( ContainerBuilder.prototype, {
                 }
 
                 if( itemComparator ) {
-                    isCollectionChanged = items.set( value, true );
+                    isCollectionChanged = items.set( value || [], true );
 
                     items.forEach( function( item, index, collection ) {
                         collection.setProperty( index, 'bindingIndex', index );
@@ -418,7 +418,7 @@ _.extend( ContainerBuilder.prototype, {
                     }
 
                 } else {
-                    items.set( value );
+                    items.set( value || [] );
 
                     items.forEach( function( item, index, collection ) {
                         collection.setProperty( index, 'bindingIndex', index );
