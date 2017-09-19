@@ -348,23 +348,25 @@ var ComboBoxDropdownView = Backbone.View.extend( {
 
     /**
      *
-     * @param parentDOMElement
+     * @param baseWidthDOMElement
+     * @param basePositionDOMElement
      */
-    updatePosition: function( parentDOMElement ) {
-        var direction = this.getDropdownDirection( parentDOMElement );
-        this.setPositionFor( parentDOMElement, direction );
+    updatePosition: function( baseWidthDOMElement, basePositionDOMElement ) {
+        var direction = this.getDropdownDirection( baseWidthDOMElement );
+        this.setPositionFor( baseWidthDOMElement, basePositionDOMElement, direction );
     },
 
     /**
      *
-     * @param parentDOMElement
+     * @param baseWidthDOMElement
+     * @param basePositionDOMElement
      * @param direction
      */
-    setPositionFor: function( parentDOMElement, direction ) {
+    setPositionFor: function( baseWidthDOMElement, basePositionDOMElement, direction ) {
         clearInterval( this._intervalId );
 
-        this.applyStyle( parentDOMElement, direction );
-        this._intervalId = setInterval( this.applyStyle.bind( this, parentDOMElement, direction ), 100 );
+        this.applyStyle( baseWidthDOMElement, basePositionDOMElement, direction );
+        this._intervalId = setInterval( this.applyStyle.bind( this, baseWidthDOMElement, basePositionDOMElement, direction ), 100 );
     },
 
     /**
@@ -396,20 +398,22 @@ var ComboBoxDropdownView = Backbone.View.extend( {
 
     /**
      *
-     * @param parentDOMElement
+     * @param baseWidthDOMElement
+     * @param basePositionDOMElement
      * @param direction
      */
-    applyStyle: function( parentDOMElement, direction ) {
-        var rect = parentDOMElement.getBoundingClientRect();
+    applyStyle: function( baseWidthDOMElement, basePositionDOMElement, direction ) {
+        var widthElementRect = baseWidthDOMElement.getBoundingClientRect();
+        var positionElementRect = basePositionDOMElement.getBoundingClientRect();
         var style = {
-            left: window.pageXOffset + rect.left,
-            width: Math.round( rect.width ) - 1
+            left: window.pageXOffset + positionElementRect.left,
+            width: Math.round( widthElementRect.width )
         };
 
         if( direction === 'bottom' ) {
-            style.top = window.pageYOffset + rect.bottom;
+            style.top = window.pageYOffset + positionElementRect.bottom;
         } else {
-            style.top = window.pageYOffset + rect.top - this.$el.height();
+            style.top = window.pageYOffset + positionElementRect.top - this.$el.height();
         }
 
         this.$el.css( style );
