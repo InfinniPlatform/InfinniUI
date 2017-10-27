@@ -17,7 +17,7 @@ var filterItems = ( function() {
          * @returns {*}
          */
         function stringToNum( value ) {
-            if( typeof value === 'string' && !isNaN( value ) ) {
+            if( typeof value === 'string' && !isNaN( value ) && value !== '' ) {
                 value = +value;
             }
             return value;

@@ -29,6 +29,10 @@ var NumericBoxModel = TextEditorBaseModel.extend( {
     },
 
     transformValue: function( value ) {
+        if( value === '' ) {
+            return null;
+        }
+
         return typeof value === 'string' ? +value : value;
     },
 
