@@ -5,6 +5,7 @@
 var ComboBoxModel = ListEditorBaseModel.extend( {
 
     defaults: _.defaults( {
+        expandOnEnter: true,
         noItemsMessage: null,
         showClear: true,
         autocomplete: false,

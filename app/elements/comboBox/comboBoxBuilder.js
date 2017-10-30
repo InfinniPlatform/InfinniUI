@@ -39,6 +39,10 @@ _.extend( ComboBoxBuilder.prototype, {
             this.resolveExpressionInText( params, 'NoItemsMessage' );
         }
 
+        if( 'ExpandOnEnter' in params.metadata ) {
+            this.initBindingToProperty( params, 'ExpandOnEnter' );
+        }
+
         element.setAutocomplete( params.metadata.Autocomplete );
         element.setShowClear( params.metadata.ShowClear );
 

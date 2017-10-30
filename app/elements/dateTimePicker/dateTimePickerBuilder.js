@@ -38,6 +38,10 @@ DateTimePickerBuilder.prototype.applyMetadata = function( params ) {
     this.applyMinValue( element, metadata.MinValue );
     this.applyMaxValue( element, metadata.MaxValue );
 
+    if( 'ExpandOnEnter' in params.metadata ) {
+        this.initBindingToProperty( params, 'ExpandOnEnter' );
+    }
+
     //var format = params.builder.buildType(params.parent, 'DateFormat', {}, null);
     //element.setDateFormat(format);
 };

@@ -91,4 +91,17 @@ DateTimePicker.prototype.setDateFormat = function( value ) {
     this.control.set( 'format', value );
 };
 
+/**
+ * @returns {*}
+ */
+DateTimePicker.prototype.getExpandOnEnter = function() {
+    return this.control.get( 'expandOnEnter' );
+};
 
+/**
+ *
+ * @param value
+ */
+DateTimePicker.prototype.setExpandOnEnter = function( value ) {
+    this.control.set( 'expandOnEnter', value );
+};

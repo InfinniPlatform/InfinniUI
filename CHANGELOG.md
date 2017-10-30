@@ -2,6 +2,7 @@ Changelog
 =========
 
 * fixed: NumericBox allows leave input field empty
+* added: 'ExpandOnEnter' property to ComboBox, DataTimePicker, DataPicker, TimePicker metadata
 
 ## 3.0.13
 * added: InfinniUI.config.signalROptions (hubConnection options [guide](https://docs.microsoft.com/en-us/aspnet/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client#connequivalence))

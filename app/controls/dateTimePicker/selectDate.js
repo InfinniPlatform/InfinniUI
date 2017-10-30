@@ -195,6 +195,7 @@ var SelectDate = Backbone.View.extend( {
      */
     remove: function() {
         clearInterval( this._intervalId );
+        this.trigger( 'remove' );
         return Backbone.View.prototype.remove.apply( this, arguments );
     },
 
