@@ -16,7 +16,8 @@ var DateTimePickerView = TextEditorBaseView.extend( {
     } ),
 
     events: _.extend( {}, TextEditorBaseView.prototype.events, {
-        'click .pl-datepicker-calendar': 'onClickDropdownHandler'
+        'click .pl-datepicker-calendar': 'onClickDropdownHandler',
+        'keydown .pl-control': 'onKeyDownControlHandler'
     } ),
 
     editMaskStrategies: {
@@ -134,11 +135,65 @@ var DateTimePickerView = TextEditorBaseView.extend( {
      *
      */
     onClickDropdownHandler: function() {
-    }
+        this.toggleDropdown();
+    },
+
+    /**
+     *
+     * @returns {boolean}
+     */
+    toggleDropdown: function() {
+        var dropdown = this.model.get( 'dropdown' );
+
+        if( dropdown !== null ) {
+            this.closeDropdown();
+        } else {
+            this.openDropdown();
+        }
+    },
+
     /**
      *
      */
+    openDropdown: function() {
+    },
 
+    /**
+     *
+     */
+    closeDropdown: function() {
+        var dropdown = this.model.get( 'dropdown' );
+        dropdown.onClickBackdropHandler();
+    },
+
+    /**
+     *
+     * @param event
+     * @returns {*}
+     */
+    onKeyDownControlHandler: function( event ) {
+        var enabled = this.model.get( 'enabled' );
+        var expandOnEnter = this.model.get( 'expandOnEnter' );
+
+        if( !enabled ) {
+            event.preventDefault();
+            return;
+        }
+
+        if( event.ctrlKey || event.altKey ) {
+            return;
+        }
+        switch( event.which ) {
+            case 13:    //Enter
+                if( expandOnEnter ) {
+                    event.preventDefault();
+                    this.toggleDropdown();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
 } );
 

@@ -152,6 +152,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
      */
     onKeyDownControlHandler: function( event ) {
         var enabled = this.model.get( 'enabled' );
+        var expandOnEnter = this.model.get( 'expandOnEnter' );
 
         if( !enabled ) {
             event.preventDefault();
@@ -167,9 +168,11 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
         switch( event.which ) {
             case 40:    //Down Arrow
-            case 13:    //Ennter
-                event.preventDefault();
-                this.toggleDropdown();
+            case 13:    //Enter
+                if( expandOnEnter ) {
+                    event.preventDefault();
+                    this.toggleDropdown();
+                }
                 break;
             default:
                 break;

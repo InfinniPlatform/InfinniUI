@@ -6,7 +6,10 @@
 var DateTimePickerModel = TextEditorBaseModel.extend( {
 
     defaults: _.extend(
-        {},
+        {
+            expandOnEnter: true,
+            dropdown: null
+        },
         TextEditorBaseModel.prototype.defaults,
         {
             mode: 'Date'

@@ -93,3 +93,18 @@ ComboBox.prototype.setAutocompleteValue = function( value ) {
 ComboBox.prototype.setNoItemsMessage = function( value ) {
     this.control.setNoItemsMessage( value );
 };
+
+/**
+ * @returns {*}
+ */
+ComboBox.prototype.getExpandOnEnter = function() {
+    return this.control.get( 'expandOnEnter' );
+};
+
+/**
+ *
+ * @param value
+ */
+ComboBox.prototype.setExpandOnEnter = function( value ) {
+    this.control.set( 'expandOnEnter', value );
+};
