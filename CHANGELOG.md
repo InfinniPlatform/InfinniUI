@@ -1,6 +1,8 @@
 Changelog
 =========
 
+## 3.0.14
+
 * fixed: NumericBox allows leave input field empty
 * added: 'ExpandOnEnter' property to ComboBox, DataTimePicker, DataPicker, TimePicker metadata
 
