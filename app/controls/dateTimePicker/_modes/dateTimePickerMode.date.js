@@ -16,6 +16,7 @@ var dateTimePickerModeDate = {
      *
      */
     openDropdown: function() {
+        var that = this;
         var model = this.model;
         var calendar = new SelectDate( {
             model: model
@@ -34,6 +35,7 @@ var dateTimePickerModeDate = {
 
         this.listenTo( calendar, 'remove', function( date ) {
             model.set( 'dropdown', null );
+            that.ui.control.focus();
         } );
     },
 
