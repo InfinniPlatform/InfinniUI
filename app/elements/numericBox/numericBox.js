@@ -68,13 +68,19 @@ NumericBox.prototype.setIncrement = function( value ) {
 
 /**
  * @public
- * @description Устанваливает начальное значение
+ * @description Устанавливает начальное значение
  * @param {Number} value
  */
 NumericBox.prototype.setStartValue = function( value ) {
     this.control.set( 'startValue', value );
 };
 
+/**
+ *
+ * @param value
+ * @description Конвертирует значение в число
+ * @return {Number | null}
+ */
 NumericBox.prototype.convertValue = function( value ) {
     var val = ( value === null || value === '' || typeof value === 'undefined' ) ? null : +value;
 
@@ -88,4 +94,13 @@ NumericBox.prototype.convertValue = function( value ) {
  */
 NumericBox.prototype.getStartValue = function() {
     return this.control.get( 'startValue' );
+};
+
+/**
+ * @public
+ * @param {Boolean} value
+ * @description Устанавливает необходимость валидации вводимого значения
+ */
+NumericBox.prototype.setIsNeedValidation = function( value ) {
+    this.control.set( 'isNeedValidation', value );
 };

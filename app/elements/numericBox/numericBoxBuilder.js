@@ -34,5 +34,9 @@ NumericBoxBuilder.prototype.applyMetadata = function( params ) {
     element.setMaxValue( metadata.MaxValue );
     element.setIncrement( metadata.Increment );
     element.setStartValue( metadata.StartValue );
+
+    if( typeof metadata.MinValue !== 'undefined' || typeof metadata.MaxValue !== 'undefined' ) {
+        element.setIsNeedValidation( true );
+    }
 };
 
