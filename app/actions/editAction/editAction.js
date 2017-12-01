@@ -77,7 +77,7 @@ _.extend( EditAction.prototype, {
      * @private
      */
     _setItem: function( editDataSource, selectedItem ) {
-        var item = _.clone( selectedItem );
+        var item = _.recursiveDeepCopy( selectedItem );
 
         if( typeof item === 'undefined' || item === null ) {
             item = {};
