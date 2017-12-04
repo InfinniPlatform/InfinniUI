@@ -57,7 +57,9 @@ var FileBoxModel = ControlModel.extend( _.extend( {
                 if( !acceptType ) {
                     var len = fileName.length;
                     acceptType = acceptTypes.some( function( name ) {
-                        return fileName.lastIndexOf( name.toLowerCase() ) === len - name.length;
+                        var index = fileName.lastIndexOf( name.toLowerCase() );
+
+                        return index !== -1 && index === len - name.length;
                     } );
                 }
 

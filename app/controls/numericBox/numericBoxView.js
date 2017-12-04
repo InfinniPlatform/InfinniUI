@@ -123,51 +123,6 @@ var NumericBoxView = TextEditorBaseView.extend( {
         var enabled = model.get( 'enabled' );
 
         return enabled === true;
-    },
-
-    /**
-     *
-     */
-    updateValue: function() {
-        editorBaseViewMixin.updateValueState.call( this );
-
-        var displayValue = this.getDisplayValue();
-        var isNeedValidation = this.model.get( 'isNeedValidation' );
-        var validationResult = new ValidationResult();
-
-        if( isNeedValidation ) {
-            this.validate( displayValue, validationResult );
-        }
-
-        if( !validationResult.IsValid ) {
-            this.model.set( 'errorText', validationResult.Items[ 0 ].Message );
-        } else {
-            this.model.set( 'errorText', null );
-        }
-
-        this.ui.control.val( this.getDisplayValue() );
-    },
-
-    /**
-     *
-     * @param value
-     * @param validationResult
-     */
-    validate: function( value, validationResult ) {
-        var min = this.model.get( 'minValue' );
-        var max = this.model.get( 'maxValue' );
-
-        if ( value !== null && typeof value !== 'undefined' ) {
-            if ( typeof min === 'number' && typeof max === 'number' ) {
-                if ( value < min || value > max ) {
-                    validationResult.error( 'Значение должно быть в диапазоне от ' + min + ' до ' + max + '.' );
-                }
-            } else if ( typeof min === 'number' && value < min ) {
-                validationResult.error( 'Значение должно быть не меньше ' + min + '.' );
-            } else if ( typeof max === 'number' && value > max ) {
-                validationResult.error( 'Значение должно быть не больше ' + max + '.' );
-            }
-        }
     }
 
 } );
