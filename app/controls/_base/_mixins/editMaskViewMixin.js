@@ -106,7 +106,13 @@ var editMaskViewMixin = ( function( global ) {
                 this.model.set( {
                     value: text,
                     rawValue: text
+                }, {
+                    validate: true
                 } );
+
+                if( this.model.isValid() ) {
+                    this.model.set( 'errorText', null );
+                }
             }
 
         },
