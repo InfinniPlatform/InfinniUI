@@ -17,6 +17,21 @@ var labelTextElementMixin = {
      */
     setLabelText: function( value ) {
         this.control.set( 'labelText', value );
+    },
+
+    /**
+     * @returns {boolean | null}
+     */
+    getLabelTextTitle: function() {
+        return this.control.get( 'labelTextTitle' );
+    },
+
+    /**
+     *
+     * @param {boolean} value
+     */
+    setLabelTextTitle: function( value ) {
+        this.control.set( 'labelTextTitle', value );
     }
 
 };

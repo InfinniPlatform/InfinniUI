@@ -27,6 +27,8 @@ _.extend( PasswordBoxBuilder.prototype, {
 
         this.initBindingToProperty( params, 'LabelText' );
         this.resolveExpressionInText( params, 'LabelText' );
+        this.initBindingToProperty( params, 'LabelTextTitle' );
+
         element.setAutocomplete( metadata.Autocomplete );
     },
 

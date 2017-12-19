@@ -7,6 +7,7 @@ var TextEditorBaseModel = ControlModel.extend( {
 
     defaults: _.defaults( {
         labelText: null,
+        labelTextTitle: null,
         displayFormat: null,
         editMask: null
     }, editorBaseModelMixin.defaults_editorBaseModel, ControlModel.prototype.defaults ),

@@ -33,6 +33,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
     initHandlersForProperties: function() {
         ControlView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
+        this.listenTo( this.model, 'change:labelTextTitle', this.updateLabelTextTitle );
         this.listenTo( this.model, 'change:fileName', this.updateFileName );
         this.listenTo( this.model, 'change:fileSize', this.updateFileSize );
         this.listenTo( this.model, 'change:fileTime', this.updateFileTime );
@@ -56,6 +57,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
         ControlView.prototype.updateProperties.call( this );
 
         this.updateLabelText();
+        this.updateLabelTextTitle();
         this.updateFileName();
         this.updateFileSize();
         this.updateFileType();
@@ -80,6 +82,20 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
                 .text( labelText );
         } else {
             this.ui.label.css( { display: 'none' } );
+        }
+    },
+
+    /**
+     *
+     */
+    updateLabelTextTitle: function() {
+        var labelTextTitle = this.model.get( 'labelTextTitle' );
+        var labelText = this.model.get( 'labelText' );
+
+        if( labelTextTitle && labelText && labelText !== '' ) {
+            this.ui.label.attr( 'title', labelText );
+        } else {
+            this.ui.label.attr( 'title', null );
         }
     },
 
