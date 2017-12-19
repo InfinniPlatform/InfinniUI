@@ -5,7 +5,11 @@
  */
 var FileBoxModel = ControlModel.extend( _.extend( {
 
-    defaults: _.defaults( {},
+    defaults: _.defaults(
+        {
+            labelText: null,
+            labelTextTitle: null
+        },
         editorBaseModelMixin.defaults_editorBaseModel,
         ControlModel.prototype.defaults
     ),

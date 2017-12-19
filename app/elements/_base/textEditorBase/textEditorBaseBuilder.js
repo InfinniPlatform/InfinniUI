@@ -29,6 +29,7 @@ _.extend( TextEditorBaseBuilder.prototype, {
 
         this.initBindingToProperty( params, 'LabelText' );
         this.resolveExpressionInText( params, 'LabelText' );
+        this.initBindingToProperty( params, 'LabelTextTitle' );
 
         element.setInputType( this.getCompatibleInputType( params ) );
         this

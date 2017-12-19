@@ -35,6 +35,7 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
         editMaskViewMixin.initHandlersForProperties.call( this );
 
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
+        this.listenTo( this.model, 'change:labelTextTitle', this.updateLabelTextTitle );
         this.listenTo( this.model, 'change:displayFormat', this.updateDisplayFormat );
         this.listenTo( this.model, 'change:editMask', this.updateEditMask );
         this.listenTo( this.model, 'change:inputType', this.updateInputType );
@@ -48,6 +49,7 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
         editorBaseViewMixin.updateProperties.call( this );
 
         this.updateLabelText();
+        this.updateLabelTextTitle();
         this.updateInputType();
     },
 
@@ -109,6 +111,20 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
             this.ui.label
                 .text( '' )
                 .addClass( 'hidden' );
+        }
+    },
+
+    /**
+     *
+     */
+    updateLabelTextTitle: function() {
+        var labelTextTitle = this.model.get( 'labelTextTitle' );
+        var labelText = this.model.get( 'labelText' );
+
+        if( labelTextTitle && labelText && labelText !== '' ) {
+            this.ui.label.attr( 'title', labelText );
+        } else {
+            this.ui.label.attr( 'title', null );
         }
     },
 

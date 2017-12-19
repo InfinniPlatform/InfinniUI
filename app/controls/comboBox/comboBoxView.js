@@ -116,6 +116,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
         ListEditorBaseView.prototype.initHandlersForProperties.call( this );
         this.listenTo( this.model, 'change:showClear', this.updateShowClear );
         this.listenTo( this.model, 'change:labelText', this.updateLabelText );
+        this.listenTo( this.model, 'change:labelTextTitle', this.updateLabelTextTitle );
     },
 
     /**
@@ -209,6 +210,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
         ListEditorBaseView.prototype.updateProperties.call( this );
 
         this.updateLabelText();
+        this.updateLabelTextTitle();
         this.updateShowClear();
     },
 
@@ -232,6 +234,20 @@ var ComboBoxView = ListEditorBaseView.extend( {
         }
 
         this.ui.label.text( labelText );
+    },
+
+    /**
+     *
+     */
+    updateLabelTextTitle: function() {
+        var labelTextTitle = this.model.get( 'labelTextTitle' );
+        var labelText = this.model.get( 'labelText' );
+
+        if( labelTextTitle && labelText && labelText !== '' ) {
+            this.ui.label.attr( 'title', labelText );
+        } else {
+            this.ui.label.attr( 'title', null );
+        }
     },
 
     /**

@@ -33,6 +33,7 @@ _.extend( ComboBoxBuilder.prototype, {
         this.initValueTemplate( data.valueBinding, params );
         this.initBindingToProperty( params, 'LabelText' );
         this.resolveExpressionInText( params, 'LabelText' );
+        this.initBindingToProperty( params, 'LabelTextTitle' );
 
         if( 'NoItemsMessage' in params.metadata ) {
             this.initBindingToProperty( params, 'NoItemsMessage' );
