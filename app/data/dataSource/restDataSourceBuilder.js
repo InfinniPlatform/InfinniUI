@@ -49,9 +49,9 @@ _.extend( RestDataSourceBuilder.prototype, {
         }
 
         if( 'DeletingParams' in metadata ) {
-            tmpParams = this.extractUrlParams( metadata[ 'DeletingParams' ], '.urlParams.delet.params' );
+            tmpParams = this.extractUrlParams( metadata[ 'DeletingParams' ], '.urlParams.delete.params' );
             dataSource.setDeletingUrlParams( tmpParams );
-            this.bindParams( metadata[ 'DeletingParams' ], dataSource, parent, '.urlParams.delet.params', builder );
+            this.bindParams( metadata[ 'DeletingParams' ], dataSource, parent, '.urlParams.delete.params', builder );
         }
 
         if( 'UpdatingItemsConverter' in metadata ) {
