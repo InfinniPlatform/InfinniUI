@@ -59,7 +59,12 @@ var PasswordBoxView = ControlView.extend( _.extend( {}, editorBaseViewMixin, {
      */
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
-        this.ui.label.text( labelText );
+
+        if( labelText !== '' && labelText !== null && typeof labelText !== 'undefined' ) {
+            this.ui.label.text( labelText );
+        } else {
+            this.ui.label.css( { display: 'none' } );
+        }
     },
 
     /**

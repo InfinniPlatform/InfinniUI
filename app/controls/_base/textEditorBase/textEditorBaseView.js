@@ -103,7 +103,7 @@ var TextEditorBaseView = ControlView.extend( /** @lends TextEditorBaseView.proto
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
-        if( labelText ) {
+        if( labelText !== '' && labelText !== null && typeof labelText !== 'undefined' ) {
             this.ui.label
                 .text( labelText )
                 .removeClass( 'hidden' );

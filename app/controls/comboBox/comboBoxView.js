@@ -227,7 +227,7 @@ var ComboBoxView = ListEditorBaseView.extend( {
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
-        if( labelText && labelText !== '' ) {
+        if( labelText !== null && typeof labelText !== 'undefined' && labelText !== '' ) {
             this.ui.label.toggleClass( 'hidden', false );
         } else {
             this.ui.label.toggleClass( 'hidden', true );
