@@ -76,7 +76,7 @@ var FileBoxView = ControlView.extend( /** @lends FileBoxView.prototype */ _.exte
     updateLabelText: function() {
         var labelText = this.model.get( 'labelText' );
 
-        if( labelText != '' ) {
+        if( labelText !== '' && labelText !== null && typeof labelText !== 'undefined' ) {
             this.ui.label
                 .css( { display: 'inline-block' } )
                 .text( labelText );

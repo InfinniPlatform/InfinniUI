@@ -7,6 +7,7 @@ var PasswordBoxModel = ControlModel.extend( _.extend( {
 
     defaults: _.defaults(
         {
+            labelText: null,
             autocomplete: true
         },
         editorBaseModelMixin.defaults_editorBaseModel,
